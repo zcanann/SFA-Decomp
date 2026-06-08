@@ -184,111 +184,113 @@ void wcfloortile_update(int obj)
 #pragma peephole reset
 
 #pragma scheduling off
-void arwarwing_clampToFlightBounds(int obj, int bounds) {
-    f32 cx = *(f32 *)(bounds + 0x14);
-    f32 hx = cx + *(f32 *)(bounds + 0x20);
-    f32 lx = cx - *(f32 *)(bounds + 0x20);
-    f32 cy = *(f32 *)(bounds + 0x18);
-    f32 hy = cy + *(f32 *)(bounds + 0x28);
-    f32 ly = cy - *(f32 *)(bounds + 0x24);
+void arwarwing_clampToFlightBounds(int obj, int state) {
+    ArwingState *arwing = (ArwingState *)state;
+    f32 cx = arwing->homeX;
+    f32 hx = cx + arwing->flightHalfWidth;
+    f32 lx = cx - arwing->flightHalfWidth;
+    f32 cy = arwing->homeY;
+    f32 hy = cy + arwing->flightUpperHeight;
+    f32 ly = cy - arwing->flightLowerHeight;
     if (((GameObject *)obj)->anim.localPosX > hx) {
         ((GameObject *)obj)->anim.localPosX = hx;
-        *(f32 *)(bounds + 0x48) = lbl_803E6ECC;
+        arwing->velX = lbl_803E6ECC;
     } else if (((GameObject *)obj)->anim.localPosX < lx) {
         ((GameObject *)obj)->anim.localPosX = lx;
-        *(f32 *)(bounds + 0x48) = lbl_803E6ECC;
+        arwing->velX = lbl_803E6ECC;
     }
     if (((GameObject *)obj)->anim.localPosY > hy) {
         ((GameObject *)obj)->anim.localPosY = hy;
-        *(f32 *)(bounds + 0x4c) = lbl_803E6ECC;
+        arwing->velY = lbl_803E6ECC;
     } else if (((GameObject *)obj)->anim.localPosY < ly) {
         ((GameObject *)obj)->anim.localPosY = ly;
-        *(f32 *)(bounds + 0x4c) = lbl_803E6ECC;
+        arwing->velY = lbl_803E6ECC;
     }
-    *(f32 *)(bounds + 0x2c) = ((GameObject *)obj)->anim.localPosX - *(f32 *)(bounds + 0x14);
-    *(f32 *)(bounds + 0x30) = ((GameObject *)obj)->anim.localPosY - *(f32 *)(bounds + 0x18);
-    *(f32 *)(bounds + 0x34) = lbl_803E6ECC;
+    arwing->camPos[0] = ((GameObject *)obj)->anim.localPosX - arwing->homeX;
+    arwing->camPos[1] = ((GameObject *)obj)->anim.localPosY - arwing->homeY;
+    arwing->camPos[2] = lbl_803E6ECC;
 }
 #pragma scheduling reset
 
 #pragma peephole off
 #pragma scheduling off
-void arwarwing_updateFlightPhysics(int obj, int p)
+void arwarwing_updateFlightPhysics(int obj, int state)
 {
+    ArwingState *arwing = (ArwingState *)state;
     f32 v[3];
     f32 cz;
     int diff;
     int iv;
 
     if (*(s8 *)(obj + 0xac) == 0x26) {
-        *(f32 *)(p + 0x44) = lbl_803E6ECC;
+        arwing->velTargetZ = lbl_803E6ECC;
     }
-    PSVECSubtract((void *)(p + 0x3c), (void *)(p + 0x48), v);
-    v[0] = v[0] * *(f32 *)(p + 0x60);
-    v[1] = v[1] * *(f32 *)(p + 0x64);
-    v[2] = v[2] * *(f32 *)(p + 0x68);
-    v[2] = v[2] < *(f32 *)(p + 0x84) ? *(f32 *)(p + 0x84)
-         : (v[2] > *(f32 *)(p + 0x78) ? *(f32 *)(p + 0x78) : v[2]);
+    PSVECSubtract((void *)&arwing->velTargetX, (void *)&arwing->velX, v);
+    v[0] = v[0] * arwing->accelX;
+    v[1] = v[1] * arwing->accelY;
+    v[2] = v[2] * arwing->accelZ;
+    v[2] = v[2] < arwing->minAccelZ ? arwing->minAccelZ
+         : (v[2] > arwing->maxAccelZ ? arwing->maxAccelZ : v[2]);
     PSVECScale(v, v, timeDelta);
-    PSVECAdd((int)(p + 0x48), (int)v, (int)(p + 0x48));
-    objMove(obj, *(f32 *)(p + 0x48) * timeDelta, *(f32 *)(p + 0x4c) * timeDelta,
-            *(f32 *)(p + 0x50) * timeDelta);
+    PSVECAdd((int)&arwing->velX, (int)v, (int)&arwing->velX);
+    objMove(obj, arwing->velX * timeDelta, arwing->velY * timeDelta,
+            arwing->velZ * timeDelta);
 
-    diff = *(int *)(p + 0x340) - (u16) * (int *)(p + 0x344);
+    diff = arwing->rotXTarget - (u16)arwing->rotXCur;
     if (diff > 0x8000) diff -= 0xffff;
     if (diff < -0x8000) diff += 0xffff;
-    iv = (int)(f32)((int)((f32)diff * *(f32 *)(p + 0x34c)) - *(int *)(p + 0x350));
+    iv = (int)(f32)((int)((f32)diff * arwing->rotXGain) - arwing->rotXRate);
     iv = (iv < -0x32) ? -0x32 : ((iv > 0x32) ? 0x32 : iv);
-    *(int *)(p + 0x350) = (int)((f32)iv * timeDelta + (f32)*(int *)((u8 *)p + 0x350));
-    *(int *)(p + 0x344) =
-        (int)((f32) * (int *)(p + 0x350) * timeDelta + (f32)*(int *)((u8 *)p + 0x344));
+    arwing->rotXRate = (int)((f32)iv * timeDelta + (f32)arwing->rotXRate);
+    arwing->rotXCur =
+        (int)((f32)arwing->rotXRate * timeDelta + (f32)arwing->rotXCur);
 
-    diff = *(int *)(p + 0x354) - (u16) * (int *)(p + 0x358);
+    diff = arwing->rotYTarget - (u16)arwing->rotYCur;
     if (diff > 0x8000) diff -= 0xffff;
     if (diff < -0x8000) diff += 0xffff;
-    iv = (int)(f32)((int)((f32)diff * *(f32 *)(p + 0x360)) - *(int *)(p + 0x364));
+    iv = (int)(f32)((int)((f32)diff * arwing->rotYGain) - arwing->rotYRate);
     iv = (iv < -0x32) ? -0x32 : ((iv > 0x32) ? 0x32 : iv);
-    *(int *)(p + 0x364) = (int)((f32)iv * timeDelta + (f32)*(int *)((u8 *)p + 0x364));
-    *(int *)(p + 0x358) =
-        (int)((f32) * (int *)(p + 0x364) * timeDelta + (f32)*(int *)((u8 *)p + 0x358));
+    arwing->rotYRate = (int)((f32)iv * timeDelta + (f32)arwing->rotYRate);
+    arwing->rotYCur =
+        (int)((f32)arwing->rotYRate * timeDelta + (f32)arwing->rotYCur);
 
-    diff = *(int *)(p + 0x368) - (u16) * (int *)(p + 0x36c);
+    diff = arwing->rotZTarget - (u16)arwing->rotZCur;
     if (diff > 0x8000) diff -= 0xffff;
     if (diff < -0x8000) diff += 0xffff;
-    iv = (int)((f32)(int)((f32)diff * *(f32 *)(p + 0x374)) - *(f32 *)(p + 0x378));
+    iv = (int)((f32)(int)((f32)diff * arwing->rotZGain) - arwing->rotZRate);
     iv = (iv < -0x64) ? -0x64 : ((iv > 0x64) ? 0x64 : iv);
-    *(f32 *)(p + 0x378) = (f32)iv * timeDelta + *(f32 *)((u8 *)p + 0x378);
-    *(int *)(p + 0x36c) =
-        (int)(*(f32 *)(p + 0x378) * timeDelta + (f32)*(int *)((u8 *)p + 0x36c));
+    arwing->rotZRate = (f32)iv * timeDelta + arwing->rotZRate;
+    arwing->rotZCur =
+        (int)(arwing->rotZRate * timeDelta + (f32)arwing->rotZCur);
 
-    if (*(u8 *)(p + 0x478) == 0) {
-        diff = *(int *)(p + 0x37c) - (u16) * (int *)(p + 0x380);
+    if (arwing->mode == 0) {
+        diff = arwing->rotZTrimTarget - (u16)arwing->rotZTrimCur;
         if (diff > 0x8000) diff -= 0xffff;
         if (diff < -0x8000) diff += 0xffff;
-        *(int *)(p + 0x380) =
-            (int)(timeDelta * ((f32)diff * *(f32 *)(p + 0x388)) + (f32)*(int *)((u8 *)p + 0x380));
-        if ((f32) * (int *)(p + 0x380) > *(f32 *)(p + 0x394) ||
-            (f32) * (int *)(p + 0x380) < -*(f32 *)(p + 0x394)) {
-            *(f32 *)(p + 0x38c) = *(f32 *)(p + 0x38c) - *(f32 *)(p + 0x390) * timeDelta;
+        arwing->rotZTrimCur =
+            (int)(timeDelta * ((f32)diff * arwing->rotZTrimGain) + (f32)arwing->rotZTrimCur);
+        if ((f32)arwing->rotZTrimCur > arwing->rotZBlendThreshold ||
+            (f32)arwing->rotZTrimCur < -arwing->rotZBlendThreshold) {
+            arwing->rotZBlend = arwing->rotZBlend - arwing->rotZBlendRate * timeDelta;
         } else {
-            *(f32 *)(p + 0x38c) = *(f32 *)(p + 0x390) * timeDelta + *(f32 *)(p + 0x38c);
+            arwing->rotZBlend = arwing->rotZBlendRate * timeDelta + arwing->rotZBlend;
         }
     } else {
-        *(f32 *)(p + 0x38c) = *(f32 *)(p + 0x38c) - *(f32 *)(p + 0x390) * timeDelta;
+        arwing->rotZBlend = arwing->rotZBlend - arwing->rotZBlendRate * timeDelta;
     }
-    if (*(f32 *)(p + 0x38c) < lbl_803E6ECC) {
-        *(f32 *)(p + 0x38c) = lbl_803E6ECC;
-    } else if (*(f32 *)(p + 0x38c) > lbl_803E6ED0) {
-        *(f32 *)(p + 0x38c) = lbl_803E6ED0;
+    if (arwing->rotZBlend < lbl_803E6ECC) {
+        arwing->rotZBlend = lbl_803E6ECC;
+    } else if (arwing->rotZBlend > lbl_803E6ED0) {
+        arwing->rotZBlend = lbl_803E6ED0;
     }
 
-    ((GameObject *)obj)->anim.rotX = (s16) * (int *)(p + 0x344);
-    ((GameObject *)obj)->anim.rotY = (s16) * (int *)(p + 0x358);
-    if (*(u8 *)(p + 0x478) == 1) {
-        arwarwing_updateBarrelRoll(obj, p);
+    ((GameObject *)obj)->anim.rotX = (s16)arwing->rotXCur;
+    ((GameObject *)obj)->anim.rotY = (s16)arwing->rotYCur;
+    if (arwing->mode == 1) {
+        arwarwing_updateBarrelRoll(obj, state);
     } else {
-        ((GameObject *)obj)->anim.rotZ = ((f32) * (int *)(p + 0x36c) * *(f32 *)(p + 0x38c) +
-                                        (f32) * (int *)(p + 0x380));
+        ((GameObject *)obj)->anim.rotZ = ((f32)arwing->rotZCur * arwing->rotZBlend +
+                                        (f32)arwing->rotZTrimCur);
         if (((GameObject *)obj)->anim.rotZ < -0x4000) {
             ((GameObject *)obj)->anim.rotZ = -0x4000;
         } else if (((GameObject *)obj)->anim.rotZ > 0x4000) {
@@ -296,41 +298,41 @@ void arwarwing_updateFlightPhysics(int obj, int p)
         }
     }
 
-    if (sqrtf(*(f32 *)(p + 0x48) * *(f32 *)(p + 0x48) +
-              *(f32 *)(p + 0x4c) * *(f32 *)(p + 0x4c)) < *(f32 *)(p + 0x3b4) &&
-        *(u8 *)(p + 0x478) == 0) {
-        *(f32 *)(p + 0x3dc) = *(f32 *)(p + 0x3e0) * timeDelta + *(f32 *)(p + 0x3dc);
+    if (sqrtf(arwing->velX * arwing->velX +
+              arwing->velY * arwing->velY) < arwing->bobSpeedThreshold &&
+        arwing->mode == 0) {
+        arwing->bobBlend = arwing->bobBlendRate * timeDelta + arwing->bobBlend;
     } else {
-        *(f32 *)(p + 0x3dc) = *(f32 *)(p + 0x3dc) - *(f32 *)(p + 0x3e0) * timeDelta;
+        arwing->bobBlend = arwing->bobBlend - arwing->bobBlendRate * timeDelta;
     }
-    if (*(f32 *)(p + 0x3dc) < lbl_803E6ECC) {
-        *(f32 *)(p + 0x3dc) = lbl_803E6ECC;
-    } else if (*(f32 *)(p + 0x3dc) > lbl_803E6ED0) {
-        *(f32 *)(p + 0x3dc) = lbl_803E6ED0;
+    if (arwing->bobBlend < lbl_803E6ECC) {
+        arwing->bobBlend = lbl_803E6ECC;
+    } else if (arwing->bobBlend > lbl_803E6ED0) {
+        arwing->bobBlend = lbl_803E6ED0;
     }
 
-    ((GameObject *)obj)->anim.rotZ = (*(f32 *)(p + 0x3dc) *
-                                       (*(f32 *)(p + 0x3bc) *
-                                        mathSinf(lbl_803E6EFC * (f32)(u32) * (u16 *)(p + 0x3c0) /
+    ((GameObject *)obj)->anim.rotZ = (arwing->bobBlend *
+                                       (arwing->bobRotZAmp *
+                                        mathSinf(lbl_803E6EFC * (f32)(u32)arwing->bobRotZPhase /
                                                     lbl_803E6F00)) +
                                    (f32) * (s16 *)(obj + 4));
     ((GameObject *)obj)->anim.localPosX =
-        *(f32 *)(p + 0x3dc) *
-            (*(f32 *)(p + 0x3c8) *
-             mathSinf(lbl_803E6EFC * (f32)(u32) * (u16 *)(p + 0x3cc) / lbl_803E6F00)) +
+        arwing->bobBlend *
+            (arwing->bobXAmp *
+             mathSinf(lbl_803E6EFC * (f32)(u32)arwing->bobXPhase / lbl_803E6F00)) +
         ((GameObject *)obj)->anim.localPosX;
     ((GameObject *)obj)->anim.localPosY =
-        *(f32 *)(p + 0x3dc) *
-            (*(f32 *)(p + 0x3d4) *
-             mathSinf(lbl_803E6EFC * (f32)(u32) * (u16 *)(p + 0x3d8) / lbl_803E6F00)) +
+        arwing->bobBlend *
+            (arwing->bobYAmp *
+             mathSinf(lbl_803E6EFC * (f32)(u32)arwing->bobYPhase / lbl_803E6F00)) +
         ((GameObject *)obj)->anim.localPosY;
-    *(u16 *)(p + 0x3c0) =
-        (*(f32 *)(p + 0x3b8) * timeDelta + (f32)(u32) * (u16 *)(p + 0x3c0));
-    *(u16 *)(p + 0x3cc) =
-        (*(f32 *)(p + 0x3c4) * timeDelta + (f32)(u32) * (u16 *)(p + 0x3cc));
-    *(u16 *)(p + 0x3d8) =
-        (*(f32 *)(p + 0x3d0) * timeDelta + (f32)(u32) * (u16 *)(p + 0x3d8));
-    arwarwing_clampToFlightBounds(obj, p);
+    arwing->bobRotZPhase =
+        (arwing->bobRotZRate * timeDelta + (f32)(u32)arwing->bobRotZPhase);
+    arwing->bobXPhase =
+        (arwing->bobXRate * timeDelta + (f32)(u32)arwing->bobXPhase);
+    arwing->bobYPhase =
+        (arwing->bobYRate * timeDelta + (f32)(u32)arwing->bobYPhase);
+    arwarwing_clampToFlightBounds(obj, state);
 }
 #pragma scheduling reset
 #pragma peephole reset

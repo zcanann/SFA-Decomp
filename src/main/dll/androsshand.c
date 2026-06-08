@@ -151,7 +151,7 @@ void androsshand_update(int obj)
             v.y = lbl_803E75AC;
             v.z = lbl_803E75AC;
             w = v;
-            fn_8022D4AC(*(int *)&state->otherHand, (int)&w);
+            arwarwing_setVelocity(*(int *)&state->otherHand, (int)&w);
             doRumble(lbl_803E75C8);
         }
         if (((GameObject *)obj)->anim.currentMoveProgress < lbl_803E75D0) {
@@ -192,7 +192,7 @@ void androsshand_update(int obj)
             v.y = lbl_803E75F4;
             v.z = lbl_803E75AC;
             w = v;
-            fn_8022D4AC(*(int *)&state->otherHand, (int)&w);
+            arwarwing_setVelocity(*(int *)&state->otherHand, (int)&w);
             doRumble(lbl_803E75C8);
         }
         if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E75E0 && ((GameObject *)obj)->anim.currentMoveProgress < lbl_803E75F8 &&

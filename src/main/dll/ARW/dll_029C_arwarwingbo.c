@@ -118,7 +118,7 @@ void arwarwingbo_update(int obj)
     int arwing = getArwing();
 
     if (*(u16 *)(arwing + 0xb0) & 0x1000) {
-        fn_8022D4F8(arwing);
+        arwarwing_clearActiveBomb(arwing);
         Obj_FreeObject(obj);
         return;
     }
@@ -132,7 +132,7 @@ void arwarwingbo_update(int obj)
         state->control.fuseTimer -= timeDelta;
         if (state->control.fuseTimer <= lbl_803E7044) {
             state = ((GameObject *)obj)->extra;
-            fn_8022D4F8(getArwing());
+            arwarwing_clearActiveBomb(getArwing());
             Sfx_PlayFromObject(obj, SFXbaddie_eba_death);
             state->explosionTimer = lbl_803E7040;
             state->control.fuseTimer = lbl_803E7044;
@@ -154,7 +154,7 @@ void arwarwingbo_update(int obj)
             (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->contactFlags != 0 ||
             (getButtonsJustPressed(0) & 0x200)) {
             state = ((GameObject *)obj)->extra;
-            fn_8022D4F8(getArwing());
+            arwarwing_clearActiveBomb(getArwing());
             Sfx_PlayFromObject(obj, SFXbaddie_eba_death);
             state->explosionTimer = lbl_803E7040;
             state->control.fuseTimer = lbl_803E7044;

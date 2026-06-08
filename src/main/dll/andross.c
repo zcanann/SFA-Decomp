@@ -170,7 +170,7 @@ int fn_8023A6A4(int p1, f32 a, f32 b, f32 c)
     ang = lbl_803E74A0 * (f32)yaw / lbl_803E74A4;
     *(f32 *)(p1 + 0xd8) = val * mathSinf(ang);
     *(f32 *)(p1 + 0xdc) = val * mathCosf(ang);
-    fn_8022D48C((int)vel, *(int *)p1);
+    arwarwing_getVelocity((int)vel, *(int *)p1);
     *(f32 *)(p1 + 0xd8) -= vel[0] * lbl_803DC4C4;
     *(f32 *)(p1 + 0xdc) -= vel[1] * lbl_803DC4C4;
     *(f32 *)(p1 + 0xe0) = c;
@@ -365,7 +365,7 @@ void andross_update(int obj)
     *piVar14 = iVar5;
     if (*(void **)piVar14 == NULL) goto LAB_8023ef14;
     *(f32 *)(piVar14 + 0x1c) = *(f32 *)(*piVar14 + 0x14);
-        fn_8022D460(*piVar14,(f32)lbl_803DC438);
+        arwarwing_setFlightHalfWidth(*piVar14,(f32)lbl_803DC438);
   }
   for (iVar8 = 0; (u8)iVar8 < 4; iVar8 = iVar8 + 1) {
     uVar6 = (u8)iVar8;
@@ -1284,7 +1284,7 @@ LAB_8023cbdc:
     local_e4.y = (*(f32 *)(piVar14 + 0x31) - *(float *)(iVar12 + 0x10)) * lbl_803DC468;
     local_e4.z = (*(f32 *)(piVar14 + 0x32) - *(float *)(iVar12 + 0x14)) * lbl_803DC468;
     local_d8 = local_e4;
-    fn_8022D4AC(iVar12,(int)&local_d8);
+    arwarwing_setVelocity(iVar12,(int)&local_d8);
     fVar2 = -(lbl_803E74B0 * timeDelta - *(f32 *)(piVar14 + 0x2a));
     if (fVar2 < lbl_803E74EC) {
       fVar2 = lbl_803E74EC;
@@ -1661,7 +1661,7 @@ LAB_8023de5c:
       local_fc.y = (*(f32 *)(piVar14 + 0x31) - *(float *)(iVar12 + 0x10)) * lbl_803DC488;
       local_fc.z = (*(f32 *)(piVar14 + 0x32) - *(float *)(iVar12 + 0x14)) * lbl_803DC488;
       local_f0 = local_fc;
-      fn_8022D4AC(iVar12,(int)&local_f0);
+      arwarwing_setVelocity(iVar12,(int)&local_f0);
       fVar2 = -(lbl_803E753C * timeDelta - *(f32 *)(piVar14 + 0x2a));
       if (fVar2 < lbl_803E7538) {
         fVar2 = lbl_803E7538;
@@ -1768,7 +1768,7 @@ LAB_8023de5c:
       local_114.y = (*(f32 *)(piVar14 + 0x31) - *(float *)(iVar12 + 0x10)) * lbl_803DC494;
       local_114.z = (*(f32 *)(piVar14 + 0x32) - *(float *)(iVar12 + 0x14)) * lbl_803DC494;
       local_108 = local_114;
-      fn_8022D4AC(iVar12,(int)&local_108);
+      arwarwing_setVelocity(iVar12,(int)&local_108);
 
     }
     else {
@@ -1780,14 +1780,14 @@ LAB_8023de5c:
       *(f32 *)(piVar14 + 0x2a) = fVar2;
       *(undefined *)(piVar14 + 0x2e) = 0;
       *(s16 *)(*piVar14 + 6) = *(s16 *)(*piVar14 + 6) & ~0x4000;
-      sVar3 = fn_8022D46C(*piVar14);
+      sVar3 = arwarwing_getRotY(*piVar14);
             iVar12 = (int)(dVar19 * lbl_803DC49C + (f32)(sVar3));
-      fn_8022D47C(*piVar14,iVar12);
+      arwarwing_setRotY(*piVar14,iVar12);
       local_9c.x = lbl_803E74D4;
       local_9c.y = lbl_803E74D4;
       local_9c.z = (float)(dVar19 * lbl_803DC498);
       local_b4 = local_9c;
-      fn_8022D4AC(*piVar14,(int)&local_b4);
+      arwarwing_setVelocity(*piVar14,(int)&local_b4);
     }
     if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E74DC) {
       piVar14[0x21] = 1;
@@ -1806,7 +1806,7 @@ LAB_8023de5c:
       local_12c.y = (*(f32 *)(piVar14 + 0x31) - *(float *)(iVar12 + 0x10)) * lbl_803DC4A4;
       local_12c.z = (*(f32 *)(piVar14 + 0x32) - *(float *)(iVar12 + 0x14)) * lbl_803DC4A4;
       local_120 = local_12c;
-      fn_8022D4AC(iVar12,(int)&local_120);
+      arwarwing_setVelocity(iVar12,(int)&local_120);
 
     }
     else {
@@ -1818,14 +1818,14 @@ LAB_8023de5c:
       *(f32 *)(piVar14 + 0x2a) = fVar2;
       *(undefined *)(piVar14 + 0x2e) = 0;
       *(s16 *)(*piVar14 + 6) = *(s16 *)(*piVar14 + 6) & ~0x4000;
-      sVar3 = fn_8022D46C(*piVar14);
+      sVar3 = arwarwing_getRotY(*piVar14);
             iVar12 = (int)(dVar19 * lbl_803DC4AC + (f32)(sVar3));
-      fn_8022D47C(*piVar14,iVar12);
+      arwarwing_setRotY(*piVar14,iVar12);
       local_a8.x = lbl_803E74D4;
       local_a8.y = lbl_803E74D4;
       local_a8.z = (float)(dVar19 * lbl_803DC4A8);
       local_c0 = local_a8;
-      fn_8022D4AC(*piVar14,(int)&local_c0);
+      arwarwing_setVelocity(*piVar14,(int)&local_c0);
       if ((*(u8 *)(piVar14 + 0x3a) >> 5 & 1) == 0) {
         Sfx_PlayFromObject(obj,0x46f);
         ((AndrossFlagByte *)((u8 *)piVar14 + 0xe8))->f20 = 1;
@@ -1877,7 +1877,7 @@ LAB_8023de5c:
   }
   if (*(void **)(*piVar14 + 0xc0) == NULL) {
     local_cc = *(SunVec3 *)(piVar14 + 0x36);
-    fn_8022D4CC(*piVar14,(int)&local_cc);
+    arwarwing_addVelocity(*piVar14,(int)&local_cc);
   }
   sVar3 = *(short *)(piVar14 + 0x28) - *(s16 *)obj;
   if (0x8000 < sVar3) {

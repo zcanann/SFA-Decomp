@@ -205,7 +205,7 @@ void arwbombcoll_update(int obj)
         }
     }
 
-    if ((u32)arw != 0 && fn_8022D710(arw) != 0) {
+    if ((u32)arw != 0 && arwarwing_isExplodingOrWarping(arw) != 0) {
         flags->b80 = 0;
         ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         ObjHits_EnableObject(obj);

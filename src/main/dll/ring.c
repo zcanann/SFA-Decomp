@@ -235,7 +235,7 @@ void ring_update(int obj)
             break;
         }
         if (state->flags.bit80 != 0) {
-            if (fn_8022D750(arwing) == 0 && fn_8022D710(arwing) == 0 &&
+            if (arwarwing_isDead(arwing) == 0 && arwarwing_isExplodingOrWarping(arwing) == 0 &&
                 arwbombcoll_checkArwingCollision(obj, state, arwing) != 0) {
                 arwbombcoll_handleArwingHit(obj, state, arwing);
             }

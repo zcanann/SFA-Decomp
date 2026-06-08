@@ -5016,8 +5016,8 @@ void CameraModeTitle_update(u8 *obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int fn_8022D750(int state);
-extern int fn_8022D710(int state);
+extern int arwarwing_isDead(int state);
+extern int arwarwing_isExplodingOrWarping(int state);
 extern f32 lbl_803E1BA0;
 extern f32 lbl_803E1BA8;
 extern f32 lbl_803E1BAC;
@@ -5054,7 +5054,7 @@ void CameraModeArwing_update(u8 *obj) {
     pitch0 = (s32)((f32)*(s16 *)((char *)lbl_803A43C0 + 0x56) *
                    *(f32 *)((char *)lbl_803A43C0 + 0x48));
 
-    if (fn_8022D750((int)state) != 0) {
+    if (arwarwing_isDead((int)state) != 0) {
         f32 vd, vc, vb, va;
         int step;
         *(f32 *)((char *)lbl_803A43C0 + 0x50) = lbl_803E1BA8;
@@ -5082,7 +5082,7 @@ void CameraModeArwing_update(u8 *obj) {
         }
         step = (s32)((f32)d * timeDelta);
         ((GameObject *)obj)->anim.rotY = (f32)step * lbl_803E1BAC + (f32)((GameObject *)obj)->anim.rotY;
-    } else if (fn_8022D710((int)state) != 0) {
+    } else if (arwarwing_isExplodingOrWarping((int)state) != 0) {
         f32 nv = *(f32 *)((char *)lbl_803A43C0 + 0x50) * lbl_803E1BB0;
         *(f32 *)((char *)lbl_803A43C0 + 0x50) = nv;
         ((GameObject *)obj)->anim.rotZ = nv * timeDelta + (f32)((GameObject *)obj)->anim.rotZ;

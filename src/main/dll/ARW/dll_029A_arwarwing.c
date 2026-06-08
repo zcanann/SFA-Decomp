@@ -100,25 +100,28 @@ void arwarwing_hitDetect(int obj)
 
 #pragma peephole on
 #pragma scheduling off
-void fn_8022D460(int arwing, f32 val) { (*(ArwingState **)(arwing + 0xb8))->unk20 = val; }
+void arwarwing_setFlightHalfWidth(int arwing, f32 width)
+{
+    (*(ArwingState **)(arwing + 0xb8))->flightHalfWidth = width;
+}
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
-int fn_8022D46C(int arwing) { return (s16)(*(ArwingState **)(arwing + 0xb8))->rotYCur; }
+int arwarwing_getRotY(int arwing) { return (s16)(*(ArwingState **)(arwing + 0xb8))->rotYCur; }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
-void fn_8022D47C(int arwing, int p2) { (*(ArwingState **)(arwing + 0xb8))->rotYCur = (s16)p2; }
+void arwarwing_setRotY(int arwing, int rotY) { (*(ArwingState **)(arwing + 0xb8))->rotYCur = (s16)rotY; }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
-void fn_8022D48C(int out, int arwing)
+void arwarwing_getVelocity(int out, int arwing)
 {
     *(Vec12 *)out = *(Vec12 *)&(*(ArwingState **)(arwing + 0xb8))->velX;
 }
@@ -127,7 +130,7 @@ void fn_8022D48C(int out, int arwing)
 
 #pragma peephole on
 #pragma scheduling off
-void fn_8022D4AC(int arwing, int in)
+void arwarwing_setVelocity(int arwing, int in)
 {
     ArwingState *state = *(ArwingState **)(arwing + 0xb8);
     state->velX = *(f32 *)(in + 0);
@@ -139,7 +142,7 @@ void fn_8022D4AC(int arwing, int in)
 
 #pragma peephole on
 #pragma scheduling off
-void fn_8022D4CC(int arwing, int in)
+void arwarwing_addVelocity(int arwing, int in)
 {
     int v = *(int *)(arwing + 0xb8) + 0x48;
     PSVECAdd(v, in, v);
@@ -149,7 +152,7 @@ void fn_8022D4CC(int arwing, int in)
 
 #pragma peephole on
 #pragma scheduling off
-void fn_8022D4F8(int arwing) { (*(ArwingState **)(arwing + 0xb8))->activeBombObj = 0; }
+void arwarwing_clearActiveBomb(int arwing) { (*(ArwingState **)(arwing + 0xb8))->activeBombObj = 0; }
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -604,7 +607,7 @@ void arwarwing_upgradeLaserLevel(int arwing)
 
 #pragma peephole on
 #pragma scheduling off
-int fn_8022D710(int arwing)
+int arwarwing_isExplodingOrWarping(int arwing)
 {
     int result = 0;
     u32 v = (*(ArwingState **)(arwing + 0xb8))->mode;
@@ -618,13 +621,13 @@ int fn_8022D710(int arwing)
 
 #pragma peephole on
 #pragma scheduling on
-int fn_8022D738(int arwing) { return (*(ArwingState **)(arwing + 0xb8))->mode == 1; }
+int arwarwing_isBarrelRolling(int arwing) { return (*(ArwingState **)(arwing + 0xb8))->mode == 1; }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling on
-int fn_8022D750(int arwing) { return (*(ArwingState **)(arwing + 0xb8))->mode == 4; }
+int arwarwing_isDead(int arwing) { return (*(ArwingState **)(arwing + 0xb8))->mode == 4; }
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -880,9 +883,9 @@ void arwarwing_initAttachments(int obj, int state)
         ((ArwingState *)state)->homeX = ((GameObject *)obj)->anim.localPosX;
         ((ArwingState *)state)->homeY = ((GameObject *)obj)->anim.localPosY;
         ((ArwingState *)state)->homeZ = ((GameObject *)obj)->anim.localPosZ;
-        ((ArwingState *)state)->unk20 = lbl_803E6FEC;
-        ((ArwingState *)state)->unk28 = lbl_803E6FF0;
-        ((ArwingState *)state)->unk24 = lbl_803E6EF0;
+        ((ArwingState *)state)->flightHalfWidth = lbl_803E6FEC;
+        ((ArwingState *)state)->flightUpperHeight = lbl_803E6FF0;
+        ((ArwingState *)state)->flightLowerHeight = lbl_803E6EF0;
     }
 }
 #pragma scheduling reset

@@ -124,11 +124,11 @@ void arwingandrossstuff_hitDetect(int obj)
             v.y = lbl_803E7038 * mathCosf(ang);
             v.z = lbl_803E7008;
             w = v;
-            fn_8022D4AC(arwing, (int)&w);
+            arwarwing_setVelocity(arwing, (int)&w);
             doRumble(lbl_803E703C);
         }
         if ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject == arwing) {
-            if (fn_8022D738(arwing) != 0) {
+            if (arwarwing_isBarrelRolling(arwing) != 0) {
                 PSVECNormalize((void *)(obj + 0x24), (void *)(obj + 0x24));
                 d.x = ((GameObject *)obj)->anim.localPosX - *(f32 *)(arwing + 0xc);
                 d.y = ((GameObject *)obj)->anim.localPosY - *(f32 *)(arwing + 0x10);

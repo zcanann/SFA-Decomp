@@ -170,7 +170,7 @@ void arwlevelcon_update(int obj)
     if (state->ringChoiceTriggered == 0) {
         int mb = mapBlockFn_800592e4();
         if (*(f32 *)(arwing + 0x14) - *(f32 *)(mb + 0x28) > lbl_803E70E8 &&
-            fn_8022D750(arwing) == 0 && fn_8022D710(arwing) == 0) {
+            arwarwing_isDead(arwing) == 0 && arwarwing_isExplodingOrWarping(arwing) == 0) {
             int a, b;
             arwingHudSetVisible(2);
             (*gObjectTriggerInterface)->setObjects(state->ringChoiceTriggerId, 0, 0);

@@ -15,9 +15,9 @@ typedef struct ArwingState {
     f32 homeX;           /* 0x014: spawn position */
     f32 homeY;
     f32 homeZ;
-    f32 unk20;
-    f32 unk24;
-    f32 unk28;
+    f32 flightHalfWidth;
+    f32 flightLowerHeight;
+    f32 flightUpperHeight;
     f32 camPos[3];       /* 0x02c: pushed to the camera each update */
     f32 rootMotionScale;
     f32 velTargetX;      /* 0x03c: (vel - velTarget) * accel integrates vel */
