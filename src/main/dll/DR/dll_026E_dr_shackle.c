@@ -179,7 +179,7 @@ void drshackle_update(int obj) {
             for (j = 0; j < *(int *)(p + 0x14); j++) {
                 if (*(u8 *)(sub + 0x18) == *(s16 *)(q + 0x1a) + j * 4) {
                     *(int *)(p + j * 4) = *list;
-                    ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+                    (*gObjectTriggerInterface)
                         ->runSequence(0, (void *)*(int *)(p + j * 4), -1);
                 }
             }

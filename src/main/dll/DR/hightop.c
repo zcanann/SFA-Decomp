@@ -1718,7 +1718,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     case 3:
                         t = ObjGroup_FindNearestObject(0xf, obj, 0);
                         if (t != 0) {
-                            ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+                            (*gObjectTriggerInterface)
                                 ->runSequence(p[3], (void *)t, -1);
                         }
                         break;

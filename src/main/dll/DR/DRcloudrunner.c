@@ -531,13 +531,13 @@ void sc_cloudrunnera_init(int obj, int p2)
     *(int *)(obj + 0xf8) = 0;
 
     if (*(int *)(obj + 0xf4) == 0 && *(s16 *)(p2 + 0x18) != 1) {
-        ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+        (*gObjectTriggerInterface)
             ->loadAnimData((u8 *)inner, (u8 *)p2);
         *(int *)(obj + 0xf4) = *(s16 *)(p2 + 0x18) + 1;
     } else if (*(int *)(obj + 0xf4) != 0 && *(s16 *)(p2 + 0x18) != *(int *)(obj + 0xf4) - 1) {
         (*gObjectTriggerInterface)->freeState((u8 *)inner);
         if (*(s16 *)(p2 + 0x18) != -1) {
-            ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+            (*gObjectTriggerInterface)
                 ->loadAnimData((u8 *)inner, (u8 *)p2);
         }
         *(int *)(obj + 0xf4) = *(s16 *)(p2 + 0x18) + 1;

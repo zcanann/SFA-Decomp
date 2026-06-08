@@ -3436,7 +3436,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                         ObjAnim_SetCurrentMove(obj, 0x7b, lbl_803E7EA4, 1);
                         if ((u32)getSbGalleon() != 0) {
                             (**(void (**)(int, int))((char *)(*gCameraInterface) + 0x28))(va, 0);
-                            ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+                            (*gObjectTriggerInterface)
                                 ->setCamVars(0x4a, 1, 0, 0x78);
                         }
                         break;
@@ -3502,14 +3502,14 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                 if ((u32)gb != 0 && *(s16 *)(gb + 0x46) == 0x416) {
                     (**(void (**)(int, int))((char *)(*gCameraInterface) + 0x28))(gb, 0);
                     (**(void (**)(int, int, int))((char *)(*gCameraInterface) + 0x24))(0, 0x69, 0);
-                    ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+                    (*gObjectTriggerInterface)
                         ->setCamVars(0x42, 4, 0, 0);
                 } else if ((u32)gb != 0 && arrayIndexOf((void *)(tbl + 0x160), 4, *(s16 *)(gb + 0x46)) != -1) {
-                    ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+                    (*gObjectTriggerInterface)
                         ->setCamVars(0x53, 0, 0, 0);
                 } else {
                     (**(void (**)(int, int, int))((char *)(*gCameraInterface) + 0x24))(0, 0x1d, 0);
-                    ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+                    (*gObjectTriggerInterface)
                         ->setCamVars(0x42, 4, 0, 0);
                 }
                 break;
@@ -3576,7 +3576,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                     spd * -mathSinf(lbl_803E7F94 * (f32)*(s16 *)(obj2 + 0x478) /
                                        lbl_803E7F98),
                     dy2, sp3);
-                ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+                (*gObjectTriggerInterface)
                     ->runSequence(((GameObject *)obj)->unkF4, (void *)obj, -1);
                 break;
             }
@@ -12704,7 +12704,7 @@ int fn_802A418C(int obj, int state, f32 fv)
                     lbl_803DE444 = att;
                 }
                 ((void (*)(int, void *, int))ObjLink_AttachChild)(obj, att, 1);
-                ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+                (*gObjectTriggerInterface)
                     ->runSequence(0xd, (void *)obj, -1);
             }
         }
@@ -16466,13 +16466,13 @@ int Lightfoot_UpdateChallengeGateInteraction(int obj, int state)
                         GameBit_Get(0xc3a) != 0) {
                         if (GameBit_Get(0xc52) == 0) {
                             GameBit_Set(0xc52, 1);
-                            ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+                            (*gObjectTriggerInterface)
                                 ->runSequence(3, (void *)obj, -1);
                             *(u8 *)((char *)sub + 0x2e) = 1;
                             *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
                         }
                     } else {
-                        ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+                        (*gObjectTriggerInterface)
                             ->runSequence(2, (void *)obj, -1);
                     }
                     break;
@@ -16481,13 +16481,13 @@ int Lightfoot_UpdateChallengeGateInteraction(int obj, int state)
                         GameBit_Get(0xc3d) != 0) {
                         if (GameBit_Get(0xc53) == 0) {
                             GameBit_Set(0xc53, 1);
-                            ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+                            (*gObjectTriggerInterface)
                                 ->runSequence(5, (void *)obj, -1);
                             *(u8 *)((char *)sub + 0x2e) = 1;
                             *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
                         }
                     } else {
-                        ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+                        (*gObjectTriggerInterface)
                             ->runSequence(4, (void *)obj, -1);
                     }
                     break;
@@ -16496,13 +16496,13 @@ int Lightfoot_UpdateChallengeGateInteraction(int obj, int state)
                         GameBit_Get(0xc40) != 0) {
                         if (GameBit_Get(0xc54) == 0) {
                             GameBit_Set(0xc54, 1);
-                            ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+                            (*gObjectTriggerInterface)
                                 ->runSequence(7, (void *)obj, -1);
                             *(u8 *)((char *)sub + 0x2e) = 1;
                             *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
                         }
                     } else {
-                        ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+                        (*gObjectTriggerInterface)
                             ->runSequence(6, (void *)obj, -1);
                     }
                     break;

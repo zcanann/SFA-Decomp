@@ -283,7 +283,7 @@ int kytesmum_updateNearPlayerCallback(int obj, int unused, u8 *arg) {
             buttonDisable(0, 0x100);
             ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumePriority = 0xb;
             ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumeId = 4;
-            ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+            (*gObjectTriggerInterface)
                 ->runSequence(randomGetRange(0, 1), (void *)obj, -1);
         }
     }

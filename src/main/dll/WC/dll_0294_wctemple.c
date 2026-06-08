@@ -62,13 +62,13 @@ void wctemple_update(int obj)
 
     if (WCTEMPLE_TRIGGER_SLOT(state) == WCTEMPLE_SEQUENCE_SLOT_CLOSED) {
         if ((*(u8 *)(obj + 0xaf) & WCTEMPLE_ACTIVATION_FLAG) != 0) {
-            ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+            (*gObjectTriggerInterface)
                 ->runSequence(WCTEMPLE_SEQUENCE_SLOT_CLOSED, (void *)obj, WCTEMPLE_SEQUENCE_INVALID_ARG);
             WCTEMPLE_TRIGGER_SLOT(state) = WCTEMPLE_SEQUENCE_SLOT_OPEN;
         }
     } else {
         if ((*(u8 *)(obj + 0xaf) & WCTEMPLE_ACTIVATION_FLAG) != 0) {
-            ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+            (*gObjectTriggerInterface)
                 ->runSequence(WCTEMPLE_SEQUENCE_SLOT_OPEN, (void *)obj, WCTEMPLE_SEQUENCE_INVALID_ARG);
             WCTEMPLE_TRIGGER_SLOT(state) = WCTEMPLE_SEQUENCE_SLOT_CLOSED;
         }

@@ -618,7 +618,7 @@ void hightop_update(int obj) {
         v = (s8)*(u8 *)(p + 0xc4b);
         if (v != -1) {
             if (v < 0xa) {
-                ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+                (*gObjectTriggerInterface)
                     ->runSequence(v, (void *)obj, -1);
             } else {
                 GameBit_Set(*(s16 *)((char *)&lbl_803DC314 + v * 2 - 0x14), 1);
@@ -1060,7 +1060,7 @@ int hightop_stateHandler10(int obj, int p) {
                 r -= weights[i];
                 i++;
             }
-            ((ObjectTriggerInterface *)*gObjectTriggerInterface)
+            (*gObjectTriggerInterface)
                 ->runSequence(lbl_8032AB30[i], (void *)obj, -1);
         }
     }
