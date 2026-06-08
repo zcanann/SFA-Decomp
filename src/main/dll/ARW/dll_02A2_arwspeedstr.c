@@ -3,6 +3,27 @@
 
 #pragma peephole on
 #pragma scheduling on
+
+typedef struct ARWSpeedStrState {
+    f32 speed;
+    f32 lifeTimer;
+    f32 alpha;
+    f32 spreadX;
+    f32 spreadY;
+    f32 viewZ;
+    u8 flags;
+    u8 pad19[3];
+} ARWSpeedStrState;
+
+STATIC_ASSERT(sizeof(ARWSpeedStrState) == 0x1c);
+STATIC_ASSERT(offsetof(ARWSpeedStrState, speed) == 0x00);
+STATIC_ASSERT(offsetof(ARWSpeedStrState, lifeTimer) == 0x04);
+STATIC_ASSERT(offsetof(ARWSpeedStrState, alpha) == 0x08);
+STATIC_ASSERT(offsetof(ARWSpeedStrState, spreadX) == 0x0c);
+STATIC_ASSERT(offsetof(ARWSpeedStrState, spreadY) == 0x10);
+STATIC_ASSERT(offsetof(ARWSpeedStrState, viewZ) == 0x14);
+STATIC_ASSERT(offsetof(ARWSpeedStrState, flags) == 0x18);
+
 int arwspeedstr_getExtraSize(void) { return 0x1c; }
 #pragma scheduling reset
 #pragma peephole reset
@@ -58,32 +79,32 @@ void arwspeedstr_initialise(void) {}
 #pragma peephole off
 #pragma scheduling off
 void arwspeedstr_update(int obj) {
-    int state = *(int *)&((GameObject *)obj)->extra;
-    if (*(u8 *)(state + 0x18) == 0) {
+    ARWSpeedStrState *state = ((GameObject *)obj)->extra;
+    if (state->flags == 0) {
         f32 local[3];
-        local[0] = (f32)(int)randomGetRange((int)-*(f32 *)(state + 0xc), (int)*(f32 *)(state + 0xc));
+        local[0] = (f32)(int)randomGetRange((int)-state->spreadX, (int)state->spreadX);
         local[1] =
-            (f32)(int)randomGetRange((int)-*(f32 *)(state + 0x10), (int)*(f32 *)(state + 0x10));
-        local[2] = *(f32 *)(state + 0x14);
+            (f32)(int)randomGetRange((int)-state->spreadY, (int)state->spreadY);
+        local[2] = state->viewZ;
         PSMTXMultVec(Camera_GetInverseViewMatrix(), &local[0], (f32 *)(obj + 0xc));
         ((GameObject *)obj)->anim.localPosX += playerMapOffsetX;
         ((GameObject *)obj)->anim.localPosZ += playerMapOffsetZ;
-        *(u8 *)(state + 0x18) = (*(u8 *)(state + 0x18) | 1) & 0xff;
-        *(f32 *)(state + 8) = lbl_803E7104;
+        state->flags = (state->flags | 1) & 0xff;
+        state->alpha = lbl_803E7104;
     }
     {
-        f32 t = *(f32 *)(state + 4);
+        f32 t = state->lifeTimer;
         if (t > lbl_803E7104) {
-            *(f32 *)(state + 4) = t - timeDelta;
-            if (*(f32 *)(state + 4) <= lbl_803E7104) {
-                *(f32 *)(state + 4) = lbl_803E7104;
+            state->lifeTimer = t - timeDelta;
+            if (state->lifeTimer <= lbl_803E7104) {
+                state->lifeTimer = lbl_803E7104;
                 Obj_FreeObject(obj);
             } else {
-                objMove(obj, lbl_803E7104, lbl_803E7104, *(f32 *)(state + 0) * timeDelta);
-                *(f32 *)(state + 8) = lbl_803E7108 * timeDelta + *(f32 *)(state + 8);
-                if (*(f32 *)(state + 8) > lbl_803E710C)
-                    *(f32 *)(state + 8) = lbl_803E710C;
-                ((GameObject *)obj)->anim.alpha = (int)*(f32 *)(state + 8);
+                objMove(obj, lbl_803E7104, lbl_803E7104, state->speed * timeDelta);
+                state->alpha = lbl_803E7108 * timeDelta + state->alpha;
+                if (state->alpha > lbl_803E710C)
+                    state->alpha = lbl_803E710C;
+                ((GameObject *)obj)->anim.alpha = (int)state->alpha;
             }
         }
     }
@@ -104,6 +125,10 @@ void fn_80231058(int obj, int src)
 
 #pragma peephole on
 #pragma scheduling off
-void fn_80231028(int obj, int v) { *(f32 *)(*(int *)&((GameObject *)obj)->extra + 0x0) = (f32)v; }
+void fn_80231028(int obj, int v)
+{
+    ARWSpeedStrState *state = ((GameObject *)obj)->extra;
+    state->speed = (f32)v;
+}
 #pragma scheduling reset
 #pragma peephole reset
