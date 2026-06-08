@@ -905,15 +905,15 @@ void trickyBallFn_801793b8(int *obj, u8 *params)
     *(f32 *)((char *)lcl + 0x8) = lbl_803E36A0;
     *(s16 *)((char *)lcl + 0x4) = 0;
     *(s16 *)((char *)lcl + 0x2) = 0;
-    if (*(int *)((char *)player + 0x30) != 0) {
+    if (*(void **)((char *)player + 0x30) != NULL) {
         *(s16 *)lcl = (s16)(*(s16 *)*(int **)((char *)player + 0x30) + *(s16 *)player);
     } else {
         *(s16 *)lcl = *(s16 *)player;
     }
-    vecRotateZXY(lcl, (f32 *)((char *)obj + 0x24));
+    vecRotateZXY(lcl, &((GameObject *)obj)->anim.velocityX);
 
     fn_801796BC(obj,
-                *(f32 *)((char *)obj + 0x24),
+                ((GameObject *)obj)->anim.velocityX,
                 ((GameObject *)obj)->anim.velocityY,
                 ((GameObject *)obj)->anim.velocityZ);
 
