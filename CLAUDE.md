@@ -266,6 +266,33 @@ citations map to which renumbered entry).
     landed yet. (zulu14, task #9: the symbols.txt-retype experiment is a
     settled negative — that specific approach is exhausted, so spend new effort
     on the pool-ordering axis instead of re-running it.)
+    **#10 ADDENDUM — the `CONCAT44(0x43300000, ...)` / `__cvt_ull_dbl` de-Ghidra
+    tell is a MAJOR field (94 source files).** A CUR-only `__cvt_ull_dbl` in
+    `callset_audit.py` (or a `CONCAT44(0x43300000,` in the source) is a raw
+    Ghidra-imported int->double conversion the decompiler wrote as the explicit
+    magic-bias idiom: `(float)((double)CONCAT44(0x43300000, (int)x ^ 0x80000000)
+    - DOUBLE_bias)`. The `CONCAT44` builds a u64, so `(double)(u64)` routes
+    through the `__cvt_ull_dbl` runtime helper where TARGET does a plain inline
+    int->float. FIX: rewrite the whole blob as a direct cast — `(float)(int)x`
+    (signed; the `^ 0x80000000` marks signed) or `(float)(u32)x` if no XOR
+    (unsigned). MWCC then lowers it to the standard xoris/stw/lfd/fsubs/frsp
+    conversion with NO helper call, and it CASCADES: the dead `local_NN =
+    0x43300000;` / `uStack_NN = x ^ 0x80000000;` bias-build locals drop, the
+    frame shrinks, and downstream coloring often realigns. Took kaldaChomFn_8016821c
+    81.9->100 and firstPersonExit 83.1->91.75 (campfire/camTalk). Companion
+    de-Ghidra fixes that ride along in the same import-damaged fns: `char`->`u8`
+    on an `Obj_IsLoadingLocked()`-style byte compare (clrlwi vs extsb), retype
+    `*(undefined4 *)` position-field copies to `*(f32 *)` (lfs/stfs vs lwz/stw),
+    `0x8000` not `-0x8000` for a `(short)(K - angle)` constant (matches target's
+    `lis;addi` materialization), and `int` not `short` for a value assigned from
+    an `s16`-returning callee that's used raw (drops a redundant extsh). DETECTOR:
+    `grep -rln "CONCAT44(0x43300000" src/` (94 files) — but only the ones in
+    PARTIAL fns that produce the helper are guaranteed wins; a CONCAT44 that
+    already compiles to target's exact stw/lfd/fsubs is cosmetic, leave it.
+    SIBLING (uncharacterized): `__cvt_fp2unsigned` is the float->UNSIGNED
+    direction (`(u32)(floatExpr)`); target often uses signed `(s32)`/fctiwz —
+    A/B `(s32)` vs `(u32)` per site, but beware it can be entangled with a
+    #108 rotation (partfx_update: __cvt_fp2unsigned x9 in a parked rotation fn).
 
 11. **`extern int fn(...)` for callees whose return is treated as `int`** —
     even if conceptually the return is a byte. Declaring `extern u8 fn(...)`
