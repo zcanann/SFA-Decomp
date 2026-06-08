@@ -3953,6 +3953,35 @@ LAB_800e1030:
   } while( true );
 }
 
+static inline int Objfsa_FindRomCurveById(int curveId) {
+    int lo;
+    int hi;
+    int mid;
+    int curve;
+    u32 id;
+
+    if (curveId < 0) {
+        return 0;
+    }
+
+    lo = 0;
+    hi = nRomCurves - 1;
+    id = (u32)curveId;
+    while (lo <= hi) {
+        mid = (hi + lo) >> 1;
+        curve = (int)romCurves[mid];
+        if (id > *(u32 *)(curve + 0x14)) {
+            lo = mid + 1;
+        } else if (id < *(u32 *)(curve + 0x14)) {
+            hi = mid - 1;
+        } else {
+            return curve;
+        }
+    }
+
+    return 0;
+}
+
 /*
  * --INFO--
  *
@@ -5297,34 +5326,6 @@ static inline f32 RomCurveNode_GetHermiteTangent(void *node, int angleOffset, in
     return lbl_803E05D0 * ((f32)(u32)*(u8 *)((char *)node + 0x2e) * trig);
 }
 
-static inline int Objfsa_FindRomCurveById(int curveId) {
-    int lo;
-    int hi;
-    int mid;
-    int curve;
-    u32 id;
-
-    if (curveId < 0) {
-        return 0;
-    }
-
-    lo = 0;
-    hi = nRomCurves - 1;
-    id = (u32)curveId;
-    while (lo <= hi) {
-        mid = (hi + lo) >> 1;
-        curve = (int)romCurves[mid];
-        if (id > *(u32 *)(curve + 0x14)) {
-            lo = mid + 1;
-        } else if (id < *(u32 *)(curve + 0x14)) {
-            hi = mid - 1;
-        } else {
-            return curve;
-        }
-    }
-
-    return 0;
-}
 
 int RomCurve_getControlPointId_2A(int curve, int exclude, int pickIdx);
 int RomCurve_getControlPointId_2B(int curve, int exclude, int pickIdx);
