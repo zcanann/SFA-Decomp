@@ -1,6 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
+#include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/dll/ARW/ARWarwingattachment.h"
@@ -1388,7 +1389,6 @@ void FUN_801f1d3c(undefined8 param_1,undefined8 param_2,double param_3,undefined
 void fn_801F20D4(int obj)
 {
   extern void *Obj_GetPlayerObject(void);
-  extern int *gGameUIInterface;
   extern int lbl_802C247C[];
   extern void buttonDisable(int a, int b);
   extern u8 framesThisStep;
@@ -1426,7 +1426,7 @@ void fn_801F20D4(int obj)
     *(u8 *)(sub + 0x27) = 0;
     buttonDisable(0, 256);
   } else if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 0x1) != 0) {
-    if ((**(int (**)(int *, int))(*gGameUIInterface + 0x24))(stk, 3) > -1) {
+    if ((*gGameUIInterface)->isOneOfItemsBeingUsed((s32 *)stk, 3) > -1) {
       GameBit_Set(784, 1);
       *(u8 *)(sub + 0x27) = *(u8 *)(sub + 0x27) + 1;
       buttonDisable(0, 256);
@@ -2904,7 +2904,6 @@ void fn_801F2290(int obj)
     extern int getAngle(f32 x, f32 y);
     extern f32 sqrtf(f32 x);
     extern void fn_80137948(char *fmt, ...);
-    extern int *gGameUIInterface;
     extern int lbl_802C2470[];
     extern ArwAttachTarget lbl_80328974[];
     extern char sArwingAttachmentDiffFormat[];
@@ -2933,7 +2932,7 @@ void fn_801F2290(int obj)
     if (GameBit_Get(0x1fc) != 0) {
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~8);
         if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0 &&
-            (**(int (**)(IntVec3 *, int))(*gGameUIInterface + 0x24))(&stk, 3) > -1) {
+            (*gGameUIInterface)->isOneOfItemsBeingUsed((s32 *)&stk, 3) > -1) {
             GameBit_Set(0x4d1, 1);
             b->counter27 += 1;
             GameBit_Set(0x310, 1);

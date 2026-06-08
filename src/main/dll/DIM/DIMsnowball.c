@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
+#include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/objanim.h"
@@ -1534,7 +1535,6 @@ void ccpedstal_update(int obj)
 extern void *fn_802972A8(void *obj);
 extern int mapGetDirIdx(int a);
 extern void lockLevel(int idx, int flag);
-extern int *gGameUIInterface;
 
 #pragma peephole off
 #pragma scheduling off
@@ -1553,7 +1553,7 @@ void fn_801AC01C(int obj)
     }
     lockLevel(mapGetDirIdx(0x17), 1);
     if (r == 1) {
-        (*(int (**)(int))(*(int *)gGameUIInterface + 0x40))(1);
+        (*gGameUIInterface)->setShowWorldMapHud(1);
         *(u8 *)(state + 0) = 5;
         GameBit_Set(0x37b, 1);
     } else {
@@ -1572,7 +1572,7 @@ void fn_801AC108(int obj, int param2)
 {
     int r;
     void *res;
-    (*(int (**)(int))(*(int *)gGameUIInterface + 0x40))(0);
+    (*gGameUIInterface)->setShowWorldMapHud(0);
     if (GameBit_Get(0x3a3) != 0) {
         GameBit_Set(0x3a3, 0);
         GameBit_Set(0x3a2, 0);
@@ -1587,7 +1587,7 @@ void fn_801AC108(int obj, int param2)
         GameBit_Set(0x4e5, 1);
         (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 1, 1);
         if (r == 1) {
-            (*(int (**)(int))(*(int *)gGameUIInterface + 0x40))(1);
+            (*gGameUIInterface)->setShowWorldMapHud(1);
             *(u8 *)(param2 + 0) = 5;
             GameBit_Set(0x379, 1);
         } else {
