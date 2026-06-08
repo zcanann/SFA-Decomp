@@ -1293,6 +1293,7 @@ extern void debugPrintf(char *fmt, ...);
 
 #pragma push
 #pragma scheduling off
+#pragma dont_inline on
 void newclouds_snowKillSnowCloud(int cloudId, int flag)
 {
     void *p;
