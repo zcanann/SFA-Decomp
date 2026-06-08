@@ -1183,7 +1183,6 @@ extern double FUN_80293900();
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
 
-extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd71c;
 extern undefined4 DAT_803e3064;
 extern undefined4 DAT_803e3068;
@@ -2002,11 +2001,13 @@ void FUN_8013a408(undefined2 *param_1)
   }
   uVar2 = randomGetRange(0,4);
   if (uVar2 == 0) {
-    (**(code **)(*DAT_803dd708 + 8))(param_1,0xca,local_28,0x200001,0xffffffff,0);
+    (*gPartfxInterface)->spawnObject((void *)param_1, SKEETLA_PARTICLE_SPARK_A, local_28,
+                                     SKEETLA_PARTICLE_SPAWN_FLAGS, -1, NULL);
   }
   uVar2 = randomGetRange(0,4);
   if (uVar2 == 0) {
-    (**(code **)(*DAT_803dd708 + 8))(param_1,0xcb,local_28,0x200001,0xffffffff,0);
+    (*gPartfxInterface)->spawnObject((void *)param_1, SKEETLA_PARTICLE_SPARK_B, local_28,
+                                     SKEETLA_PARTICLE_SPAWN_FLAGS, -1, NULL);
   }
   local_1c = *(undefined4 *)(iVar3 + 0x3e4);
   local_18 = *(undefined4 *)(iVar3 + 1000);
@@ -2014,11 +2015,13 @@ void FUN_8013a408(undefined2 *param_1)
   local_28[0] = *param_1;
   uVar2 = randomGetRange(0,4);
   if (uVar2 == 0) {
-    (**(code **)(*DAT_803dd708 + 8))(param_1,0xca,local_28,0x200001,0xffffffff,0);
+    (*gPartfxInterface)->spawnObject((void *)param_1, SKEETLA_PARTICLE_SPARK_A, local_28,
+                                     SKEETLA_PARTICLE_SPAWN_FLAGS, -1, NULL);
   }
   uVar2 = randomGetRange(0,4);
   if (uVar2 == 0) {
-    (**(code **)(*DAT_803dd708 + 8))(param_1,0xcb,local_28,0x200001,0xffffffff,0);
+    (*gPartfxInterface)->spawnObject((void *)param_1, SKEETLA_PARTICLE_SPARK_B, local_28,
+                                     SKEETLA_PARTICLE_SPAWN_FLAGS, -1, NULL);
   }
   return;
 }

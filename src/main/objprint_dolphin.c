@@ -274,7 +274,7 @@ extern undefined4 DAT_803dc0e8;
 extern undefined4 DAT_803dc210;
 extern undefined4 DAT_803dd5d0;
 extern undefined4* DAT_803dd6d0;
-extern undefined4* DAT_803dd708;
+extern EffectInterface **gPartfxInterface;
 extern undefined4* DAT_803dd72c;
 extern undefined4 DAT_803dd8a0;
 extern undefined4 DAT_803dd8a4;
@@ -516,7 +516,7 @@ void FUN_8003d97c(ushort *param_1,int param_2)
     local_f8 = 0;
     local_f4 = 0;
     local_f6 = 0;
-    (**(code **)(*DAT_803dd708 + 8))(param_1, 0x7fd, &local_f8, 0x200001, 0xffffffff, 0);
+    (*gPartfxInterface)->spawnObject((void *)param_1, 0x7fd, &local_f8, 0x200001, -1, NULL);
   }
   return;
 }
@@ -5269,7 +5269,6 @@ extern f32 *Camera_GetViewMatrix(void);
 extern void PSMTXScale(f32 *m, f32 x, f32 y, f32 z);
 extern void gxTextureFn_80072dfc(u8 *obj, int *p2, int p3);
 extern void GXBegin(int prim, int fmt, u16 count);
-extern EffectInterface **gPartfxInterface;
 
 void objRenderFn_8003d980(u8 *obj, int *p2) {
     f32 wm[16];

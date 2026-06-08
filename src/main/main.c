@@ -34,7 +34,7 @@ extern undefined4 FUN_80294964();
 extern LaserTriggerInterface **DAT_803dd6e8;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd6fc;
-extern undefined4* DAT_803dd708;
+extern EffectInterface **gPartfxInterface;
 extern MapEventInterface **DAT_803dd72c;
 extern undefined4 DAT_803de940;
 extern undefined4 DAT_803de944;
@@ -111,7 +111,7 @@ void FUN_801fd398(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     uVar2 = GameBit_Get((int)*(short *)(iVar3 + 2));
     if (((uVar2 == 0) && (DAT_803de944 < 0xc9)) &&
        ((*(char *)(iVar3 + 0xb) == DAT_803de946 && (uVar2 = randomGetRange(0,2), uVar2 == 0)))) {
-      (**(code **)(*DAT_803dd708 + 8))(param_9,0x391,0,4,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)param_9, 0x391, NULL, 4, -1, NULL);
     }
   }
   else if (*(short *)(param_9 + 0x46) == 0x3c5) {
@@ -135,18 +135,18 @@ void FUN_801fd398(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     uVar2 = GameBit_Get(0x522);
     if ((((uVar2 == 0) && (DAT_803de944 < 0xc9)) && (*(char *)(iVar3 + 0xb) == DAT_803de946)) &&
        (uVar2 = randomGetRange(0,2), uVar2 == 0)) {
-      (**(code **)(*DAT_803dd708 + 8))(param_9,0x391,0,4,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)param_9, 0x391, NULL, 4, -1, NULL);
     }
   }
   else if (cVar1 == '\x01') {
     psVar4 = *(short **)(param_9 + 0xb8);
     uVar2 = GameBit_Get((int)*psVar4);
     if (uVar2 != 0) {
-      (**(code **)(*DAT_803dd708 + 8))(param_9,0x390,0,4,0xffffffff,0);
-      (**(code **)(*DAT_803dd708 + 8))(param_9,0x390,0,4,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)param_9, 0x390, NULL, 4, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)param_9, 0x390, NULL, 4, -1, NULL);
       uVar2 = randomGetRange(0,1);
       if (uVar2 != 0) {
-        (**(code **)(*DAT_803dd708 + 8))(param_9,0x391,0,4,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)param_9, 0x391, NULL, 4, -1, NULL);
       }
     }
     iVar3 = ObjHits_GetPriorityHit(param_9,(int *)0x0,(int *)0x0,(uint *)0x0);
@@ -468,7 +468,7 @@ void FUN_801fdc60(uint param_1)
        lbl_803E6E18 * *(float *)(iVar4 + 8) * (float)dVar5;
   if (((lbl_803E6E1C < *(float *)(iVar4 + 0xc)) && (*(float *)(iVar4 + 0xc) < lbl_803E6E20)) &&
      (local_50 = *(undefined4 *)(iVar4 + 8), (*(ushort *)(param_1 + 0xb0) & 0x800) != 0)) {
-    (**(code **)(*DAT_803dd708 + 8))(param_1,0x3a2,auStack_58,2,0xffffffff,0);
+    (*gPartfxInterface)->spawnObject((void *)param_1, 0x3a2, auStack_58, 2, -1, NULL);
   }
   fVar1 = *(float *)(iVar4 + 0xc);
   if (lbl_803E6E24 < fVar1) {
@@ -1604,7 +1604,6 @@ extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 extern f32 sqrtf(f32 x);
 extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int ***listOut, int p6, int p7);
-extern EffectInterface **gPartfxInterface;
 extern LaserTriggerInterface **gGameUIInterface;
 
 #pragma scheduling off
