@@ -1,4 +1,5 @@
 #include "main/dll/tricky.h"
+#include "main/mapEventTypes.h"
 #include "main/texture.h"
 
 extern undefined4 FUN_800033a8();
@@ -2123,13 +2124,13 @@ void GameUI_initAirMeter(int a, int b) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern u8 lbl_803DB424;
 #pragma scheduling off
 #pragma peephole off
 void showDeathMenu(void) {
-    int *o = (int *)*gMapEventInterface;
-    int *r = (int *)(*(int (*)(int *))(*(int *)((char *)o + 0x8c)))(o);
+    MapEventInterface *mapEvents = *gMapEventInterface;
+    int *r = (int *)(*(int (*)(MapEventInterface *))((u8 *)mapEvents + 0x8c))(mapEvents);
     pauseMenuInit();
     if (*((u8 *)r + 9) != 0) {
         pauseMenuState = 8;

@@ -14,6 +14,7 @@
  */
 
 #include "main/dll/baddie/wispBaddie.h"
+#include "main/mapEventTypes.h"
 
 extern f32   mathSinf(f32 x);
 extern void  pauseMenuDrawElement(void* tex, f32 a, f32 b, s16 x, u8 alpha, s32 mode, s32 flag);
@@ -60,7 +61,7 @@ extern void hudDrawMagicBar(int a, int b, int c);
 extern f32  hudElementOpacity;
 extern f32  timeDelta;
 extern u8   pauseMenuState;
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 
 extern u8 pauseMenuTextDrawFn[];
 extern u8 lbl_8031AE20[];
@@ -360,8 +361,8 @@ void pauseMenuDraw(int *arg1, int *arg2, int *arg3) {
             lbl_803DBA8C = lbl_803E20A0;
             switch (pauseMenuState) {
             case 8: {
-                void *obj = *(void **)gMapEventInterface;
-                int *info = (int *)(*(int (**)(void *))((u8 *)obj + 0x8c))(obj);
+                MapEventInterface *mapEvents = *gMapEventInterface;
+                int *info = (int *)(*(int (**)(MapEventInterface *))((u8 *)mapEvents + 0x8c))(mapEvents);
                 char buf[0x10];
                 *(int *)buf = lbl_803E1E04;
                 gameTextFn_80016810(0x3e0, 0xc8, 0x118);
@@ -550,14 +551,14 @@ void pauseMenuDrawStatus_801274a0(int *arg1) {
         lbl_803DD824 = (void *)lbl_8031BD90;
         fn_80128470(ty1);
     } else {
-        void *obj = *(void **)gMapEventInterface;
+        MapEventInterface *mapEvents = *gMapEventInterface;
         char buf[0x80];
         s32 hintCount;
         s32 gbCount;
         s32 h24;
         s32 mins25;
         f32 playRatio;
-        info = (int *)(*(int (**)(void *))((u8 *)obj + 0x8c))(obj);
+        info = (int *)(*(int (**)(MapEventInterface *))((u8 *)mapEvents + 0x8c))(mapEvents);
         hintCount = (u8)((u32)(u16)getNextTaskHintText() * 0x64 / 0x32);
         playRatio = SaveGame_getPlayTime() / lbl_803E2020;
         ty1 = (s32)((f32)(s16)alpha * lbl_803DD850);
