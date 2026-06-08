@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/audio/sfx_ids.h"
 #include "main/game_ui_interface.h"
 #include "main/mapEvent.h"
@@ -1500,15 +1501,15 @@ void fn_801FBAC8(int obj)
     }
     switch (*(u8 *)(state + 2)) {
     case 6:
-        if (((GameObject *)obj)->anim.localPosZ < *(f32 *)(params + 0x10)) {
+        if (((GameObject *)obj)->anim.localPosZ < ((ObjPlacement *)params)->posZ) {
             ((GameObject *)obj)->anim.localPosZ = ((GameObject *)obj)->anim.localPosZ + timeDelta;
-            if (((GameObject *)obj)->anim.localPosZ >= *(f32 *)(params + 0x10)) {
-                ((GameObject *)obj)->anim.localPosZ = *(f32 *)(params + 0x10);
+            if (((GameObject *)obj)->anim.localPosZ >= ((ObjPlacement *)params)->posZ) {
+                ((GameObject *)obj)->anim.localPosZ = ((ObjPlacement *)params)->posZ;
             }
-        } else if (((GameObject *)obj)->anim.localPosZ > *(f32 *)(params + 0x10)) {
+        } else if (((GameObject *)obj)->anim.localPosZ > ((ObjPlacement *)params)->posZ) {
             ((GameObject *)obj)->anim.localPosZ = ((GameObject *)obj)->anim.localPosZ - timeDelta;
-            if (((GameObject *)obj)->anim.localPosZ <= *(f32 *)(params + 0x10)) {
-                ((GameObject *)obj)->anim.localPosZ = *(f32 *)(params + 0x10);
+            if (((GameObject *)obj)->anim.localPosZ <= ((ObjPlacement *)params)->posZ) {
+                ((GameObject *)obj)->anim.localPosZ = ((ObjPlacement *)params)->posZ;
             }
         } else {
             if (GameBit_Get(*(s16 *)state) == 0) {
@@ -1529,17 +1530,17 @@ void fn_801FBAC8(int obj)
                 *(s16 *)(state + 4) = 0;
             }
         } else if (*(u8 *)(state + 3) == 0) {
-            if (((GameObject *)obj)->anim.localPosZ == *(f32 *)(params + 0x10) - lbl_803E6108) {
+            if (((GameObject *)obj)->anim.localPosZ == ((ObjPlacement *)params)->posZ - lbl_803E6108) {
                 *(u8 *)(state + 2) = 2;
             }
-            if (((GameObject *)obj)->anim.localPosZ == lbl_803E6108 + *(f32 *)(params + 0x10)) {
+            if (((GameObject *)obj)->anim.localPosZ == lbl_803E6108 + ((ObjPlacement *)params)->posZ) {
                 *(u8 *)(state + 2) = 3;
             }
         } else {
-            if (((GameObject *)obj)->anim.localPosZ == *(f32 *)(params + 0x10) - lbl_803E6108) {
+            if (((GameObject *)obj)->anim.localPosZ == ((ObjPlacement *)params)->posZ - lbl_803E6108) {
                 *(u8 *)(state + 2) = 4;
             }
-            if (((GameObject *)obj)->anim.localPosZ == lbl_803E6108 + *(f32 *)(params + 0x10)) {
+            if (((GameObject *)obj)->anim.localPosZ == lbl_803E6108 + ((ObjPlacement *)params)->posZ) {
                 *(u8 *)(state + 2) = 5;
             }
         }
@@ -1547,10 +1548,10 @@ void fn_801FBAC8(int obj)
     }
     case 2: {
         f32 thr = lbl_803E6108;
-        if (((GameObject *)obj)->anim.localPosZ < thr + *(f32 *)(params + 0x10)) {
+        if (((GameObject *)obj)->anim.localPosZ < thr + ((ObjPlacement *)params)->posZ) {
             ((GameObject *)obj)->anim.localPosZ = ((GameObject *)obj)->anim.localPosZ + timeDelta;
-            if (((GameObject *)obj)->anim.localPosZ >= thr + *(f32 *)(params + 0x10)) {
-                ((GameObject *)obj)->anim.localPosZ = thr + *(f32 *)(params + 0x10);
+            if (((GameObject *)obj)->anim.localPosZ >= thr + ((ObjPlacement *)params)->posZ) {
+                ((GameObject *)obj)->anim.localPosZ = thr + ((ObjPlacement *)params)->posZ;
                 *(u8 *)(state + 2) = 1;
                 *(s16 *)(state + 4) = 20;
             }
@@ -1559,10 +1560,10 @@ void fn_801FBAC8(int obj)
     }
     case 3: {
         f32 thr = lbl_803E6108;
-        if (((GameObject *)obj)->anim.localPosZ > *(f32 *)(params + 0x10) - thr) {
+        if (((GameObject *)obj)->anim.localPosZ > ((ObjPlacement *)params)->posZ - thr) {
             ((GameObject *)obj)->anim.localPosZ = ((GameObject *)obj)->anim.localPosZ - timeDelta;
-            if (((GameObject *)obj)->anim.localPosZ <= *(f32 *)(params + 0x10) - thr) {
-                ((GameObject *)obj)->anim.localPosZ = *(f32 *)(params + 0x10) - thr;
+            if (((GameObject *)obj)->anim.localPosZ <= ((ObjPlacement *)params)->posZ - thr) {
+                ((GameObject *)obj)->anim.localPosZ = ((ObjPlacement *)params)->posZ - thr;
                 *(u8 *)(state + 2) = 1;
                 *(s16 *)(state + 4) = 20;
             }
@@ -1589,8 +1590,8 @@ void vfpplatform_update(int obj)
     } else {
         int xi = (int)((GameObject *)obj)->anim.localPosX;
         int yi = (int)((GameObject *)obj)->anim.localPosZ;
-        int txi = (int)*(f32 *)(params + 8);
-        int tyi = (int)*(f32 *)(params + 0x10);
+        int txi = (int)((ObjPlacement *)params)->posX;
+        int tyi = (int)((ObjPlacement *)params)->posZ;
         if (s3 != 99) {
             if (((GameObject *)obj)->anim.seqId == 960) {
                 fn_801FBAC8(obj);

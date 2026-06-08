@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/anim_internal.h"
 #include "main/effect_interfaces.h"
@@ -1728,9 +1729,9 @@ void vfplavastar_update(int obj) {
     def = *(int *)&((GameObject *)obj)->anim.placementData;
     extra = ((GameObject *)obj)->extra;
     ((GameObject *)obj)->anim.localPosY += timeDelta * extra[0];
-    if (((GameObject *)obj)->anim.localPosY > lbl_803E61B0 + *(f32 *)(def + 0xc)) {
+    if (((GameObject *)obj)->anim.localPosY > lbl_803E61B0 + ((ObjPlacement *)def)->posY) {
         extra[0] = lbl_803E61B4 * (f32)(int)randomGetRange(5, 0x14);
-        ((GameObject *)obj)->anim.localPosY = *(f32 *)(def + 0xc);
+        ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)def)->posY;
     }
     *(s16 *)((u8 *)extra + 0xe) += (s16)(int)timeDelta;
     if (lbl_803DDCD8 != 0 && *(s16 *)((u8 *)extra + 0xe) > 0x27) {
@@ -1754,7 +1755,7 @@ void vfplavastar_init(int obj, int def) {
     *(s16 *)((u8 *)extra + 0xc) = *(s16 *)(def + 0x1e);
     extra[0] = lbl_803E61B4 * (f32)(int)randomGetRange(10, 0x19);
     *(s16 *)((u8 *)extra + 0xe) = 0x14;
-    ((GameObject *)obj)->anim.localPosY = *(f32 *)(def + 0xc) + (f32)(int)*(s16 *)(def + 0x1a);
+    ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)def)->posY + (f32)(int)*(s16 *)(def + 0x1a);
     ((GameObject *)obj)->objectFlags |= 0x2000;
     extra[1] = (f32)(int)randomGetRange(0x1e, 0x3c);
     extra[2] = (f32)(int)randomGetRange(100, 200);

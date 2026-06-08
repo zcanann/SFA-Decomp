@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/objlib.h"
@@ -198,7 +199,7 @@ void dfpfloorbar_init(int obj, int params)
 
     if (GameBit_Get((int)state->completionGameBit) != 0) {
         state->active = 1;
-        ((GameObject *)obj)->anim.localPosY = *(f32 *)(params + 0xc) - lbl_803E640C;
+        ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)params)->posY - lbl_803E640C;
     }
 }
 #pragma peephole reset

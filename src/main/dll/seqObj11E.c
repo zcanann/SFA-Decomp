@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/curve_walker.h"
 #include "main/dll/rom_curve_interface.h"
@@ -329,7 +330,7 @@ void fn_80152514(int *obj, u8 *state)
             ((BaddieState *)state)->unk33A = 0;
         }
     } else {
-        if (((GameObject *)obj)->anim.localPosY - *(f32 *)((char *)def + 0xc) < lbl_803E2830) {
+        if (((GameObject *)obj)->anim.localPosY - ((ObjPlacement *)def)->posY < lbl_803E2830) {
             if (Sfx_IsPlayingFromObject(obj, SFXar_laser216) == 0) {
                 Sfx_PlayFromObject(obj, SFXar_laser216);
             }

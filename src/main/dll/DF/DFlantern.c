@@ -1,4 +1,5 @@
 #include "main/mapEvent.h"
+#include "main/obj_placement.h"
 #include "main/game_object.h"
 #include "main/dll/DF/DFlantern.h"
 #include "main/dll/DF/dll_198.h"
@@ -230,7 +231,7 @@ void fn_801C2914(int obj)
   player = Obj_GetPlayerObject();
   if ((((GameObject *)obj)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0) {
     *(s16 *)obj = 0;
-    ((GameObject *)obj)->anim.localPosY = *(f32 *)(def + 0xc);
+    ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)def)->posY;
     return;
   }
 
@@ -240,7 +241,7 @@ void fn_801C2914(int obj)
 
   ((GameObject *)obj)->anim.localPosY =
       lbl_803E4E5C +
-      (*(f32 *)(def + 0xc) +
+      (((ObjPlacement *)def)->posY +
        mathSinf((lbl_803E4E60 * (f32)state->orbitA) / lbl_803E4E64));
 
   trigA = mathSinf((lbl_803E4E60 * (f32)state->orbitB) / lbl_803E4E64);

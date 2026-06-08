@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/obj_placement.h"
 #include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
@@ -1861,7 +1862,7 @@ void scarab_init(int *obj, u8 *def) {
     state->mode = *(s16 *)((char *)def + 0x1a);
     state->yawSpeed = (s16)randomGetRange(0x3e8, 0xfa0);
     state->riseLimit = (s16)randomGetRange(0x32, 0x64);
-    state->baseY = *(f32 *)((char *)def + 0xc);
+    state->baseY = ((ObjPlacement *)def)->posY;
     model = (int *)Obj_GetActiveModel(obj);
     switch (((GameObject *)obj)->anim.seqId) {
     case 0x3d3:
