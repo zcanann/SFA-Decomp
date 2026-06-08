@@ -1,4 +1,5 @@
 #include "main/game_object.h"
+#include "main/camera_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/mapEvent.h"
 #include "main/model.h"
@@ -6005,7 +6006,6 @@ void objRenderShadow2(int *obj, int *obj2, u8 *m, int p4) {
 }
 
 extern int *Obj_GetPlayerObject(void);
-extern void *gCameraInterface;
 extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
 extern f32 lbl_803DEA38;
 extern u16 lbl_803DEA4A[3];
@@ -6073,7 +6073,7 @@ void modelDoRenderInstrs(int *obj, int *obj2, u8 *m, u8 mode) {
     lbl_803DCC4C = 0;
     if (((ObjAnimComponent *)obj)->modelInstance->flags & 0x400) {
         int *player = Obj_GetPlayerObject();
-        int *cam = ((int *(*)(void *))((void **)*(void **)gCameraInterface)[0xc / 4])(*(void **)gCameraInterface);
+        int *cam = (int *)(*gCameraInterface)->getCamera();
         if (player != NULL && !(*(u16 *)((char *)player + 0xb0) & 0x1000) && *(int **)((char *)cam + 0xa4) == player) {
             f32 d = lbl_803DEA38 + (*(f32 *)((char *)obj + 0xa8) * *(f32 *)((char *)obj + 8) + *(f32 *)((char *)obj + 0xa4));
             f32 dist = Camera_DistanceToCurrentViewPosition(*(f32 *)((char *)player + 0x18), *(f32 *)((char *)player + 0x1c), *(f32 *)((char *)player + 0x20));
