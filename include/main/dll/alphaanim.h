@@ -10,6 +10,19 @@ extern ObjectDescriptor gSeqObjectObjDescriptor;
 extern ObjectDescriptor gSeqObj2ObjDescriptor;
 extern ObjectDescriptor gIMMultiSeqObjDescriptor;
 
+typedef struct DoorLockPlacement {
+    ObjPlacement base;
+    u8 rotXByte;
+    u8 rotYByte;
+    u8 rotZByte;
+    u8 flags;
+    s16 lockGameBit;
+    u8 pad1E[0x21 - 0x1E];
+    u8 modelBankIndex;
+    u8 pad22[0x26 - 0x22];
+    s16 modeFlags;
+} DoorLockPlacement;
+
 typedef struct SeqObjectPlacement {
     ObjPlacement base;
     s16 openGameBit;
@@ -38,7 +51,7 @@ typedef struct IMMultiSeqPlacement {
 } IMMultiSeqPlacement;
 
 int Lock_DoorLock_SeqFn(int obj, int unused, int seq);
-void doorlock_init(short *obj,int config);
+void doorlock_init(short *obj, DoorLockPlacement *config);
 void FUN_8017c230(int param_1);
 void FUN_8017c254(int param_1,int p1,int p2,int p3,int p4,s8 visible);
 void FUN_8017c29c(int param_1);

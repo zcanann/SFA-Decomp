@@ -22,6 +22,10 @@ extern undefined4 FUN_800723a0();
 
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 
+typedef struct DoorLockState {
+    u8 unlocked;
+} DoorLockState;
+
 typedef struct SeqObjectState {
     u8 flags;
     s8 triggerBitState;
@@ -37,6 +41,15 @@ typedef struct IMMultiSeqState {
     u8 flags;
 } IMMultiSeqState;
 
+STATIC_ASSERT(sizeof(DoorLockPlacement) == 0x28);
+STATIC_ASSERT(offsetof(DoorLockPlacement, rotXByte) == 0x18);
+STATIC_ASSERT(offsetof(DoorLockPlacement, rotYByte) == 0x19);
+STATIC_ASSERT(offsetof(DoorLockPlacement, rotZByte) == 0x1A);
+STATIC_ASSERT(offsetof(DoorLockPlacement, flags) == 0x1B);
+STATIC_ASSERT(offsetof(DoorLockPlacement, lockGameBit) == 0x1C);
+STATIC_ASSERT(offsetof(DoorLockPlacement, modelBankIndex) == 0x21);
+STATIC_ASSERT(offsetof(DoorLockPlacement, modeFlags) == 0x26);
+STATIC_ASSERT(sizeof(DoorLockState) == 0x1);
 STATIC_ASSERT(sizeof(SeqObjectPlacement) == 0x28);
 STATIC_ASSERT(offsetof(SeqObjectPlacement, openGameBit) == 0x18);
 STATIC_ASSERT(offsetof(SeqObjectPlacement, triggerGameBit) == 0x1A);
@@ -85,34 +98,34 @@ STATIC_ASSERT(sizeof(IMMultiSeqState) == 0x2);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void doorlock_init(short *obj,int config)
+void doorlock_init(short *obj, DoorLockPlacement *config)
 {
   ObjAnimComponent *objAnim;
-  byte *state;
+  DoorLockState *state;
   
   objAnim = (ObjAnimComponent *)obj;
-  *obj = (short)((byte)*(byte *)(config + 0x18) << 8);
-  obj[1] = (short)((byte)*(byte *)(config + 0x19) << 8);
-  obj[2] = (short)((byte)*(byte *)(config + 0x1a) << 8);
+  *obj = (short)((byte)config->rotXByte << 8);
+  obj[1] = (short)((byte)config->rotYByte << 8);
+  obj[2] = (short)((byte)config->rotZByte << 8);
   ((GameObject *)obj)->animEventCallback = (void *)Lock_DoorLock_SeqFn;
-  objAnim->bankIndex = *(u8 *)(config + 0x21);
+  objAnim->bankIndex = config->modelBankIndex;
   if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
     objAnim->bankIndex = 0;
   }
-  state = *(byte **)(obj + 0x5c);
-  *state = (byte)GameBit_Get((int)*(short *)(config + 0x1c));
+  state = ((GameObject *)obj)->extra;
+  state->unlocked = (byte)GameBit_Get(config->lockGameBit);
   ObjGroup_AddObject(obj,0xf);
-  if ((*(byte *)(config + 0x1b) & 1) != 0) {
-    if (*state != 0) {
-      *(undefined *)(obj + 0x1b) = 0;
+  if ((config->flags & 1) != 0) {
+    if (state->unlocked != 0) {
+      objAnim->alpha = 0;
     }
   }
-  else if ((*(short *)(config + 0x26) & 1) != 0) {
-    if (*state != 0) {
-      *(undefined4 *)(obj + 0x7c) = 0;
+  else if ((config->modeFlags & 1) != 0) {
+    if (state->unlocked != 0) {
+      ((GameObject *)obj)->unkF8 = 0;
     }
     else {
-      *(undefined4 *)(obj + 0x7c) = 1;
+      ((GameObject *)obj)->unkF8 = 1;
     }
   }
   return;
