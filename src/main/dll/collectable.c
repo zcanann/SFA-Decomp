@@ -1366,7 +1366,8 @@ void Tricky_update(int obj)
       ((TrickyState *)state)->homePosX = ((GameObject *)obj)->anim.worldPosX;
       ((TrickyState *)state)->homePosY = ((GameObject *)obj)->anim.worldPosY;
       ((TrickyState *)state)->homePosZ = ((GameObject *)obj)->anim.worldPosZ;
-      (*gPathControlInterface)->attachObject((void *)obj, (void *)(state + 0xf8));
+      (*gPathControlInterface)->attachObject((void *)obj,
+                                             &((TrickyState *)state)->pathControlFlags);
       if (((GameObject *)obj)->anim.currentMove == 8 || ((GameObject *)obj)->anim.currentMove == 7) {
         ((TrickyState *)state)->unk2AC = lbl_803E2414;
         ((TrickyState *)state)->unk2B0 = lbl_803E2544;
@@ -1385,7 +1386,8 @@ void Tricky_update(int obj)
     if ((((TrickyState *)state)->unk54 & 0x10) != 0) {
       ((TrickyState *)state)->unk54 = ((TrickyState *)state)->unk54 & ~0x10LL;
       ((TrickyState *)state)->unk374 = 2;
-      (*gPathControlInterface)->attachObject((void *)obj, (void *)(state + 0xf8));
+      (*gPathControlInterface)->attachObject((void *)obj,
+                                             &((TrickyState *)state)->pathControlFlags);
       ((GameObject *)obj)->anim.localPosX = ((TrickyState *)state)->homePosX;
       ((GameObject *)obj)->anim.localPosY = ((TrickyState *)state)->homePosY;
       ((GameObject *)obj)->anim.localPosZ = ((TrickyState *)state)->homePosZ;
@@ -1910,7 +1912,7 @@ void Tricky_init(int obj)
   ((TrickyState *)state)->modelVariant = modelVariant;
   model = Obj_GetActiveModel(obj);
   *(u8 *)(*(int *)(model + 0x34) + 8) = ((TrickyState *)state)->modelVariant;
-  pathState = state + 0xf8;
+  pathState = (int)&((TrickyState *)state)->pathControlFlags;
   (*gPathControlInterface)->init((void *)pathState, 1, 0xa7, 1);
   ((void (*)(void *, int, void *, void *, int))(*gPathControlInterface)->slot08)(
       (void *)pathState, 1, lbl_8031D300, &lbl_803DBC48, 2);
