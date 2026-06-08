@@ -1117,7 +1117,7 @@ int fn_8010A47C(int curve, int *count, int tag)
         if ((*(int *)(curve + i * 4 + 0x1c) > -1) &&
             (((int)*(char *)(curve + 0x1b) & (1 << i)) != 0)) {
           linked = (int)(*gRomCurveInterface)->getById(*(int *)(curve + i * 4 + 0x1c));
-          if ((linked != 0) &&
+          if (((u32)linked != 0) &&
               ((*(u8 *)(linked + 0x31) == tag || (*(u8 *)(linked + 0x32) == tag)) ||
                (*(u8 *)(linked + 0x33) == tag))) {
             curve = linked;

@@ -2150,7 +2150,7 @@ void player_rotateTowardEnemy(int *obj, int *ctx, int spd) {
     int diff;
     enemy = (int *)ctx[0x2d0 / 4];
     if (enemy != 0) {
-        if (enemy[0x30 / 4] == obj[0x30 / 4]) {
+        if ((u32)enemy[0x30 / 4] == (u32)obj[0x30 / 4]) {
             dx = *(f32 *)((char *)enemy + 0xc) - ((GameObject *)obj)->anim.localPosX;
             dz = *(f32 *)((char *)enemy + 0x14) - ((GameObject *)obj)->anim.localPosZ;
         } else {
