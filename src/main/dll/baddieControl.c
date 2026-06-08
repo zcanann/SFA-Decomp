@@ -3646,7 +3646,7 @@ void CameraModePerv_update(u8 *obj) {
     u8 *state = *(u8 **)&((GameObject *)obj)->anim.targetObj;
 
     ((f32 *)lbl_803DD5C8)[0] -= lbl_803E1B78 * timeDelta;
-    if (((f32 *)lbl_803DD5C8)[0] < lbl_803E1B7C) {
+    if (((f32 *)lbl_803DD5C8)[0] < *(f32 *)&lbl_803E1B7C) {
         ((f32 *)lbl_803DD5C8)[0] = lbl_803E1B7C;
     }
     ((GameObject *)obj)->anim.localPosX =
