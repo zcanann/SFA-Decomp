@@ -4,6 +4,7 @@
 #include "global.h"
 #include "ghidra_import.h"
 #include "main/dfppowersl.h"
+#include "main/obj_placement.h"
 #include "main/object_descriptor.h"
 
 #define DFPLIGHTNI_OBJECT_DEF_ID 0x0345
@@ -32,7 +33,7 @@
 #define DFPPOWERSL_SPAWN_COUNT 0x14
 
 typedef struct DfpLightniMapData {
-  u8 pad00[0x18];
+  ObjPlacement base;
   s8 angleIndex;
   s8 delayTicks;
   s16 radiusX;

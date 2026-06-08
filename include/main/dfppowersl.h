@@ -5,6 +5,7 @@
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
 #include "main/objseq.h"
+#include "main/obj_placement.h"
 #include "main/object_descriptor.h"
 
 #define DFPPOWERSL_OBJECT_DEF_ID 0x0344
@@ -29,7 +30,7 @@ typedef struct DfpPowerSlObject DfpPowerSlObject;
 typedef int (*DfpPowerSlHitCallback)(DfpPowerSlObject *obj);
 
 typedef struct DfpPowerSlMapData {
-  u8 pad00[0x18];
+  ObjPlacement base;
   s8 mode;
   u8 pad19;
   s16 activateObjectId;
@@ -54,6 +55,7 @@ STATIC_ASSERT(offsetof(DfpPowerSlMapData, mode) == 0x18);
 STATIC_ASSERT(offsetof(DfpPowerSlMapData, activateObjectId) == 0x1A);
 STATIC_ASSERT(offsetof(DfpPowerSlMapData, spawnObjectId) == 0x1C);
 STATIC_ASSERT(offsetof(DfpPowerSlMapData, eventId) == 0x20);
+STATIC_ASSERT(sizeof(DfpPowerSlMapData) == 0x24);
 
 STATIC_ASSERT(offsetof(DfpPowerSlObject, modeWord) == 0x00);
 STATIC_ASSERT(offsetof(DfpPowerSlObject, state) == 0xB8);

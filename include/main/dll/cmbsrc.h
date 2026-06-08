@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "main/object_descriptor.h"
+#include "main/obj_placement.h"
 #include "main/objanim_internal.h"
 
 #define CMBSRC_DLL_ID 0x02B1
@@ -55,7 +56,7 @@
 #define CMBSRC_DEFAULT_INACTIVE_FRAMES 0x0258
 
 typedef struct CmbSrcMapData {
-  u8 pad00[0x18];
+  ObjPlacement base;
   s8 rotZ;
   s8 rotY;
   s8 rotX;
