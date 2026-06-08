@@ -1,6 +1,7 @@
 #include "main/mapEvent.h"
 #include "main/dll/SP/SPshopkeeper.h"
 #include "main/objseq.h"
+#include "main/screen_transition.h"
 
 #define SHOPKEEPER_THORNTAIL_OBJECT_ID 0x442ff
 #define SHOPKEEPER_OBJFLAG_REFRESH_MAP 0x2
@@ -15,9 +16,6 @@ typedef struct ShopkeeperObject {
     u16 flagsB0;
 } ShopkeeperObject;
 
-typedef void (*ScreenTransitionStartFn)(int transitionId, int value);
-typedef int (*ScreenTransitionFinishedFn)(void);
-
 extern u32 GameBit_Get(u32 id);
 extern void GameBit_Set(u32 id, u32 value);
 extern int Obj_GetPlayerObject(void);
@@ -29,15 +27,15 @@ extern void buttonDisable(int controller, int flags);
 extern int playerHasSpell(int obj, int spell);
 
 extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern int *gScreenTransitionInterface;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern MapEventInterface **gMapEventInterface;
 
 #define OBJECT_TRIGGER_REFRESH(triggerId, obj, arg) \
     (*gObjectTriggerInterface)->runSequence((triggerId), (void *)(obj), (arg))
 #define SCREEN_TRANSITION_START(transitionId, value) \
-    ((ScreenTransitionStartFn)(*(u32 *)(*gScreenTransitionInterface + 0x8)))((transitionId), (value))
+    (*gScreenTransitionInterface)->start((transitionId), (value))
 #define SCREEN_TRANSITION_FINISHED() \
-    ((ScreenTransitionFinishedFn)(*(u32 *)(*gScreenTransitionInterface + 0x14)))()
+    (*gScreenTransitionInterface)->isFinished()
 #define MAP_EVENT_TRIGGER(mapId, eventId, value, arg) \
     (*gMapEventInterface)->triggerEvent((mapId), (eventId), (value), (arg))
 #define MAP_EVENT_GET_ANIM(mapId, eventId) \

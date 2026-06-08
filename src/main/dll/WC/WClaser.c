@@ -6,6 +6,7 @@
 #include "main/objanim.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
+#include "main/screen_transition.h"
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
@@ -20,7 +21,7 @@ extern void textureFree(void *resource);
 
 extern MapEventInterface **gMapEventInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern int *gScreenTransitionInterface;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern ModgfxInterface **gModgfxInterface;
 
 extern f32 timeDelta;
@@ -47,7 +48,7 @@ extern f32 lbl_803E5D08;
 #define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) \
     (*gObjectTriggerInterface)->runSequence((eventId), (obj), (arg))
 #define SCREEN_TRANSITION_START(kind, value) \
-    ((void (*)(int, int))(*(u32 *)((u8 *)*gScreenTransitionInterface + 0xc)))((kind), (value))
+    (*gScreenTransitionInterface)->step((kind), (value))
 
 typedef struct Dll1FBSetup {
     u8 pad00[0x18];

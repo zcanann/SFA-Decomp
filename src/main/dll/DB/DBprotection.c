@@ -5,6 +5,7 @@
 #include "main/mapEventTypes.h"
 #include "main/dll/DB/sbgalleon_state.h"
 #include "main/objseq.h"
+#include "main/screen_transition.h"
 
 #define DBPROTECTION_GAMEBIT_CYCLE_A_PENDING 0xa3c
 #define DBPROTECTION_GAMEBIT_CYCLE_B_PENDING 0xa3d
@@ -114,7 +115,7 @@ extern f32 lbl_803E6450;
 extern s8 lbl_803DDC2C;
 extern CloudActionInterface **gCloudActionInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern int *gScreenTransitionInterface;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern f32 lbl_803E56CC;
 extern f32 lbl_803E56E4;
 extern f32 lbl_803E56E8;
@@ -127,11 +128,11 @@ extern f32 lbl_803E57DC;
 extern f32 lbl_803E57E0;
 
 #define SCREEN_TRANSITION_FADE(kind, value) \
-  ((void (*)(int, int))(*(u32 *)((u8 *)*gScreenTransitionInterface + 0x8)))((kind), (value))
+  (*gScreenTransitionInterface)->start((kind), (value))
 #define SCREEN_TRANSITION_START(kind, value) \
-  ((void (*)(int, int))(*(u32 *)((u8 *)*gScreenTransitionInterface + 0xc)))((kind), (value))
+  (*gScreenTransitionInterface)->step((kind), (value))
 #define SCREEN_TRANSITION_READY() \
-  ((int (*)(void))(*(u32 *)((u8 *)*gScreenTransitionInterface + 0x14)))()
+  (*gScreenTransitionInterface)->isFinished()
 #define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) \
   (*gObjectTriggerInterface)->runSequence((eventId), (obj), (arg))
 #define CLOUD_ACTION_SET(a, b) \
@@ -231,7 +232,7 @@ extern f32 lbl_803E57B8;
 #define DBPROT_MAP_EVENT(layer, a, b) \
   (*gMapEventInterface)->setAnimEvent((layer), (a), (b))
 #define DBPROT_SCREEN_FADE(kind, value) \
-  ((void (*)(int, int))(*(u32 *)((u8 *)*gScreenTransitionInterface + 0x8)))((kind), (value))
+  (*gScreenTransitionInterface)->start((kind), (value))
 #define DBPROT_CLOUD_SET_A(flag) \
   (*gCloudActionInterface)->func10Nop((flag))
 #define DBPROT_CLOUD_SET_B(flag) \

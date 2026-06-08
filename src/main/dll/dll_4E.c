@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/dll_4E.h"
+#include "main/screen_transition.h"
 
 #define OPTIONS_MENU_ACTION_CLOSE 0
 #define OPTIONS_MENU_ACTION_SELECT 1
@@ -49,7 +50,7 @@ extern undefined4 DAT_803de384;
 extern undefined4 DAT_803de385;
 extern undefined4 DAT_803de388;
 
-extern int* gScreenTransitionInterface;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern int* gTitleMenuControlInterface;
 extern int* gTitleMenuItemInterface;
 extern int* lbl_803A87D0[8];
@@ -109,8 +110,8 @@ void optionsMenu_applyAudioSetting(int p1,int p2)
     }
     if (p1 == OPTIONS_MENU_ACTION_CLOSE) {
         Sfx_PlayFromObject(0, SFXsp_snrot1_c);
-        (*(void(**)(int, int))(*gScreenTransitionInterface + 0x8))(OPTIONS_MENU_TRANSITION_FRAMES,
-                                                                    OPTIONS_MENU_TRANSITION_MODE);
+        (*gScreenTransitionInterface)->start(OPTIONS_MENU_TRANSITION_FRAMES,
+                                             OPTIONS_MENU_TRANSITION_MODE);
         lbl_803DD704 = OPTIONS_MENU_NEXT_STATE;
         lbl_803DD705 = 1;
     } else if ((p1 == OPTIONS_MENU_ACTION_SELECT) && (p2 == AUDIO_OPTION_RESET_DEFAULTS)) {
@@ -198,8 +199,8 @@ void optionsMenu_applyGameplaySetting(int p1, int p2)
     }
     if (p1 == OPTIONS_MENU_ACTION_CLOSE) {
         Sfx_PlayFromObject(0, SFXsp_snrot1_c);
-        (*(void(**)(int, int))(*gScreenTransitionInterface + 0x8))(OPTIONS_MENU_TRANSITION_FRAMES,
-                                                                    OPTIONS_MENU_TRANSITION_MODE);
+        (*gScreenTransitionInterface)->start(OPTIONS_MENU_TRANSITION_FRAMES,
+                                             OPTIONS_MENU_TRANSITION_MODE);
         lbl_803DD704 = OPTIONS_MENU_NEXT_STATE;
         lbl_803DD705 = 1;
     }
@@ -225,8 +226,8 @@ int optionsMenu_openSelectedSubmenu(int p1, int p2)
         }
     } else if (p1 == OPTIONS_MENU_ACTION_CLOSE) {
         Sfx_PlayFromObject(0, SFXsp_snrot1_c);
-        (*(void(**)(int, int))(*gScreenTransitionInterface + 0x8))(OPTIONS_MENU_TRANSITION_FRAMES,
-                                                                    OPTIONS_MENU_TRANSITION_MODE);
+        (*gScreenTransitionInterface)->start(OPTIONS_MENU_TRANSITION_FRAMES,
+                                             OPTIONS_MENU_TRANSITION_MODE);
         lbl_803DD704 = OPTIONS_MENU_NEXT_STATE;
         lbl_803DD705 = 1;
     }

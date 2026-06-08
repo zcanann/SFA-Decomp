@@ -5,6 +5,7 @@
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
+#include "main/screen_transition.h"
 
 extern undefined4 Sfx_SetObjectSfxVolume();
 extern undefined4 Sfx_PlayFromObject();
@@ -76,7 +77,7 @@ extern int ObjSeq_takeXrotChanged(int index);
 extern void hudFn_8011f38c(int n);
 extern int *gCameraInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern int *gScreenTransitionInterface;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern int  lbl_803DDC10;
 extern int  lbl_803DC070;
 extern u8   framesThisStep;
@@ -266,7 +267,7 @@ int platform1_control(int obj, int p2, u8 *data)
                 if (st->loopSfxHandle > 0) {
                     ObjSeq_takeXrotChanged(st->loopSfxHandle);
                 }
-                (*(void (**)(int, int))((char *)(*gScreenTransitionInterface) + 0xc))(0x14, 1);
+                (*gScreenTransitionInterface)->step(0x14, 1);
                 lbl_803DDC10 = 2;
                 ret = 4;
                 goto done;
@@ -289,7 +290,7 @@ int platform1_control(int obj, int p2, u8 *data)
                 if (st->loopSfxHandle > 0) {
                     ObjSeq_takeXrotChanged(st->loopSfxHandle);
                 }
-                (*(void (**)(int, int))((char *)(*gScreenTransitionInterface) + 0xc))(0x14, 1);
+                (*gScreenTransitionInterface)->step(0x14, 1);
                 lbl_803DDC10 = 2;
                 ret = 4;
                 goto done;
