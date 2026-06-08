@@ -1503,7 +1503,7 @@ extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern CloudActionInterface **gCloudActionInterface;
 extern int *gGameUIInterface;
 extern int *gPlayerShadowInterface;
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern void OSReport(const char *fmt, ...);
 extern int Obj_GetPlayerObject(void);
 extern void fn_80295918(f32 a, int obj, int b);
@@ -1776,7 +1776,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     GameBit_Set(bit, GameBit_Get(bit) ^ (1 << (((u32)p[2] << 8) >> 13)));
                     break;
                 case 0x13:
-                    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(
+                    (*gMapEventInterface)->setAnimEvent(
                         (int)*(s8 *)(obj + 0xac), (u16)((p[2] << 8) | p[3]), 1);
                     break;
                 case 0x27:
@@ -1808,13 +1808,13 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     break;
                 case 0x14:
-                    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(
+                    (*gMapEventInterface)->setAnimEvent(
                         (int)*(s8 *)(obj + 0xac), (u16)((p[2] << 8) | p[3]), 0);
                     break;
                 case 0x22:
                     id = (u16)((p[2] << 8) | p[3]);
-                    c = ((MapEventInterface *)*gMapEventInterface)->getAnimEvent((int)*(s8 *)(obj + 0xac), id);
-                    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent((int)*(s8 *)(obj + 0xac), id, c ^ 1);
+                    c = (*gMapEventInterface)->getAnimEvent((int)*(s8 *)(obj + 0xac), id);
+                    (*gMapEventInterface)->setAnimEvent((int)*(s8 *)(obj + 0xac), id, c ^ 1);
                     break;
                 case 0x15:
                     tbl = (int *)getTablesBinEntry((u16)((p[2] << 8) | p[3]) + 2);
@@ -1837,17 +1837,17 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     break;
                 case 0x18:
-                    ((MapEventInterface *)*gMapEventInterface)->setMode(
+                    (*gMapEventInterface)->setMode(
                         (int)*(s8 *)(obj + 0xac), (u16)((p[2] << 8) | p[3]));
                     break;
                 case 0x1a:
-                    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(p[3], p[2], 1);
+                    (*gMapEventInterface)->setAnimEvent(p[3], p[2], 1);
                     break;
                 case 0x1b:
-                    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(p[3], p[2], 0);
+                    (*gMapEventInterface)->setAnimEvent(p[3], p[2], 0);
                     break;
                 case 0x1e:
-                    ((MapEventInterface *)*gMapEventInterface)->setMode(p[3], p[2]);
+                    (*gMapEventInterface)->setMode(p[3], p[2]);
                     break;
                 case 0x11:
                     GameBit_Set(0x4e3, (p[2] << 8) | p[3]);
@@ -1866,11 +1866,12 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                         ang = -ang;
                     }
                     if (ang > 0x4000) {
-                        ((MapEventInterface *)*gMapEventInterface)
-                            ->triggerEvent(obj + 0xc, (int)(s16)(*(s16 *)obj + 0x8000), p[3], getCurMapLayer());
+                        (*gMapEventInterface)->triggerEvent(obj + 0xc,
+                                                            (int)(s16)(*(s16 *)obj + 0x8000),
+                                                            p[3], getCurMapLayer());
                     } else {
-                        ((MapEventInterface *)*gMapEventInterface)
-                            ->triggerEvent(obj + 0xc, (int)*(s16 *)obj, p[3], getCurMapLayer());
+                        (*gMapEventInterface)->triggerEvent(obj + 0xc, (int)*(s16 *)obj,
+                                                            p[3], getCurMapLayer());
                     }
                     break;
                 case 0x20:
@@ -1883,17 +1884,16 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                 case 0x23:
                     switch (*(s8 *)(p + 2)) {
                     case 0:
-                        (*(code *)(*gMapEventInterface + 0x24))(obj + 0xc, (int)*(s16 *)obj, getCurMapLayer(), 0);
+                        (*(code *)((u8 *)*gMapEventInterface + 0x24))(obj + 0xc, (int)*(s16 *)obj, getCurMapLayer(), 0);
                         break;
                     case 1:
-                        (*(code *)(*gMapEventInterface + 0x2c))();
+                        (*(code *)((u8 *)*gMapEventInterface + 0x2c))();
                         break;
                     case 2:
-                        ((MapEventInterface *)*gMapEventInterface)
-                            ->finishCurrentEvent((MapEventInterface *)*gMapEventInterface);
+                        (*gMapEventInterface)->finishCurrentEvent(*gMapEventInterface);
                         break;
                     case 3:
-                        (*(code *)(*gMapEventInterface + 0x24))(obj + 0xc, (int)*(s16 *)obj, getCurMapLayer(), 1);
+                        (*(code *)((u8 *)*gMapEventInterface + 0x24))(obj + 0xc, (int)*(s16 *)obj, getCurMapLayer(), 1);
                         break;
                     }
                     break;
