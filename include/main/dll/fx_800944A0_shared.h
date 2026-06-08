@@ -353,7 +353,7 @@ void objfx_spawnLightPulse(void *obj, u8 type, int a3, u8 mode, void *light, f32
 void objfx_spawnFlaggedTrailBurst(void *obj, u8 mode, int p5, int p6, int p7, f32 fval);
 void projectileParticleFxFn_80099660(void *obj, int mode);
 void itemPickupDoParticleFx(void *obj, int mode, u8 count, f32 fval);
-void objParticleFn_80099d84(void *obj, f32 scale, u8 type, f32 fextra, void *light);
+void objParticleFn_80099d84(void *obj, f32 scale, int type, f32 fextra, void *light);
 void fn_8009A8C8(u8 *obj, f32 thresh);
 void DIMexplosionFn_8009a96c(u8 *src, f32 vx, f32 vy, f32 vz, f32 fval, u8 a, u8 flag4,
                              u8 flag8, u8 flag10, u8 doShake, u8 flag20, u8 f1cinit);
