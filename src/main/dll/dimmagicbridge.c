@@ -17,7 +17,7 @@ extern f32 Vec_distance(f32 *a, f32 *b);
 
 extern int *gTitleMenuControlInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern int *gModgfxInterface;
+extern ModgfxInterface **gModgfxInterface;
 extern MapEventInterface **gMapEventInterface;
 
 extern byte framesThisStep;
@@ -148,7 +148,7 @@ void dll_199_update(int obj)
                 (**(void (**)(int, int, int, int, int, int))(*res + 4))(obj, 0, 0, 1, 0xffffffff, 0);
                 Resource_Release(res);
                 GameBit_Set(0x126, 0);
-                ((ModgfxInterface *)*gModgfxInterface)->releaseHandle(state + 6);
+                (*gModgfxInterface)->releaseHandle(state + 6);
             }
             break;
         case 1:

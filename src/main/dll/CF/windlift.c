@@ -1837,13 +1837,13 @@ extern void objRenderFn_8003b8f4(f32);
 void portalspelldoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3A88); }
 #pragma peephole reset
 
-extern undefined4 *gModgfxInterface;
+extern ModgfxInterface **gModgfxInterface;
 extern void *lbl_803DDAD0;
 extern void *lbl_803DDAD4;
 #pragma scheduling off
 #pragma peephole off
 void fn_801859D4(int *obj) {
-    ((ModgfxInterface *)*gModgfxInterface)->detachSource(obj);
+    (*gModgfxInterface)->detachSource(obj);
     Resource_Release(lbl_803DDAD0);
     lbl_803DDAD0 = NULL;
     Resource_Release(lbl_803DDAD4);

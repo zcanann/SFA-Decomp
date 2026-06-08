@@ -21,7 +21,7 @@ extern void textureFree(void *resource);
 extern MapEventInterface **gMapEventInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int *gScreenTransitionInterface;
-extern int *gModgfxInterface;
+extern ModgfxInterface **gModgfxInterface;
 
 extern f32 timeDelta;
 extern u8 lbl_803DDC78;
@@ -396,7 +396,7 @@ void LaserBeam_init(int *obj)
     void **state;
 
     state = (void **)OBJ_PTR(obj, 0xb8);
-    ((ModgfxInterface *)*gModgfxInterface)->detachSource(obj);
+    (*gModgfxInterface)->detachSource(obj);
     if (state[0] != 0) {
         textureFree(state[0]);
         state[0] = 0;

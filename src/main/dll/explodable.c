@@ -473,9 +473,9 @@ void largecrate_update(int obj)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int *gModgfxInterface;
+extern ModgfxInterface **gModgfxInterface;
 void largecrate_free(int obj) {
-    ((ModgfxInterface *)*gModgfxInterface)->detachSource((void *)obj);
+    (*gModgfxInterface)->detachSource((void *)obj);
     Resource_Release(lbl_803DDAC8);
 }
 

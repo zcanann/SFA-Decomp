@@ -135,14 +135,14 @@ void dfsh_objcreator_update(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern undefined4 *gModgfxInterface;
+extern ModgfxInterface **gModgfxInterface;
 extern void *lbl_803DDBB8;
 extern void textureFree(void *tex);
 #pragma scheduling off
 #pragma peephole off
 void DFSH_LaserBeam_init(int *obj) {
     int *state = ((GameObject *)obj)->extra;
-    ((ModgfxInterface *)*gModgfxInterface)->detachSource(obj);
+    (*gModgfxInterface)->detachSource(obj);
     Resource_Release(lbl_803DDBB8);
     lbl_803DDBB8 = NULL;
     if (*(void **)state != NULL) {

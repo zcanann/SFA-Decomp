@@ -67,7 +67,7 @@ extern void fn_80137948(char *fmt, ...);
 extern char sShrineTimeFormat[];
 extern void *gTitleMenuControlInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern int *gModgfxInterface;
+extern ModgfxInterface **gModgfxInterface;
 extern f32 lbl_803E518C;
 extern f32 lbl_803E5190;
 extern f32 lbl_803E5194;
@@ -176,7 +176,7 @@ void dll_19B_update(int obj)
                 (*(s16 (**)(int, int, int, int, int, int))(*(int *)handle + 4))(obj, 0, 0, 1, -1, 0);
                 Resource_Release(handle);
                 GameBit_Set(0x126, 0);
-                ((ModgfxInterface *)*gModgfxInterface)->releaseHandle(st + 6);
+                (*gModgfxInterface)->releaseHandle(st + 6);
             }
             break;
         case 1:

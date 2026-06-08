@@ -486,7 +486,7 @@ extern void smallbasket_init();
 extern void smallbasket_update();
 extern void smallbasket_render(int param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4,
                               undefined4 param_5, char param_6);
-extern undefined4* gModgfxInterface;
+extern ModgfxInterface **gModgfxInterface;
 extern void* lbl_803DDAC0;
 extern void ObjGroup_RemoveObject(int obj, int flag);
 
@@ -500,7 +500,7 @@ extern void ObjGroup_RemoveObject(int obj, int flag);
 #pragma scheduling off
 void smallbasket_free(int param_1)
 {
-  ((ModgfxInterface *)*gModgfxInterface)->detachSource((void *)param_1);
+  (*gModgfxInterface)->detachSource((void *)param_1);
   Resource_Release(lbl_803DDAC0);
   ObjGroup_RemoveObject(param_1, 0x10);
 }

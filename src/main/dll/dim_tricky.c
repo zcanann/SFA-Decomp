@@ -14,7 +14,7 @@ extern void GameBit_Set(int eventId, int value);
 
 extern u8 framesThisStep;
 extern ExpgfxInterface **gExpgfxInterface;
-extern int *gModgfxInterface;
+extern ModgfxInterface **gModgfxInterface;
 extern EffectInterface **gPartfxInterface;
 extern s8 lbl_803DDBE8;
 extern undefined4 lbl_802C23D8[4];
@@ -142,7 +142,7 @@ void dll_19E_update(void *obj)
         state->delayTimer = 1;
       } else {
         Sfx_StopObjectChannel(obj, 0x40);
-        ((ModgfxInterface *)*gModgfxInterface)->detachSource(obj);
+        (*gModgfxInterface)->detachSource(obj);
         (*gExpgfxInterface)->freeSource((u32)obj);
         if ((state->gameBitId != -1) && (GameBit_Get(state->gameBitId) != 0)) {
           GameBit_Set(state->gameBitId, 0);
