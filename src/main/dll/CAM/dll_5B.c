@@ -336,6 +336,7 @@ void CameraModeViewfinder_copyToCurrent(undefined2 *param_1)
  */
 #pragma peephole off
 #pragma scheduling off
+extern void Rcp_SetViewFinderHudEnabled(int on);
 void CameraModeViewfinder_free(int param_1)
 {
   int iVar1;
@@ -343,13 +344,13 @@ void CameraModeViewfinder_free(int param_1)
   int local_18 [5];
 
   *(ushort *)(*(int *)(param_1 + 0xa4) + 6) = *(ushort *)(*(int *)(param_1 + 0xa4) + 6) & ~0x4000;
-  FUN_80053bf0(0);
+  Rcp_SetViewFinderHudEnabled(0);
   iVar2 = *(int *)(param_1 + 0xa4);
   if (iVar2 != 0) {
     ((GameObject *)iVar2)->anim.alpha = 0xff;
-    iVar1 = FUN_80017a98();
+    iVar1 = Obj_GetPlayerObject();
     if (iVar1 == iVar2) {
-      FUN_80294d00(iVar2,local_18);
+      fn_802966D4(iVar2,local_18);
       if (local_18[0] != 0) {
         ((GameObject *)local_18[0])->anim.alpha = 0xff;
         if (((GameObject *)local_18[0])->anim.alpha == 1) {
@@ -358,10 +359,10 @@ void CameraModeViewfinder_free(int param_1)
       }
     }
   }
-  FUN_80006810(0,0x3d8);
-  FUN_80017814(lbl_803DD548);
+  Sfx_StopFromObject(0,0x3d8);
+  mm_free(lbl_803DD548);
   lbl_803DD548 = 0;
-  FUN_800810d8((double)lbl_803E17E0);
+  viewFinderSetZoom((double)lbl_803E17E0);
   return;
 }
 #pragma scheduling reset
