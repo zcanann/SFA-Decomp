@@ -171,19 +171,19 @@ void trickyUpdateCollisionAndPathState(u8 *obj)
     }
 
     if ((s8)state->unk353 == 0) {
-        (*gPathControlInterface)->attachObject(obj, (u8 *)state + 0xf8);
+        (*gPathControlInterface)->attachObject(obj, &state->pathControlFlags);
     }
 
     if ((coordsToMapCell(((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosZ) == 0xe) ||
         (ObjGroup_FindNearestObject(5, obj, &nearestDistance) != 0)) {
-        *(u32 *)((u8 *)state + 0xf8) &= ~4;
+        state->pathControlFlags &= ~4;
     } else {
-        *(u32 *)((u8 *)state + 0xf8) |= 4;
+        state->pathControlFlags |= 4;
     }
 
-    (*gPathControlInterface)->update(obj, (u8 *)state + 0xf8, timeDelta);
-    (*gPathControlInterface)->apply(obj, (u8 *)state + 0xf8);
-    (*gPathControlInterface)->advance(obj, (u8 *)state + 0xf8, timeDelta);
+    (*gPathControlInterface)->update(obj, &state->pathControlFlags, timeDelta);
+    (*gPathControlInterface)->apply(obj, &state->pathControlFlags);
+    (*gPathControlInterface)->advance(obj, &state->pathControlFlags, timeDelta);
 
     ((GameObject *)obj)->anim.rotY = state->pathRotY;
     ((GameObject *)obj)->anim.rotZ = state->pathRotZ;
@@ -1185,7 +1185,6 @@ extern undefined4 FUN_80294964();
 
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd71c;
-extern undefined4* DAT_803dd728;
 extern undefined4 DAT_803e3064;
 extern undefined4 DAT_803e3068;
 extern f64 DOUBLE_803e3090;
@@ -1357,7 +1356,7 @@ void FUN_8013939c(uint param_1)
     ((TrickyState *)iVar3)->unk838 = FLOAT_803e30c8;
   }
   if (*(char *)(iVar3 + 0x353) == '\0') {
-    (**(code **)(*DAT_803dd728 + 0x20))(param_1,iVar3 + 0xf8);
+    (*gPathControlInterface)->attachObject(param_1, &((TrickyState *)iVar3)->pathControlFlags);
   }
   iVar2 = FUN_8005b024();
   if ((iVar2 == 0xe) || (iVar2 = ObjGroup_FindNearestObject(5,param_1,&local_38), iVar2 != 0)) {
@@ -1366,9 +1365,9 @@ void FUN_8013939c(uint param_1)
   else {
     ((TrickyState *)iVar3)->pathControlFlags = ((TrickyState *)iVar3)->pathControlFlags | 4;
   }
-  (**(code **)(*DAT_803dd728 + 0x10))((double)FLOAT_803dc074,param_1,iVar3 + 0xf8);
-  (**(code **)(*DAT_803dd728 + 0x14))(param_1,iVar3 + 0xf8);
-  (**(code **)(*DAT_803dd728 + 0x18))((double)FLOAT_803dc074,param_1,iVar3 + 0xf8);
+  (*gPathControlInterface)->update(param_1, &((TrickyState *)iVar3)->pathControlFlags, FLOAT_803dc074);
+  (*gPathControlInterface)->apply(param_1, &((TrickyState *)iVar3)->pathControlFlags);
+  (*gPathControlInterface)->advance(param_1, &((TrickyState *)iVar3)->pathControlFlags, FLOAT_803dc074);
   *(undefined2 *)(param_1 + 2) = *(u16 *)&((TrickyState *)iVar3)->pathRotY;
   *(undefined2 *)(param_1 + 4) = *(u16 *)&((TrickyState *)iVar3)->pathRotZ;
   return;

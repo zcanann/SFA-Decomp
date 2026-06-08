@@ -43,7 +43,6 @@ extern double FUN_80293900();
 extern undefined4 SUB41();
 extern uint countLeadingZeros();
 
-extern undefined4* DAT_803dd728;
 extern f32 FLOAT_803dc074;
 extern f32 FLOAT_803e306c;
 extern f32 FLOAT_803e3070;
@@ -201,7 +200,7 @@ int trickyFn_8013b368(u8 *obj, f32 vel, u8 *state)
 
     moved = 1;
     if ((((TrickyState *)state)->unk09 < 5) && (isInWalkGroupOrPatch((f32 *)(obj + 0x18)) == 0)) {
-        (*gPathControlInterface)->attachObject(obj, state + 0xf8);
+        (*gPathControlInterface)->attachObject(obj, &((TrickyState *)state)->pathControlFlags);
         ((GameObject *)obj)->anim.localPosX = ((TrickyState *)state)->homePosX;
         ((GameObject *)obj)->anim.localPosY = ((TrickyState *)state)->homePosY;
         ((GameObject *)obj)->anim.localPosZ = ((TrickyState *)state)->homePosZ;
@@ -1092,7 +1091,7 @@ state_selected:
             ((TrickyState *)state)->homePosY = ((GameObject *)obj)->anim.worldPosY;
             ((TrickyState *)state)->homePosZ = ((GameObject *)obj)->anim.worldPosZ;
         } else {
-            (*gPathControlInterface)->attachObject(obj, state + 0xf8);
+            (*gPathControlInterface)->attachObject(obj, &((TrickyState *)state)->pathControlFlags);
             ((GameObject *)obj)->anim.localPosX = ((TrickyState *)state)->homePosX;
             ((GameObject *)obj)->anim.localPosY = ((TrickyState *)state)->homePosY;
             ((GameObject *)obj)->anim.localPosZ = ((TrickyState *)state)->homePosZ;
