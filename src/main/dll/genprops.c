@@ -2,6 +2,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/genprops.h"
+#include "main/dll/path_control_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/mapEvent.h"
 #include "main/objanim_internal.h"
@@ -7464,7 +7465,6 @@ void fn_80171E5C(int *obj)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void *gPathControlInterface;
 extern f32 lbl_803E345C;
 extern f32 lbl_803E3460;
 extern f32 lbl_803E3464;
@@ -7484,9 +7484,9 @@ void fn_80172144(int *obj)
                 ((GameObject *)obj)->anim.velocityY * (f32)(u32)n,
                 ((GameObject *)obj)->anim.velocityZ * (f32)(u32)n);
     }
-    ((void (*)(int *, u8 *, f32))((int *)*(int **)gPathControlInterface)[4])(obj, state + 0x50, timeDelta);
-    ((void (*)(int *, u8 *))((int *)*(int **)gPathControlInterface)[5])(obj, state + 0x50);
-    ((void (*)(int *, u8 *, f32))((int *)*(int **)gPathControlInterface)[6])(obj, state + 0x50, timeDelta);
+    (*gPathControlInterface)->update(obj, state + 0x50, timeDelta);
+    (*gPathControlInterface)->apply(obj, state + 0x50);
+    (*gPathControlInterface)->advance(obj, state + 0x50, timeDelta);
     if (*(s8 *)(state + 0x2b1) != 0) {
         f32 nx = -((GameObject *)obj)->anim.velocityX;
         f32 ny = -((GameObject *)obj)->anim.velocityY;

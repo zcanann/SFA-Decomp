@@ -1,4 +1,5 @@
 #include "main/dll/objfsa.h"
+#include "main/dll/path_control_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
@@ -4744,7 +4745,6 @@ extern f32 lbl_803E05C0;
 extern f32 lbl_803E05C4;
 extern f32 lbl_803DD444;
 extern f32 lbl_803DD448;
-extern void *gPathControlInterface;
 extern void fn_800D915C(int pos, int *obj, void *fnTable, f32 fval);
 extern void fn_800D8414(char *pos, char *state);
 extern void player_applyVelocityStep(char *pos, char *state, f32 dt);
@@ -4981,9 +4981,9 @@ void player_update(char *pos, char *state, float dt, float pathDt, int stateFns,
     lbl_803DD430 = 0;
 
     if ((*(u32 *)state & 0x1000000) == 0 && (*(u32 *)state & 0x400000) == 0 && keepPathControls != 0) {
-        (*(void (**)(char *, char *, f32))(*(int *)gPathControlInterface + 0x10))(pos, state + 0x4, dt);
-        (*(void (**)(char *, char *))(*(int *)gPathControlInterface + 0x14))(pos, state + 0x4);
-        (*(void (**)(char *, char *, f32))(*(int *)gPathControlInterface + 0x18))(pos, state + 0x4, pathDt);
+        (*gPathControlInterface)->update(pos, state + 0x4, dt);
+        (*gPathControlInterface)->apply(pos, state + 0x4);
+        (*gPathControlInterface)->advance(pos, state + 0x4, pathDt);
 
         if (((s32)*(s8 *)(state + 0x264) & 0x10) == 0) {
             *(u32 *)state &= 0xfffbffff;

@@ -1,5 +1,6 @@
 #include "main/dll/landedArwing.h"
 #include "main/dll/baddie_state.h"
+#include "main/dll/path_control_interface.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
 #include "main/objlib.h"
@@ -16,7 +17,6 @@ extern void fn_80165C8C(int obj, int sub);
 extern void fn_80166444(int obj, int sub);
 extern void updateConstrainedChaseVelocity(int obj, f32 x, f32 y, f32 z, f32 scale);
 
-extern void *gPathControlInterface;
 extern u8 framesThisStep;
 extern f32 timeDelta;
 
@@ -97,7 +97,7 @@ undefined4 LandedArwing_UpdateFlightChase(int obj, int state)
     (*(ObjHitsPriorityState **)(objLocal + 0x54))->objectPairHitVolume = LANDED_ARWING_OBJECT_PAIR_HIT_VOLUME;
     ObjHits_RegisterActiveHitVolumeObject(objLocal);
 
-    (*(code *)(*(int *)gPathControlInterface + 0x18))(objLocal, stateWord + 4, (double)timeDelta);
+    (*gPathControlInterface)->advance((void *)objLocal, (void *)(stateWord + 4), timeDelta);
 
     if (sub->surfaceMode != LANDED_ARWING_SCRIPT_MODE) {
         if ((u32)playerObj != 0 &&

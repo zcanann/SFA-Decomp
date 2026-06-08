@@ -1,4 +1,5 @@
 #include "main/dll/baddie_state.h"
+#include "main/dll/path_control_interface.h"
 #include "main/game_object.h"
 #include "main/dll/landedArwing.h"
 #include "main/dll/staffAction.h"
@@ -48,7 +49,6 @@ extern undefined4 FUN_80293f80();
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd728;
 extern undefined4* DAT_803dd738;
-extern int *gPathControlInterface;
 extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
@@ -1091,7 +1091,7 @@ undefined4 fn_801659B8(s16 *obj,u32 *params)
   *(undefined *)(*(int *)(obj + 0x2a) + 0x6c) = 9;
   *(undefined *)(*(int *)(obj + 0x2a) + 0x6d) = 1;
   ObjHits_RegisterActiveHitVolumeObject(obj);
-  (*(void (**)(int,u32 *,f32))(*(int *)gPathControlInterface + 0x18))((int)obj,params + 1,timeDelta);
+  (*gPathControlInterface)->advance(obj, params + 1, timeDelta);
   if (*(s8 *)((int)params + 0x27a) != 0) {
     if (*(s8 *)&state->surfaceMode == 6) {
       if (((state->flags92 >> 2) & 1) == 0) {
