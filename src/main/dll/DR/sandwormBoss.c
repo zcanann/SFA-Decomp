@@ -4306,6 +4306,7 @@ void cfguardian_hitDetect(int *obj) {
 
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 int *findRomCurvePointNearObject(int *obj, int p2, int *outVec, int p4) {
     int *result = NULL;
     int local[2];
@@ -4335,6 +4336,7 @@ int *findRomCurvePointNearObject(int *obj, int p2, int *outVec, int p4) {
     }
     return result;
 }
+#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 
