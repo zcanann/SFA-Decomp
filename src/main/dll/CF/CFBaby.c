@@ -1877,7 +1877,7 @@ void flammablevine_init(int obj, int def)
     *(s16 *)obj = (s16)((s8)*(u8 *)(def + 0x18) << 8);
 
     ((GameObject *)obj)->anim.rootMotionScale = lbl_803E3B20 * ((f32)*(s16 *)(def + 0x1a) / lbl_803E3B24);
-    if (((GameObject *)obj)->anim.rootMotionScale <= lbl_803E3B28) {
+    if (((GameObject *)obj)->anim.rootMotionScale <= *(f32 *)&lbl_803E3B28) {
         ((GameObject *)obj)->anim.rootMotionScale = lbl_803E3B28;
     }
 
