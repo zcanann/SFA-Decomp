@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "dolphin/mtx.h"
 #include "main/dll/collectable.h"
@@ -246,7 +247,6 @@ extern undefined4 DAT_803e31f8;
 extern char sSidekickCommandDebugTextBlock[];
 extern undefined4 lbl_803DDA48;
 extern int lbl_803DDA54;
-extern undefined4* gExpgfxInterface;
 extern MapEventInterface **gMapEventInterface;
 extern undefined4 lbl_803DBC40;
 extern undefined4 lbl_803DBC48;
@@ -1160,7 +1160,7 @@ void Tricky_destroy(int obj,int shouldKeepFlameChildren)
   freeAndNull((void *)((TrickyState *)state)->voxBlocks[7]);
   freeAndNull((void *)((TrickyState *)state)->voxBlocks[8]);
   ObjGroup_RemoveObject(obj,1);
-  ((void (**)(int))(*gExpgfxInterface))[5](obj);
+  (*gExpgfxInterface)->freeSource((u32)obj);
   if ((shouldKeepFlameChildren == 0) && ((((TrickyState *)state)->unk54 & 0x800) != 0)) {
     ((TrickyState *)state)->unk54 = ((TrickyState *)state)->unk54 & 0xfffff7ff;
     ((TrickyState *)state)->unk54 = ((TrickyState *)state)->unk54 | 0x1000;

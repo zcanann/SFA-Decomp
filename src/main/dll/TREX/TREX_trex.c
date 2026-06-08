@@ -1342,7 +1342,7 @@ void FUN_801e5dd0(int param_1,int param_2)
 void FUN_801e5f78(int param_1)
 {
   FUN_8000680c(param_1,0x40);
-  (**(code **)(*DAT_803dd6f8 + 0x18))(param_1);
+  (*gExpgfxInterface)->freeSource2((u32)param_1);
   return;
 }
 

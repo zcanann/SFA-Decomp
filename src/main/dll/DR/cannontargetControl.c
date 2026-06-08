@@ -1,4 +1,5 @@
 #include "main/dll/DR/cannontargetControl.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/DR/gasvent.h"
 #include "main/dll/DR/gunpowderbarrel_state.h"
@@ -57,7 +58,6 @@ extern uint FUN_80294cf0();
 extern uint FUN_80294db4();
 
 extern undefined4 DAT_803dc070;
-extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd740;
 extern f64 DOUBLE_803e4f90;
 extern f32 lbl_803DC074;
@@ -245,7 +245,7 @@ void FUN_801a1df8(int param_1,int param_2)
   ObjGroup_RemoveObject(param_1,0x19);
   ObjGroup_RemoveObject(param_1,0x16);
   if (*(char *)(iVar2 + 0x17) != '\0') {
-    (**(code **)(*DAT_803dd6f8 + 0x18))(param_1);
+    (*gExpgfxInterface)->freeSource2((u32)param_1);
   }
   return;
 }

@@ -892,7 +892,7 @@ void FUN_8016b174(int param_1)
     FUN_80017620(uVar1);
     *(undefined4 *)(iVar2 + 0x18) = 0;
   }
-  (**(code **)(*DAT_803dd6f8 + 0x18))(param_1);
+  (*gExpgfxInterface)->freeSource2((u32)param_1);
   return;
 }
 

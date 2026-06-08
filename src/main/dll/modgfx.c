@@ -508,7 +508,6 @@ extern undefined4 DAT_8039cff4;
 extern ExpgfxAttachedSourceState gProjgfxDefaultAttachedSource;
 extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803dd430;
-extern undefined4* DAT_803dd6f8;
 extern EffectInterface **gPartfxInterface;
 extern undefined4 DAT_803dded8;
 extern undefined4 DAT_803ddf00;
@@ -3773,7 +3772,7 @@ void FUN_800a2c90(undefined4 param_1,undefined4 param_2,ExpgfxAttachedSourceStat
         local_88 = local_88 + local_a0;
       }
     }
-    (**(code **)(*DAT_803dd6f8 + 8))(local_c0,0xffffffff,(int)uVar4,0);
+    (*gExpgfxInterface)->spawnEffect(local_c0, -1, (int)uVar4, 0);
   }
 LAB_800bd57c:
   FUN_8028688c();
@@ -4109,7 +4108,7 @@ projgfx_spawnPresetEffect(int param_1,undefined4 param_2,ExpgfxAttachedSourceSta
         local_80 = local_80 + local_98;
       }
     }
-    uVar1 = (**(code **)(*DAT_803dd6f8 + 8))(local_b8,0xffffffff,param_2,0);
+    uVar1 = (*gExpgfxInterface)->spawnEffect(local_b8, -1, param_2, 0);
   }
   return uVar1;
 }

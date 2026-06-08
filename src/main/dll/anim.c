@@ -3899,7 +3899,7 @@ void FUN_80204f1c(undefined2 *param_1,int param_2)
 void FUN_80204f20(undefined4 param_1)
 {
   (**(code **)(*DAT_803dd6fc + 0x18))();
-  (**(code **)(*DAT_803dd6f8 + 0x18))(param_1);
+  (*gExpgfxInterface)->freeSource2((u32)param_1);
   return;
 }
 
@@ -3988,7 +3988,7 @@ void FUN_80204f7c(int param_1,int param_2,int param_3,int param_4,int param_5,s8
                              asStack_70,auStack_78,(undefined *)0x0,0);
         if (iVar3 == 0) {
           *(undefined *)(iVar5 + 8) = 0;
-          (**(code **)(*DAT_803dd6f8 + 0x14))(param_1);
+          (*gExpgfxInterface)->freeSource((u32)param_1);
         }
       }
       if (*(short *)(iVar5 + 4) < 1) {
@@ -4090,7 +4090,7 @@ void FUN_802051e0(uint param_1)
       if (*(char *)((int)puVar4 + 10) == '\0') {
         FUN_8000680c(param_1,0x40);
         (**(code **)(*DAT_803dd6fc + 0x18))(param_1);
-        (**(code **)(*DAT_803dd6f8 + 0x14))(param_1);
+        (*gExpgfxInterface)->freeSource((u32)param_1);
         if ((*puVar4 != 0xffffffff) && (uVar3 = FUN_80017690(*puVar4), uVar3 != 0)) {
           FUN_80017698(*puVar4,0);
         }
@@ -5632,7 +5632,7 @@ void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 voxmaps_worldToGrid(stk2.b, stk2.g2);
                 if (voxmaps_traceLine(stk2.g1, stk2.g2, stk2.out, 0, 0) == 0) {
                     state->visibleLatch = 0;
-                    ((ExpgfxInterface *)*gExpgfxInterface)->freeSource(obj);
+                    (*gExpgfxInterface)->freeSource((u32)obj);
                 }
             }
             if (state->flickerTimer > 0) {
@@ -7109,7 +7109,7 @@ void DFP_Torch_update(int obj)
             } else {
                 Sfx_StopObjectChannel(obj, 0x40);
                 (*gModgfxInterface)->detachSource((void *)obj);
-                ((ExpgfxInterface *)*gExpgfxInterface)->freeSource(obj);
+                (*gExpgfxInterface)->freeSource((u32)obj);
                 if (blob->gameBit != -1) {
                     if (GameBit_Get(blob->gameBit) != 0) {
                         GameBit_Set(blob->gameBit, 0);
