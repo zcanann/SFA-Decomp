@@ -2290,6 +2290,7 @@ extern void boxDrawFn_8001c5ac(u16 *strPtr, int boxId, u8 *box);
 
 #pragma push
 #pragma scheduling off
+#pragma peephole off
 #pragma dont_inline on
 void gameTextDrawBox(u16 *strPtr, int boxId, u8 *box) {
     u32 colorB;
