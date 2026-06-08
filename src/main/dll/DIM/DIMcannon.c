@@ -149,7 +149,7 @@ extern undefined4 DAT_803ad5b4;
 extern undefined4 DAT_803ad5b8;
 extern undefined4 DAT_803ad5bc;
 extern undefined4 DAT_803dc070;
-extern ObjectTriggerInterface **DAT_803dd6d4;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6d8;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;
@@ -1074,7 +1074,8 @@ void FUN_801af444(void)
         *(byte *)(puVar9 + 1) = (cVar2 + -1) * '@' | *(byte *)(puVar9 + 1) & 0x3f;
         if ((cVar2 == -1) && ((*(ushort *)(iVar5 + 0xb0) & 0x1000) == 0)) {
           GameBit_Set(0x386,1);
-          (*DAT_803dd6d4)->runSequence(*(byte *)(puVar9 + 1) >> 3 & 7, (void *)iVar3, -1);
+          (*gObjectTriggerInterface)->runSequence(*(byte *)(puVar9 + 1) >> 3 & 7,
+                                                  (void *)iVar3, -1);
           *(byte *)(puVar9 + 1) =
                ((*(byte *)(puVar9 + 1) >> 3 & 7) + 1) * '\b' & 0x38 | *(byte *)(puVar9 + 1) & 199;
           *(byte *)(puVar9 + 1) = *(byte *)(puVar9 + 1) & 0xf8;
@@ -1087,7 +1088,8 @@ void FUN_801af444(void)
         uVar8 = GameBit_Get(900);
         if (uVar8 != 0) {
           FUN_80135c84(iVar5,1);
-          (*DAT_803dd6d4)->runSequence(*(byte *)(puVar9 + 1) >> 3 & 7, (void *)iVar3, -1);
+          (*gObjectTriggerInterface)->runSequence(*(byte *)(puVar9 + 1) >> 3 & 7,
+                                                  (void *)iVar3, -1);
           *(byte *)(puVar9 + 1) =
                ((*(byte *)(puVar9 + 1) >> 3 & 7) + 1) * '\b' & 0x38 | *(byte *)(puVar9 + 1) & 199;
           *(byte *)(puVar9 + 1) = *(byte *)(puVar9 + 1) & 0xf8;
@@ -1099,7 +1101,8 @@ void FUN_801af444(void)
         if ((uVar8 != 0) && ((*(ushort *)(iVar4 + 0xb0) & 0x1000) == 0)) {
           GameBit_Set(0x385,1);
           FUN_80135c84(iVar5,1);
-          (*DAT_803dd6d4)->runSequence(*(byte *)(puVar9 + 1) >> 3 & 7, (void *)iVar3, -1);
+          (*gObjectTriggerInterface)->runSequence(*(byte *)(puVar9 + 1) >> 3 & 7,
+                                                  (void *)iVar3, -1);
           *(byte *)(puVar9 + 1) =
                ((*(byte *)(puVar9 + 1) >> 3 & 7) + 1) * '\b' & 0x38 | *(byte *)(puVar9 + 1) & 199;
           *(byte *)(puVar9 + 1) = *(byte *)(puVar9 + 1) & 0xf8;
@@ -1111,7 +1114,8 @@ void FUN_801af444(void)
       uVar8 = GameBit_Get(0x543);
       if (uVar8 != 0) {
         FUN_80135c84(iVar5,1);
-        (*DAT_803dd6d4)->runSequence(*(byte *)(puVar9 + 1) >> 3 & 7, (void *)iVar3, -1);
+        (*gObjectTriggerInterface)->runSequence(*(byte *)(puVar9 + 1) >> 3 & 7,
+                                                (void *)iVar3, -1);
         *(byte *)(puVar9 + 1) =
              ((*(byte *)(puVar9 + 1) >> 3 & 7) + 1) * '\b' & 0x38 | *(byte *)(puVar9 + 1) & 199;
         *(byte *)(puVar9 + 1) = *(byte *)(puVar9 + 1) & 0xf8;
@@ -1126,7 +1130,8 @@ void FUN_801af444(void)
           if (*(char *)((int)puVar9 + 5) < '\0') {
             GameBit_Set(0x387,1);
             FUN_80135c84(iVar5,1);
-            (*DAT_803dd6d4)->runSequence(*(byte *)(puVar9 + 1) >> 3 & 7, (void *)iVar3, -1);
+            (*gObjectTriggerInterface)->runSequence(*(byte *)(puVar9 + 1) >> 3 & 7,
+                                                    (void *)iVar3, -1);
             *(byte *)(puVar9 + 1) =
                  ((*(byte *)(puVar9 + 1) >> 3 & 7) + 1) * '\b' & 0x38 | *(byte *)(puVar9 + 1) & 199;
             *(byte *)(puVar9 + 1) = *(byte *)(puVar9 + 1) & 0xf8;
@@ -2299,7 +2304,6 @@ extern MapEventInterface **gMapEventInterface;
 extern void getEnvfxActImmediately(int a, int b, int c, int d);
 extern int *getTrickyObject(void);
 extern void fn_80138908(int *tricky, int mode);
-extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E47C8;
 
