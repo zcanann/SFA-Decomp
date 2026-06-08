@@ -14233,7 +14233,7 @@ void fn_802AAF80(int obj, int inner, int a, int b, int c)
 {
     int v;
     if (lbl_803DE44C != NULL && ((((PlayerState *)inner)->unk3F4 >> 6) & 1) != 0) {
-        ((ModgfxInterface *)*gModgfxInterface)->renderEffects((void *)a, b, c, 1, lbl_803DE44C);
+        (*gModgfxInterface)->renderEffects((void *)a, b, c, 1, lbl_803DE44C);
     }
     if (((PlayerState *)inner)->unk81C != 0) {
         (*(void (*)(int, int, int, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))(

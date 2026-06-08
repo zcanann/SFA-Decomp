@@ -261,7 +261,7 @@ extern undefined DAT_803dc568;
 extern undefined4 DAT_803dc570;
 extern undefined DAT_803dc578;
 extern undefined DAT_803dc580;
-extern undefined4* gModgfxInterface;
+extern ModgfxInterface **gModgfxInterface;
 extern undefined4 DAT_803de128;
 extern f64 DOUBLE_803e1c28;
 extern f64 DOUBLE_803e1c60;
@@ -946,7 +946,7 @@ void dll_7C_func03(int param_1,int param_2,int param_3,uint param_4)
       buf.pos[2] += *(f32 *)(param_3 + 0x14);
     }
   }
-  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,0x15,base,0x18,base + 0xd4,0x2e,0);
+  (*gModgfxInterface)->spawnEffect(&buf,0,0x15,base,0x18,base + 0xd4,0x2e,0);
 }
 
 /*
@@ -1024,7 +1024,7 @@ int dll_7D_func03(int param_1,int param_2,int param_3,uint param_4,undefined4 pa
       buf.pos[2] = lbl_803E0DDC + *(f32 *)(param_3 + 0x14);
     }
   }
-  ret = ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,0x15,(u8 *)(int)lbl_80315030,0x18,base + 0xd4,0x89,0);
+  ret = (*gModgfxInterface)->spawnEffect(&buf,0,0x15,(u8 *)(int)lbl_80315030,0x18,base + 0xd4,0x89,0);
   lbl_803DD4B0 += 1;
   if (lbl_803DD4B0 == 5) {
     lbl_803DD4B0 = 0;
@@ -1112,7 +1112,7 @@ void dll_7E_func03(int param_1,int param_2,int param_3,uint param_4,undefined4 p
       buf.pos[2] = lbl_803E0E04 + *(f32 *)(param_3 + 0x14);
     }
   }
-  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,9,(u8 *)(int)lbl_80315258,5,base + 0x5c,0x3c,0);
+  (*gModgfxInterface)->spawnEffect(&buf,0,9,(u8 *)(int)lbl_80315258,5,base + 0x5c,0x3c,0);
 }
 
 /*
@@ -1219,10 +1219,10 @@ void dll_7F_func03(int param_1,int param_2,int param_3,uint param_4)
   }
   if (param_2 == 0) {
     buf.v58 = 0;
-    ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,9,base,8,base + 0xb8,0x156,0);
+    (*gModgfxInterface)->spawnEffect(&buf,0,9,base,8,base + 0xb8,0x156,0);
   } else {
     buf.v58 = 0;
-    ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,9,base + 0x5c,8,base + 0xb8,0x8a,0);
+    (*gModgfxInterface)->spawnEffect(&buf,0,9,base + 0x5c,8,base + 0xb8,0x8a,0);
   }
 }
 
@@ -1296,7 +1296,7 @@ void dll_80_func03(int param_1,int param_2,int param_3,uint param_4)
     }
   }
   buf.v58 = 0;
-  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,9,base,8,base + 0x5c,0x156,0);
+  (*gModgfxInterface)->spawnEffect(&buf,0,9,base,8,base + 0x5c,0x156,0);
 }
 
 /*
@@ -1424,13 +1424,13 @@ void dll_81_func03(int param_1,int param_2,int param_3,uint param_4)
     }
   }
   if (param_2 == 0x1e) {
-    ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,0x15,(u8 *)(int)lbl_80315548,0x18,base + 0xd4,0x3e9,0);
+    (*gModgfxInterface)->spawnEffect(&buf,0,0x15,(u8 *)(int)lbl_80315548,0x18,base + 0xd4,0x3e9,0);
   } else if (param_2 == 2 || param_2 == 3) {
-    ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,0x15,(u8 *)(int)lbl_80315548,0x18,base + 0xd4,0x23d,0);
+    (*gModgfxInterface)->spawnEffect(&buf,0,0x15,(u8 *)(int)lbl_80315548,0x18,base + 0xd4,0x23d,0);
   } else if ((uint)(param_2 - 10) <= 3 || param_2 == 0xe) {
-    ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,0x15,(u8 *)(int)lbl_80315548,0x18,base + 0xd4,0x2e,0);
+    (*gModgfxInterface)->spawnEffect(&buf,0,0x15,(u8 *)(int)lbl_80315548,0x18,base + 0xd4,0x2e,0);
   } else {
-    ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,0x15,(u8 *)(int)lbl_80315548,0x18,base + 0xd4,0xd9,0);
+    (*gModgfxInterface)->spawnEffect(&buf,0,0x15,(u8 *)(int)lbl_80315548,0x18,base + 0xd4,0xd9,0);
   }
 }
 
@@ -1518,9 +1518,9 @@ void dll_82_func03(int param_1,int param_2,int param_3,uint param_4)
     }
   }
   if (param_2 == 3 || param_2 == 4) {
-    ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,0x15,(u8 *)(int)lbl_80315770,0x18,base + 0xd4,0xd9,0);
+    (*gModgfxInterface)->spawnEffect(&buf,0,0x15,(u8 *)(int)lbl_80315770,0x18,base + 0xd4,0xd9,0);
   } else {
-    ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,0x15,(u8 *)(int)lbl_80315770,0x18,base + 0xd4,0x2e,0);
+    (*gModgfxInterface)->spawnEffect(&buf,0,0x15,(u8 *)(int)lbl_80315770,0x18,base + 0xd4,0x2e,0);
   }
 }
 
@@ -1614,7 +1614,7 @@ void dll_83_func03(int param_1,int param_2,int param_3,uint param_4)
       buf.pos[2] = lbl_803E0EE4 + *(f32 *)(param_3 + 0x14);
     }
   }
-  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,0x24,(u8 *)(int)lbl_80315998,0x10,base + 0x168,base32[param_2 + 0xb7],0);
+  (*gModgfxInterface)->spawnEffect(&buf,0,0x24,(u8 *)(int)lbl_80315998,0x10,base + 0x168,base32[param_2 + 0xb7],0);
 }
 
 /*
@@ -1706,7 +1706,7 @@ void dll_84_func03(int param_1,int param_2,int param_3,uint param_4)
       buf.pos[2] = lbl_803E0F2C + *(f32 *)(param_3 + 0x14);
     }
   }
-  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,0x24,(u8 *)(int)lbl_80315CA8,0x10,base + 0x168,0x3f,0);
+  (*gModgfxInterface)->spawnEffect(&buf,0,0x24,(u8 *)(int)lbl_80315CA8,0x10,base + 0x168,0x3f,0);
 }
 
 /*
@@ -1829,7 +1829,7 @@ void dll_85_func03(int param_1,int param_2,int param_3,uint param_4)
       buf.pos[2] += *(f32 *)(param_3 + 0x14);
     }
   }
-  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,4,(u8 *)(int)lbl_80315FA8,2,base + 0x28,
+  (*gModgfxInterface)->spawnEffect(&buf,0,4,(u8 *)(int)lbl_80315FA8,2,base + 0x28,
       base16[param_2 * 2 + (int)randomGetRange(0, 1) + 0x22],0);
 }
 
@@ -1913,7 +1913,7 @@ void dll_86_func03(int param_1,int param_2,int param_3,uint param_4)
       buf.pos[2] = lbl_803E0FD4 + *(f32 *)(param_3 + 0x14);
     }
   }
-  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,0,0,0,0,0,0);
+  (*gModgfxInterface)->spawnEffect(&buf,0,0,0,0,0,0,0);
 }
 
 /*
@@ -1993,7 +1993,7 @@ void dll_87_func03(int param_1,int param_2,int param_3,uint param_4)
       buf.pos[2] = lbl_803E0FF0 + *(f32 *)(param_3 + 0x14);
     }
   }
-  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,10,(u8 *)(int)lbl_80316050,8,base + 0x168,0x1fd,0);
+  (*gModgfxInterface)->spawnEffect(&buf,0,10,(u8 *)(int)lbl_80316050,8,base + 0x168,0x1fd,0);
 }
 
 /*
@@ -2063,7 +2063,7 @@ void dll_88_func03(int param_1,int param_2,int param_3,uint param_4)
       buf.pos[2] = lbl_803E1014 + *(f32 *)(param_3 + 0x14);
     }
   }
-  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,0x19,(u8 *)(int)lbl_80316240,0x20,base + 0xfc,0x205,0);
+  (*gModgfxInterface)->spawnEffect(&buf,0,0x19,(u8 *)(int)lbl_80316240,0x20,base + 0xfc,0x205,0);
 }
 
 /*
@@ -2152,7 +2152,7 @@ void dll_89_func03(int param_1,int param_2,int param_3,uint param_4)
       buf.pos[2] = lbl_803E1030 + *(f32 *)(param_3 + 0x14);
     }
   }
-  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,10,(u8 *)(int)lbl_80316460,8,base + 0x168,0x1fd,0);
+  (*gModgfxInterface)->spawnEffect(&buf,0,10,(u8 *)(int)lbl_80316460,8,base + 0x168,0x1fd,0);
 }
 
 /*
@@ -2206,7 +2206,7 @@ void dll_8A_func03(int param_1,int param_2,int param_3,uint param_4)
       buf.pos[2] = lbl_803E1054 + *(f32 *)(param_3 + 0x14);
     }
   }
-  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,8,(u8 *)(int)lbl_80316650,0xc,base + 0x50,0x1fd,0);
+  (*gModgfxInterface)->spawnEffect(&buf,0,8,(u8 *)(int)lbl_80316650,0xc,base + 0x50,0x1fd,0);
 }
 
 /*
@@ -2341,7 +2341,7 @@ void dll_8B_func03(int param_1,int param_2,int param_3,uint param_4,undefined4 p
         buf.pos[2] = c74 + *(f32 *)(param_3 + 0x14);
       }
     }
-    ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,0x15,base,0x18,base + 0xd4,0xd9,0);
+    (*gModgfxInterface)->spawnEffect(&buf,0,0x15,base,0x18,base + 0xd4,0xd9,0);
   }
 }
 
@@ -2449,7 +2449,7 @@ void dll_8C_func03(int param_1,int param_2,int param_3,uint param_4)
       buf.pos[2] = lbl_803E10B0 + *(f32 *)(param_3 + 0x14);
     }
   }
-  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,0x15,base,0x18,base + 0xd4,0x5e0,0);
+  (*gModgfxInterface)->spawnEffect(&buf,0,0x15,base,0x18,base + 0xd4,0x5e0,0);
 }
 
 /*
@@ -2634,15 +2634,15 @@ int dll_8D_func03(int param_1,int param_2,int param_3,uint param_4)
   }
   if (param_2 == 0) {
     buf.v58 = 0;
-    ret = ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,9,base,8,base + 0x5c,0x156,0);
+    ret = (*gModgfxInterface)->spawnEffect(&buf,0,9,base,8,base + 0x5c,0x156,0);
   } else if (param_2 == 1) {
     buf.v58 = 0;
     buf.flags |= 4;
-    ret = ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,9,base,8,base + 0x5c,0xc0d,0);
+    ret = (*gModgfxInterface)->spawnEffect(&buf,0,9,base,8,base + 0x5c,0xc0d,0);
   } else if (param_2 == 2) {
     buf.v58 = 0;
     buf.flags |= 4;
-    ret = ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,9,base,8,base + 0x5c,0x23b,0);
+    ret = (*gModgfxInterface)->spawnEffect(&buf,0,9,base,8,base + 0x5c,0x23b,0);
   }
   return ret;
 }
@@ -2753,7 +2753,7 @@ void dll_8E_func03(int param_1,int param_2,int param_3,uint param_4)
       buf.pos[2] += *(f32 *)(param_3 + 0x14);
     }
   }
-  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,3,lbl_80316C40,1,&lbl_803DB910,0x26a,0);
+  (*gModgfxInterface)->spawnEffect(&buf,0,3,lbl_80316C40,1,&lbl_803DB910,0x26a,0);
 }
 
 /*
@@ -2833,7 +2833,7 @@ void dll_8F_func03(int param_1,int param_2,int param_3,uint param_4)
       buf.pos[2] = lbl_803E1178 + *(f32 *)(param_3 + 0x14);
     }
   }
-  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,18,(u8 *)(int)lbl_80316C90,16,base + 0xb4,0x2e,0);
+  (*gModgfxInterface)->spawnEffect(&buf,0,18,(u8 *)(int)lbl_80316C90,16,base + 0xb4,0x2e,0);
 }
 
 /*
@@ -2927,7 +2927,7 @@ void dll_90_func03(int param_1,int param_2,int param_3,uint param_4)
       buf.pos[2] = lbl_803E11A0 + *(f32 *)(param_3 + 0x14);
     }
   }
-  ((ModgfxInterface *)*gModgfxInterface)->spawnEffect(&buf,0,0x12,(u8 *)(int)lbl_80316E30,0x10,base + 0xb4,0x45,0);
+  (*gModgfxInterface)->spawnEffect(&buf,0,0x12,(u8 *)(int)lbl_80316E30,0x10,base + 0xb4,0x45,0);
 }
 
 

@@ -1778,7 +1778,7 @@ extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 extern EffectInterface **gExpgfxInterface;
-extern int* gModgfxInterface;
+extern ModgfxInterface **gModgfxInterface;
 extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
@@ -2424,7 +2424,7 @@ void SB_KyteCage_update(int obj)
 void SB_MiniFire_free(int* obj)
 {
     (*gExpgfxInterface)->freeObject(obj);
-    ((ModgfxInterface *)*gModgfxInterface)->detachSource(obj);
+    (*gModgfxInterface)->detachSource(obj);
 }
 #pragma peephole reset
 #pragma scheduling reset

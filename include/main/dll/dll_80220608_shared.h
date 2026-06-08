@@ -1075,7 +1075,7 @@ extern f32 lbl_803E6C30;
 extern f32 lbl_803E6C34;
 
 
-extern int *gModgfxInterface;
+extern ModgfxInterface **gModgfxInterface;
 extern void *lbl_803DDD80;
 
 

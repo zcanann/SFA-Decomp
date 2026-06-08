@@ -42,7 +42,7 @@ void dll_299_initialise_nop(void) {}
 void dll_299_free(int obj)
 {
     ((EffectInterface *)*gExpgfxInterface)->freeObject((void *)obj);
-    ((ModgfxInterface *)*gModgfxInterface)->freeSourceEffects((void *)obj);
+    (*gModgfxInterface)->freeSourceEffects((void *)obj);
     Resource_Release(lbl_803DDD80);
     lbl_803DDD80 = 0;
 }
