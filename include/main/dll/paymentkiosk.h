@@ -2,6 +2,7 @@
 #define MAIN_DLL_PAYMENTKIOSK_H_
 
 #include "global.h"
+#include "main/obj_placement.h"
 
 /*
  * Per-object extra state for the PaymentKiosk family
@@ -15,7 +16,7 @@ typedef struct PaymentKioskState {
 } PaymentKioskState;
 
 typedef struct PaymentKioskMapData {
-  u8 pad00[0x18];
+  ObjPlacement base;
   s8 facingByte;
   u8 pad19;
   s16 price;

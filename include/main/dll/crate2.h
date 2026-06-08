@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/objseq.h"
+#include "main/obj_placement.h"
 #include "main/object_descriptor.h"
 
 typedef struct DfpStatue1State {
@@ -15,7 +16,7 @@ typedef struct DfpStatue1State {
 } DfpStatue1State;
 
 typedef struct DfpStatue1MapData {
-  u8 pad00[0x18];
+  ObjPlacement base;
   s8 yawByte;
   u8 effectPairCount;
   u8 pad1A[0x1E - 0x1A];
@@ -31,6 +32,11 @@ typedef struct DfpStatue1Object {
   DfpStatue1State *state;
   undefined4 (*updateState)(int obj, undefined4 param_2, int hitState);
 } DfpStatue1Object;
+
+STATIC_ASSERT(offsetof(DfpStatue1MapData, yawByte) == 0x18);
+STATIC_ASSERT(offsetof(DfpStatue1MapData, effectPairCount) == 0x19);
+STATIC_ASSERT(offsetof(DfpStatue1MapData, triggerSfxId) == 0x1E);
+STATIC_ASSERT(offsetof(DfpStatue1MapData, loopSfxId) == 0x20);
 
 void dfpstatue1_updateState(DfpStatue1Object *obj);
 

@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
+#include "main/obj_placement.h"
 
 typedef struct FirePipeExtra {
     int effectObjs[8];
@@ -22,7 +23,7 @@ typedef struct FirePipeExtra {
 } FirePipeExtra;
 
 typedef struct FirePipeMapData {
-    u8 pad00[0x18];
+    ObjPlacement base;
     s8 modeX;
     u8 modeY;
     s16 cycleTime;
@@ -51,6 +52,14 @@ typedef struct FirePipeObject {
     u8 padC0[0xC4 - 0xC0];
     undefined4 (*callback)(struct FirePipeObject *obj);
 } FirePipeObject;
+
+STATIC_ASSERT(offsetof(FirePipeMapData, modeX) == 0x18);
+STATIC_ASSERT(offsetof(FirePipeMapData, modeY) == 0x19);
+STATIC_ASSERT(offsetof(FirePipeMapData, cycleTime) == 0x1A);
+STATIC_ASSERT(offsetof(FirePipeMapData, scale) == 0x1C);
+STATIC_ASSERT(offsetof(FirePipeMapData, gameBit) == 0x1E);
+STATIC_ASSERT(offsetof(FirePipeMapData, timer) == 0x20);
+STATIC_ASSERT(offsetof(FirePipeMapData, flags) == 0x22);
 
 int firepipe_spawnEffectObject(FirePipeExtra *extra, FirePipeObject *obj, void *spawnDef);
 void firepipe_releaseEffectObject(FirePipeObject *obj);

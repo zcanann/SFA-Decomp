@@ -2,11 +2,14 @@
 #define MAIN_DLL_SH_SHSPORE_H_
 
 #include "ghidra_import.h"
+#include "main/obj_placement.h"
 
 typedef struct QueenEarthWalkerMapData {
-  u8 pad00[0x18];
+  ObjPlacement base;
   s8 yawByte;
 } QueenEarthWalkerMapData;
+
+STATIC_ASSERT(offsetof(QueenEarthWalkerMapData, yawByte) == 0x18);
 
 int sh_queenearthwalker_getExtraSize(void);
 void sh_queenearthwalker_update(void *obj);
