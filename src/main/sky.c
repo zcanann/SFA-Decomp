@@ -622,35 +622,21 @@ void skyFn_80089710(int flags, u32 enabled, int startComplete)
         return;
     }
 
-    flagBit = 0;
-    if ((flags & (1 << flagBit)) != 0) {
-        stateActive = ((SkyBlendStateFlags *)(sky + 0xc1))->active;
-        requestedActive = (u8)enabled;
-        if (stateActive != requestedActive) {
-            if (startComplete != 0) {
-                ((SkyState *)sky)->lights[0].unk9C = EXIInputFlag;
-            } else {
-                ((SkyState *)sky)->lights[0].unk9C = pEXIInputFlag;
+    for (flagBit = 0; flagBit < 2; flagBit++) {
+        if ((flags & (1 << flagBit)) != 0) {
+            sky = lbl_803DD12C;
+            stateActive = ((SkyBlendStateFlags *)(sky + flagBit * 0xa4 + 0xc1))->active;
+            requestedActive = (u8)enabled;
+            if (stateActive != requestedActive) {
+                if (startComplete != 0) {
+                    ((SkyState *)sky)->lights[flagBit].unk9C = EXIInputFlag;
+                } else {
+                    ((SkyState *)sky)->lights[flagBit].unk9C = pEXIInputFlag;
+                }
             }
+            sky = lbl_803DD12C;
+            ((SkyBlendStateFlags *)(sky + flagBit * 0xa4 + 0xc1))->active = enabled;
         }
-        sky = lbl_803DD12C;
-        ((SkyBlendStateFlags *)(sky + 0xc1))->active = enabled;
-    }
-
-    flagBit = 1;
-    if ((flags & (1 << flagBit)) != 0) {
-        sky = lbl_803DD12C;
-        stateActive = ((SkyBlendStateFlags *)(sky + 0x165))->active;
-        requestedActive = (u8)enabled;
-        if (stateActive != requestedActive) {
-            if (startComplete != 0) {
-                ((SkyState *)sky)->lights[1].unk9C = EXIInputFlag;
-            } else {
-                ((SkyState *)sky)->lights[1].unk9C = pEXIInputFlag;
-            }
-        }
-        sky = lbl_803DD12C;
-        ((SkyBlendStateFlags *)(sky + 0x165))->active = enabled;
     }
 }
 #pragma scheduling reset
