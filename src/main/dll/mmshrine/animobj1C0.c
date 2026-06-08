@@ -20,7 +20,6 @@ extern void GameBit_Set(int eventId, int value);
 extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
 
 extern undefined4 DAT_803dc070;
-extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd718;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern f32 timeDelta;
@@ -122,13 +121,13 @@ void FUN_801c5990(undefined8 param_1,undefined8 param_2,double param_3,undefined
   *(undefined4 *)(iVar5 + 0x28) = 0xffffffff;
   iVar4 = *(int *)(param_9 + 0xf4);
   if ((iVar4 == 0) && (*(short *)(param_10 + 0x18) != 1)) {
-    dVar6 = (double)(**(code **)(*DAT_803dd6d4 + 0x1c))(iVar5);
+    (*gObjectTriggerInterface)->loadAnimData((u8 *)iVar5, (u8 *)param_10);
     *(int *)(param_9 + 0xf4) = *(short *)(param_10 + 0x18) + 1;
   }
   else if ((iVar4 != 0) && ((int)*(short *)(param_10 + 0x18) != iVar4 + -1)) {
-    dVar6 = (double)(**(code **)(*DAT_803dd6d4 + 0x24))(iVar5);
+    (*gObjectTriggerInterface)->freeState((u8 *)iVar5);
     if (*(short *)(param_10 + 0x18) != -1) {
-      dVar6 = (double)(**(code **)(*DAT_803dd6d4 + 0x1c))(iVar5,param_10);
+      (*gObjectTriggerInterface)->loadAnimData((u8 *)iVar5, (u8 *)param_10);
     }
     *(int *)(param_9 + 0xf4) = *(short *)(param_10 + 0x18) + 1;
   }
