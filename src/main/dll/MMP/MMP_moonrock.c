@@ -1,4 +1,5 @@
 #include "main/dll/MMP/MMP_moonrock.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 
@@ -65,7 +66,6 @@ extern f32 lbl_803E4D54;
 
 extern EffectInterface **gPartfxInterface;
 extern int *gCameraInterface;
-extern int *gRomCurveInterface;
 extern u8 *Obj_GetPlayerObject(void);
 extern f32 sqrtf(f32 value);
 extern f32 mathSinf(f32 angle);
@@ -507,13 +507,13 @@ void sfxplayerObj_update(u8 *obj)
     if ((data[0x1c] & 8) != 0) {
         if (getCurSeqNo() != 0) {
             focusObj = (*(u8 *(**)(void))(*gCameraInterface + 0x0c))();
-            (*(void (**)(f32, f32, f32, int, int, u8 *, u8 *, u8 *))(*gRomCurveInterface + 0x20))(
+            ((void (*)(f32, f32, f32, int, int, u8 *, u8 *, u8 *))(*gRomCurveInterface)->slot20)(
                 *(f32 *)(focusObj + 0x18), *(f32 *)(focusObj + 0x1c), *(f32 *)(focusObj + 0x20),
                 7, (s8)data[0x20], obj + 0x0c, obj + 0x10, obj + 0x14);
         }
         else {
             focusObj = Obj_GetPlayerObject();
-            (*(void (**)(f32, f32, f32, int, int, u8 *, u8 *, u8 *))(*gRomCurveInterface + 0x20))(
+            ((void (*)(f32, f32, f32, int, int, u8 *, u8 *, u8 *))(*gRomCurveInterface)->slot20)(
                 *(f32 *)(focusObj + 0x18), *(f32 *)(focusObj + 0x1c), *(f32 *)(focusObj + 0x20),
                 7, (s8)data[0x20], obj + 0x0c, obj + 0x10, obj + 0x14);
         }
@@ -592,13 +592,13 @@ void fn_80198A00(u8 *obj, int seqArg)
 
     queryType = 0x17;
     state = ((GameObject *)obj)->extra;
-    curveHit = (*(int (**)(f32, f32, f32, int *, int, int))(*gRomCurveInterface + 0x14))(
-        *(f32 *)(state + 0x28), *(f32 *)(state + 0x2c), *(f32 *)(state + 0x30),
-        &queryType, 1, *(s16 *)(*(u8 **)&((GameObject *)obj)->anim.placementData + 0x38));
-    frontBlocked = (*(int (**)(int, f32, f32, f32, f32 *))(*gRomCurveInterface + 0x4c))(
+    curveHit = (*gRomCurveInterface)->find(&queryType, 1,
+        *(s16 *)(*(u8 **)&((GameObject *)obj)->anim.placementData + 0x38),
+        *(f32 *)(state + 0x28), *(f32 *)(state + 0x2c), *(f32 *)(state + 0x30));
+    frontBlocked = ((int (*)(int, f32, f32, f32, f32 *))(*gRomCurveInterface)->slot4C)(
         curveHit, *(f32 *)(state + 0x28), *(f32 *)(state + 0x2c), *(f32 *)(state + 0x30),
         &hitDistance);
-    rearBlocked = (*(int (**)(int, f32, f32, f32, f32 *))(*gRomCurveInterface + 0x4c))(
+    rearBlocked = ((int (*)(int, f32, f32, f32, f32 *))(*gRomCurveInterface)->slot4C)(
         curveHit, *(f32 *)(state + 0x1c), *(f32 *)(state + 0x20), *(f32 *)(state + 0x24),
         &hitDistance);
 
