@@ -39,10 +39,10 @@ extern undefined4 DAT_803ad59c;
 extern undefined4 DAT_803ad5a0;
 extern undefined4 DAT_803ad5a4;
 extern undefined4 DAT_803dc070;
-extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd6e8;
 extern undefined4* DAT_803dd6f4;
 extern undefined4* DAT_803dd708;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern f64 DOUBLE_803e5250;
 extern f64 DOUBLE_803e5268;
 extern f64 DOUBLE_803e5280;
@@ -273,7 +273,7 @@ void FUN_801a9614(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     uVar3 = ObjLink_DetachChild(param_9,iVar1);
     FUN_80017ac8(uVar3,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar1);
   }
-  ((ObjectTriggerInterface *)*DAT_803dd6d4)->freeState((u8 *)uVar2);
+  (*gObjectTriggerInterface)->freeState((u8 *)uVar2);
   (**(code **)(*DAT_803dd6f4 + 8))(param_9,0xffff,0,0,0);
   FUN_8000680c(param_9,0x7f);
   return;
@@ -330,9 +330,9 @@ void FUN_801a9758(undefined8 param_1,double param_2,double param_3,undefined8 pa
   if ((*(int *)(param_9 + 0x4c) != 0) && (*(short *)(*(int *)(param_9 + 0x4c) + 0x18) != -1)) {
     local_24[2] = (int)DAT_803dc070;
     local_24[1] = 0x43300000;
-    local_24[0] = (**(code **)(*DAT_803dd6d4 + 0x14))
-                            ((double)(float)((double)CONCAT44(0x43300000,local_24[2]) -
-                                            DOUBLE_803e5268));
+    local_24[0] = (*gObjectTriggerInterface)->update((u8 *)param_9,
+                            (f32)((double)CONCAT44(0x43300000,local_24[2]) -
+                                  DOUBLE_803e5268));
     FUN_801a9408(extraout_f1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,iVar4);
     if ((local_24[0] != 0) && (*(short *)(param_9 + 0xb4) == -2)) {
       iVar5 = (int)*(char *)(iVar4 + 0x57);
@@ -352,7 +352,7 @@ void FUN_801a9758(undefined8 param_1,double param_2,double param_3,undefined8 pa
       }
       if (((iVar3 < 2) && (iVar4 != 0)) && (*(short *)(iVar4 + 0xb4) != -1)) {
         *(undefined2 *)(iVar4 + 0xb4) = 0xffff;
-        ((ObjectTriggerInterface *)*DAT_803dd6d4)->endSequence(iVar5);
+        (*gObjectTriggerInterface)->endSequence(iVar5);
       }
       *(undefined2 *)(param_9 + 0xb4) = 0xffff;
     }
@@ -393,13 +393,13 @@ void FUN_801a9ab4(int param_1,int param_2)
   *(undefined4 *)(param_1 + 0xf8) = 0xffffffff;
   iVar1 = *(int *)(param_1 + 0xf4);
   if ((iVar1 == 0) && (*(short *)(param_2 + 0x18) != 1)) {
-    ((ObjectTriggerInterface *)*DAT_803dd6d4)->loadAnimData((u8 *)iVar2, (u8 *)param_2);
+    (*gObjectTriggerInterface)->loadAnimData((u8 *)iVar2, (u8 *)param_2);
     *(int *)(param_1 + 0xf4) = *(short *)(param_2 + 0x18) + 1;
   }
   else if ((iVar1 != 0) && ((int)*(short *)(param_2 + 0x18) != iVar1 + -1)) {
-    ((ObjectTriggerInterface *)*DAT_803dd6d4)->freeState((u8 *)iVar2);
+    (*gObjectTriggerInterface)->freeState((u8 *)iVar2);
     if (*(short *)(param_2 + 0x18) != -1) {
-      ((ObjectTriggerInterface *)*DAT_803dd6d4)->loadAnimData((u8 *)iVar2, (u8 *)param_2);
+      (*gObjectTriggerInterface)->loadAnimData((u8 *)iVar2, (u8 *)param_2);
     }
     *(int *)(param_1 + 0xf4) = *(short *)(param_2 + 0x18) + 1;
   }
@@ -638,7 +638,7 @@ void FUN_801a9e5c(uint param_1)
             (uVar2 = GameBit_Get(0x86a), uVar2 != 0)) {
       *(undefined4 *)(param_1 + 0x10) = *(undefined4 *)(iVar4 + 0xc);
       ((GameObject *)param_1)->anim.alpha = 0;
-      ((ObjectTriggerInterface *)*DAT_803dd6d4)->runSequence(0, (void *)param_1, -1);
+      (*gObjectTriggerInterface)->runSequence(0, (void *)param_1, -1);
       GameBit_Set(0x86a,uVar2 - 1);
       *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
     }
@@ -901,7 +901,6 @@ void ccgasvent_init(int x) { ObjGroup_AddObject(x, 0x3f); }
 /* MoonSeedPlantingSpot_SeqFn: leaf flag-set on obj's extra struct, returns 0. */
 extern void disableHeavyFog(void);
 extern int *gGameUIInterface;
-extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int *gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 #pragma scheduling off
