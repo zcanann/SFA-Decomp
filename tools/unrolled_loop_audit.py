@@ -1,60 +1,102 @@
 #!/usr/bin/env python3
-"""unrolled_loop_audit.py -- find fns where TARGET has more `slw` than current.
+"""unrolled_loop_audit.py -- find recipe-#28 candidates: functions where the
+TARGET emits more runtime `slw` (variable shift) instructions than current.
 
-The #28 manual-unroll signature: the import hand-wrote a manual loop unroll
-(folding 1<<i / 2<<i to constants) where the original was a `for` loop that
-MWCC unrolls keeping the runtime `slw` form. Target shows MORE slw instructions
-than current => rewrite the manual unroll as a for-loop to recover them.
-(sky skyFn_80088c94 69.8->99.2 precedent.)
+Recipe #28: a `li rX,1; slw r0,rX,rBIT` (RUNTIME shift, 1<<bit over a run of
+bit positions 0,1,2..) that the import hand-unrolled into manual constant
+bit-tests (`if (flags & 1)... if (flags & 2)...`), which MWCC folds to
+clrlwi / rlwinm / ori. The original was a small `for (bit=0; bit<N; bit++)
+{ if (flags & (1<<bit)) ... }` loop that MWCC unrolls while KEEPING the slw
+(it folds the induction-derived OFFSET to per-copy constants but does not
+re-fold `1<<bit`). Rewrite the manual unroll as the for-loop. Also covers a
+running-mask `mask <<= 1` variable (-> strength-reduced rlwinm) that should be
+spelled `(1 << k)` inline.
 
-CRITICAL: re-run after a FULL build -- stale .o gives false positives.
-Promoted from miner-3's /tmp/sweep28.py (task #20/#21, 2026-06-08).
+  Confirmed: sky skyFn_80088c94 69.8->99.2 (two loops), skyFn_80089710
+  80.2->86.9.
+
+  GUARD (#28): only fires when the per-iteration body is ~<=4 simple instrs;
+  a larger body makes MWCC keep a REAL loop (1 slw, not N) and the manual
+  unroll fold `1<<const` -- such fns sit ~66-70%, bank them. Watch the
+  while-PREDICATE variant (objfsa RomCurve_*: the `1<<bit` lives in a
+  multi-term `while(!(...))` predicate that needs a predicate-loop
+  restructure, not a body for-loop).
+
+NOTE: this counts the 3-register runtime `slw` ONLY -- it excludes `slwi`
+(the rlwinm-alias constant shift the disassembler also prints as "slw...").
+
+*** STALE-.o CAVEAT: run after a FULL `ninja` build (same as callset_audit). ***
+
+Usage:
+    python3 tools/unrolled_loop_audit.py [--unit-filter SUBSTR] [--limit N]
 """
-import json,subprocess,os,re
-d=json.load(open('build/GSAE01/report.json'))
-# map report unit -> source .o path
-# report unit name like 'main/main/sky' ; config has source_path
-cfg=json.load(open('build/GSAE01/config.json'))
-# build name->object paths from config
-units={}
-for u in cfg['units']:
-    name=u['name']  # e.g. main/newshadows.c
-    units[name]=u
-# report units carry metadata.source_path? use report unit 'name' diff. Let's map via report
-def objdump_slw(path):
-    # returns {sym: slw_count}
+import argparse
+import json
+import os
+import re
+import subprocess
+
+OBJDUMP = "build/binutils/powerpc-eabi-objdump"
+REPORT = "build/GSAE01/report.json"
+
+
+def slw_counts(path):
+    """{sym: count of runtime `slw` (3-reg, not slwi)}."""
     try:
-        out=subprocess.run(['build/binutils/powerpc-eabi-objdump','-d',path],capture_output=True,text=True,timeout=60).stdout
+        out = subprocess.run([OBJDUMP, "-d", path], capture_output=True,
+                             text=True, timeout=120).stdout
     except Exception:
         return {}
-    res={}
-    cur=None
+    res, cur = {}, None
     for line in out.splitlines():
-        m=re.match(r'[0-9a-f]+ <([^>]+)>:',line)
-        if m: cur=m.group(1); res[cur]=0; continue
+        m = re.match(r"[0-9a-f]+ <([^>]+)>:", line)
+        if m:
+            cur = m.group(1)
+            res[cur] = 0
+            continue
         if cur:
-            parts=line.split('\t')
-            if len(parts)>=3 and parts[2].strip().split()[0:1]==['slw']: res[cur]+=1
+            parts = line.split("\t")
+            if len(parts) >= 3 and parts[2].strip().split()[0:1] == ["slw"]:
+                res[cur] += 1
     return res
-# iterate report units, find target .o and src .o
-cands=[]
-for u in d['units']:
-    rn=u['name']  # main/main/sky
-    parts=[f for f in u.get('functions',[]) if f.get('fuzzy_match_percent',100)<100]
-    if not parts: continue
-    # find source_path from metadata
-    sp=u.get('metadata',{}).get('source_path')
-    if not sp: continue
-    rel=sp[4:] if sp.startswith('src/') else sp
-    tgt='build/GSAE01/obj/'+rel[:-2]+'.o' if rel.endswith('.c') else None
-    src='build/GSAE01/src/'+rel[:-2]+'.o' if rel.endswith('.c') else None
-    if not (tgt and os.path.exists(tgt) and os.path.exists(src)): continue
-    ts=objdump_slw(tgt); cs=objdump_slw(src)
-    for f in parts:
-        n=f['name']
-        if ts.get(n,0)>cs.get(n,0):
-            cands.append((f.get('fuzzy_match_percent',100),ts.get(n,0),cs.get(n,0),rn,n))
-cands.sort()
-for pct,t,c,rn,n in cands:
-    print('%5.1f  Tslw=%d Cslw=%d  %s  %s'%(pct,t,c,rn,n))
-print('TOTAL',len(cands))
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--unit-filter", default="")
+    ap.add_argument("--limit", type=int, default=80)
+    args = ap.parse_args()
+
+    d = json.load(open(REPORT))
+    out = []
+    for u in d["units"]:
+        name = u["name"]
+        if args.unit_filter and args.unit_filter not in name:
+            continue
+        sp = u.get("metadata", {}).get("source_path")
+        parts = [f for f in u.get("functions", [])
+                 if f.get("fuzzy_match_percent", 100) < 100]
+        if not sp or not parts:
+            continue
+        rel = sp[4:] if sp.startswith("src/") else sp
+        if not rel.endswith(".c"):
+            continue
+        tgt = "build/GSAE01/obj/" + rel[:-2] + ".o"
+        src = "build/GSAE01/src/" + rel[:-2] + ".o"
+        if not (os.path.exists(tgt) and os.path.exists(src)):
+            continue
+        ts, cs = slw_counts(tgt), slw_counts(src)
+        for f in parts:
+            n = f["name"]
+            if ts.get(n, 0) > cs.get(n, 0):
+                out.append((f.get("fuzzy_match_percent", 100),
+                            ts.get(n, 0), cs.get(n, 0), name, n))
+    out.sort()
+    for pct, t, c, un, n in out[:args.limit]:
+        print("%5.1f  Tslw=%d Cslw=%d  %-40s %s"
+              % (pct, t, c, un.replace("main/main/", ""), n))
+    print("TOTAL", len(out))
+
+
+if __name__ == "__main__":
+    main()
