@@ -4,6 +4,7 @@
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
+#include "main/obj_placement.h"
 #include "main/objlib.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
@@ -51,7 +52,7 @@ extern f32 lbl_803E5D08;
     (*gScreenTransitionInterface)->step((kind), (value))
 
 typedef struct Dll1FBSetup {
-    u8 pad00[0x18];
+    ObjPlacement base;
     s8 yawByte;
     s8 baseMove;
     s16 triggerMode;
@@ -59,9 +60,15 @@ typedef struct Dll1FBSetup {
 } Dll1FBSetup;
 
 typedef struct WMGalleonSetup {
-    u8 pad00[0x18];
+    ObjPlacement base;
     s8 yawByte;
 } WMGalleonSetup;
+
+typedef struct WMSeqObjectSetup {
+    ObjPlacement base;
+    s8 yawByte;
+    s8 setupType;
+} WMSeqObjectSetup;
 
 typedef struct WMGalleonState {
     f32 savedX;
@@ -96,6 +103,8 @@ STATIC_ASSERT(offsetof(Dll1FBSetup, baseMove) == 0x19);
 STATIC_ASSERT(offsetof(Dll1FBSetup, triggerMode) == 0x1a);
 STATIC_ASSERT(offsetof(Dll1FBSetup, objectParam) == 0x1c);
 STATIC_ASSERT(offsetof(WMGalleonSetup, yawByte) == 0x18);
+STATIC_ASSERT(offsetof(WMSeqObjectSetup, yawByte) == 0x18);
+STATIC_ASSERT(offsetof(WMSeqObjectSetup, setupType) == 0x19);
 
 #pragma scheduling off
 #pragma peephole off
@@ -240,8 +249,10 @@ void WM_seqobject_update(int *obj)
     int found;
     int i;
     int setupType;
+    WMSeqObjectSetup *setup;
 
-    setupType = OBJ_S8(OBJ_PTR(obj, 0x4c), 0x19);
+    setup = (WMSeqObjectSetup *)OBJ_PTR(obj, 0x4c);
+    setupType = setup->setupType;
     if (setupType == 8) {
         return;
     }
@@ -296,8 +307,9 @@ void WM_seqobject_update(int *obj)
 void WM_seqobject_init(int *obj, s8 *def)
 {
     s16 angle;
+    WMSeqObjectSetup *setup = (WMSeqObjectSetup *)def;
 
-    angle = (s16)((s32)def[0x18] << 8);
+    angle = (s16)((s32)setup->yawByte << 8);
     OBJ_S16(obj, 0) = angle;
     ((GameObject *)obj)->animEventCallback = (void *)WM_seqobject_SeqFn;
     OBJ_S32(obj, 0xf8) = 0x14;
