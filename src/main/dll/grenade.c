@@ -1,6 +1,7 @@
 #include "main/dll/grenade.h"
 #include "main/dll/collectable.h"
 #include "main/effect_interfaces.h"
+#include "main/game_ui_interface.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
@@ -117,7 +118,6 @@ extern void* PTR_FUN_8031dfa4;
  */
 extern void trickyDebugPrint(const char *fmt, ...);
 extern void getYButtonItem(s16 *out);
-extern int *gGameUIInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern void GameBit_Set(int bit, int val);
 extern void buttonDisable(int a, int b);
@@ -764,7 +764,6 @@ extern u32 lbl_802C21DC[];
 int trickyFoodFn_80142d2c(int obj, int state)
 {
   int tex;
-  int iface;
   int result;
   short sVar;
   u32 buf[5];
@@ -780,8 +779,7 @@ int trickyFoodFn_80142d2c(int obj, int state)
     ((TrickyState *)state)->unkA = 0;
     return 1;
   }
-  iface = *gGameUIInterface;
-  result = (**(code **)(iface + 0x24))(buf, 5);
+  result = (*gGameUIInterface)->isOneOfItemsBeingUsed((s32 *)buf, 5);
   if (result != 2) {
     if (result < 2) {
       if (result < 0) goto skip;
@@ -1700,7 +1698,7 @@ int trickyFoodFn_8014460c(int param_1,int *param_2)
     }
     if (flag != 0) {
         if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) {
-            if (((int (**)(int))*gGameUIInterface)[8](0xc1) != 0) {
+            if ((*gGameUIInterface)->isEventReady(0xc1) != 0) {
                 a = **(u8 **)state;
                 c = *(*(u8 **)state + 1);
                 if (a == c) {
