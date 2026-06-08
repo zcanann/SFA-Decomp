@@ -122,6 +122,18 @@ citations map to which renumbered entry).
 3. **`*(void **)ptr != NULL` instead of `*(int *)ptr != 0`**. The pointer form
    emits `cmplwi` (unsigned); the int form emits `cmpwi` (signed). Target
    almost always uses `cmplwi` for pointer-typed compares. See `a42bb90b`.
+   **MWCC DROPS a `(u32)` cast on a `!= 0` compare — so `(u32)x != 0` still
+   emits `cmpwi`; use `(void *)x != NULL` to force `cmplwi`.** For an `int`
+   field/local holding a handle/pointer that target null-tests unsigned, the
+   `(u32)`-cast form is INERT (the front-end folds `(u32)x != 0` back to
+   `x != 0` and uses x's signed type); the pointer-cast `(void *)x != NULL`
+   is the form that lands `cmplwi`. (miner-4: fn_801C5CE4 light null-test.)
+   CAVEAT — when the int field is ALSO read with int arithmetic nearby
+   (`inner->heldObj`), MWCC CSE-merges the loads and the int read's signedness
+   wins the compare; the only fix is a struct-field pointer retype (header
+   change, gold-gated) — body-local u32/volatile launders are inert/worse
+   (fn_802A49C8, banked #108-CSE-open: void* retype build-fails on int-
+   arithmetic use sites).
 
 4. **`if (v > K) v = K; return v;` instead of `if (v <= K) return v; return K;`**.
    The former produces target's `blelr` clamp pattern; the inverse form emits
