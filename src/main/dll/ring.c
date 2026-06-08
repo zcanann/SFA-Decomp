@@ -201,7 +201,6 @@ void ring_update(int obj)
         case RING_ROUTE_MOVING_SHOT_B:
             if (ObjHits_GetPriorityHit(obj, &hitA, 0, 0) != 0 && (hit = hitA) != 0 &&
                 (*(s16 *)(hit + 0x46) == RING_SHOT_TYPE_A || *(s16 *)(hit + 0x46) == RING_SHOT_TYPE_B)) {
-                getArwing();
                 arwarwing_addScore(getArwing(), RING_SCORE_VALUE);
                 ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4);
                 Obj_SetActiveModelIndex(obj, RING_MODEL_DEFAULT);
@@ -217,7 +216,6 @@ void ring_update(int obj)
         case RING_ROUTE_STATIONARY_SHOT:
             if (ObjHits_GetPriorityHit(obj, &hitB, 0, 0) != 0 && (hit = hitB) != 0 &&
                 (*(s16 *)(hit + 0x46) == RING_SHOT_TYPE_A || *(s16 *)(hit + 0x46) == RING_SHOT_TYPE_B)) {
-                getArwing();
                 arwarwing_addScore(getArwing(), RING_SCORE_VALUE);
                 ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4);
                 Obj_SetActiveModelIndex(obj, RING_MODEL_DEFAULT);
