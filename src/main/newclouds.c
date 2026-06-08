@@ -3278,11 +3278,7 @@ int snowPrintSnowCloud(int arg, int cloudId) {
     PSMTXConcat((void *)Camera_GetViewMatrix(), (void *)mtxT, (void *)mtxT);
     GXLoadPosMtxImm(mtxT, 0);
     texIdx = 0;
-    if (((NewCloud *)p)->unk13F4 == 0) {
-        selectTexture(lbl_8039A818[0], 0);
-    } else {
-        selectTexture(lbl_803DD1C4, 0);
-    }
+    selectTexture(((NewCloud *)p)->unk13F4 == 0 ? lbl_8039A818[0] : lbl_803DD1C4, 0);
     GXSetCullMode(0);
     textureSetupFn_800799c0();
     textRenderSetupFn_800795e8();
