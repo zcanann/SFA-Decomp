@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
@@ -950,7 +951,6 @@ void fuelcell_init(int* obj)
 }
 
 extern void disableHeavyFog(void);
-extern int* gGameUIInterface;
 
 void deathgas_free(int* obj)
 {
@@ -962,7 +962,7 @@ void deathgas_free(int* obj)
         }
     }
     if (((u32)state[12] >> 6) & 1u) {
-        ((void(*)(void))((void**)*gGameUIInterface)[24])();
+        (*gGameUIInterface)->airMeterSetShutdown();
     }
 }
 
@@ -1005,7 +1005,7 @@ void deathgas_update(int* obj)
             state->fogOn = 0;
         }
         if (state->draining) {
-            ((void(*)(void))((void**)*gGameUIInterface)[24])();
+            (*gGameUIInterface)->airMeterSetShutdown();
             state->draining = 0;
         }
         return;
@@ -1025,7 +1025,7 @@ void deathgas_update(int* obj)
         && *(f32*)((char*)player + 0x1c) <= lbl_803E3CA4 + *(f32*)((char*)obj + 0x1c)
         && Vec_distance((char*)player + 0x18, (char*)obj + 0x18) <= state->radius) {
         if (!state->draining) {
-            ((void(*)(int,int))((void**)*gGameUIInterface)[22])(6000, 0x603);
+            (*gGameUIInterface)->initAirMeter(6000, 0x603);
             state->timer = lbl_803E3CA8;
             state->draining = 1;
         }
@@ -1042,13 +1042,13 @@ void deathgas_update(int* obj)
     } else if (state->draining) {
         state->timer += (timeDelta * (f32)setup->fillRate) / lbl_803E3CAC;
         if (state->timer > lbl_803E3CA8) {
-            ((void(*)(void))((void**)*gGameUIInterface)[25])();
+            (*gGameUIInterface)->airMeterShutdown();
             state->draining = 0;
         }
     }
 
     if (state->draining) {
-        ((void(*)(int))((void**)*gGameUIInterface)[23])((int)state->timer);
+        (*gGameUIInterface)->runAirMeter((int)state->timer);
     }
 }
 
