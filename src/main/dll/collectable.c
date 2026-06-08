@@ -247,7 +247,7 @@ extern char sSidekickCommandDebugTextBlock[];
 extern undefined4 lbl_803DDA48;
 extern int lbl_803DDA54;
 extern undefined4* gExpgfxInterface;
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern undefined4 lbl_803DBC40;
 extern undefined4 lbl_803DBC48;
 extern f64 DOUBLE_803e30f0;
@@ -1897,7 +1897,7 @@ void Tricky_init(int obj)
   trickyVoxAllocFn_8004b5d4((void *)((TrickyState *)state)->voxBlocks[6]);
   trickyVoxAllocFn_8004b5d4((void *)((TrickyState *)state)->voxBlocks[7]);
   trickyVoxAllocFn_8004b5d4((void *)((TrickyState *)state)->voxBlocks[8]);
-  ((TrickyState *)state)->progressPtr = (int)((MapEventInterface *)*gMapEventInterface)->getProgressPtr();
+  ((TrickyState *)state)->progressPtr = (int)(*gMapEventInterface)->getProgressPtr();
   ((TrickyState *)state)->playerObj = Obj_GetPlayerObject();
   ((TrickyState *)state)->unk08 = 0;
   ((TrickyState *)state)->unk0B = 0;
@@ -2053,8 +2053,8 @@ void trickyFn_80148d8c(int obj,int state)
     }
     else {
       if (*(s16 *)(setup + 0x2c) != 0) {
-        (*(void (**)(f32))(*(int *)gMapEventInterface + 0x64))
-            (lbl_803E2570 * (f32)*(s16 *)(setup + 0x2c));
+        (*gMapEventInterface)->startTimedEvent(*(int *)(setup + 0x14),
+                                               lbl_803E2570 * (f32)*(s16 *)(setup + 0x2c));
       }
       ((TrickyState *)state)->flags2DC = ((TrickyState *)state)->flags2DC & 0xfffff7ff;
       ((TrickyState *)state)->unk2E8 = ((TrickyState *)state)->unk2E8 & ~3;

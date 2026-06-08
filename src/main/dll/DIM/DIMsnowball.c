@@ -1253,7 +1253,7 @@ extern void fn_80088870(void *a, void *b, void *c, void *d);
 extern int getSaveGameLoadStatus(void);
 extern void getEnvfxActImmediately(void *obj, void *target, int animId, int flags);
 extern void getEnvfxAct(int obj, int target, int id, int p);
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern int lbl_80323548[];
 extern f32 lbl_803E46D4;
 extern void ccpedstal_updateGameBitGate(int obj, u8* state2);
@@ -1297,7 +1297,7 @@ void cclevcontrol_init(int *obj) {
     }
     *(f32 *)state = lbl_803E46D4;
     state[2] = -1;
-    state[3] = (u32)(u8)((int (*)(int))((int **)*gMapEventInterface)[0x10])(((s8 *)obj)[0xac]);
+    state[3] = (u32)(u8)(*gMapEventInterface)->getMode(((s8 *)obj)[0xac]);
 }
 
 #pragma peephole reset
@@ -1588,7 +1588,7 @@ void fn_801AC108(int obj, int param2)
             r = 0;
         }
         GameBit_Set(0x4e5, 1);
-        ((MapEventInterface *)*(int *)gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 1, 1);
+        (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 1, 1);
         if (r == 1) {
             (*(int (**)(int))(*(int *)gGameUIInterface + 0x40))(1);
             *(u8 *)(param2 + 0) = 5;
@@ -1728,16 +1728,16 @@ void cclevcontrol_update(int obj)
         SCGameBitLatch_UpdateInverted((SCGameBitLatchState *)(state + 1), 0x80, -1, -1, 0x24, 0xea);
     }
     if (GameBit_Get(0x3d6) != 0
-        && ((MapEventInterface *)*(int *)gMapEventInterface)->getAnimEvent(*(s8 *)(obj + 0xac), 0x1f) != 0) {
-        ((MapEventInterface *)*(int *)gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 0x1f, 0);
+        && (*gMapEventInterface)->getAnimEvent(*(s8 *)(obj + 0xac), 0x1f) != 0) {
+        (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 0x1f, 0);
     }
     if (GameBit_Get(0x161) != 0
-        && ((MapEventInterface *)*(int *)gMapEventInterface)->getAnimEvent(*(s8 *)(obj + 0xac), 0x1e) == 0) {
-        ((MapEventInterface *)*(int *)gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 0x1e, 1);
+        && (*gMapEventInterface)->getAnimEvent(*(s8 *)(obj + 0xac), 0x1e) == 0) {
+        (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 0x1e, 1);
     }
     if (GameBit_Get(0x3d7) != 0
-        && ((MapEventInterface *)*(int *)gMapEventInterface)->getAnimEvent(*(s8 *)(obj + 0xac), 0x1d) == 0) {
-        ((MapEventInterface *)*(int *)gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 0x1d, 1);
+        && (*gMapEventInterface)->getAnimEvent(*(s8 *)(obj + 0xac), 0x1d) == 0) {
+        (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 0x1d, 1);
     }
     tricky = (int *)getTrickyObject();
     if (state[1] & 1) {

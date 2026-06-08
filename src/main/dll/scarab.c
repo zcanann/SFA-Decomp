@@ -4,6 +4,7 @@
 #include "main/effect_interfaces.h"
 #include "main/dll/scarab.h"
 #include "main/dll/baddie_state.h"
+#include "main/mapEventTypes.h"
 #include "main/objanim.h"
 #include "main/objhits_types.h"
 #include "main/objseq.h"
@@ -216,7 +217,7 @@ void dll_CA_update(int obj, int p2, int p3)
   extern void mediumbasket_tryAcquireTarget(int obj, int sub, int sub2);
   extern void mediumbasket_updateTargetMotion(int obj, int sub, int sub2);
   extern int *gBaddieControlInterface;
-  extern int *gMapEventInterface;
+  extern MapEventInterface **gMapEventInterface;
   extern ObjectTriggerInterface **gObjectTriggerInterface;
   extern f32 lbl_803E2D14;
   extern f32 lbl_803E2D90;
@@ -228,7 +229,7 @@ void dll_CA_update(int obj, int p2, int p3)
   setup = *(int *)&((GameObject *)obj)->anim.placementData;
   if (((GameObject *)obj)->unkF4 != 0) {
     if ((sub->baddie.unk270 != 3 || (sub->configFlags & 1) != 0) &&
-        (*(int (**)(int))(*(int *)gMapEventInterface + 0x68))(*(int *)(setup + 0x14)) != 0) {
+        (*gMapEventInterface)->isTimedEventActive(*(int *)(setup + 0x14)) != 0) {
       (*(void (**)(int, int, int, int, int, int, int, f32))(*(int *)gBaddieControlInterface +
                                                             0x58))(
           obj, setup, (int)sub, 14, 8, 0x102, 0x26, lbl_803E2DB8);
@@ -1741,7 +1742,7 @@ void dll_CE_update(int obj, int p2, int p3)
   extern void fn_8015EB6C(int obj, int p2, int p3);
   extern void fn_8015EA48(int obj, u8 *p);
   extern int *gBaddieControlInterface;
-  extern int *gMapEventInterface;
+  extern MapEventInterface **gMapEventInterface;
   extern ObjectTriggerInterface **gObjectTriggerInterface;
   extern int *gSHthorntailAnimationInterface;
   extern EffectInterface **gPartfxInterface;
@@ -1762,7 +1763,7 @@ void dll_CE_update(int obj, int p2, int p3)
   setup = *(int *)&((GameObject *)obj)->anim.placementData;
   if (((GameObject *)obj)->unkF4 != 0) {
     if ((sub->baddie.unk270 != 3 || (sub->configFlags & 1) != 0) &&
-        (*(int (**)(int))(*(int *)gMapEventInterface + 0x68))(*(int *)(setup + 0x14)) != 0) {
+        (*gMapEventInterface)->isTimedEventActive(*(int *)(setup + 0x14)) != 0) {
       (*(void (**)(int, int, int, int, int, int, int, f32))(*(int *)gBaddieControlInterface +
                                                             0x58))(
           obj, setup, (int)sub, 7, 6, 0x102, 0x26, lbl_803E2E14);
