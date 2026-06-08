@@ -1,6 +1,7 @@
 #include "main/dll/DR/DRlaserturret.h"
 #include "main/objanim.h"
 #include "main/objseq.h"
+#include "main/screen_transition.h"
 
 #pragma peephole off
 #pragma scheduling off
@@ -28,7 +29,7 @@ extern double shopKeeperRotateFn_801e7c4c(void *obj, void *playerObj, int p3);
 extern float mathSinf(double);
 extern int playerGetMoney(void *playerObj);
 
-extern void *gScreenTransitionInterface;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern void *gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
@@ -336,7 +337,7 @@ int DRlaserturret_handlePromptChoice(DRLaserTurretObject *obj, void *param2, int
         btn = getButtonsJustPressed(0);
         if ((btn & DR_LASERTURRET_BUTTON_CANCEL) != 0) {
             state->flags = state->flags | DR_LASERTURRET_FLAG_CONFIRM_PROMPT;
-            (*(code **)gScreenTransitionInterface)[0x8 / 4](0x1e, 1);
+            (*gScreenTransitionInterface)->start(0x1e, 1);
             return 1;
         }
     }
