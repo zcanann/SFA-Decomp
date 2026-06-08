@@ -4,6 +4,7 @@
 #include "main/effect_interfaces.h"
 #include "main/objseq.h"
 #include "main/resource.h"
+#include "main/screen_transition.h"
 
 extern undefined8 camcontrol_playTargetTypeSfx();
 extern undefined8 runLoadingScreens();
@@ -1088,7 +1089,7 @@ extern void *gCameraInterface;
 extern void *lbl_803DCA94;
 extern void *gPlayerInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern void *gScreenTransitionInterface;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern void *gSHthorntailAnimationInterface;
 extern Sky2Interface **gSky2Interface;
 extern void *gNewCloudsInterface;
@@ -1606,7 +1607,7 @@ void gameLoop(void)
         Sfx_UpdateLoopedObjectSounds();
     }
     debugPrintDraw(0);
-    (*(void (**)(int, int, int))(*(int *)gScreenTransitionInterface + 4))(0, 0, 0);
+    (*gScreenTransitionInterface)->init(0, 0, 0);
     if (lbl_803DCA3D == 1) {
         if (lbl_803DCA48 != 0) {
             if (lbl_803DCA46 == 0) {
@@ -2172,7 +2173,7 @@ void checkReset(void) {
     case 6:
         OSReport(msg + 0xd0);
         if (lbl_803DCA49 != 0) {
-            (*(void (**)(int, int))((*(u8 **)gScreenTransitionInterface) + 8))(0x1e, 1);
+            (*gScreenTransitionInterface)->start(0x1e, 1);
         }
         if (lbl_803DCA3D == 6) {
             lbl_803DCAC5 = 1;

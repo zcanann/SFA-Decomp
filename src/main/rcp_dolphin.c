@@ -4,6 +4,7 @@
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/rcp_dolphin.h"
+#include "main/screen_transition.h"
 
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_80003494();
@@ -2437,7 +2438,7 @@ extern u8 *lbl_803DCE78;
 extern s16 lbl_803DCEBA;
 extern u8 lbl_803DCEBC;
 extern u8 lbl_803DCEBD;
-extern void *gScreenTransitionInterface;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern void Pause_SetDisabled(int);
 
 #pragma scheduling off
@@ -2454,7 +2455,7 @@ void warpToMap(int idx, s8 transType) {
     lbl_803DCEBD = 1;
     *(s8 *)&lbl_803DCEBC = transType;
     if (transType != 0) {
-        (*(void (***)(int, int))gScreenTransitionInterface)[2](2, 1);
+        (*gScreenTransitionInterface)->start(2, 1);
     }
     Pause_SetDisabled(1);
 }
@@ -3692,14 +3693,14 @@ void loadNextMap(void)
         lbl_803DCDE0 -= 1;
         if ((s8)lbl_803DCDE0 < 0) {
             if (lbl_803DCEB8 > -1 && (s8)lbl_803DCEBC != 0) {
-                (*(void (***)(int, int))gScreenTransitionInterface)[3](3, 1);
+                (*gScreenTransitionInterface)->step(3, 1);
             }
             lbl_803DCEB8 = -1;
             Pause_SetDisabled(0);
         }
     }
     if ((s8)lbl_803DCEBD != 0) {
-        if ((*(int (***)(void))gScreenTransitionInterface)[5]() != 0 || (s8)lbl_803DCEBC == 0) {
+        if ((*gScreenTransitionInterface)->isFinished() != 0 || (s8)lbl_803DCEBC == 0) {
             (*gCloudActionInterface)->freeCloudObjects();
             (*gCloudActionInterface)->onMapSetup();
             (*gSky2Interface)->onMapSetup();
