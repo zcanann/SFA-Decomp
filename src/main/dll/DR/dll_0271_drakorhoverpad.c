@@ -118,6 +118,7 @@ void drakorhoverpad_initMain(int obj, void *desc) {
 
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 int drakorhoverpad_init(int obj) {
     u8 *p = ((GameObject *)obj)->extra;
     HoverpadFlags *f = (HoverpadFlags *)(p + 0x178);
@@ -153,6 +154,7 @@ int drakorhoverpad_init(int obj) {
     }
     return 0;
 }
+#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 
