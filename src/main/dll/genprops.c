@@ -5754,7 +5754,7 @@ void mikabomb_update(int *obj)
         }
     } else {
         ((GameObject *)obj)->anim.velocityY -= lbl_803E31CC * timeDelta;
-        if (((GameObject *)obj)->anim.velocityY < lbl_803E31D0) {
+        if (((GameObject *)obj)->anim.velocityY < *(f32 *)&lbl_803E31D0) {
             ((GameObject *)obj)->anim.velocityY = lbl_803E31D0;
         }
         objMove(obj, ((GameObject *)obj)->anim.velocityX * timeDelta,
