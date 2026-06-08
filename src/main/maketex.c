@@ -1,3 +1,4 @@
+#include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/maketex.h"
 #include "main/objanim.h"
@@ -81,7 +82,6 @@ extern undefined4 DAT_803dc37c;
 extern undefined4 DAT_803dc380;
 extern undefined4 DAT_803dc384;
 extern undefined4 DAT_803dc388;
-extern undefined4* DAT_803dd6d0;
 extern undefined4 DAT_803ddcc0;
 extern undefined4 DAT_803ddcc4;
 extern undefined4 DAT_803ddcc8;
@@ -1103,7 +1103,7 @@ void FUN_8007fa8c(int param_1,int param_2)
   undefined4 local_10;
   undefined local_c;
   
-  iVar1 = (**(code **)(*DAT_803dd6d0 + 0x10))();
+  iVar1 = (*gCameraInterface)->getMode();
   if (iVar1 != 0x4d) {
     puVar2 = *(undefined4 **)(param_2 + 0x74);
     if (((puVar2 == (undefined4 *)0x0) || (param_1 == 7)) || (param_1 == 6)) {
@@ -1118,7 +1118,7 @@ void FUN_8007fa8c(int param_1,int param_2)
     }
     local_c = (undefined)param_1;
     DAT_803ddd7c = param_2;
-    (**(code **)(*DAT_803dd6d0 + 0x1c))(0x4d,1,0,0x10,&local_18,0,0xff);
+    (*gCameraInterface)->setMode(0x4d,1,0,0x10,&local_18,0,0xff);
   }
   return;
 }
@@ -1459,8 +1459,6 @@ void ObjSeq_preempt(int a, int b)
 #pragma scheduling reset
 #pragma peephole reset
 
-extern int *gCameraInterface;
-
 #pragma peephole off
 #pragma scheduling off
 void cameraFocusNpc(int param1, u8 *obj)
@@ -1468,7 +1466,7 @@ void cameraFocusNpc(int param1, u8 *obj)
     struct { f32 vec[3]; u8 tag; } buf;
     f32 *p;
 
-    if ((*(int (**)(void))(*gCameraInterface + 0x10))() == 0x4d) return;
+    if ((*gCameraInterface)->getMode() == 0x4d) return;
     lbl_803DD0FC = (u32)obj;
     p = *(f32 **)(obj + 0x74);
     if (p == NULL || param1 == 7 || param1 == 6) {
@@ -1481,7 +1479,7 @@ void cameraFocusNpc(int param1, u8 *obj)
         buf.vec[2] = p[2];
     }
     buf.tag = (u8)param1;
-    (*(void (**)(int, int, int, int, f32 *, int, int))(*gCameraInterface + 0x1c))(0x4d, 1, 0, 0x10, buf.vec, 0, 0xff);
+    (*gCameraInterface)->setMode(0x4d, 1, 0, 0x10, buf.vec, 0, 0xff);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -2357,9 +2355,8 @@ void endObjSequence(int seq)
         Obj_FreeObject(frees[j]);
     }
     if (seq == lbl_803DD064) {
-        if ((*(int (**)(void))((char *)*gCameraInterface + 0x10))() == 0x4d) {
-            (*(void (**)(int, int, int, int, int, int, int))((char *)*gCameraInterface +
-                                                             0x1c))(0x42, 0, 3, 0, 0, 0, 0);
+        if ((*gCameraInterface)->getMode() == 0x4d) {
+            (*gCameraInterface)->setMode(0x42, 0, 3, 0, NULL, 0, 0);
             lbl_803DD064 = 0;
             curSeqNo = 0;
             Pause_ResetMenuFrameCounter();

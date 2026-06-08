@@ -1,4 +1,5 @@
 #include "main/dll/CF/CFtoggleswitch.h"
+#include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim_internal.h"
@@ -45,7 +46,6 @@ extern undefined4 DAT_802c2a30;
 extern undefined4 DAT_802c2a34;
 extern undefined4 DAT_802c2a38;
 extern undefined4 DAT_802c2a3c;
-extern undefined4* DAT_803dd6d0;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern MapEventInterface **gMapEventInterface;
 extern undefined4* DAT_803de760;
@@ -478,7 +478,7 @@ void FUN_8018b6ac(undefined8 param_1,double param_2,double param_3,undefined8 pa
             (*gMapEventInterface)->setAnimEvent(*(undefined *)(iVar9 + 0x1f),*(undefined *)(iVar9 + 0x1a),1);
             (*gMapEventInterface)->setMode(*(undefined *)(iVar9 + 0x1f),*(undefined *)(iVar9 + 0x1b));
             (*gObjectTriggerInterface)->runSequence(0, (void *)uVar3, -1);
-            (**(code **)(*DAT_803dd6d0 + 0x1c))(0x42,0,1,0,0,0x1e,0xff);
+            (*gCameraInterface)->setMode(0x42,0,1,0,NULL,0x1e,0xff);
           }
         }
         else {
@@ -891,7 +891,6 @@ extern void objfx_spawnArcedBurst(int *obj, int enabled, f32 radius, int particl
                                   int particleId, int lifetime, f32 sx, f32 sy, f32 sz,
                                   void *args, int a);
 extern MapEventInterface **gMapEventInterface;
-extern int *gCameraInterface;
 extern f32 lbl_803E3C30;
 extern f32 lbl_803E3C34;
 extern f32 lbl_803E3C38;
@@ -967,7 +966,7 @@ void magiccavetop_update(int *obj) {
                 (*gMapEventInterface)->setAnimEvent(def[0x1f], def[0x1a], 1);
                 (*gMapEventInterface)->setMode(def[0x1f], def[0x1b]);
                 (*gObjectTriggerInterface)->runSequence(0, obj, -1);
-                (*(void (**)(int, int, int, int, int, int, int))(*(int *)gCameraInterface + 0x1c))(0x42, 0, 1, 0, 0, 0x1e, 0xff);
+                (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
             }
             break;
         case 2:

@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/objanim.h"
@@ -44,7 +45,6 @@ extern undefined4 DAT_803dcb6a;
 extern undefined4 DAT_803dcb6c;
 extern undefined4 DAT_803dcb74;
 extern undefined4 DAT_803dcb78;
-extern undefined4* DAT_803dd6d0;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6e8;
 extern void* DAT_803de7d0;
@@ -106,10 +106,10 @@ void FUN_801b2550(undefined8 param_1,undefined8 param_2,double param_3,undefined
     FUN_8011e868(0x16);
     FUN_8011e844(0x17);
     FUN_8011e800(1);
-    iVar5 = (**(code **)(*DAT_803dd6d0 + 0x10))();
+    iVar5 = (*gCameraInterface)->getMode();
     if ((iVar5 != 0x51) && (iVar5 != 0x4c)) {
       local_38[0] = psVar4;
-      (**(code **)(*DAT_803dd6d0 + 0x1c))(0x51,1,0,4,local_38,0x32,0xff);
+      (*gCameraInterface)->setMode(0x51,1,0,4,local_38,0x32,0xff);
     }
     if (iVar5 == 0x51) {
       iVar5 = FUN_8003964c((int)psVar4,0);
@@ -220,7 +220,7 @@ void FUN_801b2550(undefined8 param_1,undefined8 param_2,double param_3,undefined
           FUN_80006ba8(0,0x200);
           FUN_8011e800(0);
           (**(code **)(*DAT_803dd6e8 + 0x60))();
-          (**(code **)(*DAT_803dd6d0 + 0x1c))(0x42,0,1,0,0,0,0xff);
+          (*gCameraInterface)->setMode(0x42,0,1,0,NULL,0,0xff);
           *(undefined *)(iVar12 + 0xac) = 5;
           *(undefined *)(iVar12 + 0xb0) = 0x3c;
           *(byte *)(param_11 + 0x90) = *(byte *)(param_11 + 0x90) | 4;
@@ -448,7 +448,7 @@ void FUN_801b2ccc(double param_1,double param_2,double param_3,double param_4,un
           *(undefined *)((int)piVar6 + 0xae) = 0;
           *(undefined *)((int)piVar6 + 0xb1) = 0;
           local_28[0] = param_9;
-          (**(code **)(*DAT_803dd6d0 + 0x1c))(0x51,1,0,4,local_28,0x32,0xff);
+          (*gCameraInterface)->setMode(0x51,1,0,4,local_28,0x32,0xff);
           FUN_80006ba8(0,0x100);
           *(undefined *)(piVar6 + 0x2b) = 3;
           (*gObjectTriggerInterface)->runSequence(0, (void *)param_9, -1);
@@ -769,7 +769,6 @@ extern void *fn_802972A8(void *player);
 extern void buttonDisable(int chan, int mask);
 extern u8  framesThisStep;
 extern f32 timeDelta;
-extern int *gCameraInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int lbl_803DBF10;
 extern int lbl_803DBF0C;
@@ -821,8 +820,7 @@ void dimcannon_update(int *obj)
             ((DimCannonState *)state)->unkAE = 0;
             ((DimCannonState *)state)->unkB1 = 0;
             focusObj = obj;
-            (*(void (**)(int, int, int, int, int **, int, int))(*(int *)gCameraInterface + 0x1c))(
-                0x51, 1, 0, 4, &focusObj, 0x32, 0xff);
+            (*gCameraInterface)->setMode(0x51, 1, 0, 4, &focusObj, 0x32, 0xff);
             buttonDisable(0, 0x100);
             ((DimCannonState *)state)->fireState = 3;
             (*gObjectTriggerInterface)->runSequence(0, obj, -1);
@@ -958,11 +956,10 @@ int fn_801B2550(int *obj, int p2, char *p3)
         setAButtonIcon(0x16);
         setBButtonIcon(0x17);
         hudFn_8011f38c(1);
-        camMode = (*(int (**)(void))(*(int *)gCameraInterface + 0x10))();
+        camMode = (*gCameraInterface)->getMode();
         if (camMode != 0x51 && camMode != 0x4c) {
             int *focusObj = obj;
-            (*(void (**)(int, int, int, int, int **, int, int))(*(int *)gCameraInterface + 0x1c))(
-                0x51, 1, 0, 4, &focusObj, 0x32, 0xff);
+            (*gCameraInterface)->setMode(0x51, 1, 0, 4, &focusObj, 0x32, 0xff);
         }
         if (camMode != 0x51) {
             return 0;
@@ -1057,8 +1054,7 @@ int fn_801B2550(int *obj, int p2, char *p3)
                 buttonDisable(0, 0x200);
                 hudFn_8011f38c(0);
                 (*(void (**)(void))(*(int *)gGameUIInterface + 0x60))();
-                (*(void (**)(int, int, int, int, int, int, int))(*(int *)gCameraInterface + 0x1c))(
-                    0x42, 0, 1, 0, 0, 0, 0xff);
+                (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
                 *(u8 *)(state + 0xac) = 5;
                 *(u8 *)(state + 0xb0) = 0x3c;
                 *(u8 *)(p3 + 0x90) |= 0x4;
