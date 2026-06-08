@@ -40,7 +40,7 @@ extern undefined4 DAT_803ad5a0;
 extern undefined4 DAT_803ad5a4;
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6e8;
-extern undefined4* DAT_803dd708;
+extern EffectInterface **gPartfxInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int *gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
@@ -110,7 +110,7 @@ void FUN_801a8f88(void)
     }
     *(float *)(psVar3 + 0x16) = *(float *)(psVar3 + 0x16) - lbl_803DC074;
     if (lbl_803E5248 < *(float *)(psVar3 + 0x16)) {
-      (**(code **)(*DAT_803dd708 + 8))(iVar1,0x71f,psVar3 + 8,0x200001,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)iVar1, 0x71f, psVar3 + 8, 0x200001, -1, NULL);
     }
     DAT_803ad598 = lbl_803E524C;
     uVar2 = randomGetRange(-(uint)(ushort)psVar3[1],(uint)(ushort)psVar3[1]);
@@ -123,7 +123,7 @@ void FUN_801a8f88(void)
     DAT_803ad59c = DAT_803ad59c + *(float *)(iVar1 + 0xc);
     DAT_803ad5a0 = DAT_803ad5a0 + *(float *)(iVar1 + 0x10);
     DAT_803ad5a4 = DAT_803ad5a4 + *(float *)(iVar1 + 0x14);
-    (**(code **)(*DAT_803dd708 + 8))(iVar1,0x720,&DAT_803ad590,0x200001,0xffffffff,0);
+    (*gPartfxInterface)->spawnObject((void *)iVar1, 0x720, &DAT_803ad590, 0x200001, -1, NULL);
   }
   FUN_8028688c();
   return;
@@ -161,7 +161,7 @@ void FUN_801a92cc(uint param_1)
         *(undefined4 *)(param_1 + 0xf8) = 0;
       }
       else {
-        (**(code **)(*DAT_803dd708 + 8))(param_1,0x724,0,2,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)param_1, 0x724, NULL, 2, -1, NULL);
         FUN_800068c4(param_1,0x450);
       }
     }
@@ -576,7 +576,7 @@ void FUN_801a9e5c(uint param_1)
         *(float *)(param_1 + 0x10) =
              *(float *)(iVar4 + 0xc) +
              (f32)(s32)(uVar2);
-        (**(code **)(*DAT_803dd708 + 8))(param_1,0x70f,0,2,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)param_1, 0x70f, NULL, 2, -1, NULL);
       }
       *(float *)(pbVar6 + 0x14) = *(float *)(pbVar6 + 0x14) - lbl_803DC074;
       if (*(float *)(pbVar6 + 0x14) <= lbl_803E528C) {
@@ -739,7 +739,7 @@ void FUN_801aa3a0(int param_1)
     ObjGroup_FindNearestObject(5,param_1,local_18);
     if (*pcVar2 == '\x01') {
       if (lbl_803E52AC <= local_18[0]) {
-        (**(code **)(*DAT_803dd708 + 8))(param_1,0x3df,0,0,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)param_1, 0x3df, NULL, 0, -1, NULL);
       }
       else {
         *pcVar2 = '\0';
@@ -1111,7 +1111,6 @@ u8 CCGasVentControlFn_801a9fd0(int obj, int extra)
 
 extern int getTrickyObject(void);
 extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
-extern EffectInterface **gPartfxInterface;
 extern f32 lbl_803E45DC;
 extern f64 lbl_803E45E8;
 extern f32 lbl_803E45F0;
