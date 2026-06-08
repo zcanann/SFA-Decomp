@@ -42,10 +42,31 @@
 #define WCAPERTURES_LIGHT_BLUE_LO 0x4d
 #define WCAPERTURES_LIGHT_BLUE_HI 0x96
 
-#define WCAPERTURES_LIGHT(state) (*(void **)((state) + WCAPERTURES_STATE_LIGHT))
-#define WCAPERTURES_TARGET_ALPHA(state) (*(s16 *)((state) + WCAPERTURES_STATE_TARGET_ALPHA))
-#define WCAPERTURES_MODE(state) (*(u8 *)((state) + WCAPERTURES_STATE_MODE))
-#define WCAPERTURES_FLAGS(state) (*(u8 *)((state) + WCAPERTURES_STATE_FLAGS))
+typedef struct WCAperturesSetup {
+    u8 pad00[WCAPERTURES_SETUP_TYPE_OFFSET];
+    s8 type;
+    u8 modelIndex;
+    u8 pad1A[WCAPERTURES_SETUP_OPEN_BIT_OFFSET - 0x1A];
+    s16 openBit;
+    s16 armBit;
+} WCAperturesSetup;
+
+typedef struct WCAperturesState {
+    void *light;
+    s16 targetAlpha;
+    u8 mode;
+    u8 flags;
+} WCAperturesState;
+
+STATIC_ASSERT(sizeof(WCAperturesState) == WCAPERTURES_EXTRA_SIZE);
+STATIC_ASSERT(offsetof(WCAperturesState, light) == WCAPERTURES_STATE_LIGHT);
+STATIC_ASSERT(offsetof(WCAperturesState, targetAlpha) == WCAPERTURES_STATE_TARGET_ALPHA);
+STATIC_ASSERT(offsetof(WCAperturesState, mode) == WCAPERTURES_STATE_MODE);
+STATIC_ASSERT(offsetof(WCAperturesState, flags) == WCAPERTURES_STATE_FLAGS);
+STATIC_ASSERT(offsetof(WCAperturesSetup, type) == WCAPERTURES_SETUP_TYPE_OFFSET);
+STATIC_ASSERT(offsetof(WCAperturesSetup, modelIndex) == WCAPERTURES_SETUP_MODEL_INDEX_OFFSET);
+STATIC_ASSERT(offsetof(WCAperturesSetup, openBit) == WCAPERTURES_SETUP_OPEN_BIT_OFFSET);
+STATIC_ASSERT(offsetof(WCAperturesSetup, armBit) == WCAPERTURES_SETUP_ARM_BIT_OFFSET);
 
 #pragma peephole on
 #pragma scheduling on
@@ -58,7 +79,7 @@ int wcapertures_getExtraSize(void) { return WCAPERTURES_EXTRA_SIZE; }
 int wcapertures_getObjectTypeId(int obj)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-    int modelIndex = *(s8 *)(*(int *)&((GameObject *)obj)->anim.placementData + WCAPERTURES_SETUP_MODEL_INDEX_OFFSET);
+    int modelIndex = (s8)((WCAperturesSetup *)((GameObject *)obj)->anim.placementData)->modelIndex;
     int modelCount = objAnim->modelInstance->modelCount;
 
     if (modelIndex >= modelCount) {
@@ -73,7 +94,8 @@ int wcapertures_getObjectTypeId(int obj)
 #pragma scheduling off
 void wcapertures_free(int obj)
 {
-    void *light = WCAPERTURES_LIGHT(*(int *)&((GameObject *)obj)->extra);
+    WCAperturesState *state = ((GameObject *)obj)->extra;
+    void *light = state->light;
 
     if (light != NULL) {
         ModelLightStruct_free(light);
@@ -86,15 +108,15 @@ void wcapertures_free(int obj)
 #pragma scheduling off
 void wcapertures_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    char *state = ((GameObject *)obj)->extra;
+    WCAperturesState *state = ((GameObject *)obj)->extra;
     u8 *light;
 
     if (visible != 0) {
-        WCAPERTURES_FLAGS((int)state) |= WCAPERTURES_FLAG_VISIBLE;
+        state->flags |= WCAPERTURES_FLAG_VISIBLE;
     } else {
-        WCAPERTURES_FLAGS((int)state) &= ~WCAPERTURES_FLAG_VISIBLE;
+        state->flags &= ~WCAPERTURES_FLAG_VISIBLE;
     }
-    light = WCAPERTURES_LIGHT((int)state);
+    light = state->light;
     if (light != NULL && light[0x2f8] != 0 && light[0x4c] != 0) {
         queueGlowRender(light);
     }
@@ -110,9 +132,9 @@ void wcapertures_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 void wcapertures_hitDetect(int obj)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-    int state = *(int *)&((GameObject *)obj)->extra;
+    WCAperturesState *state = ((GameObject *)obj)->extra;
 
-    if (WCAPERTURES_MODE(state) == WCAPERTURES_MODE_OPEN) {
+    if (state->mode == WCAPERTURES_MODE_OPEN) {
         s16 ev[18];
         f32 col[3];
 
@@ -127,8 +149,8 @@ void wcapertures_hitDetect(int obj)
                                          WCAPERTURES_PARTFX_KIND,
                                          WCAPERTURES_PARTFX_INVALID_HANDLE, col);
     }
-    if (WCAPERTURES_LIGHT(state) != NULL)
-        modelLightStruct_updateGlowAlpha(WCAPERTURES_LIGHT(state));
+    if (state->light != NULL)
+        modelLightStruct_updateGlowAlpha(state->light);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -149,12 +171,12 @@ void wcapertures_initialise(void) {}
 #pragma scheduling off
 int wcapertures_interactCallback(int obj, int p2, int p3)
 {
-    int state = *(int *)&((GameObject *)obj)->extra;
+    WCAperturesState *state = ((GameObject *)obj)->extra;
     int i;
 
     for (i = 0; i < *(u8 *)(p3 + WCAPERTURES_CALLBACK_COMMAND_COUNT_OFFSET); i++) {
         if (*(u8 *)(p3 + (i + WCAPERTURES_CALLBACK_COMMANDS_OFFSET)) == WCAPERTURES_CALLBACK_ARM)
-            WCAPERTURES_MODE(state) = WCAPERTURES_MODE_ARMED;
+            state->mode = WCAPERTURES_MODE_ARMED;
     }
     return 0;
 }
@@ -166,32 +188,33 @@ int wcapertures_interactCallback(int obj, int p2, int p3)
 void wcapertures_init(int obj, int initData)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-    int state = *(int *)&((GameObject *)obj)->extra;
+    WCAperturesState *state = ((GameObject *)obj)->extra;
+    WCAperturesSetup *setup = (WCAperturesSetup *)initData;
 
-    ((GameObject *)obj)->anim.rotX = (s16)((s8)*(u8 *)(initData + WCAPERTURES_SETUP_TYPE_OFFSET) << 8);
+    ((GameObject *)obj)->anim.rotX = (s16)(setup->type << 8);
     ((GameObject *)obj)->animEventCallback = (void *)wcapertures_interactCallback;
-    objAnim->bankIndex = *(u8 *)(initData + WCAPERTURES_SETUP_MODEL_INDEX_OFFSET);
+    objAnim->bankIndex = setup->modelIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
         objAnim->bankIndex = 0;
-    if ((u32)GameBit_Get(*(s16 *)(initData + WCAPERTURES_SETUP_ARM_BIT_OFFSET)) != 0) {
-        if ((u32)GameBit_Get(*(s16 *)(initData + WCAPERTURES_SETUP_OPEN_BIT_OFFSET)) != 0)
-            WCAPERTURES_MODE(state) = WCAPERTURES_MODE_OPEN;
+    if ((u32)GameBit_Get(setup->armBit) != 0) {
+        if ((u32)GameBit_Get(setup->openBit) != 0)
+            state->mode = WCAPERTURES_MODE_OPEN;
         else
-            WCAPERTURES_MODE(state) = WCAPERTURES_MODE_ARMED;
+            state->mode = WCAPERTURES_MODE_ARMED;
     }
     objAnim->alpha = WCAPERTURES_INITIAL_ALPHA;
-    WCAPERTURES_TARGET_ALPHA(state) = WCAPERTURES_ALPHA_OPAQUE;
+    state->targetAlpha = WCAPERTURES_ALPHA_OPAQUE;
     ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), postRenderSetAlphaBlendState);
-    WCAPERTURES_LIGHT(state) = objCreateLight(obj, 1);
-    if (WCAPERTURES_LIGHT(state) != NULL) {
-        modelLightStruct_setLightKind(WCAPERTURES_LIGHT(state), WCAPERTURES_LIGHT_KIND);
+    state->light = objCreateLight(obj, 1);
+    if (state->light != NULL) {
+        modelLightStruct_setLightKind(state->light, WCAPERTURES_LIGHT_KIND);
         if (objAnim->bankIndex == 0)
-            modelLightStruct_setupGlow(WCAPERTURES_LIGHT(state), 0, 0xff, 0xff, WCAPERTURES_LIGHT_BLUE_LO,
+            modelLightStruct_setupGlow(state->light, 0, 0xff, 0xff, WCAPERTURES_LIGHT_BLUE_LO,
                                        WCAPERTURES_LIGHT_BLUE_HI, lbl_803E6E3C);
         else
-            modelLightStruct_setupGlow(WCAPERTURES_LIGHT(state), 0, WCAPERTURES_LIGHT_BLUE_LO,
+            modelLightStruct_setupGlow(state->light, 0, WCAPERTURES_LIGHT_BLUE_LO,
                                        WCAPERTURES_LIGHT_BLUE_LO, 0xff, 0xff, lbl_803E6E3C);
-        modelLightStruct_setGlowProjectionRadius(WCAPERTURES_LIGHT(state), lbl_803E6E40);
+        modelLightStruct_setGlowProjectionRadius(state->light, lbl_803E6E40);
     }
 }
 #pragma scheduling reset
@@ -202,35 +225,35 @@ void wcapertures_init(int obj, int initData)
 void wcapertures_update(int obj)
 {
     ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
-    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
-    int state = *(int *)&((GameObject *)obj)->extra;
+    WCAperturesSetup *setup = (WCAperturesSetup *)((GameObject *)obj)->anim.placementData;
+    WCAperturesState *state = ((GameObject *)obj)->extra;
     int player = Obj_GetPlayerObject();
     void *light;
     int alpha, target;
 
-    WCAPERTURES_TARGET_ALPHA(state) = 0;
-    switch (WCAPERTURES_MODE(state)) {
+    state->targetAlpha = 0;
+    switch (state->mode) {
     case WCAPERTURES_MODE_CLOSED:
-        if ((u32)GameBit_Get(*(s16 *)(setup + WCAPERTURES_SETUP_ARM_BIT_OFFSET)) != 0) {
-            WCAPERTURES_MODE(state) = WCAPERTURES_MODE_ARMED;
+        if ((u32)GameBit_Get(setup->armBit) != 0) {
+            state->mode = WCAPERTURES_MODE_ARMED;
         }
         break;
     case WCAPERTURES_MODE_ARMED:
         if ((*(int (**)(void))(*gCameraInterface + 0x10))() == WCAPERTURES_CAMERA_MODE &&
             fn_802969F0(player) == WCAPERTURES_PLAYER_STATE) {
-            WCAPERTURES_TARGET_ALPHA(state) = WCAPERTURES_ALPHA_OPAQUE;
+            state->targetAlpha = WCAPERTURES_ALPHA_OPAQUE;
             if (Camera_GetFovY() <= lbl_803E6E38 && (((GameObject *)obj)->objectFlags & WCAPERTURES_ACCEPT_OBJECT_FLAG)) {
-                GameBit_Set(*(s16 *)(setup + WCAPERTURES_SETUP_OPEN_BIT_OFFSET), 1);
-                WCAPERTURES_MODE(state) = WCAPERTURES_MODE_OPEN;
+                GameBit_Set(setup->openBit, 1);
+                state->mode = WCAPERTURES_MODE_OPEN;
             }
         }
         break;
     case WCAPERTURES_MODE_OPEN:
-        WCAPERTURES_TARGET_ALPHA(state) = 0;
+        state->targetAlpha = 0;
         break;
     }
     alpha = objAnim->alpha;
-    target = WCAPERTURES_TARGET_ALPHA(state);
+    target = state->targetAlpha;
     if (alpha < target) {
         int v = alpha + (framesThisStep << WCAPERTURES_ALPHA_STEP_SHIFT);
         if (v > target) {
@@ -244,7 +267,7 @@ void wcapertures_update(int obj)
         }
         objAnim->alpha = v;
     }
-    light = WCAPERTURES_LIGHT(state);
+    light = state->light;
     if (light != NULL) {
         if (objAnim->alpha > WCAPERTURES_LIGHT_ENABLE_THRESHOLD) {
             modelLightStruct_setEnabled(light, 1, lbl_803E6E2C);
