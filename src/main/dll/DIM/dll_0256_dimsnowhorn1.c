@@ -967,7 +967,7 @@ int DIMSnowHorn1_animEventCallback(int obj, undefined4 unused, int setup)
             break;
     }
 
-    (*(void (**)(int, int))(*gPathControlInterface + 0x20))(obj, (int)((char *)state + 4));
+    (*gPathControlInterface)->attachObject((void *)obj, (u8 *)&state->baddie + 4);
     fz = lbl_803E8234;
     state->baddie.unk294 = fz;
     state->baddie.animSpeedB = fz;
@@ -1296,7 +1296,8 @@ void DIMSnowHorn1_update(int obj)
         ((GameObject *)obj)->anim.velocityX = fz;
         ((GameObject *)obj)->anim.velocityY = fz;
         ((GameObject *)obj)->anim.velocityZ = fz;
-        (*(void (*)(int, int))(*(int *)(*gPathControlInterface + 0x20)))(obj, data + 4);
+        (*gPathControlInterface)->attachObject((void *)obj,
+                                               (u8 *)&((DIMSnowHorn1State *)data)->baddie + 4);
         fn_802BB4B4(obj, framesThisStep, -1);
     }
     if (*(u8 *)((char *)data + 0xa8a) == 0) {
@@ -1470,7 +1471,7 @@ void DIMSnowHorn1_init(int obj, int p2, int p3)
     u8 *base = lbl_80335030;
     int stk = lbl_803E8230;
     DIMSnowHorn1State *inner;
-    int q;
+    u8 *pathState;
     s8 idx;
     ((GameObject *)obj)->anim.rotX = (s16)((s8)*(s8 *)((char *)p2 + 0x18) << 8);
     ((GameObject *)obj)->animEventCallback = (void *)DIMSnowHorn1_animEventCallback;
@@ -1487,16 +1488,17 @@ void DIMSnowHorn1_init(int obj, int p2, int p3)
     }
     (*(void (*)(int, int, int, int))(*(int *)(*gPlayerInterface + 0x4)))(obj, (int)inner, 0xc, 1);
     inner->baddie.unk2A4 = lbl_803E82B8;
-    q = (int)((char *)inner + 0x4);
-    *(u8 *)((char *)q + 0x25b) = 0;
+    pathState = (u8 *)&inner->baddie + 4;
+    pathState[0x25b] = 0;
     switch (inner->unkA8C) {
     case 1:
     case 3:
     case 4:
-        (*(void (*)(int, int, int, int))(*(int *)(*gPathControlInterface + 0x4)))(q, 3, 0x200020, 1);
-        (*(void (*)(int, int, int, int, int))(*(int *)(*gPathControlInterface + 0x8)))(q, 2, (int)(base + 0xe0), (int)&lbl_803DC734, 8);
-        (*(void (*)(int, int, int, int, int *))(*(int *)(*gPathControlInterface + 0xc)))(q, 4, (int)(base + 0xa0), (int)(base + 0xd0), &stk);
-        (*(void (*)(int, int))(*(int *)(*gPathControlInterface + 0x20)))(obj, q);
+        (*gPathControlInterface)->init(pathState, 3, 0x200020, 1);
+        (*gPathControlInterface)->setLocalPointCollision(pathState, 2, base + 0xe0,
+                                                         &lbl_803DC734, 8);
+        (*gPathControlInterface)->setup(pathState, 4, base + 0xa0, base + 0xd0, &stk);
+        (*gPathControlInterface)->attachObject((void *)obj, pathState);
         break;
     case 2:
         break;

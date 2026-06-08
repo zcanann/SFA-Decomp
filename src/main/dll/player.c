@@ -5508,8 +5508,9 @@ int fn_8029F108(int obj, int state)
         pos2[0] = pos2[0] + *(f32 *)((char *)obj + 0xc);
         pos2[2] = pos2[2] + *(f32 *)((char *)obj + 0x14);
         *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)obj + 0x10) - pos1[1];
-        t = (*(f32 (*)(int, f32, f32, f32, f32))(*(int *)(*gPathControlInterface + 0x24)))(
-            obj, pos2[0], *(f32 *)((char *)obj + 0x10), pos2[2], lbl_803E7FA4);
+        t = (*gPathControlInterface)->sampleHeight((void *)obj, pos2[0],
+                                                   *(f32 *)((char *)obj + 0x10), pos2[2],
+                                                   lbl_803E7FA4);
         inner->unk6B4 = pos2[0];
         inner->unk6B8 = t;
         inner->unk6BC = pos2[2];
@@ -7309,6 +7310,7 @@ extern f32 lbl_803E8160;
 void playerDoHitDetection(int obj)
 {
     int inner = *(int *)&((GameObject *)obj)->extra;
+    u8 *pathState = (u8 *)&((PlayerState *)inner)->baddie + 4;
     f32 dt = timeDelta;
     f32 spd;
     int sub;
@@ -7323,12 +7325,9 @@ void playerDoHitDetection(int obj)
         (((GameObject *)obj)->objectFlags & 0x1000) != 0) {
         ((PlayerState *)inner)->baddie.unk25F = 0;
     }
-    (*(void (*)(int, void *, f32))(*(int *)(*gPathControlInterface + 0x10)))(
-        obj, (void *)(inner + 4), timeDelta);
-    (*(void (*)(int, void *))(*(int *)(*gPathControlInterface + 0x14)))(obj,
-                                                                        (void *)(inner + 4));
-    (*(void (*)(int, void *, f32))(*(int *)(*gPathControlInterface + 0x18)))(
-        obj, (void *)(inner + 4), timeDelta);
+    (*gPathControlInterface)->update((void *)obj, pathState, timeDelta);
+    (*gPathControlInterface)->apply((void *)obj, pathState);
+    (*gPathControlInterface)->advance((void *)obj, pathState, timeDelta);
     fn_80026C54(lbl_803DE420);
     if (!(((PlayerState *)inner)->unk820 >= lbl_803E7EF0)) {
         (*(void (*)(int, int, void *))(*(int *)(*gPlayerInterface + 0xc)))(obj, inner,
@@ -11407,7 +11406,7 @@ int Lightfoot_SeqFn(int p1, int p2, int p3)
 void objLoadPlayerFromSave(int obj)
 {
     int inner = *(int *)&((GameObject *)obj)->extra;
-    int pc;
+    u8 *pathState;
     int me;
     int off;
     int i;
@@ -11449,13 +11448,14 @@ void objLoadPlayerFromSave(int obj)
     ((PlayerState *)inner)->unk8BF = 0;
     (*(void (*)(int, int, int, int))(*(int *)(*gPlayerInterface + 0x4)))(obj, inner, 0x42, 1);
     *(int *)((char *)inner + 0x27c) = inner + 0x6f0;
-    pc = inner + 0x4;
-    (*(void (*)(int, int, int, int))(*(int *)(*gPathControlInterface + 0x4)))(pc, 1, 0x400a7, 1);
-    (*(void (*)(int, int, int, int, int))(*(int *)(*gPathControlInterface + 0x8)))(
-        pc, 1, (int)((char *)lbl_80332EC0 + 0x130), (int)&lbl_803DC6C0, 1);
-    (*(void (*)(int, int, int, int, int))(*(int *)(*gPathControlInterface + 0xc)))(
-        pc, 2, (int)((char *)lbl_80332EC0 + 0x118), (int)lbl_803DC6B8, (int)&lbl_803DC6A4);
-    *(u8 *)((char *)pc + 0x258) = 0x64;
+    pathState = (u8 *)&((PlayerState *)inner)->baddie + 4;
+    (*gPathControlInterface)->init(pathState, 1, 0x400a7, 1);
+    (*gPathControlInterface)->setLocalPointCollision(pathState, 1,
+                                                     (u8 *)lbl_80332EC0 + 0x130,
+                                                     &lbl_803DC6C0, 1);
+    (*gPathControlInterface)->setup(pathState, 2, (u8 *)lbl_80332EC0 + 0x118,
+                                    lbl_803DC6B8, &lbl_803DC6A4);
+    pathState[0x258] = 0x64;
     fn_802AB5A4(obj, inner, 0xff);
     Player_GetObjHitsState(obj)->trackContactMask = 0x29;
     ((GameObject *)obj)->anim.alpha = 0xff;

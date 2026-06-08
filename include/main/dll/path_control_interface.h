@@ -10,6 +10,7 @@ typedef void (*PathControlSetupFn)(void *pathState, int pointCount, void *pathDa
                                    void *pathParam);
 typedef void (*PathControlStepFn)(void *obj, void *pathState, f32 delta);
 typedef void (*PathControlApplyFn)(void *obj, void *pathState);
+typedef f32 (*PathControlSampleHeightFn)(void *obj, f32 x, f32 y, f32 z, f32 radius);
 
 typedef struct PathControlInterface {
   void *slot00;
@@ -21,6 +22,7 @@ typedef struct PathControlInterface {
   PathControlStepFn advance;
   void *slot1C;
   PathControlApplyFn attachObject;
+  PathControlSampleHeightFn sampleHeight;
 } PathControlInterface;
 
 extern PathControlInterface **gPathControlInterface;
@@ -32,5 +34,6 @@ STATIC_ASSERT(offsetof(PathControlInterface, update) == 0x10);
 STATIC_ASSERT(offsetof(PathControlInterface, apply) == 0x14);
 STATIC_ASSERT(offsetof(PathControlInterface, advance) == 0x18);
 STATIC_ASSERT(offsetof(PathControlInterface, attachObject) == 0x20);
+STATIC_ASSERT(offsetof(PathControlInterface, sampleHeight) == 0x24);
 
 #endif /* MAIN_DLL_PATH_CONTROL_INTERFACE_H_ */

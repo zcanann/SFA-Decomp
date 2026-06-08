@@ -8,6 +8,7 @@
 #include "main/objanim.h"
 #include "main/objseq.h"
 #include "main/resource.h"
+#include "main/dll/path_control_interface.h"
 
 /* typedefs (verbatim from placeholder_80295318) */
 typedef struct {
@@ -839,7 +840,6 @@ extern f32 lbl_803DC6E0;
 extern f32 lbl_803DC6E4;
 extern f32 powfBitEstimate(f32 base, f32 exp);
 extern void vecRotateZXY(void *a, void *b);
-extern int *gPathControlInterface;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f32 lbl_803E7FA4;
@@ -1250,7 +1250,6 @@ extern f32 lbl_803E821C;
 extern f32 lbl_803E8220;
 extern f32 lbl_803E8224;
 extern MapEventInterface **gMapEventInterface;
-extern int *gPathControlInterface;
 extern int allocModelStruct2(int p1, int p2);
 extern void *mmAlloc(int size, int heap, int flags);
 extern void objSetSlot(int obj, int slot);
