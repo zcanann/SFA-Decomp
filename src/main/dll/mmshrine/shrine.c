@@ -133,7 +133,7 @@ void mmsh_scales_update(int param_1)
   int count;
 
   if ((*(void **)(param_1 + 0x4c) != NULL) && (*(short *)(*(int *)(param_1 + 0x4c) + 0x18) != -1)) {
-    i = (*(int (**)(f32))(*gObjectTriggerInterface + 0x14))((f32)(u32)lbl_803DB411);
+    i = (*gObjectTriggerInterface)->update((u8 *)param_1, (f32)(u32)lbl_803DB411);
     if ((i != 0) && (*(short *)(param_1 + 0xb4) == -2)) {
       typeId = *(char *)(*(int *)(param_1 + 0xb8) + 0x57);
       found = 0;

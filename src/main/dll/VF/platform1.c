@@ -295,7 +295,7 @@ int platform1_control(int obj, int p2, u8 *data)
                 goto done;
             }
             if (st->loopSfxHandle > 0) {
-                ((void (*)(void))*(void **)((char *)(*gObjectTriggerInterface) + 0x74))();
+                (*gObjectTriggerInterface)->setXrot(st->loopSfxHandle, st->currentTrackOffset);
             }
             if (st->offsetVelocity < c5690) {
                 st->offsetVelocity = lbl_803E5698 * push + st->offsetVelocity;
