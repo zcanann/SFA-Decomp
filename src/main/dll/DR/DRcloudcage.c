@@ -318,10 +318,10 @@ void fn_801EA240(f32 distanceScale, int obj, int state, int intensity, int unuse
             if (lbl_803DDC64 < lbl_803E5AE8) {
                 lbl_803DDC64 = -lbl_803DDC64;
             }
-            if (lbl_803DDC64 < lbl_803E5B10) {
+            if (lbl_803DDC64 < *(f32 *)&lbl_803E5B10) {
                 lbl_803DDC64 = lbl_803E5B10;
             }
-            if (lbl_803DDC64 > lbl_803E5B14) {
+            if (lbl_803DDC64 > *(f32 *)&lbl_803E5B14) {
                 lbl_803DDC64 = lbl_803E5B14;
             }
             if (*(f32 *)(state + 0x424) < lbl_803E5B18) {
@@ -372,10 +372,10 @@ void fn_801EA240(f32 distanceScale, int obj, int state, int intensity, int unuse
                 *(f32 *)(state + 0x3f8) = -(lbl_803E5B2C * timeDelta - *(f32 *)(state + 0x3f8));
             }
         }
-        if (*(f32 *)(state + 0x3f8) > lbl_803E5B08) {
+        if (*(f32 *)(state + 0x3f8) > *(f32 *)&lbl_803E5B08) {
             *(f32 *)(state + 0x3f8) = lbl_803E5B08;
         }
-        if (*(f32 *)(state + 0x3f8) < lbl_803E5B30) {
+        if (*(f32 *)(state + 0x3f8) < *(f32 *)&lbl_803E5B30) {
             *(f32 *)(state + 0x3f8) = lbl_803E5B30;
         }
         v = *(f32 *)(state + 0x3f8);
@@ -387,10 +387,10 @@ void fn_801EA240(f32 distanceScale, int obj, int state, int intensity, int unuse
                 *(f32 *)(state + 0x3f4) = -(lbl_803E5AF8 * timeDelta - *(f32 *)(state + 0x3f4));
             }
         }
-        if (*(f32 *)(state + 0x3f4) > lbl_803E5B40) {
+        if (*(f32 *)(state + 0x3f4) > *(f32 *)&lbl_803E5B40) {
             *(f32 *)(state + 0x3f4) = lbl_803E5B40;
         }
-        if (*(f32 *)(state + 0x3f4) < lbl_803E5B44) {
+        if (*(f32 *)(state + 0x3f4) < *(f32 *)&lbl_803E5B44) {
             *(f32 *)(state + 0x3f4) = lbl_803E5B44;
         }
         v = *(f32 *)(state + 0x3f4);
