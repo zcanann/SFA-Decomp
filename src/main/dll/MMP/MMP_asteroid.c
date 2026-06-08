@@ -39,7 +39,7 @@ extern undefined4 DAT_80322fb8;
 extern undefined4 DAT_803dc070;
 extern undefined4 gNewCloudsInterface;
 extern undefined4* DAT_803dd6f8;
-extern undefined4* DAT_803dd708;
+extern EffectInterface **gPartfxInterface;
 extern undefined4 DAT_803de780;
 extern f64 DOUBLE_803e4ca8;
 extern f64 DOUBLE_803e4cc0;
@@ -738,8 +738,8 @@ void FUN_801955c8(int param_1)
         uStack_34 = uStack_34 ^ 0x80000000;
         local_38 = 0x43300000;
         local_5c = (float)((double)CONCAT44(0x43300000,uStack_34) - dVar4);
-        (**(code **)(*DAT_803dd708 + 8))
-                  (param_1,(int)*(short *)(iVar2 + 0x24),auStack_70,2,0xffffffff,&local_78);
+        (*gPartfxInterface)->spawnObject((void *)param_1, (int)*(short *)(iVar2 + 0x24),
+                                         auStack_70, 2, -1, &local_78);
       }
     }
   }
@@ -1144,7 +1144,8 @@ void FUN_80195b9c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
           local_9c = (float)(dVar15 * dVar12 + (double)*(float *)(param_9 + 0x40));
           local_98 = (float)(dVar14 * dVar12 + (double)*(float *)(param_9 + 0x42));
           local_94 = (float)(dVar13 * dVar12 + (double)*(float *)(param_9 + 0x44));
-          (**(code **)(*DAT_803dd708 + 8))(param_9,1000,auStack_a8,0x200001,0xffffffff,0);
+          (*gPartfxInterface)->spawnObject((void *)param_9, 1000, auStack_a8, 0x200001, -1,
+                                           NULL);
           uVar6 = uVar6 + 1;
         } while ((int)uVar6 < 2);
       }
@@ -1292,7 +1293,6 @@ void explodeanimator_hitDetect(void) {}
 void explodeanimator_release(void) {}
 void explodeanimator_initialise(void) {}
 
-extern EffectInterface **gPartfxInterface;
 extern f32 lbl_803E4020;
 
 #pragma scheduling off
