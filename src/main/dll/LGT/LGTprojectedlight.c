@@ -327,14 +327,14 @@ void wmlevelcontrol_update(int obj)
     *state = *state - timeDelta;
     timer = *state;
     if (timer < lbl_803E5E70) {
-      *state = lbl_803E5E70;
+      *state = *(f32 *)&lbl_803E5E70;
     }
   }
   if (*(u8 *)(state + 5) == 0) {
     areaId = (*gMapEventInterface)->getMode((int)*(char *)(obj + 0xac));
     areaId = __cntlzw(6 - (areaId & 0xff));
     areaId = areaId >> 5;
-    if (((areaId == 0) || (loadingDone = getCurSeqNo(), loadingDone == 0)) ||
+    if ((((int)areaId == 0) || (loadingDone = getCurSeqNo(), loadingDone == 0)) ||
        (areaId = GameBit_Get(0xa7f), areaId == 0)) {
       SCGameBitLatch_UpdateInverted((SCGameBitLatchState *)(state + 4),0x10,-1,-1,0xa7f,0xa6);
       SCGameBitLatch_Update((SCGameBitLatchState *)(state + 4),2,-1,-1,0xa7f,0xa8);
