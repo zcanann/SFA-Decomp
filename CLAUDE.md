@@ -3364,6 +3364,17 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
     spelling. Detailed snapshot and examples live in
     `docs/unmatched_failure_categories.md`.
 
+125. **Loop-tail guard polarity controls `cmpwi K; blt` vs `cmpwi K-1; ble`:
+    when target increments then continues on `< LIMIT`, spell the positive
+    continue guard, not the equivalent exit guard.** Signature: only the loop
+    tail differs, target has `addi i,1; cmpwi i,8; blt loop`, current has
+    `addi i,1; cmpwi i,7; ble loop`. Rewrite:
+    `if (i < 8) { continue; } return 0;` instead of
+    `if (7 < i) { return 0; }`. This took
+    `mapBlockBounds_HasCornerPastDepthThreshold` 99.976→100; the source is
+    semantically identical, but MWCC does not canonicalize the two branch
+    forms to the same compare immediate.
+
 **NAMED CAP — branchy-arg pre-eval hoist (the in-place L2R ternary arg).**
 When target evaluates a branchy ternary CALL ARG at its L2R slot (args 1-7
 set up first, the clamp 8th, then 9-10 — ObjHits_CheckSkeletonPair's two

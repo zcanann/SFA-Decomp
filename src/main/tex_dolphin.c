@@ -159,9 +159,10 @@ u8 mapBlockBounds_HasCornerPastDepthThreshold(int param_1,float *param_2)
       return 1;
     }
     i = i + 1;
-    if (7 < (int)i) {
-      return 0;
+    if ((int)i < 8) {
+      continue;
     }
+    return 0;
   }
 }
 #pragma peephole reset
