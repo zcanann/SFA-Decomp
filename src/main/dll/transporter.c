@@ -95,7 +95,6 @@ extern undefined4 DAT_803ad3e4;
 extern undefined4 DAT_803ad3e8;
 extern undefined4 DAT_803dc070;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd72c;
 extern undefined4 DAT_803dda60;
 extern undefined4 DAT_803ddb38;
@@ -913,7 +912,7 @@ void FUN_80177204(short *param_1,int param_2)
 void FUN_80177208(int param_1)
 {
   if (*(char *)(*(int *)(param_1 + 0xb8) + 8) == '\x04') {
-    (**(code **)(*DAT_803dd6f8 + 0x18))();
+    (*gExpgfxInterface)->freeSource2((u32)param_1);
   }
   return;
 }

@@ -61,7 +61,6 @@ extern undefined4 FUN_80294d18();
 
 extern undefined4 DAT_803dccc0;
 extern undefined4* DAT_803dd6e8;
-extern undefined4* DAT_803dd6f8;
 extern f64 DOUBLE_803e6198;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E6168;
@@ -858,13 +857,12 @@ void FUN_801da868(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 {
   int iVar1;
   int *piVar2;
-  undefined8 uVar3;
   
   piVar2 = *(int **)(param_9 + 0xb8);
-  uVar3 = (**(code **)(*DAT_803dd6f8 + 0x18))();
+  (*gExpgfxInterface)->freeSource2((u32)param_9);
   if (((param_10 == 0) && (iVar1 = *piVar2, iVar1 != 0)) &&
      ((*(ushort *)(iVar1 + 0xb0) & 0x40) == 0)) {
-    FUN_80017ac8(uVar3,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar1);
+    FUN_80017ac8(param_9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar1);
   }
   return;
 }

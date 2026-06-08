@@ -43,7 +43,6 @@ extern undefined4 FUN_80294bd4();
 
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6e4;
-extern undefined4* DAT_803dd6f8;
 extern EffectInterface **gPartfxInterface;
 extern f64 DOUBLE_803e6938;
 extern f32 lbl_803DC074;
@@ -503,7 +502,7 @@ void FUN_801ef228(int param_1)
   int iVar1;
   
   iVar1 = *(int *)(param_1 + 0xb8);
-  (**(code **)(*DAT_803dd6f8 + 0x18))();
+  (*gExpgfxInterface)->freeSource2((u32)param_1);
   if (*(int *)(iVar1 + 0x18) != 0) {
     FUN_80053754();
     *(undefined4 *)(iVar1 + 0x18) = 0;

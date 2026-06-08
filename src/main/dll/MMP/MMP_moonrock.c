@@ -31,7 +31,6 @@ extern double FUN_80293900();
 
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6d0;
-extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd71c;
 extern f64 DOUBLE_803e4d18;
 extern f64 DOUBLE_803e4d30;
@@ -1153,9 +1152,9 @@ undefined4 FUN_80198348(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8019836c(void)
+void FUN_8019836c(int obj)
 {
-  (**(code **)(*DAT_803dd6f8 + 0x18))();
+  (*gExpgfxInterface)->freeSource2((u32)obj);
   return;
 }
 

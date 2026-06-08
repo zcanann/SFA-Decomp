@@ -1,5 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/DIM/DIMlavasmash.h"
 #include "main/dll/DIM/dimlogfire.h"
@@ -50,7 +51,6 @@ extern undefined4 FUN_80081110();
 extern int FUN_8028683c();
 extern undefined4 FUN_80286888();
 
-extern undefined4* DAT_803dd6f8;
 extern EffectInterface **gPartfxInterface;
 extern f64 DOUBLE_803e54b0;
 extern f64 DOUBLE_803e54d8;
@@ -256,13 +256,12 @@ void FUN_801b0ae8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 {
   uint uVar1;
   uint *puVar2;
-  undefined8 uVar3;
   
   puVar2 = *(uint **)(param_9 + 0xb8);
-  uVar3 = (**(code **)(*DAT_803dd6f8 + 0x18))();
+  (*gExpgfxInterface)->freeSource2((u32)param_9);
   uVar1 = puVar2[1];
   if ((uVar1 != 0) && (param_10 == 0)) {
-    FUN_80017ac8(uVar3,param_2,param_3,param_4,param_5,param_6,param_7,param_8,uVar1);
+    FUN_80017ac8(param_9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,uVar1);
   }
   ObjGroup_RemoveObject(param_9,0x31);
   uVar1 = *puVar2;

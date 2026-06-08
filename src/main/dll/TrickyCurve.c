@@ -24,7 +24,6 @@ extern undefined4 FUN_80286888();
 extern undefined4 FUN_80294c40();
 extern int FUN_80294d6c();
 
-extern undefined4* DAT_803dd6f8;
 extern MapEventInterface **DAT_803dd72c;
 extern u8 gTrickyCurveBurstCounter;
 extern f64 DOUBLE_803e70d8;
@@ -466,9 +465,9 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1,undefined8 param_2,u
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80207c10(void)
+void FUN_80207c10(int obj)
 {
-  (**(code **)(*DAT_803dd6f8 + 0x18))();
+  (*gExpgfxInterface)->freeSource2((u32)obj);
   return;
 }
 
