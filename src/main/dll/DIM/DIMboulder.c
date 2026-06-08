@@ -145,7 +145,7 @@ extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6d8;
 extern undefined4* DAT_803dd6e4;
 extern undefined4* DAT_803dd6e8;
-extern undefined4* DAT_803dd6f8;
+extern EffectInterface **gExpgfxInterface;
 extern MapEventInterface **DAT_803dd72c;
 extern undefined4 DAT_803de7c0;
 extern f64 DOUBLE_803e5390;
@@ -904,7 +904,7 @@ void FUN_801adb28(undefined8 param_1,double param_2,double param_3,undefined8 pa
       getLActions(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,
                    (uint)*(ushort *)(*(int *)(param_9 + 0xb8) + 8),0,0,0,in_r9,in_r10);
     }
-    (**(code **)(*DAT_803dd6f8 + 0x18))(param_9);
+    (*gExpgfxInterface)->freeObject((void *)param_9);
   }
   return;
 }
@@ -1298,7 +1298,6 @@ void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
 #pragma scheduling reset
 
 extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern EffectInterface **gExpgfxInterface;
 #pragma scheduling off
 #pragma peephole off
 extern int hitDetectFn_80065e50(int obj, int **listOut, int p3, int p4, f32 x, f32 y, f32 z);

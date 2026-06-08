@@ -50,7 +50,6 @@ extern undefined4 DAT_8039d0b4;
 extern undefined4 DAT_8039d0b8;
 extern undefined4 DAT_8039d0bc;
 extern undefined4 DAT_803dc070;
-extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd718;
 extern undefined4 DAT_803de040;
 extern undefined4 DAT_803de044;
@@ -774,7 +773,7 @@ FUN_800c8110(int param_1,undefined4 param_2,undefined2 *param_3,uint param_4,und
         local_60 = local_60 + local_78;
       }
     }
-    uVar1 = (**(code **)(*DAT_803dd6f8 + 8))(local_98,0xffffffff,param_2,0);
+    uVar1 = (*gExpgfxInterface)->spawnEffect(local_98, 0xffffffff, param_2, 0);
   }
   return uVar1;
 }
@@ -1406,7 +1405,7 @@ void FUN_800c858c(undefined4 param_1,undefined4 param_2,undefined2 *param_3,uint
         local_90 = local_90 + local_a8;
       }
     }
-    (**(code **)(*DAT_803dd6f8 + 8))(local_c8,0xffffffff,(int)uVar6,0);
+    (*gExpgfxInterface)->spawnEffect(local_c8, 0xffffffff, (int)uVar6, 0);
   }
 LAB_800cd094:
   FUN_8028688c();
@@ -1593,7 +1592,7 @@ void FUN_800c8d0c(undefined4 param_1,undefined4 param_2,undefined2 *param_3,uint
           local_70 = local_70 + local_88;
         }
       }
-      (**(code **)(*DAT_803dd6f8 + 8))(local_a8,0xffffffff,0x76c,0);
+      (*gExpgfxInterface)->spawnEffect(local_a8, 0xffffffff, 0x76c, 0);
     }
   }
 LAB_800cd570:

@@ -209,7 +209,7 @@ extern undefined4 DAT_803dc9f0;
 extern undefined4* DAT_803dd6d0;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6d8;
-extern undefined4* DAT_803dd6f8;
+extern EffectInterface **gExpgfxInterface;
 extern undefined4* DAT_803dd6fc;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd718;
@@ -2515,7 +2515,7 @@ void FUN_8016e858(int param_1)
     puVar2 = puVar2 + 6;
     iVar1 = iVar1 + 1;
   } while (iVar1 < 3);
-  (**(code **)(*DAT_803dd6f8 + 0x18))(param_1);
+  (*gExpgfxInterface)->freeObject((void *)param_1);
   return;
 }
 
@@ -2830,7 +2830,7 @@ void FUN_8016f038(int param_1)
   if (**(uint **)(param_1 + 0xb8) != 0) {
     FUN_80017620(**(uint **)(param_1 + 0xb8));
   }
-  (**(code **)(*DAT_803dd6f8 + 0x18))(param_1);
+  (*gExpgfxInterface)->freeObject((void *)param_1);
   ObjGroup_RemoveObject(param_1,2);
   return;
 }
@@ -5225,7 +5225,6 @@ int* fn_801702D4(int* obj, f32 fv) {
 #pragma scheduling reset
 
 extern void mm_free(int *p);
-extern EffectInterface **gExpgfxInterface;
 extern f32 lbl_803E31FC;
 extern f32 lbl_803E3200;
 extern f32 lbl_803E3204;
