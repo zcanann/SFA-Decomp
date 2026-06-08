@@ -102,7 +102,7 @@ void arwspeedstr_update(int obj) {
             } else {
                 objMove(obj, lbl_803E7104, lbl_803E7104, state->speed * timeDelta);
                 state->alpha = lbl_803E7108 * timeDelta + state->alpha;
-                if (state->alpha > lbl_803E710C)
+                if (state->alpha > *(f32 *)&lbl_803E710C)
                     state->alpha = lbl_803E710C;
                 ((GameObject *)obj)->anim.alpha = (int)state->alpha;
             }

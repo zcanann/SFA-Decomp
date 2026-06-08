@@ -77,7 +77,7 @@ int gf_levelcon_handleScriptEvents(int obj, int eventId, u8 *script)
     if (*(f32 *)(state + 0xc) > lbl_803E7488) {
         gameTextShow(0x476);
         *(f32 *)(state + 0xc) -= timeDelta;
-        if (*(f32 *)(state + 0xc) < lbl_803E7488) {
+        if (*(f32 *)(state + 0xc) < *(f32 *)&lbl_803E7488) {
             *(f32 *)(state + 0xc) = lbl_803E7488;
         }
     }
