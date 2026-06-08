@@ -9,52 +9,107 @@
 #pragma scheduling on
 #include "global.h"
 
-/* arwsquadron_getExtraSize == 0x164 (enemy squadron fighter). */
+#define ARW_SQUADRON_STATE_WAITING 0
+#define ARW_SQUADRON_STATE_ACTIVE 1
+#define ARW_SQUADRON_STATE_DEAD 3
+#define ARW_SQUADRON_STATE_DISABLED 4
+
+#define ARW_SQUADRON_VARIANT_FIGHTER 1
+#define ARW_SQUADRON_VARIANT_ASTEROID 2
+#define ARW_SQUADRON_VARIANT_SHIP 3
+
+typedef struct ArwSquadronSetup {
+    s16 objectId;
+    u8 pad02[0x16];
+    u8 rotX;
+    u8 rotY;
+    u8 rotZ;
+    u8 rotXSpeed;
+    u8 rotYSpeed;
+    u8 rotZSpeed;
+    s8 leaderOffsetZ;
+    u8 pad1F;
+    int leaderObjectId;
+    u16 exitDistance;
+    s8 leaderOffsetX;
+    s8 leaderOffsetY;
+    u8 pad28[2];
+    u16 volleyAngleSpread;
+    u8 volleyCooldown;
+    u8 shotInterval;
+    u8 shotsPerVolley;
+    u8 pathMode;
+    u8 pathSpeed;
+    u8 dialogueVariant;
+    s16 gameBit;
+} ArwSquadronSetup;
+
+typedef struct ArwSquadronPathCommand {
+    u8 pad00[0x18];
+    u8 primaryCommand;
+    s8 signature;
+    s8 primaryValue;
+    u8 pad1B[0x14];
+    u8 secondaryCommand;
+    u8 secondaryValue;
+} ArwSquadronPathCommand;
+
+/* arwsquadron_getExtraSize == 0x164 (ARWSquadron object family). */
 typedef struct ArwSquadronState {
     u8 pad000[0x68];
-    f32 unk68;
-    f32 unk6C;
-    f32 unk70;
+    f32 curveX;
+    f32 curveY;
+    f32 curveZ;
     u8 pad74[0x28];
-    int unk9C;
+    ArwSquadronPathCommand *commandData;
     u8 padA0[0x68];
-    f32 pathX;       /* 0x108 */
-    f32 pathY;
-    f32 pathZ;       /* 0x110 */
-    f32 emitX;       /* 0x114 */
-    f32 emitY;
-    f32 emitZ;       /* 0x11c */
-    f32 unk120;
-    u8 pad124[0xc];
-    f32 unk130;
-    f32 unk134;
-    f32 unk138;
-    int leaderObj;   /* 0x13c */
-    s16 unk140;
-    s16 unk142;
-    s16 unk144;
-    u16 unk146;
-    u16 unk148;
-    u16 unk14A;
-    u16 unk14C;
-    s16 volleyTimer; /* 0x14e */
-    s16 unk150;
-    s16 unk152;
-    u8 unk154;
-    u8 unk155;
-    u8 unk156;
-    u8 unk157;
-    u8 health158;    /* 0x158 */
-    u8 unk159;
-    u8 unk15A;
-    u8 unk15B;
-    u8 unk15C;
-    u8 unk15D;
-    u8 unk15E;
-    u8 unk15F;
-    u8 pad160[4];
+    f32 pathSpeed;
+    f32 targetPathSpeed;
+    f32 hitFlashTimer;
+    f32 muzzleLightRadius;
+    f32 muzzleLightIntensity;
+    f32 damageSmokeScale;
+    f32 fireFxScale;
+    f32 volleyCooldownTimer;
+    f32 shotIntervalTimer;
+    f32 deathTimer;
+    f32 activationDistance;
+    f32 exitDistance;
+    f32 rollAmplitude;
+    int leaderObj;
+    s16 rotXSpeed;
+    s16 rotYSpeed;
+    s16 rotZSpeed;
+    u16 swayPhaseX;
+    u16 swayPhaseY;
+    u16 swaySpeedX;
+    u16 swaySpeedY;
+    s16 volleyAngle;
+    s16 hitFadeRed;
+    s16 hitFadeGreen;
+    u8 hitFlashActive;
+    u8 volleyShotsRemaining;
+    u8 hitVolumeMode;
+    u8 deathScore;
+    u8 hitScore;
+    u8 phase;
+    u8 muzzleCount;
+    u8 projectilePathCount;
+    u8 variant;
+    u8 dialogueVariant;
+    u8 health;
+    u8 fxFrameCounter;
+    union {
+        SquadFlags init;
+        SquadCmdFlags cmd;
+    } flags;
+    u8 pad161[3];
 } ArwSquadronState;
 STATIC_ASSERT(sizeof(ArwSquadronState) == 0x164);
+STATIC_ASSERT(offsetof(ArwSquadronState, pathSpeed) == 0x108);
+STATIC_ASSERT(offsetof(ArwSquadronState, volleyCooldownTimer) == 0x124);
+STATIC_ASSERT(offsetof(ArwSquadronState, leaderObj) == 0x13c);
+STATIC_ASSERT(offsetof(ArwSquadronState, flags) == 0x160);
 
 int arwsquadron_getExtraSize(void) { return 0x164; }
 #pragma scheduling reset
@@ -123,115 +178,117 @@ void arwsquadron_spawnProjectile(int obj, int pathIdx, int angle, u8 flag) {
 void arwsquadron_init(int obj, int setup)
 {
     SquadFlags *flags;
-    int s;
+    ArwSquadronState *state;
+    ArwSquadronSetup *setupData;
     int tmp;
 
     tmp = lbl_803E7160;
-    s = *(int *)&((GameObject *)obj)->extra;
-    flags = (SquadFlags *)(s + 0x160);
+    state = *(ArwSquadronState **)&((GameObject *)obj)->extra;
+    setupData = (ArwSquadronSetup *)setup;
+    flags = &state->flags.init;
 
-    ((GameObject *)obj)->anim.rotX = *(u8 *)(setup + 0x18) << 8;
-    ((GameObject *)obj)->anim.rotY = *(u8 *)(setup + 0x19) << 8;
-    ((GameObject *)obj)->anim.rotZ = *(u8 *)(setup + 0x1a) << 8;
+    ((GameObject *)obj)->anim.rotX = setupData->rotX << 8;
+    ((GameObject *)obj)->anim.rotY = setupData->rotY << 8;
+    ((GameObject *)obj)->anim.rotZ = setupData->rotZ << 8;
     flags->b10 = 1;
-    *(u8 *)(s + 0x15e) = 1;
-    *(f32 *)(s + 0x108) = (f32)(u32) * (u8 *)(setup + 0x30) * lbl_803E716C;
-    *(f32 *)(s + 0x10c) = *(f32 *)(s + 0x108);
-    *(s16 *)(s + 0x140) = *(u8 *)(setup + 0x1b) << 4;
-    *(s16 *)(s + 0x142) = *(u8 *)(setup + 0x1c) << 4;
-    *(s16 *)(s + 0x144) = *(u8 *)(setup + 0x1d) << 4;
+    state->health = 1;
+    state->pathSpeed = (f32)(u32)setupData->pathSpeed * lbl_803E716C;
+    state->targetPathSpeed = state->pathSpeed;
+    state->rotXSpeed = setupData->rotXSpeed << 4;
+    state->rotYSpeed = setupData->rotYSpeed << 4;
+    state->rotZSpeed = setupData->rotZSpeed << 4;
     ObjHits_SetTargetMask(obj, 4);
 
-    if (*(s16 *)(setup + 0x0) == 0x616 || *(s16 *)(setup + 0x0) == 0x617) {
-        *(u8 *)(s + 0x15c) = 3;
-        if (*(s16 *)(setup + 0x0) == 0x616) {
+    if (setupData->objectId == 0x616 || setupData->objectId == 0x617) {
+        state->variant = ARW_SQUADRON_VARIANT_SHIP;
+        if (setupData->objectId == 0x616) {
             flags->b10 = 0;
         }
-        if (*(s16 *)(setup + 0x0) == 0x616) {
-            *(f32 *)(s + 0x130) = lbl_803E71C0;
+        if (setupData->objectId == 0x616) {
+            state->activationDistance = lbl_803E71C0;
         } else {
-            *(f32 *)(s + 0x130) = lbl_803E71C4;
+            state->activationDistance = lbl_803E71C4;
         }
-        *(u8 *)(s + 0x157) = 5;
-        *(u8 *)(s + 0x158) = 0;
-        if (*(s16 *)(setup + 0x0) == 0x616) {
-            *(u8 *)(s + 0x156) = 2;
+        state->deathScore = 5;
+        state->hitScore = 0;
+        if (setupData->objectId == 0x616) {
+            state->hitVolumeMode = 2;
         } else {
-            *(u8 *)(s + 0x156) = 1;
+            state->hitVolumeMode = 1;
         }
-        *(s16 *)(s + 0x140) = randomGetRange(-0x12c, 0x12c);
-        *(s16 *)(s + 0x142) = randomGetRange(-0x12c, 0x12c);
-        *(s16 *)(s + 0x144) = randomGetRange(-0x12c, 0x12c);
+        state->rotXSpeed = randomGetRange(-0x12c, 0x12c);
+        state->rotYSpeed = randomGetRange(-0x12c, 0x12c);
+        state->rotZSpeed = randomGetRange(-0x12c, 0x12c);
         flags->b80 = 1;
-    } else if (*(s16 *)(setup + 0x0) == 0x7f0) {
-        *(u8 *)(s + 0x15c) = 2;
+    } else if (setupData->objectId == 0x7f0) {
+        state->variant = ARW_SQUADRON_VARIANT_ASTEROID;
         flags->b10 = 0;
-        *(f32 *)(s + 0x130) = lbl_803E71C0;
+        state->activationDistance = lbl_803E71C0;
     } else {
-        *(u8 *)(s + 0x15c) = 1;
-        *(f32 *)(s + 0x130) = lbl_803E71C4;
-        *(u8 *)(s + 0x156) = 1;
-        *(u8 *)(s + 0x157) = 0x14;
-        *(u8 *)(s + 0x158) = 0;
-        *(f32 *)(s + 0x11c) = lbl_803E71C8;
-        *(f32 *)(s + 0x120) = lbl_803E7170;
+        state->variant = ARW_SQUADRON_VARIANT_FIGHTER;
+        state->activationDistance = lbl_803E71C4;
+        state->hitVolumeMode = 1;
+        state->deathScore = 0x14;
+        state->hitScore = 0;
+        state->damageSmokeScale = lbl_803E71C8;
+        state->fireFxScale = lbl_803E7170;
         flags->b80 = 1;
         switch (((GameObject *)obj)->anim.seqId) {
         case 0x6d6:
-            *(u8 *)(s + 0x15a) = 1;
-            *(u8 *)(s + 0x15b) = 2;
-            *(f32 *)(s + 0x114) = lbl_803E71CC;
-            *(f32 *)(s + 0x118) = lbl_803E71D0;
+            state->muzzleCount = 1;
+            state->projectilePathCount = 2;
+            state->muzzleLightRadius = lbl_803E71CC;
+            state->muzzleLightIntensity = lbl_803E71D0;
             break;
         case 0x6d5:
-            *(u8 *)(s + 0x15a) = 0;
-            *(u8 *)(s + 0x15b) = 1;
+            state->muzzleCount = 0;
+            state->projectilePathCount = 1;
             break;
         case 0x6d7:
-            *(u8 *)(s + 0x15a) = 1;
-            *(u8 *)(s + 0x15b) = 1;
-            *(f32 *)(s + 0x114) = lbl_803E71CC;
-            *(f32 *)(s + 0x118) = lbl_803E71D0;
+            state->muzzleCount = 1;
+            state->projectilePathCount = 1;
+            state->muzzleLightRadius = lbl_803E71CC;
+            state->muzzleLightIntensity = lbl_803E71D0;
             break;
         default:
-            *(u8 *)(s + 0x15a) = 1;
-            *(u8 *)(s + 0x15b) = 1;
-            *(f32 *)(s + 0x114) = lbl_803E7170;
-            *(f32 *)(s + 0x118) = lbl_803E71D0;
+            state->muzzleCount = 1;
+            state->projectilePathCount = 1;
+            state->muzzleLightRadius = lbl_803E7170;
+            state->muzzleLightIntensity = lbl_803E71D0;
             break;
         }
     }
 
-    *(f32 *)(s + 0x134) = (f32)(u32) * (u16 *)(setup + 0x24);
-    if (*(f32 *)(s + 0x134) > *(f32 *)(s + 0x130)) {
-        *(f32 *)(s + 0x134) = *(f32 *)(s + 0x130);
+    state->exitDistance = (f32)(u32)setupData->exitDistance;
+    if (state->exitDistance > state->activationDistance) {
+        state->exitDistance = state->activationDistance;
     }
     ((GameObject *)obj)->anim.alpha = 0;
     ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
-    storeZeroToFloatParam((void *)(s + 0x12c));
+    storeZeroToFloatParam(&state->deathTimer);
 
-    if (*(u8 *)(setup + 0x2f) != 0) {
-        if (*(u8 *)(s + 0x15c) == 1 || *(u8 *)(s + 0x15c) == 2) {
+    if (setupData->pathMode != 0) {
+        if (state->variant == ARW_SQUADRON_VARIANT_FIGHTER || state->variant == ARW_SQUADRON_VARIANT_ASTEROID) {
             tmp = 0x28;
         } else {
             tmp = 2;
         }
         if ((u8)(*(int (**)(int, int, f32, int *, int))(*gRomCurveInterface + 0x8c))(
-                s, obj, lbl_803E71D4, &tmp, -1) == 0) {
+                (int)state, obj, lbl_803E71D4, &tmp, -1) == 0) {
             flags->b40 = 1;
-            ((GameObject *)obj)->anim.localPosX = *(f32 *)(s + 0x68);
-            ((GameObject *)obj)->anim.localPosY = *(f32 *)(s + 0x6c);
-            ((GameObject *)obj)->anim.localPosZ = *(f32 *)(s + 0x70);
-            arwsquadron_applyCommandParams(obj, s);
+            ((GameObject *)obj)->anim.localPosX = state->curveX;
+            ((GameObject *)obj)->anim.localPosY = state->curveY;
+            ((GameObject *)obj)->anim.localPosZ = state->curveZ;
+            arwsquadron_applyCommandParams(obj, (int)state);
         }
     }
 
-    *(u16 *)(s + 0x146) = randomGetRange(0, 0xffff);
-    *(u16 *)(s + 0x148) = randomGetRange(0, 0xffff);
-    *(u16 *)(s + 0x14a) = randomGetRange(0xc8, 0x12c);
-    *(u16 *)(s + 0x14c) = randomGetRange(0xc8, 0x12c);
-    *(f32 *)(s + 0x138) = (f32)(int)randomGetRange(0x3e8, 0x7d0);
-    *(u8 *)(s + 0x15d) = *(u8 *)(setup + 0x31);
+    state->swayPhaseX = randomGetRange(0, 0xffff);
+    state->swayPhaseY = randomGetRange(0, 0xffff);
+    state->swaySpeedX = randomGetRange(0xc8, 0x12c);
+    state->swaySpeedY = randomGetRange(0xc8, 0x12c);
+    state->rollAmplitude = (f32)(int)randomGetRange(0x3e8, 0x7d0);
+    state->dialogueVariant = setupData->dialogueVariant;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -240,33 +297,34 @@ void arwsquadron_init(int obj, int setup)
 #pragma scheduling off
 void arwsquadron_applyCommandParams(int p1, int p2)
 {
-    SquadCmdFlags *flags = (SquadCmdFlags *)(p2 + 0x160);
-    int cmds = ((ArwSquadronState *)p2)->unk9C;
+    ArwSquadronState *state = (ArwSquadronState *)p2;
+    SquadCmdFlags *flags = &state->flags.cmd;
+    ArwSquadronPathCommand *cmds = state->commandData;
     int i;
 
-    if ((s8)*(u8 *)(cmds + 0x19) == 0x28) {
+    if (cmds->signature == 0x28) {
         for (i = 0; i < 2; i++) {
             int cmd;
             f32 val;
             if (i == 0) {
-                cmd = *(u8 *)(cmds + 0x18);
-                val = (f32)(s8)*(u8 *)(cmds + 0x1a);
+                cmd = cmds->primaryCommand;
+                val = (f32)cmds->primaryValue;
             } else {
-                cmd = *(u8 *)(cmds + 0x2f);
-                val = (f32)*(u8 *)(cmds + 0x30);
+                cmd = cmds->secondaryCommand;
+                val = (f32)cmds->secondaryValue;
             }
             switch ((u8)cmd) {
             case 3:
-                ((ArwSquadronState *)p2)->pathY = val * lbl_803E716C;
+                state->targetPathSpeed = val * lbl_803E716C;
                 break;
             case 1:
                 if (!flags->f80) {
-                    int s = *(int *)(p1 + 0x4c);
+                    ArwSquadronSetup *setup = *(ArwSquadronSetup **)(p1 + 0x4c);
                     flags->f80 = 1;
-                    if (((ArwSquadronState *)p2)->unk15C == 1) {
+                    if (state->variant == ARW_SQUADRON_VARIANT_FIGHTER) {
                         flags->f20 = 0;
-                        storeZeroToFloatParam((void *)(p2 + 0x124));
-                        s16toFloat((void *)(p2 + 0x124), *(u8 *)(s + 0x2c));
+                        storeZeroToFloatParam(&state->volleyCooldownTimer);
+                        s16toFloat(&state->volleyCooldownTimer, setup->volleyCooldown);
                     }
                 }
                 break;
@@ -276,7 +334,7 @@ void arwsquadron_applyCommandParams(int p1, int p2)
             case 4:
                 if (!flags->f08) {
                     flags->f08 = 1;
-                    ((ArwSquadronState *)p2)->unk144 = lbl_803E7170 * val;
+                    state->rotZSpeed = lbl_803E7170 * val;
                 }
                 break;
             case 5:
@@ -293,27 +351,27 @@ void arwsquadron_applyCommandParams(int p1, int p2)
 #pragma scheduling off
 void arwsquadron_followPath(int p1, int p2)
 {
-    int state = *(int *)(p1 + 0x4c);
+    ArwSquadronState *state = (ArwSquadronState *)p2;
+    ArwSquadronSetup *setup = *(ArwSquadronSetup **)(p1 + 0x4c);
     int r;
 
-    r = Obj_UpdateRomCurveFollowVelocity(p1, p2, ((ArwSquadronState *)p2)->pathX, lbl_803E719C, ((ArwSquadronState *)p2)->pathX, 1);
+    r = Obj_UpdateRomCurveFollowVelocity(p1, p2, state->pathSpeed, lbl_803E719C, state->pathSpeed, 1);
     if (r == -1) {
         *(s16 *)(p1 + 6) |= 0x4000;
         ObjHits_DisableObject(p1);
-        ((ArwSquadronState *)p2)->unk159 = 4;
+        state->phase = ARW_SQUADRON_STATE_DISABLED;
     } else {
         if (r != 0)
             arwsquadron_applyCommandParams(p1, p2);
-        if (*(u8 *)(state + 0x2f) == 2) {
-            if (((ArwSquadronState *)p2)->unk15C == 2)
+        if (setup->pathMode == 2) {
+            if (state->variant == ARW_SQUADRON_VARIANT_ASTEROID)
                 Obj_SmoothTurnAnglesTowardVelocity(p1, p1 + 0x24, 0xf, lbl_803E71A0, lbl_803E7188);
             else
                 Obj_SmoothTurnAnglesTowardVelocity(p1, p1 + 0x24, 0xf,
-                            ((SquadCmdFlags *)(p2 + 0x160))->f08 ? lbl_803E7168 : lbl_803E71A0,
+                            state->flags.cmd.f08 ? lbl_803E7168 : lbl_803E71A0,
                             lbl_803E7188);
         }
-        ((ArwSquadronState *)p2)->pathX += interpolate(((ArwSquadronState *)p2)->pathY - ((ArwSquadronState *)p2)->pathX,
-                                            lbl_803E71A4, timeDelta);
+        state->pathSpeed += interpolate(state->targetPathSpeed - state->pathSpeed, lbl_803E71A4, timeDelta);
         objMove(p1, *(f32 *)(p1 + 0x24) * timeDelta, *(f32 *)(p1 + 0x28) * timeDelta,
                 *(f32 *)(p1 + 0x2c) * timeDelta);
     }
@@ -325,29 +383,31 @@ void arwsquadron_followPath(int p1, int p2)
 #pragma scheduling off
 void arwsquadron_updateVolley(int p1, int p2, int p3)
 {
-    SquadCmdFlags *flags = (SquadCmdFlags *)(p2 + 0x160);
+    ArwSquadronState *state = (ArwSquadronState *)p2;
+    ArwSquadronSetup *setup = (ArwSquadronSetup *)p3;
+    SquadCmdFlags *flags = &state->flags.cmd;
 
     if (!flags->f20) {
-        if (timerCountDown((void *)(p2 + 0x124)) != 0) {
+        if (timerCountDown(&state->volleyCooldownTimer) != 0) {
             flags->f20 = 1;
-            storeZeroToFloatParam((void *)(p2 + 0x128));
-            s16toFloat((void *)(p2 + 0x128), *(u8 *)(p3 + 0x2d));
-            *(u8 *)(p2 + 0x155) = (s8)*(u8 *)(p3 + 0x2e);
-            *(s16 *)(p2 + 0x14e) = -*(u16 *)(p3 + 0x2a);
+            storeZeroToFloatParam(&state->shotIntervalTimer);
+            s16toFloat(&state->shotIntervalTimer, setup->shotInterval);
+            state->volleyShotsRemaining = (s8)setup->shotsPerVolley;
+            state->volleyAngle = -setup->volleyAngleSpread;
         }
-    } else if (timerCountDown((void *)(p2 + 0x128)) != 0) {
-        arwsquadron_spawnProjectile(p1, 0, *(s16 *)(p2 + 0x14e),
-                                    (s8)*(u8 *)(p2 + 0x155) == *(u8 *)(p3 + 0x2e) ? 1 : 0);
-        if (*(u8 *)(p2 + 0x15b) > 1)
-            arwsquadron_spawnProjectile(p1, 1, *(s16 *)(p2 + 0x14e), 0);
-        *(u8 *)(p2 + 0x155) = *(u8 *)(p2 + 0x155) - 1;
-        storeZeroToFloatParam((void *)(p2 + 0x128));
-        s16toFloat((void *)(p2 + 0x128), *(u8 *)(p3 + 0x2d));
-        *(s16 *)(p2 + 0x14e) = *(s16 *)(p2 + 0x14e) + *(u16 *)(p3 + 0x2a) * 2 / *(u8 *)(p3 + 0x2e);
-        if ((s8)*(u8 *)(p2 + 0x155) <= 0) {
+    } else if (timerCountDown(&state->shotIntervalTimer) != 0) {
+        arwsquadron_spawnProjectile(p1, 0, state->volleyAngle,
+                                    (s8)state->volleyShotsRemaining == setup->shotsPerVolley ? 1 : 0);
+        if (state->projectilePathCount > 1)
+            arwsquadron_spawnProjectile(p1, 1, state->volleyAngle, 0);
+        state->volleyShotsRemaining--;
+        storeZeroToFloatParam(&state->shotIntervalTimer);
+        s16toFloat(&state->shotIntervalTimer, setup->shotInterval);
+        state->volleyAngle += setup->volleyAngleSpread * 2 / setup->shotsPerVolley;
+        if ((s8)state->volleyShotsRemaining <= 0) {
             flags->f20 = 0;
-            storeZeroToFloatParam((void *)(p2 + 0x124));
-            s16toFloat((void *)(p2 + 0x124), *(u8 *)(p3 + 0x2c));
+            storeZeroToFloatParam(&state->volleyCooldownTimer);
+            s16toFloat(&state->volleyCooldownTimer, setup->volleyCooldown);
         }
     }
 }
@@ -358,36 +418,37 @@ void arwsquadron_updateVolley(int p1, int p2, int p3)
 #pragma scheduling off
 void arwsquadron_emitEffects(int p1, int p2)
 {
+    ArwSquadronState *state = (ArwSquadronState *)p2;
     u8 flag = 1;
     SquadPfx pfx;
 
-    if ((s8)((ArwSquadronState *)p2)->unk15E <= 2) {
-        int cnt = ((ArwSquadronState *)p2)->unk15F;
-        ((ArwSquadronState *)p2)->unk15F = cnt + 1;
+    if ((s8)state->health <= 2) {
+        int cnt = state->fxFrameCounter;
+        state->fxFrameCounter = cnt + 1;
         if (cnt % 2 != 0) {
             ObjPath_GetPointLocalPosition(p2, 4, &pfx.fx, &pfx.fy, &pfx.fz);
-            pfx.f8 = ((ArwSquadronState *)p2)->emitZ;
-            pfx.s6 = ((s8)((ArwSquadronState *)p2)->unk15E <= 1) ? 0x61a8 : -0x63c0;
+            pfx.f8 = state->damageSmokeScale;
+            pfx.s6 = ((s8)state->health <= 1) ? 0x61a8 : -0x63c0;
             (*gPartfxInterface)->spawnObject((void *)p1, 0x7d0, &pfx, 4, -1, &flag);
         }
     }
-    if ((s8)((ArwSquadronState *)p2)->unk15E <= 1) {
+    if ((s8)state->health <= 1) {
         pfx.s6 = 0xc0a;
         ObjPath_GetPointLocalPosition(p2, 5, &pfx.fx, &pfx.fy, &pfx.fz);
-        pfx.f8 = ((ArwSquadronState *)p2)->unk120;
+        pfx.f8 = state->fireFxScale;
         (*gPartfxInterface)->spawnObject((void *)p1, 0x7d1, &pfx, 4, -1, &flag);
     }
-    if (((ArwSquadronState *)p2)->unk15A != 0 && (s8)((ArwSquadronState *)p2)->unk15E > 1) {
+    if (state->muzzleCount != 0 && (s8)state->health > 1) {
         pfx.s0 = 0;
         pfx.s2 = 0;
         pfx.s4 = 0;
         pfx.f8 = lbl_803E7168;
         ObjPath_GetPointLocalPosition(p2, 2, &pfx.fx, &pfx.fy, &pfx.fz);
-        objfx_spawnLightPulse(p1, ((ArwSquadronState *)p2)->emitX, 2, 0, 0, ((ArwSquadronState *)p2)->emitY, (int)&pfx);
+        objfx_spawnLightPulse(p1, state->muzzleLightRadius, 2, 0, 0, state->muzzleLightIntensity, (int)&pfx);
     }
-    if (((ArwSquadronState *)p2)->unk15A > 1 && (s8)((ArwSquadronState *)p2)->unk15E > 1) {
+    if (state->muzzleCount > 1 && (s8)state->health > 1) {
         ObjPath_GetPointLocalPosition(p2, 3, &pfx.fx, &pfx.fy, &pfx.fz);
-        objfx_spawnLightPulse(p1, ((ArwSquadronState *)p2)->emitX, 2, 0, 0, ((ArwSquadronState *)p2)->emitY, (int)&pfx);
+        objfx_spawnLightPulse(p1, state->muzzleLightRadius, 2, 0, 0, state->muzzleLightIntensity, (int)&pfx);
     }
 }
 #pragma scheduling reset
@@ -397,59 +458,60 @@ void arwsquadron_emitEffects(int p1, int p2)
 #pragma scheduling off
 void arwsquadron_handleDamage(int obj, int state)
 {
-    SquadCmdFlags *flags = (SquadCmdFlags *)(state + 0x160);
+    ArwSquadronState *squad = (ArwSquadronState *)state;
+    SquadCmdFlags *flags = &squad->flags.cmd;
     int hitObj;
     int hitVol;
     int arwing;
 
     if (((GameObject *)obj)->anim.hitReactState == NULL)
         return;
-    if (((ArwSquadronState *)state)->unk154 != 0) {
-        ((ArwSquadronState *)state)->pathZ -= timeDelta;
-        if (((ArwSquadronState *)state)->pathZ <= lbl_803E7168)
-            ((ArwSquadronState *)state)->unk154 = 0;
+    if (squad->hitFlashActive != 0) {
+        squad->hitFlashTimer -= timeDelta;
+        if (squad->hitFlashTimer <= lbl_803E7168)
+            squad->hitFlashActive = 0;
         if (flags->f10) {
-            ((ArwSquadronState *)state)->unk150 = lbl_803E71AC * timeDelta + (f32)*(u16 *)&((ArwSquadronState *)state)->unk150;
-            ((ArwSquadronState *)state)->unk152 = lbl_803E71B0 * timeDelta + (f32)*(u16 *)&((ArwSquadronState *)state)->unk152;
+            squad->hitFadeRed = lbl_803E71AC * timeDelta + (f32)*(u16 *)&squad->hitFadeRed;
+            squad->hitFadeGreen = lbl_803E71B0 * timeDelta + (f32)*(u16 *)&squad->hitFadeGreen;
         }
     }
     if (ObjHits_GetPriorityHit(obj, &hitObj, 0, &hitVol) != 0 ||
         (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject != 0) {
         if (flags->f10) {
-            if (((ArwSquadronState *)state)->unk154 == 0)
+            if (squad->hitFlashActive == 0)
                 Sfx_PlayFromObjectLimited(obj, SFXbaddie_mika_death, 4);
             Obj_SetModelColorFadeRecursive(obj, 0xf, 0xc8, 0, 0, 1);
-            ((ArwSquadronState *)state)->pathZ = lbl_803E71B4;
-            ((ArwSquadronState *)state)->unk154 = 1;
-            ((ArwSquadronState *)state)->unk150 = 0;
-            ((ArwSquadronState *)state)->unk152 = 0;
-            ((ArwSquadronState *)state)->unk15E = ((ArwSquadronState *)state)->unk15E - hitVol;
-            if ((s8)((ArwSquadronState *)state)->unk15E <= 0) {
-                storeZeroToFloatParam((void *)(state + 0x12c));
-                s16toFloat((void *)(state + 0x12c), 0x78);
-                if (((ArwSquadronState *)state)->unk15C == 1) {
+            squad->hitFlashTimer = lbl_803E71B4;
+            squad->hitFlashActive = 1;
+            squad->hitFadeRed = 0;
+            squad->hitFadeGreen = 0;
+            squad->health = squad->health - hitVol;
+            if ((s8)squad->health <= 0) {
+                storeZeroToFloatParam(&squad->deathTimer);
+                s16toFloat(&squad->deathTimer, 0x78);
+                if (squad->variant == ARW_SQUADRON_VARIANT_FIGHTER) {
                     spawnExplosion(obj, lbl_803E719C, 1, 0, 1, 1, 0, 0, 0);
                     ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                     ObjHits_DisableObject(obj);
-                    ((ArwSquadronState *)state)->unk159 = 4;
-                    ((ArwSquadronState *)state)->unk159 = 3;
-                    if (((ArwSquadronState *)state)->unk15D == 3)
+                    squad->phase = ARW_SQUADRON_STATE_DISABLED;
+                    squad->phase = ARW_SQUADRON_STATE_DEAD;
+                    if (squad->dialogueVariant == 3)
                         gameTextFn_80125ba4(0xe);
                 } else {
                     spawnExplosion(obj, lbl_803E719C, 1, 0, 0, 1, 0, 0, 3);
                     ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                     ObjHits_DisableObject(obj);
-                    ((ArwSquadronState *)state)->unk159 = 3;
+                    squad->phase = ARW_SQUADRON_STATE_DEAD;
                 }
                 arwing = getArwing();
                 if (arwing != 0)
-                    arwarwing_addScore(arwing, ((ArwSquadronState *)state)->unk157);
+                    arwarwing_addScore(arwing, squad->deathScore);
             } else {
                 arwing = getArwing();
                 if (arwing != 0)
-                    arwarwing_addScore(arwing, ((ArwSquadronState *)state)->health158);
+                    arwarwing_addScore(arwing, squad->hitScore);
             }
-        } else if (((ArwSquadronState *)state)->unk154 == 0) {
+        } else if (squad->hitFlashActive == 0) {
             Sfx_PlayFromObjectLimited(obj, SFXbaddie_invin_hit, 4);
         }
     }
@@ -461,15 +523,16 @@ void arwsquadron_handleDamage(int obj, int state)
 #pragma scheduling off
 void arwsquadron_followLeader(int p1, int p2)
 {
-    int leader = ((ArwSquadronState *)p2)->leaderObj;
+    ArwSquadronState *state = (ArwSquadronState *)p2;
+    int leader = state->leaderObj;
     int leaderState = *(int *)(leader + 0xb8);
-    int wstate = *(int *)(p1 + 0x4c);
+    ArwSquadronSetup *setup = *(ArwSquadronSetup **)(p1 + 0x4c);
     ArwProjPosSrc src;
     f32 mtx[12];
     f32 out[3];
 
-    *(s16 *)&((ArwSquadronState *)p2)->unk146 = (f32)((ArwSquadronState *)p2)->unk14A * timeDelta + (f32)((ArwSquadronState *)p2)->unk146;
-    *(s16 *)&((ArwSquadronState *)p2)->unk148 = (f32)((ArwSquadronState *)p2)->unk14C * timeDelta + (f32)((ArwSquadronState *)p2)->unk148;
+    *(s16 *)&state->swayPhaseX = (f32)state->swaySpeedX * timeDelta + (f32)state->swayPhaseX;
+    *(s16 *)&state->swayPhaseY = (f32)state->swaySpeedY * timeDelta + (f32)state->swayPhaseY;
     src.pos[0] = *(f32 *)(leader + 0xc);
     src.pos[1] = *(f32 *)(leader + 0x10);
     src.pos[2] = *(f32 *)(leader + 0x14);
@@ -477,11 +540,11 @@ void arwsquadron_followLeader(int p1, int p2)
     src.rot[0] = *(s16 *)(leader + 0);
     src.rot[1] = *(s16 *)(leader + 2);
     src.rot[2] = *(s16 *)(leader + 4);
-    out[0] = lbl_803E7190 * mathSinf(lbl_803E7194 * (f32)((ArwSquadronState *)p2)->unk146 / lbl_803E7198) +
-             lbl_803E718C * (f32)(s8)*(u8 *)(wstate + 0x26);
-    out[1] = lbl_803E7190 * mathSinf(lbl_803E7194 * (f32)((ArwSquadronState *)p2)->unk148 / lbl_803E7198) +
-             lbl_803E718C * (f32)(s8)*(u8 *)(wstate + 0x27);
-    out[2] = lbl_803E718C * (f32)(s8)*(u8 *)(wstate + 0x1e);
+    out[0] = lbl_803E7190 * mathSinf(lbl_803E7194 * (f32)state->swayPhaseX / lbl_803E7198) +
+             lbl_803E718C * (f32)setup->leaderOffsetX;
+    out[1] = lbl_803E7190 * mathSinf(lbl_803E7194 * (f32)state->swayPhaseY / lbl_803E7198) +
+             lbl_803E718C * (f32)setup->leaderOffsetY;
+    out[2] = lbl_803E718C * (f32)setup->leaderOffsetZ;
     setMatrixFromObjectTransposed(&src, mtx);
     PSMTXMultVec(mtx, out, (void *)(p1 + 0xc));
     *(f32 *)(p1 + 0x24) = *(f32 *)(leader + 0x24);
@@ -489,20 +552,20 @@ void arwsquadron_followLeader(int p1, int p2)
     *(f32 *)(p1 + 0x2c) = *(f32 *)(leader + 0x2c);
     *(s16 *)(p1 + 0) = *(s16 *)(leader + 0);
     *(s16 *)(p1 + 2) = *(s16 *)(leader + 2);
-    if (!((SquadCmdFlags *)(p2 + 0x160))->f08) {
+    if (!state->flags.cmd.f08) {
         *(s16 *)(p1 + 4) =
-            ((ArwSquadronState *)leaderState)->unk138 *
-                mathSinf(lbl_803E7194 * (f32)((ArwSquadronState *)p2)->unk146 / lbl_803E7198) +
+            ((ArwSquadronState *)leaderState)->rollAmplitude *
+                mathSinf(lbl_803E7194 * (f32)state->swayPhaseX / lbl_803E7198) +
             (f32)*(s16 *)(leader + 4);
     }
-    ((SquadCmdFlags *)(p2 + 0x160))->f80 = ((SquadCmdFlags *)(leaderState + 0x160))->f80;
-    if (((ArwSquadronState *)p2)->unk144 > 0)
-        ((SquadCmdFlags *)(p2 + 0x160))->f08 = ((SquadCmdFlags *)(leaderState + 0x160))->f08;
-    if (((ArwSquadronState *)leaderState)->unk159 == 4) {
+    state->flags.cmd.f80 = ((ArwSquadronState *)leaderState)->flags.cmd.f80;
+    if (state->rotZSpeed > 0)
+        state->flags.cmd.f08 = ((ArwSquadronState *)leaderState)->flags.cmd.f08;
+    if (((ArwSquadronState *)leaderState)->phase == ARW_SQUADRON_STATE_DISABLED) {
         *(s16 *)(p1 + 6) |= 0x4000;
         ObjHits_DisableObject(p1);
-        ((ArwSquadronState *)p2)->unk159 = 4;
-        ((ArwSquadronState *)p2)->unk159 = 4;
+        state->phase = ARW_SQUADRON_STATE_DISABLED;
+        state->phase = ARW_SQUADRON_STATE_DISABLED;
     }
 }
 #pragma scheduling reset
@@ -512,15 +575,15 @@ void arwsquadron_followLeader(int p1, int p2)
 #pragma scheduling off
 void arwsquadron_update(int obj)
 {
-    int state = *(int *)&((GameObject *)obj)->extra;
-    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
-    SquadCmdFlags *flags = (SquadCmdFlags *)(state + 0x160);
-    u8 s = ((ArwSquadronState *)state)->unk159;
+    ArwSquadronState *state = *(ArwSquadronState **)&((GameObject *)obj)->extra;
+    ArwSquadronSetup *setup = *(ArwSquadronSetup **)&((GameObject *)obj)->anim.placementData;
+    SquadCmdFlags *flags = &state->flags.cmd;
+    u8 phase = state->phase;
 
-    if (s == 4 || s == 3)
+    if (phase == ARW_SQUADRON_STATE_DISABLED || phase == ARW_SQUADRON_STATE_DEAD)
         return;
 
-    if (((ArwSquadronState *)state)->unk15D == 1) {
+    if (state->dialogueVariant == 1) {
         int aim = getArwing();
         f32 d;
         int inRange;
@@ -533,25 +596,25 @@ void arwsquadron_update(int obj)
                 gameTextFn_80125ba4(0x10);
             else
                 gameTextFn_80125ba4(0xd);
-            ((ArwSquadronState *)state)->unk15D = 0;
+            state->dialogueVariant = 0;
         }
     }
 
-    switch (((ArwSquadronState *)state)->unk159) {
-    case 0: {
-        int setupL = *(int *)&((GameObject *)obj)->anim.placementData;
+    switch (state->phase) {
+    case ARW_SQUADRON_STATE_WAITING: {
+        ArwSquadronSetup *setupL = *(ArwSquadronSetup **)&((GameObject *)obj)->anim.placementData;
         int leader = obj;
         int enable;
         getArwing();
-        if (*(int *)(setupL + 0x20) > 0) {
-            if (((ArwSquadronState *)state)->leaderObj == 0)
-                ((ArwSquadronState *)state)->leaderObj = ObjList_FindObjectById(*(int *)(setupL + 0x20));
-            leader = ((ArwSquadronState *)state)->leaderObj;
+        if (setupL->leaderObjectId > 0) {
+            if (state->leaderObj == 0)
+                state->leaderObj = ObjList_FindObjectById(setupL->leaderObjectId);
+            leader = state->leaderObj;
         }
         if (leader == 0) {
             enable = 0;
         } else {
-            f32 thr = ((ArwSquadronState *)state)->unk130;
+            f32 thr = state->activationDistance;
             int aim = getArwing();
             f32 d;
             int inRange;
@@ -561,10 +624,10 @@ void arwsquadron_update(int obj)
             inRange = (d < thr && d > lbl_803E7164);
             if (!inRange) {
                 enable = 0;
-            } else if (*(s16 *)(setupL + 0x32) > 0) {
-                enable = GameBit_Get(*(s16 *)(setupL + 0x32)) != 0;
+            } else if (setupL->gameBit > 0) {
+                enable = GameBit_Get(setupL->gameBit) != 0;
             } else {
-                f32 thr2 = ((ArwSquadronState *)state)->unk134;
+                f32 thr2 = state->exitDistance;
                 int aim2 = getArwing();
                 f32 d2;
                 int inRange2;
@@ -573,7 +636,7 @@ void arwsquadron_update(int obj)
                 d2 = *(f32 *)(leader + 0x14) - *(f32 *)(aim2 + 0x14);
                 inRange2 = (d2 < thr2 && d2 > lbl_803E7164);
                 if (!inRange2)
-                    enable = GameBit_Get(*(s16 *)(setupL + 0x32)) != 0;
+                    enable = GameBit_Get(setupL->gameBit) != 0;
                 else
                     enable = 1;
             }
@@ -581,28 +644,28 @@ void arwsquadron_update(int obj)
         if (enable) {
             ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
             ObjHits_EnableObject(obj);
-            ((ArwSquadronState *)state)->unk159 = 1;
-            setupL = *(int *)&((GameObject *)obj)->anim.placementData;
-            if (((ArwSquadronState *)state)->unk15C == 1) {
+            state->phase = ARW_SQUADRON_STATE_ACTIVE;
+            setupL = *(ArwSquadronSetup **)&((GameObject *)obj)->anim.placementData;
+            if (state->variant == ARW_SQUADRON_VARIANT_FIGHTER) {
                 flags->f20 = 0;
-                storeZeroToFloatParam((void *)(state + 0x124));
-                s16toFloat((void *)(state + 0x124), *(u8 *)(setupL + 0x2c));
+                storeZeroToFloatParam(&state->volleyCooldownTimer);
+                s16toFloat(&state->volleyCooldownTimer, setupL->volleyCooldown);
             }
         }
         return;
     }
-    case 1: {
-        int setupL = *(int *)&((GameObject *)obj)->anim.placementData;
+    case ARW_SQUADRON_STATE_ACTIVE: {
+        ArwSquadronSetup *setupL = *(ArwSquadronSetup **)&((GameObject *)obj)->anim.placementData;
         int leader = obj;
         int disable;
         ((GameObject *)obj)->anim.alpha = 0xff;
         getArwing();
-        if (((ArwSquadronState *)state)->leaderObj != 0)
-            leader = ((ArwSquadronState *)state)->leaderObj;
+        if (state->leaderObj != 0)
+            leader = state->leaderObj;
         if (leader == 0) {
             disable = 0;
         } else {
-            f32 thr = ((ArwSquadronState *)state)->unk130;
+            f32 thr = state->activationDistance;
             int aim = getArwing();
             f32 d;
             int inRange;
@@ -612,10 +675,10 @@ void arwsquadron_update(int obj)
             inRange = (d < thr && d > lbl_803E7164);
             if (inRange) {
                 disable = 0;
-            } else if (*(s16 *)(setupL + 0x32) > 0) {
-                disable = GameBit_Get(*(s16 *)(setupL + 0x32)) != 0;
+            } else if (setupL->gameBit > 0) {
+                disable = GameBit_Get(setupL->gameBit) != 0;
             } else {
-                f32 thr2 = ((ArwSquadronState *)state)->unk134;
+                f32 thr2 = state->exitDistance;
                 int aim2 = getArwing();
                 f32 d2;
                 int inRange2;
@@ -624,7 +687,7 @@ void arwsquadron_update(int obj)
                 d2 = *(f32 *)(leader + 0x14) - *(f32 *)(aim2 + 0x14);
                 inRange2 = (d2 < thr2 && d2 > lbl_803E7164);
                 if (!inRange2)
-                    disable = GameBit_Get(*(s16 *)(setupL + 0x32)) != 0;
+                    disable = GameBit_Get(setupL->gameBit) != 0;
                 else
                     disable = 1;
             }
@@ -632,44 +695,44 @@ void arwsquadron_update(int obj)
         if (disable) {
             ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             ObjHits_DisableObject(obj);
-            ((ArwSquadronState *)state)->unk159 = 4;
+            state->phase = ARW_SQUADRON_STATE_DISABLED;
             return;
         }
-        if (((ArwSquadronState *)state)->unk15C != 2) {
-            if (*(u8 *)(setup + 0x2f) != 2) {
+        if (state->variant != ARW_SQUADRON_VARIANT_ASTEROID) {
+            if (setup->pathMode != 2) {
                 ((GameObject *)obj)->anim.rotX =
-                    (f32)((ArwSquadronState *)state)->unk140 * timeDelta + (f32)((GameObject *)obj)->anim.rotX;
+                    (f32)state->rotXSpeed * timeDelta + (f32)((GameObject *)obj)->anim.rotX;
                 ((GameObject *)obj)->anim.rotY =
-                    (f32)((ArwSquadronState *)state)->unk142 * timeDelta + (f32)((GameObject *)obj)->anim.rotY;
+                    (f32)state->rotYSpeed * timeDelta + (f32)((GameObject *)obj)->anim.rotY;
             }
-            if (flags->f08 || *(u8 *)(setup + 0x2f) != 2) {
+            if (flags->f08 || setup->pathMode != 2) {
                 ((GameObject *)obj)->anim.rotZ =
-                    (f32)((ArwSquadronState *)state)->unk144 * timeDelta + (f32)((GameObject *)obj)->anim.rotZ;
+                    (f32)state->rotZSpeed * timeDelta + (f32)((GameObject *)obj)->anim.rotZ;
             }
         }
-        if (((ArwSquadronState *)state)->leaderObj != 0) {
-            arwsquadron_followLeader(obj, state);
+        if (state->leaderObj != 0) {
+            arwsquadron_followLeader(obj, (int)state);
         } else if (flags->f40) {
-            arwsquadron_followPath(obj, state);
+            arwsquadron_followPath(obj, (int)state);
         }
         if (flags->f80) {
-            setupL = *(int *)&((GameObject *)obj)->anim.placementData;
-            ObjHits_SetHitVolumeSlot(obj, 0x13, ((ArwSquadronState *)state)->unk156, 0);
-            if (((ArwSquadronState *)state)->unk15C == 1)
-                arwsquadron_updateVolley(obj, state, setupL);
+            setupL = *(ArwSquadronSetup **)&((GameObject *)obj)->anim.placementData;
+            ObjHits_SetHitVolumeSlot(obj, 0x13, state->hitVolumeMode, 0);
+            if (state->variant == ARW_SQUADRON_VARIANT_FIGHTER)
+                arwsquadron_updateVolley(obj, (int)state, (int)setupL);
         }
         break;
     }
-    case 3:
-    case 4:
+    case ARW_SQUADRON_STATE_DEAD:
+    case ARW_SQUADRON_STATE_DISABLED:
         return;
     default:
         break;
     }
 
-    arwsquadron_handleDamage(obj, state);
-    if (((ArwSquadronState *)state)->unk15C == 1)
-        arwsquadron_emitEffects(obj, state);
+    arwsquadron_handleDamage(obj, (int)state);
+    if (state->variant == ARW_SQUADRON_VARIANT_FIGHTER)
+        arwsquadron_emitEffects(obj, (int)state);
     if (((ObjAnimComponent *)obj)->modelInstance->flags == 0)
         ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E71BC, timeDelta, 0);
 }
