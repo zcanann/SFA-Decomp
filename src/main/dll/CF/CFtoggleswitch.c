@@ -1,5 +1,6 @@
 #include "main/dll/CF/CFtoggleswitch.h"
 #include "main/camera_interface.h"
+#include "main/dll/cannon.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim_internal.h"
@@ -604,16 +605,6 @@ extern int* getTrickyObject(void);
 extern f32 Vec_xzDistance(f32 *a, f32 *b);
 extern void objRenderFn_80041018(int obj);
 extern u8 framesThisStep;
-
-typedef struct TrickyGuardSpotInterfaceVTable {
-    void *pad00[10];
-    void (*setGuardSpotAction)(ObjAnimComponent *tricky, TrickyGuardSpotObject *obj,
-                               int action, int param);
-    void *pad2C[4];
-    void (*resetGuardSpotAction)(ObjAnimComponent *tricky);
-    void *pad40;
-    int (*isGuardSpotActionReady)(ObjAnimComponent *tricky);
-} TrickyGuardSpotInterfaceVTable;
 
 #define TRICKY_GUARD_SPOT_VTABLE(tricky) \
     (*(TrickyGuardSpotInterfaceVTable **)(*(u8 **)((char *)(tricky) + 0x68)))

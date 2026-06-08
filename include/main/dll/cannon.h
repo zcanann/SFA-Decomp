@@ -5,6 +5,21 @@
 #include "main/objanim_internal.h"
 
 typedef struct TrickyRuntime TrickyRuntime;
+typedef struct TrickyGuardSpotObject TrickyGuardSpotObject;
+
+typedef struct TrickyGuardSpotInterfaceVTable {
+    void *pad00[10];
+    void (*setGuardSpotAction)(ObjAnimComponent *tricky, TrickyGuardSpotObject *obj,
+                               int action, int param);
+    void *pad2C[4];
+    void (*resetGuardSpotAction)(ObjAnimComponent *tricky);
+    void *pad40;
+    int (*isGuardSpotActionReady)(ObjAnimComponent *tricky);
+} TrickyGuardSpotInterfaceVTable;
+
+STATIC_ASSERT(offsetof(TrickyGuardSpotInterfaceVTable, setGuardSpotAction) == 0x28);
+STATIC_ASSERT(offsetof(TrickyGuardSpotInterfaceVTable, resetGuardSpotAction) == 0x3C);
+STATIC_ASSERT(offsetof(TrickyGuardSpotInterfaceVTable, isGuardSpotActionReady) == 0x44);
 
 void trickyGuard(ObjAnimComponent *obj, TrickyRuntime *state);
 undefined4 FUN_8013ffbc(int param_1);
