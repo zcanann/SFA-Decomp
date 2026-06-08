@@ -4,6 +4,7 @@
 #include "ghidra_import.h"
 #include "global.h"
 #include "main/object_descriptor.h"
+#include "main/obj_placement.h"
 #include "main/objanim_internal.h"
 
 extern ObjectDescriptor gFXEmitObjDescriptor;
@@ -25,7 +26,7 @@ typedef struct FxEmitObject FxEmitObject;
 typedef int (*FxEmitSeqCallback)(FxEmitObject *obj, int unused, int events);
 
 typedef struct FxEmitPlacement {
-    u8 pad00[0x18];
+    ObjPlacement base;
     s8 triggerRadius;
     s8 effectMode;
     s16 effectId;

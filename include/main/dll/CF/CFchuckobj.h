@@ -4,6 +4,7 @@
 #include "ghidra_import.h"
 #include "main/dll/CF/CFTreasSharpy.h"
 #include "main/object_descriptor.h"
+#include "main/obj_placement.h"
 
 extern ObjectDescriptor gAreaFXEmitObjDescriptor;
 extern ObjectDescriptor12 gLFXEmitterObjDescriptor;
@@ -37,7 +38,7 @@ typedef struct LfxEmitterObject LfxEmitterObject;
 typedef int (*AreaFxEmitSeqCallback)(AreaFxEmitObject *obj, int unused, u8 *events);
 
 typedef struct AreaFxEmitPlacement {
-    u8 pad00[0x18];
+    ObjPlacement base;
     s8 triggerRadius;
     s8 initialRoll;
     s8 initialPitch;

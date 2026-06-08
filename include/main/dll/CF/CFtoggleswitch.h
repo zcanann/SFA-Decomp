@@ -4,6 +4,7 @@
 #include "ghidra_import.h"
 #include "main/objanim_internal.h"
 #include "main/objanim_update.h"
+#include "main/obj_placement.h"
 #include "main/object_descriptor.h"
 
 #define TRICKY_GUARD_SPOT_DLL_ID 0x0120
@@ -28,7 +29,7 @@ extern ObjectDescriptor gDeathGasObjDescriptor;
 typedef struct TrickyGuardSpotObject TrickyGuardSpotObject;
 
 typedef struct TrickyGuardSpotPlacement {
-    u8 pad00[0x18];
+    ObjPlacement base;
     s8 initialYaw;
     u8 resetSeconds;
     s16 triggerRadius;
