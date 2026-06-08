@@ -3,6 +3,7 @@
 #include "main/camera_object.h"
 #include "main/objanim.h"
 #include "main/game_object.h"
+#include "main/screen_transition.h"
 
 typedef struct {
     u8 b7 : 1;
@@ -5126,7 +5127,7 @@ extern int padGetCX(int pad);
 extern int padGetCY(int pad);
 extern int isWidescreen(void);
 extern void fn_8012DDB8(int mode);
-extern void **gScreenTransitionInterface;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern f32 lbl_80319DF8[];
 extern f32 lbl_803E1A2C;
 extern f32 lbl_803E1A30;
@@ -5167,15 +5168,15 @@ void CameraModeWorldMap_update(u8 *obj) {
     case 0:
         if (*(u8 *)(lbl_803DD588 + 9) != *(u8 *)(lbl_803DD588 + 8)) {
             *(u8 *)(lbl_803DD588 + 0x14) = 1;
-            (*(void (**)(int, int))((char *)*gScreenTransitionInterface + 8))(0xc, 1);
+            (*gScreenTransitionInterface)->start(0xc, 1);
             *(s16 *)(lbl_803DD588 + 0xa) = 2;
             ((WmFlags *)(lbl_803DD588 + 0x15))->b7 = 1;
         } else {
             s16 dYaw, dPitch;
             if (((WmFlags *)(lbl_803DD588 + 0x15))->b7 != 0 &&
-                (*(int (**)(void))((char *)*gScreenTransitionInterface + 0x14))() != 0) {
+                (*gScreenTransitionInterface)->isFinished() != 0) {
                 fn_8012DDB8(0);
-                (*(void (**)(int, int))((char *)*gScreenTransitionInterface + 0xc))(0xc, 1);
+                (*gScreenTransitionInterface)->step(0xc, 1);
                 ((WmFlags *)(lbl_803DD588 + 0x15))->b7 = 0;
                 *(u8 *)(*(int *)(ObjList_FindObjectById(0x43077) + 0xb8) + 0x27d) = 0;
             }
@@ -5290,14 +5291,14 @@ void CameraModeWorldMap_update(u8 *obj) {
     case 1: {
         int g = ObjList_FindObjectById(0x43077);
         if (*(u8 *)(lbl_803DD588 + 9) != *(u8 *)(lbl_803DD588 + 8)) {
-            (*(void (**)(int, int))((char *)*gScreenTransitionInterface + 8))(0xc, 1);
+            (*gScreenTransitionInterface)->start(0xc, 1);
             *(s16 *)(lbl_803DD588 + 0xa) = 2;
             ((WmFlags *)(lbl_803DD588 + 0x15))->b7 = 1;
         } else {
             if (((WmFlags *)(lbl_803DD588 + 0x15))->b7 != 0 &&
-                (*(int (**)(void))((char *)*gScreenTransitionInterface + 0x14))() != 0) {
+                (*gScreenTransitionInterface)->isFinished() != 0) {
                 fn_8012DDB8(1);
-                (*(void (**)(int, int))((char *)*gScreenTransitionInterface + 0xc))(0xc, 1);
+                (*gScreenTransitionInterface)->step(0xc, 1);
                 ((WmFlags *)(lbl_803DD588 + 0x15))->b7 = 0;
                 *(u8 *)(*(int *)(ObjList_FindObjectById(0x43077) + 0xb8) + 0x27d) = 1;
             }

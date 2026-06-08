@@ -5,6 +5,7 @@
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
 #include "main/objseq.h"
+#include "main/screen_transition.h"
 
 extern bool FUN_800067f0();
 extern undefined4 FUN_8000680c();
@@ -688,7 +689,7 @@ extern void fn_80163980(int o);
 extern void Obj_FreeObject(int o);
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int *gGameUIInterface;
-extern int *gScreenTransitionInterface;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 
 #pragma scheduling off
 #pragma peephole off
@@ -830,7 +831,7 @@ void fn_801CE2BC(int *obj, u8 *st, short *p3) {
     case 0x11:
         if (!(*(u16 *)(*(char **)(st + 0x28) + 0xb0) & 0x1000) && *(f32 *)(st + 8) >= lbl_803E5234) {
             Sfx_PlayFromObject(obj, 0x109);
-            (**(void (**)(int, int))((char *)(*gScreenTransitionInterface) + 0x8))(0x14, 1);
+            (*gScreenTransitionInterface)->start(0x14, 1);
             st[0x408] = 0x12;
             GameBit_Set(0xd32, 0);
             st[0x43c] = (u8)(st[0x43c] & ~0x40);
@@ -839,7 +840,7 @@ void fn_801CE2BC(int *obj, u8 *st, short *p3) {
         break;
     case 0x12:
         if (!(*(u16 *)(*(char **)(st + 0x28) + 0xb0) & 0x1000)) {
-            if ((**(int (**)(void))((char *)(*gScreenTransitionInterface) + 0x14))() != 0) {
+            if ((*gScreenTransitionInterface)->isFinished() != 0) {
                 GameBit_Set(0x102, 1);
                 (*gObjectTriggerInterface)->runSequence(1, (void *)near_, -1);
                 st[0x408] = 0x13;
