@@ -1,6 +1,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/dll_4E.h"
 #include "main/dll/debug/dimenu.h"
+#include "main/screen_transition.h"
 
 extern undefined4 FUN_800067e8();
 extern undefined4 FUN_80006824();
@@ -94,7 +95,7 @@ extern undefined4* PTR_DAT_8031b928;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void **gScreenTransitionInterface;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern int *gTitleMenuItemInterface;
 extern int *gTitleMenuLinkInterface;
 extern s8 lbl_803DBA28;
@@ -132,8 +133,7 @@ void OptionsScreen_render(int arg)
         return;
     }
 
-    alpha = (int)(lbl_803E1DD4 -
-                  ((f32 (*)(void))((void **)*gScreenTransitionInterface)[6])());
+    alpha = (int)(lbl_803E1DD4 - (*gScreenTransitionInterface)->getProgress());
     gameTextSetDrawFunc(titleScreenTextDrawFunc);
 
     if ((u8)alpha < 0x80) {
@@ -196,7 +196,7 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
 #pragma peephole off
 void OptionsScreen_initialise(void)
 {
-    ((void (*)(int, int))((void **)*gScreenTransitionInterface)[3])(20, 5);
+    (*gScreenTransitionInterface)->step(20, 5);
     gameTextLoadDir(21);
     lbl_803DD70C = 0;
     lbl_803DD708 = (u32)getSaveFileStruct();
@@ -246,7 +246,7 @@ int OptionsScreen_run(void)
     if (lbl_803DD704 > 0) {
         lbl_803DD704 = (s8)(lbl_803DD704 - step);
     }
-    if (((int (*)(void))(*(int *)((int)*gScreenTransitionInterface + 0x14)))() == 0) {
+    if ((*gScreenTransitionInterface)->isFinished() == 0) {
         (*(void (*)(void))(*(int *)(*gTitleMenuLinkInterface + 0x34)))();
         lbl_803DD706 = 2;
     }
@@ -311,7 +311,7 @@ int OptionsScreen_run(void)
         case 3:
             if (selection == 0) {
                 Sfx_PlayFromObject(0, SFXsp_snrot1_c);
-                (*(void (*)(int, int))(*(int *)((int)*gScreenTransitionInterface + 0x8)))(0x14, 5);
+                (*gScreenTransitionInterface)->start(0x14, 5);
                 lbl_803DD704 = 0x23;
                 lbl_803DD705 = 1;
             }

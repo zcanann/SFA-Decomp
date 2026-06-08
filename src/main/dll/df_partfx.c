@@ -4,6 +4,7 @@
 #include "main/dll/baddie_state.h"
 #include "main/objanim.h"
 #include "main/resource.h"
+#include "main/screen_transition.h"
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006950();
@@ -2357,7 +2358,7 @@ typedef struct {
 } HudColor;
 extern u8 gDvdErrorPauseActive;
 extern f32 lbl_803E0568;
-extern void *gScreenTransitionInterface;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern void GXGetScissor(int *x, int *y, int *w, int *h);
 extern void GXSetScissor(int x, int y, int w, int h);
 extern void hudDrawRect(int x, int y, int w, int h, HudColor col);
@@ -2377,7 +2378,7 @@ void screenTransition_do2(int p1, int p2, int p3) {
         return;
     }
     if (lbl_803DD42F == 0 && lbl_803DD428 >= lbl_803E0568) {
-        (*(code *)(*(int *)gScreenTransitionInterface + 0xc))(0x1e, lbl_803DD42C);
+        (*gScreenTransitionInterface)->step(0x1e, lbl_803DD42C);
         lbl_803DD428 = lbl_803E0560;
     }
     lbl_803DD420 = lbl_803DD424 * timeDelta + lbl_803DD420;

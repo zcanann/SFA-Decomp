@@ -2,6 +2,7 @@
 #include "main/mapEventTypes.h"
 #include "main/dll/WM/WMcrystal.h"
 #include "main/objseq.h"
+#include "main/screen_transition.h"
 
 
 #pragma peephole off
@@ -74,7 +75,7 @@ extern f32 mathSinf(f32 angle);
 extern f32 mathCosf(f32 angle);
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int *gGameUIInterface;
-extern int *gScreenTransitionInterface;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern int *gCameraInterface;
 extern MapEventInterface **gMapEventInterface;
 extern u16 lbl_80327A60[];
@@ -452,7 +453,7 @@ void sc_totembond_update(ScTotemBondObject *obj)
         state->eventFlags |= SC_TOTEMBOND_EVENT_ORBS_ACTIVE;
         (*(code *)(*gGameUIInterface + 0x40))(1);
         hudFn_8011f38c(1);
-        (*(code *)(*gScreenTransitionInterface + 0x0c))(0x1e,1);
+        (*gScreenTransitionInterface)->step(0x1e, 1);
         state->spawnTimer = lbl_803E563C;
         Music_Trigger(0xf0,1);
     }
@@ -504,7 +505,7 @@ void sc_totembond_update(ScTotemBondObject *obj)
                 if (allOrbsCollected) {
                     state->completionTimer = lbl_803E5658;
                     fn_8011F6D4(0);
-                    (*(code *)(*gScreenTransitionInterface + 0x08))(0x1e,1);
+                    (*gScreenTransitionInterface)->start(0x1e, 1);
                 }
             }
             if (((u32)(u16)obj->yaw >> 13) != state->ringIndex) {

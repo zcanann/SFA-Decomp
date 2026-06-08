@@ -3,6 +3,7 @@
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
+#include "main/screen_transition.h"
 
 extern undefined8 FUN_80006728();
 extern undefined4 FUN_80006770();
@@ -71,7 +72,7 @@ extern u8 lbl_803DBF60;
 extern f64 lbl_803E4E80;
 extern f64 lbl_803E4E90;
 extern u16 lbl_80325F88[];
-extern void *gScreenTransitionInterface;
+extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern int Obj_GetPlayerObject(void);
 extern void skyFn_80088c94(int skyId, int enable);
 extern void getEnvfxAct(int obj, int target, int effectId, int flags);
@@ -296,7 +297,7 @@ void dfsh_shrine_update(int obj)
         break;
     case 5:
         state->transitionTimer = 0x1f;
-        ((void (*)(int, int))((void **)*(int *)gScreenTransitionInterface)[3])(0x1e, 1);
+        (*gScreenTransitionInterface)->step(0x1e, 1);
         state->mode = 1;
         ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         break;
@@ -306,7 +307,7 @@ void dfsh_shrine_update(int obj)
     case 7:
         state->mode = 6;
         state->transitionTimer = 0x23;
-        ((void (*)(int, int))((void **)*(int *)gScreenTransitionInterface)[2])(0x1e, 1);
+        (*gScreenTransitionInterface)->start(0x1e, 1);
         break;
     }
 }
