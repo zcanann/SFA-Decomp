@@ -1,6 +1,64 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
+typedef struct DirectionalLightSetup {
+    u8 pad00[0x18];
+    u8 rotX;
+    u8 rotY;
+    u8 diffuseR;
+    u8 diffuseG;
+    u8 diffuseB;
+    u8 eventName;
+    s16 enableBit;
+    u8 pad20[0x26 - 0x20];
+    u8 colorFadeSpeed;
+    u8 targetR;
+    u8 targetG;
+    u8 targetB;
+    u8 flags;
+    u8 pad2B;
+    u8 selectionPriority;
+    u8 pad2D;
+    s16 colorFadeFrames;
+    u8 enabled;
+    u8 pad31;
+    s16 rotXSpeed;
+    s16 rotYSpeed;
+} DirectionalLightSetup;
+
+typedef struct DirectionalLightState {
+    u8 diffuseR;
+    u8 diffuseG;
+    u8 diffuseB;
+    u8 pad03;
+    u8 targetR;
+    u8 targetG;
+    u8 targetB;
+    u8 pad07;
+    void *light;
+    u8 debugEditing;
+    s8 debugField;
+    u8 enabled;
+    u8 pad0F;
+} DirectionalLightState;
+
+STATIC_ASSERT(sizeof(DirectionalLightState) == 0x10);
+STATIC_ASSERT(offsetof(DirectionalLightState, light) == 0x08);
+STATIC_ASSERT(offsetof(DirectionalLightState, debugEditing) == 0x0C);
+STATIC_ASSERT(offsetof(DirectionalLightState, debugField) == 0x0D);
+STATIC_ASSERT(offsetof(DirectionalLightState, enabled) == 0x0E);
+STATIC_ASSERT(offsetof(DirectionalLightSetup, rotX) == 0x18);
+STATIC_ASSERT(offsetof(DirectionalLightSetup, rotY) == 0x19);
+STATIC_ASSERT(offsetof(DirectionalLightSetup, diffuseR) == 0x1A);
+STATIC_ASSERT(offsetof(DirectionalLightSetup, eventName) == 0x1D);
+STATIC_ASSERT(offsetof(DirectionalLightSetup, enableBit) == 0x1E);
+STATIC_ASSERT(offsetof(DirectionalLightSetup, flags) == 0x2A);
+STATIC_ASSERT(offsetof(DirectionalLightSetup, selectionPriority) == 0x2C);
+STATIC_ASSERT(offsetof(DirectionalLightSetup, colorFadeFrames) == 0x2E);
+STATIC_ASSERT(offsetof(DirectionalLightSetup, enabled) == 0x30);
+STATIC_ASSERT(offsetof(DirectionalLightSetup, rotXSpeed) == 0x32);
+STATIC_ASSERT(offsetof(DirectionalLightSetup, rotYSpeed) == 0x34);
+
 #pragma peephole on
 #pragma scheduling on
 int directionallight_getExtraSize(void) { return 0x10; }
@@ -17,9 +75,9 @@ int directionallight_getObjectTypeId(void) { return 0; }
 #pragma scheduling on
 void directionallight_free(int obj)
 {
-    int state = *(int *)&((GameObject *)obj)->extra;
-    if (*(void **)(state + 8) != NULL) {
-        ModelLightStruct_free(*(void **)(state + 8));
+    DirectionalLightState *state = ((GameObject *)obj)->extra;
+    if (state->light != NULL) {
+        ModelLightStruct_free(state->light);
     }
 }
 #pragma scheduling reset
@@ -42,31 +100,32 @@ void directionallight_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 
 #pragma peephole off
 #pragma scheduling off
-void directionallight_debugEdit(int obj, int state)
+void directionallight_debugEdit(int obj, int statePtr)
 {
+    DirectionalLightState *state = (DirectionalLightState *)statePtr;
     u8 *desc = gDirectionalLightObjDescriptor;
     u16 buttons = (u16)getButtonsJustPressed(0);
 
     if ((buttons & 0x10) != 0) {
-        *(u8 *)(state + 0xc) ^= 1;
+        state->debugEditing ^= 1;
     }
-    if (*(u8 *)(state + 0xc) == 0) {
+    if (state->debugEditing == 0) {
         return;
     }
     if ((buttons & 8) != 0) {
-        *(u8 *)(state + 0xd) += 1;
+        state->debugField += 1;
     }
     if ((buttons & 4) != 0) {
-        *(u8 *)(state + 0xd) -= 1;
+        state->debugField -= 1;
     }
-    if ((s8)*(u8 *)(state + 0xd) >= 8) {
-        *(u8 *)(state + 0xd) = 0;
+    if (state->debugField >= 8) {
+        state->debugField = 0;
     }
-    if ((s8)*(u8 *)(state + 0xd) < 0) {
-        *(u8 *)(state + 0xd) = 7;
+    if (state->debugField < 0) {
+        state->debugField = 7;
     }
 
-    switch ((s8)*(u8 *)(state + 0xd)) {
+    switch (state->debugField) {
     case 0:
         if ((buttons & 1) != 0) {
             ((GameObject *)obj)->anim.rotX -= 0x3e8;
@@ -89,63 +148,63 @@ void directionallight_debugEdit(int obj, int state)
         break;
     case 2:
         if ((buttons & 1) != 0) {
-            *(u8 *)(state + 0) -= 5;
+            state->diffuseR -= 5;
         }
         if ((buttons & 2) != 0) {
-            *(u8 *)(state + 0) += 5;
+            state->diffuseR += 5;
         }
         fn_80137948(desc + 0x60);
-        fn_80137948(desc + 0x7c, *(u8 *)(state + 0));
+        fn_80137948(desc + 0x7c, state->diffuseR);
         break;
     case 3:
         if ((buttons & 1) != 0) {
-            *(u8 *)(state + 1) -= 5;
+            state->diffuseG -= 5;
         }
         if ((buttons & 2) != 0) {
-            *(u8 *)(state + 1) += 5;
+            state->diffuseG += 5;
         }
         fn_80137948(desc + 0x88);
-        fn_80137948(desc + 0x7c, *(u8 *)(state + 1));
+        fn_80137948(desc + 0x7c, state->diffuseG);
         break;
     case 4:
         if ((buttons & 1) != 0) {
-            *(u8 *)(state + 2) -= 5;
+            state->diffuseB -= 5;
         }
         if ((buttons & 2) != 0) {
-            *(u8 *)(state + 2) += 5;
+            state->diffuseB += 5;
         }
         fn_80137948(desc + 0xa4);
-        fn_80137948(desc + 0x7c, *(u8 *)(state + 2));
+        fn_80137948(desc + 0x7c, state->diffuseB);
         break;
     case 5:
         if ((buttons & 1) != 0) {
-            *(u8 *)(state + 4) -= 5;
+            state->targetR -= 5;
         }
         if ((buttons & 2) != 0) {
-            *(u8 *)(state + 4) += 5;
+            state->targetR += 5;
         }
         fn_80137948(desc + 0xc0);
-        fn_80137948(desc + 0x7c, *(u8 *)(state + 4));
+        fn_80137948(desc + 0x7c, state->targetR);
         break;
     case 6:
         if ((buttons & 1) != 0) {
-            *(u8 *)(state + 5) -= 5;
+            state->targetG -= 5;
         }
         if ((buttons & 2) != 0) {
-            *(u8 *)(state + 5) += 5;
+            state->targetG += 5;
         }
         fn_80137948(desc + 0xdc);
-        fn_80137948(desc + 0x7c, *(u8 *)(state + 5));
+        fn_80137948(desc + 0x7c, state->targetG);
         break;
     case 7:
         if ((buttons & 1) != 0) {
-            *(u8 *)(state + 6) -= 5;
+            state->targetB -= 5;
         }
         if ((buttons & 2) != 0) {
-            *(u8 *)(state + 6) += 5;
+            state->targetB += 5;
         }
         fn_80137948(desc + 0xfc);
-        fn_80137948(desc + 0x7c, *(u8 *)(state + 6));
+        fn_80137948(desc + 0x7c, state->targetB);
         break;
     }
 }
@@ -158,39 +217,40 @@ void directionallight_init(int obj, int setup)
 {
     u8 colorR, colorG, colorB;
     PointLightVec vec;
-    int state = *(int *)&((GameObject *)obj)->extra;
+    DirectionalLightSetup *setupData = (DirectionalLightSetup *)setup;
+    DirectionalLightState *state = ((GameObject *)obj)->extra;
 
     vec = *(PointLightVec *)lbl_802C2608;
 
-    ((GameObject *)obj)->anim.rotX = (s16)(*(u8 *)(setup + 0x18) << 8);
-    ((GameObject *)obj)->anim.rotY = (s16)(*(u8 *)(setup + 0x19) << 8);
+    ((GameObject *)obj)->anim.rotX = (s16)(setupData->rotX << 8);
+    ((GameObject *)obj)->anim.rotY = (s16)(setupData->rotY << 8);
 
-    if (*(void **)(state + 8) == NULL) {
-        *(void **)(state + 8) = objCreateLight(obj, 1);
+    if (state->light == NULL) {
+        state->light = objCreateLight(obj, 1);
     }
 
-    if (*(void **)(state + 8) != NULL) {
-        modelLightStruct_setLightKind(*(void **)(state + 8), 4);
-        objSetEventName(*(void **)(state + 8), *(u8 *)(setup + 0x1d));
-        modelLightStruct_setDirection(*(void **)(state + 8), vec.x, vec.y, vec.z);
+    if (state->light != NULL) {
+        modelLightStruct_setLightKind(state->light, 4);
+        objSetEventName(state->light, setupData->eventName);
+        modelLightStruct_setDirection(state->light, vec.x, vec.y, vec.z);
 
-        if ((*(u8 *)(setup + 0x2a) & 1) != 0) {
+        if ((setupData->flags & 1) != 0) {
             getAmbientColor(0, &colorR, &colorG, &colorB);
-            modelLightStruct_setDiffuseColor(*(void **)(state + 8), colorR, colorG, colorB, 0xff);
-            modelLightStruct_setDiffuseTargetColor(*(void **)(state + 8), colorR, colorG, colorB, 0xff);
+            modelLightStruct_setDiffuseColor(state->light, colorR, colorG, colorB, 0xff);
+            modelLightStruct_setDiffuseTargetColor(state->light, colorR, colorG, colorB, 0xff);
         } else {
-            modelLightStruct_setDiffuseColor(*(void **)(state + 8), *(u8 *)(setup + 0x1a),
-                *(u8 *)(setup + 0x1b), *(u8 *)(setup + 0x1c), 0xff);
-            modelLightStruct_setDiffuseTargetColor(*(void **)(state + 8), *(u8 *)(setup + 0x27),
-                *(u8 *)(setup + 0x28), *(u8 *)(setup + 0x29), 0xff);
+            modelLightStruct_setDiffuseColor(state->light, setupData->diffuseR,
+                setupData->diffuseG, setupData->diffuseB, 0xff);
+            modelLightStruct_setDiffuseTargetColor(state->light, setupData->targetR,
+                setupData->targetG, setupData->targetB, 0xff);
         }
 
-        modelLightStruct_setEnabled(*(void **)(state + 8), *(u8 *)(setup + 0x30), lbl_803E7250);
-        *(u8 *)(state + 0xe) = *(u8 *)(setup + 0x30);
-        modelLightStruct_startColorFade(*(void **)(state + 8), *(u8 *)(setup + 0x26), *(s16 *)(setup + 0x2e));
+        modelLightStruct_setEnabled(state->light, setupData->enabled, lbl_803E7250);
+        state->enabled = setupData->enabled;
+        modelLightStruct_startColorFade(state->light, setupData->colorFadeSpeed, setupData->colorFadeFrames);
 
-        if (*(u8 *)(setup + 0x2c) != 0) {
-            modelLightStruct_setSelectionPriority(*(void **)(state + 8), *(u8 *)(setup + 0x2c));
+        if (setupData->selectionPriority != 0) {
+            modelLightStruct_setSelectionPriority(state->light, setupData->selectionPriority);
         }
     }
 }
@@ -202,35 +262,35 @@ void directionallight_init(int obj, int setup)
 void directionallight_update(int obj)
 {
     u8 colorR, colorG, colorB;
-    int state = *(int *)&((GameObject *)obj)->extra;
-    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
+    DirectionalLightState *state = ((GameObject *)obj)->extra;
+    DirectionalLightSetup *setup = (DirectionalLightSetup *)((GameObject *)obj)->anim.placementData;
 
-    if (*(void **)(state + 8) == NULL) {
+    if (state->light == NULL) {
         return;
     }
 
     ((GameObject *)obj)->anim.rotX =
-        (s16)((f32)*(s16 *)(setup + 0x32) * timeDelta + (f32)((GameObject *)obj)->anim.rotX);
+        (s16)((f32)setup->rotXSpeed * timeDelta + (f32)((GameObject *)obj)->anim.rotX);
     ((GameObject *)obj)->anim.rotY =
-        (s16)((f32)*(s16 *)(setup + 0x34) * timeDelta + (f32)((GameObject *)obj)->anim.rotY);
+        (s16)((f32)setup->rotYSpeed * timeDelta + (f32)((GameObject *)obj)->anim.rotY);
 
-    if (*(u8 *)(state + 0xe) != 0) {
-        if ((u32)GameBit_Get(*(s16 *)(setup + 0x1e)) == 0) {
-            *(u8 *)(state + 0xe) = 0;
-            modelLightStruct_setEnabled(*(void **)(state + 8), 0, lbl_803E7254);
+    if (state->enabled != 0) {
+        if ((u32)GameBit_Get(setup->enableBit) == 0) {
+            state->enabled = 0;
+            modelLightStruct_setEnabled(state->light, 0, lbl_803E7254);
         }
-        if ((*(u8 *)(setup + 0x2a) & 1) != 0) {
+        if ((setup->flags & 1) != 0) {
             getAmbientColor(0, &colorR, &colorG, &colorB);
-            modelLightStruct_setDiffuseColor(*(void **)(state + 8), colorR, colorG, colorB, 0xff);
+            modelLightStruct_setDiffuseColor(state->light, colorR, colorG, colorB, 0xff);
         }
     } else {
-        if ((u32)GameBit_Get(*(s16 *)(setup + 0x1e)) != 0) {
-            *(u8 *)(state + 0xe) = 1;
-            modelLightStruct_setEnabled(*(void **)(state + 8), 1, lbl_803E7254);
+        if ((u32)GameBit_Get(setup->enableBit) != 0) {
+            state->enabled = 1;
+            modelLightStruct_setEnabled(state->light, 1, lbl_803E7254);
         }
     }
 
-    directionallight_debugEdit(obj, state);
+    directionallight_debugEdit(obj, (int)state);
 }
 #pragma scheduling reset
 #pragma peephole reset
