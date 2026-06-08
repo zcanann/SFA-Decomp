@@ -32,7 +32,7 @@ extern undefined4 DAT_8039d0b8;
 extern undefined4 DAT_8039d0bc;
 extern undefined4 DAT_803dd5d0;
 extern undefined4* DAT_803dd6cc;
-extern undefined4* DAT_803dd708;
+extern EffectInterface **gPartfxInterface;
 extern undefined4* DAT_803dd71c;
 extern undefined4 DAT_803de090;
 extern undefined4 DAT_803de0ac;
@@ -1403,13 +1403,13 @@ void FUN_800d83cc(int param_1,undefined4 param_2,undefined4 param_3,int param_4,
 {
   while ((param_4 != 0 && (param_1 != 0))) {
     if (param_5 == 0) {
-      (**(code **)(*DAT_803dd708 + 8))(param_1,param_3,0,2,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, param_3, NULL, 2, -1, NULL);
     }
     else if (param_5 == 1) {
-      (**(code **)(*DAT_803dd708 + 8))(param_1,param_3,0,2,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, param_3, NULL, 2, -1, NULL);
     }
     else if (param_5 == 2) {
-      (**(code **)(*DAT_803dd708 + 8))(param_1,param_3,0,4,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, param_3, NULL, 4, -1, NULL);
     }
     param_4 = param_4 + -1;
   }
@@ -2073,8 +2073,6 @@ void Checkpoint_Add(int *entry) {
 #pragma opt_common_subs reset
 #pragma peephole reset
 #pragma scheduling reset
-
-extern EffectInterface **gPartfxInterface;
 
 #pragma scheduling off
 #pragma peephole off
