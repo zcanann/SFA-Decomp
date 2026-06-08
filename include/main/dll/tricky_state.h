@@ -58,8 +58,8 @@ typedef struct TrickyState {
     f32 homePosY;
     f32 homePosZ;
     u8 padEC[0xF8 - 0xEC];
-    u32 unkF8; /* head word of the embedded gPathControlInterface record */
-    u8 padFC[0x1B8 - 0xFC]; /* embedded gPathControlInterface record (0xF8..0x1B8) */
+    u32 pathControlFlags; /* head word of the embedded gPathControlInterface record */
+    u8 pathControlData[0x1B8 - 0xFC]; /* embedded gPathControlInterface record (0xF8..0x1B8) */
     f32 unk1B8;
     u8 pad1BC[0x25F - 0x1BC];
     u8 unk25F;

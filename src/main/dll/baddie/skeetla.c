@@ -1361,10 +1361,10 @@ void FUN_8013939c(uint param_1)
   }
   iVar2 = FUN_8005b024();
   if ((iVar2 == 0xe) || (iVar2 = ObjGroup_FindNearestObject(5,param_1,&local_38), iVar2 != 0)) {
-    ((TrickyState *)iVar3)->unkF8 = ((TrickyState *)iVar3)->unkF8 & 0xfffffffb;
+    ((TrickyState *)iVar3)->pathControlFlags = ((TrickyState *)iVar3)->pathControlFlags & 0xfffffffb;
   }
   else {
-    ((TrickyState *)iVar3)->unkF8 = ((TrickyState *)iVar3)->unkF8 | 4;
+    ((TrickyState *)iVar3)->pathControlFlags = ((TrickyState *)iVar3)->pathControlFlags | 4;
   }
   (**(code **)(*DAT_803dd728 + 0x10))((double)FLOAT_803dc074,param_1,iVar3 + 0xf8);
   (**(code **)(*DAT_803dd728 + 0x14))(param_1,iVar3 + 0xf8);

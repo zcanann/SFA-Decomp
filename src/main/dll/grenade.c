@@ -1,6 +1,7 @@
 #include "main/dll/grenade.h"
 #include "main/dll/collectable.h"
 #include "main/effect_interfaces.h"
+#include "main/dll/path_control_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
 #include "main/dll/tricky_state.h"
@@ -480,9 +481,7 @@ void trickyFn_80141fec(u8 *obj, u8 *state)
  * PAL Size: TODO
  */
 extern void fn_80144B50(u8 *obj, u8 *state);
-typedef struct GrenadeIfc { void *vtable; } GrenadeIfc;
 typedef struct TrickyFnRow { u8 pad[0x6c]; int (*fn)(u8 *, u8 *); } TrickyFnRow;
-extern GrenadeIfc *gPathControlInterface;
 
 void trickyFn_80142524(u8 *obj, u8 *state)
 {
@@ -566,7 +565,7 @@ void trickyFn_80142524(u8 *obj, u8 *state)
     }
     if (found != NULL) {
         state[0x374] = 2;
-        ((void (**)(u8 *, u8 *))gPathControlInterface->vtable)[8](obj, state + 0xf8);
+        (*gPathControlInterface)->attachObject(obj, &((TrickyState *)state)->pathControlFlags);
         state[8] = 1;
         state[0xa] = 0;
         z = lbl_803E23DC;
