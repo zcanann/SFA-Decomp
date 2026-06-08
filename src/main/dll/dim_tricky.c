@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/dll/dim_tricky.h"
 #include "main/effect_interfaces.h"
@@ -13,7 +14,6 @@ extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 
 extern u8 framesThisStep;
-extern ExpgfxInterface **gExpgfxInterface;
 extern ModgfxInterface **gModgfxInterface;
 extern EffectInterface **gPartfxInterface;
 extern s8 lbl_803DDBE8;

@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/asset_load.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/model_light.h"
 #include "main/engine_8001746C_phantoms.h"
@@ -1718,7 +1719,6 @@ extern int getDataFileSize(int id);
 extern void *gCameraInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern void *gTitleMenuControlInterface;
-extern ExpgfxInterface **gExpgfxInterface;
 extern void *gModgfxInterface;
 extern WaterfxInterface **gWaterfxInterface;
 extern MapEventInterface **gMapEventInterface;

@@ -1,5 +1,6 @@
 #include "main/asset_load.h"
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/objseq.h"
@@ -4112,7 +4113,6 @@ extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern WaterfxInterface **gWaterfxInterface;
 extern ProjgfxInterface **gProjgfxInterface;
 extern int* gModgfxInterface;
-extern ExpgfxInterface **gExpgfxInterface;
 extern EffectInterface **gPartfxInterface;
 extern Sky2Interface **gSky2Interface;
 extern int* gSHthorntailAnimationInterface;

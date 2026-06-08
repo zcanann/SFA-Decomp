@@ -1,4 +1,5 @@
 #include "main/effect_interfaces.h"
+#include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 #include "main/screen_transition.h"
@@ -13,7 +14,6 @@ typedef struct {
     u8 pad12[2];
 } GreatFoxFxEntry;
 
-extern ExpgfxInterface **gExpgfxInterface;
 extern void ModelLightStruct_free(int model);
 extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern void objRenderFn_8003b8f4(f32 e);

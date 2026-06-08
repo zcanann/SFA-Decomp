@@ -2,9 +2,11 @@
 #define MAIN_EXPGFX_H_
 
 #include "ghidra_import.h"
+#include "main/effect_interfaces.h"
 #include "main/object_descriptor.h"
 
 extern ObjectDescriptor14 expgfx_funcs;
+extern ExpgfxInterface **gExpgfxInterface;
 
 void expgfxRemove(uint slotPoolBase,int poolIndex,int slotIndex,int skipTextureFree,int flushSlot);
 void expgfxRemoveAll(void);
