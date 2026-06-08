@@ -1031,7 +1031,7 @@ void ecsh_creator_update(s16 *obj) {
 
     def = *(u8 **)&((GameObject *)obj)->anim.placementData;
     sub = ((GameObject *)obj)->extra;
-    if (((GameObject *)obj)->unkF8 == 0 && GameBit_Get(sub[2]) != 0) {
+    if (((GameObject *)obj)->unkF8 == 0 && (u32)GameBit_Get(sub[2]) != 0) {
         res = Resource_Acquire(0x82, 1);
         (*(void (**)(s16 *, int, int, int, int, int))(*(int *)res + 4))(obj, 0, 0, 1, -1, 0);
         (*(void (**)(s16 *, int, int, int, int, int))(*(int *)res + 4))(obj, 1, 0, 1, -1, 0);
@@ -1043,7 +1043,7 @@ void ecsh_creator_update(s16 *obj) {
     if (sub[1] != 0) {
         *sub = *sub - sub[1] * framesThisStep;
     }
-    if (Obj_IsLoadingLocked() != 0 && *sub < 1) {
+    if (Obj_IsLoadingLocked() != 0 && *sub <= 0) {
         p = mmAlloc(0x38, 0xe, 0);
         *(f32 *)(p + 8) = ((ObjPlacement *)def)->posX;
         *(f32 *)(p + 0xc) = ((ObjPlacement *)def)->posY;
@@ -1071,7 +1071,7 @@ void ecsh_creator_update(s16 *obj) {
         *(s16 *)(p + 0x1a) = 0;
         *(u8 *)(p + 0x32) = sub[4];
         ret = Obj_SetupObject(p, 5, *(s8 *)((char *)obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
-        if (ret != 0) {
+        if ((u32)ret != 0) {
             *(u8 *)(*(int *)(ret + 0xb8) + 0x404) = 0x20;
         }
         *sub = 100;
