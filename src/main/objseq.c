@@ -218,6 +218,7 @@ int objSeqFindLabel(u8 *seq, int label)
 
 #pragma peephole off
 #pragma scheduling off
+#pragma dont_inline on
 int objSeqFindConditional(u8 *seq, u8 *seqState)
 {
     int currentLabel;
@@ -252,6 +253,7 @@ int objSeqFindConditional(u8 *seq, u8 *seqState)
     }
     return -1;
 }
+#pragma dont_inline reset
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -2693,7 +2695,7 @@ int ObjSeq_update(u8 *obj, f32 t)
             *(s16 *)(*(u8 **)(action + 0x2c) + 0x58) =
                 (u16)(int)(SendMailData * ((ObjSeqState *)seq)->fade);
         }
-        objAnimCurvFn_800849e8(obj, seq);
+        ObjSeq_UpdateCurvePosition(obj, seq);
         if ((s8)((ObjSeqState *)seq)->unk7A == 1 &&
             hitDetectFn_800658a4(obj, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY,
                                  ((GameObject *)obj)->anim.localPosZ, scratch, 0) == 0) {
