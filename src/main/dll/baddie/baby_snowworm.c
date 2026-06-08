@@ -27,6 +27,7 @@
  */
 
 #include "main/audio/sfx_ids.h"
+#include "main/camera_interface.h"
 #include "main/dll/baddie/baby_snowworm.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim_internal.h"
@@ -249,7 +250,6 @@ extern undefined4 DAT_803dc710;
 extern undefined4 DAT_803dc71c;
 extern undefined4 DAT_803dc808;
 extern undefined4 DAT_803dc810;
-extern undefined4* DAT_803dd6d0;
 extern undefined4 DAT_803dd970;
 extern undefined4 DAT_803de3b0;
 extern undefined4 DAT_803de3b8;
@@ -708,7 +708,7 @@ void FUN_8012c1c0(void)
       }
       DAT_803de3db = '\0';
       FUN_800176c8(0);
-      (**(code **)(*DAT_803dd6d0 + 0x24))(3,0x80,1);
+      (*(void (**)(int, int, int))((char *)*gCameraInterface + 0x24))(3,0x80,1);
       DAT_803de408 = 0x3c;
       FUN_80006824(0,0x418);
     }
@@ -716,7 +716,7 @@ void FUN_8012c1c0(void)
       FUN_80006ba8(0,0x200);
       DAT_803de3db = '\0';
       FUN_800176c8(0);
-      (**(code **)(*DAT_803dd6d0 + 0x24))(3,0x80,1);
+      (*(void (**)(int, int, int))((char *)*gCameraInterface + 0x24))(3,0x80,1);
       DAT_803de408 = 0x3c;
       FUN_80006824(0,0x419);
     }
@@ -985,7 +985,6 @@ void fn_8012DDB8(u32 val)
 extern u8    framesThisStep;
 extern s32   lbl_803DBA5C;
 extern f32   lbl_803DBAA4;
-extern void **gCameraInterface;     /* (*vtable)[] dispatcher singleton */
 extern u8    lbl_803DD75B;
 extern u8    lbl_803DD77F;
 extern s32   lbl_803DD7E0;
@@ -2513,7 +2512,7 @@ void cMenuRun(void)
         return;
     }
 
-    if ((*(int (**)(void))(*(int *)gCameraInterface + 0x10))() == 0x44 ||
+    if ((*gCameraInterface)->getMode() == 0x44 ||
         (*(u16 *)(player + 0xb0) & 0x1000) != 0 || pauseMenuState != 0) {
         buttonDisable(0, 0xe0800);
     } else {
@@ -2526,7 +2525,7 @@ void cMenuRun(void)
     lbl_803DD8A4 = btn;
     btn16 = (u16)btn;
 
-    if ((*(int (**)(void))(*(int *)gCameraInterface + 0x10))() == 0x44 ||
+    if ((*gCameraInterface)->getMode() == 0x44 ||
         (*(u16 *)(player + 0xb0) & 0x1000) != 0 || pauseMenuState != 0 ||
         (s8)shouldCloseCMenu != 0 || lbl_803DD75B != 0) {
         lbl_803DD8A4 |= 0x200;
@@ -3316,7 +3315,7 @@ void pauseMenuFn_80129ee0(void)
             int camMode;
             int audioFree = 0;
             int canOpen = 1;
-            camMode = (*(int (**)(void))(*(int *)gCameraInterface + 0x10))();
+            camMode = (*gCameraInterface)->getMode();
             if ((player == 0 || !(*(u16 *)(player + 0xb0) & 0x1000)) &&
                 getCurSeqNo() == 0 && AudioStream_IsPreparing() == 0) {
                 audioFree = 1;
