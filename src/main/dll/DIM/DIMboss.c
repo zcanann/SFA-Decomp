@@ -645,7 +645,7 @@ void DIMboss_update(DIMbossObject *obj)
     if (topState->introSinkHeight > lbl_803E4BD8) {
       gameTextShow(0x432);
       topState->introSinkHeight -= timeDelta;
-      if (topState->introSinkHeight < lbl_803E4BD8) {
+      if (topState->introSinkHeight < *(f32 *)&lbl_803E4BD8) {
         topState->introSinkHeight = lbl_803E4BD8;
       }
     }

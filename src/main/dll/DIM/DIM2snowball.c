@@ -276,7 +276,7 @@ void dim_levelcontrol_update(int obj)
         gameTextSetColor(0xff, 0xff, 0xff, 0xff);
         gameTextShow(0x430);
         st->timer = st->timer - timeDelta;
-        if (st->timer < lbl_803E4A24) {
+        if (st->timer < *(f32 *)&lbl_803E4A24) {
             st->timer = lbl_803E4A24;
         }
     }

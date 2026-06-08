@@ -1531,7 +1531,7 @@ void pinponspike_update(int obj) {
         vz = ((GameObject *)obj)->anim.velocityZ * timeDelta;
         objMove(obj, vx, vy, vz);
         ((GameObject *)obj)->anim.velocityY += lbl_803E3124 * timeDelta;
-        if (((GameObject *)obj)->anim.velocityY < lbl_803E3128) {
+        if (((GameObject *)obj)->anim.velocityY < *(f32 *)&lbl_803E3128) {
             ((GameObject *)obj)->anim.velocityY = lbl_803E3128;
         }
         ((GameObject *)obj)->anim.rotX = getAngle(vx, vz) - 0x8000;

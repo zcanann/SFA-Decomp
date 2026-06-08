@@ -632,7 +632,7 @@ void Camera_ProjectWorldSphere(
         *outZ *= invW;
 
         pos[2] += radius;
-        if (pos[2] > lbl_803DE624) {
+        if (pos[2] > *(f32 *)&lbl_803DE624) {
             pos[2] = lbl_803DE624;
         }
 
