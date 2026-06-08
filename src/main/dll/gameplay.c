@@ -64,6 +64,7 @@ extern undefined4 FUN_800d783c();
 extern undefined4 FUN_8011e80c();
 extern undefined4 FUN_80135810();
 extern undefined4 FUN_80244e58();
+extern void OSSetSaveRegion(void *start, void *end);
 extern int FUN_80286718();
 extern undefined8 FUN_80286810();
 extern undefined8 FUN_80286820();
@@ -2000,7 +2001,7 @@ void gplaySaveGame(int param)
 #pragma peephole off
 void titleDoLoadSave(void)
 {
-  FUN_80244e58(0,0);
+  OSSetSaveRegion(0, 0);
   DAT_803dc4f0 = (undefined)((int)(*((byte *)DAT_803de110 + 0x21) & 0x60) >> 5);
   *((byte *)DAT_803de110 + 0x21) = *((byte *)DAT_803de110 + 0x21) & 0x1f;
   (*(void (**)(void))((char *)*gMapEventInterface + 0x20))();
