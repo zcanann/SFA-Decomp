@@ -2,6 +2,7 @@
 #define SFA_DLL_PLAYER_80295318_SHARED_H
 
 #include "ghidra_import.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/effect_interfaces.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
@@ -1358,7 +1359,6 @@ extern double lbl_803E7F88;
 extern f32 lbl_803E7F90;
 extern int objBboxFn_800640cc(f32 radius, void *from, void *to, int mode, void *hit, int obj,
                               int p7, int p8, int p9, int p10);
-extern int *gRomCurveInterface;
 extern void PSVECSubtract(f32 *a, f32 *b, f32 *ab);
 extern void PSVECNormalize(f32 *in, f32 *out);
 extern int lbl_803DE480;

@@ -15883,10 +15883,11 @@ int fn_8029E568(int obj, int state, f32 fv)
         break;
     default: {
         int curveId = 0x1f;
-        if ((*(int (*)(int *, int, int, f32, f32, f32))(*(int *)(*gRomCurveInterface + 0x14)))(
-                &curveId, 1, 0, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY,
-                ((GameObject *)obj)->anim.localPosZ) != -1) {
-            int pt = (*(int (*)(void))(*(int *)(*gRomCurveInterface + 0x1c)))();
+        int found = (*gRomCurveInterface)->find(&curveId, 1, 0, ((GameObject *)obj)->anim.localPosX,
+                                                ((GameObject *)obj)->anim.localPosY,
+                                                ((GameObject *)obj)->anim.localPosZ);
+        if (found != -1) {
+            int pt = (int)(*gRomCurveInterface)->getById(found);
             int pt2;
             *(f32 *)((char *)inner + 0x61c) = *(f32 *)((char *)pt + 0x8);
             inner->unk620 = *(f32 *)((char *)pt + 0xc);
@@ -15900,10 +15901,11 @@ int fn_8029E568(int obj, int state, f32 fv)
             sqrtf(inner->unk60C * inner->unk60C +
                   inner->unk614 * inner->unk614);
             ((GameObject *)obj)->anim.rotY = 0;
-            if ((*(int (*)(int, int))(*(int *)(*gRomCurveInterface + 0x54)))(pt, -1) == -1) {
-                (*(int (*)(int, int))(*(int *)(*gRomCurveInterface + 0x60)))(pt, -1);
+            found = ((int (*)(int, int))(*gRomCurveInterface)->slot54)(pt, -1);
+            if (found == -1) {
+                found = ((int (*)(int, int))(*gRomCurveInterface)->slot60)(pt, -1);
             }
-            pt2 = (*(int (*)(void))(*(int *)(*gRomCurveInterface + 0x1c)))();
+            pt2 = (int)(*gRomCurveInterface)->getById(found);
             *(f32 *)((char *)inner + 0x628) = *(f32 *)((char *)pt2 + 0x8);
             inner->unk62C = *(f32 *)((char *)pt2 + 0xc);
             inner->unk630 = *(f32 *)((char *)pt2 + 0x10);
