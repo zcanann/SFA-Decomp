@@ -1,6 +1,7 @@
 #include "main/dll/CAM/camshipbattle5C.h"
 #include "main/audio/sfx.h"
 #include "main/camera_object.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
 #include "main/dll/CAM/viewfinder_state.h"
 #include "main/dll/CAM/dll_5B.h"
@@ -52,7 +53,6 @@ extern undefined4 FUN_80294d00();
 
 extern u8 framesThisStep;
 extern undefined4* gCameraInterface;
-extern undefined4* gRomCurveInterface;
 extern undefined4* lbl_803DD548;
 extern f32* lbl_803DD550;
 extern undefined4* lbl_803DD558;
@@ -1022,12 +1022,12 @@ void fn_8010A104(int *p1, int *p2, f32 x, f32 y, f32 z, int tag)
   int done;
   f32 dist;
 
-  curve = (*(int (**)(int))(*(int *)gRomCurveInterface + 0x1c))(*p1);
+  curve = (int)(*gRomCurveInterface)->getById(*p1);
   found = 1;
   for (i = 0; i < 5; i++) {
     if (*(int *)(curve + 28 + i * 4) > -1 &&
         ((s8)*(s8 *)(curve + 27) & (1 << i)) == 0) {
-      linked = (*(int (**)(int))(*(int *)gRomCurveInterface + 0x1c))(*(int *)(curve + 28 + i * 4));
+      linked = (int)(*gRomCurveInterface)->getById(*(int *)(curve + 28 + i * 4));
       if (linked != 0 &&
           (*(u8 *)(linked + 49) == tag || *(u8 *)(linked + 50) == tag ||
            *(u8 *)(linked + 51) == tag)) {
@@ -1040,7 +1040,7 @@ void fn_8010A104(int *p1, int *p2, f32 x, f32 y, f32 z, int tag)
     for (i = 0; i < 5; i++) {
       if (*(int *)(curve + 28 + i * 4) > -1 &&
           ((s8)*(s8 *)(curve + 27) & (1 << i)) != 0) {
-        linked = (*(int (**)(int))(*(int *)gRomCurveInterface + 0x1c))(*(int *)(curve + 28 + i * 4));
+        linked = (int)(*gRomCurveInterface)->getById(*(int *)(curve + 28 + i * 4));
         if (linked != 0 &&
             (*(u8 *)(linked + 49) == tag || *(u8 *)(linked + 50) == tag ||
              *(u8 *)(linked + 51) == tag)) {
@@ -1053,7 +1053,7 @@ void fn_8010A104(int *p1, int *p2, f32 x, f32 y, f32 z, int tag)
   done = 0;
   do {
     done = 1;
-    curve = (*(int (**)(int))(*(int *)gRomCurveInterface + 0x1c))(*p1);
+    curve = (int)(*gRomCurveInterface)->getById(*p1);
     pathcam_findTaggedNodeWindow((u8 *)curve, window, tag);
     dist = fn_8010AC48(window, x, y, z);
     if (dist < lbl_803E1888) {
@@ -1068,16 +1068,16 @@ void fn_8010A104(int *p1, int *p2, f32 x, f32 y, f32 z, int tag)
       }
     }
   } while (done == 0);
-  curve = (*(int (**)(int))(*(int *)gRomCurveInterface + 0x1c))(*p1);
+  curve = (int)(*gRomCurveInterface)->getById(*p1);
   fn_8010A47C(curve, &count, tag);
-  curve = (*(int (**)(int))(*(int *)gRomCurveInterface + 0x1c))(*p2);
+  curve = (int)(*gRomCurveInterface)->getById(*p2);
   *p2 = *(int *)(fn_8010A47C(curve, &dummy, tag) + 20);
   for (k = 0; k < count; k++) {
-    curve = (*(int (**)(int))(*(int *)gRomCurveInterface + 0x1c))(*p2);
+    curve = (int)(*gRomCurveInterface)->getById(*p2);
     for (i = 0; i < 5; i++) {
       if (*(int *)(curve + 28 + i * 4) > -1 &&
           ((s8)*(s8 *)(curve + 27) & (1 << i)) == 0) {
-        linked = (*(int (**)(int))(*(int *)gRomCurveInterface + 0x1c))(*(int *)(curve + 28 + i * 4));
+        linked = (int)(*gRomCurveInterface)->getById(*(int *)(curve + 28 + i * 4));
         if (linked != 0 &&
             (*(u8 *)(linked + 49) == tag || *(u8 *)(linked + 50) == tag ||
              *(u8 *)(linked + 51) == tag)) {
@@ -1116,8 +1116,7 @@ int fn_8010A47C(int curve, int *count, int tag)
       for (i = 0; i < 5; i = i + 1) {
         if ((*(int *)(curve + i * 4 + 0x1c) > -1) &&
             (((int)*(char *)(curve + 0x1b) & (1 << i)) != 0)) {
-          linked = (*(int (**)(int))(*(int *)gRomCurveInterface + 0x1c))
-                     (*(int *)(curve + i * 4 + 0x1c));
+          linked = (int)(*gRomCurveInterface)->getById(*(int *)(curve + i * 4 + 0x1c));
           if ((linked != 0) &&
               ((*(u8 *)(linked + 0x31) == tag || (*(u8 *)(linked + 0x32) == tag)) ||
                (*(u8 *)(linked + 0x33) == tag))) {

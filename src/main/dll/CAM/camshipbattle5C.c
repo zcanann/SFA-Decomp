@@ -1,4 +1,5 @@
 #include "main/dll/CAM/camshipbattle5C.h"
+#include "main/dll/rom_curve_interface.h"
 
 extern undefined4 FUN_80135810();
 extern undefined8 FUN_8028680c();
@@ -31,7 +32,6 @@ extern f32 lbl_803E1890;
 extern f32 lbl_803E1894;
 extern f32 lbl_803E1898;
 extern f32 lbl_803E1888;
-extern void *gRomCurveInterface;
 
 #pragma scheduling off
 #pragma peephole off
@@ -63,7 +63,7 @@ void pathcam_buildWindowSamples(int *nodes, f32 *o1, f32 *o2, f32 *o3, f32 *o4,
   q6 = o6;
   q7 = o7;
   for (; i < 4; i++) {
-    *pp = (u8 *)(**(int *(**)(int))(*(int *)gRomCurveInterface + 0x1c))(*nodes);
+    *pp = (u8 *)(*gRomCurveInterface)->getById(*nodes);
     p = *pp;
     if (p != NULL) {
       *q1 = *(f32 *)(p + 8);
@@ -200,7 +200,7 @@ void pathcam_findTaggedNodeWindow(u8 *node, int *out, int tag)
     for (; i < 5; i++) {
         idx = *(int *)(cur + 0x1c);
         if (idx > -1) {
-            p = (u8 *)(**(int *(**)(int))(*(int *)gRomCurveInterface + 0x1c))(idx);
+            p = (u8 *)(*gRomCurveInterface)->getById(idx);
             if (p != NULL) {
                 if (p[0x31] == tag || p[0x32] == tag || p[0x33] == tag) {
                     m = (s8)node[0x1b] & (1 << i);
@@ -217,7 +217,7 @@ void pathcam_findTaggedNodeWindow(u8 *node, int *out, int tag)
 
     idx = out[2];
     if (idx > -1) {
-        node = (u8 *)(**(int *(**)(int))(*(int *)gRomCurveInterface + 0x1c))(idx);
+        node = (u8 *)(*gRomCurveInterface)->getById(idx);
         if (node != NULL) {
             if (node[0x31] == tag || node[0x32] == tag || node[0x33] == tag) {
                 i = 0;
@@ -227,7 +227,7 @@ void pathcam_findTaggedNodeWindow(u8 *node, int *out, int tag)
                     if (idx > -1) {
                         m = (s8)node[0x1b] & (1 << i);
                         if (m == 0) {
-                            p = (u8 *)(**(int *(**)(int))(*(int *)gRomCurveInterface + 0x1c))(idx);
+                            p = (u8 *)(*gRomCurveInterface)->getById(idx);
                             if (p != NULL) {
                                 if (p[0x31] == tag || p[0x32] == tag || p[0x33] == tag) {
                                     out[3] = *(int *)(cur + 0x1c);
@@ -272,7 +272,7 @@ f32 fn_8010AC48(int *obj, f32 px, f32 py, f32 pz) {
     dp = pts;
     sp = obj;
     for (i = 0; i < 4; i++) {
-        *dp = (int *)(**(int *(**)(int))(*(int *)gRomCurveInterface + 0x1c))(*sp);
+        *dp = (int *)(*gRomCurveInterface)->getById(*sp);
         sp++;
         dp++;
     }
