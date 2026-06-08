@@ -607,7 +607,7 @@ extern void objRenderFn_80041018(int obj);
 extern u8 framesThisStep;
 
 #define TRICKY_GUARD_SPOT_VTABLE(tricky) \
-    (*(TrickyGuardSpotInterfaceVTable **)(*(u8 **)((char *)(tricky) + 0x68)))
+    (*(TrickyGuardSpotInterfaceVTable **)((tricky)->dll))
 
 #pragma scheduling off
 #pragma peephole off
