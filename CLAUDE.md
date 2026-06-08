@@ -3773,6 +3773,17 @@ caller *before* the helper's definition so MWCC can't inline the helper upward
 (it's not yet defined), while the helper still inlines its own callees normally.
 Reach for `dont_inline` only when the wrapped fn has no callees it needs to
 inline.
+**When source-order is IMPOSSIBLE (the dont_inline'd fn has callers on BOTH
+sides of its definition), MANUALLY INLINE the blocked callee's body.** If the
+wrapped fn must stay un-inlined (38 callers before+after the def, so no
+source-order placement works) but it calls a `static inline` accessor that
+target inlines, the dont_inline wrap blocks that accessor too, leaving a
+`bl` target doesn't have. Fix: spell the accessor's body inline at the call
+site (e.g. `Player_GetObjHitsState(obj)` →
+`(ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState`) — removes
+the `bl`, keeps the load-bearing wrap, call-set matches. (miner-4,
+fn_802AB5A4 78.93→80.63; detect via callset_audit's CUR-only flag for a
+same-TU static-inline.)
 
 **Diagnostic:** when a freshly-added function lands mysteriously low (<70%) for
 no visible source reason, suspect a same-TU callee got auto-inlined into it.
