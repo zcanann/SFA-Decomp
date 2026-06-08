@@ -1,4 +1,5 @@
 #include "main/dll/CAM/dll_5F.h"
+#include "main/camera_interface.h"
 #include "main/camera_object.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
@@ -20,7 +21,6 @@ extern void pathcam_findTaggedNodeWindow(int node, int *window, int p3);
 extern f32 fn_8010AC48(f32 x, f32 y, f32 z, int *window);
 extern int fn_8010AEA8(short *cam, int flags);
 extern int getAngle(f32 a, f32 b);
-typedef void (*CameraRequestFn)(int, int, int, int, int, int, int);
 extern undefined4 FUN_8010b218();
 extern undefined8 FUN_8028683c();
 extern undefined4 FUN_80286888();
@@ -28,7 +28,6 @@ extern f32 sqrtf(f32);
 extern void cameraModeTestStrengthFn_8010b238(int camera, f32 *pos, s16 pitch, s16 yaw, s16 roll);
 extern void *memset(void *p, int c, int n);
 extern u8 framesThisStep;
-extern int *gCameraInterface;
 extern undefined4* lbl_803DD560;
 extern f64 lbl_803E18A0;
 extern f32 lbl_803E1888;
@@ -74,7 +73,7 @@ void CameraModeTestStrength_update(short *cam)
   f32 fov[4];
 
   if (*((u8 *)lbl_803DD560 + 0x65) != 0) {
-    (*(CameraRequestFn *)(*(int *)gCameraInterface + 0x1c))(0x42, 0, 1, 0, 0, 0, 0xff);
+    (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
   } else {
     obj = *(int *)((char *)cam + 0xa4);
     getButtonsJustPressed(0);
@@ -402,7 +401,7 @@ typedef struct {
 void CameraModeCombat_free(int obj)
 {
   if (*(void **)(obj + 0x11c) != NULL) {
-    (*(void (**)(int))((char *)*(int *)gCameraInterface + 0x48))(0);
+    (*(void (**)(int))((char *)*gCameraInterface + 0x48))(0);
   }
   mm_free(lbl_803DD568);
   *(int *)&lbl_803DD568 = 0;

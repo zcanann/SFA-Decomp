@@ -1,4 +1,5 @@
 #include "main/dll/CAM/camdrakor.h"
+#include "main/camera_interface.h"
 #include "main/camera_object.h"
 #include "main/game_object.h"
 #include "main/mm.h"
@@ -30,7 +31,6 @@ extern uint fn_8029630C(int obj);
 extern int objAnimFn_80296328(int obj);
 extern undefined4 cameraGetPrevPos2();
 
-extern undefined4* gCameraInterface;
 extern f32* lbl_803DD568;
 extern s32 lbl_803DD56C;
 extern f32* lbl_803DD570;
@@ -163,9 +163,9 @@ void CameraModeCombat_update(short *cam)
             if ((*(u8 *)(*(int *)((char *)cam + 0x11c) + 0xaf) & 0x40) || (((CameraObject *)cam)->unk141 & 2)) {
                 return;
             }
-            (*(void (*)(int))(*(int *)(*gCameraInterface + 0x48)))(0);
+            (*(void (*)(int))*(int *)((char *)*gCameraInterface + 0x48))(0);
         }
-        (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(0x42, 0, 1, 0, 0, 0x1e, 0xff);
+        (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
     } else {
         focus = *(int *)((char *)cam + 0xa4);
         if (((GameObject *)focus)->anim.classId == 1 && objAnimFn_80296328(focus) == 0) {
@@ -173,9 +173,9 @@ void CameraModeCombat_update(short *cam)
                 if ((*(u8 *)(*(int *)((char *)cam + 0x11c) + 0xaf) & 0x40) || (((CameraObject *)cam)->unk141 & 2)) {
                     return;
                 }
-                (*(void (*)(int))(*(int *)(*gCameraInterface + 0x48)))(0);
+                (*(void (*)(int))*(int *)((char *)*gCameraInterface + 0x48))(0);
             }
-            (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(0x42, 0, 1, 0, 0, 0x1e, 0xff);
+            (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
         } else {
             tgt = *(char **)((char *)cam + 0x11c);
             if (tgt == NULL || (((GameObject *)tgt)->objectFlags & 0x40) || (*(u8 *)(tgt + 0xaf) & 0x28)) {
@@ -183,9 +183,9 @@ void CameraModeCombat_update(short *cam)
                     if ((*(u8 *)(tgt + 0xaf) & 0x40) || (((CameraObject *)cam)->unk141 & 2)) {
                         return;
                     }
-                    (*(void (*)(int))(*(int *)(*gCameraInterface + 0x48)))(0);
+                    (*(void (*)(int))*(int *)((char *)*gCameraInterface + 0x48))(0);
                 }
-                (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(0x42, 0, 1, 0, 0, 0x1e, 0xff);
+                (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
             } else {
                 path = *(CombatPathPoint **)(tgt + 0x74);
                 if (path != NULL) {
@@ -195,9 +195,9 @@ void CameraModeCombat_update(short *cam)
                             if ((*(u8 *)(*(int *)((char *)cam + 0x11c) + 0xaf) & 0x40) || (((CameraObject *)cam)->unk141 & 2)) {
                                 return;
                             }
-                            (*(void (*)(int))(*(int *)(*gCameraInterface + 0x48)))(0);
+                            (*(void (*)(int))*(int *)((char *)*gCameraInterface + 0x48))(0);
                         }
-                        (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(0x42, 0, 1, 0, 0, 0x1e, 0xff);
+                        (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
                     } else {
                         ty = lbl_803E18D0 + ((GameObject *)focus)->anim.worldPosY;
                         sVar2 = ((GameObject *)tgt)->anim.classId;
@@ -226,9 +226,9 @@ void CameraModeCombat_update(short *cam)
                                 if ((*(u8 *)(*(int *)((char *)cam + 0x11c) + 0xaf) & 0x40) || (((CameraObject *)cam)->unk141 & 2)) {
                                     return;
                                 }
-                                (*(void (*)(int))(*(int *)(*gCameraInterface + 0x48)))(0);
+                                (*(void (*)(int))*(int *)((char *)*gCameraInterface + 0x48))(0);
                             }
-                            (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(0x42, 0, 1, 0, 0, 0x1e, 0xff);
+                            (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
                         } else {
                             cameraGetPrevPos2(focus, &prevX, &prevY, &prevZ);
                             px = lbl_803E18D4 * dx + ((GameObject *)focus)->anim.worldPosX;

@@ -1,4 +1,5 @@
 #include "main/dll/CAM/cutCam.h"
+#include "main/camera_interface.h"
 #include "main/camera_object.h"
 #include "main/game_object.h"
 #include "main/object_transform.h"
@@ -49,7 +50,6 @@ extern int getAngle(f32 dx, f32 dy);
 
 extern undefined4 DAT_803a4ed8;
 extern undefined4 gCamcontrolTargetTypeMask;
-extern int *gCameraInterface;
 extern undefined4 gCamcontrolTargetState;
 extern undefined4 DAT_803de143;
 extern undefined4 DAT_803de144;
@@ -226,7 +226,7 @@ undefined camcontrol_getTargetPosition(int arg0,void *arg1,void *arg2,void *arg3
     prev[2] = *(float *)(param_2 + 0x10);
   }
   camcontrol_traceMove(prev,pos,param_3,box,3,'\x01','\x01',lbl_803E1688);
-  (*(void (**)(int, f32 *, f32 *, f32 *, f32 *, f32, int))(*gCameraInterface + 0x38))
+  (*(void (**)(int, f32 *, f32 *, f32 *, f32 *, f32, int))((char *)*gCameraInterface + 0x38))
       (param_1, &a, &b, &c, &d2, cameraMtxVar57[0x23], 0);
   b = *(float *)(param_1 + 0x1c) -
       (*(float *)(param_2 + 0xe) + cameraMtxVar57[0x23]);
@@ -287,7 +287,7 @@ void camcontrol_updateTargetAction(int param_1,int param_2)
     goto check_action_44;
 action_49:
     cameraSetInterpMode(1);
-    (*(code *)(*gCameraInterface + 0x1c))(0x49,1,0,4,param_1 + 0x124,0x3c,0xff);
+    (*gCameraInterface)->setMode(0x49,1,0,4,(void *)(param_1 + 0x124),0x3c,0xff);
     goto done;
 check_action_44:
     if ((((uVar2 & 0x10) != 0) && (*(short *)(param_2 + 0x44) == 1)) &&
@@ -297,7 +297,7 @@ check_action_44:
       local_18 = (longlong)(int)cameraMtxVar57[0x23];
       local_24.height = (int)cameraMtxVar57[0x23];
       cameraSetInterpMode(0);
-      (*(code *)(*gCameraInterface + 0x1c))(0x44,1,0,0xc,&local_24,0xf,0xfe);
+      (*gCameraInterface)->setMode(0x44,1,0,0xc,&local_24,0xf,0xfe);
     }
     else {
       iVar3 = getCurSeqNo();
@@ -306,7 +306,7 @@ check_action_44:
         local_28.action = 5;
         local_28.enabled = 1;
         local_28.immediate = 1;
-        (*(code *)(*gCameraInterface + 0x1c))(0x43,1,0,4,&local_28,0,0xff);
+        (*gCameraInterface)->setMode(0x43,1,0,4,&local_28,0,0xff);
       }
     }
     goto done;
@@ -374,7 +374,7 @@ int cameraFn_80103b40(short *cam, f32 *outA, f32 *outB, int angle)
 
   OSGetTick();
   result = 0;
-  (*(void (**)(short *, f32 *, f32 *, f32 *, f32 *, f32, int))(*gCameraInterface + 0x38))
+  (*(void (**)(short *, f32 *, f32 *, f32 *, f32 *, f32, int))((char *)*gCameraInterface + 0x38))
       (cam, &spinB, &spinC, &spinD, &spinA, *(f32 *)((char *)cameraMtxVar57 + 0x8c), 0);
   tgt0 = *(int *)((char *)cam + 0xa4);
   *(int *)&probe[35] = tgt0;
