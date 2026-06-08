@@ -1,4 +1,5 @@
 #include "main/mapEvent.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/dll/TREX/TREX_Lazerwall.h"
 
 extern u32 GameBit_Get(int eventId);
@@ -18,7 +19,6 @@ extern void hudFn_8011f38c(int x);
 
 extern undefined4 *gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
-extern undefined4 *gRomCurveInterface;
 extern MapEventInterface **gMapEventInterface;
 
 extern f32 lbl_803E59DC;
@@ -53,14 +53,13 @@ int TREX_Lazerwall_popQueuedState(int arg1, int arg2)
 
     if (*(s8 *)(arg2 + 0x27a) != 0) {
         if (Stack_IsEmpty(*(int *)(state + 0x9b0)) != 0) {
-            int found = (*(int (**)(u32 *, int, int, f32, f32, f32))((char *)*gRomCurveInterface + 0x14))(
-                head, 2, -1,
-                *(f32 *)(playerObj + 0xc),
-                *(f32 *)(playerObj + 0x10),
-                *(f32 *)(playerObj + 0x14));
+            int found = (*gRomCurveInterface)->find((int *)head, 2, -1,
+                                                    *(f32 *)(playerObj + 0xc),
+                                                    *(f32 *)(playerObj + 0x10),
+                                                    *(f32 *)(playerObj + 0x14));
 
             if (found != -1) {
-                hit = (*(int (**)(void))((char *)*gRomCurveInterface + 0x1c))();
+                hit = (int)(*gRomCurveInterface)->getById(found);
                 *(f32 *)(arg1 + 0xc) = *(f32 *)(hit + 0x8);
                 *(f32 *)(arg1 + 0x10) = lbl_803E59E0 + *(f32 *)(hit + 0xc);
                 *(f32 *)(arg1 + 0x14) = *(f32 *)(hit + 0x10);
