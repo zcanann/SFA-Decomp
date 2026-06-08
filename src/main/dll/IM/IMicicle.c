@@ -67,7 +67,7 @@ extern undefined4 DAT_803dcafc;
 extern undefined4 DAT_803dcb00;
 extern undefined4* DAT_803dd6d0;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern MapEventInterface **DAT_803dd72c;
+extern MapEventInterface **gMapEventInterface;
 extern f64 DOUBLE_803e5020;
 extern f64 DOUBLE_803e5048;
 extern f64 DOUBLE_803e5060;
@@ -1045,10 +1045,10 @@ void FUN_801a494c(undefined8 param_1,double param_2,double param_3,undefined8 pa
     FUN_8017c5c4(iVar3);
     *(byte *)(iVar9 + 0xc) = *(byte *)(iVar9 + 0xc) & 0xf7;
   }
-  cVar6 = (*DAT_803dd72c)->getMode(0x1d);
+  cVar6 = (*gMapEventInterface)->getMode(0x1d);
   uVar10 = extraout_f1;
   if ((cVar6 == '\x01') && (uVar4 = FUN_80017690(0x40), uVar4 != 0)) {
-    iVar3 = (int)*DAT_803dd72c;
+    iVar3 = (int)*gMapEventInterface;
     uVar10 = (**(code **)(iVar3 + 0x44))(0x1d,2);
   }
   uVar4 = FUN_80017690(0x974);
@@ -1114,7 +1114,7 @@ void FUN_801a494c(undefined8 param_1,double param_2,double param_3,undefined8 pa
   uVar4 = FUN_80017690(0xd3d);
   if (uVar4 != 0) {
     iVar2 = FUN_80056600();
-    iVar3 = (int)*DAT_803dd72c;
+    iVar3 = (int)*gMapEventInterface;
     (**(code **)(iVar3 + 0x24))(&local_28,0,iVar2,1);
     uVar10 = FUN_80017698(0xd3d,0);
     uVar10 = FUN_80006724(uVar10,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar1,iVar1

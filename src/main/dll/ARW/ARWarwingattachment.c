@@ -184,7 +184,7 @@ extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6e8;
 extern ExpgfxInterface **gExpgfxInterface;
 extern ModgfxInterface **gModgfxInterface;
-extern MapEventInterface **DAT_803dd72c;
+extern MapEventInterface **gMapEventInterface;
 extern undefined4* DAT_803de900;
 extern f64 DOUBLE_803e69e8;
 extern f64 DOUBLE_803e6a38;
@@ -769,7 +769,7 @@ void FUN_801f1104(void)
   pcVar9[6] = pcVar9[6] & 0x7f;
   if ((*(int *)(uVar3 + 0x58) == 0) || (*(char *)(*(int *)(uVar3 + 0x58) + 0x10f) < '\x01')) {
     if ((*(char *)(uVar3 + 0xac) == '\v') &&
-       (((cVar6 = (*DAT_803dd72c)->getMode((int)*(char *)(uVar3 + 0xac)), cVar6 == '\x03' &&
+       (((cVar6 = (*gMapEventInterface)->getMode((int)*(char *)(uVar3 + 0xac)), cVar6 == '\x03' &&
          (iVar4 = FUN_80017a90(), iVar4 != 0)) &&
         (dVar14 = (double)FUN_8001771c((float *)(uVar3 + 0x18),(float *)(iVar4 + 0x18)),
         dVar14 < (double)lbl_803E69FC)))) {
@@ -797,7 +797,7 @@ void FUN_801f1104(void)
     }
   }
   if (((*(char *)(uVar3 + 0xac) == '\v') &&
-      (cVar6 = (*DAT_803dd72c)->getMode((int)*(char *)(uVar3 + 0xac)), cVar6 == '\x01')) && (dVar13 <= dVar12)) {
+      (cVar6 = (*gMapEventInterface)->getMode((int)*(char *)(uVar3 + 0xac)), cVar6 == '\x01')) && (dVar13 <= dVar12)) {
     if (*pcVar9 == '\0') {
       uVar5 = FUN_80017690(0x905);
       if (uVar5 != 0) {
@@ -1563,7 +1563,7 @@ undefined4 FUN_801f26a8(int param_1,undefined4 param_2,int param_3)
   int iVar2;
   int iVar3;
   
-  uVar1 = (*DAT_803dd72c)->getMode((int)*(char *)(param_1 + 0xac));
+  uVar1 = (*gMapEventInterface)->getMode((int)*(char *)(param_1 + 0xac));
   switch(uVar1) {
   case 1:
     FUN_801f25b4(param_1,param_2,param_3);
@@ -1656,7 +1656,7 @@ void FUN_801f284c(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   
   iVar1 = FUN_80286840();
   if (visible != 0) {
-    cVar3 = (*DAT_803dd72c)->getMode((int)*(char *)(iVar1 + 0xac));
+    cVar3 = (*gMapEventInterface)->getMode((int)*(char *)(iVar1 + 0xac));
     if (cVar3 == '\x04') {
       uVar2 = FUN_80017690(0x2bd);
       if (uVar2 != 0) {

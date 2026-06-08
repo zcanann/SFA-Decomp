@@ -335,7 +335,7 @@ extern EffectInterface **gPartfxInterface;
 extern undefined4* DAT_803dd70c;
 extern undefined4* DAT_803dd718;
 extern undefined4* DAT_803dd71c;
-extern MapEventInterface **DAT_803dd72c;
+extern MapEventInterface **gMapEventInterface;
 extern undefined4* DAT_803dd738;
 extern undefined4 DAT_803de960;
 extern undefined4 DAT_803de968;
@@ -1459,7 +1459,7 @@ void FUN_80200f4c(undefined8 param_1,double param_2,double param_3,undefined8 pa
       FUN_80006ac0(*(short **)(iVar5 + 0x24),(uint)auStack_28);
     }
     if (*(short *)(iVar6 + 0x2c) == 0) {
-      (*DAT_803dd72c)->startTimedEvent(*(int *)(iVar6 + 0x14), lbl_803E6FD4);
+      (*gMapEventInterface)->startTimedEvent(*(int *)(iVar6 + 0x14), lbl_803E6FD4);
     }
     *(byte *)(iVar7 + 0x404) = *(byte *)(iVar7 + 0x404) | *(byte *)(iVar6 + 0x2b);
   }
@@ -2719,7 +2719,7 @@ void FUN_80202b70(undefined8 param_1,double param_2,double param_3,double param_
       }
     }
     else if (((*(byte *)(iVar12 + 0x404) & 4) == 0) &&
-            (iVar10 = (*DAT_803dd72c)->isTimedEventActive(*(int *)(iVar11 + 0x14)),
+            (iVar10 = (*gMapEventInterface)->isTimedEventActive(*(int *)(iVar11 + 0x14)),
             iVar10 != 0)) {
       uVar3 = 0x10;
       uVar5 = 7;
@@ -3036,8 +3036,8 @@ void FUN_8020368c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   }
   uVar3 = FUN_80017690(0x7a1);
   if ((uVar3 != 0) &&
-     (cVar4 = (*DAT_803dd72c)->getAnimEvent((int)*(char *)(uVar1 + 0xac),6), cVar4 == '\0')) {
-    (*DAT_803dd72c)->setAnimEvent((int)*(char *)(uVar1 + 0xac),6,1);
+     (cVar4 = (*gMapEventInterface)->getAnimEvent((int)*(char *)(uVar1 + 0xac),6), cVar4 == '\0')) {
+    (*gMapEventInterface)->setAnimEvent((int)*(char *)(uVar1 + 0xac),6,1);
   }
   FUN_8028688c();
   return;
@@ -3222,7 +3222,7 @@ void FUN_80203d00(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   }
   dVar8 = (double)*(float *)(iVar2 + 0x14);
   FUN_8005b024();
-  bVar6 = (*DAT_803dd72c)->getMode((int)*(char *)(iVar1 + 0xac));
+  bVar6 = (*gMapEventInterface)->getMode((int)*(char *)(iVar1 + 0xac));
   if (bVar6 == 2) {
     FUN_8020368c(extraout_f1,dVar8,param_3,param_4,param_5,param_6,param_7,param_8);
   }
@@ -3705,14 +3705,14 @@ void FUN_80204834(undefined8 param_1,double param_2,double param_3,undefined8 pa
           *(byte *)(iVar8 + 0xf) = *(byte *)(iVar8 + 0xf) & 0x7f | 0x80;
         }
         else {
-          cVar4 = (*DAT_803dd72c)->getMode((int)*(char *)(iVar2 + 0xac));
+          cVar4 = (*gMapEventInterface)->getMode((int)*(char *)(iVar2 + 0xac));
           if ((cVar4 == '\x01') ||
-             (cVar4 = (*DAT_803dd72c)->getMode((int)*(char *)(iVar2 + 0xac)),
+             (cVar4 = (*gMapEventInterface)->getMode((int)*(char *)(iVar2 + 0xac)),
              cVar4 == '\x02')) {
             FUN_80042b9c(0,0,1);
             uVar3 = FUN_80044404(0x32);
             FUN_80042bec(uVar3,0);
-            iVar5 = (int)*DAT_803dd72c;
+            iVar5 = (int)*gMapEventInterface;
             uVar9 = (**(code **)(iVar5 + 0x44))(0x32,2);
             FUN_80053c98(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x73,'\0',
                          iVar5,param_12,param_13,param_14,param_15,param_16);
@@ -3721,18 +3721,18 @@ void FUN_80204834(undefined8 param_1,double param_2,double param_3,undefined8 pa
       }
     }
     else if (((sVar1 < 10) && (sVar1 == 1)) && (*(char *)(param_11 + iVar6 + 0x81) == '\x01')) {
-      cVar4 = (*DAT_803dd72c)->getMode((int)*(char *)(iVar2 + 0xac));
+      cVar4 = (*gMapEventInterface)->getMode((int)*(char *)(iVar2 + 0xac));
       if (cVar4 == '\x01') {
-        (*DAT_803dd72c)->setAnimEvent((int)*(char *)(iVar2 + 0xac),5,0);
-        (*DAT_803dd72c)->setAnimEvent((int)*(char *)(iVar2 + 0xac),6,0);
-        (*DAT_803dd72c)->setAnimEvent((int)*(char *)(iVar2 + 0xac),7,0);
+        (*gMapEventInterface)->setAnimEvent((int)*(char *)(iVar2 + 0xac),5,0);
+        (*gMapEventInterface)->setAnimEvent((int)*(char *)(iVar2 + 0xac),6,0);
+        (*gMapEventInterface)->setAnimEvent((int)*(char *)(iVar2 + 0xac),7,0);
       }
       else {
-        cVar4 = (*DAT_803dd72c)->getMode((int)*(char *)(iVar2 + 0xac));
+        cVar4 = (*gMapEventInterface)->getMode((int)*(char *)(iVar2 + 0xac));
         if (cVar4 == '\x02') {
-          (*DAT_803dd72c)->setAnimEvent((int)*(char *)(iVar2 + 0xac),5,0);
-          (*DAT_803dd72c)->setAnimEvent((int)*(char *)(iVar2 + 0xac),6,0);
-          (*DAT_803dd72c)->setAnimEvent((int)*(char *)(iVar2 + 0xac),7,0);
+          (*gMapEventInterface)->setAnimEvent((int)*(char *)(iVar2 + 0xac),5,0);
+          (*gMapEventInterface)->setAnimEvent((int)*(char *)(iVar2 + 0xac),6,0);
+          (*gMapEventInterface)->setAnimEvent((int)*(char *)(iVar2 + 0xac),7,0);
         }
       }
     }

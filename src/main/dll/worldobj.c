@@ -50,7 +50,7 @@ extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6d8;
 extern undefined4* DAT_803dd6e8;
 extern EffectInterface **gPartfxInterface;
-extern MapEventInterface **DAT_803dd72c;
+extern MapEventInterface **gMapEventInterface;
 extern f64 DOUBLE_803e5eb8;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E5E98;
@@ -129,7 +129,7 @@ undefined4 FUN_801ce07c(int param_1,undefined4 param_2,int param_3)
  */
 void FUN_801ce144(int param_1)
 {
-  (*DAT_803dd72c)->setAnimEvent((int)*(char *)(param_1 + 0xac),0x1f,0);
+  (*gMapEventInterface)->setAnimEvent((int)*(char *)(param_1 + 0xac),0x1f,0);
   return;
 }
 

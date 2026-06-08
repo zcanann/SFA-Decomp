@@ -40,7 +40,7 @@ extern undefined4 FUN_80293f90();
 extern undefined4 DAT_803dc8d8;
 extern undefined4 DAT_803dc8e0;
 extern undefined4* DAT_803dd71c;
-extern MapEventInterface **DAT_803dd72c;
+extern MapEventInterface **gMapEventInterface;
 extern undefined4 DAT_803de6d0;
 extern undefined4 DAT_803de6d8;
 extern undefined4 DAT_803de6e0;
@@ -296,7 +296,7 @@ void FUN_8014e3a8(ushort *param_1)
         local_2c = local_2c + lbl_803DDA5C;
         FUN_80081120(param_1,auStack_40,3,(int *)0x0);
         local_20 = (double)CONCAT44(0x43300000,*(short *)(iVar3 + 0x1c) * 0x3c ^ 0x80000000);
-        (**(code **)(*DAT_803dd72c + 100))
+        (**(code **)(*gMapEventInterface + 100))
                   ((double)(float)(local_20 - DOUBLE_803e32e0),*(undefined4 *)(iVar3 + 0x14));
         if ((int)*(short *)(iVar3 + 0x20) != 0xffffffff) {
           GameBit_Set((int)*(short *)(iVar3 + 0x20),1);
@@ -365,7 +365,7 @@ void FUN_8014e3a8(ushort *param_1)
   }
   else if ((((int)*(short *)(iVar3 + 0x20) == 0xffffffff) ||
            (uVar1 = GameBit_Get((int)*(short *)(iVar3 + 0x20)), uVar1 == 0)) &&
-          (iVar3 = (*DAT_803dd72c)->isTimedEventActive(*(int *)(iVar3 + 0x14)), iVar3 != 0))
+          (iVar3 = (*gMapEventInterface)->isTimedEventActive(*(int *)(iVar3 + 0x14)), iVar3 != 0))
   {
     param_1[0x7a] = 0;
     param_1[0x7b] = 0;

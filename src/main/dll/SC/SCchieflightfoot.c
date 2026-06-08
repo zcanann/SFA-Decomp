@@ -33,7 +33,7 @@ extern u8 gSHthorntailPathData[0x4AC];
 extern undefined4 lbl_803E5410;
 extern EffectInterface **gPartfxInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern MapEventInterface **DAT_803dd72c;
+extern MapEventInterface **gMapEventInterface;
 extern SHthorntailPathControlInterface **gPathControlInterface;
 extern f32 timeDelta;
 extern f64 lbl_803E5428;
@@ -161,7 +161,7 @@ void SHthorntail_update(SHthorntailObject *obj)
   cVar3 = ObjHitReact_Update((int)obj,hitReactEntries,0x19,uVar7,pfVar8);
   runtime->hitReactState = cVar3;
   if (cVar3 == '\0') {
-    uVar4 = (*DAT_803dd72c)->getMode((int)obj->animObjId);
+    uVar4 = (*gMapEventInterface)->getMode((int)obj->animObjId);
     runtime->locomotionMode = uVar4;
     bVar1 = config->controlMode;
     switch (bVar1) {

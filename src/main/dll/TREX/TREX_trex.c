@@ -134,7 +134,7 @@ extern undefined4 DAT_803dc071;
 extern undefined4 DAT_803dcd00;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern ModgfxInterface **gModgfxInterface;
-extern MapEventInterface **DAT_803dd72c;
+extern MapEventInterface **gMapEventInterface;
 extern int* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 extern f64 DOUBLE_803e6558;
@@ -1661,7 +1661,7 @@ void FUN_801e6558(undefined8 param_1,double param_2,double param_3,undefined8 pa
   
   iVar1 = FUN_80017a98();
   iVar3 = *(int *)(param_9 + 0xb8);
-  iVar2 = (int)(*DAT_803dd72c)->getState(*DAT_803dd72c);
+  iVar2 = (int)(*gMapEventInterface)->getState(*gMapEventInterface);
   uVar4 = FUN_80294d28(iVar1,-param_10);
   switch(*(undefined *)(iVar3 + 1)) {
   case 0:

@@ -79,7 +79,7 @@ extern undefined4 DAT_80326e90;
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6cc;
 extern undefined4* DAT_803dd6e8;
-extern MapEventInterface **DAT_803dd72c;
+extern MapEventInterface **gMapEventInterface;
 extern undefined4 DAT_803de840;
 extern undefined4 DAT_803de844;
 extern undefined4 DAT_803e90f0;
@@ -733,7 +733,7 @@ void FUN_801c7390(undefined4 param_1,undefined4 param_2,int param_3)
         FUN_80294ccc(iVar3,0x80,1);
         FUN_80017698(299,1);
         FUN_80017698(0xc85,1);
-        (*DAT_803dd72c)->setMode(0xb,5);
+        (*gMapEventInterface)->setMode(0xb,5);
       }
       else if (bVar1 < 7) {
         if (bVar1 == 3) {

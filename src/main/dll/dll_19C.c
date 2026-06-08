@@ -47,7 +47,7 @@ extern int DAT_80326c04;
 extern undefined4 DAT_803dcbc8;
 extern undefined4* DAT_803dd6cc;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern MapEventInterface **DAT_803dd72c;
+extern MapEventInterface **gMapEventInterface;
 extern f64 DOUBLE_803e5b18;
 extern f64 DOUBLE_803e5b28;
 extern f32 lbl_803DC074;
@@ -346,7 +346,7 @@ void FUN_801c3134(undefined4 param_1,undefined4 param_2,int param_3)
         FUN_80294ccc(iVar3,1,1);
         FUN_80017698(0xbfd,1);
         FUN_80017698(0x956,1);
-        (*DAT_803dd72c)->setMode(0xb,2);
+        (*gMapEventInterface)->setMode(0xb,2);
       }
       else if (bVar1 < 7) {
         if (bVar1 == 3) {

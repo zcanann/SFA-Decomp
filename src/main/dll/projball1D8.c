@@ -26,7 +26,7 @@ extern void gameTextShow(int p);
 
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6d8;
-extern MapEventInterface **DAT_803dd72c;
+extern MapEventInterface **gMapEventInterface;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E5F10;
 extern f32 lbl_803E5F14;
@@ -69,13 +69,13 @@ void nw_levcontrol_update(int param_1)
       *pfVar10 = lbl_803E5F10;
     }
   }
-  cVar7 = (*DAT_803dd72c)->getMode((int)*(char *)(iVar1 + 0xac));
+  cVar7 = (*gMapEventInterface)->getMode((int)*(char *)(iVar1 + 0xac));
   if (cVar7 != '\x01') {
-    (*DAT_803dd72c)->setMode((int)*(char *)(iVar1 + 0xac),1);
+    (*gMapEventInterface)->setMode((int)*(char *)(iVar1 + 0xac),1);
   }
-  cVar7 = (*DAT_803dd72c)->getMode(7);
+  cVar7 = (*gMapEventInterface)->getMode(7);
   if (cVar7 == '\x01') {
-    (*DAT_803dd72c)->setMode(7,2);
+    (*gMapEventInterface)->setMode(7,2);
     GameBit_Set(0xf22,1);
     GameBit_Set(0xf23,1);
     GameBit_Set(0xf24,1);
@@ -106,9 +106,9 @@ void nw_levcontrol_update(int param_1)
   SCGameBitLatch_Update(pfVar10 + 2,0x80,-1,-1,0xf31,(int *)0xaf);
   uVar4 = GameBit_Get(0x398);
   if ((uVar4 != 0) &&
-     (cVar7 = (*DAT_803dd72c)->getAnimEvent((int)*(char *)(iVar1 + 0xac),0x1f), cVar7 == '\0')
+     (cVar7 = (*gMapEventInterface)->getAnimEvent((int)*(char *)(iVar1 + 0xac),0x1f), cVar7 == '\0')
      ) {
-    (*DAT_803dd72c)->setAnimEvent((int)*(char *)(iVar1 + 0xac),0x1f,1);
+    (*gMapEventInterface)->setAnimEvent((int)*(char *)(iVar1 + 0xac),0x1f,1);
   }
   if (((*((uint*)pfVar10 + 2) & 2) == 0) || (bVar8 = FUN_80006b44(), bVar8 == 0)) {
     switch(*(undefined *)(pfVar10 + 1)) {
@@ -159,7 +159,7 @@ void nw_levcontrol_update(int param_1)
           *((uint*)pfVar10 + 2) = *((uint*)pfVar10 + 2) | 2;
           FUN_80006b54(0x15,(uint)*(byte *)((int)pfVar10 + 5));
           FUN_80006b50();
-          (*DAT_803dd72c)->triggerEvent((int)(psVar2 + 6),(int)*psVar2,0,0);
+          (*gMapEventInterface)->triggerEvent((int)(psVar2 + 6),(int)*psVar2,0,0);
         }
         else if ((uVar6 & 4) != 0) {
           *((uint*)pfVar10 + 2) = uVar6 & 0xfffffffd;
@@ -193,7 +193,7 @@ void nw_levcontrol_update(int param_1)
   }
   else {
     FUN_80006824(0,SFXsc_clubhit02);
-    (*DAT_803dd72c)->finishCurrentEvent(*DAT_803dd72c);
+    (*gMapEventInterface)->finishCurrentEvent(*gMapEventInterface);
   }
   return;
 }
