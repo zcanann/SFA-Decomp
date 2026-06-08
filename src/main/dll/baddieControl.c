@@ -4,6 +4,7 @@
 #include "main/objanim.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
+#include "main/dll/path_control_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/screen_transition.h"
 
@@ -3596,7 +3597,6 @@ void dll_19_func19(u8 *cam, u8 *ctx) {
 #pragma scheduling reset
 
 extern void *gPlayerInterface;
-extern void *gPathControlInterface;
 
 /* dll_19_func0C  addr=0x80112D80  size=0x114  linkage=global */
 #pragma dont_inline on
@@ -3622,7 +3622,7 @@ void dll_19_func0C(int p1, u8 *p2, u8 *p3, s16 p4, u8 *p5, s16 p6, s16 p7, int p
     if (p8 != 0) {
         ObjAnim_SetCurrentMove(p1, p8, lbl_803E1C2C, 0);
     }
-    (*(void (**)(int, u8 *))(*(int *)gPathControlInterface + 0x20))(p1, p2 + 4);
+    (*gPathControlInterface)->attachObject((void *)p1, p2 + 4);
     if (p9 != -1) {
         p2[0x25f] = p9;
     }
@@ -4306,17 +4306,16 @@ void dll_19_func18(int p1, u8 *p2, u8 *p3, int p4, int p5, int p6, f32 fparam, i
         GameBit_Set(*(s16 *)(p3 + 1012), 0);
     }
     if ((flags & 2) != 0) {
-        (*(void (**)(u8 *, int, int, int))(*(int *)gPathControlInterface + 4))(path, 0, p6 | 0x200000, 1);
+        (*gPathControlInterface)->init(path, 0, p6 | 0x200000, 1);
     } else {
-        (*(void (**)(u8 *, int, int, int))(*(int *)gPathControlInterface + 4))(path, 0, 0, 0);
+        (*gPathControlInterface)->init(path, 0, 0, 0);
     }
-    (*(void (**)(u8 *, int, u8 *, u32, int))(*(int *)gPathControlInterface + 8))(
+    ((void (*)(void *, int, void *, u32, int))(*gPathControlInterface)->slot08)(
         path, 1, lbl_8031A054, lbl_803DB9E0, 4);
     if ((flags & 4) != 0) {
-        (*(void (**)(u8 *, int, u8 *, u32, u8 *))(*(int *)gPathControlInterface + 12))(
-            path, 1, lbl_8031A048, lbl_803DD5E0, &byteLocal);
+        (*gPathControlInterface)->setup(path, 1, lbl_8031A048, (void *)lbl_803DD5E0, &byteLocal);
     }
-    (*(void (**)(int, u8 *))(*(int *)gPathControlInterface + 32))(p1, path);
+    (*gPathControlInterface)->attachObject((void *)p1, path);
     p3[1028] = p2[43];
     *(s16 *)(p3 + 1008) = *(s16 *)(p2 + 34);
     p3[1030] = p2[47];

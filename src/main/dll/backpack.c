@@ -7,6 +7,7 @@
 #include "main/dll/backpack_state.h"
 #include "main/dll/backpack.h"
 #include "main/dll/landedArwing.h"
+#include "main/dll/path_control_interface.h"
 #include "main/objanim.h"
 #include "main/objlib.h"
 #include "main/objhits_types.h"
@@ -16,7 +17,6 @@ extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 
 extern void* gBaddieControlInterface;
 extern void* gPlayerInterface;
-extern void* gPathControlInterface;
 extern EffectInterface **gPartfxInterface;
 extern f32 lbl_803E2FC8;
 extern f32 lbl_803E2FCC;
@@ -179,7 +179,7 @@ void tumbleweed_updateStateMachine(int obj) {
             }
         }
         tumbleweed_updateRollingMotion(obj, aux);
-        (*(int(**)(int, int, f32))(*(int*)gPathControlInterface + 0x18))(obj, aux, timeDelta);
+        (*gPathControlInterface)->advance((void *)obj, (void *)aux, timeDelta);
         ((BackpackState *)aux)->phaseTimer = ((BackpackState *)aux)->phaseTimer - timeDelta;
         if (((BackpackState *)aux)->phaseTimer < lbl_803E2F68) {
             ((BackpackState *)aux)->unk27A = (u8)(((BackpackState *)aux)->unk27A | 7);
@@ -222,7 +222,7 @@ void tumbleweed_updateStateMachine(int obj) {
                 }
             }
             fn_80163990(obj, aux);
-            (*(int(**)(int, int, f32))(*(int*)gPathControlInterface + 0x18))(obj, aux, timeDelta);
+            (*gPathControlInterface)->advance((void *)obj, (void *)aux, timeDelta);
         }
     } else if (state == 4) {
         while (ObjMsg_Pop((void *)obj, &popMsg, (u32*)0, (u32*)0) != 0) {
@@ -295,9 +295,10 @@ void tumbleweed_init(int obj, int defData) {
     ((BackpackState *)aux)->growRate = ((BackpackState *)aux)->targetScale / (f32)(s32)randomGetRange(0xc8, 0x1f4);
     *(u32*)(aux + 0x284) = 0;
     ((GameObject *)obj)->anim.rootMotionScale = lbl_803E2FD0;
-    (*(int(**)(int, int, int, int))(*(int*)gPathControlInterface + 0x4))(aux, 0, 0x40000, 1);
-    (*(int(**)(int, int, void*, void*, int))(*(int*)gPathControlInterface + 0x8))(aux, 1, lbl_80320288, lbl_803DBD40, 8);
-    (*(int(**)(int, int))(*(int*)gPathControlInterface + 0x20))(obj, aux);
+    (*gPathControlInterface)->init((void *)aux, 0, 0x40000, 1);
+    ((void (*)(void *, int, void *, void *, int))(*gPathControlInterface)->slot08)(
+        (void *)aux, 1, lbl_80320288, lbl_803DBD40, 8);
+    (*gPathControlInterface)->attachObject((void *)obj, (void *)aux);
     ((BackpackState *)aux)->phase = 0;
     ((BackpackState *)aux)->phaseTimer = lbl_803E2FB4 + (f32)(s32)randomGetRange(-0x12c, 0x12c);
     ObjGroup_AddObject(obj, 3);
@@ -637,7 +638,7 @@ void tumbleweed_updateTargetedStateMachine(int obj)
             ((GameObject *)obj)->anim.velocityZ = -(k * ((GameObject *)obj)->anim.velocityZ);
         }
         tumbleweed_updateRollingMotion(obj, aux);
-        (*(int(**)(int, int, f32))(*(int*)gPathControlInterface + 0x18))(obj, aux, timeDelta);
+        (*gPathControlInterface)->advance((void *)obj, (void *)aux, timeDelta);
         if (ObjHits_GetPriorityHit(obj, &hitObject, &sphereIndex, &hitVolume) != 0) {
             GameBit_Set(0x642, 1);
             ((BackpackState *)aux)->unk27A = (u8)(((BackpackState *)aux)->unk27A | 7);

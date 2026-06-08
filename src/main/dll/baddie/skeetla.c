@@ -4,6 +4,7 @@
  */
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
+#include "main/dll/path_control_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/tricky_state.h"
 #include "main/game_object.h"
@@ -24,7 +25,6 @@ extern f32 lbl_803E2430;
 extern f32 lbl_803E2434;
 extern f32 lbl_803E2438;
 extern f32 timeDelta;
-extern void *gPathControlInterface;
 
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern void hitDetectFn_800658a4(u8 *obj, f32 x, f32 y, f32 z, f32 *out, int flags);
@@ -171,7 +171,7 @@ void trickyUpdateCollisionAndPathState(u8 *obj)
     }
 
     if ((s8)state->unk353 == 0) {
-        (*(void (**)(u8 *, u8 *))(*(int *)gPathControlInterface + 0x20))(obj, (u8 *)state + 0xf8);
+        (*gPathControlInterface)->attachObject(obj, (u8 *)state + 0xf8);
     }
 
     if ((coordsToMapCell(((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosZ) == 0xe) ||
@@ -181,9 +181,9 @@ void trickyUpdateCollisionAndPathState(u8 *obj)
         *(u32 *)((u8 *)state + 0xf8) |= 4;
     }
 
-    (*(void (**)(u8 *, u8 *, f32))(*(int *)gPathControlInterface + 0x10))(obj, (u8 *)state + 0xf8, timeDelta);
-    (*(void (**)(u8 *, u8 *))(*(int *)gPathControlInterface + 0x14))(obj, (u8 *)state + 0xf8);
-    (*(void (**)(u8 *, u8 *, f32))(*(int *)gPathControlInterface + 0x18))(obj, (u8 *)state + 0xf8, timeDelta);
+    (*gPathControlInterface)->update(obj, (u8 *)state + 0xf8, timeDelta);
+    (*gPathControlInterface)->apply(obj, (u8 *)state + 0xf8);
+    (*gPathControlInterface)->advance(obj, (u8 *)state + 0xf8, timeDelta);
 
     ((GameObject *)obj)->anim.rotY = state->pathRotY;
     ((GameObject *)obj)->anim.rotZ = state->pathRotZ;
