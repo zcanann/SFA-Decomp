@@ -139,7 +139,6 @@ extern undefined4* DAT_803dd6d0;
 extern undefined4* DAT_803dd6f4;
 extern undefined4* DAT_803dd70c;
 extern undefined4* DAT_803dd71c;
-extern undefined4* DAT_803dd728;
 extern undefined4* DAT_803dd72c;
 extern float* DAT_803de1fc;
 extern undefined4* DAT_803de200;
@@ -2808,7 +2807,7 @@ void FUN_8011221c(undefined8 param_1,double param_2,double param_3,undefined8 pa
     FUN_800305f8((double)lbl_803E28AC,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                  uVar1,param_16,0,iVar3,puVar4,param_14,param_15,iVar5);
   }
-  (**(code **)(*DAT_803dd728 + 0x20))(uVar1,iVar2 + 4);
+  (*gPathControlInterface)->attachObject((void *)uVar1, (void *)(iVar2 + 4));
   if (param_17 != -1) {
     *(char *)(iVar2 + 0x25f) = param_17;
   }
