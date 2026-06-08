@@ -1,4 +1,5 @@
 #include "main/dll/CAM/camshipbattle.h"
+#include "main/camera_interface.h"
 #include "main/camera_object.h"
 #include "main/pad.h"
 
@@ -6,7 +7,6 @@ extern undefined4 FUN_80017814();
 extern int objFn_802962b4(int obj);
 extern int objFn_80296700(int obj);
 
-extern int *gCameraInterface;
 extern u8 *lbl_803DD538;
 
 #define gCamcontrolPathState lbl_803DD538
@@ -59,7 +59,7 @@ checkActiveTarget:
 checkOverrideFlag:
     if ((((CameraObject *)param_1)->unk141 & 2) != 0) {
 sendFollowAction:
-      (*(code *)(*gCameraInterface + 0x1c))(0x49,1,0,4,param_1 + 0x124,0x3c,0xff);
+      (*gCameraInterface)->setMode(0x49,1,0,4,(void *)(param_1 + 0x124),0x3c,0xff);
       goto done;
     }
     if ((((buttons & 0x10) != 0) && (*(short *)(param_2 + 0x44) == 1)) &&
@@ -67,7 +67,7 @@ sendFollowAction:
       local_28.x = *(float *)(lbl_803DD538 + 4);
       local_28.z = *(float *)(lbl_803DD538 + 0xc);
       local_28.y = (s16)*(float *)(lbl_803DD538 + 0x10);
-      (*(code *)(*gCameraInterface + 0x1c))(0x44,1,0,0xc,&local_28,0,0xff);
+      (*gCameraInterface)->setMode(0x44,1,0,0xc,&local_28,0,0xff);
     }
   }
 done:

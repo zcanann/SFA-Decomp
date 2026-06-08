@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/camera_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/WM/WMcrystal.h"
 #include "main/objseq.h"
@@ -76,7 +77,6 @@ extern f32 mathCosf(f32 angle);
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int *gGameUIInterface;
 extern ScreenTransitionInterface **gScreenTransitionInterface;
-extern int *gCameraInterface;
 extern MapEventInterface **gMapEventInterface;
 extern u16 lbl_80327A60[];
 extern u16 lbl_80327A70[];
@@ -470,7 +470,7 @@ void sc_totembond_update(ScTotemBondObject *obj)
                 state->completionTimer = lbl_803E5654;
                 player = Obj_GetPlayerObject();
                 (*(code *)((u8 *)*gMapEventInterface + 0x2c))();
-                (*(code *)(*gCameraInterface + 0x1c))(0x42,0,3,0,0,0,0);
+                (*gCameraInterface)->setMode(0x42,0,3,0,NULL,0,0);
                 obj->mapAlpha = 0xff;
                 fn_80296124(player,NULL,NULL,0);
                 ObjHits_EnableObject(obj);
@@ -524,7 +524,7 @@ void sc_totembond_update(ScTotemBondObject *obj)
         state->pitch = obj->pitch;
         state->roll = obj->roll;
         state->cameraDistance = lbl_803E5660;
-        (*(code *)(*gCameraInterface + 0x60))(state,0x18);
+        (*(void (*)(void *, int))*(int *)((char *)*gCameraInterface + 0x60))(state,0x18);
     }
 
     if ((state->eventFlags & SC_TOTEMBOND_EVENT_SET_MAP_MODE) != 0) {

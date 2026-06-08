@@ -1,4 +1,5 @@
 #include "main/dll/tricky.h"
+#include "main/camera_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/texture.h"
 
@@ -192,7 +193,6 @@ extern undefined4 DAT_803dc798;
 extern undefined4 DAT_803dc79c;
 extern undefined4 DAT_803dc7a0;
 extern undefined4 DAT_803dc7a8;
-extern undefined4* DAT_803dd6d0;
 extern MapEventInterface **gMapEventInterface;
 extern undefined4 DAT_803de3b0;
 extern undefined4 DAT_803de3c0;
@@ -1821,7 +1821,7 @@ void FUN_8011f438(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       }
     }
   }
-  iVar2 = (**(code **)(*DAT_803dd6d0 + 0x10))();
+  iVar2 = (*gCameraInterface)->getMode();
   if ((iVar2 < 0x49) && (0x46 < iVar2)) {
     dVar12 = (double)(f32)(s32)((int)cVar8 + 0x5fU);
     FUN_800709e8((double)lbl_803E2C1C,dVar12,DAT_803a97a4,uVar7,0x100);
@@ -2944,7 +2944,6 @@ extern int coordsToMapCell(f32 x, f32 z);
 extern int fn_802972A8(int *player);
 extern void drawPartialTexture(void *tex, f32 x, f32 y, int alpha, int p5, int p6, int p7, int p8, int p9);
 extern void hudDrawCounter(int id, int a, int b, int c, int d, int *e, int f);
-extern int *gCameraInterface;
 extern s16 cMenuFadeCounter;
 extern f32 lbl_803DD844, lbl_803DD83C;
 extern const f32 lbl_803E1F98;
@@ -3035,7 +3034,7 @@ void hudDrawFn_80121440(void) {
         }
     }
     {
-        int camMode = (*(int (**)(void))(*(int *)gCameraInterface + 0x10))();
+        int camMode = (*gCameraInterface)->getMode();
         if (camMode >= 0x47 && camMode < 0x49) {
             drawTexture(*(void **)(base + 0x354), lbl_803E1F9C,
                         (f32)(int)((s8)itemTex + 0x5f), alpha, 0x100);

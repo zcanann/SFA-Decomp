@@ -1,6 +1,7 @@
 #include "main/dll/FRONT/dll_39.h"
 #include "main/dll/FRONT/dll_44.h"
 #include "main/dll/FRONT/picmenu.h"
+#include "main/camera_interface.h"
 #include "main/screen_transition.h"
 
 extern undefined4 FUN_80006b1c();
@@ -88,7 +89,6 @@ extern void VIWaitForRetrace(void);
 extern u8 framesThisStep;
 extern f32 timeDelta;
 extern ScreenTransitionInterface **gScreenTransitionInterface;
-extern undefined4 *gCameraInterface;
 extern undefined4 *gTitleMenuLinkInterface;
 extern int lbl_803DD5F8;
 extern s8 lbl_803DD5FC;
@@ -426,7 +426,7 @@ void TitleMenu_render(u8 *param_1)
     return;
   }
 
-  menuAction = (*(code *)(*gCameraInterface + 0x10))();
+  menuAction = (*gCameraInterface)->getMode();
   if (menuAction == TITLE_MENU_CAMERA_ACTION_ACTIVE) {
     gameTextSetDrawFunc(titleScreenTextDrawFunc);
     titleScreenPositionElements(lbl_803E1D10 + (f32)(gTitleMenuSelectionFade * 0x1a4) / lbl_803E1D14,

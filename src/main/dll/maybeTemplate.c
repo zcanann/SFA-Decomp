@@ -1,4 +1,5 @@
 #include "main/dll/maybeTemplate.h"
+#include "main/camera_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/screen_transition.h"
 
@@ -515,7 +516,6 @@ void hudDrawCounter(int idx, s16 value, s16 target, u8 alpha, int timer, int *yP
  */
 extern MapEventInterface **gMapEventInterface;
 extern ScreenTransitionInterface **gScreenTransitionInterface;
-extern int *gCameraInterface;
 extern int lbl_803A87F0[];
 extern f32 lbl_803DD83C;
 extern u8 lbl_803DD75B;
@@ -540,7 +540,7 @@ extern f32 lbl_803E1FC8;
 #define PMDS_SCREEN_GET_FADE() \
   (*gScreenTransitionInterface)->getProgress()
 #define PMDS_CAMERA_GET_STATE() \
-  ((int (*)(void))(*(u32 *)((u8 *)*gCameraInterface + 0x10)))()
+  (*gCameraInterface)->getMode()
 
 void pauseMenuDrawStatus(void)
 {
