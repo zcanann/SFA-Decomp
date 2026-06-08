@@ -3333,6 +3333,19 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
     assigning the real field took 99.97→100 and improved the layout
     documentation.
 
+123. **FP-register residuals can hide WRONG CONSTANT ownership: when target
+    keeps an earlier constant live in `f1` while current reloads a later
+    `scale`/parameter constant into `f1`, audit which constant each
+    expression should semantically use.** In stack-builder functions with
+    repeated initializers, Ghidra often points every later expression at the
+    most recent visually-similar float label. The target tells you otherwise:
+    if `buf.scale = lbl_Scale` loads/stores through `f0`, but the following
+    optional position offset does `fadds f0,f1,f0` without reloading `f1`,
+    then `f1` is still the earlier base/zero constant, not the scale.
+    `dll_76_func03` and `dll_77_func03` both sat at 99.93 with exactly this
+    shape; changing the position-offset adds from `lbl_803E0C54/6C` to the
+    earlier `lbl_803E0C4C/64` took both to 100 and fixed the behavior.
+
 **NAMED CAP — branchy-arg pre-eval hoist (the in-place L2R ternary arg).**
 When target evaluates a branchy ternary CALL ARG at its L2R slot (args 1-7
 set up first, the clamp 8th, then 9-10 — ObjHits_CheckSkeletonPair's two

@@ -1943,6 +1943,8 @@ int saveFn_800e8508(void)
   return iVar1;
 }
 #pragma peephole reset
+
+
 #pragma scheduling reset
 
 /*
@@ -15510,13 +15512,13 @@ void dll_76_func03(int param_1, int param_2, int param_3, uint param_4)
   buf.flags |= param_4;
   if ((buf.flags & 1) != 0) {
     if ((u32)ctx != 0) {
-      buf.pos[0] = lbl_803E0C54 + *(f32 *)(ctx + 0x18);
-      buf.pos[1] = lbl_803E0C54 + *(f32 *)(ctx + 0x1c);
-      buf.pos[2] = lbl_803E0C54 + *(f32 *)(ctx + 0x20);
+      buf.pos[0] = lbl_803E0C4C + *(f32 *)(ctx + 0x18);
+      buf.pos[1] = lbl_803E0C4C + *(f32 *)(ctx + 0x1c);
+      buf.pos[2] = lbl_803E0C4C + *(f32 *)(ctx + 0x20);
     } else {
-      buf.pos[0] = lbl_803E0C54 + *(f32 *)(param_3 + 0xc);
-      buf.pos[1] = lbl_803E0C54 + *(f32 *)(param_3 + 0x10);
-      buf.pos[2] = lbl_803E0C54 + *(f32 *)(param_3 + 0x14);
+      buf.pos[0] = lbl_803E0C4C + *(f32 *)(param_3 + 0xc);
+      buf.pos[1] = lbl_803E0C4C + *(f32 *)(param_3 + 0x10);
+      buf.pos[2] = lbl_803E0C4C + *(f32 *)(param_3 + 0x14);
     }
   }
   (*gModgfxInterface)->spawnEffect(&buf, 0, 0, 0, 0, 0, 0, 0);
@@ -15561,13 +15563,13 @@ void dll_77_func03(int param_1, int param_2, int param_3, uint param_4)
   buf.flags |= param_4;
   if ((buf.flags & 1) != 0) {
     if ((u32)ctx != 0) {
-      buf.pos[0] = lbl_803E0C6C + *(f32 *)(ctx + 0x18);
-      buf.pos[1] = lbl_803E0C6C + *(f32 *)(ctx + 0x1c);
-      buf.pos[2] = lbl_803E0C6C + *(f32 *)(ctx + 0x20);
+      buf.pos[0] = lbl_803E0C64 + *(f32 *)(ctx + 0x18);
+      buf.pos[1] = lbl_803E0C64 + *(f32 *)(ctx + 0x1c);
+      buf.pos[2] = lbl_803E0C64 + *(f32 *)(ctx + 0x20);
     } else {
-      buf.pos[0] = lbl_803E0C6C + *(f32 *)(param_3 + 0xc);
-      buf.pos[1] = lbl_803E0C6C + *(f32 *)(param_3 + 0x10);
-      buf.pos[2] = lbl_803E0C6C + *(f32 *)(param_3 + 0x14);
+      buf.pos[0] = lbl_803E0C64 + *(f32 *)(param_3 + 0xc);
+      buf.pos[1] = lbl_803E0C64 + *(f32 *)(param_3 + 0x10);
+      buf.pos[2] = lbl_803E0C64 + *(f32 *)(param_3 + 0x14);
     }
   }
   (*gModgfxInterface)->spawnEffect(&buf, 0, 0, 0, 0, 0, 0, 0);
@@ -16909,4 +16911,3 @@ int modgfx_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, int param
   return ret;
 }
 #pragma peephole reset
-
