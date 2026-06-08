@@ -214,7 +214,6 @@ extern undefined4* DAT_803dd6d8;
 extern ModgfxInterface **gModgfxInterface;
 extern EffectInterface **gPartfxInterface;
 extern undefined4* DAT_803dd718;
-extern undefined4* DAT_803dd72c;
 extern void **gTitleMenuControlInterfaceCopy;
 extern undefined4* DAT_803de720;
 extern undefined4* DAT_803de724;

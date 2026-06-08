@@ -49,7 +49,6 @@ extern int getAngle(f32 dx, f32 dy);
 
 extern undefined4 DAT_803a4ed8;
 extern undefined4 gCamcontrolTargetTypeMask;
-extern undefined4* DAT_803dd6d0;
 extern int *gCameraInterface;
 extern undefined4 gCamcontrolTargetState;
 extern undefined4 DAT_803de143;

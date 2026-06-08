@@ -44,7 +44,6 @@ extern void titleScreenTextDrawFunc(void);
 extern int DAT_803a5098;
 extern char lbl_8031A1D8[];
 extern undefined4 DAT_803dc070;
-extern undefined4* DAT_803dd6cc;
 extern undefined4 DAT_803dd970;
 extern undefined4 DAT_803de260;
 extern undefined4 DAT_803de264;

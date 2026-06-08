@@ -46,10 +46,7 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern f32 mathSinf(f32 x);
 
 extern undefined4 DAT_803dc070;
-extern undefined4* DAT_803dd6cc;
-extern undefined4* DAT_803dd6d0;
 extern undefined4* DAT_803dd6e4;
-extern undefined4* DAT_803dd72c;
 extern f64 DOUBLE_803e6458;
 extern f32 lbl_803DC074;
 extern f32 timeDelta;

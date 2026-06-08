@@ -64,7 +64,6 @@ extern undefined4 FUN_801da7f8();
 extern undefined4 DAT_803dccc8;
 extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern undefined4* DAT_803dd6d8;
-extern undefined4* DAT_803dd6e8;
 extern MapEventInterface **gMapEventInterface;
 extern undefined4 DAT_803de878;
 extern undefined4 DAT_803de880;

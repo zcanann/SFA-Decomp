@@ -273,7 +273,6 @@ extern undefined4 DAT_803dc0e4;
 extern undefined4 DAT_803dc0e8;
 extern undefined4 DAT_803dc210;
 extern undefined4 DAT_803dd5d0;
-extern undefined4* DAT_803dd6d0;
 extern EffectInterface **gPartfxInterface;
 extern MapEventInterface **gMapEventInterface;
 extern undefined4 DAT_803dd8a0;

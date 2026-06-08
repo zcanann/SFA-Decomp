@@ -142,8 +142,6 @@ extern uint countLeadingZeros();
 extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803dcb80;
 extern undefined4 DAT_803dcb88;
-extern undefined4* DAT_803dd6d8;
-extern undefined4* DAT_803dd6e8;
 extern EffectInterface **gPartfxInterface;
 extern MapEventInterface **gMapEventInterface;
 extern f64 DOUBLE_803e56e8;

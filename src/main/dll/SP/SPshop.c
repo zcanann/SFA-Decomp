@@ -14,7 +14,6 @@ extern undefined4 FUN_80286880();
 extern undefined4 FUN_80286884();
 extern uint countLeadingZeros();
 
-extern undefined4* DAT_803dd6d8;
 extern int *gGameUIInterface;
 extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;

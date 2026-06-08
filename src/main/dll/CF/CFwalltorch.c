@@ -21,7 +21,6 @@ extern undefined8 FUN_80080f3c();
 extern uint FUN_80286840();
 extern undefined4 FUN_8028688c();
 
-extern undefined4* DAT_803dd72c;
 extern f32 FLOAT_803e4b30;
 
 /*

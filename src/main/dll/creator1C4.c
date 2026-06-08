@@ -31,8 +31,6 @@ extern undefined4 FUN_80286834();
 extern undefined4 FUN_80286880();
 extern uint FUN_80294cd0();
 
-extern undefined4* DAT_803dd6cc;
-extern undefined4* DAT_803dd72c;
 extern f64 DOUBLE_803e5cc8;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E5CD4;

@@ -28,7 +28,6 @@ extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294ccc();
 extern void fn_80296518(int obj, int arg, int enable);
 
-extern undefined4* DAT_803dd72c;
 extern void* DAT_803de838;
 extern MapEventInterface **gMapEventInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;

@@ -16,7 +16,6 @@ extern undefined4 FUN_801ce244();
 
 extern undefined4 DAT_80327428;
 extern undefined4 DAT_80327458;
-extern undefined4* DAT_803dd6e8;
 extern undefined4* DAT_803dd71c;
 extern undefined4 DAT_803e5ea0;
 extern f32 lbl_803E5EE4;

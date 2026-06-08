@@ -148,7 +148,6 @@ extern undefined4 DAT_80323890;
 extern undefined4 DAT_803dc070;
 extern undefined4 gScreensInterface;
 extern WaterfxInterface **gWaterfxInterface;
-extern undefined4* DAT_803dd6d0;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6e8;
 extern EffectInterface **gPartfxInterface;

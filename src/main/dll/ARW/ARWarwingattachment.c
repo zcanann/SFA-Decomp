@@ -179,7 +179,6 @@ extern undefined4 DAT_803295bc;
 extern undefined4 DAT_803295c0;
 extern undefined4 DAT_803295c4;
 extern undefined4 DAT_803dc070;
-extern undefined4* DAT_803dd6cc;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6e8;
 extern ExpgfxInterface **gExpgfxInterface;

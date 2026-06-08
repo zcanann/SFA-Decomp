@@ -80,7 +80,6 @@ extern undefined4 DAT_803dc8cc;
 extern undefined4 DAT_803dc8d0;
 extern ExpgfxInterface **gExpgfxInterface;
 extern undefined4* DAT_803dd71c;
-extern undefined4* DAT_803dd72c;
 extern f64 DOUBLE_803e3218;
 extern f64 DOUBLE_803e3278;
 extern f32 lbl_803DC074;

@@ -229,8 +229,6 @@ extern char sInWaterMessage[];
 extern char lbl_8031D478[];
 extern undefined4 DAT_803dc8a8;
 extern undefined4 DAT_803dc8b0;
-extern undefined4* DAT_803dd6e8;
-extern undefined4* DAT_803dd72c;
 extern undefined4* DAT_803dd734;
 extern undefined4 DAT_803de6c8;
 extern undefined4* DAT_803de6d0;

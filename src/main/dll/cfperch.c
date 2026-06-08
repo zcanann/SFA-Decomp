@@ -42,7 +42,6 @@ extern uint FUN_80294cf0();
 extern uint FUN_80294db4();
 
 extern undefined4 DAT_803dc070;
-extern undefined4* DAT_803dd6d8;
 extern undefined4* DAT_803de740;
 extern f64 DOUBLE_803e4600;
 extern f64 DOUBLE_803e4638;

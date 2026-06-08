@@ -119,7 +119,6 @@ extern int lbl_803DBDA0;
 extern undefined4 DAT_803dca00;
 extern undefined4 DAT_803dca08;
 extern undefined4* DAT_803dd6d0;
-extern undefined4* DAT_803dd6e8;
 extern EffectInterface **gPartfxInterface;
 extern undefined4* DAT_803dd71c;
 extern MapEventInterface **gMapEventInterface;
