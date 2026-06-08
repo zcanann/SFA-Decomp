@@ -38,8 +38,7 @@ extern undefined4 FUN_80286884();
 extern undefined4 FUN_80286888();
 
 extern ObjectTriggerInterface **gObjectTriggerInterface;
-extern undefined4* DAT_803dd6fc;
-extern undefined4* DAT_803dd72c;
+extern MapEventInterface **gMapEventInterface;
 extern undefined4 DAT_803de940;
 extern f64 DOUBLE_803e6d90;
 extern f64 DOUBLE_803e6da8;
@@ -801,11 +800,11 @@ FUN_801fcccc(undefined8 param_1,double param_2,double param_3,undefined8 param_4
       FUN_80017698(0x500,0);
       FUN_80017698(0xd72,1);
       FUN_80017698(0xd44,1);
-      (**(code **)(*DAT_803dd72c + 0x50))((int)*(char *)(param_9 + 0xac),1,1);
-      (**(code **)(*DAT_803dd72c + 0x50))((int)*(char *)(param_9 + 0xac),2,1);
-      iVar4 = *DAT_803dd72c;
-      (**(code **)(iVar4 + 0x50))((int)*(char *)(param_9 + 0xac),0x16,1);
-      cVar2 = (**(code **)(*DAT_803dd72c + 0x40))((int)*(char *)(param_9 + 0xac));
+      (*gMapEventInterface)->setAnimEvent((int)*(char *)(param_9 + 0xac),1,1);
+      (*gMapEventInterface)->setAnimEvent((int)*(char *)(param_9 + 0xac),2,1);
+      iVar4 = (int)*gMapEventInterface;
+      (*gMapEventInterface)->setAnimEvent((int)*(char *)(param_9 + 0xac),0x16,1);
+      cVar2 = (*gMapEventInterface)->getMode((int)*(char *)(param_9 + 0xac));
       if (cVar2 == '\x01') {
         uVar7 = extraout_f1;
         FUN_80042b9c(0,0,1);
@@ -814,13 +813,13 @@ FUN_801fcccc(undefined8 param_1,double param_2,double param_3,undefined8 param_4
         uVar1 = FUN_80044404(4);
         FUN_80042bec(uVar1,0);
         FUN_80041ff8(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x46);
-        iVar3 = *DAT_803dd72c;
-        uVar7 = (**(code **)(iVar3 + 0x44))(0x12,2);
+        iVar3 = (int)*gMapEventInterface;
+        (*gMapEventInterface)->setMode(0x12,2);
         FUN_80053c98(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x7c,'\0',iVar3,
                      iVar4,param_13,param_14,param_15,param_16);
       }
       else {
-        cVar2 = (**(code **)(*DAT_803dd72c + 0x40))((int)*(char *)(param_9 + 0xac));
+        cVar2 = (*gMapEventInterface)->getMode((int)*(char *)(param_9 + 0xac));
         if (cVar2 == '\x02') {
           uVar7 = extraout_f1_00;
           FUN_80042b9c(0,0,1);
@@ -829,9 +828,9 @@ FUN_801fcccc(undefined8 param_1,double param_2,double param_3,undefined8 param_4
           uVar1 = FUN_80044404(4);
           FUN_80042bec(uVar1,0);
           FUN_80041ff8(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x46);
-          (**(code **)(*DAT_803dd72c + 0x44))(0xb,4);
-          iVar3 = *DAT_803dd72c;
-          uVar7 = (**(code **)(iVar3 + 0x44))(8,6);
+          (*gMapEventInterface)->setMode(0xb,4);
+          iVar3 = (int)*gMapEventInterface;
+          (*gMapEventInterface)->setMode(8,6);
           FUN_80053c98(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x7c,'\0',iVar3
                        ,iVar4,param_13,param_14,param_15,param_16);
         }
@@ -1122,13 +1121,13 @@ void spellStoneUseFn_801fd270(int obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int *gModgfxInterface;
+extern ModgfxInterface **gModgfxInterface;
 extern void *lbl_803DDCC0;
 #pragma scheduling off
 #pragma peephole off
 void vfpdraghead_free(int obj) {
     (*gExpgfxInterface)->freeSource2((u32)obj);
-    ((ModgfxInterface *)*gModgfxInterface)->freeSourceEffects((void *)obj);
+    (*gModgfxInterface)->freeSourceEffects((void *)obj);
     if (lbl_803DDCC0 != NULL) {
         Resource_Release(lbl_803DDCC0);
     }

@@ -191,7 +191,7 @@ extern undefined4* DAT_803dd6d8;
 extern undefined4* DAT_803dd6dc;
 extern undefined4* DAT_803dd6e0;
 extern undefined4* DAT_803dd6e4;
-extern undefined4* DAT_803dd6fc;
+extern ModgfxInterface **gModgfxInterface;
 extern undefined4* DAT_803dd718;
 extern undefined4* DAT_803dd730;
 extern undefined4* DAT_803dd73c;
@@ -951,7 +951,7 @@ void FUN_8005bc0c(void)
     uVar4 = modelDef->flags;
     if (((uVar4 & 0x800) == 0) && ((modelDef->renderFlags & 0x10) == 0)) {
       if ((uVar4 & 0x800000) == 0) {
-        (**(code **)(*DAT_803dd6fc + 0x1c))(0,0,0,1,iVar6);
+        (*gModgfxInterface)->renderEffects(NULL,0,0,1,(void *)iVar6);
       }
       FUN_8003b878(0,0,0,0,iVar6,1);
       iVar5 = *(int *)(iVar6 + 100);
@@ -1358,7 +1358,7 @@ void FUN_8005c24c(void)
   }
   piVar5 = &DAT_80382e34;
   for (iVar2 = 0; iVar2 < DAT_803dda70; iVar2 = iVar2 + 1) {
-    (**(code **)(*DAT_803dd6fc + 0x1c))(0,0,0,1,*piVar5);
+    (*gModgfxInterface)->renderEffects(NULL,0,0,1,(void *)*piVar5);
     FUN_8003b878(0,0,0,0,*piVar5,1);
     piVar5 = piVar5 + 1;
   }
@@ -1382,8 +1382,8 @@ void FUN_8005c24c(void)
   (&DAT_8037ed2c)[iVar2 * 4] = 9;
   DAT_803ddab0 = DAT_803ddab0 + 1;
   lightmap_flushQueuedRenderPackets();
-  (**(code **)(*DAT_803dd6fc + 0x30))(auStack_278);
-  (**(code **)(*DAT_803dd6fc + 0x1c))(0,0,0,0,0);
+  (*gModgfxInterface)->markSourceFrameUpdated(auStack_278);
+  (*gModgfxInterface)->renderEffects(NULL,0,0,0,NULL);
   iVar2 = FUN_80017a98();
   if (iVar2 != 0) {
     iVar6 = iVar2;
@@ -2545,7 +2545,7 @@ void lightmap_renderQueuedObject(ushort *object)
   
   iVar1 = FUN_80017a54((int)object);
   if (*(int *)(iVar1 + 0x58) == 0) {
-    (**(code **)(*DAT_803dd6fc + 0x1c))(0,0,0,1,object);
+    (*gModgfxInterface)->renderEffects(NULL,0,0,1,object);
     FUN_8003f9f8();
     FUN_8003b878(0,0,0,0,(int)object,1);
     FUN_80006994();
@@ -2813,7 +2813,7 @@ void lightmap_queueExternalRenderEntry(u32 a, u32 b, f32 *p) {
 extern u32 gVisibleObjectSortKeys[];
 extern int lbl_803DCDF0;
 extern s16 gVisibleObjectSortKeyCount;
-extern int *gModgfxInterface;
+extern ModgfxInterface **gModgfxInterface;
 extern void objRender(int a, int b, int c, int d, void *obj, int f);
 
 #pragma scheduling off
@@ -2848,7 +2848,7 @@ void renderObjects(s8 *arg0) {
             }
         } else {
             if ((flags & 0x800000) == 0) {
-                ((ModgfxInterface *)*gModgfxInterface)->renderEffects((void *)0, 0, 0, 1, obj);
+                (*gModgfxInterface)->renderEffects(NULL, 0, 0, 1, obj);
             }
             objRender(0, 0, 0, 0, obj, 1);
             p = (int *)((GameObject *)obj)->anim.modelState;
@@ -3493,7 +3493,7 @@ void sceneDraw(void)
     i = 0;
     cursor = (u8 *)(q + 0x4114);
     for (; i < lbl_803DCDF0; i++) {
-        ((ModgfxInterface *)*gModgfxInterface)->renderEffects((void *)0, 0, 0, 1, (void *)*(u32 *)cursor);
+        (*gModgfxInterface)->renderEffects(NULL, 0, 0, 1, (void *)*(u32 *)cursor);
         objRender(0, 0, 0, 0, (void *)*(u32 *)cursor, 1);
         cursor += 4;
     }
@@ -3515,8 +3515,8 @@ void sceneDraw(void)
     ((u32 *)(q + 12))[lbl_803DCE30 * 4] = 9;
     lbl_803DCE30++;
     sceneDrawTransparentPolys();
-    ((ModgfxInterface *)*gModgfxInterface)->markSourceFrameUpdated(buf);
-    ((ModgfxInterface *)*gModgfxInterface)->renderEffects((void *)0, 0, 0, 0, (void *)0);
+    (*gModgfxInterface)->markSourceFrameUpdated(buf);
+    (*gModgfxInterface)->renderEffects(NULL, 0, 0, 0, NULL);
     player = Obj_GetPlayerObject();
     if (player != NULL) {
         i = 0;
@@ -4020,7 +4020,7 @@ void objDrawFn_8005da48(int *obj)
         objRenderFn_8003d980(obj, model);
     } else {
         void *shadow;
-        ((ModgfxInterface *)*gModgfxInterface)->renderEffects((void *)0, 0, 0, 1, obj);
+        (*gModgfxInterface)->renderEffects(NULL, 0, 0, 1, obj);
         renderResetFn_8003fc60();
         objRender(0, 0, 0, 0, obj, 1);
         fn_8000F9B4();

@@ -193,12 +193,10 @@ extern undefined4* DAT_803dd6dc;
 extern undefined4* DAT_803dd6e0;
 extern undefined4* DAT_803dd6e4;
 extern undefined4* DAT_803dd6ec;
-extern undefined4* DAT_803dd6f8;
-extern undefined4* DAT_803dd6fc;
 extern undefined4* DAT_803dd700;
 extern undefined4* DAT_803dd718;
 extern undefined4* DAT_803dd71c;
-extern undefined4* DAT_803dd72c;
+extern MapEventInterface **gMapEventInterface;
 extern undefined4 DAT_803dda48;
 extern undefined4 DAT_803dda4c;
 extern undefined4 DAT_803dda50;
@@ -1832,7 +1830,7 @@ void FUN_80057274(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   *(undefined *)(DAT_803ddb20 + 0x19) = 0;
   if ((int)uVar8 == 0) {
     FUN_80056cfc();
-    (**(code **)(*DAT_803dd72c + 0x58))(iVar2);
+    (*gMapEventInterface)->loadRomListObjects(iVar2);
   }
   FUN_8028688c();
   return;
@@ -4111,7 +4109,7 @@ extern u8 lbl_803DCDE0;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern WaterfxInterface **gWaterfxInterface;
 extern ProjgfxInterface **gProjgfxInterface;
-extern int* gModgfxInterface;
+extern ModgfxInterface **gModgfxInterface;
 extern EffectInterface **gPartfxInterface;
 extern Sky2Interface **gSky2Interface;
 extern int* gSHthorntailAnimationInterface;
@@ -4231,7 +4229,7 @@ void beginLoadingMap(void)
     lbl_803DCEBD = 0;
     (*gWaterfxInterface)->onMapSetup();
     (*gProjgfxInterface)->onMapSetup();
-    ((ModgfxInterface *)*gModgfxInterface)->onMapSetup();
+    (*gModgfxInterface)->onMapSetup();
     (*gExpgfxInterface)->onMapSetup();
     (*gPartfxInterface)->onMapSetup();
     (*gCloudActionInterface)->freeCloudObjects();

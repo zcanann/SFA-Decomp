@@ -32,10 +32,10 @@ extern double FUN_80293900();
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
 
-extern LaserTriggerInterface **DAT_803dd6e8;
-extern undefined4* DAT_803dd6fc;
+extern LaserTriggerInterface **gGameUIInterface;
+extern ModgfxInterface **gModgfxInterface;
 extern EffectInterface **gPartfxInterface;
-extern MapEventInterface **DAT_803dd72c;
+extern MapEventInterface **gMapEventInterface;
 extern undefined4 DAT_803de940;
 extern undefined4 DAT_803de944;
 extern undefined4 DAT_803de946;
@@ -284,7 +284,7 @@ void FUN_801fd828(int param_1)
     uVar2 = GameBit_Get((int)*psVar5);
     if ((((short)uVar2 == 0) && (*(char *)(psVar5 + 2) == '\0')) && (sVar4 != 0)) {
       *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xf7;
-      iVar3 = (*DAT_803dd6e8)->isEventReady((int)DAT_803de948);
+      iVar3 = (*gGameUIInterface)->isEventReady((int)DAT_803de948);
       if ((iVar3 != 0) &&
          (dVar6 = (double)FUN_8001771c((float *)(param_1 + 0x18),(float *)(iVar1 + 0x18)),
          dVar6 < (double)lbl_803E6DE8)) {
@@ -335,7 +335,7 @@ void FUN_801fd964(int param_1)
 {
   byte bVar1;
   
-  bVar1 = (*DAT_803dd72c)->getMode((int)*(char *)(param_1 + 0xac));
+  bVar1 = (*gMapEventInterface)->getMode((int)*(char *)(param_1 + 0xac));
   if (bVar1 == 2) {
     DAT_803de948 = 0x83b;
   }
@@ -587,7 +587,7 @@ void FUN_801fe020(int param_1,int param_2)
 void FUN_801fe024(undefined4 param_1)
 {
   (*gExpgfxInterface)->freeSource2((u32)param_1);
-  (**(code **)(*DAT_803dd6fc + 0x14))(param_1);
+  (*gModgfxInterface)->freeSourceEffects((void *)param_1);
   return;
 }
 
@@ -784,9 +784,9 @@ void FUN_801fe1c4(LaserObject *obj)
   }
   FUN_800400b0();
   if ((obj->statusFlags & LASER_OBJECT_STATUS_ACTIVE) != 0) {
-    bVar3 = (*DAT_803dd72c)->getMode((int)obj->modeIndex);
+    bVar3 = (*gMapEventInterface)->getMode((int)obj->modeIndex);
     if (bVar3 == LASEROBJ_MODE_SEQUENCE_B) {
-      iVar2 = (*DAT_803dd6e8)->isEventReady(LASEROBJ_MAIN_SEQUENCE_B_EVENT);
+      iVar2 = (*gGameUIInterface)->isEventReady(LASEROBJ_MAIN_SEQUENCE_B_EVENT);
       if (iVar2 != 0) {
         GameBit_Set((int)state->primaryGameBit,1);
         GameBit_Set((int)state->secondaryGameBit,0);
@@ -795,7 +795,7 @@ void FUN_801fe1c4(LaserObject *obj)
       }
     }
     else if ((bVar3 < 2) && (bVar3 != 0)) {
-      iVar2 = (*DAT_803dd6e8)->isEventReady(LASEROBJ_MAIN_SEQUENCE_A_EVENT);
+      iVar2 = (*gGameUIInterface)->isEventReady(LASEROBJ_MAIN_SEQUENCE_A_EVENT);
       if (iVar2 != 0) {
         GameBit_Set((int)state->primaryGameBit,1);
         GameBit_Set((int)state->secondaryGameBit,0);
@@ -1461,12 +1461,12 @@ void vfplavastar_initialise(void) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int *gModgfxInterface;
+extern ModgfxInterface **gModgfxInterface;
 #pragma scheduling off
 #pragma peephole off
 void vfplavastar_free(int obj) {
     (*gExpgfxInterface)->freeSource2((u32)obj);
-    ((ModgfxInterface *)*gModgfxInterface)->freeSourceEffects((void *)obj);
+    (*gModgfxInterface)->freeSourceEffects((void *)obj);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1603,7 +1603,6 @@ extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 extern f32 sqrtf(f32 x);
 extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int ***listOut, int p6, int p7);
-extern LaserTriggerInterface **gGameUIInterface;
 
 #pragma scheduling off
 #pragma peephole off
