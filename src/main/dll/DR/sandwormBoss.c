@@ -152,7 +152,7 @@ extern undefined4* DAT_803dd6d0;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6e8;
 extern undefined4* DAT_803dd6f8;
-extern undefined4* DAT_803dd708;
+extern EffectInterface **gPartfxInterface;
 extern undefined4* DAT_803dd71c;
 extern undefined4* DAT_803dd740;
 extern undefined4 DAT_803de790;
@@ -1328,7 +1328,8 @@ void FUN_8019c7cc(undefined8 param_1,double param_2,double param_3,undefined8 pa
         local_44 = -local_44;
         sVar11 = (short)iVar10;
         local_3a = sVar11;
-        (**(code **)(*DAT_803dd708 + 8))(psVar2,0x7f4,auStack_40,2,0xffffffff,&local_4c);
+        (*gPartfxInterface)->spawnObject((void *)psVar2, 0x7f4, auStack_40, 2, -1,
+                                         &local_4c);
         local_4c = *pfVar12 - *(float *)(DAT_803de790 + 0xc);
         local_48 = lbl_803E4E7C;
         local_44 = pfVar12[8] - *(float *)(DAT_803de790 + 0x14);
@@ -1337,10 +1338,8 @@ void FUN_8019c7cc(undefined8 param_1,double param_2,double param_3,undefined8 pa
         local_30 = lbl_803E4E74;
         local_2c = lbl_803E4E80;
         local_3a = sVar11 + 3;
-        in_r7 = 0xffffffff;
-        in_r8 = &local_4c;
-        in_r9 = *DAT_803dd708;
-        (**(code **)(in_r9 + 8))(DAT_803de790,0x7f4,auStack_40,2);
+        (*gPartfxInterface)->spawnObject((void *)DAT_803de790, 0x7f4, auStack_40, 2, -1,
+                                         &local_4c);
         param_2 = (double)*pfVar12;
         local_34 = *pfVar12;
         local_30 = pfVar12[4];
@@ -1357,10 +1356,7 @@ void FUN_8019c7cc(undefined8 param_1,double param_2,double param_3,undefined8 pa
     if (((int)*(short *)(pfVar9 + 0xc) +
          (int)*(short *)((int)pfVar9 + 0x32) + (int)*(short *)(pfVar9 + 0xd) < 300) &&
        (uVar5 = randomGetRange(0,3), uVar5 == 0)) {
-      in_r7 = 0xffffffff;
-      in_r8 = (float *)0x0;
-      in_r9 = *DAT_803dd708;
-      (**(code **)(in_r9 + 8))(psVar2,0x81,0,0);
+      (*gPartfxInterface)->spawnObject((void *)psVar2, 0x81, NULL, 0, -1, NULL);
     }
     if (((*(short *)(pfVar9 + 0xc) != 0) || (*(short *)((int)pfVar9 + 0x32) != 0)) ||
        (*(short *)(pfVar9 + 0xd) != 0)) {
@@ -5591,7 +5587,6 @@ extern void getEnvfxAct(int a, int b, int c, int d);
 extern int  Sfx_IsPlayingFromObjectChannel(int obj, int ch);
 extern void Sfx_SetObjectChannelVolume(int obj, int ch, int max, f32 vol);
 extern void PSVECNormalize(f32* out, f32* in);
-extern EffectInterface **gPartfxInterface;
 extern f32 lbl_803E41D8;
 extern f32 lbl_803E41DC;
 extern f32 lbl_803E41E0;
