@@ -6,6 +6,7 @@
 #include "main/objHitReact.h"
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
+#include "main/dll/rom_curve_interface.h"
 
 #define NW_MAMMOTH_OBJECT_DEF_ID_WHITE 0x0280
 #define NW_MAMMOTH_OBJECT_DEF_ID_HEAVY 0x027D
@@ -116,9 +117,6 @@ typedef void (*NwMammothPathSetupFn)(void *pathState,int pointCount,u8 *pathData
 typedef void (*NwMammothPathUpdateFn)(NwMammothObject *obj,void *pathState,f32 delta);
 typedef void (*NwMammothPathApplyFn)(NwMammothObject *obj,void *pathState);
 typedef void (*NwMammothUiMessageFn)(int messageId,int textId);
-typedef int (*NwMammothCurveInitFn)(void *curveState,NwMammothObject *obj,f32 scale,
-                                    int *curveParam,int arg);
-
 typedef struct NwMammothPathControlInterface {
   u8 pad00[0x04];
   NwMammothPathInitFn init;
@@ -135,11 +133,6 @@ typedef struct NwMammothGameUiInterface {
   u8 pad00[0x58];
   NwMammothUiMessageFn showMessage;
 } NwMammothGameUiInterface;
-
-typedef struct NwMammothRomCurveInterface {
-  u8 pad00[0x8C];
-  NwMammothCurveInitFn initCurve;
-} NwMammothRomCurveInterface;
 
 STATIC_ASSERT(offsetof(NwMammothMapData, modelIndex) == 0x1C);
 STATIC_ASSERT(offsetof(NwMammothMapData, behaviorMode) == 0x1D);
@@ -183,8 +176,6 @@ STATIC_ASSERT(offsetof(NwMammothPathControlInterface, apply) == 0x14);
 STATIC_ASSERT(offsetof(NwMammothPathControlInterface, advance) == 0x18);
 STATIC_ASSERT(offsetof(NwMammothPathControlInterface, attachObject) == 0x20);
 STATIC_ASSERT(offsetof(NwMammothGameUiInterface, showMessage) == 0x58);
-STATIC_ASSERT(offsetof(NwMammothRomCurveInterface, initCurve) == 0x8C);
-
 void nw_mammoth_update(NwMammothObject *obj,int param_2);
 void nw_mammoth_init(NwMammothObject *obj,NwMammothMapData *mapData,int isReload);
 void FUN_801cf0b0(uint param_1,int param_2);

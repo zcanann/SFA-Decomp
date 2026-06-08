@@ -58,7 +58,6 @@ extern undefined4* DAT_803dd728;
 extern NwMammothGameUiInterface **gGameUIInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern NwMammothPathControlInterface **gPathControlInterface;
-extern NwMammothRomCurveInterface **gRomCurveInterface;
 extern f32 timeDelta;
 extern f32 lbl_803DC074;
 extern u32 lbl_803E5208;

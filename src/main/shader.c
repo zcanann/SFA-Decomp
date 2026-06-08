@@ -2,6 +2,7 @@
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/game_object.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/mapEvent.h"
 #include "main/objseq.h"
 #include "main/shader.h"
@@ -3152,7 +3153,6 @@ int mapTextureOverrideAcquire(int key, int value, int type)
 #pragma peephole reset
 
 extern int* gCheckpointInterface;
-extern int* gRomCurveInterface;
 extern int* gNewCloudsInterface;
 extern CloudActionInterface **gCloudActionInterface;
 extern void audioStopByMask(int mask);
@@ -3227,7 +3227,7 @@ void unloadMap(void)
         }
     }
     (*(void (*)(void))(*(int *)(*gCheckpointInterface + 4)))();
-    (*(void (*)(void))(*(int *)(*gRomCurveInterface + 4)))();
+    (*gRomCurveInterface)->initialise();
     lbl_803DCDEC = 0;
     playerMapOffsetX = lbl_803DEBCC;
     playerMapOffsetZ = lbl_803DEBCC;
@@ -3705,14 +3705,14 @@ void defStartFn_8005972c(char* p, u32* tbl, int idx, int flag)
         for (; pos < count; ) {
             if (flag != 0) {
                 if (*(s16*)cur == 110)
-                    (*(void (*)(char*))(*(int*)(*gRomCurveInterface + 0xc)))(cur);
+                    (*gRomCurveInterface)->addCurveDef((RomCurveDef *)cur);
                 if (*(s16*)cur == 5)
                     (*(void (*)(char*))(*(int*)(*gCheckpointInterface + 0xc)))(cur);
             } else {
                 t = *(s16*)cur;
                 if (t == 110 || t == 5) {
                     if (t == 110)
-                        (*(void (*)(char*))(*(int*)(*gRomCurveInterface + 8)))(cur);
+                        (*gRomCurveInterface)->remove((RomCurveDef *)cur);
                     else
                         (*(void (*)(char*))(*(int*)(*gCheckpointInterface + 8)))(cur);
                     if (found == 0) {

@@ -2,6 +2,7 @@
 #include "dolphin/os/OSFastCast.h"
 #include "main/asset_load.h"
 #include "main/effect_interfaces.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/expgfx.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
@@ -1105,7 +1106,6 @@ extern void *gPlayerShadowInterface;
 extern EffectInterface **gPartfxInterface;
 extern void *gScreensInterface;
 extern WaterfxInterface **gWaterfxInterface;
-extern void *gRomCurveInterface;
 extern void *gTitleMenuLinkInterface;
 extern void *gPathControlInterface;
 extern MapEventInterface **gMapEventInterface;
