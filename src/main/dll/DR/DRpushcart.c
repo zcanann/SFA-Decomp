@@ -120,7 +120,6 @@ extern uint countLeadingZeros();
 
 extern undefined4 DAT_803adcc8;
 extern undefined4* DAT_803dd6cc;
-extern undefined4* DAT_803dd6f4;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd70c;
@@ -150,6 +149,7 @@ extern f32 lbl_803E66E0;
 extern f32 lbl_803E66E4;
 extern f32 lbl_803E66E8;
 extern f32 lbl_803E66F8;
+extern void **gTitleMenuControlInterfaceCopy;
 
 /*
  * --INFO--
@@ -365,7 +365,8 @@ void FUN_801e7b2c(int param_1)
     GameBit_Set(0x626,1);
     (**(code **)(**(int **)(*(int *)(iVar1 + 0x9b4) + 0x68) + 0x4c))
               (*(int *)(iVar1 + 0x9b4),*(undefined *)(iVar1 + 0x9d5));
-    (**(code **)(*DAT_803dd6f4 + 4))(0,0xf5,0,0,0);
+    (*(void (*)(int, int, int, int, int))((char *)*gTitleMenuControlInterfaceCopy + 4))
+        (0, 0xf5, 0, 0, 0);
   }
   *(undefined *)(iVar1 + 0x9d4) = 0;
   return;

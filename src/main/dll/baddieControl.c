@@ -136,7 +136,8 @@ extern undefined4 DAT_803dc634;
 extern undefined4 DAT_803dc640;
 extern undefined4* DAT_803dd6cc;
 extern undefined4* DAT_803dd6d0;
-extern undefined4* DAT_803dd6f4;
+extern void **gTitleMenuControlInterfaceCopy;
+#define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 extern undefined4* DAT_803dd70c;
 extern undefined4* DAT_803dd71c;
 extern undefined4* DAT_803dd72c;
@@ -2292,10 +2293,12 @@ void FUN_80111778(int param_1,int param_2,byte param_3)
   FUN_8000680c(param_1,0x7f);
   if ((param_3 & *(byte *)(param_2 + 0x404)) == 0) {
     if (*(short *)(param_2 + 0x3fc) != 0) {
-      (**(code **)(*DAT_803dd6f4 + 8))(param_1,*(short *)(param_2 + 0x3fc),0,0,0);
+      (*(void (*)(int, int, int, int, int))((char *)*gTitleMenuControlInterface + 8))
+          (param_1, *(short *)(param_2 + 0x3fc), 0, 0, 0);
     }
     if (*(short *)(param_2 + 0x3fa) != 0) {
-      (**(code **)(*DAT_803dd6f4 + 8))(param_1,*(short *)(param_2 + 0x3fa),0,0,0);
+      (*(void (*)(int, int, int, int, int))((char *)*gTitleMenuControlInterface + 8))
+          (param_1, *(short *)(param_2 + 0x3fa), 0, 0, 0);
     }
   }
   FUN_80006a5c((uint *)(param_2 + 900));
@@ -3381,8 +3384,6 @@ int dll_19_func1B(int p)
 
 extern void Sfx_StopObjectChannel(int *p1, int channel);
 extern void voxmaps_freeRouteWork(void *p);
-extern void **gTitleMenuControlInterfaceCopy;
-#define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 extern void mm_free(u32);
 void dll_19_func12(int *p1, int *p2, u8 flag)
 {
