@@ -529,16 +529,16 @@ void wcpushblock_update(int obj)
 
 #pragma peephole off
 #pragma scheduling off
-void fn_802251B4(int obj, int state)
+void fn_802251B4(int obj, WcLevelControlState *state)
 {
     int scratch;
 
     (*(int (**)(int *))(*gSHthorntailAnimationInterface + 0x24))(&scratch);
-    switch (*(u8 *)(state + 0xc)) {
+    switch (state->mode) {
     case 6:
         gameTimerInit(0x1d, 0x50);
         timerSetToCountUp();
-        *(u8 *)(state + 0xc) = 4;
+        state->mode = 4;
         break;
     case 4:
         if ((u32)GameBit_Get(0x2a5) != 0) {
@@ -547,8 +547,8 @@ void fn_802251B4(int obj, int state)
             GameBit_Set(0xef1, 0);
             player = Obj_GetPlayerObject();
             (*gMapEventInterface)->triggerEvent(player + 0xc, *(s16 *)player, 1, 0);
-            *(u16 *)(state + 0x1a) |= 0x40;
-            *(u8 *)(state + 0xc) = 0;
+            state->completionFlags |= 0x40;
+            state->mode = 0;
             Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
             gameTimerStop();
         } else if (isGameTimerDisabled() != 0) {
@@ -560,12 +560,12 @@ void fn_802251B4(int obj, int state)
                 GameBit_Set(0x2a6, 1);
                 GameBit_Set(0x206, 1);
                 GameBit_Set(0x25f, 1);
-                *(u8 *)(state + 0xc) = 0;
+                state->mode = 0;
             }
         }
         break;
     default:
-        if (!(*(u16 *)(state + 0x1a) & 0x40) && (u32)GameBit_Get(0x2b1) != 0) {
+        if (!(state->completionFlags & 0x40) && (u32)GameBit_Get(0x2b1) != 0) {
             GameBit_Set(0xef1, 1);
             GameBit_Set(0xe6d, 0);
             if ((u32)GameBit_Get(0x204) != 0) {
@@ -574,72 +574,72 @@ void fn_802251B4(int obj, int state)
                 GameBit_Set(0x206, 0);
                 GameBit_Set(0x25f, 0);
                 GameBit_Set(0x274, 1);
-                *(u8 *)(state + 0xc) = 6;
+                state->mode = 6;
             }
         }
         break;
     }
 
-    if (!(*(u16 *)(state + 0x1a) & 0x10)) {
+    if (!(state->completionFlags & 0x10)) {
         if ((u8)GameBit_Get(0x810) == 4) {
             GameBit_Set(0x812, 1);
             Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
-            *(u16 *)(state + 0x1a) |= 0x10;
+            state->completionFlags |= 0x10;
         } else if ((u32)GameBit_Get(0x808) != 0) {
-            if (*(f32 *)(state + 8) <= lbl_803E6DA8) {
+            if (state->tileAResetTimer <= lbl_803E6DA8) {
                 GameBit_Set(0x810, 0);
                 memcpy(lbl_803AD2D8, lbl_8032B008, 0x40);
-                *(f32 *)(state + 8) = lbl_803E6DAC;
+                state->tileAResetTimer = lbl_803E6DAC;
             }
         }
-        if (*(f32 *)(state + 8) > lbl_803E6DA8) {
-            *(f32 *)(state + 8) -= timeDelta;
-            if (*(f32 *)(state + 8) <= lbl_803E6DA8)
+        if (state->tileAResetTimer > lbl_803E6DA8) {
+            state->tileAResetTimer -= timeDelta;
+            if (state->tileAResetTimer <= lbl_803E6DA8)
                 GameBit_Set(0x808, 0);
         }
     }
 
-    if (!(*(u16 *)(state + 0x1a) & 0x20)) {
+    if (!(state->completionFlags & 0x20)) {
         if ((u8)GameBit_Get(0x811) == 4) {
             GameBit_Set(0x813, 1);
             Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
-            *(u16 *)(state + 0x1a) |= 0x20;
+            state->completionFlags |= 0x20;
         } else if ((u32)GameBit_Get(0x809) != 0) {
-            if (*(f32 *)(state + 4) <= lbl_803E6DA8) {
+            if (state->tileBResetTimer <= lbl_803E6DA8) {
                 GameBit_Set(0x811, 0);
                 memcpy(lbl_803AD298, lbl_8032B088, 0x40);
-                *(f32 *)(state + 4) = lbl_803E6DAC;
+                state->tileBResetTimer = lbl_803E6DAC;
             }
         }
-        if (*(f32 *)(state + 4) > lbl_803E6DA8) {
-            *(f32 *)(state + 4) -= timeDelta;
-            if (*(f32 *)(state + 4) <= lbl_803E6DA8)
+        if (state->tileBResetTimer > lbl_803E6DA8) {
+            state->tileBResetTimer -= timeDelta;
+            if (state->tileBResetTimer <= lbl_803E6DA8)
                 GameBit_Set(0x809, 0);
         }
     }
 
-    if (!(*(u16 *)(state + 0x1a) & 0x80)) {
+    if (!(state->completionFlags & 0x80)) {
         if ((u32)GameBit_Get(0xc58) != 0 && (u32)GameBit_Get(0xc59) != 0 &&
             (u32)GameBit_Get(0xc5a) != 0) {
             GameBit_Set(0x205, 1);
             Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
-            *(u16 *)(state + 0x1a) |= 0x80;
-        } else if (!((WclevelcontFlags *)(state + 0x14))->b40 &&
+            state->completionFlags |= 0x80;
+        } else if (!state->dialogueFlags.b40 &&
                    (u32)GameBit_Get(0xc58) != 0) {
             Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
-            ((WclevelcontFlags *)(state + 0x14))->b40 = 1;
-        } else if (!((WclevelcontFlags *)(state + 0x14))->b20 &&
+            state->dialogueFlags.b40 = 1;
+        } else if (!state->dialogueFlags.b20 &&
                    (u32)GameBit_Get(0xc59) != 0) {
             Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
-            ((WclevelcontFlags *)(state + 0x14))->b20 = 1;
-        } else if (!((WclevelcontFlags *)(state + 0x14))->b18 &&
+            state->dialogueFlags.b20 = 1;
+        } else if (!state->dialogueFlags.b18 &&
                    (u32)GameBit_Get(0xc5a) != 0) {
             Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
-            ((WclevelcontFlags *)(state + 0x14))->b18 = 1;
+            state->dialogueFlags.b18 = 1;
         }
     }
 
-    if (!(*(u16 *)(state + 0x1a) & 0x100)) {
+    if (!(state->completionFlags & 0x100)) {
         if ((u32)GameBit_Get(0xbcf) != 0) {
             int player;
             GameBit_Set(0xbc8, 0);
@@ -649,11 +649,11 @@ void fn_802251B4(int obj, int state)
             player = Obj_GetPlayerObject();
             (*gMapEventInterface)->triggerEvent(player + 0xc, *(s16 *)player, 1, 0);
             Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
-            *(u16 *)(state + 0x1a) |= 0x100;
+            state->completionFlags |= 0x100;
         }
     }
 
-    *(u16 *)(state + 0x1a) &= ~1;
+    state->completionFlags &= ~1;
     if ((u32)GameBit_Get(0xc92) != 0) {
         GameBit_Set(0x4e4, 0);
         GameBit_Set(0x4e5, 0);
@@ -666,20 +666,20 @@ void fn_802251B4(int obj, int state)
 
 #pragma peephole off
 #pragma scheduling off
-void wcpushblock_updateLevelControlState(int obj, int state)
+void wcpushblock_updateLevelControlState(int obj, WcLevelControlState *state)
 {
-    if (*(u16 *)(state + 0x1a) & 0x2)
+    if (state->completionFlags & 0x2)
         return;
-    *(u8 *)(state + 0xd) = *(u8 *)(state + 0xc);
-    switch (*(u8 *)(state + 0xc)) {
+    state->previousMode = state->mode;
+    switch (state->mode) {
     case 1:
-        if (*(u16 *)(state + 0x1a) & 0x1) {
+        if (state->completionFlags & 0x1) {
             gameTimerInit(0x1d, 0x3c);
             timerSetToCountUp();
             GameBit_Set(0xba6, 1);
             GameBit_Set(0xedd, 1);
         } else if ((u32)GameBit_Get(0x7f9) != 0) {
-            *(u16 *)(state + 0x1a) |= 0x4;
+            state->completionFlags |= 0x4;
             gameTimerStop();
             if ((u32)GameBit_Get(0x7fa) != 0)
                 Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
@@ -689,28 +689,28 @@ void wcpushblock_updateLevelControlState(int obj, int state)
             GameBit_Set(0xedd, 0);
             if ((u32)GameBit_Get(0x7fa) != 0) {
                 (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
-                *(u8 *)(state + 0xc) = 3;
+                state->mode = 3;
             } else {
                 (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
-                *(u8 *)(state + 0xc) = 0;
+                state->mode = 0;
             }
-            *(u16 *)(state + 0x1a) |= 0x2;
+            state->completionFlags |= 0x2;
         } else if (isGameTimerDisabled() != 0) {
             GameBit_Set(0x7ef, 0);
             GameBit_Set(0x7ed, 0);
             GameBit_Set(0xba6, 0);
             GameBit_Set(0xedd, 0);
-            *(u8 *)(state + 0xc) = 0;
+            state->mode = 0;
         }
         break;
     case 2:
-        if (*(u16 *)(state + 0x1a) & 0x1) {
+        if (state->completionFlags & 0x1) {
             gameTimerInit(0x1d, 0x50);
             timerSetToCountUp();
             GameBit_Set(0xba6, 1);
             GameBit_Set(0xedc, 1);
         } else if ((u32)GameBit_Get(0x7fa) != 0) {
-            *(u16 *)(state + 0x1a) |= 0x8;
+            state->completionFlags |= 0x8;
             gameTimerStop();
             if ((u32)GameBit_Get(0x7f9) != 0)
                 Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
@@ -720,18 +720,18 @@ void wcpushblock_updateLevelControlState(int obj, int state)
             GameBit_Set(0xedc, 0);
             if ((u32)GameBit_Get(0x7f9) != 0) {
                 (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
-                *(u8 *)(state + 0xc) = 3;
+                state->mode = 3;
             } else {
                 (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
-                *(u8 *)(state + 0xc) = 0;
+                state->mode = 0;
             }
-            *(u16 *)(state + 0x1a) |= 0x2;
+            state->completionFlags |= 0x2;
         } else if (isGameTimerDisabled() != 0) {
             GameBit_Set(0x7f0, 0);
             GameBit_Set(0x7ee, 0);
             GameBit_Set(0xba6, 0);
             GameBit_Set(0xedc, 0);
-            *(u8 *)(state + 0xc) = 0;
+            state->mode = 0;
         }
         break;
     case 3:
@@ -741,28 +741,28 @@ void wcpushblock_updateLevelControlState(int obj, int state)
             GameBit_Set(0xc37, 1);
             player = Obj_GetPlayerObject();
             (*gMapEventInterface)->triggerEvent(player + 0xc, *(s16 *)player, 1, 0);
-            *(u8 *)(state + 0xc) = 7;
+            state->mode = 7;
         }
         break;
     case 7:
         break;
     default:
-        if (!(*(u16 *)(state + 0x1a) & 0x4) && (u32)GameBit_Get(0x7ed) != 0) {
+        if (!(state->completionFlags & 0x4) && (u32)GameBit_Get(0x7ed) != 0) {
             GameBit_Set(0x7ef, 1);
-            *(f32 *)(state + 0) = lbl_803E6DB0;
-            *(u8 *)(state + 0xc) = 1;
-            *(u16 *)(state + 0x1a) |= 0x2;
+            state->eventTimer = lbl_803E6DB0;
+            state->mode = 1;
+            state->completionFlags |= 0x2;
             break;
         }
-        if (!(*(u16 *)(state + 0x1a) & 0x8) && (u32)GameBit_Get(0x7ee) != 0) {
+        if (!(state->completionFlags & 0x8) && (u32)GameBit_Get(0x7ee) != 0) {
             GameBit_Set(0x7f0, 1);
-            *(f32 *)(state + 0) = lbl_803E6DB0;
-            *(u8 *)(state + 0xc) = 2;
-            *(u16 *)(state + 0x1a) |= 0x2;
+            state->eventTimer = lbl_803E6DB0;
+            state->mode = 2;
+            state->completionFlags |= 0x2;
         }
         break;
     }
-    *(u16 *)(state + 0x1a) &= ~1;
+    state->completionFlags &= ~1;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -771,23 +771,23 @@ void wcpushblock_updateLevelControlState(int obj, int state)
 #pragma scheduling off
 int wcpushblock_levelControlTriggerCallback(int obj, int p2, int p3)
 {
-    int state = *(int *)&((GameObject *)obj)->extra;
+    WcLevelControlState *state = ((GameObject *)obj)->extra;
     int i;
 
-    *(u16 *)(state + 0x1a) |= 0x1;
-    *(u16 *)(state + 0x1a) &= ~0x2;
-    if (*(u8 *)(state + 0xd) == 1) {
-        f32 t = *(f32 *)(state + 0) - timeDelta;
-        *(f32 *)(state + 0) = t;
+    state->completionFlags |= 0x1;
+    state->completionFlags &= ~0x2;
+    if (state->previousMode == 1) {
+        f32 t = state->eventTimer - timeDelta;
+        state->eventTimer = t;
         if (t <= lbl_803E6DA8) {
             int player;
             GameBit_Set(0x7f7, 1);
             player = Obj_GetPlayerObject();
             (*gMapEventInterface)->triggerEvent(player + 0xc, *(s16 *)player, 1, 0);
         }
-    } else if (*(u8 *)(state + 0xd) == 2) {
-        f32 t = *(f32 *)(state + 0) - timeDelta;
-        *(f32 *)(state + 0) = t;
+    } else if (state->previousMode == 2) {
+        f32 t = state->eventTimer - timeDelta;
+        state->eventTimer = t;
         if (t <= lbl_803E6DA8) {
             int player;
             GameBit_Set(0x802, 1);
@@ -798,7 +798,7 @@ int wcpushblock_levelControlTriggerCallback(int obj, int p2, int p3)
     for (i = 0; i < *(u8 *)(p3 + 0x8b); i++) {
         switch (*(u8 *)(p3 + i + 0x81)) {
         case 1:
-            *(u8 *)(state + 0xc) = 6;
+            state->mode = 6;
             break;
         }
     }

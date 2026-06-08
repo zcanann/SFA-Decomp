@@ -194,11 +194,11 @@ int wclevelcont_getObjectTypeId(void) { return 0; }
 #pragma scheduling off
 void wclevelcont_free(int obj)
 {
-    int state = *(int *)&((GameObject *)obj)->extra;
+    WcLevelControlState *state = ((GameObject *)obj)->extra;
     u8 mode;
 
     ObjGroup_RemoveObject(obj, 9);
-    mode = *(u8 *)(state + 0xc);
+    mode = state->mode;
     if (mode == 1) {
         GameBit_Set(0x7ef, 0);
         GameBit_Set(0x7ed, 0);
@@ -234,39 +234,39 @@ void wclevelcont_hitDetect(void) {}
 
 #pragma peephole off
 #pragma scheduling off
-void wclevelcont_syncProgressBits(int obj)
+void wclevelcont_syncProgressBits(WcLevelControlState *state)
 {
     int flag;
 
     if ((*(int (**)(int))(*gSHthorntailAnimationInterface + 0x24))(0)) {
-        if (*(u16 *)(obj + 0x16) != 0x2d) {
-            *(u16 *)(obj + 0x16) = 0x2d;
+        if (state->thorntailMusicId != 0x2d) {
+            state->thorntailMusicId = 0x2d;
             Music_Trigger(0x2d, 1);
         }
-        if (*(u16 *)(obj + 0x18) != -1) {
-            *(u16 *)(obj + 0x18) = 0xffff;
+        if (state->ambientMusicId != -1) {
+            state->ambientMusicId = 0xffff;
             Music_Trigger(0x22, 0);
         }
     } else {
-        if (*(u16 *)(obj + 0x16) != 0x39) {
-            *(u16 *)(obj + 0x16) = 0x39;
+        if (state->thorntailMusicId != 0x39) {
+            state->thorntailMusicId = 0x39;
             Music_Trigger(0x39, 1);
         }
-        if (*(u16 *)(obj + 0x18) != 0x22) {
-            *(u16 *)(obj + 0x18) = 0x22;
+        if (state->ambientMusicId != 0x22) {
+            state->ambientMusicId = 0x22;
             Music_Trigger(0x22, 1);
         }
     }
-    SCGameBitLatch_Update(obj + 0x10, 0x8, -1, -1, 0xba6, 0xd2);
-    SCGameBitLatch_Update(obj + 0x10, 0x4, -1, -1, 0xcce, 0x36);
-    SCGameBitLatch_Update(obj + 0x10, 0x10, -1, -1, 0xcd0, 0xd4);
-    SCGameBitLatch_Update(obj + 0x10, 0x40, -1, -1, 0xcbb, 0xc4);
+    SCGameBitLatch_Update((int)&state->gameBitLatch, 0x8, -1, -1, 0xba6, 0xd2);
+    SCGameBitLatch_Update((int)&state->gameBitLatch, 0x4, -1, -1, 0xcce, 0x36);
+    SCGameBitLatch_Update((int)&state->gameBitLatch, 0x10, -1, -1, 0xcd0, 0xd4);
+    SCGameBitLatch_Update((int)&state->gameBitLatch, 0x40, -1, -1, 0xcbb, 0xc4);
     flag = 0;
     if ((u32)GameBit_Get(0xba6) == 0 && ((u32)GameBit_Get(0xda9) != 0 || gameTimerIsRunning() != 0)) {
         flag = 1;
     }
     GameBit_Set(0xf31, flag);
-    SCGameBitLatch_Update(obj + 0x10, 0x80, -1, -1, 0xf31, 0xaf);
+    SCGameBitLatch_Update((int)&state->gameBitLatch, 0x80, -1, -1, 0xf31, 0xaf);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -275,7 +275,7 @@ void wclevelcont_syncProgressBits(int obj)
 #pragma scheduling off
 void wclevelcont_update(int obj)
 {
-    int state = *(int *)&((GameObject *)obj)->extra;
+    WcLevelControlState *state = ((GameObject *)obj)->extra;
     int hitOut;
 
     if (((GameObject *)obj)->unkF4 == 0) {
@@ -396,7 +396,7 @@ int wclevelcont_func10(int obj, s16 a, s16 b, f32 *outX, f32 *outZ, int dx, int 
 #pragma scheduling off
 void wclevelcont_init(int obj)
 {
-    int state = *(int *)&((GameObject *)obj)->extra;
+    WcLevelControlState *state = ((GameObject *)obj)->extra;
     u16 flags;
 
     ((GameObject *)obj)->animEventCallback = (void *)wcpushblock_levelControlTriggerCallback;
@@ -404,19 +404,19 @@ void wclevelcont_init(int obj)
     memcpy(lbl_803AD2D8, lbl_8032B008, 0x40);
     GameBit_Set(0x811, 0);
     memcpy(lbl_803AD298, lbl_8032B088, 0x40);
-    if ((u32)GameBit_Get(0x7fa) != 0) *(u16 *)(state + 0x1a) |= 0x8;
-    if ((u32)GameBit_Get(0x7f9) != 0) *(u16 *)(state + 0x1a) |= 0x4;
-    if ((u32)GameBit_Get(0x813) != 0) *(u16 *)(state + 0x1a) |= 0x20;
-    if ((u32)GameBit_Get(0x812) != 0) *(u16 *)(state + 0x1a) |= 0x10;
-    if ((u32)GameBit_Get(0x2a5) != 0) *(u16 *)(state + 0x1a) |= 0x40;
-    if ((u32)GameBit_Get(0x205) != 0) *(u16 *)(state + 0x1a) |= 0x80;
-    if ((u32)GameBit_Get(0xbcf) != 0) *(u16 *)(state + 0x1a) |= 0x100;
-    if ((u32)GameBit_Get(0xcac) != 0) *(u16 *)(state + 0x1a) |= 0x200;
-    flags = *(u16 *)(state + 0x1a);
+    if ((u32)GameBit_Get(0x7fa) != 0) state->completionFlags |= 0x8;
+    if ((u32)GameBit_Get(0x7f9) != 0) state->completionFlags |= 0x4;
+    if ((u32)GameBit_Get(0x813) != 0) state->completionFlags |= 0x20;
+    if ((u32)GameBit_Get(0x812) != 0) state->completionFlags |= 0x10;
+    if ((u32)GameBit_Get(0x2a5) != 0) state->completionFlags |= 0x40;
+    if ((u32)GameBit_Get(0x205) != 0) state->completionFlags |= 0x80;
+    if ((u32)GameBit_Get(0xbcf) != 0) state->completionFlags |= 0x100;
+    if ((u32)GameBit_Get(0xcac) != 0) state->completionFlags |= 0x200;
+    flags = state->completionFlags;
     if (flags & 0x200) {
-        *(u8 *)(state + 0xc) = 7;
+        state->mode = 7;
     } else if ((flags & 0x4) && (flags & 0x8)) {
-        *(u8 *)(state + 0xc) = 3;
+        state->mode = 3;
     }
     ObjGroup_AddObject(obj, 9);
     GameBit_Set(0x226, 1);
@@ -424,9 +424,9 @@ void wclevelcont_init(int obj)
     GameBit_Set(0x206, 1);
     GameBit_Set(0x25f, 1);
     (*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));
-    ((WclevelcontFlags *)(state + 0x14))->b40 = GameBit_Get(0xc58);
-    ((WclevelcontFlags *)(state + 0x14))->b20 = GameBit_Get(0xc59);
-    ((WclevelcontFlags *)(state + 0x14))->b18 = GameBit_Get(0xc5a);
+    state->dialogueFlags.b40 = GameBit_Get(0xc58);
+    state->dialogueFlags.b20 = GameBit_Get(0xc59);
+    state->dialogueFlags.b18 = GameBit_Get(0xc5a);
 }
 #pragma scheduling reset
 #pragma peephole reset
