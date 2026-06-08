@@ -49,7 +49,7 @@ extern undefined4 DAT_803ad410;
 extern undefined4 DAT_803ad41e;
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6f8;
-extern undefined4* DAT_803dd6fc;
+extern ModgfxInterface **gModgfxInterface;
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd71c;
 extern EffectInterface **gPartfxInterface;
@@ -236,7 +236,7 @@ void areafxemit_emitBurst(AreaFxEmitObject *obj, int count)
 void FUN_8018f158(undefined4 param_1)
 {
   (**(code **)(*DAT_803dd6f8 + 0x18))();
-  (**(code **)(*DAT_803dd6fc + 0x14))(param_1);
+  (*gModgfxInterface)->freeSourceEffects((void *)param_1);
   return;
 }
 

@@ -46,7 +46,6 @@ extern void objUpdateOpacity(int obj);
 
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6f8;
-extern undefined4* DAT_803dd6fc;
 extern undefined4* DAT_803dd708;
 extern u8 lbl_803DBF68;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
