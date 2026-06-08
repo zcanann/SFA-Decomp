@@ -104,8 +104,8 @@ void bossdrakor_update(int obj)
         getEnvfxActImmediately(obj, obj, 0x10e, 0);
         skyFn_80088e54(1, lbl_803E6510);
         timeOfDayFn_80055038();
-        if ((*(u8 (**)(void *, int, f32, int *, int))(*gRomCurveInterface + 0x8c))((void *)((char *)state + 0x28), obj, lbl_803E6560, &curveArg, 0xd) != 0) {
-            (*(u8 (**)(void *, int, f32, int *, int))(*gRomCurveInterface + 0x8c))((void *)((char *)state + 0x28), obj, lbl_803E6560, &curveArg, 0);
+        if ((*gRomCurveInterface)->initCurve((void *)((char *)state + 0x28), (void *)obj, lbl_803E6560, &curveArg, 0xd) != 0) {
+            (*gRomCurveInterface)->initCurve((void *)((char *)state + 0x28), (void *)obj, lbl_803E6560, &curveArg, 0);
         }
         ((GameObject *)obj)->anim.localPosX = ((BossDrakorState *)state)->unk90;
         ((GameObject *)obj)->anim.localPosZ = ((BossDrakorState *)state)->unk98;

@@ -2,6 +2,7 @@
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/game_object.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/objanim_internal.h"
 
 
@@ -50,8 +51,6 @@ extern f32 FLOAT_803e5f8c;
 extern void *Obj_GetPlayerObject(void);
 extern u32 GameBit_Get(int bit);
 extern f32 Vec_distance(int a, int b);
-
-extern void *gRomCurveInterface;
 
 extern f32 lbl_803E5288;
 extern f32 lbl_803E52A0;
@@ -129,8 +128,7 @@ void ediblemushroom_init(int obj, int aux)
         if (v < 6) {
             if (v >= 4) {
                 *(u8 *)(state + 0x137) |= 2;
-                (**(void(***)(int, int, f32, int *, int))(*(int *)gRomCurveInterface + 0x8c))(
-                    state, obj, lbl_803E52EC, &local_x, -1);
+                (*gRomCurveInterface)->initCurve((void *)state, (void *)obj, lbl_803E52EC, &local_x, -1);
                 ((GameObject *)obj)->anim.localPosX = *(f32 *)(state + 0x68);
                 ((GameObject *)obj)->anim.localPosZ = *(f32 *)(state + 0x70);
             }

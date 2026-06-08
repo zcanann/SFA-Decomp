@@ -10,6 +10,7 @@
 #include "main/objHitReact.h"
 #include "main/objseq.h"
 #include "main/resource.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/screen_transition.h"
 
 /* Pattern wrappers. */
@@ -1096,7 +1097,6 @@ extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
 
 
 extern int *gPlayerInterface;
-extern int *gRomCurveInterface;
 extern int Curve_AdvanceAlongPath(int curve, f32 val);
 extern int getAngle(f32 dx, f32 dz);
 extern f32 oneOverTimeDelta;

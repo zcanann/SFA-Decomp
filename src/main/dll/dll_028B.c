@@ -94,8 +94,7 @@ void dll_28B_init(int obj)
     dll_2E_func05(obj, state + 0x35c, -0x2aaa, 0x638e, 8);
     dll_2E_func09(state + 0x35c, &blockB, &blockA, 8);
     *(u8 *)(state + 0x96d) |= 0x22;
-    (*(void (**)(int, int, f32, int *, int))(*gRomCurveInterface + 0x8c))(
-        state + 0x9b0, obj, lbl_803E6D1C, &two, -1);
+    (*gRomCurveInterface)->initCurve((void *)(state + 0x9b0), (void *)obj, lbl_803E6D1C, &two, -1);
     (*(void (**)(int, int, int, int))(*gPlayerInterface + 0x4))(obj, state, 4, 4);
     ObjGroup_AddObject(obj, 3);
 }

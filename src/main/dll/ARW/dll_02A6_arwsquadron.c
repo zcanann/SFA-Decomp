@@ -273,8 +273,7 @@ void arwsquadron_init(int obj, int setup)
         } else {
             tmp = 2;
         }
-        if ((u8)(*(int (**)(int, int, f32, int *, int))(*gRomCurveInterface + 0x8c))(
-                (int)state, obj, lbl_803E71D4, &tmp, -1) == 0) {
+        if ((*gRomCurveInterface)->initCurve(state, (void *)obj, lbl_803E71D4, &tmp, -1) == 0) {
             flags->b40 = 1;
             ((GameObject *)obj)->anim.localPosX = state->curveX;
             ((GameObject *)obj)->anim.localPosY = state->curveY;

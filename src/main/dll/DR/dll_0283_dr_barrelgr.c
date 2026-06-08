@@ -71,8 +71,7 @@ void drbarrelgr_init(int obj, int setup)
     storeZeroToFloatParam((void *)(state + 0xc));
     s16toFloat((void *)(state + 0xc), *(s16 *)(setup + 0x1a));
     *(s16 *)obj = (s16)((s8)*(s8 *)(setup + 0x18) << 8);
-    (*(void (**)(int, int, f32, int *, int))(*gRomCurveInterface + 0x8c))(
-        state + 0x20, obj, lbl_803E6CD0, &one, 0);
+    (*gRomCurveInterface)->initCurve((void *)(state + 0x20), (void *)obj, lbl_803E6CD0, &one, 0);
     ((GameObject *)obj)->anim.localPosX = *(f32 *)(state + 0x88);
     ((GameObject *)obj)->anim.localPosZ = *(f32 *)(state + 0x90);
     ((GameObject *)obj)->anim.localPosY = *(f32 *)(state + 0x8c);

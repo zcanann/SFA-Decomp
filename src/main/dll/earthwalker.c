@@ -348,7 +348,7 @@ int fn_80223AFC(int obj, int ai)
         (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, ai, 2);
     }
     if (Curve_AdvanceAlongPath(curve, lbl_803E6D08) != 0 || *(int *)(curve + 0x10) != 0) {
-        (*(void (**)(int))(*gRomCurveInterface + 0x90))(curve);
+        (*gRomCurveInterface)->goNextPoint((void *)curve);
     }
     if (((EarthwalkerState *)state)->unkAB8 < lbl_803E6D0C) {
         return 3;
