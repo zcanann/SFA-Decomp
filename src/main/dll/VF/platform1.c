@@ -1,4 +1,5 @@
 #include "main/dll/paymentkiosk.h"
+#include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/dll/VF/platform1.h"
 #include "main/mapEventTypes.h"
@@ -73,7 +74,6 @@ extern f64  fn_8001461C(void);
 extern void fn_801DE320(void *dst, int val);
 extern int ObjSeq_takeXrotChanged(int index);
 extern void hudFn_8011f38c(int n);
-extern int *gCameraInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern int  lbl_803DDC10;
@@ -197,10 +197,10 @@ int platform1_control(int obj, int p2, u8 *data)
     } else if (st->loopSfxHandle < 0x19) {
         ret = 0;
     } else {
-        if ((*(int (**)(void))((char *)(*gCameraInterface) + 0x10))() != 0x48) {
+        if ((*gCameraInterface)->getMode() != 0x48) {
             evt.mode = 3;
             evt.flag = 1;
-            (*(void (**)(int, int, int, int, void *, int, int))((char *)(*gCameraInterface) + 0x1c))(0x48, 1, 3, 8, &evt, 0, 0xff);
+            (*gCameraInterface)->setMode(0x48, 1, 3, 8, &evt, 0, 0xff);
         }
         if (playerObj->anim.currentMove != PLATFORM1_PLAYER_PULL_MOVE_ID) {
             ObjAnim_SetCurrentMove(player, PLATFORM1_PLAYER_PULL_MOVE_ID,
