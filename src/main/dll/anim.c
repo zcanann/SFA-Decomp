@@ -331,7 +331,7 @@ extern undefined4 DAT_803dcdeb;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd6fc;
-extern undefined4* DAT_803dd708;
+extern EffectInterface **gPartfxInterface;
 extern undefined4* DAT_803dd70c;
 extern undefined4* DAT_803dd718;
 extern undefined4* DAT_803dd71c;
@@ -2305,14 +2305,14 @@ void FUN_80202414(undefined8 param_1,double param_2,double param_3,undefined8 pa
     FUN_80202268(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_10);
   }
   if ((*(byte *)(iVar1 + 0x14) & 2) != 0) {
-    (**(code **)(*DAT_803dd708 + 8))(param_9,0x345,0,2,0xffffffff,0);
-    (**(code **)(*DAT_803dd708 + 8))(param_9,0x345,0,2,0xffffffff,0);
-    (**(code **)(*DAT_803dd708 + 8))(param_9,0x345,0,2,0xffffffff,0);
+    (*gPartfxInterface)->spawnObject((void *)param_9, 0x345, NULL, 2, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)param_9, 0x345, NULL, 2, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)param_9, 0x345, NULL, 2, -1, NULL);
   }
   if ((*(byte *)(iVar1 + 0x14) & 4) != 0) {
     iVar2 = 0;
     do {
-      (**(code **)(*DAT_803dd708 + 8))(param_9,0x343,0,1,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)param_9, 0x343, NULL, 1, -1, NULL);
       iVar2 = iVar2 + 1;
     } while (iVar2 < 10);
   }
@@ -3995,7 +3995,7 @@ void FUN_80204f7c(int param_1,int param_2,int param_3,int param_4,int param_5,s8
           local_30 = lbl_803E7070;
           local_2c = lbl_803E7074;
           local_28 = lbl_803E7070;
-          (**(code **)(*DAT_803dd708 + 8))(param_1,0x1f7,auStack_3c,0x12,0xffffffff,0);
+          (*gPartfxInterface)->spawnObject((void *)param_1, 0x1f7, auStack_3c, 0x12, -1, NULL);
         }
         uVar4 = randomGetRange(0xfffffff6,10);
         *(short *)(iVar5 + 4) = (short)uVar4 + 0x3c;
@@ -4111,7 +4111,7 @@ void FUN_802051e0(uint param_1)
         FUN_80006b0c((undefined *)piVar2);
         iVar1 = 0;
         do {
-          (**(code **)(*DAT_803dd708 + 8))(param_1,0x1a3,0,0,0xffffffff,0);
+          (*gPartfxInterface)->spawnObject((void *)param_1, 0x1a3, NULL, 0, -1, NULL);
           iVar1 = iVar1 + 1;
         } while (iVar1 < 100);
         if ((*puVar4 != 0xffffffff) && (uVar3 = FUN_80017690(*puVar4), uVar3 == 0)) {
@@ -4762,7 +4762,6 @@ void DBstealerwo_setFuncPtrs_80203c78(void)
 #pragma scheduling reset
 
 extern void fn_80202EF0(int obj, int p2);
-extern EffectInterface **gPartfxInterface;
 
 #pragma peephole off
 #pragma scheduling off
@@ -7036,7 +7035,6 @@ void DFP_Torch_update(int obj)
     extern int ObjHits_GetPriorityHit(int, int, int, int);
     extern uint GameBit_Get(int);
     extern void GameBit_Set(int, int);
-    extern EffectInterface **gPartfxInterface;
     extern ModgfxInterface **gModgfxInterface;
     extern EffectInterface **gExpgfxInterface;
     extern u8 lbl_803DDCE8;
@@ -7151,7 +7149,6 @@ void drakorenergy_update(int obj)
     extern void PSVECNormalize(f32 *, f32 *);
     extern void PSVECScale(f32 *, f32 *, f32);
     extern void objfx_spawnFlaggedTrailBurst(int, f32, int, int, int, int);
-    extern EffectInterface **gPartfxInterface;
     extern f32 timeDelta;
     extern u8 framesThisStep;
     extern f32 lbl_803E627C;
@@ -7520,7 +7517,6 @@ void dbegg_update(int obj)
     extern void ObjHits_EnableObject(int);
     extern void ObjHits_DisableObject(int);
     extern WaterfxInterface **gWaterfxInterface;
-    extern EffectInterface **gPartfxInterface;
     extern f32 timeDelta;
     extern f32 oneOverTimeDelta;
     extern char sAnimGreaterMessage[];

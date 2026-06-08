@@ -46,7 +46,6 @@ extern void objUpdateOpacity(int obj);
 
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6f8;
-extern undefined4* DAT_803dd708;
 extern u8 lbl_803DBF68;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern ModgfxInterface **gModgfxInterface;
@@ -528,7 +527,7 @@ void FUN_801ca13c(int param_1,int param_2,int param_3,int param_4,int param_5,s8
         local_20 = lbl_803E5DC8;
         local_1c = lbl_803E5DCC;
         local_18 = lbl_803E5DC8;
-        (**(code **)(*DAT_803dd708 + 8))(param_1,0x1f7,auStack_2c,0x12,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)param_1, 0x1f7, auStack_2c, 0x12, -1, NULL);
       }
       uVar4 = randomGetRange(0xfffffff6,10);
       *(short *)(iVar5 + 4) = (short)uVar4 + 0x3c;
