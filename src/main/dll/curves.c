@@ -3818,7 +3818,7 @@ void curves_clear(CurvesCollisionState *state,int updateMode,uint flags,int subt
   state->subtype = (s8)subtype;
   state->flags = flags | CURVES_COLLISION_STATE_ACTIVE;
   state->updateMode = (u8)updateMode;
-  state->surfaceFlags = 5;
+  state->heightPadding = 5;
   return;
 }
 #pragma peephole reset

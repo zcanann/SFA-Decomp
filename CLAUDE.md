@@ -3314,6 +3314,25 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
     All four read as `f32 x = lbl_X;` to the regex but are real named
     locals.
 
+122. **At 99.9%, one immediate/offset diff is often imported STRUCTURE,
+    not MWCC magic: verify switch case bounds and field ownership before
+    allocator grinding.** Two cheap checks cracked current near-misses:
+    (a) **Dead empty switch cases can widen MWCC's range guard by exactly
+    one.** If target and current are identical except a compare immediate
+    in the generated switch guard (`cmpwi ...,3` target vs `...,4`
+    current), remove the highest empty imported case and remeasure. Ghidra
+    often keeps a no-op case that the original source did not spell. This
+    took `androssligh_update` 99.98→100 by dropping dead `case 3`, leaving
+    cases 0/1/2 and matching the target's upper-bound check.
+    (b) **Single-byte store offset after `memset` is likely the wrong
+    struct member, not a scheduling cap.** If a clear/init function is
+    byte-identical except `stb K,offA` vs `stb K,offB`, read the struct
+    layout and nearby uses before trying source-order tricks. In
+    `curves_clear`, target stored the initial `5` at offset `0x258`
+    (`heightPadding`), while the import wrote `surfaceFlags` at `0x260`;
+    assigning the real field took 99.97→100 and improved the layout
+    documentation.
+
 **NAMED CAP — branchy-arg pre-eval hoist (the in-place L2R ternary arg).**
 When target evaluates a branchy ternary CALL ARG at its L2R slot (args 1-7
 set up first, the clamp 8th, then 9-10 — ObjHits_CheckSkeletonPair's two

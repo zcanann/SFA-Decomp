@@ -87,8 +87,6 @@ void androssligh_update(int obj)
         break;
     case 2:
         break;
-    case 3:
-        break;
     }
 }
 #pragma peephole reset
