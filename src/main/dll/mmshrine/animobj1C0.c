@@ -316,13 +316,13 @@ int fn_801C5CE4(void *objArg, int unused, void *eventListArg)
                 break;
             case 14:
                 obj->flags |= 0x4000;
-                if ((u32)state->light != 0) {
+                if ((void *)state->light != NULL) {
                     modelLightStruct_setEnabled(state->light, 0, lbl_803E4FC8);
                 }
                 break;
             case 15:
                 obj->flags &= ~0x4000;
-                if ((u32)state->light != 0) {
+                if ((void *)state->light != NULL) {
                     modelLightStruct_setEnabled(state->light, 0, lbl_803E4FC8);
                 }
                 break;
