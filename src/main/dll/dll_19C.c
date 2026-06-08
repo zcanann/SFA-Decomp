@@ -66,7 +66,7 @@ extern f32 lbl_803E5B30;
 extern f32 lbl_803E4E88;
 extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
 extern void objRenderFn_8003b8f4(f32 scale);
-extern void objParticleFn_80099d84(int *obj, int kind, int light, f32 scale1, f32 scale2);
+extern void objParticleFn_80099d84(int *obj, f32 scale1, int kind, f32 scale2, int light);
 extern f32 timeDelta;
 extern u8 lbl_803DBF60;
 extern f64 lbl_803E4E80;
@@ -160,7 +160,7 @@ void dfsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             modelLightStruct_setEnabled((int)light, 1, lbl_803E4E88);
         }
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E4E88);
-        objParticleFn_80099d84((int *)obj, 7, (int)state->light, lbl_803E4E88, lbl_803E4E88);
+        objParticleFn_80099d84((int *)obj, lbl_803E4E88, 7, *(f32 *)&lbl_803E4E88, (int)state->light);
     }
 }
 #pragma peephole reset
@@ -884,9 +884,9 @@ void SpiritPrize_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
     if (v != 0) {
         objRenderFn_8003b8f4(lbl_803E4E98);
         if (state->useDetachedLight != 0) {
-            objParticleFn_80099d84(obj, 7, (int)state->light, lbl_803E4E98, lbl_803E4E98);
+            objParticleFn_80099d84(obj, lbl_803E4E98, 7, *(f32 *)&lbl_803E4E98, (int)state->light);
         } else {
-            objParticleFn_80099d84(obj, 7, 0, lbl_803E4E98, lbl_803E4E98);
+            objParticleFn_80099d84(obj, lbl_803E4E98, 7, *(f32 *)&lbl_803E4E98, 0);
         }
     }
 }
