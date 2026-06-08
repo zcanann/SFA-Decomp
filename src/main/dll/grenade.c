@@ -1,6 +1,7 @@
 #include "main/dll/grenade.h"
 #include "main/dll/collectable.h"
 #include "main/effect_interfaces.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
 #include "main/dll/tricky_state.h"
 #include "main/objseq.h"
@@ -136,7 +137,6 @@ extern f32 lbl_803E243C;
 extern void Sfx_AddLoopedObjectSound(u8 *obj, int soundId);
 extern void Sfx_RemoveLoopedObjectSound(u8 *obj, int soundId);
 extern void *Objfsa_FindNearestCurveType24(void *pos, int a, int b);
-extern int *gRomCurveInterface;
 extern int Objfsa_GetWalkGroupIndexAtPoint(void *pos, int a);
 extern void trickyUpdateApproachSpeed(u8 *obj, f32 vel, u8 *state, u8 *pos, int flag);
 extern int trickyMove(u8 *obj, u8 *pos);
@@ -166,9 +166,9 @@ void trickyDigTunnel(u8 *obj, u8 *state)
     switch (state[0xa]) {
     case 0:
         pc = Objfsa_FindNearestCurveType24(*(void **)(state + 0x28), -1, 2);
-        ((TrickyState *)state)->unk708 = ((u8 *(**)(int))*gRomCurveInterface)[7](*(int *)(pc + 0x1c));
+        ((TrickyState *)state)->unk708 = (u8 *)(*gRomCurveInterface)->getById(*(int *)(pc + 0x1c));
         ((TrickyState *)state)->unk700 = pc;
-        ((TrickyState *)state)->unk704 = ((u8 *(**)(int))*gRomCurveInterface)[7](*(int *)(pc + 0x20));
+        ((TrickyState *)state)->unk704 = (u8 *)(*gRomCurveInterface)->getById(*(int *)(pc + 0x20));
         if (*(u8 *)(((TrickyState *)state)->unk704 + 3) != 0) {
             *(u32 *)(state + 0x704) = *(u32 *)(state + 0x704) ^ *(u32 *)(state + 0x708);
             *(u32 *)(state + 0x708) = *(u32 *)(state + 0x708) ^ *(u32 *)(state + 0x704);
@@ -237,7 +237,9 @@ void trickyDigTunnel(u8 *obj, u8 *state)
                 v = *(int *)(((TrickyState *)state)->unk704 + off + 0x1c);
                 if (v > -1 && (u32)v != *(u32 *)(((TrickyState *)state)->unk700 + 0x14)) {
                     ((TrickyState *)state)->unk700 = ((TrickyState *)state)->unk704;
-                    ((TrickyState *)state)->unk704 = ((u8 *(**)(int))*gRomCurveInterface)[7](*(int *)(((TrickyState *)state)->unk704 + idx * 4 + 0x1c));
+                    ((TrickyState *)state)->unk704 =
+                        (u8 *)(*gRomCurveInterface)->getById(
+                            *(int *)(((TrickyState *)state)->unk704 + idx * 4 + 0x1c));
                     break;
                 }
                 off += 4;
@@ -266,7 +268,9 @@ void trickyDigTunnel(u8 *obj, u8 *state)
                 v = *(int *)(((TrickyState *)state)->unk704 + off + 0x1c);
                 if (v > -1 && (u32)v != *(u32 *)(((TrickyState *)state)->unk700 + 0x14)) {
                     ((TrickyState *)state)->unk700 = ((TrickyState *)state)->unk704;
-                    ((TrickyState *)state)->unk704 = ((u8 *(**)(int))*gRomCurveInterface)[7](*(int *)(((TrickyState *)state)->unk704 + idx * 4 + 0x1c));
+                    ((TrickyState *)state)->unk704 =
+                        (u8 *)(*gRomCurveInterface)->getById(
+                            *(int *)(((TrickyState *)state)->unk704 + idx * 4 + 0x1c));
                     break;
                 }
                 off += 4;

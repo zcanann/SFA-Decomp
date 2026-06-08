@@ -1,4 +1,5 @@
 #include "dolphin/PPCArch.h"
+#include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
 #include "main/pi_dolphin.h"
 
@@ -7758,7 +7759,6 @@ int fn_8004B218(void *q_, u32 n_) {
     }
     return result;
 }
-extern int *gRomCurveInterface;
 extern u32 GameBit_Get(int eventId);
 extern char *lbl_803DCD08;
 extern void fn_8004AB5C(int *q, int *elem, int idx, u32 d, char *obj);
@@ -7781,7 +7781,7 @@ void fn_8004AFA0(int *q, int *elem, int idx) {
     for (; bit < 4; bit++) {
         int nodeId = *(int *)(p + 0x1c);
         if (nodeId > -1 && (mask & (1 << bit)) != 0) {
-            obj = (char *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(nodeId);
+            obj = (char *)(*gRomCurveInterface)->getById(nodeId);
             if (obj != 0) {
                 switch (*(s8 *)(obj + 0x19)) {
                 case 0x24: {

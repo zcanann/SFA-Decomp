@@ -1,4 +1,5 @@
 #include "main/dll/cannon.h"
+#include "main/dll/rom_curve_interface.h"
 
 #define TRICKY_STATE_FLAGS_OFFSET 0x54
 #define TRICKY_STATE_TARGET_DIRTY_FLAG 0x00000400
@@ -149,7 +150,6 @@ extern void objSetAnimSpeedTo1(void *obj);
 extern void objAudioFn_800393f8(int obj, void *p2, int p3, int p4, int p5, int p6);
 
 extern char lbl_8031D2E8[];
-extern void **gRomCurveInterface;
 extern f32 timeDelta;
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
@@ -212,7 +212,8 @@ void trickyFlame(int p1, int p2) {
             }
             *(u8 *)(p2 + 0xa) = 1;
         } else {
-            *(int *)(p2 + 0x720) = (*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(*(int *)(*(int *)(p2 + 0x71c) + 0x1c));
+            *(int *)(p2 + 0x720) =
+                (int)(*gRomCurveInterface)->getById(*(int *)(*(int *)(p2 + 0x71c) + 0x1c));
             newTarget = *(int *)(p2 + 0x720) + 0x8;
             if (*(uint *)(p2 + 0x28) != (uint)newTarget) {
                 *(int *)(p2 + 0x28) = newTarget;
