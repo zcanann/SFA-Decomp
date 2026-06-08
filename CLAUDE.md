@@ -3800,6 +3800,31 @@ where target shares ONE tail. Fix by replacing that arm's body with `break`
 tail — the call set then matches. NOT a dont_inline case. (november11,
 fn_8029E568 86.8→91.7%.)
 
+**THE CALL-SET-DIFF FIELD is a PROJECT-WIDE, +15pp/fn vein — run
+`tools/callset_audit.py` (per-fn diff of bl reloc-target sets, target.o vs
+current.o).** Two recurring import-damage sub-classes, both reliably large:
+(1) **auto-inline victim** — a TGT-only call is a same-TU helper the caller
+auto-inlined (the dont_inline fix above + its CAUTION: A/B mandatory, some
+"victims" are false — target actually inlines, e.g. isSpace into
+textMeasureFn regressed when wrapped; use the source-order fallback when the
+callee must inline its own leaves); (2) **wrong-symbol phantom** — the import
+called a Ghidra `FUN_<addr>` / mis-suffixed extern (e.g. `PSMTXMultVecSR2`,
+`objAnimCurvFn_800849e8`) resolving to a DIFFERENT address than the canonical
+symbol target calls — often a genuine RUNTIME BEHAVIORAL BUG; verify the
+address via `config/GSAE01/symbols.txt` and map each call by target's bl order
++ arg shape. Spurious discarded calls (a trailing `FUN_xxx()` / a doubled
+getter target CSEs) are a sub-shape — drop/hoist. NOT-a-clean-fix: when CUR
+has a SET of unrelated extra calls with no same-TU helper, the import
+mis-structured the logic (reconstruction, treat separately). Confirmed wins
+(task #20/#21, miner-3): drakorhoverpad_updateMain +16.7, Sky_func03 +15,
+ObjSeq_update, waterSpellStone1Fn, + 4 behavioral bugs (staffAction,
+titleDoLoadSave, CameraModeViewfinder_free's all-6-calls-wrong, barrelgener).
+The MSL math cluster (savefpr/restfpr-only diffs → #99 optimize_for_size) is a
+parked delicate -O0 batch. `tools/unrolled_loop_audit.py` is the sibling #28
+detector (target has more runtime `slw` than current = a manual-unroll the
+import should have left as a for-loop; sky skyFn_80088c94 69.8→99.2). Both
+tools carry a STALE-.o caveat — run after a full `ninja`.
+
 ## `for (i=0; i<n; i++) { use(*p); p++; }` vs `*p++`
 
 MWCC emits a `bdnz` countdown loop only when the increment and the
