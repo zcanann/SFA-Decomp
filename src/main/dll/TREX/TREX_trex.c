@@ -134,7 +134,6 @@ extern undefined4 DAT_803dc071;
 extern undefined4 DAT_803dcd00;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern ModgfxInterface **gModgfxInterface;
-extern MapEventInterface **gMapEventInterface;
 extern int* gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 extern f64 DOUBLE_803e6558;
@@ -1772,7 +1771,6 @@ extern f32 lbl_803E5920;
 extern f32 lbl_803E5978;
 extern f32 lbl_803E59A8;
 extern f32 lbl_803E59C8;
-extern ModgfxInterface **gModgfxInterface;
 extern void Sfx_StopObjectChannel(int* obj, int channel);
 extern void Sfx_PlayFromObject(int* obj, int sfxId);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);

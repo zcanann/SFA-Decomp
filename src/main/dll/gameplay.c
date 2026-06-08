@@ -1001,7 +1001,6 @@ extern f32 lbl_803E06C8;
 extern f32 lbl_803E06CC;
 extern u16 lbl_80311720[];
 extern u16 lbl_80311810[];
-extern MapEventInterface **gMapEventInterface;
 extern u32 gMapObjGroupStatuses[];
 extern u8 gExtendedMapActLookup[];
 extern int lbl_803DD48C;

@@ -434,13 +434,10 @@ extern undefined4 DAT_803111c1;
 extern undefined4 DAT_8031122c;
 extern undefined DAT_80380209;
 extern int DAT_8039b7b8;
-extern u8 gExpgfxRuntimeData[];
-extern s16 gExpgfxStaticPoolSlotTypeIds[];
 extern undefined4 DAT_8039c7c8;
 extern undefined4 DAT_8039c7cc;
 extern undefined4 DAT_8039c7d0;
 extern undefined4 DAT_8039c7d4;
-extern uint gExpgfxSlotPoolBases[];
 extern ExpgfxSpawnConfig gExpgfxSpawnConfig;
 extern undefined4 DAT_8039cf40;
 extern undefined4 DAT_8039cf42;
@@ -15428,7 +15425,6 @@ void fn_800A0C78(void *state, void *p, int mode, u8 idx)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern u8 gExpgfxUpdatingActivePools;
 extern int Obj_IsLoadingLocked(void);
 extern int *Obj_AllocObjectSetup(int size, int type);
 extern int *Obj_SetupObject(int *obj, int a, int b, int c, int d);

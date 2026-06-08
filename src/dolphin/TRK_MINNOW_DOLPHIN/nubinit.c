@@ -1,6 +1,5 @@
 #include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/nubinit.h"
 
-extern BOOL gTRKBigEndian;
 
 inline BOOL TRK_InitializeEndian(void) {
     BOOL res = FALSE;

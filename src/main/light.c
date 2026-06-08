@@ -1436,7 +1436,6 @@ void vfpdraghead_update(int *obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-extern MapEventInterface **gMapEventInterface;
 extern void unlockLevel(int, int, int);
 extern undefined4 lockLevel(undefined4, int);
 extern int mapGetDirIdx(int);

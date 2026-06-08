@@ -4781,7 +4781,6 @@ void fn_80203000(int obj, int param2)
 
 extern void unlockLevel(int a, int b, int c);
 extern void Music_Trigger(int a, int b);
-extern MapEventInterface **gMapEventInterface;
 
 typedef struct DfpFlags7 {
     u8 b80 : 1;

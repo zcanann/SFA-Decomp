@@ -3390,7 +3390,6 @@ void sandworm_turnTowardTargetAnim(int* a, int* b, u8* c, int d)
 #pragma scheduling reset
 #pragma dont_inline reset
 
-extern ObjectTriggerInterface **gObjectTriggerInterface;
 
 /* EN v1.0 0x801A0614  size: 368b  cfprisoncage_SeqFn: drain the object's message
  * queue (re-arming its gamebit on the keyed message), then sync the

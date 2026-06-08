@@ -769,7 +769,6 @@ extern void *fn_802972A8(void *player);
 extern void buttonDisable(int chan, int mask);
 extern u8  framesThisStep;
 extern f32 timeDelta;
-extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int lbl_803DBF10;
 extern int lbl_803DBF0C;
 extern f32 lbl_803E48EC;

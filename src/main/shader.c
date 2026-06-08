@@ -277,7 +277,6 @@ extern undefined4 cRam803dc288;
  * PAL Size: TODO
  */
 extern char lbl_8030E4B0[];
-extern MapEventInterface **gMapEventInterface;
 extern int gMapBlockLayerTables[5];
 extern u8 lbl_80386648[];
 extern f32 playerMapOffsetX;

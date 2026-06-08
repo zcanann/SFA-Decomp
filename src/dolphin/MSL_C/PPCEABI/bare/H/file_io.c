@@ -2,7 +2,6 @@
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/buffer_io.h"
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/FILE_POS.h"
 
-extern unsigned int __flush_all(void);
 
 int fflush(FILE* file) {
     unsigned long pos;

@@ -73,7 +73,6 @@ extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
 extern f32 sqrtf(f32 x);
 extern uint countLeadingZeros();
-extern int __cntlzw(unsigned int value);
 extern void voxmaps_worldToGrid(f32 *world,s16 *grid);
 extern int voxmaps_traceLine(s16 *start,s16 *end,void *coordOut,u8 *occOut,int skipFirst);
 

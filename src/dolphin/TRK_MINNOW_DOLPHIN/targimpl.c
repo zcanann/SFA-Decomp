@@ -40,7 +40,6 @@ typedef struct DSCPUType {
 	u8 extended2TypeSize;
 } DSCPUType;
 
-extern BOOL gTRKBigEndian;
 u8 TRKTargetCPUMinorType(void);
 
 static void TRKExceptionHandler(u16);
@@ -54,9 +53,7 @@ static inline DSError TRKPPCAccessSpecialReg(void* srcDestPtr, u32* instructionD
 DSError TRKPPCAccessFPRegister(void* srcDestPtr, u32 fpr, BOOL read);
 
 extern u16 TRK_saved_exceptionID_803D82F8;
-extern TRKState gTRKState;
 extern Default_PPC gTRKSaveState;
-extern ProcessorState_PPC gTRKCPUState;
 extern u128 lbl_803D8864;
 
 #define TRKvalue128_temp lbl_803D8864

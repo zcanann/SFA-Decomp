@@ -4113,7 +4113,6 @@ void titlescreen_initialise(void)
 
 extern u8    lbl_803DD9AA;
 extern int   lbl_803DD9A4;
-extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern void  objRenderFn_8003b8f4(f32);
 
 /* EN v1.0 0x80135C2C  size: 152b  titlescreen_render: when visible and
@@ -5649,7 +5648,6 @@ extern u8 lbl_803A9DD0[];
 extern WarpstoneEntry lbl_8031CC38[];
 extern int lbl_803A9F38[];
 extern int *gTitleMenuLinkInterface;
-extern MapEventInterface **gMapEventInterface;
 
 #pragma scheduling off
 void WarpstoneUI_showUI(int param_1)

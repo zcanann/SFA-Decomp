@@ -46,7 +46,6 @@ extern u32 __PADSpec;
 #define DB_EXCEPTIONRET_OFFSET 0xC
 #define DB_EXCEPTIONDEST_OFFSET 0x8
 
-void OSDefaultExceptionHandler(__OSException exception, OSContext *context);
 extern BOOL __DBIsExceptionMarked(__OSException);
 static void OSExceptionInit(void);
 
@@ -388,7 +387,6 @@ void __OSDBJUMPEND(void);
 
 #define NOP 0x60000000
 
-__OSExceptionHandler __OSSetExceptionHandler(__OSException exception, __OSExceptionHandler handler);
 
 static void OSExceptionInit(void)
 {

@@ -686,7 +686,6 @@ extern int lbl_803DDA68;
 extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern MapEventInterface **gMapEventInterface;
 extern int Obj_GetPlayerObject(void);
 extern f32 Vec_distance(void *a, void *b);
 extern int Curve_AdvanceAlongPath(int curve, f32 t);

@@ -2,7 +2,6 @@
 
 #include <dolphin/gx/GXPriv.h>
 
-void __GXInitGX();
 
 static struct __GXData_struct gxData;
 struct __GXData_struct *gx = &gxData;

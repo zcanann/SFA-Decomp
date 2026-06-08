@@ -92,7 +92,6 @@ extern void fn_8014C5C0(int obj);
 extern int objGetAnimStateFlags(int obj, int flag);
 extern void audioStopByMask(int mask);
 extern f32 lbl_803E4E8C;
-extern void fn_801C2914(int obj);
 extern u8 lbl_803DB411;
 extern f32 lbl_803E4E9C;
 extern f64 lbl_803E4EA0;

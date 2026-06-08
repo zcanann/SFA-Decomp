@@ -1546,7 +1546,6 @@ void invhit_init(int *obj, u8 *def) {
 extern void *Obj_GetPlayerObject2(void);
 extern int playerIsDisguised(void *player);
 extern u32 GameBit_Get(int eventId);
-extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int fn_80295A04(void *player, int a);
 extern void pushable_savePos(int *obj);
 extern int fn_80174668(int *obj, PushableState *state);

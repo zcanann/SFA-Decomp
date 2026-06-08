@@ -1392,7 +1392,6 @@ void cflevelcontrol_initialise(void) {}
 extern void storeZeroToFloatParam(void* p);
 extern void objSetSlot(void *obj, int resourceId);
 extern s16 lbl_80323008[];
-extern MapEventInterface **gMapEventInterface;
 
 #pragma peephole off
 #pragma scheduling off

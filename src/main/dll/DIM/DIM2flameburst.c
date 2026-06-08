@@ -2235,7 +2235,6 @@ extern f32 lbl_803DCDD8;
 extern f32 lbl_803DCDDC;
 extern f32 lbl_80325528[];
 extern FbTexTbl lbl_802C2328;
-extern EffectInterface **gPartfxInterface;
 extern f32 lbl_803E4A00;
 extern f32 lbl_803E4A04;
 extern f32 lbl_803E4A08;

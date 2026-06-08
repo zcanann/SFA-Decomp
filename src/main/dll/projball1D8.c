@@ -290,7 +290,6 @@ void sh_tricky_init(int* obj)
 
 extern char lbl_803269F8[];
 extern f32 lbl_803E5280;
-extern MapEventInterface **gMapEventInterface;
 extern void fn_80088870(char* a, char* b, char* c, char* d);
 extern int getSaveGameLoadStatus(void);
 extern void envFxActFn_800887f8(int id);

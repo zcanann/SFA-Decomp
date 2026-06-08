@@ -49,7 +49,6 @@ extern void GameBit_Set(int eventId, int value);
 extern void vecRotateZXY(s16 *rotation, f32 *outVec);
 extern EffectInterface **gPartfxInterface;
 
-extern MapEventInterface **gMapEventInterface;
 extern u32 lbl_803E6450;
 extern u32 lbl_803E6454;
 extern f32 timeDelta;

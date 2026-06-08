@@ -379,8 +379,6 @@ extern int textureAlloc512(void);
 extern int textureFn_8006c5c4(void);
 extern f32 lbl_803DB654;
 extern f32 lbl_803DEC90;
-extern u8 *getCache(void);
-extern void memcpyToCache(void *dst, void *src, int n);
 extern int lbl_803DCFB8;
 extern u8 lbl_803DCF80;
 extern f32 lbl_803DF8E8;
@@ -4456,7 +4454,6 @@ extern char sTrackIntersectFuncOverflowFormat[];
 extern void debugPrintf(char *fmt, ...);
 extern s16 lbl_803DCF5E;
 extern int lbl_803DCF34;
-extern void *mmAlloc(int size, int type, int flag);
 extern void memcpy(void *dst, void *src, int n);
 
 void intersectModLineBuild(int *obj)
@@ -7277,7 +7274,6 @@ int fn_80067B84(int cur, TrackBlockDescriptor *desc, int model, int flags, f32 s
  * the query box into the buffer at cur; returns advanced cursor. */
 extern u8 *mapGetBlockAtPos(int x, int z, int layer);
 extern int cacheAllocAndCopy(void *p, int size, int *offIn, int *offOut, int base);
-extern void cacheQueueWait(int n);
 extern f32 fastFloorf(f32 x);
 extern void PSVECSubtract(f32 *a, f32 *b, f32 *out);
 extern f32 PSVECMag(f32 *v);

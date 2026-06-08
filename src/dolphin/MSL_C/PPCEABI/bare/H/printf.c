@@ -6,7 +6,6 @@
 #include "PowerPC_EABI_Support/Msl/MSL_C/MSL_Common/stdlib.h"
 #include "string.h"
 
-extern void __num2dec(const decform*, double, decimal*);
 extern const double printf_double_zero;
 
 #define TARGET_FLOAT_BITS           64
@@ -70,9 +69,6 @@ char* float2str(long double num, char *buff, print_format format);
 int __pformatter(void *(*WriteProc)(void*, const char*, size_t), void *WriteProcArg, const char * format_str, va_list arg);
 void* __FileWrite(void* pFile, const char* pBuffer, size_t char_num);
 void* __StringWrite(void* pCtrl, const char* pBuffer, size_t char_num);
-int vsprintf(char *s, const char *format, va_list arg);
-int vprintf(const char* format, va_list arg);
-int sprintf(char* s, const char* format, ...);
 
 int sprintf(char* s, const char* format, ...)
 {

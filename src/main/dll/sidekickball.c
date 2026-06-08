@@ -8,7 +8,6 @@ extern f32 lbl_803E36A4;
 extern f32 lbl_803E36A8;
 extern f32 lbl_803E36AC;
 
-extern int __cntlzw(unsigned int value);
 extern u8 *Obj_GetPlayerObject(void);
 extern u8 *getTrickyObject(void);
 extern u32 GameBit_Get(int bit);

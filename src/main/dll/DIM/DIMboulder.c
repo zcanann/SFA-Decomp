@@ -1119,7 +1119,6 @@ FUN_801addec(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 void imicemountain_free(void) {}
 void imicemountain_hitDetect(void) {}
 
-extern MapEventInterface **gMapEventInterface;
 extern void gameBitFn_800ea2e0(int idx);
 extern void unlockLevel(int a, int b, int c);
 extern f32 lbl_803E46E0;
@@ -1297,7 +1296,6 @@ void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern ObjectTriggerInterface **gObjectTriggerInterface;
 #pragma scheduling off
 #pragma peephole off
 extern int hitDetectFn_80065e50(int obj, int **listOut, int p3, int p4, f32 x, f32 y, f32 z);

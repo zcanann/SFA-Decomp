@@ -495,8 +495,6 @@ void dll_199_free(int *obj) {
 
 extern void *Obj_GetPlayerObject(void);
 extern void fn_80296518(void *player, int a, int b);
-extern MapEventInterface **gMapEventInterface;
-extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern int getButtonsHeld(int pad);
 extern int return0_8005669C(int p);
 extern int lbl_803DB610;

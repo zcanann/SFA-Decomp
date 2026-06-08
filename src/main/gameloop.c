@@ -1055,7 +1055,6 @@ extern void fn_80137D28(void);
 extern void loadTextureFiles(void);
 extern void initMapBlocks(void);
 extern void ObjModel_InitResourceCaches(void);
-extern void Resource_ResetRefCounts(void);
 extern void gameTextInit(void);
 extern void Obj_InitObjectSystem(void);
 extern void fn_80137998(void);

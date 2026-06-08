@@ -12,8 +12,6 @@
 #define OS_CACHED_REGION_PREFIX 0x8000
 
 // prototypes
-extern BOOL OSDisableInterrupts(void);
-extern BOOL OSRestoreInterrupts(BOOL level);
 extern void OSReport(const char* msg, ...);
 void DMAErrorHandler(OSError error, OSContext* context, ...);
 

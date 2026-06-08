@@ -216,7 +216,6 @@ extern f32 lbl_803E3898;
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern s16 lbl_803DBD98[4];
-extern MapEventInterface **gMapEventInterface;
 extern int ViewFrustum_IsSphereVisible(f32 *pos,f32 radius);
 extern void vecRotateZXY(void *angles,void *outVec);
 

@@ -1,7 +1,6 @@
 
 #include "dolphin/card/__card.h"
 
-extern DVDDiskID __CARDDiskNone;
 
 BOOL __CARDCompareFileName(CARDDir* ent, const char* fileName) {
     char* entName = (char*)ent->fileName;

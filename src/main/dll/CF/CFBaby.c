@@ -1736,7 +1736,6 @@ typedef struct CarryableBreakRespawnState {
 } CarryableBreakRespawnState;
 
 extern int *lbl_803DCAC0;
-extern EffectInterface **gPartfxInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E3B44;
 extern f32 lbl_803E3B48;
@@ -2218,7 +2217,6 @@ extern void setLoadedFileFlags_blocks1(void);
 extern void clearLoadedFileFlags_blocks1(void);
 extern void warpToMap(int mapId, int arg);
 extern void unlockLevel(int a, int b, int c);
-extern MapEventInterface **gMapEventInterface;
 extern f32 lbl_803E3BA8;
 extern f32 lbl_803E3BAC;
 extern f32 lbl_803E3BB0;

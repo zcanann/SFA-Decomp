@@ -924,7 +924,6 @@ end:
 }
 
 extern u32 GameBit_Get(int eventId);
-extern ObjectTriggerInterface **gObjectTriggerInterface;
 void doorf4_update(int *obj)
 {
     DoorF4State *state = *(DoorF4State **)((char *)obj + 0xb8);

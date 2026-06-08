@@ -31,7 +31,6 @@ extern void OSReport(const char *fmt, ...);
 extern int FUN_80017730();
 extern undefined4 FUN_8001774c();
 extern uint FUN_800177dc();
-extern void *mmAlloc(int size,int heap,int flags);
 extern float *ObjModel_GetJointMatrix(int *model,int jointIndex);
 extern void Obj_BuildWorldTransformMatrix(void *obj,float *mtx,int flags);
 extern void mtx44Transpose(float *src,float *dst);

@@ -211,7 +211,6 @@ extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextShow(int id);
 extern void Music_Trigger(int id, int value);
 extern void SCGameBitLatch_Update(int *state, int mask, int a, int b, int bit, int value);
-extern MapEventInterface **gMapEventInterface;
 extern int *gSHthorntailAnimationInterface;
 extern f32 lbl_803E4A24;
 extern f32 timeDelta;

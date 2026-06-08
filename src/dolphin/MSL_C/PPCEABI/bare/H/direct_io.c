@@ -8,7 +8,6 @@ typedef enum {
     __load_eof      = 2
 } __load_result;
 
-size_t __fwrite(const void* buffer, size_t size, size_t count, FILE* stream);
 
 size_t __fwrite(const void* buffer, size_t size, size_t count, FILE* stream) {
     unsigned char* write_ptr;

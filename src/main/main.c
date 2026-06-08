@@ -1321,7 +1321,6 @@ void dll_224_hitDetect(void *obj) {
 }
 
 /* dll_224_update: dispatch GameEvent id based on vtable[0x40](obj->field_0xac). */
-extern MapEventInterface **gMapEventInterface;
 extern int lbl_803DDCC8;
 extern void spellStoneUseFn_801fd270(void *obj);
 #pragma scheduling off
@@ -1460,7 +1459,6 @@ void vfplavastar_initialise(void) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern ModgfxInterface **gModgfxInterface;
 #pragma scheduling off
 #pragma peephole off
 void vfplavastar_free(int obj) {

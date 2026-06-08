@@ -685,7 +685,6 @@ extern f32 getXZDistance(void *a, void *b);
 extern int Sfx_IsPlayingFromObjectChannel(int *obj, int ch);
 extern void fn_80163980(int o);
 extern void Obj_FreeObject(int o);
-extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern ScreenTransitionInterface **gScreenTransitionInterface;
 
 #pragma scheduling off

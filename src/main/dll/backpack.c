@@ -25,7 +25,6 @@ extern f32 lbl_803E2FB4;
 extern u8 lbl_803DBD40[8];
 extern u8 lbl_80320288[0xc];
 
-extern void* getTrickyObject(void);
 extern void Obj_FreeObject(int obj);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);

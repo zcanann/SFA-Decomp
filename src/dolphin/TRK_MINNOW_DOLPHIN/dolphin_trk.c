@@ -98,7 +98,6 @@ u32 TRKTargetTranslate(u32 param_0)
 	return param_0 & 0x3FFFFFFF | 0x80000000;
 }
 
-extern u8 gTRKInterruptVectorTable[];
 
 inline void TRK_copy_vector(u32 offset)
 {

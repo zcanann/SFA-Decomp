@@ -2814,7 +2814,6 @@ void lightmap_queueExternalRenderEntry(u32 a, u32 b, f32 *p) {
 extern u32 gVisibleObjectSortKeys[];
 extern int lbl_803DCDF0;
 extern s16 gVisibleObjectSortKeyCount;
-extern ModgfxInterface **gModgfxInterface;
 extern void objRender(int a, int b, int c, int d, void *obj, int f);
 
 #pragma scheduling off

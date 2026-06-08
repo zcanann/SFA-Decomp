@@ -989,7 +989,6 @@ extern void warpToMap(int mapId, int flag);
 extern void timeListFn_8012df14(void);
 extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
 extern int *gSHthorntailAnimationInterface;
-extern MapEventInterface **gMapEventInterface;
 extern u16  lbl_803DC060[4];
 extern f32  timeDelta;
 extern f32  lbl_803E5558;

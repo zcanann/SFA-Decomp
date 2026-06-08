@@ -923,7 +923,6 @@ void ecsh_creator_init(s16 *obj, s8 *def) {
 #pragma scheduling reset
 
 extern void fn_80296518(int *player, int a, int b);
-extern MapEventInterface **gMapEventInterface;
 extern int fn_801C5CE4(void *objArg, int unused, void *eventListArg);
 extern int objCreateLight(int a, int b);
 extern int lbl_803DDBC0;

@@ -45,7 +45,6 @@ extern f32 Vec_distance(void *a, void *b);
 extern void objUpdateOpacity(int obj);
 
 extern undefined4 DAT_803dc070;
-extern ExpgfxInterface **gExpgfxInterface;
 extern u8 lbl_803DBF68;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern ModgfxInterface **gModgfxInterface;

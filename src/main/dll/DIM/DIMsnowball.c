@@ -1340,7 +1340,6 @@ void fn_801AA878(u8* p1, int* p2, f32 v) {
 
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void gameBitDecrement(int id);
-extern ObjectTriggerInterface **gObjectTriggerInterface;
 
 /* ccpedstal_updateGameBitGate: state2-driven model + trigger gate. If state2's gamebit at
  * +0x4 is set, latches obj[0xaf] bit 8 and selects model index 1.

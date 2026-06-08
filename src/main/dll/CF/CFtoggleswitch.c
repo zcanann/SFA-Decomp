@@ -881,7 +881,6 @@ extern void Sfx_PlayFromObject(int *obj, int sfxId);
 extern void objfx_spawnArcedBurst(int *obj, int enabled, f32 radius, int particleKind,
                                   int particleId, int lifetime, f32 sx, f32 sy, f32 sz,
                                   void *args, int a);
-extern MapEventInterface **gMapEventInterface;
 extern f32 lbl_803E3C30;
 extern f32 lbl_803E3C34;
 extern f32 lbl_803E3C38;

@@ -565,7 +565,6 @@ LAB_801cf840:
   return;
 }
 
-extern void GameBit_Set(int eventId, int value);
 #pragma scheduling off
 void nw_tricky_free(int obj) {
     (void)obj;

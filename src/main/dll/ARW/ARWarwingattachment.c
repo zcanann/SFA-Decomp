@@ -182,7 +182,6 @@ extern undefined4 DAT_803295c4;
 extern undefined4 DAT_803dc070;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6e8;
-extern ExpgfxInterface **gExpgfxInterface;
 extern ModgfxInterface **gModgfxInterface;
 extern MapEventInterface **gMapEventInterface;
 extern undefined4* DAT_803de900;
@@ -2275,7 +2274,6 @@ void dll_1FF_render(int *obj, int p1, int p2, int p3, int p4, s8 visible)
 /* dll_200_render: when visible != 0 and
  * gMapEventInterface vtable[0x40] applied to obj->_ac returns 4, gate on
  * GameBit_Get(0x2bd); else render directly via objRenderFn_8003b8f4. */
-extern MapEventInterface **gMapEventInterface;
 extern f32 lbl_803E5DC0;
 #pragma scheduling off
 #pragma peephole off

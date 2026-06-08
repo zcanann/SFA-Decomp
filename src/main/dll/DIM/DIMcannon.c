@@ -2299,7 +2299,6 @@ void link_levcontrol_init(int *obj) {
 }
 
 extern u8 lbl_803238D8[];
-extern MapEventInterface **gMapEventInterface;
 extern void getEnvfxActImmediately(int a, int b, int c, int d);
 extern int *getTrickyObject(void);
 extern void fn_80138908(int *tricky, int mode);

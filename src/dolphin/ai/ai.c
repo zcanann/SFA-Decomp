@@ -27,7 +27,6 @@ STRUCT_TIMELOG profile;
 #endif
 
 // prototypes
-void AISetStreamSampleRate(u32 rate);
 void __AIDHandler(__OSInterrupt interrupt, OSContext* context);
 void __AISHandler(__OSInterrupt interrupt, OSContext* context);
 void __AICallbackStackSwitch(void* cb);
