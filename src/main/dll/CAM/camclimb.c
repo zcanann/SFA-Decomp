@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/camera_interface.h"
 #include "main/camera_object.h"
 #include "main/object_transform.h"
 
@@ -8,7 +9,6 @@ extern char camcontrol_getTargetPosition();
 extern char camcontrol_samplePathState();
 extern undefined4 camcontrol_updatePathTargetAction();
 
-extern undefined4 **gCameraInterface;
 extern int *lbl_803DD538;
 extern f32 timeDelta;
 extern f32 lbl_803E1740;
@@ -46,7 +46,7 @@ void camclimb_update(short *param_1)
   float local_38;
 
   if (*(u8 *)((int)lbl_803DD538 + 0x1bc) != 0) {
-    (*(code *)(*(int *)gCameraInterface + 0x1c))(0x42, 0, 1, 0, 0, 0, 0xff);
+    (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
   }
   else {
     if (*lbl_803DD538 != *(uint *)(param_1 + 0x18)) {
@@ -74,7 +74,7 @@ void camclimb_update(short *param_1)
     cVar2 = camcontrol_samplePathState(&local_28, &local_24, local_20, psVar4, param_1);
     *(float *)(param_1 + 6) = local_28;
     *(float *)(param_1 + 10) = local_20[0];
-    iVar3 = (*(code *)(*(int *)gCameraInterface + 0x18))();
+    iVar3 = (int)(*gCameraInterface)->getDefaultHandlerEntry();
     Obj_TransformLocalPointToWorld(*(float *)(param_1 + 6),*(float *)(param_1 + 8),
                  *(float *)(param_1 + 10),(float *)(param_1 + 0xc),(float *)(param_1 + 0xe),
                  (float *)(param_1 + 0x10),*(int *)(param_1 + 0x18));
@@ -96,8 +96,8 @@ void camclimb_update(short *param_1)
       ((CameraObject *)param_1)->probePosZ = *(float *)(param_1 + 0x10);
       cVar2 = 1;
     }
-    (*(code *)(*(int *)gCameraInterface + 0x38))
-              ((double)lbl_803E1740, param_1, &local_2c, auStack_30, &local_34, &local_38, 0);
+    (*gCameraInterface)->getRelativePosition(lbl_803E1740, (int)param_1, &local_2c,
+                                             (f32 *)auStack_30, &local_34, &local_38, 0);
     uVar1 = getAngle((double)local_2c, (double)local_34);
     iVar5 = 0x8000 - (uVar1 & 0xffff);
     iVar5 = iVar5 - (uint)*(ushort *)param_1;
@@ -111,7 +111,7 @@ void camclimb_update(short *param_1)
     (*(code *)(**(int **)(iVar3 + 4) + 0x18))
               ((double)*(float *)(psVar4 + 0xe), (double)local_38, param_1);
     if (cVar2 != 0) {
-      (*(code *)(*(int *)gCameraInterface + 0x1c))(0x42, 0, 1, 0, 0, 0, 0xff);
+      (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
     }
     camcontrol_updatePathTargetAction(param_1, psVar4);
     Obj_TransformWorldPointToLocal(*(float *)(param_1 + 0xc),*(float *)(param_1 + 0xe),

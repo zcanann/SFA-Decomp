@@ -1,4 +1,5 @@
 #include "main/dll/CAM/pathcam.h"
+#include "main/camera_interface.h"
 #include "main/camera_object.h"
 #include "main/game_object.h"
 #include "main/mm.h"
@@ -13,7 +14,6 @@ extern undefined4 camcontrol_getTargetPosition();
 extern f32 Curve_EvalHermite(f32 param_1, f32 *param_2, f32 *param_3);
 extern undefined4 Curve_AdvanceAlongPath(f32 param_1, f32 *param_2);
 
-extern int *gCameraInterface;
 extern f32 *cameraMtxVar57;
 extern undefined4 lbl_803DD538;
 extern f64 DOUBLE_803e1698;
@@ -278,7 +278,7 @@ void camcontrol_samplePathState(f32 *outX,f32 *height,f32 *outZ,undefined4 param
   Obj_TransformLocalPointToWorld((double)work.sampleX,(double)work.sampleY,(double)work.sampleZ,
                                  &work.worldX,&work.worldY,work.worldZ,work.model);
   work.targetObj = param_4;
-  iVar1 = (*(code *)(*gCameraInterface + 0x18))();
+  iVar1 = (int)(*gCameraInterface)->getDefaultHandlerEntry();
   (*(code *)(**(int **)(iVar1 + 4) + 0x14))(&work,param_4);
   Obj_TransformLocalPointToWorld(work.sampleX,work.sampleY,work.sampleZ,
                                  &work.targetX,&work.targetY,work.targetZ,work.model);

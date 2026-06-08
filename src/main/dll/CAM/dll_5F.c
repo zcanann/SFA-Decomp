@@ -401,7 +401,7 @@ typedef struct {
 void CameraModeCombat_free(int obj)
 {
   if (*(void **)(obj + 0x11c) != NULL) {
-    (*(void (**)(int))((char *)*gCameraInterface + 0x48))(0);
+    (*gCameraInterface)->setTarget(0);
   }
   mm_free(lbl_803DD568);
   *(int *)&lbl_803DD568 = 0;

@@ -1,4 +1,5 @@
 #include "main/dll/CAM/firstperson.h"
+#include "main/camera_interface.h"
 #include "main/game_object.h"
 #include "main/object_transform.h"
 
@@ -11,7 +12,6 @@ extern undefined4 camcontrol_getTargetPosition();
 extern double SeekTwiceBeforeRead();
 extern double FUN_80293900();
 
-extern int *gCameraInterface;
 extern f32 *cameraMtxVar57;
 extern f64 DOUBLE_803e1698;
 extern f64 DOUBLE_803e16f8;
@@ -92,8 +92,8 @@ void firstperson_updatePosition(int param_1, short *param_2)
   f32 ratio;
   f32 speed;
 
-  (*(void (**)(f32, int, f32 *, f32 *, f32 *, f32 *, int))(*gCameraInterface + 0x38))(
-      gCamcontrolModeSettings[0x23], param_1, &dx, &dz, &dy, &dist, 1);
+  (*gCameraInterface)->getRelativePosition(gCamcontrolModeSettings[0x23], param_1, &dx,
+                                           &dz, &dy, &dist, 1);
   dist = dy * dy + (dx * dx + dz * dz);
   if (dist > lbl_803E16AC) {
     dist = sqrtf(dist);
@@ -110,8 +110,8 @@ void firstperson_updatePosition(int param_1, short *param_2)
     *(f32 *)(param_1 + 0xb8) = *(f32 *)(param_1 + 0x18);
     *(f32 *)(param_1 + 0xbc) = *(f32 *)(param_1 + 0x1c);
     *(f32 *)(param_1 + 0xc0) = *(f32 *)(param_1 + 0x20);
-    (*(void (**)(f32, int, f32 *, f32 *, f32 *, f32 *, int))(*gCameraInterface + 0x38))(
-        gCamcontrolModeSettings[0x23], param_1, &dx, &dz, &dy, &dist, 1);
+    (*gCameraInterface)->getRelativePosition(gCamcontrolModeSettings[0x23], param_1, &dx,
+                                             &dz, &dy, &dist, 1);
     dist = dy * dy + (dx * dx + dz * dz);
     if (dist > lbl_803E16AC) {
       dist = sqrtf(dist);
@@ -202,7 +202,7 @@ void firstperson_loadSettings(int param_1)
   float fVar1;
   int iVar4;
 
-  iVar4 = (*(int (**)(void))(*gCameraInterface + 0xc))();
+  iVar4 = (int)(*gCameraInterface)->getCamera();
   gCamcontrolModeSettings[0x24] = gCamcontrolModeSettings[0x23];
   gCamcontrolModeSettings[0xf] = gCamcontrolModeSettings[2];
   gCamcontrolModeSettings[0x11] = gCamcontrolModeSettings[3];

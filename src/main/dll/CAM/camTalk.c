@@ -1,4 +1,5 @@
 #include "main/dll/CAM/camTalk.h"
+#include "main/camera_interface.h"
 #include "main/camera_object.h"
 #include "main/mm.h"
 #include "main/object_transform.h"
@@ -25,7 +26,6 @@ extern f32 sqrtf(f32 value);
 extern f32 mathCosf(f32);
 extern void cameraGetPrevPos2(int obj, float *x, float *y, float *z);
 
-extern int *gCameraInterface;
 extern u8* lbl_803DD540;
 extern u8* lbl_803DD548;
 extern f64 lbl_803E17B8;
@@ -109,7 +109,7 @@ void CameraModeBike_update(short *param_1)
   uint uStack_4c;
   longlong local_48;
   
-  (*(code *)(*gCameraInterface + 0x18))();
+  (*gCameraInterface)->getDefaultHandlerEntry();
   puVar5 = ((CameraObject *)param_1)->anim.targetObj;
   if (puVar5 != (ushort *)0x0) {
     ((CameraObject *)param_1)->fov = lbl_803E1784;

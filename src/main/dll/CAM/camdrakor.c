@@ -163,7 +163,7 @@ void CameraModeCombat_update(short *cam)
             if ((*(u8 *)(*(int *)((char *)cam + 0x11c) + 0xaf) & 0x40) || (((CameraObject *)cam)->unk141 & 2)) {
                 return;
             }
-            (*(void (*)(int))*(int *)((char *)*gCameraInterface + 0x48))(0);
+            (*gCameraInterface)->setTarget(0);
         }
         (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
     } else {
@@ -173,7 +173,7 @@ void CameraModeCombat_update(short *cam)
                 if ((*(u8 *)(*(int *)((char *)cam + 0x11c) + 0xaf) & 0x40) || (((CameraObject *)cam)->unk141 & 2)) {
                     return;
                 }
-                (*(void (*)(int))*(int *)((char *)*gCameraInterface + 0x48))(0);
+                (*gCameraInterface)->setTarget(0);
             }
             (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
         } else {
@@ -183,7 +183,7 @@ void CameraModeCombat_update(short *cam)
                     if ((*(u8 *)(tgt + 0xaf) & 0x40) || (((CameraObject *)cam)->unk141 & 2)) {
                         return;
                     }
-                    (*(void (*)(int))*(int *)((char *)*gCameraInterface + 0x48))(0);
+                    (*gCameraInterface)->setTarget(0);
                 }
                 (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
             } else {
@@ -195,7 +195,7 @@ void CameraModeCombat_update(short *cam)
                             if ((*(u8 *)(*(int *)((char *)cam + 0x11c) + 0xaf) & 0x40) || (((CameraObject *)cam)->unk141 & 2)) {
                                 return;
                             }
-                            (*(void (*)(int))*(int *)((char *)*gCameraInterface + 0x48))(0);
+                            (*gCameraInterface)->setTarget(0);
                         }
                         (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
                     } else {
@@ -226,7 +226,7 @@ void CameraModeCombat_update(short *cam)
                                 if ((*(u8 *)(*(int *)((char *)cam + 0x11c) + 0xaf) & 0x40) || (((CameraObject *)cam)->unk141 & 2)) {
                                     return;
                                 }
-                                (*(void (*)(int))*(int *)((char *)*gCameraInterface + 0x48))(0);
+                                (*gCameraInterface)->setTarget(0);
                             }
                             (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
                         } else {
