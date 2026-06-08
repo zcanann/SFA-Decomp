@@ -509,7 +509,7 @@ extern ExpgfxAttachedSourceState gProjgfxDefaultAttachedSource;
 extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803dd430;
 extern undefined4* DAT_803dd6f8;
-extern undefined4* DAT_803dd708;
+extern EffectInterface **gPartfxInterface;
 extern undefined4 DAT_803dded8;
 extern undefined4 DAT_803ddf00;
 extern undefined4 DAT_803ddf02;
@@ -2569,31 +2569,35 @@ void FUN_800a19bc(undefined8 param_1,double param_2,undefined4 param_3,undefined
         if ((cVar1 == '\x12') || (cVar1 == '\x10')) {
           uVar6 = randomGetRange(0,0x1e);
           if (uVar6 == 1) {
-            (**(code **)(*DAT_803dd708 + 8))(param_5,0x72,&local_148,0x200001,0xffffffff,0);
+            (*gPartfxInterface)->spawnObject((void *)param_5, 0x72, &local_148,
+                                             0x200001, -1, NULL);
           }
         }
         else if (cVar1 == '\x11') {
           uVar6 = randomGetRange(0,8);
           if (uVar6 == 2) {
-            (**(code **)(*DAT_803dd708 + 8))(param_5,0x73,&local_148,0x111,0xffffffff,0);
+            (*gPartfxInterface)->spawnObject((void *)param_5, 0x73, &local_148, 0x111, -1,
+                                             NULL);
           }
         }
         else if (cVar1 == '\x14') {
           uVar6 = randomGetRange(0,8);
           if (uVar6 == 2) {
-            (**(code **)(*DAT_803dd708 + 8))(param_5,0x73,&local_148,0x111,0xffffffff,0);
+            (*gPartfxInterface)->spawnObject((void *)param_5, 0x73, &local_148, 0x111, -1,
+                                             NULL);
           }
         }
         else if (cVar1 == '\x15') {
           uVar6 = randomGetRange(0,8);
           if (uVar6 == 2) {
-            (**(code **)(*DAT_803dd708 + 8))(param_5,0x73,&local_148,0x111,0xffffffff,0);
+            (*gPartfxInterface)->spawnObject((void *)param_5, 0x73, &local_148, 0x111, -1,
+                                             NULL);
           }
         }
         else if (cVar1 == '\x17') {
-          (**(code **)(*DAT_803dd708 + 8))(param_5,400,&local_148,0x111,0xffffffff,0);
-          (**(code **)(*DAT_803dd708 + 8))(param_5,400,&local_148,0x111,0xffffffff,0);
-          (**(code **)(*DAT_803dd708 + 8))(param_5,400,&local_148,0x111,0xffffffff,0);
+          (*gPartfxInterface)->spawnObject((void *)param_5, 400, &local_148, 0x111, -1, NULL);
+          (*gPartfxInterface)->spawnObject((void *)param_5, 400, &local_148, 0x111, -1, NULL);
+          (*gPartfxInterface)->spawnObject((void *)param_5, 400, &local_148, 0x111, -1, NULL);
         }
       }
       iVar9 = iVar9 + 0x4c;
@@ -2945,9 +2949,9 @@ void FUN_800a1f80(undefined4 param_1,undefined4 param_2,uint param_3)
     FUN_8005360c(uVar6,DAT_803ddf24,(undefined4 *)0x0,0,0);
   }
   else {
-    (**(code **)(*DAT_803dd708 + 8))(param_3,0x28c,0,1,0xffffffff,0);
-    (**(code **)(*DAT_803dd708 + 8))(param_3,0x28c,0,1,0xffffffff,0);
-    (**(code **)(*DAT_803dd708 + 8))(param_3,0x28c,0,1,0xffffffff,0);
+    (*gPartfxInterface)->spawnObject((void *)param_3, 0x28c, NULL, 1, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)param_3, 0x28c, NULL, 1, -1, NULL);
+    (*gPartfxInterface)->spawnObject((void *)param_3, 0x28c, NULL, 1, -1, NULL);
     uVar7 = randomGetRange(0,1);
     if (uVar7 == 0) {
       FUN_8005360c(uVar6,DAT_803ddf28,(undefined4 *)0x0,0,0);
@@ -3042,7 +3046,8 @@ void FUN_800a2620(undefined4 param_1,undefined4 param_2,undefined4 param_3,uint 
         local_36 = param_5[1];
         local_32 = param_5[3];
       }
-      (**(code **)(*DAT_803dd708 + 8))(iVar1,(int)uVar6,&local_38,2,0xffffffff,param_3);
+      (*gPartfxInterface)->spawnObject((void *)iVar1, (int)uVar6, &local_38, 2, -1,
+                                       (void *)param_3);
     }
   }
   FUN_80286880();
@@ -4806,7 +4811,6 @@ extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f32 timeDelta;
 extern u8 framesThisStep;
-extern EffectInterface **gPartfxInterface;
 typedef u8 BoneFxJRow[16];
 typedef struct BoneFxVtx {
     u16 e0;
