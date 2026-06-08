@@ -1,5 +1,6 @@
 #include "main/objanim.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
 
@@ -82,7 +83,7 @@ typedef struct SCMusicTreeState {
 } SCMusicTreeState;
 
 typedef struct SCMusicTreeSetup {
-    u8 pad00[0x18];
+    ObjPlacement base;
     u8 rotXByte;
     u8 rotZByte;
     u8 yawByte;
@@ -91,6 +92,14 @@ typedef struct SCMusicTreeSetup {
     u8 pad20[0x23 - 0x20];
     u8 flags;
 } SCMusicTreeSetup;
+
+STATIC_ASSERT(sizeof(SCMusicTreeSetup) == 0x24);
+STATIC_ASSERT(offsetof(SCMusicTreeSetup, rotXByte) == 0x18);
+STATIC_ASSERT(offsetof(SCMusicTreeSetup, rotZByte) == 0x19);
+STATIC_ASSERT(offsetof(SCMusicTreeSetup, yawByte) == 0x1A);
+STATIC_ASSERT(offsetof(SCMusicTreeSetup, hearRadiusHalf) == 0x1B);
+STATIC_ASSERT(offsetof(SCMusicTreeSetup, scale) == 0x1C);
+STATIC_ASSERT(offsetof(SCMusicTreeSetup, flags) == 0x23);
 
 #pragma peephole off
 #pragma scheduling off

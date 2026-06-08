@@ -1,12 +1,14 @@
 #include "global.h"
 #include "main/dll/DR/dr_shared.h"
+#include "main/obj_placement.h"
 
 typedef struct DRChimmeySetup {
-    u8 pad00[0x18];
+    ObjPlacement base;
     s8 yawByte;
     u8 pad19[5];
     s16 completionGameBit;
     s16 enableGameBit;
+    u8 pad22[0x24 - 0x22];
 } DRChimmeySetup;
 
 typedef struct DRChimmeyState {
@@ -35,6 +37,7 @@ STATIC_ASSERT(offsetof(DRChimmeyState, timer) == 0x10);
 STATIC_ASSERT(offsetof(DRChimmeyState, completionGameBit) == 0x14);
 STATIC_ASSERT(offsetof(DRChimmeyState, offeringsRemaining) == 0x16);
 STATIC_ASSERT(offsetof(DRChimmeyState, eventActive) == 0x17);
+STATIC_ASSERT(sizeof(DRChimmeySetup) == 0x24);
 STATIC_ASSERT(offsetof(DRChimmeySetup, yawByte) == 0x18);
 STATIC_ASSERT(offsetof(DRChimmeySetup, completionGameBit) == 0x1e);
 STATIC_ASSERT(offsetof(DRChimmeySetup, enableGameBit) == 0x20);

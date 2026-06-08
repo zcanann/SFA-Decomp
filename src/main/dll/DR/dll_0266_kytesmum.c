@@ -1,6 +1,7 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 #include "main/objhits_types.h"
+#include "main/obj_placement.h"
 #include "main/objseq.h"
 
 typedef int (*KytesMumUpdateCallback)(int obj);
@@ -10,12 +11,13 @@ typedef struct KytesMumMoveSet {
 } KytesMumMoveSet;
 
 typedef struct KytesMumSetup {
-    u8 pad00[0x18];
+    ObjPlacement base;
     s8 yaw;
     s8 mode;
     s16 interactionRange;
     u8 pad1C[0x1e - 0x1c];
     s16 completionGameBit;
+    u8 pad20[0x24 - 0x20];
 } KytesMumSetup;
 
 typedef struct KytesMumRuntime {
@@ -45,6 +47,12 @@ typedef struct KytesMumObject {
     KytesMumRuntime *runtime;
     void *interactionCallback;
 } KytesMumObject;
+
+STATIC_ASSERT(sizeof(KytesMumSetup) == 0x24);
+STATIC_ASSERT(offsetof(KytesMumSetup, yaw) == 0x18);
+STATIC_ASSERT(offsetof(KytesMumSetup, mode) == 0x19);
+STATIC_ASSERT(offsetof(KytesMumSetup, interactionRange) == 0x1A);
+STATIC_ASSERT(offsetof(KytesMumSetup, completionGameBit) == 0x1E);
 
 int kytesmum_getExtraSize(void) { return 0x6ec; }
 
