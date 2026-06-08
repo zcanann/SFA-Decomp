@@ -2,6 +2,7 @@
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 
 #define VFPLIFT1_OBJTYPE 0x3b7
 #define VFPLIFT2_OBJTYPE 0x3bf
@@ -39,6 +40,29 @@ typedef struct VFPLiftState {
     u8 flagsPad : 6;
 } VFPLiftState;
 
+typedef struct VFPLiftPlacement {
+    ObjPlacement base;
+    s8 yawByte;
+    u8 pad19;
+    s16 travelDistance;
+    s16 mapEventNo;
+    s16 toggleGameBit;
+    s16 hitDisableGameBit;
+} VFPLiftPlacement;
+
+STATIC_ASSERT(sizeof(VFPLiftState) == 0x20);
+STATIC_ASSERT(offsetof(VFPLiftState, travelDistance) == 0x00);
+STATIC_ASSERT(offsetof(VFPLiftState, mode) == 0x0A);
+STATIC_ASSERT(offsetof(VFPLiftState, hitDisableGameBit) == 0x0C);
+STATIC_ASSERT(offsetof(VFPLiftState, toggleGameBit) == 0x0E);
+STATIC_ASSERT(offsetof(VFPLiftState, mapEventNo) == 0x1A);
+STATIC_ASSERT(sizeof(VFPLiftPlacement) == 0x24);
+STATIC_ASSERT(offsetof(VFPLiftPlacement, yawByte) == 0x18);
+STATIC_ASSERT(offsetof(VFPLiftPlacement, travelDistance) == 0x1A);
+STATIC_ASSERT(offsetof(VFPLiftPlacement, mapEventNo) == 0x1C);
+STATIC_ASSERT(offsetof(VFPLiftPlacement, toggleGameBit) == 0x1E);
+STATIC_ASSERT(offsetof(VFPLiftPlacement, hitDisableGameBit) == 0x20);
+
 extern void buttonDisable(int index,u32 flags);
 extern void Sfx_StopObjectChannel(int obj,int channel);
 extern f32 lbl_803E60E0;
@@ -53,7 +77,9 @@ static inline VFPLiftState *vfplift_getState(int obj)
 
 static inline f32 vfplift_getModelY(int obj)
 {
-    return *(f32 *)(*(int *)&((GameObject *)obj)->anim.placementData + 0xc);
+    VFPLiftPlacement *setup = *(VFPLiftPlacement **)&((GameObject *)obj)->anim.placementData;
+
+    return setup->base.posY;
 }
 
 static inline void vfplift_trigger(int triggerId,int obj)
@@ -83,15 +109,15 @@ static inline f32 vfplift23_getRaisedOffset(int objType)
 #pragma scheduling off
 void vfplift23_updateState(int obj)
 {
-    int setup;
+    VFPLiftPlacement *setup;
     VFPLiftState *state;
     f32 raisedOffset;
 
     raisedOffset = vfplift23_getRaisedOffset(((GameObject *)obj)->anim.seqId);
-    setup = *(int *)&((GameObject *)obj)->anim.placementData;
+    setup = *(VFPLiftPlacement **)&((GameObject *)obj)->anim.placementData;
     state = vfplift_getState(obj);
     if (state->applyHeight != 0) {
-        ((GameObject *)obj)->anim.localPosY = *(f32 *)(setup + 0xc) + raisedOffset;
+        ((GameObject *)obj)->anim.localPosY = setup->base.posY + raisedOffset;
         state->applyHeight = 0;
     }
     if (state->mode >= VFPLIFT_STATE_RAISED || state->mode < VFPLIFT_STATE_LOWERED) {
@@ -106,7 +132,7 @@ void vfplift23_updateState(int obj)
         } else {
             if ((u32)GameBit_Get(state->toggleGameBit) == 0) {
                 state->mode = VFPLIFT_STATE_LOWERED;
-                ((GameObject *)obj)->anim.localPosY = *(f32 *)(setup + 0xc);
+                ((GameObject *)obj)->anim.localPosY = setup->base.posY;
             }
         }
     } else {
@@ -121,7 +147,7 @@ void vfplift23_updateState(int obj)
         } else {
             if ((u32)GameBit_Get(state->toggleGameBit) != 0) {
                 state->mode = VFPLIFT_STATE_RAISED;
-                ((GameObject *)obj)->anim.localPosY = *(f32 *)(setup + 0xc) + raisedOffset;
+                ((GameObject *)obj)->anim.localPosY = setup->base.posY + raisedOffset;
             }
         }
     }
@@ -134,7 +160,7 @@ void vfplift23_updateState(int obj)
 void vfplift1_updateState(int obj)
 {
     VFPLiftState *state;
-    int setup;
+    VFPLiftPlacement *setup;
     void *player;
     s16 gate0;
     s16 gate1;
@@ -142,7 +168,7 @@ void vfplift1_updateState(int obj)
     s16 gate3;
 
     state = vfplift_getState(obj);
-    setup = *(int *)&((GameObject *)obj)->anim.placementData;
+    setup = *(VFPLiftPlacement **)&((GameObject *)obj)->anim.placementData;
     player = Obj_GetPlayerObject();
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= VFPLIFT_OBJ_FLAG_NO_HIT;
     if (player == NULL) {
@@ -164,7 +190,7 @@ void vfplift1_updateState(int obj)
     }
     if (state->applyHeight != 0 ||
         (state->forceRaised != 0 && state->mode == VFPLIFT_STATE_IDLE)) {
-        ((GameObject *)obj)->anim.localPosY = *(f32 *)(setup + 0xc) + lbl_803E60EC;
+        ((GameObject *)obj)->anim.localPosY = setup->base.posY + lbl_803E60EC;
         state->applyHeight = 0;
         state->forceRaised = 0;
         state->mode = VFPLIFT_STATE_RAISED;
@@ -184,7 +210,7 @@ void vfplift1_updateState(int obj)
         } else {
             if ((u32)GameBit_Get(state->toggleGameBit) != 0) {
                 state->mode = VFPLIFT_STATE_LOWERED;
-                ((GameObject *)obj)->anim.localPosY = *(f32 *)(setup + 0xc);
+                ((GameObject *)obj)->anim.localPosY = setup->base.posY;
             }
         }
     } else {
@@ -199,7 +225,7 @@ void vfplift1_updateState(int obj)
         } else {
             if ((u32)GameBit_Get(state->toggleGameBit) == 0) {
                 state->mode = VFPLIFT_STATE_RAISED;
-                ((GameObject *)obj)->anim.localPosY = *(f32 *)(setup + 0xc) + lbl_803E60EC;
+                ((GameObject *)obj)->anim.localPosY = setup->base.posY + lbl_803E60EC;
             }
         }
     }
@@ -252,8 +278,9 @@ void vfplift_update(int obj) {
 #pragma peephole off
 #pragma scheduling off
 void vfplift_hitDetect(int obj) {
-    int inner = *(int *)&((GameObject *)obj)->extra;
-    if (*(s16 *)((char *)inner + 0xc) != -1 && (u32)GameBit_Get(*(s16 *)((char *)inner + 0xc)) == 0) {
+    VFPLiftState *state = vfplift_getState(obj);
+
+    if (state->hitDisableGameBit != -1 && (u32)GameBit_Get(state->hitDisableGameBit) == 0) {
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     } else if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 8) != 0) {
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode ^= 8;
@@ -264,33 +291,32 @@ void vfplift_hitDetect(int obj) {
 
 #pragma peephole off
 #pragma scheduling off
-void vfplift_init(int *obj, u8 *init) {
+void vfplift_init(int *obj, VFPLiftPlacement *init) {
     VFPLiftState *st = ((GameObject *)obj)->extra;
-    int *inner = (int *)st;
     ((GameObject *)obj)->animEventCallback = (void *)vfplift_SeqFn;
-    *(s16 *)obj = (s16)((s8)init[0x18] << 8);
-    *(s16 *)((char *)inner + 0xa) = 0;
-    *(s16 *)((char *)inner + 0xc) = *(s16 *)((char *)init + 0x20);
-    *(s16 *)((char *)inner + 0xe) = *(s16 *)((char *)init + 0x1e);
-    *(f32 *)inner = (f32)(s32)*(s16 *)((char *)init + 0x1a);
-    *(u8 *)((char *)inner + 0x1a) = *(s16 *)((char *)init + 0x1c);
-    *(s16 *)((char *)inner + 0x12) = 0;
-    *(s16 *)((char *)inner + 0x14) = 0;
-    *(s16 *)((char *)inner + 0x16) = 0;
-    *(s16 *)((char *)inner + 0x18) = 0;
+    *(s16 *)obj = (s16)(init->yawByte << 8);
+    st->mode = 0;
+    st->hitDisableGameBit = init->hitDisableGameBit;
+    st->toggleGameBit = init->toggleGameBit;
+    st->travelDistance = (f32)(s32)init->travelDistance;
+    st->mapEventNo = init->mapEventNo;
+    *(s16 *)((char *)st + 0x12) = 0;
+    *(s16 *)((char *)st + 0x14) = 0;
+    *(s16 *)((char *)st + 0x16) = 0;
+    *(s16 *)((char *)st + 0x18) = 0;
     if (((GameObject *)obj)->anim.seqId == 0x3bf) {
-        if ((u32)GameBit_Get(*(s16 *)((char *)inner + 0xe)) != 0) {
-            *(s16 *)((char *)inner + 0xa) = 4;
+        if ((u32)GameBit_Get(st->toggleGameBit) != 0) {
+            st->mode = 4;
             st->applyHeight = 1;
         } else {
-            *(s16 *)((char *)inner + 0xa) = 3;
+            st->mode = 3;
         }
     }
     if (((GameObject *)obj)->anim.seqId == 0x3b7 && (u32)GameBit_Get(0x4ee) != 0) {
-        if ((u32)GameBit_Get(*(s16 *)((char *)inner + 0xe)) != 0) {
-            *(s16 *)((char *)inner + 0xa) = 3;
+        if ((u32)GameBit_Get(st->toggleGameBit) != 0) {
+            st->mode = 3;
         } else {
-            *(s16 *)((char *)inner + 0xa) = 4;
+            st->mode = 4;
             st->applyHeight = 1;
         }
     }
