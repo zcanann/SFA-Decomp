@@ -2,13 +2,30 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 
+typedef struct ARWBlockerSetup {
+    u8 pad00[0x18];
+    s8 rotZ;
+    u8 sequenceMode;
+} ARWBlockerSetup;
+
+typedef struct ARWBlockerState {
+    u8 sequenceMode;
+    u8 sequenceLocked;
+} ARWBlockerState;
+
+STATIC_ASSERT(sizeof(ARWBlockerState) == 0x2);
+STATIC_ASSERT(offsetof(ARWBlockerState, sequenceMode) == 0x00);
+STATIC_ASSERT(offsetof(ARWBlockerState, sequenceLocked) == 0x01);
+STATIC_ASSERT(offsetof(ARWBlockerSetup, rotZ) == 0x18);
+STATIC_ASSERT(offsetof(ARWBlockerSetup, sequenceMode) == 0x19);
+
 #pragma scheduling off
 int arwblocker_getBlockState(int obj)
 {
-    int state = *(int *)&((GameObject *)obj)->extra;
-    switch (*(u8 *)(state + 0)) {
+    ARWBlockerState *state = ((GameObject *)obj)->extra;
+    switch (state->sequenceMode) {
     case 1:
-        if (*(u8 *)(state + 1) != 0) {
+        if (state->sequenceLocked != 0) {
             break;
         }
         return 1;
@@ -57,12 +74,13 @@ void arwblocker_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 void arwblocker_init(int obj, int setup)
 {
     ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
-    int state = *(int *)&((GameObject *)obj)->extra;
+    ARWBlockerState *state = ((GameObject *)obj)->extra;
+    ARWBlockerSetup *mapData = (ARWBlockerSetup *)setup;
 
     ((GameObject *)obj)->anim.rotX = -0x8000;
-    ((GameObject *)obj)->anim.rotZ = (s16)(*(s8 *)(setup + 0x18) << 8);
+    ((GameObject *)obj)->anim.rotZ = (s16)(mapData->rotZ << 8);
     ((GameObject *)obj)->animEventCallback = (void *)arwblocker_getBlockState;
-    *(u8 *)(state + 0) = *(u8 *)(setup + 0x19);
+    state->sequenceMode = mapData->sequenceMode;
     ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     objAnim->alpha = 0;
     ObjHits_DisableObject(obj);
@@ -85,7 +103,7 @@ void arwblocker_initialise(void) {}
 #pragma scheduling off
 void arwblocker_update(int obj) {
     ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
-    int state = *(int *)&((GameObject *)obj)->extra;
+    ARWBlockerState *state = ((GameObject *)obj)->extra;
     int arwing = getArwing();
 
     if (arwing == 0)
@@ -98,7 +116,7 @@ void arwblocker_update(int obj) {
         ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         ObjHits_EnableObject(obj);
         if (((GameObject *)obj)->unkF4 == 0) {
-            switch (*(u8 *)(state + 0)) {
+            switch (state->sequenceMode) {
             case 1:
                 (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
                 break;

@@ -38,8 +38,10 @@ void arwgenerato_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 #pragma scheduling off
 void arwgenerato_init(int obj, int setup)
 {
-    int state = *(int *)(obj + 0xb8);
-    *(f32 *)(state + 0) = (f32)(u32)*(u16 *)(setup + 0x18);
+    ARWGeneratorState *state = ((GameObject *)obj)->extra;
+    ARWGeneratorSetup *mapData = (ARWGeneratorSetup *)setup;
+
+    state->spawnTimer = (f32)(u32)mapData->spawnInterval;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -60,23 +62,23 @@ void arwgenerato_initialise(void) {}
 #pragma scheduling off
 void arwgenerato_update(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
-    int setup = *(int *)(obj + 0x4c);
-    f32 timer = *(f32 *)state;
+    ARWGeneratorState *state = ((GameObject *)obj)->extra;
+    ARWGeneratorSetup *mapData = (ARWGeneratorSetup *)((GameObject *)obj)->anim.placementData;
+    f32 timer = state->spawnTimer;
     f32 thr = lbl_803E7154;
 
     if (timer > thr) {
-        *(f32 *)state = timer - timeDelta;
-        if (*(f32 *)state <= thr) {
-            switch (*(u8 *)(setup + 0x25)) {
+        state->spawnTimer = timer - timeDelta;
+        if (state->spawnTimer <= thr) {
+            switch (mapData->spawnMode) {
             case 0:
-                fn_802317A8(obj, state, setup);
+                fn_802317A8(obj, state, mapData);
                 break;
             case 1:
-                fn_802315EC(obj, state, setup);
+                fn_802315EC(obj, state, mapData);
                 break;
             }
-            *(f32 *)state = (f32)(u32)*(u16 *)(setup + 0x18);
+            state->spawnTimer = (f32)(u32)mapData->spawnInterval;
         }
     }
 }

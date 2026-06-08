@@ -821,8 +821,33 @@ extern int arwarwing_getCollectedRingCount(int arwing);
 
 
 extern f32 lbl_803E7154;
-extern void fn_802317A8(int obj, int state, int setup);
-extern void fn_802315EC(int obj, int state, int setup);
+typedef struct ARWGeneratorState {
+    f32 spawnTimer;
+} ARWGeneratorState;
+
+typedef struct ARWGeneratorSetup {
+    u8 pad00[0x18];
+    u16 spawnInterval;
+    u16 projectileSpeed;
+    s8 velocityX;
+    s8 velocityY;
+    s8 velocityZ;
+    u8 pad1F[3];
+    u8 spreadX;
+    u8 spreadY;
+    u8 spreadZ;
+    u8 spawnMode;
+} ARWGeneratorSetup;
+
+STATIC_ASSERT(sizeof(ARWGeneratorState) == 0x4);
+STATIC_ASSERT(offsetof(ARWGeneratorSetup, spawnInterval) == 0x18);
+STATIC_ASSERT(offsetof(ARWGeneratorSetup, projectileSpeed) == 0x1A);
+STATIC_ASSERT(offsetof(ARWGeneratorSetup, velocityX) == 0x1C);
+STATIC_ASSERT(offsetof(ARWGeneratorSetup, spreadX) == 0x22);
+STATIC_ASSERT(offsetof(ARWGeneratorSetup, spawnMode) == 0x25);
+
+extern void fn_802317A8(int obj, ARWGeneratorState *state, ARWGeneratorSetup *setup);
+extern void fn_802315EC(int obj, ARWGeneratorState *state, ARWGeneratorSetup *setup);
 
 
 extern void fn_8006CB24(int obj);
@@ -2343,8 +2368,8 @@ void fn_8022ED74(int obj, int v);
 void fn_8022F558(int obj, int v);
 void fn_80231028(int obj, int v);
 void fn_8023134C(int obj, int v);
-void fn_802315EC(int obj, int state, int setup);
-void fn_802317A8(int obj, int state, int setup);
+void fn_802315EC(int obj, ARWGeneratorState *state, ARWGeneratorSetup *setup);
+void fn_802317A8(int obj, ARWGeneratorState *state, ARWGeneratorSetup *setup);
 void fn_8022F27C(int obj);
 void fn_8022ECE0(int obj, f32 param);
 void fn_8022B764(int p, int q, int idx);

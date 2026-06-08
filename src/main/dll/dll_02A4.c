@@ -88,53 +88,53 @@ void dll_2A4_init(int obj)
 #pragma peephole reset
 
 #pragma scheduling off
-void fn_802315EC(int obj, int state, int setup)
+void fn_802315EC(int obj, ARWGeneratorState *state, ARWGeneratorSetup *setup)
 {
     int newObj;
     f32 dir[3];
 
     if (Obj_IsLoadingLocked()) {
         newObj = Obj_AllocObjectSetup(0x20, 0x616);
-        *(f32 *)(newObj + 8) = ((GameObject *)obj)->anim.localPosX + (f32)(int)randomGetRange(-(s8)*(u8 *)(setup + 0x22), (s8)*(u8 *)(setup + 0x22));
-        *(f32 *)(newObj + 0xc) = ((GameObject *)obj)->anim.localPosY + (f32)(int)randomGetRange(-(s8)*(u8 *)(setup + 0x23), (s8)*(u8 *)(setup + 0x23));
-        *(f32 *)(newObj + 0x10) = ((GameObject *)obj)->anim.localPosZ + (f32)(int)randomGetRange(-(s8)*(u8 *)(setup + 0x24), (s8)*(u8 *)(setup + 0x24));
+        *(f32 *)(newObj + 8) = ((GameObject *)obj)->anim.localPosX + (f32)(int)randomGetRange(-(s8)setup->spreadX, (s8)setup->spreadX);
+        *(f32 *)(newObj + 0xc) = ((GameObject *)obj)->anim.localPosY + (f32)(int)randomGetRange(-(s8)setup->spreadY, (s8)setup->spreadY);
+        *(f32 *)(newObj + 0x10) = ((GameObject *)obj)->anim.localPosZ + (f32)(int)randomGetRange(-(s8)setup->spreadZ, (s8)setup->spreadZ);
         *(u8 *)(newObj + 0x1a) = 0;
         *(u8 *)(newObj + 0x19) = 0;
         *(u8 *)(newObj + 0x18) = 0;
         *(u8 *)(newObj + 4) = 1;
         *(u8 *)(newObj + 5) = 1;
         newObj = ((int (*)(int, int))loadObjectAtObject)(obj, newObj);
-        dir[0] = (f32)(s8)*(u8 *)(setup + 0x1c) / lbl_803E7140;
-        dir[1] = (f32)(s8)*(u8 *)(setup + 0x1d) / lbl_803E7140;
-        dir[2] = (f32)(s8)*(u8 *)(setup + 0x1e) / lbl_803E7140;
+        dir[0] = (f32)setup->velocityX / lbl_803E7140;
+        dir[1] = (f32)setup->velocityY / lbl_803E7140;
+        dir[2] = (f32)setup->velocityZ / lbl_803E7140;
         fn_8023137C(newObj, (int)dir);
-        fn_8023134C(newObj, *(u16 *)(setup + 0x1a));
+        fn_8023134C(newObj, setup->projectileSpeed);
     }
 }
 #pragma scheduling reset
 
 #pragma scheduling off
-void fn_802317A8(int obj, int state, int setup)
+void fn_802317A8(int obj, ARWGeneratorState *state, ARWGeneratorSetup *setup)
 {
     int newObj;
     f32 dir[3];
 
     if (Obj_IsLoadingLocked()) {
         newObj = Obj_AllocObjectSetup(0x20, 0x617);
-        *(f32 *)(newObj + 8) = ((GameObject *)obj)->anim.localPosX + (f32)(int)randomGetRange(-(s8)*(u8 *)(setup + 0x22), (s8)*(u8 *)(setup + 0x22));
-        *(f32 *)(newObj + 0xc) = ((GameObject *)obj)->anim.localPosY + (f32)(int)randomGetRange(-(s8)*(u8 *)(setup + 0x23), (s8)*(u8 *)(setup + 0x23));
-        *(f32 *)(newObj + 0x10) = ((GameObject *)obj)->anim.localPosZ + (f32)(int)randomGetRange(-(s8)*(u8 *)(setup + 0x24), (s8)*(u8 *)(setup + 0x24));
+        *(f32 *)(newObj + 8) = ((GameObject *)obj)->anim.localPosX + (f32)(int)randomGetRange(-(s8)setup->spreadX, (s8)setup->spreadX);
+        *(f32 *)(newObj + 0xc) = ((GameObject *)obj)->anim.localPosY + (f32)(int)randomGetRange(-(s8)setup->spreadY, (s8)setup->spreadY);
+        *(f32 *)(newObj + 0x10) = ((GameObject *)obj)->anim.localPosZ + (f32)(int)randomGetRange(-(s8)setup->spreadZ, (s8)setup->spreadZ);
         *(u8 *)(newObj + 0x1a) = 0;
         *(u8 *)(newObj + 0x19) = 0;
         *(u8 *)(newObj + 0x18) = 0;
         *(u8 *)(newObj + 4) = 1;
         *(u8 *)(newObj + 5) = 1;
         newObj = ((int (*)(int, int))loadObjectAtObject)(obj, newObj);
-        dir[0] = (f32)(s8)*(u8 *)(setup + 0x1c) / lbl_803E7140;
-        dir[1] = (f32)(s8)*(u8 *)(setup + 0x1d) / lbl_803E7140;
-        dir[2] = (f32)(s8)*(u8 *)(setup + 0x1e) / lbl_803E7140;
+        dir[0] = (f32)setup->velocityX / lbl_803E7140;
+        dir[1] = (f32)setup->velocityY / lbl_803E7140;
+        dir[2] = (f32)setup->velocityZ / lbl_803E7140;
         fn_80231058(newObj, (int)dir);
-        fn_80231028(newObj, *(u16 *)(setup + 0x1a));
+        fn_80231028(newObj, setup->projectileSpeed);
     }
 }
 #pragma scheduling reset
