@@ -49,7 +49,7 @@ extern undefined4* DAT_803dd6cc;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6d8;
 extern undefined4* DAT_803dd6e8;
-extern undefined4* DAT_803dd708;
+extern EffectInterface **gPartfxInterface;
 extern MapEventInterface **DAT_803dd72c;
 extern f64 DOUBLE_803e5eb8;
 extern f32 lbl_803DC074;
@@ -320,7 +320,7 @@ undefined4 FUN_801ce424(uint param_1,int param_2)
         local_28 = *(undefined4 *)(param_2 + 0xc);
         local_24 = *(undefined4 *)(param_2 + 0x10);
         local_20 = *(undefined4 *)(param_2 + 0x14);
-        (**(code **)(*DAT_803dd708 + 8))(param_1,0x7f0,auStack_34,0x200001,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)param_1, 0x7f0, auStack_34, 0x200001, -1, NULL);
       }
       *(float *)(param_2 + 0x1c) = lbl_803E5EB0;
     }
@@ -487,7 +487,6 @@ extern f32 lbl_803E520C;
 extern f32 lbl_803E5218;
 extern void Sfx_PlayFromObject(int *obj, int sfx);
 extern void *gSHthorntailAnimationInterface;
-extern EffectInterface **gPartfxInterface;
 typedef struct {
     u8 pad[0xc];
     f32 pos[3];

@@ -24,7 +24,6 @@ extern undefined4 FUN_80294c40();
 extern int FUN_80294d6c();
 
 extern undefined4* DAT_803dd6f8;
-extern undefined4* DAT_803dd708;
 extern MapEventInterface **DAT_803dd72c;
 extern u8 gTrickyCurveBurstCounter;
 extern f64 DOUBLE_803e70d8;
@@ -425,10 +424,10 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1,undefined8 param_2,u
       if (uVar4 == 0) {
         ObjMsg_SendToObject(dVar10,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar3,0x60004,
                      uVar2,1,unusedArg7,unusedArg8,unusedArg9,unusedArg10);
-        (**(code **)(*DAT_803dd708 + 8))(uVar2,0x5ed,&local_78,2,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)uVar2, 0x5ed, &local_78, 2, -1, NULL);
         iVar3 = 9;
         do {
-          (**(code **)(*DAT_803dd708 + 8))(uVar2,0x5fd,&local_78,2,0xffffffff,0);
+          (*gPartfxInterface)->spawnObject((void *)uVar2, 0x5fd, &local_78, 2, -1, NULL);
           iVar3 = iVar3 + -1;
         } while (iVar3 != -1);
       }
@@ -436,10 +435,10 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1,undefined8 param_2,u
         uVar11 = FUN_80017698(0x468,1);
         ObjMsg_SendToObject(uVar11,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar3,0x60004,
                      uVar2,0,unusedArg7,unusedArg8,unusedArg9,unusedArg10);
-        (**(code **)(*DAT_803dd708 + 8))(uVar2,0x5ed,&local_78,2,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)uVar2, 0x5ed, &local_78, 2, -1, NULL);
         iVar3 = 9;
         do {
-          (**(code **)(*DAT_803dd708 + 8))(uVar2,0x5fd,&local_78,2,0xffffffff,0);
+          (*gPartfxInterface)->spawnObject((void *)uVar2, 0x5fd, &local_78, 2, -1, NULL);
           iVar3 = iVar3 + -1;
         } while (iVar3 != -1);
       }

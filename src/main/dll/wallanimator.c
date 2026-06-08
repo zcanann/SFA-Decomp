@@ -25,7 +25,7 @@ extern undefined4 FUN_8028688c();
 extern void objRenderFn_8003b8f4(double scale);
 extern void queueGlowRender(void *light);
 
-extern undefined4* DAT_803dd708;
+extern EffectInterface **gPartfxInterface;
 extern undefined4* DAT_803dd70c;
 extern undefined4* DAT_803dd738;
 extern undefined4 DAT_803de710;
@@ -479,7 +479,7 @@ void FUN_80169a44(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   else {
     for (local_18[0] = 0; local_18[0] < 0x19; local_18[0] = local_18[0] + 1) {
-      (**(code **)(*DAT_803dd708 + 8))(param_9,0x715,0,1,0xffffffff,local_18);
+      (*gPartfxInterface)->spawnObject((void *)param_9, 0x715, NULL, 1, -1, local_18);
     }
     FUN_80006824(param_9,SFXsc_attack03);
   }
@@ -556,7 +556,6 @@ extern f32 sqrtf(f32 x);
 extern int Obj_GetPlayerObject(void);
 extern int getTrickyObject(void);
 extern void fn_80098B18(int obj, f32 scale, int a, int b, int c, int d);
-extern EffectInterface **gPartfxInterface;
 extern f64 lbl_803E30E8;
 extern f32 lbl_803E30F0;
 extern f32 lbl_803E30F4;

@@ -43,7 +43,7 @@ extern undefined4 FUN_80294bd4();
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6e4;
 extern undefined4* DAT_803dd6f8;
-extern undefined4* DAT_803dd708;
+extern EffectInterface **gPartfxInterface;
 extern f64 DOUBLE_803e6938;
 extern f32 lbl_803DC074;
 extern f32 lbl_803DDA58;
@@ -406,12 +406,12 @@ void FUN_801eefd0(uint param_1,int param_2)
     local_32 = 0;
     local_30 = 0;
     if (*(short *)(local_38 + 0x46) == 0x9a) {
-      (**(code **)(*DAT_803dd708 + 8))(param_1,0xa8,&local_34,0x200001,0xffffffff,0);
-      (**(code **)(*DAT_803dd708 + 8))(param_1,0xa8,&local_34,0x200001,0xffffffff,0);
-      (**(code **)(*DAT_803dd708 + 8))(param_1,0xa8,&local_34,0x200001,0xffffffff,0);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 0xa8, &local_34, 0x200001, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 0xa8, &local_34, 0x200001, -1, NULL);
+      (*gPartfxInterface)->spawnObject((void *)param_1, 0xa8, &local_34, 0x200001, -1, NULL);
       iVar1 = 0;
       do {
-        (**(code **)(*DAT_803dd708 + 8))(param_1,0xa9,&local_34,0x200001,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)param_1, 0xa9, &local_34, 0x200001, -1, NULL);
         iVar1 = iVar1 + 1;
       } while (iVar1 < 10);
     }
@@ -911,7 +911,6 @@ extern int objGetFlagsE5_2(int obj);
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
 extern void doRumble(f32 val);
 extern void GameBit_Set(int id, int v);
-extern EffectInterface **gPartfxInterface;
 extern f32 lbl_803E5CB8;
 extern f32 lbl_803E5C74;
 

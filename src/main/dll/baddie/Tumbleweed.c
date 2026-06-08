@@ -197,7 +197,7 @@ extern undefined4 DAT_803dd5e8;
 extern undefined4* DAT_803dd6d0;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6e8;
-extern undefined4* DAT_803dd708;
+extern EffectInterface **gPartfxInterface;
 extern undefined4* DAT_803dd720;
 extern MapEventInterface **DAT_803dd72c;
 extern undefined4* DAT_803dd738;
@@ -3864,7 +3864,7 @@ void FUN_801367b4(undefined2 *param_1,int param_2)
     local_24 = param_1[2];
     if ((*(uint *)(param_2 + 0x54) & 0x800) == 0) {
       while (bVar1 = cVar2 != '\0', cVar2 = cVar2 + -1, bVar1) {
-        (**(code **)(*DAT_803dd708 + 8))(param_1,0x533,&local_28,2,0xffffffff,0);
+        (*gPartfxInterface)->spawnObject((void *)param_1, 0x533, &local_28, 2, -1, NULL);
       }
       *(uint *)(param_2 + 0x54) = *(uint *)(param_2 + 0x54) & 0xffffefff;
     }
@@ -4178,7 +4178,6 @@ void titlescreen_init(u8* obj, u8* p)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern EffectInterface **gPartfxInterface;
 extern f32   lbl_803E23E8;
 
 /* EN v1.0 0x80139164  size: 252b  Tricky_emitQueuedPathParticles: when b->_54 carries the
