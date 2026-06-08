@@ -71,6 +71,52 @@ from collections import Counter
 OBJDUMP = "build/binutils/powerpc-eabi-objdump"
 REPORT = "build/GSAE01/report.json"
 CONFIG = "build/GSAE01/config.json"
+SYMBOLS = "config/GSAE01/symbols.txt"
+
+
+def load_addrs():
+    """{symbol_name: 0xADDR} from symbols.txt (best-effort)."""
+    addrs = {}
+    try:
+        for line in open(SYMBOLS):
+            m = re.match(r"(\w+)\s*=\s*\.\w+:(0x[0-9A-Fa-f]+)", line)
+            if m:
+                addrs[m.group(1)] = int(m.group(2), 16)
+    except OSError:
+        pass
+    return addrs
+
+
+def sym_addr(name, addrs):
+    """Resolve a symbol's address. FUN_<hex>/fn_<hex> encode it in the name;
+    otherwise look up symbols.txt. Returns int or None."""
+    m = re.match(r"(?:FUN_|fn_)([0-9A-Fa-f]{8})$", name)
+    if m:
+        return int(m.group(1), 16)
+    return addrs.get(name)
+
+
+def wrongsym_hint(only_t, only_c, local_fns, addrs):
+    """For a 1<->1 wrong-symbol pair, classify NEUTRAL vs BEHAVIORAL/SCORES.
+
+    SAME address + canonical is CROSS-TU  -> external==external reloc = NEUTRAL
+                                             (objdiff matches by address).
+    SAME address + canonical is SAME-TU   -> local-vs-external reloc = SCORES.
+    DIFFERENT address                     -> wrong function = BEHAVIORAL BUG.
+    """
+    tk = [k for k in only_t if "gpr" not in k and "fpr" not in k]
+    ck = [k for k in only_c if "gpr" not in k and "fpr" not in k]
+    if len(tk) != 1 or len(ck) != 1:
+        return ""
+    ta, ca = sym_addr(tk[0], addrs), sym_addr(ck[0], addrs)
+    if ta is None or ca is None:
+        return ""
+    if ta == ca:
+        if tk[0] in local_fns:
+            return "  [WRONG-SYM same-addr, canonical SAME-TU -> rename SCORES (local reloc)]"
+        return ("  [WRONG-SYM same-addr, canonical CROSS-TU -> rename is "
+                "SCORE-NEUTRAL; any deficit is elsewhere in the fn]")
+    return "  [WRONG-SYM diff-addr -> likely BEHAVIORAL BUG, fix it]"
 
 
 def bl_targets(path):
@@ -106,6 +152,7 @@ def main():
     args = ap.parse_args()
 
     d = json.load(open(REPORT))
+    addrs = load_addrs()
     out = []
     for u in d["units"]:
         name = u["name"]
@@ -139,12 +186,13 @@ def main():
             victims = [k for k in only_t if k in local_fns]
             if args.same_tu_only and not victims:
                 continue
+            hint = wrongsym_hint(only_t, only_c, local_fns, addrs) if not victims else ""
             out.append((f.get("fuzzy_match_percent", 100), name, n,
-                        dict(only_t), dict(only_c), victims))
+                        dict(only_t), dict(only_c), victims, hint))
 
     out.sort()
-    for pct, un, n, ot, oc, victims in out[:args.limit]:
-        tag = "  [INLINE-VICTIM: %s]" % ",".join(victims) if victims else ""
+    for pct, un, n, ot, oc, victims, hint in out[:args.limit]:
+        tag = "  [INLINE-VICTIM: %s]" % ",".join(victims) if victims else hint
         print("%5.1f  %-44s %s%s" % (pct, un.replace("main/main/", ""), n, tag))
         if ot:
             print("      TGT-only:", ot)
