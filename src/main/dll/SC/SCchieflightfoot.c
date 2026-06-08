@@ -307,7 +307,6 @@ void SHthorntail_update(SHthorntailObject *obj)
       }
     }
   }
-  FUN_80286888();
   return;
 }
 #pragma peephole reset
