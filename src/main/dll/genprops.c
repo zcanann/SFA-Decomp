@@ -207,7 +207,7 @@ extern undefined4 DAT_803dc9e0;
 extern undefined4 DAT_803dc9e8;
 extern undefined4 DAT_803dc9f0;
 extern undefined4* DAT_803dd6d0;
-extern undefined4* DAT_803dd6d4;
+extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern undefined4* DAT_803dd6d8;
 extern undefined4* DAT_803dd6f4;
 extern undefined4* DAT_803dd6f8;
@@ -994,7 +994,7 @@ void FUN_8016c0a0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 {
   undefined8 uVar1;
   
-  ((ObjectTriggerInterface *)*DAT_803dd6d4)->freeState(*(u8 **)(param_9 + 0xb8));
+  (*gObjectTriggerInterface)->freeState(*(u8 **)(param_9 + 0xb8));
   (**(code **)(*DAT_803dd6f4 + 8))(param_9,0xffff,0,0,0);
   FUN_800068c8(param_9);
   uVar1 = FUN_8000680c(param_9,0x7f);
@@ -1111,7 +1111,7 @@ void FUN_8016c388(undefined8 param_1,double param_2,double param_3,undefined8 pa
   
   iVar10 = *(int *)(param_9 + 0xb8);
   if ((*(int *)(param_9 + 0x4c) != 0) && (*(short *)(*(int *)(param_9 + 0x4c) + 0x18) != -1)) {
-    local_14 = (**(code **)(*DAT_803dd6d4 + 0x14))((double)lbl_803DC074);
+    local_14 = (*gObjectTriggerInterface)->update((u8 *)param_9, lbl_803DC074);
     uVar12 = extraout_f1;
     if ((local_14 != 0) && (*(short *)(param_9 + 0xb4) == -2)) {
       iVar9 = (int)*(char *)(iVar10 + 0x57);
@@ -1131,7 +1131,8 @@ void FUN_8016c388(undefined8 param_1,double param_2,double param_3,undefined8 pa
       }
       if (((iVar7 < 2) && (iVar11 != 0)) && (*(short *)(iVar11 + 0xb4) != -1)) {
         *(undefined2 *)(iVar11 + 0xb4) = 0xffff;
-        uVar12 = (**(code **)(*DAT_803dd6d4 + 0x4c))(iVar9);
+        (*gObjectTriggerInterface)->endSequence(iVar9);
+        uVar12 = extraout_f1;
       }
       *(undefined2 *)(param_9 + 0xb4) = 0xffff;
       *(ushort *)(param_9 + 0xb0) = *(ushort *)(param_9 + 0xb0) | 0x8000;
@@ -1199,13 +1200,13 @@ void FUN_8016c710(int param_1,int param_2)
   *(undefined4 *)(iVar2 + 0xe8) = 0;
   iVar1 = *(int *)(param_1 + 0xf4);
   if ((iVar1 == 0) && (*(short *)(param_2 + 0x18) != 1)) {
-    ((ObjectTriggerInterface *)*DAT_803dd6d4)->loadAnimData((u8 *)iVar2, (u8 *)param_2);
+    (*gObjectTriggerInterface)->loadAnimData((u8 *)iVar2, (u8 *)param_2);
     *(int *)(param_1 + 0xf4) = *(short *)(param_2 + 0x18) + 1;
   }
   else if ((iVar1 != 0) && ((int)*(short *)(param_2 + 0x18) != iVar1 + -1)) {
-    ((ObjectTriggerInterface *)*DAT_803dd6d4)->freeState((u8 *)iVar2);
+    (*gObjectTriggerInterface)->freeState((u8 *)iVar2);
     if (*(short *)(param_2 + 0x18) != -1) {
-      ((ObjectTriggerInterface *)*DAT_803dd6d4)->loadAnimData((u8 *)iVar2, (u8 *)param_2);
+      (*gObjectTriggerInterface)->loadAnimData((u8 *)iVar2, (u8 *)param_2);
     }
     *(int *)(param_1 + 0xf4) = *(short *)(param_2 + 0x18) + 1;
   }
@@ -1302,7 +1303,7 @@ void FUN_8016c8a4(int param_1)
  */
 void FUN_8016ca4c(int param_1)
 {
-  ((ObjectTriggerInterface *)*DAT_803dd6d4)->freeState(*(u8 **)(param_1 + 0xb8));
+  (*gObjectTriggerInterface)->freeState(*(u8 **)(param_1 + 0xb8));
   (**(code **)(*DAT_803dd6f4 + 8))(param_1,0xffff,0,0,0);
   FUN_8000680c(param_1,0x7f);
   return;
@@ -1430,7 +1431,7 @@ void FUN_8016cc88(int param_1)
         } while (iVar4 != 0);
       }
     }
-    local_38 = (**(code **)(*DAT_803dd6d4 + 0x14))((double)lbl_803DC074,param_1);
+    local_38 = (*gObjectTriggerInterface)->update((u8 *)param_1, lbl_803DC074);
     if ((local_38 != 0) && (*(short *)(param_1 + 0xb4) == -2)) {
       iVar5 = (int)*(char *)(iVar6 + 0x57);
       iVar6 = 0;
@@ -1449,7 +1450,7 @@ void FUN_8016cc88(int param_1)
       }
       if (((iVar4 < 2) && (iVar6 != 0)) && (*(short *)(iVar6 + 0xb4) != -1)) {
         *(undefined2 *)(iVar6 + 0xb4) = 0xffff;
-        ((ObjectTriggerInterface *)*DAT_803dd6d4)->endSequence(iVar5);
+        (*gObjectTriggerInterface)->endSequence(iVar5);
       }
       *(undefined2 *)(param_1 + 0xb4) = 0xffff;
     }
@@ -1491,13 +1492,13 @@ void FUN_8016ceb4(int param_1,int param_2)
   *(undefined4 *)(param_1 + 0xf8) = 0;
   iVar1 = *(int *)(param_1 + 0xf4);
   if ((iVar1 == 0) && (*(short *)(param_2 + 0x18) != 1)) {
-    ((ObjectTriggerInterface *)*DAT_803dd6d4)->loadAnimData((u8 *)iVar2, (u8 *)param_2);
+    (*gObjectTriggerInterface)->loadAnimData((u8 *)iVar2, (u8 *)param_2);
     *(int *)(param_1 + 0xf4) = *(short *)(param_2 + 0x18) + 1;
   }
   else if ((iVar1 != 0) && ((int)*(short *)(param_2 + 0x18) != iVar1 + -1)) {
-    ((ObjectTriggerInterface *)*DAT_803dd6d4)->freeState((u8 *)iVar2);
+    (*gObjectTriggerInterface)->freeState((u8 *)iVar2);
     if (*(short *)(param_2 + 0x18) != -1) {
-      ((ObjectTriggerInterface *)*DAT_803dd6d4)->loadAnimData((u8 *)iVar2, (u8 *)param_2);
+      (*gObjectTriggerInterface)->loadAnimData((u8 *)iVar2, (u8 *)param_2);
     }
     *(int *)(param_1 + 0xf4) = *(short *)(param_2 + 0x18) + 1;
   }
@@ -4489,7 +4490,6 @@ void dll_F7_free(int obj)
 }
 #pragma scheduling reset
 
-extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern void *gTitleMenuControlInterfaceCopy;
 extern void Sfx_StopObjectChannel(int *obj, int channel);
 
