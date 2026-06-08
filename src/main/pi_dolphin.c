@@ -10229,6 +10229,7 @@ int initLoadFiles(void) {
     char **names;
     int *sizes;
     u8 *flags;
+    u8 *himem;
     if (lbl_803DCC90 == 0) {
         lbl_803DCC90 = 1;
         lbl_803DCC88 = 0;
@@ -10242,12 +10243,13 @@ int initLoadFiles(void) {
             rom++;
         }
         lbl_803DCC98 = 0;
-        ptrs = t->ptrs;
-        owners = t->owners;
-        ids = t->ids;
+        himem = (u8 *)t + 0x20000;
+        ptrs = (u32 *)(himem - 27176);
+        owners = (s16 *)(himem - 26824);
+        ids = (int *)(himem - 28360);
         names = sResourceFileNameTable;
-        sizes = t->sizes;
-        flags = t->mergeModels + 0x2000;
+        sizes = (int *)(himem - 28008);
+        flags = himem - 28448;
         for (i = 0; i <= 0x57; i++) {
             switch (i) {
             case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
