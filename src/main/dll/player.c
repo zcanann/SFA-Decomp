@@ -13208,11 +13208,7 @@ int fn_8029CF30(int obj, int state, f32 fv)
     }
 
     t = (*(f32 *)((char *)state + 0x298) - lbl_803E7F14) / lbl_803E7F2C;
-    ang = lbl_803E7EA4;
-    if (t >= ang) {
-        ang = lbl_803E7EE0;
-        if (t <= ang) ang = t;
-    }
+    ang = (t < lbl_803E7EA4) ? lbl_803E7EA4 : ((t > lbl_803E7EE0) ? lbl_803E7EE0 : t);
     vx = inner->unk404 *
          (ang * -mathSinf(lbl_803E7F94 * (f32)inner->unk474 / lbl_803E7F98));
     vy = inner->unk404 *
@@ -13226,11 +13222,7 @@ int fn_8029CF30(int obj, int state, f32 fv)
               inner->unk4CC * inner->unk4CC);
     {
         f32 d = ((PlayerState *)state)->baddie.unk294;
-        f32 c = lbl_803E7EA4;
-        if (d >= c) {
-            c = inner->unk404;
-            if (d <= c) c = d;
-        }
+        f32 c = (d < lbl_803E7EA4) ? lbl_803E7EA4 : ((d > inner->unk404) ? inner->unk404 : d);
         ((PlayerState *)state)->baddie.unk294 = c;
     }
 
