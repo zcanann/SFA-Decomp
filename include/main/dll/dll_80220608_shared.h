@@ -1027,13 +1027,6 @@ extern f32 lbl_803E745C;
 extern int mclightning_handleScriptEvents(int obj, int eventId, u8 *script);
 extern f32 lbl_803E7440;
 
-typedef struct McLightningFlags {
-    u8 hi : 4;
-    u8 lo : 4;
-} McLightningFlags;
-
-
-
 extern void *lightningCreate(f32 *pos, f32 *dir, f32 a, f32 b, u16 angle, int c, int d);
 extern f32 lbl_803E7450;
 extern f32 lbl_803E7454;
