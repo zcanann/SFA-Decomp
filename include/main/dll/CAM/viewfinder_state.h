@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "global.h"
+#include "main/curve.h"
 
 /*
  * ViewfinderState - the heap record behind the .sbss pointer
@@ -36,17 +37,8 @@ typedef struct ViewfinderState {
     f32 unk54;
     f32 unk58;
     f32 unk5C;
-    u8 unk60[0xE0 - 0x60];
-    f32 unkE0;
-    f32 unkE4;
-    u8 unkE8[0xF8 - 0xE8];
-    int curveParam;
-    int curvePointsX;
-    int curvePointsY;
-    int curvePointsZ;
-    int curvePointCount;
-    int curveEvalFn;
-    int curveCoeffsFn;
+    u8 unk60[0x78 - 0x60];
+    Curve viewCurve;
     f32 unk114;
     u8 unk118[0x11C - 0x118];
     f32 yawSpeed;
@@ -60,5 +52,12 @@ typedef struct ViewfinderState {
 } ViewfinderState;
 
 STATIC_ASSERT(offsetof(ViewfinderState, yawSpeed) == 0x11C);
+STATIC_ASSERT(offsetof(ViewfinderState, viewCurve) == 0x78);
+STATIC_ASSERT(offsetof(ViewfinderState, viewCurve.sample) == 0xE0);
+STATIC_ASSERT(offsetof(ViewfinderState, viewCurve.dir) == 0xF8);
+STATIC_ASSERT(offsetof(ViewfinderState, viewCurve.px) == 0xFC);
+STATIC_ASSERT(offsetof(ViewfinderState, viewCurve.count) == 0x108);
+STATIC_ASSERT(offsetof(ViewfinderState, viewCurve.eval) == 0x10C);
+STATIC_ASSERT(offsetof(ViewfinderState, viewCurve.coeffFn) == 0x110);
 
 #endif /* MAIN_DLL_CAM_VIEWFINDER_STATE_H_ */

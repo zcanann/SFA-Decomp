@@ -43,6 +43,7 @@ STATIC_ASSERT(offsetof(Curve, coeffFn) == 0x98);
 int Curve_AdvanceAlongPath(Curve *curve, f32 dt);
 void curvesMove(Curve *curve);
 f32 Curve_EvalHermite(f32 t, f32 *values, f32 *outTangent);
+void Curve_BuildHermiteCoeffs(f32 *values, f32 *coefficients);
 f32 Curve_EvalBSpline(f32 t, f32 *values, f32 *outTangent);
 void Curve_BuildBSplineCoeffs(f32 *values, f32 *coefficients);
 

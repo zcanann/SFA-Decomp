@@ -14,11 +14,12 @@
  * Curve_EvalLinear(elapsed/duration, &pair); starts live in the pad bytes
  * before each named End field (pos pairs at +0x10/18/20). */
 typedef struct CamCannonState {
-    u8 unk0[0x14 - 0x0];
+    u8 pad00[0x10 - 0x00];
+    f32 posXStart;
     f32 posXEnd;
-    u8 unk18[0x1C - 0x18];
+    f32 posYStart;
     f32 posYEnd;
-    u8 unk20[0x24 - 0x20];
+    f32 posZStart;
     f32 posZEnd;
     f32 rotXStart;
     f32 rotXEnd;
@@ -26,12 +27,22 @@ typedef struct CamCannonState {
     f32 rotYEnd;
     f32 rotZStart;
     f32 rotZEnd;
-    u8 unk40[0x44 - 0x40];
+    f32 fovStart;
     f32 fovEnd;
-    u8 unk48[0x5C - 0x48];
+    f32 speedCurve[5];
     f32 elapsed;
     f32 duration;
-    u8 unk64[0x68 - 0x64];
+    u8 transitionComplete;
+    u8 pad65[0x68 - 0x65];
 } CamCannonState;
+
+STATIC_ASSERT(sizeof(CamCannonState) == 0x68);
+STATIC_ASSERT(offsetof(CamCannonState, posXStart) == 0x10);
+STATIC_ASSERT(offsetof(CamCannonState, rotXStart) == 0x28);
+STATIC_ASSERT(offsetof(CamCannonState, fovStart) == 0x40);
+STATIC_ASSERT(offsetof(CamCannonState, speedCurve) == 0x48);
+STATIC_ASSERT(offsetof(CamCannonState, elapsed) == 0x5C);
+STATIC_ASSERT(offsetof(CamCannonState, duration) == 0x60);
+STATIC_ASSERT(offsetof(CamCannonState, transitionComplete) == 0x64);
 
 #endif /* MAIN_DLL_CAM_CAMCANNON_STATE_H_ */
