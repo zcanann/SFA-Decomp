@@ -148,7 +148,6 @@ extern void Rcp_SetColorFilterEnabled(int enabled);
 void optionsMenu_applyGameplaySetting(int p1, int p2)
 {
     int i;
-    int **ptr;
     u8 newState;
 
     if (lbl_803A87D0[p2] != NULL &&
@@ -174,14 +173,11 @@ void optionsMenu_applyGameplaySetting(int p1, int p2)
                     (*(void(**)(void))(*gTitleMenuLinkInterface + 0x8))();
                     lbl_803DBA28 = -1;
                 }
-                i = 0;
-                ptr = lbl_803A87D0;
-                for (; i < OPTIONS_MENU_ITEM_COUNT; i++) {
-                    if (*ptr != NULL) {
-                        (*(void(**)(int*))(*gTitleMenuItemInterface + 0x10))(*ptr);
-                        *ptr = NULL;
+                for (i = 0; i < OPTIONS_MENU_ITEM_COUNT; i++) {
+                    if (lbl_803A87D0[i] != NULL) {
+                        (*(void(**)(int*))(*gTitleMenuItemInterface + 0x10))(lbl_803A87D0[i]);
+                        lbl_803A87D0[i] = NULL;
                     }
-                    ptr++;
                 }
             }
             break;
