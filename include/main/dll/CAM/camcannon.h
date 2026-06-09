@@ -2,10 +2,11 @@
 #define MAIN_DLL_CAM_CAMCANNON_H_
 
 #include "ghidra_import.h"
+#include "main/camera_object.h"
 
-uint fn_8010AEA8(short *param_1,uint param_2);
-void cameraModeTestStrengthFn_8010b238(f32 param_1, s16 *param_2, f32 *param_3, s32 param_4, s32 param_5,
-                 s32 param_6);
+uint fn_8010AEA8(CameraObject *camera,uint flagsIn);
+void cameraModeTestStrengthFn_8010b238(f32 fovEnd, CameraObject *camera, f32 *posEnd,
+                 s32 rotXEnd, s32 rotYEnd, s32 rotZEnd);
 void FUN_8010b428(void);
 
 #endif /* MAIN_DLL_CAM_CAMCANNON_H_ */

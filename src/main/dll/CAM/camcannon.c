@@ -1,5 +1,6 @@
 #include "main/dll/CAM/camcannon.h"
 #include "main/camera_interface.h"
+#include "main/camera_object.h"
 #include "main/dll/CAM/camcannon_state.h"
 
 
@@ -36,7 +37,7 @@ extern f32 lbl_803E18B8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint fn_8010AEA8(s16 *st, uint flagsIn)
+uint fn_8010AEA8(CameraObject *camera, uint flagsIn)
 {
   CamCannonState *state;
   u8 flags;
@@ -45,13 +46,13 @@ uint fn_8010AEA8(s16 *st, uint flagsIn)
   f32 q;
 
   state = lbl_803DD560;
-  state->posXEnd = *(f32 *)(st + 6);
-  state->posYEnd = *(f32 *)(st + 8);
-  state->posZEnd = *(f32 *)(st + 10);
-  state->rotXEnd = (f32)st[0];
-  state->rotYEnd = (f32)st[1];
-  state->rotZEnd = (f32)st[2];
-  state->fovEnd = *(f32 *)(st + 0x5a);
+  state->posXEnd = camera->anim.localPosX;
+  state->posYEnd = camera->anim.localPosY;
+  state->posZEnd = camera->anim.localPosZ;
+  state->rotXEnd = (f32)camera->anim.rotX;
+  state->rotYEnd = (f32)camera->anim.rotY;
+  state->rotZEnd = (f32)camera->anim.rotZ;
+  state->fovEnd = camera->fov;
 
   if (lbl_803E1888 != state->duration) {
     t = state->elapsed / state->duration;
@@ -74,10 +75,10 @@ uint fn_8010AEA8(s16 *st, uint flagsIn)
   if (q > lbl_803E188C) {
     q = lbl_803E188C;
   }
-  *(f32 *)(st + 6) = Curve_EvalLinear(q, &state->posXStart, (f32 *)0x0);
-  *(f32 *)(st + 8) = Curve_EvalLinear(q, &state->posYStart, (f32 *)0x0);
-  *(f32 *)(st + 10) = Curve_EvalLinear(q, &state->posZStart, (f32 *)0x0);
-  *(f32 *)(st + 0x5a) = Curve_EvalLinear(q, &state->fovStart, (f32 *)0x0);
+  camera->anim.localPosX = Curve_EvalLinear(q, &state->posXStart, (f32 *)0x0);
+  camera->anim.localPosY = Curve_EvalLinear(q, &state->posYStart, (f32 *)0x0);
+  camera->anim.localPosZ = Curve_EvalLinear(q, &state->posZStart, (f32 *)0x0);
+  camera->fov = Curve_EvalLinear(q, &state->fovStart, (f32 *)0x0);
 
   d = state->rotXStart - state->rotXEnd;
   if ((d > lbl_803E1890) || (d < lbl_803E1894)) {
@@ -109,13 +110,13 @@ uint fn_8010AEA8(s16 *st, uint flagsIn)
 
   flags = flagsIn;
   if ((flags & 1) == 0) {
-    st[0] = (s16)(int)Curve_EvalLinear(q, &state->rotXStart, (f32 *)0x0);
+    camera->anim.rotX = (s16)(int)Curve_EvalLinear(q, &state->rotXStart, (f32 *)0x0);
   }
   if ((flags & 2) == 0) {
-    st[1] = (s16)(int)Curve_EvalLinear(q, &state->rotYStart, (f32 *)0x0);
+    camera->anim.rotY = (s16)(int)Curve_EvalLinear(q, &state->rotYStart, (f32 *)0x0);
   }
   if ((flags & 4) == 0) {
-    st[2] = (s16)(int)Curve_EvalLinear(q, &state->rotZStart, (f32 *)0x0);
+    camera->anim.rotZ = (s16)(int)Curve_EvalLinear(q, &state->rotZStart, (f32 *)0x0);
   }
   return q >= lbl_803E188C;
 }
@@ -133,8 +134,8 @@ uint fn_8010AEA8(s16 *st, uint flagsIn)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void cameraModeTestStrengthFn_8010b238(f32 param_1, s16 *param_2, f32 *param_3, s32 param_4, s32 param_5,
-                 s32 param_6)
+void cameraModeTestStrengthFn_8010b238(f32 fovEnd, CameraObject *camera, f32 *posEnd,
+                 s32 rotXEnd, s32 rotYEnd, s32 rotZEnd)
 {
   CamCannonState *state;
   f32 fVar1;
@@ -143,20 +144,20 @@ void cameraModeTestStrengthFn_8010b238(f32 param_1, s16 *param_2, f32 *param_3, 
 
   state = lbl_803DD560;
   state->transitionComplete = 0;
-  state->posXStart = *(f32 *)((int)param_2 + 12);
-  state->posYStart = *(f32 *)((int)param_2 + 16);
-  state->posZStart = *(f32 *)((int)param_2 + 20);
-  state->rotXStart = (f32)(s32)param_2[0];
-  state->rotYStart = (f32)(s32)param_2[1];
-  state->rotZStart = (f32)(s32)param_2[2];
-  state->fovStart = *(f32 *)((int)param_2 + 0xb4);
-  state->posXEnd = param_3[0];
-  state->posYEnd = param_3[1];
-  state->posZEnd = param_3[2];
-  state->rotXEnd = (f32)param_4;
-  state->rotYEnd = (f32)param_5;
-  state->rotZEnd = (f32)param_6;
-  state->fovEnd = param_1;
+  state->posXStart = camera->anim.localPosX;
+  state->posYStart = camera->anim.localPosY;
+  state->posZStart = camera->anim.localPosZ;
+  state->rotXStart = (f32)(s32)camera->anim.rotX;
+  state->rotYStart = (f32)(s32)camera->anim.rotY;
+  state->rotZStart = (f32)(s32)camera->anim.rotZ;
+  state->fovStart = camera->fov;
+  state->posXEnd = posEnd[0];
+  state->posYEnd = posEnd[1];
+  state->posZEnd = posEnd[2];
+  state->rotXEnd = (f32)rotXEnd;
+  state->rotYEnd = (f32)rotYEnd;
+  state->rotZEnd = (f32)rotZEnd;
+  state->fovEnd = fovEnd;
   state->elapsed = lbl_803E1888;
   fVar1 = state->posXEnd - state->posXStart;
   fVar2 = state->posYEnd - state->posYStart;
