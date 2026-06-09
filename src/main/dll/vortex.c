@@ -17,7 +17,7 @@ void vortex_free(int obj)
 void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     VortexState *state = ((GameObject *)obj)->extra;
-    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
+    VortexSetup *setup = (VortexSetup *)((GameObject *)obj)->anim.placementData;
     f32 dt;
     s16 *texture;
     int model;
@@ -47,8 +47,8 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     if (((GameObject *)obj)->anim.seqId == 0x835 || ((GameObject *)obj)->anim.seqId == 0x838) {
         texture = (s16 *)objFindTexture(obj, 0, 0);
         if (texture != NULL) {
-            u8 reverse = *(s16 *)(setup + 0x1c) != 0;
-            if (*(s16 *)(setup + 0x1e) != -1 && GameBit_Get(*(s16 *)(setup + 0x1e)) != 0) {
+            u8 reverse = setup->reverseTextureScroll != 0;
+            if (setup->invertGameBit != -1 && GameBit_Get(setup->invertGameBit) != 0) {
                 reverse = !reverse;
             }
             if (reverse != 0) {
@@ -68,7 +68,7 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         if (state->particleTimer <= lbl_803E73D0 && hudHidden == 0) {
             state->particleTimer = lbl_803E73D8;
             particleArgs[2] =
-                ((f32)*(s16 *)(setup + 0x1a) / lbl_803E73DC) * ((GameObject *)obj)->anim.rootMotionScale * state->alpha;
+                ((f32)setup->radiusParam / lbl_803E73DC) * ((GameObject *)obj)->anim.rootMotionScale * state->alpha;
             particleArgs[4] = lbl_803E73D0;
             (*gPartfxInterface)->spawnObject((void *)obj, 0x7f7, particleArgs, 2, -1, NULL);
         }
@@ -82,7 +82,7 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             ((GameObject *)obj)->anim.rotZ = lbl_803DC414[i];
             ((GameObject *)obj)->anim.rotX = state->angles[i];
             state->angles[i] = (s16)((f32)state->angles[i] + dt * (f32)lbl_803DC410[i]);
-            ((GameObject *)obj)->anim.rootMotionScale = ((f32)*(s16 *)(setup + 0x1a) / lbl_803E73DC) * state->alpha *
+            ((GameObject *)obj)->anim.rootMotionScale = ((f32)setup->radiusParam / lbl_803E73DC) * state->alpha *
                                   (state->radiusScale[i] * objScale);
             *(u8 *)(obj + 0x37) =
                 (s8)(int)(state->alpha * state->alphaScale[i] * (f32)(u32)objAlpha);
@@ -168,50 +168,51 @@ void vortex_hitDetect(void) {}
 void vortex_init(int obj, int initData)
 {
     f32 *base = lbl_8032BE20;
-    int state = *(int *)&((GameObject *)obj)->extra;
+    VortexSetup *setup = (VortexSetup *)initData;
+    VortexState *state = ((GameObject *)obj)->extra;
     u8 i;
 
-    ((VortexFlags *)(state + 0x26))->active = 0;
-    if (*(s16 *)(initData + 0x20) != -1) {
-        ((VortexFlags *)(state + 0x26))->active = (u8)GameBit_Get(*(s16 *)(initData + 0x20));
+    state->flags.active = 0;
+    if (setup->activeGameBit != -1) {
+        state->flags.active = (u8)GameBit_Get(setup->activeGameBit);
     }
     if (((GameObject *)obj)->anim.seqId == 0x835) {
         for (i = 0; i < 2; i++) {
-            *(f32 *)(state + i * 4 + 0x14) = lbl_803DC3F8[i];
-            *(f32 *)(state + i * 4 + 0x8) = lbl_803DC400[i];
-            *(s16 *)(state + i * 2 + 0x20) = (s16)randomGetRange(-0x7fff, 0x7fff);
+            state->radiusScale[i] = lbl_803DC3F8[i];
+            state->alphaScale[i] = lbl_803DC400[i];
+            state->angles[i] = (s16)randomGetRange(-0x7fff, 0x7fff);
         }
     } else if (((GameObject *)obj)->anim.seqId == 0x838) {
         for (i = 0; i < 2; i++) {
-            *(f32 *)(state + i * 4 + 0x14) = lbl_803DC3F8[i];
-            *(f32 *)(state + i * 4 + 0x8) = lbl_803DC408[i];
-            *(s16 *)(state + i * 2 + 0x20) = (s16)randomGetRange(-0x7fff, 0x7fff);
+            state->radiusScale[i] = lbl_803DC3F8[i];
+            state->alphaScale[i] = lbl_803DC408[i];
+            state->angles[i] = (s16)randomGetRange(-0x7fff, 0x7fff);
         }
     } else if (((GameObject *)obj)->anim.seqId == 0x83d) {
         for (i = 0; i < 3; i++) {
-            *(f32 *)(state + i * 4 + 0x14) = base[i];
-            *(f32 *)(state + i * 4 + 0x8) = base[i + 3];
-            *(s16 *)(state + i * 2 + 0x20) = (s16)randomGetRange(-0x7fff, 0x7fff);
+            state->radiusScale[i] = base[i];
+            state->alphaScale[i] = base[i + 3];
+            state->angles[i] = (s16)randomGetRange(-0x7fff, 0x7fff);
         }
     } else {
         for (i = 0; i < 3; i++) {
-            *(f32 *)(state + i * 4 + 0x14) = base[i + 6];
-            *(f32 *)(state + i * 4 + 0x8) = base[i + 9];
-            *(s16 *)(state + i * 2 + 0x20) = (s16)randomGetRange(-0x7fff, 0x7fff);
+            state->radiusScale[i] = base[i + 6];
+            state->alphaScale[i] = base[i + 9];
+            state->angles[i] = (s16)randomGetRange(-0x7fff, 0x7fff);
         }
-        if (((VortexFlags *)(state + 0x26))->active != 0) {
-            if (*(s16 *)(initData + 0x1e) != -1) {
-                ((VortexFlags *)(state + 0x26))->active = !GameBit_Get(*(s16 *)(initData + 0x1e));
+        if (state->flags.active != 0) {
+            if (setup->invertGameBit != -1) {
+                state->flags.active = !GameBit_Get(setup->invertGameBit);
             }
         }
     }
     ((GameObject *)obj)->objectFlags |= 0x2000;
     ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), postRenderSetAlphaBlendState);
-    if (((VortexFlags *)(state + 0x26))->active != 0)
-        *(f32 *)(state + 0) = lbl_803E73E0;
+    if (state->flags.active != 0)
+        state->alpha = lbl_803E73E0;
     else
-        *(f32 *)(state + 0) = lbl_803E73D0;
-    *(f32 *)(state + 4) = (f32)randomGetRange(0, 0x14);
+        state->alpha = lbl_803E73D0;
+    state->particleTimer = (f32)randomGetRange(0, 0x14);
     *(f32 *)(obj + 0x40) = *(f32 *)(obj + 0x40) * lbl_803E7404;
 }
 #pragma scheduling reset
@@ -222,17 +223,17 @@ void vortex_init(int obj, int initData)
 void vortex_update(int obj)
 {
     VortexState *state = ((GameObject *)obj)->extra;
-    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
+    VortexSetup *setup = (VortexSetup *)((GameObject *)obj)->anim.placementData;
 
     state->flags.active = 0;
-    if (*(s16 *)(setup + 0x20) != -1) {
-        state->flags.active = (u8)GameBit_Get(*(s16 *)(setup + 0x20));
+    if (setup->activeGameBit != -1) {
+        state->flags.active = (u8)GameBit_Get(setup->activeGameBit);
     }
 
     if (((GameObject *)obj)->anim.seqId == 0x29a || ((GameObject *)obj)->anim.seqId == 0x829) {
         if (state->flags.active != 0) {
-            if (*(s16 *)(setup + 0x1e) != -1) {
-                state->flags.active = !GameBit_Get(*(s16 *)(setup + 0x1e));
+            if (setup->invertGameBit != -1) {
+                state->flags.active = !GameBit_Get(setup->invertGameBit);
             }
         }
     }

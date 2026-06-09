@@ -7,6 +7,7 @@
 #include "main/expgfx.h"
 #include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
+#include "main/obj_placement.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
 #include "main/objHitReact.h"
@@ -548,6 +549,27 @@ typedef struct VortexState {
     VortexFlags flags;
     u8 pad27;
 } VortexState;
+
+typedef struct VortexSetup {
+    ObjPlacement base;
+    u8 pad18[2];
+    s16 radiusParam;
+    s16 reverseTextureScroll;
+    s16 invertGameBit;
+    s16 activeGameBit;
+    u8 pad22[0x24 - 0x22];
+} VortexSetup;
+
+STATIC_ASSERT(sizeof(VortexState) == 0x28);
+STATIC_ASSERT(offsetof(VortexState, alphaScale) == 0x08);
+STATIC_ASSERT(offsetof(VortexState, radiusScale) == 0x14);
+STATIC_ASSERT(offsetof(VortexState, angles) == 0x20);
+STATIC_ASSERT(offsetof(VortexState, flags) == 0x26);
+STATIC_ASSERT(sizeof(VortexSetup) == 0x24);
+STATIC_ASSERT(offsetof(VortexSetup, radiusParam) == 0x1a);
+STATIC_ASSERT(offsetof(VortexSetup, reverseTextureScroll) == 0x1c);
+STATIC_ASSERT(offsetof(VortexSetup, invertGameBit) == 0x1e);
+STATIC_ASSERT(offsetof(VortexSetup, activeGameBit) == 0x20);
 
 extern f32 lbl_803E73E0;
 extern f32 lbl_803E73D0;
