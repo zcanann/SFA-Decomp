@@ -1024,6 +1024,7 @@ void immultiseq_update(int *obj)
 }
 
 int dll_115_seqFn(int *obj, int p2, void *p3) {
+    int v;
     u8 *state = ((GameObject *)obj)->extra;
     s16 *def = *(s16 **)&((GameObject *)obj)->anim.placementData;
     *(s16 *)((char *)p3 + 0x6e) = *(s16 *)((char *)p3 + 0x70);
@@ -1032,13 +1033,12 @@ int dll_115_seqFn(int *obj, int p2, void *p3) {
         return 0;
     }
     {
-        int v = state[0];
+        v = state[0];
         if (v >= 10 || v < 8) {
-            if (v + 1 < 8) {
-                s16 *nextDef = def + v + 1;
-                s16 *curDef = def + v;
-                s16 newId = nextDef[0x14];
-                if (newId != -1 && newId != curDef[0x14]) {
+            int n = v + 1;
+            if (n < 8) {
+                s16 newId = (def + n)[0x14];
+                if (newId != -1 && newId != (def + v)[0x14]) {
                     if (GameBit_Get(newId) != 0) {
                         (*gObjectTriggerInterface)->endSequence(((GameObject *)obj)->unkB4);
                     }
