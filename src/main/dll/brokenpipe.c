@@ -18,6 +18,12 @@ STATIC_ASSERT(offsetof(BrokenPipeSetup, rotZ) == 0x18);
 STATIC_ASSERT(offsetof(BrokenPipeSetup, scale) == 0x1b);
 STATIC_ASSERT(sizeof(BrokenPipeSetup) == 0x20);
 
+typedef struct BrokenPipeState {
+    int hitEffectCooldown;
+} BrokenPipeState;
+
+STATIC_ASSERT(sizeof(BrokenPipeState) == 4);
+
 int brokenpipe_getExtraSize(void) { return 4; }
 
 #pragma peephole off
@@ -48,7 +54,9 @@ void brokenpipe_init(int obj, int setup)
 #pragma scheduling off
 void brokenpipe_update(int obj)
 {
+    BrokenPipeState *state = ((GameObject *)obj)->extra;
+
     ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f,
-        *(int *)&((GameObject *)obj)->extra);
+        (int)&state->hitEffectCooldown);
 }
 #pragma scheduling reset
