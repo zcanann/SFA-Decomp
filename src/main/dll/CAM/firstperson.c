@@ -108,15 +108,15 @@ void firstperson_updatePosition(CameraObject *camera, ObjAnimComponent *target)
   if (dist > gCamcontrolModeSettings->maxDistance) {
     clamped = gCamcontrolModeSettings->maxDistance;
     gCamcontrolModeSettings->wallAvoidanceFlags.b7 = 0;
-    gCamcontrolModeSettings->distanceClampFlags.b7 = 1;
+    gCamcontrolModeSettings->clampFlags.b7 = 1;
   }
   else if (dist < gCamcontrolModeSettings->minDistance) {
     clamped = gCamcontrolModeSettings->minDistance;
-    gCamcontrolModeSettings->distanceClampFlags.b7 = 0;
+    gCamcontrolModeSettings->clampFlags.b7 = 0;
   }
   else {
     clamped = dist;
-    gCamcontrolModeSettings->distanceClampFlags.b7 = 0;
+    gCamcontrolModeSettings->clampFlags.b7 = 0;
   }
 
   targetX = camera->anim.localPosX;

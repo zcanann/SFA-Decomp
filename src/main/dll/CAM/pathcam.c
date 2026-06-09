@@ -60,7 +60,7 @@ void pathcam_loadSettings(u16 *cam, int mode, u8 *data)
     gCamcontrolModeSettings->collisionState = 0;
     gCamcontrolModeSettings->collisionProbeTimer = 0;
     gCamcontrolModeSettings->wallAvoidanceTimer = 0;
-    gCamcontrolModeSettings->distanceClampFlags.b7 = 0;
+    gCamcontrolModeSettings->clampFlags.b7 = 0;
     gCamcontrolModeSettings->yawResponseFrames = 8;
     target = ((CameraObject *)cam)->anim.targetObj;
     switch (mode) {

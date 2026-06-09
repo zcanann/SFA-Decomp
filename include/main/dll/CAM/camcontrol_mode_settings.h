@@ -95,7 +95,7 @@ typedef struct CamcontrolModeSettings {
   u8 targetActionFlags;
   CamcontrolModeFlagByte wallAvoidanceFlags;
   u8 wallAvoidanceTimer;
-  CamcontrolModeFlagByte distanceClampFlags;
+  CamcontrolModeFlagByte clampFlags;
   u8 padC9[0xCC - 0xC9];
 } CamcontrolModeSettings;
 
@@ -107,7 +107,7 @@ STATIC_ASSERT(offsetof(CamcontrolModeSettings, slideAngle) == 0xAC);
 STATIC_ASSERT(offsetof(CamcontrolModeSettings, heightLockLimit) == 0xBC);
 STATIC_ASSERT(offsetof(CamcontrolModeSettings, yawResponseFrames) == 0xC2);
 STATIC_ASSERT(offsetof(CamcontrolModeSettings, wallAvoidanceFlags) == 0xC6);
-STATIC_ASSERT(offsetof(CamcontrolModeSettings, distanceClampFlags) == 0xC8);
+STATIC_ASSERT(offsetof(CamcontrolModeSettings, clampFlags) == 0xC8);
 
 extern CamcontrolModeSettings *cameraMtxVar57;
 
