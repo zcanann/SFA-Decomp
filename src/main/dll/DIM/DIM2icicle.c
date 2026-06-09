@@ -1,6 +1,7 @@
 #include "main/dll/DIM/DIM2icicle.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/model_light.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 
@@ -148,9 +149,6 @@ typedef struct IcicleState {
     u8 index;
 } IcicleState;
 
-extern void modelLightStruct_setPosition(int *light, f32 x, f32 y, f32 z);
-extern void modelLightStruct_getSpecularColor(int light, u8 *a, u8 *b, u8 *c, u8 *d);
-extern void modelLightStruct_setGlowColor(int light, u8 a, u8 b, u8 c, int d);
 extern void PSMTXMultVec(f32 *mtx, f32 *src, f32 *dst);
 extern void memcpy(void *dst, void *src, int n);
 extern EffectInterface **gPartfxInterface;
@@ -184,13 +182,14 @@ typedef struct IcicleFxPos {
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_801BB598(int objIndex, int param_2)
+void fn_801BB598(DIMbossObject *obj, DIMbossRuntime *runtime)
 {
-  int *piVar4;
+  int objIndex;
   int *state;
+  DIMbossTopState *topState;
+  DIMbossEffect *effect;
   s16 brightness;
   int i;
-  int iVar6;
   f32 zero;
   f32 m[12];
   u8 colA;
@@ -198,32 +197,33 @@ void fn_801BB598(int objIndex, int param_2)
   u8 colG;
   u8 colR;
 
-  state = *(int **)(param_2 + 0x40c);
-  piVar4 = (int *)*state;
-  if (piVar4 != NULL) {
-    if (*(s16 *)(param_2 + 0x402) == 1) {
-      modelLightStruct_setPosition(piVar4, *(f32 *)(state + 0x16), *(f32 *)(state + 0x17), *(f32 *)(state + 0x18));
+  objIndex = (int)obj;
+  topState = runtime->topState;
+  state = (int *)topState;
+  effect = topState->effect;
+  if (effect != NULL) {
+    if (runtime->phase == DIMBOSS_PHASE_LAUNCH_LIFT) {
+      modelLightStruct_setPosition((ModelLightStruct *)effect, *(f32 *)(state + 0x16), *(f32 *)(state + 0x17), *(f32 *)(state + 0x18));
     }
     else {
-      modelLightStruct_setPosition(piVar4, *(f32 *)(state + 0x10), *(f32 *)(state + 0x11), *(f32 *)(state + 0x12));
+      modelLightStruct_setPosition((ModelLightStruct *)effect, *(f32 *)(state + 0x10), *(f32 *)(state + 0x11), *(f32 *)(state + 0x12));
     }
-    modelLightStruct_getSpecularColor(*state, &colA, &colB, &colG, &colR);
-    modelLightStruct_setGlowColor(*state, colA, colB, colG, 0xc0);
-    iVar6 = *state;
-    if (*(u8 *)(iVar6 + 0x2f8) != 0 && *(u8 *)(iVar6 + 0x4c) != 0) {
-      brightness = *(u8 *)(iVar6 + 0x2f9) + *(s8 *)(iVar6 + 0x2fa);
+    modelLightStruct_getSpecularColor((ModelLightStruct *)effect, &colA, &colB, &colG, &colR);
+    modelLightStruct_setGlowColor((ModelLightStruct *)effect, colA, colB, colG, 0xc0);
+    if (effect->glowType != 0 && effect->enabled != 0) {
+      brightness = effect->glowAlpha + effect->glowAlphaStep;
       if (brightness < 0) {
         brightness = 0;
-        *(u8 *)(iVar6 + 0x2fa) = 0;
+        effect->glowAlphaStep = 0;
       }
       else if (brightness > 0xc) {
         brightness = brightness + randomGetRange(-0xc, 0xc);
         if (brightness > 0xff) {
           brightness = 0xff;
-          *(u8 *)(*state + 0x2fa) = 0;
+          effect->glowAlphaStep = 0;
         }
       }
-      *(u8 *)(*state + 0x2f9) = brightness;
+      effect->glowAlpha = brightness;
     }
   }
   if (gDIMbossSequenceFlags & 0x200) {

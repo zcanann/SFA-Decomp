@@ -584,7 +584,7 @@ void DIMboss_render(DIMbossObject *obj,undefined4 param_2,undefined4 param_3,und
   dll_2E_func06(obj,gDIMbossAnimController,0);
 
   effect = runtime->topState->effect;
-  if (effect != NULL && effect->active != 0 && effect->visible != 0) {
+  if (effect != NULL && effect->glowType != 0 && effect->enabled != 0) {
     queueGlowRender(effect);
   }
 }

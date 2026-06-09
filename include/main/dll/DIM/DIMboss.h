@@ -116,9 +116,11 @@
 
 typedef struct DIMbossEffect {
   u8 pad00[0x4C];
-  u8 visible;
+  u8 enabled;
   u8 pad4D[0x2F8 - 0x4D];
-  u8 active;
+  u8 glowType;
+  u8 glowAlpha;
+  s8 glowAlphaStep;
 } DIMbossEffect;
 
 typedef union DIMbossSteamFlags {
@@ -212,9 +214,11 @@ typedef struct DIMbossObject {
   int updateInitialized;
 } DIMbossObject;
 
-STATIC_ASSERT(sizeof(DIMbossEffect) == 0x2F9);
-STATIC_ASSERT(offsetof(DIMbossEffect, visible) == 0x4C);
-STATIC_ASSERT(offsetof(DIMbossEffect, active) == 0x2F8);
+STATIC_ASSERT(sizeof(DIMbossEffect) == 0x2FB);
+STATIC_ASSERT(offsetof(DIMbossEffect, enabled) == 0x4C);
+STATIC_ASSERT(offsetof(DIMbossEffect, glowType) == 0x2F8);
+STATIC_ASSERT(offsetof(DIMbossEffect, glowAlpha) == 0x2F9);
+STATIC_ASSERT(offsetof(DIMbossEffect, glowAlphaStep) == 0x2FA);
 
 STATIC_ASSERT(sizeof(DIMbossTopState) == 0xB8);
 STATIC_ASSERT(offsetof(DIMbossTopState, effect) == 0x00);
