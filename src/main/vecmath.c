@@ -914,11 +914,13 @@ void mtx44_mult(f32 *a, f32 *b, f32 *out)
     b2 = b[10];
     b3 = b[14];
     out[1] = t;
-    a0 = a0 * b0;
-    a1 = a1 * b1;
-    a2 = a2 * b2;
-    s = a0 + b3;
-    out[2] = (a1 + a2) + s;
+    b0 = a0 * b0;
+    b1 = a1 * b1;
+    b2 = a2 * b2;
+    b3 = b0 + b3;
+    b2 = b1 + b2;
+    t = b2 + b3;
+    out[2] = t;
 }
 #pragma peephole reset
 #pragma scheduling reset
