@@ -114,6 +114,7 @@ float fn_802943F4(float x) {
     }
 }
 
+#pragma peephole on
 float fn_8029454C(float x) {
     u16 n;
     float y = trigReduceQuadrant(&n, x);
@@ -129,6 +130,7 @@ float fn_8029454C(float x) {
     }
     return -result;
 }
+#pragma peephole reset
 
 float fn_802945E0(float x) {
     u32 bits;
@@ -143,3 +145,4 @@ float fn_802945E0(float x) {
     tail = fastCastS16ToFloat(&exponent);
     return mantissa + tail;
 }
+
