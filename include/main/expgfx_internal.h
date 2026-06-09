@@ -294,7 +294,7 @@ typedef struct ExpgfxSpawnConfig {
   ExpgfxSpawnColorPair colorByte1;
   ExpgfxSpawnColorPair colorByte2;
   u8 pad5E[0x60 - 0x5E];
-  u8 initialStateByte;
+  u8 initialAlpha;
   u8 linkGroup;
 } ExpgfxSpawnConfig;
 
@@ -429,7 +429,7 @@ typedef struct ExpgfxSlot {
   u8 pad00[0x06];
   s16 lifetimeFrame;
   u8 pad08[0x0F - 0x08];
-  u8 initialStateByte;
+  u8 initialAlpha;
   u8 pad10[0x16 - 0x10];
   s16 lifetimeFrameLimit;
   u8 pad18[0x26 - 0x18];
@@ -456,9 +456,9 @@ typedef struct ExpgfxSlot {
   float velocityZ;
   u32 behaviorFlags;
   u32 renderFlags;
-  u16 scaleCounter;
+  u16 scaleCurrent;
   u16 scaleTarget;
-  u16 scaleFrames;
+  u16 scaleStep;
   u8 encodedTableIndex;
   ExpgfxSlotStateBits stateBits;
   u8 colorByte0;
@@ -473,7 +473,7 @@ typedef struct ExpgfxSlot {
 
 STATIC_ASSERT(sizeof(ExpgfxSlot) == EXPGFX_SLOT_SIZE);
 STATIC_ASSERT(offsetof(ExpgfxSlot, lifetimeFrame) == 0x06);
-STATIC_ASSERT(offsetof(ExpgfxSlot, initialStateByte) == 0x0F);
+STATIC_ASSERT(offsetof(ExpgfxSlot, initialAlpha) == 0x0F);
 STATIC_ASSERT(offsetof(ExpgfxSlot, lifetimeFrameLimit) == 0x16);
 STATIC_ASSERT(offsetof(ExpgfxSlot, sequenceId) == 0x26);
 STATIC_ASSERT(offsetof(ExpgfxSlot, soundHandle) == 0x36);
@@ -484,9 +484,9 @@ STATIC_ASSERT(offsetof(ExpgfxSlot, startPosX) == 0x64);
 STATIC_ASSERT(offsetof(ExpgfxSlot, velocityX) == 0x70);
 STATIC_ASSERT(offsetof(ExpgfxSlot, behaviorFlags) == 0x7C);
 STATIC_ASSERT(offsetof(ExpgfxSlot, renderFlags) == 0x80);
-STATIC_ASSERT(offsetof(ExpgfxSlot, scaleCounter) == 0x84);
+STATIC_ASSERT(offsetof(ExpgfxSlot, scaleCurrent) == 0x84);
 STATIC_ASSERT(offsetof(ExpgfxSlot, scaleTarget) == 0x86);
-STATIC_ASSERT(offsetof(ExpgfxSlot, scaleFrames) == 0x88);
+STATIC_ASSERT(offsetof(ExpgfxSlot, scaleStep) == 0x88);
 STATIC_ASSERT(offsetof(ExpgfxSlot, encodedTableIndex) == 0x8A);
 STATIC_ASSERT(offsetof(ExpgfxSlot, stateBits) == 0x8B);
 STATIC_ASSERT(offsetof(ExpgfxSlot, colorByte0) == 0x8C);

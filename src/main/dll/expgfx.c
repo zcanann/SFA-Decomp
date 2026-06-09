@@ -542,11 +542,11 @@ void expgfx_initSlotQuad(void *slotPtr)
   slot->posZ.value += slot->velocityZ * step;
 
   if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_SCALE_FROM_ZERO) != 0) {
-    slot->scaleCounter =
-        (int)((f32)(u16)slot->scaleFrames * step + (f32)(u16)slot->scaleCounter);
+    slot->scaleCurrent =
+        (int)((f32)(u16)slot->scaleStep * step + (f32)(u16)slot->scaleCurrent);
   } else if ((slot->renderFlags & EXPGFX_RENDER_SCALE_OVER_LIFETIME) != 0) {
-    slot->scaleCounter =
-        (int)((f32)(u16)slot->scaleCounter - (f32)(u16)slot->scaleFrames * step);
+    slot->scaleCurrent =
+        (int)((f32)(u16)slot->scaleCurrent - (f32)(u16)slot->scaleStep * step);
   }
 
   if (resource == 0) {
@@ -1010,21 +1010,21 @@ foundFirst:
             } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_1) != 0) {
               slot->velocityX *= lbl_803DF358;
               slot->velocityZ *= lbl_803DF358;
-              slot->scaleCounter =
-                  (int)((f32)(u16)slot->scaleCounter * lbl_803DF3F4);
+              slot->scaleCurrent =
+                  (int)((f32)(u16)slot->scaleCurrent * lbl_803DF3F4);
               slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_1;
             } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_2) != 0) {
               slot->velocityX *= lbl_803DF358;
               slot->velocityZ *= lbl_803DF358;
-              slot->scaleCounter =
-                  (int)((f32)(u16)slot->scaleCounter * lbl_803DF3F4);
+              slot->scaleCurrent =
+                  (int)((f32)(u16)slot->scaleCurrent * lbl_803DF3F4);
               slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_2;
               slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_1;
             } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_3) != 0) {
               slot->velocityX *= lbl_803DF358;
               slot->velocityZ *= lbl_803DF358;
-              slot->scaleCounter =
-                  (int)((f32)(u16)slot->scaleCounter * lbl_803DF3F4);
+              slot->scaleCurrent =
+                  (int)((f32)(u16)slot->scaleCurrent * lbl_803DF3F4);
               slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_3;
               slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_2;
               if (slot->soundHandle != -1) {
@@ -1035,8 +1035,8 @@ foundFirst:
             } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_4) != 0) {
               slot->velocityX = slot->velocityX * (gExpgfxSlotMotionStep - slot->velocityX);
               slot->velocityZ = slot->velocityZ * (gExpgfxSlotMotionStep - slot->velocityZ);
-              slot->scaleCounter =
-                  (int)((f32)(u16)slot->scaleCounter * lbl_803DF3F4);
+              slot->scaleCurrent =
+                  (int)((f32)(u16)slot->scaleCurrent * lbl_803DF3F4);
               slot->behaviorFlags ^= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_4;
               slot->behaviorFlags |= EXPGFX_BEHAVIOR_GROUND_IMPACT_STAGE_3;
               if (slot->soundHandle != -1) {
@@ -1135,10 +1135,10 @@ foundFirst:
           slot->posY.value += slot->velocityY * timeDelta;
           slot->posZ.value += slot->velocityZ * timeDelta;
           if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_SCALE_FROM_ZERO) != 0) {
-            slot->scaleCounter = (int)((f32)(u16)slot->scaleFrames * timeDelta +
-                                       (f32)(u16)slot->scaleCounter);
+            slot->scaleCurrent = (int)((f32)(u16)slot->scaleStep * timeDelta +
+                                       (f32)(u16)slot->scaleCurrent);
           } else if ((slot->renderFlags & EXPGFX_RENDER_SCALE_OVER_LIFETIME) != 0) {
-            slot->scaleCounter = slot->scaleCounter - slot->scaleFrames * framesThisStep;
+            slot->scaleCurrent = slot->scaleCurrent - slot->scaleStep * framesThisStep;
           }
         }
         quad = (ExpgfxQuadVertex *)slot;
@@ -1944,7 +1944,7 @@ void drawGlow(uint slotPoolBase,int poolIndex)
       } else if (ratio > lbl_803DF354) {
         ratio = lbl_803DF354;
       }
-      alpha = (int)((f32)((s32)slot->initialStateByte - 0xff) * ratio + (f32)(u32)slot->initialStateByte);
+      alpha = (int)((f32)((s32)slot->initialAlpha - 0xff) * ratio + (f32)(u32)slot->initialAlpha);
     } else if ((behaviorFlags & EXPGFX_BEHAVIOR_ALPHA_FADE_OUT) != 0) {
       f32 ratio = (f32)(s32)lifetimeFrame / (f32)(s32)lifetimeFrameLimit;
       if (ratio < lbl_803DF35C) {
@@ -1952,7 +1952,7 @@ void drawGlow(uint slotPoolBase,int poolIndex)
       } else if (ratio > lbl_803DF354) {
         ratio = lbl_803DF354;
       }
-      alpha = (int)((f32)(u32)slot->initialStateByte * ratio);
+      alpha = (int)((f32)(u32)slot->initialAlpha * ratio);
     } else if ((slot->renderFlags & EXPGFX_RENDER_ALPHA_FADE_IN) != 0 &&
                (f32)(s32)lifetimeFrame <= lifeFraction) {
       f32 ratio = (f32)(s32)lifetimeFrame / lifeFraction;
@@ -1961,7 +1961,7 @@ void drawGlow(uint slotPoolBase,int poolIndex)
       } else if (ratio > lbl_803DF354) {
         ratio = lbl_803DF354;
       }
-      alpha = (int)((f32)(u32)slot->initialStateByte * ratio);
+      alpha = (int)((f32)(u32)slot->initialAlpha * ratio);
     } else if ((behaviorFlags & EXPGFX_BEHAVIOR_ALPHA_PULSE) != 0) {
       f32 ratio;
       if ((f32)(s32)lifetimeFrame <= lifeFraction) {
@@ -1974,9 +1974,9 @@ void drawGlow(uint slotPoolBase,int poolIndex)
       } else if (ratio > lbl_803DF354) {
         ratio = lbl_803DF354;
       }
-      alpha = (int)((f32)(u32)slot->initialStateByte * ratio);
+      alpha = (int)((f32)(u32)slot->initialAlpha * ratio);
     } else {
-      alpha = slot->initialStateByte;
+      alpha = slot->initialAlpha;
     }
 
     angleA = 0;
@@ -1984,7 +1984,7 @@ void drawGlow(uint slotPoolBase,int poolIndex)
     sx = slot->renderX;
     sy = slot->renderY;
     sz = slot->renderZ;
-    scaleSize = lbl_803DF410 * (f32)(u32)(u16)slot->scaleCounter;
+    scaleSize = lbl_803DF410 * (f32)(u32)(u16)slot->scaleCurrent;
     if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_RANDOMIZE_SCALE) != 0 && dummy == 0) {
       f32 base = lbl_803DF358 * scaleSize;
       f32 rnd = (f32)(s32)randomGetRange(1, 10);
@@ -2675,7 +2675,7 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
   slot->velocityX = config->velocityX;
   slot->velocityY = config->velocityY;
   slot->velocityZ = config->velocityZ;
-  slot->initialStateByte = config->initialStateByte;
+  slot->initialAlpha = config->initialAlpha;
   quadVertices[3].pad06 = (s16)config->quadVertex3Pad06;
   slot->lifetimeFrame = (s16)config->lifetimeFrames;
   slot->lifetimeFrameLimit = (s16)config->lifetimeFrames;
@@ -2686,17 +2686,17 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
   scaleVal = lbl_803DF350 * config->scale;
 
   if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_SCALE_FROM_ZERO) != 0) {
-    slot->scaleCounter = 0;
-    slot->scaleFrames = (int)(scaleVal / (f32)(s32)slot->lifetimeFrameLimit);
+    slot->scaleCurrent = 0;
+    slot->scaleStep = (int)(scaleVal / (f32)(s32)slot->lifetimeFrameLimit);
     slot->scaleTarget = (int)scaleVal;
   } else if ((slot->renderFlags & EXPGFX_RENDER_SCALE_OVER_LIFETIME) != 0) {
-    slot->scaleCounter = (int)scaleVal;
-    slot->scaleFrames = (int)(scaleVal / (f32)(s32)slot->lifetimeFrameLimit);
-    slot->scaleTarget = slot->scaleCounter;
+    slot->scaleCurrent = (int)scaleVal;
+    slot->scaleStep = (int)(scaleVal / (f32)(s32)slot->lifetimeFrameLimit);
+    slot->scaleTarget = slot->scaleCurrent;
   } else {
-    slot->scaleCounter = (int)scaleVal;
-    slot->scaleTarget = slot->scaleCounter;
-    slot->scaleFrames = 0;
+    slot->scaleCurrent = (int)scaleVal;
+    slot->scaleTarget = slot->scaleCurrent;
+    slot->scaleStep = 0;
   }
 
   if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_COPY_CONFIG_SOURCE_A) != 0 ||
