@@ -110,8 +110,8 @@ void cnthitobjec_init(int obj, int setup)
 
 void cnthitobjec_update(int obj)
 {
-    CntHitObjectState *state = ((GameObject *)obj)->extra;
     CntHitObjectSetup *setup;
+    CntHitObjectState *state = ((GameObject *)obj)->extra;
     setup = (CntHitObjectSetup *)((GameObject *)obj)->anim.placementData;
 
     if (state->flags.disabled == 0) {
