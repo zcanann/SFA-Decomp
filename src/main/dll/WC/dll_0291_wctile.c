@@ -1,5 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 
 typedef struct WCTileIface WCTileIface;
 struct WCTileIface {
@@ -60,11 +61,11 @@ typedef struct WCTileState {
 } WCTileState;
 
 typedef struct WCTileSetup {
-    u8 pad00[0x0C];
-    f32 yOffset;
-    u8 pad10[WCTILE_MODEL_INDEX_OFFSET - 0x10];
+    ObjPlacement base;
+    u8 unk18;
     s8 modelIndex;
     s16 initialTile;
+    u8 pad1C[0x24 - 0x1C];
 } WCTileSetup;
 
 STATIC_ASSERT(sizeof(WCTileState) == WCTILE_EXTRA_SIZE);
@@ -73,7 +74,8 @@ STATIC_ASSERT(offsetof(WCTileState, tileX) == WCTILE_STATE_TILE_X);
 STATIC_ASSERT(offsetof(WCTileState, tileY) == WCTILE_STATE_TILE_Y);
 STATIC_ASSERT(offsetof(WCTileState, targetTile) == WCTILE_STATE_TARGET_TILE);
 STATIC_ASSERT(offsetof(WCTileState, mode) == WCTILE_STATE_MODE);
-STATIC_ASSERT(offsetof(WCTileSetup, yOffset) == 0x0c);
+STATIC_ASSERT(sizeof(WCTileSetup) == 0x24);
+STATIC_ASSERT(offsetof(WCTileSetup, base.posY) == 0x0c);
 STATIC_ASSERT(offsetof(WCTileSetup, modelIndex) == WCTILE_MODEL_INDEX_OFFSET);
 STATIC_ASSERT(offsetof(WCTileSetup, initialTile) == WCTILE_INITIAL_TILE_OFFSET);
 
@@ -132,7 +134,7 @@ void wctile_init(u8 *obj, u8 *setupBytes)
     WCTileState *state = ((GameObject *)obj)->extra;
     WCTileSetup *setup = (WCTileSetup *)setupBytes;
 
-    ((GameObject *)obj)->anim.localPosY = lbl_803E6DFC + setup->yOffset;
+    ((GameObject *)obj)->anim.localPosY = lbl_803E6DFC + setup->base.posY;
     objAnim->bankIndex = setup->modelIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
         objAnim->bankIndex = 0;

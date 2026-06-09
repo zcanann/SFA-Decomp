@@ -16,10 +16,10 @@ typedef struct WcFloorTileState {
 } WcFloorTileState;
 
 typedef struct WcFloorTileSetup {
-    u8 pad00[0x0C];
-    f32 homeY;
-    u8 pad10[0x1A - 0x10];
+    ObjPlacement base;
+    u8 pad18[0x1A - 0x18];
     s16 eventId;
+    u8 pad1C[0x24 - 0x1C];
 } WcFloorTileSetup;
 
 STATIC_ASSERT(sizeof(WcFloorTileState) == 0x8);
@@ -28,7 +28,8 @@ STATIC_ASSERT(offsetof(WcFloorTileState, shakeMag) == 0x04);
 STATIC_ASSERT(offsetof(WcFloorTileState, phase) == 0x06);
 STATIC_ASSERT(offsetof(WcFloorTileState, flags) == 0x07);
 
-STATIC_ASSERT(offsetof(WcFloorTileSetup, homeY) == 0x0C);
+STATIC_ASSERT(sizeof(WcFloorTileSetup) == 0x24);
+STATIC_ASSERT(offsetof(WcFloorTileSetup, base.posY) == 0x0C);
 STATIC_ASSERT(offsetof(WcFloorTileSetup, eventId) == 0x1A);
 
 int wcfloortile_getExtraSize(void) { return 8; }
@@ -98,7 +99,7 @@ void wcfloortile_update(int obj)
     WcFloorTileSetup *setup = (WcFloorTileSetup *)((GameObject *)obj)->anim.placementData;
 
     if ((u32)GameBit_Get(824) != 0) {
-        ((GameObject *)obj)->anim.localPosY = setup->homeY;
+        ((GameObject *)obj)->anim.localPosY = setup->base.posY;
         state->phase = 3;
     }
     switch (state->phase) {
@@ -132,7 +133,7 @@ void wcfloortile_update(int obj)
         ((GameObject *)obj)->anim.rotZ = (s16)randomGetRange(-state->shakeMag, state->shakeMag);
         ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.velocityY * timeDelta + ((GameObject *)obj)->anim.localPosY;
         {
-            f32 d = setup->homeY - ((GameObject *)obj)->anim.localPosY;
+            f32 d = setup->base.posY - ((GameObject *)obj)->anim.localPosY;
             f32 t;
             if (d < lbl_803E6EAC) {
                 t = lbl_803E6EB0;

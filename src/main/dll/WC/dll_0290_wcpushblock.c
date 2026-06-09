@@ -2,6 +2,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mapEventTypes.h"
+#include "main/obj_placement.h"
 #include "main/objseq.h"
 
 #define WCPUSHBLOCK_EXTRA_SIZE 0x288
@@ -57,11 +58,11 @@
 #define WCPUSHBLOCK_REQUIRED_LOCK_COUNT 4
 
 typedef struct WCPushBlockSetup {
-    u8 pad00[0xc];
-    f32 y;
-    u8 pad10[WCPUSHBLOCK_MODEL_INDEX_OFFSET - 0x10];
+    ObjPlacement base;
+    u8 unk18;
     u8 modelIndex;
     s16 initialTile;
+    u8 pad1C[0x24 - 0x1C];
 } WCPushBlockSetup;
 
 typedef struct WCPushBlockRuntimeState {
@@ -95,7 +96,8 @@ STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, pushDir) == WCPUSHBLOCK_STATE_PU
 STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, initialTile) == WCPUSHBLOCK_STATE_INITIAL_TILE);
 STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, moveResult) == WCPUSHBLOCK_STATE_MOVE_RESULT);
 STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, flags) == WCPUSHBLOCK_STATE_FLAGS);
-STATIC_ASSERT(offsetof(WCPushBlockSetup, y) == 0xc);
+STATIC_ASSERT(sizeof(WCPushBlockSetup) == 0x24);
+STATIC_ASSERT(offsetof(WCPushBlockSetup, base.posY) == 0xc);
 STATIC_ASSERT(offsetof(WCPushBlockSetup, modelIndex) == WCPUSHBLOCK_MODEL_INDEX_OFFSET);
 STATIC_ASSERT(offsetof(WCPushBlockSetup, initialTile) == WCPUSHBLOCK_INITIAL_TILE_OFFSET);
 
@@ -172,7 +174,7 @@ void wcpushblock_init(int obj, int setup)
     }
     ObjHitbox_SetStateIndex(obj, *(int *)&((GameObject *)obj)->anim.hitReactState, objAnim->bankIndex);
     state->initialTile = (u8)setupData->initialTile;
-    state->baseY = lbl_803E6DA0 + setupData->y;
+    state->baseY = lbl_803E6DA0 + setupData->base.posY;
 }
 #pragma scheduling reset
 

@@ -1,6 +1,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/obj_placement.h"
 
 #define WCTEMPLE_DIA_EXTRA_SIZE 0x14
 #define WCTEMPLE_DIA_STAGE_COUNT 3
@@ -29,11 +30,12 @@
 #define WCTEMPLE_DIA_STAGE_SFX 0x409
 
 typedef struct WCTempleDiaSetup {
-    u8 pad00[WCTEMPLE_DIA_SETUP_TYPE_OFFSET];
+    ObjPlacement base;
     s8 type;
     u8 modelIndex;
     u8 pad1A[WCTEMPLE_DIA_SETUP_SOLVED_BIT_OFFSET - 0x1A];
     s16 solvedBit;
+    u8 pad20[0x24 - 0x20];
 } WCTempleDiaSetup;
 
 typedef struct WCTempleDiaState {
@@ -47,6 +49,7 @@ typedef struct WCTempleDiaState {
 } WCTempleDiaState;
 
 STATIC_ASSERT(sizeof(WCTempleDiaState) == WCTEMPLE_DIA_EXTRA_SIZE);
+STATIC_ASSERT(sizeof(WCTempleDiaSetup) == 0x24);
 STATIC_ASSERT(offsetof(WCTempleDiaState, currentSpeed) == WCTEMPLE_DIA_STATE_CURRENT_SPEED);
 STATIC_ASSERT(offsetof(WCTempleDiaState, targetSpeed) == WCTEMPLE_DIA_STATE_TARGET_SPEED);
 STATIC_ASSERT(offsetof(WCTempleDiaState, stageMask) == WCTEMPLE_DIA_STATE_STAGE_MASK);

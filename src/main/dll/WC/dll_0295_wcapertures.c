@@ -1,6 +1,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 
 #define WCAPERTURES_EXTRA_SIZE 8
 #define WCAPERTURES_RENDER_TYPE_BASE 0x400
@@ -43,12 +44,13 @@
 #define WCAPERTURES_LIGHT_BLUE_HI 0x96
 
 typedef struct WCAperturesSetup {
-    u8 pad00[WCAPERTURES_SETUP_TYPE_OFFSET];
+    ObjPlacement base;
     s8 type;
     u8 modelIndex;
     u8 pad1A[WCAPERTURES_SETUP_OPEN_BIT_OFFSET - 0x1A];
     s16 openBit;
     s16 armBit;
+    u8 pad22[0x24 - 0x22];
 } WCAperturesSetup;
 
 typedef struct WCAperturesState {
@@ -59,6 +61,7 @@ typedef struct WCAperturesState {
 } WCAperturesState;
 
 STATIC_ASSERT(sizeof(WCAperturesState) == WCAPERTURES_EXTRA_SIZE);
+STATIC_ASSERT(sizeof(WCAperturesSetup) == 0x24);
 STATIC_ASSERT(offsetof(WCAperturesState, light) == WCAPERTURES_STATE_LIGHT);
 STATIC_ASSERT(offsetof(WCAperturesState, targetAlpha) == WCAPERTURES_STATE_TARGET_ALPHA);
 STATIC_ASSERT(offsetof(WCAperturesState, mode) == WCAPERTURES_STATE_MODE);

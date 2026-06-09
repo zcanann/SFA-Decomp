@@ -1,5 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/objseq.h"
 
 #define WCTEMPLE_EXTRA_SIZE 8
@@ -12,8 +13,9 @@
 #define WCTEMPLE_SEQUENCE_INVALID_ARG -1
 
 typedef struct WCTempleSetup {
-    u8 pad00[WCTEMPLE_SETUP_TYPE_OFFSET];
+    ObjPlacement base;
     s8 type;
+    u8 pad19[0x24 - 0x19];
 } WCTempleSetup;
 
 typedef struct WCTempleState {
@@ -23,6 +25,7 @@ typedef struct WCTempleState {
 } WCTempleState;
 
 STATIC_ASSERT(sizeof(WCTempleState) == WCTEMPLE_EXTRA_SIZE);
+STATIC_ASSERT(sizeof(WCTempleSetup) == 0x24);
 STATIC_ASSERT(offsetof(WCTempleState, timer) == WCTEMPLE_STATE_TIMER);
 STATIC_ASSERT(offsetof(WCTempleState, triggerSlot) == WCTEMPLE_STATE_TRIGGER_SLOT);
 STATIC_ASSERT(offsetof(WCTempleSetup, type) == WCTEMPLE_SETUP_TYPE_OFFSET);

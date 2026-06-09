@@ -2,6 +2,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
+#include "main/obj_placement.h"
 
 #define WCTREXSTATU_CALLBACK_COMMANDS_OFFSET 0x81
 #define WCTREXSTATU_CALLBACK_COMMAND_COUNT_OFFSET 0x8b
@@ -23,13 +24,15 @@
 #define WCTREXSTATU_MAPEVENT_RAISED 2
 
 typedef struct WCTrexStatueSetup {
-    u8 pad00[WCTREXSTATU_SETUP_TYPE_OFFSET];
+    ObjPlacement base;
     s8 type;
     u8 modelIndex;
     u8 pad1A[WCTREXSTATU_SETUP_RAISED_BIT_OFFSET - 0x1A];
     s16 raisedBit;
+    u8 pad20[0x24 - 0x20];
 } WCTrexStatueSetup;
 
+STATIC_ASSERT(sizeof(WCTrexStatueSetup) == 0x24);
 STATIC_ASSERT(offsetof(WCTrexStatueSetup, type) == WCTREXSTATU_SETUP_TYPE_OFFSET);
 STATIC_ASSERT(offsetof(WCTrexStatueSetup, modelIndex) == WCTREXSTATU_SETUP_MODEL_INDEX_OFFSET);
 STATIC_ASSERT(offsetof(WCTrexStatueSetup, raisedBit) == WCTREXSTATU_SETUP_RAISED_BIT_OFFSET);

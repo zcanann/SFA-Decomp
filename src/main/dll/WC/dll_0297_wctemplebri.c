@@ -1,5 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 
 #define WCTEMPLEBRI_EXTRA_SIZE 0x68
 #define WCTEMPLEBRI_RENDER_TYPE_BASE 0x400
@@ -39,11 +40,12 @@
 #define WCTEMPLEBRI_WAVE_WRAP 0xffff
 
 typedef struct WCTempleBriSetup {
-    u8 pad00[WCTEMPLEBRI_SETUP_TYPE_OFFSET];
+    ObjPlacement base;
     s8 type;
     u8 modelIndex;
     u8 pad1A[WCTEMPLEBRI_SETUP_SOLVED_BIT_OFFSET - 0x1A];
     s16 solvedBit;
+    u8 pad20[0x24 - 0x20];
 } WCTempleBriSetup;
 
 typedef struct WCTempleBriState {
@@ -61,6 +63,7 @@ typedef struct WCTempleBriState {
 } WCTempleBriState;
 
 STATIC_ASSERT(sizeof(WCTempleBriState) == WCTEMPLEBRI_EXTRA_SIZE);
+STATIC_ASSERT(sizeof(WCTempleBriSetup) == 0x24);
 STATIC_ASSERT(offsetof(WCTempleBriState, maxY) == WCTEMPLEBRI_STATE_MAX_Y);
 STATIC_ASSERT(offsetof(WCTempleBriState, sortedOffsets) == WCTEMPLEBRI_STATE_SORTED_OFFSETS);
 STATIC_ASSERT(offsetof(WCTempleBriState, partFlags) == WCTEMPLEBRI_STATE_PART_FLAGS);

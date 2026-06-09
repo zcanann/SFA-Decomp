@@ -3,6 +3,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mapEventTypes.h"
+#include "main/obj_placement.h"
 #include "main/objseq.h"
 
 #define WCBEACON_EXTRA_SIZE 0x8
@@ -37,12 +38,13 @@
 #define WCBEACON_FINAL_TRIGGER_ID 105
 
 typedef struct WCBeaconSetup {
-    u8 pad00[WCBEACON_SETUP_TYPE_OFFSET];
+    ObjPlacement base;
     s8 type;
     s8 modelIndex;
     u8 pad1A[WCBEACON_SETUP_SOLVED_BIT_OFFSET - 0x1A];
     s16 solvedBit;
     s16 armBit;
+    u8 pad22[0x24 - 0x22];
 } WCBeaconSetup;
 
 typedef struct WCBeaconState {
@@ -53,6 +55,7 @@ typedef struct WCBeaconState {
 } WCBeaconState;
 
 STATIC_ASSERT(sizeof(WCBeaconState) == WCBEACON_EXTRA_SIZE);
+STATIC_ASSERT(sizeof(WCBeaconSetup) == 0x24);
 STATIC_ASSERT(offsetof(WCBeaconState, timer) == WCBEACON_STATE_TIMER);
 STATIC_ASSERT(offsetof(WCBeaconState, phase) == WCBEACON_STATE_PHASE);
 STATIC_ASSERT(offsetof(WCBeaconState, acceptedInteraction) == WCBEACON_STATE_ACCEPTED_INTERACTION);
