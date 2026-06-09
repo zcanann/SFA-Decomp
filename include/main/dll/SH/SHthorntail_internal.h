@@ -4,6 +4,7 @@
 #include "global.h"
 #include "ghidra_import.h"
 #include "dolphin/mtx.h"
+#include "main/objHitReact.h"
 
 typedef struct SHthorntailConfig {
   u8 pad00[0x08];
@@ -18,6 +19,12 @@ typedef struct SHthorntailConfig {
 
 #define SHTHORNTAIL_LINKED_CONFIG_GROUP_COUNT 6
 #define SHTHORNTAIL_LINKED_CONFIG_COUNT 3
+#define SHTHORNTAIL_HIT_REACT_ENTRY_COUNT 25
+#define SHTHORNTAIL_STATE_MOVE_ID_COUNT 18
+#define SHTHORNTAIL_STATE_STEP_SCALE_COUNT 17
+#define SHTHORNTAIL_STATE_FLAG_BYTES 0x14
+#define SHTHORNTAIL_STATE_TRIGGER0_SFX_COUNT 18
+#define SHTHORNTAIL_STATE_TRIGGER7_SFX_BYTES 0x14
 #define SHTHORNTAIL_LEVEL_MODE0_SFX_VARIANT_BYTES 0x0C
 
 typedef struct SHthorntailLinkedConfigRow {
@@ -28,7 +35,14 @@ typedef struct SHthorntailLinkedConfigRow {
 typedef struct SHthorntailDataTables {
   SHthorntailLinkedConfigRow linkedConfigRows[SHTHORNTAIL_LINKED_CONFIG_GROUP_COUNT];
   u8 pathHeaders[0x30];
-  u8 pathData[0x4AC];
+  u8 pathControlData[0x10];
+  ObjHitReactEntry normalHitReactEntries[SHTHORNTAIL_HIT_REACT_ENTRY_COUNT];
+  ObjHitReactEntry heavyHitReactEntries[SHTHORNTAIL_HIT_REACT_ENTRY_COUNT];
+  s16 stateMoveIds[SHTHORNTAIL_STATE_MOVE_ID_COUNT];
+  f32 stateMoveStepScales[SHTHORNTAIL_STATE_STEP_SCALE_COUNT];
+  u8 stateFlags[SHTHORNTAIL_STATE_FLAG_BYTES];
+  u16 stateTrigger0Sfx[SHTHORNTAIL_STATE_TRIGGER0_SFX_COUNT];
+  u8 stateTrigger7Sfx[SHTHORNTAIL_STATE_TRIGGER7_SFX_BYTES];
   u8 levelMode0DefaultImpactSfxTable[0x10];
   u8 levelMode0Locomotion1ImpactSfxVariants[SHTHORNTAIL_LEVEL_MODE0_SFX_VARIANT_BYTES];
   u8 levelMode0Locomotion2ClearImpactSfxVariants[SHTHORNTAIL_LEVEL_MODE0_SFX_VARIANT_BYTES];
