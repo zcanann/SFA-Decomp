@@ -11619,15 +11619,7 @@ int fn_8029C9C8(int obj, int state)
     }
     {
         f32 x = (*(f32 *)((char *)state + 0x298) - lbl_803E7F14) / lbl_803E7F2C;
-        if (x >= lbl_803E7EA4) {
-            if (x <= lbl_803E7EE0) {
-                ratio = x;
-            } else {
-                ratio = lbl_803E7EE0;
-            }
-        } else {
-            ratio = lbl_803E7EA4;
-        }
+        ratio = (x < lbl_803E7EA4) ? lbl_803E7EA4 : ((x > lbl_803E7EE0) ? lbl_803E7EE0 : x);
     }
     {
         f32 ang = lbl_803E7F94 * (f32)(int)inner->unk474 / lbl_803E7F98;
@@ -11649,15 +11641,8 @@ int fn_8029C9C8(int obj, int state)
     {
         f32 v = ((PlayerState *)state)->baddie.unk294;
         f32 lo = *(f32 *)inner->unk400;
-        if (v >= lo) {
-            if (v <= inner->unk404) {
-                ((PlayerState *)state)->baddie.unk294 = v;
-            } else {
-                ((PlayerState *)state)->baddie.unk294 = inner->unk404;
-            }
-        } else {
-            ((PlayerState *)state)->baddie.unk294 = lo;
-        }
+        ((PlayerState *)state)->baddie.unk294 =
+            (v < lo) ? lo : ((v > inner->unk404) ? inner->unk404 : v);
     }
     {
         f32 ang = lbl_803E7F94 * (f32)inner->targetYaw / lbl_803E7F98;
