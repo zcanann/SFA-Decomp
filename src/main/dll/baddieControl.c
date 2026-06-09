@@ -4446,7 +4446,8 @@ extern int lbl_803DB9D4;
 #pragma peephole off
 #pragma scheduling off
 void CameraModeCloudRunner_update(u8 *obj) {
-    u8 *state = *(u8 **)&((GameObject *)obj)->anim.targetObj;
+    CameraObject *camera = (CameraObject *)obj;
+    GameObject *target = (GameObject *)camera->anim.targetObj;
     u8 *curve;
     s16 tgtYaw;
     s16 tgtPitch;
@@ -4457,8 +4458,8 @@ void CameraModeCloudRunner_update(u8 *obj) {
     u8 mxin[24];
     f32 matrix[12];
 
-    fn_8029697C((int)state, &tgtYaw, &tgtPitch);
-    curve = (u8 *)fn_802972A8((int)state);
+    fn_8029697C((int)target, &tgtYaw, &tgtPitch);
+    curve = (u8 *)fn_802972A8((int)target);
     if (curve != NULL) {
         if (*(s16 *)(curve + 70) == 1049) {
             *(f32 *)(mxin + 12) = *(f32 *)(curve + 24);
@@ -4472,52 +4473,52 @@ void CameraModeCloudRunner_update(u8 *obj) {
             Matrix_TransformPoint(matrix, lbl_803E1B24, lbl_803E1B28, lbl_803E1B2C,
                                   &baseX, &baseY, &baseZ);
         } else {
-            baseX = *(f32 *)(state + 24);
-            baseY = *(f32 *)(state + 28) + lbl_803DB9D0;
-            baseZ = *(f32 *)(state + 32);
+            baseX = target->anim.worldPosX;
+            baseY = target->anim.worldPosY + lbl_803DB9D0;
+            baseZ = target->anim.worldPosZ;
         }
     } else {
-        baseX = *(f32 *)(state + 24);
-        baseY = *(f32 *)(state + 28) + lbl_803DB9D0;
-        baseZ = *(f32 *)(state + 32);
+        baseX = target->anim.worldPosX;
+        baseY = target->anim.worldPosY + lbl_803DB9D0;
+        baseZ = target->anim.worldPosZ;
     }
 
-    tgtYaw = (s16)((0x8000 - *(s16 *)state) + tgtYaw);
-    tgtYaw = (s16)(tgtYaw - (u16)*(s16 *)obj);
+    tgtYaw = (s16)((0x8000 - target->anim.rotX) + tgtYaw);
+    tgtYaw = (s16)(tgtYaw - (u16)camera->anim.rotX);
     if (tgtYaw > 0x8000) {
         tgtYaw -= 0xffff;
     }
     if (tgtYaw < -0x8000) {
         tgtYaw += 0xffff;
     }
-    *(s16 *)obj = *(s16 *)obj + tgtYaw;
+    camera->anim.rotX = camera->anim.rotX + tgtYaw;
 
-    tgtPitch = (s16)(tgtPitch - (u16)((GameObject *)obj)->anim.rotY);
+    tgtPitch = (s16)(tgtPitch - (u16)camera->anim.rotY);
     if (tgtPitch > 0x8000) {
         tgtPitch -= 0xffff;
     }
     if (tgtPitch < -0x8000) {
         tgtPitch += 0xffff;
     }
-    ((GameObject *)obj)->anim.rotY = ((GameObject *)obj)->anim.rotY + tgtPitch;
+    camera->anim.rotY = camera->anim.rotY + tgtPitch;
 
-    ((GameObject *)obj)->anim.rotZ = (s16)(*(s16 *)(state + 4) * lbl_803DB9D4);
+    camera->anim.rotZ = (s16)(target->anim.rotZ * lbl_803DB9D4);
 
-    cosYaw = mathSinf(lbl_803E1B30 * (f32)(s32)(*(s16 *)obj - 0x4000) / lbl_803E1B34);
-    sinYaw = mathCosf(lbl_803E1B30 * (f32)(s32)(*(s16 *)obj - 0x4000) / lbl_803E1B34);
-    sinPitch = mathCosf(lbl_803E1B30 * (f32)(s32)((GameObject *)obj)->anim.rotY / lbl_803E1B34);
-    cosPitch = mathSinf(lbl_803E1B30 * (f32)(s32)((GameObject *)obj)->anim.rotY / lbl_803E1B34);
+    cosYaw = mathSinf(lbl_803E1B30 * (f32)(s32)(camera->anim.rotX - 0x4000) / lbl_803E1B34);
+    sinYaw = mathCosf(lbl_803E1B30 * (f32)(s32)(camera->anim.rotX - 0x4000) / lbl_803E1B34);
+    sinPitch = mathCosf(lbl_803E1B30 * (f32)(s32)camera->anim.rotY / lbl_803E1B34);
+    cosPitch = mathSinf(lbl_803E1B30 * (f32)(s32)camera->anim.rotY / lbl_803E1B34);
     radius = lbl_803DD5B8->radius;
     ry = radius * cosPitch;
     rs = radius * sinPitch;
     rx = rs * sinYaw;
     rz = rs * cosYaw;
-    ((GameObject *)obj)->anim.worldPosX = baseX + rx;
-    ((GameObject *)obj)->anim.worldPosY = baseY + ry;
-    ((GameObject *)obj)->anim.worldPosZ = baseZ + rz;
-    Obj_TransformWorldPointToLocal(((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY, ((GameObject *)obj)->anim.worldPosZ,
-                                   &((GameObject *)obj)->anim.localPosX, &((GameObject *)obj)->anim.localPosY, &((GameObject *)obj)->anim.localPosZ,
-                                   *(int *)&((GameObject *)obj)->anim.parent);
+    camera->anim.worldPosX = baseX + rx;
+    camera->anim.worldPosY = baseY + ry;
+    camera->anim.worldPosZ = baseZ + rz;
+    Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
+                                   &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
+                                   *(int *)&camera->anim.parent);
 }
 #pragma peephole reset
 #pragma scheduling reset
