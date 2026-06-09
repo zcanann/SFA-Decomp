@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/dll/barrelgener_state.h"
 #include "main/game_object.h"
 #include "main/objseq.h"
 
@@ -12,12 +13,12 @@ int barrelgener_getLinkId(int obj)
 #pragma scheduling off
 void barrelgener_queueObjectRelease(int obj, int queuedObj, int releaseFrame)
 {
-    int state = *(int *)&((GameObject *)obj)->extra;
+    BarrelGeneratorState *state = ((GameObject *)obj)->extra;
 
-    *(int *)state = queuedObj;
-    *(u8 *)(state + 4) = 0;
-    storeZeroToFloatParam((void *)(state + 8));
-    s16toFloat((void *)(state + 8), (s16)(releaseFrame - lbl_803DC398));
+    state->queuedObject = queuedObj;
+    state->releaseAnimPlaying = 0;
+    storeZeroToFloatParam(&state->releaseTimer);
+    s16toFloat(&state->releaseTimer, (s16)(releaseFrame - lbl_803DC398));
 }
 #pragma scheduling reset
 
@@ -43,12 +44,12 @@ void barrelgener_hitDetect(void) {}
 #pragma scheduling off
 void barrelgener_init(int obj)
 {
-    int state = *(int *)&((GameObject *)obj)->extra;
+    BarrelGeneratorState *state = ((GameObject *)obj)->extra;
 
     ObjGroup_AddObject(obj, 0x3a);
-    *(u8 *)(state + 4) = 0;
-    *(void **)state = NULL;
-    storeZeroToFloatParam((void *)(state + 8));
+    state->releaseAnimPlaying = 0;
+    state->queuedObject = 0;
+    storeZeroToFloatParam(&state->releaseTimer);
 }
 #pragma scheduling reset
 
@@ -60,7 +61,7 @@ void barrelgener_initialise(void) {}
 #pragma scheduling off
 void barrelgener_update(int obj)
 {
-    int state = *(int *)&((GameObject *)obj)->extra;
+    BarrelGeneratorState *state = ((GameObject *)obj)->extra;
     int player = Obj_GetPlayerObject();
 
     if ((u32)GameBit_Get(0xadb) == 0) {
@@ -69,16 +70,16 @@ void barrelgener_update(int obj)
             GameBit_Set(0xadb, 1);
         }
     }
-    if (fn_80080150(state + 8) != 0) {
-        if (*(f32 *)(state + 8) <= lbl_803E6C28 && *(u8 *)(state + 4) == 0) {
-            *(u8 *)(state + 4) = 1;
+    if (fn_80080150((int)&state->releaseTimer) != 0) {
+        if (state->releaseTimer <= lbl_803E6C28 && state->releaseAnimPlaying == 0) {
+            state->releaseAnimPlaying = 1;
             ObjAnim_SetCurrentMove(obj, 0, lbl_803E6C2C, 0);
             Sfx_PlayFromObject(obj, SFXpda_fper_camoff);
-            *(u8 *)(state + 0xc) = 0;
+            state->releaseBeepPlayed = 0;
         }
-        if (timerCountDown((void *)(state + 8)) != 0) {
-            if (Obj_IsObjectAlive(*(int *)(state + 0)) != 0) {
-                int o = *(int *)(state + 0);
+        if (timerCountDown((void *)&state->releaseTimer) != 0) {
+            if (Obj_IsObjectAlive(state->queuedObject) != 0) {
+                int o = state->queuedObject;
                 f32 c2c;
                 *(f32 *)(o + 12) = ((GameObject *)obj)->anim.localPosX;
                 *(f32 *)(o + 16) = ((GameObject *)obj)->anim.localPosY;
@@ -93,19 +94,20 @@ void barrelgener_update(int obj)
                 *(f32 *)(o + 44) = c2c;
                 *(f32 *)(o + 40) = c2c;
                 *(f32 *)(o + 36) = c2c;
-                ObjGroup_AddObject(*(int *)(state + 0), 25);
-                *(int *)(state + 0) = 0;
+                ObjGroup_AddObject(state->queuedObject, 25);
+                state->queuedObject = 0;
             }
         }
     }
-    if (*(u8 *)(state + 4) != 0) {
+    if (state->releaseAnimPlaying != 0) {
         if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E6C30) {
-            if (*(u8 *)(state + 0xc) == 0) {
+            if (state->releaseBeepPlayed == 0) {
                 Sfx_PlayFromObject(obj, SFXpda_compassbeep);
-                *(u8 *)(state + 0xc) = 1;
+                state->releaseBeepPlayed = 1;
             }
         }
-        *(u8 *)(state + 4) = !((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E6C34, timeDelta, 0);
+        state->releaseAnimPlaying =
+            !((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E6C34, timeDelta, 0);
     }
 }
 #pragma scheduling reset
