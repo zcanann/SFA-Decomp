@@ -1258,6 +1258,19 @@ cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
     sibling block locals (rot/vec landed reversed vs target regardless of
     order) — a wrapping struct pins the layout (recipe #8 cousin) but can
     perturb the sth/addi schedule and net-lose; measure before keeping.
+    ⚠️ **RESOLVED for the rot/vec case (DIMcannon lavaball1be_init → 100,
+    unit → 100.0): placement is in order of FIRST ADDRESS-TAKING (call-arg
+    order), probe-proven** — decl order, scope, size, alignment, use order
+    all inert; a 3rd address-taken local always stacked in arg order. When
+    target's order contradicts the call's arg order, the original was ONE
+    WRAPPING STRUCT (vec@+0, rot@+12 = sp+8/sp+20 exactly), padded per
+    #67(b) to land the conversion-scratch base (pad[18] → 36B → scratch@48,
+    frame -128). The struct's sth/addi schedule perturbation (addi hoisted
+    above the last sth, +0 instrs but transposed) is fixed by spelling the
+    call arg as RAW POINTER ARITH `(u8 *)&s + 12` instead of `s.rot` — the
+    member-decay spelling shares its address node with the rot[0] store and
+    hoists; (int)-cast launders are VN'd through; only the structurally
+    distinct raw-arith tree lands target's sth-then-addi order.
     GXColor-style by-value struct args each take an 8B caller temp slot —
     same threshold behavior (objFn_8003dc50 capped: target allocates 2
     fewer temps for identical call sites; no source form found).
@@ -1974,7 +1987,18 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
     - RESIST (bank, don't grind — these need a different lever): (a) named-
       `lim` embedded-assign clamps `if (x op (lim = lbl)) {…}` — laundering the
       init or removing the local cascades a whole-fn regression (FireFly,
-      dll_2A3_update); (b) NO-store reload compares (`if (x <= lbl) result=1;`
+      dll_2A3_update). ⚠️ **(a) CRACKED — DOUBLE-EMBED with a named field
+      value:** `if ((a = FIELD) op (lim = lbl)) { FIELD = a ± step; ... }`
+      (fresh `f32 a;` declared after lim). The two embedded defs number
+      DESCENDING (field=f2, lim=f1 = target) and the body's reuse of `a`
+      reproduces target's reuse of the compare reg. Both former resist
+      examples → 100 (FireFlyFn_801f4f88, dll_2A3_update). The init-launder
+      `(lim = *(f32 *)&lbl)` stays inert on this shape — but for the
+      SEPARATE-STATEMENT named-temp variant (`fVar1 = lbl; if (fVar1 ==
+      field)`) the plain #81 init launder `fVar1 = *(f32 *)&lbl;` IS the
+      fix (fireflyLantern fn_80154870 → 100; embedding there swapped the
+      whole compare — wrong direction). Read the import's form first;
+      (b) NO-store reload compares (`if (x <= lbl) result=1;`
       / `Obj_FreeObject` instead of a store — cmbsrc, arwingandrossstuff);
       (c) COMPUTED-limit compares (`fcmpo x, (base - delta)` — dll_219); (d)
       whole-register SHIFTS (target `f2,f1` vs current `f1,f0` — NOT a same-
@@ -2911,6 +2935,19 @@ today's #100. Same resolution pattern as the #70-72/#93-95 collision.)*
     - Const-init'd SINGLE-def locals take no saved reg across calls
       (rematerialized at use, E5/E7) — only multi-def or address-anchored
       const webs survive.
+    **BLOCK-SCOPE lever on the within-class order (shrine1CE dll_19B_update
+    99.93→99.99): a call-result local declared BLOCK-SCOPE PER ARM (3
+    separate `void *handle;` inside each case block) makes each acquire/
+    release web sink to the saved-pool BOTTOM — all three landed r24 =
+    target — where the single fn-scope `handle` colored them r25/r24 by
+    creation order.** Inverse data point: #119-style variable-merge
+    (recycling a dead earlier local) moved ALL the webs to r25 (worse);
+    decl-position moves were inert. When target gives several disjoint
+    same-shaped webs the SAME bottom saved reg, try per-block re-decls.
+    Related const-web coalescing lever (DIM2conveyor dimbridgecogmai_update
+    → 100): a chain spelled `bits = (u8)x; bits = (u8)(bits | y);` SPLITS
+    into per-def webs (r28 then r29) where compound `bits |= y;` keeps ONE
+    web — and the merge flipped the code/bits saved pair to target.
     APPLIED — partfx_update 97.54→97.68 (+2.5K matched_code): the 40KB
     param-rotation blocker responded to the #77 conversion framed by
     this model — signature retyped (u32 p2_, u32 p5_, void *p6_) +
@@ -3149,7 +3186,18 @@ resolved in the reconciliation pass: GVN keeps #110, unroller -> #113.)*
 
 **OPEN — n-ary sum canonicalization (>=3 variable terms): the
 invariant-statement-reorder class.** (task #14; characterized with a full
-probe set, awaiting a lever.) Recipe #112's K-grouping levers work
+probe set, awaiting a lever.) ⚠️ **PARTIAL LEVER for simple VALUE sums
+(non-address): the collection's output ORDER depends on the source
+ASSOCIATIVITY SPELLING — A/B the opposite parenthesization.** A 3-term
+`glow + (drift + rnd)` (parens) collects to `(rnd+glow)+drift`, while the
+paren-FREE left-assoc `glow + drift + rnd` re-associates to
+`glow+(drift+rnd)` — opposite outputs from the same math. When a 3-term
+sum's add order/grouping diverges, flip the spelling before banking
+(wallanimator kaldachompspit_update → 100; the import had ADDED parens).
+(int)(long) sandwiches, opt_common_subs/opt_propagation off, embedded
+defs, and #15 array-index forms were all inert on that shape. For
+ADDRESS sums the rest of this entry applies: recipe #112's K-grouping
+levers work
 for `base + idx + K` (TWO variable terms); with THREE OR MORE variable
 terms (`a + i6 + i4 + i5 + i12 + 0x60`) MWCC -O4 COLLECTS the n-ary sum
 and re-canonicalizes it — base joined LAST, source grouping/order erased.
