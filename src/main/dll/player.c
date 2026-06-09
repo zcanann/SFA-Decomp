@@ -8506,10 +8506,9 @@ int fn_80299BB0(int obj, int p2)
 int fn_802A9B1C(int obj, int p2, int p3)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
-    u8 c = inner->curAnimId;
-    int deref;
+    u8 c;
     int v;
-    if (c == 0x48 || c == 0x47 || c == 0x44 ||
+    if ((c = inner->curAnimId) == 0x48 || c == 0x47 || c == 0x44 ||
         *(void **)((char *)inner + 0x7f8) != NULL ||
         ((ByteFlags *)((char *)inner + 0x3f0))->b20 ||
         ((ByteFlags *)((char *)inner + 0x3f0))->b04 ||
@@ -8517,14 +8516,12 @@ int fn_802A9B1C(int obj, int p2, int p3)
         ((ByteFlags *)((char *)inner + 0x3f4))->b40 == 0) {
         return 0;
     }
-    deref = inner->unk35C;
     if (p3 == 0x2d) {
-        if (*(s16 *)((char *)deref + 4) < 2) return 0;
+        if (*(s16 *)((char *)inner->unk35C + 4) < 2) return 0;
     } else {
-        if (*(s16 *)((char *)deref + 4) < 1) return 0;
+        if (*(s16 *)((char *)inner->unk35C + 4) < 1) return 0;
     }
-    v = ((PlayerState *)p2)->baddie.controlMode;
-    if (v == 1 || v == 2 || v == 0x2a || v == 0x2c || (u16)(v - 0x2e) <= 1 || v == 0x2d) {
+    if ((v = ((PlayerState *)p2)->baddie.controlMode) == 1 || v == 2 ||v == 0x2a || v == 0x2c || (u16)(v - 0x2e) <= 1 || v == 0x2d) {
         return 1;
     }
     return 0;
@@ -8872,10 +8869,9 @@ int fn_802A9A0C(int obj, int p2)
 int fn_802A9C0C(int obj, int p2, int p3)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
-    u8 c = inner->curAnimId;
-    int deref;
+    u8 c;
     int v;
-    if (c == 0x48 || c == 0x47 || c == 0x44 ||
+    if ((c = inner->curAnimId) == 0x48 || c == 0x47 || c == 0x44 ||
         *(void **)((char *)inner + 0x7f8) != NULL ||
         ((ByteFlags *)((char *)inner + 0x3f0))->b20 ||
         ((ByteFlags *)((char *)inner + 0x3f0))->b04 ||
@@ -8883,14 +8879,12 @@ int fn_802A9C0C(int obj, int p2, int p3)
         ((ByteFlags *)((char *)inner + 0x3f4))->b40 == 0) {
         return 0;
     }
-    deref = inner->unk35C;
     if (p3 == 0x2d) {
-        if (*(s16 *)((char *)deref + 4) < 2) return 0;
+        if (*(s16 *)((char *)inner->unk35C + 4) < 2) return 0;
     } else {
-        if (*(s16 *)((char *)deref + 4) < 1) return 0;
+        if (*(s16 *)((char *)inner->unk35C + 4) < 1) return 0;
     }
-    v = ((PlayerState *)p2)->baddie.controlMode;
-    if (v == 1 || v == 2 || (u16)(v - 0x24) <= 1 || (u16)(v - 0x2a) <= 2 ||
+    if ((v = ((PlayerState *)p2)->baddie.controlMode) == 1 || v == 2 ||(u16)(v - 0x24) <= 1 || (u16)(v - 0x2a) <= 2 ||
         (u16)(v - 0x2e) <= 1 || v == 0x2d) {
         return 1;
     }
