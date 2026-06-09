@@ -1,6 +1,26 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/objhits_types.h"
+#include "main/obj_placement.h"
+
+#define SOFTBODY_OBJECT_FLAGS_INIT 0x2000
+#define SOFTBODY_MOVE_PHASE_A_FIRST 0x6af
+#define SOFTBODY_MOVE_PHASE_A_END 0x6b2
+
+typedef struct SoftBodySetup {
+    ObjPlacement base;
+    u8 rotZ;
+    u8 rotY;
+    u8 rotX;
+    u8 scale;
+    u8 pad1C[3];
+    u8 phaseDriverDisabled;
+} SoftBodySetup;
+
+STATIC_ASSERT(offsetof(SoftBodySetup, rotZ) == 0x18);
+STATIC_ASSERT(offsetof(SoftBodySetup, scale) == 0x1b);
+STATIC_ASSERT(offsetof(SoftBodySetup, phaseDriverDisabled) == 0x1f);
+STATIC_ASSERT(sizeof(SoftBodySetup) == 0x20);
 
 int softbody_getExtraSize(void) { return 0; }
 
@@ -28,23 +48,25 @@ void softbody_hitDetect(void) {}
 #pragma scheduling off
 void softbody_init(int obj, int setup)
 {
-    ((GameObject *)obj)->anim.rotZ = (s16)(*(u8 *)(setup + 0x18) << 8);
-    ((GameObject *)obj)->anim.rotY = (s16)(*(u8 *)(setup + 0x19) << 8);
-    ((GameObject *)obj)->anim.rotX = (s16)(*(u8 *)(setup + 0x1a) << 8);
-    if (*(u8 *)(setup + 0x1b) != 0) {
-        ((GameObject *)obj)->anim.rootMotionScale = (f32)(u32)*(u8 *)(setup + 0x1b) / lbl_803E7294;
-        if (((GameObject *)obj)->anim.rootMotionScale == lbl_803E7298) {
-            ((GameObject *)obj)->anim.rootMotionScale = lbl_803E7288;
+    GameObject *object = (GameObject *)obj;
+    SoftBodySetup *setupData = (SoftBodySetup *)setup;
+
+    object->anim.rotZ = (s16)(setupData->rotZ << 8);
+    object->anim.rotY = (s16)(setupData->rotY << 8);
+    object->anim.rotX = (s16)(setupData->rotX << 8);
+    if (setupData->scale != 0) {
+        object->anim.rootMotionScale = (f32)(u32)setupData->scale / lbl_803E7294;
+        if (object->anim.rootMotionScale == lbl_803E7298) {
+            object->anim.rootMotionScale = lbl_803E7288;
         }
-        ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale * *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4);
+        object->anim.rootMotionScale = object->anim.rootMotionScale * object->anim.modelInstance->rootMotionScaleBase;
     }
-    ((GameObject *)obj)->objectFlags |= 0x2000;
+    object->objectFlags |= SOFTBODY_OBJECT_FLAGS_INIT;
     ObjAnim_SetCurrentMove(obj, 0, lbl_803E7298, 0);
-    if (((GameObject *)obj)->anim.hitReactState != NULL) {
+    if (object->anim.hitReactState != NULL) {
         ObjHitbox_SetSphereRadius(obj,
-            (s16)((f32)((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)
-                      ->primaryRadius *
-                  ((GameObject *)obj)->anim.rootMotionScale));
+            (s16)((f32)((ObjHitsPriorityState *)object->anim.hitReactState)->primaryRadius *
+                  object->anim.rootMotionScale));
     }
 }
 #pragma scheduling reset
@@ -64,9 +86,10 @@ void softbody_initialise(void)
 #pragma scheduling off
 void softbody_update(int obj)
 {
-    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
+    GameObject *object = (GameObject *)obj;
+    SoftBodySetup *setup = (SoftBodySetup *)object->anim.placementData;
 
-    if (lbl_803DDD98 == NULL && *(u8 *)(setup + 0x1f) == 0) {
+    if (lbl_803DDD98 == NULL && setup->phaseDriverDisabled == 0) {
         lbl_803DDD98 = (void *)obj;
     }
 
@@ -81,7 +104,8 @@ void softbody_update(int obj)
         }
     }
 
-    if (((GameObject *)obj)->anim.seqId >= 0x6af && ((GameObject *)obj)->anim.seqId < 0x6b2) {
+    if (object->anim.seqId >= SOFTBODY_MOVE_PHASE_A_FIRST &&
+        object->anim.seqId < SOFTBODY_MOVE_PHASE_A_END) {
         ObjAnim_SetCurrentMove(obj, 0, lbl_803DDDA0, 0);
     } else {
         ObjAnim_SetCurrentMove(obj, 0, lbl_803DDD9C, 0);
