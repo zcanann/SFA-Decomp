@@ -3,6 +3,7 @@
 #include "main/camera_object.h"
 #include "main/dll/CAM/cambike_state.h"
 #include "main/dll/CAM/viewfinder_state.h"
+#include "main/game_object.h"
 #include "main/mm.h"
 #include "main/object_transform.h"
 
@@ -17,8 +18,8 @@ extern undefined4 FUN_80017814();
 extern undefined4 FUN_80017830();
 extern undefined4 camcontrol_getTargetPosition(int param_1,int param_2,float *outPos,void *outAngle);
 extern int getAngle(f32 dx,f32 dz);
-extern void *getSbGalleon(void);
-extern int DBprotection_getCameraState(int *obj);
+extern GameObject *getSbGalleon(void);
+extern int DBprotection_getCameraState(GameObject *obj);
 extern double FUN_80293900();
 extern f32 mathSinf(f32);
 extern f32 sqrtf(f32 value);
@@ -72,13 +73,13 @@ extern f32 lbl_803E2450;
  * PAL Size: TODO
  */
 #pragma scheduling off
-void CameraModeBike_update(short *param_1)
+void CameraModeBike_update(CameraObject *camera)
 {
   int iVar1;
   float fVar2;
   float fVar3;
   short sVar4;
-  ushort *puVar5;
+  GameObject *target;
   float dVar6;
   float dVar7;
   float dVar8;
@@ -109,40 +110,40 @@ void CameraModeBike_update(short *param_1)
   longlong local_48;
   
   (*gCameraInterface)->getDefaultHandlerEntry();
-  puVar5 = ((CameraObject *)param_1)->anim.targetObj;
-  if (puVar5 != (ushort *)0x0) {
-    ((CameraObject *)param_1)->fov = lbl_803E1784;
-    local_fc.x = *(float *)(puVar5 + 0xc);
-    local_fc.y = *(float *)(puVar5 + 0xe);
-    local_fc.z = *(float *)(puVar5 + 0x10);
+  target = (GameObject *)camera->anim.targetObj;
+  if (target != NULL) {
+    camera->fov = lbl_803E1784;
+    local_fc.x = target->anim.worldPosX;
+    local_fc.y = target->anim.worldPosY;
+    local_fc.z = target->anim.worldPosZ;
     local_fc.scale = lbl_803E1788;
-    local_fc.yaw = *(short *)puVar5;
+    local_fc.yaw = target->anim.rotX;
     local_a0 = (longlong)(int)lbl_803DD540->pitchTarget;
     local_fc.pitch = (undefined2)(int)lbl_803DD540->pitchTarget;
     local_fc.roll = 0;
     setMatrixFromObjectPos(afStack_e4,&local_fc);
     Matrix_TransformPoint(afStack_e4,lbl_803E1780,lbl_803E178C,lbl_803E1780,
                  &local_100,&local_104,&local_108);
-    *param_1 = -0x8000 - *puVar5;
+    camera->anim.rotX = -0x8000 - target->anim.rotX;
     lbl_803DD540->smoothedYawOffset =
          lbl_803E1790 *
          (lbl_803E1794 * lbl_803DD540->turnInput - lbl_803DD540->smoothedYawOffset) +
          lbl_803DD540->smoothedYawOffset;
-    iVar1 = (int)((f32)(s32)*param_1 + lbl_803DD540->smoothedYawOffset);
-    *param_1 = (short)iVar1;
+    iVar1 = (int)((f32)(s32)camera->anim.rotX + lbl_803DD540->smoothedYawOffset);
+    camera->anim.rotX = (short)iVar1;
     iVar1 = (int)(lbl_803E1798 - lbl_803DD540->pitchTarget);
-    sVar4 = (short)iVar1 - param_1[1];
+    sVar4 = (short)iVar1 - camera->anim.rotY;
     if (0x8000 < sVar4) {
       sVar4 = sVar4 + 1;
     }
     if (sVar4 < -0x8000) {
       sVar4 = sVar4 + -1;
     }
-    param_1[1] = param_1[1] + (sVar4 >> 3);
-    dVar6 = mathSinf(lbl_803E179C * (f32)(s32)((int)*param_1 - 0x4000) / lbl_803E17A0);
-    dVar7 = mathCosf(lbl_803E179C * (f32)(s32)((int)*param_1 - 0x4000) / lbl_803E17A0);
-    dVar8 = mathCosf(lbl_803E179C * (f32)(s32)param_1[1] / lbl_803E17A0);
-    dVar9 = mathSinf(lbl_803E179C * (f32)(s32)param_1[1] / lbl_803E17A0);
+    camera->anim.rotY = camera->anim.rotY + (sVar4 >> 3);
+    dVar6 = mathSinf(lbl_803E179C * (f32)(s32)((int)camera->anim.rotX - 0x4000) / lbl_803E17A0);
+    dVar7 = mathCosf(lbl_803E179C * (f32)(s32)((int)camera->anim.rotX - 0x4000) / lbl_803E17A0);
+    dVar8 = mathCosf(lbl_803E179C * (f32)(s32)camera->anim.rotY / lbl_803E17A0);
+    dVar9 = mathSinf(lbl_803E179C * (f32)(s32)camera->anim.rotY / lbl_803E17A0);
     fVar2 = -lbl_803DD540->heightInput / lbl_803E17A4;
     fVar3 = (fVar2 < lbl_803E1780) ? lbl_803E1780 : ((fVar2 > lbl_803E1788) ? lbl_803E1788 : fVar2);
     lbl_803DD540->followDistance =
@@ -151,23 +152,23 @@ void CameraModeBike_update(short *param_1)
          lbl_803DD540->followDistance;
     fVar2 = lbl_803DD540->followDistance;
     dVar8 = fVar2 * dVar8;
-    ((CameraObject *)param_1)->anim.worldPosX = local_100 + dVar8 * dVar7;
-    ((CameraObject *)param_1)->anim.worldPosY = local_104 + fVar2 * dVar9;
-    ((CameraObject *)param_1)->anim.worldPosZ = local_108 + dVar8 * dVar6;
+    camera->anim.worldPosX = local_100 + dVar8 * dVar7;
+    camera->anim.worldPosY = local_104 + fVar2 * dVar9;
+    camera->anim.worldPosZ = local_108 + dVar8 * dVar6;
     iVar1 = (int)(lbl_803E17A8 * lbl_803DD540->rollInput);
     local_60 = (longlong)iVar1;
-    sVar4 = (short)iVar1 - param_1[2];
+    sVar4 = (short)iVar1 - camera->anim.rotZ;
     if (0x8000 < sVar4) {
       sVar4 = sVar4 + 1;
     }
     if (sVar4 < -0x8000) {
       sVar4 = sVar4 + -1;
     }
-    iVar1 = (int)((f32)(s32)sVar4 * timeDelta * lbl_803E17B4 + (f32)(s32)param_1[2]);
-    param_1[2] = (short)iVar1;
-    Obj_TransformWorldPointToLocal(((CameraObject *)param_1)->anim.worldPosX,((CameraObject *)param_1)->anim.worldPosY,
-                 ((CameraObject *)param_1)->anim.worldPosZ,(float *)(param_1 + 6),(float *)(param_1 + 8),
-                 (float *)(param_1 + 10),*(int *)(param_1 + 0x18));
+    iVar1 = (int)((f32)(s32)sVar4 * timeDelta * lbl_803E17B4 + (f32)(s32)camera->anim.rotZ);
+    camera->anim.rotZ = (short)iVar1;
+    Obj_TransformWorldPointToLocal(camera->anim.worldPosX,camera->anim.worldPosY,
+                 camera->anim.worldPosZ,&camera->anim.localPosX,&camera->anim.localPosY,
+                 &camera->anim.localPosZ,(u32)camera->anim.parent);
   }
   return;
 }
@@ -186,13 +187,13 @@ void CameraModeBike_update(short *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void CameraModeBike_init(int param_1)
+void CameraModeBike_init(CameraObject *camera)
 {
   if (lbl_803DD540 == 0) {
     lbl_803DD540 = (CameraModeBikeState *)mmAlloc(sizeof(CameraModeBikeState),0xf,0);
   }
   memset(lbl_803DD540,0,sizeof(CameraModeBikeState));
-  lbl_803DD540->entryFov = ((CameraObject *)param_1)->fov;
+  lbl_803DD540->entryFov = camera->fov;
   lbl_803DD540->defaultFov = lbl_803E1784;
   lbl_803DD540->defaultScale = lbl_803E1788;
   lbl_803DD540->followDistance = lbl_803E17AC;
@@ -213,11 +214,11 @@ void CameraModeBike_init(int param_1)
  */
 #pragma scheduling off
 #pragma peephole off
-void firstPersonPlaceCamera(int param_1,int param_2)
+void firstPersonPlaceCamera(GameObject *focus,int resetClamp)
 {
-  register int self = param_1;
+  register GameObject *self = focus;
   ViewfinderState *state;
-  int *puVar1;
+  GameObject *galleon;
   int iVar2;
   float local_20;
   float local_24;
@@ -225,9 +226,9 @@ void firstPersonPlaceCamera(int param_1,int param_2)
   float local_1c[3];
 
   state = lbl_803DD548;
-  if (*(short *)(self + 0x44) == 1) {
-    cameraGetPrevPos2(self,&local_28,&local_24,&local_20);
-    if (((param_2 != 0) || (state->camPosX != local_28)) ||
+  if (self->anim.classId == 1) {
+    cameraGetPrevPos2((int)self,&local_28,&local_24,&local_20);
+    if (((resetClamp != 0) || (state->camPosX != local_28)) ||
        (state->camPosZ != local_20)) {
       state->clampedPosY = local_24;
     }
@@ -236,22 +237,22 @@ void firstPersonPlaceCamera(int param_1,int param_2)
     state->camPosZ = local_20;
   }
   else {
-    state->camPosX = *(float *)(self + 0x18);
-    state->camPosY = lbl_803E17C0 + *(float *)(self + 0x1c);
-    state->camPosZ = *(float *)(self + 0x20);
+    state->camPosX = self->anim.worldPosX;
+    state->camPosY = lbl_803E17C0 + self->anim.worldPosY;
+    state->camPosZ = self->anim.worldPosZ;
     state->clampedPosY = state->camPosY;
   }
-  puVar1 = (int *)getSbGalleon();
-  if (puVar1 != (int *)0x0) {
-    iVar2 = DBprotection_getCameraState(puVar1);
+  galleon = getSbGalleon();
+  if (galleon != NULL) {
+    iVar2 = DBprotection_getCameraState(galleon);
     if (iVar2 == 2) {
-      local_1c[0] = *(float *)(self + 0x18) - *(float *)(puVar1 + 6);
-      local_1c[1] = (lbl_803E17C0 + *(float *)(self + 0x1c)) - *(float *)(puVar1 + 7);
-      local_1c[2] = *(float *)(self + 0x20) - *(float *)(puVar1 + 8);
-      vecRotateZXY(puVar1,local_1c);
-      state->camPosX = *(float *)(puVar1 + 6) + local_1c[0];
-      state->camPosY = *(float *)(puVar1 + 7) + local_1c[1];
-      state->camPosZ = *(float *)(puVar1 + 8) + local_1c[2];
+      local_1c[0] = self->anim.worldPosX - galleon->anim.worldPosX;
+      local_1c[1] = (lbl_803E17C0 + self->anim.worldPosY) - galleon->anim.worldPosY;
+      local_1c[2] = self->anim.worldPosZ - galleon->anim.worldPosZ;
+      vecRotateZXY(galleon,local_1c);
+      state->camPosX = galleon->anim.worldPosX + local_1c[0];
+      state->camPosY = galleon->anim.worldPosY + local_1c[1];
+      state->camPosZ = galleon->anim.worldPosZ + local_1c[2];
     }
   }
   return;
@@ -274,30 +275,30 @@ void firstPersonPlaceCamera(int param_1,int param_2)
  */
 #pragma scheduling off
 #pragma peephole off
-void firstPersonExit(short *param_1)
+void firstPersonExit(CameraObject *camera)
 {
-  register short *self = param_1;
+  register CameraObject *self = camera;
   ViewfinderState *state;
+  GameObject *target;
   float fVar1;
   float fVar2;
   int sVar3;
-  int iVar4;
   float local_24[3];
   undefined auStack_28[4];
 
   state = lbl_803DD548;
-  iVar4 = *(int *)(self + 0x52);
-  state->posXCurve.start = *(float *)(self + 0xc);
+  target = (GameObject *)self->anim.targetObj;
+  state->posXCurve.start = self->anim.worldPosX;
   fVar1 = lbl_803E17C4;
   state->posXCurve.startTangent = lbl_803E17C4;
   state->posXCurve.endTangent = fVar1;
-  state->posYCurve.start = *(float *)(self + 0xe);
+  state->posYCurve.start = self->anim.worldPosY;
   state->posYCurve.startTangent = fVar1;
   state->posYCurve.endTangent = fVar1;
-  state->posZCurve.start = *(float *)(self + 0x10);
+  state->posZCurve.start = self->anim.worldPosZ;
   state->posZCurve.startTangent = fVar1;
   state->posZCurve.endTangent = fVar1;
-  camcontrol_getTargetPosition((int)self,iVar4,local_24,auStack_28);
+  camcontrol_getTargetPosition((int)self,(int)target,local_24,auStack_28);
   state->posXCurve.end = local_24[0];
   state->posYCurve.end = local_24[1];
   state->posZCurve.end = local_24[2];
@@ -311,9 +312,9 @@ void firstPersonExit(short *param_1)
   state->viewCurve.dir = 0;
   state->viewCurve.eval = Curve_EvalHermite;
   state->viewCurve.coeffFn = Curve_BuildHermiteCoeffs;
-  state->yawCurve.start = (float)(int)*self;
-  sVar3 = getAngle((double)(state->posXCurve.end - *(float *)(iVar4 + 0x18)),
-                   (double)(state->posZCurve.end - *(float *)(iVar4 + 0x20)));
+  state->yawCurve.start = (float)(int)self->anim.rotX;
+  sVar3 = getAngle((double)(state->posXCurve.end - target->anim.worldPosX),
+                   (double)(state->posZCurve.end - target->anim.worldPosZ));
   state->yawCurve.end = (float)(int)(short)(0x8000 - sVar3);
   fVar1 = lbl_803E17C4;
   state->yawCurve.startTangent = lbl_803E17C4;
@@ -329,7 +330,7 @@ void firstPersonExit(short *param_1)
       state->yawCurve.start = state->yawCurve.start + lbl_803E17D0;
     }
   }
-  state->pitchCurve.start = (float)(int)self[1];
+  state->pitchCurve.start = (float)(int)self->anim.rotY;
   fVar1 = lbl_803E17C4;
   state->pitchCurve.end = lbl_803E17C4;
   state->pitchCurve.startTangent = fVar1;

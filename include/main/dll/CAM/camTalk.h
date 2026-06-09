@@ -2,6 +2,8 @@
 #define MAIN_DLL_CAM_CAMTALK_H_
 
 #include "ghidra_import.h"
+#include "main/camera_object.h"
+#include "main/game_object.h"
 
 typedef struct CamTalkTransformInput {
   u16 yaw;
@@ -14,11 +16,11 @@ typedef struct CamTalkTransformInput {
   f32 z;
 } CamTalkTransformInput;
 
-void CameraModeBike_update(short *param_1);
-void CameraModeBike_init(int param_1);
+void CameraModeBike_update(CameraObject *camera);
+void CameraModeBike_init(CameraObject *camera);
 void CameraModeBike_release(void);
 void CameraModeBike_initialise(void);
-void firstPersonPlaceCamera(int param_1,int param_2);
-void firstPersonExit(short *param_1);
+void firstPersonPlaceCamera(GameObject *focus, int resetClamp);
+void firstPersonExit(CameraObject *camera);
 
 #endif /* MAIN_DLL_CAM_CAMTALK_H_ */

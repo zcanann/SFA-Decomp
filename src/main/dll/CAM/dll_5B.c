@@ -3,6 +3,7 @@
 #include "main/camera_interface.h"
 #include "main/camera_object.h"
 #include "main/dll/CAM/camdebug_state.h"
+#include "main/dll/CAM/camTalk.h"
 #include "main/dll/CAM/camstatic_state.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
@@ -42,8 +43,6 @@ extern void* ObjGroup_GetObjects();
 extern undefined4 FUN_80053bf0();
 extern undefined4 FUN_800810d8();
 extern undefined4 camcontrol_applyState();
-extern undefined4 firstPersonPlaceCamera();
-extern undefined4 firstPersonExit();
 extern double fn_8010AEA8();
 extern undefined4 FUN_80135814();
 extern undefined8 FUN_8028683c();
@@ -390,7 +389,7 @@ void CameraModeViewfinder_update(s16 *param_1)
 
   camObj = *(int *)(param_1 + 0x52);
   getButtonsJustPressed(0);
-  firstPersonPlaceCamera(camObj, 0);
+  firstPersonPlaceCamera((GameObject *)camObj, 0);
   switch (lbl_803DD548->mode) {
   case 0:
     lbl_803DD548->mode = firstPersonEnter((u8 *)param_1, (s16 *)*(int *)(param_1 + 0x52));
@@ -412,7 +411,7 @@ void CameraModeViewfinder_update(s16 *param_1)
     firstPersonDoControls((short *)param_1);
     if (getButtonsJustPressed(0) & 0x210) {
       buttonDisable(0, 0x200);
-      firstPersonExit(param_1);
+      firstPersonExit((CameraObject *)param_1);
       Rcp_SetViewFinderHudEnabled(0);
       lbl_803DD548->mode = 3;
     }
@@ -513,7 +512,7 @@ void CameraModeViewfinder_update(s16 *param_1)
     break;
   }
   if (ObjHits_GetPriorityHit(*(int *)(param_1 + 0x52), 0, 0, 0) != 0) {
-    firstPersonExit(param_1);
+    firstPersonExit((CameraObject *)param_1);
     *(f32 *)(param_1 + 0xc) = lbl_803DD548->posXCurve.end;
     *(f32 *)(param_1 + 0xe) = lbl_803DD548->posYCurve.end;
     *(f32 *)(param_1 + 0x10) = lbl_803DD548->posZCurve.end;
@@ -590,7 +589,7 @@ void CameraModeViewfinder_init(s16 *param_1, int param_2, int *param_3)
     dx = dx / dist;
     dz = dz / dist;
   }
-  firstPersonPlaceCamera((int)camObj, 1);
+  firstPersonPlaceCamera((GameObject *)camObj, 1);
   cosv = -mathSinf((lbl_803E1834 * (f32)camObj[0]) / lbl_803E17C8);
   sinv = -mathCosf((lbl_803E1834 * (f32)camObj[0]) / lbl_803E17C8);
   lbl_803DD548->posXCurve.start = *(f32 *)(param_1 + 0xc);
