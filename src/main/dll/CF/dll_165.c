@@ -24,6 +24,13 @@ extern f32 lbl_803E3C14;
 extern f32 lbl_803E3C18;
 extern f64 lbl_803E3BD0;
 
+STATIC_ASSERT(sizeof(TreasureChestSetup) == 0x24);
+STATIC_ASSERT(offsetof(TreasureChestSetup, type) == 0x18);
+STATIC_ASSERT(offsetof(TreasureChestSetup, hitboxKind) == 0x19);
+STATIC_ASSERT(offsetof(TreasureChestSetup, triggerObjectId) == 0x1a);
+STATIC_ASSERT(offsetof(TreasureChestSetup, dialogueId) == 0x1c);
+STATIC_ASSERT(offsetof(TreasureChestSetup, openGameBit) == 0x1e);
+
 typedef struct {
     u8 b7 : 1;
     u8 b6 : 1;
@@ -169,19 +176,19 @@ void staffactivated_init(int obj, int setup)
 int treasurechest_SeqFn(int obj, int unused, u8 *events)
 {
   int i;
-  int setup;
+  TreasureChestSetup *setup;
   u8 *state;
   u8 eventId;
 
-  setup = *(int *)&((GameObject *)obj)->anim.placementData;
+  setup = (TreasureChestSetup *)((GameObject *)obj)->anim.placementData;
   state = ((GameObject *)obj)->extra;
   i = 0;
   while (i < events[0x8b]) {
     eventId = events[i + 0x81];
     switch (eventId) {
     case 1:
-      if (*(s16 *)(setup + 0x1c) != 0) {
-        (*gGameUIInterface)->showNpcDialogue(*(s16 *)(setup + 0x1c), 0xc8, 0x8c, 0);
+      if (setup->dialogueId != 0) {
+        (*gGameUIInterface)->showNpcDialogue(setup->dialogueId, 0xc8, 0x8c, 0);
       }
       break;
     case 2:
@@ -261,12 +268,12 @@ extern void hitDetectFn_80097070(f32 radius, int obj, int a, int b, int c, int d
 void treasurechest_hitDetect(int obj)
 {
   u8 *state;
-  int setup;
+  TreasureChestSetup *setup;
 
-  setup = *(int *)&((GameObject *)obj)->anim.placementData;
+  setup = (TreasureChestSetup *)((GameObject *)obj)->anim.placementData;
   state = ((GameObject *)obj)->extra;
   if (((u32)state[0] >> 5 & 1) != 0) {
-    hitDetectFn_80097070(lbl_803E3C24, obj, 2, (u8)(*(u8 *)(setup + 0x19) + 6), 4, 0);
+    hitDetectFn_80097070(lbl_803E3C24, obj, 2, (u8)(setup->hitboxKind + 6), 4, 0);
   }
 }
 #pragma peephole reset

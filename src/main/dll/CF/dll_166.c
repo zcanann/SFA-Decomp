@@ -65,7 +65,7 @@ extern f32 lbl_803E3C2C;
 void treasurechest_update(int obj)
 {
   ChestFlags *flags;
-  int setup;
+  TreasureChestSetup *setup;
   uint iVar2;
   int iVar3;
   ChestHitBlock blk;
@@ -75,7 +75,7 @@ void treasurechest_update(int obj)
   int hitObject;
 
   flags = ((GameObject *)obj)->extra;
-  setup = *(int *)&((GameObject *)obj)->anim.placementData;
+  setup = (TreasureChestSetup *)((GameObject *)obj)->anim.placementData;
   local_3c = lbl_803E3C28;
   if (flags->trigger != 0 && flags->open != 0) {
     *(byte *)&((GameObject *)obj)->anim.resetHitboxMode = *(byte *)&((GameObject *)obj)->anim.resetHitboxMode | 8;
@@ -91,10 +91,10 @@ void treasurechest_update(int obj)
         (*gObjectTriggerInterface)->runSequence(1, (void *)obj, 0xffffffff);
       }
       else {
-        (*gObjectTriggerInterface)->setObjects((int)*(short *)(setup + 0x1a), 0, 0);
+        (*gObjectTriggerInterface)->setObjects(setup->triggerObjectId, 0, 0);
         (*gObjectTriggerInterface)->runSequence(0, (void *)obj, 0xffffffff);
       }
-      GameBit_Set((int)*(short *)(setup + 0x1e),1);
+      GameBit_Set(setup->openGameBit,1);
       flags->open = 1;
       ObjHits_DisableObject(obj);
     }
@@ -190,13 +190,13 @@ void magiccavebottom_free(int obj) {
 #pragma peephole off
 void treasurechest_init(int *obj) {
     register ChestFlags *state = ((GameObject *)obj)->extra;
-    register int *cfg = *(int **)&((GameObject *)obj)->anim.placementData;
+    register TreasureChestSetup *cfg = (TreasureChestSetup *)((GameObject *)obj)->anim.placementData;
 
     ((GameObject *)obj)->animEventCallback = (void *)treasurechest_SeqFn;
-    *(s16 *)obj = (s16)((s32)*(s8 *)((char *)cfg + 0x18) << 8);
+    *(s16 *)obj = (s16)((s32)cfg->type << 8);
 
-    if (*(s16 *)((char *)cfg + 0x1e) != -1) {
-        state->open = (u8)GameBit_Get(*(s16 *)((char *)cfg + 0x1e));
+    if (cfg->openGameBit != -1) {
+        state->open = (u8)GameBit_Get(cfg->openGameBit);
     } else {
         state->open = 0;
     }
