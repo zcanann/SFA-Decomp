@@ -3813,7 +3813,7 @@ int objUpdateOpacity(char* obj)
         }
         player = Obj_GetPlayerObject();
         if (ptr != 0 && (*(u8*)(ptr + 5) & 2) && player != 0) {
-            d = Vec_distance((f32*)(obj + 0x18), (f32*)((char*)player + 0x18));
+            d = Vec_distance(&((GameObject *)obj)->anim.worldPosX, (f32*)((char*)player + 0x18));
         } else {
             d = Camera_DistanceToCurrentViewPosition(((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY,
                                                      ((GameObject *)obj)->anim.worldPosZ);
