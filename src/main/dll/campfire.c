@@ -239,11 +239,11 @@ void kaldachom_handleAnimEvents(int obj, int p2, int p3)
 
   lbl_803DDA98 = lbl_803E30A0 + (f32)(s32)(s8)*(u8 *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x28) / lbl_803E30A4;
 
-  if ((eventState->baddie.eventFlags &0x1) != 0) {
+  if (((s32)eventState->baddie.eventFlags &0x1) != 0) {
     eventState->baddie.eventFlags &= ~0x1;
     Sfx_PlayFromObject(obj, SFXkr_climb1);
   }
-  if ((eventState->baddie.eventFlags &0x80) != 0) {
+  if (((s32)eventState->baddie.eventFlags &0x80) != 0) {
     int n;
     control->climbFxIndex = (u8)randomGetRange(0, 2);
     eventState->baddie.eventFlags &= ~0x80;
@@ -252,19 +252,19 @@ void kaldachom_handleAnimEvents(int obj, int p2, int p3)
       (*gPartfxInterface)->spawnObject((void *)obj, 1809, 0, 4, -1, &lbl_803DDA98);
     }
   }
-  if ((eventState->baddie.eventFlags &0x40) != 0) {
+  if (((s32)eventState->baddie.eventFlags &0x40) != 0) {
     eventState->baddie.eventFlags &= ~0x40;
     kaldaChomFn_80168374(obj, p2, 0);
   }
-  if ((eventState->baddie.eventFlags &0x20) != 0) {
+  if (((s32)eventState->baddie.eventFlags &0x20) != 0) {
     eventState->baddie.eventFlags &= ~0x20;
     kaldaChomFn_80168374(obj, p2, 1);
   }
-  if ((eventState->baddie.eventFlags &0x200) != 0) {
+  if (((s32)eventState->baddie.eventFlags &0x200) != 0) {
     eventState->baddie.eventFlags &= ~0x200;
     Sfx_PlayFromObject(obj, SFXkr_land1);
   }
-  if ((eventState->baddie.eventFlags &0x400) != 0) {
+  if (((s32)eventState->baddie.eventFlags &0x400) != 0) {
     int n;
     control->climbFxIndex = 3;
     n = 10;
