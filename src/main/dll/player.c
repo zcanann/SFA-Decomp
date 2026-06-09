@@ -15316,20 +15316,17 @@ void fn_802AE9C8(int obj, int inner, int state)
     ((PlayerState *)inner)->unk408 =
         lbl_803E7EA0 * (lbl_803E806C * *(f32 *)((char *)state + 0x298)) +
         lbl_803E7EB4 * ((PlayerState *)state)->baddie.unk294;
+    ((PlayerState *)inner)->unk408 =
+        (((PlayerState *)inner)->unk408 < lbl_803E7F18)
+            ? lbl_803E7F18
+            : ((((PlayerState *)inner)->unk408 > ((PlayerState *)inner)->unk404)
+                   ? ((PlayerState *)inner)->unk404
+                   : ((PlayerState *)inner)->unk408);
     {
-        f32 v = ((PlayerState *)inner)->unk408;
-        f32 clamped;
-        if (v < lbl_803E7F18) {
-            clamped = lbl_803E7F18;
-        } else if (v > ((PlayerState *)inner)->unk404) {
-            clamped = ((PlayerState *)inner)->unk404;
-        } else {
-            clamped = v;
-        }
-        ((PlayerState *)inner)->unk408 = clamped;
+        f32 a = ((PlayerState *)inner)->unk408;
+        ((PlayerState *)state)->baddie.animSpeedA = a;
+        ((PlayerState *)state)->baddie.unk294 = a;
     }
-    ((PlayerState *)state)->baddie.animSpeedA = ((PlayerState *)inner)->unk408;
-    ((PlayerState *)state)->baddie.unk294 = ((PlayerState *)inner)->unk408;
 
     ((GameObject *)obj)->anim.velocityY = ((PlayerState *)state)->baddie.animSpeedA / lbl_803E8068;
     {
@@ -15345,18 +15342,12 @@ void fn_802AE9C8(int obj, int inner, int state)
         ((GameObject *)obj)->anim.velocityY = clamped;
     }
     ((GameObject *)obj)->anim.velocityY = ((GameObject *)obj)->anim.velocityY * lbl_803DC680;
-    {
-        f32 v = ((GameObject *)obj)->anim.velocityY;
-        f32 clamped;
-        if (v < lbl_803E7E98) {
-            clamped = lbl_803E7E98;
-        } else if (v > lbl_803DC680) {
-            clamped = lbl_803DC680;
-        } else {
-            clamped = v;
-        }
-        ((GameObject *)obj)->anim.velocityY = clamped;
-    }
+    ((GameObject *)obj)->anim.velocityY =
+        (((GameObject *)obj)->anim.velocityY < lbl_803E7E98)
+            ? lbl_803E7E98
+            : ((((GameObject *)obj)->anim.velocityY > lbl_803DC680)
+                   ? lbl_803DC680
+                   : ((GameObject *)obj)->anim.velocityY);
     *(f32 *)((char *)state + 0x2a0) =
         lbl_803E7EE0 / (lbl_803E7ED4 * lbl_803DC680 / lbl_803DC67C);
     ((PlayerState *)inner)->unk84C = ((GameObject *)obj)->anim.worldPosY;
