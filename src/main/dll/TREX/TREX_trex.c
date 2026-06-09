@@ -2075,7 +2075,7 @@ void Lamp_update(int obj)
 void SB_CageKyte_init(int p)
 {
     ((GameObject *)p)->animEventCallback = (void *)SB_CageKyte_SeqFn;
-    *(u16 *)((char *)p + 0xb0) = (u16)((u32)*(u16 *)((char *)p + 0xb0) | 0x6000u);
+    ((GameObject *)p)->objectFlags = (u16)((u32)((GameObject *)p)->objectFlags | 0x6000u);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -2261,8 +2261,8 @@ void SB_CloudBall_update(int obj)
 #pragma scheduling off
 void SB_FireBall_init(int p)
 {
-    SBFireBallState *state = *(SBFireBallState **)(p + 0xb8);
-    *(int *)((char *)p + 0xf4) = 0x4b0;
+    SBFireBallState *state = ((GameObject *)p)->extra;
+    ((GameObject *)p)->unkF4 = 0x4b0;
     state->launched = 0;
 }
 #pragma scheduling reset

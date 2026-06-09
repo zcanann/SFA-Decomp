@@ -208,8 +208,8 @@ int Obj_UpdateRomCurveFollowVelocity(int p1, int p2, f32 a, f32 b, f32 c, int fl
 
     result = 0;
     scale = c;
-    d[0] = *(f32 *)(p1 + 0xc) - *(f32 *)(p2 + 0x68);
-    d[2] = *(f32 *)(p1 + 0x14) - *(f32 *)(p2 + 0x70);
+    d[0] = ((GameObject *)p1)->anim.localPosX - *(f32 *)(p2 + 0x68);
+    d[2] = ((GameObject *)p1)->anim.localPosZ - *(f32 *)(p2 + 0x70);
     dist = sqrtf(d[0] * d[0] + d[2] * d[2]);
     if (dist < b) {
         if (Curve_AdvanceAlongPath(p2, a) != 0 || *(int *)(p2 + 0x10) != 0) {
@@ -220,18 +220,18 @@ int Obj_UpdateRomCurveFollowVelocity(int p1, int p2, f32 a, f32 b, f32 c, int fl
         }
         scale = lbl_803E6C78 * a;
     }
-    d[0] = *(f32 *)(p2 + 0x68) - *(f32 *)(p1 + 0xc);
-    d[1] = *(f32 *)(p2 + 0x6c) - *(f32 *)(p1 + 0x10);
-    d[2] = *(f32 *)(p2 + 0x70) - *(f32 *)(p1 + 0x14);
+    d[0] = *(f32 *)(p2 + 0x68) - ((GameObject *)p1)->anim.localPosX;
+    d[1] = *(f32 *)(p2 + 0x6c) - ((GameObject *)p1)->anim.localPosY;
+    d[2] = *(f32 *)(p2 + 0x70) - ((GameObject *)p1)->anim.localPosZ;
     if (flag == 0) {
-        int state2 = *(int *)(p1 + 0xb8);
-        d[0] = *(f32 *)(p1 + 0xc) - *(f32 *)(p2 + 0x68);
-        d[2] = *(f32 *)(p1 + 0x14) - *(f32 *)(p2 + 0x70);
+        int state2 = *(int *)&((GameObject *)p1)->extra;
+        d[0] = ((GameObject *)p1)->anim.localPosX - *(f32 *)(p2 + 0x68);
+        d[2] = ((GameObject *)p1)->anim.localPosZ - *(f32 *)(p2 + 0x70);
         ang = lbl_803E6C60 * (f32)(-(s16)getAngle(d[0], d[2])) / lbl_803E6C64;
         *(f32 *)(state2 + 0x290) = scale * -mathSinf(ang);
         *(f32 *)(state2 + 0x28c) = scale * -mathCosf(ang);
     } else {
-        Obj_SteerVelocityTowardVector(p1, (f32 *)(p1 + 0x24), d, scale, scale / lbl_803E6C7C, lbl_803E6C80);
+        Obj_SteerVelocityTowardVector(p1, &((GameObject *)p1)->anim.velocityX, d, scale, scale / lbl_803E6C7C, lbl_803E6C80);
     }
     return result;
 }
@@ -248,8 +248,8 @@ int Obj_UpdateRomCurveFollowVelocityIndexed(int p1, int p2, f32 a, f32 b, f32 c,
 
     result = 0;
     scale = c;
-    d[0] = *(f32 *)(p1 + 0xc) - *(f32 *)(p2 + 0x68);
-    d[2] = *(f32 *)(p1 + 0x14) - *(f32 *)(p2 + 0x70);
+    d[0] = ((GameObject *)p1)->anim.localPosX - *(f32 *)(p2 + 0x68);
+    d[2] = ((GameObject *)p1)->anim.localPosZ - *(f32 *)(p2 + 0x70);
     dist = sqrtf(d[0] * d[0] + d[2] * d[2]);
     if (dist < b) {
         if (Curve_AdvanceAlongPath(p2, a) != 0 || *(int *)(p2 + 0x10) != 0) {
@@ -261,18 +261,18 @@ int Obj_UpdateRomCurveFollowVelocityIndexed(int p1, int p2, f32 a, f32 b, f32 c,
         }
         scale = lbl_803E6C78 * a;
     }
-    d[0] = *(f32 *)(p2 + 0x68) - *(f32 *)(p1 + 0xc);
-    d[1] = *(f32 *)(p2 + 0x6c) - *(f32 *)(p1 + 0x10);
-    d[2] = *(f32 *)(p2 + 0x70) - *(f32 *)(p1 + 0x14);
+    d[0] = *(f32 *)(p2 + 0x68) - ((GameObject *)p1)->anim.localPosX;
+    d[1] = *(f32 *)(p2 + 0x6c) - ((GameObject *)p1)->anim.localPosY;
+    d[2] = *(f32 *)(p2 + 0x70) - ((GameObject *)p1)->anim.localPosZ;
     if (flag == 0) {
-        int state2 = *(int *)(p1 + 0xb8);
-        d[0] = *(f32 *)(p1 + 0xc) - *(f32 *)(p2 + 0x68);
-        d[2] = *(f32 *)(p1 + 0x14) - *(f32 *)(p2 + 0x70);
+        int state2 = *(int *)&((GameObject *)p1)->extra;
+        d[0] = ((GameObject *)p1)->anim.localPosX - *(f32 *)(p2 + 0x68);
+        d[2] = ((GameObject *)p1)->anim.localPosZ - *(f32 *)(p2 + 0x70);
         ang = lbl_803E6C60 * (f32)(-(s16)getAngle(d[0], d[2])) / lbl_803E6C64;
         *(f32 *)(state2 + 0x290) = scale * -mathSinf(ang);
         *(f32 *)(state2 + 0x28c) = scale * -mathCosf(ang);
     } else {
-        Obj_SteerVelocityTowardVector(p1, (f32 *)(p1 + 0x24), d, scale, scale / lbl_803E6C7C, lbl_803E6C80);
+        Obj_SteerVelocityTowardVector(p1, &((GameObject *)p1)->anim.velocityX, d, scale, scale / lbl_803E6C7C, lbl_803E6C80);
     }
     return result;
 }

@@ -57,9 +57,9 @@ void drakord_thornbush_free(int obj)
 
 void drakord_thornbush_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
 {
-    int inner = *(int *)((char *)p1 + 0xb8);
+    int inner = *(int *)&((GameObject *)p1)->extra;
     f32 v;
-    if (*(s16 *)((char *)p1 + 0x46) == 0x709) {
+    if (((GameObject *)p1)->anim.seqId == 0x709) {
         v = *(f32 *)((char *)inner + 0x68);
         if (v < lbl_803E6590) {
             v = lbl_803E658C;

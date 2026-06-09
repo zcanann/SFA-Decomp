@@ -2346,11 +2346,11 @@ int dll_200_SeqFn(int p1, int p2, int p3, int p4)
         fn_801F2974((int *)p1, p2, (int *)p3, p4);
         break;
     case 4:
-        *(u8 *)((char *)p1 + 0xaf) = (u8)(*(u8 *)((char *)p1 + 0xaf) | 8);
+        *(u8 *)&((GameObject *)p1)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)p1)->anim.resetHitboxMode | 8);
         break;
     case 6:
-        state = *(int *)((char *)p1 + 0xb8);
-        *(u8 *)((char *)p1 + 0xaf) = (u8)(*(u8 *)((char *)p1 + 0xaf) | 8);
+        state = *(int *)&((GameObject *)p1)->extra;
+        *(u8 *)&((GameObject *)p1)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)p1)->anim.resetHitboxMode | 8);
         for (i = 0; i < (int)*(u8 *)((char *)p3 + 0x8b); i++) {
             switch (*((u8 *)p3 + (i + 0x81))) {
             case 0:

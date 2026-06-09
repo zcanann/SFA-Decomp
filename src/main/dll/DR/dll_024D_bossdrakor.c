@@ -717,7 +717,7 @@ void bossdrakor_init(int obj, u8 *init)
 
 void bossdrakor_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
 {
-    int inner = *(int *)((char *)p1 + 0xb8);
+    int inner = *(int *)&((GameObject *)p1)->extra;
     f32 pos2;
     f32 pos1;
     f32 pos0;

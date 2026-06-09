@@ -4373,7 +4373,7 @@ void cfmaincrystal_update(int *obj) {
 int cfpowerbase_SeqFn(int p1, int unused, int p3)
 {
   extern int ObjMsg_Pop(int, int *, int *, int *);
-  CfPowerBaseState *sub = *(CfPowerBaseState **)(p1 + 0xb8);
+  CfPowerBaseState *sub = ((GameObject *)p1)->extra;
   int msgArg;
   int msgType;
   int msgFlag = 0;

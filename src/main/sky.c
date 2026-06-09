@@ -1278,7 +1278,7 @@ void sky2_run(void)
             lbl_803DB750 = 0;
             p = *pp;
             if (*(int *)(p + 0x48) != 0) {
-                if ((*(u16 *)(p + 4) & 1) == 0) {
+                if ((*(u16 *)&((GameObject *)p)->anim.rotZ & 1) == 0) {
                     spd = lbl_803DF118;
                     *(f32 *)(p + 0x310) = spd * *(f32 *)(p + 0x30c);
                     if (*(f32 *)(*pp + 0x310) > spd) {
@@ -1288,7 +1288,7 @@ void sky2_run(void)
             } else if (*(int *)(p + 0x44) != 0) {
                 *(f32 *)(p + 0x30c) = *(f32 *)(p + 0x310) / lbl_803DF118;
                 p = *pp;
-                if ((*(u16 *)(p + 4) & 1) == 0) {
+                if ((*(u16 *)&((GameObject *)p)->anim.rotZ & 1) == 0) {
                     *(f32 *)(p + 0x310) =
                         -(timeDelta * *(f32 *)(p + 0x58) - *(f32 *)(p + 0x310));
                     if (*(f32 *)(*pp + 0x310) < (frzero = lbl_803DF108)) {
@@ -1300,13 +1300,13 @@ void sky2_run(void)
                 fn_8008D088(i);
             }
             p = *pp;
-            if ((*(u16 *)(p + 4) & 0x10) != 0) {
+            if ((*(u16 *)&((GameObject *)p)->anim.rotZ & 0x10) != 0) {
                 r = *(f32 *)(p + 0x70);
-                g = *(f32 *)(p + 0x9c);
-                b = *(f32 *)(p + 0xc8);
+                g = ((GameObject *)p)->anim.activeMoveProgress;
+                b = *(f32 *)&((GameObject *)p)->unkC8;
                 sa = *(f32 *)(p + 0x1fc);
                 sb = *(f32 *)(p + 0x228);
-            } else if ((*(u16 *)(p + 6) & 0x20) != 0) {
+            } else if ((*(u16 *)&((GameObject *)p)->anim.flags & 0x20) != 0) {
                 (*(void (**)(f32 *))((char *)*gSHthorntailAnimationInterface + 0x14))(&height);
                 t = height / lbl_803DF15C;
                 if (t < lbl_803DF108) {
@@ -1378,16 +1378,16 @@ void sky2_run(void)
                 if (best.x > z2) {
                     p = *pp + idx.best * 4;
                     r = *(f32 *)(p + 0x70) * best.x + r;
-                    g = *(f32 *)(p + 0x9c) * best.x + g;
-                    b = *(f32 *)(p + 0xc8) * best.x + b;
+                    g = ((GameObject *)p)->anim.activeMoveProgress * best.x + g;
+                    b = *(f32 *)&((GameObject *)p)->unkC8 * best.x + b;
                     sa = *(f32 *)(*pp + idx.best * 4 + 0x1fc) * best.x + sa;
                     sb = *(f32 *)(p + 0x228) * best.x + sb;
                 }
                 if (best.y > z2) {
                     p = *pp + idx.second * 4;
                     r = *(f32 *)(p + 0x70) * best.y + r;
-                    g = *(f32 *)(p + 0x9c) * best.y + g;
-                    b = *(f32 *)(p + 0xc8) * best.y + b;
+                    g = ((GameObject *)p)->anim.activeMoveProgress * best.y + g;
+                    b = *(f32 *)&((GameObject *)p)->unkC8 * best.y + b;
                     sa = *(f32 *)(*pp + idx.second * 4 + 0x1fc) * best.y + sa;
                     sb = *(f32 *)(p + 0x228) * best.y + sb;
                 }
@@ -1408,7 +1408,7 @@ void sky2_run(void)
                 b = lbl_803DF108;
             }
             p = *pp;
-            if ((*(u16 *)(p + 6) & 0x40) != 0) {
+            if ((*(u16 *)&((GameObject *)p)->anim.flags & 0x40) != 0) {
                 if (*(s8 *)(p + 0x314) == -1) {
                     *(u8 *)(p + 0x314) = 1;
                     frzero = lbl_803DF108;
@@ -1418,19 +1418,19 @@ void sky2_run(void)
                         (int)(-diff * lbl_803DF168), (int)(diff * lbl_803DF168));
                     *(f32 *)(*pp + 0x64) = lbl_803DF17C * (f32)randomGetRange(1, 10);
                 } else if (*(s8 *)(p + 0x314) == 1) {
-                    hv = *(f32 *)(p + 0x6c);
+                    hv = *(f32 *)&((GameObject *)p)->anim.jointPoseData;
                     sa = sa + hv;
-                    *(f32 *)(p + 0x6c) = hv + *(f32 *)(p + 0x64);
+                    *(f32 *)&((GameObject *)p)->anim.jointPoseData = hv + *(f32 *)(p + 0x64);
                     p = *pp;
-                    if (*(f32 *)(p + 0x6c) > *(f32 *)(p + 0x68)) {
+                    if (*(f32 *)&((GameObject *)p)->anim.jointPoseData > *(f32 *)&((GameObject *)p)->anim.dll) {
                         *(s8 *)(p + 0x314) = (s8)(1 - *(s8 *)(p + 0x314));
                     }
                 } else {
-                    hv = *(f32 *)(p + 0x6c);
+                    hv = *(f32 *)&((GameObject *)p)->anim.jointPoseData;
                     sa = sa + hv;
-                    *(f32 *)(p + 0x6c) = hv - *(f32 *)(p + 0x64);
+                    *(f32 *)&((GameObject *)p)->anim.jointPoseData = hv - *(f32 *)(p + 0x64);
                     p = *pp;
-                    if (*(f32 *)(p + 0x6c) < (frzero = lbl_803DF108)) {
+                    if (*(f32 *)&((GameObject *)p)->anim.jointPoseData < (frzero = lbl_803DF108)) {
                         *(s8 *)(p + 0x314) = (s8)(1 - *(s8 *)(p + 0x314));
                         *(f32 *)(*pp + 0x6c) = frzero;
                         amp = (s16)(int)(sb - sa);
@@ -1452,7 +1452,7 @@ void sky2_run(void)
                 fn_8005CECC(0);
             }
             p = *pp;
-            flags = *(u16 *)(p + 4);
+            flags = *(u16 *)&((GameObject *)p)->anim.rotZ;
             if ((flags & 8) == 0) {
                 scale = (f32)(blue + green + red) / lbl_803DF184;
                 r *= scale;
@@ -1460,7 +1460,7 @@ void sky2_run(void)
                 b *= scale;
             }
             if ((flags & 1) != 0) {
-                *(int *)(p + 0x24) = (int)r;
+                *(int *)&((GameObject *)p)->anim.velocityX = (int)r;
                 *(int *)(*pp + 0x28) = (int)g;
                 *(int *)(*pp + 0x2c) = (int)b;
                 *(f32 *)(*pp + 0x14) = sa;
@@ -1473,7 +1473,7 @@ void sky2_run(void)
                     *(f32 *)(*pp + 0x20) = lbl_803DF18C;
                 }
             } else if ((flags & 4) != 0) {
-                *(int *)(p + 0x30) = (int)r;
+                *(int *)&((GameObject *)p)->anim.parent = (int)r;
                 *(int *)(*pp + 0x34) = (int)g;
                 *(int *)(*pp + 0x38) = (int)b;
                 *(f32 *)(*pp + 0x1c) = sa;
@@ -1487,7 +1487,7 @@ void sky2_run(void)
                 }
             } else {
                 ri = (int)r;
-                *(int *)(p + 0x24) = ri;
+                *(int *)&((GameObject *)p)->anim.velocityX = ri;
                 gi = (int)g;
                 *(int *)(*pp + 0x28) = gi;
                 bi = (int)b;
@@ -1680,7 +1680,7 @@ void timeOfDayFn_8008b964(void)
             i = 0;
             for (count = 2; count != 0; count--) {
                 p = lbl_803DD12C + i;
-                *(f32 *)(p + 0xb8) -= *(f32 *)(p + 0xb4) * timeDelta;
+                *(f32 *)&((GameObject *)p)->extra -= *(f32 *)(p + 0xb4) * timeDelta;
                 val = *(f32 *)(lbl_803DD12C + (idx = i + 0xb8));
                 *(f32 *)(lbl_803DD12C + idx) =
                     (val < pEXIInputFlag) ? pEXIInputFlag : ((val > EXIInputFlag) ? EXIInputFlag : val);
@@ -2296,7 +2296,7 @@ void skyFn_8008a04c(void)
             t2 = (int)Curve_EvalCatmullRom(lbl_803DD12C + iofs + idx7 + 0x20, frac, 0);
             blue = (int)Curve_EvalCatmullRom(lbl_803DD12C + iofs + idx14 + 0x20, frac, 0);
             p = lbl_803DD12C + iofs;
-            blend = *(f32 *)(p + 0xb8);
+            blend = *(f32 *)&((GameObject *)p)->extra;
             if (blend != zero) {
                 c1 = (int)(blend * ((f32)p[0x74] - (f32)c1) + (f32)c1);
                 t2 = (int)(blend * ((f32)p[0x75] - (f32)t2) + (f32)t2);

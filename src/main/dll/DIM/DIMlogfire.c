@@ -1360,7 +1360,7 @@ extern void fn_8003B608(int r, int g, int b);
 #pragma scheduling off
 #pragma peephole off
 void MoonSeedPlantingSpot_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {
-    u8 *inner = *(u8 **)(p1 + 0xb8);
+    u8 *inner = ((GameObject *)p1)->extra;
     s32 v = visible;
     if (v != 0) {
         if (inner[0] == 2) {

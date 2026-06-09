@@ -366,7 +366,7 @@ f32 DR_EarthWarrior_func19(int obj, f32 *out)
 #pragma peephole off
 void DR_EarthWarrior_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
 {
-    EarthWarriorState *inner = *(EarthWarriorState **)((char *)p1 + 0xb8);
+    EarthWarriorState *inner = ((GameObject *)p1)->extra;
     if (vis == -1) {
         objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E8338);
         ObjPath_GetPointWorldPosition(p1, 0xb, (char *)(char *)inner + 0x1438, (char *)(char *)inner + 0x143c, (char *)(char *)inner + 0x1440, 0);

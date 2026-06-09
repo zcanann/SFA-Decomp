@@ -4444,7 +4444,7 @@ int dbstealerworm_stateHandlerB00(int p1, int p2)
 #pragma scheduling off
 int dbstealerworm_stateHandlerB03(int p1, int p2)
 {
-  GroundBaddieState *state = *(GroundBaddieState **)(p1 + 0xb8);
+  GroundBaddieState *state = ((GameObject *)p1)->extra;
   if ((s8)((BaddieState *)p2)->moveJustStartedB != 0) {
     (*(void (**)(int, s16, int, int))((char *)*gBaddieControlInterface + 0x4c))(
         p1, state->unk3F0, -1, 0);
@@ -4460,7 +4460,7 @@ extern f32 lbl_803E62BC;
 #pragma scheduling off
 int dbstealerworm_stateHandlerB01(int p1, int p2)
 {
-  GroundBaddieState *state = *(GroundBaddieState **)(p1 + 0xb8);
+  GroundBaddieState *state = ((GameObject *)p1)->extra;
   if ((s8)((BaddieState *)p2)->hitPoints < 1) return 3;
   if ((s8)((BaddieState *)p2)->moveDone != 0) {
     ((DbStealerwormControl *)state->control)->unk38 += lbl_803E62BC;
@@ -4490,7 +4490,7 @@ extern f32 timeDelta;
 #pragma scheduling off
 int dfplevelcontrol_SeqFn(int p1)
 {
-  DfpLevelControlState *p_b8 = *(DfpLevelControlState **)(p1 + 0xb8);
+  DfpLevelControlState *p_b8 = ((GameObject *)p1)->extra;
   void *player = Obj_GetPlayerObject();
   s16 v = p_b8->timer;
   if (v > 0) {

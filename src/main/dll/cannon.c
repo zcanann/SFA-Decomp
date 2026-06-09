@@ -1,4 +1,5 @@
 #include "main/dll/cannon.h"
+#include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"
 
 #define TRICKY_STATE_FLAGS_OFFSET 0x54
@@ -227,7 +228,7 @@ void trickyFlame(int p1, int p2) {
     case 3:
         trickyDebugPrint(strBase + 0x70c);
         trickyFn_8013b368((void *)p1, lbl_803E2488, (void *)p2);
-        if ((u8)*(u8 *)(*(int *)(p2 + 0x720) + 0x3) == Objfsa_GetWalkGroupIndexAtPoint((float *)(p1 + 0x18), (void *)0x0)) {
+        if ((u8)*(u8 *)(*(int *)(p2 + 0x720) + 0x3) == Objfsa_GetWalkGroupIndexAtPoint((float *)&((GameObject *)p1)->anim.worldPosX, (void *)0x0)) {
             *(u8 *)(p2 + 0x9) = 1;
             *(u8 *)(p2 + 0xa) = 4;
         }
@@ -237,7 +238,7 @@ void trickyFlame(int p1, int p2) {
         target = (void *)(*(int *)(p2 + 0x71c) + 0x8);
         trickyUpdateApproachSpeed(p1, p2, lbl_803E2488, target, 1);
         trickyMove(p1, target);
-        if (Objfsa_GetWalkGroupIndexAtPoint((float *)(p1 + 0x18), (void *)0x0) == 0) {
+        if (Objfsa_GetWalkGroupIndexAtPoint((float *)&((GameObject *)p1)->anim.worldPosX, (void *)0x0) == 0) {
             *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) | 0x10;
             *(u8 *)(p2 + 0xa) = 5;
         }
@@ -274,7 +275,7 @@ void trickyFlame(int p1, int p2) {
             }
             trickyTurnTowardYaw(p1, srcAng);
         }
-        if ((double)*(f32 *)(p1 + 0x98) > (double)lbl_803E24AC) {
+        if ((double)((GameObject *)p1)->anim.currentMoveProgress > (double)lbl_803E24AC) {
             if ((*(u32 *)(p2 + 0x54) & 0x800) == 0) {
                 if ((u8)Obj_IsLoadingLocked() != 0) {
                     *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) | 0x800;
@@ -283,7 +284,7 @@ void trickyFlame(int p1, int p2) {
                         *(u8 *)((char *)setup + 0x4) = 2;
                         *(u8 *)((char *)setup + 0x5) = 1;
                         *(s16 *)((char *)setup + 0x1a) = (s16)i;
-                        slot[0x700 / 4] = (void *)Obj_SetupObject(setup, 5, *(s8 *)(p1 + 0xac), -1, *(void **)(p1 + 0x30));
+                        slot[0x700 / 4] = (void *)Obj_SetupObject(setup, 5, *(s8 *)(p1 + 0xac), -1, ((GameObject *)p1)->anim.parent);
                         slot++;
                     }
                     Sfx_PlayFromObject(p1, 0x3db);
@@ -294,16 +295,16 @@ void trickyFlame(int p1, int p2) {
                 int (*cb)(int, int) = *(int (**)(int, int))(p2 + 0x724);
                 if (cb != NULL && cb(*(int *)(p2 + 0x24), 1) == 0) {
                     dieFlag = 1;
-                } else if ((double)*(f32 *)(p1 + 0x98) > (double)lbl_803E2504) {
+                } else if ((double)((GameObject *)p1)->anim.currentMoveProgress > (double)lbl_803E2504) {
                     TRICKY_MARK_HELPERS_FINISHED(p2);
                     for (i = 0, slot = (void **)p2; i < 7; i++) {
                         objSetAnimSpeedTo1(slot[0x700 / 4]);
                         slot++;
                     }
                     Sfx_RemoveLoopedObjectSound(p1, 0x3dc);
-                    state = *(void **)(p1 + 0xb8);
+                    state = ((GameObject *)p1)->extra;
                     if ((((u32)*(u8 *)((char *)state + 0x58) >> 6) & 1) == 0) {
-                        s16 a0 = *(s16 *)(p1 + 0xa0);
+                        s16 a0 = ((GameObject *)p1)->anim.currentMove;
                         if (a0 >= 0x30 || a0 < 0x29) {
                             if (Sfx_IsPlayingFromObjectChannel(p1, 0x10) == 0) {
                                 objAudioFn_800393f8(p1, (char *)state + 0x3a8, 0x29d, 0, -1, 0);
@@ -352,7 +353,7 @@ void trickyFlame(int p1, int p2) {
         break;
     case 6:
         trickyDebugPrint(strBase + 0x778);
-        if ((double)*(f32 *)(p1 + 0x98) > (double)lbl_803E24AC) {
+        if ((double)((GameObject *)p1)->anim.currentMoveProgress > (double)lbl_803E24AC) {
             if ((*(u32 *)(p2 + 0x54) & 0x800) == 0) {
                 if ((u8)Obj_IsLoadingLocked() != 0) {
                     *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) | 0x800;
@@ -361,7 +362,7 @@ void trickyFlame(int p1, int p2) {
                         *(u8 *)((char *)setup + 0x4) = 2;
                         *(u8 *)((char *)setup + 0x5) = 1;
                         *(s16 *)((char *)setup + 0x1a) = (s16)i;
-                        slot[0x700 / 4] = (void *)Obj_SetupObject(setup, 5, *(s8 *)(p1 + 0xac), -1, *(void **)(p1 + 0x30));
+                        slot[0x700 / 4] = (void *)Obj_SetupObject(setup, 5, *(s8 *)(p1 + 0xac), -1, ((GameObject *)p1)->anim.parent);
                         slot++;
                     }
                     Sfx_PlayFromObject(p1, 0x3db);
@@ -372,16 +373,16 @@ void trickyFlame(int p1, int p2) {
                 int (*cb)(int, int) = *(int (**)(int, int))(p2 + 0x724);
                 if (cb != NULL && cb(*(int *)(p2 + 0x24), 1) == 0) {
                     dieFlag = 1;
-                } else if ((double)*(f32 *)(p1 + 0x98) > (double)lbl_803E2504) {
+                } else if ((double)((GameObject *)p1)->anim.currentMoveProgress > (double)lbl_803E2504) {
                     TRICKY_MARK_HELPERS_FINISHED(p2);
                     for (i = 0, slot = (void **)p2; i < 7; i++) {
                         objSetAnimSpeedTo1(slot[0x700 / 4]);
                         slot++;
                     }
                     Sfx_RemoveLoopedObjectSound(p1, 0x3dc);
-                    state = *(void **)(p1 + 0xb8);
+                    state = ((GameObject *)p1)->extra;
                     if ((((u32)*(u8 *)((char *)state + 0x58) >> 6) & 1) == 0) {
-                        s16 a0 = *(s16 *)(p1 + 0xa0);
+                        s16 a0 = ((GameObject *)p1)->anim.currentMove;
                         if (a0 >= 0x30 || a0 < 0x29) {
                             if (Sfx_IsPlayingFromObjectChannel(p1, 0x10) == 0) {
                                 objAudioFn_800393f8(p1, (char *)state + 0x3a8, 0x29d, 0, -1, 0);
@@ -412,7 +413,7 @@ void trickyFlame(int p1, int p2) {
             target = (void *)(*(int *)(p2 + 0x720) + 0x8);
             trickyUpdateApproachSpeed(p1, p2, lbl_803E2488, target, 1);
             trickyMove(p1, target);
-            if (Objfsa_GetWalkGroupIndexAtPoint((float *)(p1 + 0x18), (void *)0x0) != 0) {
+            if (Objfsa_GetWalkGroupIndexAtPoint((float *)&((GameObject *)p1)->anim.worldPosX, (void *)0x0) != 0) {
                 *(u8 *)(p2 + 0x8) = 1;
                 *(u8 *)(p2 + 0xa) = 0;
                 fz = lbl_803E23DC;
@@ -566,7 +567,7 @@ void trickyGuard(ObjAnimComponent *obj, TrickyRuntime *trickyState) {
                 slot++;
             }
             Sfx_RemoveLoopedObjectSound(p1, 0x3dc);
-            state = *(void **)(p1 + 0xb8);
+            state = ((GameObject *)p1)->extra;
             if ((((u32)*(u8 *)((char *)state + 0x58) >> 6) & 1) == 0) {
                 s16 a0 = obj->currentMove;
                 if (a0 >= 0x30 || a0 < 0x29) {
@@ -597,7 +598,7 @@ void trickyGuard(ObjAnimComponent *obj, TrickyRuntime *trickyState) {
         if ((double)obj->currentMoveProgress >= (double)lbl_803E24D0) {
             objAnimFn_8013a3f0(p1, 0x33, lbl_803E2444, 0x4000000);
             trickyState->guardTimer = lbl_803E23DC;
-            state = *(void **)(p1 + 0xb8);
+            state = ((GameObject *)p1)->extra;
             if ((((u32)*(u8 *)((char *)state + 0x58) >> 6) & 1) == 0) {
                 s16 a0 = obj->currentMove;
                 if (a0 >= 0x30 || a0 < 0x29) {
@@ -617,7 +618,7 @@ void trickyGuard(ObjAnimComponent *obj, TrickyRuntime *trickyState) {
     case 7:
         trickyDebugPrint(strBase + 0x6b8);
         if (randomGetRange(0, 10) == 0) {
-            state = *(void **)(p1 + 0xb8);
+            state = ((GameObject *)p1)->extra;
             if ((((u32)*(u8 *)((char *)state + 0x58) >> 6) & 1) == 0) {
                 s16 a0 = obj->currentMove;
                 if (a0 >= 0x30 || a0 < 0x29) {

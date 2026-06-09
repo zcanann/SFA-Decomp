@@ -8731,22 +8731,22 @@ void fn_802A9D0C(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8)
         }
         (*(void (*)(int, int, int, int, int, int))(*(int *)((char *)*(int *)*(int *)((char *)p3 + 0x68) + 0x10)))(
             p3, p4, p5, p6, p7, -1);
-        *(f32 *)((char *)p1 + 0x8c) = *(f32 *)((char *)p1 + 0x18);
-        *(f32 *)((char *)p1 + 0x90) = *(f32 *)((char *)p1 + 0x1c);
-        *(f32 *)((char *)p1 + 0x94) = *(f32 *)((char *)p1 + 0x20);
-        *(f32 *)((char *)p1 + 0x80) = *(f32 *)((char *)p1 + 0xc);
-        *(f32 *)((char *)p1 + 0x84) = *(f32 *)((char *)p1 + 0x10);
-        *(f32 *)((char *)p1 + 0x88) = *(f32 *)((char *)p1 + 0x14);
+        ((GameObject *)p1)->anim.previousWorldPosX = ((GameObject *)p1)->anim.worldPosX;
+        ((GameObject *)p1)->anim.previousWorldPosY = ((GameObject *)p1)->anim.worldPosY;
+        ((GameObject *)p1)->anim.previousWorldPosZ = ((GameObject *)p1)->anim.worldPosZ;
+        ((GameObject *)p1)->anim.previousLocalPosX = ((GameObject *)p1)->anim.localPosX;
+        ((GameObject *)p1)->anim.previousLocalPosY = ((GameObject *)p1)->anim.localPosY;
+        ((GameObject *)p1)->anim.previousLocalPosZ = ((GameObject *)p1)->anim.localPosZ;
     }
     (*(void (*)(int, f32 *, f32 *, f32 *))(*(int *)((char *)*(int *)*(int *)((char *)p3 + 0x68) + 0x28)))(
         p3, &a, &b, &c);
-    *(f32 *)((char *)p1 + 0xc) = a;
-    *(f32 *)((char *)p1 + 0x10) = b;
-    *(f32 *)((char *)p1 + 0x14) = c;
-    inner = *(int *)((char *)p1 + 0xb8);
-    if (*(s16 *)((char *)inner + 0x274) == 0x18 || (*(u16 *)((char *)p1 + 0xb0) & 0x1000) != 0) {
-        *(s16 *)((char *)p1 + 0x2) = *(s16 *)((char *)p3 + 0x2);
-        *(s16 *)((char *)p1 + 0x4) = *(s16 *)((char *)p3 + 0x4);
+    ((GameObject *)p1)->anim.localPosX = a;
+    ((GameObject *)p1)->anim.localPosY = b;
+    ((GameObject *)p1)->anim.localPosZ = c;
+    inner = *(int *)&((GameObject *)p1)->extra;
+    if (*(s16 *)((char *)inner + 0x274) == 0x18 || (((GameObject *)p1)->objectFlags & 0x1000) != 0) {
+        ((GameObject *)p1)->anim.rotY = *(s16 *)((char *)p3 + 0x2);
+        ((GameObject *)p1)->anim.rotZ = *(s16 *)((char *)p3 + 0x4);
         *(s16 *)((char *)p2 + 0x478) = *(s16 *)((char *)p3 + 0x0);
     } else {
         flag = 1;
@@ -8772,18 +8772,18 @@ void fn_802A9D0C(int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8)
         (*(void (*)(int, int, int *))(*(int *)((char *)*(int *)*(int *)((char *)p3 + 0x68) + 0x54)))(
             p3, 4, &flag);
         if (flag != 0) {
-            *(s16 *)((char *)p1 + 0x2) = *(s16 *)((char *)p3 + 0x2);
-            *(s16 *)((char *)p1 + 0x4) = *(s16 *)((char *)p3 + 0x4);
+            ((GameObject *)p1)->anim.rotY = *(s16 *)((char *)p3 + 0x2);
+            ((GameObject *)p1)->anim.rotZ = *(s16 *)((char *)p3 + 0x4);
         }
     }
     *(s16 *)((char *)p2 + 0x484) = *(s16 *)((char *)p2 + 0x478);
-    *(s16 *)((char *)p1 + 0x0) = *(s16 *)((char *)p2 + 0x478);
-    *(f32 *)((char *)p1 + 0x18) = *(f32 *)((char *)p1 + 0xc);
-    *(f32 *)((char *)p1 + 0x1c) = *(f32 *)((char *)p1 + 0x10);
-    *(f32 *)((char *)p1 + 0x20) = *(f32 *)((char *)p1 + 0x14);
-    *(f32 *)((char *)p1 + 0x24) = *(f32 *)((char *)p3 + 0x24);
-    *(f32 *)((char *)p1 + 0x28) = *(f32 *)((char *)p3 + 0x28);
-    *(f32 *)((char *)p1 + 0x2c) = *(f32 *)((char *)p3 + 0x2c);
+    ((GameObject *)p1)->anim.rotX = *(s16 *)((char *)p2 + 0x478);
+    ((GameObject *)p1)->anim.worldPosX = ((GameObject *)p1)->anim.localPosX;
+    ((GameObject *)p1)->anim.worldPosY = ((GameObject *)p1)->anim.localPosY;
+    ((GameObject *)p1)->anim.worldPosZ = ((GameObject *)p1)->anim.localPosZ;
+    ((GameObject *)p1)->anim.velocityX = *(f32 *)((char *)p3 + 0x24);
+    ((GameObject *)p1)->anim.velocityY = *(f32 *)((char *)p3 + 0x28);
+    ((GameObject *)p1)->anim.velocityZ = *(f32 *)((char *)p3 + 0x2c);
     fn_802AB5A4(p1, p2, 7);
 }
 #pragma peephole reset
@@ -11236,8 +11236,8 @@ void fn_802AC32C(int p1, int p2, int p3)
             *(s16 *)((char *)p3 + 0x4a0) = (s16)randomGetRange(0x78, 0xf0);
             *(s16 *)((char *)p3 + 0x4a2) = (s16)randomGetRange(0, 0x28);
         }
-        delta = (u16)getAngle(-(*(f32 *)((char *)near + 0xc) - *(f32 *)((char *)p1 + 0xc)),
-                              -(*(f32 *)((char *)near + 0x14) - *(f32 *)((char *)p1 + 0x14))) -
+        delta = (u16)getAngle(-(*(f32 *)((char *)near + 0xc) - ((GameObject *)p1)->anim.localPosX),
+                              -(*(f32 *)((char *)near + 0x14) - ((GameObject *)p1)->anim.localPosZ)) -
                 (u16)*(s16 *)((char *)p3 + 0x478);
         if (delta > 0x8000) {
             delta -= 0xFFFF;

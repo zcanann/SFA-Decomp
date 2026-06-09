@@ -1622,9 +1622,9 @@ void fn_8015ED1C(int p1, int p2, int p3)
   player = Obj_GetPlayerObject();
   t = *(char **)(p3 + 0x2d0);
   if (t != NULL) {
-    d.x = *(f32 *)(t + 0x18) - *(f32 *)(p1 + 0x18);
-    d.y = *(f32 *)(t + 0x1c) - *(f32 *)(p1 + 0x1c);
-    d.z = *(f32 *)(t + 0x20) - *(f32 *)(p1 + 0x20);
+    d.x = *(f32 *)(t + 0x18) - ((GameObject *)p1)->anim.worldPosX;
+    d.y = *(f32 *)(t + 0x1c) - ((GameObject *)p1)->anim.worldPosY;
+    d.z = *(f32 *)(t + 0x20) - ((GameObject *)p1)->anim.worldPosZ;
     *(f32 *)(p3 + 0x2c0) = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
   }
 
@@ -1689,10 +1689,10 @@ void dll_CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
   extern void fn_8003B5E0(int, int, int, int);
   extern f32 lbl_803E2DC8;
   extern f32 lbl_803E2E10;
-  GroundBaddieState *sub = *(GroundBaddieState **)(p1 + 0xb8);
+  GroundBaddieState *sub = ((GameObject *)p1)->extra;
   f32 t;
 
-  if (visible != 0 && *(int *)(p1 + 0xf4) == 0 && sub->targetState != 0) {
+  if (visible != 0 && ((GameObject *)p1)->unkF4 == 0 && sub->targetState != 0) {
     t = sub->unk3E8;
     if (t != lbl_803E2DC8) {
       fn_8003B5E0(200, 0, 0, (int)t);

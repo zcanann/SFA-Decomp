@@ -628,8 +628,8 @@ void worldobj_spawnAsteroidBatch(int obj, int xMin, int xMax, int yMin, int yMax
 #pragma scheduling off
 #pragma peephole off
 void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {
-    int *inner = *(int **)(p1 + 0xb8);
-    int modelId = *(s16 *)*(int **)(p1 + 0x4c);
+    int *inner = ((GameObject *)p1)->extra;
+    int modelId = *(s16 *)*(int **)&((GameObject *)p1)->anim.placementData;
 
     if (modelId == 0x5f5) {
         objRenderFn_8003b8f4(lbl_803E6678);

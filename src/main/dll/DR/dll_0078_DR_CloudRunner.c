@@ -307,8 +307,8 @@ int DR_CloudRunner_stateHandler03(int obj, int p2)
 #pragma peephole off
 void DR_CloudRunner_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
 {
-    CloudRunnerState *inner = *(CloudRunnerState **)((char *)p1 + 0xb8);
-    if (*(int *)((char *)p1 + 0xf4) == 0) {
+    CloudRunnerState *inner = ((GameObject *)p1)->extra;
+    if (((GameObject *)p1)->unkF4 == 0) {
         if (vis == -1) {
             objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E83A8);
             ObjPath_GetPointWorldPosition(p1, 3, (char *)(int)((char *)inner + 0xae8), (char *)(int)((char *)inner + 0xaec), (char *)(int)((char *)inner + 0xaf0), 0);

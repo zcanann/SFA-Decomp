@@ -397,9 +397,9 @@ void dll_19B_init(u8 *obj, u8 *params) {
 void dll_19C_init(int obj, u8 *initData)
 {
     register int self = obj;
-    register int state = *(int *)(self + 0xb8);
+    register int state = *(int *)&((GameObject *)self)->extra;
     *(short *)self = (short)((int)(signed char)initData[0x1e] << 8);
-    *(int *)(self + 0xf8) = 0;
+    ((GameObject *)self)->unkF8 = 0;
     *(short *)(state + 4) = 0x64;
     *(short *)(state + 6) = 0;
     *(int *)state = 0;
@@ -419,7 +419,7 @@ void dll_19C_init(int obj, u8 *initData)
 void dll_19D_free(int obj)
 {
     register int self = obj;
-    register int state = *(int *)(self + 0xb8);
+    register int state = *(int *)&((GameObject *)self)->extra;
     if ((*(u8 *)(state + 0x36) & 2) == 0) {
         getLActions(self, self, 1, 0, 0, 0);
         *(u8 *)(state + 0x36) = (u8)((u32)*(u8 *)(state + 0x36) | 0x2);
@@ -441,7 +441,7 @@ extern int ObjHits_SetHitVolumeSlot(int obj, int volumeIdx, int hitType, int ext
 void dll_19D_init(int obj)
 {
     register int self = obj;
-    register int state2 = *(int *)(self + 0x4c);
+    register int state2 = *(int *)&((GameObject *)self)->anim.placementData;
     int slot;
 
     if ((int)(signed char)*(u8 *)(state2 + 0x19) != 0) {
@@ -476,8 +476,8 @@ extern f64 lbl_803E51C0;
 void dll_19D_hitDetect(int obj)
 {
     register int self = obj;
-    register int state = *(int *)(self + 0xb8);
-    int state2 = *(int *)(self + 0x4c);
+    register int state = *(int *)&((GameObject *)self)->extra;
+    int state2 = *(int *)&((GameObject *)self)->anim.placementData;
     float vec[6];
     int linkObj;
     void *linkSubObj;
@@ -487,7 +487,7 @@ void dll_19D_hitDetect(int obj)
     vec[5] = lbl_803E51B8;
     vec[2] = (float)(int)(s8)*(u8 *)(state2 + 0x19);
 
-    linkObj = *(int *)(self + 0x54);
+    linkObj = *(int *)&((GameObject *)self)->anim.hitReactState;
     linkSubObj = *(void **)(linkObj + 0x50);
     if (linkSubObj == 0) return;
     if (*(short *)((u8 *)linkSubObj + 0x46) == 0x248) return;

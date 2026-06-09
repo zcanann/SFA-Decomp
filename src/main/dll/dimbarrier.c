@@ -399,17 +399,17 @@ extern f64 lbl_803E50D0;
 void fn_801C8B68(int obj)
 {
     register int self = obj;
-    register int state2 = *(int *)(self + 0x4c);
-    register int state = *(int *)(self + 0xb8);
+    register int state2 = *(int *)&((GameObject *)self)->anim.placementData;
+    register int state = *(int *)&((GameObject *)self)->extra;
     void *player = Obj_GetPlayerObject();
     int local_var;
     f32 dist;
     f32 angA, angB;
     int delta;
 
-    if ((*(short *)(self + 0x6) & 0x4000) != 0) {
+    if ((((GameObject *)self)->anim.flags & 0x4000) != 0) {
         *(short *)self = 0;
-        *(float *)(self + 0x10) = *(float *)(state2 + 0xc);
+        ((GameObject *)self)->anim.localPosY = *(float *)(state2 + 0xc);
         return;
     }
 
@@ -423,22 +423,22 @@ void fn_801C8B68(int obj)
         (int)*(short *)(state + 0x12)
         + (int)(lbl_803E50A8 * timeDelta));
 
-    *(float *)(self + 0x10) = lbl_803E50AC + (*(float *)(state2 + 0xc) +
+    ((GameObject *)self)->anim.localPosY = lbl_803E50AC + (*(float *)(state2 + 0xc) +
         mathSinf((lbl_803E50B0 * (f32)(s32)*(short *)(state + 0xe)) / lbl_803E50B4));
     angA = mathSinf((lbl_803E50B0 * (f32)(s32)*(short *)(state + 0x10)) / lbl_803E50B4);
     angB = mathSinf((lbl_803E50B0 * (f32)(s32)*(short *)(state + 0xe)) / lbl_803E50B4);
-    *(short *)(self + 0x4) = (short)(int)(lbl_803E50B8 * (angA + angB));
+    ((GameObject *)self)->anim.rotZ = (short)(int)(lbl_803E50B8 * (angA + angB));
     angA = mathSinf((lbl_803E50B0 * (f32)(s32)*(short *)(state + 0x12)) / lbl_803E50B4);
     angB = mathSinf((lbl_803E50B0 * (f32)(s32)*(short *)(state + 0xe)) / lbl_803E50B4);
-    *(short *)(self + 0x2) = (short)(int)(lbl_803E50B8 * (angA + angB));
+    ((GameObject *)self)->anim.rotY = (short)(int)(lbl_803E50B8 * (angA + angB));
 
     ObjAnim_AdvanceCurrentMove(lbl_803E50BC, timeDelta, self, (ObjAnimEventList *)&local_var);
 
     if (player == NULL) return;
 
     {
-        float dx = *(float *)(self + 0x18) - *(float *)((int)player + 0x18);
-        float dz = *(float *)(self + 0x20) - *(float *)((int)player + 0x20);
+        float dx = ((GameObject *)self)->anim.worldPosX - *(float *)((int)player + 0x18);
+        float dz = ((GameObject *)self)->anim.worldPosZ - *(float *)((int)player + 0x20);
         int ang = (int)getAngle(dx, dz);
         delta = (int)(u16)ang - (int)(u16)*(short *)self;
         if (delta > 0x8000) delta -= 0x10000;

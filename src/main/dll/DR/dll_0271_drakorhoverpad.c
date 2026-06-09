@@ -258,59 +258,59 @@ int drakorhoverpad_update(void *curve, int arg) {
     if (curve == NULL) {
         return 1;
     }
-    cur = *(u8 **)(p + 0xa0);
-    if (cur == NULL || *(void **)(p + 0xa4) == NULL) {
+    cur = *(u8 **)&((GameObject *)p)->anim.currentMove;
+    if (cur == NULL || ((GameObject *)p)->anim.targetObj == NULL) {
         return 1;
     }
-    *(u8 **)(p + 0x9c) = cur;
-    *(u8 **)(p + 0xa0) = *(u8 **)(p + 0xa4);
+    *(u8 **)&((GameObject *)p)->anim.activeMoveProgress = cur;
+    *(u8 **)&((GameObject *)p)->anim.currentMove = *(u8 **)&((GameObject *)p)->anim.targetObj;
     memcpy(p + 0xa8, p + 0xb8, 16);
     memcpy(p + 0xc8, p + 0xd8, 16);
     memcpy(p + 0xe8, p + 0xf8, 16);
-    if (*(int *)(p + 0x80) != 0) {
-        result = drakorhoverpad_pickMaskedNextPoint(*(int **)(p + 0xa0), -1, arg);
+    if (*(int *)&((GameObject *)p)->anim.previousLocalPosX != 0) {
+        result = drakorhoverpad_pickMaskedNextPoint(*(int **)&((GameObject *)p)->anim.currentMove, -1, arg);
     } else {
-        result = drakorhoverpad_pickUnmaskedNextPoint(*(int **)(p + 0xa0), -1, arg);
+        result = drakorhoverpad_pickUnmaskedNextPoint(*(int **)&((GameObject *)p)->anim.currentMove, -1, arg);
     }
     if (result == -1) {
-        *(void **)(p + 0xa4) = NULL;
+        ((GameObject *)p)->anim.targetObj = NULL;
         return 1;
     }
-    *(void **)(p + 0xa4) = (*gRomCurveInterface)->getById(result);
-    if (*(void **)(p + 0xa4) == NULL) {
+    ((GameObject *)p)->anim.targetObj = (*gRomCurveInterface)->getById(result);
+    if (((GameObject *)p)->anim.targetObj == NULL) {
         return 1;
     }
-    if (*(int *)(p + 0x80) != 0) {
-        *(f32 *)(p + 0xb8) = *(f32 *)(*(u8 **)(p + 0xa0) + 8);
-        *(f32 *)(p + 0xbc) = *(f32 *)(*(u8 **)(p + 0x9c) + 8);
-        *(f32 *)(p + 0xc0) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2c) << 8) / lbl_803E6A58));
-        *(f32 *)(p + 0xc4) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0x9c) + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0x9c) + 0x2c) << 8) / lbl_803E6A58));
-        *(f32 *)(p + 0xd8) = *(f32 *)(*(u8 **)(p + 0xa0) + 0xc);
-        *(f32 *)(p + 0xdc) = *(f32 *)(*(u8 **)(p + 0x9c) + 0xc);
-        *(f32 *)(p + 0xe0) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2d) << 8) / lbl_803E6A58));
-        *(f32 *)(p + 0xe4) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0x9c) + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0x9c) + 0x2d) << 8) / lbl_803E6A58));
-        *(f32 *)(p + 0xf8) = *(f32 *)(*(u8 **)(p + 0xa0) + 0x10);
-        *(f32 *)(p + 0xfc) = *(f32 *)(*(u8 **)(p + 0x9c) + 0x10);
-        *(f32 *)(p + 0x100) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * mathCosf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2c) << 8) / lbl_803E6A58));
-        *(f32 *)(p + 0x104) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0x9c) + 0x2e) * mathCosf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0x9c) + 0x2c) << 8) / lbl_803E6A58));
+    if (*(int *)&((GameObject *)p)->anim.previousLocalPosX != 0) {
+        *(f32 *)&((GameObject *)p)->extra = *(f32 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 8);
+        *(f32 *)&((GameObject *)p)->animEventCallback = *(f32 *)(*(u8 **)&((GameObject *)p)->anim.activeMoveProgress + 8);
+        *(f32 *)&((GameObject *)p)->unkC0 = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2c) << 8) / lbl_803E6A58));
+        *(f32 *)&((GameObject *)p)->unkC4 = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)&((GameObject *)p)->anim.activeMoveProgress + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)&((GameObject *)p)->anim.activeMoveProgress + 0x2c) << 8) / lbl_803E6A58));
+        *(f32 *)(p + 0xd8) = *(f32 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0xc);
+        *(f32 *)&((GameObject *)p)->unkDC = *(f32 *)(*(u8 **)&((GameObject *)p)->anim.activeMoveProgress + 0xc);
+        *(f32 *)(p + 0xe0) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2d) << 8) / lbl_803E6A58));
+        *(f32 *)(p + 0xe4) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)&((GameObject *)p)->anim.activeMoveProgress + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)&((GameObject *)p)->anim.activeMoveProgress + 0x2d) << 8) / lbl_803E6A58));
+        *(f32 *)&((GameObject *)p)->unkF8 = *(f32 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x10);
+        ((GameObject *)p)->unkFC = *(f32 *)(*(u8 **)&((GameObject *)p)->anim.activeMoveProgress + 0x10);
+        ((GameObject *)p)->unk100 = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2e) * mathCosf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2c) << 8) / lbl_803E6A58));
+        ((GameObject *)p)->unk104 = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)&((GameObject *)p)->anim.activeMoveProgress + 0x2e) * mathCosf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)&((GameObject *)p)->anim.activeMoveProgress + 0x2c) << 8) / lbl_803E6A58));
     } else {
-        *(f32 *)(p + 0xb8) = *(f32 *)(*(u8 **)(p + 0xa0) + 8);
-        *(f32 *)(p + 0xbc) = *(f32 *)(*(u8 **)(p + 0xa0) + 8);
-        *(f32 *)(p + 0xc0) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2c) << 8) / lbl_803E6A58));
-        *(f32 *)(p + 0xc4) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2c) << 8) / lbl_803E6A58));
-        *(f32 *)(p + 0xd8) = *(f32 *)(*(u8 **)(p + 0xa0) + 0xc);
-        *(f32 *)(p + 0xdc) = *(f32 *)(*(u8 **)(p + 0xa0) + 0xc);
-        *(f32 *)(p + 0xe0) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2d) << 8) / lbl_803E6A58));
-        *(f32 *)(p + 0xe4) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2d) << 8) / lbl_803E6A58));
-        *(f32 *)(p + 0xf8) = *(f32 *)(*(u8 **)(p + 0xa0) + 0x10);
-        *(f32 *)(p + 0xfc) = *(f32 *)(*(u8 **)(p + 0xa0) + 0x10);
-        *(f32 *)(p + 0x100) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * mathCosf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2c) << 8) / lbl_803E6A58));
-        *(f32 *)(p + 0x104) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)(p + 0xa0) + 0x2e) * mathCosf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)(p + 0xa0) + 0x2c) << 8) / lbl_803E6A58));
+        *(f32 *)&((GameObject *)p)->extra = *(f32 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 8);
+        *(f32 *)&((GameObject *)p)->animEventCallback = *(f32 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 8);
+        *(f32 *)&((GameObject *)p)->unkC0 = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2c) << 8) / lbl_803E6A58));
+        *(f32 *)&((GameObject *)p)->unkC4 = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2c) << 8) / lbl_803E6A58));
+        *(f32 *)(p + 0xd8) = *(f32 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0xc);
+        *(f32 *)&((GameObject *)p)->unkDC = *(f32 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0xc);
+        *(f32 *)(p + 0xe0) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2d) << 8) / lbl_803E6A58));
+        *(f32 *)(p + 0xe4) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2d) << 8) / lbl_803E6A58));
+        *(f32 *)&((GameObject *)p)->unkF8 = *(f32 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x10);
+        ((GameObject *)p)->unkFC = *(f32 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x10);
+        ((GameObject *)p)->unk100 = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2e) * mathCosf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2c) << 8) / lbl_803E6A58));
+        ((GameObject *)p)->unk104 = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2e) * mathCosf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2c) << 8) / lbl_803E6A58));
     }
-    if (*(int *)(p + 0x90) != 0) {
+    if (*(int *)&((GameObject *)p)->anim.previousWorldPosY != 0) {
         curvesSetupMoveNetworkCurve(curve);
     }
-    if (*(int *)(p + 0x80) != 0) {
+    if (*(int *)&((GameObject *)p)->anim.previousLocalPosX != 0) {
         Curve_AdvanceAlongPath(curve, lbl_803E6A70);
     } else {
         Curve_AdvanceAlongPath(curve, lbl_803E6A48);
@@ -351,7 +351,7 @@ void drakorhoverpad_updateMain(int obj) {
             curveArg = 0x2a;
             (*gRomCurveInterface)->initCurve(p + 4, (void *)obj, lbl_803E6A4C, &curveArg, -1);
             Curve_AdvanceAlongPath(p + 4, lbl_803E6A50);
-            ((GameObject *)obj)->anim.localPosX = *(f32 *)(p + 0x6c);
+            ((GameObject *)obj)->anim.localPosX = *(f32 *)&((GameObject *)p)->anim.jointPoseData;
             ((GameObject *)obj)->anim.localPosY = *(f32 *)(p + 0x70);
             ((GameObject *)obj)->anim.localPosZ = *(f32 *)(p + 0x74);
             *(f32 *)p = lbl_803E6A38;
