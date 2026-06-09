@@ -8,7 +8,6 @@ extern uint GameBit_Get(int bit);
 extern int coordsToMapCell(u8 *p, f32 a, f32 b);
 extern f32 vec3f_distanceSquared(f32 *a, f32 *b);
 
-#pragma peephole off
 
 /*
  * --INFO--

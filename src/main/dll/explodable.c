@@ -474,4 +474,3 @@ int LargeCrate_SeqFn(int *obj) {
     }
     return 0;
 }
-#pragma peephole reset

@@ -21,7 +21,6 @@ extern f32 lbl_803E4E24;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
 int dfropenode_syncRopeToEndpoints(DFropenodeObject *obj)
 {
   DFropenodeExtra *extra;

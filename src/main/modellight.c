@@ -82,34 +82,24 @@ FUN_80017468(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
  */
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 extern f32 timeDelta;
 
 #pragma push
-#pragma scheduling off
 
 #pragma pop
 
 #pragma push
-#pragma scheduling off
 #pragma pop
 
 /*
@@ -179,8 +169,6 @@ FUN_80017998(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 /* ObjModel/model-file accessors. */
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 
@@ -312,8 +300,6 @@ void *objCreateLight(int arg, u8 addToList) {
 }
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 void modelLightStruct_freeSlot(void **lightSlot) {
     int count;
     int i;
@@ -410,8 +396,6 @@ void *modelLightStruct_createPointLight(int unused, u8 red, u8 green, u8 blue, u
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 void *objAllocLight(void *owner) {
     u8 *light;
     f32 tmp[3];
@@ -544,8 +528,6 @@ void modelLightStruct_setProjectionTevModes(ModelLightStruct *p, void *a, void *
 extern u8 lbl_803DB408;
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 void modelLightStruct_setGlowColor(ModelLightStruct *light, u8 red, u8 green, u8 blue, u8 alpha) {
     light->glowColor[0] = red;
     light->glowColor[1] = green;
@@ -612,8 +594,6 @@ extern void *textureLoadAsset(int assetId);
 extern int randomGetRange(int lo, int hi);
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 void modelLightStruct_getSpecularColor(ModelLightStruct *p, u8 *a, u8 *b, u8 *c, u8 *d) {
     *a = p->specularColor[0];
     *b = p->specularColor[1];
@@ -817,8 +797,6 @@ typedef struct {
 extern ModelLightChannelState gModelLightChannelStates[];
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 void mm_free(void *p);
@@ -843,8 +821,6 @@ void modelLightChannels_reset(u8 v) {
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 
@@ -852,8 +828,6 @@ void modelLightChannels_reset(u8 v) {
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 
@@ -865,8 +839,6 @@ extern void PSVECSubtract(f32 *a, f32 *b, f32 *out);
 extern void PSVECNormalize(f32 *src, f32 *dst);
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 
@@ -944,8 +916,6 @@ extern f32 *Camera_GetInverseViewMatrix(void);
 extern void PSMTXConcat(f32 *a, f32 *b, f32 *ab);
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 void modelLightStruct_loadDiffuseGXLight(u8 *light, u8 *obj, int lightId) {
     f32 viewPos[3];
     f32 *view;
@@ -1225,8 +1195,6 @@ extern f32 lbl_803DE768;
 extern f32 lbl_802C1A88[];
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 
@@ -1538,8 +1506,6 @@ void modelLightStruct_selectObjectLights(u8 *obj, u8 **outLights, int maxLights,
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 
@@ -1568,16 +1534,12 @@ void modelLightStruct_updateGlowAlpha(ModelLightStruct *light) {
 
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
 int randomGetRange(int lo, int hi);
 
@@ -1587,8 +1549,6 @@ int randomGetRange(int lo, int hi);
 extern void C_MTXLightPerspective(f32 *m, f32 fovY, f32 aspect, f32 scaleS, f32 scaleT, f32 transS, f32 transT);
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 void modelLightStruct_setupPerspectiveProjection(ModelLightStruct *obj, f32 a, f32 b) {
     obj->projectionFovY = a;
     obj->projectionAspect = b;
@@ -1625,8 +1585,6 @@ void modelLightStruct_setupOrthoProjection(ModelLightStruct *obj, f32 a, f32 b, 
 
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
 void modelLightStruct_setSpecularAttenuation(ModelLightStruct *obj, f32 a, f32 b) {
     u8 *lightObj;
@@ -1645,196 +1603,126 @@ void modelLightStruct_setSpecularAttenuation(ModelLightStruct *obj, f32 a, f32 b
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 
 
 #pragma push
-#pragma scheduling off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 void Obj_BuildInverseWorldTransformMatrix(u8 *obj, f32 *out);
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
 #pragma fp_contract off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_loop_invariants off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 void *mmAlloc(int size, int type, int flag);
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 #pragma opt_strength_reduction off
 #pragma opt_strength_reduction reset
@@ -1842,210 +1730,136 @@ void *mmAlloc(int size, int type, int flag);
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 #pragma dont_inline reset
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 #pragma dont_inline reset
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
 #pragma opt_strength_reduction off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
 #pragma fp_contract off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
 #pragma optimization_level 1
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 
 #pragma dont_inline off
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop

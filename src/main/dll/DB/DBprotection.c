@@ -849,8 +849,6 @@ void fn_801DFA28(u8 *obj)
   }
 end:;
 }
-#pragma scheduling off
-#pragma peephole off
 
 
 void DBprotection_updateEnvfxGameBits(u8 *state)

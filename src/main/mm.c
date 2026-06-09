@@ -76,32 +76,22 @@ FUN_80017468(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
  */
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
 
 #pragma pop
 
 #pragma push
-#pragma scheduling off
 #pragma pop
 
 /*
@@ -171,8 +161,6 @@ FUN_80017998(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 /* ObjModel/model-file accessors. */
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 
@@ -229,14 +217,10 @@ extern void *mmAlloc(int size, int type, int flag);
 
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 void texFlagFn_80023cbc(int v) {
@@ -249,8 +233,6 @@ extern int lbl_803DCB08;
 extern int lbl_803DB434;
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 
@@ -295,8 +277,6 @@ extern int lbl_803DD610;
 extern void *lbl_803DD61C;
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
 void *getCache(void) {
     if (lbl_803DD610 != 4 && lbl_803DD610 != 0) {
@@ -313,8 +293,6 @@ extern void mmFree(void *p);
 extern void mmFreeDeferred(void *p);
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
 void cacheQueueWait(int sync) {
     if (lbl_803DD610 == 4 || lbl_803DD610 == 0) {
@@ -333,8 +311,6 @@ void mm_free(void *p) {
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 
@@ -345,8 +321,6 @@ extern int OSDisableInterrupts(void);
 extern int OSRestoreInterrupts(int level);
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
 void AtomicSList_Push(void **list, void *node) {
     int intr = OSDisableInterrupts();
@@ -373,16 +347,12 @@ typedef struct {
 extern MmRegion gMmRegionTable[];
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 
 
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 
@@ -1057,8 +1027,6 @@ extern void *memcpy(void *dst, const void *src, int n);
 extern void LCLoadBlocks(void *destTag, void *srcAddr, u32 numBlocks);
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
 void copyToCache(void *dst, void *src, u32 count) {
     if (lbl_803DD610 != 4 && lbl_803DD610 != 0) {
@@ -1082,16 +1050,12 @@ void copyToCache(void *dst, void *src, u32 count) {
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 
@@ -1100,8 +1064,6 @@ void copyToCache(void *dst, void *src, u32 count) {
 extern void LCStoreBlocks(void *destAddr, void *srcTag, u32 numBlocks);
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 
@@ -1123,197 +1085,127 @@ void memcpyToCache(void *dst, void *src, u32 count) {
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 
 
 
 #pragma push
-#pragma scheduling off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
 #pragma fp_contract off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
 #pragma pop
 
 
 #pragma push
-#pragma scheduling off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_loop_invariants off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 void *stackCreate(int count, int size)
 {
     u8 *s;
@@ -1357,8 +1249,6 @@ void *stackCreate(int count, int size)
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 void *mmAlloc(int size, int type, int flag)
 {
     void *result;
@@ -1412,8 +1302,6 @@ void *mmAlloc(int size, int type, int flag)
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 #pragma opt_strength_reduction off
 #pragma opt_strength_reduction reset
@@ -1421,209 +1309,135 @@ void *mmAlloc(int size, int type, int flag)
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 #pragma dont_inline reset
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 #pragma dont_inline reset
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
 #pragma opt_strength_reduction off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
 #pragma fp_contract off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
 #pragma optimization_level 1
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma dont_inline off
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop

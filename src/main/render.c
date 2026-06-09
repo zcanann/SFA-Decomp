@@ -292,8 +292,6 @@ void fn_80007F78(u8 *anim, u16 *dst, u16 *out)
     } while ((u64)(u32)dst != end);
 }
 
-#pragma peephole reset
-#pragma scheduling reset
 
 int return0xFFFF_80008B6C(void) { return -0x1; }
 
