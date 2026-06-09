@@ -231,18 +231,18 @@ int DBSH_Symbol_SeqFn(int *obj, int *anim, u8 *seq)
         if (state->spinSpeed > spdThresh) {
             state->spinSpeed = state->spinSpeed - lbl_803E50FC;
         }
-        if (ObjAnim_AdvanceCurrentMove(
-                ((f32)state->spinProgress - (f32)state->prevSpinProgress) / animDiv,
-                timeDelta, player, NULL) != 0) {
+        if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
+                player, ((f32)state->spinProgress - (f32)state->prevSpinProgress) / animDiv,
+                timeDelta, NULL) != 0) {
             if (((GameObject *)player)->anim.currentMoveProgress < lbl_803E50EC) {
                 ((GameObject *)player)->anim.currentMoveProgress =
                     lbl_803E5104 + ((GameObject *)player)->anim.currentMoveProgress;
             }
         }
         if (state->partnerObj != NULL) {
-            if (ObjAnim_AdvanceCurrentMove(
-                    -((f32)state->spinProgress - (f32)state->prevSpinProgress) / lbl_803E5100,
-                    timeDelta, *(int *)&state->partnerObj, NULL) != 0) {
+            if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
+                    *(int *)&state->partnerObj, -((f32)state->spinProgress - (f32)state->prevSpinProgress) / lbl_803E5100,
+                    timeDelta, NULL) != 0) {
                 f32 h = ((GameObject *)state->partnerObj)->anim.currentMoveProgress;
                 if (h < lbl_803E50EC) {
                     ((GameObject *)state->partnerObj)->anim.currentMoveProgress =

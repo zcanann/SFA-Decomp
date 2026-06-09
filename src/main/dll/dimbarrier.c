@@ -432,7 +432,7 @@ void fn_801C8B68(int obj)
     angB = mathSinf((lbl_803E50B0 * (f32)(s32)*(short *)(state + 0xe)) / lbl_803E50B4);
     ((GameObject *)self)->anim.rotY = (short)(int)(lbl_803E50B8 * (angA + angB));
 
-    ObjAnim_AdvanceCurrentMove(lbl_803E50BC, timeDelta, self, (ObjAnimEventList *)&local_var);
+    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(self, lbl_803E50BC, timeDelta, (ObjAnimEventList *)&local_var);
 
     if (player == NULL) return;
 

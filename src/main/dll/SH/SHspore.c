@@ -229,7 +229,7 @@ void sh_queenearthwalker_update(void *obj)
   if (currentMove != targetMove) {
     ObjAnim_SetCurrentMove((int)obj, targetMove, lbl_803E53F8, 0);
   }
-  ObjAnim_AdvanceCurrentMove(lbl_80326E24[*(u8 *)state], timeDelta, (int)obj, NULL);
+  ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_80326E24[*(u8 *)state], timeDelta, NULL);
 
   stateFlags = *(u8 *)((u8 *)state + 0x2);
   if ((stateFlags & 0x10) == 0) {

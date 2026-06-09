@@ -810,7 +810,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
     }
     if (!((ByteFlags *)((char *)q + 0x3f0))->b80 && !((ByteFlags *)((char *)q + 0x3f0))->b40 &&
         !((ByteFlags *)((char *)inner + 0x14ec))->b01) {
-        if (ObjAnim_SampleRootCurvePhase(*(f32 *)((char *)p2 + 0x294), (ObjAnimComponent *)obj, (f32 *)((char *)p2 + 0x2a0)) == 0) {
+        if (((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)((int)obj, *(f32 *)((char *)p2 + 0x294), (f32 *)((char *)p2 + 0x2a0)) == 0) {
             *(f32 *)((char *)p2 + 0x2a0) = lbl_803E8354;
         }
     }
