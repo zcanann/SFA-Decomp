@@ -307,11 +307,7 @@ void fn_801EA240(f32 distanceScale, int obj, int state, int intensity, int unuse
     f32 v;
     DRCloudCagePulseParams pulse;
 
-    if (distanceScale < (clamped = lbl_803E5AE8)) {
-    } else if (distanceScale > (clamped = lbl_803E5B08)) {
-    } else {
-        clamped = distanceScale;
-    }
+    clamped = (distanceScale < lbl_803E5AE8) ? lbl_803E5AE8 : ((distanceScale > lbl_803E5B08) ? lbl_803E5B08 : distanceScale);
     if (channelFlags & 1) {
         if (Sfx_IsPlayingFromObjectChannel(obj, 8)) {
             lbl_803DDC64 = lbl_803E5B0C * clamped;
