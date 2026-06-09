@@ -10124,7 +10124,7 @@ int fn_80298184(int obj, int state, f32 fv)
     } else {
         *(f32 *)((char *)state + 0x2a0) = lbl_803E7EF8;
         if (((GameObject *)obj)->anim.currentMove != 0x458 &&
-            ObjAnim_GetCurrentEventCountdown((ObjAnimComponent *)obj) == 0) {
+            ((int (*)(ObjAnimComponent *))ObjAnim_GetCurrentEventCountdown)((ObjAnimComponent *)obj) == 0) {
             ObjAnim_SetCurrentMove(obj, 0x458, ((GameObject *)obj)->anim.currentMoveProgress, 0);
             ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 8);
         }
@@ -10190,7 +10190,6 @@ int fn_80297AD0(int obj, int state, f32 fv)
         if (r != 0) {
             return r;
         }
-        return 0;
     }
     return 0;
 }
@@ -10251,7 +10250,6 @@ int fn_80297D0C(int obj, int state, f32 fv)
         if (r != 0) {
             return r;
         }
-        return 0;
     }
     return 0;
 }
@@ -10312,7 +10310,6 @@ int fn_80297F48(int obj, int state, f32 fv)
         if (r != 0) {
             return r;
         }
-        return 0;
     }
     return 0;
 }
@@ -10425,7 +10422,6 @@ int fn_80297854(int obj, int state, f32 fv)
         if (r != 0) {
             return r;
         }
-        return 0;
     }
     return 0;
 }
@@ -10441,7 +10437,7 @@ void Lightfoot_UpdatePlayerInteraction(int obj, int inner, int state)
     (*(void (*)(int, int, int, void *, void *, void *))(*(int *)(*gBaddieControlInterface + 0x14)))(
         obj, Obj_GetPlayerObject(), 0x10,
         (char *)p + 0x1e, (char *)p + 0x20, (char *)p + 0x22);
-    *(f32 *)((char *)state + 0x2c0) = (f32)(u32)*(u16 *)((char *)p + 0x22);
+    *(f32 *)((char *)state + 0x2c0) = (f32)(u32)*(u16 *)((int)p + 0x22);
     mode = ((GameObject *)obj)->unkF8;
     if (mode == 2) {
         (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
@@ -10484,7 +10480,7 @@ void fn_802B4C18(int obj, int state, f32 fv)
     *(u32 *)((char *)state + 0x4) &= ~0x8100000;
     playerShadowFn_80062a30(obj);
     ((PlayerState *)state)->unk8C5 = 0;
-    ((PlayerState *)state)->flags360 &= ~0x2000;
+    *(u32 *)((char *)state + 0x360) &= ~0x2000LL;
     *(int *)state |= 0x1000000;
     fn_802B0EA4(obj, state, state);
     if (fn_802A74A4(obj, state, state, buf, fv, 0x60) == 8) {
@@ -13556,7 +13552,7 @@ void fn_802AED2C(int obj, int state, int p3)
     ((ByteFlags *)((char *)state + 0x3f0))->b80 = 0;
     staffFn_80170380(lbl_803DE450, 2);
     ((ByteFlags *)((char *)state + 0x3f0))->b02 = 0;
-    *(int *)((char *)state + 0x360) |= 0x800000;
+    *(u32 *)((char *)state + 0x360) |= 0x800000LL;
     ObjHits_SyncObjectPositionIfDirty(obj);
     ((ByteFlags *)((char *)state + 0x3f0))->b08 = 0;
     ((ByteFlags *)((char *)state + 0x3f0))->b04 = 0;
@@ -15170,7 +15166,7 @@ int fn_80298944(int obj, int state)
     case 0xe4:
     case 0xe5:
         if (*(s8 *)((char *)state + 0x346) != 0) {
-            inner->flags360 |= 0x800000;
+            *(u32 *)((char *)inner + 0x360) |= 0x800000LL;
             *(int *)((char *)state + 0x308) = (int)fn_802A514C;
             return 2;
         }
@@ -15262,7 +15258,7 @@ int fn_802985FC(int obj, int state, f32 fv)
             doRumble(lbl_803E7F30);
         }
         if (*(s8 *)((char *)state + 0x346) != 0) {
-            inner->flags360 |= 0x800000;
+            *(u32 *)((char *)inner + 0x360) |= 0x800000LL;
             *(int *)((char *)state + 0x308) = (int)fn_802A514C;
             return 2;
         }
