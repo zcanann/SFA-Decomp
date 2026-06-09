@@ -3978,24 +3978,23 @@ extern f32 lbl_803E1AF0;
 /* CameraModeCannon_update  addr=0x8010FA84  size=0x168  linkage=global */
 void CameraModeCannon_update(u8 *obj) {
     CameraObject *camera = (CameraObject *)obj;
-    GameObject *target = lbl_803DD5A0->target;
     s16 *vec;
     s16 yaw;
     s16 delta;
 
-    vec = objModelGetVecFn_800395d8((int)target, 0);
-    if (target == NULL) {
+    vec = objModelGetVecFn_800395d8((int)lbl_803DD5A0->target, 0);
+    if (lbl_803DD5A0->target == NULL) {
         return;
     }
     yaw = camera->anim.rotX;
-    delta = (s16)((0x8000 - target->anim.rotX) - vec[1] - yaw);
+    delta = (s16)((0x8000 - lbl_803DD5A0->target->anim.rotX) - vec[1] - yaw);
     camera->anim.rotX = (s16)(s32)((f32)(s32)yaw + (f32)(s32)delta / lbl_803E1AE0);
     camera->anim.localPosX =
-        target->anim.worldPosX -
+        lbl_803DD5A0->target->anim.worldPosX -
         lbl_803E1AE4 * mathSinf(lbl_803E1AE8 * (f32)(s32)(-camera->anim.rotX) / lbl_803E1AEC);
-    camera->anim.localPosY = lbl_803E1AF0 + target->anim.worldPosY;
+    camera->anim.localPosY = lbl_803E1AF0 + lbl_803DD5A0->target->anim.worldPosY;
     camera->anim.localPosZ =
-        target->anim.worldPosZ -
+        lbl_803DD5A0->target->anim.worldPosZ -
         lbl_803E1AE4 * mathCosf(lbl_803E1AE8 * (f32)(s32)(-camera->anim.rotX) / lbl_803E1AEC);
 }
 
