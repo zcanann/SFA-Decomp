@@ -738,7 +738,6 @@ extern f32 lbl_803E435C;
 void explodable_init(int obj, int setup)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
-    GasVentTableEntry *tbl;
     int base;
     GasVentTableEntry *e;
     u32 c1;
@@ -772,13 +771,11 @@ void explodable_init(int obj, int setup)
     if ((u32)GameBit_Get(*(s16 *)(setup + 0x3e)) != 0) {
         ((DrExplodableState *)state)->phase6E4 = 2;
     }
-    base = 0;
-    for (tbl = lbl_80322DA0; base < 16; base++) {
-        if (((GameObject *)obj)->anim.seqId == tbl->key) {
+    for (base = 0; base < 16; base++) {
+        if (((GameObject *)obj)->anim.seqId == lbl_80322DA0[base].key) {
             ((DrExplodableState *)state)->unk6E5 = base;
             break;
         }
-        tbl++;
     }
     if (*(s8 *)(setup + 0x3d) == 0) {
         *(u8 *)(setup + 0x3d) = 0x14;
