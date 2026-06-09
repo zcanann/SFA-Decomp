@@ -25,7 +25,10 @@ typedef struct StaffActivatedSetup {
     u8 pad1A[2];
     u8 mode;
     u8 size;
-    u8 pad1E[4];
+    u8 debrisObjectSet;
+    u8 debrisCount;
+    u8 timedEventSeconds;
+    u8 pad21;
     s16 activeGameBit;
     s16 lockGameBit;
     u8 pad26[0x28 - 0x26];

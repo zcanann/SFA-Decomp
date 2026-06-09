@@ -48,6 +48,9 @@ STATIC_ASSERT(sizeof(StaffActivatedSetup) == 0x28);
 STATIC_ASSERT(offsetof(StaffActivatedSetup, type) == 0x18);
 STATIC_ASSERT(offsetof(StaffActivatedSetup, mode) == 0x1c);
 STATIC_ASSERT(offsetof(StaffActivatedSetup, size) == 0x1d);
+STATIC_ASSERT(offsetof(StaffActivatedSetup, debrisObjectSet) == 0x1e);
+STATIC_ASSERT(offsetof(StaffActivatedSetup, debrisCount) == 0x1f);
+STATIC_ASSERT(offsetof(StaffActivatedSetup, timedEventSeconds) == 0x20);
 STATIC_ASSERT(offsetof(StaffActivatedSetup, activeGameBit) == 0x22);
 STATIC_ASSERT(offsetof(StaffActivatedSetup, lockGameBit) == 0x24);
 
@@ -184,7 +187,7 @@ after_bit4:
 
     mode = param->mode;
     if (mode == STAFFACTIVATED_MODE_LIFT) {
-        staffactivated_updateLiftHeight(obj, (int)state);
+        staffactivated_updateLiftHeight(obj, state);
     } else if (mode > STAFFACTIVATED_MODE_LIFT) {
         if (mode >= STAFFACTIVATED_MODE_DEFAULT) {
             goto default_case;

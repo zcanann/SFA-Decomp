@@ -1,13 +1,14 @@
 #ifndef MAIN_DLL_CF_CFPRISONGUARD_H_
 #define MAIN_DLL_CF_CFPRISONGUARD_H_
 
-#include "ghidra_import.h"
+#include "global.h"
+#include "main/dll/CF/dll_163.h"
 
-void staffactivated_updateLiftHeight(int obj, int state);
-void FUN_80189cc4(int param_1,int param_2);
-void FUN_80189e0c(uint param_1,int param_2);
-void fn_80189C68(int obj);
-void FUN_8018a060(int param_1,char param_2);
-byte FUN_8018a0d0(int param_1);
+void staffactivated_updateLiftHeight(int obj, StaffActivatedState *state);
+void FUN_80189cc4(int obj, StaffActivatedState *state);
+void FUN_80189e0c(uint obj, StaffActivatedState *state);
+void staffactivated_spawnMapEventDebris(int obj);
+void FUN_8018a060(int obj, char enabled);
+byte FUN_8018a0d0(int obj);
 
 #endif /* MAIN_DLL_CF_CFPRISONGUARD_H_ */

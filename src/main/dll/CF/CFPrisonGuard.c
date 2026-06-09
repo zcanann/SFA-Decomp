@@ -65,52 +65,50 @@ extern MapEventInterface **gMapEventInterface;
  */
 #pragma peephole off
 #pragma scheduling off
-void staffactivated_updateLiftHeight(int obj, int state)
+void staffactivated_updateLiftHeight(int obj, StaffActivatedState *state)
 {
   u32 flags;
   s32 prevHeight;
   s32 rumbleStrength;
 
-  flags = *(u8 *)(state + 0x1d);
+  flags = state->flags;
   if ((flags >> 7 & 1) != 0) {
     if ((flags >> 6 & 1) == 0) {
-      if (*(u8 *)(state + 0x1c) == 0) {
-        *(s32 *)(state + 0xc) =
-            (s32)-(lbl_803E3BC8 * timeDelta - (f32)*(s32 *)(state + 0xc));
-        *(s32 *)(state + 0x14) =
-            (s32)((f32)*(s32 *)(state + 0xc) * timeDelta + (f32)*(s32 *)(state + 0x14));
-        if (*(s32 *)(state + 0x14) > *(s32 *)(state + 0x18)) {
-          *(s32 *)(state + 0x18) = *(s32 *)(state + 0x14);
+      if (state->liftReset == 0) {
+        state->liftVelocity = (s32)-(lbl_803E3BC8 * timeDelta - (f32)state->liftVelocity);
+        state->liftHeight =
+            (s32)((f32)state->liftVelocity * timeDelta + (f32)state->liftHeight);
+        if (state->liftHeight > state->peakLiftHeight) {
+          state->peakLiftHeight = state->liftHeight;
         }
-        if (*(s32 *)(state + 0x10) == 0x800 && *(s32 *)(state + 0x14) < 0x800) {
+        if (state->previousLiftHeight == 0x800 && state->liftHeight < 0x800) {
           Sfx_PlayFromObject(obj, 0x374);
         }
-        if (*(s32 *)(state + 0x14) < 0) {
-          if (*(s32 *)(state + 0x10) > 0) {
+        if (state->liftHeight < 0) {
+          if (state->previousLiftHeight > 0) {
             Sfx_PlayFromObject(obj, SFXmn_dimraw36);
-            rumbleStrength = *(s32 *)(state + 0x18) / 200;
+            rumbleStrength = state->peakLiftHeight / 200;
             if (rumbleStrength > 0) {
               doRumble((f32)rumbleStrength);
             }
           }
-          *(s32 *)(state + 0xc) = 0;
-          *(s32 *)(state + 0x14) = 0;
+          state->liftVelocity = 0;
+          state->liftHeight = 0;
         }
       } else {
-        *(u8 *)(state + 0x1c) = 0;
-        *(s32 *)(state + 0x18) = 0;
+        state->liftReset = 0;
+        state->peakLiftHeight = 0;
       }
 
-      prevHeight = *(s32 *)(state + 0x10);
-      if ((prevHeight < 0x40 && *(s32 *)(state + 0x14) >= 0x40) ||
-          (prevHeight >= 0x40 && *(s32 *)(state + 0x14) < 0x40)) {
+      prevHeight = state->previousLiftHeight;
+      if ((prevHeight < 0x40 && state->liftHeight >= 0x40) ||
+          (prevHeight >= 0x40 && state->liftHeight < 0x40)) {
         Sfx_PlayFromObject(obj, 0x374);
       }
       ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f,
-                                                (f32 *)(state + 0x20));
-      *(s32 *)(state + 0x10) = *(s32 *)(state + 0x14);
-      ObjAnim_SetMoveProgress((f32)*(s32 *)(state + 0x14) / lbl_803E3BCC,
-                              (ObjAnimComponent *)obj);
+                                                &state->hitCooldown);
+      state->previousLiftHeight = state->liftHeight;
+      ObjAnim_SetMoveProgress((f32)state->liftHeight / lbl_803E3BCC, (ObjAnimComponent *)obj);
     } else {
       goto done;
     }
@@ -138,20 +136,20 @@ typedef struct PrisonGuardStateFlags {
 #pragma scheduling off
 void cfPrisonGuard_setGameBitMirror(int obj, u8 flag)
 {
-    register int s = *(int *)&((GameObject *)obj)->anim.placementData;
-    register int t = *(int *)&((GameObject *)obj)->extra;
+    register StaffActivatedSetup *setup = (StaffActivatedSetup *)((GameObject *)obj)->anim.placementData;
+    register StaffActivatedState *state = ((GameObject *)obj)->extra;
     if (flag != 0) {
-        GameBit_Set((int)*(short *)(s + 0x24), 1);
-        ((PrisonGuardStateFlags *)t)->mirror = 1;
+        GameBit_Set(setup->lockGameBit, 1);
+        ((PrisonGuardStateFlags *)state)->mirror = 1;
     } else {
-        GameBit_Set((int)*(short *)(s + 0x24), 0);
-        ((PrisonGuardStateFlags *)t)->mirror = 0;
+        GameBit_Set(setup->lockGameBit, 0);
+        ((PrisonGuardStateFlags *)state)->mirror = 0;
     }
 }
 #pragma scheduling reset
 #pragma peephole reset
 
-u32 cfPrisonGuard_isGameBitMirrorSet(int *obj) { return (*((u8*)((int**)obj)[0xb8/4] + 0x1d) >> 5) & 1; }
+u32 cfPrisonGuard_isGameBitMirrorSet(int *obj) { return (((StaffActivatedState *)((GameObject *)obj)->extra)->flags >> 5) & 1; }
 
 typedef struct PrisonGuardRotationWork {
   s16 y;
@@ -176,36 +174,38 @@ typedef struct PrisonGuardRotationWork {
 void staffactivated_spawnMapEventDebris(int obj)
 {
   int i;
-  int setup;
+  StaffActivatedSetup *setup;
   int player;
   u32 tricky;
-  int state;
+  StaffActivatedState *state;
   int spawnedSetup;
   int spawnedObj;
+  ObjPlacement *spawnedPlacement;
   f32 lenSq;
   f32 len;
   s32 yawDelta;
   PrisonGuardRotationWork rotate;
 
-  setup = *(int *)&((GameObject *)obj)->anim.placementData;
+  setup = (StaffActivatedSetup *)((GameObject *)obj)->anim.placementData;
   player = Obj_GetPlayerObject();
   tricky = getTrickyObject();
-  state = *(int *)&((GameObject *)obj)->extra;
+  state = ((GameObject *)obj)->extra;
 
-  if ((*gMapEventInterface)->isTimedEventActive(((ObjPlacement *)setup)->mapId) != 0 &&
+  if ((*gMapEventInterface)->isTimedEventActive(setup->base.mapId) != 0 &&
       Obj_IsLoadingLocked() != 0) {
-    (*gMapEventInterface)->startTimedEvent(((ObjPlacement *)setup)->mapId,
-                                           lbl_803E3BD8 * (f32)*(u8 *)(setup + 0x20));
+    (*gMapEventInterface)->startTimedEvent(setup->base.mapId,
+                                           lbl_803E3BD8 * (f32)setup->timedEventSeconds);
     if (tricky != 0) {
       trickyImpress(tricky);
     }
 
     i = 0;
-    while (i < *(u8 *)(setup + 0x1f)) {
-      spawnedSetup = Obj_AllocObjectSetup(0x24, lbl_803DBDE0[*(u8 *)(setup + 0x1e)]);
-      *(f32 *)(spawnedSetup + 8) = *(f32 *)state;
-      *(f32 *)(spawnedSetup + 0xc) = ((GameObject *)obj)->anim.localPosY;
-      *(f32 *)(spawnedSetup + 0x10) = *(f32 *)(state + 4);
+    while (i < setup->debrisCount) {
+      spawnedSetup = Obj_AllocObjectSetup(0x24, lbl_803DBDE0[setup->debrisObjectSet]);
+      spawnedPlacement = (ObjPlacement *)spawnedSetup;
+      spawnedPlacement->posX = state->targetX;
+      spawnedPlacement->posY = ((GameObject *)obj)->anim.localPosY;
+      spawnedPlacement->posZ = state->targetZ;
       *(s16 *)(spawnedSetup + 0x1a) = 0x190;
 
       spawnedObj = Obj_SetupObject(spawnedSetup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
@@ -266,42 +266,39 @@ void staffactivated_spawnMapEventDebris(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80189cc4(int param_1,int param_2)
+void FUN_80189cc4(int obj, StaffActivatedState *state)
 {
   byte bVar1;
   uint uVar2;
   undefined4 *puVar3;
-  int iVar4;
+  StaffActivatedSetup *setup;
   
-  iVar4 = *(int *)&((GameObject *)param_1)->anim.placementData;
-  if ((int)*(short *)(iVar4 + 0x24) != 0xffffffff) {
-    uVar2 = GameBit_Get((int)*(short *)(iVar4 + 0x24));
-    *(byte *)(param_2 + 0x1d) =
-         (byte)((uVar2 & 0xff) << 5) & 0x20 | *(byte *)(param_2 + 0x1d) & 0xdf;
-    bVar1 = *(byte *)(param_2 + 0x1d) >> 5 & 1;
-    if ((bVar1 == 0) || (*(char *)(iVar4 + 0x1c) != '\x05')) {
+  setup = (StaffActivatedSetup *)((GameObject *)obj)->anim.placementData;
+  if (setup->lockGameBit != -1) {
+    uVar2 = GameBit_Get(setup->lockGameBit);
+    state->flags = (byte)((uVar2 & 0xff) << 5) & 0x20 | state->flags & 0xdf;
+    bVar1 = state->flags >> 5 & 1;
+    if ((bVar1 == 0) || (setup->mode != 5)) {
       if (bVar1 == 0) {
-        *(byte *)(param_2 + 0x1d) = *(byte *)(param_2 + 0x1d) & 0xbf;
+        state->flags = state->flags & 0xbf;
       }
     }
     else {
-      *(byte *)(param_2 + 0x1d) = *(byte *)(param_2 + 0x1d) & 0xbf | 0x40;
+      state->flags = state->flags & 0xbf | 0x40;
     }
   }
-  if (*(char *)(param_2 + 0x1d) < '\0') {
-    if (((int)*(short *)(iVar4 + 0x22) != 0xffffffff) &&
-       (uVar2 = GameBit_Get((int)*(short *)(iVar4 + 0x22)), uVar2 == 0)) {
-      *(byte *)(param_2 + 0x1d) = *(byte *)(param_2 + 0x1d) & 0x7f;
+  if ((s8)state->flags < 0) {
+    if ((setup->activeGameBit != -1) && (uVar2 = GameBit_Get(setup->activeGameBit), uVar2 == 0)) {
+      state->flags = state->flags & 0x7f;
     }
   }
-  else if (((int)*(short *)(iVar4 + 0x22) != 0xffffffff) &&
-          (uVar2 = GameBit_Get((int)*(short *)(iVar4 + 0x22)), uVar2 != 0)) {
-    *(byte *)(param_2 + 0x1d) = *(byte *)(param_2 + 0x1d) & 0x7f | 0x80;
+  else if ((setup->activeGameBit != -1) && (uVar2 = GameBit_Get(setup->activeGameBit), uVar2 != 0)) {
+    state->flags = state->flags & 0x7f | 0x80;
   }
-  puVar3 = (undefined4 *)FUN_80039520(param_1,0);
+  puVar3 = (undefined4 *)FUN_80039520(obj,0);
   if (puVar3 != (undefined4 *)0x0) {
-    if ((char)*(byte *)(param_2 + 0x1d) < '\0') {
-      if ((*(byte *)(param_2 + 0x1d) >> 5 & 1) == 0) {
+    if ((s8)state->flags < 0) {
+      if ((state->flags >> 5 & 1) == 0) {
         *puVar3 = 0x100;
       }
       else {
@@ -328,7 +325,7 @@ void FUN_80189cc4(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80189e0c(uint param_1,int param_2)
+void FUN_80189e0c(uint obj, StaffActivatedState *state)
 {
   double dVar1;
   int iVar2;
@@ -336,49 +333,49 @@ void FUN_80189e0c(uint param_1,int param_2)
   undefined8 local_18;
   
   dVar1 = DOUBLE_803e4868;
-  if (((char)*(byte *)(param_2 + 0x1d) < '\0') && ((*(byte *)(param_2 + 0x1d) >> 6 & 1) == 0)) {
-    if (*(char *)(param_2 + 0x1c) == '\0') {
-      *(int *)(param_2 + 0xc) =
+  if (((s8)state->flags < 0) && ((state->flags >> 6 & 1) == 0)) {
+    if (state->liftReset == 0) {
+      state->liftVelocity =
            (int)-(FLOAT_803e4860 * FLOAT_803dc074 -
-                 (float)((double)CONCAT44(0x43300000,*(uint *)(param_2 + 0xc) ^ 0x80000000) -
+                 (float)((double)CONCAT44(0x43300000,state->liftVelocity ^ 0x80000000) -
                         DOUBLE_803e4868));
-      *(int *)(param_2 + 0x14) =
-           (int)((float)((double)CONCAT44(0x43300000,*(uint *)(param_2 + 0xc) ^ 0x80000000) - dVar1)
+      state->liftHeight =
+           (int)((float)((double)CONCAT44(0x43300000,state->liftVelocity ^ 0x80000000) - dVar1)
                  * FLOAT_803dc074 +
-                (float)((double)CONCAT44(0x43300000,*(uint *)(param_2 + 0x14) ^ 0x80000000) - dVar1)
+                (float)((double)CONCAT44(0x43300000,state->liftHeight ^ 0x80000000) - dVar1)
                 );
-      if (*(int *)(param_2 + 0x18) < *(int *)(param_2 + 0x14)) {
-        *(int *)(param_2 + 0x18) = *(int *)(param_2 + 0x14);
+      if (state->peakLiftHeight < state->liftHeight) {
+        state->peakLiftHeight = state->liftHeight;
       }
-      if ((*(int *)(param_2 + 0x10) == 0x800) && (*(int *)(param_2 + 0x14) < 0x800)) {
-        FUN_80006824(param_1,0x374);
+      if ((state->previousLiftHeight == 0x800) && (state->liftHeight < 0x800)) {
+        FUN_80006824(obj,0x374);
       }
-      if (*(int *)(param_2 + 0x14) < 0) {
-        if (0 < *(int *)(param_2 + 0x10)) {
-          FUN_80006824(param_1,SFXmn_dimraw36);
-          iVar2 = *(int *)(param_2 + 0x18) / 200 + (*(int *)(param_2 + 0x18) >> 0x1f);
+      if (state->liftHeight < 0) {
+        if (0 < state->previousLiftHeight) {
+          FUN_80006824(obj,SFXmn_dimraw36);
+          iVar2 = state->peakLiftHeight / 200 + (state->peakLiftHeight >> 0x1f);
           uVar3 = iVar2 - (iVar2 >> 0x1f);
           if (0 < (int)uVar3) {
             local_18 = (double)CONCAT44(0x43300000,uVar3 ^ 0x80000000);
             FUN_80006b94((double)(float)(local_18 - DOUBLE_803e4868));
           }
         }
-        *(undefined4 *)(param_2 + 0xc) = 0;
-        *(undefined4 *)(param_2 + 0x14) = 0;
+        state->liftVelocity = 0;
+        state->liftHeight = 0;
       }
     }
     else {
-      *(undefined *)(param_2 + 0x1c) = 0;
-      *(undefined4 *)(param_2 + 0x18) = 0;
+      state->liftReset = 0;
+      state->peakLiftHeight = 0;
     }
-    if (((*(int *)(param_2 + 0x10) < 0x40) && (0x3f < *(int *)(param_2 + 0x14))) ||
-       ((0x3f < *(int *)(param_2 + 0x10) && (*(int *)(param_2 + 0x14) < 0x40)))) {
-      FUN_80006824(param_1,0x374);
+    if (((state->previousLiftHeight < 0x40) && (0x3f < state->liftHeight)) ||
+       ((0x3f < state->previousLiftHeight && (state->liftHeight < 0x40)))) {
+      FUN_80006824(obj,0x374);
     }
-    ObjHits_PollPriorityHitEffectWithCooldown(param_1,8,0xb4,0xf0,0xff,0x6f,(float *)(param_2 + 0x20));
-    *(undefined4 *)(param_2 + 0x10) = *(undefined4 *)(param_2 + 0x14);
-    local_18 = (double)CONCAT44(0x43300000,*(uint *)(param_2 + 0x14) ^ 0x80000000);
-    FUN_800305c4((double)((float)(local_18 - DOUBLE_803e4868) / FLOAT_803e4864),param_1);
+    ObjHits_PollPriorityHitEffectWithCooldown(obj,8,0xb4,0xf0,0xff,0x6f,&state->hitCooldown);
+    state->previousLiftHeight = state->liftHeight;
+    local_18 = (double)CONCAT44(0x43300000,state->liftHeight ^ 0x80000000);
+    FUN_800305c4((double)((float)(local_18 - DOUBLE_803e4868) / FLOAT_803e4864),obj);
   }
   return;
 }
@@ -396,18 +393,20 @@ void FUN_80189e0c(uint param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8018a060(int param_1,char param_2)
+void FUN_8018a060(int obj,char enabled)
 {
-  int iVar1;
+  StaffActivatedSetup *setup;
+  StaffActivatedState *state;
   
-  iVar1 = *(int *)&((GameObject *)param_1)->extra;
-  if (param_2 == '\0') {
-    GameBit_Set((int)*(short *)(*(int *)&((GameObject *)param_1)->anim.placementData + 0x24),0);
-    *(byte *)(iVar1 + 0x1d) = *(byte *)(iVar1 + 0x1d) & 0xdf;
+  setup = (StaffActivatedSetup *)((GameObject *)obj)->anim.placementData;
+  state = ((GameObject *)obj)->extra;
+  if (enabled == '\0') {
+    GameBit_Set(setup->lockGameBit,0);
+    state->flags = state->flags & 0xdf;
   }
   else {
-    GameBit_Set((int)*(short *)(*(int *)&((GameObject *)param_1)->anim.placementData + 0x24),1);
-    *(byte *)(iVar1 + 0x1d) = *(byte *)(iVar1 + 0x1d) & 0xdf | 0x20;
+    GameBit_Set(setup->lockGameBit,1);
+    state->flags = state->flags & 0xdf | 0x20;
   }
   return;
 }
@@ -425,9 +424,9 @@ void FUN_8018a060(int param_1,char param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-byte FUN_8018a0d0(int param_1)
+byte FUN_8018a0d0(int obj)
 {
-  return *(byte *)(*(int *)&((GameObject *)param_1)->extra + 0x1d) >> 5 & 1;
+  return ((StaffActivatedState *)((GameObject *)obj)->extra)->flags >> 5 & 1;
 }
 
 /*
@@ -439,7 +438,7 @@ byte FUN_8018a0d0(int param_1)
  */
 u32 cfPrisonGuard_getPullRateMode(int obj) {
     u32 v;
-    v = *(u8 *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x1d);
+    v = ((StaffActivatedSetup *)((GameObject *)obj)->anim.placementData)->size;
     if (v > 2) v = 2;
     return v;
 }
