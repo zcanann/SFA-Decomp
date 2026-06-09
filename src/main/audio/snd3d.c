@@ -60,20 +60,19 @@ void s3dHandle(void)
         return;
     }
 
-    emitter = s3dEmitterRoot;
-    lbl_803DE36B = 0;
-    zeroDist = lbl_803E7880;
     s3dCallCnt = S3D_UPDATE_SKIP_TICKS;
-    ageStep = lbl_803E78C4;
+    lbl_803DE36B = 0;
     lbl_803DE36C = 0;
-    ageLimit = lbl_803E78A4;
     lbl_803DE36D = 0;
+    emitter = s3dEmitterRoot;
+    zeroDist = lbl_803E7880;
+    ageStep = lbl_803E78C4;
+    ageLimit = lbl_803E78A4;
 
     for (; emitter != (Snd3DEmitter *)0x0; emitter = next) {
-        flags = emitter->flags;
         next = emitter->next;
 
-        if ((flags & S3D_EMITTER_FLAG_REMOVE) != 0) {
+        if ((emitter->flags & S3D_EMITTER_FLAG_REMOVE) != 0) {
             S3D_UNLINK_EMITTER(emitter);
             emitter->flags &= 0xffff;
             if (emitter->handle != S3D_INVALID_FX_HANDLE) {
@@ -82,7 +81,7 @@ void s3dHandle(void)
             continue;
         }
 
-        if ((flags & (S3D_EMITTER_FLAG_PLAYING | S3D_EMITTER_FLAG_POSITIONAL)) != 0) {
+        if ((emitter->flags & (S3D_EMITTER_FLAG_PLAYING | S3D_EMITTER_FLAG_POSITIONAL)) != 0) {
             s3dCalcEmitter(emitter, &distance, &pan, &azimuth, &pitch, &frontBack);
         }
 
