@@ -121,58 +121,60 @@ extern f32 lbl_803E6AF8;
  * PAL Size: TODO
  */
 #pragma scheduling off
-void wmworm_update(short *param_1)
+void wmworm_update(GameObject *obj)
 {
   float fVar1;
   float fVar2;
   float fVar3;
-  u8 *player;
-  int iVar5;
-  short sVar6;
+  GameObject *player;
+  WmWormState *state;
+  ObjPlacement *placement;
+  short burstCount;
   f32 dist;
 
-  player = (u8 *)Obj_GetPlayerObject();
-  iVar5 = *(int *)(param_1 + 0x5c);
+  player = Obj_GetPlayerObject();
+  state = obj->extra;
+  placement = (ObjPlacement *)obj->anim.placementData;
   if (player != NULL) {
-    dist = Vec_xzDistance((f32 *)(player + 0x18),(f32 *)(*(int *)(param_1 + 0x26) + 8));
+    dist = Vec_xzDistance(&player->anim.worldPosX, &placement->posX);
     if (dist > lbl_803E5E58) {
-      *(f32 *)(param_1 + 6) = *(f32 *)(iVar5 + 0x10);
-      *(f32 *)(param_1 + 8) = *(f32 *)(iVar5 + 0x14);
-      *(f32 *)(param_1 + 10) = *(f32 *)(iVar5 + 0x18);
+      obj->anim.localPosX = state->homeX;
+      obj->anim.localPosY = state->homeY;
+      obj->anim.localPosZ = state->homeZ;
     }
     else {
-      fVar1 = *(f32 *)(player + 0x18) - *(f32 *)(param_1 + 6);
-      fVar2 = *(f32 *)(player + 0x1c) - *(f32 *)(param_1 + 8);
-      fVar3 = *(f32 *)(player + 0x20) - *(f32 *)(param_1 + 10);
+      fVar1 = player->anim.worldPosX - obj->anim.localPosX;
+      fVar2 = player->anim.worldPosY - obj->anim.localPosY;
+      fVar3 = player->anim.worldPosZ - obj->anim.localPosZ;
       if ((fVar1 > lbl_803E5E5C) || (fVar1 < lbl_803E5E5C)) {
-        *(f32 *)(param_1 + 6) = lbl_803E5E60 * fVar1 * timeDelta + *(f32 *)(param_1 + 6);
+        obj->anim.localPosX = lbl_803E5E60 * fVar1 * timeDelta + obj->anim.localPosX;
       }
       if ((fVar2 > lbl_803E5E5C) || (fVar2 < lbl_803E5E5C)) {
-        *(f32 *)(param_1 + 8) = lbl_803E5E60 * fVar2 * timeDelta + *(f32 *)(param_1 + 8);
+        obj->anim.localPosY = lbl_803E5E60 * fVar2 * timeDelta + obj->anim.localPosY;
       }
       if ((fVar3 > lbl_803E5E5C) || (fVar3 < lbl_803E5E5C)) {
-        *(f32 *)(param_1 + 10) = lbl_803E5E60 * fVar3 * timeDelta + *(f32 *)(param_1 + 10);
+        obj->anim.localPosZ = lbl_803E5E60 * fVar3 * timeDelta + obj->anim.localPosZ;
       }
-      sVar6 = *(short *)(iVar5 + 8);
-      if ((-1 < sVar6) || ((-1 >= sVar6 && (*(int *)(param_1 + 0x7a) < 1)))) {
-        if (sVar6 == 0) {
-          *(undefined2 *)(iVar5 + 0xc) = 1;
+      burstCount = state->burstCount;
+      if ((-1 < burstCount) || ((-1 >= burstCount && (obj->unkF4 < 1)))) {
+        if (burstCount == 0) {
+          state->unk0C = 1;
         }
-        *param_1 = *param_1 + 300;
-        if (0 < *(short *)(iVar5 + 8)) {
-          for (sVar6 = 0; sVar6 < *(short *)(iVar5 + 8); sVar6 = sVar6 + 1) {
-            (*gPartfxInterface)->spawnObject(param_1, (int)*(short *)(iVar5 + 4), NULL, 4,
+        obj->anim.rotY += 300;
+        if (0 < state->burstCount) {
+          for (burstCount = 0; burstCount < state->burstCount; burstCount = burstCount + 1) {
+            (*gPartfxInterface)->spawnObject(obj, state->particleEffectId, NULL, 4,
                                              -1, NULL);
           }
         }
         else {
-          (*gPartfxInterface)->spawnObject(param_1, (int)*(short *)(iVar5 + 4), NULL, 4,
+          (*gPartfxInterface)->spawnObject(obj, state->particleEffectId, NULL, 4,
                                            -1, NULL);
         }
-        *(int *)(param_1 + 0x7a) = -(int)*(short *)(iVar5 + 8);
+        obj->unkF4 = -state->burstCount;
       }
-      else if ((sVar6 < 0) && (0 < *(int *)(param_1 + 0x7a))) {
-        *(uint *)(param_1 + 0x7a) = *(int *)(param_1 + 0x7a) - (uint)framesThisStep;
+      else if ((burstCount < 0) && (0 < obj->unkF4)) {
+        obj->unkF4 = obj->unkF4 - (u32)framesThisStep;
       }
     }
   }
@@ -182,24 +184,24 @@ void wmworm_update(short *param_1)
 
 #pragma scheduling off
 #pragma peephole off
-void wmworm_init(s16* obj, s8* p2)
+void wmworm_init(GameObject *obj, WmWormSetup *setup)
 {
-    int* state;
+    WmWormState *state;
 
-    *obj = 0;
-    state = ((GameObject *)obj)->extra;
-    *(f32*)state = (f32)((s32)*(s8*)(p2 + 0x18) << 2);
-    *(s16*)((char*)state + 0x4) = *(s16*)(p2 + 0x1a);
-    *(s16*)((char*)state + 0x8) = *(s16*)(p2 + 0x1c);
-    *(s16*)((char*)state + 0xc) = 0;
-    if (*(s16*)((char*)state + 0x8) < 1) {
-        ((GameObject *)obj)->unkF4 = (int)*(s16*)((char*)state + 0x8);
+    obj->anim.rotY = 0;
+    state = obj->extra;
+    state->effectScale = (f32)((s32)setup->effectScale << 2);
+    state->particleEffectId = setup->particleEffectId;
+    state->burstCount = setup->burstCount;
+    state->unk0C = 0;
+    if (state->burstCount < 1) {
+        obj->unkF4 = state->burstCount;
     } else {
-        ((GameObject *)obj)->unkF4 = 0;
+        obj->unkF4 = 0;
     }
-    *(f32*)((char*)state + 0x10) = ((GameObject *)obj)->anim.localPosX;
-    *(f32*)((char*)state + 0x14) = ((GameObject *)obj)->anim.localPosY;
-    *(f32*)((char*)state + 0x18) = ((GameObject *)obj)->anim.localPosZ;
+    state->homeX = obj->anim.localPosX;
+    state->homeY = obj->anim.localPosY;
+    state->homeZ = obj->anim.localPosZ;
 }
 #pragma peephole reset
 #pragma scheduling reset
