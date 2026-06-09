@@ -251,7 +251,7 @@ void wctemplebri_init(int obj, int initData)
     int done;
 
     ((GameObject *)obj)->anim.rotX = (s16)(setup->type << 8);
-    objAnim->bankIndex = setup->modelIndex;
+    *(u8 *)&objAnim->bankIndex = setup->modelIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount)
         objAnim->bankIndex = 0;
     ((GameObject *)obj)->animEventCallback = (void *)wctemplebri_interactCallback;

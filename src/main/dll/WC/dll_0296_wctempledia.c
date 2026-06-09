@@ -179,7 +179,7 @@ void wctempledia_init(int obj, int setup)
     int i;
 
     *(s16 *)obj = (s16)(setupData->type << 8);
-    objAnim->bankIndex = setupData->modelIndex;
+    *(u8 *)&objAnim->bankIndex = setupData->modelIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
         objAnim->bankIndex = 0;
     }
