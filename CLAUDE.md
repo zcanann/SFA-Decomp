@@ -1067,6 +1067,18 @@ cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
     explodeplan_updateTriggerCallback ret-first → obj/q/runtime=r31/r30/r29;
     fn_802C0A5C inner-before-q → p2/q=r31/r30). Try this BEFORE declaring a
     recipe #16 coloring cap.
+    **VOLATILE-reg edition — a FN-SCOPE decl (assignment left in place) sets
+    the vreg NUMBERING even when decl-order swaps among initialized locals
+    are inert.** Split the decl from its init and move ONLY the decl to fn
+    scope, then battery its POSITION: `int v;` declared before the other
+    inits flipped alphaanim dll_115_seqFn's def/v pair (def=r6, v=r4 =
+    target → 100); `PartFxItem *q;` declared FIRST (before rank/arr) landed
+    all three volatiles of Checkpoint_func0F (rank=r7, arr=r4, q=r6 → 100;
+    q-last and q-mid were inert — POSITION is the lever, q-first ≠ q-second).
+    Block-scope→fn-scope decl moves are codegen-free apart from the
+    numbering, so battery cheaply. Pairs with #107's count-inline-in-
+    condition (drop `s32 n` and write `i < lbl_X` to send the bound straight
+    to ctr) and index-form `arr[i]` (#160) when the walker also diverges.
 
 61c. **Limit of #61b — 2-variable chained-deref pairs (`p = load; q = *(p+off)`)
     do NOT respond to decl-order.** When the ONLY divergence is a 2-reg
@@ -2125,6 +2137,15 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
           mask/extension there and breaks the whole shape (probe-verified
           battery; objlib playerEyeAnimFn_80038988 67.84->98.94 -- both
           instances in one fn).
+          **INVERSE direction — when target HAS a dead conversion pair the
+          direct store folds, route through an INT local.** A byte copy
+          target compiles as `lbz; extsb; clrlwi; stb` (s8 source → u8
+          dest with both conversions executed) folds to bare `lbz; stb`
+          under EVERY direct-assignment spelling (u8=u8, u8=*(s8*),
+          (u8)(s8) chains — front-end drops conversions dead at a
+          truncating store); only `int t = *(s8 *)src; *(u8 *)dst = t;`
+          keeps both nodes live (dimmagicbridge dll_19A_update → 100).
+          Same int-local principle as the drgenerator (s16)t store cast.
     - Sibling discovery (drawHudBox): a no-op `(s16)` cast on ONE
       use-class of an s16 param (`(f32)(x + (s16)w)`) blocks extsh-CSE
       with the implicit promotions at the other uses — target re-extends
@@ -3235,6 +3256,25 @@ cap (which stays open for VARIABLE-compare loop-break-position branch-over-
 branch). Read the position: plain statement → switch reading; loop-break →
 still #92-open. Pairs with #21 (snd ternary invert), #58 (u32 clamp cmplwi),
 #93c (drop (int) on float→s16 store) when those co-occur in the same fn.
+**Round-4 extensions + a hard scope limit:**
+- **VALUE-ternary variant**: `cmpwi t,0; beq <li>; b <join>` over a
+  keep-or-replace ternary = switch ON THE VALUE with the assignment in the
+  case: `int t = lha; switch (t) { case 0: t = 0x14; break; } store (s16)t;`
+  — the plain ternary AND the #63 keep-or-replace form both fold the branch.
+  `int t` + a bare `(s16)` cast at the store supplies the join extsh that
+  `s16 t` drops (drgenerator_init → 100).
+- **Import-flattened-switch tell**: SEQUENTIAL guard returns
+  `if (x == 8) return; if (x >= 8) return; if (x != 0) return;` = a
+  decompiled binary-search tree — reconstruct the switch
+  (`case 8: break; case 0: <body>`) to regenerate the dispatch including
+  the case-0 `beq; b` (WM_seqobject_update → 100).
+- ⚠️ **SCOPE LIMIT: MWCC switch compares are ALWAYS SIGNED (cmpwi).** When
+  target shows `cmpLwi` + beq-over-b (u8/unsigned operand), the switch
+  reading canNOT reproduce the compare width — probed exhaustively:
+  `(u32)` cast, u32 local, `+ 0u`, `& 0xffu` all stay cmpwi; if/goto/
+  discarded-ternary/empty-arm spellings all fold the branch. Best
+  achievable is the switch's 1-byte cmpwi residual (dll_1FB_render banked
+  96.5). An unsigned-compare branch-over-branch lever is still open.
 
 110. **GVN chained-constant residual CRACKED — `li rY,K; mr rX,rY` (target
     chains a constant-equal copy) is per-fn `#pragma optimization_level 1`,
