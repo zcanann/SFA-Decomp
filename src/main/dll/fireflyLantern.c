@@ -94,7 +94,7 @@ void fn_80154870(int obj, int *state)
         fn_8014CD1C(obj, state, 0xf, lbl_803E29C4, lbl_803E2994, 0);
     }
     if (state[0xb7] & 0x40000000U) {
-        fVar1 = lbl_803E2990;
+        fVar1 = *(f32 *)&lbl_803E2990;
         if (fVar1 == *(f32 *)(state + 0xca)) {
             if (flag == 0) {
                 if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E29A4) {
