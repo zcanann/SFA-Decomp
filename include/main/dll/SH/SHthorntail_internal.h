@@ -7,7 +7,8 @@
 #include "main/objHitReact.h"
 
 typedef struct SHthorntailConfig {
-  u8 pad00[0x08];
+  u8 pad00[0x04];
+  f32 baseScale;
   Vec homePos;
   s32 configToken;
   u8 controlMode;
@@ -114,6 +115,9 @@ typedef struct SHthorntailObject {
 
 STATIC_ASSERT(offsetof(SHthorntailObject, runtime) == 0xB8);
 STATIC_ASSERT(offsetof(SHthorntailObject, animEventCallback) == 0xBC);
+STATIC_ASSERT(offsetof(SHthorntailConfig, baseScale) == 0x04);
+STATIC_ASSERT(offsetof(SHthorntailConfig, homePos) == 0x08);
+STATIC_ASSERT(offsetof(SHthorntailConfig, configToken) == 0x14);
 
 typedef struct SHthorntailAnimationInterface {
   u8 pad00[0x24];
