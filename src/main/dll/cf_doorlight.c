@@ -122,7 +122,7 @@ int kaldachom_stateHandlerA07(int obj, int p)
     }
   }
   ((GameObject *)obj)->anim.alpha =
-      (s32)((lbl_803E3078 - ((GameObject *)obj)->anim.currentMoveProgress) * lbl_803E308C);
+      (lbl_803E3078 - ((GameObject *)obj)->anim.currentMoveProgress) * lbl_803E308C;
   return 0;
 }
 
