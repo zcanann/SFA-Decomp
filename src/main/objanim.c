@@ -44,13 +44,13 @@ static inline s16 ObjAnim_ReadRootAxisSample(s16 *axis,int sampleIndex)
 void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimState *state,
                           uint moveId,s16 eventState)
 {
-  int eventStateValue;
+  int requestedEventState;
   int moveIndex;
   ObjAnimMoveData *moveData;
-  int frameType;
+  int blendFrameType;
   float blendFrameLength;
 
-  eventStateValue = eventState;
+  requestedEventState = eventState;
   moveIndex = ObjAnim_ResolveMoveIndex(animDef,moveId);
   if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
     if (state->lastBlendMoveIndex != moveIndex) {
@@ -73,20 +73,20 @@ void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimS
     moveData = (ObjAnimMoveData *)animDef->moveData[state->blendCacheSlot];
   }
   state->blendFrameData = (ObjAnimFrameCommand *)moveData->frameCmd;
-  frameType = moveData->frameInfo & OBJANIM_FRAME_TYPE_MASK;
-  if (frameType != state->frameType) {
+  blendFrameType = moveData->frameInfo & OBJANIM_FRAME_TYPE_MASK;
+  if (blendFrameType != state->frameType) {
     state->eventState = 0;
   }
   else {
     blendFrameLength = (float)state->blendFrameData->frameLength;
-    if (frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
+    if (blendFrameType == OBJANIM_FRAME_TYPE_CLAMPED) {
       blendFrameLength = blendFrameLength - gObjAnimProgressOne;
     }
     if (blendFrameLength != state->frameLength) {
       state->eventState = 0;
     }
     else {
-      state->eventState = (u16)eventStateValue;
+      state->eventState = (u16)requestedEventState;
     }
   }
   return;
