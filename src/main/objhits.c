@@ -1182,8 +1182,8 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
   float *spheresA;
   float *spheresB;
   float *defA;
-  u8 *volA;
-  u8 *volB;
+  ObjHitsModelHitVolume *volA;
+  ObjHitsModelHitVolume *volB;
   float *curSphA;
   float *curDefA;
   float *contactBase;
@@ -1191,10 +1191,10 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
   float *cw;
   float *sphB;
   float *cr;
-  u8 *p;
+  ObjHitsModelHitVolume *p;
   float *pb2;
   int *piVar11;
-  int modelFile;
+  ObjHitsModelFileHeader *modelFile;
   s64 maskA;
   s64 maskB;
   s64 volBits;
@@ -1268,11 +1268,11 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
   if ((checkA != 0 && (stateA->secondaryShapeFlags & OBJHITS_SHAPE_MODEL_HIT_VOLUMES) != 0) ||
       (checkB != 0 && stateA->shapeFlags == OBJHITS_SHAPE_MODEL_HIT_VOLUMES)) {
     piVar11 = ObjHits_GetActiveModel(objA);
-    modelFile = *piVar11;
-    countA = *(u8 *)(modelFile + 0xf7);
+    modelFile = (ObjHitsModelFileHeader *)*piVar11;
+    countA = modelFile->hitVolumeCount;
     spheresA = (float *)piVar11[0x14];
     defA = (float *)piVar11[(*(u16 *)(piVar11 + 6) >> 2 & 1 ^ 1) + 0x12];
-    volA = *(u8 **)(modelFile + 0x58);
+    volA = modelFile->hitVolumes;
     if ((uint)srcObj != (uint)objA) {
       radiusA = stateSrc->secondaryRadiusXZ;
     }
@@ -1287,7 +1287,7 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
     countA = 1;
     spheresA = sphs;
     defA = defs;
-    volA = volA0;
+    volA = (ObjHitsModelHitVolume *)volA0;
     if (stateA->secondaryShapeFlags & OBJHITS_SHAPE_CAPSULE) {
       modeA = 1;
     }
@@ -1307,10 +1307,10 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
   if ((checkA != 0 && (stateB->secondaryShapeFlags & OBJHITS_SHAPE_MODEL_HIT_VOLUMES) != 0) ||
       (checkB != 0 && stateB->shapeFlags == OBJHITS_SHAPE_MODEL_HIT_VOLUMES)) {
     piVar11 = ObjHits_GetActiveModel(objB);
-    modelFile = *piVar11;
-    countB = *(u8 *)(modelFile + 0xf7);
+    modelFile = (ObjHitsModelFileHeader *)*piVar11;
+    countB = modelFile->hitVolumeCount;
     spheresB = (float *)piVar11[0x14];
-    volB = *(u8 **)(modelFile + 0x58);
+    volB = modelFile->hitVolumes;
     radiusB = stateB->secondaryRadiusXZ;
     if ((((GameObject *)objB)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0) {
       return 0;
@@ -1319,7 +1319,7 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
   else {
     countB = 1;
     spheresB = &sphs[4];
-    volB = volB0;
+    volB = (ObjHitsModelHitVolume *)volB0;
     if (stateB->secondaryShapeFlags & OBJHITS_SHAPE_CAPSULE) {
       modeB = 1;
     }
@@ -1352,23 +1352,23 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
   i = 0;
   p = volA;
   for (; i < countA; i++) {
-    if (i == *(s8 *)(p + 0x16)) {
-      if ((mask & 1 << *(s8 *)(p + 0x17)) != 0) {
+    if (i == p->sphereIndex) {
+      if ((mask & 1 << p->maskBit) != 0) {
         maskA |= 1 << i;
       }
-      if ((volMask & 1 << *(s8 *)(p + 0x17)) != 0) {
+      if ((volMask & 1 << p->maskBit) != 0) {
         volBits |= 1 << i;
       }
     }
-    p += 24;
+    p++;
   }
   j = 0;
   p = volB;
   for (; j < countB; j++) {
-    if (j == *(s8 *)(p + 0x16)) {
+    if (j == p->sphereIndex) {
       maskB |= 1 << j;
     }
-    p += 24;
+    p++;
   }
   contactBase = gObjHitsContactScratch;
   bestDepth = lbl_803DE938;
@@ -1529,8 +1529,8 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
     for (; k < count; k++) {
       idxA = *((u8 *)cr + 24);
       hit = *((u8 *)cr + 25);
-      linkA = *(u16 *)(volA + idxA * 24 + 20);
-      linkB = *(u16 *)(volB + hit * 24 + 20);
+      linkA = volA[idxA].linkedSpheres;
+      linkB = volB[hit].linkedSpheres;
       link = linkA;
       while (link != 0) {
         maskA |= 1 << (idxA + (u16)((link & 0xf000) >> 12));

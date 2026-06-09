@@ -46,6 +46,10 @@
 #define OBJHITS_SKELETON_HIT_POINT_INDEX_A_WORD 0x10
 #define OBJHITS_SKELETON_HIT_POINT_INDEX_B_WORD 0x11
 #define OBJHITS_SKELETON_HIT_SENTINEL -1
+#define OBJHITS_MODEL_HIT_VOLUME_SIZE 0x18
+#define OBJHITS_MODEL_HIT_VOLUME_LINKS_OFFSET 0x14
+#define OBJHITS_MODEL_HIT_VOLUME_SPHERE_INDEX_OFFSET 0x16
+#define OBJHITS_MODEL_HIT_VOLUME_MASK_BIT_OFFSET 0x17
 #define OBJHITBOX_WORLD_X_OFFSET 0x18
 #define OBJHITBOX_WORLD_Y_OFFSET 0x1C
 #define OBJHITBOX_WORLD_Z_OFFSET 0x20
@@ -147,11 +151,26 @@ typedef struct ObjHitsModelJointInfo {
   u8 pad01[0x1C - 0x01];
 } ObjHitsModelJointInfo;
 
+typedef struct ObjHitsModelHitVolume {
+  f32 radius;
+  f32 x;
+  f32 y;
+  f32 z;
+  u8 pad10[OBJHITS_MODEL_HIT_VOLUME_LINKS_OFFSET - 0x10];
+  u16 linkedSpheres;
+  s8 sphereIndex;
+  s8 maskBit;
+} ObjHitsModelHitVolume;
+
 typedef struct ObjHitsModelFileHeader {
   u8 pad00[0x3C];
   ObjHitsModelJointInfo *joints;
-  u8 pad40[0xF3 - 0x40];
+  u8 pad40[0x58 - 0x40];
+  ObjHitsModelHitVolume *hitVolumes;
+  u8 pad5C[0xF3 - 0x5C];
   u8 jointCount;
+  u8 padF4[0xF7 - 0xF4];
+  u8 hitVolumeCount;
 } ObjHitsModelFileHeader;
 
 typedef struct ObjHitsSkeletonJointData {
@@ -185,8 +204,17 @@ typedef struct ObjHitsSkeletonHit {
 } ObjHitsSkeletonHit;
 
 STATIC_ASSERT(sizeof(ObjHitsModelJointInfo) == 0x1C);
+STATIC_ASSERT(sizeof(ObjHitsModelHitVolume) == OBJHITS_MODEL_HIT_VOLUME_SIZE);
+STATIC_ASSERT(offsetof(ObjHitsModelHitVolume, linkedSpheres) ==
+              OBJHITS_MODEL_HIT_VOLUME_LINKS_OFFSET);
+STATIC_ASSERT(offsetof(ObjHitsModelHitVolume, sphereIndex) ==
+              OBJHITS_MODEL_HIT_VOLUME_SPHERE_INDEX_OFFSET);
+STATIC_ASSERT(offsetof(ObjHitsModelHitVolume, maskBit) ==
+              OBJHITS_MODEL_HIT_VOLUME_MASK_BIT_OFFSET);
 STATIC_ASSERT(offsetof(ObjHitsModelFileHeader, joints) == 0x3C);
+STATIC_ASSERT(offsetof(ObjHitsModelFileHeader, hitVolumes) == 0x58);
 STATIC_ASSERT(offsetof(ObjHitsModelFileHeader, jointCount) == 0xF3);
+STATIC_ASSERT(offsetof(ObjHitsModelFileHeader, hitVolumeCount) == 0xF7);
 STATIC_ASSERT(offsetof(ObjHitsSkeletonJointData, jointRadii) == 0x04);
 STATIC_ASSERT(offsetof(ObjHitsSkeletonJointData, jointLengths) == 0x0C);
 STATIC_ASSERT(offsetof(ObjHitsSkeletonJointData, jointCullDistances) == 0x10);
