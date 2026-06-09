@@ -8579,8 +8579,11 @@ int fn_802A00E0(int obj, int state)
         *(s16 *)((char *)state + 0x278) = 0x15;
         inner->unk898 = (int)fn_8029FFD0;
     }
-    *(u32 *)((char *)*(int *)&((GameObject *)obj)->extra + 0x360) &= ~2LL;
-    *(u32 *)((char *)*(int *)&((GameObject *)obj)->extra + 0x360) |= 0x2000LL;
+    {
+        int ex = *(int *)&((GameObject *)obj)->extra;
+        *(u32 *)((char *)ex + 0x360) &= ~2LL;
+        *(u32 *)((char *)ex + 0x360) |= 0x2000LL;
+    }
     *(int *)((char *)state + 4) |= 0x100000;
     fz = lbl_803E7EA4;
     ((PlayerState *)state)->baddie.animSpeedA = fz;
@@ -8592,14 +8595,14 @@ int fn_802A00E0(int obj, int state)
     ((GameObject *)obj)->anim.velocityY = fz;
     ObjAnim_WriteStateWord((ObjAnimComponent *)obj, OBJANIM_STATE_INDEX_CURRENT,
                            OBJANIM_STATE_WORD_EVENT_STATE, inner->unk5A4);
-    if ((*(int *)((char *)state + 0x314) & 0x400) != 0) {
+    if ((*(int *)((char *)state + 0x314) & 0x200) != 0) {
         doRumble(lbl_803E7F10);
     }
     obj98 = ((GameObject *)obj)->anim.currentMoveProgress;
     if (obj98 > lbl_803E7F68) {
         ((GameObject *)obj)->anim.worldPosX = inner->unk768;
         ((GameObject *)obj)->anim.worldPosZ = inner->unk770;
-        if (*(int *)&((GameObject *)obj)->anim.parent != 0) {
+        if (*(void **)&((GameObject *)obj)->anim.parent != NULL) {
             ((GameObject *)obj)->anim.worldPosX = ((GameObject *)obj)->anim.worldPosX + playerMapOffsetX;
             ((GameObject *)obj)->anim.worldPosZ = ((GameObject *)obj)->anim.worldPosZ + playerMapOffsetZ;
         }
@@ -8652,8 +8655,11 @@ int fn_802A03BC(int obj, int state)
         *(s16 *)((char *)state + 0x278) = 0x14;
         inner->unk898 = (int)fn_8029FFD0;
     }
-    *(u32 *)((char *)*(int *)&((GameObject *)obj)->extra + 0x360) &= ~2LL;
-    *(u32 *)((char *)*(int *)&((GameObject *)obj)->extra + 0x360) |= 0x2000LL;
+    {
+        int ex = *(int *)&((GameObject *)obj)->extra;
+        *(u32 *)((char *)ex + 0x360) &= ~2LL;
+        *(u32 *)((char *)ex + 0x360) |= 0x2000LL;
+    }
     *(int *)((char *)state + 4) |= 0x100000;
     fz = lbl_803E7EA4;
     ((PlayerState *)state)->baddie.animSpeedA = fz;
@@ -8669,7 +8675,7 @@ int fn_802A03BC(int obj, int state)
     if (obj98 > lbl_803E7F68) {
         ((GameObject *)obj)->anim.worldPosX = inner->unk768;
         ((GameObject *)obj)->anim.worldPosZ = inner->unk770;
-        if (*(int *)&((GameObject *)obj)->anim.parent != 0) {
+        if (*(void **)&((GameObject *)obj)->anim.parent != NULL) {
             ((GameObject *)obj)->anim.worldPosX = ((GameObject *)obj)->anim.worldPosX + playerMapOffsetX;
             ((GameObject *)obj)->anim.worldPosZ = ((GameObject *)obj)->anim.worldPosZ + playerMapOffsetZ;
         }
@@ -11067,13 +11073,15 @@ int fn_802A14F8(int obj, int state)
         ((PlayerState *)inner)->unk8B4 = 1;
         ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 1;
     }
-    if (((GameObject *)obj)->anim.currentMove == 0x41a) {
+    switch (((GameObject *)obj)->anim.currentMove) {
+    case 0x41a:
         if (*(s8 *)((char *)state + 0x346) != 0) {
             fn_802AB5A4(obj, inner + 4, 5);
             *(int *)((char *)state + 0x308) = (int)fn_8029FFD0;
             return -0x13;
         }
-    } else {
+        break;
+    default: {
         pos[0] = ((PlayerState *)inner)->unk54C;
         pos[1] = ((PlayerState *)inner)->unk550;
         if (((PlayerState *)inner)->curAnimId != 0x48 && ((PlayerState *)inner)->curAnimId != 0x47) {
@@ -11088,6 +11096,8 @@ int fn_802A14F8(int obj, int state)
         ((GameObject *)obj)->anim.localPosY = ((PlayerState *)inner)->unk76C;
         ((GameObject *)obj)->anim.localPosZ = ((PlayerState *)inner)->unk594;
         *(f32 *)((char *)state + 0x2a0) = lbl_803E800C;
+        break;
+    }
     }
     fn_802AB5A4(obj, inner + 4, 5);
     return 0;
@@ -13932,7 +13942,8 @@ int fn_802A4D34(int obj, int state)
         *(s16 *)((char *)state + 0x278) = 1;
         inner->unk898 = (int)fn_802A514C;
     }
-    if (((GameObject *)obj)->anim.currentMove == 5) {
+    switch (((GameObject *)obj)->anim.currentMove) {
+    case 5: {
         void *sub;
         *(f32 *)((char *)state + 0x2a0) = lbl_803E7F40;
         ((PlayerState *)state)->baddie.animSpeedA = lbl_803E7EA4;
@@ -13943,7 +13954,7 @@ int fn_802A4D34(int obj, int state)
                 *(int *)((char *)sub + 0xf8) = 1;
             }
             amt = interpolate((f32)inner->unk4A4, lbl_803E805C, timeDelta);
-            inner->targetYaw = (int)((f32)inner->targetYaw + amt);
+            inner->targetYaw = (f32)inner->targetYaw + amt;
             inner->yaw = inner->targetYaw;
         }
         if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E7F2C) {
@@ -13953,7 +13964,9 @@ int fn_802A4D34(int obj, int state)
             *(int *)((char *)state + 0x308) = (int)fn_802A514C;
             return 2;
         }
-    } else {
+        break;
+    }
+    default: {
         void *sub = *(void **)((char *)inner + 0x7f8);
         if (sub != NULL && *(s16 *)((char *)sub + 0x46) == 0x112) {
             inner->unk3F8 = (int)lbl_80333110;
@@ -13965,13 +13978,15 @@ int fn_802A4D34(int obj, int state)
         } else {
             ObjAnim_SetCurrentMove(obj, 5, lbl_803E7EA4, 0);
         }
+        break;
+    }
     }
     if (*(int *)((char *)state + 0x314) & 1) {
         u16 snd;
-        if (inner->unk81A != 0) {
-            snd = 0x3c1;
-        } else {
+        if (inner->unk81A == 0) {
             snd = 0x320;
+        } else {
+            snd = 0x3c1;
         }
         Sfx_PlayFromObject(obj, snd);
     }
@@ -14584,7 +14599,10 @@ int fn_80298E54(int obj, int state, f32 fv)
         } else if (lbl_803DE488 < lbl_803E7F60) {
             lbl_803DE488 = lbl_803E7F60;
         }
-        count = (int)((f32)(int)cfPrisonGuard_getLiftHeight(lbl_803DE434) + lbl_803DE488);
+        {
+            f32 lh = (f32)(int)cfPrisonGuard_getLiftHeight(lbl_803DE434);
+            count = (int)(lh + lbl_803DE488);
+        }
         if (count <= 0) {
             lbl_803DE488 = lbl_803E7EA4;
             count = 0;
