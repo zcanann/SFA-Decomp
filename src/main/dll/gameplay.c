@@ -1922,8 +1922,6 @@ undefined4 * FUN_800e87a8(void)
  */
 extern int maybeTryLoadSave(int a);
 
-#pragma scheduling off
-#pragma peephole off
 int saveFn_800e8508(void)
 {
   int iVar1;
@@ -1941,10 +1939,8 @@ int saveFn_800e8508(void)
   }
   return iVar1;
 }
-#pragma peephole reset
 
 
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1996,8 +1992,6 @@ void gplaySaveGame(int param)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void titleDoLoadSave(void)
 {
   OSSetSaveRegion(0, 0);
@@ -2006,8 +2000,6 @@ void titleDoLoadSave(void)
   (*(void (**)(void))((char *)*gMapEventInterface + 0x20))();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -13062,11 +13054,7 @@ void Carryable_init(int param_1, int param_2) {
 }
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-#pragma scheduling off
-#pragma peephole off
 void Carryable_free(int x) { ObjGroup_RemoveObject(x, 0x10); }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* lbl = N (byte) */
 void clearSaveGameLoadingFlag(void) { lbl_803DD488 = 0x0; }
@@ -13084,9 +13072,7 @@ void Carryable_setFlag08(u8 *state, u8 enable)
   }
 }
 
-#pragma peephole off
 s32 Carryable_getFlag04(u8 *state) { return (state[7] & 4) != 0; }
-#pragma peephole reset
 
 void Carryable_setFlag04(u8 *state, u8 enable)
 {
@@ -13111,11 +13097,7 @@ u8 Carryable_getSurfaceType(u8 *state) { return state[8]; }
 
 /* if (lbl) fn(lbl); */
 extern void mm_free(u32);
-#pragma scheduling off
-#pragma peephole off
 void SaveGame_release(void) { if (pRestartPoint != 0) mm_free(pRestartPoint); }
-#pragma peephole reset
-#pragma scheduling reset
 
 enum {
     SAVEGAME_EMPTY_TASK_HINT = -1,
@@ -13148,15 +13130,9 @@ void SaveGame_initialise(void) {
 }
 
 extern void* getLastSavedGameTexts(void);
-#pragma scheduling off
-#pragma peephole off
 u8 getNextTaskHintText(void) { u8 *p = (u8*)getLastSavedGameTexts(); return p[5]; }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* conditional init/free pair. */
-#pragma scheduling off
-#pragma peephole off
 void SaveGame_gplayClearRestartPoint(void) { if (pRestartPoint != 0) { mm_free(pRestartPoint); pRestartPoint = 0; } }
 extern void loadMapForCurrentSaveGame(void);
 void SaveGame_gplayGotoRestartPoint(void) {
@@ -13383,11 +13359,7 @@ int Carryable_updateRenderState(int *obj, int flag) {
     return 1;
 }
 
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void SaveGame_setCamActionNo(s16 actionNo) { *(s16 *)((char *)lbl_803A32A8 + 0x6a4) = actionNo; }
 void *SaveGame_getLast(void) { return lbl_803A32A8; }
 s32 SaveGame_getCamActionNo(void) { return *(s16 *)((char *)lbl_803A32A8 + 0x6a4); }
@@ -13752,11 +13724,7 @@ void gameBitFn_800ea2e0(u8 id) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void *fn_800E888C(u8 a, u8 b) { return (char *)saveData + a * 40 + b * 8 + 28; }
 
 void screens_remove(void) {
@@ -13804,8 +13772,6 @@ void screens_show(int id) {
     }
     lbl_803DD4A8 = 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern u8 lbl_80313A40[];
 extern f32 lbl_803E0A58;

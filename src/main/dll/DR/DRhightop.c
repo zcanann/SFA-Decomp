@@ -330,8 +330,6 @@ typedef struct HightopFlags {
     u8 flags : 7;
 } HightopFlags;
 
-#pragma scheduling off
-#pragma peephole off
 void fn_801EB334(int *obj) {
     SnowBikeState *state = ((GameObject *)obj)->extra;
     if ((u32)((state->flags428 >> 1) & 1) == 0) {
@@ -359,8 +357,6 @@ void fn_801EB334(int *obj) {
         hitState->worldPosZ = ((GameObject *)obj)->anim.worldPosZ;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--

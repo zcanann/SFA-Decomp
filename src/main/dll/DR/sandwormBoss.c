@@ -3922,9 +3922,7 @@ void spiritdoorspirit_free(int x) { ObjGroup_RemoveObject(x, 0x4e); }
 /* if (o->_X == K) return A; else return B; */
 #pragma peephole off
 #pragma scheduling off
-#pragma peephole off
 int cfprisoncage_getObjectTypeId(int *obj) { if (((GameObject *)obj)->anim.seqId == 0x128) return 0x8; return 0x0; }
-#pragma peephole reset
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -4044,8 +4042,6 @@ void spiritdoorspirit_init(int* obj)
 extern f32 lbl_803DBE78;
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 
-#pragma scheduling off
-#pragma peephole off
 void spiritdoorspirit_update(int *obj) {
     SpiritDoorSpiritState *sub;
     u8 *def;
@@ -4071,8 +4067,6 @@ void spiritdoorspirit_update(int *obj) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 int babycloudrunner_setScale(int* obj)
 {
@@ -4126,8 +4120,6 @@ extern void PSVECScale(void *in, void *out, f32 scale);
 extern void getAmbientColor(int mode, u8 *r, u8 *g, u8 *b);
 extern void modelLightStruct_setDiffuseColor(void *p, int r, int g, int b, int a);
 
-#pragma scheduling off
-#pragma peephole off
 void gcrobotlightbea_update(int *obj) {
     GcRobotLightBeaState *sub;
     f32 vec[3];
@@ -4159,8 +4151,6 @@ void gcrobotlightbea_update(int *obj) {
         modelLightStruct_setPosition(sub->light, vec2[0], vec2[1], vec2[2]);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void spiritdoorspirit_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -4209,8 +4199,6 @@ void cfprisoncage_hitDetect(int* obj)
 }
 
 extern f32 lbl_803E42B4;
-#pragma scheduling off
-#pragma peephole off
 void cfprisoncage_init(int *obj, u8 *def) {
     ObjMsg_AllocQueue(obj, 1);
     *(s16 *)obj = (s16)((s32)def[0x1a] << 8);
@@ -4228,8 +4216,6 @@ void cfprisoncage_init(int *obj, u8 *def) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void windlift_free(int* obj)
 {

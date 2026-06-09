@@ -682,8 +682,6 @@ extern void *Camera_GetCurrentViewSlot(void);
 extern f32 sqrtf(f32 x);
 extern void voxmaps_worldToGrid(void *world, void *grid);
 extern int voxmaps_traceLine(void *from, void *to, void *out, int p4, int p5);
-#pragma scheduling off
-#pragma peephole off
 #pragma fp_contract off
 void dll_197_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -763,8 +761,6 @@ void dll_197_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     state->sparkTimer = randomGetRange(-10, 10) + 0x3c;
 }
 #pragma fp_contract reset
-#pragma peephole reset
-#pragma scheduling reset
 
 void dll_197_free(int obj)
 {
@@ -774,8 +770,6 @@ void dll_197_free(int obj)
 
 extern f32 lbl_803E5118;
 
-#pragma scheduling off
-#pragma peephole off
 void dbsh_symbol_init(int* obj)
 {
     DbshSymbolState* state = ((GameObject *)obj)->extra;
@@ -793,5 +787,3 @@ void dbsh_symbol_init(int* obj)
 
     ((GameObject *)obj)->anim.modelState->flags &= ~DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
 }
-#pragma peephole reset
-#pragma scheduling reset

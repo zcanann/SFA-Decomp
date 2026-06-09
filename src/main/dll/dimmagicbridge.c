@@ -376,8 +376,6 @@ void dll_19A_initialise(void) {}
 int dll_19A_getExtraSize(void) { return 0x4; }
 int dll_19A_getObjectTypeId(void) { return 0x0; }
 
-#pragma scheduling off
-#pragma peephole off
 void dll_19A_init(int obj, s8 *def) {
     int *state = ((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)((s32)def[0x1E] << 8);
@@ -387,12 +385,8 @@ void dll_19A_init(int obj, s8 *def) {
     *(u8 *)((char *)obj + 0x37) = 0xFF;
     ((GameObject *)obj)->anim.alpha = 0xFF;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5180;
 extern void objRenderFn_8003b8f4(f32);
-#pragma peephole off
 void dll_19A_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5180); }
-#pragma peephole reset

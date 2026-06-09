@@ -187,7 +187,6 @@ extern f32 lbl_803E2504;
  * EN v1.0 Address: 0x801409DC
  * EN v1.0 Size: 2224b
  */
-#pragma peephole off
 #pragma scheduling off
 void trickyFlame(int p1, int p2) {
     register char *strBase = lbl_8031D2E8;
@@ -426,7 +425,6 @@ void trickyFlame(int p1, int p2) {
     }
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--

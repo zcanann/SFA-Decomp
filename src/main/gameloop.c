@@ -213,8 +213,6 @@ extern u8 framesThisStep;
 #pragma dont_inline on
 #pragma dont_inline reset
 
-#pragma peephole off
-#pragma peephole reset
 
 #pragma pop
 
@@ -284,12 +282,10 @@ void crash(void) {
     *(u8 *)0 = 0;
 }
 
-#pragma peephole off
 
 #pragma dont_inline on
 
 #pragma dont_inline reset
-#pragma peephole reset
 
 /* Simple field/global accessors. */
 extern int lbl_803DCAE8[2];
@@ -304,10 +300,6 @@ void gameTextSetDrawFunc(void *fn);
 
 extern void *memset(void *dst, int val, int n);
 
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma push
 #pragma scheduling off
@@ -327,8 +319,6 @@ u8 getButtonObjects(void **p) {
     return lbl_803DCA48;
 }
 
-#pragma peephole off
-#pragma peephole reset
 
 extern u16 lbl_803DCA42;
 extern u8 lbl_803DCAF0;
@@ -410,8 +400,6 @@ void gameTextInit(void);
 
 void *Obj_GetPlayerObject(void);
 
-#pragma peephole off
-#pragma peephole reset
 #pragma pop
 
 extern void mapReloadWithFadeout(void);
@@ -561,10 +549,8 @@ void cutsceneFadeInOut(int a) {
 #pragma pop
 
 
-#pragma peephole off
 #pragma dont_inline on
 #pragma dont_inline reset
-#pragma peephole reset
 
 
 #pragma dont_inline on
@@ -893,18 +879,12 @@ void Obj_FlushDeferredFreeList(void);
 #pragma peephole off
 #pragma pop
 
-#pragma scheduling off
-#pragma peephole off
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
 #pragma pop
 
-#pragma peephole off
-#pragma peephole reset
 
 #pragma push
 #pragma scheduling off
@@ -913,13 +893,7 @@ void Obj_FlushDeferredFreeList(void);
 
 
 
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma push
 #pragma scheduling off

@@ -835,9 +835,7 @@ int dll_127_getObjectTypeId(void) { return 0x13; }
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3D60;
 extern void objRenderFn_8003b8f4(f32);
-#pragma peephole off
 void dll_127_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3D60); }
-#pragma peephole reset
 
 /* Drift-recovery: add new fns with v1.0 names. */
 extern void setPendingMapLoad(int v);
@@ -882,8 +880,6 @@ typedef struct {
     s16 onBit;   // 0x20
 } FuelcellSetup;
 
-#pragma scheduling off
-#pragma peephole off
 
 void deathseq_free(int* obj)
 {
@@ -892,8 +888,6 @@ void deathseq_free(int* obj)
     removeButtonObject(obj);
 }
 
-#pragma scheduling off
-#pragma peephole off
 void deathgas_init(int* obj)
 {
     register DeathGasState* state = ((GameObject *)obj)->extra;
@@ -903,8 +897,6 @@ void deathgas_init(int* obj)
     state->noFog = 1;
     state->radius = *(f32*)((char*)obj + 64);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 int fuelcell_func0B(int* obj)
 {
@@ -1380,5 +1372,3 @@ void deathseq_update(int* obj)
     }
 }
 
-#pragma peephole reset
-#pragma scheduling reset

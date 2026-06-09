@@ -1356,9 +1356,7 @@ void magiclight_update(int obj) {
 /* if (o->_X == K) return A; else return B; */
 #pragma peephole off
 #pragma scheduling off
-#pragma peephole off
 int magiclight_getExtraSize(int *obj) { if (((GameObject *)obj)->anim.seqId == 0x172) return 0x0; return 0x14; }
-#pragma peephole reset
 #pragma scheduling reset
 #pragma peephole reset
 

@@ -240,25 +240,15 @@ void pathcam_loadSettings(u16 *cam, int mode, u8 *data)
     *((u8 *)cam + 0x13e) = 1;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void camcontrol_releaseModeSettings(void) { mm_free(cameraMtxVar57); cameraMtxVar57 = 0; }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void camcontrol_initialiseModeSettings(void)
 {
   cameraMtxVar57 = (f32 *)mmAlloc(0xcc,0xf,0);
   memset(cameraMtxVar57,0,0xcc);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void camcontrol_samplePathState(f32 *outX,f32 *height,f32 *outZ,undefined4 param_4,int param_5)
 {
   CamcontrolPathSampleWork work;
@@ -312,5 +302,3 @@ void camcontrol_samplePathState(f32 *outX,f32 *height,f32 *outZ,undefined4 param
   *outZ = *(float *)(gCamcontrolPathState + 400);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset

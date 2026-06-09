@@ -4609,8 +4609,6 @@ void dll_CE_initialise(void)
 extern f32 lbl_803E2E90;
 extern f32 lbl_803E2E94;
 
-#pragma scheduling off
-#pragma peephole off
 int fn_801605D4(int* obj, GroundBaddieState *def)
 {
     GroundBaddieState* state = ((GameObject *)obj)->extra;
@@ -4625,8 +4623,6 @@ int fn_801605D4(int* obj, GroundBaddieState *def)
     def->baddie.moveSpeed = lbl_803E2E94 * def->baddie.animSpeedA;
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void dll_CB_initialise(void)
 {

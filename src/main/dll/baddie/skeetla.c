@@ -972,7 +972,6 @@ typedef struct SkeetlaParticleSpawnArgs {
 extern EffectInterface **gPartfxInterface;
 
 /* skeetla_spawnLinkedSparks  addr=0x8013ADFC  size=0x1E4  linkage=global */
-#pragma scheduling off
 #pragma peephole off
 void skeetla_spawnLinkedSparks(u8 *obj)
 {
@@ -1021,7 +1020,6 @@ void skeetla_spawnLinkedSparks(u8 *obj)
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 /* trickyAdjustStepAroundPoint  addr=0x8013AFE0  size=0x200  linkage=global */
 void trickyAdjustStepAroundPoint(f32 *start, f32 *end, f32 *guardPoint, f32 *center, f32 minDistance, f32 moveDistance)

@@ -190,8 +190,6 @@ FUN_80017998(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 #pragma dont_inline on
 #pragma dont_inline reset
 
-#pragma peephole off
-#pragma peephole reset
 
 #pragma pop
 
@@ -200,9 +198,7 @@ FUN_80017998(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 #pragma dont_inline on
 #pragma dont_inline reset
 
-#pragma peephole off
 
-#pragma peephole reset
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -257,10 +253,6 @@ extern u8 lbl_803DCB10;
 
 extern void *mmAlloc(int size, int type, int flag);
 
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma push
 #pragma scheduling off
@@ -376,8 +368,6 @@ void mm_free(void *p) {
 }
 #pragma dont_inline reset
 
-#pragma peephole off
-#pragma peephole reset
 #pragma pop
 
 #pragma push
@@ -449,10 +439,8 @@ extern MmRegion gMmRegionTable[];
 #pragma peephole off
 #pragma pop
 
-#pragma peephole off
 #pragma dont_inline on
 #pragma dont_inline reset
-#pragma peephole reset
 
 
 #pragma dont_inline on
@@ -1241,18 +1229,6 @@ void memcpyToCache(void *dst, void *src, u32 count) {
 #pragma peephole off
 #pragma pop
 
-#pragma scheduling off
-#pragma peephole off
-#pragma scheduling reset
-#pragma peephole reset
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
-
-#pragma peephole off
-#pragma peephole reset
 
 #pragma push
 #pragma scheduling off
@@ -1260,13 +1236,13 @@ void memcpyToCache(void *dst, void *src, u32 count) {
 #pragma pop
 
 
+#pragma push
+#pragma scheduling off
 #pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
+#pragma pop
 
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
+
+
 
 #pragma push
 #pragma scheduling off

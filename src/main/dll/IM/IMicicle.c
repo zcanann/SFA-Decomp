@@ -1393,8 +1393,6 @@ extern void storeZeroToFloatParam(void* p);
 extern void objSetSlot(void *obj, int resourceId);
 extern s16 lbl_80323008[];
 
-#pragma peephole off
-#pragma scheduling off
 void cflevelcontrol_init(u8* obj, u8* params) {
     typedef struct LevelControlFlags {
         u8 b7 : 1;
@@ -1431,8 +1429,6 @@ void cflevelcontrol_init(u8* obj, u8* params) {
     objSetSlot(obj, 0x51);
     ((LevelControlFlags *)(sub + 0xc))->b3 = 1;
 }
-#pragma scheduling reset
-#pragma peephole reset
 void exploded_free(void) {}
 void exploded_hitDetect(void) {}
 void exploded_release(void) {}
@@ -1463,13 +1459,11 @@ extern f32 Vec_distance(void *a, void *b);
 extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
 extern f32 lbl_803E43E8;
 extern f32 lbl_803E43F4;
-#pragma peephole off
 void slidingdoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E43BC); }
 void attractor_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E43D0); }
 void cfmagicwall_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E43D8); }
 void cflevelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E43E8); }
 void exploded_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E43F4); }
-#pragma peephole reset
 
 void cfmagicwall_update(int obj) {
     int data = *(int *)&((GameObject *)obj)->anim.placementData;
@@ -1654,22 +1648,15 @@ void cflevelcontrol_update(int obj) {
 }
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-#pragma scheduling off
-#pragma peephole off
 void attractor_free(int x) { ObjGroup_RemoveObject(x, 0x1e); }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* state encode: ((obj->_X)->_Y << shift) | const. */
 u32 exploded_getObjectTypeId(ExplodedObject *obj) { return (obj->mapData->objectTypeTag << 11) | 0x400; }
 
 /* byte-to-short shift8 pattern. */
-#pragma peephole off
 void cfmagicwall_init(s16 *dst, void* src) { s8 v = *((s8*)src + 0x18); s16 t = v << 8; *dst = t; }
-#pragma peephole reset
 
 /* attractor_setScale: branch on s8 flag at +0x19 of obj->_4C; if set return s16 at +0x1a, else 0. */
-#pragma peephole off
 int attractor_setScale(int *obj) {
     int *p = (int*)((int**)obj)[0x4c/4];
     if ((s8)*((u8*)p + 0x19) != 0) {
@@ -1677,11 +1664,8 @@ int attractor_setScale(int *obj) {
     }
     return 0;
 }
-#pragma peephole reset
 
 /* attractor_init: ObjGroup_AddObject(obj, 0x1e); byte<<8 -> sth at obj. */
-#pragma scheduling off
-#pragma peephole off
 void attractor_init(s16 *obj, void *data) {
     ObjGroup_AddObject(obj, 0x1e);
     {
@@ -1690,12 +1674,8 @@ void attractor_init(s16 *obj, void *data) {
         *obj = t;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern u8 framesThisStep;
-#pragma scheduling off
-#pragma peephole off
 void exploded_update(int *obj) {
     ExplodedObject *o = (ExplodedObject *)obj;
     ExplodedObjectState *state = o->state;
@@ -1734,8 +1714,6 @@ void exploded_update(int *obj) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E43B8;
 extern f32 lbl_803E43C0;
@@ -1748,7 +1726,6 @@ extern int atan2i(int y, int x);
  * tricky is within lbl_803E43B8 xz-distance and steps a 3-bit state field
  * (state[0] bits 5..7) through the door's open/close machine. Returns 1
  * while in the static states (0/1) and 0 while in transition (2/3). */
-#pragma scheduling off
 int slidingdoor_SeqFn(u8* obj, int unused, u8* data) {
     typedef struct DoorFlags {
         u8 mode : 3;
@@ -1822,14 +1799,11 @@ int slidingdoor_SeqFn(u8* obj, int unused, u8* data) {
     }
     return result;
 }
-#pragma scheduling reset
 /* slidingdoor_update: triggered-once handler. If obj->_f4 is already set,
  * skip. Otherwise: if data->_1c (event id) is non-zero AND obj->_b8->_0
  * bits 5..7 are set, preempt the event. Then if (s8)data->_1e is not -1,
  * run that sequence with obj, -1.
  * Finally latch obj->_f4 = 1. */
-#pragma scheduling off
-#pragma peephole off
 void slidingdoor_update(u8* obj) {
     u8* sub;
     u8* data;
@@ -1850,13 +1824,9 @@ void slidingdoor_update(u8* obj) {
     }
     *(u32 *)&((GameObject *)obj)->unkF4 = 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* exploded_init: store the map object tag, scale the model using the map
  * byte, then enable physics if any initial velocity/acceleration is present. */
-#pragma scheduling off
-#pragma peephole off
 void exploded_init(ExplodedObject* obj, ExplodedObjectMapData* data, int extra) {
     ExplodedObjectState* state;
     obj->objectTypeTag = data->objectTypeTag;
@@ -1874,14 +1844,10 @@ void exploded_init(ExplodedObject* obj, ExplodedObjectMapData* data, int extra) 
         state->explodePhase = 0;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* attractor_func0B: dispatch on (s8)obj->_4c->_19 - state 0/3+ store NULL,
  * state 1 stores obj, state 2 computes atan2 of (player - obj) deltas
  * (truncated to int), latches angle+0x8000 into obj+0, then stores obj. */
-#pragma scheduling off
-#pragma peephole off
 void attractor_func0B(u8* obj, void** out) {
     void* result = NULL;
     s8 state = *(s8*)((char*)(*(u8**)&((GameObject *)obj)->anim.placementData) + 0x19);
@@ -1904,15 +1870,11 @@ void attractor_func0B(u8* obj, void** out) {
     }
     *out = result;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* slidingdoor_init: clear obj+0xf4, copy data[0x1f]<<8 into obj+0; install
  * slidingdoor_SeqFn as obj->thinkRoutine; convert data[0x21] to f32, scale by
  * lbl_803E43C0 and obj->_50->[4], stash at obj+0x8; then clear bits 5..7 of
  * obj->_b8->_0. */
-#pragma scheduling off
-#pragma peephole off
 void slidingdoor_init(u8* obj, u8* data) {
     typedef struct SlidingDoorSubFlags {
         u8 doorState : 3;
@@ -1930,15 +1892,11 @@ void slidingdoor_init(u8* obj, u8* data) {
     sub = ((GameObject *)obj)->extra;
     ((SlidingDoorSubFlags *)sub)->doorState = doorState;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* CFLevelControl_SeqFn: loop through u8 array at +0x81 of param 3; on element==1, do game state setup. */
 extern void loadMapAndParent(int mapId);
 extern int mapGetDirIdx(int mapId);
 extern void lockLevel(int dirIdx, int b);
-#pragma scheduling off
-#pragma peephole off
 int CFLevelControl_SeqFn(int p1, int p2, void *p3) {
     int i;
     u8 *base = (u8*)p3;
@@ -1956,12 +1914,8 @@ int CFLevelControl_SeqFn(int p1, int p2, void *p3) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* cfforcefield_init: byte<<8 sth; insert GameBit_Get bit into bit-7 of *(u8*)obj->_B8; storeZeroToFloatParam. */
-#pragma scheduling off
-#pragma peephole off
 void cfforcefield_init(s16 *obj, void *data) {
     typedef struct ForceFieldInitFlags {
         u8 disabled : 1;
@@ -1976,8 +1930,6 @@ void cfforcefield_init(s16 *obj, void *data) {
     ((ForceFieldInitFlags *)flagPtr)->disabled = (u8)GameBit_Get(*(s16*)((char*)data + 0x20));
     storeZeroToFloatParam(flagPtr + 4);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void Obj_TransformLocalPointByWorldMatrix(void *obj, void *state, f32 *out, int flags);
 extern void fn_80065684(double x, double y, double z, void *obj, f32 *out, int flags);
@@ -1992,8 +1944,6 @@ extern f32 lbl_803E4420;
 extern f32 lbl_803E4424;
 
 
-#pragma scheduling off
-#pragma peephole off
 void exploded_initDebrisState(ExplodedObject *obj, ExplodedObjectMapData *data,
                               int computeModelCenter, ExplodedObjectState *state)
 {
@@ -2053,15 +2003,11 @@ void exploded_initDebrisState(ExplodedObject *obj, ExplodedObjectMapData *data,
   *((u8 *)state + 0x67) = 255;
   state->physicsFlags = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 
 /* Exploded debris setup: seed object angles, linear velocity, angular velocity,
  * ground clearance, and the randomized lifetime countdown. */
-#pragma scheduling off
-#pragma peephole off
 void exploded_seedDebrisMotion(ExplodedObject *obj, ExplodedObjectState *state, ExplodedObjectMapData *data)
 {
   f32 floorY[2];
@@ -2105,13 +2051,9 @@ void exploded_seedDebrisMotion(ExplodedObject *obj, ExplodedObjectState *state, 
     state->durationFrames = -1;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Exploded debris physics step: integrate local velocity and spin, bounce from
  * the stored floor height, and return nonzero once the shard comes to rest. */
-#pragma scheduling off
-#pragma peephole off
 int exploded_stepDebrisPhysics(ExplodedObject *obj, ExplodedObjectState *state)
 {
   f32 stopped;
@@ -2186,5 +2128,3 @@ int exploded_stepDebrisPhysics(ExplodedObject *obj, ExplodedObjectState *state)
   obj->z = obj->velocityZ * timeDelta + obj->z;
   return (s32)stopped;
 }
-#pragma peephole reset
-#pragma scheduling reset

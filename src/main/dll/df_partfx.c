@@ -2359,8 +2359,6 @@ extern void GXSetScissor(int x, int y, int w, int h);
 extern void hudDrawRect(int x, int y, int w, int h, HudColor col);
 extern void setHudOpacity(int op);
 extern void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b);
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_common_subs off
 void screenTransition_do2(int p1, int p2, int p3) {
     int sx;
@@ -2437,16 +2435,12 @@ void screenTransition_do2(int p1, int p2, int p3) {
     }
 }
 #pragma opt_common_subs reset
-#pragma scheduling reset
-#pragma peephole reset
 
 extern f32 lbl_803E0540;
 extern f32 lbl_803E0544;
 extern f32 lbl_803E0548;
 extern void Camera_GetCurrentViewport(int *x1, int *y1, int *x2, int *y2);
 
-#pragma scheduling off
-#pragma peephole off
 void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
 {
     int vx;
@@ -2561,8 +2555,6 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
         GXSetScissor(sx, sy, sw, sh);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f64 lbl_803E0520;
 extern f32 lbl_803E051C;
@@ -2572,8 +2564,6 @@ extern f32 lbl_803E0530;
 extern f32 lbl_803E0534;
 extern f32 lbl_803E0538;
 
-#pragma scheduling off
-#pragma peephole off
 void Checkpoint_func06(int* obj, int* state, int filter)
 {
     int stack[64];
@@ -2708,5 +2698,3 @@ void Checkpoint_func06(int* obj, int* state, int filter)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

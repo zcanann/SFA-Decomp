@@ -1856,7 +1856,6 @@ void MagicPlant_free(int obj, int param_2) {
 }
 #pragma scheduling reset
 
-#pragma peephole off
 #pragma scheduling off
 void MagicPlant_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
   MagicPlantObject *plant;
@@ -1878,7 +1877,6 @@ void MagicPlant_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
   }
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 void trickywarp_free(int obj) {
   TrickyWarpState *state = ((GameObject *)obj)->extra;
@@ -1999,7 +1997,6 @@ void trickyguard_init(s16 *obj, u8 *param_2) {
   ((GameObject *)obj)->objectFlags = (u16)v;
 }
 
-#pragma peephole off
 #pragma scheduling off
 void duster_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
   DusterState *state = ((GameObject *)obj)->extra;
@@ -2012,14 +2009,12 @@ void duster_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
   }
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 extern int objBboxFn_800640cc(f32 *from, f32 *to, f32 radius, int mode, void *hit,
                               void *obj, int flags, int mask, int arg9, int arg10);
 extern f32 lbl_803E38B4;
 
 #pragma scheduling off
-#pragma peephole off
 void duster_hitDetect(int param_1) {
   int obj = param_1;
   DusterState *state;
@@ -2035,7 +2030,6 @@ void duster_hitDetect(int param_1) {
   ((GameObject *)obj)->anim.previousLocalPosY = ((GameObject *)obj)->anim.localPosY;
   ((GameObject *)obj)->anim.previousLocalPosZ = ((GameObject *)obj)->anim.localPosZ;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 typedef struct DusterSetup {
@@ -2060,7 +2054,6 @@ typedef struct DusterLaunchRotation {
 } DusterLaunchRotation;
 
 #pragma scheduling off
-#pragma peephole off
 void duster_init(int obj, u8 *params) {
   DusterState *state;
   DusterSetup *setup;
@@ -2089,11 +2082,9 @@ void duster_init(int obj, u8 *params) {
   ObjMsg_AllocQueue((void *)obj,1);
   ((GameObject *)obj)->animEventCallback = (void *)duster_SeqFn;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void duster_update(int obj) {
   DusterState *state;
   DusterSetup *setup;
@@ -2263,12 +2254,10 @@ void duster_update(int obj) {
 
   ((GameObject *)obj)->anim.localPosY += ((GameObject *)obj)->anim.velocityY;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 
 #pragma scheduling off
-#pragma peephole off
 void MagicPlant_init(int obj, MagicPlantSetup *setup) {
     MagicPlantObject *plant;
     ObjAnimComponent *objAnim;
@@ -2311,7 +2300,6 @@ void MagicPlant_init(int obj, MagicPlantSetup *setup) {
     }
     plant->seqCallback = (void *)MagicPlant_SeqFn;
 }
-#pragma peephole reset
 #pragma scheduling reset
 extern f32 lbl_803E3928;
 
@@ -2348,7 +2336,6 @@ typedef struct CurveFishState {
 } CurveFishState;
 
 #pragma scheduling off
-#pragma peephole off
 void trickywarp_update(int param_1) {
   int obj = param_1;
   TrickyWarpState *state;
@@ -2367,11 +2354,9 @@ void trickywarp_update(int param_1) {
     }
   }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void curvefish_update(int obj) {
   CurveFishState *state;
   CurveFishSetup *setup;
@@ -2547,7 +2532,6 @@ void curvefish_update(int obj) {
   ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, state->moveStepScale, timeDelta, NULL);
   state->animTimer += timeDelta;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -2573,7 +2557,6 @@ typedef struct DusterHitEffectPos {
 } DusterHitEffectPos;
 
 #pragma scheduling off
-#pragma peephole off
 void fn_801814D0(int obj, int param_2, u8 *state) {
   int hitWork[4];
   DusterHitEffectPos effectPos;
@@ -2636,11 +2619,9 @@ void fn_801814D0(int obj, int param_2, u8 *state) {
     }
   }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void trickyguard_update(int *obj) {
     int *tricky;
     int *def = *(int **)&((GameObject *)obj)->anim.placementData;
@@ -2657,7 +2638,6 @@ void trickyguard_update(int *obj) {
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x08);
     objRenderFn_80041018(obj);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 typedef struct StayPointSetup {
@@ -2667,7 +2647,6 @@ typedef struct StayPointSetup {
 } StayPointSetup;
 
 #pragma scheduling off
-#pragma peephole off
 void StayPoint_update(int obj) {
     StayPointSetup *setup;
     void *tricky;
@@ -2705,7 +2684,6 @@ void StayPoint_update(int obj) {
         }
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 ObjectDescriptor gMagicPlantObjDescriptor = {

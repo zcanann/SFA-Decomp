@@ -555,7 +555,6 @@ void CameraModeShipBattle_update(short *cam)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void CameraModeShipBattle_init(void)
 {
   float fVar1;
@@ -579,7 +578,6 @@ void CameraModeShipBattle_init(void)
   lbl_803DD570[7] = fVar1;
   return;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -611,9 +609,5 @@ void CameraModeShipBattle_initialise(void) {}
 void CameraModeClimb_copyToCurrent_nop(void) {}
 
 /* fn_X(lbl); lbl = 0; */
-#pragma scheduling off
-#pragma peephole off
 void CameraModeShipBattle_free(void) { mm_free(lbl_803DD570); lbl_803DD570 = 0; }
 void CameraModeClimb_free(void) { mm_free(lbl_803DD578); lbl_803DD578 = 0; }
-#pragma peephole reset
-#pragma scheduling reset

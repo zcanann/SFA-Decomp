@@ -36,7 +36,6 @@ static inline f32 DFRope_S32AsFloat_SubAsFloat(s32 value) {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 int dfropenode_func0E(int obj, f32 worldX, f32 worldY, f32 worldZ, float *distanceOut,
                       float *phaseOut, u8 *sideOut)
 {
@@ -110,7 +109,6 @@ int dfropenode_func0E(int obj, f32 worldX, f32 worldY, f32 worldZ, float *distan
   }
   return result;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -125,7 +123,6 @@ int dfropenode_func0E(int obj, f32 worldX, f32 worldY, f32 worldZ, float *distan
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void dfropenode_render2(f32 phase, f32 force, int obj)
 {
   int extra;
@@ -143,7 +140,6 @@ void dfropenode_render2(f32 phase, f32 force, int obj)
   node = **(int **)(extra + 0x2c) + idx * 0x34;
   *(f32 *)(node + 0x1c) = force * fraction + *(f32 *)(node + 0x1c);
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -158,7 +154,6 @@ void dfropenode_render2(f32 phase, f32 force, int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void dfropenode_modelMtxFn(f32 distance, int obj, float *phase)
 {
   int extra;
@@ -185,7 +180,6 @@ void dfropenode_modelMtxFn(f32 distance, int obj, float *phase)
   *phase = *phase + distance;
   *phase = *phase + (f32)(s8)raw;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -200,7 +194,6 @@ void dfropenode_modelMtxFn(f32 distance, int obj, float *phase)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void dfropenode_func0B(f32 phase, int obj, float *xOut, float *yOut, float *zOut)
 {
   DFropenodeExtra *extra;
@@ -224,4 +217,3 @@ void dfropenode_func0B(f32 phase, int obj, float *xOut, float *yOut, float *zOut
   *yOut = dy * fraction + (((GameObject *)obj)->anim.localPosY + extra->rope->nodes[idx].pos[1]);
   *zOut = dz * fraction + (((GameObject *)obj)->anim.localPosZ + extra->rope->nodes[idx].pos[2]);
 }
-#pragma scheduling reset

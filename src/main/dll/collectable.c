@@ -1870,7 +1870,6 @@ void Tricky_update(int obj)
 }
 
 /* Tricky_init: 536b - initialize Tricky state, command callback, and path controller. */
-#pragma scheduling off
 void Tricky_init(int obj)
 {
   int state;
@@ -1922,10 +1921,8 @@ void Tricky_init(int obj)
   ((TrickyInitFlags *)&((TrickyState *)state)->unk82E)->initBit7 = 1;
   ((TrickyState *)state)->unkD = -1;
 }
-#pragma scheduling reset
 
 /* Tricky_resumeAfterCommand: resume Tricky visibility, collision, and fade after command finish. */
-#pragma scheduling off
 void Tricky_resumeAfterCommand(int obj,int state)
 {
   u8 moveId;
@@ -1962,10 +1959,8 @@ void Tricky_resumeAfterCommand(int obj,int state)
     ((TrickyState *)state)->unk30C = ((GameObject *)obj)->anim.currentMoveProgress;
   }
 }
-#pragma scheduling reset
 
 /* trickyFn_80148d8c: 828b - handle Tricky's completed-command fade and reward spawning. */
-#pragma scheduling off
 void trickyFn_80148d8c(int obj,int state)
 {
   int setup;
@@ -2059,10 +2054,8 @@ void trickyFn_80148d8c(int obj,int state)
     }
   }
 }
-#pragma scheduling reset
 
 /* collectibleFn_80149cec: 876b - spawn or reposition Tricky reward objects from packed command bits. */
-#pragma scheduling off
 int collectibleFn_80149cec(int obj,int state,int spawnBits,u32 useAltMode,u32 mode)
 {
   u32 commandSpawnIds[2];
@@ -2183,7 +2176,6 @@ int collectibleFn_80149cec(int obj,int state,int spawnBits,u32 useAltMode,u32 mo
   }
   return lbl_803DDA54;
 }
-#pragma scheduling reset
 
 /* baddie_updateWhileFrozen: 2796b - shared frozen-state update + per-baddie reaction dispatch. */
 typedef struct {
@@ -2476,7 +2468,6 @@ void baddie_updateWhileFrozen(int obj, u8 *state, u8 fromHit)
 }
 
 /* baddieInstantiateWeapon: 248b - refresh Tricky's attached child object when its setup id changes. */
-#pragma scheduling off
 void baddieInstantiateWeapon(int obj,int state)
 {
   int parentSetup;
@@ -2505,11 +2496,8 @@ void baddieInstantiateWeapon(int obj,int state)
     }
   }
 }
-#pragma scheduling reset
 
 /* baddieTargetFn_8014a150: 436b - line-of-sight and bbox visibility check between Tricky and a target. */
-#pragma scheduling off
-#pragma peephole off
 u8 baddieTargetFn_8014a150(int obj,int state,void *from,void *to)
 {
   u8 traceHit[4];
@@ -2559,12 +2547,8 @@ u8 baddieTargetFn_8014a150(int obj,int state,void *from,void *to)
   }
   return visible;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* baddieFn_8014a304: 760b - update Tricky's four quadrant line-of-sight state bits. */
-#pragma scheduling off
-#pragma peephole off
 void baddieFn_8014a304(f32 radius,int obj,int state)
 {
   u8 traceHit[4];
@@ -2639,14 +2623,10 @@ void baddieFn_8014a304(f32 radius,int obj,int state)
     }
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void Tricky_findNearbyFloorHeights(int obj,int state,f32 *nearestFloorY,f32 *nearestSpecialY);
 
 /* Tricky_applyFloorResponse: apply Tricky floor response and movement-control callbacks. */
-#pragma scheduling off
-#pragma peephole off
 void Tricky_applyFloorResponse(int obj,int state)
 {
   f32 nearestFloorY;
@@ -2708,12 +2688,8 @@ void Tricky_applyFloorResponse(int obj,int state)
                 (void *)(state + 4));
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Tricky_findNearbyFloorHeights: find nearby floor heights and special surface deltas for Tricky. */
-#pragma scheduling off
-#pragma peephole off
 void Tricky_findNearbyFloorHeights(int obj,int state,f32 *nearestFloorY,f32 *nearestSpecialY)
 {
   int hitList[2];
@@ -2766,8 +2742,6 @@ void Tricky_findNearbyFloorHeights(int obj,int state,f32 *nearestFloorY,f32 *nea
     }
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2851,8 +2825,6 @@ void Tricky_render(int obj,int param_2,int param_3,int param_4,int param_5,char 
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void Tricky_hitDetect(int obj)
 {
   f32 y;
@@ -2918,8 +2890,6 @@ void Tricky_hitDetect(int obj)
   }
   return;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -3644,22 +3614,14 @@ void FUN_80147d2c(int param_1,int param_2)
 int Tricky_getExtraSize(void) { return 0x83c; }
 
 /* misc 16b 4-insn patterns. */
-#pragma scheduling off
-#pragma peephole off
 u8 Tricky_func0E(int *obj) { return *((u8*)((int**)obj)[0xb8/4][0x0/4] + 0x1); }
 u8 Tricky_render2(int *obj) { return *((u8*)((int**)obj)[0xb8/4][0x0/4] + 0x0); }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Tricky_getCurrentCommandType: 24b - write state command byte 0xd to the outparam. */
-#pragma peephole off
-#pragma scheduling off
 int Tricky_getCurrentCommandType(int *obj, int *out) {
     *out = *((s8*)obj[0xb8/4] + 0xd);
     return 1;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern u8 Objfsa_GetWalkGroupIndexAtPoint(void *pos,int param_2);
 extern int Objfsa_GetPatchGroupIdAtPoint(void *pos);
@@ -3667,8 +3629,6 @@ extern void walkPath_writeU16LE(int pathId,u8 *out);
 extern int Objfsa_FindNearestEnabledCurveType24(void *pos,int param_2,int param_3);
 
 /* trickyFn_801451d8: 300b - seed Tricky's path state and ensure the helper object exists. */
-#pragma peephole off
-#pragma scheduling off
 int trickyFn_801451d8(int obj,int state) {
     u8 pathBytes[16];
     u32 pathByte = Objfsa_GetWalkGroupIndexAtPoint((void *)(obj + 0x18), 0);
@@ -3706,33 +3666,23 @@ int trickyFn_801451d8(int obj,int state) {
         return ret;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /* Tricky_func11: 72b - if GameBit_Get(0x4e4), OR 0x10000 into obj->_b8->_54. */
-#pragma scheduling off
 void Tricky_func11(int *obj) {
     register int *p = (int*)obj[0xb8/4];
     if (GameBit_Get(0x4e4)) {
         p[0x54/4] |= 0x10000;
     }
 }
-#pragma scheduling reset
 
 /* Tricky_func13: 40b - lbz/cmplwi(8/0xe) selector returning 1 or 0. */
-#pragma peephole off
-#pragma scheduling off
 int Tricky_func13(int *obj) {
     u8 v = *((u8*)obj[0xb8/4] + 8);
     if (v == 8 || v == 0xe) return 1;
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /* Tricky_func12: 36b - cmpwi(5) selector returning 1 or 0. */
-#pragma peephole off
-#pragma scheduling off
 #pragma optimize_for_size off
 int Tricky_func12(int *obj) {
     u8 v;
@@ -3749,12 +3699,8 @@ int Tricky_func12(int *obj) {
     return r;
 }
 #pragma optimize_for_size reset
-#pragma scheduling reset
-#pragma peephole reset
 
 /* Tricky_func10: enter state 10 against targetObj, or queue it while Tricky is busy. */
-#pragma peephole off
-#pragma scheduling off
 int Tricky_func10(int *obj,int targetObj) {
     int *state = (int*)obj[0xb8/4];
     s32 objBlocked = ((GameObject *)obj)->objectFlags & 0x1000;
@@ -3780,12 +3726,8 @@ int Tricky_func10(int *obj,int targetObj) {
     }
     return 1;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /* Tricky_func0F: start or refresh state 5 against a nearby curve target. */
-#pragma peephole off
-#pragma scheduling off
 void Tricky_func0F(int *obj,int commandEnabled,int targetObj) {
     register int *state = (int*)obj[0xb8/4];
 
@@ -3816,12 +3758,8 @@ void Tricky_func0F(int *obj,int commandEnabled,int targetObj) {
         state[0x54/4] |= 0x10000;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /* Tricky_getAvailableCommands: 124b - GameBit_Get cascade returning command flags. */
-#pragma peephole off
-#pragma scheduling off
 int Tricky_getAvailableCommands(void) {
     int r = 0;
     if (GameBit_Get(0x4e4) != 0) {
@@ -3832,8 +3770,6 @@ int Tricky_getAvailableCommands(void) {
     }
     return r;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /* trickyReportError: 80b - varargs OSReport-style stub. */
 void trickyReportError(const char *fmt, ...) { }
@@ -3846,7 +3782,6 @@ extern f32 lbl_803E2500;
 extern f32 lbl_803E2418;
 
 /* Tricky_findNearestGroup4BObject: find nearest object within distance threshold. */
-#pragma scheduling off
 u8 *Tricky_findNearestGroup4BObject(u8 *obj, TrickyState *state) {
     int *objs;
     int count[1];
@@ -3873,11 +3808,8 @@ u8 *Tricky_findNearestGroup4BObject(u8 *obj, TrickyState *state) {
     }
     return result;
 }
-#pragma scheduling reset
 
 /* trickyFn_80144f50: 648b - update Tricky's water/out-of-water probe and animation. */
-#pragma peephole off
-#pragma scheduling off
 void trickyFn_80144f50(int obj, int state) {
     int sfxState;
     int isInWater;
@@ -3938,13 +3870,9 @@ void trickyFn_80144f50(int obj, int state) {
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 
 /* frozenEnemyFn_80149bb4: 312b - flag bits to byte field. */
-#pragma peephole off
-#pragma scheduling off
 void frozenEnemyFn_80149bb4(int *obj, u32 flags, f32 f, u16 val) {
     *((u8*)obj + 0x2f1) = 0;
     if ((flags & 0x2) != 0) {
@@ -3979,5 +3907,3 @@ void frozenEnemyFn_80149bb4(int *obj, u32 flags, f32 f, u16 val) {
     }
     *(u16*)((char*)obj + 0x2ec) = val;
 }
-#pragma scheduling reset
-#pragma peephole reset

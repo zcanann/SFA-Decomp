@@ -248,8 +248,6 @@ void dimbossgut2_updateTracking(int obj, int state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void dimbossgut2_free(int param_9)
 {
   int obj = param_9;
@@ -271,8 +269,6 @@ void dimbossgut2_free(int param_9)
   (*(void (*)(int,int,int))(*(int *)(*gBaddieControlInterface + 0x40)))(obj,iVar2,0);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -287,8 +283,6 @@ void dimbossgut2_free(int param_9)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void dimbossgut2_render(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   u8 *light;
@@ -303,8 +297,6 @@ void dimbossgut2_render(int param_1,int param_2,int param_3,int param_4,int para
   }
   return;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -563,8 +555,6 @@ void DIMbossspit_updateBurst(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void DIMbossspit_free(int param_1)
 {
   int obj = param_1;
@@ -577,8 +567,6 @@ void DIMbossspit_free(int param_1)
   (*gExpgfxInterface)->freeSource2((u32)obj);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -593,8 +581,6 @@ void DIMbossspit_free(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void DIMbossspit_render(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   u8 *light;
@@ -609,8 +595,6 @@ void DIMbossspit_render(int param_1,int param_2,int param_3,int param_4,int para
   }
   return;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -832,8 +816,6 @@ void magicmaker_update(int obj)
 }
 
 extern f32 lbl_803E4D98;
-#pragma scheduling off
-#pragma peephole off
 int dimbosscrackpar_SeqFn(int *obj) {
     int *side = *(int **)&((GameObject *)obj)->anim.placementData;
     if ((u32)GameBit_Get(*(s16 *)((char *)side + 0x1e)) == 0u) {
@@ -864,8 +846,6 @@ void dimbosscrackpar_init(s16 *obj, s8 *def) {
     obj[1] = (s16)((s32)def[0x23] << 8);
     obj[2] = (s16)((s32)def[0x22] << 8);
 }
-#pragma peephole reset
-#pragma scheduling reset
 void dimbossfire_hitDetect(void) {}
 
 /*
@@ -881,8 +861,6 @@ void dimbossfire_hitDetect(void) {}
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void dimbossfire_free(int obj)
 {
   int o = obj;
@@ -897,12 +875,8 @@ void dimbossfire_free(int obj)
   }
   (*gExpgfxInterface)->freeSource2((u32)o);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma peephole off
 void dimbossfire_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
-#pragma peephole reset
 
 /* 8b "li r3, N; blr" returners. */
 int dimbossgut2_setScale(void) { return 0x0; }
@@ -918,6 +892,4 @@ int dimbossfire_getExtraSize(void) { return 0x14; }
 int dimbossfire_getObjectTypeId(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-#pragma peephole off
 void magicmaker_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4D88); }
-#pragma peephole reset

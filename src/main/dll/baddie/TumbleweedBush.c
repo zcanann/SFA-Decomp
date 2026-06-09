@@ -879,15 +879,11 @@ int TitleMenuItem_isChanged(TitleMenuItem* item)
  * Logic-only ? target has `extsh r0,r4; sth r0,0xc(r3)` but MWCC -O4
  * strips the redundant extsh before sth (same family as GameUI_func0F /
  * CMenu_SetShouldClose). */
-#pragma scheduling off
-#pragma peephole off
 void TitleMenuItem_setVal(TitleMenuItem* item, int val)
 {
     item->value = (s16)val;
     item->frameDelay = 2;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* EN v1.0 0x80131590  size: 8b   Getter for item->value. */
 s16 TitleMenuItem_getVal(TitleMenuItem* item)
@@ -914,8 +910,6 @@ extern void gameTextSetWindowStrPos(int windowId, int x, int y);
 extern void gameTextAppendStr(void* str, int windowId);
 
 /* EN v1.0 0x80131598  size: 116b  Toggle enabled bit on item->flags. */
-#pragma scheduling off
-#pragma peephole off
 void TitleMenuItem_setEnabled(TitleMenuItem* item, int flag)
 {
     if (flag != 0) {
@@ -928,8 +922,6 @@ void TitleMenuItem_setEnabled(TitleMenuItem* item, int flag)
         item->flags = (u8)(item->flags & ~TITLE_MENU_FLAG_ENABLED);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* EN v1.0 0x8013160C  size: 12b  Read enabled bit from item->flags. */
 int TitleMenuItem_isEnabled(TitleMenuItem* item)
@@ -1131,7 +1123,6 @@ extern void mm_free(void);
 extern void fn_8001BDD4(int);
 
 /* EN v1.0 0x80131540  size: 48b  Toggle A-button bit of item->flags. */
-#pragma peephole off
 void TitleMenuItem_setAButtonToggle(TitleMenuItem* item, int flag)
 {
     if (flag != 0) {
@@ -1140,7 +1131,6 @@ void TitleMenuItem_setAButtonToggle(TitleMenuItem* item, int flag)
         item->flags = (u8)(item->flags | TITLE_MENU_FLAG_A_TOGGLE);
     }
 }
-#pragma peephole reset
 
 /* EN v1.0 0x80131CF4  size: 32b  Wrapper for mm_free. */
 void TitleMenuItem_free(void)
@@ -1179,8 +1169,6 @@ extern const char* lbl_803DD908;
 extern char lbl_8031C1A8[];
 extern void linkInitTextures(LinkMenuItem* item);
 
-#pragma scheduling off
-#pragma peephole off
 
 /* EN v1.0 0x80131D14  size: 168b  Create text-window title menu item. */
 TitleMenuItem* TitleMenuItem_createWithWindow(int phraseId, int windowId, s16 minValue,
@@ -1426,5 +1414,3 @@ void Link_free(void)
     lbl_803DD911 = 0;
 }
 
-#pragma peephole reset
-#pragma scheduling reset

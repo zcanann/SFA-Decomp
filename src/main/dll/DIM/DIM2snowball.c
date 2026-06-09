@@ -1324,7 +1324,6 @@ extern int* getTrickyObject(void);
 /* fn_801B6D40 (EN v1.0 0x801B6D40, size 44): subtract v from state[2] byte,
  * return 1 if the signed result dropped to or below 0. */
 #pragma peephole off
-#pragma scheduling off
 int fn_801B6D40(int* obj, int v)
 {
     u8* state = ((GameObject *)obj)->extra;
@@ -1332,9 +1331,7 @@ int fn_801B6D40(int* obj, int v)
     return *(s8 *)(state + 2) <= 0;
 }
 #pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 u8 dim2pathgenerator_getCurveVals(int* obj, int** p1, int** p2, int** p3, int** p4)
 {
@@ -1483,7 +1480,6 @@ void dim_tricky_update(int* obj)
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 #pragma scheduling reset
 
 extern f32 mathCosf(f32 x);

@@ -198,8 +198,6 @@ FUN_80017998(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 #pragma dont_inline on
 #pragma dont_inline reset
 
-#pragma peephole off
-#pragma peephole reset
 
 #pragma pop
 
@@ -208,9 +206,7 @@ FUN_80017998(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 #pragma dont_inline on
 #pragma dont_inline reset
 
-#pragma peephole off
 
-#pragma peephole reset
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -222,12 +218,10 @@ void objSetEventName(u8 *obj, void *name) {
     ((GameObject *)obj)->anim.eventTable = name;
 }
 
-#pragma peephole off
 
 #pragma dont_inline on
 
 #pragma dont_inline reset
-#pragma peephole reset
 
 /* Simple field/global accessors. */
 
@@ -576,8 +570,6 @@ void modelLightStruct_setProjectionTevModes(ModelLightStruct *p, void *a, void *
     p->projectionTevAlphaMode = (int)b;
 }
 
-#pragma peephole off
-#pragma peephole reset
 
 extern u8 lbl_803DB408;
 
@@ -878,7 +870,6 @@ void modelLightChannel_configure(int i, int a, int b) {
     gModelLightChannelStates[i].active = 1;
 }
 
-#pragma peephole off
 void modelLightChannels_reset(u8 v) {
     gModelLightUseModelRelativePositions = v;
     gModelLightNextGXLightId = 1;
@@ -889,7 +880,6 @@ void modelLightChannels_reset(u8 v) {
     gModelLightChannelStates[4].active = 0;
     gModelLightChannelStates[5].active = 0;
 }
-#pragma peephole reset
 #pragma pop
 
 #pragma push
@@ -1276,10 +1266,8 @@ void updateLights(void) {
     }
 }
 
-#pragma peephole off
 #pragma dont_inline on
 #pragma dont_inline reset
-#pragma peephole reset
 
 
 #pragma dont_inline on
@@ -1753,31 +1741,19 @@ void modelLightStruct_setSpecularAttenuation(ModelLightStruct *obj, f32 a, f32 b
 #pragma peephole off
 #pragma pop
 
-#pragma scheduling off
-#pragma peephole off
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
 #pragma pop
 
-#pragma peephole off
-#pragma peephole reset
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
 #pragma pop
 
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma push
 #pragma scheduling off

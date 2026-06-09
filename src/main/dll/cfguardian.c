@@ -717,7 +717,6 @@ int Door_SeqFn(int obj, int p2, int seq);
 extern f32 lbl_803E3784;
 extern f32 lbl_803E3788;
 extern f32 lbl_803E3790;
-#pragma scheduling off
 #pragma peephole off
 void Door_init(int *obj, u8 *def) {
     u8 *state = ((GameObject *)obj)->extra;
@@ -756,9 +755,7 @@ void Door_init(int *obj, u8 *def) {
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 void Door_update(int obj)
 {
@@ -785,9 +782,7 @@ void Door_update(int obj)
   }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 void mmp_bridge_update(int *obj)
 {
@@ -809,7 +804,6 @@ void mmp_bridge_update(int *obj)
   }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
 extern int Sfx_StopFromObject(int obj, int sfxId);
@@ -824,7 +818,6 @@ extern void buttonDisable(int index, int mask);
  * EN v1.0 Address: 0x8017B5C8
  * EN v1.0 Size: 788b
  */
-#pragma scheduling off
 #pragma peephole off
 int Door_SeqFn(int obj, int p2, int seq)
 {
@@ -926,7 +919,6 @@ int Door_SeqFn(int obj, int p2, int seq)
   return ret;
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -935,7 +927,6 @@ int Door_SeqFn(int obj, int p2, int seq)
  * EN v1.0 Address: 0x8017BCF8
  * EN v1.0 Size: 180b
  */
-#pragma scheduling off
 #pragma peephole off
 int Lock_DoorLock_SeqFn(int obj, int p2, int seq)
 {
@@ -955,7 +946,6 @@ int Lock_DoorLock_SeqFn(int obj, int p2, int seq)
   return 0;
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -964,7 +954,6 @@ int Lock_DoorLock_SeqFn(int obj, int p2, int seq)
  * EN v1.0 Address: 0x8017BE28
  * EN v1.0 Size: 848b
  */
-#pragma scheduling off
 #pragma peephole off
 void doorlock_update(int obj)
 {
@@ -1048,4 +1037,3 @@ void doorlock_update(int obj)
   }
 }
 #pragma peephole reset
-#pragma scheduling reset

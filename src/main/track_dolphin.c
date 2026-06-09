@@ -678,8 +678,6 @@ extern void GXSetArray(int attr, void *base, int stride);
 extern f32 lbl_803DEBCC;
 extern u8 lbl_803967F0[];
 
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void setupToRenderMapBlock(int *block, void *posMtx) {
     f32 out[12];
@@ -701,8 +699,6 @@ void setupToRenderMapBlock(int *block, void *posMtx) {
     GXSetArray(14, *(void **)((char *)block + 0x60), 4);
 }
 #pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void *Camera_GetViewMatrix(void);
 extern void modelRenderInstrsState_init(int *state, int ptr, int a, int b);
@@ -4107,47 +4103,31 @@ void fn_800628CC(void) { lbl_803DB658 = 0x1; }
 void setMapBlockFlag(void) { lbl_803DCF4E = 0x1; }
 
 /* arr indexing: obj->arr + idx*size */
-#pragma scheduling off
-#pragma peephole off
 void* mapBlockFn_800606ec(int *obj, int idx) { return (char*)((int**)obj)[0x50/4] + idx * 0x14; }
 void* fn_800606FC(int *obj, int idx) { return (char*)((int**)obj)[0x68/4] + idx * 0x1c; }
 void* fn_8006070C(int *obj, int idx) { return (char*)((int**)obj)[0x64/4] + idx * 0x44; }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* arr indexing pow2. */
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void* fn_800606DC(int *obj, int idx) { return (char*)((int**)obj)[0x4c/4] + idx * 8; }
 #pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 
 /* 4-way sda21 to indirect-pointer broadcast. */
 extern u32 lbl_803DCE08;
 extern u32 lbl_803DCE0C;
 extern u32 lbl_803DCE10;
 extern u32 lbl_803DCE14;
-#pragma scheduling off
-#pragma peephole off
 void fn_80060490(u32 *a, u32 *b, u32 *c, u32 *d) {
     *a = lbl_803DCE08;
     *b = lbl_803DCE0C;
     *c = lbl_803DCE10;
     *d = lbl_803DCE14;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* extsb-then-stb (asm to preserve the extsb MWCC strips). */
-#pragma scheduling off
-#pragma peephole off
 void setShadowFlag_803db658(s32 v) {
     lbl_803DB658 = (s8)v;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* tables exposed through wide stubs below. */
 extern u8 lbl_803DCF6C;
@@ -4166,70 +4146,48 @@ extern TrackBlockDescriptor lbl_8038DC64[];
 #define gTrackBlockDescriptors lbl_8038DC64
 
 /* fn_80069944 -- store sbss byte into *p1 and return a fixed table base. */
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void *fn_80069944(u32 *outVal) {
     *outVal = lbl_803DCF6C;
     return gTrackBlockDescriptors;
 }
 #pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 
 /* fn_80069958 -- write a fixed table base address into *out. */
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void fn_80069958(void **out) {
     *out = lbl_8038DE44;
 }
 #pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 
 /* mapBlockFn_80060678 -- return top byte of obj[0x10]
  * (clrrwi 24 + srwi 24). */
-#pragma scheduling off
-#pragma peephole off
 u32 mapBlockFn_80060678(int *obj)
 {
     return (*(u32 *)&((GameObject *)obj)->anim.localPosY & 0xff000000) >> 24;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* mapGetBlocks: write a fixed table base and an sbss u32 into two
  * out-pointers. */
 extern u8 gMapBlockLayerTables[];
 extern u32 lbl_803DCE9C;
-#pragma scheduling off
-#pragma peephole off
 void mapGetBlocks(void **outPtr, u32 *outVal)
 {
     *outPtr = gMapBlockLayerTables;
     *outVal = lbl_803DCE9C;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* playerShadowFn_80062a30 -- if obj[0x64] non-NULL, clear bits 0x2020 in
  * its u32 at +0x30. */
-#pragma scheduling off
-#pragma peephole off
 void playerShadowFn_80062a30(int *obj)
 {
     int *p = *(int**)((char*)obj + 0x64);
     if (p == NULL) return;
     *(u32*)((char*)p + 0x30) &= ~0x2020;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* fn_80060668 -- extract bits 8-15 of obj[0x10] as a byte
  * (target uses rlwinm 8,15 + srwi 16). */
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 u32 fn_80060668(int *obj)
 {
@@ -4238,8 +4196,6 @@ u32 fn_80060668(int *obj)
     return v >> 16;
 }
 #pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 
 /* fn_80062894 -- clear two shorts, toggle two bytes (1 - x), clear
  * two more bytes. r3 stays at 0 through the whole sequence. */
@@ -4249,8 +4205,6 @@ extern s8 lbl_803DCEEA;
 extern s8 lbl_803DCEEB;
 extern u8 lbl_803DCEE9;
 extern u8 lbl_803DCEE8;
-#pragma scheduling off
-#pragma peephole off
 void fn_80062894(void) {
     lbl_803DCEF6 = 0;
     lbl_803DCEFA = 0;
@@ -4259,14 +4213,10 @@ void fn_80062894(void) {
     lbl_803DCEE9 = 0;
     lbl_803DCEE8 = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* fn_80069968 -- read s16 at lbl_8038DC64[idx*0x18 + 4] into *out1, and
  * the sbss u32 lbl_803DCF30 into *out2. Asm form locks the lis/addi
  * pair so MWCC doesn't route the table base through r0. */
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void fn_80069968(s32 *out1, u32 *out2) {
     TrackBlockDescriptor *descriptors = gTrackBlockDescriptors;
@@ -4274,20 +4224,14 @@ void fn_80069968(s32 *out1, u32 *out2) {
     *out2 = lbl_803DCF30;
 }
 #pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 
 extern u8 lbl_803DCF4F;
 extern u8 lbl_803DCF4D;
-#pragma scheduling off
-#pragma peephole off
 int fn_80065640(void) {
     int r = 0;
     if ((s8)lbl_803DCF4E != 0 || (s8)lbl_803DCF4F != 0 || lbl_803DCF4D != 0) r = 1;
     return r;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int lbl_803DCF48;
 
@@ -4300,8 +4244,6 @@ typedef struct MapDynamicSlot {
     u8 pad15[3];
 } MapDynamicSlot;
 
-#pragma scheduling off
-#pragma peephole off
 void objFn_80065604(void) {
     u32 cur;
     int idx;
@@ -4316,10 +4258,7 @@ void objFn_80065604(void) {
         i++;
     } while (i < MAP_DYNAMIC_SLOT_COUNT);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole on
 #pragma optimization_level 1
 void fn_80063368(int target) {
@@ -4338,7 +4277,6 @@ void fn_80063368(int target) {
 }
 #pragma optimization_level reset
 #pragma peephole reset
-#pragma scheduling reset
 
 extern u8 lbl_803DCE06;
 extern int lbl_80382038[];
@@ -4346,8 +4284,6 @@ extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern char gViewFrustumPlanes[];
 
-#pragma scheduling off
-#pragma peephole off
 void queueGlowRender(ModelLightStruct* light)
 {
     u8 i;
@@ -4377,12 +4313,9 @@ check:
     lbl_803DCE06 = (u8)(idx + 1);
     lbl_80382038[idx] = (int)light;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern u8 lbl_803DCE98;
 
-#pragma scheduling off
 #pragma peephole on
 #pragma optimization_level 1
 void fn_80060BB0(void)
@@ -4416,7 +4349,6 @@ void fn_80060BB0(void)
 }
 #pragma optimization_level reset
 #pragma peephole reset
-#pragma scheduling reset
 
 extern f32 *lbl_803DCF38;
 extern s16 lbl_803DCF5C;

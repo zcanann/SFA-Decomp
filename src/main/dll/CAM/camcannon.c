@@ -191,8 +191,4 @@ void CameraModeTestStrength_copyToCurrent_nop(void) {}
 
 /* fn_X(lbl); lbl = 0; */
 extern void mm_free(u32);
-#pragma scheduling off
-#pragma peephole off
 void CameraModeTestStrength_free(void) { mm_free(lbl_803DD560); lbl_803DD560 = 0; }
-#pragma peephole reset
-#pragma scheduling reset

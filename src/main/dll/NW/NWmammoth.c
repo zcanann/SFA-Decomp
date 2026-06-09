@@ -156,8 +156,6 @@ void ediblemushroom_init(int obj, int aux)
     }
 }
 
-#pragma scheduling off
-#pragma peephole off
 void enemymushroom_resetToSpawn(EnemyMushroomObject *obj,EnemyMushroomState *state,int enableTimer)
 {
   EnemyMushroomMapData *mapData;
@@ -189,8 +187,6 @@ void enemymushroom_resetToSpawn(EnemyMushroomObject *obj,EnemyMushroomState *sta
   ObjHits_EnableObject((int)obj);
   ObjHits_RefreshObjectState((int)obj);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -238,7 +234,6 @@ extern void objRenderFn_8003b8f4(void *obj, undefined4 p2, undefined4 p3, undefi
 extern void ObjPath_GetPointWorldPosition(void *obj, int idx, void *out0, void *out1, void *out2, int flag);
 extern f32 lbl_803E5310;
 
-#pragma scheduling off
 void enemymushroom_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
 {
     void *state = ((GameObject *)obj)->extra;
@@ -247,7 +242,6 @@ void enemymushroom_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4
         ObjPath_GetPointWorldPosition(obj, 0, (char *)state + 0x20, (char *)state + 0x24, (char *)state + 0x28, 0);
     }
 }
-#pragma scheduling reset
 
 /*
  * --INFO--

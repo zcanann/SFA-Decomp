@@ -307,8 +307,6 @@ extern f32 floor(f32 v);
 extern f32 fn_802943F4(f32 v);
 
 
-#pragma scheduling off
-#pragma peephole off
 void updateVisibleGeometry(void)
 {
     u8 *cam;
@@ -388,8 +386,6 @@ void updateVisibleGeometry(void)
     n++;
     frustumPlanes_updateAabbCornerIndices((FrustumPlane*)gViewFrustumPlanes, 5);
 }
-#pragma peephole reset
-#pragma scheduling reset
 /* old v1.1 body removed */
 
 /*
@@ -449,8 +445,6 @@ extern f32 gMapBlockWorldSize;
 extern f32 fastFloorf(f32 v);
 extern int lbl_803DCDD0;
 extern int lbl_803DCDD4;
-#pragma scheduling off
-#pragma peephole off
 int coordsToMapCell(f32 x, f32 z)
 {
     int ix = (int)(fastFloorf(x / gMapBlockWorldSize) - (f32)lbl_803DCDD0);
@@ -459,8 +453,6 @@ int coordsToMapCell(f32 x, f32 z)
     if (iz < 0 || iz >= 16) return -1;
     return *(s16 *)((char *)lbl_803822A0[0] + (ix + iz * 16) * 12);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2727,8 +2719,6 @@ extern void sceneDrawTransparentPolys(void);
 extern int Camera_GetViewMatrix(void);
 extern void PSMTXMultVec(int m, f32 *in, f32 *out);
 #pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
 void renderShadowType3(u8 *obj, u32 b, s32 offset) {
     f32 stk[3];
     s32 t, v;
@@ -2753,13 +2743,9 @@ void renderShadowType3(u8 *obj, u32 b, s32 offset) {
     lbl_8037E0C0[lbl_803DCE30 * 4]     = (u32)obj;
     lbl_8037E0C0[lbl_803DCE30 * 4 + 2] = (u32)v | ((b & 0xff) << 27);
 }
-#pragma peephole reset
-#pragma scheduling reset
 #pragma dont_inline reset
 
 extern f32 CurrTiming_803DEC20;
-#pragma scheduling off
-#pragma peephole off
 void fn_8005D3B4(u8 *obj, u8 *model, s32 b) {
     f32 stk[3];
     s32 t, v;
@@ -2787,11 +2773,7 @@ void fn_8005D3B4(u8 *obj, u8 *model, s32 b) {
     lbl_8037E0C0[lbl_803DCE30 * 4 + 1] = (u32)model;
     lbl_8037E0C0[lbl_803DCE30 * 4 + 2] = (u32)v | ((b & 0xff) << 27);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void lightmap_queueExternalRenderEntry(u32 a, u32 b, f32 *p) {
     s32 t, v;
     if (lbl_803DCE30 == 1000) {
@@ -2808,16 +2790,12 @@ void lightmap_queueExternalRenderEntry(u32 a, u32 b, f32 *p) {
     lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 7;
     lbl_803DCE30++;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern u32 gVisibleObjectSortKeys[];
 extern int lbl_803DCDF0;
 extern s16 gVisibleObjectSortKeyCount;
 extern void objRender(int a, int b, int c, int d, void *obj, int f);
 
-#pragma scheduling off
-#pragma peephole off
 typedef struct { u32 a, b, c, d; } LightmapQEnt;
 typedef struct { u8 pad[0x4114]; u32 deferred[20]; } LightmapDrawQueue;
 
@@ -2864,8 +2842,6 @@ void renderObjects(s8 *arg0) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern s8 lbl_803DCEA4;
 extern int lbl_803DCEA8;
@@ -2877,8 +2853,6 @@ extern void playerVecFn_8005a9b0(void);
 extern void updateLights(void);
 extern void sceneDraw(void);
 extern void screenFn_8000e944(int v);
-#pragma scheduling off
-#pragma peephole off
 void sceneRender(void) {
     renderFlags |= 0x21;
     if (lbl_803DCEA4 == 1 || lbl_803DCEA4 == 3) {
@@ -2896,8 +2870,6 @@ void sceneRender(void) {
     screenFn_8000e944(0);
     renderFlags &= ~2LL;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Trivial 4b 0-arg blr leaves. */
 void doNothing_beforeTitleScreen(void) {}
@@ -2911,19 +2883,13 @@ u32 shouldDrawShadows(void) { return renderFlags & 0x80; }
 u32 shouldDrawClouds(void) { return renderFlags & 0x10; }
 
 /* return (lbl >> bit) & 1 via cntlzw-equivalent (rlwinm; neg; or; srwi). */
-#pragma scheduling off
-#pragma peephole off
 u32 isOvercast(void) {
     u32 v = renderFlags & 0x40000;
     u32 t = ((u32)-(s32)v | v) >> 31;
     return t;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Toggle a renderFlags bit based on a boolean argument. */
-#pragma scheduling off
-#pragma peephole off
 void gameFlagFn_8005cd24(int v) {
     if (v != 0) renderFlags |= 0x20000;
     else        renderFlags &= ~0x20000;
@@ -2948,8 +2914,6 @@ void setPendingMapLoad(int v) {
     if (v != 0) renderFlags |= 0x1000;
     else        renderFlags &= ~0x1000;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Return the loaded romlist page table. */
 extern u8 gLoadedRomListPages[0x1e0];
@@ -2957,8 +2921,6 @@ void *RomList_GetLoadedPages(void) {
     return gLoadedRomListPages;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void mapGetBlockOriginForPos(f32 x, f32 y, f32 z, f32 *outX, f32 *outZ) {
     s32 ix, iz;
     f32 s;
@@ -2968,12 +2930,8 @@ void mapGetBlockOriginForPos(f32 x, f32 y, f32 z, f32 *outX, f32 *outZ) {
     *outX = s * (f32)ix;
     *outZ = s * (f32)iz;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void *gMapBlockLayerTables[];
-#pragma scheduling off
-#pragma peephole off
 int isInBounds(f32 x, f32 z) {
     int ix = (int)(fastFloorf(x / gMapBlockWorldSize) - (f32)lbl_803DCDD0);
     int iz = (int)(fastFloorf(z / gMapBlockWorldSize) - (f32)lbl_803DCDD4);
@@ -2992,12 +2950,8 @@ int isInBounds(f32 x, f32 z) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void **lbl_803DCE9C;
-#pragma scheduling off
-#pragma peephole off
 int objPosToMapBlockIdx(f32 x, f32 y, f32 z) {
     int ix = (int)(fastFloorf(x / gMapBlockWorldSize) - (f32)lbl_803DCDD0);
     int iz = (int)(fastFloorf(z / gMapBlockWorldSize) - (f32)lbl_803DCDD4);
@@ -3021,37 +2975,25 @@ int objPosToMapBlockIdx(f32 x, f32 y, f32 z) {
     }
     return -1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Drop-arg-1 trampoline:  fn(_, a, b, c) -> fn_800704FC(a, b, c). */
 extern void fn_800704FC(int a, int b, int c);
-#pragma scheduling off
-#pragma peephole off
 void fn_8005D0BC(int unused, int a, int b, int c) {
     fn_800704FC(a, b, c);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Drop-arg-1 trampoline:  fn(_, a, b, c, d) -> _gxSetTevColor1/2(a, b, c, d). */
 extern void _gxSetTevColor1(int a, int b, int c, int d);
 extern void _gxSetTevColor2(int a, int b, int c, int d);
-#pragma scheduling off
-#pragma peephole off
 void _textSetColor(int unused, int a, int b, int c, int d) {
     _gxSetTevColor1(a, b, c, d);
 }
 void setTextColor(int unused, int a, int b, int c, int d) {
     _gxSetTevColor2(a, b, c, d);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Map-block accessors backed by a per-layer table + indirect block list. */
 extern u8 lbl_803DCE98;          /* count of allocated blocks */
-#pragma scheduling off
-#pragma peephole off
 void *mapGetBlockIdx(int layer) {
     return gMapBlockLayerTables[layer];
 }
@@ -3067,16 +3009,12 @@ void *mapGetBlockAtPos(int x, int y, int layer) {
     if (idx < 0 || idx >= lbl_803DCE98) return 0;
     return lbl_803DCE9C[idx];
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Set widescreen flag and switch camera to 16:9 (1.7777) or 4:3 (1.3333). */
 extern f32 shdwChanged_803DEC18;
 extern f32 widescreenAspect_803DEC1C;
 extern f32 lbl_803DB670;
 extern void Camera_SetAspectRatio(f32 ratio);
-#pragma scheduling off
-#pragma peephole off
 int setWidescreen(u8 v) {
     if (v != 0) {
         renderFlags |= 0x8;
@@ -3087,13 +3025,9 @@ int setWidescreen(u8 v) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Toggle renderFlags + env byte for "draw lights" / "draw clouds-and-lights". */
 extern void *saveGameGetEnvState(void);
-#pragma scheduling off
-#pragma peephole off
 void setDrawLights(int v) {
     void *env = saveGameGetEnvState();
     if (v != 0) {
@@ -3114,8 +3048,6 @@ void setDrawCloudsAndLights(int v) {
         *(u8 *)((char *)env + 0x40) &= ~0x9;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void modelRenderInstrsState_init(int* state, void* buf, int s1, int s2);
 extern void modelRenderInstrsState_setBit(int* state, int bit);
@@ -3123,7 +3055,6 @@ extern void mapBlockRender_drawDimmedAabbLights(int* p1, int* obj, float* p3);
 extern int mapBlockRender_setLightmapShader(int* obj, int* state);
 extern void mapBlockRender_drawLightmapIndirectPasses(int* obj, int v, int* state, float* p3);
 
-#pragma scheduling off
 #pragma dont_inline on
 void modelRenderFn_8005d4ec(int* p1, int* obj, float* p3)
 {
@@ -3161,14 +3092,12 @@ void modelRenderFn_8005d4ec(int* p1, int* obj, float* p3)
     mapBlockRender_drawLightmapIndirectPasses(obj, newR, state, p3);
 }
 #pragma dont_inline reset
-#pragma scheduling reset
 
 extern void fn_8000F8F8(void);
 extern void Camera_ApplyFullViewport(void);
 extern int mapBlockRender_setShader(int p1, int* obj, int* state);
 extern void mapBlockRender_callList(int p1, int p2, int* obj, int v, int* state, float* p3);
 
-#pragma scheduling off
 #pragma dont_inline on
 void modelRenderFn_8005d894(int* p1, int* obj, float* p3)
 {
@@ -3208,7 +3137,6 @@ void modelRenderFn_8005d894(int* p1, int* obj, float* p3)
     Camera_ApplyFullViewport();
 }
 #pragma dont_inline reset
-#pragma scheduling reset
 
 extern void PSMTXConcat(f32 *a, f32 *b, f32 *ab);
 extern void GXLoadTexMtxImm(f32 *m, int id, int type);
@@ -3216,7 +3144,6 @@ extern void gxTextureSetupFn_8007cf7c(void);
 extern f32 lbl_80396850[12];
 extern f32 lbl_80396820[12];
 
-#pragma scheduling off
 #pragma dont_inline on
 void modelRenderFn_8005d69c(int* p1, int* obj, float* p3)
 {
@@ -3259,12 +3186,9 @@ void modelRenderFn_8005d69c(int* p1, int* obj, float* p3)
     mapBlockRender_callList(1, 1, obj, newR, state, p3);
 }
 #pragma dont_inline reset
-#pragma scheduling reset
 
 extern void* lbl_803DCEA0;
 
-#pragma scheduling off
-#pragma peephole off
 int* mapRomListFindItem(int needle, int* out_idx, int* out_outer, int* out_type, int* out_lastpage)
 {
     int outer;
@@ -3305,8 +3229,6 @@ int* mapRomListFindItem(int needle, int* out_idx, int* out_outer, int* out_type,
     }
     return NULL;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 typedef struct { u8 r, g, b, a; } GXColor8;
@@ -3392,8 +3314,6 @@ extern void drawViewFinderAperture(f32 a, f32 b, int c, int d);
 extern s32 bEnableColorFilter;
 extern void setShadowFlag_803db658(int v);
 
-#pragma scheduling off
-#pragma peephole off
 void sceneDraw(void)
 {
     char *q;
@@ -3550,10 +3470,7 @@ void sceneDraw(void)
     }
     setShadowFlag_803db658(0);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void sceneDrawTransparentPolys(void)
 {
     int *e;
@@ -3645,7 +3562,6 @@ void sceneDrawTransparentPolys(void)
         e = e + 4;
     }
 }
-#pragma scheduling reset
 
 
 extern void mapFn_80057d24(int x, int z, int *box0, int *box1, int *box2, int *box3, int layer,
@@ -3668,8 +3584,6 @@ typedef union {
     } u;
 } F64Cvt;
 
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_loop_invariants off
 void renderSceneGeometry(int *p1, s8 *order)
 {
@@ -3803,8 +3717,6 @@ void renderSceneGeometry(int *p1, s8 *order)
     } while (layer >= 0);
 }
 #pragma opt_loop_invariants reset
-#pragma peephole reset
-#pragma scheduling reset
 
 typedef struct {
     u32 a;
@@ -3813,8 +3725,6 @@ typedef struct {
     u32 d;
 } LightSortEntry;
 
-#pragma scheduling off
-#pragma peephole off
 void lightmap_sortTransparentDrawQueue(void)
 {
     int gap = 1;
@@ -3838,8 +3748,6 @@ void lightmap_sortTransparentDrawQueue(void)
         gap /= 3;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 
 extern void maybeHudFn_8006c91c(void);
@@ -3851,8 +3759,6 @@ extern void shadowRenderFn_8006b558(u8 *obj);
 extern void renderShadows(int a, int b, int c);
 void sortVisibleObjectKeysDescending(u32 *arr, int n);
 
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_loop_invariants off
 void getVisibleObjects(s8 *opacity)
 {
@@ -3982,11 +3888,7 @@ void getVisibleObjects(s8 *opacity)
     renderShadows(0, 0, 0);
 }
 #pragma opt_loop_invariants reset
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void sortVisibleObjectKeysDescending(u32 *arr, int n)
 {
     int gap = 1;
@@ -4007,8 +3909,6 @@ void sortVisibleObjectKeysDescending(u32 *arr, int n)
         gap /= 3;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern void objRenderFn_8003d980(int *obj, int *model);
 
@@ -4183,8 +4083,6 @@ extern void loadNextMap(void);
 extern f32 timeDelta;
 extern s32 lbl_803DCE00;
 
-#pragma scheduling off
-#pragma peephole off
 #pragma fp_contract off
 void updateEnvironment(int mode) {
     if (mode == 0) {
@@ -4242,5 +4140,3 @@ void updateEnvironment(int mode) {
     }
 }
 #pragma fp_contract reset
-#pragma peephole reset
-#pragma scheduling reset

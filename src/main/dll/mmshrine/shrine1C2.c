@@ -853,8 +853,6 @@ extern void objRenderFn_8003b8f4(f32);
 extern void objParticleFn_80099d84(void *obj, f32 scale, int type, f32 extraScale, void *light);
 extern f32 lbl_803E5038;
 
-#pragma scheduling off
-#pragma peephole off
 void gpsh_shrine_free(int *obj)
 {
     void **state = ((GameObject *)obj)->extra;
@@ -873,11 +871,7 @@ void gpsh_shrine_free(int *obj)
     GameBit_Set(0xefa, 0);
     GameBit_Set(0xcbb, GameBit_Get(0xc91) == 0);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void gpsh_shrine_render(void *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     void **state = ((GameObject *)obj)->extra;
@@ -896,17 +890,11 @@ void gpsh_shrine_render(void *obj, int p2, int p3, int p4, int p5, s8 visible)
         objParticleFn_80099d84(obj, lbl_803E5038, 7, *(f32 *)&lbl_803E5038, state[0]);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4FF8;
-#pragma peephole off
 void ecsh_creator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4FF8); }
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 void ecsh_creator_init(s16 *obj, s8 *def) {
     s16 *inner = ((GameObject *)obj)->extra;
     obj[0] = (s16)((s32)def[0x1e] << 8);
@@ -919,8 +907,6 @@ void ecsh_creator_init(s16 *obj, s8 *def) {
     inner[4] = 2;
     inner[4] = inner[4] + (u8)def[0x20];
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void fn_80296518(int *player, int a, int b);
 extern int fn_801C5CE4(void *objArg, int unused, void *eventListArg);

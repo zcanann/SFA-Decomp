@@ -1316,7 +1316,6 @@ void _gxSetFogParams(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-#pragma scheduling off
 #pragma peephole off
 void fogFn_80070404(f32 a, f32 b)
 {
@@ -1345,7 +1344,6 @@ void fogFn_80070404(f32 a, f32 b)
     GXSetFog(GX_FOG_PERSP_EXP, lbl_803DD024, lbl_803DD020, lbl_803DD038, lbl_803DD034, c);
 }
 #pragma peephole reset
-#pragma scheduling reset
 #pragma scheduling reset
 
 /*

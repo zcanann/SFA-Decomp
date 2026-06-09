@@ -2329,18 +2329,15 @@ void* mapTextureOverrideGetEntry(int idx) {
 
 /* 32b two-stage table lookup via lis/addi/lwz. */
 extern int lbl_803822A0[5];
-#pragma scheduling off
 void* fn_80059334(int a, int b) {
 	int* base = (int*)lbl_803822A0[0];
 	return (char*)base + (a + (b << 4)) * 12;
 }
-#pragma scheduling reset
 
 /* 48b paired float reads scaled by sda21 constant. */
 extern int lbl_803DCE68;
 extern f32 lbl_803DEBC8;
 
-#pragma scheduling off
 void mapTextureScrollGetOffset(int idx, float* outX, float* outY) {
 	f32 divisor;
 	char* base;
@@ -2349,10 +2346,8 @@ void mapTextureScrollGetOffset(int idx, float* outX, float* outY) {
 	base = (char*)lbl_803DCE68 + idx;
 	*outY = *(f32*)(base + 4) / divisor;
 }
-#pragma scheduling reset
 
 /* 52b layer clamp pair. */
-#pragma scheduling off
 void goToPrevMapLayer(void) {
 	curMapLayer = curMapLayer - 1;
 	if (curMapLayer < -2) {
@@ -2368,7 +2363,6 @@ void goToNextMapLayer(void) {
 	}
 	renderFlags |= 0x4000;
 }
-#pragma scheduling reset
 
 /* 132b per-block flag scan. */
 typedef struct {
@@ -2380,7 +2374,6 @@ typedef struct {
 extern BlockEntry lbl_8038224C[8];
 extern s8 lbl_803DCDEC;
 
-#pragma scheduling off
 void mapBlockFn_80059c2c(u8* outFlags) {
 	int outer;
 	for (outer = 0; outer < 0x78; outer++) {
@@ -2400,13 +2393,11 @@ void mapBlockFn_80059c2c(u8* outFlags) {
 		}
 	}
 }
-#pragma scheduling reset
 
 /* 136b 5-plane view-frustum sphere visibility test. */
 extern f32 lbl_803DEBCC;
 extern char gViewFrustumPlanes[];
 
-#pragma scheduling off
 int ViewFrustum_IsSphereVisible(float* center, float radius) {
 	FrustumPlane* plane;
 	u8 i;
@@ -2420,7 +2411,6 @@ int ViewFrustum_IsSphereVisible(float* center, float radius) {
 	}
 	return 1;
 }
-#pragma scheduling reset
 
 /* 112b indexed teardown/free of map block. */
 extern char lbl_803822C8[];
@@ -2428,8 +2418,6 @@ extern void* gLoadedRomListPages[];
 extern void defStartFn_8005972c(char* p1, u32* p2, int idx, int flag);
 extern void mm_free(void* p);
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80059A50(int param_1) {
 	int idx = param_1;
 	void* p = gLoadedRomListPages[idx];
@@ -2439,8 +2427,6 @@ void fn_80059A50(int param_1) {
 		gLoadedRomListPages[idx] = 0;
 	}
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* 96b camera-pos gated load. */
 extern f32 lbl_803DCE5C;
@@ -2448,8 +2434,6 @@ extern f32 lbl_803DCE60;
 extern f32 lbl_803DCE64;
 extern void doPendingMapLoads(void);
 
-#pragma peephole off
-#pragma scheduling off
 void loadMapForCameraPos(float x, float y, float z) {
 	if ((renderFlags & 2) != 0 && (renderFlags & 0x800) == 0) return;
 	lbl_803DCE64 = x;
@@ -2460,14 +2444,11 @@ void loadMapForCameraPos(float x, float y, float z) {
 		doPendingMapLoads();
 	}
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* 80b current map block lookup. */
 extern int lbl_803DB648;
 extern void* lbl_803DCEA0;
 
-#pragma scheduling off
 void* mapBlockFn_800592e4(void) {
 	char* p = (char*)lbl_803822A0[0];
 	int v = *(s16*)(p + 0x594);
@@ -2487,7 +2468,6 @@ void* mapBlockFn_800592e4(void) {
 		return res;
 	}
 }
-#pragma scheduling reset
 
 /* 104b conditional gameTextLoadDir caller. */
 extern int lbl_803DCEC4;
@@ -2495,8 +2475,6 @@ extern int lbl_803DCEC8;
 extern s8 lbl_8030E55C[];
 extern void gameTextLoadDir(int dirId);
 
-#pragma peephole off
-#pragma scheduling off
 void gameTextLoadForMap_800571f0(u8 force) {
 	int curVal = lbl_803DCEC8;
 	if (curVal == -1) return;
@@ -2509,27 +2487,19 @@ void gameTextLoadForMap_800571f0(u8 force) {
 		gameTextLoadDir(entry);
 	}
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
-#pragma scheduling off
-#pragma peephole off
 void mapTextureScrollSetStep(int idx, int xStep, int yStep, int texWidthFixed, int texHeightFixed) {
     int base = lbl_803DCE68 + idx * 16;
     *(s16*)(base + 8) = (s16)((xStep << 16) / (texWidthFixed >> 6));
     *(s16*)(base + 10) = (s16)((yStep << 16) / (texHeightFixed >> 6));
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern s8 lbl_803DB624;
 extern u8 *lbl_803DCE78;
 extern int mapCoordsToId(int x, int z, int layer);
 extern int getDataFileSize(int kind);
 
-#pragma scheduling off
-#pragma peephole off
 void mapSetup(int mapType, s32* outMapId, s32* outEvent, f32 a, f32 b, f32 c)
 {
     int layer;
@@ -2575,8 +2545,6 @@ void mapSetup(int mapType, s32* outMapId, s32* outEvent, f32 a, f32 b, f32 c)
         *outEvent = (s32)*(s8*)((*gMapEventInterface)->getWarpPos() + 0xe);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern s16* lbl_803DCE94;
 extern u8 lbl_803DCE98;
@@ -2592,8 +2560,6 @@ extern void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer);
 extern int return0_80060B90(void* blk);
 extern void DCStoreRange(void* p, int size);
 
-#pragma scheduling off
-#pragma peephole off
 int mapLoadBlock(int p1, int p2, int p3, int p4, int layer)
 {
     int blockId;
@@ -2657,8 +2623,6 @@ int mapLoadBlock(int p1, int p2, int p3, int p4, int layer)
     DCStoreRange(blk, *(int*)((char*)blk + 0x8));
     return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 typedef struct { f32 v[15]; } _PlaneDirPack;
 typedef struct { f32 v[5]; } _ScalePack;
@@ -2676,8 +2640,6 @@ extern void PSVECScale(f32* in, _Vec3* out, f32 s);
 extern void PSVECAdd(_Vec3* a, _Vec3* b, _Vec3* out);
 extern f32 PSVECDotProduct(_Vec3* a, f32* b);
 
-#pragma scheduling off
-#pragma peephole off
 void playerVecFn_8005a9b0(void)
 {
     _Vec3 camPos;
@@ -2726,15 +2688,11 @@ void playerVecFn_8005a9b0(void)
     }
     frustumPlanes_updateAabbCornerIndices(gPlayerRelativeFrustumPlanes, 5);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int* lbl_803DCE9C;
 extern void setMapBlockFlag(void);
 extern char sTrackLoadBlockOverrunError[];
 
-#pragma scheduling off
-#pragma peephole off
 void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer)
 {
     int i;
@@ -2762,12 +2720,8 @@ void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer)
     lbl_803DCE8C[i] = 1;
     setMapBlockFlag();
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
 void mapTextureOverrideRelease(int key, int type)
 {
     int i;
@@ -2790,12 +2744,8 @@ void mapTextureOverrideRelease(int key, int type)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 #pragma dont_inline reset
 
-#pragma scheduling off
-#pragma peephole off
 void mapTextureOverrideSetValue(int type, u32 key, int value)
 {
     int i;
@@ -2810,13 +2760,9 @@ void mapTextureOverrideSetValue(int type, u32 key, int value)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern int mapGetRomListAndOffsets(int p1, int b);
 
-#pragma scheduling off
-#pragma peephole off
 void mapLoadForObject(int p1, char *p2)
 {
     int saved = lbl_803DCEC8;
@@ -2837,11 +2783,7 @@ void mapLoadForObject(int p1, char *p2)
     (*gMapEventInterface)->loadRomListObjects(slot);
     lbl_803DCEC8 = saved;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int texHeightFixed)
 {
     char *base = (char *)lbl_803DCE68;
@@ -2876,8 +2818,6 @@ int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int texHeig
     *(u8 *)(e + 0xc) += 1;
     return slot;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern int isRomListLoading(void);
 extern void padUpdate(void);
@@ -2893,8 +2833,6 @@ extern char lbl_8037E0C0[];
 extern u8 gDvdErrorPauseActive;
 extern int lbl_803DB620;
 
-#pragma scheduling off
-#pragma peephole off
 int mapProcessRomList(int slot)
 {
     u8 flag;
@@ -2966,15 +2904,11 @@ int mapProcessRomList(int slot)
     lbl_803DB620 = slot;
     return i;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void *mmAlloc(int size, int heap, int flags);
 extern void mapsBinGetRomlistSize(int offset, int *a, int *b, int *c);
 extern int lbl_803DCE7C;
 
-#pragma scheduling off
-#pragma peephole off
 int mapGetRomListAndOffsets(int p1, int flag)
 {
     int tabOff = p1 * 7 << 2;
@@ -3010,12 +2944,8 @@ int mapGetRomListAndOffsets(int p1, int flag)
     }
     return (int)lbl_803DCEA0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
 void mapInitSetRects(s16 *rect, u8 *bitmap, int p3, int p4, int idx)
 {
     u8 *self = lbl_803DCE78;
@@ -3040,15 +2970,11 @@ void mapInitSetRects(s16 *rect, u8 *bitmap, int p3, int p4, int idx)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 #pragma dont_inline reset
 
 extern void Obj_UpdateWorldTransform(void);
 extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
 
-#pragma scheduling off
-#pragma peephole off
 void playerUpdateFn_8005649c(void)
 {
     int count;
@@ -3085,13 +3011,9 @@ void playerUpdateFn_8005649c(void)
         e++;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern char sTrackGlobalTexanimOverflowError[];
 
-#pragma scheduling off
-#pragma peephole off
 typedef struct TexOverrideEntry {
     u32 key;
     int data0;
@@ -3144,8 +3066,6 @@ int mapTextureOverrideAcquire(int key, int value, int type)
     OSReport(sTrackGlobalTexanimOverflowError);
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern int* gCheckpointInterface;
 extern int* gNewCloudsInterface;
@@ -3159,8 +3079,6 @@ extern void voxmaps_resetLoadedMaps(void);
 extern void textureFreeFn_8012fcec(void);
 extern void fn_80133934(void);
 
-#pragma scheduling off
-#pragma peephole off
 void unloadMap(void)
 {
     int blk;
@@ -3232,15 +3150,11 @@ void unloadMap(void)
     (*(void (*)(int, int))(*(int *)(*gNewCloudsInterface + 0xc)))(-1, 0);
     (*gCloudActionInterface)->freeCloudObjects();
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int lbl_80382238[];
 extern void loadAssetFileById(void* out, int id);
 extern void* memset(void* p, int v, int n);
 
-#pragma scheduling off
-#pragma peephole off
 void initMaps(void)
 {
     void* data;
@@ -3368,11 +3282,7 @@ void initMaps(void)
     lbl_803DCEB4 = 0;
     mm_free(data);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void mapFn_80057d24(int a, int b, int* o0, int* o1, int* o2, int* o3, int f1, int f2, int idx)
 {
     int base;
@@ -3455,11 +3365,7 @@ void mapFn_80057d24(int a, int b, int* o0, int* o1, int* o2, int* o3, int f1, in
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int mapCoordsToId(int x, int z, int layerIdx)
 {
     int x0, z0;
@@ -3515,13 +3421,9 @@ int mapCoordsToId(int x, int z, int layerIdx)
     }
     return -1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 sAabbCornerDirections[];
 
-#pragma scheduling off
-#pragma peephole off
 void frustumPlanes_updateAabbCornerIndices(FrustumPlane* planes, int count)
 {
     int k;
@@ -3571,11 +3473,7 @@ void frustumPlanes_updateAabbCornerIndices(FrustumPlane* planes, int count)
         planes++;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int mapRectFn_8005a728(int bx, int bz, char* obj)
 {
     f32 a1, a2, b1, b2, c1, c2;
@@ -3636,11 +3534,7 @@ int mapRectFn_8005a728(int bx, int bz, char* obj)
     }
     return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void defStartFn_8005972c(char* p, u32* tbl, int idx, int flag)
 {
     char* cur;
@@ -3769,8 +3663,6 @@ void defStartFn_8005972c(char* p, u32* tbl, int idx, int flag)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803DEBB8;
 extern f32 lbl_803DEBD4;
@@ -3780,8 +3672,6 @@ extern f32 Vec_distance(f32* a, f32* b);
 extern void Camera_ProjectWorldSphere(f32 x, f32 y, f32 z, f32 radius, f32* outX, f32* outY,
                                       f32* outZ, f32* outRadiusX, f32* outRadiusY, f32* outDepth);
 
-#pragma scheduling off
-#pragma peephole off
 int objUpdateOpacity(char* obj)
 {
     u8 op;
@@ -3859,8 +3749,6 @@ int objUpdateOpacity(char* obj)
     }
     return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
 extern int objShouldUnload(char* obj);
@@ -3871,8 +3759,6 @@ extern void mapInstantiateObjects(char* page, int mapId, int bit, char* obj);
 extern void mapClearBit(int mapId, int bit);
 extern void Obj_SetupObject(u32 setup, int a, int b, int c, char* d);
 
-#pragma scheduling off
-#pragma peephole off
 void mapLoadUnloadObjects(int flag)
 {
     char* base;
@@ -4099,8 +3985,6 @@ void mapLoadUnloadObjects(int flag)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern s16 lbl_803DCEB8;
 extern u8 lbl_803DCDE0;
@@ -4140,8 +4024,6 @@ extern void skyFn_80088e54(f32 a, int on);
 extern void Pause_SetDisabled(int);
 extern void Pause_ResetMenuFrameCounter(void);
 
-#pragma scheduling off
-#pragma peephole off
 void beginLoadingMap(void)
 {
     char* base;
@@ -4330,8 +4212,6 @@ void beginLoadingMap(void)
     Pause_SetDisabled(0);
     Pause_ResetMenuFrameCounter();
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int mapGetDirIdx(int mapId);
 extern void setForceLoadImmediately(void);
@@ -4347,8 +4227,6 @@ extern int lbl_803DCEB0;
 extern s16 lbl_803DCE70;
 extern u8 lbl_803DCDED;
 
-#pragma scheduling off
-#pragma peephole off
 void doPendingMapLoads(void)
 {
     char* base;
@@ -4742,14 +4620,10 @@ void doPendingMapLoads(void)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern s16 lbl_803DCE90;
 extern int lbl_803DCE84;
 
-#pragma scheduling off
-#pragma peephole off
 void mapBlockFn_80059354(int x, int z, s16* out, int layer)
 {
     int id;
@@ -4843,8 +4717,6 @@ void mapBlockFn_80059354(int x, int z, s16* out, int layer)
         *(s8*)((char*)out + 8) = 0;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int gMapBlockLayerTables[];
 extern void* lbl_803DCEA8;
@@ -4853,8 +4725,6 @@ extern char sTrackCellCoordFormat[];
 extern void fn_80137948(char* fmt, ...);
 extern void modelRenderInstrsState_init(int* state, int buf, int s1, int s2);
 
-#pragma scheduling off
-#pragma peephole off
 void mapDebugRender(int* state)
 {
     int bx, bz;
@@ -4923,5 +4793,3 @@ void mapDebugRender(int* state)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

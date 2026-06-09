@@ -4781,7 +4781,6 @@ extern void Matrix_TransformPoint(f32 *matrix, f32 x, f32 y, f32 z, f32 *outX, f
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 
 #pragma scheduling off
-#pragma peephole off
 void playerRunStateMachine(char *pos, char *state, float dt, int stateFns) {
     int changed;
     int done;
@@ -4883,11 +4882,9 @@ void playerRunStateMachine(char *pos, char *state, float dt, int stateFns) {
         *(s16 *)(pos + 4) = *(s16 *)(pos + 4) - (s16)decay;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void player_update(char *pos, char *state, float dt, float pathDt, int stateFns, int auxStateFns) {
     struct {
         s16 rotX;
@@ -5028,7 +5025,6 @@ void player_update(char *pos, char *state, float dt, float pathDt, int stateFns,
         }
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma peephole off
@@ -6617,7 +6613,6 @@ void fn_800D9EE8(float *p) {
 
 
 #pragma scheduling off
-#pragma peephole off
 int fn_800DB240(int p1, f32 *outVec, u16 id)
 {
   extern f32 vec3f_distanceSquared(int, int);
@@ -6647,10 +6642,8 @@ int fn_800DB240(int p1, f32 *outVec, u16 id)
   outVec[2] = (f32)(s32)*(s16 *)(entry + 40);
   return 1;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
-#pragma peephole off
 #pragma scheduling off
 void fn_800D915C(int p1, int *obj, void *fnTable, f32 fval)
 {
@@ -6701,4 +6694,3 @@ void fn_800D915C(int p1, int *obj, void *fnTable, f32 fval)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset

@@ -1383,8 +1383,6 @@ void FUN_801f1d3c(undefined8 param_1,undefined8 param_2,double param_3,undefined
 }
 
 #pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
 void fn_801F20D4(int obj)
 {
   extern void *Obj_GetPlayerObject(void);
@@ -1432,8 +1430,6 @@ void fn_801F20D4(int obj)
     }
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 #pragma dont_inline reset
 
 /*
@@ -1582,8 +1578,6 @@ undefined4 FUN_801f26a8(int param_1,undefined4 param_2,int param_3)
 }
 
 #pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
 void fn_801F27E4(int obj)
 {
   extern void *Obj_GetPlayerObject(void);
@@ -1629,8 +1623,6 @@ void fn_801F27E4(int obj)
     }
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 #pragma dont_inline reset
 
 /*
@@ -1880,8 +1872,6 @@ typedef struct PressureSwitchFlags {
     u8 otherFlags : 6;
 } PressureSwitchFlags;
 
-#pragma scheduling off
-#pragma peephole off
 void pressureswitch_init(int *obj, u8 *init) {
     extern uint GameBit_Get(int id);
     PressureSwitchState *sub;
@@ -1910,8 +1900,6 @@ void pressureswitch_init(int *obj, u8 *init) {
         sub->holdTimer = 0x1e;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 void dll_1FF_free_nop(void) {}
 void dll_1FF_hitDetect_nop(void) {}
 void dll_1FF_release_nop(void) {}
@@ -1923,8 +1911,6 @@ void wmlasertarget_initialise(void) {}
 
 extern void Obj_SetActiveModelIndex(int *obj, int idx);
 
-#pragma scheduling off
-#pragma peephole off
 void wmlasertarget_update(int *obj) {
     extern u8 framesThisStep;
     extern void GameBit_Set(int slot, int val);
@@ -1955,8 +1941,6 @@ void wmlasertarget_update(int *obj) {
         sub->cooldown -= fs;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 void dll_200_free_nop(void) {}
 void dll_200_hitDetect_nop(void) {}
 void dll_200_release_nop(void) {}
@@ -1976,8 +1960,6 @@ extern f32 lbl_803E5DD8;
 extern f32 lbl_803E5DDC;
 extern f32 lbl_803E5DE0;
 
-#pragma scheduling off
-#pragma peephole off
 void WM_colrise_update(int *obj) {
     u8 *def;
     WMColriseState *sub;
@@ -2029,8 +2011,6 @@ void WM_colrise_update(int *obj) {
         Sfx_StopObjectChannel((int)obj, 8);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 void wmtorch_hitDetect(void) {}
 void wmtorch_release(void) {}
 void wmtorch_initialise(void) {}
@@ -2039,8 +2019,6 @@ extern f32 lbl_803E5DEC;
 extern f32 lbl_803E5DF0;
 extern f32 lbl_803E5DF4;
 extern f32 lbl_803E5DF8;
-#pragma peephole off
-#pragma scheduling off
 void wmtorch_init(u8* obj, u8* params) {
     WmTorchState* sub;
     void *res;
@@ -2076,22 +2054,14 @@ void wmtorch_init(u8* obj, u8* params) {
     Resource_Release(res);
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x2000);
 }
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole off
 void wmtorch_render(int *obj, int p1, int p2, int p3, int p4, s8 visible) {
     if (visible == 0) return;
 }
-#pragma peephole reset
 
 extern void *lbl_803DDC80;
-#pragma scheduling off
-#pragma peephole off
 void LaserBeam_initialise(void) {
     lbl_803DDC80 = Resource_Acquire(0x81, 1);
 }
-#pragma peephole reset
-#pragma scheduling reset
 void lightsource_hitDetect(void) {}
 
 /* 8b "li r3, N; blr" returners. */
@@ -2116,14 +2086,10 @@ extern f32 lbl_803E5D90;
 extern f32 lbl_803E5DC8;
 extern f32 lbl_803E5E08;
 extern void queueGlowRender(void *light);
-#pragma peephole off
 void pressureswitch_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5D58); }
 void wmlasertarget_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5D90); }
 void WM_colrise_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5DC8); }
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 void lightsource_render(void *obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     extern void objRenderFn_8003b8f4(void *obj, int p1, int p2, int p3, int p4, f32 alpha);
@@ -2135,72 +2101,42 @@ void lightsource_render(void *obj, int p1, int p2, int p3, int p4, s8 visible)
         objRenderFn_8003b8f4(obj, p1, p2, p3, p4, lbl_803E5E08);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* if (o->_X == K) return A; else return B; */
-#pragma peephole off
-#pragma scheduling off
-#pragma peephole off
 int dll_1FF_getObjectTypeId(int *obj) { if (((GameObject *)obj)->anim.seqId == 0x146) return 0x2; return 0x0; }
-#pragma peephole reset
-#pragma scheduling reset
-#pragma peephole reset
 
 /* init pattern: short=-1; byte=0; return 0; */
-#pragma scheduling off
-#pragma peephole off
 int PressureSwitch_SeqFn(int p1, int p2, void* p3) { *(s16*)((char*)p3 + 0x6e) = -1; *(u8*)((char*)p3 + 0x56) = 0; return 0; }
 int WM_colrise_SeqFn(int p1, int p2, void* p3) { *(s16*)((char*)p3 + 0x6e) = -1; *(u8*)((char*)p3 + 0x56) = 0; return 0; }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* fn_X(lbl); lbl = 0; */
-#pragma scheduling off
-#pragma peephole off
 void LaserBeam_release(void) { Resource_Release(lbl_803DDC80); lbl_803DDC80 = NULL; }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* dll_1FF_init: stash (s8 b[0x18] << 8) into a[0] and -0x8000 into a[1]. */
-#pragma scheduling off
-#pragma peephole off
 void dll_1FF_init(s16* a, s8* b)
 {
     a[0] = (s16)((s32)b[0x18] << 8);
     a[1] = -0x8000;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void WM_colrise_init(s16 *a, s8 *b) {
     WMColriseState *inner = ((GameObject *)a)->extra;
     ((GameObject *)a)->animEventCallback = (void *)WM_colrise_SeqFn;
     a[0] = (s16)((s32)b[0x18] << 8);
     inner->gameBit = *(s16 *)(b + 0x1e);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int GameBit_Get(int id);
-#pragma scheduling off
-#pragma peephole off
 void wmlasertarget_init(char *obj, s8 *p) {
     WmLaserTargetState *inner = ((GameObject *)obj)->extra;
     ((ObjAnimComponent *)obj)->bankIndex = (s8)GameBit_Get(*(s16 *)(p + 0x1e));
     inner->cooldown = *(s16 *)(p + 0x1a);
     inner->toggleQueued = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32 *a, f32 *b);
 extern f32 lbl_803E5DE8;
-#pragma scheduling off
-#pragma peephole off
 void wmtorch_update(int obj) {
     int state = *(int *)&((GameObject *)obj)->extra;
     if (((WmTorchState *)state)->torchType == 2) {
@@ -2212,12 +2148,8 @@ void wmtorch_update(int obj) {
         Sfx_StopObjectChannel(obj, 0x40);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void Obj_FreeObject(void *o);
-#pragma scheduling off
-#pragma peephole off
 void wmtorch_free(int obj, int mode) {
     int state = *(int *)&((GameObject *)obj)->extra;
     if (mode == 0 && ((WmTorchState *)state)->linkedObj != 0) {
@@ -2226,12 +2158,8 @@ void wmtorch_free(int obj, int mode) {
     (*gModgfxInterface)->detachSource((void *)obj);
     (*gExpgfxInterface)->freeSource(obj);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void ModelLightStruct_free(void *light);
-#pragma scheduling off
-#pragma peephole off
 void lightsource_free(int obj) {
     int state = *(int *)&((GameObject *)obj)->extra;
     (*gExpgfxInterface)->freeSource2((u32)obj);
@@ -2239,15 +2167,11 @@ void lightsource_free(int obj) {
         ModelLightStruct_free(((LightSourceState *)state)->light);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* dll_1FF_render: when obj->_f8 implies
  * visible == -1 (else visible != 0), toggle bit 0x1000 of obj->_64->_30
  * based on obj->_b4 == -1, then call objRenderFn_8003b8f4. */
 extern f32 lbl_803E5D80;
-#pragma scheduling off
-#pragma peephole off
 void dll_1FF_render(int *obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     extern void objRenderFn_8003b8f4(void* obj, int p1, int p2, int p3, int p4, f32 scale);
@@ -2268,15 +2192,11 @@ void dll_1FF_render(int *obj, int p1, int p2, int p3, int p4, s8 visible)
     }
     objRenderFn_8003b8f4(obj, p1, p2, p3, p4, lbl_803E5D80);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* dll_200_render: when visible != 0 and
  * gMapEventInterface vtable[0x40] applied to obj->_ac returns 4, gate on
  * GameBit_Get(0x2bd); else render directly via objRenderFn_8003b8f4. */
 extern f32 lbl_803E5DC0;
-#pragma scheduling off
-#pragma peephole off
 void dll_200_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     extern void objRenderFn_8003b8f4(void* obj, int p1, int p2, int p3, int p4, f32 scale);
@@ -2291,16 +2211,12 @@ void dll_200_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
     }
     objRenderFn_8003b8f4(obj, p1, p2, p3, p4, lbl_803E5DC0);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* dll_200_init: write a function pointer
  * (dll_200_SeqFn) into obj->_bc and prime obj->_b8 (the body block) with
  * fixed bytes, the three float position-quaternion from arg+8/c/10,
  * GameBit_Get(0xd0) latched into b->_24, plus several literal latches. */
 extern f32 lbl_803E5D98;
-#pragma scheduling off
-#pragma peephole off
 void dll_200_init(int* obj, int* arg)
 {
     Dll200State* b;
@@ -2322,8 +2238,6 @@ void dll_200_init(int* obj, int* arg)
     b->animSpeed = lbl_803E5D98;
     b->unk14 = lbl_803E5DC0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void playerAddRemoveMagic(int player, int amount);
 extern void fn_80296474(int player, int a, int b);
@@ -2331,8 +2245,6 @@ extern void GameBit_Set(int slot, int val);
 
 int fn_801F2974(int* arg0, int arg1, int* arg2, int arg3);
 
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_strength_reduction off
 int dll_200_SeqFn(int p1, int p2, int p3, int p4)
 {
@@ -2374,11 +2286,7 @@ int dll_200_SeqFn(int p1, int p2, int p3, int p4)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_strength_reduction off
 int fn_801F2974(int* arg0, int arg1, int* arg2, int arg3)
 {
@@ -2409,14 +2317,10 @@ int fn_801F2974(int* arg0, int arg1, int* arg2, int arg3)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int textureLoadAsset(int id);
 extern f32 lbl_803E5D10;
 
-#pragma scheduling off
-#pragma peephole off
 void LaserBeam_free(s16 *obj, char *arg)
 {
     LaserBeamState *b;
@@ -2447,14 +2351,10 @@ void LaserBeam_free(s16 *obj, char *arg)
         b->texture = textureLoadAsset(0xd9);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern ObjHitReactEntry lbl_80328898[];
 void fn_801F2290(int obj);
 
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_strength_reduction off
 void dll_200_update(int obj)
 {
@@ -2502,15 +2402,11 @@ void dll_200_update(int obj)
     }
 }
 #pragma opt_strength_reduction reset
-#pragma peephole reset
-#pragma scheduling reset
 
 typedef struct LightSourceFlagByte {
     u8 looped : 1;
 } LightSourceFlagByte;
 
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_strength_reduction off
 void lightsource_update(int obj)
 {
@@ -2618,8 +2514,6 @@ void lightsource_update(int obj)
     }
 }
 #pragma opt_strength_reduction reset
-#pragma peephole reset
-#pragma scheduling reset
 
 typedef struct Dll1FFSlot {
     int obj;
@@ -2631,8 +2525,6 @@ typedef struct Dll1FFSlots {
     u8 count;
 } Dll1FFSlots;
 
-#pragma scheduling off
-#pragma peephole off
 void dll_1FF_update(int obj)
 {
     extern void *Obj_GetPlayerObject(void);
@@ -2718,16 +2610,12 @@ void dll_1FF_update(int obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 typedef struct PswFlags {
     u8 active : 1;
     u8 latched : 1;
 } PswFlags;
 
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_common_subs off
 void pressureswitch_update(int obj)
 {
@@ -2874,8 +2762,6 @@ void pressureswitch_update(int obj)
     }
 }
 #pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset
 
 typedef struct IntVec3 {
     int a;
@@ -2891,8 +2777,6 @@ typedef struct ArwAttachTarget {
     f32 speed;
 } ArwAttachTarget;
 
-#pragma scheduling off
-#pragma peephole off
 void fn_801F2290(int obj)
 {
     extern void *Obj_GetPlayerObject(void);
@@ -3042,5 +2926,3 @@ void fn_801F2290(int obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

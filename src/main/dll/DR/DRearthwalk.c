@@ -884,8 +884,6 @@ extern f32 lbl_803E552C;
 extern int lbl_803DDC00;
 
 /* 96b: render via objRenderFn + fn_80098B18 with 3-float local. */
-#pragma scheduling off
-#pragma peephole off
 void sh_staffhaze_render(int obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5)
 {
   float local[3];
@@ -895,22 +893,16 @@ void sh_staffhaze_render(int obj, undefined4 p2, undefined4 p3, undefined4 p4, u
   local[2] = lbl_803E551C;
   fn_80098B18(obj, ((GameObject *)obj)->anim.rootMotionScale, 4, 0, 0, (int)&local[0]);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* 48b: free if 0x4000 flag set. */
-#pragma peephole off
 void sh_staffhaze_update(int obj)
 {
   if ((((GameObject *)obj)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0) {
     Obj_FreeObject(obj);
   }
 }
-#pragma peephole reset
 
 /* 120b: tick a float timer; on wrap optionally trigger an effect. */
-#pragma scheduling off
-#pragma peephole off
 int sh_beacon_SeqFn(int obj)
 {
   int extra = *(int *)&((GameObject *)obj)->extra;
@@ -923,8 +915,6 @@ int sh_beacon_SeqFn(int obj)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* 20b: reset extra->field_0x8 = lbl_803E552C, return 1. */
 int fn_801DA9CC(int obj)
@@ -934,8 +924,6 @@ int fn_801DA9CC(int obj)
 }
 
 /* 112b: vtable cleanup then maybe Obj_FreeObject. */
-#pragma scheduling off
-#pragma peephole off
 void sh_beacon_free(int obj, int param_2)
 {
   int extra = *(int *)&((GameObject *)obj)->extra;
@@ -947,17 +935,13 @@ void sh_beacon_free(int obj, int param_2)
     }
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* 56b: single-call hit-effect poll. */
-#pragma scheduling off
 void sh_emptytumblew_update(int obj)
 {
   ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x280,
                                               &lbl_803DDC00);
 }
-#pragma scheduling reset
 
 /* TODO stubs to align function set with v1.0 asm. Bodies are large
  * state-machine and animation logic; filling them is a follow-up task. */
@@ -967,8 +951,6 @@ extern int loadObjectAtObject(int obj, int *setup);
 extern void hudFn_8011f38c(int a);
 extern void fn_801DA4A8(int obj, int state, int a);
 extern f32 lbl_803E5508;
-#pragma scheduling off
-#pragma peephole off
 int sh_staff_SeqFn(int obj, int unused, u8 *buf)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -1048,8 +1030,6 @@ int sh_staff_SeqFn(int obj, int unused, u8 *buf)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 getXZDistance(f32 *a, f32 *b);
 extern void *fn_802966CC(int player);
@@ -1064,8 +1044,6 @@ extern f32 lbl_803E550C;
 extern f32 lbl_803E5510;
 extern f32 lbl_803E5514;
 
-#pragma scheduling off
-#pragma peephole off
 void fn_801DA4A8(int obj, int state, int clearChildren)
 {
     int player;
@@ -1116,11 +1094,7 @@ void fn_801DA4A8(int obj, int state, int clearChildren)
 
     ((ShStaffState *)state)->phase = 6;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void sh_staff_update(int obj)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -1192,10 +1166,6 @@ end:
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
-#pragma scheduling off
-#pragma peephole off
 void sh_beacon_init(int obj, int defData)
 {
     int state;
@@ -1225,8 +1195,6 @@ void sh_beacon_init(int obj, int defData)
 
     ((GameObject *)obj)->animEventCallback = (void *)sh_beacon_SeqFn;
 }
-#pragma peephole reset
-#pragma scheduling reset
 extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
 extern int GameBit_Set(int eventId, int value);
 extern void gameBitDecrement(int eventId);

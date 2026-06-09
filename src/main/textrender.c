@@ -906,8 +906,6 @@ extern u8 framesThisStep;
 #pragma dont_inline on
 #pragma dont_inline reset
 
-#pragma peephole off
-#pragma peephole reset
 
 #pragma pop
 
@@ -917,9 +915,7 @@ extern u8 framesThisStep;
 int getGameState(void);
 #pragma dont_inline reset
 
-#pragma peephole off
 
-#pragma peephole reset
 
 #pragma dont_inline on
 int getHudHiddenFrameCount(void);
@@ -935,12 +931,10 @@ void *getCurGameText(void) {
 }
 #pragma dont_inline reset
 
-#pragma peephole off
 
 #pragma dont_inline on
 
 #pragma dont_inline reset
-#pragma peephole reset
 
 /* Simple field/global accessors. */
 
@@ -959,10 +953,6 @@ void gameTextSetDrawFunc(void *fn) {
 extern void *mmAlloc(int size, int type, int flag);
 extern void textureFree(void *tex);
 
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma push
 #pragma scheduling off
@@ -981,8 +971,6 @@ f32 gameTextFn_80019c00(void) {
     return *(f32 *)(gameTextFonts + 0x20);
 }
 
-#pragma peephole off
-#pragma peephole reset
 
 typedef struct {
     u8 _pad[0x1c];
@@ -1062,8 +1050,6 @@ void gameTextInit(void) {
 void mm_free(void *p);
 #pragma dont_inline reset
 
-#pragma peephole off
-#pragma peephole reset
 #pragma pop
 
 #pragma push
@@ -1343,10 +1329,8 @@ int subtitleIsActive(void) {
 #pragma peephole off
 #pragma pop
 
-#pragma peephole off
 #pragma dont_inline on
 #pragma dont_inline reset
-#pragma peephole reset
 
 
 #pragma dont_inline on
@@ -1640,18 +1624,12 @@ void gameTextOpenCallback_8001b3d0(int status, u8 *match) {
 #pragma peephole off
 #pragma pop
 
-#pragma scheduling off
-#pragma peephole off
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
 #pragma pop
 
-#pragma peephole off
-#pragma peephole reset
 
 extern void DCStoreRange(void *p, int size);
 
@@ -1660,13 +1638,7 @@ extern void DCStoreRange(void *p, int size);
 #pragma peephole off
 #pragma pop
 
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma push
 #pragma scheduling off

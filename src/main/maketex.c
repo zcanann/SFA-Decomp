@@ -143,15 +143,11 @@ extern char s_opening_bnr_8030f718[];
  */
 extern int lbl_803DD044;
 extern void *memcpy(void *dst, const void *src, u32 n);
-#pragma peephole off
-#pragma scheduling off
 int saveCb_8007e77c(u8 idx, int unused, void *dst)
 {
     memcpy(dst, (void *)(lbl_803DD044 + idx * 1772 + 2640), 1772);
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -1194,11 +1190,7 @@ void storeZeroToFloatParam(f32 *p) { *p = lbl_803DEFA0; }
 /* misc 16b 4-insn patterns. */
 extern u32 lbl_803DB714;
 extern u32 lbl_803DB71C;
-#pragma scheduling off
-#pragma peephole off
 void seqClearTaskTexts(void) { u32 v = -0x1; lbl_803DB714 = v; lbl_803DB71C = v; }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern u8 lbl_803DD0F8;
 extern f32 lbl_803DD0F4;
@@ -1214,8 +1206,6 @@ extern s16 lbl_8030ECF8[];
 int fn_80080150(f32 *p) { return lbl_803DEFA0 != *p; }
 
 /* fn_8008020C (40b): record positional + flags */
-#pragma peephole off
-#pragma scheduling off
 void fn_8008020C(s16 a, s16 b, s16 c, f32 x, f32 y, f32 z, f32 w)
 {
     lbl_803DD0F8 = 1;
@@ -1227,8 +1217,6 @@ void fn_8008020C(s16 a, s16 b, s16 c, f32 x, f32 y, f32 z, f32 w)
     lbl_803DD0E4 = c;
     lbl_803DD0E0 = w;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /* fn_8007FE04 (112b): array remove-and-swap by value */
 int fn_8007FE04(int *arr, int *count_ptr, int target)
@@ -1259,41 +1247,27 @@ found:
 }
 
 /* fn_80080360 (36b): write u16 indexed by signed byte * 2 */
-#pragma peephole off
-#pragma scheduling off
 int fn_80080360(int p, int val)
 {
     lbl_8030ECF8[(s8)*(u8 *)(p + 0x57)] = (s16)val;
     return 1;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern s16 lbl_8039A3B0[];
-#pragma peephole off
-#pragma scheduling off
 int animatedObjGetSeqId(int obj)
 {
     return lbl_8039A3B0[(s8)*(u8 *)(obj + 0x57)] - 1;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void ObjSeq_yield(u8 *seq, int value)
 {
     *(int *)(seq + 0x74) = value;
     *(u8 *)(seq + 0x90) = (u8)(*(u8 *)(seq + 0x90) | 0x40);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern int lbl_803DB72C;
 extern int lbl_803DD07C;
 extern u8 lbl_803DD078;
-#pragma peephole off
-#pragma scheduling off
 int ObjSeq_SetObjs(int a, int b, int c)
 {
     u8 v = (u8)c;
@@ -1302,13 +1276,9 @@ int ObjSeq_SetObjs(int a, int b, int c)
     lbl_803DD078 = v;
     return 1;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern u8 lbl_803DD0D9;
 extern f32 lbl_803994EC[];
-#pragma peephole off
-#pragma scheduling off
 int ObjSeq_setOverridePos(f32 x, f32 y, f32 z)
 {
     lbl_803DD0D9 = 1;
@@ -1317,8 +1287,6 @@ int ObjSeq_setOverridePos(f32 x, f32 y, f32 z)
     lbl_803994EC[2] = z;
     return 1;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 int arrayIndexOf(int *arr, int count, int target)
 {
@@ -1339,8 +1307,6 @@ int randFn_80080100(int n)
 }
 
 extern f32 timeDelta;
-#pragma peephole off
-#pragma scheduling off
 int timerCountDown(f32 *p)
 {
     f32 v = *p;
@@ -1354,8 +1320,6 @@ int timerCountDown(f32 *p)
     }
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern u8 AudioStream_IsPreparing(void);
 extern void doNothing_8000CF54(int);
@@ -1378,8 +1342,6 @@ void streamCb_80080384(void)
     }
 }
 
-#pragma peephole off
-#pragma scheduling off
 void s16toFloat(f32 *p, s16 val)
 {
     *p = (f32)val;
@@ -1426,12 +1388,8 @@ int seqStreamLookupFn_8007fff8(int arr[][2], int count, int key)
     } while (count <= lo);
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern int objModelGetVecFn_800395d8(int obj, int idx);
-#pragma peephole off
-#pragma scheduling off
 void objModelResetVecFn_80080548(int obj)
 {
     s16 *v = (s16 *)objModelGetVecFn_800395d8(obj, 0);
@@ -1440,13 +1398,9 @@ void objModelResetVecFn_80080548(int obj)
         v[0] = 0;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern u8 lbl_803DD124;
 extern int lbl_8039A664[][2];
-#pragma peephole off
-#pragma scheduling off
 void ObjSeq_preempt(int a, int b)
 {
     u8 c = lbl_803DD124;
@@ -1456,11 +1410,7 @@ void ObjSeq_preempt(int a, int b)
     lbl_8039A664[i][1] = b;
     lbl_803DD124++;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void cameraFocusNpc(int param1, u8 *obj)
 {
     struct { f32 vec[3]; u8 tag; } buf;
@@ -1481,8 +1431,6 @@ void cameraFocusNpc(int param1, u8 *obj)
     buf.tag = (u8)param1;
     (*gCameraInterface)->setMode(0x4d, 1, 0, 0x10, buf.vec, 0, 0xff);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 typedef struct {
     int key;
@@ -1492,8 +1440,6 @@ typedef struct {
 /* EN v1.0 0x8007FEAC  size: 332b  Shell sort over (key, val) pairs,
  * ascending by key. */
 #pragma dont_inline on
-#pragma peephole off
-#pragma scheduling off
 void objSeqInitFn_8007feac(SeqSortPair *arr, int n)
 {
     int j;
@@ -1523,14 +1469,10 @@ void objSeqInitFn_8007feac(SeqSortPair *arr, int n)
     for (i = 1; i < n; i++) {
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 #pragma dont_inline reset
 
 /* EN v1.0 0x80080078  size: 136b  Spin-delay then sort when the pair list
  * is large enough. */
-#pragma peephole off
-#pragma scheduling off
 void objSeqInitFn_80080078(SeqSortPair *arr, int n)
 {
     int i;
@@ -1544,8 +1486,6 @@ void objSeqInitFn_80080078(SeqSortPair *arr, int n)
         objSeqInitFn_8007feac(arr, n);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern void debugPrintf(char *fmt, ...);
 extern char sEndObjSequenceMaxFreesError[];
@@ -1560,8 +1500,6 @@ extern int  lbl_803DD064;
  * every object still tagged with the sequence id, runs each freed object's
  * completion callback, frees the collected objects, and resets the global
  * sequence/camera state when this was the active sequence. */
-#pragma peephole off
-#pragma scheduling off
 extern s32 CARDWrite(int *fileInfo, void *buf, s32 length, s32 offset);
 extern s32 CARDRead(int *fileInfo, void *buf, s32 length, s32 offset);
 extern s32 CARDDelete(s32 chan, char *fileName);
@@ -1573,8 +1511,6 @@ extern u64 lbl_803DD050;
 
 /* EN v1.0 0x8007E7C0  size: 900b  Checksums the save buffer, writes it to the
  * memory card, then reads it back and verifies the checksum. */
-#pragma peephole off
-#pragma scheduling off
 int saveGame_doWrite(int slot)
 {
     u64 x;
@@ -1625,8 +1561,6 @@ int saveGame_doWrite(int slot)
     }
     return result;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 typedef struct {
     u8 pad[0x3c];
@@ -1642,8 +1576,6 @@ extern char sMemoryCardFileNameString[];
 /* EN v1.0 0x8007F358  size: 1372b  Builds the memory card comment strings
  * (Shift-JIS title on JP cards), loads the banner/icon images from disc, and
  * checksums both halves of the card image buffer. */
-#pragma peephole off
-#pragma scheduling off
 void loadMemCardImages(void)
 {
     char *names = sMemoryCardFileNameString;
@@ -1742,8 +1674,6 @@ void loadMemCardImages(void)
     ((u32 *)q)[0xffe] = (u32)(chk >> 32);
     DCFlushRange((void *)lbl_803DD05C, 0x4000);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 typedef struct {
     char fileName[32];
@@ -1780,8 +1710,6 @@ extern u8 lbl_803DD05A;
 /* EN v1.0 0x8007F818  size: 1468b  Mounts the memory card, validates its
  * serial number, opens or creates the save file (writing the card image
  * buffer for a fresh file), and maps any CARD error to a status code. */
-#pragma peephole off
-#pragma scheduling off
 int saveGame(int writeImages)
 {
     u8 created;
@@ -1960,14 +1888,10 @@ int saveGame(int writeImages)
     lbl_803DD040 = NULL;
     return ret;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /* EN v1.0 0x8007EB04  size: 1948b  Saves the game: verifies the existing save
  * slots' checksums, rewrites stale slots and card images, then runs the
  * caller's callback and maps the result to a status code. */
-#pragma peephole off
-#pragma scheduling off
 int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD,
                              int (*cb)(int, int, int, int))
 {
@@ -2121,8 +2045,6 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
     }
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern int Obj_GetPlayerObject(void);
 extern s16 getAngle(f32 x, f32 z);
@@ -2132,8 +2054,6 @@ extern u8 framesThisStep;
 /* EN v1.0 0x800805A4  size: 1564b  Object-sequence turn-to-face-player step:
  * starts (mode 4) or advances (mode 5) a smooth turn of the object toward the
  * player, blending the model vector and animation as it goes. */
-#pragma peephole off
-#pragma scheduling off
 int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
 {
     int player;
@@ -2264,8 +2184,6 @@ int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
     }
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern void AudioStream_StartPrepared(void);
 extern int lbl_803DD094;
@@ -2277,8 +2195,6 @@ extern f32 lbl_8039A1AC[];
 
 /* EN v1.0 0x8008023C  size: 260b  Starts the prepared audio stream for a
  * sequence slot and records its subtitle timing. */
-#pragma peephole off
-#pragma scheduling off
 int seqStreamFn_8008023c(int x)
 {
     int seqId = lbl_8039A3B0[x] - 1;
@@ -2302,8 +2218,6 @@ int seqStreamFn_8008023c(int x)
     AudioStream_StartPrepared();
     return 1;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void endObjSequence(int seq)
 {
@@ -2365,5 +2279,3 @@ void endObjSequence(int seq)
     lbl_803DD07C = 0;
     lbl_8039A3B0[seq] = 0;
 }
-#pragma scheduling reset
-#pragma peephole reset

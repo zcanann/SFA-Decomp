@@ -229,8 +229,6 @@ typedef struct CFTreasSharpyFxSpawnArgs {
 #define CFTREAS_PARTFX_SPAWN(obj, id, data, flags, model, arg) \
     (*gPartfxInterface)->spawnObject((void *)(obj), id, data, flags, model, (void *)(arg))
 
-#pragma scheduling off
-#pragma peephole off
 void fxemit_emitEffect(FxEmitObject *obj)
 {
     FxEmitState *state;
@@ -348,13 +346,9 @@ void fxemit_emitEffect(FxEmitObject *obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 #undef CFTREAS_PARTFX_SPAWN
 
-#pragma scheduling off
-#pragma peephole off
 int fxemit_SeqFn(FxEmitObject *obj, int unused, int events)
 {
     FxEmitState *state;
@@ -402,8 +396,6 @@ int fxemit_SeqFn(FxEmitObject *obj, int unused, int events)
 
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -475,15 +467,11 @@ int fxemit_getObjectTypeId(void)
   return 0;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void fxemit_free(FxEmitObject *obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
     (*gModgfxInterface)->freeSourceEffects(obj);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -502,9 +490,7 @@ void fxemit_hitDetect(void)
 {
 }
 
-#pragma peephole off
 void fxemit_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
-#pragma peephole reset
 
 extern f32 timeDelta;
 extern f32 sqrtf(f32);
@@ -512,8 +498,6 @@ extern ObjAnimComponent *Obj_GetPlayerObject(void);
 extern int Sfx_PlayFromObject(int obj, int sfx);
 extern f32 lbl_803E3E4C;
 
-#pragma scheduling off
-#pragma peephole off
 void fxemit_update(FxEmitObject *obj)
 {
     FxEmitState *state;
@@ -611,5 +595,3 @@ void fxemit_update(FxEmitObject *obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

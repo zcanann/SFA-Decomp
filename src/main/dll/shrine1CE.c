@@ -293,7 +293,6 @@ extern void Obj_FreeObject(int obj);
 extern void Sfx_PlayFromObject(int obj, int sfx);
 extern f32 lbl_803E51B4;
 
-#pragma scheduling off
 #pragma peephole off
 void dll_19C_update(int *obj) {
     extern uint GameBit_Get(int);
@@ -340,9 +339,7 @@ void dll_19C_update(int *obj) {
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 void dll_19B_init(u8 *obj, u8 *params) {
     register u8 *sub;
@@ -385,14 +382,12 @@ void dll_19B_init(u8 *obj, u8 *params) {
     ((GameObject *)obj)->anim.worldPosZ = ((GameObject *)obj)->anim.localPosZ;
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 /*
  * Function: dll_19C_init
  * EN v1.0 Address: 0x801CC950
  * EN v1.0 Size: 64b
  */
-#pragma scheduling off
 #pragma peephole off
 void dll_19C_init(int obj, u8 *initData)
 {
@@ -407,14 +402,12 @@ void dll_19C_init(int obj, u8 *initData)
     ((GameObject *)self)->anim.alpha = 0xff;
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 /*
  * Function: dll_19D_free
  * EN v1.0 Address: 0x801CC9A8
  * EN v1.0 Size: 132b
  */
-#pragma scheduling off
 #pragma peephole off
 void dll_19D_free(int obj)
 {
@@ -427,7 +420,6 @@ void dll_19D_free(int obj)
     (*gExpgfxInterface)->freeSource2((u32)self);
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 extern int ObjHits_SetHitVolumeSlot(int obj, int volumeIdx, int hitType, int extra);
 
@@ -436,7 +428,6 @@ extern int ObjHits_SetHitVolumeSlot(int obj, int volumeIdx, int hitType, int ext
  * EN v1.0 Address: 0x801CCECC
  * EN v1.0 Size: 208b
  */
-#pragma scheduling off
 #pragma peephole off
 void dll_19D_init(int obj)
 {
@@ -460,7 +451,6 @@ void dll_19D_init(int obj)
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 extern EffectInterface **gPartfxInterface;
 extern f32 lbl_803E51B8;
@@ -471,7 +461,6 @@ extern f64 lbl_803E51C0;
  * EN v1.0 Address: 0x801CCA30
  * EN v1.0 Size: 276b
  */
-#pragma scheduling off
 #pragma peephole off
 void dll_19D_hitDetect(int obj)
 {
@@ -498,14 +487,12 @@ void dll_19D_hitDetect(int obj)
     *(short *)(state + 0x32) = 0x32;
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 /*
  * Function: dll_19D_update
  * EN v1.0 Address: 0x801CCB44
  * EN v1.0 Size: 904b
  */
-#pragma scheduling off
 #pragma peephole off
 void dll_19D_update(int obj)
 {
@@ -587,4 +574,3 @@ void dll_19D_update(int obj)
     }
 }
 #pragma peephole reset
-#pragma scheduling reset

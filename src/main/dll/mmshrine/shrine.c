@@ -416,16 +416,12 @@ int mmsh_scales_getExtraSize(void) { return 0x140; }
 int mmsh_scales_getObjectTypeId(void) { return 0xb; }
 int mmsh_waterspike_getExtraSize(void) { return 0x0; }
 int mmsh_waterspike_getObjectTypeId(void) { return 0x0; }
-#pragma peephole off
 void mmsh_waterspike_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
-#pragma peephole reset
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4F68;
 extern void objRenderFn_8003b8f4(f32);
-#pragma peephole off
 void mmsh_scales_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4F68); }
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -504,8 +500,6 @@ void mmsh_waterspike_update(int param_1)
   return;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void mmsh_waterspike_init(int obj, s16 *def) {
     register u32 packedEventIds;
     register u32 lowEventId;
@@ -516,15 +510,11 @@ void mmsh_waterspike_init(int obj, s16 *def) {
     packedEventIds |= lowEventId;
     *(u32 *)&((GameObject *)obj)->unkF8 = packedEventIds;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E4F78;
 extern u8 Obj_IsLoadingLocked(void);
 extern u8 *Obj_AllocObjectSetup(int size, int type);
 extern u8 *Obj_SetupObject(u8 *no, int a, int b, int c, int d);
-#pragma scheduling off
-#pragma peephole off
 void mmsh_scales_init(int *obj, s16 *def) {
     u8 *state = ((GameObject *)obj)->extra;
     u8 *no;
@@ -556,5 +546,3 @@ void mmsh_scales_init(int *obj, s16 *def) {
     ((GameObject *)obj)->unkC8 = no;
     *(f32 *)(*(u8 **)&((GameObject *)obj)->unkC8 + 8) = *(f32 *)(*(u8 **)&((GameObject *)obj)->unkC8 + 8) * lbl_803E4F78;
 }
-#pragma peephole reset
-#pragma scheduling reset

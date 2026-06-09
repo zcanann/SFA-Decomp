@@ -2056,20 +2056,17 @@ typedef struct {
     u8 bits_0to6 : 7;
 } _Obj8011F70C;
 #pragma scheduling off
-#pragma peephole off
 void GameUI_airMeterSetShutdown(void) {
     _Obj8011F70C *p = (_Obj8011F70C *)airMeter;
     if (p == 0) return;
     p->bit7 = 1;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern int lbl_803A9398[];
 extern void mm_free(void *p);
 #pragma dont_inline on
 #pragma scheduling off
-#pragma peephole off
 void GameUI_airMeterShutdown(void) {
     int *m = (int *)airMeter;
     if (m == NULL) return;
@@ -2089,7 +2086,6 @@ void GameUI_airMeterShutdown(void) {
     mm_free(airMeter);
     airMeter = NULL;
 }
-#pragma peephole reset
 #pragma scheduling reset
 #pragma dont_inline reset
 
@@ -2098,7 +2094,6 @@ extern void *memset(void *p, int v, int n);
 extern const f32 lbl_803E1E68;
 
 #pragma scheduling off
-#pragma peephole off
 void GameUI_initAirMeter(int a, int b) {
     int *m;
     if (airMeter == NULL) {
@@ -2122,12 +2117,10 @@ void GameUI_initAirMeter(int a, int b) {
     *(f32*)((char*)m + 0x24) = lbl_803E1E68;
     m[0x10] = 1;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern u8 lbl_803DB424;
 #pragma scheduling off
-#pragma peephole off
 void showDeathMenu(void) {
     MapEventInterface *mapEvents = *gMapEventInterface;
     int *r = (int *)mapEvents->getState(mapEvents);
@@ -2144,10 +2137,8 @@ void showDeathMenu(void) {
     lbl_803DD764 = lbl_803E1E60;
     lbl_803DD7D8 = 1;
 }
-#pragma peephole reset
 #pragma scheduling reset
 #pragma scheduling off
-#pragma peephole off
 void GameUI_func15(s16 a, int b, int c) {
     void *t = textureLoadAsset(a);
     lbl_803A9398[0] = (int)t;
@@ -2156,11 +2147,9 @@ void GameUI_func15(s16 a, int b, int c) {
     *(s16 *)((char *)lbl_803A9398 + 0xc) = (s16)c;
     *(f32 *)((char *)lbl_803A9398 + 0x8) = lbl_803E1E3C;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void GameUI_airMeterRun(int v) {
     int *m = (int *)airMeter;
     int clamped;
@@ -2172,7 +2161,6 @@ void GameUI_airMeterRun(int v) {
     }
     m[3] = v;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern u8 cMenuEnabled;
@@ -2189,7 +2177,6 @@ extern s16 lbl_803DD772;
 extern u8 pauseMenuFrameCounter;
 extern void Obj_FreeObject(int *obj);
 #pragma scheduling off
-#pragma peephole off
 void gameUiResetMenuState(void) {
     int i;
     cMenuEnabled = 0;
@@ -2220,11 +2207,9 @@ void gameUiResetMenuState(void) {
     pauseMenuFrameCounter = 0x3c;
     lbl_803DD792 = 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void GameUI_airMeterInitType0(int a, int b, int c) {
     int *m;
     if (airMeter != NULL) return;
@@ -2241,12 +2226,10 @@ void GameUI_airMeterInitType0(int a, int b, int c) {
     *(f32 *)((char *)m + 0x24) = lbl_803E1E68;
     m[0x10] = 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern int lbl_8031B5D8[];
 #pragma scheduling off
-#pragma peephole off
 void GameUI_func14(s16 a, int b, int c) {
     int *entry = lbl_8031B5D8;
     lbl_803A9398[0] = 0;
@@ -2267,7 +2250,6 @@ void GameUI_func14(s16 a, int b, int c) {
         *(f32 *)((char *)lbl_803A9398 + 0x8) = lbl_803E1E3C;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern u8 framesThisStep;
@@ -2279,7 +2261,6 @@ extern int lbl_803DD740;
 extern int lbl_803A9428[];
 extern void drawTexture(void *p, f32 a, f32 b, int c, int d);
 #pragma scheduling off
-#pragma peephole off
 void hudDrawTimedElement(int unused, int *e) {
     if (e[1] < 0) return;
     e[1] = e[1] - framesThisStep;
@@ -2304,7 +2285,6 @@ void hudDrawTimedElement(int unused, int *e) {
     drawTexture(lbl_803A9428, lbl_803E1FA4, (f32)(lbl_803DD740 + 0xaf),
                 (int)*(f32 *)((char *)e + 0x8), 0x100);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 typedef union {
@@ -2321,7 +2301,6 @@ extern void GXBegin(int type, int fmt, int n);
 extern f32 lbl_803E1E80;
 extern void pauseMenuMapFn_8011de20(void *this, int a, s16 b, int c);
 #pragma scheduling off
-#pragma peephole off
 void pauseMenuDrawElement(void *this, f32 fx, f32 fy, int p4, int p5, int p6, int p7) {
     int dx, dy;
     f32 c0, c1;
@@ -2354,7 +2333,6 @@ void pauseMenuDrawElement(void *this, f32 fx, f32 fy, int p4, int p5, int p6, in
     GXWGFifo.f32 = c0;
     GXWGFifo.f32 = c1;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 typedef struct { u8 r, g, b, a; } GXColor;
@@ -2385,7 +2363,6 @@ extern int lbl_803E1E34;
 extern int lbl_803E1E38;
 extern char lbl_803A8830[];
 #pragma scheduling off
-#pragma peephole off
 void pauseMenuMapFn_8011de20(void *this, int a, s16 b, int c) {
     GXColor colA = *(GXColor *)&lbl_803E1E34;
     GXColor colB = *(GXColor *)&lbl_803E1E38;
@@ -2433,14 +2410,12 @@ void pauseMenuMapFn_8011de20(void *this, int a, s16 b, int c) {
     GXSetVtxDesc(9, 1);
     GXSetVtxDesc(0xd, 1);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern s16 lbl_803DBA8A;
 extern f32 lbl_803DBA8C;
 
 #pragma scheduling off
-#pragma peephole off
 void pauseMenuTextDrawFn(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1) {
     s16 z;
     GXLoadPosMtxImm(lbl_803A8830, 0);
@@ -2484,11 +2459,9 @@ void pauseMenuTextDrawFn(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1,
     GXWGFifo.f32 = u0;
     GXWGFifo.f32 = v1;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void drawFn_8011e8d8(void *this, f32 f1, f32 f2, int p4, int p5, int p6, int p7, int p8, int p9) {
     f32 sx, sy, u0, v0, u1, v1;
     u32 w, h;
@@ -2523,11 +2496,9 @@ void drawFn_8011e8d8(void *this, f32 f1, f32 f2, int p4, int p5, int p6, int p7,
     GXWGFifo.f32 = u0;
     GXWGFifo.f32 = v1;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void drawFn_8011eb3c(void *this, f32 f1, f32 f2, int p4, int p5, int p6, int p7, int p8, int p9) {
     f32 ua, ub, va, vb, tu, tv;
     u32 dx, dy;
@@ -2575,7 +2546,6 @@ void drawFn_8011eb3c(void *this, f32 f1, f32 f2, int p4, int p5, int p6, int p7,
     GXWGFifo.f32 = ua;
     GXWGFifo.f32 = vb;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern void PSMTXRotRad(f32 *m, int axis, f32 rad);
@@ -2597,7 +2567,6 @@ extern f32 lbl_803E1E90, lbl_803E1E98;
 extern f32 lbl_803DBB04, lbl_803DBB08, lbl_803DBB0C;
 extern f32 lbl_803DBAF4, lbl_803DBAF8, lbl_803DBAFC, lbl_803DBB00;
 #pragma scheduling off
-#pragma peephole off
 void fn_8011EF50(u16 a, u16 b, u16 c, f32 f1, f32 f2, f32 f3, f32 f4) {
     char *base = lbl_803A87F0;
     f32 mA[12];
@@ -2651,7 +2620,6 @@ void fn_8011EF50(u16 a, u16 b, u16 c, f32 f1, f32 f2, f32 f3, f32 f4) {
     *(s16 *)(lbl_803DD860[1] + 0x2) = (s16)b;
     *(s16 *)(lbl_803DD860[1] + 0x0) = (s16)c;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern char hudTextures[];
@@ -2665,7 +2633,6 @@ extern void GXGetScissor(int *a, int *b, int *c, int *d);
 extern void GXSetScissor(int a, int b, int c, int d);
 extern void hudDrawRect(int x0, int y0, int x1, int y1, GXColor col);
 #pragma scheduling off
-#pragma peephole off
 void fearTestMeterDraw(void) {
     int sc0, sc1, sc2, sc3;
     GXColor col;
@@ -2713,7 +2680,6 @@ void fearTestMeterDraw(void) {
                 col);
     GXSetScissor(sc0, sc1, sc2, sc3);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern int *Obj_GetPlayerObject(void);
@@ -2723,7 +2689,6 @@ extern u8 lbl_803DBAED;
 extern s8 lbl_803DD7F8;
 extern s8 lbl_803DD7F9;
 #pragma scheduling off
-#pragma peephole off
 void hudDrawAirMeter(void) {
     int sc0, sc1, sc2, sc3;
     int *player = Obj_GetPlayerObject();
@@ -2805,7 +2770,6 @@ void hudDrawAirMeter(void) {
     }
     GXSetScissor(sc0, sc1, sc2, sc3);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern void PSMTXCopy(f32 *src, f32 *dst);
@@ -2832,7 +2796,6 @@ extern f32 lbl_803DBB14;
 extern int lbl_803DBB10;
 typedef struct { int w[6]; } _IndMtx;
 #pragma scheduling off
-#pragma peephole off
 int fn_8011E0D8(int *this, int *p2, int p3) {
     f32 m1[12];
     f32 m2[12];
@@ -2935,7 +2898,6 @@ int fn_8011E0D8(int *this, int *p2, int p3) {
     GXSetVtxDesc(0xa, 1);
     return 1;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern void *getTrickyObject(void);
@@ -2950,7 +2912,6 @@ extern const f32 lbl_803E1F98;
 extern f32 lbl_803E1FA8, lbl_803E1FAC, lbl_803E1FB0, lbl_803E1FB4;
 extern f32 timeDelta;
 #pragma scheduling off
-#pragma peephole off
 void hudDrawFn_80121440(void) {
     char *base = lbl_803A87F0;
     int *player, *tricky;
@@ -3065,7 +3026,6 @@ void hudDrawFn_80121440(void) {
         hudDrawCounter(0x1c, (s16)*(int *)(base + 0xba4), 0xff, (int)*(f32 *)(base + 0xaf8), (int)*(f32 *)(base + 0xb2c), &hcArg, 0);
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern int Camera_GetCurrentViewSlot(void);
@@ -3135,7 +3095,6 @@ extern int sprintf(char *, ...);
     drawViewFinderLine((u8 *)&_c2, (A) + _sx, (B) - _cx, (A) - _sx, (B) + _cx, (A) - _sx, (C) + _cx, (A) + _sx, (C) - _cx); \
 } while (0)
 
-#pragma peephole off
 void drawViewFinderHud(void) {
     f32 fovY;
     int slot;
@@ -3380,5 +3339,4 @@ void drawViewFinderHud(void) {
         }
     }
 }
-#pragma peephole reset
 #pragma scheduling reset

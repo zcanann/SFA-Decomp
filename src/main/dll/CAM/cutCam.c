@@ -100,8 +100,6 @@ extern f32 lbl_803E234C;
  * PAL Size: TODO
  */
 #pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
 int
 camcontrol_traceMove(float *param_2,float *param_3,float *param_4,u8 *param_5,
                      char param_6,u8 param_7,u8 param_8,float param_1)
@@ -137,8 +135,6 @@ camcontrol_traceMove(float *param_2,float *param_3,float *param_4,u8 *param_5,
   }
   return uVar1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 #pragma dont_inline reset
 
 /*
@@ -184,7 +180,6 @@ undefined camcontrol_traceFromTarget(float *param_1,int param_2,float *param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 undefined camcontrol_getTargetPosition(int arg0,void *arg1,void *arg2,void *arg3)
 {
   short *param_4;
@@ -243,7 +238,6 @@ undefined camcontrol_getTargetPosition(int arg0,void *arg1,void *arg2,void *arg3
   }
   return box[110];
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -258,8 +252,6 @@ undefined camcontrol_getTargetPosition(int arg0,void *arg1,void *arg2,void *arg3
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void camcontrol_updateTargetAction(int param_1,int param_2)
 {
   short sVar1;
@@ -314,8 +306,6 @@ done:
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--

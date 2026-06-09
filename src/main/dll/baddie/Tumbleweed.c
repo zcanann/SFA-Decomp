@@ -5649,7 +5649,6 @@ extern WarpstoneEntry lbl_8031CC38[];
 extern int lbl_803A9F38[];
 extern int *gTitleMenuLinkInterface;
 
-#pragma scheduling off
 void WarpstoneUI_showUI(int param_1)
 {
     int sel;
@@ -5695,7 +5694,6 @@ void WarpstoneUI_showUI(int param_1)
         lbl_803DD978 = 0;
     }
 }
-#pragma scheduling reset
 
 typedef struct {
     u16 t0;
@@ -5721,7 +5719,6 @@ extern f32 lbl_803E22B0;
 extern f32 lbl_803E22B4;
 extern f32 lbl_803E22B8;
 
-#pragma scheduling off
 #pragma peephole off
 int Credits_frameStart(void)
 {
@@ -5781,7 +5778,6 @@ int Credits_frameStart(void)
     return 0;
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 extern u32 lbl_803E2200;
 extern f32 lbl_803DD94C;
@@ -5792,7 +5788,6 @@ extern f32 lbl_803E226C;
 extern f32 lbl_803E2270;
 extern f32 lbl_803E2274;
 
-#pragma scheduling off
 #pragma peephole off
 void fn_8013351C(void)
 {
@@ -5825,13 +5820,11 @@ void fn_8013351C(void)
                     lbl_803E2278 - cc2, (f32)y - s2, &c2);
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 extern u8 enableDebugText;
 extern u16 *lbl_803DDA30;
 extern void DCStoreRange(void *p, u32 nBytes);
 
-#pragma scheduling off
 #pragma peephole off
 void fn_80137A00(int p1, int p2, u8 *grid, int p4)
 {
@@ -5879,13 +5872,11 @@ void fn_80137A00(int p1, int p2, u8 *grid, int p4)
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 extern u16 *lbl_803DCCE8;
 extern u16 *lbl_803DCCEC;
 extern u8 lbl_8031D060[];
 
-#pragma scheduling off
 void debugPrintfxy(int x, int y, char *fmt, ...)
 {
     int xx;
@@ -5934,7 +5925,6 @@ void debugPrintfxy(int x, int y, char *fmt, ...)
         lbl_803DDA30 = saved;
     }
 }
-#pragma scheduling reset
 
 extern void selectTexture(char *tex, int slot);
 extern void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
@@ -5951,7 +5941,6 @@ extern f32 lbl_803E239C;
 extern f32 lbl_803E23A0;
 extern f32 lbl_803E23A4;
 
-#pragma scheduling off
 #pragma peephole off
 int fn_80136A40(int p1, int c)
 {
@@ -6011,7 +6000,6 @@ int fn_80136A40(int p1, int c)
     return c;
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 extern int getButtonsHeld(int p);
 extern int getButtonsJustPressed(int p);
@@ -6032,7 +6020,6 @@ extern f32 lbl_803E2294;
 extern f32 lbl_803E2298;
 extern f32 lbl_803E229C;
 
-#pragma scheduling off
 #pragma peephole off
 void fn_8013396C(void)
 {
@@ -6208,7 +6195,6 @@ void fn_8013396C(void)
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 extern void GXSetTevColor(int id, int *color);
 extern void setTextColor(int p);
@@ -6222,7 +6208,6 @@ extern u8 lbl_803DD9F3;
 extern u16 lbl_803DD9F6;
 extern int lbl_803DDA10;
 
-#pragma scheduling off
 #pragma peephole off
 int fn_80136E00(int p1, u8 *p)
 {
@@ -6411,7 +6396,6 @@ int fn_80136E00(int p1, u8 *p)
     return p - start;
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 extern void drawScaledTexture(char *tex, f32 x, f32 y, int alpha, int s, int w, int h, int mode);
 extern s16 fn_80130124(void);
@@ -6432,7 +6416,6 @@ extern f32 lbl_803E2338;
 extern f32 lbl_803E233C;
 extern f32 lbl_803E2340;
 
-#pragma scheduling off
 #pragma peephole off
 void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
 {
@@ -6564,7 +6547,6 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 extern u16 *debugFrameBuffer;
 extern u16  lbl_803DDA40_u;
@@ -6588,7 +6570,6 @@ extern void VIWaitForRetrace(void);
  * Clears the debug framebuffer, prints the exception type, DSISR/SRR0,
  * stack trace and GPR dump via debugPrintfxy, draws the underline and
  * box pixels directly into the framebuffer, and flips buffers forever. */
-#pragma scheduling off
 #pragma peephole off
 void fn_80137DF8(void)
 {
@@ -6799,7 +6780,6 @@ void fn_80137DF8(void)
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 extern u16 lbl_803DD9F4;
 extern u32 lbl_803DDA04;
@@ -6809,7 +6789,6 @@ extern f64 lbl_803E23A8;
 /* EN v1.0 0x801375C8  size: 736b  debugPrintDraw: lay out the debug log
  * twice (measure pass then draw pass), drawing the backing rect between
  * the passes when the log produced any extent. */
-#pragma scheduling off
 #pragma peephole off
 void debugPrintDraw(int ctx)
 {
@@ -6895,4 +6874,3 @@ void debugPrintDraw(int ctx)
     lbl_803DD9E4 = 0;
 }
 #pragma peephole reset
-#pragma scheduling reset

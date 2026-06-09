@@ -104,8 +104,6 @@ static inline int *ObjHits_GetActiveModel(int obj) {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int ObjHits_CollectSkeletonHitsXZ(f32 *point,f32 radius,ObjHitsSkeletonJointData *jointData,
                                   int *model,ObjHitsSkeletonHit *hits,
                                   ObjHitsSkeletonHit **outBest,f32 yMax,f32 yMin,f32 *outAccum)
@@ -252,11 +250,7 @@ int ObjHits_CollectSkeletonHitsXZ(f32 *point,f32 radius,ObjHitsSkeletonJointData
   cur->pointIndexA = OBJHITS_SKELETON_HIT_SENTINEL;
   return cur != hits;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 /*
  * --INFO--
  *
@@ -407,8 +401,6 @@ int ObjHits_CollectSkeletonHits3D(f32 *point,f32 radius,ObjHitsSkeletonJointData
   cur->pointIndexA = OBJHITS_SKELETON_HIT_SENTINEL;
   return cur != hits;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -423,8 +415,6 @@ int ObjHits_CollectSkeletonHits3D(f32 *point,f32 radius,ObjHitsSkeletonJointData
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int ObjHits_CalcSkeletonResponseXZ(f32 *pos,f32 radius,int obj,ObjHitsSkeletonHit *hits,
                                    ObjHitsSkeletonJointData *jointPoints,int jointModel,
                                    ObjHitsSkeletonHit *bestHit,f32 t,f32 axial,f32 *out)
@@ -548,11 +538,7 @@ int ObjHits_CalcSkeletonResponseXZ(f32 *pos,f32 radius,int obj,ObjHitsSkeletonHi
   out[2] = rPtr[2] - pos[2];
   return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 /*
  * --INFO--
  *
@@ -685,8 +671,6 @@ int ObjHits_CalcSkeletonResponse3D(f32 *pos,f32 radius,int obj,ObjHitsSkeletonHi
   out[2] = rPtr[2] - pos[2];
   return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -701,7 +685,6 @@ int ObjHits_CalcSkeletonResponse3D(f32 *pos,f32 radius,int obj,ObjHitsSkeletonHi
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 float *ObjHits_ProjectPointToTaperedCapsuleXZ(float *point, float pointRadius, float axial,
                                               float *base, float *tip, float baseRadius,
                                               float tipRadius, float length, float *out)
@@ -760,7 +743,6 @@ float *ObjHits_ProjectPointToTaperedCapsuleXZ(float *point, float pointRadius, f
     out[2] = out[2] + surfacePoint[2];
     return out;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -775,7 +757,6 @@ float *ObjHits_ProjectPointToTaperedCapsuleXZ(float *point, float pointRadius, f
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 float *ObjHits_ProjectPointToTaperedCapsule3D(float *point, float pointRadius, float axial,
                                               float *base, float *tip, float baseRadius,
                                               float tipRadius, float length, float *out)
@@ -834,7 +815,6 @@ float *ObjHits_ProjectPointToTaperedCapsule3D(float *point, float pointRadius, f
     out[2] = out[2] + surfacePoint[2];
     return out;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -849,8 +829,6 @@ float *ObjHits_ProjectPointToTaperedCapsule3D(float *point, float pointRadius, f
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 float *ObjHits_CalcTaperedCapsuleNormal(float *point,float axial,float *base,float *tip,
                                         float baseRadius,float tipRadius,float length,
                                         float *out)
@@ -913,8 +891,6 @@ float *ObjHits_CalcTaperedCapsuleNormal(float *point,float axial,float *base,flo
   }
   return out;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -929,7 +905,6 @@ float *ObjHits_CalcTaperedCapsuleNormal(float *point,float axial,float *base,flo
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 int ObjHits_TestTaperedCapsuleXZ(float *point, float pointRadius, float baseRadius, float tipRadius,
                                  float *base, float *axis, float *tip, float length,
                                  float *axial, float *dist2, float *sumR)
@@ -966,9 +941,7 @@ int ObjHits_TestTaperedCapsuleXZ(float *point, float pointRadius, float baseRadi
     *sumR = radiusSum;
     return *dist2 <= radiusSum * radiusSum;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 /*
  * --INFO--
  *
@@ -1018,7 +991,6 @@ int ObjHits_TestTaperedCapsule3D(float *point, float pointRadius, float baseRadi
     *sumR = radiusSum;
     return *dist2 <= radiusSum * radiusSum;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1033,8 +1005,6 @@ int ObjHits_TestTaperedCapsule3D(float *point, float pointRadius, float baseRadi
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void ObjHits_SortSweepEntries(ObjHitsSweepEntry **sweepPtrs,int entryCount)
 {
@@ -1064,8 +1034,6 @@ void ObjHits_SortSweepEntries(ObjHitsSweepEntry **sweepPtrs,int entryCount)
   return;
 }
 #pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1080,8 +1048,6 @@ void ObjHits_SortSweepEntries(ObjHitsSweepEntry **sweepPtrs,int entryCount)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void ObjHits_TickPriorityHitCooldowns(void)
 {
   int iVar1;
@@ -1103,8 +1069,6 @@ void ObjHits_TickPriorityHitCooldowns(void)
   gObjHitsPriorityHitTickDelta = timeDelta;
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1199,8 +1163,6 @@ void ObjHitbox_UpdateRotatedBounds(ObjHitbox *hitbox,int advanceMatrix)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,uint mask,
                            uint volMask)
 {
@@ -1635,8 +1597,6 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1670,8 +1630,6 @@ void doNothing_800333C8(int objA,int objB,int att,void *state,void *attState,f32
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void ObjHits_CheckObjectHitVolumes(int objA,int objB,int attA,int attB,f32 dt)
 {
   ObjHitsPriorityState *stateA;
@@ -1788,8 +1746,6 @@ void ObjHits_CheckObjectHitVolumes(int objA,int objB,int attA,int attB,f32 dt)
   }
 }
 
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1804,7 +1760,6 @@ void ObjHits_CheckObjectHitVolumes(int objA,int objB,int attA,int attB,f32 dt)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void ObjHits_RegisterActiveHitVolumeObject(int obj)
 {
   int index;
@@ -1821,7 +1776,6 @@ void ObjHits_RegisterActiveHitVolumeObject(int obj)
   gObjHitsActiveHitVolumeObjects[index] = obj;
   return;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1836,8 +1790,6 @@ void ObjHits_RegisterActiveHitVolumeObject(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void ObjHits_ApplyPairResponse(int objA,int objB,f32 x,f32 y,f32 z,int flag)
 {
   ObjAnimComponent *animA;
@@ -1997,11 +1949,7 @@ void ObjHits_ApplyPairResponse(int objA,int objB,f32 x,f32 y,f32 z,int flag)
   }
 }
 
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 /*
  * --INFO--
  *
@@ -2159,8 +2107,6 @@ void ObjHits_DetectObjectPair(int objA,int objB)
 end:;
 }
 
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2302,8 +2248,6 @@ void ObjHits_CheckSkeletonPair(int objA,int objB,void *hits,void *scratchB,void 
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void ObjHits_CheckTrackContact(int objA,int objB)
 {
   uint uVar1;
@@ -2458,8 +2402,6 @@ void ObjHits_CheckTrackContact(int objA,int objB)
     }
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--

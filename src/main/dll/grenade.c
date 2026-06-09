@@ -633,8 +633,6 @@ void trickyFn_80142524(u8 *obj, u8 *state)
 extern void objPosFn_80039510(int obj, int flags, float *out);
 extern f32 lbl_803E24C8;
 
-#pragma scheduling off
-#pragma peephole off
 int trickyFn_80142a14(int obj, int state)
 {
   int tex;
@@ -671,8 +669,6 @@ int trickyFn_80142a14(int obj, int state)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -937,8 +933,6 @@ int trickyFn_801430e0(u8 *obj, u8 *state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 undefined4 trickyFn_80143210(int param_1,int *param_2)
 {
   short sVar1;
@@ -963,8 +957,6 @@ undefined4 trickyFn_80143210(int param_1,int *param_2)
   }
   return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -979,8 +971,6 @@ undefined4 trickyFn_80143210(int param_1,int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 undefined4 trickyFn_801432cc(int param_1,int *param_2)
 {
   short sVar1;
@@ -1005,8 +995,6 @@ undefined4 trickyFn_801432cc(int param_1,int *param_2)
   }
   return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1021,8 +1009,6 @@ undefined4 trickyFn_801432cc(int param_1,int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 undefined4 trickyFn_80143388(int param_1,int *param_2)
 {
   int iVar1;
@@ -1054,8 +1040,6 @@ undefined4 trickyFn_80143388(int param_1,int *param_2)
   }
   return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1074,8 +1058,6 @@ extern f32 lbl_803E2520;
 extern f32 lbl_803E23F8;
 extern int *gSHthorntailAnimationInterface;
 
-#pragma scheduling off
-#pragma peephole off
 int trickyFn_801434b0(int param_1, int *param_2)
 {
   char cVar1;
@@ -1154,8 +1136,6 @@ int trickyFn_801434b0(int param_1, int *param_2)
   }
   return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1269,8 +1249,6 @@ int trickyFoodFn_801437d4(u8 *obj, u8 *state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 undefined4 trickyFn_80143b04(int param_1,int *param_2)
 {
   int iVar1;
@@ -1286,8 +1264,6 @@ undefined4 trickyFn_80143b04(int param_1,int *param_2)
   }
   return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1302,8 +1278,6 @@ undefined4 trickyFn_80143b04(int param_1,int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 undefined4 trickyFn_80143b78(int param_1,int *param_2)
 {
   int iVar1;
@@ -1322,8 +1296,6 @@ undefined4 trickyFn_80143b78(int param_1,int *param_2)
   *(undefined *)((int)param_2 + 10) = 0;
   return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -1338,8 +1310,6 @@ undefined4 trickyFn_80143b78(int param_1,int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int trickyFn_80143c04(int obj, int state)
 {
   int tex;
@@ -1396,8 +1366,6 @@ int trickyFn_80143c04(int obj, int state)
   }
   return fn_80143DD4(obj, (int *)state);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1413,8 +1381,6 @@ int trickyFn_80143c04(int obj, int state)
  * PAL Size: TODO
  */
 typedef struct { u8 bf7:1; u8 bf6:1; u8 rest:6; } FlagByte728;
-#pragma scheduling off
-#pragma peephole off
 undefined4 fn_80143DD4(int param_1,int *param_2)
 {
   int iVar1;
@@ -1510,8 +1476,6 @@ undefined4 fn_80143DD4(int param_1,int *param_2)
   }
   return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1614,8 +1578,6 @@ void objAnimFn_801441c0(u8 *obj, u8 *state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void tricky_startRandomIdleMove(int param_1,int param_2)
 {
   int iVar1;
@@ -1653,8 +1615,6 @@ void tricky_startRandomIdleMove(int param_1,int param_2)
     break;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1669,8 +1629,6 @@ void tricky_startRandomIdleMove(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int trickyFoodFn_8014460c(int param_1,int *param_2)
 {
     u8 *obj = (u8 *)param_1;
@@ -1813,8 +1771,6 @@ int trickyFoodFn_8014460c(int param_1,int *param_2)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--

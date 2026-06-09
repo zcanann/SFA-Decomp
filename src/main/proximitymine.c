@@ -61,7 +61,6 @@ void proximitymine_render(ProximityMineObject *obj,undefined4 param_2,undefined4
   return;
 }
 
-#pragma peephole off
 void proximitymine_hitDetect(ProximityMineObject *obj)
 {
   f32 zeroVelocity;
@@ -88,5 +87,4 @@ void proximitymine_hitDetect(ProximityMineObject *obj)
   }
   return;
 }
-#pragma peephole reset
 #pragma scheduling reset

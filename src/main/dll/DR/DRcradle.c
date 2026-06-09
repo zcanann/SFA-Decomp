@@ -95,8 +95,6 @@ extern int lbl_80328590[];
  * EN v1.0 Address: 0x801ECA64
  * EN v1.0 Size: 352b
  */
-#pragma peephole off
-#pragma scheduling off
 void SnowBike_func15(int obj)
 {
     int t = *(int *)&((GameObject *)obj)->extra;
@@ -135,8 +133,6 @@ void SnowBike_func15(int obj)
         *(s8 *)(t + 0x3d3) = 1;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern void setMatrixFromObjectPos(void *mtx, s16 *vec);
 extern void mtxRotateByVec3s(void *mtx, s16 *vec);
@@ -156,8 +152,6 @@ typedef struct SnowBikeFlags {
  * EN v1.0 Address: 0x801EC7A0
  * EN v1.0 Size: 208b
  */
-#pragma peephole off
-#pragma scheduling off
 void fn_801EC7A0(int p1, int p2)
 {
     struct {
@@ -190,8 +184,6 @@ void fn_801EC7A0(int p1, int p2)
     v.angles[2] = 0;
     mtxRotateByVec3s((void *)(p2 + 0x12c), v.angles);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -277,8 +269,6 @@ void fn_801EC928(int p1, int p2)
  * EN v1.0 Address: 0x801ECC94
  * EN v1.0 Size: 244b
  */
-#pragma peephole off
-#pragma scheduling off
 void SnowBike_setType(int obj, int type)
 {
     int t = *(int *)&((GameObject *)obj)->extra;
@@ -303,8 +293,6 @@ void SnowBike_setType(int obj, int type)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -313,8 +301,6 @@ void SnowBike_setType(int obj, int type)
  * EN v1.0 Address: 0x801ECC38
  * EN v1.0 Size: 92b
  */
-#pragma peephole off
-#pragma scheduling off
 void SnowBike_func12(int obj, f32 *outFloat, s32 *outBool)
 {
     int t = *(int *)&((GameObject *)obj)->extra;
@@ -331,8 +317,6 @@ void SnowBike_func12(int obj, f32 *outFloat, s32 *outBool)
     *outFloat = r;
     *outBool = *(f32 *)(t + 0x414) < lbl_803E5AE8;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -341,8 +325,6 @@ void SnowBike_func12(int obj, f32 *outFloat, s32 *outBool)
  * EN v1.0 Address: 0x801ECBD4
  * EN v1.0 Size: 100b
  */
-#pragma peephole off
-#pragma scheduling off
 f32 SnowBike_func13(int obj, f32 *out)
 {
     int t = *(int *)&((GameObject *)obj)->extra;
@@ -357,8 +339,6 @@ f32 SnowBike_func13(int obj, f32 *out)
     }
     return r;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -367,8 +347,6 @@ f32 SnowBike_func13(int obj, f32 *out)
  * EN v1.0 Address: 0x801ECE0C
  * EN v1.0 Size: 36b
  */
-#pragma peephole off
-#pragma scheduling off
 u32 SnowBike_setScale(int obj)
 {
     int t = *(int *)&((GameObject *)obj)->extra;
@@ -378,8 +356,6 @@ u32 SnowBike_setScale(int obj)
     }
     return *(u8 *)(t + 0x420);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -388,14 +364,10 @@ u32 SnowBike_setScale(int obj)
  * EN v1.0 Address: 0x801EC9BC
  * EN v1.0 Size: 56b
  */
-#pragma peephole off
-#pragma scheduling off
 void fn_801EC9BC(int obj)
 {
     (*(void (**)(int))((char *)*(int *)gCheckpointInterface + 0x34))(*(int *)&((GameObject *)obj)->extra + 0x28);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -404,8 +376,6 @@ void fn_801EC9BC(int obj)
  * EN v1.0 Address: 0x801EC9F4
  * EN v1.0 Size: 104b
  */
-#pragma peephole off
-#pragma scheduling off
 u32 fn_801EC9F4(int obj)
 {
     int result = (*(int (**)(int))((char *)*(int *)gCheckpointInterface + 0x34))(*(int *)&((GameObject *)obj)->extra + 0x28);
@@ -416,8 +386,6 @@ u32 fn_801EC9F4(int obj)
     }
     return (u32)__cntlzw(lbl_803DC0BC - 1 - result) >> 5;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -426,8 +394,6 @@ u32 fn_801EC9F4(int obj)
  * EN v1.0 Address: 0x801ECE40
  * EN v1.0 Size: 132b
  */
-#pragma peephole off
-#pragma scheduling off
 void SnowBike_free(int obj)
 {
     char *p;
@@ -448,8 +414,6 @@ void SnowBike_free(int obj)
         (*gGameUIInterface)->airMeterSetShutdown();
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /* 16b chained patterns. */
 s32 SnowBike_func14(int *obj) { return *(s8*)((char*)((int**)obj)[0xb8/4] + 0x422); }

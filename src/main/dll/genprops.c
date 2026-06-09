@@ -4120,8 +4120,6 @@ extern f32 lbl_803E31DC;
 extern f32 lbl_803E31E0;
 extern f32 lbl_803E31E4;
 
-#pragma scheduling off
-#pragma peephole off
 void mikabombshadow_update(int *obj) {
     int *r4;
     f32 fz = lbl_803E31D8;
@@ -4135,14 +4133,10 @@ void mikabombshadow_update(int *obj) {
     if (f > fz) f = fz;
     ((GameObject *)obj)->anim.modelState->shadowAlphaStep = (s32)(lbl_803E31E4 * f);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E33F4;
 extern f32 lbl_803E33F8;
 
-#pragma scheduling off
-#pragma peephole off
 void curve_init(ObjAnimComponent *obj, CurvePlacementParams *params) {
     obj->rotX = (s16)(params->placement.rotZ << 8);
     obj->rotY = (s16)(params->placement.rotY << 8);
@@ -4158,8 +4152,6 @@ void curve_init(ObjAnimComponent *obj, CurvePlacementParams *params) {
         obj->rootMotionScale = obj->modelInstance->rootMotionScaleBase;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void siderepel_init(int param_1, int param_2) {
     ((GameObject *)param_1)->objectFlags = ((GameObject *)param_1)->objectFlags | 0xe000;
@@ -4419,7 +4411,6 @@ void shield_initialise(void) {}
 extern void ModelLightStruct_free(void *p);
 extern int Sfx_StopFromObject(int obj, int sfxId);
 
-#pragma scheduling off
 void shield_free(int obj)
 {
     void **state = ((GameObject *)obj)->extra;
@@ -4430,7 +4421,6 @@ void shield_free(int obj)
     Sfx_StopFromObject(obj, 0x42C);
     Sfx_StopFromObject(obj, 0x42D);
 }
-#pragma scheduling reset
 
 void curve_setScale(void) {}
 void curve_free(void) {}
@@ -4474,7 +4464,6 @@ int dll_F7_getObjectTypeId(void) { return 0x2; }
 extern void *lbl_803DDAB0;
 extern void *lbl_803DDAB4;
 
-#pragma scheduling off
 void dll_F7_free(int obj)
 {
     (*gModgfxInterface)->detachSource((void *)obj);
@@ -4484,20 +4473,15 @@ void dll_F7_free(int obj)
     lbl_803DDAB4 = NULL;
     ObjGroup_RemoveObject(obj, 0x3E);
 }
-#pragma scheduling reset
 
 extern void Sfx_StopObjectChannel(int *obj, int channel);
 
-#pragma scheduling off
-#pragma peephole off
 void dim2roofrub_free(int *obj) {
     (*gObjectTriggerInterface)
         ->freeState(((GameObject *)obj)->extra);
     ((void(*)(int*, int, int, int, int))((void**)*(void**)gTitleMenuControlInterfaceCopy)[2])(obj, 0xffff, 0, 0, 0);
     Sfx_StopObjectChannel(obj, 0x7f);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 int checkpoint4_getExtraSize(void) { return 0x40; }
 int checkpoint4_getObjectTypeId(void) { return 0x10; }
@@ -4984,7 +4968,6 @@ extern f32 lbl_803E31E8;
 extern f32 lbl_803E3220;
 extern f32 lbl_803E33F0;
 extern f32 lbl_803E31F8;
-#pragma peephole off
 void StaticCamera_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E31E8); }
 void baddieinterestp_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3220); }
 void curve_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E33F0); }
@@ -4994,46 +4977,27 @@ void gcbaddieshield_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
         objRenderFn_8003b8f4(lbl_803E31F8);
     }
 }
-#pragma peephole reset
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E3388;
-#pragma scheduling off
-#pragma peephole off
 void flamethrowerspe_render(void) { objRenderFn_8003b8f4(lbl_803E3388); }
 void fn_801719F8(void) { objRenderFn_8003b8f4(lbl_803E3420); }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-#pragma scheduling off
-#pragma peephole off
 void StaticCamera_free(int x) { ObjGroup_RemoveObject(x, 0x7); }
 void siderepel_free(int x) { ObjGroup_RemoveObject(x, 0x40); }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* misc 8b leaves */
 int collectible_setScale(int *obj) { return ((GameObject *)obj)->unkF4; }
 
 /* misc 16b 4-insn patterns. */
-#pragma scheduling off
-#pragma peephole off
 void objSetAnimField48to0(int *obj) { s32 v = 0x0; *(s32*)((char*)((int**)obj)[0xb8/4] + 0x48) = v; }
 void flamethrowerspe_func0B(int *obj) { s32 v = 0x1; *(s32*)((char*)((int**)obj)[0xb8/4] + 0x10) = v; }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void quakeSpellFn_8016cee8(int *obj, int *x);
-#pragma scheduling off
-#pragma peephole off
 void playerRenderQuakeSpell(int *obj) { quakeSpellFn_8016cee8(obj, ((GameObject *)obj)->unkC4); }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* state-byte setters / leaf writers. */
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void staffSetGlow(int *obj, u8 a, u8 b) {
     u8 *state = (u8*)((int**)obj)[0xb8/4];
@@ -5066,8 +5030,6 @@ void collectible_render2(int *obj, f32 f1, f32 f2, f32 f3) {
 
 extern void saveGame_saveObjectPos(int obj);
 
-#pragma scheduling off
-#pragma peephole off
 void collectible_func10(int *obj, f32 f1, f32 f2, f32 f3) {
     char *inner = (char*)((int**)obj)[0xb8/4];
     ((GameObject *)obj)->anim.localPosX = f1;
@@ -5092,11 +5054,7 @@ void collectible_func0B(int *obj, int flag) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int collectible_modelMtxFn(int *obj) {
     int *inner = (int*)*(int *)&((GameObject *)obj)->extra;
     if (*(int*)((char*)inner + 0x18) == -2) {
@@ -5107,13 +5065,9 @@ int collectible_modelMtxFn(int *obj) {
     }
     return *(int*)((char*)inner + 0x18);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void staff_setupSwipe(int p1, int p2, int p3, int p4);
 extern int getHudHiddenFrameCount(void);
-#pragma scheduling off
-#pragma peephole off
 void staff_modelMtxFn(int *obj, int p4, int p5) {
     int *inner = (int*)*(int *)&((GameObject *)obj)->extra;
     staff_setupSwipe((int)obj, (int)inner, p5, p4);
@@ -5123,7 +5077,6 @@ void staff_modelMtxFn(int *obj, int p4, int p5) {
         *(u8*)((char*)inner + 0xbc) = 0;
     }
 }
-#pragma peephole reset
 
 void flamethrowerspe_setScale(int *obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3) {
     ((GameObject *)obj)->anim.localPosX = f1;
@@ -5192,12 +5145,8 @@ void staff_func15(int *obj, s16 idx, f32 f1, f32 f2) {
     *(s16*)(slot + 0x10) = idx;
     *(void**)(state + 0x48) = slot;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
-#pragma scheduling off
-#pragma peephole off
 int* fn_801702D4(int* obj, f32 fv) {
     void* alloc;
     int* new_obj;
@@ -5215,8 +5164,6 @@ int* fn_801702D4(int* obj, f32 fv) {
     }
     return new_obj;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void mm_free(int *p);
 extern f32 lbl_803E31FC;
@@ -5228,8 +5175,6 @@ extern f32 lbl_803E3210;
 extern f32 timeDelta;
 extern void Obj_FreeObject(int *obj);
 
-#pragma scheduling off
-#pragma peephole off
 void gcbaddieshield_update(int *obj) {
     f32 *state = ((GameObject *)obj)->extra;
     state[0] = state[0] - timeDelta;
@@ -5267,8 +5212,6 @@ void fireball_free(int *obj) {
     (*gExpgfxInterface)->freeSource2((u32)obj);
     ObjGroup_RemoveObject((int)obj, 2);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 typedef struct DofState {
     u8 enabled : 1;
@@ -5283,8 +5226,6 @@ extern int textureFree(int tex);
 extern void *lbl_803DDAA0;
 extern void *lbl_803DDAA8[2];
 
-#pragma peephole off
-#pragma scheduling off
 void depthoffieldpoint_init(int *obj)
 {
     DofState *s = ((GameObject *)obj)->extra;
@@ -5718,8 +5659,6 @@ void flamethrowerspe_update(int *obj)
         break;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern u32 lbl_803E31A0;
 extern f32 lbl_803E31A4;
@@ -5734,8 +5673,6 @@ extern f32 lbl_803E31D4;
 extern void CameraShake_Start(f32 a, f32 b, f32 c);
 extern int loadObjectAtObject(int *obj, void *params);
 
-#pragma scheduling off
-#pragma peephole off
 void mikabomb_update(int *obj)
 {
     int *state = ((GameObject *)obj)->extra;
@@ -5842,8 +5779,6 @@ void mikabomb_init(int *obj)
     *(void **)((char *)state + 8) = Resource_Acquire(0x5b, 1);
     *(u8 *)((char *)state + 0xc) = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 vec3f_distanceSquared(f32 *a, f32 *b);
 extern void GameBit_Set(int eventId, int value);
@@ -5851,8 +5786,6 @@ extern int *gSHthorntailAnimationInterface;
 extern void fn_801504BC(int *obj, int kind);
 extern f32 lbl_803E3224;
 
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_loop_invariants off
 void baddieinterestp_update(int *obj)
 {
@@ -5963,14 +5896,10 @@ void baddieinterestp_update(int *obj)
     }
 }
 #pragma opt_loop_invariants reset
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
 extern f32 lbl_803E322C;
 
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_loop_invariants off
 void animatedobj_update(int *obj)
 {
@@ -6037,8 +5966,6 @@ void animatedobj_update(int *obj)
     }
 }
 #pragma opt_loop_invariants reset
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void Obj_BuildWorldTransformMatrix(int *obj, f32 *m, int p3);
 extern void PSMTXTrans(f32 *m, f32 x, f32 y, f32 z);
@@ -6050,8 +5977,6 @@ extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f32 lbl_803E3230;
 
-#pragma scheduling off
-#pragma peephole off
 void animatedobj_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     f32 mWorld[12];
@@ -6099,8 +6024,6 @@ void animatedobj_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
         ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3228);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 typedef struct Dim2FxRow {
     f32 x;
@@ -6139,8 +6062,6 @@ extern f32 lbl_803E3274;
 extern f32 lbl_803E3278;
 extern f32 lbl_803E327C;
 
-#pragma scheduling off
-#pragma peephole off
 void dim2roofrub_spawnEffects(int *obj)
 {
     Dim2FxVec v;
@@ -6239,8 +6160,6 @@ void dim2roofrub_render(int *obj, int p2, int p3, int p4, int p5)
         ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3270);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 typedef struct Dim2PartVec {
     u8 pad[0xc];
@@ -6249,8 +6168,6 @@ typedef struct Dim2PartVec {
     f32 z;
 } Dim2PartVec;
 
-#pragma scheduling off
-#pragma peephole off
 void dim2roofrub_update(int *obj)
 {
     u8 *state = ((GameObject *)obj)->extra;
@@ -6314,8 +6231,6 @@ void dim2roofrub_update(int *obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int objCreateLight(int *obj, int arg);
 extern void lightSetField4D(int light, int v);
@@ -6329,8 +6244,6 @@ extern f32 lbl_803E3378;
 extern f32 lbl_803E337C;
 extern f32 lbl_803E3380;
 
-#pragma scheduling off
-#pragma peephole off
 void fireball_init(int *obj)
 {
     int *state = ((GameObject *)obj)->extra;
@@ -6384,8 +6297,6 @@ void fireball_init(int *obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 Vec3_Length(f32 *v);
 extern int hitDetectFn_800658a4(int *obj, f32 x, f32 y, f32 z, f32 *out, int flag);
@@ -6402,8 +6313,6 @@ extern f32 lbl_803E3364;
 extern f32 lbl_803E3368;
 extern f32 lbl_803E336C;
 
-#pragma scheduling off
-#pragma peephole off
 void fireball_update(int *obj)
 {
     int *state = ((GameObject *)obj)->extra;
@@ -6522,15 +6431,11 @@ void fireball_update(int *obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern u8 lbl_803DBD58[8];
 extern void queueGlowRender(int light);
 extern f32 lbl_803E3350;
 
-#pragma scheduling off
-#pragma peephole off
 void fireball_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     int *model;
@@ -6588,15 +6493,11 @@ void fireball_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int getAngle(f32 a, f32 b);
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803E3340;
 
-#pragma scheduling off
-#pragma peephole off
 void fn_8016F260(int *obj, int *state, int *other)
 {
     f32 *pt = (f32 *)(*(int *)((char *)other + 0x74) + *(u8 *)((char *)other + 0xe4) * 24);
@@ -6671,8 +6572,6 @@ void fn_8016F260(int *obj, int *state, int *other)
         ((GameObject *)obj)->anim.velocityZ *= c;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 fcos16(u16 angle);
 extern void Sfx_SetObjectSfxVolume(f32 ratio, s16 *obj, int sfx, int vol);
@@ -6682,8 +6581,6 @@ extern f32 lbl_803E33C4;
 extern f32 lbl_803E33E8;
 extern f32 lbl_803E33EC;
 
-#pragma scheduling off
-#pragma peephole off
 void shield_update(int *obj)
 {
     f32 *tbl = lbl_80320A28;
@@ -6745,8 +6642,6 @@ void shield_update(int *obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 typedef struct DllF7Vec {
     u8 b[16];
@@ -6761,8 +6656,6 @@ extern f32 lbl_803E3410;
 extern f32 lbl_803E3414;
 extern f32 lbl_803E3418;
 
-#pragma scheduling off
-#pragma peephole off
 void dll_F7_update(int *obj)
 {
     u8 *state = ((GameObject *)obj)->extra;
@@ -6854,15 +6747,11 @@ void dll_F7_update(int *obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern s16 lbl_803DBD50[4];
 extern s16 *lbl_803DDAA4;
 extern void *textureLoad(int id, int flag);
 
-#pragma scheduling off
-#pragma peephole off
 void staff_initialise(void)
 {
     s16 *p = (s16 *)lbl_803208A0;
@@ -6888,8 +6777,6 @@ void staff_initialise(void)
         lbl_803DDAA0 = Resource_Acquire(90, 1);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 typedef struct ShieldFxVec {
     u8 pad[8];
@@ -6904,8 +6791,6 @@ extern s16 lbl_803DBD88[4];
 extern f32 lbl_803E33D8;
 extern f32 lbl_803E33DC;
 
-#pragma scheduling off
-#pragma peephole off
 void shield_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     u8 *state = ((GameObject *)obj)->extra;
@@ -6998,8 +6883,6 @@ void shield_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
         ((GameObject *)obj)->anim.rotZ = saved4;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void quakeSpellTextureFn_8007366c(int param);
 extern f32 *Camera_GetViewMatrix(void);
@@ -7010,8 +6893,6 @@ extern void GXDrawTorus(f32 rc, u8 numc, u8 numt);
 extern void *memcpy(void *dst, const void *src, unsigned int n);
 extern f32 lbl_803E3300;
 
-#pragma scheduling off
-#pragma peephole off
 void quakeSpellTextureFn_8016dbf4(void)
 {
     f32 mResult[12];
@@ -7044,8 +6925,6 @@ void quakeSpellTextureFn_8016dbf4(void)
         GXDrawTorus(*(f32 *)(lbl_803AC6B8 + 0x10), 10, 20);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E32A8;
 extern f32 lbl_803E3290;
@@ -7060,8 +6939,6 @@ typedef struct QuakePartVec {
     f32 x, y, z;
 } QuakePartVec;
 
-#pragma scheduling off
-#pragma peephole off
 void superQuakeFn_8016d9fc(f32 *pos)
 {
     int *player;
@@ -7109,8 +6986,6 @@ void superQuakeFn_8016d9fc(f32 *pos)
         ((GameObject *)*(int *)(lbl_803AC6B8 + 0x1c))->anim.alpha = 0xff;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 typedef struct SwipeColorTable {
     u32 w[16];
@@ -7119,8 +6994,6 @@ typedef struct SwipeColorTable {
 extern SwipeColorTable lbl_802C2220;
 void staffDrawSwipe(int *obj, int *swipe);
 
-#pragma scheduling off
-#pragma peephole off
 void staff_hitDetectGeometry(int *obj)
 {
     u8 *state = *(u8 **)&((GameObject *)obj)->anim.hitReactState;
@@ -7162,8 +7035,6 @@ void staff_hitDetectGeometry(int *obj)
     }
 }
 #pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset
 
 typedef union {
     u8 u8;
@@ -7192,8 +7063,6 @@ extern void GXSetCurrentMtx(int a);
 extern void GXBegin(int type, int fmt, int n);
 extern f32 lbl_803E3294;
 
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_common_subs off
 void staffDrawSwipe(int *obj, int *swipe)
 {
@@ -7248,8 +7117,6 @@ void staffDrawSwipe(int *obj, int *swipe)
         swp += 0x18;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int objGetAnimState80A(int obj);
 extern f32 lbl_803E330C;
@@ -7261,8 +7128,6 @@ extern f32 lbl_803E32E8;
 extern f32 lbl_803E32EC;
 extern f32 lbl_803E32F0;
 
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_loop_invariants off
 void staff_update(int *obj)
 {
@@ -7354,9 +7219,7 @@ void staff_update(int *obj)
         }
     }
 }
-#pragma peephole reset
 #pragma opt_loop_invariants reset
-#pragma scheduling reset
 
 extern void playerAddHealth(void *player, int amount);
 extern void gameBitIncrement(int eventId);
@@ -7365,8 +7228,6 @@ extern void itemPickupDoParticleFx(int *obj, f32 f, int a, int b);
 extern f32 lbl_803E3450;
 extern f32 lbl_803E3454;
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80171E5C(int *obj)
 {
     u8 *state = ((GameObject *)obj)->extra;
@@ -7453,8 +7314,6 @@ void fn_80171E5C(int *obj)
     ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4);
     ((GameObject *)obj)->unkF4 = 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E345C;
 extern f32 lbl_803E3460;
@@ -7462,8 +7321,6 @@ extern f32 lbl_803E3464;
 extern f32 lbl_803E3468;
 extern f32 lbl_803E346C;
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80172144(int *obj)
 {
     u8 *state = ((GameObject *)obj)->extra;
@@ -7519,8 +7376,6 @@ void fn_80172144(int *obj)
         ((GameObject *)obj)->anim.velocityY = -(lbl_803E346C * timeDelta - ((GameObject *)obj)->anim.velocityY);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 fastFloorf(f32 v);
 extern f32 Curve_EvalBSpline(f32 *a, f32 t, f32 *out);
@@ -7529,7 +7384,6 @@ extern f32 lbl_803E3308;
 extern f32 lbl_803E32A4;
 extern f32 lbl_803E32AC;
 
-#pragma peephole off
 void staff_setupSwipe(int p1, int p2, int p3, int p4)
 {
     u8 *model2;
@@ -7737,8 +7591,6 @@ void staff_setupSwipe(int p1, int p2, int p3, int p4)
         *(f32 *)(swipe + 0x98) = *(f32 *)(model2 + 4);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int *fn_802966CC(int *player);
 extern void modelLightStruct_setSpecularColor(int light, int r, int g, int b, int a);
@@ -7752,8 +7604,6 @@ extern f32 lbl_803E33C0;
 extern f32 lbl_803E33C8;
 extern f32 lbl_803E33CC;
 
-#pragma scheduling off
-#pragma peephole off
 void staffFn_80170380(int *obj, int cmd)
 {
     f32 *tbl = lbl_80320A28;
@@ -8011,8 +7861,6 @@ void staffFn_80170380(int *obj, int cmd)
     }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int objFn_80296700(int *obj);
 extern void objfx_spawnArcedBurst(int *obj, f32 a, int type, int ba, int one, int n, f32 b, f32 c, f32 d, int x, int y);
@@ -8044,8 +7892,6 @@ typedef struct QuakeFxParams {
     f32 f3;
 } QuakeFxParams;
 
-#pragma scheduling off
-#pragma peephole off
 void quakeSpellFn_8016cee8(int *obj, int *obj2)
 {
     QuakeFxParams fxB;
@@ -8223,5 +8069,3 @@ void quakeSpellFn_8016cee8(int *obj, int *obj2)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

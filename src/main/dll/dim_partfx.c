@@ -6698,8 +6698,6 @@ s32 Checkpoint_func08(u8 *out, u8 *o, f32 dist, s32 p3, u8 flag)
 }
 #pragma pop
 
-#pragma peephole off
-#pragma scheduling off
 void Checkpoint_onGameLoop(void)
 {
     u32 tmp = lbl_803DD418;
@@ -6708,5 +6706,3 @@ void Checkpoint_onGameLoop(void)
     lbl_803DD414 = lbl_803DD416;
     lbl_803DD416 = 0;
 }
-#pragma scheduling reset
-#pragma peephole reset

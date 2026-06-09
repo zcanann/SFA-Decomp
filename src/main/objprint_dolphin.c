@@ -4427,8 +4427,6 @@ void setForceLoadImmediately(void) { lbl_803DCC70 = 0x1; }
 
 extern u8 lbl_803DCC28;
 extern u8 lbl_803DCC58;
-#pragma scheduling off
-#pragma peephole off
 void fn_800412B8(u8 r, u8 g, u8 b) {
     lbl_803DCC28 = 1;
     lbl_803DCC58 = r;
@@ -4474,8 +4472,6 @@ s32 mapCheckCurBlocks(int v) {
     if (((s16*)((char*)lbl_8035F548 + 0x8e))[0] == v) return 1;
     return -1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern u8 lbl_803DCC2A;
 extern u32 lbl_803DCC2C;
@@ -4489,7 +4485,6 @@ extern u8 lbl_803DB480;
 extern u8 lbl_803DB481;
 extern u8 lbl_803DB482;
 extern u8 lbl_803DB484[4];
-#pragma scheduling off
 void renderResetFn_8003fc60(void) {
     lbl_803DCC2A = 0;
     lbl_803DCC2C = 0;
@@ -4507,7 +4502,6 @@ void renderResetFn_8003fc60(void) {
     lbl_803DB484[1] = 0;
     lbl_803DB484[0] = 0;
 }
-#pragma scheduling reset
 
 extern s32 DVDGetCommandBlockStatus(void *block);
 int fn_80041D98(void *block) {
@@ -6948,8 +6942,6 @@ extern u32 lbl_80345F70[];
 extern void AtomicSList_Push(void *list, void *item);
 extern int DVDClose(void *fileInfo);
 
-#pragma peephole off
-#pragma scheduling off
 void tex0tab1readCb(s32 result, void *fileInfo)
 {
     if (result < 0) {
@@ -6971,11 +6963,7 @@ void tex0tab1readCb(s32 result, void *fileInfo)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void tex0tab2readCb(s32 result, void *fileInfo)
 {
     if (result < 0) {
@@ -6997,8 +6985,6 @@ void tex0tab2readCb(s32 result, void *fileInfo)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -7024,8 +7010,6 @@ void tex1tab1readCb(s32 result, void *fileInfo)
     }
 }
 
-#pragma peephole off
-#pragma scheduling off
 void tex1tab2readCb(s32 result, void *fileInfo)
 {
     if (result < 0) {
@@ -7047,8 +7031,6 @@ void tex1tab2readCb(s32 result, void *fileInfo)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 void romListReadCb(s32 result, void *fileInfo)
@@ -7093,8 +7075,6 @@ void dvdReadCb_80041d30(s32 result, void *fileInfo)
 }
 
 /* Resource read-completion callbacks: close DVD, recycle file slot, mark loaded-flag. */
-#pragma peephole off
-#pragma scheduling off
 void animReadCb(s32 result, void *fileInfo)
 {
     if (result < 0) {
@@ -7310,8 +7290,6 @@ void voxMapTabReadCb(s32 result, void *fileInfo)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern void mapLoadDataFiles(int idx);
 extern int sMapFileNameIndexRemapTable[];

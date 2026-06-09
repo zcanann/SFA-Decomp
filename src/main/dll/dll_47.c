@@ -219,7 +219,6 @@ void saveSelectOpenFile(int sel, int slot)
  * EN v1.0 Address: 0x8011B354
  * EN v1.0 Size: 96b
  */
-#pragma scheduling off
 void SaveSelectScreen_release(void) {
     void **p;
     int i;
@@ -235,7 +234,6 @@ void SaveSelectScreen_release(void) {
         i++;
     } while (i < 10);
 }
-#pragma scheduling reset
 
 /* Stubs for as-yet-unmatched functions. */
 #pragma dont_inline on
@@ -289,8 +287,6 @@ void saveFileSelect_init(int param_1, int param_2)
  * EN v1.0 Address: 0x8011A410
  * EN v1.0 Size: 216b
  */
-#pragma scheduling off
-#pragma peephole off
 void saveSelectSetupMenuItems(void **p) {
     int off1;
     int off2;
@@ -319,8 +315,6 @@ void saveSelectSetupMenuItems(void **p) {
         i++;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 #pragma dont_inline on
 void saveSelectGoToChapterSelect(void)
 {
@@ -378,7 +372,6 @@ void saveSelectGoToChapterSelect(void)
  * EN v1.0 Address: 0x8011A70C
  * EN v1.0 Size: 216b
  */
-#pragma scheduling off
 #pragma dont_inline on
 void saveSelectFn_8011a70c(void) {
     int i;
@@ -410,7 +403,6 @@ void saveSelectFn_8011a70c(void) {
     }
 }
 #pragma dont_inline reset
-#pragma scheduling reset
 /*
  * --INFO--
  *
@@ -419,8 +411,6 @@ void saveSelectFn_8011a70c(void) {
  * EN v1.0 Size: 304b
  */
 #pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
 void saveSelectGoToChooseSlot(int arg) {
     SaveSelectPanel *p;
     u8 i;
@@ -458,8 +448,6 @@ void saveSelectGoToChooseSlot(int arg) {
         saveSelectGoToChapterSelect();
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 #pragma dont_inline reset
 
 /*
@@ -469,8 +457,6 @@ void saveSelectGoToChooseSlot(int arg) {
  * EN v1.0 Address: 0x8011A914
  * EN v1.0 Size: 316b
  */
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void saveSelectScreenFree(int param_1) {
     void **p;
@@ -517,8 +503,6 @@ void saveSelectScreenFree(int param_1) {
     }
 }
 #pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 extern void gameTextSetDrawFunc(void *fn);
 extern void titleScreenTextDrawFunc(void);
 extern void titleScreenPositionElements(f32 a, f32 b);
@@ -558,8 +542,6 @@ extern char sSaveGameBinPathFormat[];
  * EN v1.0 Address: 0x8011AA50
  * EN v1.0 Size: 976b
  */
-#pragma scheduling off
-#pragma peephole off
 void SaveSelectScreen_render(int param)
 {
     SaveSelectPanel *panel;
@@ -656,8 +638,6 @@ void SaveSelectScreen_render(int param)
         lbl_803DD6CE = 0;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -666,8 +646,6 @@ void SaveSelectScreen_render(int param)
  * EN v1.0 Address: 0x8011AE24
  * EN v1.0 Size: 1328b
  */
-#pragma scheduling off
-#pragma peephole off
 int SaveSelectScreen_run(void)
 {
     char buf[32];
@@ -800,8 +778,6 @@ int SaveSelectScreen_run(void)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 void SaveSelectScreen_initialise(void) {
     int i;
     SaveSelectPanel *panel;

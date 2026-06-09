@@ -305,8 +305,6 @@ extern void audioStopByMask(int mask);
  * EN v1.0 Address: 0x801C4D88
  * EN v1.0 Size: 220b
  */
-#pragma peephole off
-#pragma scheduling off
 void mmsh_shrine_free(int obj)
 {
     int t = *(int *)&((GameObject *)obj)->extra;
@@ -329,8 +327,6 @@ void mmsh_shrine_free(int obj)
     GameBit_Set(0xe84, 0);
     GameBit_Set(0xe85, 0);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -339,8 +335,6 @@ void mmsh_shrine_free(int obj)
  * EN v1.0 Address: 0x801C4E64
  * EN v1.0 Size: 184b
  */
-#pragma peephole off
-#pragma scheduling off
 void mmsh_shrine_render(int obj, undefined4 a2, undefined4 a3, undefined4 a4, undefined4 a5,
                         char visible)
 {
@@ -359,8 +353,6 @@ void mmsh_shrine_render(int obj, undefined4 a2, undefined4 a3, undefined4 a4, un
         objParticleFn_80099d84(obj, lbl_803E4F50, 7, *(f32 *)&lbl_803E4F50, (int)runtime->light);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--

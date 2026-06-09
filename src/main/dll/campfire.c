@@ -232,8 +232,6 @@ void kaldaChomFn_80168374(int obj, int state, u8 useUpperMouthPoint)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void kaldachom_handleAnimEvents(int obj, int p2, int p3)
 {
   KaldaChomControl *control = ((CampfireState *)p2)->control;
@@ -277,8 +275,6 @@ void kaldachom_handleAnimEvents(int obj, int p2, int p3)
     eventState->baddie.eventFlags &= ~0x400;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--

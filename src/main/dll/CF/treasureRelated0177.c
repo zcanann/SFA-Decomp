@@ -89,8 +89,6 @@ extern f64 lbl_803E3DB8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void dll_127_update(int obj)
 {
   int flags;
@@ -110,8 +108,6 @@ void dll_127_update(int obj)
   }
   *(short *)(obj + 0xf8) = 100;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -189,7 +185,6 @@ void FUN_8018cf58(int param_1, int param_2, int param_3, int param_4, int param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void dll_127_init(short *param_1,int param_2)
 {
   ObjAnimComponent *objAnim;
@@ -219,7 +214,6 @@ void dll_127_init(short *param_1,int param_2)
   *(undefined4 *)(param_1 + 0x7c) = 0;
   return;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -591,7 +585,6 @@ void kt_torch_init(int obj, int p2)
     }
 }
 
-#pragma scheduling off
 void campfire_free(int obj)
 {
   void **state;
@@ -604,10 +597,7 @@ void campfire_free(int obj)
     ModelLightStruct_free(effect);
   }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void campfire_render(int obj, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
   void **state;
@@ -625,15 +615,12 @@ void campfire_render(int obj, int param_2, int param_3, int param_4, int param_5
     }
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void kt_torch_free(void) {}
 void kt_torch_hitDetect(void) {}
 void kt_torch_release(void) {}
 void kt_torch_initialise(void) {}
 
-#pragma scheduling off
 void kt_torch_update(int obj)
 {
   int mapData;
@@ -652,7 +639,6 @@ void kt_torch_update(int obj)
     }
   }
 }
-#pragma scheduling reset
 
 /* 8b "li r3, N; blr" returners. */
 int campfire_getExtraSize(void) { return 0x14; }
@@ -662,14 +648,10 @@ int kt_torch_getObjectTypeId(void) { return 0x0; }
 int cfccrate_getExtraSize(void) { return 0x4c; }
 int cfccrate_getObjectTypeId(void) { return 0x1; }
 
-#pragma scheduling off
 void cfccrate_free(int obj)
 {
   (*gExpgfxInterface)->freeSource2((u32)obj);
 }
-#pragma scheduling reset
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-#pragma peephole off
 void kt_torch_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3DB0); }
-#pragma peephole reset

@@ -405,8 +405,6 @@ int curves_distFn15(u32 curveId,f32 x,f32 y,f32 z,f32 *outDistance)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int curves_distanceToNearestOfType16(f32 x,f32 y,f32 z,int param_4)
 {
   float dx;
@@ -441,8 +439,6 @@ int curves_distanceToNearestOfType16(f32 x,f32 y,f32 z,int param_4)
   }
   return (int)nearestCurveId;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -878,8 +874,6 @@ int RomCurve_func11(RomCurveDef *curve,int typeFilter,int actionFilter,int *outC
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int RomCurve_getRandomLinkedOfTypes(RomCurveDef *curve,int *types,int typeCount,int *previousLinkId)
 {
   int candidateCount;
@@ -952,8 +946,6 @@ foundLinkedCurve:
   *previousLinkId = curve->id;
   return candidates[randomGetRange(0, candidateCount - 1)];
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1015,8 +1007,6 @@ f32 curves_distFn0B(int obj,uint curveId)
   return sqrtf(dx * dx + dy * dy + dz * dz);
 }
 
-#pragma scheduling off
-#pragma peephole off
 int curves_isNotPoint(RomCurveDef *curve) {
     int i;
     for (i = 0; i < 4; i++) {
@@ -1027,11 +1017,7 @@ int curves_isNotPoint(RomCurveDef *curve) {
     }
     return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int curves_isPoint(RomCurveDef *curve) {
     int i;
     for (i = 0; i < 4; i++) {
@@ -1042,8 +1028,6 @@ int curves_isPoint(RomCurveDef *curve) {
     }
     return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1058,8 +1042,6 @@ int curves_isPoint(RomCurveDef *curve) {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 f32 curves_find(int type,int action,f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *outZ)
 {
   int curveIndex;
@@ -1148,8 +1130,6 @@ foundLinkedCurve:
   }
   return bestDistance;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1164,8 +1144,6 @@ foundLinkedCurve:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 RomCurveDef *RomCurve_findByIdWithIndex(uint curveId,int *outIndex)
 {
   int high;
@@ -1194,8 +1172,6 @@ RomCurveDef *RomCurve_findByIdWithIndex(uint curveId,int *outIndex)
   *outIndex = -1;
   return NULL;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1510,8 +1486,6 @@ LAB_800e48f4:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void RomCurve_getAdjacentWindow(RomCurveDef *curve,int *outIds)
 {
   u32 linkId;
@@ -1579,8 +1553,6 @@ foundAdjacent:
     }
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1595,8 +1567,6 @@ foundAdjacent:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int RomCurve_getNearestAdjacentLink(f32 x,f32 y,f32 z,RomCurveDef *curve,int excludeLinkId)
 {
   f32 bestDistance[2];
@@ -1669,8 +1639,6 @@ foundLinkedCurve:
   }
   return bestLink[0];
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1767,8 +1735,6 @@ f32 RomCurve_distanceToSegment(f32 x,f32 y,f32 z,RomCurveSegmentProjection *segm
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int RomCurve_getRandomBlockedLink(RomCurveDef *curve,int excludeLinkId)
 {
   int link;
@@ -1796,8 +1762,6 @@ int RomCurve_getRandomBlockedLink(RomCurveDef *curve,int excludeLinkId)
   }
   return result;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1850,8 +1814,6 @@ int RomCurve_getLinkIds(RomCurveDef *curve,int excludeLinkId,int *outIds)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int RomCurve_getRandomUnblockedLink(RomCurveDef *curve,int excludeLinkId)
 {
   int link;
@@ -1879,8 +1841,6 @@ int RomCurve_getRandomUnblockedLink(RomCurveDef *curve,int excludeLinkId)
   }
   return result;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1895,8 +1855,6 @@ int RomCurve_getRandomUnblockedLink(RomCurveDef *curve,int excludeLinkId)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 RomCurveDef *RomCurve_getById(uint curveId)
 {
   int high;
@@ -1922,8 +1880,6 @@ RomCurveDef *RomCurve_getById(uint curveId)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1998,8 +1954,6 @@ int RomCurve_find(int *types,int typeCount,f32 x,f32 y,f32 z,int action)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void curves_remove(RomCurveDef *curve)
 {
   int sortedCurveCount;
@@ -2032,8 +1986,6 @@ void curves_remove(RomCurveDef *curve)
     tableSlot = tableSlot + 1;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -3743,8 +3695,6 @@ void FUN_800e65c8(CurvesCollisionState *state,u8 pointCount,f32 *localPointPosit
 
 /* Forward active hit-segment bounds to ObjHits with the state-derived target mask. */
 extern void hitDetectFn_800691c0(void* a, void* b, u8 mask, int e);
-#pragma scheduling off
-#pragma peephole off
 void dll_15_func07(void* arg1, CurvesCollisionState* state)
 {
     u32 flags;
@@ -3761,12 +3711,8 @@ void dll_15_func07(void* arg1, CurvesCollisionState* state)
         hitDetectFn_800691c0(arg1, state->hitBounds, mask, 1);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Extended local-point collision setup with a secondary hit type. */
-#pragma scheduling off
-#pragma peephole off
 void curves_setLocalPointCollisionEx(CurvesCollisionState* state, int pointCount,
                                      f32 *localPointPositions, f32 *localPointRadii,
                                      int primaryHitType, int secondaryHitType)
@@ -3780,12 +3726,8 @@ void curves_setLocalPointCollisionEx(CurvesCollisionState* state, int pointCount
     state->flags |= CURVES_COLLISION_STATE_SECONDARY_LOCAL_POINTS | CURVES_COLLISION_STATE_LOCAL_POINTS;
     state->activeTimer = 0xa;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Basic local-point collision setup used by path control. */
-#pragma scheduling off
-#pragma peephole off
 void dll_15_func04(CurvesCollisionState* state, int pointCount, f32 *localPointPositions,
                    f32 *localPointRadii, int primaryHitType)
 {
@@ -3797,8 +3739,6 @@ void dll_15_func04(CurvesCollisionState* state, int pointCount, f32 *localPointP
     state->flags |= CURVES_COLLISION_STATE_LOCAL_POINTS;
     state->activeTimer = 0xa;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -3813,8 +3753,6 @@ void dll_15_func04(CurvesCollisionState* state, int pointCount, f32 *localPointP
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void curves_clear(CurvesCollisionState *state,int updateMode,uint flags,int subtype)
 {
   memset(state,0,CURVES_COLLISION_STATE_SIZE);
@@ -3824,8 +3762,6 @@ void curves_clear(CurvesCollisionState *state,int updateMode,uint flags,int subt
   state->heightPadding = 5;
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -3927,8 +3863,6 @@ extern void setRumbleEnabled(u8 value);
 extern void audioSetSoundMode(u8 mode, u8 secondary);
 extern void audioSetVolumes(u8 volume, int p1, int p2, int p3, int p4);
 
-#pragma scheduling off
-#pragma peephole off
 void loadSaveSettings(void)
 {
   setWidescreen(saveData.widescreenEnabled);
@@ -3941,8 +3875,6 @@ void loadSaveSettings(void)
   audioSetVolumes(saveData.musicVolume, 10, 1, 0, 0);
   audioSetVolumes(saveData.speechVolume, 10, 0, 0, 1);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Pattern wrappers. */
 void curves_initialise(void) { nRomCurves = 0x0; }
@@ -3991,14 +3923,10 @@ int pushable_savePos(int obj)
 }
 
 /* RomCurve_getCurves: *outCount = nRomCurves; return romCurves. */
-#pragma scheduling off
-#pragma peephole off
 void* RomCurve_getCurves(int *outCount) {
     *outCount = nRomCurves;
     return romCurves;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void saveFileStruct_resetVolumes(void)
 {
@@ -4008,31 +3936,21 @@ void saveFileStruct_resetVolumes(void)
 }
 
 /* isCheatUnlocked: return registeredDebugOptions & (1 << (idx & 0xff)). */
-#pragma scheduling off
-#pragma peephole off
 int isCheatUnlocked(u8 idx) {
     SaveData *p = &saveData;
     u32 reg = p->registeredDebugOptions;
     u32 mask = 1 << idx;
     return reg & mask;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* saveFileStruct_unlockCheat: set bit (1 << (idx & 0xff)) in registeredDebugOptions. */
-#pragma scheduling off
-#pragma peephole off
 void saveFileStruct_unlockCheat(u8 idx) {
     SaveData *p = &saveData;
     u32 reg = p->registeredDebugOptions;
     u32 mask = 1 << idx;
     p->registeredDebugOptions = reg | mask;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int saveFileStruct_isCheatActive(u8 idx)
 {
   volatile SaveData *save;
@@ -4045,12 +3963,8 @@ int saveFileStruct_isCheatActive(u8 idx)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* curves_findByAction: scan romCurves for matching action curves, return curve id. */
-#pragma scheduling off
-#pragma peephole off
 int curves_findByAction(int act) {
     int i;
 
@@ -4064,14 +3978,10 @@ int curves_findByAction(int act) {
     }
     return -1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* RomCurve_segmentIntersectsOriginRayXZ: 2D segment-intersection predicate.
  * Returns 1 if the segment between (x, z) and the origin in the xz-plane
  * crosses the segment between a and b. */
-#pragma scheduling off
-#pragma peephole off
 int RomCurve_segmentIntersectsOriginRayXZ(RomCurveDef *a, RomCurveDef *b, f32 x, f32 unusedY,
                                           f32 z, f32 unusedW) {
     f32 ax = a->x;
@@ -4094,5 +4004,3 @@ int RomCurve_segmentIntersectsOriginRayXZ(RomCurveDef *a, RomCurveDef *b, f32 x,
         return 0;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

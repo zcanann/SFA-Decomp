@@ -543,7 +543,6 @@ int dimlavasmash_getObjectTypeId(void) { return 0x0; }
 /* if (o->_X == K) return A; else return B; */
 #pragma peephole off
 #pragma scheduling off
-#pragma peephole off
 #include "global.h"
 
 /* dimcannon extra block (0xb4); the head is the per-cannonball column
@@ -572,7 +571,6 @@ STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
 
 int dimcannon_getExtraSize(int *obj) { if (((GameObject *)obj)->anim.seqId == 0x1d6) return 0xc; return 0xb4; }
 int dimcannon_getObjectTypeId(int *obj) { if (((GameObject *)obj)->anim.seqId == 0x1d6) return 0x0; return 0x0; }
-#pragma peephole reset
 #pragma scheduling reset
 #pragma peephole reset
 

@@ -46,8 +46,6 @@ extern void textureFree(u32);
 extern u32 textureLoadAsset(int);
 extern u32 lbl_803DDC60;
 
-#pragma scheduling off
-#pragma peephole off
 void SnowBike_release(void) {
     if (lbl_803DDC60 != 0) {
         textureFree(lbl_803DDC60);
@@ -59,10 +57,7 @@ void SnowBike_initialise(void) {
         lbl_803DDC60 = textureLoadAsset(0x186);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma peephole off
 void SB_CloudRunner_onSeqFree(int *obj) {
     SnowBikeState *p = (SnowBikeState *)obj[0xb8/4];
     p->unk04C = ((GameObject *)obj)->anim.localPosX;
@@ -74,7 +69,6 @@ void SB_CloudRunner_onSeqFree(int *obj) {
     }
     p->unk02E = ((GameObject *)obj)->anim.rotZ;
 }
-#pragma peephole reset
 
 extern char lbl_803284E0[];
 extern u32 lbl_803E5AE0;

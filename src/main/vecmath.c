@@ -192,8 +192,6 @@ FUN_80017998(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 #pragma dont_inline on
 #pragma dont_inline reset
 
-#pragma peephole off
-#pragma peephole reset
 
 #pragma pop
 
@@ -202,9 +200,7 @@ FUN_80017998(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 #pragma dont_inline on
 #pragma dont_inline reset
 
-#pragma peephole off
 
-#pragma peephole reset
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -212,12 +208,10 @@ FUN_80017998(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 #pragma dont_inline on
 #pragma dont_inline reset
 
-#pragma peephole off
 
 #pragma dont_inline on
 
 #pragma dont_inline reset
-#pragma peephole reset
 
 /* Simple field/global accessors. */
 
@@ -227,10 +221,6 @@ FUN_80017998(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 #pragma dont_inline on
 #pragma dont_inline reset
 
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma push
 #pragma scheduling off
@@ -245,8 +235,6 @@ FUN_80017998(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 #pragma pop
 #pragma dont_inline reset
 
-#pragma peephole off
-#pragma peephole reset
 
 #pragma push
 #pragma scheduling off
@@ -314,8 +302,6 @@ int atan2_8002178c(float y, float x) {
 #pragma dont_inline on
 #pragma dont_inline reset
 
-#pragma peephole off
-#pragma peephole reset
 #pragma pop
 
 extern f32 fcos16(int angle);
@@ -432,10 +418,8 @@ extern void mtx44Transpose(f32 *src, f32 *dst);
 #pragma peephole off
 #pragma pop
 
-#pragma peephole off
 #pragma dont_inline on
 #pragma dont_inline reset
-#pragma peephole reset
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -686,31 +670,19 @@ void Vec3_Normalize(f32 *v) {
 #pragma peephole off
 #pragma pop
 
-#pragma scheduling off
-#pragma peephole off
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
 #pragma pop
 
-#pragma peephole off
-#pragma peephole reset
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
 #pragma pop
 
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma push
 #pragma scheduling off

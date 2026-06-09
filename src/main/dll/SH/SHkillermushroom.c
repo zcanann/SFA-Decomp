@@ -116,7 +116,6 @@ int bombplantspore_getExtraSize(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void bombplantspore_free(void *obj)
 {
   void *state;
@@ -130,7 +129,6 @@ void bombplantspore_free(void *obj)
     *(void **)((u8 *)state + 0x270) = NULL;
   }
 }
-#pragma scheduling reset
 
 /*
  * --INFO--

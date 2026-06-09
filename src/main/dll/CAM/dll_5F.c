@@ -392,8 +392,6 @@ void fn_8010BF08(int control, float *outX, float *outY, float *outZ, void *inFlo
  * EN v1.0 Address: 0x8010C068
  * EN v1.0 Size: 112b
  */
-#pragma peephole off
-#pragma scheduling off
 typedef struct {
     u8 flag80 : 1;
 } CamByte143;
@@ -408,5 +406,3 @@ void CameraModeCombat_free(int obj)
   Rcp_DisableBlurFilter();
   ((CamByte143 *)(obj + 0x143))->flag80 = 0;
 }
-#pragma scheduling reset
-#pragma peephole reset

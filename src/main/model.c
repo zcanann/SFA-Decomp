@@ -348,8 +348,6 @@ int ObjModel_GetUnpackedResourceSize(u8 *resource, int baseSize) {
 #pragma dont_inline on
 #pragma dont_inline reset
 
-#pragma peephole off
-#pragma peephole reset
 
 #pragma pop
 
@@ -358,9 +356,7 @@ int ObjModel_GetUnpackedResourceSize(u8 *resource, int baseSize) {
 #pragma dont_inline on
 #pragma dont_inline reset
 
-#pragma peephole off
 
-#pragma peephole reset
 
 #pragma dont_inline on
 int getHudHiddenFrameCount(void);
@@ -373,7 +369,6 @@ void __set_debug_bba(u8 *p) {
     p[0x19] = 0;
 }
 
-#pragma peephole off
 int roundUpTo4(int x);
 
 #pragma dont_inline on
@@ -383,7 +378,6 @@ int roundUpTo16(int x);
 
 int roundUpTo32(int x);
 #pragma dont_inline reset
-#pragma peephole reset
 
 /* Simple field/global accessors. */
 
@@ -405,10 +399,6 @@ extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern void textureFree(void *tex);
 
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma push
 #pragma scheduling off
@@ -429,8 +419,6 @@ void tailFn_80026c38(u8 *p, f32 a, f32 b, f32 c) {
     *(f32 *)(p + 0x10) = c;
 }
 
-#pragma peephole off
-#pragma peephole reset
 
 #pragma push
 #pragma scheduling off
@@ -484,8 +472,6 @@ void fn_80026C54(u8 *p) {
 void mm_free(void *p);
 #pragma dont_inline reset
 
-#pragma peephole off
-#pragma peephole reset
 #pragma pop
 
 extern void setGQR7(u32 v);
@@ -599,7 +585,6 @@ extern void PSMTXConcat(f32 *a, f32 *b, f32 *ab);
 
 extern int *lbl_803DCB60;
 
-#pragma peephole off
 #pragma dont_inline on
 int modelGetAmapSize(int a, int b, int c) {
     int size;
@@ -619,7 +604,6 @@ int modelGetAmapSize(int a, int b, int c) {
     return size;
 }
 #pragma dont_inline reset
-#pragma peephole reset
 
 
 extern void *getCurrentDataFile(int id);
@@ -1354,13 +1338,7 @@ void *ObjModel_Load(int id, int arg2, int *outSize) {
 }
 #pragma pop
 
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
 
 extern void ShaderDef_free(int *def);
 extern void model_adjustModelList(void *list, int index);

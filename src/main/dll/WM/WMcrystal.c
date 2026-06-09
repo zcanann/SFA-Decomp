@@ -362,8 +362,6 @@ extern f32 lbl_803E5630;
 extern void fn_801DD170(int obj);
 extern int randomGetRange(int lo, int hi);
 
-#pragma peephole off
-#pragma scheduling off
 void sc_totempuzzle_init(ScTotemPuzzleObject *obj, ScTotemPuzzleMapData *params) {
     ScTotemPuzzleState *state;
     int *tex;
@@ -403,8 +401,6 @@ void sc_totempuzzle_init(ScTotemPuzzleObject *obj, ScTotemPuzzleMapData *params)
     obj->animEventCallback = fn_801DD170;
     obj->objectFlags = (u16)(obj->objectFlags | 0x6000);
 }
-#pragma scheduling reset
-#pragma peephole reset
 void sc_totembond_hitDetect(void) {}
 void sc_totembond_release(void) {}
 void sc_totembond_initialise(void) {}
@@ -416,18 +412,14 @@ int sc_totembond_getObjectTypeId(void) { return 0x0; }
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5650;
 extern void objRenderFn_8003b8f4(f32);
-#pragma peephole off
 void sc_totembond_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5650); }
-#pragma peephole reset
 
 extern void Music_Trigger(int track, int param);
 extern void fn_8011F6D4(int p);
-#pragma scheduling off
 void sc_totembond_free(int obj) {
     Music_Trigger(240, 0);
     fn_8011F6D4(0);
 }
-#pragma scheduling reset
 
 #pragma dont_inline on
 void sc_totembond_update(ScTotemBondObject *obj)
@@ -535,8 +527,6 @@ void sc_totembond_update(ScTotemBondObject *obj)
 }
 #pragma dont_inline reset
 
-#pragma scheduling off
-#pragma peephole off
 void sc_totembond_init(ScTotemBondObject *obj, int params) {
     ScTotemBondState *state;
     u32 v;
@@ -547,8 +537,6 @@ void sc_totembond_init(ScTotemBondObject *obj, int params) {
     v = (u32)obj->objectFlags | 0x6000;
     obj->objectFlags = (u16)v;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 int fn_801DE320(u16 *gameBitIds,u16 newValue)
 {

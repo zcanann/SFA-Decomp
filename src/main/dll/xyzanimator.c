@@ -413,8 +413,6 @@ int FUN_8016a534(double param_1,double param_2,float *param_3,float *param_4,cha
   return iVar1;
 }
 
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void fn_8016A660(int obj)
 {
@@ -465,8 +463,6 @@ void fn_8016A660(int obj)
   }
 }
 #pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1180,8 +1176,6 @@ void mikabomb_hitDetect(void) {}
 
 extern ModgfxInterface **gModgfxInterface;
 extern f32 lbl_803E313C;
-#pragma scheduling off
-#pragma peephole off
 void pinponspike_free(int obj) {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
@@ -1226,8 +1220,6 @@ void mikabomb_free(int obj, int mode) {
     }
     (*gModgfxInterface)->detachSource((void *)obj);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* 8b "li r3, N; blr" returners. */
 int pinponspike_getExtraSize(void) { return 0x0; }
@@ -1243,10 +1235,8 @@ int mikabomb_getObjectTypeId(void) { return 0x0; }
 extern f32 lbl_803E3138;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E31C0;
-#pragma peephole off
 void pollen_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3138); }
 void mikabomb_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E31C0); }
-#pragma peephole reset
 
 extern void kaldachompspit_free(void);
 extern void kaldachompspit_update(void);
@@ -1375,15 +1365,11 @@ PollenFragmentConfig *lbl_8032059C[] = {
 extern int fn_80080150(int p);
 extern f32 lbl_803E3158;
 
-#pragma scheduling off
-#pragma peephole off
 void pollenfragment_render(int *obj, int p2, int p3, int p4, int p5) {
     int *state = ((GameObject *)obj)->extra;
     if (fn_80080150((int)((char *)state + 0x20)) != 0) return;
     ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3158);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 ObjectDescriptor gPollenFragmentObjDescriptor = {
     0,
@@ -1404,8 +1390,6 @@ ObjectDescriptor gPollenFragmentObjDescriptor = {
 
 extern f32 lbl_803E3148;
 
-#pragma scheduling off
-#pragma peephole off
 void pollen_init(int *obj) {
     s16 *state = ((GameObject *)obj)->extra;
     state[0] = (s16)randomGetRange(-0x8000, 0x7fff);
@@ -1424,8 +1408,6 @@ void pollen_init(int *obj) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* ==== v1.0 recovered functions (drift additions) ==== */
 
@@ -1477,8 +1459,6 @@ extern void PSVECNormalize(void *src, void *dst);
 extern void PSVECScale(void *src, void *dst, f32 scale);
 extern void PSVECAdd(void *a, void *b, void *out);
 
-#pragma scheduling off
-#pragma peephole off
 int fn_80169EF4(f32 speed, f32 grav, f32 *from, f32 *to, u8 flag) {
     f32 a;
     f32 dist;
@@ -1508,11 +1488,7 @@ int fn_80169EF4(f32 speed, f32 grav, f32 *from, f32 *to, u8 flag) {
     }
     return 0x2000;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void pinponspike_update(int obj) {
     f32 vx;
     f32 vy;
@@ -1563,11 +1539,7 @@ void pinponspike_update(int obj) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void pollen_update(int obj) {
     PollenExtra *extra;
     int i;
@@ -1608,11 +1580,7 @@ void pollen_update(int obj) {
         Obj_FreeObject(obj);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void pollenfragment_hitDetect(int obj) {
     u8 *extra;
     int hit;
@@ -1640,11 +1608,7 @@ void pollenfragment_hitDetect(int obj) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void pollenfragment_update(int obj) {
     u8 *extra;
     u8 *nearObj;
@@ -1759,5 +1723,3 @@ void pollenfragment_update(int obj) {
         s16toFloat(extra + 0x20, 0x78);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

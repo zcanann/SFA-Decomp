@@ -55,8 +55,6 @@ static inline f64 FirstPerson_S32AsDouble(s32 value) {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 typedef struct CamFlagByte {
     u8 flag : 1;
     u8 rest : 7;
@@ -181,8 +179,6 @@ void firstperson_updatePosition(int param_1, short *param_2)
     }
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--

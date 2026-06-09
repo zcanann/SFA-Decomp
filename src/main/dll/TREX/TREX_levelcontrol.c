@@ -336,8 +336,6 @@ void SB_ShipGun_update(int obj)
 void SB_CannonBall_release(void) {}
 void SB_CannonBall_initialise(void) {}
 
-#pragma scheduling off
-#pragma peephole off
 void SB_ShipGun_init(int obj)
 {
   int state;
@@ -347,15 +345,11 @@ void SB_ShipGun_init(int obj)
   *(u8 *)(state + 0xc) = SB_SHIPGUN_START_HEALTH;
   *(u8 *)(state + 0xe) = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* 8b "li r3, N; blr" returners. */
 int SB_CannonBall_getExtraSize(void) { return SB_CANNONBALL_EXTRA_SIZE; }
 int SB_CannonBall_getObjectTypeId(void) { return 0x0; }
 
-#pragma scheduling off
-#pragma peephole off
 void SB_CannonBall_free(int obj)
 {
   int state;
@@ -367,8 +361,6 @@ void SB_CannonBall_free(int obj)
     *(undefined4 *)(state + 0x20) = 0;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 int SB_FireBall_getExtraSize(void) { return SB_FIREBALL_EXTRA_SIZE; }
 int SB_FireBall_getObjectTypeId(void) { return 0x0; }
@@ -382,18 +374,14 @@ void SB_FireBall_free(int obj)
 extern f32 lbl_803E58B0;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E58D8;
-#pragma peephole off
 void SB_CannonBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E58B0); }
 void SB_FireBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E58D8); }
-#pragma peephole reset
 
 extern f32 timeDelta;
 extern f32 lbl_803E58BC;
 extern f64 lbl_803E58C0;
 extern void Obj_FreeObject(int *obj);
 extern void objfx_spawnFlaggedTrailBurst(int *obj, f32 f, int a, int b, int c, int d);
-#pragma scheduling off
-#pragma peephole off
 void SB_CannonBall_update(int *obj) {
     int *state = ((GameObject *)obj)->extra;
     if ((*(s8 *)((char *)state + 0x1a) & SB_CANNONBALL_INITIAL_BURST_FLAG) != 0) {
@@ -444,12 +432,8 @@ void SB_CannonBall_update(int *obj) {
     }
     *(s16 *)((char *)state + 0x18) += framesThisStep;
 }
-#pragma peephole reset
-#pragma scheduling reset
 extern f32 lbl_803E58B4;
 extern f32 lbl_803E58B8;
-#pragma scheduling off
-#pragma peephole off
 void SB_CannonBall_hitDetect(int *obj) {
     int *state = ((GameObject *)obj)->extra;
     f32 t = *(f32 *)((char *)state + 0x1c);
@@ -498,8 +482,6 @@ void SB_CannonBall_hitDetect(int *obj) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern u8 *objCreateLight(int *obj, int v);
 extern void modelLightStruct_setLightKind(u8 *p, int v);
@@ -509,8 +491,6 @@ extern void modelLightStruct_setDistanceAttenuation(u8 *p, f32 a, f32 b);
 extern f32 lbl_803E58C8;
 extern f32 lbl_803E58CC;
 extern f32 lbl_803E58D0;
-#pragma scheduling off
-#pragma peephole off
 void SB_CannonBall_init(int *obj) {
     int *state = ((GameObject *)obj)->extra;
     if (*(u8 **)((char *)state + 0x20) == NULL) {
@@ -531,5 +511,3 @@ void SB_CannonBall_init(int *obj) {
     Sfx_PlayFromObject(obj, SB_CANNONBALL_LAUNCH_SFX);
     Sfx_PlayFromObject(obj, SB_CANNONBALL_LOOP_SFX);
 }
-#pragma peephole reset
-#pragma scheduling reset

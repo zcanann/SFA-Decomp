@@ -392,7 +392,6 @@ void Obj_ResetModelColorState(u8 *obj) {
     (*(void (*)(int, int, int, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))((int)obj, 0x7fc, 0, 0x32, 0);
 }
 
-#pragma peephole off
 void Obj_StartModelFadeIn(u8 *obj, int frames) {
     ObjAnimComponent *objAnim;
     f32 mtx[16];
@@ -424,7 +423,6 @@ void Obj_StartModelFadeIn(u8 *obj, int frames) {
         }
     }
 }
-#pragma peephole reset
 
 #pragma pop
 
@@ -433,9 +431,7 @@ void Obj_StartModelFadeIn(u8 *obj, int frames) {
 #pragma dont_inline on
 #pragma dont_inline reset
 
-#pragma peephole off
 
-#pragma peephole reset
 
 #pragma dont_inline on
 #pragma dont_inline reset
@@ -451,7 +447,6 @@ int objGetFlagsE5_2(u8 *obj) {
     return ((GameObject *)obj)->unkE5 & 2;
 }
 
-#pragma peephole off
 int roundUpTo4(int x);
 
 #pragma dont_inline on
@@ -459,7 +454,6 @@ int roundUpTo8(int x);
 
 int roundUpTo32(int x);
 #pragma dont_inline reset
-#pragma peephole reset
 
 /* Simple field/global accessors. */
 
@@ -480,10 +474,6 @@ extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern void textureFree(void *tex);
 
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma push
 #pragma scheduling off
@@ -498,8 +488,6 @@ extern void textureFree(void *tex);
 #pragma pop
 #pragma dont_inline reset
 
-#pragma peephole off
-#pragma peephole reset
 
 #pragma push
 #pragma scheduling off
@@ -626,8 +614,6 @@ void *Obj_GetPlayerObject(void) {
     return NULL;
 }
 
-#pragma peephole off
-#pragma peephole reset
 #pragma pop
 
 extern f32 sqrtf(f32 x);
@@ -806,10 +792,8 @@ extern void PSMTXConcat(f32 *a, f32 *b, f32 *ab);
 #pragma pop
 
 
-#pragma peephole off
 #pragma dont_inline on
 #pragma dont_inline reset
-#pragma peephole reset
 
 
 void *Obj_AllocObjectSetup(int size, int b) {
@@ -1027,19 +1011,13 @@ void fn_8002B6D8(u8 *obj, int a, int b, int c, u8 d, u8 e) {
 #pragma peephole off
 #pragma pop
 
-#pragma scheduling off
-#pragma peephole off
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
 #pragma pop
 
-#pragma peephole off
 void ObjModel_AdvanceBlendChannels(u8 *model, f32 dt);
-#pragma peephole reset
 
 #pragma push
 #pragma scheduling off

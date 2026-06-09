@@ -334,8 +334,6 @@ void CameraModeViewfinder_copyToCurrent(undefined2 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 extern void Rcp_SetViewFinderHudEnabled(int on);
 void CameraModeViewfinder_free(int param_1)
 {
@@ -365,8 +363,6 @@ void CameraModeViewfinder_free(int param_1)
   viewFinderSetZoom((double)lbl_803E17E0);
   return;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern int Curve_AdvanceAlongPath(void *path, f32 step);
 extern void Rcp_SetViewFinderHudEnabled(int on);
@@ -1147,9 +1143,5 @@ void CameraModeStatic_release(void) {}
 void CameraModeStatic_initialise(void) {}
 
 /* fn_X(lbl); lbl = 0; */
-#pragma scheduling off
-#pragma peephole off
 void CameraModeDebug_free(void) { mm_free(lbl_803DD550); lbl_803DD550 = 0; }
 void CameraModeStatic_free(void) { mm_free(lbl_803DD558); lbl_803DD558 = 0; }
-#pragma peephole reset
-#pragma scheduling reset

@@ -2960,16 +2960,12 @@ void fn_8003BB7C(u8 x) { lbl_803DCC3C = x; }
 
 extern s16 lbl_803DCC18, lbl_803DCC16, lbl_803DCC14;
 extern u8 lbl_803DCC08;
-#pragma scheduling off
-#pragma peephole off
 void fn_8003B608(s16 a, s16 b, s16 c) {
     lbl_803DCC18 = a;
     lbl_803DCC16 = b;
     lbl_803DCC14 = c;
     lbl_803DCC08 = 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* 12b "*p = -1" */
 void fn_80039264(s32* p) {
@@ -2991,8 +2987,6 @@ extern u8 lbl_803DCC0D;
 extern void objRenderModel(int *obj, int **table);
 extern void objRenderFn_80041018(int *obj);
 
-#pragma scheduling off
-#pragma peephole off
 void *objModelGetVecFn_800395d8(void *obj, int target) {
     void *result = NULL;
     void *m = OBJPRINT_MODEL_INSTANCE(obj);
@@ -3014,11 +3008,7 @@ void *objModelGetVecFn_800395d8(void *obj, int target) {
     }
     return result;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_8003A9C0(char *p, int count, s16 a, s16 b) {
     int i;
     if (count <= 0) return;
@@ -3028,14 +3018,10 @@ void fn_8003A9C0(char *p, int count, s16 a, s16 b) {
         p += 0x60;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int ch);
 extern void Sfx_PlayFromObjectChannel(int obj, int ch, int sfxId);
 extern f32 lbl_803DE9C8;
 extern f32 lbl_803DE99C;
-#pragma scheduling off
-#pragma peephole off
 void objAudioFn_80039270(int obj, void *p, int sfxId) {
     if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0) {
         Sfx_PlayFromObjectChannel(obj, 0x10, sfxId);
@@ -3045,10 +3031,6 @@ void objAudioFn_80039270(int obj, void *p, int sfxId) {
         *(f32 *)((char *)p + 4) = lbl_803DE99C;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
-#pragma scheduling off
-#pragma peephole off
 void objRenderFn_8003b8f4(int *obj) {
     int **table = OBJPRINT_BANK_TABLE(obj);
     if (table[OBJPRINT_ACTIVE_BANK_INDEX(obj)] != NULL) {
@@ -3058,11 +3040,7 @@ void objRenderFn_8003b8f4(int *obj) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_8003B5E0(int a, int b, int c, u8 d) {
     lbl_803DCC0D = (u8)a;
     lbl_803DCC0C = (u8)b;
@@ -3070,12 +3048,8 @@ void fn_8003B5E0(int a, int b, int c, u8 d) {
     lbl_803DCC09 = 1;
     lbl_803DCC0A = d;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* 100b texture lookup by byte tag. */
-#pragma peephole off
-#pragma scheduling off
 void* objFindTexture(void* obj, int target) {
     void* result = NULL;
     void* p50 = *(void**)&((GameObject *)obj)->anim.modelInstance;
@@ -3098,12 +3072,9 @@ void* objFindTexture(void* obj, int target) {
     }
     return result;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* 60b objRenderShadow guard. */
 extern void objRenderShadow(void* obj);
-#pragma scheduling off
 void objRenderShadowIfVisible(void* obj) {
     void** arr = *(void***)&((GameObject *)obj)->anim.banks;
     s8 idx = ((GameObject *)obj)->anim.bankIndex;
@@ -3111,10 +3082,7 @@ void objRenderShadowIfVisible(void* obj) {
         objRenderShadow(obj);
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 int fn_800399C0(s16 *curve, s16 *state)
 {
@@ -3164,11 +3132,7 @@ int fn_800399C0(s16 *curve, s16 *state)
   return 0;
 }
 #pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_8003A168(int p1, int p2)
 {
     s16* found = NULL;
@@ -3890,13 +3854,9 @@ void fn_8003B0D0(int obj, int p2, int p3, int p4)
         found[1] = *(s16*)((char*)p3 + 0x14);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 int fn_80039834(s16 *curve, s16 *state, f32 a, f32 b);
 
-#pragma scheduling off
-#pragma peephole off
 int fn_8003A8B4(int objArg, int *keyList, int countArg, char *p4Arg)
 {
     extern f32 lbl_803DE9D8;
@@ -3945,11 +3905,7 @@ int fn_8003A8B4(int objArg, int *keyList, int countArg, char *p4Arg)
     }
     return (count * 2 - total) == 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 int fn_80039834(s16 *curve, s16 *state, f32 a, f32 b)
 {
@@ -3996,13 +3952,9 @@ int fn_80039834(s16 *curve, s16 *state, f32 a, f32 b)
     return 0;
 }
 #pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 
 int fn_8003BB84(f32 *m, f32 *out);
 
-#pragma scheduling off
-#pragma peephole off
 int objRotateFn_8003bce8(f32 *m, s16 *outA, s16 *outB, s16 *outC)
 {
     extern f32 __kernel_sin(f32);
@@ -4042,11 +3994,7 @@ int objRotateFn_8003bce8(f32 *m, s16 *outA, s16 *outB, s16 *outC)
     }
     return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int fn_8003BB84(f32 *m, f32 *out)
 {
     extern void PSVECNormalize(f32 *src, f32 *dst);
@@ -4091,11 +4039,7 @@ int fn_8003BB84(f32 *m, f32 *out)
     out[11] = zero;
     return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80039B54(int obj, s16 *curve, s16 *state, f32 val)
 {
     extern f32 lbl_803DE9E4;
@@ -4170,11 +4114,7 @@ void fn_80039B54(int obj, s16 *curve, s16 *state, f32 val)
         break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80039DF8(int obj, s16 *curve, s16 *state, f32 val)
 {
     extern f32 lbl_803DE9E4;
@@ -4279,11 +4219,7 @@ void fn_80039DF8(int obj, s16 *curve, s16 *state, f32 val)
         state[1] = 0x1fff;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_8003ADC4(int obj, char *tgt, char *p3, int a, u8 inv, int b)
 {
     extern f32 sqrtf(f32);
@@ -4366,11 +4302,7 @@ void fn_8003ADC4(int obj, char *tgt, char *p3, int a, u8 inv, int b)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c)
 {
     extern f32 playerMapOffsetX;
@@ -4444,11 +4376,7 @@ void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void characterDoEyeAnims(int obj, int p2)
 {
     extern f32 lbl_803DE9A4;
@@ -4542,11 +4470,7 @@ void characterDoEyeAnims(int obj, int p2)
         characterDoEyeMovements(obj, p2, lbl_803DE9A4);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void modelCalcVtxGroupMtxs(int p1, int p2)
 {
     extern void PSMTXTrans(f32 *m, f32 x, f32 y, f32 z);
@@ -4591,16 +4515,12 @@ void modelCalcVtxGroupMtxs(int p1, int p2)
         off += 4;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 typedef struct ObjPrintFlipFlag {
     u8 flip : 1;
     u8 rest : 7;
 } ObjPrintFlipFlag;
 
-#pragma scheduling off
-#pragma peephole off
 int objMathFn_8003a380(int obj, char *tgt, f32 *pos, int p4, s16 *spd, int unk6, int p7, f32 yOff)
 {
     extern f32 sqrtf(f32);
@@ -4746,14 +4666,10 @@ int objMathFn_8003a380(int obj, char *tgt, f32 *pos, int p4, s16 *spd, int unk6,
     }
     return ang[2];
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 typedef struct ObjPrintGXColor { u8 r, g, b, a; } ObjPrintGXColor;
 typedef struct IndTexMtx23 { f32 m[6]; } IndTexMtx23;
 
-#pragma scheduling off
-#pragma peephole off
 int modelRenderCb_8003c268(int obj, int *p2, int p3)
 {
     extern u8 *ObjModel_GetRenderOp(int m, int p);
@@ -4980,13 +4896,9 @@ int modelRenderCb_8003c268(int obj, int *p2, int p3)
     GXSetBlendMode(1, 4, 5, 5);
     return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 typedef struct ObjPrintS10Color { s16 r, g, b, a; } ObjPrintS10Color;
 
-#pragma scheduling off
-#pragma peephole off
 int shaderFuzzFn_8003cc1c(int obj, int *p2, int p3)
 {
     extern u8 *ObjModel_GetRenderOp(int m, int p);
@@ -5253,5 +5165,3 @@ int shaderFuzzFn_8003cc1c(int obj, int *p2, int p3)
     GXSetBlendMode(1, 4, 5, 5);
     return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset

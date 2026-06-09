@@ -658,8 +658,6 @@ void immultiseq_hitDetect(void) {}
 void immultiseq_release(void) {}
 void immultiseq_initialise(void) {}
 
-#pragma scheduling off
-#pragma peephole off
 void seqobject_init(int *obj, SeqObjectPlacement *params) {
     ObjAnimComponent *objAnim;
     SeqObjectState *state;
@@ -683,11 +681,7 @@ void seqobject_init(int *obj, SeqObjectPlacement *params) {
     state->triggerBitState = 0;
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x2000);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void immultiseq_init(int *obj, IMMultiSeqPlacement *params) {
     ObjAnimComponent *objAnim;
     IMMultiSeqState *state;
@@ -712,8 +706,6 @@ void immultiseq_init(int *obj, IMMultiSeqPlacement *params) {
     }
     state->step = (u8)i;
 }
-#pragma peephole reset
-#pragma scheduling reset
 void dll_115_hitDetect_nop(void) {}
 
 /* 8b "li r3, N; blr" returners. */
@@ -731,25 +723,17 @@ extern f32 lbl_803E37A0;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E37A8;
 extern f32 lbl_803E37B0;
-#pragma peephole off
 void seqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E37A0); }
 void immultiseq_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E37A8); }
 void dll_115_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E37B0); }
-#pragma peephole reset
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-#pragma scheduling off
-#pragma peephole off
 void seqobject_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
 void seqobj2_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
 void immultiseq_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
 void dll_115_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Drift-recovery: add new fns with v1.0 names. */
-#pragma scheduling off
-#pragma peephole off
 
 extern void OSReport(const char* fmt, ...);
 extern const char sSeqObjNeedBitUsedBitFormat[];
@@ -1066,5 +1050,3 @@ int dll_115_seqFn(int *obj, int p2, void *p3) {
     return 0;
 }
 
-#pragma peephole reset
-#pragma scheduling reset

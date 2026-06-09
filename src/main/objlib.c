@@ -246,8 +246,6 @@ typedef struct ObjPathTransform {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 #pragma optimization_level 1
 #pragma peephole on
 void ObjHitbox_SetStateIndex(int objPtr,int hitStatePtr,int stateIndex)
@@ -287,8 +285,6 @@ void ObjHitbox_SetStateIndex(int objPtr,int hitStatePtr,int stateIndex)
 }
 #pragma peephole reset
 #pragma optimization_level reset
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -328,8 +324,6 @@ void ObjHits_SetTargetMask(int objPtr,undefined targetMask)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void ObjHitbox_SetSphereRadius(int objPtr,s16 radius)
 {
   ObjAnimComponent *obj;
@@ -369,8 +363,6 @@ void ObjHitbox_SetSphereRadius(int objPtr,s16 radius)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -385,8 +377,6 @@ void ObjHitbox_SetSphereRadius(int objPtr,s16 radius)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void ObjHitbox_SetCapsuleBounds(int objPtr,undefined2 radius,short verticalMin,short verticalMax)
 {
   ObjAnimComponent *obj;
@@ -460,8 +450,6 @@ void ObjHitbox_SetCapsuleBounds(int objPtr,undefined2 radius,short verticalMin,s
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -501,8 +489,6 @@ void ObjHits_ClearHitVolumes(int objPtr)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void ObjHits_SetHitVolumeMasks(int objPtr,int hitVolume,int hitType,int sourceMask)
 {
   ObjHitsPriorityState *hitState;
@@ -517,8 +503,6 @@ void ObjHits_SetHitVolumeMasks(int objPtr,int hitVolume,int hitType,int sourceMa
   hitState->skeletonHitMask = sourceMask << 4;
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -533,8 +517,6 @@ void ObjHits_SetHitVolumeMasks(int objPtr,int hitVolume,int hitType,int sourceMa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void ObjHits_SetHitVolumeSlot(u32 objPtr,int hitVolume,int hitType,int sourceSlot)
 {
   int hitMask;
@@ -554,8 +536,6 @@ void ObjHits_SetHitVolumeSlot(u32 objPtr,int hitVolume,int hitType,int sourceSlo
   hitState->skeletonHitMask = hitMask;
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -570,7 +550,6 @@ void ObjHits_SetHitVolumeSlot(u32 objPtr,int hitVolume,int hitType,int sourceSlo
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
 void ObjHits_ClearSourceMask(int objPtr,int sourceMask)
 {
   ObjHitsPriorityState *hitState;
@@ -579,7 +558,6 @@ void ObjHits_ClearSourceMask(int objPtr,int sourceMask)
   hitState->sourceMask = (u8)(hitState->sourceMask & ~sourceMask);
   return;
 }
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -616,7 +594,6 @@ void ObjHits_SetSourceMask(int objPtr,u8 sourceMask)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
 void ObjHits_ClearFlags(int objPtr,int flags)
 {
   ObjHitsPriorityState *hitState;
@@ -625,7 +602,6 @@ void ObjHits_ClearFlags(int objPtr,int flags)
   hitState->flags = (s16)(hitState->flags & ~flags);
   return;
 }
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -640,7 +616,6 @@ void ObjHits_ClearFlags(int objPtr,int flags)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
 void ObjHits_SetFlags(int objPtr,int flags)
 {
   ObjHitsPriorityState *hitState;
@@ -649,7 +624,6 @@ void ObjHits_SetFlags(int objPtr,int flags)
   hitState->flags = (s16)(hitState->flags | flags);
   return;
 }
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -664,7 +638,6 @@ void ObjHits_SetFlags(int objPtr,int flags)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
 void ObjHits_MarkObjectPositionDirty(int objPtr)
 {
   ObjHitsPriorityState *hitState;
@@ -673,7 +646,6 @@ void ObjHits_MarkObjectPositionDirty(int objPtr)
   hitState->flags = (s16)(hitState->flags | OBJHITS_PRIORITY_STATE_POSITION_DIRTY);
   return;
 }
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -688,7 +660,6 @@ void ObjHits_MarkObjectPositionDirty(int objPtr)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
 void ObjHits_SyncObjectPositionIfDirty(u32 objPtr)
 {
   ObjAnimComponent *obj;
@@ -713,7 +684,6 @@ void ObjHits_SyncObjectPositionIfDirty(u32 objPtr)
   hitState->worldPosZ = obj->worldPosZ;
   return;
 }
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -728,7 +698,6 @@ void ObjHits_SyncObjectPositionIfDirty(u32 objPtr)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
 void ObjHits_DisableObject(u32 objPtr)
 {
   ObjHitsPriorityState *hitState;
@@ -740,7 +709,6 @@ void ObjHits_DisableObject(u32 objPtr)
   hitState->flags = (s16)(hitState->flags & ~OBJHITS_PRIORITY_STATE_ENABLED);
   return;
 }
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -755,7 +723,6 @@ void ObjHits_DisableObject(u32 objPtr)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
 void ObjHits_EnableObject(u32 objPtr)
 {
   ObjAnimComponent *obj;
@@ -780,7 +747,6 @@ void ObjHits_EnableObject(u32 objPtr)
   hitState->worldPosZ = obj->worldPosZ;
   return;
 }
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -846,8 +812,6 @@ void ObjHits_SyncObjectPosition(u32 objPtr)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int ObjHits_AllocObjectState(int objPtr,uint arena)
 {
   uint stateArena;
@@ -863,8 +827,6 @@ int ObjHits_AllocObjectState(int objPtr,uint arena)
   }
   return stateArena + 0xb8;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -879,8 +841,6 @@ int ObjHits_AllocObjectState(int objPtr,uint arena)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void ObjHits_RefreshObjectState(int objPtr)
 {
   ObjAnimComponent *obj;
@@ -973,8 +933,6 @@ void ObjHits_RefreshObjectState(int objPtr)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -989,8 +947,6 @@ void ObjHits_RefreshObjectState(int objPtr)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int ObjHits_RecordObjectHit(int obj,int hitObj,char priority,u8 hitVolume,u8 sphereIndex)
 {
   ObjAnimComponent *sourceObj;
@@ -1038,8 +994,6 @@ int ObjHits_RecordObjectHit(int obj,int hitObj,char priority,u8 hitVolume,u8 sph
   }
   return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1054,8 +1008,6 @@ int ObjHits_RecordObjectHit(int obj,int hitObj,char priority,u8 hitVolume,u8 sph
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int ObjHits_RecordPositionHit(f32 hitPosX,f32 hitPosY,f32 hitPosZ,int obj,int hitObj,char priority,
                               u8 hitVolume,u8 sphereIndex)
 {
@@ -1104,8 +1056,6 @@ int ObjHits_RecordPositionHit(f32 hitPosX,f32 hitPosY,f32 hitPosZ,int obj,int hi
   }
   return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1120,8 +1070,6 @@ int ObjHits_RecordPositionHit(f32 hitPosX,f32 hitPosY,f32 hitPosZ,int obj,int hi
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void ObjHits_AddContactObject(int obj,int contactObj)
 {
   int contactObjectIndex;
@@ -1156,8 +1104,6 @@ void ObjHits_AddContactObject(int obj,int contactObj)
            (s8)contactObjectIndex * 4) = contactObj;
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1173,8 +1119,6 @@ void ObjHits_AddContactObject(int obj,int contactObj)
  * PAL Size: TODO
  */
 #pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
 int ObjHits_GetPriorityHitWithPosition(int obj,int *outHitObject,int *outSphereIndex,
                 uint *outHitVolume,float *outHitPosX,float *outHitPosY,float *outHitPosZ)
 {
@@ -1220,8 +1164,6 @@ int ObjHits_GetPriorityHitWithPosition(int obj,int *outHitObject,int *outSphereI
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 #pragma dont_inline reset
 
 /*
@@ -1238,8 +1180,6 @@ int ObjHits_GetPriorityHitWithPosition(int obj,int *outHitObject,int *outSphereI
  * PAL Size: TODO
  */
 #pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
 int ObjHits_GetPriorityHit(int obj,int *outHitObject,int *outSphereIndex,uint *outHitVolume)
 {
   u8 hitPriority;
@@ -1279,8 +1219,6 @@ int ObjHits_GetPriorityHit(int obj,int *outHitObject,int *outSphereIndex,uint *o
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 #pragma dont_inline reset
 
 /*
@@ -1296,8 +1234,6 @@ int ObjHits_GetPriorityHit(int obj,int *outHitObject,int *outSphereIndex,uint *o
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void ObjHitReact_UpdateResetObjects(void)
 {
   ObjAnimComponent *obj;
@@ -1320,8 +1256,6 @@ void ObjHitReact_UpdateResetObjects(void)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1336,8 +1270,6 @@ void ObjHitReact_UpdateResetObjects(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void ObjHits_ResetWorkBuffers(void)
 {
   int slotIndex;
@@ -1347,8 +1279,6 @@ void ObjHits_ResetWorkBuffers(void)
   }
   gObjHitReactResetObjectCount = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1382,8 +1312,6 @@ ObjAnimComponent **ObjHitReact_GetResetObjects(int *outObjectCount)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void ObjHits_InitWorkBuffers(void)
 {
   int hitVolumeIndex;
@@ -1406,8 +1334,6 @@ void ObjHits_InitWorkBuffers(void)
   ((int *)(int)gObjHitsActiveHitVolumeObjects)[hitVolumeIndex++] = 0;
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1422,8 +1348,6 @@ void ObjHits_InitWorkBuffers(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 uint ObjGroup_ContainsObject(uint obj,int group)
 {
   uint *entry;
@@ -1445,8 +1369,6 @@ uint ObjGroup_ContainsObject(uint obj,int group)
   limitXorIndex = limitXorIndex & limit;
   return (uint)(halfDiff - limitXorIndex) >> 0x1f;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1508,8 +1430,6 @@ int ObjGroup_FindNearestObjectToPoint(int group,float *point,float *maxDistance)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int ObjGroup_FindNearestObjectForObject(int group,uint obj,float *maxDistance)
 {
   uint nearest;
@@ -1548,8 +1468,6 @@ int ObjGroup_FindNearestObjectForObject(int group,uint obj,float *maxDistance)
   }
   return nearest;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1564,8 +1482,6 @@ int ObjGroup_FindNearestObjectForObject(int group,uint obj,float *maxDistance)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int ObjGroup_FindNearestObject(int group,uint obj,float *maxDistance)
 {
   uint nearest;
@@ -1604,8 +1520,6 @@ int ObjGroup_FindNearestObject(int group,uint obj,float *maxDistance)
   }
   return nearest;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1620,8 +1534,6 @@ int ObjGroup_FindNearestObject(int group,uint obj,float *maxDistance)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 uint *ObjGroup_GetObjects(int group,int *countOut)
 {
   if ((group < 0) || (group >= OBJGROUP_COUNT)) {
@@ -1631,8 +1543,6 @@ uint *ObjGroup_GetObjects(int group,int *countOut)
   *countOut = (uint)gObjGroupOffsets[group + 1] - (uint)gObjGroupOffsets[group];
   return (uint *)(gObjGroupObjects + gObjGroupOffsets[group]);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1647,8 +1557,6 @@ uint *ObjGroup_GetObjects(int group,int *countOut)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void ObjGroup_RemoveObject(uint obj,int group)
 {
   u8 *offset;
@@ -1687,8 +1595,6 @@ void ObjGroup_RemoveObject(uint obj,int group)
     group++;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1703,8 +1609,6 @@ void ObjGroup_RemoveObject(uint obj,int group)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int ObjGroup_GetObjectGroup(uint obj)
 {
   int group;
@@ -1723,8 +1627,6 @@ int ObjGroup_GetObjectGroup(uint obj)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1739,8 +1641,6 @@ int ObjGroup_GetObjectGroup(uint obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void ObjGroup_AddObject(uint obj,int group)
 {
   u8 *offset;
@@ -1787,8 +1687,6 @@ void ObjGroup_AddObject(uint obj,int group)
     group++;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1804,16 +1702,12 @@ void ObjGroup_AddObject(uint obj,int group)
  * PAL Size: TODO
  */
 extern void* memset(void* dst, int val, u32 n);
-#pragma scheduling off
-#pragma peephole off
 void ObjGroup_ClearAll(void)
 {
   memset(gObjGroupOffsets, 0, OBJGROUP_OFFSET_CLEAR_COUNT);
   gObjGroupObjectCount = 0;
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1864,8 +1758,6 @@ undefined4 ObjMsg_Peek(void *obj,uint *outMessage,uint *outSender,uint *outParam
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 undefined4 ObjMsg_Pop(void *obj,uint *outMessage,uint *outSender,uint *outParam)
 {
   ObjMsgQueue *queue;
@@ -1897,8 +1789,6 @@ undefined4 ObjMsg_Pop(void *obj,uint *outMessage,uint *outSender,uint *outParam)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1913,8 +1803,6 @@ undefined4 ObjMsg_Pop(void *obj,uint *outMessage,uint *outSender,uint *outParam)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void ObjMsg_SendToNearbyObjects(int targetId,float radius,uint flags,void *sender,uint message,uint param)
 {
   int *objects;
@@ -1953,8 +1841,6 @@ void ObjMsg_SendToNearbyObjects(int targetId,float radius,uint flags,void *sende
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1969,8 +1855,6 @@ void ObjMsg_SendToNearbyObjects(int targetId,float radius,uint flags,void *sende
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void ObjMsg_SendToObjects(int targetId,uint flags,void *sender,uint message,uint param)
 {
   int *objects;
@@ -2034,8 +1918,6 @@ void ObjMsg_SendToObjects(int targetId,uint flags,void *sender,uint message,uint
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2050,8 +1932,6 @@ void ObjMsg_SendToObjects(int targetId,uint flags,void *sender,uint message,uint
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 uint ObjMsg_SendToObject(void *obj,uint message,void *sender,uint param)
 {
   uint count;
@@ -2082,8 +1962,6 @@ uint ObjMsg_SendToObject(void *obj,uint message,void *sender,uint param)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2098,8 +1976,6 @@ uint ObjMsg_SendToObject(void *obj,uint message,void *sender,uint param)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void ObjMsg_AllocQueue(void *obj,int capacity)
 {
   int queueBytes;
@@ -2115,8 +1991,6 @@ void ObjMsg_AllocQueue(void *obj,int capacity)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2131,8 +2005,6 @@ void ObjMsg_AllocQueue(void *obj,int capacity)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 undefined4 Obj_IsObjectAlive(u32 param_1)
 {
   undefined4 uVar1;
@@ -2143,8 +2015,6 @@ undefined4 Obj_IsObjectAlive(u32 param_1)
   }
   return uVar1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2159,8 +2029,6 @@ undefined4 Obj_IsObjectAlive(u32 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 bool ObjTrigger_UpdateIdBlockFlag(int param_1)
 {
   int iVar1;
@@ -2177,8 +2045,6 @@ bool ObjTrigger_UpdateIdBlockFlag(int param_1)
   *(byte *)(param_1 + OBJTRIGGER_FLAGS_OFFSET) = flags;
   return true;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2193,8 +2059,6 @@ bool ObjTrigger_UpdateIdBlockFlag(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int ObjHits_PollPriorityHitWithCooldown(int obj,float *cooldown,int *outHitObject,float *outHitPos)
 {
   int collisionType;
@@ -2218,12 +2082,8 @@ int ObjHits_PollPriorityHitWithCooldown(int obj,float *cooldown,int *outHitObjec
   }
   return collisionType;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
 /*
  * --INFO--
  *
@@ -2276,8 +2136,6 @@ int ObjHits_PollPriorityHitEffectWithCooldown(int obj,uint hitFxMode,uint colorR
   }
   return collisionType;
 }
-#pragma peephole reset
-#pragma scheduling reset
 #pragma dont_inline reset
 
 /*
@@ -2293,8 +2151,6 @@ int ObjHits_PollPriorityHitEffectWithCooldown(int obj,uint hitFxMode,uint colorR
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void ObjLink_DetachChild(int param_1,int param_2)
 {
   int q;
@@ -2320,8 +2176,6 @@ void ObjLink_DetachChild(int param_1,int param_2)
   *(int *)(param_2 + OBJLINK_PARENT_OFFSET) = 0;
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2336,8 +2190,6 @@ void ObjLink_DetachChild(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void ObjLink_AttachChild(int parent,int child,ushort linkMode)
 {
   int childIndex;
@@ -2356,8 +2208,6 @@ void ObjLink_AttachChild(int parent,int child,ushort linkMode)
   *(u8 *)(child + OBJLINK_CHILD_STATE_OFFSET) = 0;
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2372,8 +2222,6 @@ void ObjLink_AttachChild(int parent,int child,ushort linkMode)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void ObjContact_DispatchCallbacks(int objA,int objB)
 {
   int objARefCount;
@@ -2398,8 +2246,6 @@ void ObjContact_DispatchCallbacks(int objA,int objB)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2414,8 +2260,6 @@ void ObjContact_DispatchCallbacks(int objA,int objB)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void ObjContact_RemoveObjectCallbacks(int param_1)
 {
   int count;
@@ -2438,8 +2282,6 @@ void ObjContact_RemoveObjectCallbacks(int param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2499,8 +2341,6 @@ undefined4 ObjContact_AddCallback(int param_1,int param_2,ObjContactCallback cal
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 undefined4 ObjTrigger_IsSetById(int param_1,short param_2)
 {
   int iVar1;
@@ -2522,8 +2362,6 @@ undefined4 ObjTrigger_IsSetById(int param_1,short param_2)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2538,8 +2376,6 @@ undefined4 ObjTrigger_IsSetById(int param_1,short param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 undefined4 ObjTrigger_IsSet(int param_1)
 {
   uint flags;
@@ -2568,8 +2404,6 @@ undefined4 ObjTrigger_IsSet(int param_1)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2584,8 +2418,6 @@ undefined4 ObjTrigger_IsSet(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int ObjList_FindNearestObjectByDefNo(int obj,int defNo,float *maxDistanceSq)
 {
   int startIndex;
@@ -2631,8 +2463,6 @@ int ObjList_FindNearestObjectByDefNo(int obj,int defNo,float *maxDistanceSq)
   }
   return foundObj;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2647,8 +2477,6 @@ int ObjList_FindNearestObjectByDefNo(int obj,int defNo,float *maxDistanceSq)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 undefined4 ObjList_ContainsObject(int param_1)
 {
   uint *entry;
@@ -2666,8 +2494,6 @@ undefined4 ObjList_ContainsObject(int param_1)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2682,8 +2508,6 @@ undefined4 ObjList_ContainsObject(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void ObjPath_GetPointWorldPositionArray(int obj,int pointIndex,int count,float *positions)
 {
   float *position;
@@ -2697,8 +2521,6 @@ void ObjPath_GetPointWorldPositionArray(int obj,int pointIndex,int count,float *
     i++;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2713,8 +2535,6 @@ void ObjPath_GetPointWorldPositionArray(int obj,int pointIndex,int count,float *
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void ObjPath_GetPointLocalPosition(int param_1,int param_2,float *param_3,float *param_4,
                  float *param_5)
 {
@@ -2726,8 +2546,6 @@ void ObjPath_GetPointLocalPosition(int param_1,int param_2,float *param_3,float 
                       param_2 * sizeof(ObjPathPoint));
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2742,8 +2560,6 @@ void ObjPath_GetPointLocalPosition(int param_1,int param_2,float *param_3,float 
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void ObjPath_GetPointLocalMtx(int param_1,int param_2,float *param_3)
 {
   ObjPathPoint *pathPoint;
@@ -2762,8 +2578,6 @@ void ObjPath_GetPointLocalMtx(int param_1,int param_2,float *param_3)
   setMatrixFromObjectTransposed(&transform,param_3);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2778,8 +2592,6 @@ void ObjPath_GetPointLocalMtx(int param_1,int param_2,float *param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void ObjPath_GetPointModelMtx(int param_1,int param_2)
 {
   int *model;
@@ -2799,8 +2611,6 @@ void ObjPath_GetPointModelMtx(int param_1,int param_2)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2815,8 +2625,6 @@ void ObjPath_GetPointModelMtx(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void ObjPath_GetPointWorldPosition(int obj,int pointIndex,float *outX,float *outY,float *outZ,
                  int useInputPosition)
 {
@@ -2889,8 +2697,6 @@ void ObjPath_GetPointWorldPosition(int obj,int pointIndex,float *outX,float *out
     }
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2905,8 +2711,6 @@ void ObjPath_GetPointWorldPosition(int obj,int pointIndex,float *outX,float *out
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int Obj_GetYawDeltaToObject(ushort *param_1,int param_2,float *param_3)
 {
   int iVar1;
@@ -2928,8 +2732,6 @@ int Obj_GetYawDeltaToObject(ushort *param_1,int param_2,float *param_3)
   }
   return (int)(short)iVar1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -3203,11 +3005,7 @@ typedef struct ObjLibFlagByte {
 } ObjLibFlagByte;
 
 extern ObjLibFlagByte lbl_803DCC00;
-#pragma scheduling off
-#pragma peephole off
 void fn_80038F1C(int a, u8 b) {
     if ((int)(u8)a != 0) return;
     lbl_803DCC00.highBit = b;
 }
-#pragma peephole reset
-#pragma scheduling reset

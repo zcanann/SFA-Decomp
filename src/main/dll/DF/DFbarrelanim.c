@@ -42,7 +42,6 @@ extern f32 lbl_803E5A94;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 DFRope *DFRope_Create(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ,
                       f32 unused, f32 tickScale)
 {
@@ -139,7 +138,6 @@ DFRope *DFRope_Create(s32 count, f32 startX, f32 startY, f32 startZ, f32 endX, f
   }
   return rope;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -166,8 +164,6 @@ int dfropenode_func11(int obj)
   return (s16)(extra->hidden == 0);
 }
 
-#pragma peephole off
-#pragma scheduling off
 void dfropenode_func10(int obj, int value)
 {
   u32 bit;
@@ -185,8 +181,6 @@ void dfropenode_func10(int obj, int value)
     extra->hidden = bitByte;
   }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -201,12 +195,10 @@ void dfropenode_func10(int obj, int value)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void dfropenode_func13(int obj)
 {
   ((DFropenodeExtra *)*(int *)&((GameObject *)obj)->extra)->linkedObj = 0;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -226,7 +218,6 @@ int dfropenode_func0F(int obj)
   return ((DFropenodeExtra *)*(int *)&((GameObject *)obj)->extra)->angle;
 }
 
-#pragma scheduling off
 f32 fn_801C1698(f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ, f32 *x, f32 *y,
                 f32 *z)
 {
@@ -258,4 +249,3 @@ f32 fn_801C1698(f32 startX, f32 startY, f32 startZ, f32 endX, f32 endY, f32 endZ
   }
   return t;
 }
-#pragma scheduling reset

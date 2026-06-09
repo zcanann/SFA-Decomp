@@ -368,8 +368,6 @@ LAB_80173f80:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void magicdust_init(int param_1,int param_2)
 {
   short sVar1;
@@ -487,8 +485,6 @@ void magicdust_init(int param_1,int param_2)
   ObjMsg_AllocQueue(param_1,1);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -811,8 +807,6 @@ void effectbox_release(void) {}
 void effectbox_initialise(void) {}
 
 extern void fn_8002B860(int obj);
-#pragma scheduling off
-#pragma peephole off
 void effectbox_init(int obj, int *def) {
     s16 bit;
     u32 v;
@@ -829,8 +823,6 @@ void effectbox_init(int obj, int *def) {
     v = (u32)((GameObject *)obj)->objectFlags | 0x6000;
     ((GameObject *)obj)->objectFlags = (u16)v;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* 8b "li r3, N; blr" returners. */
 int effectbox_getExtraSize(void) { return 0x0; }
@@ -839,12 +831,8 @@ int effectbox_getObjectTypeId(void) { return 0x0; }
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3508;
 extern void objRenderFn_8003b8f4(f32);
-#pragma peephole off
 void effectbox_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3508); }
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80174588(int obj, PushableState *p2)
 {
   extern int *objFindTexture(int, int, int);
@@ -873,8 +861,6 @@ void fn_80174588(int obj, PushableState *p2)
     }
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void *getTrickyObject(void);
 extern void fn_80295918(f32 amount, int obj, int p3);

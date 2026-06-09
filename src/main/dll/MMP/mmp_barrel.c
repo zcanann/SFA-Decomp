@@ -1995,8 +1995,6 @@ void groundanimator_update(int *obj) {
 extern f32 lbl_803E3F7C;
 extern f32 lbl_803E3F80;
 extern f32 lbl_803E3F84;
-#pragma scheduling off
-#pragma peephole off
 void alphaanimator_update(int *obj) {
     int *d;
     AlphaAnimatorState *s;
@@ -2169,8 +2167,6 @@ void alphaanimator_update(int *obj) {
         s->fadeB = s->fadeA - lbl_803E3F84;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E3F40;
 extern f32 lbl_803E3F44;
@@ -2184,8 +2180,6 @@ extern f32 lbl_803E3F60;
 extern f32 lbl_803E3F64;
 extern f32 mathSinf(f32);
 
-#pragma scheduling off
-#pragma peephole off
 void fn_801923F8(int *cfgArg)
 {
     int i;
@@ -2272,14 +2266,10 @@ void fn_801923F8(int *cfgArg)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern char *fn_8006070C(void *block, int idx);
 extern u8 *Shader_getLayer(char *s, int layer);
 
-#pragma scheduling off
-#pragma peephole off
 void hitAnimatorFn_80193dbc(void *block, HitAnimatorObject *obj, HitAnimatorState *vstate, HitAnimatorPlacement *desc)
 {
     int i;
@@ -2317,5 +2307,3 @@ void hitAnimatorFn_80193dbc(void *block, HitAnimatorObject *obj, HitAnimatorStat
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

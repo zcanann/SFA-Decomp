@@ -2907,8 +2907,6 @@ int mediumbasket_updateControlMove5State(int* obj, GroundBaddieState *state) {
     return 0;
 }
 
-#pragma scheduling off
-#pragma peephole off
 int mediumbasket_stateHandlerB05(int* obj, GroundBaddieState *state) {
     if ((s8)state->baddie.moveJustStartedB != 0) {
         ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8 *)state, 3);
@@ -2922,8 +2920,6 @@ int mediumbasket_stateHandlerB05(int* obj, GroundBaddieState *state) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 int mediumbasket_stateHandlerB01(int* obj, GroundBaddieState *state) {
     GroundBaddieState* sub = ((GameObject *)obj)->extra;
@@ -2942,8 +2938,6 @@ int mediumbasket_stateHandlerB01(int* obj, GroundBaddieState *state) {
     return 0;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void mediumbasket_leaveWhirlpoolGroup(int* obj, GroundBaddieState *state) {
     if (state->baddie.inWhirlpoolGroup != 0) {
         ObjGroup_RemoveObject(obj, 80);
@@ -2951,11 +2945,7 @@ void mediumbasket_leaveWhirlpoolGroup(int* obj, GroundBaddieState *state) {
     }
     *(u16*)obj = (float)(int)*(s16*)obj - lbl_803E2CD8 * timeDelta;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void mediumbasket_enterWhirlpoolGroup(int* obj, GroundBaddieState *state) {
     if (state->baddie.inWhirlpoolGroup == 0) {
         ObjGroup_AddObject(obj, 80);
@@ -2965,11 +2955,7 @@ void mediumbasket_enterWhirlpoolGroup(int* obj, GroundBaddieState *state) {
     ((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)->suppressOutgoingHits = 0;
     ((GameObject *)obj)->anim.rotX -= 256;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma fp_contract off
 void mediumbasket_tryAcquireTarget(int obj, int p2, int p3)
 {
@@ -3012,11 +2998,7 @@ void mediumbasket_tryAcquireTarget(int obj, int p2, int p3)
   }
 }
 #pragma fp_contract reset
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma fp_contract off
 int mediumbasket_checkTargetState(int obj, int p2)
 {
@@ -3064,5 +3046,3 @@ return0:
   return 0;
 }
 #pragma fp_contract reset
-#pragma peephole reset
-#pragma scheduling reset

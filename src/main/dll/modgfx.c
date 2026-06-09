@@ -4832,8 +4832,6 @@ extern void gxBlendFn_80078b4c(void);
 extern void drawFn_8005cf8c(void *a, void *b, int count);
 
 /* EN v1.0 0x800A433C  size: 1764b  per-bone particle vertex update + draw. */
-#pragma scheduling off
-#pragma peephole off
 void boneParticleEffect_update(void *ctx, int p2, u8 *o)
 {
     BoneFxVtx s;
@@ -5008,8 +5006,6 @@ void boneParticleEffect_update(void *ctx, int p2, u8 *o)
     }
     lbl_803DD2A0 = 1 - lbl_803DD2A0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 typedef struct {
     s16 a, b, c;

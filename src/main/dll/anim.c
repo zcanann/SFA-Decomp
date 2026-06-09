@@ -449,8 +449,6 @@ extern f32 lbl_803E7078;
 extern undefined4 PTR_DAT_8032a154;
 
 
-#pragma scheduling off
-#pragma peephole off
 int GCRobotBlast_SeqFn(int obj, int unused, int p3)
 {
   extern void objfx_spawnDirectionalBurst(int, int, f32, int, int, int, f32, int, int);
@@ -476,8 +474,6 @@ int GCRobotBlast_SeqFn(int obj, int unused, int p3)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -820,8 +816,6 @@ undefined4 FUN_8020040c(int param_1,int param_2)
   return 0;
 }
 
-#pragma scheduling off
-#pragma peephole off
 int dbstealerworm_stateHandlerB04(int obj, int p)
 {
   extern int *gPlayerInterface;
@@ -840,11 +834,7 @@ int dbstealerworm_stateHandlerB04(int obj, int p)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int dbstealerworm_stateHandlerB02(int obj, int p)
 {
   extern int *gPlayerInterface;
@@ -873,8 +863,6 @@ int dbstealerworm_stateHandlerB02(int obj, int p)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1587,8 +1575,6 @@ FUN_802014c8(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   return 0;
 }
 
-#pragma scheduling off
-#pragma peephole off
 int dbstealerworm_stateHandlerA09(int obj, int p)
 {
   extern int Stack_IsFull(int sp);
@@ -1652,8 +1638,6 @@ int dbstealerworm_stateHandlerA09(int obj, int p)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2045,8 +2029,6 @@ FUN_80202004(double param_1,double param_2,undefined8 param_3,double param_4,ush
   return uVar2;
 }
 
-#pragma scheduling off
-#pragma peephole off
 int dbstealerworm_stateHandlerA06(int obj, int p2)
 {
   extern void ObjHits_DisableObject(int);
@@ -2111,8 +2093,6 @@ int dbstealerworm_stateHandlerA06(int obj, int p2)
   (**(void (**)(int, int, int, int, int *))((char *)(*gPlayerInterface) + 0x34))(obj, p2, 7, 0, lbl_80329640);
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2218,8 +2198,6 @@ void FUN_80202268(undefined8 param_1,double param_2,double param_3,undefined8 pa
   return;
 }
 
-#pragma scheduling off
-#pragma peephole off
 int dbstealerworm_stateHandlerA05(int obj, int p)
 {
   extern void *Obj_GetPlayerObject(void);
@@ -2278,8 +2256,6 @@ int dbstealerworm_stateHandlerA05(int obj, int p)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2321,8 +2297,6 @@ void FUN_80202414(undefined8 param_1,double param_2,double param_3,undefined8 pa
   return;
 }
 
-#pragma scheduling off
-#pragma peephole off
 int dbstealerworm_stateHandlerA03(int obj, int p)
 {
   extern void ObjHits_EnableObject(int obj);
@@ -2342,8 +2316,6 @@ int dbstealerworm_stateHandlerA03(int obj, int p)
   *(s8 *)&((BaddieState *)p)->unk34D = 1;
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2427,8 +2399,6 @@ void FUN_802026cc(undefined4 param_1,undefined4 param_2,int param_3)
   return;
 }
 
-#pragma scheduling off
-#pragma peephole off
 int dbstealerworm_stateHandlerA01(int obj, int p)
 {
   extern int *gPlayerInterface;
@@ -2480,8 +2450,6 @@ int dbstealerworm_stateHandlerA01(int obj, int p)
   (**(int (**)(int, int, int, int, int *))(*gPlayerInterface + 0x34))(obj, p, 7, 0, lbl_80329640);
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -3380,8 +3348,6 @@ void FUN_80204320(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   return;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80204320(int obj)
 {
   extern void *Obj_GetPlayerObject(void);
@@ -3435,8 +3401,6 @@ void fn_80204320(int obj)
     }
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -4002,8 +3966,6 @@ void FUN_80204f7c(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   return;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void dll_22C_init(int obj, char *p)
 {
   extern f32 lbl_803E63A8;
@@ -4020,8 +3982,6 @@ void dll_22C_init(int obj, char *p)
   ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY - lbl_803E63A8;
   ((GameObject *)obj)->objectFlags = ((GameObject *)obj)->objectFlags | 0x2000;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -4147,8 +4107,6 @@ void drakorenergy_initialise(void) {}
 extern f32 lbl_803E627C;
 extern f32 lbl_803E62A0;
 
-#pragma scheduling off
-#pragma peephole off
 void drakorenergy_init(int *obj, u8 *init) {
     extern uint GameBit_Get(int);
     DrakorEnergyState *sub;
@@ -4167,8 +4125,6 @@ void drakorenergy_init(int *obj, u8 *init) {
         sub->mode = 4;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 void dbstealerworm_release(void) {}
 void dbholecontrol1_hitDetect(void) {}
 void dbholecontrol1_release(void) {}
@@ -4176,8 +4132,6 @@ void dbholecontrol1_initialise(void) {}
 
 extern void Obj_RemoveFromUpdateList(int *obj);
 
-#pragma scheduling off
-#pragma peephole off
 void dbholecontrol1_update(int *obj) {
     extern uint GameBit_Get(int);
     u8 *def;
@@ -4189,8 +4143,6 @@ void dbholecontrol1_update(int *obj) {
         (*gObjectTriggerInterface)->runSequence(*(s8 *)(def + 0x19), obj, -1);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void Stack_Free(int *stack);
 extern void Obj_FreeObject(int obj);
@@ -4200,8 +4152,6 @@ extern f32 lbl_803E62A8;
 extern f32 lbl_803E62FC;
 extern u8 lbl_80329514[];
 extern void *memset(void *dst, int v, int n);
-#pragma scheduling off
-#pragma peephole off
 void dbstealerworm_init(int *obj, u8 *def, int param3) {
     u8 *sub;
     int *p40c;
@@ -4236,11 +4186,7 @@ void dbstealerworm_init(int *obj, u8 *def, int param3) {
         ((GameObject *)obj)->anim.modelState->flags |= 0x4008;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void dbstealerworm_free(int *obj) {
     u8 *sub = ((GameObject *)obj)->extra;
     int *p40c = *(int**)&((GroundBaddieState *)sub)->control;
@@ -4252,11 +4198,7 @@ void dbstealerworm_free(int *obj) {
     }
     ((void(*)(int*, u8*, int))((void**)*gBaddieControlInterface)[16])(obj, sub, 3);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void dbholecontrol1_init(int *obj, u8 *params) {
     DbHoleControl1State *sub = ((GameObject *)obj)->extra;
     ObjGroup_AddObject(obj, 0x1e);
@@ -4265,8 +4207,6 @@ void dbholecontrol1_init(int *obj, u8 *params) {
     sub->gameBitA = *(s16*)(params + 0x1a);
     sub->gameBitB = *(s16*)(params + 0x1c);
 }
-#pragma peephole reset
-#pragma scheduling reset
 void dfplevelcontrol_render(void) {}
 void dfplevelcontrol_hitDetect(void) {}
 void dfplevelcontrol_release(void) {}
@@ -4285,8 +4225,6 @@ void dfpseqpoint_hitDetect(void) {}
 void dfpseqpoint_release(void) {}
 void dfpseqpoint_initialise(void) {}
 
-#pragma scheduling off
-#pragma peephole off
 void dfpseqpoint_init(int *obj, u8 *init) {
     DfpSeqPointState *sub;
     sub = ((GameObject *)obj)->extra;
@@ -4300,8 +4238,6 @@ void dfpseqpoint_init(int *obj, u8 *init) {
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x2000);
     sub->flags0F = (u8)(sub->flags0F & ~0x80);
 }
-#pragma peephole reset
-#pragma scheduling reset
 void DFP_Torch_hitDetect(void) {}
 void DFP_Torch_release(void) {}
 void DFP_Torch_initialise(void) {}
@@ -4341,16 +4277,12 @@ extern f32 lbl_803E6390;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E6398;
 extern f32 lbl_803E63B8;
-#pragma peephole off
 void dbholecontrol1_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E6390); }
 void dll_22C_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E6398); }
 void dfpseqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E63B8); }
 void dfpobjcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
-#pragma peephole reset
 
 extern f32 lbl_803E6278;
-#pragma scheduling off
-#pragma peephole off
 void drakorenergy_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
     DrakorEnergyState *inner = ((GameObject *)obj)->extra;
     u32 t = inner->mode;
@@ -4358,11 +4290,7 @@ void drakorenergy_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E6278);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 extern int gDBStealerWormStateHandlersA[];
-#pragma scheduling off
-#pragma peephole off
 void chuka_free(int obj) {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
@@ -4387,16 +4315,10 @@ void GCRobotBlast_init(int obj, s8 *p) {
     ((BlastFlags4 *)&((GCRobotBlastState *)inner)->flags04)->b80 = 0;
     ((GameObject *)obj)->animEventCallback = (void *)GCRobotBlast_SeqFn;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-#pragma scheduling off
-#pragma peephole off
 void dbholecontrol1_free(int x) { ObjGroup_RemoveObject(x, 0x1e); }
 void dfplevelcontrol_free(int x) { ObjGroup_RemoveObject(x, 0x9); }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* plain forwarder. */
 extern void DBstealerwo_setFuncPtrs_80203c78(void);
@@ -4404,23 +4326,13 @@ void dbstealerworm_initialise(void) { DBstealerwo_setFuncPtrs_80203c78(); }
 
 /* OSReport(string) wrappers. */
 extern void OSReport(const char *fmt, ...);
-#pragma scheduling off
-#pragma peephole off
 void doorswitch_free(void) { OSReport(sDoorswitchInitNoLongerSupported); }
 void doorswitch_update(void) { OSReport(sDoorswitchInitNoLongerSupported); }
 void doorswitch_init(void) { OSReport(sDoorswitchInitNoLongerSupported); }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int DrakorEnergy_setScale(int *obj) { return ((DrakorEnergyState *)((int**)obj)[0xb8/4])->mode == 0; }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* alpha-flag predicate: returns 7 on fire/clear, 0 on idle */
-#pragma peephole off
-#pragma scheduling off
 int dbstealerworm_stateHandlerB00(int p1, int p2)
 {
   BaddieState *p = (BaddieState *)p2;
@@ -4436,12 +4348,8 @@ int dbstealerworm_stateHandlerB00(int p1, int p2)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* baddie anim update: fires vtable[0x13] when flag set */
-#pragma peephole off
-#pragma scheduling off
 int dbstealerworm_stateHandlerB03(int p1, int p2)
 {
   GroundBaddieState *state = ((GameObject *)p1)->extra;
@@ -4451,13 +4359,9 @@ int dbstealerworm_stateHandlerB03(int p1, int p2)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* anim progress accumulator */
 extern f32 lbl_803E62BC;
-#pragma peephole off
-#pragma scheduling off
 int dbstealerworm_stateHandlerB01(int p1, int p2)
 {
   GroundBaddieState *state = ((GameObject *)p1)->extra;
@@ -4468,26 +4372,18 @@ int dbstealerworm_stateHandlerB01(int p1, int p2)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* clear list-actions wrapper: notifies vtable[6] then resets getLActions */
-#pragma peephole off
-#pragma scheduling off
 void fn_80204B6C(int p1)
 {
   (*gExpgfxInterface)->freeSource2((u32)p1);
   getLActions(p1, p1, 0, 0, 0, 0);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* timed counter: decrement (p1->b8)->0 by timeDelta, then notify */
 extern void *Obj_GetPlayerObject(void);
 extern void fn_802960E8(void *playerObj, int p2);
 extern f32 timeDelta;
-#pragma peephole off
-#pragma scheduling off
 int dfplevelcontrol_SeqFn(int p1)
 {
   DfpLevelControlState *p_b8 = ((GameObject *)p1)->extra;
@@ -4499,12 +4395,8 @@ int dfplevelcontrol_SeqFn(int p1)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern s16 lbl_80329848[];
-#pragma scheduling off
-#pragma peephole off
 void dfplevelcontrol_initialise(void) {
     s16 *p = lbl_80329848;
     p[0] = 1;
@@ -4565,11 +4457,7 @@ void dfplevelcontrol_setScale(int unused, u8 *out) {
         p += 3;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int dbstealerworm_stateHandlerA00(int obj, int p2)
 {
   extern void ObjHits_EnableObject(int);
@@ -4613,11 +4501,7 @@ int dbstealerworm_stateHandlerA00(int obj, int p2)
   (**(void (**)(int, int, int, int, int *))((char *)(*gPlayerInterface) + 0x34))(obj, p2, 7, 0, lbl_80329640);
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int dbholecontrol1_SeqFn(int obj, int unused, int p3)
 {
   extern u8 Obj_IsLoadingLocked(void);
@@ -4663,11 +4547,7 @@ int dbholecontrol1_SeqFn(int obj, int unused, int p3)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 int dbstealerworm_func0B(int obj, u8 msg, int *out)
 {
     GroundBaddieState *state = ((GameObject *)obj)->extra;
@@ -4704,8 +4584,6 @@ int dbstealerworm_func0B(int obj, u8 msg, int *out)
     }
     return result;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int gDBStealerWormStateHandlersB[];
 extern int dbstealerworm_stateHandlerA02();
@@ -4721,8 +4599,6 @@ extern int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t);
 extern int dbstealerworm_stateHandlerB05();
 extern int dbstealerworm_stateHandlerB06();
 
-#pragma peephole off
-#pragma scheduling off
 void DBstealerwo_setFuncPtrs_80203c78(void)
 {
     gDBStealerWormStateHandlersA[0] = (int)dbstealerworm_stateHandlerA00;
@@ -4749,13 +4625,9 @@ void DBstealerwo_setFuncPtrs_80203c78(void)
     gDBStealerWormStateHandlersB[5] = (int)dbstealerworm_stateHandlerB05;
     gDBStealerWormStateHandlersB[6] = (int)dbstealerworm_stateHandlerB06;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void fn_80202EF0(int obj, int p2);
 
-#pragma peephole off
-#pragma scheduling off
 #pragma dont_inline on
 void fn_80203000(int obj, int param2)
 {
@@ -4777,8 +4649,6 @@ void fn_80203000(int obj, int param2)
     *(u8 *)(state + 0x14) = 0;
 }
 #pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void unlockLevel(int a, int b, int c);
 extern void Music_Trigger(int a, int b);
@@ -4790,8 +4660,6 @@ typedef struct DfpFlags7 {
     u8 rest : 5;
 } DfpFlags7;
 
-#pragma peephole off
-#pragma scheduling off
 void dfplevelcontrol_init(int obj, int param2)
 {
     DfpLevelControlState *state = ((GameObject *)obj)->extra;
@@ -4817,13 +4685,9 @@ void dfplevelcontrol_init(int obj, int param2)
         Music_Trigger(0xe4, 0);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E62F4;
 
-#pragma peephole off
-#pragma scheduling off
 int dbstealerworm_stateHandlerA04(int obj, int param2)
 {
     GroundBaddieState *state = ((GameObject *)obj)->extra;
@@ -4852,14 +4716,10 @@ int dbstealerworm_stateHandlerA04(int obj, int param2)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E62E8;
 extern f32 lbl_803E62EC;
 
-#pragma peephole off
-#pragma scheduling off
 int dbstealerworm_stateHandlerA0E(int obj, int param2)
 {
     DbStealerwormControl *sub = (DbStealerwormControl *)(*(GroundBaddieState **)&((GameObject *)obj)->extra)->control;
@@ -4884,16 +4744,12 @@ int dbstealerworm_stateHandlerA0E(int obj, int param2)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f64 lbl_803E63F0;
 extern f32 lbl_803E63E4;
 extern f32 lbl_803E63E8;
 extern f32 lbl_803E63E0;
 
-#pragma peephole off
-#pragma scheduling off
 void DFP_Torch_init(int obj, int param2)
 {
     DfpTorchState *state = ((GameObject *)obj)->extra;
@@ -4920,11 +4776,7 @@ void DFP_Torch_init(int obj, int param2)
     state->colorIdx = (u8)*(s16 *)(param2 + 0x1c);
     ((GameObject *)obj)->objectFlags = ((GameObject *)obj)->objectFlags | 0x2000;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80202EF0(int obj, int p2)
 {
     extern u8 Obj_IsLoadingLocked(void);
@@ -4959,11 +4811,7 @@ void fn_80202EF0(int obj, int p2)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_common_subs off
 #pragma dont_inline on
 int fn_80202C78(int obj, int p6, f32 p1, f32 p2, f32 p3, f32 p4)
@@ -5013,10 +4861,7 @@ int fn_80202C78(int obj, int p6, f32 p1, f32 p2, f32 p3, f32 p4)
 }
 #pragma dont_inline reset
 #pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma dont_inline on
 int fn_80202DA4(u8 *obj, u8 *p6, f32 p1, f32 p2, f32 p3, f32 p4)
 {
@@ -5058,9 +4903,7 @@ int fn_80202DA4(u8 *obj, u8 *p6, f32 p1, f32 p2, f32 p3, f32 p4)
     state->animSpeedB = lbl_803E62A8;
     return 0;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void dfpobjcreator_update(int obj)
 {
     extern u8 Obj_IsLoadingLocked(void);
@@ -5098,10 +4941,7 @@ void dfpobjcreator_update(int obj)
     }
 }
 #pragma dont_inline reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int dbstealerworm_stateHandlerA02(int obj, int p2)
 {
     extern void ObjHits_EnableObject(int);
@@ -5139,11 +4979,7 @@ int dbstealerworm_stateHandlerA02(int obj, int p2)
     sub->flags14 |= 2;
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void dbstealerworm_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     extern void fn_8003B5E0(int, int, int, int);
@@ -5181,11 +5017,7 @@ void dbstealerworm_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int dbstealerworm_stateHandlerA0D(int obj, int p2)
 {
     extern int Stack_IsFull(int sp);
@@ -5264,8 +5096,6 @@ int dbstealerworm_stateHandlerA0D(int obj, int p2)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 typedef struct {
     u8 flag80 : 1;
@@ -5274,8 +5104,6 @@ typedef struct {
     u8 flag10 : 1;
 } AnimFlags44;
 
-#pragma scheduling off
-#pragma peephole off
 int dbstealerworm_stateHandlerB05(int obj, int p2)
 {
     extern int Stack_IsEmpty(int);
@@ -5351,11 +5179,7 @@ int dbstealerworm_stateHandlerB05(int obj, int p2)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80203144(int obj, int p2, int p3)
 {
     extern int ObjGroup_FindNearestObject(int, int, f32 *);
@@ -5413,10 +5237,7 @@ void fn_80203144(int obj, int p2, int p3)
         sub->unk0C += timeDelta;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void dfplevelcontrol_update(int obj)
 {
     extern void *Obj_GetPlayerObject(void);
@@ -5476,10 +5297,7 @@ void dfplevelcontrol_update(int obj)
     SCGameBitLatch_UpdateInverted((void *)state->unk08, 1, -1, -1, 0xdce, 0xe4);
     GameBit_Set(0xdcf, 0);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int fn_80202A2C(int obj, int *objs, f32 *weights, int n, f32 limit)
 {
     extern int ObjGroup_FindNearestObjectForObject(int, int, f32 *);
@@ -5554,11 +5372,7 @@ int fn_80202A2C(int obj, int *objs, f32 *weights, int n, f32 limit)
     state->animSpeedB = (v < neg) ? neg : (v > limit) ? limit : v;
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     extern char *Camera_GetCurrentViewSlot(void);
@@ -5641,11 +5455,7 @@ void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80204098(int obj)
 {
     extern void *Obj_GetPlayerObject(void);
@@ -5706,11 +5516,7 @@ void fn_80204098(int obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int dbstealerworm_stateHandlerB06(int obj, int p2)
 {
     extern int Stack_IsEmpty(int);
@@ -5799,11 +5605,7 @@ int dbstealerworm_stateHandlerB06(int obj, int p2)
         return 0;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int dbstealerworm_stateHandlerA0A(int obj, int p2)
 {
     extern int Stack_IsFull(int sp);
@@ -5897,11 +5699,7 @@ int dbstealerworm_stateHandlerA0A(int obj, int p2)
         return 0;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int dbstealerworm_stateHandlerA0B(int obj, int p2, f32 t)
 {
     extern int Stack_IsFull(int sp);
@@ -6105,11 +5903,7 @@ int dbstealerworm_stateHandlerA0B(int obj, int p2, f32 t)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int dbstealerworm_stateHandlerA07(int obj, int p2, f32 t)
 {
     extern int Stack_IsFull(int sp);
@@ -6305,11 +6099,7 @@ int dbstealerworm_stateHandlerA07(int obj, int p2, f32 t)
                                  (float *)(p2 + 0x2a0));
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_loop_invariants off
 void dbstealerworm_update(u8 *objp)
 {
@@ -6427,11 +6217,7 @@ void dbstealerworm_update(u8 *objp)
     }
 }
 #pragma opt_loop_invariants reset
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int dbstealerworm_stateHandlerA08(int obj, int p2, f32 t)
 {
     extern int Stack_IsFull(int sp);
@@ -6609,11 +6395,7 @@ int dbstealerworm_stateHandlerA08(int obj, int p2, f32 t)
                                  (float *)(p2 + 0x2a0));
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80204BF8(int obj)
 {
     extern int Obj_GetPlayerObject(void);
@@ -6747,11 +6529,7 @@ void fn_80204BF8(int obj)
         break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int dbstealerworm_stateHandlerA0C(int obj, int p2, f32 t)
 {
     extern int Stack_IsFull(int sp);
@@ -6889,11 +6667,7 @@ int dbstealerworm_stateHandlerA0C(int obj, int p2, f32 t)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void chuka_update(int obj)
 {
     extern int *ObjList_GetObjects(int *, int *);
@@ -7012,11 +6786,7 @@ void chuka_update(int obj)
         break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void DFP_Torch_update(int obj)
 {
     extern void Sfx_PlayFromObject(int, int);
@@ -7117,11 +6887,7 @@ void DFP_Torch_update(int obj)
         break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void drakorenergy_update(int obj)
 {
     extern int Obj_GetPlayerObject(void);
@@ -7227,11 +6993,7 @@ void drakorenergy_update(int obj)
     *(s16 *)obj += lbl_803DC178;
     ((DrakorEnergyState *)blob)->phase += framesThisStep * 0x500;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int dfpseqpoint_SeqFn(int obj, int p2, int p3)
 {
     extern void unlockLevel(int a, int b, int c);
@@ -7280,11 +7042,7 @@ int dfpseqpoint_SeqFn(int obj, int p2, int p3)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void dfpseqpoint_update(int obj)
 {
     extern int Obj_GetPlayerObject(void);
@@ -7374,11 +7132,7 @@ void dfpseqpoint_update(int obj)
         break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t)
 {
     extern int Stack_IsFull(int sp);
@@ -7474,11 +7228,7 @@ int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t)
                                  (float *)(p2 + 0x2a0));
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void dbegg_update(int obj)
 {
     extern int Obj_GetPlayerObject(void);
@@ -7825,5 +7575,3 @@ void dbegg_update(int obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

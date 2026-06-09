@@ -219,8 +219,6 @@ static inline DIMbossObjectTriggerInterface *DIMboss_GetObjectTriggerInterface(v
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState *animUpdate)
 {
   DIMbossRuntime *runtime;
@@ -438,8 +436,6 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
 LAB_801bd7dc:
   return updateResult;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -526,7 +522,6 @@ int DIMboss_getObjectTypeId(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-#pragma peephole off
 void DIMboss_free(DIMbossObject *obj)
 {
   DIMbossRuntime *runtime;
@@ -559,7 +554,6 @@ void DIMboss_free(DIMbossObject *obj)
   }
   timeOfDayFn_80055000();
 }
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -626,8 +620,6 @@ void DIMboss_hitDetect(DIMbossObject *obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void DIMboss_update(DIMbossObject *obj)
 {
   uint gameBitCount;
@@ -720,8 +712,6 @@ void DIMboss_update(DIMbossObject *obj)
     }
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -851,8 +841,6 @@ ObjectDescriptor12 gDIM_BossObjDescriptor = {
     (ObjectDescriptorCallback)DIMboss_func0B,
 };
 
-#pragma scheduling off
-#pragma peephole off
 void DIMboss_initialiseAnimTables(void)
 {
   void (**table)(void);
@@ -879,5 +867,3 @@ void DIMboss_initialiseAnimTables(void)
   table[4] = fn_801BA224;
   table[5] = fn_801B9ECC;
 }
-#pragma peephole reset
-#pragma scheduling reset

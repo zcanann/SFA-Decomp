@@ -891,8 +891,6 @@ extern f32 lbl_803E5870;
 extern f32 lbl_803E5874;
 extern f32 lbl_803E5878;
 
-#pragma scheduling off
-#pragma peephole off
 void SB_ShipMast_update(int *obj) {
     extern u8 framesThisStep;
     int *parent;
@@ -929,8 +927,6 @@ void SB_ShipMast_update(int *obj) {
     }
     ObjAnim_AdvanceCurrentMove(speed, (f32)(u32)framesThisStep, (int)obj, NULL);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* 8b "li r3, N; blr" returners. */
 int SB_Galleon_getExtraSize(void) { return 0xb4; }
@@ -957,17 +953,11 @@ s32 SB_Galleon_func0B(int *obj) { return *(s8*)((char*)((int**)obj)[0xb8/4] + 0x
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5868;
-#pragma peephole off
 void SB_Propeller_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5810); }
 void SB_ShipMast_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5868); }
-#pragma peephole reset
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-#pragma scheduling off
-#pragma peephole off
 void SB_ShipHead_free(int x) { ObjGroup_RemoveObject(x, 0x3); }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* SB_Propeller_hitDetect: guard on 0x46 == 0x69c, copy halfword from sda21 ptr. */
 void SB_Propeller_hitDetect(int param_1) {
@@ -981,7 +971,6 @@ void SB_ShipGun_free(int param_1) {
 }
 
 /* SB_Galleon_setScale: state machine; advance counter, optionally play sfx. */
-#pragma peephole off
 int SB_Galleon_setScale(int obj) {
     s8 *p = (s8*)((int**)obj)[0xb8/4];
     int s = ((SBGalleonState *)p)->phase;
@@ -1001,7 +990,6 @@ int SB_Galleon_setScale(int obj) {
     }
     return 0;
 }
-#pragma peephole reset
 
 /* SB_Galleon_hitDetect: per-step expgfx spawn loop. */
 extern f32 lbl_803E57FC;
@@ -1011,8 +999,6 @@ extern f32 lbl_803E5808;
 extern f32 lbl_803E5738;
 extern f32 lbl_803E56F0;
 extern f32 lbl_803E56C8;
-#pragma peephole off
-#pragma scheduling off
 void SB_Galleon_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
     u8 *p = (u8*)((int**)obj)[0xb8/4];
     struct {
@@ -1061,8 +1047,6 @@ void SB_Galleon_hitDetect(int obj) {
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 
 /*
@@ -1197,8 +1181,6 @@ void SB_Galleon_free(int obj, int p2) {
 extern void ObjMsg_AllocQueue(int obj, int n);
 extern f32 lbl_803E5830;
 extern f32 lbl_803E5838;
-#pragma scheduling off
-#pragma peephole off
 void SB_ShipHead_init(int obj) {
     f32 *p = (f32*)((int**)obj)[0xb8/4];
     ObjGroup_AddObject(obj, 3);
@@ -1207,13 +1189,9 @@ void SB_ShipHead_init(int obj) {
     ((SBShipHeadState *)p)->swayB = ((SBShipHeadState *)p)->swayB + lbl_803E5830;
     ((SBShipHeadState *)p)->swayA = ((SBShipHeadState *)p)->swayA + lbl_803E5838;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* SB_ShipGun_render: conditional render with multiple flag checks. */
 extern f32 lbl_803E5888;
-#pragma scheduling off
-#pragma peephole off
 void SB_ShipGun_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
     void *o30 = *(void**)&((GameObject *)obj)->anim.parent;
     s8 *p = ((GameObject *)obj)->extra;
@@ -1226,12 +1204,8 @@ void SB_ShipGun_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E5888);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* SB_Galleon_modelMtxFn: returns -2 / -1 / state byte depending on flags. */
-#pragma peephole off
-#pragma scheduling off
 int SB_Galleon_modelMtxFn(int *obj) {
     u8 *p = (u8*)((int**)obj)[0xb8/4];
     u8 b = *(u8 *)&((SBGalleonState *)p)->phase;
@@ -1246,11 +1220,8 @@ int SB_Galleon_modelMtxFn(int *obj) {
     }
     return (s8)b;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /* SB_Galleon_func0E: state byte == 1 -> compute from 0x7c; else return 0x640. */
-#pragma peephole off
 int SB_Galleon_func0E(int *obj) {
     register s8 *p = (s8*)((int**)obj)[0xb8/4];
     s8 phase;
@@ -1266,4 +1237,3 @@ int SB_Galleon_func0E(int *obj) {
     }
     return 0x640;
 }
-#pragma peephole reset

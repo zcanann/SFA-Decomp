@@ -7603,14 +7603,12 @@ u32 getDataFileSize(int idx) {
 extern void VISetBlack(int);
 extern void VIFlush(void);
 extern u8 lbl_803DB5CC;
-#pragma peephole off
 void viFn_8004a56c(int val) {
     int v = val;
     VISetBlack(1);
     VIFlush();
     lbl_803DB5CC = (u8)v;
 }
-#pragma peephole reset
 
 void freeAndNull(void **p) {
     if (*p != NULL) {
@@ -7644,7 +7642,6 @@ extern void GXSetTevColorOp(int, int, int, int, int, int);
 extern void GXSetTevAlphaOp(int, int, int, int, int, int);
 
 #pragma scheduling off
-#pragma peephole off
 void fn_80050F2C(void) {
     GXSetTevDirect(lbl_803DCD90);
     GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 255);
@@ -7656,11 +7653,9 @@ void fn_80050F2C(void) {
     lbl_803DCD90 = lbl_803DCD90 + 1;
     lbl_803DCD6A++;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 int fn_8004AA24(int *ctx, int *ref) {
     int *node;
@@ -7962,7 +7957,6 @@ found:
         }
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern void gxSetZMode_(int a, int b, int c);
@@ -8024,7 +8018,6 @@ extern u8 GXNtsc480Prog[];
 extern u8 lbl_803DB5D4;
 extern u8 *lbl_803DCCF0;
 extern void GXSetCopyFilter(u8 aa, u8 *pat, u8 vf_en, u8 *vfilter);
-#pragma scheduling off
 void setDisplayCopyFilter(void) {
     u8 *p = lbl_803DCCF0;
     if (p == GXNtsc480Prog || p[0x18] != 0) {
@@ -8033,13 +8026,11 @@ void setDisplayCopyFilter(void) {
         GXSetCopyFilter(p[0x19], p + 0x1a, 1, &lbl_803DB5D4);
     }
 }
-#pragma scheduling reset
 
 extern void GXLoadTexObj(void *obj, int id);
 extern void GXLoadTexObjPreLoaded(void *obj, void *region, int id);
 extern void fn_80053C40(u8 *tex, void *out);
 extern u8 lbl_803779A0[];
-#pragma scheduling off
 #pragma peephole off
 void textureFn_8004c264(u8 *tex, int mapId) {
     void *base;
@@ -8056,9 +8047,7 @@ void textureFn_8004c264(u8 *tex, int mapId) {
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 void selectTexture(u8 *tex, int mapId) {
     void *base;
@@ -8071,7 +8060,6 @@ void selectTexture(u8 *tex, int mapId) {
     }
 }
 #pragma peephole reset
-#pragma scheduling off
 #pragma peephole off
 void loadModelsBin(int a, int *p1c, int *p20, int *p18, int *p4) {
     u32 v31 = 0;
@@ -8107,8 +8095,6 @@ void loadModelsBin(int a, int *p1c, int *p20, int *p18, int *p4) {
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
-#pragma scheduling off
 #pragma peephole off
 void checkLoadBlock(int a, int *pc, int *p8) {
     int idx = -1;
@@ -9951,7 +9937,6 @@ void loadDataFiles(void) {
     loadTableFiles();
 }
 #pragma peephole reset
-#pragma scheduling reset
 extern void VIConfigure(void *mode);
 void tvInit(void) {
     *(s16 *)((char *)lbl_803DCCF0 + 0xe) = 0x294;
@@ -10156,7 +10141,6 @@ void fn_8004EF9C(int *param) {
     lbl_803DCD90 = lbl_803DCD90 + 1;
     lbl_803DCD6A = lbl_803DCD6A + 1;
 }
-#pragma scheduling reset
 
 extern u8 lbl_802CC6A0[];
 extern char lbl_8035F680[];
@@ -10308,7 +10292,6 @@ int initLoadFiles(void) {
 #pragma optimize_for_size reset
 #pragma peephole reset
 
-#pragma scheduling off
 #pragma peephole off
 extern char sThreadStateAttrSuspendFormat[];
 void waitNextFrame(void)
@@ -10356,13 +10339,11 @@ void waitNextFrame(void)
     GXInvalidateTexAll();
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 void logGpuHang(void);
 extern void *lbl_803DCCD8;
 extern void *lbl_803DCCE4;
 extern void *lbl_803DCCCC;
-#pragma scheduling off
 #pragma peephole off
 void videoSwapFrameBuffers(void)
 {
@@ -10410,9 +10391,7 @@ void videoSwapFrameBuffers(void)
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 void videoFn_800499e8(void)
 {
@@ -10457,9 +10436,7 @@ void videoFn_800499e8(void)
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 void logGpuHang(void)
 {
@@ -10496,7 +10473,6 @@ void logGpuHang(void)
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 extern void debugPrintfxy(int x, int y, const char *fmt, ...);
 extern int OSGetResetButtonState(void);
@@ -10506,7 +10482,6 @@ extern u8 lbl_803DCCA6;
 extern u8 lbl_803DCCA4;
 extern u8 lbl_803DDA28;
 extern char lbl_803DB5DC;
-#pragma scheduling off
 #pragma peephole off
 void gpuErrorHandler(void)
 {
@@ -10584,9 +10559,7 @@ void gpuErrorHandler(void)
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 extern void *OSGetArenaLo(void);
 extern void *OSGetArenaHi(void);
@@ -10760,7 +10733,6 @@ void videoInit(void) {
     PPCMthid0(PPCMfhid0() | HID0_SPD);
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 #pragma peephole off
 #pragma optimize_for_size on
