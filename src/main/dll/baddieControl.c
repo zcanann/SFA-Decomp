@@ -3271,16 +3271,13 @@ extern CameraModeWorldMapState *lbl_803DD588;
 
 void CameraModePerv_init(int *obj)
 {
-    CameraObject *camera;
-    GameObject *target;
+    CameraObject *camera = (CameraObject *)obj;
 
-    camera = (CameraObject *)obj;
-    target = (GameObject *)camera->anim.targetObj;
     if (lbl_803DD5C8 == NULL) {
         lbl_803DD5C8 = (CameraModePervState *)mmAlloc(sizeof(CameraModePervState), 15, 0);
     }
     lbl_803DD5C8->timer = lbl_803E1B98;
-    lbl_803DD5C8->cameraY = target->anim.worldPosY - lbl_803E1B9C;
+    lbl_803DD5C8->cameraY = ((GameObject *)camera->anim.targetObj)->anim.worldPosY - lbl_803E1B9C;
 }
 
 void CameraModeCannon_init(int *p1, int unused, int *p3)
@@ -3427,20 +3424,17 @@ extern f32 lbl_803E1BE0;
 extern f32 lbl_803DB9D8;
 void CameraModeTitle_init(CameraObject *camera)
 {
-    CameraModeTitlePose *targetPose;
-
     lbl_803DD5D2 = 4;
     lbl_803DD5D1 = 4;
     lbl_803DB9D8 = lbl_803E1BE0;
     lbl_803DD5D0 = 0;
 
-    targetPose = &lbl_80319FB8[lbl_803DD5D2];
-    camera->anim.localPosX = targetPose->x;
-    camera->anim.localPosY = targetPose->y;
-    camera->anim.localPosZ = targetPose->z;
-    camera->anim.rotX = targetPose->yaw;
-    camera->anim.rotY = targetPose->pitch;
-    camera->anim.rotZ = targetPose->roll;
+    camera->anim.localPosX = lbl_80319FB8[4].x;
+    camera->anim.localPosY = lbl_80319FB8[lbl_803DD5D2].y;
+    camera->anim.localPosZ = lbl_80319FB8[lbl_803DD5D2].z;
+    camera->anim.rotX = lbl_80319FB8[lbl_803DD5D2].yaw;
+    camera->anim.rotY = lbl_80319FB8[lbl_803DD5D2].pitch;
+    camera->anim.rotZ = lbl_80319FB8[lbl_803DD5D2].roll;
 }
 
 extern CameraMode54State *lbl_803DD5C0;
@@ -3559,9 +3553,10 @@ void CameraModeCloudRunner_init(int *p1, int p2, f32 *p3)
         ((GameObject *)p1)->anim.worldPosZ - lbl_803DD5B8->focusZ);
     {
         int *a4 = ((int**)p1)[0xA4/4];
+        f32 *q = (f32 *)lbl_803DD5B8;
         getAngle(
-            ((GameObject *)a4)->anim.worldPosX - lbl_803DD5B8->focusX,
-            ((GameObject *)a4)->anim.worldPosZ - lbl_803DD5B8->focusZ);
+            ((GameObject *)a4)->anim.worldPosX - q[0],
+            ((GameObject *)a4)->anim.worldPosZ - q[2]);
     }
 }
 
