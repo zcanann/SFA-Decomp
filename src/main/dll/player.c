@@ -10001,7 +10001,7 @@ int fn_802A4B78(int obj, int state)
         inner->unk898 = (int)fn_802A514C;
     }
     if ((*(int *)((char *)state + 0x314) & 1) &&
-        (sub = inner->heldObj) != 0) {
+        (void *)(sub = inner->heldObj) != NULL) {
         switch (*(s16 *)((char *)sub + 0x46)) {
         case 0x6d:
         case 0x754:
@@ -10025,12 +10025,12 @@ int fn_802A4B78(int obj, int state)
     *(f32 *)((char *)state + 0x2a0) = lbl_803E7F40;
 
     sub = inner->heldObj;
-    if (sub == 0 && *(s8 *)((char *)state + 0x346) != 0) {
+    if ((void *)sub == NULL && *(s8 *)((char *)state + 0x346) != 0) {
         *(u32 *)((char *)inner + 0x360) |= 0x800000LL;
         *(int *)((char *)state + 0x308) = (int)fn_802A514C;
         return 2;
     }
-    if (sub != 0 && ((GameObject *)obj)->anim.currentMoveProgress > lbl_803E7F48) {
+    if ((void *)sub != NULL && ((GameObject *)obj)->anim.currentMoveProgress > lbl_803E7F48) {
         inner->unk800 = 0;
         if (*(void **)((char *)inner + 0x7f8) != NULL) {
             int s2 = inner->heldObj;
@@ -10053,14 +10053,14 @@ int playerSetHeldObject(int obj, int held)
     PlayerState *inner = ((GameObject *)obj)->extra;
     int sub;
 
-    if (held != 0) {
+    if ((void *)held != NULL) {
         inner->heldObj = held;
         (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, (int)inner, 5);
         *(int *)((char *)inner + 0x304) = (int)fn_802A4B4C;
-    } else if (inner->heldObj != 0) {
+    } else if ((void *)inner->heldObj != NULL) {
         inner->unk800 = 0;
         sub = inner->heldObj;
-        if (sub != 0) {
+        if ((void *)sub != NULL) {
             s16 id = *(s16 *)((char *)sub + 0x46);
             if (id == 0x3cf || id == 0x662) {
                 objThrowFn_80182504(sub);
@@ -10075,7 +10075,7 @@ int playerSetHeldObject(int obj, int held)
         (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, (int)inner, 1);
         *(int *)((char *)inner + 0x304) = (int)fn_802A514C;
     }
-    return inner->heldObj != 0;
+    return (void *)inner->heldObj != NULL;
 }
 
 int fn_80298184(int obj, int state, f32 fv)
@@ -13986,10 +13986,10 @@ int fn_802ADC08(int obj, int inner, int p3)
         doRumble(lbl_803E7F10);
         Sfx_PlayFromObject(obj, (u16)audioPickSoundEffect_8006ed24(*(u8 *)((char *)inner + 0x86c),
                                                                    *(u8 *)((char *)inner + 0x8a5)));
-        if (*(s16 *)((char *)inner + 0x81a) != 0) {
-            snd = 0x25;
-        } else {
+        if (*(s16 *)((char *)inner + 0x81a) == 0) {
             snd = 0x2cf;
+        } else {
+            snd = 0x25;
         }
         Sfx_PlayFromObject(obj, snd);
         ((ByteFlags *)((char *)inner + 0x3f0))->b08 = 0;
@@ -14026,31 +14026,26 @@ int fn_802ADC08(int obj, int inner, int p3)
     }
     *(u8 *)((char *)inner + 0x40c) += 1;
     {
-        int v = *(u8 *)((char *)inner + 0x40c);
+        u32 v = *(u8 *)((char *)inner + 0x40c);
         if (v > 0xa) v = 0xa;
         *(u8 *)((char *)inner + 0x40c) = v;
     }
     *(u8 *)((char *)inner + 0x8c5) = 1;
     {
-        f32 f4 = lbl_803E7FF4;
-        f32 c4 = lbl_803E80C4;
-        *(f32 *)((char *)inner + 0x428) = c4;
-        *(f32 *)((char *)inner + 0x42c) = f4;
+        f32 f4, c4;
+        *(f32 *)((char *)inner + 0x428) = (c4 = lbl_803E80C4);
+        *(f32 *)((char *)inner + 0x42c) = (f4 = lbl_803E7FF4);
         *(f32 *)((char *)inner + 0x430) = c4;
         *(f32 *)((char *)inner + 0x434) = f4;
     }
     *(f32 *)((char *)inner + 0x82c) = lbl_803DC684;
     {
-        f32 v = *(f32 *)((char *)inner + 0x408);
-        f32 r;
-        if (v < lbl_803E7EA4) {
-            r = lbl_803E7EA4;
-        } else if (v > *(f32 *)((char *)inner + 0x404)) {
-            r = *(f32 *)((char *)inner + 0x404);
-        } else {
-            r = v;
-        }
-        *(f32 *)((char *)inner + 0x408) = r;
+        *(f32 *)((char *)inner + 0x408) =
+            (*(f32 *)((char *)inner + 0x408) < lbl_803E7EA4)
+                ? lbl_803E7EA4
+                : ((*(f32 *)((char *)inner + 0x408) > *(f32 *)((char *)inner + 0x404))
+                       ? *(f32 *)((char *)inner + 0x404)
+                       : *(f32 *)((char *)inner + 0x408));
     }
     return 0;
 }
