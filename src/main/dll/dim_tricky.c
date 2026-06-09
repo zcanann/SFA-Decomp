@@ -59,8 +59,6 @@ STATIC_ASSERT(offsetof(Dll19ESetup, gameBitId) == 0x1E);
  * EN v1.0 Address: 0x801CD258
  * EN v1.0 Size: 1056b
  */
-#pragma scheduling off
-#pragma peephole off
 void dll_19E_update(void *obj)
 {
   Dll19EState *state;
@@ -169,8 +167,6 @@ void dll_19E_update(void *obj)
     }
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /*
@@ -180,8 +176,6 @@ void dll_19E_update(void *obj)
  * EN v1.0 Address: 0x801CD678
  * EN v1.0 Size: 348b
  */
-#pragma scheduling off
-#pragma peephole off
 void dll_19E_init(u8 *obj, Dll19ESetup *setup)
 {
   Dll19EState *state;
@@ -220,8 +214,6 @@ void dll_19E_init(u8 *obj, Dll19ESetup *setup)
   }
   state->delayTimer = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */

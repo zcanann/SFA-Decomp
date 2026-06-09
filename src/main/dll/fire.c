@@ -49,7 +49,6 @@ extern f32 lbl_803E64D8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 undefined4 fire_updateState(FireObject *obj,undefined4 param_2,ObjAnimUpdateState *animUpdate)
 {
   int stateIndex;
@@ -139,7 +138,6 @@ undefined4 fire_updateState(FireObject *obj,undefined4 param_2,ObjAnimUpdateStat
   }
   return 0;
 }
-#pragma scheduling reset
 
 int fireObj_getExtraSize(void)
 {
@@ -166,16 +164,12 @@ void fireObj_hitDetect(void)
 {
 }
 
-#pragma scheduling off
 void fireObj_update(FireObject *obj)
 {
   (*gObjectTriggerInterface)->refresh(0,obj,0xffffffff);
   return;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fireObj_init(FireObject *obj)
 {
   u32 v;
@@ -190,8 +184,6 @@ void fireObj_init(FireObject *obj)
   streamFn_8000a380(3,2,LINKA_LEVCONTROL_INIT_COLLECTABLE_ID);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void fireObj_release(void)
 {

@@ -5,7 +5,6 @@ extern CameraViewSlot *Camera_GetCurrentViewSlot(void);
 extern float Camera_GetFovY(void);
 extern f32 lbl_803E162C;
 
-#pragma scheduling off
 void firstPersonZoomOutOnExit(byte param_1, byte param_2)
 {
   CameraViewSlot *vs;
@@ -28,6 +27,5 @@ void firstPersonZoomOutOnExit(byte param_1, byte param_2)
 
   *(float *)(pCamera + 0x118) = Camera_GetFovY();
 }
-#pragma scheduling reset
 
 void cameraSetInterpMode(u8 v) { pCamera[0x139] = v; }

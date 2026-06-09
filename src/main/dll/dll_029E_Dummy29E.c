@@ -19,10 +19,8 @@ void Dummy29E_release(void) {}
 
 void Dummy29E_initialise(void) {}
 
-#pragma scheduling off
 void fn_8022F558(int obj, int v)
 {
     ARWBombCollState *state = ((GameObject *)obj)->extra;
     state->lifetime = (f32)v;
 }
-#pragma scheduling reset

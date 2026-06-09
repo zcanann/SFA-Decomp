@@ -25,6 +25,4 @@ extern void OSReport(const char *fmt, ...);
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 
-#pragma scheduling off
 int projdfp1r_doUnsupported(void) { OSReport(sProjdfp1rDoNoLongerSupported); return PROJECTILE_UNSUPPORTED_RETURN; }
-#pragma scheduling reset

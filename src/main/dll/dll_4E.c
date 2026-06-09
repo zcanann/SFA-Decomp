@@ -71,8 +71,6 @@ extern u8 *lbl_803DD708;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void optionsMenu_applyAudioSetting(int p1,int p2)
 {
     int value;
@@ -133,8 +131,6 @@ void optionsMenu_applyAudioSetting(int p1,int p2)
         Sfx_PlayFromObject(0, 0x418);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int optionsMenu_openAudioPanel(void);
 extern int optionsMenu_openGeneralPanel(void);
@@ -149,8 +145,6 @@ extern void doRumble(f32 val);
 extern void creditsStart(void);
 extern void Rcp_SetColorFilterEnabled(int enabled);
 
-#pragma scheduling off
-#pragma peephole off
 void optionsMenu_applyGameplaySetting(int p1, int p2)
 {
     int i;
@@ -204,10 +198,7 @@ void optionsMenu_applyGameplaySetting(int p1, int p2)
         lbl_803DD705 = 1;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 int optionsMenu_openSelectedSubmenu(int p1, int p2)
 {
     if (p1 == OPTIONS_MENU_ACTION_SELECT) {
@@ -231,4 +222,3 @@ int optionsMenu_openSelectedSubmenu(int p1, int p2)
     }
     return 0;
 }
-#pragma scheduling reset

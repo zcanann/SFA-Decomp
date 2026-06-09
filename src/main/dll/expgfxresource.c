@@ -5,8 +5,6 @@
 
 extern int Obj_IsLoadingLocked(void);
 
-#pragma scheduling off
-#pragma peephole off
 void expgfx_updateResourceEntries(int unused) {
     ExpgfxResourceEntry *entry;
     int i;
@@ -29,11 +27,7 @@ void expgfx_updateResourceEntries(int unused) {
         entry++;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int expgfx_acquireResourceEntry(int resourceId) {
     ExpgfxResourceEntry *entry;
     ExpgfxResourceHandle *resourceHandle;
@@ -105,6 +99,4 @@ int expgfx_acquireResourceEntry(int resourceId) {
     }
     return EXPGFX_RESOURCE_ACQUIRE_RELOAD_FAILED;
 }
-#pragma peephole reset
-#pragma scheduling reset
 

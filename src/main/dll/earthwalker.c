@@ -10,8 +10,6 @@ int earthwalker_getObjectTypeId(void) { return 0; }
 
 void earthwalker_free(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void earthwalker_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     EarthWalkerObject *ewObj = (EarthWalkerObject *)obj;
@@ -22,11 +20,7 @@ void earthwalker_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         dll_2E_func06(obj, state, 0);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void earthwalker_hitDetect(int obj)
 {
     EarthWalkerObject *ewObj = (EarthWalkerObject *)obj;
@@ -37,15 +31,11 @@ void earthwalker_hitDetect(int obj)
         fn_8003AAE0(obj, seqFn_800394a0(), ewState->hitTriggerId, 0, 0x186a0);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void earthwalker_release(void) {}
 
 void earthwalker_initialise(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void earthwalker_update(int obj)
 {
     EarthWalkerObject *ewObj = (EarthWalkerObject *)obj;
@@ -252,15 +242,11 @@ void earthwalker_update(int obj)
 
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E6CDC, timeDelta, 0);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 int fn_80223BBC(void) { return 0x2; }
 
 int fn_80223D10(void) { return 0x2; }
 
-#pragma peephole off
-#pragma scheduling off
 int fn_802239A4(int obj, int ai)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -277,11 +263,7 @@ int fn_802239A4(int obj, int ai)
     }
     return result;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 int fn_80223A1C(int obj, int ai)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -305,11 +287,7 @@ int fn_80223A1C(int obj, int ai)
     }
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 int fn_80223AFC(int obj, int ai)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -327,11 +305,7 @@ int fn_80223AFC(int obj, int ai)
     }
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 int fn_80223BC4(int obj, int ai)
 {
     int player = Obj_GetPlayerObject();
@@ -343,11 +317,7 @@ int fn_80223BC4(int obj, int ai)
     }
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 int fn_80223C34(int obj, int ai)
 {
     EarthWalkerObject *ewObj = (EarthWalkerObject *)obj;
@@ -364,10 +334,7 @@ int fn_80223C34(int obj, int ai)
         (ObjAnimComponent *)obj, (f32 *)(ai + 0x2a0));
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
 int fn_80223CF0(int obj, int ai)
 {
     if (*(s8 *)(ai + 0x27a) != 0) {
@@ -375,10 +342,7 @@ int fn_80223CF0(int obj, int ai)
     }
     return 0;
 }
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 int earthwalker_animEventCallback(int obj, int p2, int p3, int p4)
 {
     EarthWalkerObject *ewObj = (EarthWalkerObject *)obj;
@@ -406,11 +370,7 @@ int earthwalker_animEventCallback(int obj, int p2, int p3, int p4)
     }
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void earthwalker_init(int obj, int setup)
 {
     EarthWalkerObject *ewObj = (EarthWalkerObject *)obj;
@@ -438,5 +398,3 @@ void earthwalker_init(int obj, int setup)
     }
     ewState->lastTriggeredState = -1;
 }
-#pragma scheduling reset
-#pragma peephole reset

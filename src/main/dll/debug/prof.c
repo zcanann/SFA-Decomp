@@ -26,8 +26,6 @@ typedef struct OptionsMenuPanels {
 
 extern OptionsMenuPanels lbl_8031ACB8;
 
-#pragma scheduling off
-#pragma peephole off
 void optionsMenu_openAudioPanel(void)
 {
   OptionsMenuPanels *panels;
@@ -162,5 +160,3 @@ void optionsMenu_openGeneralPanel(void)
   (*(void (**)(int, int))(*gTitleMenuItemInterface + 0x20))(lbl_803A87D0[0], 1);
   lbl_803DD706 = 2;
 }
-#pragma peephole reset
-#pragma scheduling reset

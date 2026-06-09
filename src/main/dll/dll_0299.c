@@ -15,7 +15,6 @@ void dll_299_release_nop(void) {}
 
 void dll_299_initialise_nop(void) {}
 
-#pragma scheduling off
 void dll_299_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
@@ -23,9 +22,7 @@ void dll_299_free(int obj)
     Resource_Release(lbl_803DDD80);
     lbl_803DDD80 = 0;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void dll_299_update(int obj)
 {
     if (randomGetRange(0, 2) == 0) {
@@ -35,10 +32,7 @@ void dll_299_update(int obj)
     (*gPartfxInterface)->spawnObject((void *)obj, 0x547, NULL, 4, -1, NULL);
     (*gPartfxInterface)->spawnObject((void *)obj, 0x547, NULL, 4, -1, NULL);
 }
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void dll_299_init(int obj, int setup)
 {
     *(s16 *)*(int *)&((GameObject *)obj)->extra = *(s16 *)(setup + 0x1e);
@@ -49,5 +43,3 @@ void dll_299_init(int obj, int setup)
     (*gPartfxInterface)->spawnObject((void *)obj, 0x545, NULL, 0x802, -1, NULL);
     (*gPartfxInterface)->spawnObject((void *)obj, 0x546, NULL, 0x802, -1, NULL);
 }
-#pragma scheduling reset
-#pragma peephole reset

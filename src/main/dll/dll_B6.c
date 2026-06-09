@@ -30,8 +30,6 @@ extern f32 lbl_803E1658;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void *camcontrol_findBestTarget(int param_1, u8 *focus)
 {
     int objIndex;
@@ -171,8 +169,6 @@ void *camcontrol_findBestTarget(int param_1, u8 *focus)
     }
     return NULL;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -186,8 +182,6 @@ void *camcontrol_findBestTarget(int param_1, u8 *focus)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void camcontrol_updateMoveAverage(int *obj, void *p) {
     f32 mag;
     *(f32 *)&((GameObject *)obj)->unkC8 = *(f32 *)((char *)obj + 0xcc);
@@ -210,5 +204,3 @@ void camcontrol_updateMoveAverage(int *obj, void *p) {
         *(f32 *)&((GameObject *)obj)->unkC4 = -*(f32 *)&((GameObject *)obj)->unkC4;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

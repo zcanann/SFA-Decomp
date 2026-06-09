@@ -54,8 +54,6 @@ extern f32 lbl_803E2A08;
 extern f64 lbl_803E2A10;
 extern f64 lbl_803E2A18;
 
-#pragma peephole off
-#pragma scheduling off
 void fn_80154870(int obj, int *state)
 {
     int curve;
@@ -132,11 +130,7 @@ void fn_80154870(int obj, int *state)
          (f32)((GameObject *)obj)->anim.rotY);
     fn_80154328(obj, state);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void fn_80154C24(int obj, int state)
 {
     float fVar1;
@@ -167,11 +161,7 @@ void fn_80154C24(int obj, int state)
     fVar1 = lbl_803E29F8 * fVar1;
     *(float *)(state + 0x2fc) = fVar1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void fn_80154D0C(int obj, int state, u16 *outAngle, float *outDistance)
 {
     f32 targetPos[3];
@@ -355,5 +345,3 @@ uint fn_80154FB4(short *obj, int state, uint turnTime, f32 maxDistance)
     return angleStep & 0xffff;
 }
 
-#pragma scheduling reset
-#pragma peephole reset

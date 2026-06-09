@@ -20,8 +20,6 @@ extern int isCheatUnlocked(int);
  * EN v1.0 Address: 0x8011C5CC
  * EN v1.0 Size: 488b
  */
-#pragma scheduling off
-#pragma peephole off
 void languageMenuInit(void) {
     MenuPanelGroup *p;
 
@@ -54,5 +52,3 @@ void languageMenuInit(void) {
 
     lbl_803DD706 = 2;
 }
-#pragma peephole reset
-#pragma scheduling reset

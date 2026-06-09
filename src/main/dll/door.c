@@ -40,7 +40,6 @@ extern f32 lbl_803E6490;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject *obj,
                                            DfpTargetBlockCollisionPoints *collisionPoints)
 {
@@ -83,7 +82,6 @@ void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject *obj,
     i++;
   }
 }
-#pragma scheduling reset
 
 /*
  * --INFO--

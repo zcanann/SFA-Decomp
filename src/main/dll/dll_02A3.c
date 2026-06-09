@@ -31,7 +31,6 @@ void dll_2A3_render(int obj, int p2, int p3, int p4, int p5)
 
 void dll_2A3_hitDetect(void) { lbl_803DDD94 = 0; }
 
-#pragma scheduling off
 void dll_2A3_update(int obj)
 {
     f32 thr;
@@ -65,10 +64,7 @@ void dll_2A3_update(int obj)
         lbl_803DDD94 = 1;
     }
 }
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void dll_2A3_init(int obj)
 {
     Dll2A3State *state = ((GameObject *)obj)->extra;
@@ -82,8 +78,6 @@ void dll_2A3_init(int obj)
     state->rotZSpeed = randomGetRange(-0x32, 0x32);
     lbl_803DDD90 = lbl_803DDD90 + 1;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void fn_8023137C(int obj, int src)
 {
@@ -92,10 +86,8 @@ void fn_8023137C(int obj, int src)
     ((GameObject *)obj)->anim.velocityZ = *(f32 *)(src + 0x8);
 }
 
-#pragma scheduling off
 void fn_8023134C(int obj, int v)
 {
     Dll2A3State *state = ((GameObject *)obj)->extra;
     state->lifetime = (f32)v;
 }
-#pragma scheduling reset

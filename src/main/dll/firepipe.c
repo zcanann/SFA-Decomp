@@ -71,8 +71,6 @@ typedef struct {
 
 typedef void (*FirePipeEffectInitFn)(int obj, void *spawnDef, int param_3);
 
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 int firepipe_spawnEffectObject(FirePipeExtra *extra, FirePipeObject *obj, void *spawnDef)
 {
@@ -110,11 +108,7 @@ int firepipe_spawnEffectObject(FirePipeExtra *extra, FirePipeObject *obj, void *
     return effectObj;
 }
 #pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void firepipe_releaseEffectObject(FirePipeObject *obj)
 {
     if ((*(u16 *)((int)obj + 0xb0) & 0x200) != 0) {
@@ -127,10 +121,7 @@ void firepipe_releaseEffectObject(FirePipeObject *obj)
         Obj_FreeObject((int)obj);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 int firepipe_clearLinkedUpdateFlag(FirePipeObject *obj)
 {
     ((FirePipeBitFlags *)&obj->extra->flags)->bit2 = 0;
@@ -142,10 +133,7 @@ int firepipe_setLinkedUpdateFlag(FirePipeObject *obj)
     ((FirePipeBitFlags *)&obj->extra->flags)->bit2 = 1;
     return 1;
 }
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void firepipe_updateState(FirePipeObject *obj)
 {
     FirePipeExtra *extra;
@@ -330,8 +318,6 @@ sound_update:
         modelLightStruct_updateGlowAlpha(extra->subObj);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 
 int firepipe_getExtraSize(void)
@@ -339,20 +325,17 @@ int firepipe_getExtraSize(void)
     return 0x44;
 }
 
-#pragma peephole off
 undefined4 firepipe_stateCallback(FirePipeObject *obj)
 {
     firepipe_updateState(obj);
     return 0;
 }
-#pragma peephole reset
 
 int firepipe_getObjectTypeId(void)
 {
     return 1;
 }
 
-#pragma scheduling off
 void firepipe_free(FirePipeObject *obj)
 {
     int i;
@@ -372,10 +355,7 @@ void firepipe_free(FirePipeObject *obj)
         modelLightStruct_freeSlot((int)&extra->subObj);
     }
 }
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void firepipe_render(FirePipeObject *obj, int param_2, int param_3, int param_4, int param_5, char param_6)
 {
     FirePipeExtra *extra;
@@ -390,16 +370,12 @@ void firepipe_render(FirePipeObject *obj, int param_2, int param_3, int param_4,
         objRenderFn_8003b8f4((int)obj, param_2, param_3, param_4, param_5, (double)lbl_803E6B78);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
 void firepipe_update(FirePipeObject *obj)
 {
     obj->statusFlags = (u8)(obj->statusFlags | 8);
     firepipe_updateState(obj);
 }
-#pragma peephole reset
 
 static inline f64 firepipe_u32AsDouble(u32 value)
 {
@@ -407,8 +383,6 @@ static inline f64 firepipe_u32AsDouble(u32 value)
     return *(f64 *)&bits;
 }
 
-#pragma peephole off
-#pragma scheduling off
 void firepipe_init(FirePipeObject *obj, FirePipeMapData *mapData)
 {
     FirePipeExtra *extra;
@@ -530,8 +504,6 @@ void firepipe_init(FirePipeObject *obj, FirePipeMapData *mapData)
         extra->subObj = 0;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 ObjectDescriptor gFirePipeObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,

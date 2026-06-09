@@ -64,8 +64,6 @@ typedef struct NwObjPos {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_loop_invariants off
 void nw_tricky_update(int *obj)
 {
@@ -160,8 +158,6 @@ void nw_tricky_update(int *obj)
     }
 }
 #pragma opt_loop_invariants reset
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -179,13 +175,9 @@ int nw_animice_getObjectTypeId(void) { return 0x0; }
 int nw_ice_getExtraSize(void) { return 0x4; }
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-#pragma scheduling off
 void nw_animice_free(int x) { ObjGroup_RemoveObject(x, 0x3d); }
 void nw_ice_free(int x) { ObjGroup_RemoveObject(x, 0x3c); }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void nw_ice_update(int *obj) {
     NwIceState *state;
     int *setup;
@@ -232,16 +224,10 @@ void nw_ice_update(int *obj) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* call(x, N) wrappers. */
-#pragma scheduling off
 void nw_ice_init(int x) { ObjGroup_AddObject(x, 0x3c); }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void nw_tricky_init(int *obj) {
     ((GameObject *)obj)->animEventCallback = (void *)nw_tricky_SeqFn;
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x6000);
@@ -251,5 +237,3 @@ void nw_animice_init(int *obj) {
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x6000);
     ObjGroup_AddObject(obj, 0x3d);
 }
-#pragma peephole reset
-#pragma scheduling reset

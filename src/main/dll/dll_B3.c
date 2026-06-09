@@ -30,8 +30,6 @@ extern f32 lbl_803E163C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int lockIconTexCb(GameObject *obj, int *modelPtr, int renderOpIdx)
 {
   u8 *renderOp;
@@ -81,5 +79,3 @@ int lockIconTexCb(GameObject *obj, int *modelPtr, int renderOpIdx)
   GXSetCullMode(2);
   return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset

@@ -29,8 +29,6 @@ extern MapEventInterface **gMapEventInterface;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void dbsh_shrine_init(DbshShrineObject *obj)
 {
     DbshShrineRuntime *runtime;
@@ -61,8 +59,6 @@ void dbsh_shrine_init(DbshShrineObject *obj)
     GameBit_Set(DBSH_SHRINE_GB_ACTIVE, 1);
     GameBit_Set(DBSH_SHRINE_GB_INITIALIZED, 1);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--

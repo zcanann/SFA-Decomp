@@ -26,6 +26,4 @@ extern void OSReport(const char *fmt, ...);
 
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 
-#pragma scheduling off
 int projcore2_doUnsupported(void) { OSReport(sProjcore2DoNoLongerSupported); return PROJECTILE_UNSUPPORTED_RETURN; }
-#pragma scheduling reset

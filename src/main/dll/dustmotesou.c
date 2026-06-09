@@ -12,18 +12,15 @@ void dustmotesou_free(int obj)
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-#pragma peephole off
 void dustmotesou_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) {
         return;
     }
 }
-#pragma peephole reset
 
 void dustmotesou_hitDetect(void) {}
 
-#pragma peephole off
 void dustmotesou_init(int obj, int setup)
 {
     DustMoteSouObject *source = (DustMoteSouObject *)obj;
@@ -34,10 +31,7 @@ void dustmotesou_init(int obj, int setup)
     source->objAnim.rotX = (s16)(mapData->rotX << 8);
     source->objectFlags |= DUSTMOTESOU_OBJECT_FLAG_SPAWN_EFFECTS;
 }
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void dustmotesou_update(int obj)
 {
     DustMoteSouObject *source = (DustMoteSouObject *)obj;
@@ -94,8 +88,6 @@ void dustmotesou_update(int obj)
                        mapData->effectFlags, 0, 0);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void dustmotesou_release(void) {}
 

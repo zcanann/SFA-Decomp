@@ -27,8 +27,6 @@ extern u8 lbl_803DD6CF;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void saveSelectSetSlot(int param_1, int param_2)
 {
   if (param_1 == 0) {
@@ -53,5 +51,3 @@ void saveSelectSetSlot(int param_1, int param_2)
     lbl_803DD6C4 = param_2;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset

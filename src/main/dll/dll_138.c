@@ -61,8 +61,6 @@ extern f32 lbl_803E3584;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void fn_80174A80(int obj, PushableState *ext)
 {
     int def;
@@ -109,8 +107,6 @@ void fn_80174A80(int obj, PushableState *ext)
     tex[0xd] = 10;
     tex[0xe] = 10;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -149,8 +145,6 @@ extern f32 lbl_803E358C;
 extern f32 lbl_803E3590;
 extern f32 lbl_803E3594;
 
-#pragma peephole off
-#pragma scheduling off
 void fn_80174BFC(int obj, int ext)
 {
     int def;
@@ -282,8 +276,6 @@ void fn_80174BFC(int obj, int ext)
     }
     memcpy(((PushableState *)ext)->cornerWorld, points, ((PushableState *)ext)->pointCount * 0xc);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -298,8 +290,6 @@ void fn_80174BFC(int obj, int ext)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 undefined4 fn_8017510C(short *param_1,short *param_2,int param_3)
 {
   uint uVar1;
@@ -378,8 +368,6 @@ undefined4 fn_8017510C(short *param_1,short *param_2,int param_3)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -394,8 +382,6 @@ undefined4 fn_8017510C(short *param_1,short *param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void fn_80175428(int obj)
 {
   PushableState *state;
@@ -426,8 +412,6 @@ void fn_80175428(int obj)
     }
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -460,7 +444,6 @@ int pushable_render2(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void pushable_modelMtxFn(int obj,int modelNo)
 {
   int extra = *(int *)&((GameObject *)obj)->extra;
@@ -468,7 +451,6 @@ void pushable_modelMtxFn(int obj,int modelNo)
 
   *(uint *)(extra + 0xa8) = flags | (1 << modelNo);
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -489,7 +471,6 @@ typedef struct Dll138Vec3 {
     f32 z;
 } Dll138Vec3;
 
-#pragma scheduling off
 int pushable_func0B(int obj,int other)
 {
   int state;
@@ -504,4 +485,3 @@ int pushable_func0B(int obj,int other)
   return sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1])) <
          *(f32 *)(state + 0xc);
 }
-#pragma scheduling reset

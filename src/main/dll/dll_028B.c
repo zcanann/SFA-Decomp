@@ -9,12 +9,8 @@ void dll_28B_hitDetect_nop(void) {}
 
 void dll_28B_release_nop(void) {}
 
-#pragma peephole off
 void dll_28B_free(int obj) { ObjGroup_RemoveObject(obj, 3); }
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void dll_28B_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -23,11 +19,7 @@ void dll_28B_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         dll_2E_func06(obj, state + 0x35c, 0);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void dll_28B_update(int obj)
 {
     f32 ox, oy, oz;
@@ -58,11 +50,7 @@ void dll_28B_update(int obj)
     Matrix_TransformPoint(mtx, lbl_803E6CF8, lbl_803E6CF8, lbl_803E6CF8, &ox, &oy, &oz);
     doNothing_80062A50(obj, ox, oy, oz);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void dll_28B_init(int obj)
 {
     int two;
@@ -80,10 +68,7 @@ void dll_28B_init(int obj)
     (*(void (**)(int, int, int, int))(*gPlayerInterface + 0x4))(obj, state, 4, 4);
     ObjGroup_AddObject(obj, 3);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
 void dll_28B_initialise(void)
 {
     lbl_803AD288[0] = (void *)fn_80223D10;
@@ -95,4 +80,3 @@ void dll_28B_initialise(void)
     lbl_803AD278[2] = (void *)fn_80223A1C;
     lbl_803AD278[3] = (void *)fn_802239A4;
 }
-#pragma scheduling reset

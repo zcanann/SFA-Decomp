@@ -41,8 +41,6 @@ extern f32 lbl_803E166C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void camcontrol_applyState(short *param_1)
 {
   float fVar1;
@@ -169,8 +167,6 @@ void camcontrol_applyState(short *param_1)
   Camera_UpdateViewMatrices();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -179,8 +175,6 @@ void camcontrol_applyState(short *param_1)
  * EN v1.0 Address: 0x80101EBC
  * EN v1.0 Size: 400b
  */
-#pragma scheduling off
-#pragma peephole off
 void camcontrol_applyQueuedAction(void)
 {
   CameraViewSlot *view;
@@ -260,5 +254,3 @@ void Camera_setLetterbox(int yOffset,int applyNow)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset

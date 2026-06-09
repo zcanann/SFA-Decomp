@@ -167,8 +167,6 @@ extern void trickyImpress(void *trickyObj);
 extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 extern void fn_801D29E4(int *obj, int *p2);
 extern f32 lbl_803E5378;
-#pragma scheduling off
-#pragma peephole off
 void fn_801D2B70(int *obj, int unused, int *p3) {
     int *p4 = *(int **)&((GameObject *)obj)->anim.placementData;
     void *trickyObj = getTrickyObject();
@@ -194,8 +192,6 @@ void fn_801D2B70(int *obj, int unused, int *p3) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void ObjGroup_AddObject(int *obj, int group);
 extern f32 lbl_803E52FC;
@@ -204,8 +200,6 @@ extern f32 lbl_803E5350;
 /* EN v1.0 0x801D27B8  size: 172b  Mushroom enemy constructor: seeds the state
  * block, clamps the spin period, offsets the spawn height, flags the model,
  * optionally resets to spawn, and registers in object group 3. */
-#pragma scheduling off
-#pragma peephole off
 void enemymushroom_init(EnemyMushroomObject *obj, EnemyMushroomMapData *arg, int flag)
 {
     EnemyMushroomState *state = obj->state;
@@ -227,8 +221,6 @@ void enemymushroom_init(EnemyMushroomObject *obj, EnemyMushroomMapData *arg, int
     }
     ObjGroup_AddObject((int *)obj, 3);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern u8 Obj_IsLoadingLocked(void);
 extern int *Obj_AllocObjectSetup(int a, int b);
@@ -242,8 +234,6 @@ typedef struct { s16 pos[3]; f32 w; f32 v[3]; } MushSpawnBuild;
 
 /* EN v1.0 0x801D29E4  size: 336b  Spawns a spore object: builds a matrix from
  * the parent's grid pos, transforms a unit offset, and seeds the new object. */
-#pragma scheduling off
-#pragma peephole off
 void fn_801D29E4(int *obj, int *p2)
 {
     int *spore;
@@ -279,8 +269,6 @@ void fn_801D29E4(int *obj, int *p2)
         Obj_SetupObject(spore, 5, -1, -1, 0);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void Sfx_KeepAliveLoopedObjectSound(int *obj, int id);
 extern void ObjHits_RefreshObjectState(int *obj);
@@ -291,8 +279,6 @@ extern f32 lbl_803E535C;
 /* EN v1.0 0x801D286C  size: 376b  Bombplant per-tick sequencer: on the armed
  * frame snaps the model to the spawn pose and refreshes hits; otherwise keeps
  * the loop sfx alive, jitters the fuse, and fires the spark particle. */
-#pragma scheduling off
-#pragma peephole off
 int bombplant_SeqFn(int *obj)
 {
     float *state = ((GameObject *)obj)->extra;
@@ -332,8 +318,6 @@ int bombplant_SeqFn(int *obj)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int  objIsFrozen(int *obj);
 extern f32  Vec_distance(f32 *a, f32 *b);
@@ -370,8 +354,6 @@ typedef struct { f32 unk[3]; f32 x, y, z; } MushHitInfo;
 
 /* EN v1.0 0x801D1E24  size: 2452b  Mushroom enemy state machine: dormant ->
  * inflate -> chase -> deflate cycle, hit reaction, pop and respawn. */
-#pragma scheduling off
-#pragma peephole off
 void enemymushroom_update(int *obj)
 {
     char *state = ((GameObject *)obj)->extra;
@@ -606,5 +588,3 @@ void enemymushroom_update(int *obj)
         *(u8 *)(state + 0x37) = (u8)(*(u8 *)(state + 0x37) & ~0x2);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

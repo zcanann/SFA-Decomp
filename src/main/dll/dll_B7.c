@@ -5,8 +5,6 @@
 extern void mm_free(void *ptr);
 extern void *mmAlloc(int size, int heap, int flags);
 
-#pragma scheduling off
-#pragma peephole off
 void camcontrol_activateHandler(u32 actionId, void *actionData)
 {
   CamcontrolHandlerEntry *entry;
@@ -72,5 +70,3 @@ found:
   gCamcontrolActiveActionPriority = gCamcontrolQueuedActionPriority;
   gCamcontrolActiveActionStartFlags = gCamcontrolQueuedActionStartFlags;
 }
-#pragma peephole reset
-#pragma scheduling reset

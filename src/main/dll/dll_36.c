@@ -46,7 +46,6 @@ extern f32 lbl_803E1D9C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void EnterSaveNameScreen_render(void)
 {
   u8 buf[2];
@@ -83,7 +82,6 @@ void EnterSaveNameScreen_render(void)
   gameTextSetDrawFunc(NULL);
   titleScreenShowCopyright(0);
 }
-#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */

@@ -23,7 +23,6 @@ void lightfoot_release(void)
 {
 }
 
-#pragma peephole off
 void lightfoot_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     extern void objRenderFn_8003b8f4(f32 scale);
@@ -34,9 +33,7 @@ void lightfoot_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
         }
     }
 }
-#pragma peephole reset
 
-#pragma scheduling off
 void lightfoot_initialise(void)
 {
     lbl_803DB0DC[0] = (int)Lightfoot_UpdateAnimationCycle;
@@ -48,10 +45,7 @@ void lightfoot_initialise(void)
     lbl_803DB0D0[1] = (int)Lightfoot_UpdateCompletionInteraction;
     lbl_803DB0D0[2] = (int)Lightfoot_UpdateProximityInteractionState;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void lightfoot_free(int obj, int p2)
 {
     int i;
@@ -70,11 +64,7 @@ void lightfoot_free(int obj, int p2)
     }
     (*(void (*)(int, int, int))(*(int *)(*gBaddieControlInterface + 0x40)))(obj, inner, 0x20);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void lightfoot_update(int obj)
 {
     int inner = *(int *)&((GameObject *)obj)->extra;
@@ -205,11 +195,7 @@ void lightfoot_update(int obj)
         *(f32 *)((char *)anim + 0x14) -= timeDelta;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void lightfoot_init(int obj, int p2, int p3)
 {
     int inner = *(int *)&((GameObject *)obj)->extra;
@@ -342,5 +328,3 @@ void lightfoot_init(int obj, int p2, int p3)
         ObjHits_DisableObject(obj);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

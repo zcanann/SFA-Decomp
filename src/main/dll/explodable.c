@@ -81,8 +81,6 @@ typedef struct {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int fn_801833E4(int obj, int player, int state)
 {
     ExplodeArgs blk;
@@ -259,8 +257,6 @@ int fn_801833E4(int obj, int player, int state)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -298,8 +294,6 @@ int largecrate_getObjectTypeId(void)
   return 0;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void largecrate_render(int obj, int p2, int p3, int p4, int p5, s8 renderState)
 {
   int state;
@@ -323,8 +317,6 @@ void largecrate_render(int obj, int p2, int p3, int p4, int p5, s8 renderState)
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E39AC);
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -350,8 +342,6 @@ void largecrate_hitDetect(void)
  * EN v1.0 Address: 0x80183C9C
  * EN v1.0 Size: 1252b
  */
-#pragma scheduling off
-#pragma peephole off
 void largecrate_update(int obj)
 {
     int player;
@@ -471,8 +461,6 @@ void largecrate_update(int obj)
     }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern ModgfxInterface **gModgfxInterface;
 void largecrate_free(int obj) {
@@ -480,7 +468,6 @@ void largecrate_free(int obj) {
     Resource_Release(lbl_803DDAC8);
 }
 
-#pragma scheduling off
 int LargeCrate_SeqFn(int *obj) {
     if (((GameObject *)obj)->unkB4 != -1) {
         (*gCameraInterface)->setTargetReticleOverride((int)obj);
@@ -488,4 +475,3 @@ int LargeCrate_SeqFn(int *obj) {
     return 0;
 }
 #pragma peephole reset
-#pragma scheduling reset
