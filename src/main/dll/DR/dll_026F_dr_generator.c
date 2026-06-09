@@ -56,7 +56,15 @@ void drgenerator_init(int obj, char *arg) {
     *(int *)p = 0;
     ((BitFlags8 *)(p + 0x19b))->b3 = 1;
     *(s16 *)obj = (s16)((s8)arg[0x18] << 8);
-    *(s16 *)(p + 0x198) = (*(s16 *)(arg + 0x1a) == 0) ? 0x14 : *(s16 *)(arg + 0x1a);
+    {
+        int t = *(s16 *)(arg + 0x1a);
+        switch (t) {
+        case 0:
+            t = 0x14;
+            break;
+        }
+        *(s16 *)(p + 0x198) = (s16)t;
+    }
     *(s16 *)(p + 0x198) = *(s16 *)(p + 0x198) * 0x3c;
     *(f32 *)(p + 0x124) = lbl_803E6B68;
     if (GameBit_Get(0x9b9) != 0) {
