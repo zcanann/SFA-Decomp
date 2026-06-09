@@ -581,8 +581,8 @@ void enemymushroom_update(int *obj)
     if (((GameObject *)obj)->anim.currentMove != lbl_80326C78[*(u8 *)(state + 0x36)]) {
         ObjAnim_SetCurrentMove((int)obj, lbl_80326C78[*(u8 *)(state + 0x36)], lbl_803E52FC, 0);
     }
-    if (ObjAnim_AdvanceCurrentMove(lbl_80326C90[*(u8 *)(state + 0x36)], timeDelta,
-                                   (int)obj, NULL) != 0) {
+    if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_80326C90[*(u8 *)(state + 0x36)], timeDelta,
+                                   NULL) != 0) {
         *(u8 *)(state + 0x37) |= 0x2;
     } else {
         *(u8 *)(state + 0x37) = (u8)(*(u8 *)(state + 0x37) & ~0x2);

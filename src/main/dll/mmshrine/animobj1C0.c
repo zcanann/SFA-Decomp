@@ -265,7 +265,7 @@ void fn_801C5990(MmShrineAnimObj *obj)
     trigB = trigB + trigA;
     obj->pitch = lbl_803E4FA8 * trigB;
 
-    ObjAnim_AdvanceCurrentMove(lbl_803E4FAC, timeDelta, (int)obj,
+    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E4FAC, timeDelta,
                                (ObjAnimEventList *)&animEvents);
 
     if (player != NULL) {

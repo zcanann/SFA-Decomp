@@ -246,7 +246,7 @@ void fn_801C2914(int obj)
   trigB = trigB + trigA;
   ((GameObject *)obj)->anim.rotY = lbl_803E4E68 * trigB;
 
-  ObjAnim_AdvanceCurrentMove(lbl_803E4E6C,timeDelta,obj,(ObjAnimEventList *)animEvents);
+  ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj,lbl_803E4E6C,timeDelta,(ObjAnimEventList *)animEvents);
   if (player != NULL) {
     angleDelta =
         ((u16)getAngle(((GameObject *)obj)->anim.worldPosX - *(f32 *)(player + 0x18),

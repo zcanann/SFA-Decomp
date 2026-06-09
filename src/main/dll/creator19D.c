@@ -469,7 +469,7 @@ void fn_801C4664(void *objArg)
                       lbl_803E4F1C);
   obj->pitch = (s16)(int)(lbl_803E4F20 * (trigB + trigA));
 
-  ObjAnim_AdvanceCurrentMove(lbl_803E4F24,timeDelta,(int)obj,(ObjAnimEventList *)&animEvents);
+  ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj,lbl_803E4F24,timeDelta,(ObjAnimEventList *)&animEvents);
   if (playerObj == NULL) {
     return;
   }

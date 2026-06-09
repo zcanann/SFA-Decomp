@@ -805,7 +805,7 @@ int hightop_stateHandler02(int obj, int p, f32 t) {
         ObjAnim_SetCurrentMove(obj, (&lbl_803DC32C)[band], moveSpeed, 0);
         ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 0xa);
     }
-    ObjAnim_SampleRootCurvePhase(*(f32 *)((char *)p + 0x280), (ObjAnimComponent *)obj, (f32 *)((char *)p + 0x2a0));
+    ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)((int)obj, *(f32 *)((char *)p + 0x280), (f32 *)((char *)p + 0x2a0));
     return 0;
 }
 
