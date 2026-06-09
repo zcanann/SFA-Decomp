@@ -739,7 +739,7 @@ int DIMSnowHorn1_func16(void) { return 0; }
 void DIMSnowHorn1_func15(s16 *packed, undefined4 outX, undefined4 outY, undefined4 outZ)
 {
     extern void setMatrixFromObjectPos(void *matrix, void *packedTransform);
-    extern void Matrix_TransformPoint(double x, double y, double z, void *matrix, undefined4 outX, undefined4 outY, undefined4 outZ);
+    extern void Matrix_TransformPoint(void *matrix, double x, double y, double z, undefined4 outX, undefined4 outY, undefined4 outZ);
     struct {
         s16 rotX;
         s16 rotY;
@@ -760,7 +760,7 @@ void DIMSnowHorn1_func15(s16 *packed, undefined4 outX, undefined4 outY, undefine
     transform.rotZ = packed[2];
     transform.scale = lbl_803E8258;
     setMatrixFromObjectPos(matrix, &transform);
-    Matrix_TransformPoint(lbl_803E8234, lbl_803E8298, lbl_803E829C, matrix, outX, outY, outZ);
+    Matrix_TransformPoint(matrix, lbl_803E8234, lbl_803E8298, lbl_803E829C, outX, outY, outZ);
 }
 
 /*
@@ -878,7 +878,7 @@ int DIMSnowHorn1_animEventCallback(int obj, undefined4 unused, int setup)
     ((GameObject *)obj)->anim.velocityX = fz;
     ((GameObject *)obj)->anim.velocityY = fz;
     ((GameObject *)obj)->anim.velocityZ = fz;
-    return (u32)(-*(s8 *)(setup + 0x56) | *(s8 *)(setup + 0x56)) >> 0x1f;
+    return (u32)(-(s8)((u8 *)setup)[0x56] | (s8)((u8 *)setup)[0x56]) >> 0x1f;
 }
 
 void DIMSnowHorn1_func22(int obj, f32 scale)
