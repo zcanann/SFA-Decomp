@@ -2,6 +2,7 @@
 #include "main/audio/sfx.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
+#include "main/dll/CAM/camcontrol_path_state.h"
 #include "main/dll/CAM/dll_59.h"
 #include "main/mm.h"
 #include "main/object_transform.h"
@@ -21,7 +22,6 @@ extern f32 mathCosf(f32 angle);
 extern void Curve_EvalBSpline(void);
 extern void Curve_BuildBSplineCoeffs(void);
 
-extern u8 *lbl_803DD538;
 extern f32* lbl_803DD540;
 extern f64 lbl_803E1750;
 extern f32 lbl_803E1740;
@@ -89,23 +89,23 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
   target = ((GameObject *)obj)->anim.targetObj;
 
   if (gCamcontrolPathState == NULL) {
-    gCamcontrolPathState = mmAlloc(0x1c0, 0xf, 0);
+    gCamcontrolPathState = mmAlloc(sizeof(CamcontrolPathState), 0xf, 0);
   }
-  memset(gCamcontrolPathState, 0, 0x1c0);
+  memset(gCamcontrolPathState, 0, sizeof(CamcontrolPathState));
 
   view = (int)(*gCameraInterface)->getDefaultHandlerEntry();
   (*(void (**)(f32 *, f32 *, f32 *, int, f32 *))(**(int **)(view + 4) + 0x20))
-      ((f32 *)(gCamcontrolPathState + 4), (f32 *)(gCamcontrolPathState + 8),
-       (f32 *)(gCamcontrolPathState + 0xc), 0, (f32 *)(gCamcontrolPathState + 0x10));
+      (&gCamcontrolPathState->actionParamX, &gCamcontrolPathState->pad08,
+       &gCamcontrolPathState->actionParamZ, 0, &gCamcontrolPathState->actionParamY);
 
-  gCamcontrolPathState[0x1bc] = 0;
-  *(int *)gCamcontrolPathState = *(int *)&((GameObject *)obj)->anim.parent;
+  gCamcontrolPathState->active = 0;
+  gCamcontrolPathState->localFrameObj = *(int *)&((GameObject *)obj)->anim.parent;
 
   cosFacing = mathSinf(CameraModeStaffAnim_angleToRadians(target[0]));
   sinFacing = mathCosf(CameraModeStaffAnim_angleToRadians(target[0]));
 
-  if (*(s16 **)gCamcontrolPathState != NULL) {
-    facingDelta = target[0] - (*(s16 **)gCamcontrolPathState)[0];
+  if (gCamcontrolPathState->localFrameObj != 0) {
+    facingDelta = target[0] - ((s16 *)gCamcontrolPathState->localFrameObj)[0];
   }
   else {
     facingDelta = target[0];
@@ -129,19 +129,19 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
 
   threshold = (s16)(lbl_803E1768 * (f32)(*(s16 *)settings));
   if (approachAngle < threshold) {
-    gCamcontrolPathState[0x1bc] = 1;
+    gCamcontrolPathState->active = 1;
   }
   else {
-    pathRadius = *(f32 *)(gCamcontrolPathState + 4) * *(f32 *)(gCamcontrolPathState + 4) -
-                 *(f32 *)(gCamcontrolPathState + 0xc) * *(f32 *)(gCamcontrolPathState + 0xc);
+    pathRadius = gCamcontrolPathState->actionParamX * gCamcontrolPathState->actionParamX -
+                 gCamcontrolPathState->actionParamZ * gCamcontrolPathState->actionParamZ;
     if (pathRadius < lbl_803E176C) {
       pathRadius = lbl_803E176C;
     }
     pathRadius = sqrtf(pathRadius);
 
     localPos[0] = (cosFacing * pathRadius) + *(f32 *)(target + 0xc);
-    localPos[1] = *(f32 *)(gCamcontrolPathState + 0xc) +
-                  (*(f32 *)(target + 0xe) + *(f32 *)(gCamcontrolPathState + 0x10));
+    localPos[1] = gCamcontrolPathState->actionParamZ +
+                  (*(f32 *)(target + 0xe) + gCamcontrolPathState->actionParamY);
     localPos[2] = (sinFacing * pathRadius) + *(f32 *)(target + 0x10);
 
     if (settings[3] != 0) {
@@ -152,9 +152,9 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
                                    &localPos[1], &localPos[2], *(int *)&((GameObject *)obj)->anim.parent);
 
     for (pointCount = 0; pointCount < 3; pointCount++) {
-      *(f32 *)(gCamcontrolPathState + (pointCount * 4) + 0x1c) = ((GameObject *)obj)->anim.localPosX;
-      *(f32 *)(gCamcontrolPathState + (pointCount * 4) + 0x6c) = ((GameObject *)obj)->anim.localPosY;
-      *(f32 *)(gCamcontrolPathState + (pointCount * 4) + 0xbc) = ((GameObject *)obj)->anim.localPosZ;
+      gCamcontrolPathState->pointsX[pointCount] = ((GameObject *)obj)->anim.localPosX;
+      gCamcontrolPathState->pointsY[pointCount] = ((GameObject *)obj)->anim.localPosY;
+      gCamcontrolPathState->pointsZ[pointCount] = ((GameObject *)obj)->anim.localPosZ;
     }
 
     dx = ((GameObject *)obj)->anim.localPosX - localPos[0];
@@ -197,11 +197,11 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
 
     baseX = localPos[0] - (relCos * pathScale);
     baseZ = localPos[2] - (relSin * pathScale);
-    *(f32 **)(gCamcontrolPathState + 0x1a4) = (f32 *)(gCamcontrolPathState + 0x1c);
-    *(f32 **)(gCamcontrolPathState + 0x1a8) = (f32 *)(gCamcontrolPathState + 0x6c);
-    *(f32 **)(gCamcontrolPathState + 0x1ac) = (f32 *)(gCamcontrolPathState + 0xbc);
-    *(void **)(gCamcontrolPathState + 0x1b4) = Curve_EvalBSpline;
-    *(void **)(gCamcontrolPathState + 0x1b8) = Curve_BuildBSplineCoeffs;
+    gCamcontrolPathState->pointsXPtr = gCamcontrolPathState->pointsX;
+    gCamcontrolPathState->pointsYPtr = gCamcontrolPathState->pointsY;
+    gCamcontrolPathState->pointsZPtr = gCamcontrolPathState->pointsZ;
+    gCamcontrolPathState->evalCallback = Curve_EvalBSpline;
+    gCamcontrolPathState->buildCallback = Curve_BuildBSplineCoeffs;
 
     camcontrol_buildPathPoints(baseX, baseZ,
                                ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ,
@@ -210,15 +210,15 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
     i = pointCount;
     pointOffset = pointCount * 4;
     for (; i < pointCount + 3; i++) {
-      *(f32 *)(gCamcontrolPathState + pointOffset + 0x1c) = localPos[0];
-      *(f32 *)(gCamcontrolPathState + pointOffset + 0x6c) = localPos[1];
-      *(f32 *)(gCamcontrolPathState + pointOffset + 0xbc) = localPos[2];
+      *(f32 *)((u8 *)gCamcontrolPathState->pointsX + pointOffset) = localPos[0];
+      *(f32 *)((u8 *)gCamcontrolPathState->pointsY + pointOffset) = localPos[1];
+      *(f32 *)((u8 *)gCamcontrolPathState->pointsZ + pointOffset) = localPos[2];
       pointOffset += 4;
     }
 
-    *(int *)(gCamcontrolPathState + 0x1b0) = i;
-    *(int *)(gCamcontrolPathState + 0x1a0) = 0;
-    curvesMove(gCamcontrolPathState + 0x120);
+    gCamcontrolPathState->pointCount = i;
+    gCamcontrolPathState->curveCursor = 0;
+    curvesMove(gCamcontrolPathState->curveWork);
 
     if (pathAngle < 0) {
       pathAngle = -pathAngle;
@@ -227,13 +227,13 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
       Sfx_PlayFromObject(0, SFXsc_snort03);
     }
 
-    (*gCameraInterface)->initialise((f32 *)(gCamcontrolPathState + 0x10c),
-                                    *(f32 *)(gCamcontrolPathState + 0x12c),
+    (*gCameraInterface)->initialise(gCamcontrolPathState->initialiseCurve,
+                                    *(f32 *)(gCamcontrolPathState->curveWork + 0xc),
                                     lbl_803E1774, lbl_803E1770, lbl_803E1744,
                                     lbl_803E1778);
 
-    *(f32 *)(gCamcontrolPathState + 0x14) = lbl_803E1758;
-    *(f32 *)(gCamcontrolPathState + 0x18) = lbl_803E175C;
+    gCamcontrolPathState->curveMin = lbl_803E1758;
+    gCamcontrolPathState->curveMax = lbl_803E175C;
   }
 }
 #pragma peephole reset
