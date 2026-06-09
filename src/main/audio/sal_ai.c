@@ -70,8 +70,10 @@ void dspInitCallback(void)
  */
 void dspResumeCallback(void)
 {
+    struct { u32 pending; } d;
     salDspCallbackEnabled = 1;
-    if (salDspCallbackPending != 0) {
+    d.pending = salDspCallbackPending;
+    if (d.pending != 0) {
         salDspCallbackPending = 0;
         if (salCallbackActive == 0) {
             salCallbackActive = 1;
@@ -95,11 +97,11 @@ int salInitAi(void *userCallback, u32 unused, u32 *outSampleCount)
     if ((salAiDmaBuffer = (u32)salMalloc(SAL_AI_DMA_BUFFER_SIZE)) != 0) {
         memset((void *)salAiDmaBuffer, 0, SAL_AI_DMA_BUFFER_SIZE);
         DCFlushRange((void *)salAiDmaBuffer, SAL_AI_DMA_BUFFER_SIZE);
-        salAiCallback = userCallback;
+        salAIBufferIndex = 1;
         salDspCallbackPending = 0;
         salDspCallbackEnabled = 1;
-        salAIBufferIndex = 1;
         salCallbackActive = 0;
+        salAiCallback = userCallback;
         AIRegisterDMACallback(salCallback);
         AIInitDMA((salAiDmaBuffer + SAL_AI_CACHED_BASE) +
                       salAIBufferIndex * SAL_AI_DMA_CHUNK_SIZE,
