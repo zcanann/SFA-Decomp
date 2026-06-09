@@ -236,11 +236,11 @@ int drlasercannon_aimAtTarget(GameObject *self, GameObject *target, DrLaserCanno
 
 void drlasercannon_free(int obj) {
     DrLaserCannonState *state = ((GameObject *)obj)->extra;
-    if (state->firepipeObject != 0) {
+    if ((void *)state->firepipeObject != NULL) {
         firepipe_clearLinkedUpdateFlag(state->firepipeObject);
         ObjLink_DetachChild(obj, state->firepipeObject);
     }
-    if (state->warningObject != 0) {
+    if ((void *)state->warningObject != NULL) {
         Obj_FreeObject(state->warningObject);
     }
     ObjGroup_RemoveObject(obj, DR_LASERCANNON_GROUP_ID);
@@ -315,7 +315,7 @@ void drlasercannon_init(int obj, char *arg) {
     ((GameObject *)obj)->anim.velocityZ = fz;
     if (GameBit_Get(setup->destroyedGameBit) == 0) {
         state->warningObject = fn_801702D4(obj, lbl_803E6938);
-        if (state->warningObject != 0) {
+        if ((void *)state->warningObject != NULL) {
             staffFn_80170380(state->warningObject, DR_LASERCANNON_WARNING_ACTIVE_MODE);
         }
         state->flags.b6 = 1;
@@ -351,7 +351,7 @@ void drlasercannon_hitDetect(int obj) {
     hit = ObjHits_GetPriorityHitWithPosition(obj, &a8, 0, &ac, &a10, &a14, &a18);
     if (state->flags.b6 != 0) {
         if (hit != 0 && *(s16 *)((char *)a8 + 0x46) != state->hitExcludeType &&
-            state->warningObject != 0) {
+            (void *)state->warningObject != NULL) {
             staffFn_80170380(state->warningObject, DR_LASERCANNON_WARNING_HIT_MODE);
         }
     } else if (((u32)(hit - 0xe) <= 1 || hit == 5) &&
