@@ -14890,15 +14890,7 @@ int fn_8029E568(int obj, int state, f32 fv)
         if (amt < lbl_803E7EA4) {
             amt = -amt;
         }
-        if (amt >= lbl_803E7EFC) {
-            if (amt <= lbl_803E7EE0) {
-                clamped = amt;
-            } else {
-                clamped = lbl_803E7EE0;
-            }
-        } else {
-            clamped = lbl_803E7EFC;
-        }
+        clamped = (amt < lbl_803E7EFC) ? lbl_803E7EFC : ((amt > lbl_803E7EE0) ? lbl_803E7EE0 : amt);
         sp = ((PlayerState *)state)->baddie.unk28C;
         if (sp > lbl_803E7EE0) {
             spd = lbl_803E7F44 * clamped;
