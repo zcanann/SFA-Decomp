@@ -49,13 +49,13 @@ void camclimb_update(short *param_1)
   }
   else {
     if (lbl_803DD538->localFrameObj != *(uint *)(param_1 + 0x18)) {
-      for (pointIndex = 0; pointIndex < lbl_803DD538->pointCount; pointIndex = pointIndex + 1) {
+      for (pointIndex = 0; pointIndex < lbl_803DD538->pathCurve.count; pointIndex = pointIndex + 1) {
         Obj_TransformLocalPointToWorld(lbl_803DD538->pointsX[pointIndex],
                      lbl_803DD538->pointsY[pointIndex], lbl_803DD538->pointsZ[pointIndex],
                      &lbl_803DD538->pointsX[pointIndex], &lbl_803DD538->pointsY[pointIndex],
                      &lbl_803DD538->pointsZ[pointIndex], lbl_803DD538->localFrameObj);
       }
-      for (pointIndex = 0; pointIndex < lbl_803DD538->pointCount; pointIndex = pointIndex + 1) {
+      for (pointIndex = 0; pointIndex < lbl_803DD538->pathCurve.count; pointIndex = pointIndex + 1) {
         Obj_TransformWorldPointToLocal(lbl_803DD538->pointsX[pointIndex],
                      lbl_803DD538->pointsY[pointIndex], lbl_803DD538->pointsZ[pointIndex],
                      &lbl_803DD538->pointsX[pointIndex], &lbl_803DD538->pointsY[pointIndex],

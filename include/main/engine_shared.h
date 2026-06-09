@@ -152,6 +152,8 @@ typedef struct SfxTriggerCacheEntry {
     u16 key;
     u16 index;
 } SfxTriggerCacheEntry;
+#ifndef MAIN_CURVE_TYPES_DEFINED
+#define MAIN_CURVE_TYPES_DEFINED
 typedef f32 (*CurveEvalFn)(f32 t, f32 *values, f32 *outTangent);
 typedef void (*CurveCoeffFn)(f32 *values, f32 *coeffs);
 typedef struct Curve {
@@ -172,6 +174,7 @@ typedef struct Curve {
     CurveEvalFn eval;
     CurveCoeffFn coeffFn;
 } Curve;
+#endif /* MAIN_CURVE_TYPES_DEFINED */
 typedef struct CameraRenderMode {
     u32 viTVMode;
     u16 fbWidth;

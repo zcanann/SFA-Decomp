@@ -8,7 +8,6 @@
 #include "main/object_transform.h"
 
 extern void memset(void *ptr, int value, int size);
-extern void curvesMove(void *curve);
 extern int getAngle(f32 dx, f32 dz);
 extern undefined camcontrol_getTargetPosition(int obj, s16 *target, f32 *outPos, s16 *outAngle);
 extern void camcontrol_buildPathPoints(f32 baseX, f32 baseZ, f32 targetX, f32 targetY, f32 targetZ,
@@ -19,8 +18,6 @@ extern undefined4 FUN_8028688c();
 extern f32 sqrtf(f32 value);
 extern f32 mathSinf(f32 angle);
 extern f32 mathCosf(f32 angle);
-extern void Curve_EvalBSpline(void);
-extern void Curve_BuildBSplineCoeffs(void);
 
 extern f32* lbl_803DD540;
 extern f64 lbl_803E1750;
@@ -82,7 +79,6 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
   f32 dz;
   f32 localPos[3];
   int pointCount;
-  int pointOffset;
   int i;
 
   settings[3] = 1;
@@ -197,28 +193,26 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
 
     baseX = localPos[0] - (relCos * pathScale);
     baseZ = localPos[2] - (relSin * pathScale);
-    gCamcontrolPathState->pointsXPtr = gCamcontrolPathState->pointsX;
-    gCamcontrolPathState->pointsYPtr = gCamcontrolPathState->pointsY;
-    gCamcontrolPathState->pointsZPtr = gCamcontrolPathState->pointsZ;
-    gCamcontrolPathState->evalCallback = Curve_EvalBSpline;
-    gCamcontrolPathState->buildCallback = Curve_BuildBSplineCoeffs;
+    gCamcontrolPathState->pathCurve.px = gCamcontrolPathState->pointsX;
+    gCamcontrolPathState->pathCurve.py = gCamcontrolPathState->pointsY;
+    gCamcontrolPathState->pathCurve.pz = gCamcontrolPathState->pointsZ;
+    gCamcontrolPathState->pathCurve.eval = Curve_EvalBSpline;
+    gCamcontrolPathState->pathCurve.coeffFn = Curve_BuildBSplineCoeffs;
 
     camcontrol_buildPathPoints(baseX, baseZ,
                                ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ,
                                localPos[1], pathAngle, 0x1555, &pointCount);
 
     i = pointCount;
-    pointOffset = pointCount * 4;
     for (; i < pointCount + 3; i++) {
-      *(f32 *)((u8 *)gCamcontrolPathState->pointsX + pointOffset) = localPos[0];
-      *(f32 *)((u8 *)gCamcontrolPathState->pointsY + pointOffset) = localPos[1];
-      *(f32 *)((u8 *)gCamcontrolPathState->pointsZ + pointOffset) = localPos[2];
-      pointOffset += 4;
+      gCamcontrolPathState->pointsX[i] = localPos[0];
+      gCamcontrolPathState->pointsY[i] = localPos[1];
+      gCamcontrolPathState->pointsZ[i] = localPos[2];
     }
 
-    gCamcontrolPathState->pointCount = i;
-    gCamcontrolPathState->curveCursor = 0;
-    curvesMove(gCamcontrolPathState->curveWork);
+    gCamcontrolPathState->pathCurve.count = i;
+    gCamcontrolPathState->pathCurve.dir = 0;
+    curvesMove(&gCamcontrolPathState->pathCurve);
 
     if (pathAngle < 0) {
       pathAngle = -pathAngle;
@@ -228,7 +222,7 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
     }
 
     (*gCameraInterface)->initialise(gCamcontrolPathState->initialiseCurve,
-                                    *(f32 *)(gCamcontrolPathState->curveWork + 0xc),
+                                    gCamcontrolPathState->pathCurve.pathLength,
                                     lbl_803E1774, lbl_803E1770, lbl_803E1744,
                                     lbl_803E1778);
 
