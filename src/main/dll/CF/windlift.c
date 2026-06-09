@@ -413,8 +413,8 @@ void scarab_update(int obj)
             if (ObjHits_GetPriorityHit(obj, 0, 0, 0) == 0xe) {
                 *(s16 *)(state + 0x1a) = 0xfa;
                 Sfx_PlayFromObject(obj, SFXen_firlp6);
-                *(f32 *)(obj + 0x24) = *(f32 *)(player + 0xc) - *(f32 *)(obj + 0xc);
-                *(f32 *)(obj + 0x2c) = *(f32 *)(player + 0x14) - *(f32 *)(obj + 0x14);
+                *(f32 *)(obj + 0x24) = ((GameObject *)player)->anim.localPosX - *(f32 *)(obj + 0xc);
+                *(f32 *)(obj + 0x2c) = ((GameObject *)player)->anim.localPosZ - *(f32 *)(obj + 0x14);
                 *(s16 *)obj = 0;
                 sumsq = *(f32 *)(obj + 0x24) * *(f32 *)(obj + 0x24) + *(f32 *)(obj + 0x2c) * *(f32 *)(obj + 0x2c);
                 if (sumsq != lbl_803E39F8) {
@@ -563,8 +563,8 @@ void scarab_update(int obj)
                 }
             }
             if ((*(s16 *)(state + 0x1a) != 0 || *(s16 *)(obj + 0x46) != 0x3d6) &&
-                Vec_xzDistance((f32 *)(player + 0x18), (f32 *)(obj + 0x18)) < lbl_803E3A38) {
-                dy = *(f32 *)(obj + 0x10) - *(f32 *)(player + 0x10);
+                Vec_xzDistance(&((GameObject *)player)->anim.worldPosX, (f32 *)(obj + 0x18)) < lbl_803E3A38) {
+                dy = *(f32 *)(obj + 0x10) - ((GameObject *)player)->anim.localPosY;
                 if (dy >= lbl_803E39F8) {
                 } else {
                     dy = -dy;
@@ -591,8 +591,8 @@ void scarab_update(int obj)
                 }
             }
             if (*(s16 *)(state + 0x1a) == 0 && *(s16 *)(obj + 0x46) == 0x3d6) {
-                if (Vec_xzDistance((f32 *)(player + 0x18), (f32 *)(obj + 0x18)) < lbl_803E3A3C) {
-                    dy = *(f32 *)(obj + 0x10) - *(f32 *)(player + 0x10);
+                if (Vec_xzDistance(&((GameObject *)player)->anim.worldPosX, (f32 *)(obj + 0x18)) < lbl_803E3A3C) {
+                    dy = *(f32 *)(obj + 0x10) - ((GameObject *)player)->anim.localPosY;
                     if (dy >= lbl_803E39F8) {
                     } else {
                         dy = -dy;
@@ -1271,8 +1271,8 @@ void fn_80185B74(int obj)
     (*(code *)(*(int *)gSHthorntailAnimationInterface + 0x18))(&spd);
     state = ((GameObject *)obj)->extra;
     player = Obj_GetPlayerObject();
-    sub = *(int *)(player + 0xb8);
-    dist = Vec_distance((void *)(player + 0x18), (void *)&((GameObject *)obj)->anim.worldPosX);
+    sub = *(int *)&((GameObject *)player)->extra;
+    dist = Vec_distance((void *)&((GameObject *)player)->anim.worldPosX, (void *)&((GameObject *)obj)->anim.worldPosX);
     if (state->liftTimer <= 0) {
         state->ventState = 1;
         state->launchPhase = 0;
@@ -1365,7 +1365,7 @@ void fn_80185B74(int obj)
                 state->rideState = 2;
             }
             st21 = state->rideState;
-            if ((s8)st21 == 2 && ((GameObject *)obj)->unkF8 == 0 && *(s16 *)(player + 0xa0) != 0x447) {
+            if ((s8)st21 == 2 && ((GameObject *)obj)->unkF8 == 0 && ((GameObject *)player)->anim.currentMove != 0x447) {
                 state->rideState = 0;
                 state->launchPhase = 1;
                 {
@@ -1738,7 +1738,7 @@ void fn_801869DC(int obj)
     if (((LFF2 *)&state->modeFlags)->mode == 1) {
         int player = Obj_GetPlayerObject();
         state->speed =
-            lbl_803E3AC4 * Vec_distance((void *)&((GameObject *)obj)->anim.worldPosX, (void *)(player + 0x18)) + lbl_803E3AC0;
+            lbl_803E3AC4 * Vec_distance((void *)&((GameObject *)obj)->anim.worldPosX, (void *)&((GameObject *)player)->anim.worldPosX) + lbl_803E3AC0;
     } else {
         state->speed = lbl_803E3AC4 * (f32)(s32)randomGetRange(0x3c, 0x5a);
     }

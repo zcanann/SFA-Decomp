@@ -1042,7 +1042,7 @@ void fn_8009A8C8(u8 *obj, f32 thresh) {
     if (player == NULL) {
         return;
     }
-    if (*(u16 *)(player + 0xb0) & 0x1000) {
+    if (((GameObject *)player)->objectFlags & 0x1000) {
         return;
     }
     {
@@ -1086,7 +1086,7 @@ void DIMexplosionFn_8009a96c(u8 *src, f32 vx, f32 vy, f32 vz, f32 fval, u8 a, u8
         }
         if (doShake != 0) {
             u8 *player = Obj_GetPlayerObject();
-            if (player != NULL && (*(u16 *)(player + 0xb0) & 0x1000) == 0) {
+            if (player != NULL && (((GameObject *)player)->objectFlags & 0x1000) == 0) {
                 f32 d = Camera_DistanceToCurrentViewPosition(*(f32 *)(src + 0x18),
                                                              *(f32 *)(src + 0x1c),
                                                              *(f32 *)(src + 0x20));
@@ -1132,7 +1132,7 @@ void spawnExplosion(u8 *src, f32 fval, u8 a, u8 flag4, u8 flag8, u8 flag10, u8 d
         }
         if (doShake != 0) {
             u8 *player = Obj_GetPlayerObject();
-            if (player != NULL && (*(u16 *)(player + 0xb0) & 0x1000) == 0) {
+            if (player != NULL && (((GameObject *)player)->objectFlags & 0x1000) == 0) {
                 f32 d = Camera_DistanceToCurrentViewPosition(*(f32 *)(src + 0x18),
                                                              *(f32 *)(src + 0x1c),
                                                              *(f32 *)(src + 0x20));

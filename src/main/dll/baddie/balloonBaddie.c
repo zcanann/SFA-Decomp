@@ -770,7 +770,7 @@ void drawTrickyHudOverlay(int obj)
     }
     drawViewFinderHud();
     if ((*gCameraInterface)->getMode() != 0x44 &&
-        (*(u16 *)(player + 0xb0) & 0x1000) == 0 &&
+        (((GameObject *)player)->objectFlags & 0x1000) == 0 &&
         pauseMenuState == 0 &&
         (void *)tricky != 0 &&
         getHudHiddenFrameCount() == 0) {

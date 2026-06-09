@@ -1,4 +1,5 @@
 #include "dolphin/os.h"
+#include "main/game_object.h"
 #include "dolphin/vi/vifuncs.h"
 #include "main/dll/FRONT/attract_movie.h"
 #include "main/dll/FRONT/dll_3E.h"

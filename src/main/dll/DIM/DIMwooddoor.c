@@ -225,7 +225,7 @@ void DIMwooddoor_updateShardAim(int obj, f32 targetX, f32 targetY, f32 targetZ)
         distSq = (distSq > lbl_803E48C8) ? distSq : lbl_803E48C8;
         radiusSq = (f32)((s32)(config->targetRadius * 2) * (s32)(config->targetRadius * 2));
         if ((distSq < radiusSq) || (heightDelta < lbl_803DBF14) ||
-            ((*(u16 *)(player + 0xb0) & 0x1000) != 0)) {
+            ((((GameObject *)player)->objectFlags & 0x1000) != 0)) {
             state->shouldSpawnShard = 0;
         }
         distSq = (distSq > radiusSq) ? distSq : radiusSq;

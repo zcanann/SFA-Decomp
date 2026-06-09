@@ -791,8 +791,8 @@ void fn_8015039C(int obj, int animState) {
     if ((*(u16 *)(animState + 0x2f8) & 0x200) != 0) {
         Sfx_PlayFromObject(obj, 0x383);
         player = Obj_GetPlayerObject();
-        if ((*(u16 *)(player + 0xb0) & 0x1000) == 0) {
-            distance = Vec_distance(&((GameObject *)obj)->anim.worldPosX, (f32 *)(player + 0x18));
+        if ((((GameObject *)player)->objectFlags & 0x1000) == 0) {
+            distance = Vec_distance(&((GameObject *)obj)->anim.worldPosX, &((GameObject *)player)->anim.worldPosX);
             if (distance <= lbl_803E2760) {
                 rumbleFalloff = lbl_803E2748 - distance / lbl_803E2760;
                 rumbleFalloff = lbl_803E2744 * rumbleFalloff;

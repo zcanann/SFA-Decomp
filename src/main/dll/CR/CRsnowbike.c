@@ -1038,7 +1038,7 @@ void sc_levelcontrol_update(int obj)
         ((SnowFlags22 *)&((ScLevelControlState *)state)->flags22)->bit7 = 1;
     }
     if (((ScLevelControlState *)state)->areaCell != 0xe) {
-        if (coordsToMapCell(*(f32 *)(player + 0xc), *(f32 *)(player + 0x14)) == 0xe) {
+        if (coordsToMapCell(((GameObject *)player)->anim.localPosX, ((GameObject *)player)->anim.localPosZ) == 0xe) {
             u8 c = (*gMapEventInterface)->getMode(0xe);
             Obj_GetPlayerObject();
             switch (c) {
@@ -1061,7 +1061,7 @@ void sc_levelcontrol_update(int obj)
         }
     }
     if (((ScLevelControlState *)state)->fadeTimer != lbl_803E5558) {
-        if ((*(u16 *)(player + 0xb0) & 0x1000) == 0) {
+        if ((((GameObject *)player)->objectFlags & 0x1000) == 0) {
             if (lbl_803E5550 == ((ScLevelControlState *)state)->fadeTimer) {
                 (*gScreenTransitionInterface)->start(0x73, 1);
             }
@@ -1080,7 +1080,7 @@ void sc_levelcontrol_update(int obj)
             }
         }
     } else if (((ScLevelControlState *)state)->timer10 != lbl_803E5558) {
-        if ((*(u16 *)(player + 0xb0) & 0x1000) == 0) {
+        if ((((GameObject *)player)->objectFlags & 0x1000) == 0) {
             if (lbl_803E5550 == ((ScLevelControlState *)state)->timer10) {
                 (*gScreenTransitionInterface)->start(0x73, 1);
             }
@@ -1097,7 +1097,7 @@ void sc_levelcontrol_update(int obj)
             }
         }
     }
-    ((ScLevelControlState *)state)->areaCell = coordsToMapCell(*(f32 *)(player + 0xc), *(f32 *)(player + 0x14));
+    ((ScLevelControlState *)state)->areaCell = coordsToMapCell(((GameObject *)player)->anim.localPosX, ((GameObject *)player)->anim.localPosZ);
     if ((u32)GameBit_Get(0xcdc) != 0) {
         if (((ScLevelControlState *)state)->fog0C > lbl_803E5558) {
             gameTextShow(0x429);

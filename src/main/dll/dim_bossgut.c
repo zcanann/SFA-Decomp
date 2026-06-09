@@ -403,7 +403,7 @@ void enemymushroom_update(int *obj)
         return;
     }
 
-    if (*(u16 *)(player + 0xb0) & 0x1000) {
+    if (((GameObject *)player)->objectFlags & 0x1000) {
         return;
     }
 
@@ -416,9 +416,9 @@ void enemymushroom_update(int *obj)
             *(f32 *)(state + 0x2c) = lbl_803E531C;
         }
         if (!(*(u8 *)(state + 0x37) & 0x1)) {
-            if (Vec_distance(&((GameObject *)obj)->anim.worldPosX, (f32 *)(player + 0x18)) <= *(f32 *)(state + 0x2c) &&
+            if (Vec_distance(&((GameObject *)obj)->anim.worldPosX, &((GameObject *)player)->anim.worldPosX) <= *(f32 *)(state + 0x2c) &&
                 !EmissionController_IsLingering(player) && !fn_80296448(player) &&
-                !(*(u16 *)(player + 0xb0) & 0x1000)) {
+                !(((GameObject *)player)->objectFlags & 0x1000)) {
                 ObjHits_RecordObjectHit(player, obj, 0x16, 1, 0);
                 *(u8 *)(state + 0x37) |= 0x1;
             }
@@ -467,9 +467,9 @@ void enemymushroom_update(int *obj)
         *(f32 *)(state + 0x2c) = lbl_803E5320 * timeDelta + *(f32 *)(state + 0x2c);
         Sfx_KeepAliveLoopedObjectSound(obj, 0x9a);
         if (!(*(u8 *)(state + 0x37) & 0x1)) {
-            if (Vec_distance(&((GameObject *)obj)->anim.worldPosX, (f32 *)(player + 0x18)) <= *(f32 *)(state + 0x2c) &&
+            if (Vec_distance(&((GameObject *)obj)->anim.worldPosX, &((GameObject *)player)->anim.worldPosX) <= *(f32 *)(state + 0x2c) &&
                 !EmissionController_IsLingering(player) && !fn_80296448(player) &&
-                !(*(u16 *)(player + 0xb0) & 0x1000)) {
+                !(((GameObject *)player)->objectFlags & 0x1000)) {
                 ObjHits_RecordObjectHit(player, obj, 0x16, 1, 0);
                 *(u8 *)(state + 0x37) |= 0x1;
             }
@@ -561,9 +561,9 @@ void enemymushroom_update(int *obj)
     default:
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x8);
         {
-            f32 dx = *(f32 *)(player + 0xc) - ((GameObject *)obj)->anim.localPosX;
-            f32 dy = *(f32 *)(player + 0x10) - ((GameObject *)obj)->anim.localPosY;
-            f32 dz = *(f32 *)(player + 0x14) - ((GameObject *)obj)->anim.localPosZ;
+            f32 dx = ((GameObject *)player)->anim.localPosX - ((GameObject *)obj)->anim.localPosX;
+            f32 dy = ((GameObject *)player)->anim.localPosY - ((GameObject *)obj)->anim.localPosY;
+            f32 dz = ((GameObject *)player)->anim.localPosZ - ((GameObject *)obj)->anim.localPosZ;
             if ((u16)(int)sqrtf(dx * dx + dy * dy + dz * dz) <
                 (u16)(int)(lbl_803E5338 * (f32)*(u8 *)((char *)src + 0x1e))) {
                 if (fn_8029610C(player) >= lbl_803E533C) {

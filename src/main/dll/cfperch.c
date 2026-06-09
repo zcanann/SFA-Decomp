@@ -169,7 +169,7 @@ void fn_80183250(int obj, int def)
                  (SMALLBASKET_ROB_WAVE_ID_65D6 - SMALLBASKET_ROB_WAVE_ID_65D5)) ||
                 (v == SMALLBASKET_ROB_WAVE_DIRECT_ID) || (adj == SMALLBASKET_ROB_WAVE_ID_65D0) ||
                 (adj == SMALLBASKET_ROB_WAVE_ID_65D2)) {
-                if (Vec_distance((f32 *)(player + 0x18), &((GameObject *)obj)->anim.worldPosX) < lbl_803E39BC) {
+                if (Vec_distance(&((GameObject *)player)->anim.worldPosX, &((GameObject *)obj)->anim.worldPosX) < lbl_803E39BC) {
                     if ((u32)GameBit_Get(GAMEBIT_SFX_MUTE) == 0) {
                         Sfx_PlayFromObject(obj, SFXfend_rob_wave);
                     }

@@ -2403,7 +2403,7 @@ void linkb_levcontrol_update(int *obj) {
             break;
         case 1:
             if (GameBit_Get(0xc1) != 0) {
-                if (!(*(u16 *)((char *)player + 0xb0) & 0x1000)) {
+                if (!(((GameObject *)player)->objectFlags & 0x1000)) {
                     GameBit_Set(0x385, 1);
                     fn_80138908(tricky, 1);
                     (*gObjectTriggerInterface)->runSequence(state->stage, obj, -1);

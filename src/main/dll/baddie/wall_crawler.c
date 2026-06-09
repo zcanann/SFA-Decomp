@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/camera_interface.h"
 #include "main/dll/baddie/wall_crawler.h"
 
@@ -1324,7 +1325,7 @@ void GameUI_update(void)
         if (lbl_803DD75B != 0) timeListFn_8012be84();
 
         if (fn_802972A8(player) != 0 || (*gCameraInterface)->getMode() == 0x44 ||
-            (*(u16 *)(player + 0xb0) & 0x1000) != 0 || pauseMenuState != 0) {
+            (((GameObject *)player)->objectFlags & 0x1000) != 0 || pauseMenuState != 0) {
             buttonDisable(0, 0xf0000);
             lbl_803DD8A4 &= 0xfff0fff7;
             lbl_803DD898 &= 0xfff0fff7;
@@ -1337,7 +1338,7 @@ void GameUI_update(void)
         }
 
         if (fn_802972A8(player) != 0 || (*gCameraInterface)->getMode() == 0x44 ||
-            (*(u16 *)(player + 0xb0) & 0x1000) != 0 || (s8)shouldCloseCMenu != 0 ||
+            (((GameObject *)player)->objectFlags & 0x1000) != 0 || (s8)shouldCloseCMenu != 0 ||
             pauseMenuState != 0 || getHudHiddenFrameCount() != 0 || lbl_803DD75B != 0) {
             f25 = 0;
             lbl_803DD8A4 |= 0x200;
@@ -1385,7 +1386,7 @@ void GameUI_update(void)
                     } else if (cameraGetTargetType() == 9) {
                         lbl_803DD8A4 |= 0x40000;
                     } else if (tricky != 0 && lbl_803A9320[1] != 0 && lbl_803A9320[9] <= 3 &&
-                               vec3f_distanceSquared((f32 *)(player + 0x18), (f32 *)(tricky + 0x18)) < lbl_803E21D0) {
+                               vec3f_distanceSquared(&((GameObject *)player)->anim.worldPosX, (f32 *)(tricky + 0x18)) < lbl_803E21D0) {
                         lbl_803DD8A4 |= 0x80000;
                         f26 = 1;
                     } else if (tricky != 0 && GameBit_Get(0x4e4) && cameraGetTargetType() == 8) {

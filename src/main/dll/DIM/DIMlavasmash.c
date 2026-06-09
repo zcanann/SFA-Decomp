@@ -460,7 +460,7 @@ void dimsnowball_update(int obj)
     if (dy2 <= lbl_803E4850 && dy1 <= lbl_803E4850 && *(s8 *)((u8 *)state + 0xc) <= 0) {
         sqrtf(((GameObject *)obj)->anim.velocityZ * ((GameObject *)obj)->anim.velocityZ +
               (((GameObject *)obj)->anim.velocityX * ((GameObject *)obj)->anim.velocityX + ((GameObject *)obj)->anim.velocityY * ((GameObject *)obj)->anim.velocityY));
-        if ((*(u16 *)(player + 0xb0) & 0x1000) == 0) {
+        if ((((GameObject *)player)->objectFlags & 0x1000) == 0) {
             Sfx_PlayFromObject(obj, SFXfoot_run_jingle2);
         }
         *(s8 *)((u8 *)state + 0xc) = 0x1e;

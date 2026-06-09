@@ -422,7 +422,7 @@ void snowclaw_hitDetect(int obj) {
                 *(f32 *)((char *)inner + 0x2c) = lbl_803E6728 * mathCosf((f32)((GameObject *)obj)->anim.rotX * lbl_803E672C / lbl_803E6730);
                 player = (int *)fn_802972A8(Obj_GetPlayerObject());
                 if (player != 0) {
-                    int *sub3 = *(int **)((char *)player + 0xb8);
+                    int *sub3 = ((GameObject *)player)->extra;
                     if (sub3 != 0) {
                         *(f32 *)((char *)sub3 + 0x4c4) = lbl_803E6738;
                     }

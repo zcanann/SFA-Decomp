@@ -292,7 +292,7 @@ void SpiritDoorLock_update(int obj)
     player = Obj_GetPlayerObject();
 
     if (GameBit_Get(SPIRITDOORLOCK_GAMEBIT_PLAYER_APPROACHED) == 0) {
-        if (Vec_xzDistance(&((GameObject *)obj)->anim.worldPosX, (f32 *)((char *)player + 0x18)) < lbl_803E4444) {
+        if (Vec_xzDistance(&((GameObject *)obj)->anim.worldPosX, &((GameObject *)player)->anim.worldPosX) < lbl_803E4444) {
             if (SPIRITDOORLOCK_ACTIVE(state) != 0) {
                 (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
             }
@@ -579,8 +579,8 @@ void fn_801A5D88(int obj, int unused) {
     ObjHitbox_SetSphereRadius(obj,
         (s32)(lbl_803E446C * (f32)(u32) * (u8*)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x62)));
     player = (int)Obj_GetPlayerObject();
-    if ((*(u16*)(player + 0xb0) & 0x1000) == 0) {
-        dist = Vec_distance(&((GameObject *)obj)->anim.worldPosX, (f32*)(player + 0x18));
+    if ((((GameObject *)player)->objectFlags & 0x1000) == 0) {
+        dist = Vec_distance(&((GameObject *)obj)->anim.worldPosX, &((GameObject *)player)->anim.worldPosX);
         if (dist <= lbl_803E4470) {
             falloff = lbl_803E4474 - dist / lbl_803E4470;
             CameraShake_Start(obj, lbl_803E4478 * falloff, lbl_803E447C * falloff, lbl_803E4480);

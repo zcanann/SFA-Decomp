@@ -850,7 +850,7 @@ void trickyBallFn_801793b8(int *obj, u8 *params)
     f32 lcl[6];
 
     player = Obj_GetPlayerObject();
-    playerState = *(int **)((char *)player + 0xb8);
+    playerState = ((GameObject *)player)->extra;
 
     if (params[0x2c8] == 1) goto end;
 
@@ -905,8 +905,8 @@ void trickyBallFn_801793b8(int *obj, u8 *params)
     *(f32 *)((char *)lcl + 0x8) = lbl_803E36A0;
     *(s16 *)((char *)lcl + 0x4) = 0;
     *(s16 *)((char *)lcl + 0x2) = 0;
-    if (*(void **)((char *)player + 0x30) != NULL) {
-        *(s16 *)lcl = (s16)(*(s16 *)*(int **)((char *)player + 0x30) + *(s16 *)player);
+    if (((GameObject *)player)->anim.parent != NULL) {
+        *(s16 *)lcl = (s16)(*(s16 *)*(int **)&((GameObject *)player)->anim.parent + *(s16 *)player);
     } else {
         *(s16 *)lcl = *(s16 *)player;
     }
@@ -1053,8 +1053,8 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
     list = ObjList_GetObjects(&objIdx, &objCount);
     seq[0x56] = 0;
     player = Obj_GetPlayerObject();
-    dx = *(f32 *)((char *)player + 0xc) - ((ObjPlacement *)def)->posX;
-    dy = *(f32 *)((char *)player + 0x14) - ((ObjPlacement *)def)->posZ;
+    dx = ((GameObject *)player)->anim.localPosX - ((ObjPlacement *)def)->posX;
+    dy = ((GameObject *)player)->anim.localPosZ - ((ObjPlacement *)def)->posZ;
     dist = sqrtf(dx * dx + dy * dy);
     if (sub->gameBitA == -1) {
         gb = 1;
@@ -1083,7 +1083,7 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
         sd = mathSinf(ang);
         s = mathCosf(ang);
         sd = -(((ObjPlacement *)def)->posX * sd + ((ObjPlacement *)def)->posZ * s)
-           + (sd * *(f32 *)((char *)player + 0xc) + s * *(f32 *)((char *)player + 0x14));
+           + (sd * ((GameObject *)player)->anim.localPosX + s * ((GameObject *)player)->anim.localPosZ);
         thr = sub->openRange;
         if (dist < thr && gb != 0 && sd < thr && sd > -thr) {
             active = 1;
@@ -1110,7 +1110,7 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
             sd = mathSinf(ang);
             s = mathCosf(ang);
             sd = -(((ObjPlacement *)def)->posX * sd + ((ObjPlacement *)def)->posZ * s)
-               + (sd * *(f32 *)((char *)player + 0xc) + s * *(f32 *)((char *)player + 0x14));
+               + (sd * ((GameObject *)player)->anim.localPosX + s * ((GameObject *)player)->anim.localPosZ);
             if (((GameObject *)obj)->unkF8 == 0) {
                 if (sd < lbl_803E3648 && sd > lbl_803E3658) {
                     active = 1;
@@ -1179,7 +1179,7 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
             sd = mathSinf(ang);
             s = mathCosf(ang);
             sd = -(((ObjPlacement *)def)->posX * sd + ((ObjPlacement *)def)->posZ * s)
-               + (sd * *(f32 *)((char *)player + 0xc) + s * *(f32 *)((char *)player + 0x14));
+               + (sd * ((GameObject *)player)->anim.localPosX + s * ((GameObject *)player)->anim.localPosZ);
             if (sd < lbl_803E366C && sd > lbl_803E3670) {
                 active = 1;
             }

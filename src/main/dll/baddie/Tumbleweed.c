@@ -590,10 +590,10 @@ int Minimap_update(void)
     col = lbl_803E2204;
     player = Obj_GetPlayerObject();
     if (player != NULL) {
-        if (*(void **)(player + 0x30) != NULL) {
-            cell = *(u8 *)(*(int *)(player + 0x30) + 0xac);
+        if (((GameObject *)player)->anim.parent != NULL) {
+            cell = *(u8 *)(*(int *)&((GameObject *)player)->anim.parent + 0xac);
         } else {
-            cell = (u8)coordsToMapCell(*(f32 *)(player + 0xc), *(f32 *)(player + 0x14));
+            cell = (u8)coordsToMapCell(((GameObject *)player)->anim.localPosX, ((GameObject *)player)->anim.localPosZ);
         }
         while (!found && i < 0x19) {
             if (cell == lbl_8031C508[i].cellId && GameBit_Get(lbl_8031C508[i].gameBit) != 0) {
@@ -605,15 +605,15 @@ int Minimap_update(void)
         if (found != 0) {
             rows = lbl_8031C508[i].rows;
             if (rows->swap != 0) {
-                fx = *(f32 *)(player + 0x20);
-                fz = *(f32 *)(player + 0x18);
+                fx = ((GameObject *)player)->anim.worldPosZ;
+                fz = ((GameObject *)player)->anim.worldPosX;
                 lbl_803DD95C = 1;
             } else {
-                fx = *(f32 *)(player + 0x18);
-                fz = *(f32 *)(player + 0x20);
+                fx = ((GameObject *)player)->anim.worldPosX;
+                fz = ((GameObject *)player)->anim.worldPosZ;
                 lbl_803DD95C = 0;
             }
-            yi = (int)*(f32 *)(player + 0x1c);
+            yi = (int)((GameObject *)player)->anim.worldPosY;
             for (; k < lbl_8031C508[i].count; k++) {
                 row = &rows[k];
                 if (fx >= (f32)row->x0 && fx < (f32)row->x1 &&
@@ -656,7 +656,7 @@ int Minimap_update(void)
         if ((*gCameraInterface)->getMode() == 0x44 ||
             (lbl_803DBBB0 == 0 && lbl_803DD7BA == 0) ||
             (s16)Camera_GetViewportYOffset() != 0 ||
-            (*(u16 *)(player + 0xb0) & 0x1000) != 0 ||
+            (((GameObject *)player)->objectFlags & 0x1000) != 0 ||
             objIsCurModelNotZero((int)player) == 0 ||
             pauseMenuState != 0 || lbl_803DD75B != 0) {
             marker = 0;
@@ -745,11 +745,11 @@ int Minimap_update(void)
                     a = (a < lbl_803DBBBC) ? a : lbl_803DBBBC;
                     lbl_803DBBB8 = a;
                     if (lbl_803DD95C != 0) {
-                        xrel = -*(f32 *)(player + 0x20) + (f32)lbl_803DD948;
-                        yrel = *(f32 *)(player + 0x18) - (f32)lbl_803DBBD2;
+                        xrel = -((GameObject *)player)->anim.worldPosZ + (f32)lbl_803DD948;
+                        yrel = ((GameObject *)player)->anim.worldPosX - (f32)lbl_803DBBD2;
                     } else {
-                        xrel = -*(f32 *)(player + 0x18) + (f32)lbl_803DD948;
-                        yrel = -*(f32 *)(player + 0x20) + (f32)lbl_803DD94A;
+                        xrel = -((GameObject *)player)->anim.worldPosX + (f32)lbl_803DD948;
+                        yrel = -((GameObject *)player)->anim.worldPosZ + (f32)lbl_803DD94A;
                     }
                     e = (f32)bw - (f32)texW * lbl_803DBBB4;
                     e = e * 0.5f;
@@ -6054,7 +6054,7 @@ void fn_8013396C(void)
     if ((void *)player == NULL ||
         (*gCameraInterface)->getMode() == 0x44 ||
         (s16)Camera_GetViewportYOffset() != 0 ||
-        (*(u16 *)(player + 0xb0) & 0x1000) != 0 ||
+        (((GameObject *)player)->objectFlags & 0x1000) != 0 ||
         objIsCurModelNotZero(player) == 0 ||
         pauseMenuState != 0) {
         if (lbl_803DD945 != 0) {
@@ -6173,8 +6173,8 @@ void fn_8013396C(void)
                         lbl_803DD92A = 0;
                     }
                     slot = Camera_GetCurrentViewSlot();
-                    a = getAngle(*(f32 *)(lbl_803DD934 + 0xc) - *(f32 *)(player + 0xc),
-                                 *(f32 *)(lbl_803DD934 + 0x14) - *(f32 *)(player + 0x14));
+                    a = getAngle(*(f32 *)(lbl_803DD934 + 0xc) - ((GameObject *)player)->anim.localPosX,
+                                 *(f32 *)(lbl_803DD934 + 0x14) - ((GameObject *)player)->anim.localPosZ);
                     d = *slot + a - (u16)*(s16 *)((char *)lbl_803DBBC8[1] + 4);
                     if (d > 0x8000) {
                         d -= 0xffff;

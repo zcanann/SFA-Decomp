@@ -2097,7 +2097,7 @@ void SB_CageKyte_update(int obj)
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8;
     *state -= framesThisStep;
     player = (int)Obj_GetPlayerObject();
-    Vec_distance((void *)&((GameObject *)obj)->anim.worldPosX, (void *)(player + 0x18));
+    Vec_distance((void *)&((GameObject *)obj)->anim.worldPosX, (void *)&((GameObject *)player)->anim.worldPosX);
 
     if (*state <= 0) {
         randomGetRange(0, 10);
@@ -2228,7 +2228,7 @@ void SB_CloudBall_update(int obj)
         ((GameObject *)obj)->anim.localPosY = state->posY;
         ((GameObject *)obj)->anim.localPosZ = state->posZ;
         ((GameObject *)obj)->unkF4 = ((GameObject *)obj)->unkF4 - framesThisStep;
-        if (((GameObject *)obj)->unkF4 < 0 || (player != NULL && (*(u16 *)((char *)player + 0xb0) & 0x1000) != 0)) {
+        if (((GameObject *)obj)->unkF4 < 0 || (player != NULL && (((GameObject *)player)->objectFlags & 0x1000) != 0)) {
             if (state->fadeTimer == lbl_803E58EC) {
                 ((GameObject *)obj)->anim.alpha = 0;
                 state->fadeTimer = lbl_803E58F0;

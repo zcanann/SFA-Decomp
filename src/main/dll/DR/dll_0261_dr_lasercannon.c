@@ -206,7 +206,7 @@ int drlasercannon_getTrackedTarget(int obj, int *arg) {
         if (r != 0 && (*(u16 *)((char *)r + 0xb0) & 0x1000) == 0) {
             return (int)r;
         }
-        if ((*(u16 *)((char *)player + 0xb0) & 0x1000) == 0) {
+        if ((((GameObject *)player)->objectFlags & 0x1000) == 0) {
             return (int)player;
         }
     }

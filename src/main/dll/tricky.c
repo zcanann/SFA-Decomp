@@ -1,4 +1,5 @@
 #include "main/dll/tricky.h"
+#include "main/game_object.h"
 #include "main/camera_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/texture.h"
@@ -2733,7 +2734,7 @@ void hudDrawAirMeter(void) {
     if (m == NULL) return;
     alpha = *(u8 *)((char *)m + 0x18);
     if (p->bit7 || pauseMenuState != 0 || getHudHiddenFrameCount() != 0 ||
-        (player != NULL && (*(u16 *)((char *)player + 0xb0) & 0x1000) != 0 &&
+        (player != NULL && (((GameObject *)player)->objectFlags & 0x1000) != 0 &&
          *(u16 *)((char *)m + 0x2c) != 0x5d5)) {
         alpha = (s16)(alpha - (framesThisStep << 2));
         clamped = (alpha < 0) ? 0 : alpha;
@@ -2977,7 +2978,7 @@ void hudDrawFn_80121440(void) {
     }
     alpha = (int)lbl_803DD83C;
     if ((u8)alpha != 0) {
-        int cell = coordsToMapCell(*(f32 *)((char *)player + 0xc), *(f32 *)((char *)player + 0x14));
+        int cell = coordsToMapCell(((GameObject *)player)->anim.localPosX, ((GameObject *)player)->anim.localPosZ);
         if (!(*(f32 *)(base + 0xafc) > lbl_803E1F9C && *(f32 *)(base + 0xafc) < lbl_803E1FA8 &&
               ((int)*(f32 *)(base + 0xafc) & 8)) &&
             !(*(f32 *)(base + 0xb18) > lbl_803E1F9C && *(f32 *)(base + 0xb18) < lbl_803E1FA8 &&

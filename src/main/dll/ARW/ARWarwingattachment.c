@@ -382,7 +382,7 @@ void LaserBeam_update(int param_1)
     } else if (b->beamKind == 0 && b->emitterSlot != -1) {
         (*gModgfxInterface)->releaseHandle(&b->emitterSlot);
     }
-    if ((dot + (sinv * *(f32 *)(player + 0xc) + cosv * *(f32 *)(player + 0x14)) > lbl_803E5D10 &&
+    if ((dot + (sinv * ((GameObject *)player)->anim.localPosX + cosv * ((GameObject *)player)->anim.localPosZ) > lbl_803E5D10 &&
          b->beamKind != 2) ||
         b->beamKind == 30) {
         b->sweepYaw -= framesThisStep;
@@ -410,12 +410,12 @@ void LaserBeam_update(int param_1)
     }
     if (player != NULL && b->unk27 == 0 && b->unk24 == 2) {
         range = lbl_803E5D28 + (f32)(int)*(s8 *)&b->unk26;
-        dy = *(f32 *)(player + 0x10) - ((GameObject *)param_1)->anim.localPosY;
+        dy = ((GameObject *)player)->anim.localPosY - ((GameObject *)param_1)->anim.localPosY;
         if (dy < range && dy > -(lbl_803E5D2C + range)) {
-            dx = *(f32 *)(player + 0xc) - ((GameObject *)param_1)->anim.localPosX;
-            dzp = *(f32 *)(player + 0x14) - ((GameObject *)param_1)->anim.localPosZ;
+            dx = ((GameObject *)player)->anim.localPosX - ((GameObject *)param_1)->anim.localPosX;
+            dzp = ((GameObject *)player)->anim.localPosZ - ((GameObject *)param_1)->anim.localPosZ;
             if (dx * dx + dzp * dzp < dz2) {
-                lat = dot + (sinv * *(f32 *)(player + 0xc) + cosv * *(f32 *)(player + 0x14));
+                lat = dot + (sinv * ((GameObject *)player)->anim.localPosX + cosv * ((GameObject *)player)->anim.localPosZ);
                 a = lat;
                 if (lat < lbl_803E5D10) {
                     a = -lat;
@@ -432,16 +432,16 @@ void LaserBeam_update(int param_1)
                     if (objGetAnimState80A(player) == 0x1d7 && b->beamKind != 1) {
                         GameBit_Set(0x468, 1);
                     } else {
-                        if (dot + (sinv * *(f32 *)(player + 0x80) +
-                                   cosv * *(f32 *)(player + 0x88)) < lbl_803E5D10) {
+                        if (dot + (sinv * ((GameObject *)player)->anim.previousLocalPosX +
+                                   cosv * ((GameObject *)player)->anim.previousLocalPosZ) < lbl_803E5D10) {
                             spread = lbl_803E5D40;
                         } else {
                             spread = lbl_803E5D44;
                         }
-                        Sfx_PlayAtPositionFromObject(param_1, *(f32 *)(player + 0xc),
+                        Sfx_PlayAtPositionFromObject(param_1, ((GameObject *)player)->anim.localPosX,
                                                      ((GameObject *)param_1)->anim.localPosY,
-                                                     *(f32 *)(player + 0x14), 0x1c9);
-                        if (*(s16 *)(*(char **)(player + 0xb8) + 0x81a) == 0) {
+                                                     ((GameObject *)player)->anim.localPosZ, 0x1c9);
+                        if (*(s16 *)(*(char **)&((GameObject *)player)->extra + 0x81a) == 0) {
                             sfx = 31;
                         } else {
                             sfx = 35;
@@ -451,8 +451,8 @@ void LaserBeam_update(int param_1)
                             (*gPartfxInterface)->spawnObject(Obj_GetPlayerObject(), 0x198,
                                                              NULL, 4, -1, NULL);
                         }
-                        b->targetX = sinv * spread + *(f32 *)(player + 0xc);
-                        b->targetZ = cosv * spread + *(f32 *)(player + 0x14);
+                        b->targetX = sinv * spread + ((GameObject *)player)->anim.localPosX;
+                        b->targetZ = cosv * spread + ((GameObject *)player)->anim.localPosZ;
                         c = b->beamKind;
                         if (c == 0 || c == 1) {
                             ObjMsg_SendToObject(player, 0x60003, (char *)b + 0x34, 0);
