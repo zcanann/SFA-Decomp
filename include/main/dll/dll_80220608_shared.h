@@ -415,32 +415,39 @@ extern f32 lbl_803E713C;
 
 
 
+typedef void ModelLight;
 typedef struct PointLightVec { f32 x, y, z; } PointLightVec;
+
+#define MODEL_LIGHT_KIND_POINT 2
+#define MODEL_LIGHT_KIND_DIRECTIONAL 4
+#define MODEL_LIGHT_KIND_PROJECTED 8
+
+#define LGT_POINTLIGHT_GROUP 0x35
 
 extern f32 lbl_802C25F8[];
 extern f32 lbl_803E7230;
 extern f32 lbl_803E7234;
 extern f32 lbl_803E7240;
-extern void ModelLightStruct_free(void *light);
-extern void modelLightStruct_setEnabled(void *light, int flag, f32 val);
-extern void queueGlowRender(void *light);
+extern void ModelLightStruct_free(ModelLight *light);
+extern void modelLightStruct_setEnabled(ModelLight *light, int flag, f32 val);
+extern void queueGlowRender(ModelLight *light);
 extern void getAmbientColor(int id, u8 *r, u8 *g, u8 *b);
-extern void modelLightStruct_setDiffuseColor(void *light, u8 r, u8 g, u8 b, int a);
-extern void modelLightStruct_setDiffuseTargetColor(void *light, u8 r, u8 g, u8 b, int a);
-extern void modelLightStruct_updateGlowAlpha(void *light);
-extern void *objCreateLight(int obj, int kind);
-extern void modelLightStruct_setLightKind(void *light, int v);
-extern void objSetEventName(void *light, int name);
-extern void modelLightStruct_setPosition(void *light, f32 x, f32 y, f32 z);
-extern void modelLightStruct_setDistanceAttenuation(void *light, f32 near, f32 far);
-extern void modelLightStruct_setSpotAttenuation(void *light, f32 v, int x);
-extern void modelLightStruct_startColorFade(void *light, int a, s16 b);
-extern void modelLightStruct_setDirection(void *light, f32 x, f32 y, f32 z);
+extern void modelLightStruct_setDiffuseColor(ModelLight *light, u8 r, u8 g, u8 b, int a);
+extern void modelLightStruct_setDiffuseTargetColor(ModelLight *light, u8 r, u8 g, u8 b, int a);
+extern void modelLightStruct_updateGlowAlpha(ModelLight *light);
+extern ModelLight *objCreateLight(int obj, int kind);
+extern void modelLightStruct_setLightKind(ModelLight *light, int v);
+extern void objSetEventName(ModelLight *light, int name);
+extern void modelLightStruct_setPosition(ModelLight *light, f32 x, f32 y, f32 z);
+extern void modelLightStruct_setDistanceAttenuation(ModelLight *light, f32 near, f32 far);
+extern void modelLightStruct_setSpotAttenuation(ModelLight *light, f32 v, int x);
+extern void modelLightStruct_startColorFade(ModelLight *light, int a, s16 b);
+extern void modelLightStruct_setDirection(ModelLight *light, f32 x, f32 y, f32 z);
 extern void Obj_SetActiveModelIndex(int obj, int index);
-extern void modelLightStruct_setupGlow(void *light, u16 a, u8 b, u8 c, u8 d, u8 e, f32 f);
-extern void modelLightStruct_setGlowProjectionRadius(void *light, f32 v);
-extern void modelLightStruct_setAffectsAabbLightSelection(void *light, int v);
-extern void modelLightStruct_setSelectionPriority(void *light, u8 v);
+extern void modelLightStruct_setupGlow(ModelLight *light, u16 a, u8 b, u8 c, u8 d, u8 e, f32 f);
+extern void modelLightStruct_setGlowProjectionRadius(ModelLight *light, f32 v);
+extern void modelLightStruct_setAffectsAabbLightSelection(ModelLight *light, int v);
+extern void modelLightStruct_setSelectionPriority(ModelLight *light, u8 v);
 
 
 #pragma dont_inline on
@@ -473,13 +480,13 @@ extern f32 lbl_803E7274;
 extern f32 lbl_803E7260;
 extern void textureFree(void *tex);
 extern void *textureLoadAsset(int id);
-extern void modelLightStruct_setProjectedLightChannelPreference(void *light, int v);
-extern void modelLightStruct_setProjectionTexture(void *light, void *tex);
-extern void modelLightStruct_setupOrthoProjection(void *light, f32 a, f32 b, f32 c, f32 d, f32 e, f32 f);
-extern void modelLightStruct_setupPerspectiveProjection(void *light, f32 a, f32 b);
-extern void modelLightStruct_setProjectionTevModes(void *light, int a, int b);
-extern void modelLightStruct_setProjectionNearZ(void *light, f32 v);
-extern void modelLightStruct_setProjectionFarZ(void *light, f32 v);
+extern void modelLightStruct_setProjectedLightChannelPreference(ModelLight *light, int v);
+extern void modelLightStruct_setProjectionTexture(ModelLight *light, void *tex);
+extern void modelLightStruct_setupOrthoProjection(ModelLight *light, f32 a, f32 b, f32 c, f32 d, f32 e, f32 f);
+extern void modelLightStruct_setupPerspectiveProjection(ModelLight *light, f32 a, f32 b);
+extern void modelLightStruct_setProjectionTevModes(ModelLight *light, int a, int b);
+extern void modelLightStruct_setProjectionNearZ(ModelLight *light, f32 v);
+extern void modelLightStruct_setProjectionFarZ(ModelLight *light, f32 v);
 
 
 
@@ -2061,7 +2068,7 @@ void dll_2A4_update(int obj);
 void dll_2A4_init(int obj);
 int pointlight_getExtraSize(void);
 int pointlight_getObjectTypeId(void);
-void pointlight_setEffectState(int obj, int flag);
+void pointlight_setEffectState(int obj, int enabled);
 void pointlight_free(int obj);
 void pointlight_render(int obj);
 void pointlight_hitDetect(void);

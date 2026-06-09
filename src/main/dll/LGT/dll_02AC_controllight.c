@@ -20,6 +20,10 @@ typedef struct ControlLightState {
     u8 pad0A[2];
 } ControlLightState;
 
+#define CONTROLLIGHT_MODE_DIRECT 0
+#define CONTROLLIGHT_MODE_INVERTED 1
+#define CONTROLLIGHT_LAST_BIT_INVALID 0xff
+
 STATIC_ASSERT(sizeof(ControlLightState) == 0x0C);
 STATIC_ASSERT(offsetof(ControlLightState, gameBit) == 0x00);
 STATIC_ASSERT(offsetof(ControlLightState, radius) == 0x04);
@@ -50,7 +54,7 @@ void controllight_init(int obj, int setup)
     state->gameBit = setupData->gameBit;
     state->radius = (f32)setupData->radius;
     state->invertMode = setupData->invertMode % 2;
-    state->lastBit = 0xff;
+    state->lastBit = CONTROLLIGHT_LAST_BIT_INVALID;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -64,31 +68,33 @@ void controllight_update(int obj)
 
     if (bit != state->lastBit) {
         switch (state->invertMode) {
-        case 0: {
+        case CONTROLLIGHT_MODE_DIRECT: {
             f32 radius = state->radius;
             int count;
-            int *objs = ObjGroup_GetObjects(0x35, &count);
-            int *p = objs;
+            GameObject **objs = (GameObject **)ObjGroup_GetObjects(LGT_POINTLIGHT_GROUP, &count);
+            GameObject **p = objs;
             int i;
             for (i = 0; i < count; i++) {
-                int o = *p;
-                if (Vec_distance(obj + 0x18, o + 0x18) < radius) {
-                    pointlight_setEffectState(o, bit);
+                GameObject *lightObj = *p;
+                if (Vec_distance((int)&((GameObject *)obj)->anim.worldPosX,
+                        (int)&lightObj->anim.worldPosX) < radius) {
+                    pointlight_setEffectState((int)lightObj, bit);
                 }
                 p++;
             }
             break;
         }
-        case 1: {
+        case CONTROLLIGHT_MODE_INVERTED: {
             f32 radius = state->radius;
             int count;
-            int *objs = ObjGroup_GetObjects(0x35, &count);
-            int *p = objs;
+            GameObject **objs = (GameObject **)ObjGroup_GetObjects(LGT_POINTLIGHT_GROUP, &count);
+            GameObject **p = objs;
             int i;
             for (i = 0; i < count; i++) {
-                int o = *p;
-                if (Vec_distance(obj + 0x18, o + 0x18) < radius) {
-                    pointlight_setEffectState(o, !bit);
+                GameObject *lightObj = *p;
+                if (Vec_distance((int)&((GameObject *)obj)->anim.worldPosX,
+                        (int)&lightObj->anim.worldPosX) < radius) {
+                    pointlight_setEffectState((int)lightObj, !bit);
                 }
                 p++;
             }

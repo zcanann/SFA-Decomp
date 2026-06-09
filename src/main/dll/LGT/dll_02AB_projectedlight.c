@@ -38,9 +38,12 @@ typedef struct ProjectedLightSetup {
 } ProjectedLightSetup;
 
 typedef struct ProjectedLightState {
-    void *light;
+    ModelLight *light;
     void *texture;
 } ProjectedLightState;
+
+#define PROJECTEDLIGHT_DEFAULT_TEXTURE_ASSET 0x5dc
+#define PROJECTEDLIGHT_PROJECTION_ORTHO 0
 
 STATIC_ASSERT(sizeof(ProjectedLightState) == 0x8);
 STATIC_ASSERT(offsetof(ProjectedLightState, texture) == 0x04);
@@ -120,7 +123,7 @@ void projectedlight_init(int obj, int setup)
     }
 
     if (state->light != NULL) {
-        modelLightStruct_setLightKind(state->light, 8);
+        modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_PROJECTED);
         modelLightStruct_setPosition(state->light, lbl_803E7270, lbl_803E7270, lbl_803E7270);
         modelLightStruct_setDirection(state->light, vec.x, vec.y, vec.z);
         modelLightStruct_setDiffuseColor(state->light, setupData->diffuseR,
@@ -134,12 +137,12 @@ void projectedlight_init(int obj, int setup)
             if (setupData->textureAsset != 0) {
                 state->texture = textureLoadAsset(setupData->textureAsset);
             } else {
-                state->texture = textureLoadAsset(0x5dc);
+                state->texture = textureLoadAsset(PROJECTEDLIGHT_DEFAULT_TEXTURE_ASSET);
             }
             modelLightStruct_setProjectionTexture(state->light, state->texture);
         }
 
-        if (setupData->projectionMode == 0) {
+        if (setupData->projectionMode == PROJECTEDLIGHT_PROJECTION_ORTHO) {
             f32 a = (f32)(u32)setupData->projectionHeight / lbl_803E7274;
             f32 b;
             f32 lo, hi;

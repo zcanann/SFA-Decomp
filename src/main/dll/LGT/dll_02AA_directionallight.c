@@ -36,12 +36,15 @@ typedef struct DirectionalLightState {
     u8 targetG;
     u8 targetB;
     u8 pad07;
-    void *light;
+    ModelLight *light;
     u8 debugEditing;
     s8 debugField;
     u8 enabled;
     u8 pad0F;
 } DirectionalLightState;
+
+#define DIRECTIONALLIGHT_FLAG_USE_AMBIENT_COLOR 0x01
+#define DIRECTIONALLIGHT_DEBUG_FIELD_COUNT 8
 
 STATIC_ASSERT(sizeof(DirectionalLightState) == 0x10);
 STATIC_ASSERT(offsetof(DirectionalLightState, light) == 0x08);
@@ -100,11 +103,11 @@ void directionallight_debugEdit(int obj, int statePtr)
     if ((buttons & 4) != 0) {
         state->debugField -= 1;
     }
-    if (state->debugField >= 8) {
+    if (state->debugField >= DIRECTIONALLIGHT_DEBUG_FIELD_COUNT) {
         state->debugField = 0;
     }
     if (state->debugField < 0) {
-        state->debugField = 7;
+        state->debugField = DIRECTIONALLIGHT_DEBUG_FIELD_COUNT - 1;
     }
 
     switch (state->debugField) {
@@ -212,11 +215,11 @@ void directionallight_init(int obj, int setup)
     }
 
     if (state->light != NULL) {
-        modelLightStruct_setLightKind(state->light, 4);
+        modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_DIRECTIONAL);
         objSetEventName(state->light, setupData->eventName);
         modelLightStruct_setDirection(state->light, vec.x, vec.y, vec.z);
 
-        if ((setupData->flags & 1) != 0) {
+        if ((setupData->flags & DIRECTIONALLIGHT_FLAG_USE_AMBIENT_COLOR) != 0) {
             getAmbientColor(0, &colorR, &colorG, &colorB);
             modelLightStruct_setDiffuseColor(state->light, colorR, colorG, colorB, 0xff);
             modelLightStruct_setDiffuseTargetColor(state->light, colorR, colorG, colorB, 0xff);
@@ -261,7 +264,7 @@ void directionallight_update(int obj)
             state->enabled = 0;
             modelLightStruct_setEnabled(state->light, 0, lbl_803E7254);
         }
-        if ((setup->flags & 1) != 0) {
+        if ((setup->flags & DIRECTIONALLIGHT_FLAG_USE_AMBIENT_COLOR) != 0) {
             getAmbientColor(0, &colorR, &colorG, &colorB);
             modelLightStruct_setDiffuseColor(state->light, colorR, colorG, colorB, 0xff);
         }

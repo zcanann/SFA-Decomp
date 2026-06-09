@@ -4,9 +4,12 @@
 
 
 typedef struct PointLightState {
-    void *light;
+    ModelLight *light;
     u8 enabled;
 } PointLightState;
+
+#define POINTLIGHT_FLAG_USE_AMBIENT_COLOR 0x01
+#define POINTLIGHT_MAX_SPOT_BRIGHTNESS 0x5a
 
 typedef struct PointLightSetup {
     ObjPlacement base;
@@ -71,12 +74,13 @@ int pointlight_getExtraSize(void) { return 8; }
 
 int pointlight_getObjectTypeId(void) { return 0; }
 
-void pointlight_setEffectState(int obj, int flag)
+void pointlight_setEffectState(int obj, int enabled)
 {
-    PointLightState *state = ((GameObject *)obj)->extra;
-    void *light = state->light;
+    GameObject *object = (GameObject *)obj;
+    PointLightState *state = object->extra;
+    ModelLight *light = state->light;
     if (light != NULL) {
-        modelLightStruct_setEnabled(light, flag, lbl_803E7230);
+        modelLightStruct_setEnabled(light, enabled, lbl_803E7230);
     }
 }
 
@@ -88,7 +92,7 @@ void pointlight_free(int obj)
     if (state->light != NULL) {
         ModelLightStruct_free(state->light);
     }
-    ObjGroup_RemoveObject(obj, 0x35);
+    ObjGroup_RemoveObject(obj, LGT_POINTLIGHT_GROUP);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -96,7 +100,7 @@ void pointlight_free(int obj)
 void pointlight_render(int obj)
 {
     PointLightState *state = ((GameObject *)obj)->extra;
-    void *light = state->light;
+    ModelLight *light = state->light;
     if (light != NULL && *(u8 *)((char *)light + 0x2f8) != 0 &&
         *(u8 *)((char *)light + 0x4c) != 0) {
         queueGlowRender(light);
@@ -128,7 +132,7 @@ void pointlight_update(int obj)
             state->enabled = 0;
             modelLightStruct_setEnabled(state->light, 0, lbl_803E7234);
         }
-        if ((setup->flags & 1) != 0) {
+        if ((setup->flags & POINTLIGHT_FLAG_USE_AMBIENT_COLOR) != 0) {
             getAmbientColor(0, &colorR, &colorG, &colorB);
             modelLightStruct_setDiffuseColor(state->light, colorR, colorG, colorB, 0xff);
             modelLightStruct_setDiffuseTargetColor(state->light, colorR, colorG, colorB, 0xff);
@@ -167,11 +171,11 @@ void pointlight_init(int obj, int setup)
     }
 
     if (state->light != NULL) {
-        modelLightStruct_setLightKind(state->light, 2);
+        modelLightStruct_setLightKind(state->light, MODEL_LIGHT_KIND_POINT);
         objSetEventName(state->light, setupData->eventName);
         modelLightStruct_setPosition(state->light, lbl_803E7230, lbl_803E7230, lbl_803E7230);
 
-        if ((setupData->flags & 1) != 0) {
+        if ((setupData->flags & POINTLIGHT_FLAG_USE_AMBIENT_COLOR) != 0) {
             getAmbientColor(0, &colorR, &colorG, &colorB);
             modelLightStruct_setDiffuseColor(state->light, colorR, colorG, colorB, 0xff);
             modelLightStruct_setDiffuseTargetColor(state->light, colorR, colorG, colorB, 0xff);
@@ -187,8 +191,8 @@ void pointlight_init(int obj, int setup)
 
         {
             u8 brightness = setupData->brightness;
-            if (brightness >= 0x5a) {
-                brightness = 0x5a;
+            if (brightness >= POINTLIGHT_MAX_SPOT_BRIGHTNESS) {
+                brightness = POINTLIGHT_MAX_SPOT_BRIGHTNESS;
             }
             modelLightStruct_setSpotAttenuation(state->light, (f32)brightness, setupData->spotMode);
         }
@@ -220,7 +224,7 @@ void pointlight_init(int obj, int setup)
         }
     }
 
-    ObjGroup_AddObject(obj, 0x35);
+    ObjGroup_AddObject(obj, LGT_POINTLIGHT_GROUP);
 }
 #pragma scheduling reset
 #pragma peephole reset
