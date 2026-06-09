@@ -108,7 +108,7 @@ void doorlock_init(short *obj, DoorLockPlacement *config)
   obj[1] = (short)((byte)config->rotYByte << 8);
   obj[2] = (short)((byte)config->rotZByte << 8);
   ((GameObject *)obj)->animEventCallback = (void *)Lock_DoorLock_SeqFn;
-  objAnim->bankIndex = config->modelBankIndex;
+  *(u8 *)&objAnim->bankIndex = config->modelBankIndex;
   if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
     objAnim->bankIndex = 0;
   }
@@ -666,7 +666,7 @@ void seqobject_init(int *obj, SeqObjectPlacement *params) {
     state = ((GameObject *)obj)->extra;
     *(s16*)obj = (s16)(params->initialYaw << 8);
     ((GameObject *)obj)->animEventCallback = (void *)seqobject_SeqFn;
-    objAnim->bankIndex = params->modelBankIndex;
+    *(u8 *)&objAnim->bankIndex = params->modelBankIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
         objAnim->bankIndex = 0;
     }
