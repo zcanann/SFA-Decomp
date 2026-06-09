@@ -2,6 +2,7 @@
 #include "main/camera_interface.h"
 #include "main/camera_object.h"
 #include "main/dll/CAM/camclimb_state.h"
+#include "main/dll/CAM/camcombat_state.h"
 #include "main/game_object.h"
 #include "main/mm.h"
 #include "main/object_transform.h"
@@ -32,7 +33,7 @@ extern uint fn_8029630C(int obj);
 extern int objAnimFn_80296328(int obj);
 extern undefined4 cameraGetPrevPos2();
 
-extern f32* lbl_803DD568;
+extern CameraModeCombatState* lbl_803DD568;
 extern s32 lbl_803DD56C;
 extern f32* lbl_803DD570;
 extern CameraModeClimbState* lbl_803DD578;
@@ -159,7 +160,7 @@ void CameraModeCombat_update(short *cam)
     uint ad;
     short sVar2;
 
-    if (*(u8 *)((int)lbl_803DD568 + 0x12) != 0) {
+    if (lbl_803DD568->invalidTarget != 0) {
         if (((CameraObject *)cam)->targetObj != NULL) {
             if ((*(u8 *)(*(int *)((char *)cam + 0x11c) + 0xaf) & 0x40) || (((CameraObject *)cam)->unk141 & 2)) {
                 return;
@@ -276,19 +277,19 @@ void CameraModeCombat_update(short *cam)
                             }
                             zoom = (f32)(s32)(9000 - abs2) / lbl_803E18E4;
                             lbl_803DD56C = diff;
-                            step = interpolate(lbl_803E18E8 - lbl_803DD568[1], lbl_803E18EC, timeDelta);
-                            lbl_803DD568[1] = lbl_803DD568[1] + step;
-                            step = interpolate((lbl_803E18F0 + (lbl_803E18C0 - zoom)) / lbl_803E18F4 - lbl_803DD568[2], lbl_803E18F8, timeDelta);
-                            lbl_803DD568[2] = lbl_803DD568[2] + step;
+                            step = interpolate(lbl_803E18E8 - lbl_803DD568->heightOffset, lbl_803E18EC, timeDelta);
+                            lbl_803DD568->heightOffset = lbl_803DD568->heightOffset + step;
+                            step = interpolate((lbl_803E18F0 + (lbl_803E18C0 - zoom)) / lbl_803E18F4 - lbl_803DD568->zoomOffset, lbl_803E18F8, timeDelta);
+                            lbl_803DD568->zoomOffset = lbl_803DD568->zoomOffset + step;
                             c = mathSinf((lbl_803E18FC * (f32)(s32)*cam) / lbl_803E1900);
                             sn = mathCosf((lbl_803E18FC * (f32)(s32)*cam) / lbl_803E1900);
-                            t = lbl_803DD568[0] * c;
+                            t = lbl_803DD568->followDistance * c;
                             nx = px + t;
-                            t = lbl_803DD568[0] * sn;
+                            t = lbl_803DD568->followDistance * sn;
                             nz = pz - t;
                             dy = dy * lbl_803E1904;
                             dy = ty - dy;
-                            dy = dy + lbl_803DD568[1];
+                            dy = dy + lbl_803DD568->heightOffset;
                             step = interpolate(((CameraObject *)cam)->anim.worldPosY - dy, lbl_803E1908, timeDelta);
                             ny = ((CameraObject *)cam)->anim.worldPosY - step;
                             PSVECSubtract(&nx, (f32 *)((char *)cam + 0x18), vec);
@@ -341,7 +342,7 @@ void CameraModeCombat_update(short *cam)
                             if (lbl_803E192C < fVar1) {
                                 fVar1 = lbl_803E192C;
                             }
-                            t = fVar1 - lbl_803DD568[0];
+                            t = fVar1 - lbl_803DD568->followDistance;
                             step = powfBitEstimate(lbl_803E18EC, timeDelta);
                             fVar1 = t * step;
                             if (fVar1 > lbl_803E18D8 * timeDelta) {
@@ -349,7 +350,7 @@ void CameraModeCombat_update(short *cam)
                             } else if (fVar1 < lbl_803E1930 * timeDelta) {
                                 fVar1 = lbl_803E1930 * timeDelta;
                             }
-                            lbl_803DD568[0] = lbl_803DD568[0] + fVar1;
+                            lbl_803DD568->followDistance = lbl_803DD568->followDistance + fVar1;
                             turnOnBlurFilter(((GameObject *)tgt)->anim.worldPosX, ((GameObject *)tgt)->anim.worldPosY, ((GameObject *)tgt)->anim.worldPosZ, 1, 0);
                             if (lbl_803E18C4 == ((CameraObject *)cam)->unkF4) {
                                 ((CombatCamFlags *)((char *)cam + 0x143))->b80 = 1;
@@ -389,24 +390,24 @@ void CameraModeCombat_init(int param_1,undefined4 param_2,undefined4 *param_3)
 
   *(undefined4 *)(param_1 + 0x11c) = *param_3;
   iVar5 = *(int *)(param_1 + 0xa4);
-  if (lbl_803DD568 == (float *)0x0) {
-    lbl_803DD568 = (float *)mmAlloc(0x1c,0xf,0);
+  if (lbl_803DD568 == (CameraModeCombatState *)0x0) {
+    lbl_803DD568 = (CameraModeCombatState *)mmAlloc(0x1c,0xf,0);
   }
   fVar1 = lbl_803E18C4;
-  lbl_803DD568[1] = lbl_803E18C4;
-  lbl_803DD568[2] = lbl_803E18C0;
-  *(undefined *)((int)lbl_803DD568 + 0x12) = 0;
-  *(undefined *)((int)lbl_803DD568 + 0x11) = 0;
-  *(undefined *)((int)lbl_803DD568 + 0x13) = 1;
-  *(undefined *)(lbl_803DD568 + 5) = 1;
-  lbl_803DD568[6] = fVar1;
+  lbl_803DD568->heightOffset = lbl_803E18C4;
+  lbl_803DD568->zoomOffset = lbl_803E18C0;
+  lbl_803DD568->invalidTarget = 0;
+  lbl_803DD568->unk11 = 0;
+  lbl_803DD568->pathBlendStartIndex = 1;
+  lbl_803DD568->pathBlendTargetIndex = 1;
+  lbl_803DD568->pathBlendWeight = fVar1;
   if (*(short *)(iVar5 + 0x44) != 1) {
-    *(undefined *)((int)lbl_803DD568 + 0x12) = 1;
+    lbl_803DD568->invalidTarget = 1;
   }
   else {
     iVar4 = *(int *)(param_1 + 0x11c);
     if ((void *)iVar4 == NULL) {
-      *(undefined *)((int)lbl_803DD568 + 0x12) = 1;
+      lbl_803DD568->invalidTarget = 1;
     }
     else {
       if (*(void **)(iVar4 + 0x74) == NULL) {
@@ -419,12 +420,12 @@ void CameraModeCombat_init(int param_1,undefined4 param_2,undefined4 *param_3)
         fVar2 = *(float *)(iVar3 + 0x14) - *(float *)(iVar5 + 0x20);
       }
       if (*(short *)(iVar4 + 0x44) != 0x6d) {
-        *lbl_803DD568 = sqrtf(fVar1 * fVar1 + fVar2 * fVar2);
+        lbl_803DD568->followDistance = sqrtf(fVar1 * fVar1 + fVar2 * fVar2);
       }
       else {
-        *lbl_803DD568 = lbl_803E1940;
+        lbl_803DD568->followDistance = lbl_803E1940;
       }
-      *(undefined *)(lbl_803DD568 + 4) = 0;
+      lbl_803DD568->unk10 = 0;
     }
   }
   return;

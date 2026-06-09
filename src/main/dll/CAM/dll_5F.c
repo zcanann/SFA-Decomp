@@ -1,6 +1,8 @@
 #include "main/dll/CAM/dll_5F.h"
 #include "main/camera_interface.h"
 #include "main/camera_object.h"
+#include "main/dll/CAM/camcannon_state.h"
+#include "main/dll/CAM/camcombat_state.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
 #include "main/mm.h"
@@ -28,7 +30,7 @@ extern f32 sqrtf(f32);
 extern void cameraModeTestStrengthFn_8010b238(int camera, f32 *pos, s16 pitch, s16 yaw, s16 roll);
 extern void *memset(void *p, int c, int n);
 extern u8 framesThisStep;
-extern undefined4* lbl_803DD560;
+extern CamCannonState* lbl_803DD560;
 extern f64 lbl_803E18A0;
 extern f32 lbl_803E1888;
 extern f32 lbl_803E188C;
@@ -313,7 +315,7 @@ void CameraModeTestStrength_release(void) {}
 void CameraModeTestStrength_initialise(void) {}
 void CameraModeCombat_copyToCurrent_nop(void) {}
 
-extern undefined4 *lbl_803DD568;
+extern CameraModeCombatState *lbl_803DD568;
 extern f32 lbl_803E18C0;
 extern f32 lbl_803E18C4;
 extern f32 lbl_803E18C8;
@@ -347,26 +349,26 @@ void fn_8010BF08(int control, float *outX, float *outY, float *outZ, void *inFlo
   cameraObj = *(int *)(control + 0xa4);
   paths = *(CamPathEntry **)(settings + 0x74);
   curIdx = *(u8 *)(settings + 0xe4);
-  if ((u32)curIdx != (u32)*(u8 *)(*(int **)&lbl_803DD568 + 0x14/4)) {
-    *(u8 *)((char *)*(int **)&lbl_803DD568 + 0x13) = *(u8 *)((char *)*(int **)&lbl_803DD568 + 0x14);
-    *(float *)((char *)*(int **)&lbl_803DD568 + 0x18) = lbl_803E18C0;
+  if ((u32)curIdx != (u32)lbl_803DD568->pathBlendTargetIndex) {
+    lbl_803DD568->pathBlendStartIndex = lbl_803DD568->pathBlendTargetIndex;
+    lbl_803DD568->pathBlendWeight = lbl_803E18C0;
   }
-  t = *(float *)((char *)*(int **)&lbl_803DD568 + 0x18);
+  t = lbl_803DD568->pathBlendWeight;
   lim = lbl_803E18C4;
   if (t > lim) {
     t = -(lbl_803E18C8 * timeDelta) + t;
-    *(float *)((char *)*(int **)&lbl_803DD568 + 0x18) = t;
-    if (*(float *)((char *)*(int **)&lbl_803DD568 + 0x18) < lim) {
-      *(float *)((char *)*(int **)&lbl_803DD568 + 0x18) = lim;
-      *(u8 *)((char *)*(int **)&lbl_803DD568 + 0x13) = *(u8 *)(settings + 0xe4);
+    lbl_803DD568->pathBlendWeight = t;
+    if (lbl_803DD568->pathBlendWeight < lim) {
+      lbl_803DD568->pathBlendWeight = lim;
+      lbl_803DD568->pathBlendStartIndex = *(u8 *)(settings + 0xe4);
     }
     {
-      u8 ci = *(u8 *)((char *)*(int **)&lbl_803DD568 + 0x13);
+      u8 ci = lbl_803DD568->pathBlendStartIndex;
       u8 ti = *(u8 *)(settings + 0xe4);
       float dx = paths[ci].x - paths[ti].x;
       float dy = paths[ci].y - paths[ti].y;
       float dz = paths[ci].z - paths[ti].z;
-      float w = *(float *)((char *)*(int **)&lbl_803DD568 + 0x18);
+      float w = lbl_803DD568->pathBlendWeight;
       dx *= w;
       dy *= w;
       dz *= w;
@@ -382,7 +384,7 @@ void fn_8010BF08(int control, float *outX, float *outY, float *outZ, void *inFlo
     *outY = paths[*(u8 *)(settings + 0xe4)].y - *(float *)inFloatPtr;
     *outZ = paths[*(u8 *)(settings + 0xe4)].z - *(float *)(cameraObj + 0x20);
   }
-  *(u8 *)((char *)*(int **)&lbl_803DD568 + 0x14) = *(u8 *)(settings + 0xe4);
+  lbl_803DD568->pathBlendTargetIndex = *(u8 *)(settings + 0xe4);
 }
 
 /*
@@ -402,7 +404,7 @@ void CameraModeCombat_free(int obj)
     (*gCameraInterface)->setTarget(0);
   }
   mm_free(lbl_803DD568);
-  *(int *)&lbl_803DD568 = 0;
+  lbl_803DD568 = 0;
   Rcp_DisableBlurFilter();
   ((CamByte143 *)(obj + 0x143))->flag80 = 0;
 }
