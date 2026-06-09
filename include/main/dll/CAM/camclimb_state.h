@@ -18,9 +18,9 @@ typedef struct CameraModeClimbState {
     f32 endMaxHeight;
     s16 transitionTimer;
     s16 transitionDuration;
-    s16 relativePosition;
-    s16 startRelativePosition;
-    s16 targetRelativePosition;
+    u16 relativePosition;
+    u16 startRelativePosition;
+    u16 targetRelativePosition;
     u8 unk36[0x38 - 0x36];
 } CameraModeClimbState;
 

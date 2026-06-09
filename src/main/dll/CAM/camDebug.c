@@ -33,7 +33,7 @@ void CameraModeClimb_init(undefined4 param_1, int param_2, s8 *param_3) {
     f32 local_60;
     f32 local_64;
     f32 local_68;
-    undefined4 local_28[8];
+    undefined4 local_28[1];
     undefined4 local_24[1];
     undefined4 local_20[1];
     undefined4 local_1c[1];
@@ -48,7 +48,7 @@ void CameraModeClimb_init(undefined4 param_1, int param_2, s8 *param_3) {
         lbl_803DD578->startMinHeight = lbl_803DD578->minHeight;
         lbl_803DD578->startMaxHeight = lbl_803DD578->maxHeight;
         lbl_803DD578->startDistance = lbl_803DD578->targetDistance;
-        lbl_803DD578->targetRelativePosition = (s16)(lbl_803E19B8 * (f32)(s8)param_3[3]);
+        lbl_803DD578->targetRelativePosition = (u16)(int)(lbl_803E19B8 * (f32)(s8)param_3[3]);
         lbl_803DD578->endMinHeight = (f32)(s8)param_3[5];
         lbl_803DD578->endMaxHeight = (f32)(s8)param_3[4];
         lbl_803DD578->endDistance = (f32)(s8)param_3[2];
@@ -126,8 +126,8 @@ void fn_8010DB7C(GameObject *target, f32 *outX, f32 *outY, f32 *outZ) {
     dx += state->anchorX;
     dz += state->anchorZ;
 
-    cosVal = mathSinf(lbl_803E19D0 * (f32)(s32)((angle & 0xFFFF) + state->orbitAngleOffset) / lbl_803E19D4);
-    sinVal = mathCosf(lbl_803E19D0 * (f32)(s32)((angle & 0xFFFF) + state->orbitAngleOffset) / lbl_803E19D4);
+    cosVal = mathSinf(lbl_803E19D0 * (f32)(s32)(angle + state->orbitAngleOffset) / lbl_803E19D4);
+    sinVal = mathCosf(lbl_803E19D0 * (f32)(s32)(angle + state->orbitAngleOffset) / lbl_803E19D4);
 
     if (dist < state->minDistance) {
         dist = state->minDistance;
