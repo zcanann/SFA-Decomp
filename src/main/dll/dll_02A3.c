@@ -31,7 +31,6 @@ void dll_2A3_render(int obj, int p2, int p3, int p4, int p5)
 
 void dll_2A3_hitDetect(void) { lbl_803DDD94 = 0; }
 
-#pragma peephole off
 #pragma scheduling off
 void dll_2A3_update(int obj)
 {
@@ -67,7 +66,6 @@ void dll_2A3_update(int obj)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -87,14 +85,12 @@ void dll_2A3_init(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma scheduling off
 void fn_8023137C(int obj, int src)
 {
     ((GameObject *)obj)->anim.velocityX = *(f32 *)(src + 0x0);
     ((GameObject *)obj)->anim.velocityY = *(f32 *)(src + 0x4);
     ((GameObject *)obj)->anim.velocityZ = *(f32 *)(src + 0x8);
 }
-#pragma scheduling reset
 
 #pragma scheduling off
 void fn_8023134C(int obj, int v)

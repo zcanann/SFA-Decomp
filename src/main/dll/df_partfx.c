@@ -1765,8 +1765,6 @@ extern f32 lbl_803E0558;
 u32 isScreenTransitionActive(void) { return lbl_803E0558 == lbl_803DD420; }
 
 /* multi-store leaf (single float broadcast). */
-#pragma scheduling off
-#pragma peephole off
 extern f32 lbl_803E0570;
 void player_clearXZvel(int *obj, int *state) {
     f32 z = lbl_803E0570;
@@ -1776,8 +1774,6 @@ void player_clearXZvel(int *obj, int *state) {
     *(f32*)((char*)state + 0x280) = z;
     *(f32*)((char*)state + 0x284) = z;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Checkpoint table initialiser. */
 extern u32 lbl_8039CA98[];
@@ -2032,13 +2028,11 @@ void dll_0F_func13(s16* obj, int* state, int angle, f32 t, f32 scale)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void Checkpoint_initialise(void) {
     lbl_803DD410 = 0;
     lbl_803DD41C = lbl_8039CA98;
     lbl_803DD418 = (void*)((u8*)lbl_8039CA98 + 0x28);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* Checkpoint_Add: sorted insertion of (entry->_14 as key, entry as pointer) into lbl_8039C458 table. */
@@ -2075,7 +2069,6 @@ void Checkpoint_Add(int *entry) {
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void player_updateParticles(int *p1, int p2, int p3, int count, int mode)
 {
     while (count != 0 && p1 != NULL) {
@@ -2091,10 +2084,8 @@ void player_updateParticles(int *p1, int p2, int p3, int count, int mode)
 }
 
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma scheduling off
-#pragma peephole off
 void player_doProjGfx(int *p1, int p2, int p3, int count, int p5, int mode)
 {
     void *res = Resource_Acquire((u16)(p3 + 0x58), 1);
@@ -2111,7 +2102,6 @@ void player_doProjGfx(int *p1, int p2, int p3, int count, int p5, int mode)
     Resource_Release(res);
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma scheduling off
 #pragma peephole off

@@ -27,7 +27,5 @@ extern void OSReport(const char *fmt, ...);
 #define PROJECTILE_UNSUPPORTED_FALSE_RETURN 0
 
 #pragma scheduling off
-#pragma peephole off
 int projwallpower_doUnsupported(void) { OSReport(sProjwallpowerDoNoLongerSupported); return PROJECTILE_UNSUPPORTED_FALSE_RETURN; }
-#pragma peephole reset
 #pragma scheduling reset

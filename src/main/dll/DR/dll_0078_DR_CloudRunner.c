@@ -76,26 +76,21 @@ int DR_CloudRunner_getObjectTypeId(void) { return 0x43; }
 void DR_CloudRunner_release(void) {}
 
 #pragma scheduling off
-#pragma peephole off
 f32 DR_CloudRunner_func19(int obj, f32 *out)
 {
     *out = lbl_803E83E8;
     return lbl_803E83A4;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void DR_CloudRunner_func18(int obj, f32 *a, int *b)
 {
     *a = lbl_803E83A4;
     *b = 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 int DR_CloudRunner_func11(int obj)
 {
@@ -106,18 +101,14 @@ int DR_CloudRunner_func11(int obj)
     return 2;
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void DR_CloudRunner_func22(int obj)
 {
     fn_8003B950(ObjPath_GetPointModelMtx(obj, 2));
 }
-#pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 int DR_CloudRunner_func14(int obj)
 {
@@ -128,18 +119,14 @@ int DR_CloudRunner_func14(int obj)
     return 1;
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void DR_CloudRunner_modelMtxFn(int obj, int a, int b, int c)
 {
     ObjPath_GetPointWorldPosition(obj, 2, a, b, c, 0);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 int DR_CloudRunner_stateHandler07(int obj)
 {
@@ -152,10 +139,8 @@ int DR_CloudRunner_stateHandler07(int obj)
     return 0;
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void DR_CloudRunner_free(int obj)
 {
     GameBit_Set(0x7aa, *(s16 *)((char *)*(int *)&((GameObject *)obj)->extra + 0xbb0));
@@ -163,11 +148,9 @@ void DR_CloudRunner_free(int obj)
     ObjGroup_RemoveObject(obj, 0x26);
     (*gGameUIInterface)->airMeterSetShutdown();
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void DR_CloudRunner_initialise(void)
 {
     ((void **)gDRCloudRunnerStateHandlers)[0] = (void *)DR_CloudRunner_stateHandler00;
@@ -180,7 +163,6 @@ void DR_CloudRunner_initialise(void)
     ((void **)gDRCloudRunnerStateHandlers)[7] = (void *)DR_CloudRunner_stateHandler07;
     gDRCloudRunnerDefaultStateHandler = (void *)DR_CloudRunner_defaultStateHandler;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -384,7 +366,6 @@ int DR_CloudRunner_SeqFn(int obj, int p2, int p3)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void DR_CloudRunner_func15(int obj, f32 *a, f32 *b, f32 *c)
 {
     struct {
@@ -406,7 +387,6 @@ void DR_CloudRunner_func15(int obj, f32 *a, f32 *b, f32 *c)
     setMatrixFromObjectPos(matrix, v.angles);
     Matrix_TransformPoint(matrix, lbl_803E83A4, lbl_803DC78C, lbl_803DC790, a, b, c);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off

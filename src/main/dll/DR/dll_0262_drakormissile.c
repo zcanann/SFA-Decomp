@@ -289,27 +289,18 @@ void drakormissile_update(int obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int drakormissile_setScale(int obj) {
     u8 *p = ((GameObject *)obj)->extra;
     return p[DRAKORMISSILE_FIELD_STATE] == DRAKORMISSILE_STATE_FADEOUT;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void drakormissile_render2(int obj) {
     u8 *p = ((GameObject *)obj)->extra;
     if (p[DRAKORMISSILE_FIELD_STATE] == DRAKORMISSILE_STATE_STRAIGHT) {
         p[DRAKORMISSILE_FIELD_STATE] = DRAKORMISSILE_STATE_EXPLODING;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 void drakormissile_modelMtxFn(int obj) {
     u8 *p = ((GameObject *)obj)->extra;
@@ -319,7 +310,6 @@ void drakormissile_modelMtxFn(int obj) {
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off

@@ -1412,19 +1412,16 @@ u16 dll_19_func0A(int obj) {
 extern void *memcpy(void *dst, const void *src, u32 n);
 extern u8 lbl_8031A0E0[];
 #pragma scheduling off
-#pragma peephole off
 void dll_2E_func09(int obj, void *src1, void *src2) {
     if (src1 == NULL) src1 = lbl_8031A0E0;
     if (src2 == NULL) src2 = lbl_8031A0E0;
     memcpy((char *)obj + 0x5bc, src1, (u32)*(u8 *)(obj + 0x610) * 2);
     memcpy((char *)obj + 0x5da, src2, (u32)*(u8 *)(obj + 0x610) * 2);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern f32 lbl_803E1C88;
 #pragma scheduling off
-#pragma peephole off
 f32 dll_2E_func0B(int obj, int arg) {
     int r = ((int (*)(int))(*gRomCurveInterface)->slot40)(arg);
     if (r > -1) {
@@ -1432,14 +1429,12 @@ f32 dll_2E_func0B(int obj, int arg) {
     }
     return lbl_803E1C88;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern void *seqFn_800394a0(void);
 extern void objFn_8003acfc(int *obj, int *types, int count, char *out);
 extern void fn_8003A9C0(char *p, int count, s16 a, s16 b);
 #pragma scheduling off
-#pragma peephole off
 void fn_80114B1C(int *obj) {
     char *state;
     int *types;
@@ -1454,7 +1449,6 @@ void fn_80114B1C(int *obj) {
     *(int *)(state + 0x5f8) = 0x50;
     fn_8003A9C0(state + 0x1c, *(u8 *)(state + 0x610), 0, 0);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* EN v1.0 0x80114184  size: 160b  Copies a curve point's position and packed
@@ -1525,7 +1519,6 @@ extern f32 lbl_803E1C7C;
 /* EN v1.0 0x80113864  size: 248b  Steps the movement blend factors toward the
  * current target and turns the yaw by the buffered turn rate. */
 #pragma scheduling off
-#pragma peephole off
 void dll_19_func06(s16 *yaw, char *st, f32 cap, f32 speed)
 {
     if (*(f32 *)(st + 0x298) < lbl_803E1C78) {
@@ -1549,7 +1542,6 @@ void dll_19_func06(s16 *yaw, char *st, f32 cap, f32 speed)
         ((BaddieState *)st)->animSpeedA = cap;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern void fn_8003AC14(int obj, void *types, int count);

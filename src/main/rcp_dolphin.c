@@ -2368,13 +2368,11 @@ extern u32 lbl_803DCDB4;
 
 void fn_80053ED0(u32 bits) { lbl_803DCDA8 = lbl_803DCDA8 | bits; }
 #pragma scheduling off
-#pragma peephole off
 void fn_80053EBC(u32 bits) {
     u32 v = lbl_803DCDA8;
     u32 nb = bits ^ 0xffffffff;
     lbl_803DCDA8 = v & nb;
 }
-#pragma peephole reset
 #pragma scheduling reset
 void fn_800542F4(void) { lbl_803DCDA8 = 0; lbl_803DCDB4 = 0; lbl_803DCDB0 = 0; }
 
@@ -2463,7 +2461,6 @@ void warpToMap(int idx, s8 transType) {
 extern u8 lbl_8037E000[];
 
 #pragma scheduling off
-#pragma peephole off
 void ShaderDef_free(int *def) {
     void *s;
     void *p1 = (void *)def[0];
@@ -2489,7 +2486,6 @@ void ShaderDef_free(int *def) {
         }
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 typedef struct LoadedTextureEntry {
@@ -2885,10 +2881,6 @@ int textureCrazyPointerFollowFn_80054c30(int *p, int n) {
     } while (--n != 0);
     return (int)p;
 }
-#pragma peephole off
-#pragma scheduling off
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma scheduling off
 #pragma peephole off

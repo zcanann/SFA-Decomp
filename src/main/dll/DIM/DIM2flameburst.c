@@ -1851,16 +1851,12 @@ void dim_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 /* conditional init/free pair. */
 extern void *lbl_803DDB78;
-#pragma scheduling off
-#pragma peephole off
 void dll_1CE_free(void) {
     if (lbl_803DDB78 != NULL) {
         Resource_Release(lbl_803DDB78);
     }
     lbl_803DDB78 = NULL;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* dimwooddoor2 variant: trigger-init that loads a different float into the
  * extra block's [4]. Body shape matches FUN_801b5b00 but uses lbl_803E49F0. */

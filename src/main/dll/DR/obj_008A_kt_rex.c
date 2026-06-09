@@ -212,7 +212,6 @@ int ktrex_stateHandlerA06(int obj, int runtime) {
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 int ktrex_isPlayerInLaneThreatRange(int obj) {
     u8 state = ((KTRexArenaState *)gKTRexState)->laneMode;
@@ -251,26 +250,17 @@ int ktrex_isPlayerInLaneThreatRange(int obj) {
     return 0;
 }
 #pragma dont_inline reset
-#pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int ktrex_setScale(int obj) {
     void *p = ((GameObject *)obj)->extra;
     gKTRexRuntime = p;
     return *(s16 *)((char *)p + 0x274);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void ktrex_initialise(void) {
     ktrex_initialiseStateHandlerTables();
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -285,7 +275,6 @@ int ktrex_stateHandlerB00(int obj, u8 *p2) {
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void ktrex_hitDetect(int obj) {
     f32 z, y, x;
     if (((KTRexArenaState *)gKTRexState)->light != 0) {
@@ -294,7 +283,6 @@ void ktrex_hitDetect(int obj) {
         modelLightStruct_updateGlowAlpha(((KTRexArenaState *)gKTRexState)->light);
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -380,7 +368,6 @@ int ktrex_shouldAdvanceArenaPhase(void) {
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void ktrex_initialiseStateHandlerTables(void) {
     gKTRexStateHandlersB[0] = (void *)ktrex_stateHandlerB00;
     gKTRexStateHandlersB[1] = (void *)ktrex_stateHandlerB01;
@@ -404,7 +391,6 @@ void ktrex_initialiseStateHandlerTables(void) {
     gKTRexStateHandlersA[10] = (void *)ktrex_stateHandlerA10;
     gKTRexStateHandlersA[11] = (void *)ktrex_stateHandlerA11;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off

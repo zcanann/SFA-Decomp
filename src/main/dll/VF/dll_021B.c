@@ -31,13 +31,9 @@ void dll_21B_release_nop(void) {}
 
 void dll_21B_initialise_nop(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void dll_21B_free(int obj) {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

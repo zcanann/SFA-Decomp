@@ -1694,7 +1694,5 @@ int WaterFallSpray_getExtraSize(void) { return 0x8; }
 int sfxplayerObj_getExtraSize(void) { return 0x8; }
 
 #pragma scheduling off
-#pragma peephole off
 int WaterFallSpray_SeqFn(int *obj) { WaterFallSpray_update(obj); return 0; }
-#pragma peephole reset
 #pragma scheduling reset

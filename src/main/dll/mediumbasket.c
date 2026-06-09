@@ -2002,7 +2002,6 @@ extern void voxmaps_updateRoutePath(void *from, void *to);
 void mediumbasket_spawnContactObject(int *obj, int *state);
 
 #pragma scheduling off
-#pragma peephole off
 void dll_CA_func0B(int obj, int message)
 {
     GroundBaddieState *state = ((GameObject *)obj)->extra;
@@ -2015,7 +2014,6 @@ void dll_CA_func0B(int obj, int message)
         break;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -2832,13 +2830,11 @@ done:;
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void dll_CA_hitDetect(int obj)
 {
     ((void (*)(int, int, u8 *))((void **)*gPlayerInterface)[3])(obj, *(int *)&((GameObject *)obj)->extra,
                                                                gMediumBasketStateHandlersA);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off

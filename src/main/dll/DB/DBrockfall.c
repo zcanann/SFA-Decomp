@@ -432,9 +432,7 @@ void dll_144_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v 
 
 /* call(x, N) wrappers. */
 #pragma scheduling off
-#pragma peephole off
 void FElevControl_init(int x) { ObjMsg_AllocQueue(x, 0x2); }
-#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -443,14 +441,12 @@ void FElevControl_init(int x) { ObjMsg_AllocQueue(x, 0x2); }
  * EN v1.0 Size: 56b
  */
 #pragma scheduling off
-#pragma peephole off
 void FEseqobject_init(int obj)
 {
     *(short *)obj = 0;
     ((GameObject *)obj)->animEventCallback = (void *)FEseqobject_SeqFn;
     ObjMsg_AllocQueue((void *)obj, 0xa);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -477,13 +473,11 @@ void FEseqobject_update(int obj)
  * EN v1.0 Size: 16b
  */
 #pragma scheduling off
-#pragma peephole off
 int dll_144_SeqFn(void *p1, void *p2, u8 *p3)
 {
     p3[0x56] = 0;
     return 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -492,13 +486,11 @@ int dll_144_SeqFn(void *p1, void *p2, u8 *p3)
  * EN v1.0 Size: 24b
  */
 #pragma scheduling off
-#pragma peephole off
 void dll_144_init(int obj)
 {
     *(short *)obj = 0;
     ((GameObject *)obj)->animEventCallback = (void *)dll_144_SeqFn;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 ObjectDescriptor gFElevControlObjDescriptor = {

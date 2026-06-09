@@ -48,7 +48,6 @@ int worldplanet_getObjectTypeId(void)
 }
 
 #pragma peephole off
-#pragma scheduling off
 void worldplanet_free(void)
 {
   setShowWorldMapHud(0);
@@ -66,7 +65,6 @@ void worldplanet_render(undefined4 param_1,undefined4 param_2,undefined4 param_3
   }
   return;
 }
-#pragma scheduling reset
 #pragma peephole reset
 
 void worldplanet_hitDetect(void)

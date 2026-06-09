@@ -44,7 +44,6 @@ void waterfx_setupSplashDropPointRender(void) {
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int waterfx_consumePendingImpactNearPoint(f32 *vec, f32 dist) {
     if (gWaterfxPendingImpactPositionValid != 0 &&
         PSVECSquareDistance(vec, gWaterfxPendingImpactPosition) < dist * dist) {
@@ -54,7 +53,6 @@ int waterfx_consumePendingImpactNearPoint(f32 *vec, f32 dist) {
     gWaterfxPendingImpactPositionValid = 0;
     return 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -124,16 +122,12 @@ void waterfx_spawnRipple(s16 p1, int p2, f32 a, f32 b, f32 c, f32 d) {
 #pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void waterfx_setRippleScale(int flag, f32 val) {
     if (flag != 0) {
         val = lbl_803DF318;
     }
     lbl_803DD20C = val;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -528,8 +522,6 @@ void waterfx_onMapSetup(void) {
 #pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void waterfx_release(void) {
     if (lbl_803DD248 != NULL) {
         mm_free(lbl_803DD248);
@@ -563,11 +555,8 @@ void waterfx_release(void) {
         lbl_803DD1FC = NULL;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void waterfx_initialise(void) {
     char *buf;
 
@@ -600,7 +589,6 @@ void waterfx_initialise(void) {
     waterfx_onMapSetup();
     waterfx_drawFn_800953fc();
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 

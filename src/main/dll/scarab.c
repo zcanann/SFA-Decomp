@@ -4314,7 +4314,6 @@ void chukchuk_update(short *obj)
 #pragma scheduling reset
 
 /* chukchuk_setScale (52B). If low-byte of arg2 (u8) == 0x80, call Sfx_PlayFromObject(obj, SFXkr_jump1). */
-#pragma peephole off
 void chukchuk_setScale(int obj, int v) {
     switch ((u8)v) {
     case 0x80:
@@ -4322,7 +4321,6 @@ void chukchuk_setScale(int obj, int v) {
         break;
     }
 }
-#pragma peephole reset
 
 /* iceball_init (60B). Sets ->f4 = 0xb4, calls ObjHits_DisableObject(obj), then stb 0xff at 0x36. */
 #pragma scheduling off

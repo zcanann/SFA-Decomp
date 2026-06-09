@@ -83,20 +83,16 @@ int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f) {
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int drshackle_func0B(int obj) {
     int p = *(int *)&((GameObject *)obj)->anim.placementData;
     return *(s8 *)(p + 0x19);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void drshackle_free(int obj) {
     ObjGroup_RemoveObject(obj, 0x37);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -118,7 +114,6 @@ void drshackle_init(int obj, char *arg) {
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int drshackle_toggleEventCallback(int obj, int unused, u8 *arg) {
     char *p = ((GameObject *)obj)->extra;
     void *q = *(void **)p;
@@ -140,7 +135,6 @@ int drshackle_toggleEventCallback(int obj, int unused, u8 *arg) {
     }
     return 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off

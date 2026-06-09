@@ -13,7 +13,6 @@ void cagecontrol_initialise(void) {}
 
 void cagecontrol_release(void) {}
 
-#pragma scheduling off
 #pragma peephole off
 void cagecontrol_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
     if (visible != 0) {
@@ -21,7 +20,6 @@ void cagecontrol_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, 
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off

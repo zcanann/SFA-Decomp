@@ -890,17 +890,13 @@ void ccgasventcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
-#pragma peephole off
 void MoonSeedPlantingSpot_free(int x) { ObjGroup_RemoveObject(x, 0x2e); }
 void ccgasvent_free(int x) { ObjGroup_RemoveObject(x, 0x3f); }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* call(x, N) wrappers. */
 #pragma scheduling off
-#pragma peephole off
 void ccgasvent_init(int x) { ObjGroup_AddObject(x, 0x3f); }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* MoonSeedPlantingSpot_SeqFn: leaf flag-set on obj's extra struct, returns 0. */
@@ -1250,7 +1246,6 @@ extern int Obj_AllocObjectSetup(int size, int type);
 extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
 
 #pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 int fn_801A8F88(int obj, int arg2)
 {
@@ -1284,7 +1279,6 @@ int fn_801A8F88(int obj, int arg2)
     return 0;
 }
 #pragma dont_inline reset
-#pragma peephole reset
 #pragma scheduling reset
 
 extern f32 lbl_803E4610;

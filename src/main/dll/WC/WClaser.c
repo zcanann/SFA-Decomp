@@ -403,7 +403,6 @@ int LaserBeam_getExtraSize(void) { return 0x50; }
 int LaserBeam_getObjectTypeId(void) { return 0; }
 
 #pragma scheduling off
-#pragma peephole off
 void LaserBeam_init(int *obj)
 {
     void **state;
@@ -415,7 +414,6 @@ void LaserBeam_init(int *obj)
         state[0] = 0;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 void LaserBeam_render(void) {}

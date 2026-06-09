@@ -255,7 +255,6 @@ void TitleScreenInit_release(void) {}
  * PAL Size: TODO
  */
 #pragma scheduling off
-#pragma peephole off
 void TitleScreenInit_initialise(void)
 {
   lbl_803DD5F0 = 1;
@@ -269,7 +268,6 @@ void TitleScreenInit_initialise(void)
   lockIconInit();
   warpToMap(0x12,0);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /*

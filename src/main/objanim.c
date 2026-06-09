@@ -109,7 +109,6 @@ void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimS
  * PAL Size: TODO
  */
 #pragma scheduling off
-#pragma peephole off
 void Object_ObjAnimSetPrimaryBlendMove(ObjAnimComponent *objAnim,uint moveId,int eventState)
 {
   ObjAnimBank *bank;
@@ -144,7 +143,6 @@ void Object_ObjAnimSetSecondaryBlendMove(ObjAnimComponent *objAnim,uint moveId,i
   }
   return;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -460,7 +458,6 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimHandle,int moveId,int moveCont
  * PAL Size: TODO
  */
 #pragma scheduling off
-#pragma peephole off
 u16 ObjAnim_GetCurrentEventCountdown(ObjAnimComponent *objAnim)
 {
   return ObjAnim_GetCurrentState(objAnim)->eventCountdown;
@@ -525,7 +522,6 @@ void ObjAnim_SetCurrentEventStepFrames(ObjAnimComponent *objAnim,uint frameCount
     bank->currentState->eventStep = eventCountdownStep;
   }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /*

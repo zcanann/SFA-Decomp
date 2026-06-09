@@ -156,7 +156,6 @@ BOOL movieLoad(const char* fileName, void* param2)
 /* AttractMovieAudio_Shutdown (76 bytes)                               */
 /* ------------------------------------------------------------------ */
 #pragma scheduling off
-#pragma peephole off
 void AttractMovieAudio_Shutdown(void)
 {
     u32 saved = OSDisableInterrupts();
@@ -166,7 +165,6 @@ void AttractMovieAudio_Shutdown(void)
     OSRestoreInterrupts(saved);
     lbl_803DD660 = 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* ------------------------------------------------------------------ */
@@ -223,12 +221,10 @@ BOOL AttractMovieAudio_Init(int audioMode)
 /* PushReadedBuffer2 (48 bytes)                                        */
 /* ------------------------------------------------------------------ */
 #pragma scheduling off
-#pragma peephole off
 void PushReadedBuffer2(OSMessage msg)
 {
     OSSendMessage(&lbl_803A7290, msg, OS_MESSAGE_BLOCK);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* ------------------------------------------------------------------ */
@@ -236,14 +232,12 @@ void PushReadedBuffer2(OSMessage msg)
 /* ------------------------------------------------------------------ */
 #pragma dont_inline on
 #pragma scheduling off
-#pragma peephole off
 OSMessage PopReadedBuffer2(void)
 {
     OSMessage msg;
     OSReceiveMessage(&lbl_803A7290, &msg, OS_MESSAGE_BLOCK);
     return msg;
 }
-#pragma peephole reset
 #pragma scheduling reset
 #pragma dont_inline reset
 
@@ -252,12 +246,10 @@ OSMessage PopReadedBuffer2(void)
 /* ------------------------------------------------------------------ */
 #pragma dont_inline on
 #pragma scheduling off
-#pragma peephole off
 void PushFreeReadBuffer(OSMessage msg)
 {
     OSSendMessage(&lbl_803A72D0, msg, OS_MESSAGE_BLOCK);
 }
-#pragma peephole reset
 #pragma scheduling reset
 #pragma dont_inline reset
 
@@ -266,14 +258,12 @@ void PushFreeReadBuffer(OSMessage msg)
 /* ------------------------------------------------------------------ */
 #pragma dont_inline on
 #pragma scheduling off
-#pragma peephole off
 OSMessage PopReadedBuffer(void)
 {
     OSMessage msg;
     OSReceiveMessage(&lbl_803A72B0, &msg, OS_MESSAGE_BLOCK);
     return msg;
 }
-#pragma peephole reset
 #pragma scheduling reset
 #pragma dont_inline reset
 
@@ -336,8 +326,6 @@ void THPRead_Reader(void)
 /* ------------------------------------------------------------------ */
 /* ReadThreadCancel (60 bytes)                                         */
 /* ------------------------------------------------------------------ */
-#pragma scheduling off
-#pragma peephole off
 void ReadThreadCancel(void)
 {
     if (lbl_803DD688 != 0) {
@@ -345,28 +333,21 @@ void ReadThreadCancel(void)
         lbl_803DD688 = 0;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* ------------------------------------------------------------------ */
 /* ReadThreadStart (52 bytes)                                          */
 /* ------------------------------------------------------------------ */
-#pragma scheduling off
-#pragma peephole off
 void ReadThreadStart(void)
 {
     if (lbl_803DD688 != 0) {
         OSResumeThread(&lbl_803A6F08);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* ------------------------------------------------------------------ */
 /* CreateReadThread (156 bytes)                                        */
 /* ------------------------------------------------------------------ */
 #pragma scheduling off
-#pragma peephole off
 BOOL CreateReadThread(OSPriority priority)
 {
     char* base = lbl_803A5F08;
@@ -383,14 +364,12 @@ BOOL CreateReadThread(OSPriority priority)
     lbl_803DD688 = 1;
     return 1;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* ------------------------------------------------------------------ */
 /* PopDecodedTextureSet (68 bytes)                                     */
 /* ------------------------------------------------------------------ */
 #pragma scheduling off
-#pragma peephole off
 OSMessage PopDecodedTextureSet(s32 flags)
 {
     OSMessage msg;
@@ -399,19 +378,16 @@ OSMessage PopDecodedTextureSet(s32 flags)
     }
     return (OSMessage)0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* ------------------------------------------------------------------ */
 /* PushFreeTextureSet (48 bytes)                                       */
 /* ------------------------------------------------------------------ */
 #pragma scheduling off
-#pragma peephole off
 void PushFreeTextureSet(OSMessage msg)
 {
     OSSendMessage(&lbl_803A7328, msg, OS_MESSAGE_NOBLOCK);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* ------------------------------------------------------------------ */
@@ -599,8 +575,6 @@ void AttractMovieVideo_Decoder(void)
 /* ------------------------------------------------------------------ */
 /* VideoDecodeThreadCancel (60 bytes)                                  */
 /* ------------------------------------------------------------------ */
-#pragma scheduling off
-#pragma peephole off
 void VideoDecodeThreadCancel(void)
 {
     if (lbl_803DD690 != 0) {
@@ -608,22 +582,16 @@ void VideoDecodeThreadCancel(void)
         lbl_803DD690 = 0;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* ------------------------------------------------------------------ */
 /* VideoDecodeThreadStart (52 bytes)                                   */
 /* ------------------------------------------------------------------ */
-#pragma scheduling off
-#pragma peephole off
 void VideoDecodeThreadStart(void)
 {
     if (lbl_803DD690 != 0) {
         OSResumeThread(&lbl_803A8348);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* ------------------------------------------------------------------ */
 /* CreateVideoDecodeThread (200 bytes)                                 */

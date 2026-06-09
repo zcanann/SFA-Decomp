@@ -264,7 +264,6 @@ void dll_D3_init(int obj, int def, int flag)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void dll_D3_initialise(void)
 {
     gLandedArwingStateHandlers[0] = fn_801659B8;
@@ -274,7 +273,6 @@ void dll_D3_initialise(void)
     gLandedArwingStateHandlers[4] = LandedArwing_TriggerLaunchTarget;
     gLandedArwingDefaultStateHandler = LandedArwing_ReturnZero;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 
@@ -300,7 +298,6 @@ typedef struct SkeetlaWallState {
     u8 shapeFlag;
 } SkeetlaWallState;
 
-#pragma scheduling off
 #pragma peephole off
 void skeetlawall_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
     if (visible != 0) {
@@ -322,7 +319,6 @@ void skeetlawall_init(int obj, u8 *def) {
     state->shapeFlag = def[0x1E];
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 ObjectDescriptor11WithPadding gSkeetlaWallObjDescriptor = {
     {
@@ -346,16 +342,13 @@ ObjectDescriptor11WithPadding gSkeetlaWallObjDescriptor = {
 };
 
 #pragma scheduling off
-#pragma peephole off
 void fn_80167550(int *obj) {
     int *state = ((GameObject *)obj)->extra;
     ((void (*)(int *, int *, int))((void **)*gPlayerInterface)[5])(obj, state, 2);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void skeetlawall_setScale(int *obj, f32 *outVec, u8 *outByte) {
     SkeetlaWallState *state = ((GameObject *)obj)->extra;
     outVec[0] = ((GameObject *)obj)->anim.worldPosX - (f32)(u32)state->negXExtent;
@@ -366,5 +359,4 @@ void skeetlawall_setScale(int *obj, f32 *outVec, u8 *outByte) {
     outVec[5] = ((GameObject *)obj)->anim.worldPosY - (f32)(u32)state->negYExtent;
     outByte[0] = state->shapeFlag;
 }
-#pragma peephole reset
 #pragma scheduling reset

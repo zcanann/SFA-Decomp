@@ -2979,35 +2979,27 @@ f32 fn_8006C670(void) { return lbl_803DCFA4; }
 
 /* fn_X(lbl); lbl = 0; */
 extern void mm_free(u32);
-#pragma scheduling off
-#pragma peephole off
 void fn_8006CB24(void) { mm_free(lbl_803DCFBC); lbl_803DCFBC = 0; }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Three-out info getter:  *p1 = &lbl; *p2 = 4; *p3 = 8; */
 extern u8 lbl_8038E1E8[0x80];
 #pragma scheduling off
-#pragma peephole off
 void fn_8006C4C0(int *p1, int *p2, int *p3)
 {
     *p1 = (int)lbl_8038E1E8;
     *p2 = 4;
     *p3 = 8;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* Two-out info getter:  *p1 = &lbl; *p2 = 0x10; */
 extern u8 lbl_8038E268[0x40];
 #pragma scheduling off
-#pragma peephole off
 void textureFn_8006c4e0(int *p1, int *p2)
 {
     *p1 = (int)lbl_8038E268;
     *p2 = 0x10;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* Trivial GXLoadTexObj wrapper at offset 0x20 of sda21 pointer. */
@@ -3015,18 +3007,15 @@ extern u32 lbl_803DCFD0;
 extern void GXLoadTexObj(void *obj, int id);
 extern void GXLoadTexObjPreLoaded(void *obj, void *region, int id);
 #pragma scheduling off
-#pragma peephole off
 void fn_8006C678(int id)
 {
     GXLoadTexObj((char *)lbl_803DCFD0 + 0x20, id);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* PreLoaded-or-direct wrapper based on byte 0x48 of sda21 pointer.  Variant A. */
 extern u32 lbl_803DCFCC;
 #pragma scheduling off
-#pragma peephole off
 void fn_8006C6A4(int id)
 {
     register int idCopy = id;
@@ -3037,12 +3026,10 @@ void fn_8006C6A4(int id)
         GXLoadTexObj(p + 0x20, idCopy);
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* PreLoaded-or-direct wrapper using lbl_803DCF7C as base. */
 #pragma scheduling off
-#pragma peephole off
 void selectReflectionTexture(int id)
 {
     register int idCopy = id;
@@ -3053,13 +3040,11 @@ void selectReflectionTexture(int id)
         GXLoadTexObj(p + 0x20, idCopy);
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* PreLoaded-or-direct wrapper using lbl_803DCFE4 as base. */
 extern u32 lbl_803DCFE4;
 #pragma scheduling off
-#pragma peephole off
 void textureFn_8006c75c(int id)
 {
     register int idCopy = id;
@@ -3070,7 +3055,6 @@ void textureFn_8006c75c(int id)
         GXLoadTexObj(p + 0x20, idCopy);
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 typedef struct NewShadowEntry {
@@ -3083,7 +3067,6 @@ typedef struct NewShadowEntry {
  * Clears the active flag when the entry matches the needle. */
 extern NewShadowEntry lbl_8038DF48[0x25];
 #pragma scheduling off
-#pragma peephole off
 void findSomething(void *needle)
 {
     int i;
@@ -3095,14 +3078,12 @@ void findSomething(void *needle)
         }
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* Cycles a 3-element table, then samples 3 fields from obj->0x64 ptr block. */
 extern u8 lbl_803DCF8C;
 extern u32 lbl_8038E1DC[3];
 #pragma scheduling off
-#pragma peephole off
 void objShadowFn_8006c5f0(int obj, u32 *outTable, f32 *outF, int *outX, int *outY)
 {
     int idx = (lbl_803DCF8C + 1) % 3;
@@ -3113,7 +3094,6 @@ void objShadowFn_8006c5f0(int obj, u32 *outTable, f32 *outF, int *outX, int *out
     *outX = (int)modelState->shadowOffsetX;
     *outY = (int)modelState->shadowOffsetY;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* Allocate a 512x512 texture (1bpp?), set field, flush. */
@@ -3138,7 +3118,6 @@ extern void GXSetTexCopyDst(u16 wd, u16 ht, int fmt, u8 mipmap);
 extern void GXCopyTex(void *dest, u8 clear);
 extern void GXPreLoadEntireTexture(void *obj, void *region);
 #pragma scheduling off
-#pragma peephole off
 void drawReflectionTexture(void)
 {
     void *texture;
@@ -3152,14 +3131,12 @@ void drawReflectionTexture(void)
         GXPreLoadEntireTexture((char *)lbl_803DCFE4 + 0x20, *(void **)(lbl_803DCFE4 + 0x40));
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* Copy the frame buffer into both reflection textures, optionally preload. */
 extern void GXInvalidateTexAll(void);
 extern void GXPixModeSync(void);
 #pragma scheduling off
-#pragma peephole off
 void updateReflectionTextures(void)
 {
     GXSetTexCopySrc(0, 0, 0x280, 0x1e0);
@@ -3179,7 +3156,6 @@ void updateReflectionTextures(void)
     }
     GXPixModeSync();
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 typedef struct {
@@ -3189,7 +3165,6 @@ typedef struct {
 } ShadowSortEntry;
 
 #pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void fn_8006B830(ShadowSortEntry *arr, int count)
 {
@@ -3214,7 +3189,6 @@ void fn_8006B830(ShadowSortEntry *arr, int count)
 }
 #pragma dont_inline reset
 #pragma scheduling reset
-#pragma peephole reset
 
 extern u8 lbl_8030E8B0[];
 #pragma scheduling off

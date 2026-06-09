@@ -73,7 +73,6 @@ void chuka_init(int obj, int params)
  * PAL Size: TODO
  */
 #pragma scheduling off
-#pragma peephole off
 void dfpfloorbar_free(int *obj)
 {
   DfpFloorbarState *state;
@@ -83,7 +82,6 @@ void dfpfloorbar_free(int *obj)
   state->linkedObject = NULL;
   return;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* EN v1.0 0x80206474  size: 8b   trivial 0-returner. */
@@ -161,7 +159,6 @@ void dfpfloorbar_render(int p1, int p2, int p3, int p4, int p5, s8 p6)
 #pragma peephole reset
 
 /* EN v1.0 0x80206500  size: 44b   if (b->_8 && (b->_8->_6 & 0x40)) clear. */
-#pragma scheduling off
 #pragma peephole off
 void dfpfloorbar_hitDetect(int *obj)
 {
@@ -176,4 +173,3 @@ void dfpfloorbar_hitDetect(int *obj)
     b[2] = NULL;
 }
 #pragma peephole reset
-#pragma scheduling reset

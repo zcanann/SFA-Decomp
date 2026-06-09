@@ -1215,9 +1215,7 @@ int dll_1DA_getObjectTypeId(void) { return 0x0; }
 
 /* 16b chained patterns. */
 #pragma scheduling off
-#pragma peephole off
 void dim_tricky_init(int *obj) { u8 v = 0x0; *((u8*)((int**)obj)[0xb8/4] + 0x0) = v; }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
@@ -1238,16 +1236,12 @@ void dll_1DA_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E4A38;
 #pragma scheduling off
-#pragma peephole off
 void dim_tricky_render(void) { objRenderFn_8003b8f4(lbl_803E4A38); }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
-#pragma peephole off
 void dim2conveyor_free(int x) { ObjGroup_RemoveObject(x, 0x16); }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* dim2conveyor_setScale: per-area scale/sign + music latch for two specific map ids. */
@@ -1300,7 +1294,6 @@ extern f32 lbl_803E4ADC;
 
 /* dim2pathgenerator hitDetect: on hit type 0xE, scale velocity by const and SFX. */
 #pragma scheduling off
-#pragma peephole off
 void dll_1DA_hitDetect(int obj) {
     void *hi;
     void *player;
@@ -1314,7 +1307,6 @@ void dll_1DA_hitDetect(int obj) {
         Sfx_PlayFromObject(obj, SFXchar_puts_out_fire);
     }
 }
-#pragma peephole reset
 
 extern int ObjList_FindObjectById(int id);
 extern void mm_free(void* p);

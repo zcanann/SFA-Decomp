@@ -1803,13 +1803,11 @@ STATIC_ASSERT(offsetof(DusterState, useLaunchVelocity) == 0x1d);
 STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
 
 #pragma scheduling off
-#pragma peephole off
 int duster_SeqFn(u8* obj) {
     DusterState *state = ((GameObject *)obj)->extra;
     state->flags.floorCached = 0;
     return 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* gCameraInterface: vtable pointer used for state-machine dispatches. */

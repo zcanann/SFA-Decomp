@@ -141,15 +141,12 @@ void kytesmum_update(int obj) {
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int kytesmum_idleCallback(void) {
     Obj_GetPlayerObject();
     return 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 void kytesmum_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
     if (visible != 0) {
@@ -157,9 +154,7 @@ void kytesmum_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, und
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 void kytesmum_free(int obj) {
     KytesMumSetup *setup = ((KytesMumObject *)obj)->setup;
@@ -168,7 +163,6 @@ void kytesmum_free(int obj) {
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off

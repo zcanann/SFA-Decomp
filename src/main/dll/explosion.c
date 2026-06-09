@@ -451,8 +451,6 @@ extern void unlockLevel(int a, int b, int c);
 extern void skyFn_80088c94(int a, int b);
 extern void getEnvfxAct(int a, int b, int c, int d);
 
-#pragma scheduling off
-#pragma peephole off
 void nwsh_levcon_update(int *obj) {
     if (((GameObject *)obj)->unkF4 != 0) {
         ((GameObject *)obj)->unkF4 = ((GameObject *)obj)->unkF4 - 1;
@@ -464,11 +462,8 @@ void nwsh_levcon_update(int *obj) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void nwsh_levcon_init(int *obj) {
     ((GameObject *)obj)->animEventCallback = (void *)NWSH_levcon_SeqFn;
     unlockLevel(mapGetDirIdx(0x28), 1, 0);
@@ -477,20 +472,17 @@ void nwsh_levcon_init(int *obj) {
     GameBit_Set(0xea2, 1);
     GameBit_Set(0xefd, 1);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern ModgfxInterface **gModgfxInterface;
 extern void *gTitleMenuControlInterface;
 
 #pragma scheduling off
-#pragma peephole off
 void dll_199_free(int *obj) {
     (*gModgfxInterface)->detachSource(obj);
     ((void(*)(int, int))((void**)*(void**)gTitleMenuControlInterface)[14])(3, 0);
     ((void(*)(int, int))((void**)*(void**)gTitleMenuControlInterface)[14])(2, 0);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern void *Obj_GetPlayerObject(void);

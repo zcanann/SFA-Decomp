@@ -193,7 +193,6 @@ extern void setSubtitlesEnabled(u8 enabled);
 extern u8 framesThisStep;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 #pragma scheduling off
-#pragma peephole off
 void OptionsScreen_initialise(void)
 {
     (*gScreenTransitionInterface)->step(20, 5);
@@ -211,7 +210,6 @@ void OptionsScreen_initialise(void)
     lbl_803DD705 = 0;
     lbl_803DD6F9 = 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -557,11 +555,7 @@ void Dummy39_initialise(void) { lbl_803DD728 = 0x28; }
 
 extern u32 lbl_803DD72C;
 extern void textureFree(u32);
-#pragma scheduling off
-#pragma peephole off
 void Dummy39_release(void) { textureFree(lbl_803DD72C); }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern u32 lbl_803DD714, lbl_803DD718, lbl_803DD71C;
 extern void warpToMap(int mapId, int spawnId);
@@ -667,7 +661,6 @@ int Dummy39_run(void) {
 extern s16 lbl_803DD8C2;
 extern void Sfx_PlayFromObjectLimited(int obj, u16 sfx, int);
 #pragma scheduling off
-#pragma peephole off
 void cMenuPlaySelectedItemSfx(int obj) {
     int sfx = 0;
     switch (lbl_803DD8C2) {
@@ -682,10 +675,8 @@ void cMenuPlaySelectedItemSfx(int obj) {
         Sfx_PlayFromObjectLimited(obj, (u16)sfx, 1);
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 #pragma scheduling off
-#pragma peephole off
 void WeirdUnusedMenu_initialise(void) {
     lbl_803DD71C = textureLoadAsset(0x31e);
     lbl_803DD718 = textureLoadAsset(0x310);
@@ -696,5 +687,4 @@ void WeirdUnusedMenu_initialise(void) {
     lbl_803DD710 = 0;
     lbl_803DD713 = 0;
 }
-#pragma peephole reset
 #pragma scheduling reset

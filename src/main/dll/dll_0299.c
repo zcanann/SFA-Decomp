@@ -15,7 +15,6 @@ void dll_299_release_nop(void) {}
 
 void dll_299_initialise_nop(void) {}
 
-#pragma peephole off
 #pragma scheduling off
 void dll_299_free(int obj)
 {
@@ -25,9 +24,7 @@ void dll_299_free(int obj)
     lbl_803DDD80 = 0;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
 #pragma scheduling off
 void dll_299_update(int obj)
 {
@@ -39,7 +36,6 @@ void dll_299_update(int obj)
     (*gPartfxInterface)->spawnObject((void *)obj, 0x547, NULL, 4, -1, NULL);
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

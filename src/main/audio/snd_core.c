@@ -50,7 +50,6 @@ u8 sndIsInstalled(void)
     return gSynthInitialized;
 }
 
-#pragma peephole off
 #pragma fp_contract off
 void salApplyMatrix(f32 *matrix, f32 *vec, f32 *out)
 {
@@ -59,7 +58,6 @@ void salApplyMatrix(f32 *matrix, f32 *vec, f32 *out)
     out[2] = matrix[11] + (matrix[6] * vec[0] + matrix[7] * vec[1] + matrix[8] * vec[2]);
 }
 #pragma fp_contract reset
-#pragma peephole reset
 
 #pragma fp_contract off
 void salNormalizeVector(f32 *v)

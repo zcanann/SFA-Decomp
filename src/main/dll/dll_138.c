@@ -461,7 +461,6 @@ int pushable_render2(int obj)
  * PAL Size: TODO
  */
 #pragma scheduling off
-#pragma peephole off
 void pushable_modelMtxFn(int obj,int modelNo)
 {
   int extra = *(int *)&((GameObject *)obj)->extra;
@@ -469,7 +468,6 @@ void pushable_modelMtxFn(int obj,int modelNo)
 
   *(uint *)(extra + 0xa8) = flags | (1 << modelNo);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -492,7 +490,6 @@ typedef struct Dll138Vec3 {
 } Dll138Vec3;
 
 #pragma scheduling off
-#pragma peephole off
 #pragma fp_contract off
 int pushable_func0B(int obj,int other)
 {
@@ -509,5 +506,4 @@ int pushable_func0B(int obj,int other)
          *(f32 *)(state + 0xc);
 }
 #pragma fp_contract reset
-#pragma peephole reset
 #pragma scheduling reset

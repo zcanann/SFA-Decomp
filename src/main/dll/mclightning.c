@@ -43,7 +43,6 @@ int mclightning_handleScriptEvents(int obj, int eventId, u8 *script) {
 
 int mclightning_getExtraSize(void) { return 0x1c; }
 
-#pragma peephole off
 #pragma scheduling off
 void mclightning_free(int obj)
 {
@@ -55,7 +54,6 @@ void mclightning_free(int obj)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

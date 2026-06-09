@@ -609,7 +609,6 @@ void FUN_80129d10()
 }
 
 #pragma scheduling off
-#pragma peephole off
 void fn_80129FB0(void)
 {
     fn_8000F478(0);
@@ -621,7 +620,6 @@ void fn_80129FB0(void)
     fn_8000FB20();
     fn_8000F7A0();
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 void FUN_80129ff8()
@@ -801,7 +799,6 @@ void FUN_8012dca8()
 }
 
 #pragma scheduling off
-#pragma peephole off
 void fn_8012E050(void)
 {
     if (lbl_803DE3F4 == 0) return;
@@ -815,7 +812,6 @@ void fn_8012E050(void)
         lbl_803DC6C4 = -1;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -852,7 +848,6 @@ void FUN_8012e114()
 }
 
 #pragma scheduling off
-#pragma peephole off
 void fn_8012E250(void)
 {
     lbl_803DE3DB = 1;
@@ -860,7 +855,6 @@ void fn_8012E250(void)
     fn_800207AC(1);
     fn_800206EC(0xff);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 void FUN_8012e2a4()
@@ -953,7 +947,6 @@ extern u8 lbl_8031B5D8[];
 extern s16 lbl_803DD8C2;
 extern u8  lbl_803DD8B8;
 #pragma scheduling off
-#pragma peephole off
 void GameUI_unselectAllItems(void)
 {
     register int *p;
@@ -965,7 +958,6 @@ void GameUI_unselectAllItems(void)
     lbl_803DD8C2 = -1;
     lbl_803DD8B8 = 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* GameUI_gameTextShowNpcDialogue declared at end of file (needs externs declared below). */
@@ -1111,7 +1103,6 @@ void setShowWorldMapHud(u8 param)
  * the trajectory. Once the counter overshoots 0xFF it resets to 0 and
  * the active-id sentinel lbl_803DBA5C is dropped to -1. */
 #pragma scheduling off
-#pragma peephole off
 void gameTextFadeOut(void)
 {
     if (lbl_803DD774 == 0) return;
@@ -1125,14 +1116,12 @@ void gameTextFadeOut(void)
         lbl_803DBA5C = -1;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* EN v1.0 0x80129C74  size: 72b  Render-block teardown for the snowworm
  * scene: drops to layer 0, optionally tears the cached effect down, and
  * issues the close/restore pair before returning to the parent renderer. */
 #pragma scheduling off
-#pragma peephole off
 void viewFn_80129c74(void)
 {
     Camera_SetCurrentViewIndex(0);
@@ -1144,7 +1133,6 @@ void viewFn_80129c74(void)
     Camera_RebuildProjectionMatrix();
     Camera_ApplyFullViewport();
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* EN v1.0 0x8012DF14  size: 84b  Death sequence trigger: latches the
@@ -1152,7 +1140,6 @@ void viewFn_80129c74(void)
  * on the singleton at gCameraInterface with the worm-death event id 0x94,
  * then runs the standard player-input-disable + alpha-fade-to-FF pair. */
 #pragma scheduling off
-#pragma peephole off
 void timeListFn_8012df14(void)
 {
     lbl_803DD75B = 1;
@@ -1160,7 +1147,6 @@ void timeListFn_8012df14(void)
     cutsceneFadeInOut(1);
     setTimeStop(0xff);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* EN v1.0 0x8012EA5C  size: 172b  Spawn/queue helper for the snowworm
@@ -1393,7 +1379,6 @@ int registerNewScore(s8 a, int b, u8 c, int mode)
  * unified with retail's lbl_803E1E88 reference. Pragmas don't fix
  * either subtlety in this configuration. */
 #pragma scheduling off
-#pragma peephole off
 void viewFn_80129cbc(f32 fov, f32 x, f32 y)
 {
     lbl_803DBAA4 = Camera_GetFovY();
@@ -1412,7 +1397,6 @@ void viewFn_80129cbc(f32 fov, f32 x, f32 y)
                       lbl_803E1E3C, lbl_803E1E68);
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* EN v1.0 0x8012C558  size: 340b  Snowworm scene shutdown / setup.
@@ -1574,7 +1558,6 @@ void npcTalkFn_8012e880(void)
  * if it overflowed the 0x90000000 watermark. Tail restores FOV from
  * f31 and runs the standard close-block trio. */
 #pragma scheduling off
-#pragma peephole off
 void perspectiveFn_80129db4(void)
 {
     f32 saved_fov;
@@ -1606,7 +1589,6 @@ void perspectiveFn_80129db4(void)
     Camera_UpdateViewMatrices();
     Camera_ApplyFullViewport();
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* EN v1.0 0x8012D77C  size: 496b  Title-card overlay draw routine.
@@ -1958,7 +1940,6 @@ extern HintCell lbl_8031BB90[13];
 /* EN v1.0 0x80128120  size: 848b  Draws the pause-menu task panel layout and
  * lights the task-progress pips according to the current hint text level. */
 #pragma scheduling off
-#pragma peephole off
 void fn_80128120(int unused, int p2)
 {
     s16 n = 0xc8 - lbl_803DD75C;
@@ -1994,7 +1975,6 @@ void fn_80128120(int unused, int p2)
         lbl_8031BB90[lbl_803DBA9C[i]].f0 = t;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* EN v1.0 0x8012C6AC  size: 848b  Draws a 9-patch HUD box: center fill, the

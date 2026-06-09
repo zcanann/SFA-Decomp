@@ -98,7 +98,6 @@ void objfx_spawnRandomBurst(void *obj, u8 type, u8 count, void *origin, u8 flagB
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void objfx_spawnHitEmitterAtPos(f32 *pos, u8 a, u8 b, u8 c, u8 d) {
     int args[4];
     ParticleEmit s1;
@@ -117,7 +116,6 @@ void objfx_spawnHitEmitterAtPos(f32 *pos, u8 a, u8 b, u8 c, u8 d) {
     args[3] = d;
     (*(void (*)(int, int, void *, int, int, void *))(*(int *)(*(int *)res + 4)))(0, 1, &s1, 0x401, -1, args);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -761,7 +759,6 @@ void projectileParticleFxFn_80099660(void *obj, int mode) {
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void itemPickupDoParticleFx(void *obj, int mode, u8 count, f32 fval) {
     PartfxParams params;
     int i;
@@ -839,11 +836,9 @@ void itemPickupDoParticleFx(void *obj, int mode, u8 count, f32 fval) {
         break;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void objParticleFn_80099d84(void *obj, f32 scale, int type, f32 fextra, void *light) {
     f32 p8 = fextra;
     PartfxParams params;
@@ -921,7 +916,6 @@ void objParticleFn_80099d84(void *obj, f32 scale, int type, f32 fextra, void *li
         modelLightStruct_setAffectsAabbLightSelection(light, 1);
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern u8 lbl_8030FA30[];

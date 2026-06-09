@@ -104,7 +104,6 @@ void saveFileSelect_checkCheatCodes(void)
  * EN v1.0 Address: 0x80119DD4
  * EN v1.0 Size: 472b
  */
-#pragma peephole off
 #pragma scheduling off
 void saveSelect_drawText(int unused, int alpha)
 {
@@ -140,4 +139,3 @@ void saveSelect_drawText(int unused, int alpha)
     gameTextShowStr(buf, 0x45, 0, 0);
 }
 #pragma scheduling reset
-#pragma peephole reset

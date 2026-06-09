@@ -15,7 +15,6 @@ void ktrexfloorswitch_initialise(void) {}
 
 void ktrexfloorswitch_release(void) {}
 
-#pragma scheduling off
 #pragma peephole off
 void ktrexfloorswitch_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
     if (visible != 0) {
@@ -23,7 +22,6 @@ void ktrexfloorswitch_render(void *obj, undefined4 p2, undefined4 p3, undefined4
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off

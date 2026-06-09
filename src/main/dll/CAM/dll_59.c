@@ -253,8 +253,4 @@ void CameraModeStaffAnim_release(void) {}
 void CameraModeStaffAnim_initialise(void) {}
 
 /* fn_X(lbl); lbl = 0; */
-#pragma scheduling off
-#pragma peephole off
 void CameraModeBike_free(void) { mm_free(lbl_803DD540); lbl_803DD540 = 0; }
-#pragma peephole reset
-#pragma scheduling reset

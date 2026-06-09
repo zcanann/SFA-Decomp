@@ -4,7 +4,6 @@
 extern uint GameBit_Get(int eventId);
 
 #pragma scheduling off
-#pragma peephole off
 void texscroll2_setScale(TexScroll2Object *obj, s8 scale)
 {
   TexScroll2State *state = obj->state;
@@ -15,7 +14,6 @@ void texscroll2_setScale(TexScroll2Object *obj, s8 scale)
   state->stepY = scale;
   state->needsApply = 1;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);

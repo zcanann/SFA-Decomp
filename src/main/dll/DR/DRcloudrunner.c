@@ -561,7 +561,6 @@ void sc_cloudrunnera_init(int obj, int p2)
 void sc_cloudrunnera_release(void) {}
 void sc_cloudrunnera_initialise(void) {}
 
-#pragma scheduling off
 #pragma peephole off
 int fn_801DD170(void) {
     int r;
@@ -569,4 +568,3 @@ int fn_801DD170(void) {
     return r;
 }
 #pragma peephole reset
-#pragma scheduling reset

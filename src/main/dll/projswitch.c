@@ -465,12 +465,8 @@ void FUN_8014d9e8(undefined8 param_1,undefined8 param_2,double param_3,undefined
 
 /* conditional init/free pair. */
 extern void *lbl_803DDA50;
-#pragma scheduling off
-#pragma peephole off
 void enemy_release(void) { if (lbl_803DDA50 != NULL) { Resource_Release(lbl_803DDA50); lbl_803DDA50 = NULL; } }
 void enemy_initialise(void) { if (lbl_803DDA50 == NULL) lbl_803DDA50 = Resource_Acquire(0x5a, 1); }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E256C;
 extern f32 lbl_803E25F8;

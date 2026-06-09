@@ -15,7 +15,6 @@ void explodeplan_initialise(void) {}
 
 void explodeplan_release(void) {}
 
-#pragma scheduling off
 #pragma peephole off
 void explodeplan_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
     if (visible != 0) {
@@ -23,10 +22,8 @@ void explodeplan_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, 
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void explodeplan_init(int obj, char *arg) {
     char *p = ((GameObject *)obj)->extra;
     ((GameObject *)obj)->animEventCallback = (void *)explodeplan_updateTriggerCallback;
@@ -37,7 +34,6 @@ void explodeplan_init(int obj, char *arg) {
         *(int *)p = 0;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off

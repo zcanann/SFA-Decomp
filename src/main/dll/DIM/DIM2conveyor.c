@@ -136,10 +136,8 @@ void dimbridgecogmai_render(int p1, int p2, int p3, int p4, int p5, s8 visible) 
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
-#pragma peephole off
 void dimbridgecogmai_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
 void dimdismountpoint_free(int x) { ObjGroup_RemoveObject(x, 0x13); }
-#pragma peephole reset
 #pragma scheduling reset
 
 void dimbridgecogmai_release(void) {}
@@ -161,7 +159,6 @@ void dimbridgecogmai_init(int *obj, int *def) {
 #pragma scheduling reset
 
 extern f32 lbl_803E490C;
-#pragma scheduling off
 #pragma peephole off
 void dimdismountpoint_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
     if (visible == 0 || ((GameObject *)obj)->unkF8 != 0) {
@@ -173,7 +170,6 @@ void dimdismountpoint_render(int obj, int p1, int p2, int p3, int p4, s8 visible
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off

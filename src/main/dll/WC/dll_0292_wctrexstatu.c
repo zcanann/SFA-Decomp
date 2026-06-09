@@ -37,7 +37,6 @@ STATIC_ASSERT(offsetof(WCTrexStatueSetup, type) == WCTREXSTATU_SETUP_TYPE_OFFSET
 STATIC_ASSERT(offsetof(WCTrexStatueSetup, modelIndex) == WCTREXSTATU_SETUP_MODEL_INDEX_OFFSET);
 STATIC_ASSERT(offsetof(WCTrexStatueSetup, raisedBit) == WCTREXSTATU_SETUP_RAISED_BIT_OFFSET);
 
-#pragma scheduling off
 #pragma opt_strength_reduction off
 int wctrexstatu_interactCallback(int obj, int unused, int callbackData)
 {
@@ -57,7 +56,6 @@ int wctrexstatu_interactCallback(int obj, int unused, int callbackData)
     return 0;
 }
 #pragma opt_strength_reduction reset
-#pragma scheduling reset
 
 int wctrexstatu_getExtraSize(void) { return 0; }
 

@@ -48,7 +48,6 @@ void wcfloortile_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 void wcfloortile_hitDetect(void) {}
 
 #pragma peephole off
-#pragma scheduling off
 void wcfloortile_init(int obj)
 {
     WcFloorTileState *state = ((GameObject *)obj)->extra;
@@ -57,7 +56,6 @@ void wcfloortile_init(int obj)
     (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags |= 0x1800;
     state->flags |= 2;
 }
-#pragma scheduling reset
 #pragma peephole reset
 
 void wcfloortile_release(void) {}

@@ -608,8 +608,6 @@ ObjectDescriptor gWispBaddieObjDescriptor = {
 /* Trivial 4b 0-arg blr leaves. */
 void fn_8014FF20(void) {}
 
-#pragma scheduling off
-#pragma peephole off
 void fn_8014FEF8(int p1, int *p2, int p3, int code) {
     if (code == 0x10) {
         *(u32 *)((char *)p2 + 0x2e8) |= 0x20;
@@ -617,17 +615,13 @@ void fn_8014FEF8(int p1, int *p2, int p3, int code) {
         *(u32 *)((char *)p2 + 0x2e8) |= 0x8;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void fn_8014CF7C(int a, int b, f32 e, f32 f, int c, int d);
 #pragma scheduling off
-#pragma peephole off
 void fn_8014FF24(int a, int b) {
     f32 *p = *(f32 **)((char *)b + 0x29c);
     fn_8014CF7C(a, b, p[3], p[5], 0xf, 0);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern f32 lbl_803E2728;
@@ -637,7 +631,6 @@ extern f32 lbl_803E2734;
 extern f32 lbl_803E2738;
 extern f32 lbl_803E273C;
 #pragma scheduling off
-#pragma peephole off
 void fn_8014FF58(int unused, char *p) {
     f32 v1c;
     *(f32 *)(p + 0x2ac) = lbl_803E2728;
@@ -654,7 +647,6 @@ void fn_8014FF58(int unused, char *p) {
     *(u8 *)(p + 0x322) = 0;
     *(f32 *)(p + 0x31c) = v1c;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern char lbl_8031F16C[];

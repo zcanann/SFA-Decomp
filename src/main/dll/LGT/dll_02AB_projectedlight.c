@@ -88,7 +88,6 @@ void projectedlight_hitDetect(void) {}
 
 void projectedlight_render(void) {}
 
-#pragma peephole off
 #pragma scheduling off
 void projectedlight_update(int obj)
 {
@@ -102,7 +101,6 @@ void projectedlight_update(int obj)
         (s16)((f32)(setup->rotZSpeed << 4) * timeDelta + (f32)((GameObject *)obj)->anim.rotZ);
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

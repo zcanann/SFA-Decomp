@@ -199,7 +199,6 @@ extern f32 getXZDistance(f32 *a, f32 *b);
 extern void RomCurve_stepClamped(int state, f32 dt);
 
 /* trickyAdvanceRouteTargetAhead  addr=0x80139834  size=0xFC  linkage=global */
-#pragma peephole off
 #pragma scheduling off
 int trickyAdvanceRouteTargetAhead(f32 param_1, int param_2, int param_3)
 {
@@ -231,7 +230,6 @@ int trickyAdvanceRouteTargetAhead(f32 param_1, int param_2, int param_3)
     return 1;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 /* trickyTurnTowardYaw  addr=0x80139930  size=0x15C  linkage=global */
 #pragma peephole off

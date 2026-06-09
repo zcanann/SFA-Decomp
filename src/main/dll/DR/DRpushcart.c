@@ -1029,15 +1029,12 @@ int spscarab_getObjectTypeId(void) { return 0x0; }
 
 extern void Sfx_RemoveLoopedObjectSound(int x, int y);
 #pragma scheduling off
-#pragma peephole off
 void spscarab_free(int x) { Sfx_RemoveLoopedObjectSound(x, 0x406); }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern f32 lbl_803E5A30;
 extern void fn_801E83B0(int obj, int, int, int, int);
 
-#pragma scheduling off
 #pragma peephole off
 void shopitem_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
     s32 v = visible;
@@ -1050,10 +1047,8 @@ void shopitem_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void shopitem_free(int obj) {
     (*gExpgfxInterface)->freeSource(obj);
     switch (((GameObject *)obj)->anim.seqId) {
@@ -1062,7 +1057,6 @@ void shopitem_free(int obj) {
         break;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern void *lbl_803AD068[8];
@@ -1083,7 +1077,6 @@ extern void gxSetPeControl_ZCompLoc_(u32 a);
 extern void GXSetAlphaCompare(int comp0, u8 ref0, int op, int comp1, u8 ref1);
 
 #pragma scheduling off
-#pragma peephole off
 void fn_801E832C(int obj) {
     if (*(u8 *)(obj + 0x37) == 0xFF) {
         GXSetBlendMode(0, 1, 0, 5);
@@ -1094,11 +1087,9 @@ void fn_801E832C(int obj) {
     gxSetPeControl_ZCompLoc_(1);
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void shopkeeper_initialise(void) {
     lbl_803AD068[0] = (void *)DRlaserturret_startLinkedTarget;
     lbl_803AD068[1] = (void *)DRlaserturret_updateTracking;
@@ -1110,7 +1101,6 @@ void shopkeeper_initialise(void) {
     lbl_803AD068[7] = (void *)fn_801E66E4;
     lbl_803DDC58 = (void *)fn_801E66DC;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern void hudFn_8011f38c(int);

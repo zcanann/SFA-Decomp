@@ -246,7 +246,6 @@ void renderClouds(int a, int b, int c, int d) {
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void cloudaction_func05(void) {
     char *tex;
     if (*(void **)lbl_8039AB28 != NULL) {
@@ -259,15 +258,12 @@ void cloudaction_func05(void) {
         }
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void cloudaction_onMapSetup(void) {
     memset(lbl_8039AB28, 0, 0x1c);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -356,12 +352,10 @@ void cloudaction_update(int p1, int p2, u8 *state, int p4, int val) {
 void cloudaction_release(void) {}
 
 #pragma scheduling off
-#pragma peephole off
 void cloudaction_initialise(void) {
     lbl_803DB618[0] = -1;
     lbl_803DB618[1] = -1;
     lbl_803DD1F0 = 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 

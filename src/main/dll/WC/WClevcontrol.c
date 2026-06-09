@@ -921,7 +921,6 @@ struct WCPartfxArgs {
 };
 
 #pragma scheduling off
-#pragma peephole off
 void SB_CloudRunner_HandlePriorityHit(int obj, u8 *state) {
     int hitObj;
     f32 pos[3];
@@ -960,7 +959,6 @@ void SB_CloudRunner_HandlePriorityHit(int obj, u8 *state) {
         }
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern f32 playerMapOffsetX;

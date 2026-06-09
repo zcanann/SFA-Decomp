@@ -14,7 +14,6 @@ void ktlazerwall_initialise(void) {}
 void ktlazerwall_release(void) {}
 
 #pragma scheduling off
-#pragma peephole off
 void ktlazerwall_free(int obj) {
     char *p = ((GameObject *)obj)->extra;
     void *m = *(void **)(p + 0x10);
@@ -23,7 +22,6 @@ void ktlazerwall_free(int obj) {
         *(void **)(p + 0x10) = 0;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off

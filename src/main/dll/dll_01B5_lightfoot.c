@@ -5,41 +5,24 @@
 #include "main/dll/player_80295318_shared.h"
 
 
-#pragma scheduling off
-#pragma peephole off
 int lightfoot_getExtraSize(void)
 {
     return 0x440;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int lightfoot_getObjectTypeId(void)
 {
     return 0x14b;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void lightfoot_hitDetect(void)
 {
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void lightfoot_release(void)
 {
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 void lightfoot_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -52,10 +35,8 @@ void lightfoot_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void lightfoot_initialise(void)
 {
     lbl_803DB0DC[0] = (int)Lightfoot_UpdateAnimationCycle;
@@ -67,7 +48,6 @@ void lightfoot_initialise(void)
     lbl_803DB0D0[1] = (int)Lightfoot_UpdateCompletionInteraction;
     lbl_803DB0D0[2] = (int)Lightfoot_UpdateProximityInteractionState;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off

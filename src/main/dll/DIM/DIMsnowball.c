@@ -1190,11 +1190,7 @@ int cclevcontrol_getExtraSize(void) { return 0x10; }
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E46CC;
-#pragma scheduling off
-#pragma peephole off
 void cclevcontrol_render(void) { objRenderFn_8003b8f4(lbl_803E46CC); }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Drift-recovery: add new fns with v1.0 names. */
 extern void envFxActFn_800887f8(int a);
@@ -1306,7 +1302,6 @@ extern f32 lbl_803E4674;
 extern f32 lbl_803E4678;
 extern f32 lbl_803E467C;
 
-#pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
 void fn_801AA878(u8* p1, int* p2, f32 v) {
@@ -1336,7 +1331,6 @@ void fn_801AA878(u8* p1, int* p2, f32 v) {
 }
 #pragma dont_inline reset
 #pragma peephole reset
-#pragma scheduling reset
 
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void gameBitDecrement(int id);
@@ -1536,7 +1530,6 @@ extern void *fn_802972A8(void *obj);
 extern int mapGetDirIdx(int a);
 extern void lockLevel(int idx, int flag);
 
-#pragma peephole off
 #pragma scheduling off
 void fn_801AC01C(int obj)
 {
@@ -1563,10 +1556,8 @@ void fn_801AC01C(int obj)
     GameBit_Set(0x378, 0);
     GameBit_Set(0x3b9, 0);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
-#pragma peephole off
 #pragma scheduling off
 void fn_801AC108(int obj, int param2)
 {
@@ -1596,7 +1587,6 @@ void fn_801AC108(int obj, int param2)
         }
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern f32 lbl_803E46A8;

@@ -77,29 +77,22 @@ void arwarwing_hitDetect(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma scheduling off
 void arwarwing_setFlightHalfWidth(int arwing, f32 width)
 {
     (*(ArwingState **)&((GameObject *)arwing)->extra)->flightHalfWidth = width;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 int arwarwing_getRotY(int arwing) { return (s16)(*(ArwingState **)&((GameObject *)arwing)->extra)->rotYCur; }
-#pragma scheduling reset
 
 #pragma scheduling off
 void arwarwing_setRotY(int arwing, int rotY) { (*(ArwingState **)&((GameObject *)arwing)->extra)->rotYCur = (s16)rotY; }
 #pragma scheduling reset
 
-#pragma scheduling off
 void arwarwing_getVelocity(int out, int arwing)
 {
     *(Vec12 *)out = *(Vec12 *)&(*(ArwingState **)&((GameObject *)arwing)->extra)->velX;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void arwarwing_setVelocity(int arwing, int in)
 {
     ArwingState *state = ((GameObject *)arwing)->extra;
@@ -107,27 +100,20 @@ void arwarwing_setVelocity(int arwing, int in)
     state->velY = *(f32 *)(in + 4);
     state->velZ = *(f32 *)(in + 8);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void arwarwing_addVelocity(int arwing, int in)
 {
     int v = *(int *)&((GameObject *)arwing)->extra + 0x48;
     PSVECAdd(v, in, v);
 }
-#pragma scheduling reset
 
 #pragma scheduling off
 void arwarwing_clearActiveBomb(int arwing) { (*(ArwingState **)&((GameObject *)arwing)->extra)->activeBombObj = 0; }
 #pragma scheduling reset
 
-#pragma scheduling off
 int arwarwing_getRequiredRingCount(int arwing) { return (*(ArwingState **)&((GameObject *)arwing)->extra)->requiredRings; }
-#pragma scheduling reset
 
-#pragma scheduling off
 int arwarwing_getCollectedRingCount(int arwing) { return (*(ArwingState **)&((GameObject *)arwing)->extra)->collectedRings; }
-#pragma scheduling reset
 
 #pragma scheduling off
 void arwarwing_addScore(int arwing, u8 amount)
@@ -143,7 +129,6 @@ void arwarwing_addScore(int arwing, u8 amount)
 }
 #pragma scheduling reset
 
-#pragma scheduling off
 int arwarwing_getScore(int arwing)
 {
     ArwingState *state = ((GameObject *)arwing)->extra;
@@ -152,37 +137,21 @@ int arwarwing_getScore(int arwing)
     }
     return state->score;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 int arwarwing_getBombCount(int arwing) { return (*(ArwingState **)&((GameObject *)arwing)->extra)->bombCount; }
-#pragma scheduling reset
 
-#pragma scheduling off
 int arwarwing_getMaxShield(int arwing) { return *(s8 *)&(*(ArwingState **)&((GameObject *)arwing)->extra)->maxShield; }
-#pragma scheduling reset
 
-#pragma scheduling off
 int arwarwing_getShield(int arwing) { return *(s8 *)&(*(ArwingState **)&((GameObject *)arwing)->extra)->shield; }
-#pragma scheduling reset
 
-#pragma scheduling off
 int arwarwing_incrementPickup6DACount(int arwing) { return ((*(ArwingState **)&((GameObject *)arwing)->extra)->pickup6DACount)++; }
-#pragma scheduling reset
 
-#pragma scheduling off
 int arwarwing_incrementPickup6DBCount(int arwing) { return ((*(ArwingState **)&((GameObject *)arwing)->extra)->pickup6DBCount)++; }
-#pragma scheduling reset
 
-#pragma scheduling off
 int arwarwing_incrementPickup6D9Count(int arwing) { return ((*(ArwingState **)&((GameObject *)arwing)->extra)->pickup6D9Count)++; }
-#pragma scheduling reset
 
-#pragma scheduling off
 int arwarwing_incrementPickup6D8Count(int arwing) { return ((*(ArwingState **)&((GameObject *)arwing)->extra)->pickup6D8Count)++; }
-#pragma scheduling reset
 
-#pragma scheduling off
 int arwarwing_incrementCollectedRingCount(int arwing)
 {
     ArwingState *state = ((GameObject *)arwing)->extra;
@@ -194,16 +163,13 @@ int arwarwing_incrementCollectedRingCount(int arwing)
     }
     return (state->collectedRings)++;
 }
-#pragma scheduling reset
 
 #pragma peephole off
-#pragma scheduling off
 void arwarwing_addMaxShield(int arwing, int p2)
 {
     ArwingState *state = ((GameObject *)arwing)->extra;
     *(s8 *)&state->maxShield = state->maxShield + p2;
 }
-#pragma scheduling reset
 #pragma peephole reset
 
 #pragma scheduling off
@@ -816,7 +782,6 @@ void arwarwing_initAttachments(int obj, int state)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole off
 #pragma scheduling off
 void arwarwing_resetFlightState(int obj)
 {
@@ -870,7 +835,6 @@ void arwarwing_resetFlightState(int obj)
     arwarwingbo_setActiveVisible(state->bombObj, 0, 0);
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

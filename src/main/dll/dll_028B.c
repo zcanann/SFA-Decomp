@@ -10,9 +10,7 @@ void dll_28B_hitDetect_nop(void) {}
 void dll_28B_release_nop(void) {}
 
 #pragma peephole off
-#pragma scheduling off
 void dll_28B_free(int obj) { ObjGroup_RemoveObject(obj, 3); }
-#pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole off
@@ -85,7 +83,6 @@ void dll_28B_init(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole off
 #pragma scheduling off
 void dll_28B_initialise(void)
 {
@@ -99,4 +96,3 @@ void dll_28B_initialise(void)
     lbl_803AD278[3] = (void *)fn_802239A4;
 }
 #pragma scheduling reset
-#pragma peephole reset

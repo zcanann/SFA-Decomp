@@ -44,7 +44,6 @@ void timer_forceStart(int obj)
 }
 #pragma scheduling reset
 
-#pragma peephole off
 #pragma scheduling off
 void timer_addDuration(int obj, int duration)
 {
@@ -58,7 +57,6 @@ void timer_addDuration(int obj, int duration)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

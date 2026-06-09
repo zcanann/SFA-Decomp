@@ -168,25 +168,19 @@ void RollingBarrel_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
 #pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void SpiritDoorLock_free(int obj) {
     void *inner = ((GameObject *)obj)->extra;
     if (*(void **)((char *)inner + SPIRITDOORLOCK_LIGHT_OFFSET) != NULL) {
         modelLightStruct_freeSlot(inner);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void MMP_levelcontrol_free(int obj) {
     lbl_803DDB28 = lbl_803E44C0;
     lbl_803DDB2C = 0;
     Music_Trigger(0xd5, 0);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -524,7 +518,6 @@ void RollingBarrel_update(int obj)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int MMP_LevelControl_SeqFn(int obj, int p2, u8 *seq)
 {
     int player;
@@ -546,7 +539,6 @@ int MMP_LevelControl_SeqFn(int obj, int p2, u8 *seq)
     MMP_levelcontrol_update(obj);
     return 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off

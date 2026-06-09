@@ -4657,8 +4657,6 @@ int mathFn_800dbff0(float *point)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */

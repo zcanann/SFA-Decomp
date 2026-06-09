@@ -4426,9 +4426,7 @@ void dll_0B_func10(void)
 /* OSReport(literal) wrapper. */
 extern void OSReport(const char *fmt, ...);
 #pragma scheduling off
-#pragma peephole off
 void projgfx_release_doUnsupported(void) { OSReport(sProjgfxReleaseDoNoLongerSupported); }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* OSReport-stub returns. */
@@ -4436,10 +4434,8 @@ void projgfx_release_doUnsupported(void) { OSReport(sProjgfxReleaseDoNoLongerSup
 #define PROJGFX_UNSUPPORTED_FALSE_RETURN 0
 
 #pragma scheduling off
-#pragma peephole off
 int projgfx_rayhit_doUnsupported(void) { OSReport(sProjgfxRayhitDoNoLongerSupported); return PROJGFX_UNSUPPORTED_FALSE_RETURN; }
 int projgfx_setzscale_doUnsupported(void) { OSReport(sProjgfxSetzscaleDoNoLongerSupported); return PROJGFX_UNSUPPORTED_FALSE_RETURN; }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* Pattern wrappers. */
@@ -4500,7 +4496,6 @@ void dll_0B_func0B(void) {
 }
 
 #pragma scheduling off
-#pragma peephole off
 void dll_0B_func06(void) {
     fn_800A1040(0, 1);
 }
@@ -4508,7 +4503,6 @@ void dll_0B_func06(void) {
 void dll_0B_release(void) {
     fn_800A1040(0, 1);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma peephole off
@@ -5105,7 +5099,6 @@ void fn_800A02DC(ModgfxState* state, f32* in)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole off
 #pragma scheduling off
 void fn_800A0FD0(ModgfxState *state)
 {
@@ -5162,7 +5155,6 @@ void fn_800A0478(ModgfxState *state)
     *(f32*)((char*)state + 0x5C) = f0;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 
 #pragma peephole off
@@ -5560,7 +5552,6 @@ extern f32 lbl_803DD334;
 extern f32 lbl_803DD284;
 
 #pragma scheduling off
-#pragma peephole off
 void Effect1_func05(void)
 {
   f32 sum;
@@ -5586,7 +5577,6 @@ void Effect1_func05(void)
   }
   lbl_803DD330 = mathSinf(lbl_803DF868 * (f32)(s16)lbl_803DD32C / lbl_803DF86C);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern f32 lbl_803DB7C8;
@@ -14472,7 +14462,6 @@ typedef struct BoneSpawnData {
 } BoneSpawnData;
 
 #pragma scheduling off
-#pragma peephole off
 void boneParticleEffect_spawnAtBones(void *obj, int effectId, void *extraArg, u8 prob, short *src)
 {
   void *model;
@@ -14514,7 +14503,6 @@ void boneParticleEffect_spawnAtBones(void *obj, int effectId, void *extraArg, u8
     }
   }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern void *Camera_GetCurrentViewSlot(void);

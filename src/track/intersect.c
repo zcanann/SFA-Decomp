@@ -998,7 +998,6 @@ int depthReadRequestPoll(int x, int y, int requestKey)
  * PAL Size: TODO
  */
 #pragma peephole off
-#pragma scheduling off
 uint getScreenResolution(void)
 {
     u32 v = lbl_803DD004;
@@ -1007,7 +1006,6 @@ uint getScreenResolution(void)
     }
     return 0x01E00280;
 }
-#pragma scheduling reset
 #pragma peephole reset
 
 /*
@@ -1167,7 +1165,6 @@ extern f32 lbl_803DEE9C;
  * comparison indices via a global/volatile, which would break other
  * matches. */
 #pragma scheduling off
-#pragma peephole off
 void fn_80070234(f32* param_1)
 {
     int i = 0, j;
@@ -1181,7 +1178,6 @@ void fn_80070234(f32* param_1)
         param_1 += 4;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -1316,7 +1312,6 @@ void _gxSetFogParams(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-#pragma peephole off
 void fogFn_80070404(f32 a, f32 b)
 {
     extern f32 Camera_GetNearPlane(void);
@@ -1343,7 +1338,6 @@ void fogFn_80070404(f32 a, f32 b)
     c = lbl_803DD01C;
     GXSetFog(GX_FOG_PERSP_EXP, lbl_803DD024, lbl_803DD020, lbl_803DD038, lbl_803DD034, c);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -1628,7 +1622,6 @@ void renderWhirlpool(void* obj_a, void** obj_b, int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
 #pragma scheduling off
 void screenImageDraw(u8 alpha)
 {
@@ -1828,7 +1821,6 @@ void screenImageDraw(u8 alpha)
     GXSetCurrentMtx(0);
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -1843,7 +1835,6 @@ void screenImageDraw(u8 alpha)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
 #pragma scheduling off
 void doSpiritVisionFilter(void)
 {
@@ -1965,7 +1956,6 @@ void doSpiritVisionFilter(void)
     GXSetTevSwapModeTable(0, 0, 1, 2, 3);
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -2611,7 +2601,6 @@ void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int param_3)
  * stage 1 modulates by the second texture. Uses ind tex stage 0 to warp
  * tex coord 0 by tex1.
  */
-#pragma peephole off
 #pragma scheduling off
 void quakeSpellTextureFn_8007366c(u8 alpha)
 {
@@ -2721,7 +2710,6 @@ void quakeSpellTextureFn_8007366c(u8 alpha)
     GXSetCullMode(2);
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -3171,7 +3159,6 @@ void modelCb_80074518(void* obj_a, void** obj_b, int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
 #pragma scheduling off
 u32 objCallback_80074d04(int handle, void* model)
 {
@@ -3348,7 +3335,6 @@ u32 objCallback_80074d04(int handle, void* model)
     return 0;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -3904,7 +3890,6 @@ void drawPartialTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int w
  * width 4*size_x and height 4*size_y in screen pixels. Used as the
  * "draw fullscreen tint" primitive by the dialog code in cardShowLoadingMsg.
  */
-#pragma peephole off
 #pragma scheduling off
 void drawRect(f32 sx, f32 sy, int x, int y)
 {
@@ -3974,7 +3959,6 @@ void drawRect(f32 sx, f32 sy, int x, int y)
     GXSetColorUpdate(1);
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -5460,7 +5444,6 @@ void geomDrawFn_800796f0(void)
  * stage that K-multiplies the tint over the existing color, advancing
  * lbl_803DD030 (TEV stage cursor) and lbl_803DD00B (stage count).
  */
-#pragma peephole off
 #pragma scheduling off
 void textRenderSetupFn_80079804(void)
 {
@@ -5499,7 +5482,6 @@ void textRenderSetupFn_80079804(void)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -5728,7 +5710,6 @@ void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
 #pragma scheduling off
 void drawFn_80079e64(double s1, double s2, double s3, u8 mtxIdx, void* vec, u8 alpha0, u8 alpha1)
 {
@@ -5918,7 +5899,6 @@ void drawFn_80079e64(double s1, double s2, double s3, u8 mtxIdx, void* vec, u8 a
     GXSetCurrentMtx(0);
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -6129,7 +6109,6 @@ void doHeatEffect(u8 alpha)
  * 0..0x80 so the texture maps once across the screen. Used when fading
  * the screen to texture (e.g. boot logo / "now loading").
  */
-#pragma peephole off
 #pragma scheduling off
 void renderMotionBlur(f32 alpha)
 {
@@ -6219,7 +6198,6 @@ void renderMotionBlur(f32 alpha)
     Camera_RebuildProjectionMatrix();
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -7151,7 +7129,6 @@ void gxTextureSetupFn_8007cf7c(void)
  * and reuses across both calls. Register-allocator preference -- not
  * crackable without inline asm. */
 #pragma scheduling off
-#pragma peephole off
 void fn_8007D670(void)
 {
     Mtx* mats = &lbl_803967C0;
@@ -7161,7 +7138,6 @@ void fn_8007D670(void)
     PSMTXConcat(mats[2], mats[0], tmp);
     GXLoadTexMtxImm(tmp, 0x24, GX_MTX3x4);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -7816,7 +7792,6 @@ void _initCardAndDsp(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
 #pragma scheduling off
 void cardGetMessage(u32* buttons, u32* texts, u32* count)
 {
@@ -7927,7 +7902,6 @@ void cardGetMessage(u32* buttons, u32* texts, u32* count)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -8046,7 +8020,6 @@ void cardShowLoadingMsg(u8 kind)
  * into the card-IO buffer (lbl_803DD044), then asks saveGame_doWrite(2) to
  * commit; if that fails it falls back to saveGame_doWrite(1).
  */
-#pragma peephole off
 #pragma scheduling off
 int cardCb_8007e6d4(u8 slot, int unused, void* src1, void* src2)
 {
@@ -8062,7 +8035,6 @@ int cardCb_8007e6d4(u8 slot, int unused, void* src1, void* src2)
     return ret;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -8081,7 +8053,6 @@ int cardCb_8007e6d4(u8 slot, int unused, void* src1, void* src2)
  * Copies the 0xE4-byte block at offset 0x1F14 in the card buffer (held in
  * lbl_803DD044) into the caller-supplied destination.
  */
-#pragma peephole off
 #pragma scheduling off
 int saveCb_8007e748(int param_1, int param_2, void* dst)
 {
@@ -8090,4 +8061,3 @@ int saveCb_8007e748(int param_1, int param_2, void* dst)
     return 0;
 }
 #pragma scheduling reset
-#pragma peephole reset

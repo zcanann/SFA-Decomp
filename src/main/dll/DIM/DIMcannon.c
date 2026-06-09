@@ -2035,7 +2035,6 @@ void imanimspacecraft_free(int *obj) {
 extern f32 lbl_803E4784;
 extern char lbl_803AC948[];
 #pragma scheduling off
-#pragma peephole off
 void imanimspacecraft_init(int *obj) {
     f32 v;
     ((GameObject *)obj)->animEventCallback = (void *)imanimspacecraft_SeqFn;
@@ -2049,7 +2048,6 @@ void imanimspacecraft_init(int *obj) {
     GameBit_Set(0xbee, 1);
     GameBit_Set(0xbef, 1);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* setScale (test): is bit (1 << idx) set in obj->_b8->_2? Returns 1/0. */
@@ -2077,7 +2075,6 @@ void lavaball1bf_func11(int *obj) {
 
 /* lavaball1bf "request" hook: set pending if gated, return success. */
 #pragma scheduling off
-#pragma peephole off
 int lavaball1bf_setScale(int *obj) {
     Lavaball1bfState *p;
     obj = (int*)((int**)obj)[0xb8/4];
@@ -2089,7 +2086,6 @@ int lavaball1bf_setScale(int *obj) {
     }
     return 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
@@ -2109,10 +2105,8 @@ void lavaball1bf_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s3
 
 /* if (o->_X == K) return A; else return B;  pattern. */
 #pragma peephole off
-#pragma scheduling off
 int lavaball1be_getExtraSize(int *obj) { if (((GameObject *)obj)->anim.seqId == 0x1fa) return 0x0; return 0x14; }
 int lavaball1be_getObjectTypeId(int *obj) { if (((GameObject *)obj)->anim.seqId == 0x1fa) return 0x0; return 0x2; }
-#pragma scheduling reset
 #pragma peephole reset
 
 /* chained byte mask. */

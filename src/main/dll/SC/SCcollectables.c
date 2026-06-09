@@ -88,16 +88,13 @@ int warpstone_getObjectTypeId(void)
 /* void f() { fn_X(N); } pattern. */
 extern void loadUiDll(s32);
 #pragma scheduling off
-#pragma peephole off
 void warpstone_loadBaseUi(void) { loadUiDll(0x1); }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern void ObjLink_DetachChild(int obj, int child);
 extern void Obj_FreeObject(int obj);
 
 #pragma scheduling off
-#pragma peephole off
 void warpstone_free(int obj, int mode)
 {
     int *state = ((GameObject *)obj)->extra;
@@ -106,7 +103,6 @@ void warpstone_free(int obj, int mode)
         Obj_FreeObject(state[0]);
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern int ObjHits_GetPriorityHitWithPosition(int obj, int a, int b, int c, f32 *x, f32 *y, f32 *z);

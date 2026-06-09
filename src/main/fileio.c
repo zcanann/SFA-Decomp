@@ -89,23 +89,15 @@ void dvdCheckError(void)
 #pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fileReadCb_80015954(void* result)
 {
     gDvdReadCallbackResult = (int)result;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void setFileInfo(void* fileInfo)
 {
     lbl_803DC954 = fileInfo;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off

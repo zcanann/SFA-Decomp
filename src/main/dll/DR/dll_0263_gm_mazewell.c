@@ -6,20 +6,16 @@
 int gmmazewell_getExtraSize(void) { return 0x8; }
 
 #pragma scheduling off
-#pragma peephole off
 void gmmazewell_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6978);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void gmmazewell_free(void) {
     GameBit_Set(0xefc, 0);
     Music_Trigger(0x36, 0);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -35,7 +31,6 @@ void gmmazewell_init(int obj) {
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int gmmazewell_clearPendingTriggerCallback(int obj, int unused, u8 *arg) {
     char *p = ((GameObject *)obj)->extra;
     int i;
@@ -47,7 +42,6 @@ int gmmazewell_clearPendingTriggerCallback(int obj, int unused, u8 *arg) {
     }
     return 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 typedef struct {

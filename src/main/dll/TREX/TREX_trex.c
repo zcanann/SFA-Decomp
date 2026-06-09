@@ -1907,7 +1907,6 @@ int SB_CageKyte_SeqFn(int* obj, int p2, void* state)
 }
 #pragma peephole reset
 #pragma scheduling reset
-#pragma peephole off
 #pragma scheduling off
 int SB_SeqDoor_SeqFn(int p1, int p2, int p3)
 {
@@ -1918,7 +1917,6 @@ int SB_SeqDoor_SeqFn(int p1, int p2, int p3)
     return 0;
 }
 #pragma scheduling reset
-#pragma peephole reset
 extern f32 lbl_803E597C;
 extern f32 lbl_803E5980;
 extern f32 lbl_803E5984;
@@ -1993,13 +1991,11 @@ int fn_801E66EC(int arg1, int arg2)
 #pragma scheduling reset
 #pragma peephole reset
 #pragma scheduling off
-#pragma peephole off
 void Lamp_free(int* obj)
 {
     Sfx_StopObjectChannel(obj, 64);
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
-#pragma peephole reset
 #pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off
@@ -2071,13 +2067,11 @@ void Lamp_update(int obj)
 #pragma peephole reset
 #pragma scheduling reset
 #pragma peephole off
-#pragma scheduling off
 void SB_CageKyte_init(int p)
 {
     ((GameObject *)p)->animEventCallback = (void *)SB_CageKyte_SeqFn;
     ((GameObject *)p)->objectFlags = (u16)((u32)((GameObject *)p)->objectFlags | 0x6000u);
 }
-#pragma scheduling reset
 #pragma peephole reset
 #pragma peephole off
 void SB_CageKyte_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
@@ -2110,7 +2104,6 @@ void SB_CageKyte_update(int obj)
 #pragma peephole reset
 #pragma scheduling reset
 #pragma scheduling off
-#pragma peephole off
 void SB_CloudBall_free(int* obj)
 {
     SBCloudBallState* state = ((GameObject *)obj)->extra;
@@ -2123,7 +2116,6 @@ void SB_CloudBall_free(int* obj)
         }
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 extern f32 lbl_803E58EC;
 extern f32 lbl_803E58F0;
@@ -2257,7 +2249,6 @@ void SB_CloudBall_update(int obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
-#pragma peephole off
 #pragma scheduling off
 void SB_FireBall_init(int p)
 {
@@ -2266,7 +2257,6 @@ void SB_FireBall_init(int p)
     state->launched = 0;
 }
 #pragma scheduling reset
-#pragma peephole reset
 #pragma scheduling off
 #pragma peephole off
 void SB_FireBall_update(int obj)
@@ -2321,8 +2311,6 @@ void SB_FireBall_update(int obj)
 #pragma scheduling reset
 /* EN v1.0 0x801E4BA4  size: 48b  When obj->_b8->[0] is non-null,
  * call ObjLink_DetachChild(obj). */
-#pragma scheduling off
-#pragma peephole off
 void SB_KyteCage_free(int* obj)
 {
     void *child = (*(SBKyteCageState**)&((GameObject *)obj)->extra)->kyte;
@@ -2330,8 +2318,6 @@ void SB_KyteCage_free(int* obj)
         ObjLink_DetachChild(obj, child);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -2412,13 +2398,11 @@ void SB_KyteCage_update(int obj)
 #pragma peephole reset
 #pragma scheduling reset
 #pragma scheduling off
-#pragma peephole off
 void SB_MiniFire_free(int* obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
     (*gModgfxInterface)->detachSource(obj);
 }
-#pragma peephole reset
 #pragma scheduling reset
 extern int lbl_803DC098;
 extern f32 lbl_803E592C;
@@ -2518,7 +2502,6 @@ void SB_MiniFire_update(int obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
-#pragma scheduling off
 #pragma peephole off
 void SB_SeqDoor_init(int* obj, int* def)
 {
@@ -2530,7 +2513,6 @@ void SB_SeqDoor_init(int* obj, int* def)
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off
 void SB_SeqDoor_update(int *obj)
@@ -2639,7 +2621,6 @@ light_setup:
 #pragma peephole reset
 #pragma scheduling reset
 #pragma scheduling off
-#pragma peephole off
 void ShipBattle_render(int* obj)
 {
     objRenderFn_8003b8f4(lbl_803E595C);
@@ -2647,7 +2628,6 @@ void ShipBattle_render(int* obj)
         objfx_spawnFlaggedTrailBurst(obj, lbl_803E5960, 4, 389, 5, NULL);
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off
@@ -2697,7 +2677,6 @@ void ShipBattle_update(int obj)
 #pragma peephole reset
 #pragma scheduling reset
 #pragma scheduling off
-#pragma peephole off
 void shop_buyItem(int obj, int price)
 {
     int player;
@@ -2751,10 +2730,8 @@ void shop_buyItem(int obj, int price)
         GameBit_Set(boughtBit, 1);
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 #pragma scheduling off
-#pragma peephole off
 void shop_free(int* obj)
 {
     skyFn_80088c94(7, 0);
@@ -2762,7 +2739,6 @@ void shop_free(int* obj)
     Music_Trigger(144, 0);
     GameBit_Set(3838, 0);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -2808,7 +2784,6 @@ void shop_func17(int* obj, int* out_b3, int* out_b2, int* out_b4)
 #pragma peephole reset
 #pragma scheduling reset
 /* shop_getItem* helpers -- table lookup */
-#pragma peephole off
 #pragma scheduling off
 int shop_getItemPrice(int p, int idx)
 {
@@ -2839,7 +2814,6 @@ u8 shop_getItemMinPrice(int p, int idx)
     return 0;
 }
 #pragma scheduling reset
-#pragma peephole reset
 #pragma scheduling off
 #pragma peephole off
 void shop_init(int obj, int objDef)
@@ -2866,7 +2840,6 @@ void shop_init(int obj, int objDef)
  * "available" GameBit gate (lbl_80327FD0[idx*12 + 6]) is present and
  * unset.  (i.e. open by default, gated when slot != -1.) */
 #pragma scheduling off
-#pragma peephole off
 int shop_isItemAvailable(int p, int idx)
 {
     s16 slot;
@@ -2893,7 +2866,6 @@ int shop_isItemBought(int p, int idx)
     }
     return result;
 }
-#pragma peephole reset
 #pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off
@@ -2905,7 +2877,6 @@ void shop_setStateField1(int* obj, int v)
 #pragma peephole reset
 #pragma scheduling reset
 #pragma scheduling off
-#pragma peephole off
 void shop_update(int obj)
 {
     int player;
@@ -2936,5 +2907,4 @@ void shop_update(int obj)
         ((GameObject *)obj)->unkF8 = 0;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset

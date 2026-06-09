@@ -208,7 +208,6 @@ void optionsMenu_applyGameplaySetting(int p1, int p2)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int optionsMenu_openSelectedSubmenu(int p1, int p2)
 {
     if (p1 == OPTIONS_MENU_ACTION_SELECT) {
@@ -232,5 +231,4 @@ int optionsMenu_openSelectedSubmenu(int p1, int p2)
     }
     return 0;
 }
-#pragma peephole reset
 #pragma scheduling reset

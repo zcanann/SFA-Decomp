@@ -803,7 +803,6 @@ typedef struct SpiritPrizeState {
 } SpiritPrizeState;
 
 #pragma scheduling off
-#pragma peephole off
 void SpiritPrize_free(int obj)
 {
     SpiritPrizeState *state;
@@ -818,7 +817,6 @@ void SpiritPrize_free(int obj)
     }
     (*gObjectTriggerInterface)->freeState((u8 *)state);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern void modelLightStruct_setLightKind(void *light, int v);

@@ -24,7 +24,6 @@ void dustmotesou_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 void dustmotesou_hitDetect(void) {}
 
 #pragma peephole off
-#pragma scheduling off
 void dustmotesou_init(int obj, int setup)
 {
     DustMoteSouObject *source = (DustMoteSouObject *)obj;
@@ -35,7 +34,6 @@ void dustmotesou_init(int obj, int setup)
     source->objAnim.rotX = (s16)(mapData->rotX << 8);
     source->objectFlags |= DUSTMOTESOU_OBJECT_FLAG_SPAWN_EFFECTS;
 }
-#pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole off

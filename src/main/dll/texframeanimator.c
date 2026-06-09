@@ -243,8 +243,4 @@ int magicdust_getExtraSize(void) { return 0x288; }
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E34B0;
 extern void objRenderFn_8003b8f4(f32);
-#pragma scheduling off
-#pragma peephole off
 void magicdust_render(void) { objRenderFn_8003b8f4(lbl_803E34B0); }
-#pragma peephole reset
-#pragma scheduling reset

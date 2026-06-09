@@ -504,7 +504,6 @@ void dimcannon_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
 void dimlavasmash_free(void) {}
 void dimlavasmash_hitDetect(void) {}
 
-#pragma scheduling off
 #pragma peephole off
 void dimlavasmash_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
@@ -514,7 +513,6 @@ void dimlavasmash_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -542,7 +540,6 @@ int dimlavasmash_getObjectTypeId(void) { return 0x0; }
 
 /* if (o->_X == K) return A; else return B; */
 #pragma peephole off
-#pragma scheduling off
 #include "global.h"
 
 /* dimcannon extra block (0xb4); the head is the per-cannonball column
@@ -571,7 +568,6 @@ STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
 
 int dimcannon_getExtraSize(int *obj) { if (((GameObject *)obj)->anim.seqId == 0x1d6) return 0xc; return 0xb4; }
 int dimcannon_getObjectTypeId(int *obj) { if (((GameObject *)obj)->anim.seqId == 0x1d6) return 0x0; return 0x0; }
-#pragma scheduling reset
 #pragma peephole reset
 
 extern int ObjHits_GetPriorityHit(int obj, int *out, int *a, int *b);
@@ -584,7 +580,6 @@ extern int fn_8006070C(int arg1, int idx);
 extern int Shader_getLayer(int layer, int idx);
 
 #pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 /* Toggle collision/render surface flags for matching block polys and layers. */
 void dimlavasmash_setBlockSurfaceFlags(int arg1, int arg2, int arg3)
@@ -618,7 +613,6 @@ void dimlavasmash_setBlockSurfaceFlags(int arg1, int arg2, int arg3)
     }
 }
 #pragma dont_inline reset
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off

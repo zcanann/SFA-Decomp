@@ -106,10 +106,6 @@ void vfpladders_init(int *obj, u8 *init) {
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void vfpladders_free(int obj) {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
-#pragma scheduling reset
-#pragma peephole reset

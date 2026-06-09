@@ -1838,7 +1838,6 @@ extern ModgfxInterface **gModgfxInterface;
 extern void *lbl_803DDAD0;
 extern void *lbl_803DDAD4;
 #pragma scheduling off
-#pragma peephole off
 void fn_801859D4(int *obj) {
     (*gModgfxInterface)->detachSource(obj);
     Resource_Release(lbl_803DDAD0);
@@ -1846,7 +1845,6 @@ void fn_801859D4(int *obj) {
     Resource_Release(lbl_803DDAD4);
     lbl_803DDAD4 = NULL;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern u8 lbl_803DBDB0;

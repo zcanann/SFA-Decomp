@@ -3026,8 +3026,6 @@ void ObjSeq_setXrot(int index, int xrot)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 int ObjSeq_getBool(int index)
 {
     if (index < 0 || index >= 0x55) {
@@ -3035,8 +3033,6 @@ int ObjSeq_getBool(int index)
     }
     return lbl_8039A45C[index];
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -3857,7 +3853,6 @@ void ObjSeq_RefreshActionCursor(void *obj, void *seqFile, u8 *seq)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole off
 #pragma scheduling off
 #pragma ppc_unroll_speculative off
 void objSeq_onMapSetup(void)
@@ -4015,18 +4010,12 @@ void objSeq_onMapSetup(void)
 }
 #pragma ppc_unroll_speculative on
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void ObjSeq_release(void)
 {
     mm_free(lbl_803DD0D4);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
 #pragma scheduling off
 void ObjSeq_initialise(void)
 {
@@ -4038,9 +4027,7 @@ void ObjSeq_initialise(void)
     objSeqInitFn_80080078(lbl_8030ECA8, 5);
 }
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
 #pragma scheduling off
 int ObjSeq_takeXrotChanged(int index)
 {
@@ -4051,9 +4038,7 @@ int ObjSeq_takeXrotChanged(int index)
     return changed;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
 #pragma scheduling off
 void fn_80088730(u8 *out)
 {
@@ -4066,7 +4051,6 @@ void fn_80088730(u8 *out)
     out[3] = src[3];
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

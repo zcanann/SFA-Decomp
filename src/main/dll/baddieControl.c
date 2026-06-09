@@ -3470,8 +3470,6 @@ void CameraModeTitle_moveCam(u8 newCam)
 f32 titleScreenGetCamProgress(void) { return lbl_803DB9D8; }
 
 /* fn_X(lbl); lbl = 0; */
-#pragma scheduling off
-#pragma peephole off
 void CameraModeWorldMap_free(void) { mm_free(lbl_803DD588); lbl_803DD588 = 0; }
 void dll_4F_func05(void) { mm_free(lbl_803DD590); lbl_803DD590 = 0; }
 void CameraModeCrawl_free(void) { mm_free(lbl_803DD598); lbl_803DD598 = 0; }
@@ -3480,8 +3478,6 @@ void fn_801101E8(void) { mm_free(lbl_803DD5B8); lbl_803DD5B8 = 0; }
 void CameraModeCloudRunner_free(void) { mm_free(lbl_803DD5B8); lbl_803DD5B8 = 0; }
 void dll_54_func05(void) { mm_free(lbl_803DD5C0); lbl_803DD5C0 = 0; }
 void CameraModePerv_free(void) { mm_free(lbl_803DD5C8); lbl_803DD5C8 = 0; }
-#pragma peephole reset
-#pragma scheduling reset
 
 void dll_19_func11(void)
 {
@@ -3491,7 +3487,6 @@ void dll_19_func11(void)
 /* baddie spawn/visibility predicate */
 extern int objPosToMapBlockIdx(double x, double y, double z);
 #pragma peephole off
-#pragma scheduling off
 int dll_19_func0E(int p1, int p2, u8 b)
 {
   if (b != 0 && (s8)*(u8 *)(p2 + 0x354) <= 0 && ((GameObject *)p1)->anim.alpha == 0) {
@@ -3507,7 +3502,6 @@ int dll_19_func0E(int p1, int p2, u8 b)
   return 1;
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 /* compute progress ratio (signed numerator / unsigned denominator) */
 extern f32 lbl_803E1C2C;
@@ -3599,7 +3593,6 @@ extern void *gPlayerInterface;
 
 /* dll_19_func0C  addr=0x80112D80  size=0x114  linkage=global */
 #pragma dont_inline on
-#pragma peephole off
 #pragma scheduling off
 void dll_19_func0C(int p1, u8 *p2, u8 *p3, s16 p4, u8 *p5, s16 p6, s16 p7, int p8, s8 p9) {
     if (p3 != NULL) {
@@ -3630,7 +3623,6 @@ void dll_19_func0C(int p1, u8 *p2, u8 *p3, s16 p4, u8 *p5, s16 p6, s16 p7, int p
     }
 }
 #pragma scheduling reset
-#pragma peephole reset
 #pragma dont_inline reset
 
 extern f32 lbl_803E1B78;
@@ -3680,7 +3672,6 @@ extern f32 lbl_803E1B18;
 
 
 /* CameraModeForceBehind_init  addr=0x801100B8  size=0x124  linkage=global */
-#pragma peephole off
 #pragma scheduling off
 void CameraModeForceBehind_init(u8 *obj, int p2, f32 *p3) {
     u8 *state = *(u8 **)&((GameObject *)obj)->anim.targetObj;
@@ -3713,7 +3704,6 @@ void CameraModeForceBehind_init(u8 *obj, int p2, f32 *p3) {
         lbl_803DD5AC = lbl_803E1B08;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern int Obj_GetPlayerObject(void);

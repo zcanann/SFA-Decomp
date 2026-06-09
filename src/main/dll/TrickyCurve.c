@@ -765,7 +765,6 @@ int TrickyCurve_activateEffectHandleRing(int obj, int unused, u8 *eventData)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole off
 #pragma scheduling off
 void sfxplayer_free(int obj, int arg1)
 {
@@ -790,7 +789,6 @@ void sfxplayer_free(int obj, int arg1)
     gameTimerStop();
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #undef SFXPLAYER_UPDATE_EFFECT_HANDLE_POS
 

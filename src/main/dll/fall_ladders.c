@@ -640,7 +640,6 @@ extern f32 lbl_803E298C;
 
 
 #pragma scheduling off
-#pragma peephole off
 void fn_801544E8(int* obj, u8* state, int p3, int p4) {
     if (p4 == 17 || p4 == 16) return;
     if (*(f32*)((char*)obj + 152) > lbl_803E29A4) {
@@ -653,11 +652,9 @@ void fn_801544E8(int* obj, u8* state, int p3, int p4) {
         *(int*)((char*)state + 744) |= 16;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void fn_801542AC(int unused, u8* state) {
     f32 fz;
     f32 fc;
@@ -682,5 +679,4 @@ void fn_801542AC(int unused, u8* state) {
     *(f32*)((char*)state + 816) = lbl_803E298C;
     *(f32*)((char*)state + 764) = lbl_803E2958;
 }
-#pragma peephole reset
 #pragma scheduling reset

@@ -45,7 +45,6 @@ typedef struct SClanternAnimObject {
  * PAL Size: TODO
  */
 #pragma scheduling off
-#pragma peephole off
 undefined4 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
 {
   undefined4 advanceResult;
@@ -104,7 +103,6 @@ undefined4 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
   }
   return advanceResult;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -121,7 +119,6 @@ undefined4 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
  * PAL Size: TODO
  */
 #pragma scheduling off
-#pragma peephole off
 undefined4 playerFn_801d6d58(void)
 {
   undefined4 playerObj;
@@ -131,5 +128,4 @@ undefined4 playerFn_801d6d58(void)
   objGetAnimStateFlags(playerObj,0xff);
   return 2;
 }
-#pragma peephole reset
 #pragma scheduling reset

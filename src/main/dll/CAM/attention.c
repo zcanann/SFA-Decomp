@@ -139,7 +139,6 @@ void camcontrol_updateVerticalBounds(int camera,int flags,int param_3,float *upp
  * PAL Size: TODO
  */
 #pragma scheduling off
-#pragma peephole off
 void CameraModeNormal_func0A(float *distanceOut,float *yOffsetOut,float *zOffsetOut,
                              float *xAngleOut,float *targetHeightOut)
 {
@@ -156,5 +155,4 @@ void CameraModeNormal_func0A(float *distanceOut,float *yOffsetOut,float *zOffset
   }
   return;
 }
-#pragma peephole reset
 #pragma scheduling reset

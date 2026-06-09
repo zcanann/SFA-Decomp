@@ -111,7 +111,6 @@ void DIMbosstonsil_release(void)
 }
 
 #pragma scheduling off
-#pragma peephole off
 void DIMbosstonsil_initialise(void)
 {
   lbl_803DDBB0[0] = DIMbosstonsil_startIdleHitReaction;
@@ -119,5 +118,4 @@ void DIMbosstonsil_initialise(void)
   lbl_803DDBA8[0] = DIMbosstonsil_enableHitReaction;
   lbl_803DDBA8[1] = DIMbosstonsil_updateHitReaction;
 }
-#pragma peephole reset
 #pragma scheduling reset

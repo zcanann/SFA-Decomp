@@ -130,7 +130,6 @@ void firepipe_releaseEffectObject(FirePipeObject *obj)
 #pragma peephole reset
 #pragma scheduling reset
 
-#pragma peephole off
 #pragma scheduling off
 int firepipe_clearLinkedUpdateFlag(FirePipeObject *obj)
 {
@@ -143,7 +142,6 @@ int firepipe_setLinkedUpdateFlag(FirePipeObject *obj)
     ((FirePipeBitFlags *)&obj->extra->flags)->bit2 = 1;
     return 1;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma peephole off
@@ -342,13 +340,11 @@ int firepipe_getExtraSize(void)
 }
 
 #pragma peephole off
-#pragma scheduling off
 undefined4 firepipe_stateCallback(FirePipeObject *obj)
 {
     firepipe_updateState(obj);
     return 0;
 }
-#pragma scheduling reset
 #pragma peephole reset
 
 int firepipe_getObjectTypeId(void)
@@ -356,7 +352,6 @@ int firepipe_getObjectTypeId(void)
     return 1;
 }
 
-#pragma peephole off
 #pragma scheduling off
 void firepipe_free(FirePipeObject *obj)
 {
@@ -378,7 +373,6 @@ void firepipe_free(FirePipeObject *obj)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -400,13 +394,11 @@ void firepipe_render(FirePipeObject *obj, int param_2, int param_3, int param_4,
 #pragma peephole reset
 
 #pragma peephole off
-#pragma scheduling off
 void firepipe_update(FirePipeObject *obj)
 {
     obj->statusFlags = (u8)(obj->statusFlags | 8);
     firepipe_updateState(obj);
 }
-#pragma scheduling reset
 #pragma peephole reset
 
 static inline f64 firepipe_u32AsDouble(u32 value)

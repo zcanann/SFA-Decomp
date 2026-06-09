@@ -13,8 +13,6 @@ void ktlazerlight_release(void) {}
 
 void ktlazerlight_render(void) {}
 
-#pragma scheduling off
-#pragma peephole off
 void ktlazerlight_free(int obj) {
     void *p = ((GameObject *)obj)->extra;
     void *m = *(void **)((char *)p + 0x4);
@@ -22,11 +20,8 @@ void ktlazerlight_free(int obj) {
         ModelLightStruct_free(m);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void ktlazerlight_init(int obj, char *arg) {
     char *p = ((GameObject *)obj)->extra;
     *(void **)(p + 0x4) = objCreateLight(0, 1);
@@ -36,7 +31,6 @@ void ktlazerlight_init(int obj, char *arg) {
         modelLightStruct_setAffectsAabbLightSelection(*(void **)(p + 0x4), 1);
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off

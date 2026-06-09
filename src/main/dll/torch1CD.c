@@ -117,10 +117,6 @@ void dll_19B_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v 
 #pragma peephole reset
 
 extern ModgfxInterface **gModgfxInterface;
-#pragma scheduling off
-#pragma peephole off
 void dll_19B_free(int *obj) {
     (*gModgfxInterface)->detachSource(obj);
 }
-#pragma peephole reset
-#pragma scheduling reset

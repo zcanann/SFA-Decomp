@@ -7246,7 +7246,6 @@ extern u32 lbl_803DB5EC;
 extern f32 lbl_803DB5F0;
 extern f32 lbl_803DEAC8;
 #pragma scheduling off
-#pragma peephole off
 void fn_8004C1E4(u8 b, f32 scale) {
     ((u8*)&lbl_803DB5EC)[3] = b;
     lbl_803DB5F0 = scale;
@@ -7254,7 +7253,6 @@ void fn_8004C1E4(u8 b, f32 scale) {
         lbl_803DB5F0 = lbl_803DEAC8;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -10344,7 +10342,6 @@ void logGpuHang(void);
 extern void *lbl_803DCCD8;
 extern void *lbl_803DCCE4;
 extern void *lbl_803DCCCC;
-#pragma peephole off
 void videoSwapFrameBuffers(void)
 {
     u16 sync;
@@ -10390,9 +10387,7 @@ void videoSwapFrameBuffers(void)
         gxPerfFn_8004a77c(1);
     }
 }
-#pragma peephole reset
 
-#pragma peephole off
 void videoFn_800499e8(void)
 {
     char peek[8];
@@ -10435,7 +10430,6 @@ void videoFn_800499e8(void)
         }
     }
 }
-#pragma peephole reset
 
 #pragma peephole off
 void logGpuHang(void)

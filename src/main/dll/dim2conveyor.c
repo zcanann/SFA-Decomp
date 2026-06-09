@@ -373,13 +373,11 @@ int nw_tricky_getExtraSize(void)
  * EN v1.0 Size: 44b
  */
 #pragma peephole off
-#pragma scheduling off
 int nw_tricky_SeqFn(void)
 {
     Sfx_StopObjectChannel(getTrickyObject(), 16);
     return 0;
 }
-#pragma scheduling reset
 #pragma peephole reset
 
 /*

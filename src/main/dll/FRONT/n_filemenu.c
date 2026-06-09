@@ -302,16 +302,12 @@ int TitleMenu_run(void)
 #pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void TitleMenu_release(void)
 {
   setLinkNotRotated();
   titleScreenFn_80130464(1);
   saveFn_8007d960(1);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off

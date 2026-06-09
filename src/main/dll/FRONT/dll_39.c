@@ -218,7 +218,6 @@ void n_rareware_initialise(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-#pragma peephole off
 void n_attractmode_releaseMovieBuffers(void)
 {
   int freeDelay;
@@ -262,7 +261,6 @@ void n_attractmode_releaseMovieBuffers(void)
   }
   return;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -279,7 +277,6 @@ void n_attractmode_releaseMovieBuffers(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-#pragma peephole off
 void n_attractmode_prepareMovie(void)
 {
   char *attractModeStrings;
@@ -399,7 +396,6 @@ void n_attractmode_prepareMovie(void)
   }
   return;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /*

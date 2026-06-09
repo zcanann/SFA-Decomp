@@ -87,7 +87,6 @@ int wcapertures_getObjectTypeId(int obj)
 }
 #pragma scheduling reset
 
-#pragma scheduling off
 void wcapertures_free(int obj)
 {
     WCAperturesState *state = ((GameObject *)obj)->extra;
@@ -97,7 +96,6 @@ void wcapertures_free(int obj)
         ModelLightStruct_free(light);
     }
 }
-#pragma scheduling reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -154,8 +152,6 @@ void wcapertures_release(void) {}
 
 void wcapertures_initialise(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 int wcapertures_interactCallback(int obj, int p2, int p3)
 {
     WCAperturesState *state = ((GameObject *)obj)->extra;
@@ -167,8 +163,6 @@ int wcapertures_interactCallback(int obj, int p2, int p3)
     }
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

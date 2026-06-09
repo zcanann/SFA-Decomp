@@ -106,15 +106,10 @@ void vfplevelcontrol_update(int obj) {
 
 void vfplevelcontrol_release(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void vfplevelcontrol_initialise(void) {
     lbl_803DC148 = 0x82;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
 #pragma scheduling off
 void vfplevelcontrol_free(int obj) {
     timeOfDayFn_80055000();
@@ -122,7 +117,6 @@ void vfplevelcontrol_free(int obj) {
     Music_Trigger(0xe1, 0);
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

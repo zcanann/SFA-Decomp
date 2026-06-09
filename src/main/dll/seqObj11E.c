@@ -737,7 +737,6 @@ FUN_80152a30(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 }
 
 #pragma scheduling off
-#pragma peephole off
 void fn_80152A94(int obj, int p)
 {
   extern void Sfx_AddLoopedObjectSound(int obj, int sfx);
@@ -768,11 +767,9 @@ void fn_80152A94(int obj, int p)
   ((GameObject *)obj)->anim.hitboxScale = lbl_803E2860;
   Sfx_AddLoopedObjectSound(obj, SFXsp_literun115);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void fn_80152B2C(int obj, int p, int param3, int msg)
 {
   extern void Sfx_PlayFromObject(int obj, int sfx);
@@ -785,7 +782,6 @@ void fn_80152B2C(int obj, int p, int param3, int msg)
   *(u32 *)&((BaddieState *)p)->unk2E4 |= 0x20;
   ((BaddieState *)p)->reactionFlags |= 0x8;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /*

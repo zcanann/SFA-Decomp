@@ -86,7 +86,6 @@ void worldobj_release(void) {}
 
 void worldobj_initialise(void) {}
 
-#pragma scheduling off
 #pragma peephole off
 int worldobj_getObjectTypeId(int *obj) {
     if (((WorldObjSetup *)((GameObject *)obj)->anim.placementData)->objectId != 0x5e3) {
@@ -95,7 +94,6 @@ int worldobj_getObjectTypeId(int *obj) {
     return 0x8;
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -546,7 +544,6 @@ void worldobj_update(int obj) {
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void worldobj_spawnGreatFoxEffects(int obj) {
     WorldObjEffectParams params;
     u8 i;
@@ -576,7 +573,6 @@ void worldobj_spawnGreatFoxEffects(int obj) {
     params.offsetZ = lbl_803E6640 * (lbl_803E6650 * ((GameObject *)obj)->anim.rootMotionScale);
     objfx_spawnLightPulse(obj, lbl_803E6654 * ((GameObject *)obj)->anim.rootMotionScale, 1, 0, 6, lbl_803E6658, &params);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off

@@ -171,7 +171,6 @@ int levelname_getObjectTypeId(void) { return 0x0; }
 int ProjectileSwitch_getExtraSize(void) { return 0x8; }
 
 #pragma scheduling off
-#pragma peephole off
 int ProjectileSwitch_getObjectTypeId(int *obj) {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
     int v = (int)*(u8 *)((char *)*(int **)&((GameObject *)obj)->anim.placementData + 0x1e) >> 2;
@@ -181,11 +180,9 @@ int ProjectileSwitch_getObjectTypeId(int *obj) {
     }
     return ((u32)v << 11) | 0x400;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int levelname_SeqFn(int obj, int unused, u8 *setupData) {
     int *state = ((GameObject *)obj)->extra;
     int i;
@@ -200,7 +197,6 @@ int levelname_SeqFn(int obj, int unused, u8 *setupData) {
     }
     return 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 ObjectDescriptor gAreaObjDescriptor = {

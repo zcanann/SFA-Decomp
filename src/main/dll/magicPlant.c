@@ -870,7 +870,6 @@ void fn_80153790(int obj, int state, int p3, int msgFlag, int p5, int p6)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void fn_801534D8(int obj, int state)
 {
     f32 lblBC;
@@ -901,7 +900,6 @@ void fn_801534D8(int obj, int state)
         ((BaddieState *)state)->inWhirlpoolGroup = 0;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern f32 lbl_803E286C;
@@ -1074,7 +1072,6 @@ void fn_80153BFC(int obj, int p2)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void fn_80153C90(int unused, int p2)
 {
     f32 ten;
@@ -1097,7 +1094,6 @@ void fn_80153C90(int unused, int p2)
     *(f32*)(p2 + 0x324) = lbl_803E2930;
     ((BaddieState *)p2)->pathStep = oc;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -1354,7 +1350,6 @@ void fn_8015383C(int obj, int state)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void fn_80153CF8(int obj, int state, int p3, int msgFlag)
 {
     int cond = 0;
@@ -1395,7 +1390,6 @@ checkedKind:
         ((BaddieState *)state)->reactionFlags = ((BaddieState *)state)->reactionFlags | 0x10;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off

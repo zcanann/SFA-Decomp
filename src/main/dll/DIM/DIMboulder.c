@@ -1280,7 +1280,6 @@ extern void objRenderFn_8003b8f4(f32);
 void imicemountain_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E46D8); }
 #pragma peephole reset
 
-#pragma scheduling off
 #pragma peephole off
 void crrockfall_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
     CrRockfallState *inner = ((GameObject *)obj)->extra;
@@ -1294,7 +1293,6 @@ void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -1355,29 +1353,19 @@ void magiclight_update(int obj) {
 
 /* if (o->_X == K) return A; else return B; */
 #pragma peephole off
-#pragma scheduling off
 int magiclight_getExtraSize(int *obj) { if (((GameObject *)obj)->anim.seqId == 0x172) return 0x0; return 0x14; }
-#pragma scheduling reset
 #pragma peephole reset
 
 extern void Obj_FreeObject(int*);
-#pragma scheduling off
-#pragma peephole off
 void dll_16C_free(int *obj) { int *p = (int*)obj[0xc8/4]; if (p != NULL) Obj_FreeObject(p); }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* conditional init/free pair. */
-#pragma scheduling off
-#pragma peephole off
 void crrockfall_release(void) {
     if (lbl_803DDB40 != NULL) {
         Resource_Release(lbl_803DDB40);
     }
     lbl_803DDB40 = NULL;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* dll_16C_hitDetect: if extra->p && vtable(p,0x38)()==2, sync its transform into obj. */
 extern void dll_16C_syncSubObjectTransform(void *a, void *b, int c, int d, int e, int f, int g, int h, int i);
@@ -1442,7 +1430,6 @@ void dll_16C_render(int *obj, int p1, int p2, int p3, int p4, s8 visible) {
 
 /* IMIceMountain_SeqFn: set extra bit-0; scan arr for value==2 and clear two GameBits. */
 #pragma scheduling off
-#pragma peephole off
 int IMIceMountain_SeqFn(void *obj, int arg2, u8 *arg3) {
     int i;
     *(u32 *)((char *)((GameObject *)obj)->extra + 4) |= 1;
@@ -1454,12 +1441,10 @@ int IMIceMountain_SeqFn(void *obj, int arg2, u8 *arg3) {
     }
     return 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* dll_16C_init: install callback, configure sub-obj, init extra fields from arg. */
 #pragma scheduling off
-#pragma peephole off
 void dll_16C_init(void *obj, void *arg2) {
     Dll16CState *extra;
     ((GameObject *)obj)->animEventCallback = (void *)dll_16C_SeqFn;
@@ -1473,7 +1458,6 @@ void dll_16C_init(void *obj, void *arg2) {
     *(u8 *)&extra->subObjIndex = *(u8 *)((char *)arg2 + 0x27);
     extra->opacity = 0xff;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern float Vec_distance(float *a, float *b);

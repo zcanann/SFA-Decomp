@@ -40,23 +40,15 @@ int *voxmaps_getRouteNode(u8 *header, int *nodeBase, u8 *bitmap, int d, int e, i
 #pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 s16 Queue_GetCount(RingBufferQueue* queue)
 {
     return queue->count;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 BOOL Queue_IsEmpty(RingBufferQueue* queue)
 {
     return queue->count == 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -115,22 +107,16 @@ void Queue_Init(RingBufferQueue* queue, void* data, int capacity, int elemSize)
 #pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 BOOL Stack_IsEmpty(RingBufferQueue* stack)
 {
     return stack->count == 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 BOOL Stack_IsFull(RingBufferQueue* stack)
 {
     return stack->count == stack->capacity - 1;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -163,14 +149,10 @@ void Stack_Push(RingBufferQueue* stack, void* src)
 #pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Stack_Free(RingBufferQueue* stack)
 {
     mm_free(stack);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -185,17 +167,14 @@ void voxmaps_freeRouteWork(void** p)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void voxmaps_allocRouteWork(void** p)
 {
     p[0] = mmAlloc(0xe88, 0x10, NULL);
     p[1] = (u8*)p[0] + 0xaf0;
     p[2] = (u8*)p[1] + 0x320;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 void voxmaps_updateTimers(void)
 {
@@ -209,10 +188,8 @@ void voxmaps_updateTimers(void)
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void voxmaps_gridToWorld(f32* out, s16* grid)
 {
     int v;
@@ -226,7 +203,6 @@ void voxmaps_gridToWorld(f32* out, s16* grid)
         Obj_TransformLocalPointToWorld(out[0], out[1], out[2], out, &out[1], &out[2], lbl_803DC8CC);
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -293,7 +269,6 @@ void voxmaps_resetLoadedMaps(void)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void voxmaps_initialise(void)
 {
     VoxMaps *mgr = &lbl_803387A0;
@@ -326,7 +301,6 @@ void voxmaps_initialise(void)
     lbl_803DC8B8[0] = textureAlloc(16, 16, 4, 0, 0, 0, 0, 0, 0);
     lbl_803DC8B8[1] = textureAlloc(16, 16, 4, 0, 0, 0, 0, 0, 0);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -636,7 +610,6 @@ void fn_800118EC(int a1, VoxBoxArg* a2, int a3)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 static void heapSiftUp(CurveHeapNode *q, int i)
 {
     int parent;
@@ -651,7 +624,6 @@ static void heapSiftUp(CurveHeapNode *q, int i)
     q[i].priority = key;
     q[i].value = val;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off

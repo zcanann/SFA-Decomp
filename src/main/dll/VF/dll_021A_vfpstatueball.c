@@ -116,13 +116,9 @@ void vfpstatueball_release(void) {}
 
 void vfpstatueball_initialise(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void vfpstatueball_free(int obj) {
     (*gExpgfxInterface)->freeSource(obj);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

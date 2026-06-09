@@ -26,7 +26,6 @@ void cnthitobjec_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole off
 #pragma scheduling off
 int cnthitobjec_emitHitEvents(int obj, int p2, int p3)
 {
@@ -37,7 +36,6 @@ int cnthitobjec_emitHitEvents(int obj, int p2, int p3)
     return 0;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

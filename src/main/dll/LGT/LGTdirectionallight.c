@@ -183,7 +183,6 @@ void wmworm_update(GameObject *obj)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void wmworm_init(GameObject *obj, WmWormSetup *setup)
 {
     WmWormState *state;
@@ -203,7 +202,6 @@ void wmworm_init(GameObject *obj, WmWormSetup *setup)
     state->homeY = obj->anim.localPosY;
     state->homeZ = obj->anim.localPosZ;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 
@@ -316,7 +314,6 @@ int wmlevelcontrol_getExtraSize(void) { return 0x1c; }
 int wmlevelcontrol_getObjectTypeId(void) { return 0x0; }
 
 #pragma scheduling off
-#pragma peephole off
 void wmlevelcontrol_free(int obj)
 {
     ObjGroup_RemoveObject(obj, 9);
@@ -325,7 +322,6 @@ void wmlevelcontrol_free(int obj)
     GameBit_Set(0x372, 1);
     GameBit_Set(0x390, 1);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* render-with-objRenderFn_8003b8f4 pattern. */

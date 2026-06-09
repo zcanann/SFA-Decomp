@@ -1013,7 +1013,6 @@ typedef struct StaffBits {
 } StaffBits;
 #pragma dont_inline on
 #pragma scheduling off
-#pragma peephole off
 void fn_80166E38(f32 *out, f32 *forward, f32 *up) {
     f32 rt[3];
     f32 upRecomputed[3];
@@ -1031,7 +1030,6 @@ void fn_80166E38(f32 *out, f32 *forward, f32 *up) {
         mat[2][0] = -fwd[0]; mat[2][1] = -fwd[1]; mat[2][2] = -fwd[2];
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 #pragma dont_inline reset
 

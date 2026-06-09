@@ -132,15 +132,10 @@ int wmnewcrystal_SeqFn(int *obj, int unused, WmNewCrystalEventData *eventData) {
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void wmnewcrystal_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
     objRenderFn_8003b8f4(lbl_803E605C);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
 #pragma scheduling off
 void wmnewcrystal_init(int *obj, u8 *init) {
     WmNewCrystalState *inner = ((GameObject *)obj)->extra;
@@ -151,4 +146,3 @@ void wmnewcrystal_init(int *obj, u8 *init) {
     }
 }
 #pragma scheduling reset
-#pragma peephole reset

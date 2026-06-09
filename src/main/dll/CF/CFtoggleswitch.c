@@ -661,9 +661,7 @@ int deathgas_getExtraSize(void) { return 0x10; }
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
-#pragma peephole off
 void trickyguardspot_free(TrickyGuardSpotObject *obj) { ObjGroup_RemoveObject(obj, TRICKY_GUARD_SPOT_GROUP); }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern void ObjGroup_AddObject(int obj, int g);
@@ -770,7 +768,6 @@ extern void staffSetGlow(void *a, int b, int c);
 extern int mapGetDirIdx(int mapId);
 extern void mapUnload(int idx, int flags);
 #pragma scheduling off
-#pragma peephole off
 void magiccavetop_free(int *obj) {
     u8 *state = ((GameObject *)obj)->extra;
     u8 *def = *(u8 **)&((GameObject *)obj)->anim.placementData;
@@ -790,7 +787,6 @@ void magiccavetop_free(int *obj) {
         }
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern void envFxActFn_800887f8(int a);

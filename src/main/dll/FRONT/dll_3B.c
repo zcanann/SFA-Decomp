@@ -144,7 +144,6 @@ void TitleMenu_initialise(void)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void *PopDecodedAudioBuffer(int flags)
 {
   void *message;
@@ -159,7 +158,6 @@ void PushFreeAudioBuffer(void *message)
 {
   OSSendMessage(&lbl_803A4480,message,0);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off

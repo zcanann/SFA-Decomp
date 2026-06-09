@@ -358,7 +358,6 @@ int Camera_getOverrideTarget(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-#pragma peephole off
 void camcontrol_getRelativePosition(f32 heightOffset,int targetObj,float *outX,float *outY,
                                     float *outZ,float *outDistanceXZ,int useLocalPosition)
 {
@@ -388,7 +387,6 @@ void camcontrol_getRelativePosition(f32 heightOffset,int targetObj,float *outX,f
   }
   return;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 void camcontrol_initialise(float *dst,f32 numerator,f32 denominator,f32 minValue,f32 y,f32 z)
@@ -664,7 +662,6 @@ void camcontrol_release(int camAction, int recordSize)
  * PAL Size: TODO
  */
 #pragma scheduling off
-#pragma peephole off
 void camcontrol_queueSavedAction(undefined4 blendFrames,undefined queueMode)
 {
   if (gCamcontrolSavedActionId != CAMCONTROL_SAVED_ACTION_NONE) {
@@ -673,7 +670,6 @@ void camcontrol_queueSavedAction(undefined4 blendFrames,undefined queueMode)
   }
   return;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -832,7 +828,6 @@ void Camera_update(void)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void *Camera_getDefaultHandlerEntry(void)
 {
   int i;
@@ -893,5 +888,4 @@ void Camera_initialise(void)
   lbl_803DD4CB = -1;
   lbl_803DB992 = 0xffff;
 }
-#pragma peephole reset
 #pragma scheduling reset

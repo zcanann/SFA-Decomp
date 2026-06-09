@@ -13,7 +13,6 @@ int laser_getObjectTypeId(void)
 }
 
 #pragma scheduling off
-#pragma peephole off
 void laser_freeUnsupported(void)
 {
   OSReport(sTextBlockInitNoLongerSupported);
@@ -41,7 +40,6 @@ void laser_init(void)
   OSReport(sLaserInitNoLongerSupported);
   return;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 void laser_releaseUnsupported(void)

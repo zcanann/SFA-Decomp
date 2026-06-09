@@ -18,7 +18,6 @@ void dll_2A4_render(int obj, int p2, int p3, int p4, int p5)
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7138);
 }
 
-#pragma peephole off
 #pragma scheduling off
 void dll_2A4_update(int obj)
 {
@@ -41,7 +40,6 @@ void dll_2A4_update(int obj)
             ((GameObject *)obj)->anim.velocityZ * timeDelta);
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

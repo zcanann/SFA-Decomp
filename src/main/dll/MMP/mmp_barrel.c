@@ -1356,9 +1356,7 @@ u8 groundanimator_modelMtxFn(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/
 
 /* 16b chained patterns. */
 #pragma scheduling off
-#pragma peephole off
 void alphaanimator_init(int *obj) { s8 v = -1; *(s8 *)&((AlphaAnimatorState *)((int**)obj)[0xb8/4])->prevGate = v; }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
@@ -1374,7 +1372,6 @@ void groundanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {
 
 /* wall variant: hashes lha to byte */
 #pragma peephole off
-#pragma scheduling off
 u8 wallanimator_modelMtxFn(int *obj) { return (u8)*(s16 *)((char *)((int **)obj)[0x4c/4] + 0x1c); }
 void waveanimator_setScale(int *obj, f32 fval)
 {
@@ -1383,10 +1380,8 @@ void waveanimator_setScale(int *obj, f32 fval)
   p->scaleB = fval;
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E3F98;
-#pragma peephole off
 #pragma scheduling off
 u8 groundanimator_func0B(int *obj)
 {
@@ -1397,7 +1392,6 @@ u8 groundanimator_func0B(int *obj)
     return v > lbl_803E3F98 * (f32)byte;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 extern int objPosToMapBlockIdx(double x, double y, double z);
 extern void *mapGetBlock(int idx);

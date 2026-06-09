@@ -47,7 +47,6 @@ extern f32 lbl_803E1D9C;
  * PAL Size: TODO
  */
 #pragma scheduling off
-#pragma peephole off
 void EnterSaveNameScreen_render(void)
 {
   u8 buf[2];
@@ -84,7 +83,6 @@ void EnterSaveNameScreen_render(void)
   gameTextSetDrawFunc(NULL);
   titleScreenShowCopyright(0);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 

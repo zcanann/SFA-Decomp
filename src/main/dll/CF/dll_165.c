@@ -248,18 +248,10 @@ int treasurechest_getObjectTypeId(void)
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E3C20;
 extern void objRenderFn_8003b8f4(f32);
-#pragma scheduling off
-#pragma peephole off
 void treasurechest_render(void) { objRenderFn_8003b8f4(lbl_803E3C20); }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void *lbl_803DDAE0;
-#pragma scheduling off
-#pragma peephole off
 void treasurechest_free(void) { Resource_Release(lbl_803DDAE0); }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E3C24;
 extern void hitDetectFn_80097070(f32 radius, int obj, int a, int b, int c, int d);

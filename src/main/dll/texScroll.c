@@ -134,10 +134,8 @@ int pressureswitchfb_getExtraSize(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-#pragma peephole off
 void pressureswitchfb_free(int obj)
 {
   ObjGroup_RemoveObject(obj,PRESSURESWITCHFB_REMOVE_GROUP_ID);
 }
-#pragma peephole reset
 #pragma scheduling reset

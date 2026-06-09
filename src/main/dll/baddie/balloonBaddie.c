@@ -712,7 +712,6 @@ extern void gxSetZMode_(int a, int b, int c);
 extern void gxSetPeControl_ZCompLoc_(int a);
 extern void GXSetAlphaCompare(int a, int b, int c, int d, int e);
 
-#pragma peephole off
 #pragma scheduling off
 int modelFn_80124794(int obj, int param2, int param3)
 {
@@ -730,7 +729,6 @@ int modelFn_80124794(int obj, int param2, int param3)
     GXSetAlphaCompare(7, 0, 0, 7, 0);
     return 1;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern void *Obj_GetPlayerObject(void);

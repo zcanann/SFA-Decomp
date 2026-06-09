@@ -30,27 +30,22 @@ static inline ObjHitsPriorityState *Player_GetObjHitsState(int obj) {
 }
 
 #pragma scheduling off
-#pragma peephole off
 int fn_80295CE4(int obj)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
     return (inner->unk3F4 >> 6) & 1;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void fn_802960E8(void *playerObj, s16 p2)
 {
     PlayerState *inner = *(PlayerState **)((char *)playerObj + 0xb8);
     inner->unk81C = p2;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void fn_802960F4(int obj, int *out)
 {
     int inner = *(int *)&((GameObject *)obj)->extra;
@@ -59,89 +54,71 @@ void fn_802960F4(int obj, int *out)
     }
     *out = (int)((char *)inner + 0x3c4);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 f32 fn_8029610C(int obj)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
     return inner->baddie.animSpeedA;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int fn_80296118(int obj)
 {
     int inner = *(int *)&((GameObject *)obj)->extra;
     return *(int *)((char *)inner + 0x2d0);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 f32 fn_80296214(int obj)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
     return inner->unk784;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void fn_80296220(int obj, f32 v)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
     inner->unk784 = v;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 int fn_8029622C(int obj)
 {
     return (((GameObject *)obj)->objectFlags & 0x1000) == 0;
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int fn_80296448(int obj)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
     return (inner->unk3F0 >> 5) & 1;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int fn_80296464(int obj)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
     return inner->flags360 & 1;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int fn_80295BF0(int obj)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
     return inner->curAnimId != 0x44;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 int fn_80295C0C(int obj)
 {
@@ -149,87 +126,70 @@ int fn_80295C0C(int obj)
     return ((inner->unk3F0 >> 1) & 1) == 0;
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int fn_80295C24(int obj)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
     return inner->unk87C > lbl_803E7EA4;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int fn_80295C40(int obj)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
     return inner->unk838 > lbl_803E7ED4;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int fn_80295CBC(int obj)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
     return inner->baddie.controlMode == 0x13;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void fn_802961FC(int a, u8 type)
 {
     if (type > 2) {
         lbl_803DE459 = 0;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int fn_8029630C(int obj)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
     return inner->baddie.controlMode != 0x26;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int fn_8029669C(int obj)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
     return inner->baddie.controlMode == 7;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int fn_802966B4(int obj)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
     return inner->baddie.controlMode == 6;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void fn_80296BBC(int obj)
 {
     int inner = *(int *)&((GameObject *)obj)->extra;
     *(u32 *)((char *)inner + 0x360) &= ~2LL;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -243,196 +203,157 @@ void fn_80296C6C(int obj, int flag)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void fn_80297254(int obj)
 {
     int inner = *(int *)&((GameObject *)obj)->extra;
     ((ByteFlags *)((char *)inner + 0x3f2))->b20 = 1;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void fn_8029726C(int obj)
 {
     int inner = *(int *)&((GameObject *)obj)->extra;
     ((ByteFlags *)((char *)inner + 0x3f2))->b40 = 1;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void fn_80297284(int obj)
 {
     int inner = *(int *)&((GameObject *)obj)->extra;
     ((ByteFlags *)((char *)inner + 0x3f2))->b80 = 1;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int fn_802966CC(int obj)
 {
     return *(int *)&((GameObject *)obj)->unkC8;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void fn_80296B70(int v)
 {
     lbl_803DE424 = v;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 f32 fn_802966F4(int obj)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
     return inner->unk778;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int fn_802972A8(int obj)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
     return inner->unk7F0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int EmissionController_IsLingering(int obj)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
     return inner->unk8C5;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 uint playerGetStateFlag310(int obj)
 {
     int inner = *(int *)&((GameObject *)obj)->extra;
     return *(int *)((char *)inner + 0x310);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int fn_80296A14(int obj)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
     return *(s16 *)((char *)inner->unk35C + 4);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int fn_80296A8C(int obj)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
     return *(s16 *)((char *)inner->unk35C + 6);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int fn_80296C4C(int obj)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
     return (inner->unk3F3 >> 1) & 1;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int fn_80296C5C(int obj)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
     return (inner->unk3F3 >> 2) & 1;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int fn_8029656C(int obj, f32 *out)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
     *out = inner->unk77C;
     return inner->unk8C4;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int fn_80296AD4(int obj)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
     return *(s8 *)((char *)inner->unk35C + 1);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int fn_80296AE8(int obj)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
     return *(s8 *)((char *)inner->unk35C);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int playerGetMoney(void *player)
 {
     PlayerState *inner = ((GameObject *)player)->extra;
     return *(u8 *)((char *)inner->unk35C + 8);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int playerIsDisguised(int obj)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
     return (inner->unk3F3 >> 3) & 1;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int objGetAnimStateFlags(int obj, int flag)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
     return *(s8 *)((char *)inner->unk35C + 2) & flag;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int objGetAnimState80A(void *obj)
 {
     void *inner = ((GameObject *)obj)->extra;
@@ -441,11 +362,9 @@ int objGetAnimState80A(void *obj)
     }
     return 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void cameraGetPrevPos2(int obj, f32 *x, f32 *y, f32 *z)
 {
     int inner = *(int *)&((GameObject *)obj)->extra;
@@ -453,69 +372,55 @@ void cameraGetPrevPos2(int obj, f32 *x, f32 *y, f32 *z)
     *y = *(f32 *)((char *)inner + 0x28);
     *z = *(f32 *)((char *)inner + 0x2c);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int fn_802966D4(int obj, int *out)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
     *out = inner->heldObj;
     return inner->heldObj != 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int fn_80296C2C(int obj)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
     return *(s8 *)((char *)inner->unk35C) > 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void fn_80298924(int obj)
 {
     ObjHits_SyncObjectPositionIfDirty(obj);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void fn_802A00C0(int obj)
 {
     ObjHits_SyncObjectPositionIfDirty(obj);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void fn_802A49A8(int obj)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
     inner->unk400 = (int)lbl_80333250;
     inner->unk3F8 = (int)lbl_80333050;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void fn_802B6F48(int obj)
 {
     playerInitFuncPtrs(obj);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 int fn_802969F0(int obj)
 {
@@ -526,9 +431,7 @@ int fn_802969F0(int obj)
     return -1;
 }
 #pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 void fn_802961D4(int obj, int v)
 {
@@ -539,15 +442,12 @@ void fn_802961D4(int obj, int v)
     inner->flags360 |= 0x800000;
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void fn_80296B78(int obj, int p2)
 {
     fn_802AB38C(obj, *(int *)&((GameObject *)obj)->extra, p2);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -619,18 +519,15 @@ int fn_802974A0(int obj, int state, f32 fv)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void fn_8029782C(int obj)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
     inner->flags360 |= 0x800000;
     ((ByteFlags *)((char *)inner + 0x3f6))->b20 = 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int objIsCurModelNotZero(void *obj)
 {
     if (obj != NULL) {
@@ -638,11 +535,9 @@ int objIsCurModelNotZero(void *obj)
     }
     return 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int playerHasSpell(int obj, int spell)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
@@ -651,10 +546,8 @@ int playerHasSpell(int obj, int spell)
     }
     return inner->unk8C7 & (1 << spell);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 int fn_80295C5C(int obj)
 {
@@ -663,10 +556,8 @@ int fn_80295C5C(int obj)
            ((ByteFlags *)((char *)inner + 0x3f3))->b10;
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int objFn_80296700(int obj)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
@@ -675,11 +566,9 @@ int objFn_80296700(int obj)
     }
     return 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void fn_802961A4(int obj, int *out1, f32 *out2)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
@@ -690,11 +579,9 @@ void fn_802961A4(int obj, int *out1, f32 *out2)
         *out2 = inner->unk7D4;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void playerLock(int obj, int p2)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
@@ -704,10 +591,8 @@ void playerLock(int obj, int p2)
         inner->flags360 &= ~0x200000;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 void fn_80296A9C(int obj, int p2)
 {
@@ -722,7 +607,6 @@ void fn_80296A9C(int obj, int p2)
     *(s16 *)((char *)deref + 6) = (s16)v;
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -739,7 +623,6 @@ void fn_80296518(int obj, int flag, int set)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 u8 fn_80296414(int obj, int p2, u8 *out)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
@@ -747,21 +630,17 @@ u8 fn_80296414(int obj, int p2, u8 *out)
     return inner->baddie.controlMode == 0x1c &&
            *(u32 *)((char *)inner + 0x67c) == (u32)p2;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int fn_80295C88(int obj)
 {
     f32 dist = lbl_803E7EDC;
     return ObjGroup_FindNearestObject(0x30, obj, &dist);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void fn_8029697C(int obj, s16 *out1, s16 *out2)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
@@ -772,10 +651,8 @@ void fn_8029697C(int obj, s16 *out1, s16 *out2)
         *out2 = lbl_803E7EEC * inner->unk7BC;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 void playerAddHealth(int obj, int amount)
 {
@@ -793,7 +670,6 @@ void playerAddHealth(int obj, int amount)
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -817,16 +693,13 @@ void playerAddRemoveMagic(int obj, int amount)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void fn_802994A4(int obj)
 {
     *(s16 *)((char *)*(int *)&((GameObject *)obj)->extra + 0x80a) = -1;
     ObjHits_SyncObjectPositionIfDirty(obj);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 int objFn_802962b4(int obj)
 {
@@ -843,9 +716,7 @@ int objFn_802962b4(int obj)
     return 0;
 }
 #pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 int fn_80296240(int obj)
 {
@@ -863,7 +734,6 @@ int fn_80296240(int obj)
     return 0;
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -884,7 +754,6 @@ void fn_80296474(int obj, int spell, int set)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void fn_802A4B4C(int obj)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
@@ -894,11 +763,9 @@ void fn_802A4B4C(int obj)
         inner->flags360 |= 0x800000;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void fn_802985AC(int obj)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
@@ -908,11 +775,9 @@ void fn_802985AC(int obj)
     inner->unk80A = -1;
     ObjHits_SyncObjectPositionIfDirty(obj);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int fn_8029F9D4(int p1, int state)
 {
     if (GameBit_Get(0x2d0)) {
@@ -921,7 +786,6 @@ int fn_8029F9D4(int p1, int state)
     }
     return 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -942,7 +806,6 @@ int fn_80297748(int p1, int obj)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int fn_8029852C(int obj, int state)
 {
     int inner = *(int *)&((GameObject *)obj)->extra;
@@ -964,11 +827,9 @@ int fn_8029852C(int obj, int state)
     *(int *)((char *)state + 0x308) = (int)fn_8029782C;
     return 0x39;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int fn_802A2E8C(int obj, int p2)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
@@ -984,7 +845,6 @@ int fn_802A2E8C(int obj, int p2)
     ((GameObject *)obj)->anim.velocityZ = fz;
     return 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -4477,7 +4337,6 @@ void fn_80296EB4(int obj, int newParent)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int fn_802A8680(int p1, int p2, int src, int vec, int out, int flag)
 {
     f32 d1;
@@ -4523,7 +4382,6 @@ int fn_802A8680(int p1, int p2, int src, int vec, int out, int flag)
     }
     return 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -5601,7 +5459,6 @@ int fn_8029DA60(int obj, int state)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int fn_802A7160(int obj, int state)
 {
     if (GameBit_Get(0x970)) {
@@ -5611,11 +5468,9 @@ int fn_802A7160(int obj, int state)
     *(int *)((char *)state + 0x308) = (int)fn_802A514C;
     return 2;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void fn_8029BC08(int obj)
 {
     ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->objectHitMask = 0;
@@ -5624,7 +5479,6 @@ void fn_8029BC08(int obj)
     }
     lbl_803DC66C = 1;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -5647,7 +5501,6 @@ void fn_8029F67C(int obj)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void fn_80296124(int obj, void *p2, void *p3)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
@@ -5669,7 +5522,6 @@ void fn_80296124(int obj, void *p2, void *p3)
         inner->flags360 |= 0x4000;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -5691,7 +5543,6 @@ int fn_8029605C(int obj, f32 *p2, f32 *p3)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void fn_8029A420(int obj)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
@@ -5702,11 +5553,9 @@ void fn_8029A420(int obj)
     ((ByteFlags *)((char *)inner + 0x3f6))->b40 = 0;
     inner->unk80A = -1;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void playerUpdateWhileTimeStopped(int obj)
 {
     PlayerState *inner = ((GameObject *)obj)->extra;
@@ -5724,7 +5573,6 @@ void playerUpdateWhileTimeStopped(int obj)
         }
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -9504,7 +9352,6 @@ void fn_8029C8C8(int obj, int p2)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void fn_802B1B28(int obj, f32 fv)
 {
     f32 x, y, z;
@@ -9530,7 +9377,6 @@ void fn_802B1B28(int obj, f32 fv)
     z = ((GameObject *)obj)->anim.velocityZ * fv;
     objMove(obj, x, y, z);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -9776,7 +9622,6 @@ int fn_802A98FC(int obj, int p2)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void Lightfoot_ResetScriptedPosition(int obj)
 {
     switch (*(int *)((char *)*(int *)&((GameObject *)obj)->anim.placementData + 0x14)) {
@@ -9812,7 +9657,6 @@ void Lightfoot_ResetScriptedPosition(int obj)
         break;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -14080,7 +13924,6 @@ int fn_8029CF30(int obj, int state, f32 fv)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void fn_80295334(int a, int b, f32 *vec, int c, int mode, f32 angle)
 {
     f32 mtx1[12];
@@ -14135,7 +13978,6 @@ void fn_80295334(int a, int b, f32 *vec, int c, int mode, f32 angle)
         break;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off

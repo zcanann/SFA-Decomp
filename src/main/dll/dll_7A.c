@@ -27,7 +27,5 @@ extern void OSReport(const char *fmt, ...);
 #define PROJECTILE_UNSUPPORTED_RETURN -1
 
 #pragma scheduling off
-#pragma peephole off
 int projsunshock_doUnsupported(void) { OSReport(sProjsunshockDoNoLongerSupported); return PROJECTILE_UNSUPPORTED_RETURN; }
-#pragma peephole reset
 #pragma scheduling reset

@@ -1,7 +1,6 @@
 #include "main/engine_shared.h"
 
 #pragma scheduling off
-#pragma peephole off
 int isSpace(u32 c)
 {
     int result = 0;
@@ -11,31 +10,25 @@ int isSpace(u32 c)
     }
     return result;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void* gameTextGetBox(int box)
 {
     return &lbl_802C7400[box * 0x20];
 }
 #pragma dont_inline reset
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void* gameTextGetCurBox(void)
 {
     return lbl_803DC9CC;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void gameTextFn_80016c18(int a, int b)
 {
     int i = lbl_803DC9C8++;
@@ -44,7 +37,6 @@ void gameTextFn_80016c18(int a, int b)
     e[1] = a;
     e[2] = b;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -64,7 +56,6 @@ void gameTextFreePhrase(int* p)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void gameTextFn_80016810(int a, int b, int c)
 {
     int i;
@@ -80,11 +71,9 @@ void gameTextFn_80016810(int a, int b, int c)
         e[3] = c;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int gameTextGetTaskText(int id, int* outA, int* outB)
 {
     int i;
@@ -103,11 +92,9 @@ int gameTextGetTaskText(int id, int* outA, int* outB)
     }
     return 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void gameTextShowTimeStr(char* str)
 {
     int i;
@@ -120,11 +107,9 @@ void gameTextShowTimeStr(char* str)
     lbl_803DC9C4 = gameStrcpy(buf, str) + 1;
     e[1] = (int)buf;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void gameTextShow(int a)
 {
     int i;
@@ -140,7 +125,6 @@ void gameTextShow(int a)
         e[3] = 0;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -173,7 +157,6 @@ void gameTextShowStr(char *text, int box, int arg2, int arg3)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void gameTextAppendStr(char* str, int arg2)
 {
     int i;
@@ -191,11 +174,9 @@ void gameTextAppendStr(char* str, int arg2)
         e[2] = arg2;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void gameTextBoxFn_800164b0(char* str, int boxIdx, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY)
 {
     u8* box = &lbl_802C7400[boxIdx * 0x20];
@@ -223,7 +204,6 @@ void gameTextBoxFn_800164b0(char* str, int boxIdx, int* outMaxX, int* outMaxY, i
     *(s16*)(box + 0x18) = savedX;
     *(s16*)(box + 0x1a) = savedY;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -316,7 +296,6 @@ char *gameStrcpy(char *dst, char *src)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void gameTextFn_8001628c(int id, int a, int b, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY)
 {
     GameTextFont* font = gameTextFonts;
@@ -360,7 +339,6 @@ void gameTextFn_8001628c(int id, int a, int b, int* outMaxX, int* outMaxY, int* 
         *outMaxY = lbl_803DC9AC >> 2;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off

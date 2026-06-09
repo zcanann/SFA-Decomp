@@ -8,9 +8,7 @@ void mcstaffeffe_render(int obj)
 }
 #pragma scheduling reset
 
-#pragma scheduling off
 void mcstaffeffe_update(void) {}
-#pragma scheduling reset
 
 #pragma scheduling off
 void mcstaffeffe_init(int obj, int setup)

@@ -160,11 +160,7 @@ void bombplant_hitDetect(void)
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E5370;
 extern void objRenderFn_8003b8f4(f32);
-#pragma scheduling off
-#pragma peephole off
 void bombplant_render(void) { objRenderFn_8003b8f4(lbl_803E5370); }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void *getTrickyObject(void);
 extern void trickyImpress(void *trickyObj);

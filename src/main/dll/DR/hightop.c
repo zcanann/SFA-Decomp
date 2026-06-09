@@ -1277,7 +1277,6 @@ void cloudprisoncontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visibl
 #pragma peephole reset
 
 /* call(x, N) wrappers. */
-#pragma scheduling off
 #pragma peephole off
 void cloudprisoncontrol_init(int x) { ObjMsg_AllocQueue(x, 0xa); }
 
@@ -1285,7 +1284,6 @@ int cfguardian_setScale(int *obj) {
     return (*(u8*)(*(int *)&((GameObject *)obj)->extra + 0xa9b) & 0x2) == 0;
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 #pragma scheduling off

@@ -11,7 +11,6 @@ void ktrexlevel_initialise(void) {}
 
 void ktrexlevel_release(void) {}
 
-#pragma scheduling off
 #pragma peephole off
 void ktrexlevel_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
     if (visible != 0) {
@@ -19,10 +18,8 @@ void ktrexlevel_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, u
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void ktrexlevel_clearPathGameBits(void) {
     GameBit_Set(0x54a, 0);
@@ -31,11 +28,9 @@ void ktrexlevel_clearPathGameBits(void) {
     GameBit_Set(0x556, 0);
 }
 #pragma dont_inline reset
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void ktrexlevel_free(void) {
     GameBit_Set(0xefd, 0);
     GameBit_Set(0xcd1, 0);
@@ -45,11 +40,9 @@ void ktrexlevel_free(void) {
     GameBit_Set(0xedb, 0);
     GameBit_Set(0xcbb, 0);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void ktrexlevel_updatePathGameBits(void) {
     if (GameBit_Get(0x55a) != 0) {
         GameBit_Set(0x54a, 2);
@@ -63,7 +56,6 @@ void ktrexlevel_updatePathGameBits(void) {
         GameBit_Set(0x556, 2);
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off

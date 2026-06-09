@@ -1036,7 +1036,6 @@ int cannonclaw_getExtraSize(void) { return 0x0; }
 int cannonclaw_getObjectTypeId(void) { return 0x0; }
 
 #pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void grimble_initialiseStateHandlerTables(void) {
     gGrimbleStateHandlersA[0] = (void *)grimble_stateHandlerA00;
@@ -1056,7 +1055,6 @@ void grimble_initialiseStateHandlerTables(void) {
     gGrimbleStateHandlersB[4] = (void *)grimble_stateHandlerB04;
     gGrimbleStateHandlersB[5] = (void *)grimble_stateHandlerB05;
 }
-#pragma peephole reset
 #pragma scheduling reset
 #pragma dont_inline reset
 void grimble_initialise(void) { grimble_initialiseStateHandlerTables(); }

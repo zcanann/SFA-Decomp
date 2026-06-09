@@ -241,24 +241,17 @@ void vfplift_release(void) {}
 
 void vfplift_initialise(void) {}
 
-#pragma peephole off
 #pragma scheduling off
 int vfplift_SeqFn(int obj) {
     vfplift_getState(obj)->forceRaised = 1;
     return 0;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void vfplift_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
     objRenderFn_8003b8f4(lbl_803E60F0);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
 #pragma scheduling off
 void vfplift_update(int obj) {
     int v;
@@ -273,7 +266,6 @@ void vfplift_update(int obj) {
     }
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -324,10 +316,6 @@ void vfplift_init(int *obj, VFPLiftPlacement *init) {
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void vfplift_free(int obj) {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
-#pragma scheduling reset
-#pragma peephole reset

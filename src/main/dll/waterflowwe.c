@@ -136,14 +136,12 @@ void waterflowwe_init(int obj, u8 *setup)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma scheduling off
 void waterflowwe_free(int obj)
 {
     if ((u32)obj == (u32)lbl_803DDDA8) {
         lbl_803DDDA8 = 0;
     }
 }
-#pragma scheduling reset
 
 #pragma peephole off
 void waterflowwe_render(int obj, int p2, int p3, int p4, int p5, s8 visible)

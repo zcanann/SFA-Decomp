@@ -2088,9 +2088,7 @@ void smallbasket_nop(void) {}
 
 /* call(x, N) wrappers. */
 #pragma scheduling off
-#pragma peephole off
 void smallbasket_stopLoopSfx(int x) { Sfx_StopFromObject(x, 0x3e8); }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern f32 lbl_803E2CC0;
@@ -2342,7 +2340,6 @@ void smallbasket_initTailModelState(int *obj, int *st) {
 
 /* Initializes a scaled smallbasket variant from placement params. */
 #pragma scheduling off
-#pragma peephole off
 void smallbasket_initScaledVariantState(int *obj, int *st) {
     f32 ratio;
     f32 base_v;
@@ -2379,7 +2376,6 @@ void smallbasket_initScaledVariantState(int *obj, int *st) {
     ((BaddieState *)st)->reactionFlags = 0;
     ObjHits_EnableObject((int)obj);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern f32 lbl_803E2C1C;
@@ -2392,7 +2388,6 @@ extern void PSMTXMultVecSR(f32 *mtx, f32 *in, f32 *out);
 
 /* Rotates a vector around the Y axis by an integer-degree value. */
 #pragma scheduling off
-#pragma peephole off
 void smallbasket_rotateVectorYaw(int p1, int p2, f32 *vec, f32 f1, int p5, u32 int_deg) {
     f32 mtx[12];
     f32 a;
@@ -2402,12 +2397,10 @@ void smallbasket_rotateVectorYaw(int p1, int p2, f32 *vec, f32 f1, int p5, u32 i
     PSMTXRotRad(mtx, 0x79, a);
     PSMTXMultVecSR(mtx, vec, vec);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* Handles hit-state events and restarts the impact SFX. */
 #pragma scheduling off
-#pragma peephole off
 void smallbasket_handleHitStateEvent(int obj, int *st, int p3, int cmd) {
     if (cmd == 0x11) {
         /* fall through */
@@ -2420,7 +2413,6 @@ void smallbasket_handleHitStateEvent(int obj, int *st, int p3, int cmd) {
         *(s16 *)&((BaddieState *)st)->hitCounter = 0;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* Initializes the state used by the alternate smallbasket variant. */
@@ -2537,7 +2529,6 @@ extern f32 lbl_803E2C0C;
  * byte tuple to seed state[0x2a8..0x322]. The trailing block sets
  * shared state floats and computes obj[0x8] from (s8)params[0x28]. */
 #pragma scheduling off
-#pragma peephole off
 void smallbasket_initModelVariantState(s16* obj, u8* state) {
     u8* params = *(u8**)&((GameObject *)obj)->anim.placementData;
     *(u32 *)&((BaddieState *)state)->unk2E4 = 0xb;
@@ -2593,7 +2584,6 @@ void smallbasket_initModelVariantState(s16* obj, u8* state) {
     }
     ((GameObject *)obj)->anim.rootMotionScale = lbl_803E2C08 + ((f32)(s32)(s8)params[0x28] / lbl_803E2C0C);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern int fn_8014C11C(int obj, f32 dist, u8 flag, int maxCount, void* buf);

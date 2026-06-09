@@ -140,14 +140,12 @@ int wmspiritplace_getObjectTypeId(void) { return 0x0; }
 void wmspiritplace_free(void) {}
 
 #pragma peephole off
-#pragma scheduling off
 void wmspiritplace_render(undefined4 p1, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, s8 visible)
 {
     if (visible == 0) {
         return;
     }
 }
-#pragma scheduling reset
 #pragma peephole reset
 
 void wmspiritplace_hitDetect(int obj)

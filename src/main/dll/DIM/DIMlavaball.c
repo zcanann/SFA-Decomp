@@ -242,7 +242,6 @@ extern void SCGameBitLatch_Update(void *latch, int mask, int clearIfSetBit, int 
  * PAL Size: TODO
  */
 #pragma scheduling off
-#pragma peephole off
 void MMP_levelcontrol_update(int obj)
 {
   int playerForMap;
@@ -322,7 +321,6 @@ void MMP_levelcontrol_update(int obj)
   SCGameBitLatch_Update(&lbl_803DDB2C, 1, -1, -1, 0x389, 0xd5);
   SCGameBitLatch_Update(&lbl_803DDB2C, 2, -1, -1, 0xcbb, 0xc4);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -1849,7 +1847,6 @@ void mmp_trenchfx_free(int obj) {
 }
 
 extern f32 lbl_803E45C0;
-#pragma scheduling off
 #pragma peephole off
 void mmp_trenchfx_init(int obj, int data) {
     MmpTrenchfxState *state = ((GameObject *)obj)->extra;
@@ -1870,30 +1867,25 @@ void mmp_trenchfx_init(int obj, int data) {
     ((GameObject *)obj)->anim.rootMotionScale = lbl_803E45C0;
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 /* ObjGroup_RemoveObject + vtable[4] tail-call. */
 extern int *lbl_803DCAC0;
 #define gCarryableInterface lbl_803DCAC0
 #pragma scheduling off
-#pragma peephole off
 void mmp_moonrock_free(int obj) {
     ObjGroup_RemoveObject((uint)obj, 4);
     (*(void (*)(int))(*(int *)(*gCarryableInterface + 0x10)))(obj);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern f32 lbl_803E457C;
 #pragma scheduling off
-#pragma peephole off
 void mmp_moonrock_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
     if ((*(int (*)(int, int))(*(int *)(*gCarryableInterface + 0xC)))(obj, (s32)visible) != 0) {
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)
             (obj, p2, p3, p4, p5, lbl_803E457C);
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern void vecRotateZXY(void *in, void *out);

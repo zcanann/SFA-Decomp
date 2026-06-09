@@ -662,16 +662,12 @@ int doorlock_getExtraSize(void) { return 0x1; }
 extern f32 lbl_803E3780;
 extern void objRenderFn_8003b8f4(f32);
 #pragma scheduling off
-#pragma peephole off
 void Door_render(void) { objRenderFn_8003b8f4(lbl_803E3780); }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
-#pragma peephole off
 void doorlock_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off

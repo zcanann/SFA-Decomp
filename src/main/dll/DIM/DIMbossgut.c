@@ -12,14 +12,12 @@ extern f32 lbl_803E4C84;
 extern f32 lbl_803E4C88;
 
 #pragma scheduling off
-#pragma peephole off
 int DIMbossgut_updateState(int obj,int param_2,ObjAnimUpdateState *animUpdate)
 {
   animUpdate->hitVolumePair = -1;
   animUpdate->sequenceEventActive = 0;
   return 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 int DIMbossgut_getExtraSize(void) { return 0x0; }
@@ -46,7 +44,6 @@ void DIMbossgut_hitDetect(void) {}
 void DIMbossgut_update(void) {}
 
 #pragma scheduling off
-#pragma peephole off
 void DIMbossgut_init(void *obj)
 {
   int objArg;
@@ -58,7 +55,6 @@ void DIMbossgut_init(void *obj)
   ((ObjAnimAdvanceObjectFirstFn)ObjAnim_AdvanceCurrentMove)
       (objArg, (double)lbl_803E4C80, (double)timeDelta, NULL);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 void DIMbossgut_release(void) {}

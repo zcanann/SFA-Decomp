@@ -2001,7 +2001,6 @@ extern void* Obj_GetPlayerObject(void);
 extern f32 lbl_803E2598;
 
 #pragma scheduling off
-#pragma peephole off
 
 void fn_8014C5C0(int* obj)
 {
@@ -2035,11 +2034,9 @@ null_state:
     return 0;
 }
 
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void fn_8014D08C(int obj, int p2, f32 mult, int a, int b, u8 c)
 {
   extern f32 lbl_803E256C;
@@ -2055,7 +2052,6 @@ void fn_8014D08C(int obj, int p2, f32 mult, int a, int b, u8 c)
     *(u8 *)((char *)sub + 0x70) = 0;
   }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern void playerTailFn_80026b3c(int *p1, int p2, int p3, void *p4);
@@ -2080,7 +2076,6 @@ void baddieAfterUpdateBonesCb(int obj, int *p2)
 extern f64 lbl_803E25E0;
 
 #pragma scheduling off
-#pragma peephole off
 void fn_8014C540(int* obj, int* p4, f32* p5, f32* p6) {
     int* state;
     f32 fz;
@@ -2098,11 +2093,9 @@ void fn_8014C540(int* obj, int* p4, f32* p5, f32* p6) {
     *p6 = fz;
     *p4 = 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 f32 fn_8014C5D0(register int obj) {
     register u16 a;
     register int* state;
@@ -2118,7 +2111,6 @@ f32 fn_8014C5D0(register int obj) {
     }
     return lbl_803E2574;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 

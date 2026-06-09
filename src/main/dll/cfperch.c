@@ -74,13 +74,11 @@ extern f32 lbl_803E39C4;
 extern f64 lbl_803E39C8;
 
 #pragma scheduling off
-#pragma peephole off
 f32 fn_80183204(int obj)
 {
     u8* state = ((GameObject *)obj)->extra;
     return lbl_803E39AC - (f32)(u32)state[0x13] / (f32)(u32)state[0x28];
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern void ObjGroup_AddObject(int obj, int group);

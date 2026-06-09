@@ -77,7 +77,6 @@ void wclevelcont_func12(int obj, s16 *outRow, s16 *outCol, f32 px, f32 pz)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole off
 #pragma scheduling off
 void wclevelcont_func11(int obj, s16 col, s16 row, f32 *outXp, f32 *outZp)
 {
@@ -88,7 +87,6 @@ void wclevelcont_func11(int obj, s16 col, s16 row, f32 *outXp, f32 *outZp)
     *outZp = lbl_803E6DB4 + (lbl_803E6DC0 + outZ + (f32)(row * 48));
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -165,7 +163,6 @@ void wclevelcont_func0B(int obj, s16 *outRow, s16 *outCol, f32 px, f32 pz)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole off
 #pragma scheduling off
 void wclevelcont_setScale(int obj, s16 col, s16 row, f32 *outXp, f32 *outZp)
 {
@@ -176,7 +173,6 @@ void wclevelcont_setScale(int obj, s16 col, s16 row, f32 *outXp, f32 *outZp)
     *outZp = lbl_803E6DB4 + (lbl_803E6DD4 + outZ + (f32)(row * 48));
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 int wclevelcont_getExtraSize(void) { return 0x1c; }
 

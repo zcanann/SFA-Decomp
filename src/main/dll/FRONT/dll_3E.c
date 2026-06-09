@@ -303,7 +303,6 @@ bool FUN_80118574(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 }
 
 #pragma scheduling off
-#pragma peephole off
 void THPPlayerStop(void) {
     OSMessage msg;
 
@@ -336,7 +335,6 @@ void THPPlayerStop(void) {
     }
 }
 
-#pragma peephole reset
 BOOL THPPlayerPlay(void) {
     if ((lbl_803A5D60.isOpen != 0) &&
         ((lbl_803A5D60.state == 1) || (lbl_803A5D60.state == 4))) {

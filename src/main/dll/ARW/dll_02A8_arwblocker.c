@@ -22,7 +22,6 @@ STATIC_ASSERT(offsetof(ARWBlockerState, sequenceLocked) == 0x01);
 STATIC_ASSERT(offsetof(ARWBlockerSetup, rotZ) == 0x18);
 STATIC_ASSERT(offsetof(ARWBlockerSetup, sequenceMode) == 0x19);
 
-#pragma scheduling off
 int arwblocker_getBlockState(int obj)
 {
     ARWBlockerState *state = ((GameObject *)obj)->extra;
@@ -37,7 +36,6 @@ int arwblocker_getBlockState(int obj)
     }
     return 0;
 }
-#pragma scheduling reset
 
 int arwblocker_getExtraSize(void) { return 2; }
 

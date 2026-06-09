@@ -40,7 +40,6 @@ void wmsun_release(void) {}
 
 void wmsun_initialise(void) {}
 
-#pragma peephole off
 #pragma scheduling off
 void wmsun_free(int obj) {
     WmSunState *state = ((GameObject *)obj)->extra;
@@ -50,7 +49,6 @@ void wmsun_free(int obj) {
     state->glareParams = NULL;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

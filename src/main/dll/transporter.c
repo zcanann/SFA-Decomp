@@ -534,11 +534,7 @@ void FUN_80175ed4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 /* pushable_render: recovered v1.0 body defined at end of file. */
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1199,7 +1195,6 @@ extern f32 lbl_803E3620;
 extern f32 lbl_803E3628;
 extern f32 lbl_803E362C;
 #pragma scheduling off
-#pragma peephole off
 void flameblast_render(int *obj) {
     f32 vec[3];
     f32 f = lbl_803E362C * *(f32 *)((GameObject *)obj)->extra + lbl_803E3628;
@@ -1208,26 +1203,19 @@ void flameblast_render(int *obj) {
     vec[2] = lbl_803E3618;
     fn_80098B18((int)obj, f, 2, 0, 0, (int)vec);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* 16b chained patterns. */
 #pragma scheduling off
-#pragma peephole off
 void objSetAnimSpeedTo1(int *obj) { u8 v = 0x1; *((u8*)((int**)obj)[0xb8/4] + 0x10) = v; }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E35E8;
 extern void objRenderFn_8003b8f4(int *obj, int a, int b, int c, int d, f32 scale);
 extern f32 lbl_803E3600;
-#pragma scheduling off
-#pragma peephole off
 void invhit_render(int *obj, int a, int b, int c, int d) { objRenderFn_8003b8f4(obj, a, b, c, d, lbl_803E35E8); }
 void iceblast_render(int *obj, int a, int b, int c, int d) { objRenderFn_8003b8f4(obj, a, b, c, d, lbl_803E3600); }
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -1248,12 +1236,10 @@ void invhit_free(int obj) {
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void iceblast_init(int obj, s16 *p) {
     *(f32 *)((GameObject *)obj)->extra = (f32)*(s16 *)((char *)p + 0x1a);
     ObjHits_SetTargetMask(obj, 1);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern void warpToMap(int mapId, int flag);

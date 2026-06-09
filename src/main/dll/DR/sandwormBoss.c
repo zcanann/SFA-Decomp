@@ -3914,16 +3914,12 @@ void cfprisonguard_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
-#pragma peephole off
 void spiritdoorspirit_free(int x) { ObjGroup_RemoveObject(x, 0x4e); }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* if (o->_X == K) return A; else return B; */
 #pragma peephole off
-#pragma scheduling off
 int cfprisoncage_getObjectTypeId(int *obj) { if (((GameObject *)obj)->anim.seqId == 0x128) return 0x8; return 0x0; }
-#pragma scheduling reset
 #pragma peephole reset
 
 /* chained byte bit-extract. */
@@ -4290,7 +4286,6 @@ void cfguardian_hitDetect(int *obj) {
 }
 
 #pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 int *findRomCurvePointNearObject(int *obj, int p2, int *outVec, int p4) {
     int *result = NULL;
@@ -4322,7 +4317,6 @@ int *findRomCurvePointNearObject(int *obj, int p2, int *outVec, int p4) {
     return result;
 }
 #pragma dont_inline reset
-#pragma peephole reset
 #pragma scheduling reset
 
 extern void fn_8019D9F0(int *obj);

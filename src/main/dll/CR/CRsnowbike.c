@@ -747,7 +747,6 @@ void sc_musictree_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
 extern void gameTimerStop(void);
 extern void disableHeavyFog(void);
 extern void Music_Trigger(int track, int param);
-#pragma scheduling off
 void sc_levelcontrol_free(int obj) {
     gameTimerStop();
     disableHeavyFog();
@@ -757,7 +756,6 @@ void sc_levelcontrol_free(int obj) {
     Music_Trigger(34, 0);
     Music_Trigger(199, 0);
 }
-#pragma scheduling reset
 
 extern void GameBit_Set(int bit, int val);
 extern int GameBit_Get(int bit);

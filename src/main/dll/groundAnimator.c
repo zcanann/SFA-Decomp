@@ -281,13 +281,11 @@ int wm_column_getObjectTypeId(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-#pragma peephole off
 void wm_column_free(int obj)
 {
   ObjGroup_RemoveObject(obj, 4);
   (*(GroundAnimatorFreeFn *)(*gCarryableInterface + 0x10))(obj);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -304,14 +302,12 @@ void wm_column_free(int obj)
  * PAL Size: TODO
  */
 #pragma scheduling off
-#pragma peephole off
 void wm_column_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
   if ((*(GroundAnimatorVisibleFn *)(*gCarryableInterface + 0xc))(param_1, visible) != 0) {
     objRenderFn_8003b8f4(param_1, param_2, param_3, param_4, param_5, lbl_803E37B8);
   }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -1086,7 +1082,6 @@ int appleontree_getExtraSize(void) { return 0x64; }
 /* Pattern wrappers. */
 u8 appleontree_modelMtxFn(int *obj) { return ((AppleOnTreeState *)((int **)obj)[0xb8/4])->unk3A; }
 
-#pragma scheduling off
 #pragma peephole off
 void appleontree_free(int *obj) {
     (*gExpgfxInterface)->freeSource((u32)obj);
@@ -1098,7 +1093,6 @@ void appleontree_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 /* v1.0 ground-animator drop physics (drift twins of FUN_8017db40/FUN_8017e15c/FUN_8017e3c0). */
 extern f32 timeDelta;

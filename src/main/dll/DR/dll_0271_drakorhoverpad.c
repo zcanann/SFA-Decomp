@@ -720,63 +720,43 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void *out) {
 #pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int drakorhoverpad_setScale(int obj) {
     u8 *p = ((GameObject *)obj)->extra;
     return (p[0x179] >> 2) & 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 int drakorhoverpad_render2(int obj) {
     u8 *p = ((GameObject *)obj)->extra;
     return ((p[0x179] >> 2) & 1) == 0;
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void drakorhoverpad_func12(int obj, f32 *a, int *b) {
     *a = lbl_803E6A3C;
     *b = 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void drakorhoverpad_modelMtxFn(int obj, f32 *a, f32 *b, f32 *c) {
     *a = ((GameObject *)obj)->anim.localPosX;
     *b = lbl_803E6A40 + ((GameObject *)obj)->anim.localPosY;
     *c = ((GameObject *)obj)->anim.localPosZ;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 f32 drakorhoverpad_func13(int obj, f32 *out) {
     *out = lbl_803E6A44;
     return lbl_803E6A3C;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void drakorhoverpad_free(int obj) {
     ObjGroup_RemoveObject(obj, 0x46);
     ObjGroup_RemoveObject(obj, 0xa);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void drakorhoverpad_func17(int obj, int sel, int *out) {
     switch (sel) {
     case 2:
@@ -790,11 +770,8 @@ void drakorhoverpad_func17(int obj, int sel, int *out) {
         break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void drakorhoverpad_func0F(int obj, f32 *ox, f32 *oy, f32 *oz) {
     ObjPosParams pos;
     f32 mtx[16];
@@ -812,10 +789,8 @@ void drakorhoverpad_func0F(int obj, f32 *ox, f32 *oy, f32 *oz) {
     setMatrixFromObjectPos(mtx, &pos);
     Matrix_TransformPoint(mtx, lbl_803E6A3C, lbl_803DC300, lbl_803DC304, ox, oy, oz);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 void drakorhoverpad_resetPendingMotion(int obj) {
     char *p = ((GameObject *)obj)->extra;
@@ -825,10 +800,8 @@ void drakorhoverpad_resetPendingMotion(int obj) {
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void drakorhoverpad_func16(int obj, f32 scale) {
     f32 *mtx;
     ObjPosParams pos;
@@ -844,5 +817,4 @@ void drakorhoverpad_func16(int obj, f32 scale) {
     mtx44_mult(lbl_803AD1C8, mtx, lbl_803AD1C8);
     fn_8003B950(lbl_803AD1C8);
 }
-#pragma peephole reset
 #pragma scheduling reset

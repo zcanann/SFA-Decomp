@@ -4,7 +4,6 @@
 
 extern void OSReport(const char *fmt, ...);
 #pragma scheduling off
-#pragma peephole off
 int projdummy_doUnsupported(void) { OSReport(sProjdummyDoNoLongerSupported); return PROJECTILE_UNSUPPORTED_RETURN; }
 void projdummy_release(void) {}
 void projdummy_initialise(void) {}
@@ -48,5 +47,4 @@ void projlightning7_initialise(void) {}
 int projlightning6_doUnsupported(void) { OSReport(sProjlightning6DoNoLongerSupported); return PROJECTILE_UNSUPPORTED_RETURN; }
 void projlightning6_release(void) {}
 void projlightning6_initialise(void) {}
-#pragma peephole reset
 #pragma scheduling reset

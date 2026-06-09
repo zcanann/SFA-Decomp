@@ -89,7 +89,6 @@ extern void Sfx_StopObjectChannel(int obj, int channel);
 extern f32 lbl_803E6100;
 
 #pragma scheduling off
-#pragma peephole off
 void vfpblock1_update(int obj)
 {
     int player = (int)Obj_GetPlayerObject();
@@ -104,7 +103,6 @@ void vfpblock1_update(int obj)
         }
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -1125,7 +1123,6 @@ void spellStoneUseFn_801fd270(int obj) {
 extern ModgfxInterface **gModgfxInterface;
 extern void *lbl_803DDCC0;
 #pragma scheduling off
-#pragma peephole off
 void vfpdraghead_free(int obj) {
     (*gExpgfxInterface)->freeSource2((u32)obj);
     (*gModgfxInterface)->freeSourceEffects((void *)obj);
@@ -1134,7 +1131,6 @@ void vfpdraghead_free(int obj) {
     }
     lbl_803DDCC0 = NULL;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern f32 lbl_803E6138;
@@ -1215,12 +1211,8 @@ void vfpplatform_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E611C;
 extern f32 lbl_803E6140;
-#pragma scheduling off
-#pragma peephole off
 void vfpdoorswitch_render(void) { objRenderFn_8003b8f4(lbl_803E611C); }
 void vfpcoreplat_render(void) { objRenderFn_8003b8f4(lbl_803E6140); }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void vfpdoorswitch_updateExplodingVariant(int obj);
@@ -1319,7 +1311,6 @@ void dll_224_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (vi
 
 
 #pragma scheduling off
-#pragma peephole off
 void seqpoint_update(int *obj)
 {
     void *player = Obj_GetPlayerObject();
@@ -1381,7 +1372,6 @@ void seqpoint_update(int *obj)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 extern EffectInterface **gPartfxInterface;
 extern void Obj_FreeObject(int *obj);

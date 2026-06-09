@@ -480,8 +480,6 @@ void FUN_801949ec(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 f32 objFn_801948c0(u8 *obj,u8 coord)
 {
   u8 *state;
@@ -505,8 +503,6 @@ f32 objFn_801948c0(u8 *obj,u8 coord)
   }
   return lbl_803E4000;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -871,12 +867,10 @@ void xyzanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s3
 #pragma peephole reset
 
 #pragma scheduling off
-#pragma peephole off
 void wallanimator_free(int obj) {
     ObjGroup_RemoveObject(obj, WALLANIMATOR_GROUP_PRIMARY);
     ObjGroup_RemoveObject(obj, WALLANIMATOR_GROUP_SECONDARY);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off

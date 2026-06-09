@@ -73,7 +73,6 @@ void DIMbosstonsil_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4
  * EN v1.0 Address: 0x801BEA3C
  * EN v1.0 Size: 56b
  */
-#pragma peephole off
 #pragma scheduling off
 void DIMbosstonsil_hitDetect(void *obj)
 {
@@ -81,7 +80,6 @@ void DIMbosstonsil_hitDetect(void *obj)
         obj,((GameObject *)obj)->extra,&lbl_803DDBB0);
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--

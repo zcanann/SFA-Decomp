@@ -1105,7 +1105,6 @@ void Link_func0F(void)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void Link_copy(u8 *srcArg) {
     LinkMenuItem *dst;
     LinkMenuItem *src;
@@ -1132,7 +1131,6 @@ void Link_copy(u8 *srcArg) {
         src++;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off

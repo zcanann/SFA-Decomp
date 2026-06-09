@@ -123,13 +123,11 @@ void arwarwinggu_update(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma scheduling off
 void fn_8022F270(int obj, int p2)
 {
     ArwingGuState *state = ((GameObject *)obj)->extra;
     state->texture.textureFrame = p2;
 }
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off

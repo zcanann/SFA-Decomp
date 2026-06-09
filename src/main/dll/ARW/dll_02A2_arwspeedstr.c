@@ -80,14 +80,12 @@ void arwspeedstr_update(int obj) {
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma scheduling off
 void fn_80231058(int obj, int src)
 {
     ((GameObject *)obj)->anim.velocityX = *(f32 *)(src + 0x0);
     ((GameObject *)obj)->anim.velocityY = *(f32 *)(src + 0x4);
     ((GameObject *)obj)->anim.velocityZ = *(f32 *)(src + 0x8);
 }
-#pragma scheduling reset
 
 #pragma scheduling off
 void fn_80231028(int obj, int v)

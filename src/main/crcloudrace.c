@@ -150,7 +150,6 @@ int crcloudrace_completionCallback(int obj, int arg2, u8 *data) {
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void crcloudrace_updateCompletionState(int obj, CrCloudRaceState *state) {
     f32 dist;
@@ -179,7 +178,6 @@ void crcloudrace_updateCompletionState(int obj, CrCloudRaceState *state) {
     }
 }
 #pragma dont_inline reset
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off

@@ -736,25 +736,20 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 /*
  * Empty stub.
  */
 void DIMSnowHorn1_func21(void) {}
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 /*
  * Returns 0.
  */
 int DIMSnowHorn1_func20(void) { return 0; }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 /*
  * Returns floored neg-velocity-Y in *out, or a constant if mode != 10;
  * also returns f1 = constant.
@@ -769,11 +764,9 @@ f32 DIMSnowHorn1_func19(int obj, f32 *out)
     }
     return lbl_803E8234;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 /*
  * Sets *out_f = 0.0f, *out_i = 0.
  */
@@ -783,7 +776,6 @@ void DIMSnowHorn1_func18(void *unused, f32 *out_f, int *out_i)
     *out_f = lbl_803E8234;
     *out_i = 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -800,16 +792,13 @@ void DIMSnowHorn1_func17(int obj, int value)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 /*
  * Returns 0.
  */
 int DIMSnowHorn1_func16(void) { return 0; }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void DIMSnowHorn1_func15(s16 *packed, undefined4 outX, undefined4 outY, undefined4 outZ)
 {
@@ -838,10 +827,8 @@ void DIMSnowHorn1_func15(s16 *packed, undefined4 outX, undefined4 outY, undefine
     Matrix_TransformPoint(lbl_803E8234, lbl_803E8298, lbl_803E829C, matrix, outX, outY, outZ);
 }
 #pragma dont_inline reset
-#pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 /*
  * Returns 2 if state->[0xa8f] != 0, else 1.
@@ -854,7 +841,6 @@ int DIMSnowHorn1_func14(int obj)
     return 1;
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -876,7 +862,6 @@ int DIMSnowHorn1_render2(int obj)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 /*
  * Read 3 floats from state into the 3 output pointers.
  */
@@ -887,10 +872,8 @@ void DIMSnowHorn1_modelMtxFn(int obj, f32 *out_x, f32 *out_y, f32 *out_z)
     *out_y = state->unk9EC;
     *out_z = state->unk9F0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 /*
  * Returns 1 if state->[0xa90] != 0, else 2.
@@ -903,7 +886,6 @@ int DIMSnowHorn1_func11(int obj)
     return 2;
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -982,7 +964,6 @@ int DIMSnowHorn1_animEventCallback(int obj, undefined4 unused, int setup)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void DIMSnowHorn1_func22(int obj, f32 scale)
 {
@@ -1015,7 +996,6 @@ void DIMSnowHorn1_func22(int obj, f32 scale)
     fn_8003B950(lbl_803DB0F0);
 }
 #pragma dont_inline reset
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -1112,25 +1092,20 @@ void fn_802BB998(int obj, int pointState, int inputState)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 /*
  * Returns 0xd0c.
  */
 int DIMSnowHorn1_getExtraSize(void) { return 0xd0c; }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 /*
  * Returns 0x43.
  */
 int DIMSnowHorn1_getObjectTypeId(void) { return 0x43; }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 /*
  * Wrapper for ObjGroup_RemoveObject(obj, 0xa).
  */
@@ -1138,7 +1113,6 @@ void DIMSnowHorn1_free(int obj)
 {
     ObjGroup_RemoveObject(obj, 0xa);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -1426,7 +1400,6 @@ void DIMSnowHorn1_update(int obj)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void DIMSnowHorn1_release(void)
 {
     void **p = &gDIMSnowHorn1Texture;
@@ -1436,11 +1409,9 @@ void DIMSnowHorn1_release(void)
     }
     *p = NULL;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void DIMSnowHorn1_initialise(void)
 {
     s16 *src = &gDIMSnowHorn1TextureId;
@@ -1460,7 +1431,6 @@ void DIMSnowHorn1_initialise(void)
     *(void * *)&gDIMSnowHorn1DefaultStateHandler = (void *)DIMSnowHorn1_defaultStateHandler;
     *dst = (void *)textureLoad(*src, 0);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off

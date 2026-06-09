@@ -883,7 +883,6 @@ s16 cMenuGetSelectedItem(void)
  * argument equals the active id at lbl_803DD8C2, clear the busy flag
  * lbl_803DD8B8 and return 1; else return 0. */
 #pragma scheduling off
-#pragma peephole off
 int GameUI_isItemBeingUsed(s32 id)
 {
     if (id == lbl_803DD8C2) {
@@ -892,7 +891,6 @@ int GameUI_isItemBeingUsed(s32 id)
     }
     return 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* EN v1.0 0x8012EBF4  size: 32b  Sign-of-active-id predicate. Returns 1
@@ -909,7 +907,6 @@ int GameUI_isAnyItemBeingUsed(void)
  * for the active id at lbl_803DD8C2. On hit, clears the busy flag at
  * lbl_803DD8B8 and returns the matched value; on miss returns -1. */
 #pragma scheduling off
-#pragma peephole off
 s32 GameUI_isOneOfItemsBeingUsed(s32* arr, int count)
 {
     int i;
@@ -921,7 +918,6 @@ s32 GameUI_isOneOfItemsBeingUsed(s32* arr, int count)
     }
     return -1;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern u8  lbl_803DD7B9;
@@ -932,13 +928,11 @@ extern s8  shouldCloseCMenu;
 /* EN v1.0 0x8012EF30  size: 16b  Latch helper: set busy byte
  * lbl_803DD7B9 and stash s16 arg in lbl_803DD88C. */
 #pragma scheduling off
-#pragma peephole off
 void showHelpText(s16 val)
 {
     lbl_803DD7B9 = 1;
     lbl_803DD88C = val;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* EN v1.0 0x8012FB88  size: 8b  u8 setter for lbl_803DBA72. */
@@ -985,7 +979,6 @@ extern u8 lbl_8031B5D8[];
 
 #pragma dont_inline on
 #pragma scheduling off
-#pragma peephole off
 void fn_8012F9B4(int idx, s16 target, s8 flag)
 {
     void *entry = &lbl_8031B5D8[idx * 16];
@@ -1006,7 +999,6 @@ void fn_8012F9B4(int idx, s16 target, s8 flag)
         }
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off

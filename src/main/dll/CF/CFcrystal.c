@@ -344,7 +344,6 @@ extern void *getTrickyObject(void);
 extern void trickyImpress(void *trickyObj);
 
 #pragma scheduling off
-#pragma peephole off
 void FireFlyLantern_free(int obj) {
     void *tricky = getTrickyObject();
     if (tricky != NULL) {
@@ -352,16 +351,11 @@ void FireFlyLantern_free(int obj) {
     }
     ObjGroup_RemoveObject(obj, 15);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E3AF0;
-#pragma scheduling off
-#pragma peephole off
 void FireFlyLantern_render(void) { objRenderFn_8003b8f4(lbl_803E3AF0); }
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off

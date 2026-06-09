@@ -61,7 +61,6 @@ void softbody_initialise(void)
 }
 #pragma scheduling reset
 
-#pragma peephole off
 #pragma scheduling off
 void softbody_update(int obj)
 {
@@ -89,4 +88,3 @@ void softbody_update(int obj)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset

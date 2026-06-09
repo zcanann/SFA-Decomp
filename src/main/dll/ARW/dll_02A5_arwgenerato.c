@@ -14,7 +14,6 @@ void arwgenerato_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7150);
 }
 
-#pragma peephole off
 #pragma scheduling off
 void arwgenerato_init(int obj, int setup)
 {
@@ -24,13 +23,11 @@ void arwgenerato_init(int obj, int setup)
     state->spawnTimer = (f32)(u32)mapData->spawnInterval;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 void arwgenerato_release(void) {}
 
 void arwgenerato_initialise(void) {}
 
-#pragma peephole off
 #pragma scheduling off
 void arwgenerato_update(int obj)
 {
@@ -55,4 +52,3 @@ void arwgenerato_update(int obj)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset

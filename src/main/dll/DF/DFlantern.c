@@ -401,7 +401,6 @@ int dfsh_shrine_getObjectTypeId(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-#pragma peephole off
 void dfsh_shrine_free(int obj)
 {
   void **state;
@@ -419,5 +418,4 @@ void dfsh_shrine_free(int obj)
   GameBit_Set(0xefa,0);
   GameBit_Set(0xcbb,1);
 }
-#pragma peephole reset
 #pragma scheduling reset

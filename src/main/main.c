@@ -1296,9 +1296,7 @@ int dbegg_getObjectTypeId(void) { return 0x8; }
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
-#pragma peephole off
 void dbegg_free(int x) { ObjGroup_RemoveObject(x, 0x24); }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* plain forwarder. */
@@ -1308,9 +1306,7 @@ void VFP_lavapool_update(int obj) { fn_801FD6B4(obj); }
 /* fn_X(lbl); lbl = 0; */
 extern void *lbl_803DDCD8;
 #pragma scheduling off
-#pragma peephole off
 void vfplavastar_release(void) { Resource_Release(lbl_803DDCD8); lbl_803DDCD8 = NULL; }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* dll_224_hitDetect: render iff obj->field_0x74 set. */
@@ -1437,7 +1433,6 @@ void dbegg_setupFromDef(int obj, u8 *state) {
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int dbegg_func0B(int obj, f32 *v) {
     char *inner = ((GameObject *)obj)->extra;
     if (*(u8 *)(inner + 0x118) == 0xb) {
@@ -1448,25 +1443,20 @@ int dbegg_func0B(int obj, f32 *v) {
     }
     return 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void vfplavastar_initialise(void) {
     lbl_803DDCD8 = NULL;
     lbl_803DDCD8 = Resource_Acquire(0xa6, 1);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void vfplavastar_free(int obj) {
     (*gExpgfxInterface)->freeSource2((u32)obj);
     (*gModgfxInterface)->freeSourceEffects((void *)obj);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern void fn_8003B608(int r, int g, int b);
@@ -1528,7 +1518,6 @@ extern f32 lbl_803E6218;
 extern f32 lbl_803E621C;
 
 #pragma scheduling off
-#pragma peephole off
 void dbegg_hitDetect(int obj) {
     u8 *state;
     int hit;
@@ -1555,7 +1544,6 @@ void dbegg_hitDetect(int obj) {
     ((GameObject *)obj)->anim.previousLocalPosY = ((GameObject *)obj)->anim.localPosY;
     ((GameObject *)obj)->anim.previousLocalPosZ = ((GameObject *)obj)->anim.localPosZ;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* ==== v1.0 recovered functions (drift additions) ==== */
@@ -1926,7 +1914,6 @@ int fn_801FE560(int obj, f32 *out, f32 a, f32 b, int flag) {
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void fn_801FE774(int cam, f32 *vel) {
     f32 limit;
     f32 force;
@@ -1977,5 +1964,4 @@ void fn_801FE774(int cam, f32 *vel) {
         }
     }
 }
-#pragma peephole reset
 #pragma scheduling reset

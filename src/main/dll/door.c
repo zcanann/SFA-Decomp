@@ -41,7 +41,6 @@ extern f32 lbl_803E6490;
  * PAL Size: TODO
  */
 #pragma scheduling off
-#pragma peephole off
 void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject *obj,
                                            DfpTargetBlockCollisionPoints *collisionPoints)
 {
@@ -84,7 +83,6 @@ void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject *obj,
     i++;
   }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -153,8 +151,6 @@ void dfptargetblock_free(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void dfptargetblock_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
   DfpTargetBlockAudioState *state;
@@ -168,5 +164,3 @@ void dfptargetblock_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     return;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset

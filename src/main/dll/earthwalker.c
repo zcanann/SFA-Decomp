@@ -368,7 +368,6 @@ int fn_80223C34(int obj, int ai)
 #pragma peephole reset
 
 #pragma peephole off
-#pragma scheduling off
 int fn_80223CF0(int obj, int ai)
 {
     if (*(s8 *)(ai + 0x27a) != 0) {
@@ -376,7 +375,6 @@ int fn_80223CF0(int obj, int ai)
     }
     return 0;
 }
-#pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole off

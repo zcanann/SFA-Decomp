@@ -10,7 +10,6 @@ extern void GameBit_Set(int eventId, int value);
  * EN v1.0 Address: 0x801D8060
  */
 #pragma scheduling off
-#pragma peephole off
 void SCGameBitLatch_UpdateInverted(SCGameBitLatchState *state, int mask, s16 clearIfSetBit,
                                    s16 clearIfClearBit, s16 latchBit, int musicId)
 {
@@ -18,5 +17,4 @@ void SCGameBitLatch_UpdateInverted(SCGameBitLatchState *state, int mask, s16 cle
     SCGameBitLatch_Update(state, mask, clearIfSetBit, clearIfClearBit, latchBit, musicId);
     GameBit_Set(latchBit, !GameBit_Get(latchBit));
 }
-#pragma peephole reset
 #pragma scheduling reset

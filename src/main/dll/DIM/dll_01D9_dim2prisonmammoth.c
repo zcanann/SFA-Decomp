@@ -587,7 +587,6 @@ void dim2prisonmammoth_render(int obj, int p2, int p3, int p4, int p5, s8 visibl
 
 void dim2prisonmammoth_hitDetect(void) {}
 
-#pragma scheduling off
 #pragma peephole off
 int dim2prisonmammoth_stateHandler00(int* obj) {
     int* sub = *(int**)&((GameObject *)obj)->anim.placementData;
@@ -603,25 +602,17 @@ int dim2prisonmammoth_stateHandler00(int* obj) {
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void dim2prisonmammoth_release(void) {}
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void fn_802BC788(int a, int b)
 {
     playerTailFn_80026b3c((int *)b, *(int *)b, *(int *)(*(int *)((char *)a + 0xb8) + 0x14f8), 0);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void dim2prisonmammoth_initialise(void)
 {
     ((void **)gDim2PrisonMammothStateHandlers)[0] = (void *)dim2prisonmammoth_stateHandler00;
@@ -630,7 +621,6 @@ void dim2prisonmammoth_initialise(void)
     ((void **)gDim2PrisonMammothStateHandlers)[3] = (void *)dim2prisonmammoth_stateHandler03;
     gDim2PrisonMammothDefaultStateHandler = (void *)dim2prisonmammoth_defaultStateHandler;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off

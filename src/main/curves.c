@@ -337,17 +337,12 @@ void curvesMove(Curve *curve)
 #pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 f32 Curve_EvalLinear(f32 t, f32* values)
 {
     return t * (values[1] - values[0]) + values[0];
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 f32 Curve_EvalCatmullRom(f32 t, f32* values, f32* outTangent)
 {
     f32 a = values[3] + (lbl_803DE668 * values[2] + (-values[0] + lbl_803DE664 * values[1]));
@@ -360,11 +355,9 @@ f32 Curve_EvalCatmullRom(f32 t, f32* values, f32* outTangent)
     }
     return lbl_803DE678 * (t * (t * (a * t + b) + c) + d);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 f32 Curve_EvalBezier(f32 t, f32* values, f32* outTangent)
 {
     f32 a = values[3] + (lbl_803DE668 * values[2] + (-values[0] + lbl_803DE664 * values[1]));
@@ -377,11 +370,9 @@ f32 Curve_EvalBezier(f32 t, f32* values, f32* outTangent)
     }
     return t * (t * (a * t + b) + c) + values[0];
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void Curve_BuildHermiteCoeffs(f32* values, f32* coefficients)
 {
     f32 k698 = lbl_803DE698;
@@ -393,11 +384,9 @@ void Curve_BuildHermiteCoeffs(f32* values, f32* coefficients)
     coefficients[2] = values[2];
     coefficients[3] = values[0];
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 f32 Curve_EvalHermite(f32 t, f32* values, f32* outTangent)
 {
     f32 p3 = values[3];
@@ -414,11 +403,9 @@ f32 Curve_EvalHermite(f32 t, f32* values, f32* outTangent)
     }
     return t * (t * (a * t + b) + tangent1) + p0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void Curve_BuildBSplineCoeffs(f32* values, f32* coefficients)
 {
     f32 k668 = lbl_803DE668;
@@ -435,11 +422,9 @@ void Curve_BuildBSplineCoeffs(f32* values, f32* coefficients)
     coefficients[2] *= scale;
     coefficients[3] *= scale;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 f32 Curve_EvalBSpline(f32 t, f32* values, f32* outTangent)
 {
     f32 a = values[3] + (lbl_803DE668 * values[2] + (-values[0] + lbl_803DE664 * values[1]));
@@ -454,11 +439,9 @@ f32 Curve_EvalBSpline(f32 t, f32* values, f32* outTangent)
     }
     return lbl_803DE670 * (t * (t * (a * t + b) + c) + d);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void CurveHeap_SiftDown(CurveHeapNode* heap, s32 count, s32 index)
 {
@@ -485,5 +468,4 @@ void CurveHeap_SiftDown(CurveHeapNode* heap, s32 count, s32 index)
     heap[index].value = value;
 }
 #pragma dont_inline reset
-#pragma peephole reset
 #pragma scheduling reset

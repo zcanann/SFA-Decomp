@@ -4275,7 +4275,6 @@ int trickySelectQueuedCommandTarget(u8* state, int commandType)
 /* EN v1.0 0x80134388  size: 68b  Acquire two buffers and prime the
  * float at lbl_803DD968. */
 #pragma scheduling off
-#pragma peephole off
 void Credits_initialise(void)
 {
     lbl_803DD974 = textureLoadAsset(0xC5);
@@ -4283,7 +4282,6 @@ void Credits_initialise(void)
     lbl_803DD970 = 0;
     lbl_803DD968 = lbl_803E22A8;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* EN v1.0 0x80138F14  size: 100b  GameBit-gated bit toggle on
@@ -4333,7 +4331,6 @@ extern int   vsprintf(char *s, const char *format, va_list arg);
  * acquires three sized buffers (605/1/2 bytes) and primes the
  * debugLogEnd cursor to the start of the 0x1100-byte arena. */
 #pragma scheduling off
-#pragma peephole off
 void fn_80137998(void)
 {
     getScreenResolution();
@@ -4346,7 +4343,6 @@ void fn_80137998(void)
     lbl_803DDA1C = textureLoadAsset(2);
     debugLogEnd = debugLogBuffer;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* EN v1.0 0x80137520  size: 128b  Emit a SetColor record (tag 0x81 +
@@ -4521,7 +4517,6 @@ void fn_80133718(void)
 #pragma scheduling reset
 
 /* Variadic debug logger: append formatted text while the debug arena has room. */
-#pragma peephole off
 #pragma scheduling off
 void debugPrintf(char *fmt, ...)
 {
@@ -4532,7 +4527,6 @@ void debugPrintf(char *fmt, ...)
         vsprintf(debugLogEnd, fmt, args);
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* Variadic debug-print sink: retail keeps only the ABI varargs spill frame. */
@@ -4566,7 +4560,6 @@ void Minimap_release(void)
  * matrix at lbl_803A9FE4 and derive the three normalized cursor
  * positions from the supplied (a, b) coordinates. */
 #pragma scheduling off
-#pragma peephole off
 void titleScreenPositionElements(f32 a, f32 b)
 {
     PSMTXTrans(lbl_803A9FE4, a, b, lbl_803E22F8);
@@ -4574,7 +4567,6 @@ void titleScreenPositionElements(f32 a, f32 b)
     lbl_803DD9B4 = (a - lbl_803E234C) / lbl_803E2350;
     lbl_803DD9B0 = lbl_803E2318 - lbl_803DD9C8;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern void* lbl_803DD960;
@@ -4584,13 +4576,11 @@ extern f32   lbl_803E2408;
 /* EN v1.0 0x80133F40  size: 48b  Acquire a 0xBE5-byte buffer via
  * textureLoadAsset into lbl_803DD940; reset frame counter at lbl_803DD938. */
 #pragma scheduling off
-#pragma peephole off
 void Minimap_initialise(void)
 {
     lbl_803DD940 = textureLoadAsset(0xBE5);
     lbl_803DD938 = 340;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* EN v1.0 0x8013404C  size: 36b  Release the buffer at lbl_803DD960
@@ -4603,12 +4593,10 @@ void dll_3F_release(void)
 /* EN v1.0 0x80134070  size: 40b  Acquire 0x47A-byte buffer into
  * lbl_803DD960. */
 #pragma scheduling off
-#pragma peephole off
 void dll_3F_initialise(void)
 {
     lbl_803DD960 = textureLoadAsset(0x47A);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* EN v1.0 0x80134364  size: 36b  Release lbl_803DD974 buffer. */
@@ -4690,20 +4678,17 @@ int WarpstoneUI_frameStart(void)
 /* EN v1.0 0x80134834  size: 60b  Acquire two buffer slots and prime
  * the float at lbl_803DD97C with the constant from lbl_803E22E0. */
 #pragma scheduling off
-#pragma peephole off
 void WarpstoneUI_initialise(void)
 {
     lbl_803DD984 = textureLoadAsset(0x4FA);
     lbl_803DD980 = textureLoadAsset(0x5E3);
     lbl_803DD97C = lbl_803E22E0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* EN v1.0 0x80134BC4  size: 32b  Reset the per-frame state group:
  * latch lbl_803DD993 = 1 and zero five halfword/byte counters. */
 #pragma scheduling off
-#pragma peephole off
 void creditsStart(void)
 {
     lbl_803DD993 = 1;
@@ -4713,7 +4698,6 @@ void creditsStart(void)
     lbl_803DD998 = 0;
     lbl_803DD9AA = 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* EN v1.0 0x80134BE8  size: 60b  Predicate. Returns 1 when the value
@@ -4772,14 +4756,12 @@ void fn_80138908(int *obj, u8 v) {
 /* EN v1.0 0x80135BF0  size: 60b  titlescreen_free: if obj->_46 == 0x77d,
  * trigger Music_Trigger(0x3a, 0) and clear lbl_803DD993. */
 extern void Music_Trigger(s32 triggerId, s32 mode);
-#pragma peephole off
 void titlescreen_free(u8* obj) {
     if (((GameObject *)obj)->anim.seqId == 0x77d) {
         Music_Trigger(0x3a, 0);
         lbl_803DD993 = 0;
     }
 }
-#pragma peephole reset
 
 /* EN v1.0 0x801388D0  size: 56b  Stash 4 args to four globals and resume
  * the thread at &lbl_803AB118. */
@@ -4823,7 +4805,6 @@ extern void OSCreateThread(u8 *thread, void *entry, void *arg, void *stack_top, 
 extern void fn_80137DF8(void);
 extern u8 lbl_803AB428[];
 #pragma scheduling off
-#pragma peephole off
 void fn_80137D28(void)
 {
   OSSetErrorHandler(0, (void *)fn_801388D0);
@@ -4836,11 +4817,9 @@ void fn_80137D28(void)
   OSSetErrorHandler(5, (void *)fn_801388D0);
   OSCreateThread(lbl_803AB118, (void *)fn_80137DF8, 0, lbl_803AB428 + 4096, 4096, 0, 1);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int trickyFindNearestUsableBaddie(int p1, int p2, f32 maxRadius)
 {
   extern int dll_19_func1B(int);
@@ -4917,7 +4896,6 @@ int trickyFindNearestUsableBaddie(int p1, int p2, f32 maxRadius)
   }
   return closest;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -5941,7 +5919,6 @@ extern f32 lbl_803E239C;
 extern f32 lbl_803E23A0;
 extern f32 lbl_803E23A4;
 
-#pragma peephole off
 int fn_80136A40(int p1, int c)
 {
     u8 *tbl;
@@ -5999,7 +5976,6 @@ int fn_80136A40(int p1, int c)
     }
     return c;
 }
-#pragma peephole reset
 
 extern int getButtonsHeld(int p);
 extern int getButtonsJustPressed(int p);

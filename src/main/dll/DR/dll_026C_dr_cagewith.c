@@ -116,14 +116,10 @@ void drcagewith_hitDetect(int obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int drcagewith_setScale(int obj) {
     u8 *p = ((GameObject *)obj)->extra;
     return p[0x30];
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -143,7 +139,6 @@ void drcagewith_free(int obj, int arg) {
 #pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 int drcagewith_toggleRopeStateCallback(int obj, int unused, u8 *arg) {
     char *p = ((GameObject *)obj)->extra;
@@ -156,7 +151,6 @@ int drcagewith_toggleRopeStateCallback(int obj, int unused, u8 *arg) {
     return 0;
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off

@@ -218,7 +218,6 @@ u8 hwGetTimeOffset(void)
     return salTimeOffset;
 }
 
-#pragma peephole off
 u32 hwIsActive(u32 slot)
 {
     u8 *entry;
@@ -230,7 +229,6 @@ u32 hwIsActive(u32 slot)
     active = entry[0xec];
     return active != 0;
 }
-#pragma peephole reset
 
 void hwSetMesgCallback(u32 value)
 {

@@ -365,7 +365,6 @@ extern f32 lbl_803E5E90;
  * EN v1.0 Size: 656b
  */
 #pragma scheduling off
-#pragma peephole off
 void wmlevelcontrol_init(int obj)
 {
     f32 *state;
@@ -433,7 +432,6 @@ void wmlevelcontrol_init(int obj)
         break;
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern void Obj_SetModelRenderOpAlpha(int obj, int alpha);
@@ -554,16 +552,12 @@ int wmgeneralscales_getExtraSize(void) { return 0x8; }
 int wmgeneralscales_getObjectTypeId(void) { return 0x9; }
 
 #pragma scheduling off
-#pragma peephole off
 void wmgeneralscales_free(int *obj) { int *p = (int*)obj[0xc8/4]; if (p != NULL) ObjLink_DetachChild(obj, p); }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern void FireFlyFn_801f4f88(int *obj);
 #pragma scheduling off
-#pragma peephole off
 int fn_801F4C04(int *obj) { FireFlyFn_801f4f88(obj); return 0; }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern f32 lbl_803E5EA4;

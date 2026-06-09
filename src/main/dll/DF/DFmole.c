@@ -11,7 +11,6 @@ extern void mm_free(void *p);
  * EN v1.0 Address: 0x801C1EAC
  * EN v1.0 Size: 176b
  */
-#pragma peephole off
 #pragma scheduling off
 void dfropenode_free(void *obj)
 {
@@ -36,4 +35,3 @@ void dfropenode_free(void *obj)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset

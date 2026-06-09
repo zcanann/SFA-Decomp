@@ -17,10 +17,6 @@ void vfpblock1_render(void) {}
 
 void vfpblock1_hitDetect(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void vfpblock1_free(int obj) {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
-#pragma scheduling reset
-#pragma peephole reset

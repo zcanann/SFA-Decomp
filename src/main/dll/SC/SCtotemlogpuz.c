@@ -49,7 +49,6 @@ int SH_LevelControl_SeqFn(void *obj, void *unused, void *p3)
  * EN v1.0 Address: 0x801D7C94
  * EN v1.0 Size: 576b
  */
-#pragma peephole off
 #pragma scheduling off
 void mapUnloadFn_801d7c94(void *obj, void *p2)
 {
@@ -88,7 +87,6 @@ dec:
     runtime->eventCountdown--;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--

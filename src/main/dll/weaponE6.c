@@ -461,7 +461,6 @@ void fn_8013FBE4(int obj, register int state)
 #pragma peephole reset
 #pragma scheduling reset
 
-#pragma peephole off
 #pragma scheduling off
 void fn_8013FEC0(int obj, int state)
 {
@@ -490,5 +489,4 @@ void fn_8013FEC0(int obj, int state)
         }
     }
 }
-#pragma peephole reset
 #pragma scheduling reset

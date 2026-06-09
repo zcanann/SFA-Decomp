@@ -139,7 +139,6 @@ extern ModgfxInterface **gModgfxInterface;
 extern void *lbl_803DDBB8;
 extern void textureFree(void *tex);
 #pragma scheduling off
-#pragma peephole off
 void DFSH_LaserBeam_init(int *obj) {
     int *state = ((GameObject *)obj)->extra;
     (*gModgfxInterface)->detachSource(obj);
@@ -150,7 +149,6 @@ void DFSH_LaserBeam_init(int *obj) {
     }
     *(void **)state = NULL;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /*

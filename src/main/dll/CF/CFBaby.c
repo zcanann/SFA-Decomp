@@ -1835,9 +1835,7 @@ void decoration11a_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { 
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
-#pragma peephole off
 void flammablevine_free(int x) { ObjGroup_RemoveObject(x, 0x31); }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -2019,11 +2017,9 @@ checked_vine_use:
 #pragma scheduling reset
 
 /* Fall_Ladders_free: expgfx interface freeObject callback. */
-#pragma scheduling off
 void Fall_Ladders_free(int obj) {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
-#pragma scheduling reset
 
 /* coldwatercontrol_init: set float field + OR flag bits. */
 extern f32 lbl_803E3B68;
@@ -2064,7 +2060,6 @@ void coldwatercontrol_update(int obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 void coldwatercontrol_init(int obj) {
     int *p = ((int**)obj)[0xb8/4];
@@ -2072,7 +2067,6 @@ void coldwatercontrol_init(int obj) {
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x6000);
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 /* landed_arwing_free: free child object + detach link. */
 extern void Obj_FreeObject(int obj);
@@ -2656,19 +2650,16 @@ void dll_109_init(int obj, u8 *p) {
 
 #pragma dont_inline on
 #pragma scheduling off
-#pragma peephole off
 void decoration11a_expandBoundsWithVertex(f32 *vertex, f32 *maxOut, f32 *minOut) {
     f32 v;
     v = vertex[0]; if (v > maxOut[0]) maxOut[0] = v; else if (v < minOut[0]) minOut[0] = v;
     v = vertex[1]; if (v > maxOut[1]) maxOut[1] = v; else if (v < minOut[1]) minOut[1] = v;
     v = vertex[2]; if (v > maxOut[2]) maxOut[2] = v; else if (v < minOut[2]) minOut[2] = v;
 }
-#pragma peephole reset
 #pragma scheduling reset
 #pragma dont_inline reset
 
 #pragma scheduling off
-#pragma peephole off
 int InfoPoint_SeqFn(int obj, int unused, u8 *p3) {
     s16 *inner = ((GameObject *)obj)->extra;
     int i;
@@ -2681,14 +2672,11 @@ int InfoPoint_SeqFn(int obj, int unused, u8 *p3) {
     }
     return 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
 void dll_109_free(int obj) {
     (*(void (*)(int))(*(int *)(*gCarryableInterface + 0x10)))(obj);
 }
-#pragma scheduling reset
 
 extern f32 lbl_803E3B40;
 #pragma scheduling off

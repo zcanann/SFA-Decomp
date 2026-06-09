@@ -66,7 +66,6 @@ typedef struct KaldaChompMeState {
  * EN v1.0 Size: 556b
  */
 #pragma scheduling off
-#pragma peephole off
 void kaldachompme_setLinkedMouthMode(u8 *obj, u8 mode)
 {
     KaldaChompMeState *state;
@@ -136,7 +135,6 @@ void kaldachompme_setLinkedMouthMode(u8 *obj, u8 mode)
         }
     }
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 int kaldachompme_getExtraSize(void)
@@ -168,8 +166,6 @@ void kaldachompme_hitDetect(void)
 {
 }
 
-#pragma scheduling off
-#pragma peephole off
 void kaldachompme_update(int obj)
 {
   float target;
@@ -201,8 +197,6 @@ void kaldachompme_update(int obj)
   }
   ObjAnim_SetCurrentMove(obj,extra->moveId,extra->progress,0);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -516,16 +510,12 @@ int kaldachompspit_getExtraSize(void) { return 0x4; }
 int kaldachompspit_getObjectTypeId(void) { return 0x0; }
 
 extern void ModelLightStruct_free(void *p);
-#pragma scheduling off
-#pragma peephole off
 void kaldachompspit_free(int *obj) {
     void *p = *(void **)((GameObject *)obj)->extra;
     if (p != NULL) {
         ModelLightStruct_free(p);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off

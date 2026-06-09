@@ -123,10 +123,8 @@ void dfperchwitch_hitDetect(void) {}
 /* OSReport(string) wrappers. */
 extern void OSReport(const char *fmt, ...);
 #pragma scheduling off
-#pragma peephole off
 void dfperchwitch_update(void) { OSReport(sDfperchwitchInitNoLongerSupported); }
 void dfperchwitch_init(void) { OSReport(sDfperchwitchInitNoLongerSupported); }
-#pragma peephole reset
 #pragma scheduling reset
 
 void dfperchwitch_release(void) {}

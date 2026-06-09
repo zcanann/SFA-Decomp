@@ -115,22 +115,18 @@ void gf_levelcon_free(void)
 }
 #pragma scheduling reset
 
-#pragma scheduling off
 void gf_levelcon_update(int obj)
 {
     ((GameObject *)obj)->animEventCallback = (void *)gf_levelcon_handleScriptEvents;
 }
-#pragma scheduling reset
 
 #pragma peephole off
-#pragma scheduling off
 void gf_levelcon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7480);
     }
 }
-#pragma scheduling reset
 #pragma peephole reset
 
 #pragma scheduling off

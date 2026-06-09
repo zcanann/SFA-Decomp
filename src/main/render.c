@@ -1,7 +1,6 @@
 #include "main/engine_shared.h"
 
 #pragma scheduling off
-#pragma peephole off
 int getLActions(int a, int b, u16 idx)
 {
     void* buf = mmAlloc(0x28, -1, NULL);
@@ -9,7 +8,6 @@ int getLActions(int a, int b, u16 idx)
     mm_free(buf);
     return 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma dont_inline on
@@ -327,14 +325,8 @@ void fn_80007F78(u8 *anim, u16 *dst, u16 *out)
 #pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int return0xFFFF_80008B6C(void) { return -0x1; }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 s16 renderModeSetOrGet(int mode)
 {
     if (mode != -1) {
@@ -343,5 +335,3 @@ s16 renderModeSetOrGet(int mode)
     }
     return gRenderMode;
 }
-#pragma peephole reset
-#pragma scheduling reset

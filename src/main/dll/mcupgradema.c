@@ -47,6 +47,4 @@ void mcupgradema_update(int obj)
 }
 #pragma scheduling reset
 
-#pragma scheduling off
 void mcupgradema_init(int obj) { ((GameObject *)obj)->animEventCallback = (void *)mcupgradema_SeqFn; }
-#pragma scheduling reset

@@ -101,18 +101,13 @@ void snowclaw_release(void) {}
 
 void snowclaw_initialise(void) {}
 
-#pragma scheduling off
-#pragma peephole off
 void snowclaw_free(int obj) {
     if (((GameObject *)obj)->unkC8 != NULL) {
         Obj_FreeObject(*(int *)&((GameObject *)obj)->unkC8);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 void snowclaw_init(int *obj, u8 *init) {
     u8 *table;
     int *inner;
@@ -158,7 +153,6 @@ void snowclaw_init(int *obj, u8 *init) {
     lbl_803DDD38 = 0x96;
     ((SnowclawAaFlags *)((char *)inner + 0xaa))->b0 = 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off

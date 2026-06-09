@@ -12,14 +12,11 @@ void drgenerator_initialise(void) {}
 void drgenerator_release(void) {}
 
 #pragma scheduling off
-#pragma peephole off
 void drgenerator_free(int obj) {
     ObjGroup_RemoveObject(obj, 0x3);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 void drgenerator_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
     if (visible != 0) {
@@ -27,10 +24,8 @@ void drgenerator_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, 
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole off
 int drgenerator_eventCallback(int obj, int unused, u8 *arg) {
     int i;
     for (i = 0; i < arg[0x8b]; i++) {
@@ -43,7 +38,6 @@ int drgenerator_eventCallback(int obj, int unused, u8 *arg) {
     }
     return 0;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off

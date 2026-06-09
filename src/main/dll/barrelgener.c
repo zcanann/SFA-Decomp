@@ -111,7 +111,6 @@ void barrelgener_update(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole off
 #pragma scheduling off
 void Obj_SteerVelocityTowardVector(int out, f32 *v1, f32 *v2, f32 a, f32 b, f32 c)
 {
@@ -164,7 +163,6 @@ void Obj_SteerVelocityTowardVector(int out, f32 *v1, f32 *v2, f32 a, f32 b, f32 
     *(f32 *)(out + 0x2c) = n2[2] * t;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -247,7 +245,6 @@ int Obj_UpdateRomCurveFollowVelocityIndexed(int p1, int p2, f32 a, f32 b, f32 c,
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole off
 #pragma scheduling off
 void Obj_SpawnHitLightAndFade(int obj, f32 *p2)
 {
@@ -263,7 +260,6 @@ void Obj_SpawnHitLightAndFade(int obj, f32 *p2)
     Obj_SetModelColorFadeRecursive(obj, 0x5a, 0xc8, 0, 0, 1);
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma scheduling off
 int fn_80221978(int obj, void **entries, int count, void **light, f32 intensity)

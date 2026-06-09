@@ -165,7 +165,6 @@ void ObjHitReact_ResetActiveObjects(int objectCount)
  * PAL Size: TODO
  */
 #pragma scheduling off
-#pragma peephole off
 int ObjHitbox_AllocRotatedBounds(ObjHitbox *hitbox,uint arena)
 {
   ObjHitboxTransformState *transformState;
@@ -181,7 +180,6 @@ int ObjHitbox_AllocRotatedBounds(ObjHitbox *hitbox,uint arena)
   }
   return (uint)transformState + sizeof(ObjHitboxTransformState);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /*
@@ -199,7 +197,6 @@ int ObjHitbox_AllocRotatedBounds(ObjHitbox *hitbox,uint arena)
  */
 #pragma dont_inline on
 #pragma scheduling off
-#pragma peephole off
 void ObjHitReact_LoadMoveEntries(ObjAnimComponent *objAnim,ObjAnimBank *bank,int objType,
                                  ObjHitReactState *hitState,int moveId,int async)
 {
@@ -235,7 +232,6 @@ void ObjHitReact_LoadMoveEntries(ObjAnimComponent *objAnim,ObjAnimBank *bank,int
   }
   return;
 }
-#pragma peephole reset
 #pragma scheduling reset
 #pragma dont_inline reset
 
