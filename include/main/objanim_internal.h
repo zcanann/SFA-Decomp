@@ -22,6 +22,11 @@ typedef struct ObjAnimHitReactRow {
   u8 pad17;
 } ObjAnimHitReactRow;
 
+typedef struct ObjAnimFrameCommand {
+  u8 opcode;
+  u8 frameLength;
+} ObjAnimFrameCommand;
+
 #define OBJANIM_DEF_FLAG_CACHED_MOVES 0x40
 #define OBJANIM_DEF_FLAG_SKELETON_HITBOXES 0x1000
 #define OBJANIM_FLAG_HIDDEN 0x4000
@@ -35,7 +40,6 @@ typedef struct ObjAnimHitReactRow {
 #define OBJANIM_CACHED_MOVE_DATA_OFFSET 0x80
 #define OBJANIM_MOVE_ROOT_CURVE_OFFSET 4
 #define OBJANIM_FRAME_CMD_OFFSET 6
-#define OBJANIM_FRAME_CMD_LENGTH_INDEX 1
 #define OBJANIM_FRAME_TYPE_CLAMPED 0
 #define OBJANIM_FRAME_TYPE_MASK 0xF0
 #define OBJANIM_FRAME_STEP_MASK 0x0F
@@ -105,10 +109,10 @@ typedef struct ObjAnimState {
   u8 *moveCache[OBJANIM_MOVE_CACHE_SLOT_COUNT];
   u8 *blendMoveCache[OBJANIM_MOVE_CACHE_SLOT_COUNT];
   u8 pad2c[8];
-  u8 *moveFrameData;
-  u8 *prevMoveFrameData;
-  u8 *blendFrameData;
-  u8 *prevBlendFrameData;
+  ObjAnimFrameCommand *moveFrameData;
+  ObjAnimFrameCommand *prevMoveFrameData;
+  ObjAnimFrameCommand *blendFrameData;
+  ObjAnimFrameCommand *prevBlendFrameData;
   u16 moveCacheSlot;
   u16 prevMoveCacheSlot;
   u16 blendCacheSlot;
@@ -311,6 +315,7 @@ typedef struct ObjAnimEventList {
 
 STATIC_ASSERT(sizeof(ObjAnimHitReactRow) == 0x18);
 STATIC_ASSERT(offsetof(ObjAnimHitReactRow, entryIndex) == 0x16);
+STATIC_ASSERT(offsetof(ObjAnimFrameCommand, frameLength) == 0x01);
 
 STATIC_ASSERT(sizeof(ObjAnimDef) == 0xF0);
 STATIC_ASSERT(offsetof(ObjAnimDef, flags) == 0x02);

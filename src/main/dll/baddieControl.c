@@ -4759,10 +4759,19 @@ extern f32 lbl_803DB9B8;
 extern int lbl_803DB9BC;
 extern f32 lbl_803DD580;
 
+typedef struct CameraModeNpcSpeakInitParams {
+    f32 anchorX;
+    f32 anchorY;
+    f32 anchorZ;
+    u8 mode;
+} CameraModeNpcSpeakInitParams;
+
 /* CameraModeNpcSpeak_init  addr=0x8010DFF0  size=0x524  linkage=global */
 #pragma peephole off
 #pragma scheduling off
 void CameraModeNpcSpeak_init(u8 *obj, int unused, u8 *p3) {
+    CameraObject *camera = (CameraObject *)obj;
+    GameObject *target = (GameObject *)camera->anim.targetObj;
     int mode = 0;
     int yawA, yawB;
     int spd;
@@ -4776,19 +4785,20 @@ void CameraModeNpcSpeak_init(u8 *obj, int unused, u8 *p3) {
     }
     speakState = lbl_803DD584;
     if (p3 != NULL) {
-        speakState->anchorX = *(f32 *)p3;
-        speakState->anchorY = *(f32 *)(p3 + 4);
-        speakState->anchorZ = *(f32 *)(p3 + 8);
-        mode = *(u8 *)(p3 + 12);
+        CameraModeNpcSpeakInitParams *params = (CameraModeNpcSpeakInitParams *)p3;
+        speakState->anchorX = params->anchorX;
+        speakState->anchorY = params->anchorY;
+        speakState->anchorZ = params->anchorZ;
+        mode = params->mode;
     } else {
-        u8 *focus = (u8 *)getFocusedNpc();
+        GameObject *focus = (GameObject *)getFocusedNpc();
         f32 *fpos;
         if (focus == NULL) {
             speakState->anchorX = lbl_803E19E8;
             speakState->anchorY = lbl_803E19E8;
             speakState->anchorZ = lbl_803E19E8;
         }
-        fpos = *(f32 **)(focus + 0x74);
+        fpos = *(f32 **)((u8 *)focus + 0x74);
         if (fpos == NULL) {
             speakState->anchorX = lbl_803E19E8;
             speakState->anchorY = lbl_803E19E8;
@@ -4863,10 +4873,10 @@ void CameraModeNpcSpeak_init(u8 *obj, int unused, u8 *p3) {
         break;
     }
 
-    yawA = (u16)getAngle(((GameObject *)obj)->anim.worldPosX - speakState->anchorX,
-                         ((GameObject *)obj)->anim.worldPosZ - speakState->anchorZ);
-    yawB = (u16)getAngle(((GameObject *)((GameObject *)obj)->anim.targetObj)->anim.worldPosX - speakState->anchorX,
-                         ((GameObject *)((GameObject *)obj)->anim.targetObj)->anim.worldPosZ - speakState->anchorZ);
+    yawA = (u16)getAngle(camera->anim.worldPosX - speakState->anchorX,
+                         camera->anim.worldPosZ - speakState->anchorZ);
+    yawB = (u16)getAngle(target->anim.worldPosX - speakState->anchorX,
+                         target->anim.worldPosZ - speakState->anchorZ);
     spd = speakState->orbitAngleOffset;
     d1 = (yawB + spd) - yawA;
     if (d1 > 0x8000) {
@@ -4896,14 +4906,14 @@ void CameraModeNpcSpeak_init(u8 *obj, int unused, u8 *p3) {
     if (mode != 6 && mode != 7 && (npc = getFocusedNpc()) != 0) {
         s16 sd;
         int dd;
-        sd = (s16)(yawB - (u16)**(s16 **)&((GameObject *)obj)->anim.targetObj);
+        sd = (s16)(yawB - (u16)target->anim.rotX);
         if (sd > 0x8000) {
             sd -= 0xffff;
         }
         if (sd < -0x8000) {
             sd += 0xffff;
         }
-        dd = sd - (u16)(s16)Obj_GetYawDeltaToObject(*(int *)&((GameObject *)obj)->anim.targetObj, npc, 0);
+        dd = sd - (u16)(s16)Obj_GetYawDeltaToObject((int)target, npc, 0);
         if (dd > 0x8000) {
             dd -= 0xffff;
         }
@@ -4916,8 +4926,8 @@ void CameraModeNpcSpeak_init(u8 *obj, int unused, u8 *p3) {
         }
     }
 
-    fn_8010DB7C((GameObject *)((GameObject *)obj)->anim.targetObj, &va, &vb, &vc);
-    camcontrol_traceMove((f32 *)(obj + 0x18), &va, (void *)&speakState->cameraX, &vd, 3, 1, 1,
+    fn_8010DB7C(target, &va, &vb, &vc);
+    camcontrol_traceMove(&camera->anim.worldPosX, &va, (void *)&speakState->cameraX, &vd, 3, 1, 1,
                          lbl_803E1A20);
 }
 #pragma peephole reset
@@ -5432,12 +5442,13 @@ extern f32 lbl_803DB9C4;
 #pragma peephole off
 #pragma scheduling off
 void CameraModeNpcSpeak_update(u8 *obj) {
+    CameraObject *camera = (CameraObject *)obj;
     CameraModeNpcSpeakState *speakState;
-    GameObject *state = (GameObject *)((GameObject *)obj)->anim.targetObj;
+    GameObject *target = (GameObject *)camera->anim.targetObj;
     f32 ex, ey, ez;
     f32 dx, dy, dz;
 
-    if (state == NULL) {
+    if (target == NULL) {
         return;
     }
     speakState = lbl_803DD584;
@@ -5449,34 +5460,34 @@ void CameraModeNpcSpeak_update(u8 *obj) {
         } else if (speakState->orbitAngleVelocity < 0 && speakState->orbitAngleOffset < -0xd6d8) {
             speakState->orbitAngleOffset = -0xd6d8;
         }
-        fn_8010DB7C(state, &speakState->cameraX, &speakState->cameraY, &speakState->cameraZ);
+        fn_8010DB7C(target, &speakState->cameraX, &speakState->cameraY, &speakState->cameraZ);
     }
-    ((GameObject *)obj)->anim.worldPosX = speakState->cameraX;
-    ((GameObject *)obj)->anim.worldPosY = speakState->cameraY;
-    ((GameObject *)obj)->anim.worldPosZ = speakState->cameraZ;
-    dx = state->anim.worldPosX - speakState->anchorX;
-    dy = (state->anim.worldPosY + speakState->lookAtHeightOffset) - speakState->anchorY;
-    dz = state->anim.worldPosZ - speakState->anchorZ;
+    camera->anim.worldPosX = speakState->cameraX;
+    camera->anim.worldPosY = speakState->cameraY;
+    camera->anim.worldPosZ = speakState->cameraZ;
+    dx = target->anim.worldPosX - speakState->anchorX;
+    dy = (target->anim.worldPosY + speakState->lookAtHeightOffset) - speakState->anchorY;
+    dz = target->anim.worldPosZ - speakState->anchorZ;
     dx *= speakState->lookAtXZScale;
     dy *= speakState->lookAtYScale;
     dz *= speakState->lookAtXZScale;
     if (speakState->mode == 3) {
-        ((GameObject *)obj)->anim.rotY = (s16)(s32)getAngle(lbl_803DB9C4 * dy, sqrtf(dx * dx + dz * dz));
+        camera->anim.rotY = (s16)(s32)getAngle(lbl_803DB9C4 * dy, sqrtf(dx * dx + dz * dz));
     }
     dx += speakState->anchorX;
     dy += speakState->anchorY;
     dz += speakState->anchorZ;
-    ex = ((GameObject *)obj)->anim.worldPosX - dx;
-    ey = ((GameObject *)obj)->anim.worldPosY - dy;
-    ez = ((GameObject *)obj)->anim.worldPosZ - dz;
-    *(s16 *)obj = (s16)(0x8000 - getAngle(ex, ez));
+    ex = camera->anim.worldPosX - dx;
+    ey = camera->anim.worldPosY - dy;
+    ez = camera->anim.worldPosZ - dz;
+    camera->anim.rotX = (s16)(0x8000 - getAngle(ex, ez));
     if (speakState->mode != 3) {
-        ((GameObject *)obj)->anim.rotY = (s16)(s32)getAngle(ey, sqrtf(ex * ex + ez * ez));
+        camera->anim.rotY = (s16)(s32)getAngle(ey, sqrtf(ex * ex + ez * ez));
     }
     turnOnBlurFilter(speakState->anchorX, speakState->anchorY, speakState->anchorZ, 1, 0);
-    Obj_TransformWorldPointToLocal(((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY, ((GameObject *)obj)->anim.worldPosZ,
-                                   &((GameObject *)obj)->anim.localPosX, &((GameObject *)obj)->anim.localPosY, &((GameObject *)obj)->anim.localPosZ,
-                                   *(int *)&((GameObject *)obj)->anim.parent);
+    Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
+                                   &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
+                                   *(int *)&camera->anim.parent);
 }
 #pragma peephole reset
 #pragma scheduling reset

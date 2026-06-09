@@ -72,13 +72,13 @@ void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimS
     state->blendCacheSlot = (u16)moveIndex;
     moveData = (ObjAnimMoveData *)animDef->moveData[state->blendCacheSlot];
   }
-  state->blendFrameData = moveData->frameCmd;
+  state->blendFrameData = (ObjAnimFrameCommand *)moveData->frameCmd;
   frameType = moveData->frameInfo & OBJANIM_FRAME_TYPE_MASK;
   if (frameType != state->frameType) {
     state->eventState = 0;
   }
   else {
-    blendFrameLength = (float)state->blendFrameData[OBJANIM_FRAME_CMD_LENGTH_INDEX];
+    blendFrameLength = (float)state->blendFrameData->frameLength;
     if (frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
       blendFrameLength = blendFrameLength - gObjAnimProgressOne;
     }
@@ -424,9 +424,9 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimHandle,int moveId,int moveCont
     state->moveCacheSlot = (u16)moveId;
     moveData = (ObjAnimMoveData *)animDef->moveData[state->moveCacheSlot];
   }
-  state->moveFrameData = moveData->frameCmd;
+  state->moveFrameData = (ObjAnimFrameCommand *)moveData->frameCmd;
   state->frameType = moveData->frameInfo & OBJANIM_FRAME_TYPE_MASK;
-  state->frameLength = (float)state->moveFrameData[OBJANIM_FRAME_CMD_LENGTH_INDEX];
+  state->frameLength = (float)state->moveFrameData->frameLength;
   if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
     state->frameLength = state->frameLength - gObjAnimProgressOne;
   }
@@ -1125,9 +1125,9 @@ int ObjAnim_SetCurrentMove(int objAnimHandle,int moveId,f32 moveProgress,int mov
     state->moveCacheSlot = (u16)moveId;
     moveData = (ObjAnimMoveData *)animDef->moveData[state->moveCacheSlot];
   }
-  state->moveFrameData = moveData->frameCmd;
+  state->moveFrameData = (ObjAnimFrameCommand *)moveData->frameCmd;
   state->frameType = moveData->frameInfo & OBJANIM_FRAME_TYPE_MASK;
-  state->frameLength = (float)state->moveFrameData[OBJANIM_FRAME_CMD_LENGTH_INDEX];
+  state->frameLength = (float)state->moveFrameData->frameLength;
   if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
     state->frameLength = state->frameLength - gObjAnimProgressOne;
   }
