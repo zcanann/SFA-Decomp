@@ -902,6 +902,30 @@ extern void GameBit_Set(int bit, int val);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern int  lbl_803DDB18;
 
+typedef struct BlastedTargetSetup {
+    u8 pad00[0x1A];
+    s16 pieceCount;
+    s16 triggerId;
+    s16 completedGameBit;
+    s16 progressGameBit;
+} BlastedTargetSetup;
+
+typedef struct BlastedTargetState {
+    u32 destroyedHitObjects[3];
+    int triggerFired;
+    u8 pad10;
+    u8 damageStep;
+    u8 pad12[2];
+} BlastedTargetState;
+
+STATIC_ASSERT(offsetof(BlastedTargetSetup, pieceCount) == 0x1A);
+STATIC_ASSERT(offsetof(BlastedTargetSetup, triggerId) == 0x1C);
+STATIC_ASSERT(offsetof(BlastedTargetSetup, completedGameBit) == 0x1E);
+STATIC_ASSERT(offsetof(BlastedTargetSetup, progressGameBit) == 0x20);
+STATIC_ASSERT(offsetof(BlastedTargetState, triggerFired) == 0x0C);
+STATIC_ASSERT(offsetof(BlastedTargetState, damageStep) == 0x11);
+STATIC_ASSERT(sizeof(BlastedTargetState) == 0x14);
+
 /* EN v1.0 0x801A2928  size: 464b  Blasted-target update: once the target's
  * GameBit is latched, fires the map trigger; otherwise scans the model's
  * hit nodes for newly-destroyed (state 5) pieces, records each unique piece,
@@ -911,15 +935,15 @@ extern int  lbl_803DDB18;
 #pragma peephole off
 void blasted_update(int obj)
 {
-    int def = *(int *)&((GameObject *)obj)->anim.placementData;
-    int st = *(int *)&((GameObject *)obj)->extra;
-    s16 total = *(s16 *)(def + 0x1a);
+    BlastedTargetSetup *setup = (BlastedTargetSetup *)((GameObject *)obj)->anim.placementData;
+    BlastedTargetState *state = ((GameObject *)obj)->extra;
+    s16 total = setup->pieceCount;
 
-    if (*(int *)(st + 0xc) != 0) {
+    if (state->triggerFired != 0) {
         return;
     }
-    if ((u32)GameBit_Get(*(s16 *)(def + 0x1e)) != 0) {
-        *(int *)(st + 0xc) = fn_801A27B8(obj, *(s16 *)(def + 0x1c));
+    if ((u32)GameBit_Get(setup->completedGameBit) != 0) {
+        state->triggerFired = fn_801A27B8(obj, setup->triggerId);
         return;
     }
     {
@@ -935,41 +959,41 @@ void blasted_update(int obj)
                 continue;
             }
             if (total == 0) {
-                GameBit_Set(*(s16 *)(def + 0x1e), 1);
+                GameBit_Set(setup->completedGameBit, 1);
                 return;
             }
             if (m == 5) {
                 int k = 0;
-                int cnt = *(u8 *)(st + 0x11);
+                int cnt = state->damageStep;
                 while (k != cnt) {
-                    if (v == *(u32 *)(st + k++ * 4)) {
+                    if (v == state->destroyedHitObjects[k++]) {
                         k = cnt;
                         found = 1;
                     }
                 }
             }
             if (found == 0) {
-                *(u32 *)(st + *(u8 *)(st + 0x11) * 4) = v;
-                GameBit_Set(*(u8 *)(st + 0x11) + 0x2de, 0);
-                GameBit_Set(*(u8 *)(st + 0x11) + 0x2df, 1);
-                if (*(s16 *)(def + 0x20) != -1) {
-                    GameBit_Set(*(s16 *)(def + 0x20), *(u8 *)(st + 0x11) + 1);
+                state->destroyedHitObjects[state->damageStep] = v;
+                GameBit_Set(state->damageStep + 0x2de, 0);
+                GameBit_Set(state->damageStep + 0x2df, 1);
+                if (setup->progressGameBit != -1) {
+                    GameBit_Set(setup->progressGameBit, state->damageStep + 1);
                 }
                 lbl_803DDB18 = 0x12c;
-                if (*(u8 *)(st + 0x11) + 1 > total) {
+                if (state->damageStep + 1 > total) {
                     int n;
                     int lim;
                     lim = total + 1;
                     for (n = 0; n < lim; n++) {
                         GameBit_Set(n + 0x2de, 0);
                     }
-                    GameBit_Set(*(s16 *)(def + 0x1e), 1);
-                    fn_801A27B8(obj, *(s16 *)(def + 0x1c));
+                    GameBit_Set(setup->completedGameBit, 1);
+                    fn_801A27B8(obj, setup->triggerId);
                     Obj_SetActiveModelIndex(obj, 2);
-                    *(int *)(st + 0xc) = 1;
+                    state->triggerFired = 1;
                 } else {
-                    *(u8 *)(st + 0x11) = *(u8 *)(st + 0x11) + 1;
-                    Obj_SetActiveModelIndex(obj, *(u8 *)(st + 0x11));
+                    state->damageStep = state->damageStep + 1;
+                    Obj_SetActiveModelIndex(obj, state->damageStep);
                 }
             }
         }
