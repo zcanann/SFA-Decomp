@@ -165,7 +165,7 @@ int TitleMenu_run(void)
     } else if ((buttons != 0) || ((dpad != 0 || (face != 0)))) {
       inputPressed = 1;
     }
-    if (gAttractMovieLoopCompleted != 0) {
+    if (*(volatile u8 *)&gAttractMovieLoopCompleted != 0) {
       gAttractMovieLoopCompleted = 0;
     }
     if (inputPressed) {
