@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/camera_interface.h"
+#include "main/dll/CAM/camclimb_state.h"
 #include "main/mm.h"
 #include "main/object_transform.h"
 
@@ -10,7 +11,7 @@ extern float mathCosf(float x);
 extern void Rcp_DisableBlurFilter(void);
 extern void memset(void *dst, int val, int size);
 
-extern f32 *lbl_803DD578;
+extern CameraModeClimbState *lbl_803DD578;
 extern f32 *lbl_803DD584;
 
 extern f32 lbl_803E19B8;
@@ -35,43 +36,43 @@ void CameraModeClimb_init(undefined4 param_1, int param_2, s8 *param_3) {
     undefined4 local_1c[1];
     int iVar2;
 
-    if (lbl_803DD578 == (f32 *)0) {
-        lbl_803DD578 = (f32 *)mmAlloc(0x38, 0xf, 0);
+    if (lbl_803DD578 == NULL) {
+        lbl_803DD578 = (CameraModeClimbState *)mmAlloc(sizeof(CameraModeClimbState), 0xf, 0);
     }
     switch (param_2) {
     case 2:
-        *(u16 *)((u8 *)lbl_803DD578 + 0x32) = *(u16 *)((u8 *)lbl_803DD578 + 0x30);
-        lbl_803DD578[7] = lbl_803DD578[3];
-        lbl_803DD578[9] = lbl_803DD578[4];
-        lbl_803DD578[5] = lbl_803DD578[0];
-        *(s16 *)((u8 *)lbl_803DD578 + 0x34) = (s16)(lbl_803E19B8 * (f32)(s8)param_3[3]);
-        lbl_803DD578[8] = (f32)(s8)param_3[5];
-        lbl_803DD578[10] = (f32)(s8)param_3[4];
-        lbl_803DD578[6] = (f32)(s8)param_3[2];
-        *(s16 *)((u8 *)lbl_803DD578 + 0x2c) = (s16)(s8)param_3[1];
-        *(s16 *)((u8 *)lbl_803DD578 + 0x2e) = (s16)(s8)param_3[1];
+        lbl_803DD578->startRelativePosition = lbl_803DD578->relativePosition;
+        lbl_803DD578->startMinHeight = lbl_803DD578->minHeight;
+        lbl_803DD578->startMaxHeight = lbl_803DD578->maxHeight;
+        lbl_803DD578->startDistance = lbl_803DD578->targetDistance;
+        lbl_803DD578->targetRelativePosition = (s16)(lbl_803E19B8 * (f32)(s8)param_3[3]);
+        lbl_803DD578->endMinHeight = (f32)(s8)param_3[5];
+        lbl_803DD578->endMaxHeight = (f32)(s8)param_3[4];
+        lbl_803DD578->endDistance = (f32)(s8)param_3[2];
+        lbl_803DD578->transitionTimer = (s16)(s8)param_3[1];
+        lbl_803DD578->transitionDuration = (s16)(s8)param_3[1];
         break;
     case 1:
     default:
-        memset(lbl_803DD578, 0, 0x38);
+        memset(lbl_803DD578, 0, sizeof(CameraModeClimbState));
         iVar2 = (int)(*gCameraInterface)->getDefaultHandlerEntry();
         ((code)(*(undefined4 **)((undefined4 *)iVar2)[1])[8])(&local_58, &local_5c, &local_60, &local_64, &local_68);
-        (*gCameraInterface)->getRelativePosition((f32)*(u16 *)((u8 *)lbl_803DD578 + 0x30),
+        (*gCameraInterface)->getRelativePosition((f32)(u16)lbl_803DD578->relativePosition,
                                                  (int)param_1, (f32 *)local_28,
                                                  (f32 *)local_24, (f32 *)local_20,
                                                  (f32 *)local_1c, 0);
-        *(s16 *)((u8 *)lbl_803DD578 + 0x32) = (s16)local_68;
-        lbl_803DD578[7] = local_60;
-        lbl_803DD578[9] = local_64;
-        lbl_803DD578[5] = *(f32 *)local_1c;
-        *(s16 *)((u8 *)lbl_803DD578 + 0x34) = 30;
-        lbl_803DD578[8] = lbl_803E19BC;
-        lbl_803DD578[10] = lbl_803E19C0;
-        lbl_803DD578[6] = lbl_803E19C4 * (local_5c + local_58);
-        *(s16 *)((u8 *)lbl_803DD578 + 0x2c) = 60;
-        *(s16 *)((u8 *)lbl_803DD578 + 0x2e) = 60;
-        lbl_803DD578[1] = *(f32 *)local_1c;
-        lbl_803DD578[2] = lbl_803E19C8;
+        lbl_803DD578->startRelativePosition = (s16)local_68;
+        lbl_803DD578->startMinHeight = local_60;
+        lbl_803DD578->startMaxHeight = local_64;
+        lbl_803DD578->startDistance = *(f32 *)local_1c;
+        lbl_803DD578->targetRelativePosition = 30;
+        lbl_803DD578->endMinHeight = lbl_803E19BC;
+        lbl_803DD578->endMaxHeight = lbl_803E19C0;
+        lbl_803DD578->endDistance = lbl_803E19C4 * (local_5c + local_58);
+        lbl_803DD578->transitionTimer = 60;
+        lbl_803DD578->transitionDuration = 60;
+        lbl_803DD578->smoothedDistance = *(f32 *)local_1c;
+        lbl_803DD578->heightAdjustRate = lbl_803E19C8;
         break;
     }
 }

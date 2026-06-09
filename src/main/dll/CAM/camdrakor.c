@@ -1,6 +1,7 @@
 #include "main/dll/CAM/camdrakor.h"
 #include "main/camera_interface.h"
 #include "main/camera_object.h"
+#include "main/dll/CAM/camclimb_state.h"
 #include "main/game_object.h"
 #include "main/mm.h"
 #include "main/object_transform.h"
@@ -34,7 +35,7 @@ extern undefined4 cameraGetPrevPos2();
 extern f32* lbl_803DD568;
 extern s32 lbl_803DD56C;
 extern f32* lbl_803DD570;
-extern void* lbl_803DD578;
+extern CameraModeClimbState* lbl_803DD578;
 extern f64 lbl_803E1918;
 extern f64 lbl_803E1938;
 extern f64 lbl_803E1988;
