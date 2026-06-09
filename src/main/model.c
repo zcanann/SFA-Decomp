@@ -308,19 +308,11 @@ void ObjModel_ToggleMatrixBuffer(u8 *model) {
 
 ObjModelJointMatrix *ObjModel_GetJointMatrix(u8 *modelBytes, int jointIndex) {
     ObjModelInstanceLite *model;
-    ObjModelFileHeaderLite *modelFile;
     uint jointCount;
 
     model = (ObjModelInstanceLite *)modelBytes;
-    modelFile = model->file;
-    jointCount = modelFile->jointCount;
-    if (jointCount != 0) {
-        jointCount += modelFile->extraJointCount;
-    } else {
-        jointCount = 1;
-    }
-
-    if (jointIndex >= (int)jointCount) {
+    jointCount = model->file->jointCount;
+    if (jointIndex >= (int)(jointCount != 0 ? jointCount + model->file->extraJointCount : 1)) {
         jointIndex = 0;
     }
 
