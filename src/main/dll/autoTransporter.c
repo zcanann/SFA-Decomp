@@ -94,6 +94,8 @@ extern f32 lbl_803E431C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80178338(undefined4 param_1)
 {
   float local_18;
@@ -106,6 +108,8 @@ void FUN_80178338(undefined4 param_1)
   FUN_80081110(param_1,2,0,0,&local_18);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -120,6 +124,8 @@ void FUN_80178338(undefined4 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80178370(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
@@ -149,6 +155,8 @@ void FUN_80178370(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   ((GameObject *)param_9)->anim.localPosZ = ((GameObject *)param_9)->anim.velocityZ * *pfVar2 + pfVar2[3];
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -163,6 +171,8 @@ void FUN_80178370(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801784ac(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,int param_10)
@@ -177,6 +187,8 @@ void FUN_801784ac(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   *(undefined *)((int)pfVar1 + 0x11) = 2;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -191,6 +203,8 @@ void FUN_801784ac(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80178560(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11,undefined4 param_12,
@@ -598,6 +612,8 @@ LAB_80179188:
     iVar5 = iVar5 + 1;
   } while( true );
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -612,6 +628,8 @@ LAB_80179188:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801797bc(int param_1)
 {
   short sVar1;
@@ -626,6 +644,8 @@ void FUN_801797bc(int param_1)
   ObjGroup_RemoveObject(param_1,0xe);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -640,6 +660,8 @@ void FUN_801797bc(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80179820(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   if (visible != 0) {
@@ -647,6 +669,8 @@ void FUN_80179820(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -661,6 +685,8 @@ void FUN_80179820(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80179848(undefined2 *param_1)
 {
   int iVar1;
@@ -698,6 +724,8 @@ void FUN_80179848(undefined2 *param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -729,6 +757,8 @@ void FUN_801799bc(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 uint FUN_801799c0(int param_1)
 {
   uint uVar1;
@@ -736,6 +766,8 @@ uint FUN_801799c0(int param_1)
   uVar1 = countLeadingZeros((uint)*(byte *)(*(int *)&((GameObject *)param_1)->extra + 0x274));
   return uVar1 >> 5;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -751,12 +783,8 @@ int sidekickball_getExtraSize(void) { return 0x2cc; }
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3680;
 extern void objRenderFn_8003b8f4(f32);
-#pragma peephole off
 void doorf4_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3680); }
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 int fn_801793A4(int *obj) { return *((u8*)((int**)obj)[0xb8/4] + 0x274) == 0; }
 
 void sidekickball_free(int obj) { GameBit_Set(0x3F8, 1); }
@@ -1005,8 +1033,6 @@ void doorf4_init(int *obj, int *params)
                       state->sinYaw * ((GameObject *)obj)->anim.localPosZ);
 }
 
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
 extern f32 sqrtf(f32 x);
@@ -1022,8 +1048,6 @@ extern f32 lbl_803E366C;
 extern f32 lbl_803E3670;
 extern f32 lbl_803E3674;
 
-#pragma scheduling off
-#pragma peephole off
 int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
     int msg;
     int objCount;
@@ -1323,5 +1347,3 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset

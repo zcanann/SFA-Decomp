@@ -107,6 +107,8 @@ extern f32 lbl_803E4D9C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 undefined4 objInterpretSeq_v11_unused(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,undefined4 param_11,int param_12,
@@ -673,6 +675,8 @@ switchD_80199a5c_caseD_0:
     pbVar21 = pbVar21 + 4;
   } while( true );
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -687,6 +691,8 @@ switchD_80199a5c_caseD_0:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8019ada4(int param_1)
 {
   byte *pbVar1;
@@ -701,6 +707,8 @@ void FUN_8019ada4(int param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -715,6 +723,8 @@ void FUN_8019ada4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8019ae30(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,float *param_11,undefined4 param_12,
@@ -924,6 +934,8 @@ void FUN_8019ae30(undefined8 param_1,double param_2,double param_3,undefined8 pa
   FUN_80286888();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -938,6 +950,8 @@ void FUN_8019ae30(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8019b6ac(ushort *param_1,short *param_2)
 {
   float fVar1;
@@ -992,6 +1006,8 @@ void FUN_8019b6ac(ushort *param_1,short *param_2)
   *pbVar4 = *pbVar4 | 0x40;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1006,6 +1022,8 @@ void FUN_8019b6ac(ushort *param_1,short *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8019b844(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   if (visible != 0) {
@@ -1013,6 +1031,8 @@ void FUN_8019b844(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1027,6 +1047,8 @@ void FUN_8019b844(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8019b86c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9)
@@ -1151,6 +1173,8 @@ LAB_8019b31c:
   } while (uVar2 != 0);
   goto LAB_8019b350;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1165,11 +1189,15 @@ LAB_8019b31c:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8019bc2c(int param_1)
 {
   ObjMsg_AllocQueue(param_1,10);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -1183,8 +1211,6 @@ extern void objSetSlot(void* obj, int slot);
 extern int GameBit_Get(int eventId);
 extern f32 lbl_803E40F8;
 
-#pragma peephole off
-#pragma scheduling off
 void Trigger_free(void *obj)
 {
     u8 i;
@@ -1199,11 +1225,7 @@ void Trigger_free(void *obj)
         entry += 4;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 typedef struct { u8 bit7 : 1; u8 lo : 7; } TriggerFlags8A;
 void Trigger_init(u8* obj, u8* params) {
     u8* sub;
@@ -1253,8 +1275,6 @@ void Trigger_init(u8* obj, u8* params) {
     }
     sub[0] = (u8)(sub[0] | 0x40);
 }
-#pragma scheduling reset
-#pragma peephole reset
 void cloudprisoncontrol_free(void) {}
 void cloudprisoncontrol_hitDetect(void) {}
 void cloudprisoncontrol_release(void) {}
@@ -1272,22 +1292,16 @@ void cloudprisoncontrol_initialise(void) { lbl_803DBE08 = 0x1; }
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4108;
 extern void objRenderFn_8003b8f4(f32);
-#pragma peephole off
 void cloudprisoncontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4108); }
-#pragma peephole reset
 
 /* call(x, N) wrappers. */
-#pragma peephole off
 void cloudprisoncontrol_init(int x) { ObjMsg_AllocQueue(x, 0xa); }
 
 int cfguardian_setScale(int *obj) {
     return (*(u8*)(*(int *)&((GameObject *)obj)->extra + 0xa9b) & 0x2) == 0;
 }
-#pragma peephole reset
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-#pragma scheduling off
-#pragma peephole off
 void fn_8019AE3C(int p1, int p2, s16 *p3)
 {
     u8 v;
@@ -1327,16 +1341,12 @@ void fn_8019AE3C(int p1, int p2, s16 *p3)
         Sfx_PlayFromObject(p1, (u16)p3[2]);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern s8 lbl_803DDB08;
 extern s8 lbl_803DDB09;
 extern int lbl_803DDB0C;
 extern int lbl_803AC7D8[];
 extern int lbl_803AC878[];
-#pragma scheduling off
-#pragma peephole off
 void cloudprisoncontrol_update(int obj)
 {
     int target;
@@ -1413,8 +1423,6 @@ void cloudprisoncontrol_update(int obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int findRomCurvePointNearObject(int obj, int sel, int p3, int p4);
 extern int fn_8019B1D8(int obj, void *buf, f32 t, int p4);
@@ -1430,8 +1438,6 @@ typedef struct {
     f32 y;
     f32 z;
 } RomCurveTarget;
-#pragma scheduling off
-#pragma peephole off
 int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
 {
     int ret;
@@ -1496,8 +1502,6 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
     }
     return ret;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern CloudActionInterface **gCloudActionInterface;
 extern int *gPlayerShadowInterface;
@@ -1541,8 +1545,6 @@ extern void goToPrevMapLayer(void);
 extern f32 lbl_803E40D8;
 extern f32 lbl_803E40FC;
 extern f32 lbl_803E4100;
-#pragma scheduling off
-#pragma peephole off
 void objInterpretSeq(int obj, int p2, int p3, int p4)
 {
     char *desc = (char *)&gTriggerObjDescriptor;
@@ -1994,8 +1996,6 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
         GameBit_Set(*(s16 *)(state + 0x80), 1);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int fn_802972A8(void);
 extern int return1_800202BC(void);
@@ -2006,8 +2006,6 @@ extern void fn_80198A00(int obj, int target);
 extern void objSeqMoveFn_80199188(int obj, int target);
 extern f32 lbl_803E4104;
 extern u8 framesThisStep;
-#pragma scheduling off
-#pragma peephole off
 void Trigger_hitDetect(int obj)
 {
     u8 *state = ((GameObject *)obj)->extra;
@@ -2178,5 +2176,3 @@ void Trigger_hitDetect(int obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

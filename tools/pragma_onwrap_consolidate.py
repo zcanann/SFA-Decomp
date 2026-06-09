@@ -41,19 +41,34 @@ def effective_states(lines):
     return out
 
 def find_def_span(lines, name):
-    """Find (start_idx, end_idx) of the definition of `name` (col-0 type, then braces)."""
+    """Find (start_idx, end_idx) of the DEFINITION of `name` (col-0 type sig,
+    then the body braces). Skips prototype lines (sig followed by ';' before
+    any '{') and handles multi-line signatures."""
     sig=re.compile(r'^[A-Za-z_][\w \t\*]*\b'+re.escape(name)+r'\s*\(')
     for i,ln in enumerate(lines):
         s=ln.decode('latin1')
-        if sig.match(s) and not s.lstrip().startswith(('return','//','*')):
-            depth=0; started=False
-            for j in range(i, min(i+400,len(lines))):
-                t=lines[j].decode('latin1')
-                depth += t.count('{') - t.count('}')
-                if '{' in t: started=True
-                if started and depth<=0:
-                    return (i, j)
-            return None
+        if not (sig.match(s) and not s.lstrip().startswith(('return','//','*'))):
+            continue
+        # scan forward for the first top-level ';' or '{'
+        is_def=None
+        for k in range(i, min(i+60,len(lines))):
+            t=lines[k].decode('latin1')
+            semi=t.find(';'); brace=t.find('{')
+            if brace!=-1 and (semi==-1 or brace<semi):
+                is_def=k; break
+            if semi!=-1 and (brace==-1 or semi<brace):
+                is_def=False; break
+        if is_def is False or is_def is None:
+            continue  # prototype or unparseable -> try next match
+        # brace-match the body from the '{' line
+        depth=0; started=False
+        for j in range(is_def, min(is_def+600,len(lines))):
+            t=lines[j].decode('latin1')
+            depth += t.count('{') - t.count('}')
+            if '{' in t: started=True
+            if started and depth<=0:
+                return (i, j)
+        return None
     return None
 
 def transform(path, wants_on):

@@ -262,8 +262,6 @@ extern f32 FLOAT_803e471c;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void scarab_update(int obj)
 {
     extern void Sfx_PlayFromObject(int obj, int sfx);
@@ -624,8 +622,6 @@ void scarab_update(int obj)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -640,6 +636,8 @@ void scarab_update(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80184a54(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
@@ -1092,6 +1090,8 @@ LAB_80185bfc:
   FUN_80286888();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1107,8 +1107,6 @@ LAB_80185bfc:
  * PAL Size: TODO
  */
 #pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
 void fn_80185868(int obj, f32 arg)
 {
   extern void *lbl_803DDAD0;
@@ -1147,8 +1145,6 @@ void fn_80185868(int obj, f32 arg)
   ObjHits_SetHitVolumeSlot(obj, 0xe, 1, 0);
   ObjHits_EnableObject(obj);
 }
-#pragma peephole reset
-#pragma scheduling reset
 #pragma dont_inline reset
 
 /*
@@ -1164,8 +1160,6 @@ void fn_80185868(int obj, f32 arg)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void fn_80185A24(int obj, int p2, int p3, int p4, int p5, s8 renderState)
 {
     extern void fn_8003B5E0(int a, int b, int c, int d);
@@ -1209,8 +1203,6 @@ ok:
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E3A5C);
 end:;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1225,8 +1217,6 @@ end:;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_common_subs off
 void fn_80185B74(int obj)
 {
@@ -1456,11 +1446,7 @@ void fn_80185B74(int obj)
     }
 }
 #pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_801862CC(int obj, int p)
 {
   extern void *lbl_803DDAD0;
@@ -1517,8 +1503,6 @@ void fn_801862CC(int obj, int p)
     *(u32 *)(p64 + 0x30) |= 0x8000;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1533,8 +1517,6 @@ void fn_801862CC(int obj, int p)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void portalspelldoor_update(int obj)
 {
     extern int playerHasSpell(int player, int spell);
@@ -1586,8 +1568,6 @@ void portalspelldoor_update(int obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -1636,8 +1616,6 @@ typedef struct LanternFireFlyVectorParams {
     f32 z;
 } LanternFireFlyVectorParams;
 
-#pragma scheduling off
-#pragma peephole off
 void LanternFireFly_func0B(int obj)
 {
     typedef struct { u8 mode : 2; } LFFlags;
@@ -1746,8 +1724,6 @@ void fn_801869DC(int obj)
     state->controlY[3] = state->offY;
     state->controlZ[3] = state->offZ;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* portalspelldoor_init: byte<<8 / halfword<<8 stash at obj+0..+2, prime
  * obj+8 with lbl_803E3A8C, derive sub+4 = obj->_a8 * obj+8 * lbl_803E3A90,
@@ -1755,8 +1731,6 @@ void fn_801869DC(int obj)
  * latch sub+8 = -1. */
 extern f32 lbl_803E3A8C;
 extern f32 lbl_803E3A90;
-#pragma scheduling off
-#pragma peephole off
 void portalspelldoor_init(u8* obj, u8* data) {
     PortalSpellDoorState* sub = ((GameObject *)obj)->extra;
     *(s16*)obj = (s16)((s32)(s8)data[0x18] << 8);
@@ -1772,12 +1746,9 @@ void portalspelldoor_init(u8* obj, u8* data) {
     }
     sub->openTimer = -1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* LanternFireFly_setScale: subtract sub->_54..5c from vec[0..2] (overwriting
  * vec), copy the result to sub->_34..3c, set sub->_6c = 4. */
-#pragma scheduling off
 void LanternFireFly_setScale(u8* obj, f32* vec) {
     LanternFireFlyState* sub = ((GameObject *)obj)->extra;
     vec[0] = vec[0] - sub->anchorX;
@@ -1788,7 +1759,6 @@ void LanternFireFly_setScale(u8* obj, f32* vec) {
     sub->offZ = vec[2];
     sub->animFrame = 4;
 }
-#pragma scheduling reset
 
 /* LanternFireFly_free: free the light struct at sub[0] if present, then
  * (when p2==0 and the freshly-cleared sub[0] is NULL and mode bits 6..7
@@ -1796,8 +1766,6 @@ void LanternFireFly_setScale(u8* obj, f32* vec) {
  * and dispatch vtable[6] of *gExpgfxInterface. */
 extern void ModelLightStruct_free(void* p);
 extern u8 lbl_803DDAD8;
-#pragma scheduling off
-#pragma peephole off
 void LanternFireFly_free(u8* obj, int p2) {
     LanternFireFlyState* sub = ((GameObject *)obj)->extra;
     if (*(void **)&sub->light != NULL) {
@@ -1810,8 +1778,6 @@ void LanternFireFly_free(u8* obj, int p2) {
     ObjGroup_RemoveObject(obj, 0x30);
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 ObjectDescriptor gDummy108ObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
@@ -1830,14 +1796,11 @@ ObjectDescriptor gDummy108ObjDescriptor = {
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3A88;
 extern void objRenderFn_8003b8f4(f32);
-#pragma peephole off
 void portalspelldoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3A88); }
-#pragma peephole reset
 
 extern ModgfxInterface **gModgfxInterface;
 extern void *lbl_803DDAD0;
 extern void *lbl_803DDAD4;
-#pragma scheduling off
 void fn_801859D4(int *obj) {
     (*gModgfxInterface)->detachSource(obj);
     Resource_Release(lbl_803DDAD0);
@@ -1845,14 +1808,11 @@ void fn_801859D4(int *obj) {
     Resource_Release(lbl_803DDAD4);
     lbl_803DDAD4 = NULL;
 }
-#pragma scheduling reset
 
 extern u8 lbl_803DBDB0;
 extern u8 lbl_803DBDB4;
 extern u8 lbl_803DBDB8;
 
-#pragma scheduling off
-#pragma peephole off
 void scarab_init(int *obj, u8 *def) {
     ScarabState *state = ((GameObject *)obj)->extra;
     int *model;
@@ -1895,5 +1855,3 @@ void scarab_init(int *obj, u8 *def) {
     }
     ObjMsg_AllocQueue(obj, 2);
 }
-#pragma peephole reset
-#pragma scheduling reset
