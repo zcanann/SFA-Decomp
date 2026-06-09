@@ -1403,7 +1403,6 @@ void cflevelcontrol_init(u8* obj, u8* params) {
         u8 rest : 3;
     } LevelControlFlags;
     u8* sub;
-    s16* p;
     int i;
 
     sub = ((GameObject *)obj)->extra;
@@ -1415,9 +1414,8 @@ void cflevelcontrol_init(u8* obj, u8* params) {
     ((GameObject *)obj)->animEventCallback = (void *)CFLevelControl_SeqFn;
     GameBit_Set(0x983, *(int*)(*(int *)&((GameObject *)obj)->anim.placementData + 0x14) != 0x2cef);
     if (GameBit_Get(0x2fe) == 0) {
-        for (i = 0, p = lbl_80323008; i < 0x17; i++) {
-            GameBit_Set(*p, 0);
-            p++;
+        for (i = 0; i < 0x17; i++) {
+            GameBit_Set(lbl_80323008[i], 0);
         }
     }
     (*gMapEventInterface)->setAnimEvent(*(s8*)(obj + 0xac), 4, 0);
