@@ -86,7 +86,7 @@ void suntemple_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 void suntemple_hitDetect(int obj)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-    if ((objAnim->modelInstance->flags & 1) != 0 && objAnim->banks != NULL) {
+    if ((objAnim->modelInstance->flags & 1) != 0 && *(void **)(obj + 0x74) != NULL) {
         objRenderFn_80041018(obj);
     }
 }

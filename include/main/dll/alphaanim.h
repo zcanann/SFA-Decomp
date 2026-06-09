@@ -43,7 +43,7 @@ typedef struct IMMultiSeqPlacement {
     s16 activeGameBits[4];
     u8 initialYaw;
     u8 pad29;
-    s8 modelBankIndex;
+    u8 modelBankIndex;
     u8 pad2B;
     s8 triggerIds[4];
     u8 polarityMask;

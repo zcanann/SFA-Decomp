@@ -43,7 +43,7 @@ void timer_free(int obj)
 {
     TimerState *state = ((GameObject *)obj)->extra;
     ObjGroup_RemoveObject(obj, 0x4c);
-    if (state->lightSlot != 0) {
+    if ((void *)state->lightSlot != NULL) {
         modelLightStruct_freeSlot((int)&state->lightSlot);
     }
     gameTimerStop();

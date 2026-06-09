@@ -692,7 +692,7 @@ void immultiseq_init(int *obj, IMMultiSeqPlacement *params) {
     *(s16*)obj = (s16)(params->initialYaw << 8);
     ((GameObject *)obj)->animEventCallback = (void *)immultiseq_SeqFn;
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x6000);
-    objAnim->bankIndex = params->modelBankIndex;
+    objAnim->bankIndex = (s8)params->modelBankIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
         objAnim->bankIndex = 0;
     }

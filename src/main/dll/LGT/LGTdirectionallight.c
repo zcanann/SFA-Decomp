@@ -186,7 +186,7 @@ void wmworm_init(GameObject *obj, WmWormSetup *setup)
 {
     WmWormState *state;
 
-    obj->anim.rotY = 0;
+    obj->anim.rotX = 0;
     state = obj->extra;
     state->effectScale = (f32)((s32)setup->effectScale << 2);
     state->particleEffectId = setup->particleEffectId;
