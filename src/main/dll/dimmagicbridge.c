@@ -38,7 +38,7 @@ extern f32 lbl_803E5174;
  * EN v1.0 Address: 0x801CAD80
  * EN v1.0 Size: 2228b
  */
-#pragma scheduling off
+#pragma peephole on
 void dll_199_update(int obj)
 {
     short *state;
@@ -239,10 +239,8 @@ void dll_199_update(int obj)
         }
     }
 }
-#pragma scheduling reset
+#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 extern void ObjMsg_AllocQueue(int obj, int n);
 
 /*

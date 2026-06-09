@@ -58,8 +58,6 @@ typedef struct DfshObjCreatorState {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void dfsh_objcreator_update(int obj)
 {
     u8 *setup = *(u8 **)&((GameObject *)obj)->anim.placementData;
@@ -119,8 +117,6 @@ void dfsh_objcreator_update(int obj)
         state->spawnTimerStep = 0;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -138,7 +134,6 @@ void dfsh_objcreator_update(int obj)
 extern ModgfxInterface **gModgfxInterface;
 extern void *lbl_803DDBB8;
 extern void textureFree(void *tex);
-#pragma scheduling off
 void DFSH_LaserBeam_init(int *obj) {
     int *state = ((GameObject *)obj)->extra;
     (*gModgfxInterface)->detachSource(obj);
@@ -149,7 +144,6 @@ void DFSH_LaserBeam_init(int *obj) {
     }
     *(void **)state = NULL;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -164,6 +158,8 @@ void DFSH_LaserBeam_init(int *obj) {
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801c4098(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   if (visible != 0) {
@@ -171,6 +167,8 @@ void FUN_801c4098(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -185,6 +183,8 @@ void FUN_801c4098(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801c40c0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined2 *param_9)
@@ -257,6 +257,8 @@ void FUN_801c40c0(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -271,6 +273,8 @@ void FUN_801c40c0(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801c43b0(int param_1)
 {
   int *piVar1;
@@ -285,6 +289,8 @@ void FUN_801c43b0(int param_1)
   *piVar1 = 0;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -320,8 +326,6 @@ void dfsh_objcreator_initialise(void)
 {
 }
 
-#pragma scheduling off
-#pragma peephole off
 void dfsh_objcreator_init(int obj, s8 *def) {
     DfshObjCreatorState *state = ((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)((s32)def[0x1E] << 8);
@@ -331,8 +335,6 @@ void dfsh_objcreator_init(int obj, s8 *def) {
     *(u8 *)((char *)obj + 0x37) = 0xFF;
     ((GameObject *)obj)->anim.alpha = 0xFF;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Trivial 4b 0-arg blr leaves. */
 void DFSH_LaserBeam_render(void) {}

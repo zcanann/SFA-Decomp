@@ -46,8 +46,6 @@ extern f32 lbl_803E56B4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void paymentkiosk_init(int obj, PaymentKioskMapData *initData)
 {
     register int self = obj;
@@ -64,8 +62,6 @@ void paymentkiosk_init(int obj, PaymentKioskMapData *initData)
     secondaryFlag = (((GameObject *)self)->anim.seqId == PAYMENT_KIOSK_WELL_TEXT_SEQ_ID) ? 1 : 0;
     state->textVariant = (u8)secondaryFlag;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 typedef struct FEseqobjectEffectParams {
   s16 xRot;
@@ -78,11 +74,17 @@ typedef struct FEseqobjectEffectParams {
   f32 z;
 } FEseqobjectEffectParams;
 
+#pragma scheduling on
+#pragma peephole on
 static void FEseqobject_spawnEffect(int obj, FEseqobjectEffectParams *params)
 {
   (*gPartfxInterface)->spawnObject((void *)obj, 0x85, params, 1, -1, NULL);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
+#pragma scheduling on
+#pragma peephole on
 static int FEseqobject_findControlObject(void)
 {
   int count;
@@ -101,9 +103,9 @@ static int FEseqobject_findControlObject(void)
   }
   return found;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int FEseqobject_SeqFn(int obj, undefined4 unused, u8 *setup)
 {
   FEseqobjectEffectParams effect;
@@ -179,8 +181,6 @@ int FEseqobject_SeqFn(int obj, undefined4 unused, u8 *setup)
   setupData[0x56] = 0;
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -195,6 +195,8 @@ int FEseqobject_SeqFn(int obj, undefined4 unused, u8 *setup)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801df45c(undefined2 *param_1)
 {
   bool bVar1;
@@ -273,6 +275,8 @@ void FUN_801df45c(undefined2 *param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -287,6 +291,8 @@ void FUN_801df45c(undefined2 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 uint FUN_801df69c(int param_1,undefined4 param_2,int param_3)
 {
   bool bVar1;
@@ -327,6 +333,8 @@ uint FUN_801df69c(int param_1,undefined4 param_2,int param_3)
   }
   return uVar3;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -360,6 +368,8 @@ void FUN_801df784(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801df788(int param_1)
 {
   byte bVar1;
@@ -392,6 +402,8 @@ void FUN_801df788(int param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -424,38 +436,30 @@ int dll_144_getObjectTypeId(void) { return 0x0; }
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E56B8;
 extern f32 lbl_803E56C0;
-#pragma peephole off
 void FEseqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E56B4); }
 void FElevControl_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E56B8); }
 void dll_144_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E56C0); }
-#pragma peephole reset
 
 /* call(x, N) wrappers. */
-#pragma scheduling off
 void FElevControl_init(int x) { ObjMsg_AllocQueue(x, 0x2); }
-#pragma scheduling reset
 
 /*
  * Function: FEseqobject_init
  * EN v1.0 Address: 0x801DF8F4
  * EN v1.0 Size: 56b
  */
-#pragma scheduling off
 void FEseqobject_init(int obj)
 {
     *(short *)obj = 0;
     ((GameObject *)obj)->animEventCallback = (void *)FEseqobject_SeqFn;
     ObjMsg_AllocQueue((void *)obj, 0xa);
 }
-#pragma scheduling reset
 
 /*
  * Function: FEseqobject_update
  * EN v1.0 Address: 0x801DF894
  * EN v1.0 Size: 96b
  */
-#pragma scheduling off
-#pragma peephole off
 void FEseqobject_update(int obj)
 {
     register int self = obj;
@@ -464,34 +468,28 @@ void FEseqobject_update(int obj)
         (*gObjectTriggerInterface)->runSequence(0, (void *)self, -1);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * Function: dll_144_SeqFn
  * EN v1.0 Address: 0x801DF9AC
  * EN v1.0 Size: 16b
  */
-#pragma scheduling off
 int dll_144_SeqFn(void *p1, void *p2, u8 *p3)
 {
     p3[0x56] = 0;
     return 0;
 }
-#pragma scheduling reset
 
 /*
  * Function: dll_144_init
  * EN v1.0 Address: 0x801DFA08
  * EN v1.0 Size: 24b
  */
-#pragma scheduling off
 void dll_144_init(int obj)
 {
     *(short *)obj = 0;
     ((GameObject *)obj)->animEventCallback = (void *)dll_144_SeqFn;
 }
-#pragma scheduling reset
 
 ObjectDescriptor gFElevControlObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,

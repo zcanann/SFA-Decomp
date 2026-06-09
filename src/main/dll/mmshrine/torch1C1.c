@@ -36,8 +36,6 @@ extern f32 lbl_803E5C60;
 extern void *lbl_803DDBC4;
 extern s16 lbl_80326238[];
 extern u8 lbl_80326208[];
-#pragma scheduling off
-#pragma peephole off
 void ecsh_shrine_func0B(u8 idx, f32 *out1, f32 *out2) {
     int *obj;
     int j;
@@ -56,8 +54,6 @@ void ecsh_shrine_setScale(s16 *out) {
     state = ((GameObject *)obj)->extra;
     *out = *(s16 *)((char *)state + 0x20);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -72,6 +68,8 @@ void ecsh_shrine_setScale(s16 *out) {
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801c5f28(ushort *param_1)
 {
   int iVar1;
@@ -130,6 +128,8 @@ void FUN_801c5f28(ushort *param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -144,6 +144,8 @@ void FUN_801c5f28(ushort *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801c61f4(undefined4 param_1,undefined4 param_2,int param_3)
 {
   char cVar1;
@@ -190,6 +192,8 @@ void FUN_801c61f4(undefined4 param_1,undefined4 param_2,int param_3)
   FUN_80286888();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -250,8 +254,6 @@ extern void modelLightStruct_setEnabled(int handle, int flag, f32 v);
 extern void objParticleFn_80099d84(int obj, f32 a, int kind, f32 b, int h);
 extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 scale);
 extern f32 lbl_803E4FC8;
-#pragma scheduling off
-#pragma peephole off
 void ecsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
     void **inner = ((GameObject *)obj)->extra;
     if (visible == 0) {
@@ -281,5 +283,3 @@ void ecsh_shrine_free(int *obj) {
     GameBit_Set(0xcbb, 1);
     GameBit_Set(0xa7f, 1);
 }
-#pragma peephole reset
-#pragma scheduling reset

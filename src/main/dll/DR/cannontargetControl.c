@@ -111,8 +111,6 @@ extern f32 lbl_803E4348;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void gunpowderbarrel_hitDetect(int param_1)
 {
     GameObject *barrel;
@@ -216,8 +214,6 @@ copy_end:
     barrel->anim.previousLocalPosZ = barrel->anim.localPosZ;
     return;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -232,6 +228,8 @@ copy_end:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801a1df8(int param_1,int param_2)
 {
   int iVar1;
@@ -251,6 +249,8 @@ void FUN_801a1df8(int param_1,int param_2)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -265,6 +265,8 @@ void FUN_801a1df8(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801a1ec4(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
                  undefined4 param_5,undefined4 param_6)
 {
@@ -294,6 +296,8 @@ void FUN_801a1ec4(undefined4 param_1,undefined4 param_2,undefined4 param_3,undef
   FUN_80286884();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -365,8 +369,6 @@ void blasted_hitDetect(void)
 {
 }
 
-#pragma scheduling off
-#pragma peephole off
 void blasted_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
   int *state = ((GameObject *)obj)->extra;
@@ -374,8 +376,6 @@ void blasted_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
     objRenderFn_8003b8f4(lbl_803E4348);
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -390,6 +390,8 @@ void blasted_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801a1fb8(int *param_1)
 {
   float fVar1;
@@ -480,6 +482,8 @@ void FUN_801a1fb8(int *param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -494,6 +498,8 @@ void FUN_801a1fb8(int *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801a2350(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
@@ -767,6 +773,8 @@ void FUN_801a2350(undefined8 param_1,double param_2,double param_3,undefined8 pa
   FUN_80286884();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 extern int *lbl_803DCAC0; /* carryable-object interface singleton */
 extern void ObjMsg_AllocQueue(int obj, int capacity);
@@ -787,8 +795,6 @@ typedef struct {
  * carryable interface and obj groups, zeroes the roll/contact state, seeds
  * the hit radius from the model's bound halfword, and latches the
  * indestructible bit for the cannon-range variant (type 0x754). */
-#pragma scheduling off
-#pragma peephole off
 void gunpowderbarrel_init(int obj, u8 *def)
 {
     GunpowderBarrelState *state = ((GameObject *)obj)->extra;
@@ -843,8 +849,6 @@ void gunpowderbarrel_init(int obj, u8 *def)
         ((BarrelBits *)&state->heldFlags)->b1 = 1;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern u8 *mapGetBlock(int idx);
@@ -857,8 +861,6 @@ extern u8 *fn_8006070C(void *block, int idx);
  * on matching block entries and bit 1 on matching group records. Returns 0
  * when the block is missing or not trigger-enabled. */
 #pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
 int fn_801A27B8(int obj, int id)
 {
     u8 *block;
@@ -893,8 +895,6 @@ int fn_801A27B8(int obj, int id)
     }
     return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 #pragma dont_inline reset
 
 extern int  GameBit_Get(int bit);
@@ -931,8 +931,6 @@ STATIC_ASSERT(sizeof(BlastedTargetState) == 0x14);
  * hit nodes for newly-destroyed (state 5) pieces, records each unique piece,
  * advances the damage model index, and on the final piece latches the
  * GameBit, fires the trigger, and swaps to the destroyed model. */
-#pragma scheduling off
-#pragma peephole off
 void blasted_update(int obj)
 {
     BlastedTargetSetup *setup = (BlastedTargetSetup *)((GameObject *)obj)->anim.placementData;
@@ -999,8 +997,6 @@ void blasted_update(int obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int  timerCountDown(void *p);
 extern void s16toFloat(void *p, int v);
@@ -1037,8 +1033,6 @@ extern f32  lbl_803DBE80;
  * held/released message queue, grows the hitbox while the fuse burns and
  * hands the barrel back to its generator, and handles the pickup/steal/toss
  * transitions against the player's carry state. */
-#pragma scheduling off
-#pragma peephole off
 void gunpowderbarrel_update(int obj)
 {
     GunpowderBarrelState *state = ((GameObject *)obj)->extra;
@@ -1250,5 +1244,3 @@ void gunpowderbarrel_update(int obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

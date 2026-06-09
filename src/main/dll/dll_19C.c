@@ -139,8 +139,6 @@ STATIC_ASSERT(offsetof(DfshShrinePlacement, startDelay) == 0x1A);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void dfsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     DfshShrineState *state;
@@ -163,8 +161,6 @@ void dfsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         objParticleFn_80099d84((int *)obj, lbl_803E4E88, 7, *(f32 *)&lbl_803E4E88, (int)state->light);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 #define DFSH_REWARD_BIT(idx) (base[(idx)])
 #define DFSH_REWARD_DELAY(idx) (base[10 + (idx)])
@@ -174,8 +170,6 @@ void dfsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 #define DFSH_SHRINE_FLAG_SUCCESS 0x40
 #define DFSH_SHRINE_FLAG_OPENED_BY_SEQUENCE 0x80
 
-#pragma scheduling off
-#pragma peephole off
 void dfsh_shrine_update(int obj)
 {
     u16 *base = lbl_80325F88;
@@ -323,8 +317,6 @@ void dfsh_shrine_update(int obj)
         break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -339,6 +331,8 @@ void dfsh_shrine_update(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801c3134(undefined4 param_1,undefined4 param_2,int param_3)
 {
   byte bVar1;
@@ -383,6 +377,8 @@ void FUN_801c3134(undefined4 param_1,undefined4 param_2,int param_3)
   FUN_80286888();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -397,6 +393,8 @@ void FUN_801c3134(undefined4 param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801c3288(int param_1)
 {
   uint uVar1;
@@ -419,6 +417,8 @@ void FUN_801c3288(int param_1)
   FUN_80017698(0xcbb,1);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -433,6 +433,8 @@ void FUN_801c3288(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801c331c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   int iVar1;
@@ -455,6 +457,8 @@ void FUN_801c331c(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   FUN_80286888();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -469,6 +473,8 @@ void FUN_801c331c(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801c33b4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  ushort *param_9)
@@ -650,6 +656,8 @@ void FUN_801c33b4(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -681,6 +689,8 @@ void FUN_801c3a9c(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801c3aa0(int param_1)
 {
   int iVar1;
@@ -694,6 +704,8 @@ void FUN_801c3aa0(int param_1)
   (*gObjectTriggerInterface)->freeState((u8 *)iVar1);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -708,6 +720,8 @@ void FUN_801c3aa0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801c3b00(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   int iVar1;
@@ -725,6 +739,8 @@ void FUN_801c3b00(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -747,8 +763,6 @@ typedef struct DfshShrineFlags {
     u8 unused7 : 1;
 } DfshShrineFlags;
 
-#pragma scheduling off
-#pragma peephole off
 void dfsh_shrine_init(int *obj, DfshShrinePlacement *init) {
     DfshShrineState *state;
 
@@ -774,8 +788,6 @@ void dfsh_shrine_init(int *obj, DfshShrinePlacement *init) {
     GameBit_Set(0xe70, 1);
     GameBit_Set(0xefa, 1);
 }
-#pragma peephole reset
-#pragma scheduling reset
 void SpiritPrize_hitDetect(void) {}
 void SpiritPrize_release(void) {}
 void SpiritPrize_initialise(void) {}
@@ -802,7 +814,6 @@ typedef struct SpiritPrizeState {
     f32 sfxTimer;
 } SpiritPrizeState;
 
-#pragma scheduling off
 void SpiritPrize_free(int obj)
 {
     SpiritPrizeState *state;
@@ -817,7 +828,6 @@ void SpiritPrize_free(int obj)
     }
     (*gObjectTriggerInterface)->freeState((u8 *)state);
 }
-#pragma scheduling reset
 
 extern void modelLightStruct_setLightKind(void *light, int v);
 extern void modelLightStruct_setDiffuseColor(void *light, int a, int b, int c, int d);
@@ -826,8 +836,6 @@ extern f32 lbl_803E4E98;
 extern f32 lbl_803E4EB0;
 extern f32 lbl_803E4EB4;
 
-#pragma scheduling off
-#pragma peephole off
 void SpiritPrize_init(int *obj, u8 *init) {
     SpiritPrizeState *state;
 
@@ -866,8 +874,6 @@ void SpiritPrize_init(int *obj, u8 *init) {
     *(u8*)((char*)obj + 0x37) = 0;
     state->sfxTimer = (f32)(s32)randomGetRange(0xb4, 0xf0);
 }
-#pragma peephole reset
-#pragma scheduling reset
 void dfsh_objcreator_free(void) {}
 void dfsh_objcreator_hitDetect(void) {}
 
@@ -879,12 +885,8 @@ int dfsh_objcreator_getObjectTypeId(void) { return 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4EB8;
-#pragma peephole off
 void dfsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4EB8); }
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 void SpiritPrize_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
     SpiritPrizeState *state;
     s32 v;
@@ -899,11 +901,7 @@ void SpiritPrize_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void SpiritPrize_update(int obj)
 {
     u8 *params;
@@ -973,5 +971,3 @@ void SpiritPrize_update(int obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

@@ -114,8 +114,6 @@ enum NwMammothRuntimeFlag {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void nw_mammoth_update(NwMammothObject *obj,int param_2)
 {
   NwMammothTables *table = (NwMammothTables *)lbl_803267C0;
@@ -225,8 +223,6 @@ void nw_mammoth_update(NwMammothObject *obj,int param_2)
   }
 }
 
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -235,8 +231,6 @@ void nw_mammoth_update(NwMammothObject *obj,int param_2)
  * EN v1.0 Address: 0x801CF4F0
  * EN v1.0 Size: 668b
  */
-#pragma peephole off
-#pragma scheduling off
 void nw_mammoth_init(NwMammothObject *obj, NwMammothMapData *mapData, int isReload)
 {
   u32 pathParam;
@@ -302,8 +296,6 @@ void nw_mammoth_init(NwMammothObject *obj, NwMammothMapData *mapData, int isRelo
   ObjGroup_AddObject(obj, NW_MAMMOTH_GROUP_ID);
 }
 
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -335,6 +327,8 @@ void FUN_801cf0b0(uint param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801cf0b4(int param_1)
 {
   int iVar1;
@@ -346,6 +340,8 @@ void FUN_801cf0b4(int param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -372,13 +368,11 @@ int nw_tricky_getExtraSize(void)
  * EN v1.0 Address: 0x801CF78C
  * EN v1.0 Size: 44b
  */
-#pragma peephole off
 int nw_tricky_SeqFn(void)
 {
     Sfx_StopObjectChannel(getTrickyObject(), 16);
     return 0;
 }
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -393,6 +387,8 @@ int nw_tricky_SeqFn(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801cf108(int param_1)
 {
   int iVar1;
@@ -413,6 +409,8 @@ void FUN_801cf108(int param_1)
                ,0);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -427,6 +425,8 @@ void FUN_801cf108(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801cf1a0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9)
@@ -563,10 +563,10 @@ LAB_801cf840:
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
-#pragma scheduling off
 void nw_tricky_free(int obj) {
     (void)obj;
     GameBit_Set(0x4e4, 1);
 }
-#pragma scheduling reset

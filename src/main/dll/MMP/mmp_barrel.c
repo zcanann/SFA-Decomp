@@ -161,8 +161,6 @@ extern f32 lbl_803E4C5C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void waveanimator_func0B(int *obj)
 {
     WaveAnimatorState *p = (WaveAnimatorState *)((int **)obj)[0xb8 / 4];
@@ -174,8 +172,6 @@ u8 wallanimator_func0B(int *obj)
     int *p = ((int **)obj)[0xb8 / 4];
     return *p >= WALLANIMATOR_DONE_TIMER;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern void mm_free(void *p);
 void alphaanimator_free(int *obj)
@@ -198,6 +194,8 @@ void alphaanimator_free(int *obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80192488(void)
 {
   int iVar1;
@@ -262,6 +260,8 @@ void FUN_80192488(void)
   FUN_80286878();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -276,6 +276,8 @@ void FUN_80192488(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80192618(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   if (visible != 0) {
@@ -283,6 +285,8 @@ void FUN_80192618(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -297,6 +301,8 @@ void FUN_80192618(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80192640(int param_1)
 {
   int iVar1;
@@ -325,6 +331,8 @@ void FUN_80192640(int param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -339,6 +347,8 @@ void FUN_80192640(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80192720(int param_1,int param_2,int param_3)
 {
   int iVar1;
@@ -355,6 +365,8 @@ void FUN_80192720(int param_1,int param_2,int param_3)
   *(undefined4 *)(iVar1 + 0xc) = 0xffffffff;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -369,6 +381,8 @@ void FUN_80192720(int param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80192790(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   if (visible != 0) {
@@ -376,6 +390,8 @@ void FUN_80192790(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -390,6 +406,8 @@ void FUN_80192790(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801927b8(void)
 {
   float fVar1;
@@ -477,6 +495,8 @@ void FUN_801927b8(void)
   FUN_80286878();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -491,6 +511,8 @@ void FUN_801927b8(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80192ab4(int param_1)
 {
   DAT_803de768 = DAT_803de768 + -1;
@@ -508,6 +530,8 @@ void FUN_80192ab4(int param_1)
   ObjGroup_RemoveObject(param_1,0x1b);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -522,6 +546,8 @@ void FUN_80192ab4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80192b28(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   if (visible != 0) {
@@ -529,6 +555,8 @@ void FUN_80192b28(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -543,6 +571,8 @@ void FUN_80192b28(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80192b50(int param_1,int param_2)
 {
   double dVar1;
@@ -572,6 +602,8 @@ void FUN_80192b50(int param_1,int param_2)
   DAT_803de768 = DAT_803de768 + '\x01';
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -610,6 +642,8 @@ void FUN_80192c90(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80192cc0(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   if (visible != 0) {
@@ -617,6 +651,8 @@ void FUN_80192cc0(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -631,6 +667,8 @@ void FUN_80192cc0(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80192ce8(void)
 {
   byte bVar1;
@@ -821,6 +859,8 @@ LAB_8019364c:
   FUN_8028688c();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -835,6 +875,8 @@ LAB_8019364c:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 uint FUN_80193378(int param_1)
 {
   return ((uint)(byte)((lbl_803E4C30 *
@@ -843,6 +885,8 @@ uint FUN_80193378(int param_1)
                                DOUBLE_803e4c38) < *(float *)(*(int *)&((GameObject *)param_1)->extra + 0xc)) << 2)
          << 0x1c) >> 0x1e;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -857,6 +901,8 @@ uint FUN_80193378(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 double FUN_801933d8(int param_1,int param_2)
 {
   float fVar1;
@@ -904,6 +950,8 @@ double FUN_801933d8(int param_1,int param_2)
   }
   return dVar7;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -918,6 +966,8 @@ double FUN_801933d8(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80193544(undefined4 param_1,undefined4 param_2,int param_3)
 {
   byte bVar1;
@@ -1038,6 +1088,8 @@ void FUN_80193544(undefined4 param_1,undefined4 param_2,int param_3)
   FUN_80286868();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1052,6 +1104,8 @@ void FUN_80193544(undefined4 param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80193800(void)
 {
   int iVar1;
@@ -1121,6 +1175,8 @@ void FUN_80193800(void)
   FUN_8028686c();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1135,6 +1191,8 @@ void FUN_80193800(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80193924(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   if (visible != 0) {
@@ -1142,6 +1200,8 @@ void FUN_80193924(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1173,6 +1233,8 @@ void FUN_8019394c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80193950(int param_1,int param_2)
 {
   double dVar1;
@@ -1202,6 +1264,8 @@ void FUN_80193950(int param_1,int param_2)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1216,6 +1280,8 @@ void FUN_80193950(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80193a50(undefined4 param_1,undefined4 param_2,char *param_3,int param_4)
 {
   int iVar1;
@@ -1262,6 +1328,8 @@ void FUN_80193a50(undefined4 param_1,undefined4 param_2,char *param_3,int param_
   FUN_8028688c();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1276,6 +1344,8 @@ void FUN_80193a50(undefined4 param_1,undefined4 param_2,char *param_3,int param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80193ba8(int param_1)
 {
   int iVar1;
@@ -1326,6 +1396,8 @@ void FUN_80193ba8(int param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -1355,23 +1427,18 @@ int visanimator_getObjectTypeId(void) { return 0x0; }
 u8 groundanimator_modelMtxFn(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x2b); }
 
 /* 16b chained patterns. */
-#pragma scheduling off
 void alphaanimator_init(int *obj) { s8 v = -1; *(s8 *)&((AlphaAnimatorState *)((int**)obj)[0xb8/4])->prevGate = v; }
-#pragma scheduling reset
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3F70;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E3F78;
 extern f32 lbl_803E3FC4;
-#pragma peephole off
 void waveanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3F70); }
 void alphaanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3F78); }
 void groundanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3FC4); }
-#pragma peephole reset
 
 /* wall variant: hashes lha to byte */
-#pragma peephole off
 u8 wallanimator_modelMtxFn(int *obj) { return (u8)*(s16 *)((char *)((int **)obj)[0x4c/4] + 0x1c); }
 void waveanimator_setScale(int *obj, f32 fval)
 {
@@ -1379,10 +1446,8 @@ void waveanimator_setScale(int *obj, f32 fval)
   p->flags |= 1;
   p->scaleB = fval;
 }
-#pragma peephole reset
 
 extern f32 lbl_803E3F98;
-#pragma scheduling off
 u8 groundanimator_func0B(int *obj)
 {
     GroundAnimatorState *p1 = (GroundAnimatorState *)((int **)obj)[0xB8 / 4];
@@ -1391,7 +1456,6 @@ u8 groundanimator_func0B(int *obj)
     u8 byte = *(u8 *)((char *)p2 + 0x20);
     return v > lbl_803E3F98 * (f32)byte;
 }
-#pragma scheduling reset
 
 extern int objPosToMapBlockIdx(double x, double y, double z);
 extern void *mapGetBlock(int idx);
@@ -1400,8 +1464,6 @@ extern void hitAnimatorFn_80193dbc(void *block, HitAnimatorObject *obj, HitAnima
 extern int fn_80065640(void);
 extern void fn_80065574(int a, int b, int c);
 extern u8 lbl_803DDAE8;
-#pragma peephole off
-#pragma scheduling off
 void waveanimator_init(int *obj, int *desc)
 {
     WaveAnimatorState *vstate = (WaveAnimatorState *)((int**)obj)[0xB8/4];
@@ -1424,11 +1486,7 @@ void waveanimator_init(int *obj, int *desc)
     ObjGroup_AddObject(obj, 27);
     lbl_803DDAE8++;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void hitanimator_update(HitAnimatorObject *obj)
 {
     HitAnimatorPlacement *setup = (HitAnimatorPlacement *)obj->objAnim.placementData;
@@ -1477,12 +1535,8 @@ void hitanimator_update(HitAnimatorObject *obj)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern f32 lbl_803E3FB8;
-#pragma peephole off
-#pragma scheduling off
 void groundanimator_init(int *obj, int *desc)
 {
     GroundAnimatorState *vstate = (GroundAnimatorState *)((int**)obj)[0xB8/4];
@@ -1501,11 +1555,7 @@ void groundanimator_init(int *obj, int *desc)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void hitanimator_init(HitAnimatorObject *obj, HitAnimatorPlacement *desc)
 {
     HitAnimatorState *state = obj->state;
@@ -1539,11 +1589,7 @@ void hitanimator_init(HitAnimatorObject *obj, HitAnimatorPlacement *desc)
     state->previousGameBitValue = g;
     obj->objectFlags |= HITANIMATOR_OBJECT_FLAGS_ENABLED;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void visanimator_init(int *obj, int *desc)
 {
     VisAnimatorState *vstate;
@@ -1593,14 +1639,10 @@ void visanimator_update(int *obj)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern void *lbl_803DDAEC;
 extern void *lbl_803DDAF0;
 extern void *lbl_803DDAF4;
-#pragma peephole off
-#pragma scheduling off
 void waveanimator_free(int *obj)
 {
     if (--lbl_803DDAE8 == 0) {
@@ -1610,12 +1652,8 @@ void waveanimator_free(int *obj)
     }
     ObjGroup_RemoveObject(obj, 27);
 }
-#pragma scheduling reset
-#pragma peephole reset
 extern u8 lbl_803DDAF8;
 extern u8 framesThisStep;
-#pragma scheduling off
-#pragma peephole off
 void waveanimator_hitDetect(int *obj) {
     int i;
     int j;
@@ -1646,8 +1684,6 @@ extern int mapBlockFn_80060678(void *entry);
 extern void *fn_800606DC(void *block, int idx);
 extern void fn_800605F0(void *cell, void *out);
 extern void fn_8006058C(void *cell, void *in);
-#pragma scheduling off
-#pragma peephole off
 void groundanimator_free(int *obj, int flag) {
     GroundAnimatorState *w;
     int *r21;
@@ -1707,8 +1743,6 @@ extern f32 lbl_803E3FB4;
 extern f32 lbl_803E3FBC;
 extern f32 timeDelta;
 extern void fn_801A80F0(int *e, int arg);
-#pragma scheduling off
-#pragma peephole off
 f32 groundanimator_setScale(int *obj, int *target) {
     GroundAnimatorState *g;
     int *r31;
@@ -1748,8 +1782,6 @@ extern float fastFloorf(float x);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f32 lbl_803E3FC0;
-#pragma scheduling off
-#pragma peephole off
 void fn_801932C8(int *obj, GroundAnimatorState *p2, int *p3) {
     void *block;
     void *entry;
@@ -1820,8 +1852,6 @@ extern void objRenderFn_80041018(int *obj);
 extern void DCStoreRangeNoSync(void *addr, int len);
 extern void *mmAlloc(int size, int align, int tag);
 extern u16 lbl_803DBDF0[];
-#pragma scheduling off
-#pragma peephole off
 void groundanimator_update(int *obj) {
     GroundAnimatorState *g;
     int *r20;

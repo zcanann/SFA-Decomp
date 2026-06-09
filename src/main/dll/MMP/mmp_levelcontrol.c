@@ -80,8 +80,6 @@ extern f64 lbl_803E3FF0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 f32 wallanimator_setScale(int obj,int target)
 {
   struct {
@@ -146,8 +144,6 @@ f32 wallanimator_setScale(int obj,int target)
   }
   return scale;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -162,6 +158,8 @@ f32 wallanimator_setScale(int obj,int target)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80194544(int param_1)
 {
   int iVar1;
@@ -190,6 +188,8 @@ void FUN_80194544(int param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -204,6 +204,8 @@ void FUN_80194544(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801945fc(int param_1,int param_2)
 {
   byte bVar1;
@@ -228,6 +230,8 @@ void FUN_801945fc(int param_1,int param_2)
   *pbVar4 = *pbVar4 | 1;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -242,6 +246,8 @@ void FUN_801945fc(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801946b8(void)
 {
   float fVar1;
@@ -344,6 +350,8 @@ void FUN_801946b8(void)
   FUN_80286884();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -358,12 +366,16 @@ void FUN_801946b8(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80194874(int param_1)
 {
   ObjGroup_RemoveObject(param_1,0x23);
   ObjGroup_RemoveObject(param_1,0x31);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -378,6 +390,8 @@ void FUN_80194874(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801948b0(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   if (visible != 0) {
@@ -385,6 +399,8 @@ void FUN_801948b0(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -399,6 +415,8 @@ void FUN_801948b0(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801948d8(uint param_1)
 {
   int iVar1;
@@ -436,6 +454,8 @@ void FUN_801948d8(uint param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -450,6 +470,8 @@ void FUN_801948d8(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801949ec(undefined2 *param_1,int param_2)
 {
   uint uVar1;
@@ -466,6 +488,8 @@ void FUN_801949ec(undefined2 *param_1,int param_2)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -562,6 +586,8 @@ double FUN_80194a70(int param_1,byte param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80194b10(undefined4 param_1,undefined4 param_2,int param_3)
 {
   ushort uVar1;
@@ -621,6 +647,8 @@ void FUN_80194b10(undefined4 param_1,undefined4 param_2,int param_3)
   FUN_8028687c();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 typedef struct MapBlockHdr {
   u16 start;
@@ -643,8 +671,6 @@ typedef struct EdgeVerts {
   s16 f;
 } EdgeVerts;
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80194964(int obj,int state,int block)
 {
   ushort blockEnd;
@@ -702,11 +728,7 @@ void fn_80194964(int obj,int state,int block)
     edge += 2;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80194C40(undefined4 def,int state,int block)
 {
   ushort blockEnd;
@@ -786,8 +808,6 @@ void fn_80194C40(undefined4 def,int state,int block)
   }
   *(int *)block = return0_80060B90();
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -825,8 +845,6 @@ int xyzanimator_getExtraSize(void)
   return 0x50;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void xyzanimator_free(int obj,int param_2)
 {
   int block;
@@ -854,27 +872,19 @@ void xyzanimator_free(int obj,int param_2)
   ObjGroup_RemoveObject(obj,0x51);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3FF8;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E4004;
-#pragma peephole off
 void wallanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3FF8); }
 void xyzanimator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4004); }
-#pragma peephole reset
 
-#pragma scheduling off
 void wallanimator_free(int obj) {
     ObjGroup_RemoveObject(obj, WALLANIMATOR_GROUP_PRIMARY);
     ObjGroup_RemoveObject(obj, WALLANIMATOR_GROUP_SECONDARY);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void wallanimator_update(int obj)
 {
   int nearby;
@@ -917,11 +927,7 @@ void wallanimator_update(int obj)
     *(byte *)&((GameObject *)obj)->anim.resetHitboxMode = *(byte *)&((GameObject *)obj)->anim.resetHitboxMode | 0x10;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void wallanimator_init(s16* obj, s16* p2)
 {
     register int* state = ((GameObject *)obj)->extra;
@@ -934,5 +940,3 @@ void wallanimator_init(s16* obj, s16* p2)
         *state = WALLANIMATOR_DONE_TIMER;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

@@ -46,8 +46,6 @@ extern MapEventInterface **gMapEventInterface;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void SH_LevelControl_runBloopEvent(int obj, int state)
 {
   int player;
@@ -156,8 +154,6 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
     (*gMapEventInterface)->triggerEvent(0, 0, 1, 0);
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -172,6 +168,8 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801d8480(undefined4 param_1,undefined4 param_2,short param_3,short param_4,short param_5,
                  int *param_6)
 {
@@ -192,6 +190,8 @@ void FUN_801d8480(undefined4 param_1,undefined4 param_2,short param_3,short para
   FUN_80286884();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--

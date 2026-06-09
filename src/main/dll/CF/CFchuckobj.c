@@ -131,8 +131,6 @@ extern void setAButtonIcon(int iconId);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void fxemit_init(FxEmitObject *obj, FxEmitPlacement *setup)
 {
   FxEmitState *state;
@@ -170,11 +168,7 @@ void fxemit_init(FxEmitObject *obj, FxEmitPlacement *setup)
   state->startDelay = (s16)randomGetRange(0, 10);
   state->altEffectId = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void areafxemit_emitBurst(AreaFxEmitObject *obj, int count)
 {
@@ -216,8 +210,6 @@ void areafxemit_emitBurst(AreaFxEmitObject *obj, int count)
   }
 }
 #pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -232,12 +224,16 @@ void areafxemit_emitBurst(AreaFxEmitObject *obj, int count)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8018f158(undefined4 param_1)
 {
   (*gExpgfxInterface)->freeSource2((u32)param_1);
   (*gModgfxInterface)->freeSourceEffects((void *)param_1);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -252,6 +248,8 @@ void FUN_8018f158(undefined4 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8018f1b4(short *param_1)
 {
   short sVar1;
@@ -345,6 +343,8 @@ void FUN_8018f1b4(short *param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -376,6 +376,8 @@ void FUN_8018f4fc(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8018f500(void)
 {
   int iVar1;
@@ -429,6 +431,8 @@ void FUN_8018f500(void)
   FUN_80286888();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -443,6 +447,8 @@ void FUN_8018f500(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8018f650(void)
 {
   byte bVar1;
@@ -632,6 +638,8 @@ void FUN_8018f650(void)
   FUN_80286888();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -646,6 +654,8 @@ void FUN_8018f650(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 undefined4 FUN_8018fca4(undefined4 param_1,undefined4 param_2,int param_3)
 {
   byte bVar1;
@@ -657,6 +667,8 @@ undefined4 FUN_8018fca4(undefined4 param_1,undefined4 param_2,int param_3)
   }
   return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -690,6 +702,8 @@ void FUN_8018fd14(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8018fd48(int param_1)
 {
   short sVar1;
@@ -738,6 +752,8 @@ void FUN_8018fd48(int param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -817,6 +833,8 @@ void FUN_8018fec8(undefined2 *param_1,undefined2 *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8018ffbc(int param_1)
 {
   uint uVar1;
@@ -828,6 +846,8 @@ void FUN_8018ffbc(int param_1)
   ObjGroup_RemoveObject(param_1,0x1c);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -861,6 +881,8 @@ void FUN_80190004(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80190008(int param_1,int param_2)
 {
   int iVar1;
@@ -898,6 +920,8 @@ void FUN_80190008(int param_1,int param_2)
   ObjGroup_AddObject(param_1,0x1c);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -912,8 +936,6 @@ void FUN_80190008(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void warpPadFn_8019042c(int param_1)
 {
     WarpPadState *state;
@@ -1018,15 +1040,11 @@ void warpPadFn_8019042c(int param_1)
         state->pulseTimer = state->pulseTimer + timeDelta;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Drift-recovery: add new fns with v1.0 names. */
 extern u8 lbl_803AC7B0[];
 extern void mm_free(void* p);
 
-#pragma scheduling off
-#pragma peephole off
 
 
 typedef struct CFEmitterFxArgs {
@@ -1487,8 +1505,6 @@ void lfxemitter_free(LfxEmitterObject *obj)
     ObjGroup_RemoveObject((int)obj, LFXEMITTER_OBJ_GROUP);
 }
 
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Trivial 4b 0-arg blr leaves. */
 void fxemit_release(void) {}

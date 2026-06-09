@@ -126,6 +126,8 @@ void FUN_8018af08(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8018af28(int param_1)
 {
   if ((**(byte **)&((GameObject *)param_1)->extra >> 5 & 1) != 0) {
@@ -133,6 +135,8 @@ void FUN_8018af28(int param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -147,6 +151,8 @@ void FUN_8018af28(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8018af74(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
@@ -222,6 +228,8 @@ void FUN_8018af74(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -253,12 +261,16 @@ void FUN_8018b220(undefined2 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8018b224(void)
 {
   GameBit_Set(0xefb,0);
   FUN_800067c0((int *)0x2f,0);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -273,6 +285,8 @@ void FUN_8018b224(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8018b258(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
@@ -336,6 +350,8 @@ void FUN_8018b258(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -350,6 +366,8 @@ void FUN_8018b258(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8018b5a0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
@@ -372,6 +390,8 @@ void FUN_8018b5a0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -386,6 +406,8 @@ void FUN_8018b5a0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8018b6ac(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
@@ -596,6 +618,8 @@ LAB_8018bc44:
   FUN_80286888();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -609,8 +633,6 @@ extern u8 framesThisStep;
 #define TRICKY_GUARD_SPOT_VTABLE(tricky) \
     (*(TrickyGuardSpotInterfaceVTable **)((tricky)->dll))
 
-#pragma scheduling off
-#pragma peephole off
 void trickyguardspot_update(TrickyGuardSpotObject *obj) {
     u8 *sub;
     u8 *def;
@@ -649,8 +671,6 @@ void trickyguardspot_update(TrickyGuardSpotObject *obj) {
     }
     GameBit_Set(*(s16 *)(def + 0x1e), flags->trickyInRange);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* 8b "li r3, N; blr" returners. */
 int magiccavetop_getExtraSize(void) { return 0xc; }
@@ -660,15 +680,11 @@ int cctestinfot_getExtraSize(void) { return 0x8; }
 int deathgas_getExtraSize(void) { return 0x10; }
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-#pragma scheduling off
 void trickyguardspot_free(TrickyGuardSpotObject *obj) { ObjGroup_RemoveObject(obj, TRICKY_GUARD_SPOT_GROUP); }
-#pragma scheduling reset
 
 extern void ObjGroup_AddObject(int obj, int g);
 extern void objSetHintTextIdx(int obj, int idx);
 
-#pragma scheduling off
-#pragma peephole off
 void trickyguardspot_init(TrickyGuardSpotObject *obj, TrickyGuardSpotPlacement *def) {
     TrickyGuardSpotState *state = obj->state;
     ObjGroup_AddObject((int)obj, TRICKY_GUARD_SPOT_GROUP);
@@ -692,8 +708,6 @@ void cctestinfot_init(int obj, s8 *def) {
     ((GameObject *)obj)->anim.rotY = (s16)((s32)(u8)def[0x19] << 8);
     ((GameObject *)obj)->anim.rotZ = (s16)((s32)(u8)def[0x18] << 8);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int playerIsDisguised(void);
 extern void Obj_SetActiveModelIndex(int *obj, int idx);
@@ -703,8 +717,6 @@ extern f32 timeDelta;
 extern f32 lbl_803E3C88;
 extern f32 lbl_803E3C8C;
 
-#pragma scheduling off
-#pragma peephole off
 void cctestinfot_update(int *obj) {
     extern void *Obj_GetPlayerObject(void);
     u8 *sub = ((GameObject *)obj)->extra;
@@ -732,14 +744,10 @@ void cctestinfot_update(int *obj) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int Obj_GetActiveModel(int *obj);
 extern int *ObjModel_GetRenderOpTextureRefs(int model, int idx);
 extern f32 lbl_803E3C4C;
-#pragma scheduling off
-#pragma peephole off
 void magiccavetop_init(int *obj, s8 *def) {
     int *state = ((GameObject *)obj)->extra;
     int *refs;
@@ -758,8 +766,6 @@ void magiccavetop_init(int *obj, s8 *def) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void stopRumble2(void);
 extern void *Obj_GetPlayerObject(void);
@@ -767,7 +773,6 @@ extern void *fn_802966CC(void *player);
 extern void staffSetGlow(void *a, int b, int c);
 extern int mapGetDirIdx(int mapId);
 extern void mapUnload(int idx, int flags);
-#pragma scheduling off
 void magiccavetop_free(int *obj) {
     u8 *state = ((GameObject *)obj)->extra;
     u8 *def = *(u8 **)&((GameObject *)obj)->anim.placementData;
@@ -787,15 +792,12 @@ void magiccavetop_free(int *obj) {
         }
     }
 }
-#pragma scheduling reset
 
 extern void envFxActFn_800887f8(int a);
 extern void getEnvfxAct(int *obj, int *target, int id, int p);
 extern void Music_Trigger(int a, int b);
 extern void setAButtonIcon(int idx);
 extern void warpToMap(int mapId, int b);
-#pragma scheduling off
-#pragma peephole off
 void magiccavebottom_update(int *obj) {
     u8 *def = *(u8 **)&((GameObject *)obj)->anim.placementData;
     u8 *sub = ((GameObject *)obj)->extra;
@@ -839,14 +841,10 @@ void magiccavebottom_update(int *obj) {
         break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E3C80;
 extern f32 lbl_803E3C84;
 
-#pragma scheduling off
-#pragma peephole off
 void infotext_update(int *obj) {
     f32 *sub = ((GameObject *)obj)->extra;
     if (ObjTrigger_IsSet((int)obj) != 0 && fn_801334E0() == 0) {
@@ -864,8 +862,6 @@ void infotext_update(int *obj) {
         objRenderFn_80041018((int)obj);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 vec3f_distanceSquared(f32 *a, f32 *b);
 extern int loadMapAndParent(int mapId);
@@ -900,8 +896,6 @@ typedef struct MagicCaveTopFxArgs {
     f32 z;
 } MagicCaveTopFxArgs;
 
-#pragma scheduling off
-#pragma peephole off
 void magiccavetop_update(int *obj) {
     MagicCaveTopFxArgs fx;
     int *player;
@@ -1072,5 +1066,3 @@ void magiccavetop_update(int *obj) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

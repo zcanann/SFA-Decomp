@@ -95,6 +95,8 @@ typedef struct MmShrineAnimEvents {
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801c5990(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,int param_10)
@@ -149,6 +151,8 @@ void FUN_801c5990(undefined8 param_1,undefined8 param_2,double param_3,undefined
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -163,6 +167,8 @@ void FUN_801c5990(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801c5c2c(int param_1)
 {
   float fVar1;
@@ -217,9 +223,9 @@ void FUN_801c5c2c(int param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void fn_801C5990(MmShrineAnimObj *obj)
 {
     u8 *config;
@@ -334,12 +340,8 @@ int fn_801C5CE4(void *objArg, int unused, void *eventListArg)
 
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern int lbl_803DDBC4;
-#pragma scheduling off
-#pragma peephole off
 void ecsh_shrine_modelMtxFn(int *p1, u8 *p2) {
     int *obj = (int *)lbl_803DDBC4;
     int *inner;
@@ -373,5 +375,3 @@ void ecsh_shrine_render2(u8 idx, f32 a, f32 b) {
     lbl_80326208[v].a = a;
     lbl_80326208[v].b = b;
 }
-#pragma peephole reset
-#pragma scheduling reset

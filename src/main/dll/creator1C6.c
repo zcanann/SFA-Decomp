@@ -58,8 +58,6 @@ extern f32 lbl_803E5D60;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int fn_801C8EBC(int obj,undefined4 unused,int animEvents)
 {
   struct Creator1C6Flag15 { u8 b80:1; u8 rest:7; };
@@ -107,8 +105,6 @@ int fn_801C8EBC(int obj,undefined4 unused,int animEvents)
 
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -123,6 +119,8 @@ int fn_801C8EBC(int obj,undefined4 unused,int animEvents)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801c9018(ushort *param_1)
 {
   int iVar1;
@@ -181,6 +179,8 @@ void FUN_801c9018(ushort *param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -218,8 +218,6 @@ int dbsh_shrine_getObjectTypeId(void)
   return 0;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void dbsh_shrine_free(int obj)
 {
   void **state;
@@ -238,11 +236,7 @@ void dbsh_shrine_free(int obj)
   GameBit_Set(0xefa,0);
   GameBit_Set(0xcbb,1);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void dbsh_shrine_render(int obj,undefined4 p2,undefined4 p3,undefined4 p4,undefined4 p5,s8 visible)
 {
   void **state;
@@ -261,8 +255,6 @@ void dbsh_shrine_render(int obj,undefined4 p2,undefined4 p3,undefined4 p4,undefi
     objParticleFn_80099d84(obj, lbl_803E50D8, 7, *(f32 *)&lbl_803E50D8, (int)state[0]);
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--

@@ -63,8 +63,6 @@ extern MapEventInterface **gMapEventInterface;
  * EN v1.0 Address: 0x801899B4
  * EN v1.0 Size: 560b
  */
-#pragma peephole off
-#pragma scheduling off
 void staffactivated_updateLiftHeight(int obj, StaffActivatedState *state)
 {
   u32 flags;
@@ -115,8 +113,6 @@ void staffactivated_updateLiftHeight(int obj, StaffActivatedState *state)
   }
 done:;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 typedef struct PrisonGuardStateFlags {
     u8 pad[0x1d];
@@ -132,8 +128,6 @@ typedef struct PrisonGuardStateFlags {
  * EN v1.0 Address: 0x80189BE4
  * EN v1.0 Size: 116b
  */
-#pragma peephole off
-#pragma scheduling off
 void cfPrisonGuard_setGameBitMirror(int obj, u8 flag)
 {
     register StaffActivatedSetup *setup = (StaffActivatedSetup *)((GameObject *)obj)->anim.placementData;
@@ -146,8 +140,6 @@ void cfPrisonGuard_setGameBitMirror(int obj, u8 flag)
         ((PrisonGuardStateFlags *)state)->mirror = 0;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 u32 cfPrisonGuard_isGameBitMirrorSet(int *obj) { return (((StaffActivatedState *)((GameObject *)obj)->extra)->flags >> 5) & 1; }
 
@@ -169,8 +161,6 @@ typedef struct PrisonGuardRotationWork {
  * EN v1.0 Address: 0x80189C68
  * EN v1.0 Size: 732b
  */
-#pragma peephole off
-#pragma scheduling off
 void staffactivated_spawnMapEventDebris(int obj)
 {
   int i;
@@ -250,8 +240,6 @@ void staffactivated_spawnMapEventDebris(int obj)
     }
   }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -266,6 +254,8 @@ void staffactivated_spawnMapEventDebris(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80189cc4(int obj, StaffActivatedState *state)
 {
   byte bVar1;
@@ -311,6 +301,8 @@ void FUN_80189cc4(int obj, StaffActivatedState *state)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -325,6 +317,8 @@ void FUN_80189cc4(int obj, StaffActivatedState *state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80189e0c(uint obj, StaffActivatedState *state)
 {
   double dVar1;
@@ -379,6 +373,8 @@ void FUN_80189e0c(uint obj, StaffActivatedState *state)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -393,6 +389,8 @@ void FUN_80189e0c(uint obj, StaffActivatedState *state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8018a060(int obj,char enabled)
 {
   StaffActivatedSetup *setup;
@@ -410,6 +408,8 @@ void FUN_8018a060(int obj,char enabled)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--

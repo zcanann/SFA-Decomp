@@ -66,7 +66,7 @@ extern ObjectTriggerInterface **gObjectTriggerInterface;
 extern f32 timeDelta;
 extern f32 lbl_802C23B8[];
 
-#pragma scheduling off
+#pragma peephole on
 void ecsh_cup_update(short *obj)
 {
     f32 dist;
@@ -189,7 +189,7 @@ void ecsh_cup_update(short *obj)
         }
     }
 }
-#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -204,6 +204,8 @@ void ecsh_cup_update(short *obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801c83d4(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
   if (visible != 0) {
@@ -211,6 +213,8 @@ void FUN_801c83d4(int param_1, int param_2, int param_3, int param_4, int param_
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -236,8 +240,6 @@ void ecsh_cup_release(void)
  * EN v1.0 Address: 0x801C8A34
  * EN v1.0 Size: 300b
  */
-#pragma peephole off
-#pragma scheduling off
 void ecsh_cup_init(int obj, int p2)
 {
     int t;
@@ -271,8 +273,6 @@ void ecsh_cup_init(int obj, int p2)
     ObjHits_SetHitVolumeSlot(obj, 0, 0, 0);
     ObjHits_SyncObjectPositionIfDirty(obj);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -323,6 +323,8 @@ void FUN_801c83fc(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801c8400(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
   if (visible != 0) {
@@ -330,6 +332,8 @@ void FUN_801c8400(int param_1, int param_2, int param_3, int param_4, int param_
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -363,6 +367,8 @@ void FUN_801c8428(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801c845c(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
   if (visible != 0) {
@@ -370,6 +376,8 @@ void FUN_801c845c(int param_1, int param_2, int param_3, int param_4, int param_
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 extern f32 mathSinf(f32 v);
 extern int getAngle(f32 dx, f32 dz);
@@ -394,8 +402,6 @@ extern f64 lbl_803E50D0;
  * EN v1.0 Address: 0x801C8B68
  * EN v1.0 Size: 852b
  */
-#pragma peephole off
-#pragma scheduling off
 void fn_801C8B68(int obj)
 {
     register int self = obj;
@@ -454,5 +460,3 @@ void fn_801C8B68(int obj)
         ((GameObject *)self)->anim.alpha = 0xff;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset

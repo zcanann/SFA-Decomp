@@ -64,8 +64,6 @@ extern f32 lbl_803E5140;
 extern f32 lbl_803E5144;
 extern f64 lbl_803E5148;
 
-#pragma scheduling off
-#pragma peephole off
 void dll_197_init(int obj, int data)
 {
     u8 *st;
@@ -104,8 +102,6 @@ void dll_197_init(int obj, int data)
     }
     *(s16 *)(st + 4) = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /*
@@ -121,6 +117,8 @@ void dll_197_init(int obj, int data)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801caa30(undefined2 *param_1,int param_2)
 {
   int *piVar1;
@@ -162,6 +160,8 @@ void FUN_801caa30(undefined2 *param_1,int param_2)
   *(undefined2 *)(piVar2 + 1) = 0;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -176,6 +176,8 @@ void FUN_801caa30(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 undefined4 FUN_801cab60(undefined4 param_1,undefined4 param_2,int param_3)
 {
   int iVar1;
@@ -197,6 +199,8 @@ undefined4 FUN_801cab60(undefined4 param_1,undefined4 param_2,int param_3)
   }
   return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -211,12 +215,16 @@ undefined4 FUN_801cab60(undefined4 param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801caca0(void)
 {
   FUN_800067c0((int *)0x6,0);
   FUN_80017698(0xefd,0);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -231,6 +239,8 @@ void FUN_801caca0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801cacd4(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   if (visible != 0) {
@@ -238,6 +248,8 @@ void FUN_801cacd4(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -252,6 +264,8 @@ void FUN_801cacd4(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801cacfc(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
@@ -274,6 +288,8 @@ void FUN_801cacfc(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -305,6 +321,8 @@ void FUN_801caeac(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801caeb0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11,undefined4 param_12,
@@ -412,6 +430,8 @@ void FUN_801caeb0(undefined8 param_1,double param_2,double param_3,undefined8 pa
   FUN_8028688c();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -432,19 +452,15 @@ int dll_199_getObjectTypeId(void) { return 0x0; }
 extern f32 lbl_803E5150;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5158;
-#pragma peephole off
 void nwsh_levcon_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5150); }
 void dll_199_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5158); }
-#pragma peephole reset
 
 extern void Music_Trigger(int track, int param);
 extern int GameBit_Set(int eventId, int value);
-#pragma scheduling off
 void nwsh_levcon_free(int obj) {
     Music_Trigger(6, 0);
     GameBit_Set(3837, 0);
 }
-#pragma scheduling reset
 
 extern int mapGetDirIdx(int mapId);
 extern void unlockLevel(int a, int b, int c);
@@ -463,7 +479,6 @@ void nwsh_levcon_update(int *obj) {
     }
 }
 
-#pragma scheduling off
 void nwsh_levcon_init(int *obj) {
     ((GameObject *)obj)->animEventCallback = (void *)NWSH_levcon_SeqFn;
     unlockLevel(mapGetDirIdx(0x28), 1, 0);
@@ -472,18 +487,15 @@ void nwsh_levcon_init(int *obj) {
     GameBit_Set(0xea2, 1);
     GameBit_Set(0xefd, 1);
 }
-#pragma scheduling reset
 
 extern ModgfxInterface **gModgfxInterface;
 extern void *gTitleMenuControlInterface;
 
-#pragma scheduling off
 void dll_199_free(int *obj) {
     (*gModgfxInterface)->detachSource(obj);
     ((void(*)(int, int))((void**)*(void**)gTitleMenuControlInterface)[14])(3, 0);
     ((void(*)(int, int))((void**)*(void**)gTitleMenuControlInterface)[14])(2, 0);
 }
-#pragma scheduling reset
 
 extern void *Obj_GetPlayerObject(void);
 extern void fn_80296518(void *player, int a, int b);
@@ -492,8 +504,6 @@ extern int return0_8005669C(int p);
 extern int lbl_803DB610;
 extern u32 lbl_803DDBD8;
 
-#pragma scheduling off
-#pragma peephole off
 int NWSH_levcon_SeqFn(int p1, int p2, u8 *p3)
 {
     void *player;
@@ -516,11 +526,7 @@ int NWSH_levcon_SeqFn(int p1, int p2, u8 *p3)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int dll_199_SeqFn(int obj, int p2, u8 *p3)
 {
     u8 *st;
@@ -610,5 +616,3 @@ int dll_199_SeqFn(int obj, int p2, u8 *p3)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset

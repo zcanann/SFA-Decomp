@@ -72,6 +72,8 @@ extern f32 lbl_803E5588;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801b2550(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11)
@@ -252,6 +254,8 @@ void FUN_801b2550(undefined8 param_1,undefined8 param_2,double param_3,undefined
   FUN_80286884();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -266,6 +270,8 @@ void FUN_801b2550(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801b2bd8(int param_1)
 {
   if (*(short *)(param_1 + 0x46) != 0x1d6) {
@@ -276,6 +282,8 @@ void FUN_801b2bd8(int param_1)
   ObjGroup_RemoveObject(param_1,3);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -290,6 +298,8 @@ void FUN_801b2bd8(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801b2c40(undefined2 *param_1)
 {
   undefined2 uVar1;
@@ -309,6 +319,8 @@ void FUN_801b2c40(undefined2 *param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -323,6 +335,8 @@ void FUN_801b2c40(undefined2 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801b2ccc(double param_1,double param_2,double param_3,double param_4,undefined8 param_5,
                  undefined8 param_6,undefined8 param_7,undefined8 param_8,short *param_9)
 {
@@ -469,6 +483,8 @@ void FUN_801b2ccc(double param_1,double param_2,double param_3,double param_4,un
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -480,8 +496,6 @@ extern void objRenderFn_8003b8f4(f32 x);
 extern f32 lbl_803E48E8;
 extern f32 lbl_803E48F8;
 
-#pragma scheduling off
-#pragma peephole off
 void dimcannon_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
     u8 *def;
     u8 *sub;
@@ -499,12 +513,9 @@ void dimcannon_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
         ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E48E8);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 void dimlavasmash_free(void) {}
 void dimlavasmash_hitDetect(void) {}
 
-#pragma peephole off
 void dimlavasmash_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     u8 *state = ((GameObject *)obj)->extra;
@@ -512,10 +523,7 @@ void dimlavasmash_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
         ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E48F8);
     }
 }
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 void dimlavasmash_update(int *obj) {
     extern ObjectTriggerInterface **gObjectTriggerInterface;
     u8 *sub;
@@ -531,15 +539,12 @@ void dimlavasmash_update(int *obj) {
         ((GameObject *)obj)->unkF4 = 1;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* 8b "li r3, N; blr" returners. */
 int dimlavasmash_getExtraSize(void) { return 0x3; }
 int dimlavasmash_getObjectTypeId(void) { return 0x0; }
 
 /* if (o->_X == K) return A; else return B; */
-#pragma peephole off
 #include "global.h"
 
 /* dimcannon extra block (0xb4); the head is the per-cannonball column
@@ -568,7 +573,6 @@ STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
 
 int dimcannon_getExtraSize(int *obj) { if (((GameObject *)obj)->anim.seqId == 0x1d6) return 0xc; return 0xb4; }
 int dimcannon_getObjectTypeId(int *obj) { if (((GameObject *)obj)->anim.seqId == 0x1d6) return 0x0; return 0x0; }
-#pragma peephole reset
 
 extern int ObjHits_GetPriorityHit(int obj, int *out, int *a, int *b);
 extern void Sfx_PlayFromObject(int obj, int sfx);
@@ -579,7 +583,6 @@ extern int mapBlockFn_80060678(void);
 extern int fn_8006070C(int arg1, int idx);
 extern int Shader_getLayer(int layer, int idx);
 
-#pragma scheduling off
 #pragma dont_inline on
 /* Toggle collision/render surface flags for matching block polys and layers. */
 void dimlavasmash_setBlockSurfaceFlags(int arg1, int arg2, int arg3)
@@ -613,10 +616,7 @@ void dimlavasmash_setBlockSurfaceFlags(int arg1, int arg2, int arg3)
     }
 }
 #pragma dont_inline reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int dimlavasmash_SeqFn(int obj, int p2, int *r5_arg)
 {
     int *def;
@@ -651,13 +651,9 @@ int dimlavasmash_SeqFn(int obj, int p2, int *r5_arg)
     }
     return *(u8 *)((char *)state + 2) == 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void *lbl_803DDB50;
 
-#pragma scheduling off
-#pragma peephole off
 void dimcannon_free(int *obj) {
     if (((GameObject *)obj)->anim.seqId != 0x1d6) {
         ((void (*)(void))((int **)*gGameUIInterface)[0x18])();
@@ -666,8 +662,6 @@ void dimcannon_free(int *obj) {
     }
     ObjGroup_RemoveObject(obj, 3);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void ObjMsg_AllocQueue(int *obj, int n);
 extern int fn_801B2550(int *obj, int p2, char *p3);
@@ -676,8 +670,6 @@ extern f32 lbl_803E48B8;
 /* EN v1.0 0x801B30C8  size: 628b  Dimcannon constructor: handles the 0x1d6
  * sub-variant, else seeds the 10-slot trail particle array, installs the
  * sequence fn, acquires its model resource and applies map flags. */
-#pragma scheduling off
-#pragma peephole off
 void dimcannon_init(int *obj, int *arg)
 {
     ObjMsg_AllocQueue(obj, 4);
@@ -749,8 +741,6 @@ void dimcannon_init(int *obj, int *arg)
 
     ((GameObject *)obj)->objectFlags |= 0x2000;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void DIMwooddoor_updateFallingDebris(int *obj);
 extern void DIMwooddoor_updateShardAim(int *obj, f32 a, f32 b, f32 c, f32 d);
@@ -769,8 +759,6 @@ extern f32 lbl_803DBEF4;
 
 /* EN v1.0 0x801B2C68  size: 1120b  Dimcannon per-frame state machine: idle ->
  * tracking -> firing -> spent, plus the 0x1d6 falling-debris sub-variant. */
-#pragma scheduling off
-#pragma peephole off
 void dimcannon_update(int *obj)
 {
     char *state;
@@ -897,8 +885,6 @@ void dimcannon_update(int *obj)
     lbl_803DBEF4 = lbl_803E48F0;
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E48F0, timeDelta, NULL);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void setAButtonIcon(int icon);
 extern void setBButtonIcon(int icon);
@@ -924,8 +910,6 @@ extern f32 lbl_803DBEFC;
 /* EN v1.0 0x801B2550  size: 1504b  Dimcannon manned-control sequence: aims the
  * turret with the stick, charges with A, fires on release/full charge, and
  * exits on B or after the post-completion delay. */
-#pragma scheduling off
-#pragma peephole off
 int fn_801B2550(int *obj, int p2, char *p3)
 {
     int *src = *(int **)&((GameObject *)obj)->anim.placementData;
@@ -1069,5 +1053,3 @@ int fn_801B2550(int *obj, int p2, char *p3)
 
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset

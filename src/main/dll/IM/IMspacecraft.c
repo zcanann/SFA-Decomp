@@ -152,21 +152,15 @@ int MMP_levelcontrol_getObjectTypeId(void) { return 0x0; }
 void RollingBarrel_initialise(void) { lbl_803DDB20 = 0x0; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-#pragma peephole off
 void SpiritDoorLock_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4440); }
 void MMP_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E44C4); }
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 void RollingBarrel_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
     u8 *inner = ((GameObject *)obj)->extra;
     if (visible != 0 && inner[ROLLINGBARREL_STATE_OFFSET] < ROLLINGBARREL_STATE_EXPLODED_WAIT) {
         ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E4474);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void SpiritDoorLock_free(int obj) {
     void *inner = ((GameObject *)obj)->extra;
@@ -175,16 +169,12 @@ void SpiritDoorLock_free(int obj) {
     }
 }
 
-#pragma scheduling off
 void MMP_levelcontrol_free(int obj) {
     lbl_803DDB28 = lbl_803E44C0;
     lbl_803DDB2C = 0;
     Music_Trigger(0xd5, 0);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void RollingBarrel_free(int obj) {
     char *inner = ((GameObject *)obj)->extra;
     int count;
@@ -202,11 +192,7 @@ void RollingBarrel_free(int obj) {
         lbl_803DDB20 -= 1;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void RollingBarrel_init(int obj, int *params)
 {
     int *state = ((GameObject *)obj)->extra;
@@ -233,11 +219,7 @@ void RollingBarrel_init(int obj, int *params)
 
     (*gRomCurveInterface)->initCurve(state, (void *)obj, lbl_803E44B8, tmp, -1);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void SpiritDoorLock_init(int obj, int *params, int mode)
 {
     int *state = ((GameObject *)obj)->extra;
@@ -262,11 +244,7 @@ void SpiritDoorLock_init(int obj, int *params, int mode)
         SPIRITDOORLOCK_LIGHT(state) = modelLightStruct_createPointLight(obj, 255, 0, 77, 0);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void SpiritDoorLock_update(int obj)
 {
     int *state;
@@ -378,10 +356,8 @@ void SpiritDoorLock_update(int obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
+#pragma peephole on
 void RollingBarrel_update(int obj)
 {
     int *state;
@@ -515,9 +491,8 @@ void RollingBarrel_update(int obj)
         ObjHits_SetHitVolumeSlot(obj, ROLLINGBARREL_HIT_VOLUME_SLOT(state), 0, 0);
     }
 }
-#pragma scheduling reset
+#pragma peephole reset
 
-#pragma scheduling off
 int MMP_LevelControl_SeqFn(int obj, int p2, u8 *seq)
 {
     int player;
@@ -539,10 +514,7 @@ int MMP_LevelControl_SeqFn(int obj, int p2, u8 *seq)
     MMP_levelcontrol_update(obj);
     return 0;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_801A5D88(int obj, int unused) {
     int state = *(int *)&((GameObject *)obj)->extra;
     u32 r;
@@ -580,5 +552,3 @@ void fn_801A5D88(int obj, int unused) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

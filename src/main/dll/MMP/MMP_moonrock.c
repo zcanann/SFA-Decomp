@@ -91,7 +91,6 @@ extern const char sMoonrockTriggerIdentFormat[];
  */
 /* lightning_free: ObjGroup_RemoveObject + free of obj->_b8->_0 if non-null. */
 extern void mm_free(void* p);
-#pragma scheduling off
 void lightning_free(u8* obj, int p2)
 {
     u8* state = ((GameObject *)obj)->extra;
@@ -102,7 +101,6 @@ void lightning_free(u8* obj, int p2)
         mm_free(h);
     }
 }
-#pragma scheduling reset
 
 /* lightning_render: deref obj->_b8->_0 (effect handle); if non-null call
  * lightningRender(handle). */
@@ -134,8 +132,6 @@ typedef struct LightningMode {
     u8 mode : 4; /* 0x0f */
 } LightningMode;
 
-#pragma scheduling off
-#pragma peephole off
 void lightning_update(u8 *obj)
 {
     u8 *state;
@@ -221,11 +217,7 @@ void lightning_update(u8 *obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void lightning_init(u8 *obj, u8 *data)
 {
     u8 *state;
@@ -249,8 +241,6 @@ void lightning_init(u8 *obj, u8 *data)
 
     *(f32 *)(state + 0x18) = (f32)(s32)((u32)data[0x22] * 0x3c);
 }
-#pragma peephole reset
-#pragma scheduling reset
 void WaterFallSpray_free(u8* obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
@@ -269,8 +259,6 @@ typedef struct WaterFallSprayPartfxArgs {
     (*gPartfxInterface)->spawnObject( \
         (obj), (id), (args), 4, -1, 0)
 
-#pragma scheduling off
-#pragma peephole off
 void WaterFallSpray_update(int *objParam)
 {
     u8 *obj;
@@ -336,14 +324,10 @@ void WaterFallSpray_update(int *objParam)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* WaterFallSpray_init: stash 3 signed-byte<<8 fields at obj+0..+4, clear
  * obj+0xf4, install WaterFallSpray_SeqFn as the think routine at obj+0xbc, then
  * pick one of two SFX-id pairs based on the range of obj->_4c->_14. */
-#pragma scheduling off
-#pragma peephole off
 void WaterFallSpray_init(u8* obj, u8* data) {
     u8* sub = ((GameObject *)obj)->extra;
     s16 a, b, c;
@@ -367,16 +351,12 @@ void WaterFallSpray_init(u8* obj, u8* data) {
     *(u32*)(sub + 0) = WATERFALLSPRAY_DEFAULT_SFX_A;
     *(u32*)(sub + 4) = WATERFALLSPRAY_DEFAULT_SFX_B;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* sfxplayerObj_init: prime obj->_b0 with SFXPLAYER_OBJECT_FLAGS, then dispatch
  * on (s8)data->_1d: gamebit mode stores GameBit_Get(data->_18) at sub[0] if the
  * event id is positive; random-delay mode computes randomGetRange(data->_1e, data->_1f)
  * scaled by lbl_803E40BC as f32; cases 1 and >=3 are no-ops. */
 extern f32 lbl_803E40BC;
-#pragma scheduling off
-#pragma peephole off
 void sfxplayerObj_init(u8* obj, u8* data) {
     u8* sub = ((GameObject *)obj)->extra;
     int type;
@@ -399,8 +379,6 @@ void sfxplayerObj_init(u8* obj, u8* data) {
     }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* sfxplayerObj_free: bit-0 of obj->_b8->_4 gates teardown. When set, clear
  * it and stop two sfx loops (data->_1a and data->_22). Mode depends on
@@ -410,8 +388,6 @@ extern void Sfx_StopFromObject(u8* obj, u16 sfx);
 extern void Sfx_AddLoopedObjectSound(u8 *obj, u16 sfx);
 extern void Sfx_PlayFromObject(u8 *obj, u16 sfx);
 extern void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u8 *obj, u16 sfx);
-#pragma scheduling off
-#pragma peephole off
 void sfxplayerObj_free(u8* obj)
 {
     u8* data = *(u8**)&((GameObject *)obj)->anim.placementData;
@@ -435,8 +411,6 @@ void sfxplayerObj_free(u8* obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 #define SFXPLAYER_START_SOUND(sfxExpr) \
     do { \
@@ -487,8 +461,6 @@ void sfxplayerObj_free(u8* obj)
         } \
     } while (0)
 
-#pragma scheduling off
-#pragma peephole off
 void sfxplayerObj_update(u8 *obj)
 {
     u8 *state;
@@ -572,11 +544,7 @@ void sfxplayerObj_update(u8 *obj)
         break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80198A00(u8 *obj, int seqArg)
 {
     u8 *state;
@@ -613,11 +581,7 @@ void fn_80198A00(u8 *obj, int seqArg)
         objInterpretSeq(obj, seqArg, -2, (int)hitDistance);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int fn_80198B68(u8 *obj, f32 *point)
 {
     u8 *data;
@@ -671,11 +635,7 @@ int fn_80198B68(u8 *obj, f32 *point)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80198DE8(u8 *obj, int seqArg)
 {
     u8 *data;
@@ -745,8 +705,6 @@ void fn_80198DE8(u8 *obj, int seqArg)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -761,6 +719,8 @@ void fn_80198DE8(u8 *obj, int seqArg)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80197960(int param_1)
 {
   if (*(char *)(*(int *)&((GameObject *)param_1)->extra + 4) < '\0') {
@@ -768,6 +728,8 @@ void FUN_80197960(int param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -782,6 +744,8 @@ void FUN_80197960(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80197990(int param_1)
 {
   bool bVar1;
@@ -858,6 +822,8 @@ void FUN_80197990(int param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -872,6 +838,8 @@ void FUN_80197990(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80197c38(int param_1,int param_2)
 {
   uint uVar1;
@@ -919,6 +887,8 @@ void FUN_80197c38(int param_1,int param_2)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -933,6 +903,8 @@ void FUN_80197c38(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80197e14(int param_1)
 {
   uint *puVar1;
@@ -944,6 +916,8 @@ void FUN_80197e14(int param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -979,6 +953,8 @@ void FUN_80197e54(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80197e84(void)
 {
   int iVar1;
@@ -1073,6 +1049,8 @@ LAB_801981b8:
   FUN_8028688c();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1087,6 +1065,8 @@ LAB_801981b8:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80198230(int param_1,int param_2)
 {
   float fVar1;
@@ -1118,6 +1098,8 @@ void FUN_80198230(int param_1,int param_2)
               DOUBLE_803e4d30);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1132,11 +1114,15 @@ void FUN_80198230(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 undefined4 FUN_80198348(uint param_1)
 {
   FUN_801983a0(param_1);
   return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1170,6 +1156,8 @@ void FUN_8019836c(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801983a0(uint param_1)
 {
   float fVar1;
@@ -1252,6 +1240,8 @@ void FUN_801983a0(uint param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1266,6 +1256,8 @@ void FUN_801983a0(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80198634(int param_1)
 {
   byte bVar1;
@@ -1294,6 +1286,8 @@ void FUN_80198634(int param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1308,6 +1302,8 @@ void FUN_80198634(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801986d4(uint param_1)
 {
   byte bVar1;
@@ -1567,6 +1563,8 @@ void FUN_801986d4(uint param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1581,6 +1579,8 @@ void FUN_801986d4(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80198d58(int param_1,int param_2)
 {
   byte bVar1;
@@ -1606,6 +1606,8 @@ void FUN_80198d58(int param_1,int param_2)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1620,6 +1622,8 @@ void FUN_80198d58(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80198e08(void)
 {
   int iVar1;
@@ -1684,6 +1688,8 @@ void FUN_80198e08(void)
   FUN_8028688c();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -1693,6 +1699,4 @@ void WaterFallSpray_render(void) {}
 int WaterFallSpray_getExtraSize(void) { return 0x8; }
 int sfxplayerObj_getExtraSize(void) { return 0x8; }
 
-#pragma scheduling off
 int WaterFallSpray_SeqFn(int *obj) { WaterFallSpray_update(obj); return 0; }
-#pragma scheduling reset

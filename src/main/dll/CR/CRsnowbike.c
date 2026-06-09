@@ -105,8 +105,6 @@ extern f32 lbl_803E6214;
 extern f32 lbl_803E5540;
 extern f32 lbl_803E5544;
 extern f32 lbl_803E5548;
-#pragma peephole off
-#pragma scheduling off
 void sh_emptytumblew_init(s16 *p1, int p2)
 {
     f32 fv;
@@ -119,8 +117,6 @@ void sh_emptytumblew_init(s16 *p1, int p2)
     ObjHitbox_SetCapsuleBounds(p1, (int)(lbl_803E5540 * fv), (int)(lbl_803E5544 * fv), (int)(lbl_803E5548 * fv));
     *(u16 *)((char *)p1 + 0xb0) |= 0x4000;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -154,11 +150,15 @@ void FUN_801db57c(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801db580(undefined4 param_1)
 {
   ObjHits_PollPriorityHitEffectWithCooldown(param_1,8,0xff,0xff,0x78,0x280,(float *)&DAT_803de880);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -173,6 +173,8 @@ void FUN_801db580(undefined4 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801db5b8(short *param_1,int param_2)
 {
   float fVar1;
@@ -187,6 +189,8 @@ void FUN_801db5b8(short *param_1,int param_2)
   param_1[0x58] = param_1[0x58] | 0x4000;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -201,6 +205,8 @@ void FUN_801db5b8(short *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 undefined4 sc_levelcontrol_processAnimEvents(int param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate)
 {
   byte bVar2;
@@ -245,6 +251,8 @@ undefined4 sc_levelcontrol_processAnimEvents(int param_1,undefined4 param_2,ObjA
   }
   return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -259,6 +267,8 @@ undefined4 sc_levelcontrol_processAnimEvents(int param_1,undefined4 param_2,ObjA
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void sc_levelcontrol_setAnimEventState(int param_1,undefined param_2)
 {
   char cVar1;
@@ -297,6 +307,8 @@ void sc_levelcontrol_setAnimEventState(int param_1,undefined param_2)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -336,6 +348,8 @@ void FUN_801db8c4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801db924(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   if (visible != 0) {
@@ -343,6 +357,8 @@ void FUN_801db924(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -357,6 +373,8 @@ void FUN_801db924(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801db94c(undefined8 param_1,double param_2,double param_3,double param_4,double param_5,
                  undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9)
 {
@@ -677,6 +695,8 @@ void FUN_801db94c(undefined8 param_1,double param_2,double param_3,double param_
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -698,9 +718,7 @@ u8 sc_levelcontrol_getAnimEventState(int *obj) { return *(u8*)((char*)((int**)ob
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5554;
 extern void objRenderFn_8003b8f4(f32);
-#pragma peephole off
 void sc_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5554); }
-#pragma peephole reset
 
 extern void fn_8003B608(int a, int b, int c);
 extern int ObjPath_GetPointWorldPosition(int obj, int idx, f32 *x, f32 *y, f32 *z, int p6);
@@ -720,8 +738,6 @@ typedef struct SCMusicTreeState {
     u8 pad4D[0x50 - 0x4D];
 } SCMusicTreeState;
 
-#pragma scheduling off
-#pragma peephole off
 void sc_musictree_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
     int *def = *(int **)&((GameObject *)obj)->anim.placementData;
     SCMusicTreeState *state = ((GameObject *)obj)->extra;
@@ -741,8 +757,6 @@ void sc_musictree_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
     }
     ((GameObject *)obj)->unkF8 = 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void gameTimerStop(void);
 extern void disableHeavyFog(void);
@@ -766,8 +780,6 @@ extern u8 *Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(int a, int b);
 extern f32 lbl_803E5550;
 
-#pragma peephole off
-#pragma scheduling off
 int sc_levelcontrol_processAnimEventsCallback(int obj, int p2, int p3)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -806,10 +818,7 @@ int sc_levelcontrol_processAnimEventsCallback(int obj, int p2, int p3)
     }
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
 void sc_levelcontrol_applyAnimEventState(int obj, u8 scale)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -842,7 +851,6 @@ void sc_levelcontrol_applyAnimEventState(int obj, u8 scale)
         gameTimerStop();
     }
 }
-#pragma scheduling reset
 
 extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, int f);
 extern int mapGetDirIdx(int idx);
@@ -856,8 +864,6 @@ extern f32 lbl_803E5574;
 extern f32 lbl_803E5578;
 extern f32 lbl_803E557C;
 typedef struct { u8 bit7 : 1; u8 lo : 7; } SnowFlags22;
-#pragma peephole off
-#pragma scheduling off
 void sc_levelcontrol_init(int obj)
 {
     ScLevelControlState *st = ((GameObject *)obj)->extra;
@@ -892,15 +898,11 @@ void sc_levelcontrol_init(int obj)
     }
     ((GameObject *)obj)->unkF8 = 1;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int a, int b);
 extern int randomGetRange(int lo, int hi);
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
-#pragma peephole off
-#pragma scheduling off
 void sc_musictree_spawnAmbientEffect(int obj, int p2, int p3, s8 idx)
 {
     int def = *(int *)&((GameObject *)obj)->anim.placementData;
@@ -929,12 +931,8 @@ void sc_musictree_spawnAmbientEffect(int obj, int p2, int p3, s8 idx)
         state->ambientEffect[idx] = Obj_SetupObject(setup, 5, -1, -1, *(int *)&((GameObject *)obj)->anim.parent);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern f32 lbl_803E5588;
-#pragma peephole off
-#pragma scheduling off
 void sc_musictree_handleHitObject(int p1, int p2, int effectType)
 {
     int id = *(int *)(*(int *)(p1 + 0x4c) + 0x14);
@@ -972,8 +970,6 @@ void sc_musictree_handleHitObject(int p1, int p2, int effectType)
     }
     state->animSpeed = lbl_803E5588;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern void skyFn_80088c94(int a, int b);
 extern void envFxActFn_800887f8(int arg);
@@ -998,8 +994,6 @@ extern f32  lbl_803E556C;
  * GameBits, runs the two race countdown timers, eases the heavy fog level,
  * tracks the totem combo code (bits 0x7d..0x7f), and keeps the area music
  * in sync with the Thorntail animation state. */
-#pragma scheduling off
-#pragma peephole off
 void sc_levelcontrol_update(int obj)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -1256,5 +1250,3 @@ void sc_levelcontrol_update(int obj)
         ((ScLevelControlState *)state)->flags1F &= ~2;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

@@ -96,8 +96,6 @@ extern f32 lbl_803E54D4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void dimlogfire_update(int obj)
 {
     int a;
@@ -186,8 +184,6 @@ void dimlogfire_update(int obj)
         *(u8 *)(state->light + 0x2f9) = alpha;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -202,6 +198,8 @@ void dimlogfire_update(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 undefined4 FUN_801b09dc(uint param_1,undefined4 param_2,int param_3)
 {
   byte bVar1;
@@ -236,6 +234,8 @@ undefined4 FUN_801b09dc(uint param_1,undefined4 param_2,int param_3)
   *(undefined *)(param_3 + 0x80) = 0;
   return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -250,6 +250,8 @@ undefined4 FUN_801b09dc(uint param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801b0ae8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,int param_10)
@@ -270,6 +272,8 @@ void FUN_801b0ae8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -284,8 +288,6 @@ void FUN_801b0ae8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void dimlogfire_init(int obj, int def)
 {
     int radius;
@@ -322,8 +324,6 @@ void dimlogfire_init(int obj, int def)
         modelLightStruct_setGlowProjectionRadius(state->light, lbl_803E4834);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -381,7 +381,6 @@ void dimsnowball_free(void)
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4848;
 extern void objRenderFn_8003b8f4(f32);
-#pragma peephole off
 void dimsnowball_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4848); }
 
 void dimsnowball_hitDetect(int *obj) {
@@ -391,7 +390,6 @@ void dimsnowball_hitDetect(int *obj) {
     state[0] = 0;
 }
 
-#pragma scheduling off
 void dimsnowball_update(int obj)
 {
     s16 idx[4];
@@ -490,5 +488,3 @@ void dimsnowball_update(int obj)
         *(int *)(model + 0x4c) = 0x10;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset

@@ -93,6 +93,8 @@ void FUN_801ce078(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 undefined4 FUN_801ce07c(int param_1,undefined4 param_2,int param_3)
 {
   uint uVar1;
@@ -112,6 +114,8 @@ undefined4 FUN_801ce07c(int param_1,undefined4 param_2,int param_3)
   *(undefined *)(param_3 + 0x56) = 0;
   return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -126,11 +130,15 @@ undefined4 FUN_801ce07c(int param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801ce144(int param_1)
 {
   (*gMapEventInterface)->setAnimEvent((int)*(char *)(param_1 + 0xac),0x1f,0);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -145,6 +153,8 @@ void FUN_801ce144(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801ce188(uint param_1)
 {
   uint uVar1;
@@ -166,6 +176,8 @@ void FUN_801ce188(uint param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -198,6 +210,8 @@ int FUN_801ce238(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 undefined4 FUN_801ce244(short *param_1,undefined4 param_2,int param_3)
 {
   int iVar1;
@@ -223,6 +237,8 @@ undefined4 FUN_801ce244(short *param_1,undefined4 param_2,int param_3)
   }
   return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -237,6 +253,8 @@ undefined4 FUN_801ce244(short *param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801ce340(short *param_1,int param_2,int param_3)
 {
   if (((param_3 == 0) || (*(int *)(param_2 + 0x28) == 0)) ||
@@ -259,6 +277,8 @@ void FUN_801ce340(short *param_1,int param_2,int param_3)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -273,6 +293,8 @@ void FUN_801ce340(short *param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 undefined4 FUN_801ce424(uint param_1,int param_2)
 {
   byte bVar1;
@@ -347,6 +369,8 @@ undefined4 FUN_801ce424(uint param_1,int param_2)
   }
   return 1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -385,8 +409,6 @@ int nw_mammoth_getExtraSize(void)
   return 0x48c;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void fn_801CEE0C(int p1, int p2)
 {
   extern int fn_801CE078(int);
@@ -443,11 +465,7 @@ void fn_801CEE0C(int p1, int p2)
       break;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_801CED2C(int p1, int p2)
 {
   extern int ObjTrigger_IsSetById(int, int);
@@ -478,8 +496,6 @@ void fn_801CED2C(int p1, int p2)
       break;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 timeDelta;
 extern f32 lbl_803E520C;
@@ -491,8 +507,6 @@ typedef struct {
     f32 pos[3];
 } WoPartfxBlock;
 
-#pragma scheduling off
-#pragma peephole off
 int fn_801CE078(int *obj, u8 *st) {
     u8 cv;
     int snd;
@@ -559,8 +573,6 @@ int fn_801CE078(int *obj, u8 *st) {
     }
     return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 oneOverTimeDelta;
 extern f32 lbl_803E523C;
@@ -583,8 +595,6 @@ extern int Curve_AdvanceAlongPath(u8 *cv, f32 t);
 extern int getAngle(f32 a, f32 b);
 extern f32 sqrtf(f32 x);
 
-#pragma scheduling off
-#pragma peephole off
 void fn_801CEA14(short *obj, u8 *st, u8 *p3) {
     switch (fn_801CE078((int *)obj, st)) {
     case -1:
@@ -662,8 +672,6 @@ void fn_801CEA14(short *obj, u8 *st, u8 *p3) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E5228;
 extern f32 lbl_803E522C;
@@ -687,8 +695,6 @@ extern void fn_80163980(int o);
 extern void Obj_FreeObject(int o);
 extern ScreenTransitionInterface **gScreenTransitionInterface;
 
-#pragma scheduling off
-#pragma peephole off
 void fn_801CE2BC(int *obj, u8 *st, short *p3) {
     int near_ = ObjGroup_FindNearestObject(0xf, obj, 0);
     switch (st[0x408]) {
@@ -868,5 +874,3 @@ void fn_801CE2BC(int *obj, u8 *st, short *p3) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

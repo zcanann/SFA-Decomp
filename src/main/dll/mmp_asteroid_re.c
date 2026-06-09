@@ -54,8 +54,6 @@ typedef struct BarrelPadParticleArgs {
  * 0x10 directly. Tail: if state->flags & 0x40 (which 0x68 includes), set
  * obj->_af |= 8 (redundant with the unconditional prologue store).
  */
-#pragma peephole off
-#pragma scheduling off
 void transporter_init(int obj, u8 *params)
 {
   WarpPadPlacement *placement;
@@ -132,8 +130,6 @@ void transporter_init(int obj, u8 *params)
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
   }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -148,6 +144,8 @@ void transporter_init(int obj, u8 *params)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801916e8(int param_1)
 {
   if (*(char *)(*(int *)(param_1 + 0x4c) + 0x1a) != -1) {
@@ -156,6 +154,8 @@ void FUN_801916e8(int param_1)
   warpPadFn_8019042c(param_1);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -212,8 +212,6 @@ extern f32 lbl_803E3F18;
 extern f32 lbl_803E3F1C;
 extern f32 lbl_803E3F20;
 extern f32 lbl_803E3F24;
-#pragma scheduling off
-#pragma peephole off
 void cflightwall_render(void) { objRenderFn_8003b8f4(lbl_803E3EE8); }
 void barrelpad_render(void) { objRenderFn_8003b8f4(lbl_803E3F00); }
 
@@ -265,11 +263,7 @@ void cflightwall_init(s16 *obj, u8 *def) {
     }
     ((GameObject *)obj)->objectFlags |= 0xA000;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void cf_doorlight_update(int obj) {
     CfDoorLightState *state;
     CfDoorLightDef *def;
@@ -322,5 +316,3 @@ void cf_doorlight_init(int *obj, s8 *def) {
     ((GameObject *)obj)->objectFlags |= 0x2000;
     ((GameObject *)obj)->objectFlags |= 0x4000;
 }
-#pragma peephole reset
-#pragma scheduling reset
