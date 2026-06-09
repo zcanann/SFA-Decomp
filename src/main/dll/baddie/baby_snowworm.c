@@ -479,6 +479,8 @@ extern undefined4* s_B8CDEFGHI_8031bca0;
 extern char s__02d__02d__02d_8031cd70[];
 
 
+#pragma scheduling on
+#pragma peephole on
 void FUN_80128260(void)
 {
   undefined uVar1;
@@ -522,6 +524,8 @@ void FUN_80128260(void)
   FUN_8028688c();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 void FUN_8012845c()
 {
@@ -543,6 +547,8 @@ void FUN_801294d8()
 {
 }
 
+#pragma scheduling on
+#pragma peephole on
 void FUN_80129a98(void)
 {
   byte bVar1;
@@ -603,12 +609,13 @@ void FUN_80129a98(void)
   FUN_80286880();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 void FUN_80129d10()
 {
 }
 
-#pragma scheduling off
 void fn_80129FB0(void)
 {
     fn_8000F478(0);
@@ -620,7 +627,6 @@ void fn_80129FB0(void)
     fn_8000FB20();
     fn_8000F7A0();
 }
-#pragma scheduling reset
 
 void FUN_80129ff8()
 {
@@ -639,8 +645,6 @@ undefined4 FUN_8012b800()
     return 0;
 }
 
-#pragma scheduling off
-#pragma peephole off
 int fn_8012B9F8(void)
 {
     void* s;
@@ -666,8 +670,6 @@ int fn_8012B9F8(void)
     }
     return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void FUN_8012bab8()
 {
@@ -677,6 +679,8 @@ void FUN_8012bcb4()
 {
 }
 
+#pragma scheduling on
+#pragma peephole on
 void FUN_8012c1c0(void)
 {
   char cVar1;
@@ -722,6 +726,8 @@ void FUN_8012c1c0(void)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 void FUN_8012c33c()
 {
@@ -731,6 +737,8 @@ void FUN_8012c894()
 {
 }
 
+#pragma scheduling on
+#pragma peephole on
 void FUN_8012c9e8(undefined4 param_1,undefined4 param_2,short param_3,short param_4,uint param_5,
                  uint param_6)
 {
@@ -785,6 +793,8 @@ void FUN_8012c9e8(undefined4 param_1,undefined4 param_2,short param_3,short para
   FUN_80286864();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 void FUN_8012cd38()
 {
@@ -798,7 +808,6 @@ void FUN_8012dca8()
 {
 }
 
-#pragma scheduling off
 void fn_8012E050(void)
 {
     if (lbl_803DE3F4 == 0) return;
@@ -812,10 +821,7 @@ void fn_8012E050(void)
         lbl_803DC6C4 = -1;
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_8012E0B8(u8 param_1)
 {
     lbl_803DE3FE = param_1;
@@ -824,8 +830,6 @@ void fn_8012E0B8(u8 param_1)
     lbl_803DE3F6 = 0;
     lbl_803DC6C4 = -1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 u8 fn_8012E0E0(void)
 {
@@ -847,7 +851,6 @@ void FUN_8012e114()
 {
 }
 
-#pragma scheduling off
 void fn_8012E250(void)
 {
     lbl_803DE3DB = 1;
@@ -855,7 +858,6 @@ void fn_8012E250(void)
     fn_800207AC(1);
     fn_800206EC(0xff);
 }
-#pragma scheduling reset
 
 void FUN_8012e2a4()
 {
@@ -929,16 +931,12 @@ s32 CMenu_GetState(void)
 extern s16 lbl_803DD892;
 extern s16 lbl_803DD890;
 extern s16 lbl_803DD88E;
-#pragma scheduling off
-#pragma peephole off
 void GameUI_func0F(s32 a, s32 b, s32 c)
 {
     lbl_803DD892 = (s16)a;
     lbl_803DD890 = (s16)b;
     lbl_803DD88E = (s16)c;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* EN v1.0 0x8012EB30  size: 56b  Iterate a 0x10-stride struct array at
  * lbl_8031B5D8 clearing the s16 at +0x4 until the u32 key at +0x0 is
@@ -946,7 +944,6 @@ void GameUI_func0F(s32 a, s32 b, s32 c)
 extern u8 lbl_8031B5D8[];
 extern s16 lbl_803DD8C2;
 extern u8  lbl_803DD8B8;
-#pragma scheduling off
 void GameUI_unselectAllItems(void)
 {
     register int *p;
@@ -958,13 +955,11 @@ void GameUI_unselectAllItems(void)
     lbl_803DD8C2 = -1;
     lbl_803DD8B8 = 0;
 }
-#pragma scheduling reset
 
 /* GameUI_gameTextShowNpcDialogue declared at end of file (needs externs declared below). */
 
 /* EN v1.0 0x8012DDB8  size: 32b  Set lbl_803DD776 to 1 if (u8)param is
  * nonzero else 0. */
-#pragma peephole off
 void fn_8012DDB8(u32 val)
 {
     if ((u8)val != 0)
@@ -972,7 +967,6 @@ void fn_8012DDB8(u32 val)
     else
         lbl_803DD776 = 0;
 }
-#pragma peephole reset
 
 /* Wider sbss/sdata extents touched by the larger v1.0 leaves below. */
 extern u8    framesThisStep;
@@ -1084,8 +1078,6 @@ extern int  Sfx_PlayFromObject(s32, s32);
 /* EN v1.0 0x8012DD7C  size: 40b  Cancel/clear helper. Stores the new u8
  * state byte and, when the caller resets it to 0, also clears the active
  * tween halfwords and drops the active-id sentinel to -1. */
-#pragma scheduling off
-#pragma peephole off
 void setShowWorldMapHud(u8 param)
 {
     mapScreenVisible = param;
@@ -1094,15 +1086,12 @@ void setShowWorldMapHud(u8 param)
     lbl_803DD776 = 0;
     lbl_803DBA5C = -1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* EN v1.0 0x8012DD14  size: 104b  Tween advance: when the active counter
  * lbl_803DD774 is non-zero, add the per-frame step framesThisStep. The
  * direction toggle in lbl_803DD77F gates the "approaching peak" half of
  * the trajectory. Once the counter overshoots 0xFF it resets to 0 and
  * the active-id sentinel lbl_803DBA5C is dropped to -1. */
-#pragma scheduling off
 void gameTextFadeOut(void)
 {
     if (lbl_803DD774 == 0) return;
@@ -1116,12 +1105,10 @@ void gameTextFadeOut(void)
         lbl_803DBA5C = -1;
     }
 }
-#pragma scheduling reset
 
 /* EN v1.0 0x80129C74  size: 72b  Render-block teardown for the snowworm
  * scene: drops to layer 0, optionally tears the cached effect down, and
  * issues the close/restore pair before returning to the parent renderer. */
-#pragma scheduling off
 void viewFn_80129c74(void)
 {
     Camera_SetCurrentViewIndex(0);
@@ -1133,13 +1120,11 @@ void viewFn_80129c74(void)
     Camera_RebuildProjectionMatrix();
     Camera_ApplyFullViewport();
 }
-#pragma scheduling reset
 
 /* EN v1.0 0x8012DF14  size: 84b  Death sequence trigger: latches the
  * "dead/cleanup" byte at lbl_803DD75B and dispatches vtable slot +0x24
  * on the singleton at gCameraInterface with the worm-death event id 0x94,
  * then runs the standard player-input-disable + alpha-fade-to-FF pair. */
-#pragma scheduling off
 void timeListFn_8012df14(void)
 {
     lbl_803DD75B = 1;
@@ -1147,7 +1132,6 @@ void timeListFn_8012df14(void)
     cutsceneFadeInOut(1);
     setTimeStop(0xff);
 }
-#pragma scheduling reset
 
 /* EN v1.0 0x8012EA5C  size: 172b  Spawn/queue helper for the snowworm
  * death FX. If `id == -1` or the active game-text id at curGameText is
@@ -1159,8 +1143,6 @@ void timeListFn_8012df14(void)
  * When `do_input_disable` is non-zero, also disable player input and
  * fade alpha to 0xFF, marking lbl_803DD7A9 = 1 to remember the input
  * was suppressed. */
-#pragma scheduling off
-#pragma peephole off
 void GameUI_gameTextShowNpcDialogue(s32 id, s32 _unused_a, s32 _unused_b, s32 do_input_disable)
 {
     if (id == -1) return;
@@ -1180,8 +1162,6 @@ void GameUI_gameTextShowNpcDialogue(s32 id, s32 _unused_a, s32 _unused_b, s32 do
         lbl_803DD7A9 = 0;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* EN v1.0 0x8012DDD8  size: 316b  State setter with bit-flag dispatch.
  * Args: (s32 fade_target, u8 idx, u8 flags, u8 q).
@@ -1197,8 +1177,6 @@ void GameUI_gameTextShowNpcDialogue(s32 id, s32 _unused_a, s32 _unused_b, s32 do
  * Default tail: store the (clamped) idx into the active-id slot
  * lbl_803DBA5C, ensure the active counter starts at >=1, and
  * latch the s32 fade_target at lbl_803DBA60. */
-#pragma scheduling off
-#pragma peephole off
 void pauseMenuSetupTitle(s32 fade_target, u8 idx, u8 flags, u8 q)
 {
     if (flags & 0x08) {
@@ -1238,8 +1216,6 @@ void pauseMenuSetupTitle(s32 fade_target, u8 idx, u8 flags, u8 q)
     }
     lbl_803DBA60 = fade_target;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* EN v1.0 0x8012BE84  size: 380b  Pause-menu input poll. While the
  * pauseMenuState byte is clear, polls the digital pad via
@@ -1258,8 +1234,6 @@ void pauseMenuSetupTitle(s32 fade_target, u8 idx, u8 flags, u8 q)
  * to retail (target r31=prev, r30=buttons; MWCC picks r30=prev,
  * r31=buttons regardless of declaration order tried so far). The
  * stack frame matches retail's 0x20 layout via the buf[16] trick. */
-#pragma scheduling off
-#pragma peephole off
 void timeListFn_8012be84(void)
 {
     s32 buttons;
@@ -1302,15 +1276,11 @@ void timeListFn_8012be84(void)
         Sfx_PlayFromObject(0, 0x419);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* EN v1.0 0x8012B6BC  size: 192b  Snowworm "should-spawn" gate: 9-entry
  * table lookup with the same shape as the previously-matched
  * fn_8012B9F8. Returns 1 if the candidate slot is OK to spawn into,
  * 0 if any of the table entries match the slot's lookup byte. */
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 int pauseMenuIsFox(void)
 {
@@ -1337,8 +1307,6 @@ int pauseMenuIsFox(void)
     }
     return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 #pragma dont_inline reset
 
 /* EN v1.0 0x80129698  size: 196b  Pickup-pickup state hook: latches the
@@ -1347,8 +1315,6 @@ int pauseMenuIsFox(void)
  * trio (Music_Trigger / cutsceneFadeInOut / setTimeStop) when no slot was active
  * yet, then commits the new u8 active-id to lbl_803DBA90. The third arg
  * funnels through `c == 0xa` as a branchless boolean. Always returns 1. */
-#pragma scheduling off
-#pragma peephole off
 int registerNewScore(s8 a, int b, u8 c, int mode)
 {
     lbl_803DBA91 = (u8)saveScoreFn_800e88b4(a, c == 0xa, b, getSaveFileName());
@@ -1362,8 +1328,6 @@ int registerNewScore(s8 a, int b, u8 c, int mode)
     }
     return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* EN v1.0 0x80129CBC  size: 248b  Render block setup with explicit
  * viewport sized to (320 x 240) centered on the supplied (x, y).
@@ -1378,7 +1342,6 @@ int registerNewScore(s8 a, int b, u8 c, int mode)
  * 0x4330_00000000 / 2^52 magic also lands on @408 instead of being
  * unified with retail's lbl_803E1E88 reference. Pragmas don't fix
  * either subtlety in this configuration. */
-#pragma scheduling off
 void viewFn_80129cbc(f32 fov, f32 x, f32 y)
 {
     lbl_803DBAA4 = Camera_GetFovY();
@@ -1397,7 +1360,6 @@ void viewFn_80129cbc(f32 fov, f32 x, f32 y)
                       lbl_803E1E3C, lbl_803E1E68);
     }
 }
-#pragma scheduling reset
 
 /* EN v1.0 0x8012C558  size: 340b  Snowworm scene shutdown / setup.
  * 97% -- residual is MWCC routing the two .bss address loads via
@@ -1418,8 +1380,6 @@ void viewFn_80129cbc(f32 fov, f32 x, f32 y)
  * scene-down trio: Music_Trigger(0x23, 1) plus two SFX kicks (0x3e5 and
  * 0xff) on object 0.
  */
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void pauseMenuInit(void)
 {
@@ -1455,8 +1415,6 @@ void pauseMenuInit(void)
     Sfx_PlayFromObject(0, 0x3e5);
     Sfx_PlayFromObject(0, SFXsp_snrin2_c);
 }
-#pragma peephole reset
-#pragma scheduling reset
 #pragma dont_inline reset
 
 /* EN v1.0 0x8012E880  size: 452b  Per-frame death-FX state machine.
@@ -1486,8 +1444,6 @@ void pauseMenuInit(void)
  *    queue length from gameTextGet(slot_id)->_2) clamp it back one
  *    step and clear the dying byte.
  */
-#pragma scheduling off
-#pragma peephole off
 void npcTalkFn_8012e880(void)
 {
     Obj_GetPlayerObject();
@@ -1544,8 +1500,6 @@ void npcTalkFn_8012e880(void)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* EN v1.0 0x80129DB4  size: 300b  Conditional render setup gated on
  * pauseMenuState. While a pause-menu state is active, runs the layer-1
@@ -1557,7 +1511,6 @@ void npcTalkFn_8012e880(void)
  * slot pointer (reload across the call) and clears the +0x4c sentinel
  * if it overflowed the 0x90000000 watermark. Tail restores FOV from
  * f31 and runs the standard close-block trio. */
-#pragma scheduling off
 void perspectiveFn_80129db4(void)
 {
     f32 saved_fov;
@@ -1589,7 +1542,6 @@ void perspectiveFn_80129db4(void)
     Camera_UpdateViewMatrices();
     Camera_ApplyFullViewport();
 }
-#pragma scheduling reset
 
 /* EN v1.0 0x8012D77C  size: 496b  Title-card overlay draw routine.
  * Logic-only -- MWCC's register allocator picks different non-volatile
@@ -1625,8 +1577,6 @@ void perspectiveFn_80129db4(void)
  * Tail: gameTextAppendStr(handle, 0x49); gameTextResetCursor(2); gameTextSetCharset with
  * the saved state to restore the batch.
  */
-#pragma scheduling off
-#pragma peephole off
 void pauseMenuDrawText(void)
 {
     s16   target;
@@ -1689,8 +1639,6 @@ void pauseMenuDrawText(void)
     gameTextResetCursor(2);
     gameTextSetCharset(saved, 3);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern s8  padGetCX(s32 chan);
 extern s16 lbl_803DD75C;
@@ -1723,8 +1671,6 @@ extern GridEntry *lbl_803DD824;
 /* EN v1.0 0x8012B4C4  size: 504b  Pause-menu grid cursor stepper. Reads the
  * C-stick X axis, derives a one-step direction, and tweens the grid cursor
  * offsets toward the next cell, clamping when the tween crosses zero. */
-#pragma scheduling off
-#pragma peephole off
 int pauseMenuGridFn_8012b4c4(void)
 {
     int ret = 0;
@@ -1780,8 +1726,6 @@ int pauseMenuGridFn_8012b4c4(void)
 
     return ret;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803DD760;
 extern f32 lbl_803DD764;
@@ -1799,8 +1743,6 @@ extern void fn_8012C000(void);
 /* EN v1.0 0x8012B77C  size: 508b  Pause-menu open/close animator. Advances
  * the open tween, clamps it, then on the close button fires the per-state
  * close SFX and kicks the menu-item exit animations. */
-#pragma scheduling off
-#pragma peephole off
 void pauseMenuFn_8012b77c(void)
 {
     u32 btn = (u16)getButtonsJustPressed(0);
@@ -1844,8 +1786,6 @@ void pauseMenuFn_8012b77c(void)
     if (lbl_803DD784 < 0) lbl_803DD784 = 0;
     fn_8012C000();
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 extern s16 lbl_803DD770;
@@ -1859,8 +1799,6 @@ extern f64 lbl_803E2158;
 
 /* EN v1.0 0x8012975C  size: 632b  Draws the help-text frame: a base panel
  * then a row of edge/corner segments tweened in from both directions. */
-#pragma scheduling off
-#pragma peephole off
 void boxDrawFn_8012975c(void)
 {
     s8 idx;
@@ -1912,8 +1850,6 @@ void boxDrawFn_8012975c(void)
         alpha -= 0x55;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int pauseMenuDrawElement(int handle, f32 x, f32 y, int n, int p2, int w, int flag);
 extern int drawFn_8011eb3c(int handle, f32 x, f32 y, int n, int p2, int w, int a, int b, int c);
@@ -1939,7 +1875,6 @@ extern HintCell lbl_8031BB90[13];
 
 /* EN v1.0 0x80128120  size: 848b  Draws the pause-menu task panel layout and
  * lights the task-progress pips according to the current hint text level. */
-#pragma scheduling off
 void fn_80128120(int unused, int p2)
 {
     s16 n = 0xc8 - lbl_803DD75C;
@@ -1975,12 +1910,9 @@ void fn_80128120(int unused, int p2)
         lbl_8031BB90[lbl_803DBA9C[i]].f0 = t;
     }
 }
-#pragma scheduling reset
 
 /* EN v1.0 0x8012C6AC  size: 848b  Draws a 9-patch HUD box: center fill, the
  * four edges (stretched), and the four 5x5 corners, from hudTextures. */
-#pragma scheduling off
-#pragma peephole off
 void drawHudBox(s16 x, s16 y, s16 w, s16 h, int alpha, u8 flag)
 {
     drawTexture(*(void **)(hudTextures + 0x28), (f32)(x - 5), (f32)(y - 5), alpha, 0x100);
@@ -1995,8 +1927,6 @@ void drawHudBox(s16 x, s16 y, s16 w, s16 h, int alpha, u8 flag)
     drawScaledTexture(*(void **)(hudTextures + 0x28), (f32)(x + (s16)w), (f32)(y - 5), alpha, 0x100, 5, 5, 1);
     drawScaledTexture(*(void **)(hudTextures + 0x28), (f32)(x - 5), (f32)(y + (s16)h), alpha, 0x100, 5, 5, 2);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 extern u8  lbl_803DBA94[8];
@@ -2004,8 +1934,6 @@ extern MapEventInterface **gMapEventInterface;
 
 /* EN v1.0 0x8012D96C  size: 936b  World-map HUD voiceover scheduler: rate
  * limits, picks the quest-progress hint stream and starts it. */
-#pragma scheduling off
-#pragma peephole off
 void drawWorldMapHud(void)
 {
     u16 raw = lbl_803DD776;
@@ -2105,8 +2033,6 @@ void drawWorldMapHud(void)
         lbl_803DD776 = 0;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void MWTRACE(int boxId);
 extern int  sprintf(char *buf, const char *fmt, ...);
@@ -2127,8 +2053,6 @@ extern f32  lbl_803E2138;
 
 /* EN v1.0 0x80128E70  size: 812b  Draws the race-times list panel and the six
  * best-time entries with a pulsing header. */
-#pragma scheduling off
-#pragma peephole off
 void timeListDraw(void)
 {
     u16 bits[6] = { 0x2b7, 0x2cb, 0x2cc, 0x2b6, 0x2d7, 0x2d8 };
@@ -2189,8 +2113,6 @@ void timeListDraw(void)
     }
     MWTRACE(0xff);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern char *fn_800E888C(int track, int row);
 extern void gameTextShowStr(char *str, int box, int x, int y);
@@ -2205,8 +2127,6 @@ extern s16  lbl_803DD7E4;
 /* EN v1.0 0x8012919C  size: 1276b  High-score screen: draws the 9-patch box
  * around the text area, the track title, and five score rows with the
  * selection pulse highlight. */
-#pragma scheduling off
-#pragma peephole off
 void highScoreScreenDraw(int p1, int p2, int p3)
 {
     s16 x, y, w, h;
@@ -2264,8 +2184,6 @@ void highScoreScreenDraw(int p1, int p2, int p3)
     }
     gameTextFn_80016810(0x346, 0, 0x104);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern s8  lbl_803DD75E;
 extern f32 lbl_803DD768;
@@ -2278,8 +2196,6 @@ extern GridEntry lbl_8031BD90[];
 
 /* EN v1.0 0x8012B978  size: 1292b  Pause-menu submenu driver: input nav,
  * voiceover scheduling, selection SFX, and title refresh. */
-#pragma scheduling off
-#pragma peephole off
 void pauseMenuRunSubmenu(u8 p1)
 {
     s8 sel = -1;
@@ -2410,8 +2326,6 @@ void pauseMenuRunSubmenu(u8 p1)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void cMenuRotateFn_80124d80(void);
 extern void cMenuPlaySelectedItemSfx(u8 *player);
@@ -2475,8 +2389,6 @@ typedef struct {
 
 /* EN v1.0 0x8012DF68  size: 2328b  C-menu per-frame driver: input gating,
  * item set selection, Y-button assignment, scroll, select/close handling. */
-#pragma scheduling off
-#pragma peephole off
 void cMenuRun(void)
 {
     CMenuHud *hud = (CMenuHud *)lbl_803A87F0;
@@ -2773,8 +2685,6 @@ void cMenuRun(void)
     }
     *cursor = lbl_803DD8B4;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void gameTextSetDrawFunc(void *fn);
 extern void pauseMenuTextDrawFn(void);
@@ -2798,8 +2708,6 @@ void fn_80128A7C(u8 i, s16 p2, int p3);
 /* EN v1.0 0x80128470  size: 1548b  Pause-menu grid renderer: draws all cells
  * (selection last), the breathing selected cell, header/footer text, and the
  * flashing corner cursor. */
-#pragma scheduling off
-#pragma peephole off
 void fn_80128470(int p1)
 {
     gameTextSetDrawFunc(pauseMenuTextDrawFn);
@@ -2889,8 +2797,6 @@ void fn_80128470(int p1)
     }
     gameTextSetDrawFunc(0);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32  fsin16Approx(u16 angle);
 extern void drawPartialTexture(void *tex, f32 x, f32 y, int alpha, int u, int w, int h, int a, int b);
@@ -2925,8 +2831,6 @@ extern f32  lbl_803E21CC;
 /* EN v1.0 0x8012C9FC  size: 3456b  Map screen HUD: rising panel with quest
  * hint voice line and dust shimmer while opening, then the full two-panel
  * map layout with location labels. */
-#pragma scheduling off
-#pragma peephole off
 void mapScreenDrawHud(int p1, int p2, int p3)
 {
     if (pauseMenuState != 0) {
@@ -3127,8 +3031,6 @@ void mapScreenDrawHud(int p1, int p2, int p3)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32  gameTextFn_80019c00(void);
 extern int  getCurSeqNo(void);
@@ -3187,8 +3089,6 @@ typedef struct {
 extern PauseTbl lbl_8031AE20;
 
 /* EN v1.0 0x80129EE0  size: 5604b  Pause menu master state machine. */
-#pragma scheduling off
-#pragma peephole off
 void pauseMenuFn_80129ee0(void)
 {
     PauseTbl *tbl = &lbl_8031AE20;
@@ -3795,8 +3695,6 @@ void pauseMenuFn_80129ee0(void)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void objRender(int a, int b, int c, int d, void *obj, int e);
 extern int *Obj_GetActiveModel(void *obj);
@@ -3814,8 +3712,6 @@ extern f32 lbl_803E20B8;  /* 0.25f */
  * hudDrawColored when lbl_803DD78C is past its threshold. A second
  * pass renders both lbl_803DD868 slots the same way. Tail restores
  * the camera state and pops the save-confirm text when flagged. */
-#pragma scheduling off
-#pragma peephole off
 void pauseMenuDoSave(void)
 {
     u32 color[2];
@@ -3879,8 +3775,6 @@ void pauseMenuDoSave(void)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f64 lbl_803E2080;
 extern f64 lbl_803E2118;
@@ -3903,8 +3797,6 @@ typedef struct {
  * texture offset along the entry's trail vector, fading via the scaled
  * alpha. The selected cell on the main grid breathes (sin pulse) and slides
  * toward the panel edge while lbl_803DD75C runs. */
-#pragma scheduling off
-#pragma peephole off
 void fn_80128A7C(u8 i, s16 p2, int p3)
 {
     CMenuHud *hud = (CMenuHud *)lbl_803A87F0;
@@ -3994,8 +3886,6 @@ void fn_80128A7C(u8 i, s16 p2, int p3)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int  fn_802972A8(void *player);
 extern f32  lbl_8031BFA8[30];
@@ -4017,8 +3907,6 @@ extern f32  mathCosf(f32 x);
  * eases the swivel angle lbl_803DD782 toward the selected slot, spins the
  * podium objects (lbl_803DD868), then bobs/sways each character model in
  * lbl_803A9410 with phase-shifted sine waves around the podium centre. */
-#pragma scheduling off
-#pragma peephole off
 void fn_8012C000(void)
 {
     u8 flag;
@@ -4133,5 +4021,3 @@ void fn_8012C000(void)
             a * c2190 + *(f32 *)((u8 *)lbl_803DD868[0] + 0x14);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

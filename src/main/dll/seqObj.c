@@ -108,8 +108,6 @@ extern void wispbaddie_init(int obj,int setup,int initialised);
 extern int wispbaddie_getObjectTypeId(void);
 extern int wispbaddie_getExtraSize(void);
 
-#pragma peephole off
-#pragma scheduling off
 void wispbaddie_update(int obj)
 {
   WispBaddieState *state;
@@ -207,11 +205,7 @@ void wispbaddie_update(int obj)
   }
   fn_8014F620(obj,state);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void wispbaddie_init(int obj,int setup,int initialised)
 {
   WispBaddieState *state;
@@ -237,8 +231,6 @@ void wispbaddie_init(int obj,int setup,int initialised)
   }
   ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x2000);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -253,6 +245,8 @@ void wispbaddie_init(int obj,int setup,int initialised)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8014fd38(int param_1)
 {
   uint uVar1;
@@ -267,6 +261,8 @@ void FUN_8014fd38(int param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -298,6 +294,8 @@ void FUN_8014fd80(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8014fd84(uint param_1,int param_2,int param_3)
 {
   float fVar1;
@@ -332,6 +330,8 @@ void FUN_8014fd84(uint param_1,int param_2,int param_3)
   ((GameObject *)param_1)->objectFlags = ((GameObject *)param_1)->objectFlags | 0x2000;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -387,11 +387,15 @@ void FUN_8014ff20(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8014ff24(short *param_1,undefined4 param_2)
 {
   FUN_8014d3d0(param_1,param_2,0xf,0);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -406,6 +410,8 @@ void FUN_8014ff24(short *param_1,undefined4 param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8014ff4c(undefined4 param_1,int param_2)
 {
   float fVar1;
@@ -425,6 +431,8 @@ void FUN_8014ff4c(undefined4 param_1,int param_2)
   *(float *)(param_2 + 0x31c) = fVar1;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -439,6 +447,8 @@ void FUN_8014ff4c(undefined4 param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8014ffa8(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,uint param_11,undefined4 param_12,
@@ -552,6 +562,8 @@ LAB_80150818:
   FUN_8028688c();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -617,12 +629,10 @@ void fn_8014FEF8(int p1, int *p2, int p3, int code) {
 }
 
 extern void fn_8014CF7C(int a, int b, f32 e, f32 f, int c, int d);
-#pragma scheduling off
 void fn_8014FF24(int a, int b) {
     f32 *p = *(f32 **)((char *)b + 0x29c);
     fn_8014CF7C(a, b, p[3], p[5], 0xf, 0);
 }
-#pragma scheduling reset
 
 extern f32 lbl_803E2728;
 extern f32 lbl_803E272C;
@@ -630,7 +640,6 @@ extern f32 lbl_803E2730;
 extern f32 lbl_803E2734;
 extern f32 lbl_803E2738;
 extern f32 lbl_803E273C;
-#pragma scheduling off
 void fn_8014FF58(int unused, char *p) {
     f32 v1c;
     *(f32 *)(p + 0x2ac) = lbl_803E2728;
@@ -647,13 +656,10 @@ void fn_8014FF58(int unused, char *p) {
     *(u8 *)(p + 0x322) = 0;
     *(f32 *)(p + 0x31c) = v1c;
 }
-#pragma scheduling reset
 
 extern char lbl_8031F16C[];
 extern u8 lbl_8031DD30[];
 
-#pragma scheduling off
-#pragma peephole off
 extern void fn_8014D08C(int obj, int state, int moveId, f32 speed, int p5, int flags);
 
 u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent) {
@@ -770,11 +776,7 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_8015039C(int obj, int animState) {
     int player;
     f32 distance;
@@ -808,15 +810,12 @@ void fn_8015039C(int obj, int animState) {
         Sfx_PlayFromObject(obj, 0x15);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma peephole off
+#pragma scheduling on
 void fn_801504BC(int obj, int delta) {
     u8 *inner = ((GameObject *)obj)->extra;
     u8 *ptr = *(u8 **)(lbl_8031F16C + inner[0x33b] * 0x28 + 4);
     inner[0x33d] = (u8)(delta + (u32)ptr[8] + 1);
     inner[0x33e] = 1;
 }
-#pragma peephole reset
 #pragma scheduling reset

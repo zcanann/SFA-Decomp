@@ -94,8 +94,6 @@ typedef struct {
     u8 id40;
 } Dll115MapRow;
 
-#pragma scheduling off
-#pragma peephole off
 void dll_115_update(int obj)
 {
   u8 *state;
@@ -148,8 +146,6 @@ void dll_115_update(int obj)
     }
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -164,8 +160,6 @@ void dll_115_update(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void dll_115_init(short *obj, int mapData)
 {
   short *p;
@@ -194,8 +188,6 @@ void dll_115_init(short *obj, int mapData)
     state[0] = 9;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -280,13 +272,11 @@ int wm_column_getObjectTypeId(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void wm_column_free(int obj)
 {
   ObjGroup_RemoveObject(obj, 4);
   (*(GroundAnimatorFreeFn *)(*gCarryableInterface + 0x10))(obj);
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -301,14 +291,12 @@ void wm_column_free(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void wm_column_render(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
   if ((*(GroundAnimatorVisibleFn *)(*gCarryableInterface + 0xc))(param_1, visible) != 0) {
     objRenderFn_8003b8f4(param_1, param_2, param_3, param_4, param_5, lbl_803E37B8);
   }
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -340,8 +328,6 @@ void wm_column_hitDetect(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void wm_column_update(int obj)
 {
   int *objects;
@@ -411,8 +397,6 @@ void wm_column_update(int obj)
     *(u32 *)&((GameObject *)obj)->unkF4 &= ~1;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -427,8 +411,6 @@ void wm_column_update(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void wm_column_init(short *obj, int mapData)
 {
   ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
@@ -443,8 +425,6 @@ void wm_column_init(short *obj, int mapData)
   (*(GroundAnimatorInitAnimFn *)(*gCarryableInterface + 4))(obj, state, 0x32);
   ObjGroup_AddObject((int)obj, 4);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -608,6 +588,8 @@ void appleontree_func0B(int obj, float *pos)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8017db40(uint param_1,int param_2)
 {
   undefined2 uVar1;
@@ -722,6 +704,8 @@ LAB_8017de10:
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -736,6 +720,8 @@ LAB_8017de10:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8017de58(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9)
@@ -786,6 +772,8 @@ void FUN_8017de58(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* appleontree_handleCollectableHit: ground-animator collectable hit handler. When player is in
  * range, either send a trigger event (first contact) or apply healing +
@@ -798,8 +786,6 @@ extern void Obj_FreeObject(int obj);
 extern f32 lbl_803E37C8;
 extern f32 lbl_803E37EC;
 extern f32 lbl_803E37F0;
-#pragma scheduling off
-#pragma peephole off
 void appleontree_handleCollectableHit(int obj)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -831,8 +817,6 @@ void appleontree_handleCollectableHit(int obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -866,6 +850,8 @@ void FUN_8017e0f8(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8017e12c(int param_1)
 {
   if ((((AppleOnTreeState *)*(int *)&((GameObject *)param_1)->extra)->unk5A & 2) == 0) {
@@ -873,6 +859,8 @@ void FUN_8017e12c(int param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -887,6 +875,8 @@ void FUN_8017e12c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 undefined4 FUN_8017e15c(double param_1,undefined2 *param_2,int param_3)
 {
   float fVar1;
@@ -975,6 +965,8 @@ undefined4 FUN_8017e15c(double param_1,undefined2 *param_2,int param_3)
   }
   return uVar4;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -989,6 +981,8 @@ undefined4 FUN_8017e15c(double param_1,undefined2 *param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 undefined4 FUN_8017e3c0(double param_1,undefined2 *param_2,int param_3)
 {
   float fVar1;
@@ -1071,6 +1065,8 @@ undefined4 FUN_8017e3c0(double param_1,undefined2 *param_2,int param_3)
   }
   return uVar4;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -1082,7 +1078,6 @@ int appleontree_getExtraSize(void) { return 0x64; }
 /* Pattern wrappers. */
 u8 appleontree_modelMtxFn(int *obj) { return ((AppleOnTreeState *)((int **)obj)[0xb8/4])->unk3A; }
 
-#pragma peephole off
 void appleontree_free(int *obj) {
     (*gExpgfxInterface)->freeSource((u32)obj);
 }
@@ -1092,7 +1087,6 @@ void appleontree_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
         objRenderFn_8003b8f4(obj, p1, p2, p3, p4, lbl_803E37C8);
     }
 }
-#pragma peephole reset
 
 /* v1.0 ground-animator drop physics (drift twins of FUN_8017db40/FUN_8017e15c/FUN_8017e3c0). */
 extern f32 timeDelta;
@@ -1110,8 +1104,6 @@ extern f32 lbl_803E37F8;
 extern f32 lbl_803E37FC;
 extern f32 lbl_803E3800;
 
-#pragma scheduling off
-#pragma peephole off
 void fn_8017D854(int obj, int msg)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -1369,5 +1361,3 @@ int fn_8017DF34(int p, int state, f32 y)
         return 1;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

@@ -356,7 +356,6 @@ extern undefined4 _DAT_803dc354;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void* fn_8006F388(u32 i)
 {
     extern u8 lbl_8030E8B0[];
@@ -375,7 +374,6 @@ void* fn_8006F388(u32 i)
         default: return base + 0x28;
     }
 }
-#pragma scheduling reset
 
 typedef struct {
     s16 id;
@@ -394,8 +392,6 @@ extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_PlayAtPositionFromObject(u8 *obj, f32 x, f32 y, f32 z, int sfxId);
 extern int randomGetRange(int min, int max);
 
-#pragma peephole off
-#pragma scheduling off
 void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unused, f32 scale)
 {
     Vec v;
@@ -503,8 +499,6 @@ void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unus
         j++;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -531,8 +525,6 @@ void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unus
  * retail source had a variable reassignment between the two uses
  * (see Ghidra: local_18 reassigned before the else-branch store).
  * Can't reproduce the re-store without __asm. */
-#pragma peephole off
-#pragma scheduling off
 void timeFn_8006f400(f32 step)
 {
     int i;
@@ -562,8 +554,6 @@ void timeFn_8006f400(f32 step)
         b += 0x10;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -578,8 +568,6 @@ void timeFn_8006f400(f32 step)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void drawFn_8006f500(void)
 {
     extern f32 playerMapOffsetX, playerMapOffsetZ;
@@ -682,8 +670,6 @@ void drawFn_8006f500(void)
     }
     Camera_ApplyFullViewport();
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -721,8 +707,6 @@ typedef struct {
     SplashQuad quads[0x100];
 } WaterFxState;
 
-#pragma peephole off
-#pragma scheduling off
 void playerEarthWalkerAudioFn_8006f950(u8 *obj, f32 *pos, u8 flip, u8 type)
 {
     extern f32 lbl_80391DC0[];
@@ -813,8 +797,6 @@ void playerEarthWalkerAudioFn_8006f950(u8 *obj, f32 *pos, u8 flip, u8 type)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -829,8 +811,6 @@ void playerEarthWalkerAudioFn_8006f950(u8 *obj, f32 *pos, u8 flip, u8 type)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void fn_8006FC00(int param_1)
 {
     int i;
@@ -861,8 +841,6 @@ void fn_8006FC00(int param_1)
     lbl_803DCFF9 = 0;
     *(u8*)&lbl_803DCFF8 = 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -877,7 +855,6 @@ void fn_8006FC00(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void mapInitFn_8006fccc(void)
 {
     extern u8 lbl_80391DC0[];
@@ -923,7 +900,6 @@ void mapInitFn_8006fccc(void)
     lbl_803DCFF8 = 0;
     lbl_803DCFF4 = 0;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -938,8 +914,6 @@ void mapInitFn_8006fccc(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 /* Queues a GXPeekZ read at (x,y) tagged by an opaque requestKey (callers pass
  * any unique value - object ptrs, loop indices, even a function address) and
  * returns the previously completed result for that key, 0 until ready. */
@@ -981,8 +955,6 @@ int depthReadRequestPoll(int x, int y, int requestKey)
     }
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -997,7 +969,6 @@ int depthReadRequestPoll(int x, int y, int requestKey)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
 uint getScreenResolution(void)
 {
     u32 v = lbl_803DD004;
@@ -1006,7 +977,6 @@ uint getScreenResolution(void)
     }
     return 0x01E00280;
 }
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -1070,8 +1040,6 @@ extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 extern f32 fabs(f32 x);
 
-#pragma scheduling off
-#pragma peephole off
 void matrixFn_8006ff0c(f32 fov, f32 aspect, f32 near, f32 far, f32 scale,
                        float *mat, short *out)
 {
@@ -1109,8 +1077,6 @@ void matrixFn_8006ff0c(f32 fov, f32 aspect, f32 near, f32 far, f32 scale,
     C_MTXPerspective((void *)lbl_803968C0, fov, aspect, lbl_803DD038, lbl_803DD034);
     lbl_803DD03C = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1125,8 +1091,6 @@ void matrixFn_8006ff0c(f32 fov, f32 aspect, f32 near, f32 far, f32 scale,
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void normalize(f32* x, f32* y, f32* z)
 {
     f32 scale;
@@ -1138,8 +1102,6 @@ void normalize(f32* x, f32* y, f32* z)
     *y = *y * scale;
     *z = *z * scale;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -1164,7 +1126,6 @@ extern f32 lbl_803DEE9C;
  * 132 byte discrepancy. Not crackable without materializing the
  * comparison indices via a global/volatile, which would break other
  * matches. */
-#pragma scheduling off
 void fn_80070234(f32* param_1)
 {
     int i = 0, j;
@@ -1178,7 +1139,6 @@ void fn_80070234(f32* param_1)
         param_1 += 4;
     }
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1193,7 +1153,7 @@ void fn_80070234(f32* param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
+#pragma peephole on
 void gxSetPeControl_ZCompLoc_(u32 param_1)
 {
     extern void GXSetZCompLoc();
@@ -1203,7 +1163,7 @@ void gxSetPeControl_ZCompLoc_(u32 param_1)
         lbl_803DD019 = 1;
     }
 }
-#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -1218,7 +1178,7 @@ void gxSetPeControl_ZCompLoc_(u32 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
+#pragma peephole on
 void gxSetZMode_(u32 param_1, int param_2, u32 param_3)
 {
     extern void GXSetZMode();
@@ -1238,7 +1198,7 @@ void gxSetZMode_(u32 param_1, int param_2, u32 param_3)
         lbl_803DD01A = 1;
     }
 }
-#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -1290,13 +1250,11 @@ void setHudOpacity(u8 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void _gxSetFogParams(void)
 {
     GXColor c = lbl_803DD01C;
     GXSetFog(GX_FOG_PERSP_EXP, lbl_803DD024, lbl_803DD020, lbl_803DD038, lbl_803DD034, c);
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1311,7 +1269,6 @@ void _gxSetFogParams(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void fogFn_80070404(f32 a, f32 b)
 {
     extern f32 Camera_GetNearPlane(void);
@@ -1338,7 +1295,6 @@ void fogFn_80070404(f32 a, f32 b)
     c = lbl_803DD01C;
     GXSetFog(GX_FOG_PERSP_EXP, lbl_803DD024, lbl_803DD020, lbl_803DD038, lbl_803DD034, c);
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1353,14 +1309,12 @@ void fogFn_80070404(f32 a, f32 b)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void getColor803dd01c(u8* param_1)
 {
     param_1[0] = lbl_803DD01C.r;
     param_1[1] = lbl_803DD01C.g;
     param_1[2] = lbl_803DD01C.b;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1375,7 +1329,6 @@ void getColor803dd01c(u8* param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void fn_800704FC(u8 param_1, u8 param_2, u8 param_3)
 {
     extern GXColor lbl_803DD01C;
@@ -1383,7 +1336,6 @@ void fn_800704FC(u8 param_1, u8 param_2, u8 param_3)
     lbl_803DD01C.g = param_2;
     lbl_803DD01C.b = param_3;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1398,8 +1350,6 @@ void fn_800704FC(u8 param_1, u8 param_2, u8 param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void renderWhirlpool(void* obj_a, void** obj_b, int param_3)
 {
     extern f32 lbl_803DEEE4;
@@ -1606,8 +1556,6 @@ void renderWhirlpool(void* obj_a, void** obj_b, int param_3)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -1622,7 +1570,6 @@ void renderWhirlpool(void* obj_a, void** obj_b, int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void screenImageDraw(u8 alpha)
 {
     extern f32 lbl_803DEEE4, lbl_803DEEEC, lbl_803DEEF0;
@@ -1820,7 +1767,6 @@ void screenImageDraw(u8 alpha)
     Camera_RebuildProjectionMatrix();
     GXSetCurrentMtx(0);
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1835,7 +1781,6 @@ void screenImageDraw(u8 alpha)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void doSpiritVisionFilter(void)
 {
     extern Mtx hudMatrix;
@@ -1955,7 +1900,6 @@ void doSpiritVisionFilter(void)
     Camera_RebuildProjectionMatrix();
     GXSetTevSwapModeTable(0, 0, 1, 2, 3);
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1970,8 +1914,6 @@ void doSpiritVisionFilter(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void doColorFilter(u8* mod)
 {
     extern u32 lbl_803DEEC8, lbl_803DEECC, lbl_803DEED0, lbl_803DEED4;
@@ -2103,8 +2045,6 @@ void doColorFilter(u8* mod)
     Camera_RebuildProjectionMatrix();
     GXSetTevSwapModeTable(0, 0, 1, 2, 3);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -2119,8 +2059,6 @@ void doColorFilter(u8* mod)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 static inline float distortSqrtf(float x) {
     static const double half = 0.5;
     static const double three = 3.0;
@@ -2392,8 +2330,6 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
 
     Camera_RebuildProjectionMatrix();
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -2408,8 +2344,6 @@ void doDistortionFilter(f32 radius, f32 angle, float* pos, u8* mod)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int param_3)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
@@ -2578,8 +2512,6 @@ void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int param_3)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -2601,7 +2533,6 @@ void gxTextureFn_80072dfc(void* obj_a, void** obj_b, int param_3)
  * stage 1 modulates by the second texture. Uses ind tex stage 0 to warp
  * tex coord 0 by tex1.
  */
-#pragma scheduling off
 void quakeSpellTextureFn_8007366c(u8 alpha)
 {
     extern Mtx lbl_80396820;
@@ -2709,7 +2640,6 @@ void quakeSpellTextureFn_8007366c(u8 alpha)
     GXSetAlphaCompare(7, 0, 0, 7, 0);
     GXSetCullMode(2);
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2724,7 +2654,6 @@ void quakeSpellTextureFn_8007366c(u8 alpha)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void fn_80073AAC(void* texture, u32* colorA, u32* colorB)
 {
     extern void fn_8004C460(void*, int);
@@ -2769,7 +2698,6 @@ void fn_80073AAC(void* texture, u32* colorA, u32* colorB)
     GXSetAlphaCompare(7, 0, 0, 7, 0);
     GXSetCullMode(2);
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2784,8 +2712,6 @@ void fn_80073AAC(void* texture, u32* colorA, u32* colorB)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 int modelCb_80073d04(u8 *obj, int *objB)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEF34;
@@ -2877,8 +2803,6 @@ int modelCb_80073d04(u8 *obj, int *objB)
     GXSetCullMode(2);
     return 1;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -2893,8 +2817,6 @@ int modelCb_80073d04(u8 *obj, int *objB)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 int moonFxCb_80074110(u8 *obj, int *objB, int slot)
 {
     extern f32 lbl_803DEEDC, lbl_803DEF38;
@@ -2972,8 +2894,6 @@ int moonFxCb_80074110(u8 *obj, int *objB, int slot)
     GXSetFog(0, lbl_803DEEDC, lbl_803DEEDC, lbl_803DEEDC, lbl_803DEEDC, colorFog);
     return 1;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -2988,8 +2908,6 @@ int moonFxCb_80074110(u8 *obj, int *objB, int slot)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void modelCb_80074518(void* obj_a, void** obj_b, int param_3)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
@@ -3143,8 +3061,6 @@ void modelCb_80074518(void* obj_a, void** obj_b, int param_3)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -3159,7 +3075,6 @@ void modelCb_80074518(void* obj_a, void** obj_b, int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 u32 objCallback_80074d04(int handle, void* model)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEF0;
@@ -3334,7 +3249,6 @@ u32 objCallback_80074d04(int handle, void* model)
     GXSetBlendMode(1, 4, 5, 5);
     return 0;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -3349,8 +3263,6 @@ u32 objCallback_80074d04(int handle, void* model)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void hudDrawRect(int x1, int y1, int x2, int y2, u8* color)
 {
     extern void Camera_RebuildProjectionMatrix(void);
@@ -3426,8 +3338,6 @@ void hudDrawRect(int x1, int y1, int x2, int y2, u8* color)
 
     Camera_RebuildProjectionMatrix();
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -3442,8 +3352,6 @@ void hudDrawRect(int x1, int y1, int x2, int y2, u8* color)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void drawViewFinderLine(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4)
 {
     extern void Camera_RebuildProjectionMatrix(void);
@@ -3530,8 +3438,6 @@ void drawViewFinderLine(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y
 
     Camera_RebuildProjectionMatrix();
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -3546,8 +3452,6 @@ void drawViewFinderLine(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void hudDrawTriangle(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
 {
     extern void Camera_RebuildProjectionMatrix(void);
@@ -3625,8 +3529,6 @@ void hudDrawTriangle(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
 
     Camera_RebuildProjectionMatrix();
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -3641,8 +3543,6 @@ void hudDrawTriangle(u8* color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void skyDrawFn_80075d5c(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2, int z)
 {
     extern void Camera_RebuildProjectionMatrix(void);
@@ -3686,8 +3586,6 @@ void skyDrawFn_80075d5c(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, 
 
     Camera_RebuildProjectionMatrix();
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -3702,8 +3600,6 @@ void skyDrawFn_80075d5c(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, 
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void textRenderChar(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 v2)
 {
     extern void Camera_RebuildProjectionMatrix(void);
@@ -3747,8 +3643,6 @@ void textRenderChar(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 
 
     Camera_RebuildProjectionMatrix();
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -3763,8 +3657,6 @@ void textRenderChar(int x1, int y1, int x2, int y2, f32 u1, f32 v1, f32 u2, f32 
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void drawPartialTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int width, int height, int u_offset, int v_offset)
 {
     extern f32 hudScale;
@@ -3868,8 +3760,6 @@ void drawPartialTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int w
 
     Camera_RebuildProjectionMatrix();
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -3890,7 +3780,6 @@ void drawPartialTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int w
  * width 4*size_x and height 4*size_y in screen pixels. Used as the
  * "draw fullscreen tint" primitive by the dialog code in cardShowLoadingMsg.
  */
-#pragma scheduling off
 void drawRect(f32 sx, f32 sy, int x, int y)
 {
     extern Mtx hudMatrix;
@@ -3958,7 +3847,6 @@ void drawRect(f32 sx, f32 sy, int x, int y)
     Camera_RebuildProjectionMatrix();
     GXSetColorUpdate(1);
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -3973,8 +3861,6 @@ void drawRect(f32 sx, f32 sy, int x, int y)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void drawScaledTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int width, int height, u8 flags)
 {
     extern f32 hudScale;
@@ -4099,8 +3985,6 @@ void drawScaledTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int wi
 
     Camera_RebuildProjectionMatrix();
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -4121,8 +4005,6 @@ void drawScaledTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale, int wi
  * "raster passthrough" (TevColorIn 0xF/0xF/0xF/0xE) and "K-tint replace"
  * (TevColorIn 0xF/0xE/0x8/0xF).
  */
-#pragma peephole off
-#pragma scheduling off
 void hudDrawColored(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
 {
     extern f32 hudScale;
@@ -4225,8 +4107,6 @@ void hudDrawColored(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
     }
     Camera_RebuildProjectionMatrix();
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -4249,8 +4129,6 @@ void hudDrawColored(s16* obj, int x, int y, GXColor* color, u16 scale, u8 flag)
  * tex stage that further K-multiplies by the texture. Final width and
  * height are 4 * asset_dim * scale >> 8 in screen pixels at z=-8.
  */
-#pragma peephole off
-#pragma scheduling off
 void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
 {
     extern f32 hudScale;
@@ -4351,8 +4229,6 @@ void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
 
     Camera_RebuildProjectionMatrix();
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -4367,7 +4243,6 @@ void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void objectShadow_setupSwappedProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx)
 {
     extern void fn_8004C460(int, int);
@@ -4417,7 +4292,6 @@ void objectShadow_setupSwappedProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx)
     }
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -4432,7 +4306,6 @@ void objectShadow_setupSwappedProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void objectShadow_setupProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx)
 {
     extern void fn_8004C460(int, int);
@@ -4479,7 +4352,6 @@ void objectShadow_setupProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx)
     }
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -4494,8 +4366,6 @@ void objectShadow_setupProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void fn_80077AD8(u8 *st, u8 *p2, f32 *m, f32 depth)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
@@ -4587,8 +4457,6 @@ void fn_80077AD8(u8 *st, u8 *p2, f32 *m, f32 depth)
     }
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -4603,8 +4471,6 @@ void fn_80077AD8(u8 *st, u8 *p2, f32 *m, f32 depth)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void fn_80077EF8(void* obj, u8* node, Mtx mtx, double scale)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
@@ -4818,8 +4684,6 @@ void fn_80077EF8(void* obj, u8* node, Mtx mtx, double scale)
     }
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -4834,7 +4698,6 @@ void fn_80077EF8(void* obj, u8* node, Mtx mtx, double scale)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void fn_80078740(void)
 {
     extern void GXSetZMode();
@@ -4858,7 +4721,6 @@ void fn_80078740(void)
     }
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -4873,7 +4735,6 @@ void fn_80078740(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void fn_8007880C(void)
 {
     extern void GXSetZMode();
@@ -4897,7 +4758,6 @@ void fn_8007880C(void)
     }
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -4912,7 +4772,6 @@ void fn_8007880C(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void fn_800788DC(void)
 {
     extern void GXSetZMode();
@@ -4936,7 +4795,6 @@ void fn_800788DC(void)
     }
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -4951,7 +4809,6 @@ void fn_800788DC(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void gxBlendFn_800789ac(void)
 {
     extern void GXSetZMode();
@@ -4975,7 +4832,6 @@ void gxBlendFn_800789ac(void)
     }
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -4990,7 +4846,6 @@ void gxBlendFn_800789ac(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void textBlendSetupFn_80078a7c(void)
 {
     extern void GXSetZMode();
@@ -5014,7 +4869,6 @@ void textBlendSetupFn_80078a7c(void)
     }
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -5029,7 +4883,6 @@ void textBlendSetupFn_80078a7c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void gxBlendFn_80078b4c(void)
 {
     extern void GXSetZMode();
@@ -5053,7 +4906,6 @@ void gxBlendFn_80078b4c(void)
     }
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -5068,7 +4920,6 @@ void gxBlendFn_80078b4c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void gxDebugTextureFn_80078c1c(void)
 {
     extern void GXSetZMode();
@@ -5106,7 +4957,6 @@ void gxDebugTextureFn_80078c1c(void)
     }
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -5121,7 +4971,6 @@ void gxDebugTextureFn_80078c1c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void fn_80078DFC(void)
 {
     GXSetTevOrder(lbl_803DD030, 0xFF, 0xFF, 4);
@@ -5135,7 +4984,6 @@ void fn_80078DFC(void)
     lbl_803DD00B += 1;
     lbl_803DD009 += 1;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -5150,7 +4998,6 @@ void fn_80078DFC(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void fn_80078ED0(void)
 {
     GXSetTevOrder(lbl_803DD030, 0xFF, 0xFF, 4);
@@ -5164,7 +5011,6 @@ void fn_80078ED0(void)
     lbl_803DD00B += 1;
     lbl_803DD009 += 1;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -5179,7 +5025,6 @@ void fn_80078ED0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void textRenderSetup(void)
 {
     GXSetTevOrder(lbl_803DD030, lbl_803DD02C, lbl_803DD028, 0xFF);
@@ -5196,7 +5041,6 @@ void textRenderSetup(void)
     lbl_803DD00A += 1;
     lbl_803DD028 += 1;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -5211,7 +5055,6 @@ void textRenderSetup(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void fn_800790AC(void)
 {
     GXSetTevOrder(lbl_803DD030, 0xFF, 0xFF, 4);
@@ -5225,7 +5068,6 @@ void fn_800790AC(void)
     lbl_803DD00B += 1;
     lbl_803DD009 += 1;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -5240,7 +5082,6 @@ void fn_800790AC(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void fn_80079180(void)
 {
     GXSetTevOrder(lbl_803DD030, 0xFF, 0xFF, 4);
@@ -5254,7 +5095,6 @@ void fn_80079180(void)
     lbl_803DD00B += 1;
     lbl_803DD009 += 1;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -5269,7 +5109,6 @@ void fn_80079180(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void gxTexColorFn_80079254(void)
 {
     GXSetTevOrder(lbl_803DD030, 0xFF, 0xFF, 4);
@@ -5283,7 +5122,6 @@ void gxTexColorFn_80079254(void)
     lbl_803DD00B += 1;
     lbl_803DD009 += 1;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -5298,7 +5136,6 @@ void gxTexColorFn_80079254(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void gxTevAddTextureFrameBlendStages(void)
 {
     GXSetTevOrder(lbl_803DD030, lbl_803DD02C, lbl_803DD028, 0xFF);
@@ -5325,7 +5162,6 @@ void gxTevAddTextureFrameBlendStages(void)
     lbl_803DD00A += 1;
     lbl_803DD028 += 1;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -5340,7 +5176,6 @@ void gxTevAddTextureFrameBlendStages(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void gxTextureFn_800794e0(void)
 {
     GXSetTevOrder(lbl_803DD030, lbl_803DD02C, lbl_803DD028, 0xFF);
@@ -5357,7 +5192,6 @@ void gxTextureFn_800794e0(void)
     lbl_803DD02C += 1;
     lbl_803DD00A += 1;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -5372,7 +5206,6 @@ void gxTextureFn_800794e0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void textRenderSetupFn_800795e8(void)
 {
     GXSetTevOrder(lbl_803DD030, lbl_803DD02C, lbl_803DD028, 0xFF);
@@ -5389,7 +5222,6 @@ void textRenderSetupFn_800795e8(void)
     lbl_803DD02C += 1;
     lbl_803DD00A += 1;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -5404,7 +5236,6 @@ void textRenderSetupFn_800795e8(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void geomDrawFn_800796f0(void)
 {
     GXSetTevOrder(lbl_803DD030, lbl_803DD02C, lbl_803DD028, 4);
@@ -5422,7 +5253,6 @@ void geomDrawFn_800796f0(void)
     lbl_803DD00A += 1;
     lbl_803DD009 += 1;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -5444,7 +5274,6 @@ void geomDrawFn_800796f0(void)
  * stage that K-multiplies the tint over the existing color, advancing
  * lbl_803DD030 (TEV stage cursor) and lbl_803DD00B (stage count).
  */
-#pragma scheduling off
 void textRenderSetupFn_80079804(void)
 {
     extern u8 lbl_803DD008, lbl_803DD009, lbl_803DD00A, lbl_803DD00B;
@@ -5481,7 +5310,6 @@ void textRenderSetupFn_80079804(void)
         GXSetChanCtrl(4, 0, 0, 1, 0, 0, 2);
     }
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -5520,7 +5348,6 @@ void textureSetupFn_800799c0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void _gxSetTevColor2(u8 r, u8 g, u8 b, u8 a)
 {
     GXColor c;
@@ -5530,7 +5357,6 @@ void _gxSetTevColor2(u8 r, u8 g, u8 b, u8 a)
     c.a = a;
     GXSetTevColor(GX_TEVREG1, c);
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -5545,7 +5371,6 @@ void _gxSetTevColor2(u8 r, u8 g, u8 b, u8 a)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void _gxSetTevColor1(u8 r, u8 g, u8 b, u8 a)
 {
     GXColor c;
@@ -5555,7 +5380,6 @@ void _gxSetTevColor1(u8 r, u8 g, u8 b, u8 a)
     c.a = a;
     GXSetTevColor(GX_TEVREG0, c);
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -5577,8 +5401,6 @@ void _gxSetTevColor1(u8 r, u8 g, u8 b, u8 a)
  * coord matrix that scales the source texture by 1/sx and 1/sy with a
  * sub-pixel offset baked from lbl_803DEF4C/50.
  */
-#pragma peephole off
-#pragma scheduling off
 void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag)
 {
     extern u32 lbl_803DEEA0;
@@ -5694,8 +5516,6 @@ void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag)
     Camera_RebuildProjectionMatrix();
     GXSetCurrentMtx(0);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -5710,7 +5530,6 @@ void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void drawFn_80079e64(double s1, double s2, double s3, u8 mtxIdx, void* vec, u8 alpha0, u8 alpha1)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEF4;
@@ -5898,7 +5717,6 @@ void drawFn_80079e64(double s1, double s2, double s3, u8 mtxIdx, void* vec, u8 a
     Camera_RebuildProjectionMatrix();
     GXSetCurrentMtx(0);
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -5917,8 +5735,6 @@ typedef struct {
     f32 m[6];
 } IndMtxInit;
 
-#pragma peephole off
-#pragma scheduling off
 void doHeatEffect(u8 alpha)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
@@ -6086,8 +5902,6 @@ void doHeatEffect(u8 alpha)
     Camera_RebuildProjectionMatrix();
     GXSetCurrentMtx(0);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -6109,7 +5923,6 @@ void doHeatEffect(u8 alpha)
  * 0..0x80 so the texture maps once across the screen. Used when fading
  * the screen to texture (e.g. boot logo / "now loading").
  */
-#pragma scheduling off
 void renderMotionBlur(f32 alpha)
 {
     extern f32 lbl_803DEF20;
@@ -6197,7 +6010,6 @@ void renderMotionBlur(f32 alpha)
 
     Camera_RebuildProjectionMatrix();
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -6212,8 +6024,6 @@ void renderMotionBlur(f32 alpha)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void doBlurFilter(double wx, double wy, double wz, char param4, char param5)
 {
     extern f32 playerMapOffsetX, playerMapOffsetZ;
@@ -6502,8 +6312,6 @@ void doBlurFilter(double wx, double wy, double wz, char param4, char param5)
 
     Camera_RebuildProjectionMatrix();
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -6518,8 +6326,6 @@ void doBlurFilter(double wx, double wy, double wz, char param4, char param5)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void fn_8007BD8C(int handle1, int handle2)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
@@ -6654,8 +6460,6 @@ void fn_8007BD8C(int handle1, int handle2)
     }
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -6670,8 +6474,6 @@ void fn_8007BD8C(int handle1, int handle2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void setupReflectionIndirectTev(u8 flag)
 {
     extern f32 lbl_803DEEDC;
@@ -6716,8 +6518,6 @@ void setupReflectionIndirectTev(u8 flag)
     GXSetTevColorOp(1, 0, 0, 0, 1, 0);
     GXSetTevAlphaOp(1, 0, 0, 0, 1, 0);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -6732,8 +6532,6 @@ void setupReflectionIndirectTev(u8 flag)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void fn_8007C664(int texHandle)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
@@ -6826,8 +6624,6 @@ void fn_8007C664(int texHandle)
     }
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -6842,8 +6638,6 @@ void fn_8007C664(int texHandle)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void fn_8007CAF4(void)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEEC;
@@ -6935,8 +6729,6 @@ void fn_8007CAF4(void)
     }
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -6951,8 +6743,6 @@ void fn_8007CAF4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void gxTextureSetupFn_8007cf7c(void)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEF0, lbl_803DEEF4;
@@ -7108,8 +6898,6 @@ void gxTextureSetupFn_8007cf7c(void)
     }
     GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -7128,7 +6916,6 @@ void gxTextureSetupFn_8007cf7c(void)
  * each PSMTXConcat call; target caches it once in r31 (callee-save)
  * and reuses across both calls. Register-allocator preference -- not
  * crackable without inline asm. */
-#pragma scheduling off
 void fn_8007D670(void)
 {
     Mtx* mats = &lbl_803967C0;
@@ -7138,7 +6925,6 @@ void fn_8007D670(void)
     PSMTXConcat(mats[2], mats[0], tmp);
     GXLoadTexMtxImm(tmp, 0x24, GX_MTX3x4);
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -7184,8 +6970,6 @@ void OSReport(const char* msg, ...)
  * if we still owe one, else success: clear the cache, set state 13,
  * unmount, return 1.
  */
-#pragma peephole off
-#pragma scheduling off
 int cardLoadFn_8007d72c(void)
 {
     extern int cardProbe(int);
@@ -7262,8 +7046,6 @@ int cardLoadFn_8007d72c(void)
     }
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -7278,8 +7060,6 @@ int cardLoadFn_8007d72c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void saveFn_8007d960(u32 param_1)
 {
     u8 v = (u8)param_1;
@@ -7292,8 +7072,6 @@ void saveFn_8007d960(u32 param_1)
     lbl_803DD054 = 0;
     lbl_803DD050 = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -7348,8 +7126,6 @@ extern int saveGame_prepareAndWrite(int, int, int, int, int, void*);
 extern void saveCb_8007e77c(void);
 extern u8 lbl_803DD058;
 
-#pragma scheduling off
-#pragma peephole off
 int cardDeleteFn_8007d99c(void)
 {
     extern void* mmAlloc();
@@ -7402,8 +7178,6 @@ int cardDeleteFn_8007d99c(void)
     } while (lbl_803DD058 != 0);
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -7418,7 +7192,6 @@ int cardDeleteFn_8007d99c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 int _saveGame(int a, int b, int c)
 {
     int ret;
@@ -7433,7 +7206,6 @@ int _saveGame(int a, int b, int c)
     } while (lbl_803DD058 != 0);
     return ret;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -7448,7 +7220,6 @@ int _saveGame(int a, int b, int c)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 int maybeTryLoadSave(int a)
 {
     int ret;
@@ -7463,7 +7234,6 @@ int maybeTryLoadSave(int a)
     } while (lbl_803DD058 != 0);
     return ret;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -7478,7 +7248,6 @@ int maybeTryLoadSave(int a)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 int loadSaveGame(int a, int b)
 {
     int ret;
@@ -7493,10 +7262,7 @@ int loadSaveGame(int a, int b)
     } while (lbl_803DD058 != 0);
     return ret;
 }
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void showMemCardError(u8 err)
 {
     extern f32 lbl_803DEF90, lbl_803DEF94;
@@ -7647,8 +7413,6 @@ void showMemCardError(u8 err)
         }
     } while (lbl_803DB700 != 0xd);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -7663,8 +7427,6 @@ void showMemCardError(u8 err)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 int memCardFn_8007dd04(u8 retry)
 {
     extern int saveGame(int);
@@ -7705,8 +7467,6 @@ int memCardFn_8007dd04(u8 retry)
     } while (lbl_803DD058 != 0 && retry != 0);
     return ret;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -7721,8 +7481,6 @@ int memCardFn_8007dd04(u8 retry)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 int cardProbe(u8 retry)
 {
     extern s32 CARDProbeEx(s32 chan, s32* memSize, s32* sectorSize);
@@ -7758,8 +7516,6 @@ int cardProbe(u8 retry)
     } while (lbl_803DD058 != 0 && retry != 0);
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -7792,7 +7548,6 @@ void _initCardAndDsp(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void cardGetMessage(u32* buttons, u32* texts, u32* count)
 {
     extern u8 lbl_803DD059;
@@ -7901,7 +7656,6 @@ void cardGetMessage(u32* buttons, u32* texts, u32* count)
             return;
     }
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -7936,8 +7690,6 @@ void cardGetMessage(u32* buttons, u32* texts, u32* count)
  * cached prompt id in lbl_803DB708, then routes the OK/Cancel/back text
  * to gameTextFn_80016810 based on the dialog kind passed in.
  */
-#pragma peephole off
-#pragma scheduling off
 void cardShowLoadingMsg(u8 kind)
 {
     extern void gameTextSetWindow(int);
@@ -7999,8 +7751,6 @@ void cardShowLoadingMsg(u8 kind)
         GXFlush_(1, 0);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -8020,7 +7770,6 @@ void cardShowLoadingMsg(u8 kind)
  * into the card-IO buffer (lbl_803DD044), then asks saveGame_doWrite(2) to
  * commit; if that fails it falls back to saveGame_doWrite(1).
  */
-#pragma scheduling off
 int cardCb_8007e6d4(u8 slot, int unused, void* src1, void* src2)
 {
     extern char* lbl_803DD044;
@@ -8034,7 +7783,6 @@ int cardCb_8007e6d4(u8 slot, int unused, void* src1, void* src2)
     }
     return ret;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -8053,11 +7801,9 @@ int cardCb_8007e6d4(u8 slot, int unused, void* src1, void* src2)
  * Copies the 0xE4-byte block at offset 0x1F14 in the card buffer (held in
  * lbl_803DD044) into the caller-supplied destination.
  */
-#pragma scheduling off
 int saveCb_8007e748(int param_1, int param_2, void* dst)
 {
     extern char* lbl_803DD044;
     memcpy(dst, lbl_803DD044 + 0x1F14, 0xE4);
     return 0;
 }
-#pragma scheduling reset

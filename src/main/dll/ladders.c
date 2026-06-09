@@ -85,8 +85,6 @@ extern void* ObjList_FindObjectById(int id);
 extern f32 timeDelta;
 extern f32 lbl_803E2F34;
 extern f32 lbl_803E2F38;
-#pragma scheduling off
-#pragma peephole off
 void cannonclaw_update(u8* obj)
 {
     u8* trickyState;
@@ -103,8 +101,6 @@ void cannonclaw_update(u8* obj)
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x8);
     ObjHits_DisableObject(obj);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -172,6 +168,8 @@ void FUN_801633ac(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801633b0(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   if ((visible != 0) && (((GameObject *)param_1)->unkF4 == 0)) {
@@ -179,6 +177,8 @@ void FUN_801633b0(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -193,6 +193,8 @@ void FUN_801633b0(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801633e4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
@@ -218,6 +220,8 @@ void FUN_801633e4(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -232,6 +236,8 @@ void FUN_801633e4(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80163544(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
@@ -340,6 +346,8 @@ LAB_80163950:
   FUN_8028688c();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -354,6 +362,8 @@ LAB_80163950:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801638bc(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   if (visible != 0) {
@@ -361,6 +371,8 @@ void FUN_801638bc(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -393,6 +405,8 @@ void FUN_801638e4(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801638e8(undefined4 param_1,undefined4 param_2,int param_3)
 {
   float fVar1;
@@ -454,6 +468,8 @@ LAB_80163cb0:
   FUN_80286888();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -468,6 +484,8 @@ LAB_80163cb0:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 int FUN_80163ac8(float *param_1)
 {
   int *piVar1;
@@ -492,6 +510,8 @@ int FUN_80163ac8(float *param_1)
   }
   return iVar3;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -506,11 +526,15 @@ int FUN_80163ac8(float *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80163b8c(int param_1)
 {
   *(undefined *)(*(int *)&((GameObject *)param_1)->extra + 0x278) = 7;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -529,8 +553,6 @@ extern u8 lbl_803201E8[];
 extern void vecRotateZXY(void* obj, void* p);
 extern void *memcpy(void *dst, const void *src, int n);
 
-#pragma peephole off
-#pragma scheduling off
 void tumbleweedbush_init(u8* obj, u8* params, int param3) {
     u8* sub;
     f32 t;
@@ -582,8 +604,6 @@ void tumbleweedbush_init(u8* obj, u8* params, int param3) {
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /* 8b "li r3, N; blr" returners. */
 int tumbleweedbush_getExtraSize(void) { return 0x54; }
@@ -611,8 +631,6 @@ typedef struct TumbleweedBushState {
     u8 pad51[3];
 } TumbleweedBushState;
 
-#pragma scheduling off
-#pragma peephole off
 void tumbleweedbush_update(int *obj) {
     TumbleweedBushState *state;
     int *player;
@@ -657,25 +675,17 @@ void tumbleweedbush_update(int *obj) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* 16b chained patterns. */
-#pragma scheduling off
 void fn_80163980(int *obj) { u8 v = 0x7; *((u8*)((int**)obj)[0xb8/4] + 0x278) = v; }
-#pragma scheduling reset
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E2F44;
 extern void objRenderFn_8003b8f4(f32);
-#pragma peephole off
 void tumbleweedbush_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E2F44); }
-#pragma peephole reset
 
 /* byte-to-short shift8 pattern. */
-#pragma peephole off
 void cannonclaw_init(s16 *dst, void* src) { s8 v = *((s8*)src + 0x28); s16 t = v << 8; *dst = t; }
-#pragma peephole reset
 
 /* tumbleweedbush_findNearestActive: scan all type-0x31 objects, pick the closest one whose
  * obj->_46 == 0x3fb and obj->_b8->_278 > 1 (by vec3f_distanceSquared from
@@ -683,7 +693,6 @@ void cannonclaw_init(s16 *dst, void* src) { s8 v = *((s8*)src + 0x28); s16 t = v
 extern void* ObjGroup_GetObjects(int type, int* outCount);
 extern f32 vec3f_distanceSquared(f32* p1, f32* p2);
 extern f32 lbl_803E2F58;
-#pragma scheduling off
 void* tumbleweedbush_findNearestActive(f32* p_pos)
 {
     int count;
@@ -713,11 +722,9 @@ void* tumbleweedbush_findNearestActive(f32* p_pos)
     }
     return bestObj;
 }
-#pragma scheduling reset
 
 /* tumbleweedbush_setScale: scan the sub-array at obj->_b8 (sub[0x50] entries
  * of 4 bytes each), zeroing every slot whose +0xc word matches `match`. */
-#pragma scheduling off
 void tumbleweedbush_setScale(u8* obj, void* match) {
     TumbleweedBushState *state;
     int i;
@@ -730,7 +737,6 @@ void tumbleweedbush_setScale(u8* obj, void* match) {
         i++;
     }
 }
-#pragma scheduling reset
 
 
 extern u8 Obj_IsLoadingLocked(void);
@@ -739,8 +745,6 @@ extern int *Obj_SetupObject(int *obj, int a, s8 b, int c, void *d);
 extern int **ObjList_GetObjects(int *idx, int *count);
 extern f32 lbl_803E2F40;
 
-#pragma scheduling off
-#pragma peephole off
 s8 fn_801631C8(int *obj) {
     u8 *state;
     u8 *p4c;
@@ -828,8 +832,6 @@ s8 fn_801631C8(int *obj) {
     *(u16 *)(state + 0x4e) = *(u16 *)(state + 0x4e) + 1;
     return (s8)freeSlot;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int fn_80065684(int obj, f32 a, f32 b, f32 c, f32 *out, int flag);
 extern f32 lbl_803E2F5C;
@@ -837,8 +839,6 @@ extern f32 lbl_803E2F60;
 extern f32 lbl_803E2F64;
 extern f32 lbl_803E2F68;
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80163990(int *piece, u8 *state) {
     f32 gh;
 
@@ -865,8 +865,6 @@ void fn_80163990(int *piece, u8 *state) {
     *(s16 *)((char*)piece + 0x2) = (s16)(s32)((f32)(int)*(s16 *)(state + 0x27e) * timeDelta + (f32)(int)*(s16 *)((char*)piece + 0x2));
     *(s16 *)((char*)piece + 0x0) = (s16)(s32)((f32)(int)*(s16 *)(state + 0x280) * timeDelta + (f32)(int)*(s16 *)((char*)piece + 0x0));
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 ObjectDescriptor11WithPadding gTumbleWeedBushObjDescriptor = {

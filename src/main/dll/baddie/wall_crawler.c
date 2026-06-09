@@ -149,6 +149,8 @@ extern void* PTR_DAT_8031c238;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8012eb7c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
@@ -190,6 +192,8 @@ void FUN_8012eb7c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -204,6 +208,8 @@ void FUN_8012eb7c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8012ed00(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
@@ -258,6 +264,8 @@ void FUN_8012ed00(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -290,6 +298,8 @@ int FUN_8012ef0c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8012ef14(int param_1,undefined4 param_2,undefined4 param_3,int param_4)
 {
   if ((param_1 != -1) && (DAT_803dc6d8 == -1)) {
@@ -311,6 +321,8 @@ void FUN_8012ef14(int param_1,undefined4 param_2,undefined4 param_3,int param_4)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -343,6 +355,8 @@ int FUN_8012efc4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void fn_8012F04C(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                 undefined4 param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
@@ -430,6 +444,8 @@ void fn_8012F04C(undefined8 param_1,double param_2,double param_3,undefined8 par
   FUN_8028688c();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -444,12 +460,16 @@ void fn_8012F04C(undefined8 param_1,double param_2,double param_3,undefined8 par
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8012f744(undefined2 param_1)
 {
   DAT_803de439 = 1;
   DAT_803de50c = param_1;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -464,6 +484,8 @@ void FUN_8012f744(undefined2 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8012f758(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,uint param_11,undefined4 param_12,
@@ -862,6 +884,8 @@ LAB_8012fca8:
   FUN_80286884();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* ===== EN v1.0 retargeted leaves ==========================================
  * Hand-ported helpers below pair by name in objdiff against the live v1.0
@@ -882,7 +906,6 @@ s16 cMenuGetSelectedItem(void)
 /* EN v1.0 0x8012EBD0  size: 36b  Match-and-consume helper. If the s32
  * argument equals the active id at lbl_803DD8C2, clear the busy flag
  * lbl_803DD8B8 and return 1; else return 0. */
-#pragma scheduling off
 int GameUI_isItemBeingUsed(s32 id)
 {
     if (id == lbl_803DD8C2) {
@@ -891,7 +914,6 @@ int GameUI_isItemBeingUsed(s32 id)
     }
     return 0;
 }
-#pragma scheduling reset
 
 /* EN v1.0 0x8012EBF4  size: 32b  Sign-of-active-id predicate. Returns 1
  * when the current id at lbl_803DD8C2 is non-negative, 0 otherwise. */
@@ -906,7 +928,6 @@ int GameUI_isAnyItemBeingUsed(void)
 /* EN v1.0 0x8012EB7C  size: 76b  Linear search through a 4-byte array
  * for the active id at lbl_803DD8C2. On hit, clears the busy flag at
  * lbl_803DD8B8 and returns the matched value; on miss returns -1. */
-#pragma scheduling off
 s32 GameUI_isOneOfItemsBeingUsed(s32* arr, int count)
 {
     int i;
@@ -918,7 +939,6 @@ s32 GameUI_isOneOfItemsBeingUsed(s32* arr, int count)
     }
     return -1;
 }
-#pragma scheduling reset
 
 extern u8  lbl_803DD7B9;
 extern s16 lbl_803DD88C;
@@ -927,13 +947,11 @@ extern s8  shouldCloseCMenu;
 
 /* EN v1.0 0x8012EF30  size: 16b  Latch helper: set busy byte
  * lbl_803DD7B9 and stash s16 arg in lbl_803DD88C. */
-#pragma scheduling off
 void showHelpText(s16 val)
 {
     lbl_803DD7B9 = 1;
     lbl_803DD88C = val;
 }
-#pragma scheduling reset
 
 /* EN v1.0 0x8012FB88  size: 8b  u8 setter for lbl_803DBA72. */
 void GameUI_setUnusedHudSetting(u8 val)
@@ -943,12 +961,10 @@ void GameUI_setUnusedHudSetting(u8 val)
 
 /* EN v1.0 0x8012FB90  size: 12b  s8 setter for shouldCloseCMenu. Target
  * emits `extsb r0,r3; stb r0` triple. Forced via #pragma peephole off. */
-#pragma peephole off
 void CMenu_SetShouldClose(int val)
 {
     shouldCloseCMenu = (s8)val;
 }
-#pragma peephole reset
 
 extern u8 mapScreenVisible;
 extern u8 gameUiResourcesLoaded;
@@ -978,7 +994,6 @@ extern int lbl_803A9038[];
 extern u8 lbl_8031B5D8[];
 
 #pragma dont_inline on
-#pragma scheduling off
 void fn_8012F9B4(int idx, s16 target, s8 flag)
 {
     void *entry = &lbl_8031B5D8[idx * 16];
@@ -999,10 +1014,7 @@ void fn_8012F9B4(int idx, s16 target, s8 flag)
         }
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_8012FA70(int idx, s8 flag)
 {
     void *entry = &lbl_8031B5D8[idx * 16];
@@ -1025,8 +1037,6 @@ void fn_8012FA70(int idx, s8 flag)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 #pragma dont_inline reset
 
 extern void textureFree(void *tex);
@@ -1049,8 +1059,6 @@ typedef struct {
 
 /* EN v1.0 0x8012FB9C  size: 336b  Frees all cached HUD/item textures and
  * resets the item slot tables. */
-#pragma scheduling off
-#pragma peephole off
 void GameUI_release(void)
 {
     GameUiHud *g = (GameUiHud *)lbl_803A87F0;
@@ -1096,8 +1104,6 @@ void GameUI_release(void)
 
     textureFree(lbl_803DD8C4);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void *Obj_GetPlayerObject(void);
 extern void *getArwing(void);
@@ -1138,8 +1144,6 @@ extern s16 aButtonIcon;
 extern u8 bButtonIcon;
 
 /* EN v1.0 0x8012EC14  size: 796b  Top-level per-frame HUD draw dispatcher. */
-#pragma scheduling off
-#pragma peephole off
 void GameUI_hudDraw(int a, int b, int c)
 {
     void *player = Obj_GetPlayerObject();
@@ -1215,8 +1219,6 @@ void GameUI_hudDraw(int a, int b, int c)
     aButtonIcon = 0;
     bButtonIcon = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern u8  *getTrickyObject(void);
 extern int  cameraGetTargetType(void);
@@ -1279,8 +1281,6 @@ extern s16 lbl_803DD8D6;
 extern f32 lbl_803E21D0;
 
 /* EN v1.0 0x8012EF40  size: 2676b  Per-frame UI/pause-menu update + dispatch. */
-#pragma scheduling off
-#pragma peephole off
 void GameUI_update(void)
 {
     u8 *player = Obj_GetPlayerObject();
@@ -1578,5 +1578,3 @@ void GameUI_update(void)
         Obj_ResetObjectSystem();
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

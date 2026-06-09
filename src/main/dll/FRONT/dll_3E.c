@@ -95,8 +95,6 @@ extern OSMessage lbl_803DD67C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void PlayControl(void)
 {
   AttractMovieTextureSet *decodedTexture;
@@ -206,8 +204,6 @@ void PlayControl(void)
     gAttractMovieLoopCompleted = 1;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -222,6 +218,8 @@ void PlayControl(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80118470(void)
 {
   int iVar1;
@@ -254,6 +252,8 @@ void FUN_80118470(void)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -268,6 +268,8 @@ void FUN_80118470(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 undefined4 FUN_80118524(void)
 {
   if ((DAT_803a6a58 != 0) && ((DAT_803a6a5c == '\x01' || (DAT_803a6a5c == '\x04')))) {
@@ -280,6 +282,8 @@ undefined4 FUN_80118524(void)
   }
   return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -302,7 +306,6 @@ bool FUN_80118574(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     return 0;
 }
 
-#pragma scheduling off
 void THPPlayerStop(void) {
     OSMessage msg;
 
@@ -347,7 +350,6 @@ BOOL THPPlayerPlay(void) {
     return FALSE;
 }
 
-#pragma peephole off
 BOOL prepareAttractMode(u32 movieIndex, s32 playFlags) {
     char *base;
     void *readyMsg;
@@ -430,13 +432,11 @@ BOOL prepareAttractMode(u32 movieIndex, s32 playFlags) {
     lbl_803DD664 = (void (*)(void))VISetPostRetraceCallback((void (*)(u32))PlayControl);
     return TRUE;
 }
-#pragma peephole reset
 
 void PrepareReady(void *msg) {
     OSSendMessage(&lbl_803A5CEC, msg, OS_MESSAGE_BLOCK);
 }
 
-#pragma peephole off
 void InitAllMessageQueue(void) {
     char *player;
     s32 i;
@@ -473,5 +473,3 @@ void InitAllMessageQueue(void) {
 
     OSInitMessageQueue(&lbl_803A5CEC, &lbl_803DD67C, 1);
 }
-#pragma peephole reset
-#pragma scheduling reset

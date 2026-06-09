@@ -57,8 +57,6 @@ extern f32 lbl_803E4420;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 typedef struct {
     u8 pad[4];
     u16 type;
@@ -293,8 +291,6 @@ skip_insert: ;
     }
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -326,6 +322,8 @@ void FUN_8017b3b8(short *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8017b3bc(undefined4 param_1,undefined4 param_2,int param_3)
 {
   uint uVar1;
@@ -422,6 +420,8 @@ void FUN_8017b3bc(undefined4 param_1,undefined4 param_2,int param_3)
   FUN_80286888();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -455,6 +455,8 @@ void FUN_8017b6bc(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8017b6dc(int param_1)
 {
   uint uVar1;
@@ -478,6 +480,8 @@ void FUN_8017b6dc(int param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -509,6 +513,8 @@ void FUN_8017b7a8(short *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8017b7ac(int param_1)
 {
   uint uVar1;
@@ -528,6 +534,8 @@ void FUN_8017b7ac(int param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -542,6 +550,8 @@ void FUN_8017b7ac(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8017b858(undefined2 *param_1)
 {
   int iVar1;
@@ -562,6 +572,8 @@ void FUN_8017b858(undefined2 *param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -587,8 +599,6 @@ typedef struct PressureSwitchFbFlags {
     u8 unused7 : 1;
 } PressureSwitchFbFlags;
 
-#pragma scheduling off
-#pragma peephole off
 void pressureswitchfb_init(u8* obj, u8* params) {
     ObjAnimComponent *objAnim;
     u8* sub;
@@ -649,8 +659,6 @@ void pressureswitchfb_init(u8* obj, u8* params) {
     *(int*)(sub + 0x28) = 0;
     ((GameObject *)obj)->animEventCallback = (void *)pressureswitchfb_updateStateMode;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* 8b "li r3, N; blr" returners. */
 int Door_getExtraSize(void) { return 0x8; }
@@ -661,17 +669,11 @@ int doorlock_getExtraSize(void) { return 0x1; }
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E3780;
 extern void objRenderFn_8003b8f4(f32);
-#pragma scheduling off
 void Door_render(void) { objRenderFn_8003b8f4(lbl_803E3780); }
-#pragma scheduling reset
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-#pragma scheduling off
 void doorlock_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void mmp_bridge_init(int *obj) {
     int *state = *(int **)&((GameObject *)obj)->anim.placementData;
     int *tex = objFindTexture(obj, 0, 0);
@@ -685,13 +687,9 @@ void mmp_bridge_init(int *obj) {
         ObjHits_EnableObject((int)obj);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E3798;
 extern void objRenderFn_80041018(int *obj);
-#pragma scheduling off
-#pragma peephole off
 void doorlock_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
     if (visible != 0) {
         if (obj[0xf8/4] == 0) {
@@ -707,13 +705,11 @@ void doorlock_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
 render_basic:
     ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3798);
 }
-#pragma peephole reset
 
 int Door_SeqFn(int obj, int p2, int seq);
 extern f32 lbl_803E3784;
 extern f32 lbl_803E3788;
 extern f32 lbl_803E3790;
-#pragma peephole off
 void Door_init(int *obj, u8 *def) {
     u8 *state = ((GameObject *)obj)->extra;
     state[5] = 1;
@@ -750,9 +746,7 @@ void Door_init(int *obj, u8 *def) {
         }
     }
 }
-#pragma peephole reset
 
-#pragma peephole off
 void Door_update(int obj)
 {
   int state;
@@ -777,9 +771,7 @@ void Door_update(int obj)
     *(u8 *)(state + 5) = 0;
   }
 }
-#pragma peephole reset
 
-#pragma peephole off
 void mmp_bridge_update(int *obj)
 {
   int *tex;
@@ -799,7 +791,6 @@ void mmp_bridge_update(int *obj)
     ObjHits_EnableObject((int)obj);
   }
 }
-#pragma peephole reset
 
 extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
 extern int Sfx_StopFromObject(int obj, int sfxId);
@@ -814,7 +805,6 @@ extern void buttonDisable(int index, int mask);
  * EN v1.0 Address: 0x8017B5C8
  * EN v1.0 Size: 788b
  */
-#pragma peephole off
 int Door_SeqFn(int obj, int p2, int seq)
 {
   int i;
@@ -914,7 +904,6 @@ int Door_SeqFn(int obj, int p2, int seq)
   }
   return ret;
 }
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -923,7 +912,6 @@ int Door_SeqFn(int obj, int p2, int seq)
  * EN v1.0 Address: 0x8017BCF8
  * EN v1.0 Size: 180b
  */
-#pragma peephole off
 int Lock_DoorLock_SeqFn(int obj, int p2, int seq)
 {
   int def;
@@ -941,7 +929,6 @@ int Lock_DoorLock_SeqFn(int obj, int p2, int seq)
   ((GameObject *)obj)->unkF8 = 0;
   return 0;
 }
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -950,7 +937,6 @@ int Lock_DoorLock_SeqFn(int obj, int p2, int seq)
  * EN v1.0 Address: 0x8017BE28
  * EN v1.0 Size: 848b
  */
-#pragma peephole off
 void doorlock_update(int obj)
 {
   int state;
@@ -1032,4 +1018,3 @@ void doorlock_update(int obj)
     }
   }
 }
-#pragma peephole reset

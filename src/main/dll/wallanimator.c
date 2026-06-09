@@ -65,7 +65,6 @@ typedef struct KaldaChompMeState {
  * EN v1.0 Address: 0x80169360
  * EN v1.0 Size: 556b
  */
-#pragma scheduling off
 void kaldachompme_setLinkedMouthMode(u8 *obj, u8 mode)
 {
     KaldaChompMeState *state;
@@ -135,7 +134,6 @@ void kaldachompme_setLinkedMouthMode(u8 *obj, u8 mode)
         }
     }
 }
-#pragma scheduling reset
 
 int kaldachompme_getExtraSize(void)
 {
@@ -151,7 +149,6 @@ void kaldachompme_free(void)
 {
 }
 
-#pragma peephole off
 void kaldachompme_render(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
                          undefined4 param_5,s8 renderFlag)
 {
@@ -160,7 +157,6 @@ void kaldachompme_render(undefined4 param_1,undefined4 param_2,undefined4 param_
     objRenderFn_8003b8f4(lbl_803E30D0);
   }
 }
-#pragma peephole reset
 
 void kaldachompme_hitDetect(void)
 {
@@ -198,8 +194,6 @@ void kaldachompme_update(int obj)
   ObjAnim_SetCurrentMove(obj,extra->moveId,extra->progress,0);
 }
 
-#pragma scheduling off
-#pragma peephole off
 void kaldachompme_init(int obj,int params)
 {
   ((GameObject *)obj)->anim.rotZ = (s16)(*(u8 *)(params + 0x18) << 8);
@@ -208,8 +202,6 @@ void kaldachompme_init(int obj,int params)
   ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x2000);
   ObjAnim_SetCurrentMove(obj,0,lbl_803E30D4,0);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void kaldachompme_release(void)
 {
@@ -246,6 +238,8 @@ ObjectDescriptor gKaldaChompMeObjDescriptor = {
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801695e8(int param_1,byte param_2)
 {
   float *pfVar1;
@@ -337,6 +331,8 @@ void FUN_801695e8(int param_1,byte param_2)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -351,6 +347,8 @@ void FUN_801695e8(int param_1,byte param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8016980c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   if (visible != 0) {
@@ -358,6 +356,8 @@ void FUN_8016980c(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -372,6 +372,8 @@ void FUN_8016980c(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80169834(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
@@ -407,6 +409,8 @@ void FUN_80169834(undefined8 param_1,undefined8 param_2,double param_3,undefined
                (uint)*(byte *)(pfVar2 + 3),0,param_12,param_13,param_14,param_15,param_16);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -421,6 +425,8 @@ void FUN_80169834(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80169960(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9,int param_10,undefined4 param_11,undefined4 param_12,
@@ -434,6 +440,8 @@ void FUN_80169960(undefined8 param_1,double param_2,double param_3,undefined8 pa
                param_9,0,0,param_12,param_13,param_14,param_15,param_16);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -448,6 +456,8 @@ void FUN_80169960(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80169a44(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9)
@@ -479,6 +489,8 @@ void FUN_80169a44(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -517,8 +529,6 @@ void kaldachompspit_free(int *obj) {
     }
 }
 
-#pragma scheduling off
-#pragma peephole off
 void kaldachompspit_render(void *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     u8 *light = **(u8 ***)&((GameObject *)obj)->extra;
@@ -529,8 +539,6 @@ void kaldachompspit_render(void *obj, int p2, int p3, int p4, int p5, s8 visible
         ((void (*)(void *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E30E0);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void modelLightStruct_setEnabled(int light, int onoff, f32 intensity);
 extern void spawnExplosion(int obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
@@ -561,8 +569,6 @@ void kaldachompspit_burst(int obj);
  * EN v1.0 Address: 0x801698E8
  * EN v1.0 Size: 988b
  */
-#pragma scheduling off
-#pragma peephole off
 void kaldachompspit_update(int obj)
 {
     ObjAnimComponent *objAnim;
@@ -649,8 +655,6 @@ void kaldachompspit_update(int obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -659,8 +663,6 @@ void kaldachompspit_update(int obj)
  * EN v1.0 Address: 0x801696D4
  * EN v1.0 Size: 312b
  */
-#pragma scheduling off
-#pragma peephole off
 void kaldachompspit_burst(int obj)
 {
     int i;
@@ -684,5 +686,3 @@ void kaldachompspit_burst(int obj)
         Sfx_PlayFromObject(obj, 0x279);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

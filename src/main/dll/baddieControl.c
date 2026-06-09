@@ -310,6 +310,8 @@ extern f32 lbl_803E28E8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8010de18_v11_drift(undefined4 param_1,undefined4 param_2,float *param_3,float *param_4)
 {
   float fVar1;
@@ -344,6 +346,8 @@ void FUN_8010de18_v11_drift(undefined4 param_1,undefined4 param_2,float *param_3
   FUN_80286888();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -433,6 +437,8 @@ void FUN_8010df14(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8010df40(void)
 {
   float fVar1;
@@ -701,6 +707,8 @@ void FUN_8010df40(void)
   FUN_80286884();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -752,6 +760,8 @@ void FUN_8010eba4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8010ebd0(short *param_1)
 {
   float fVar1;
@@ -803,6 +813,8 @@ void FUN_8010ebd0(short *param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -839,6 +851,8 @@ void FUN_8010ed80(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8010edc4(int param_1,int param_2)
 {
   short sVar1;
@@ -890,6 +904,8 @@ void FUN_8010edc4(int param_1,int param_2)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -924,6 +940,8 @@ void FUN_8010eec0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8010eeec(ushort *param_1)
 {
   uint uVar1;
@@ -1004,6 +1022,8 @@ void FUN_8010eeec(ushort *param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1060,6 +1080,8 @@ void FUN_8010f1c4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8010f1f0(short *param_1)
 {
   int iVar1;
@@ -1084,6 +1106,8 @@ void FUN_8010f1f0(short *param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1098,6 +1122,8 @@ void FUN_8010f1f0(short *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8010f358(int param_1,undefined4 param_2,undefined4 *param_3)
 {
   if (DAT_803de218 == (undefined4 *)0x0) {
@@ -1112,6 +1138,8 @@ void FUN_8010f358(int param_1,undefined4 param_2,undefined4 *param_3)
   *(undefined2 *)(param_1 + 2) = 0xaf0;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1126,6 +1154,8 @@ void FUN_8010f358(int param_1,undefined4 param_2,undefined4 *param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8010f3d4(short *param_1)
 {
   int iVar1;
@@ -1241,6 +1271,8 @@ void FUN_8010f3d4(short *param_1)
                (float *)(param_1 + 10),*(int *)(param_1 + 0x18));
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1255,6 +1287,8 @@ void FUN_8010f3d4(short *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8010f760(int param_1,undefined4 param_2,undefined4 *param_3)
 {
   short *psVar1;
@@ -1293,6 +1327,8 @@ void FUN_8010f760(int param_1,undefined4 param_2,undefined4 *param_3)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1327,6 +1363,8 @@ void FUN_8010f8bc(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8010f8e8(short *param_1)
 {
   float fVar1;
@@ -1422,6 +1460,8 @@ void FUN_8010f8e8(short *param_1)
                (float *)(param_1 + 10),*(int *)(param_1 + 0x18));
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1436,6 +1476,8 @@ void FUN_8010f8e8(short *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8010fb90(int param_1,uint param_2,undefined4 *param_3)
 {
   float fVar1;
@@ -1462,6 +1504,8 @@ void FUN_8010fb90(int param_1,uint param_2,undefined4 *param_3)
   FUN_80017730();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1496,6 +1540,8 @@ void FUN_8010fc88(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8010fcb4(short *param_1)
 {
   float fVar1;
@@ -1618,6 +1664,8 @@ void FUN_8010fcb4(short *param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1686,6 +1734,8 @@ void FUN_8011031c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80110320(ushort *param_1)
 {
   int iVar1;
@@ -1830,6 +1880,8 @@ void FUN_80110320(ushort *param_1)
                (float *)(param_1 + 10),*(int *)(param_1 + 0x18));
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1844,6 +1896,8 @@ void FUN_80110320(ushort *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80110a44(int param_1,int param_2)
 {
   int iVar1;
@@ -1877,6 +1931,8 @@ void FUN_80110a44(int param_1,int param_2)
   ((GameObject *)param_1)->anim.worldPosZ = *(float *)(iVar1 + 0x20) + DAT_803a5058;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1909,6 +1965,8 @@ double FUN_80110b8c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80110b94(char param_1)
 {
   undefined1 *puVar1;
@@ -1932,6 +1990,8 @@ void FUN_80110b94(char param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1968,6 +2028,8 @@ void FUN_80110c58(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80110c90(ushort *param_1)
 {
   float fVar1;
@@ -2088,6 +2150,8 @@ void FUN_80110c90(ushort *param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2208,6 +2272,8 @@ undefined4 FUN_801113c0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 double FUN_80111558(int param_1)
 {
   float fVar1;
@@ -2222,6 +2288,8 @@ double FUN_80111558(int param_1)
   }
   return (double)fVar1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2236,6 +2304,8 @@ double FUN_80111558(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801115e0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,int param_10)
@@ -2278,6 +2348,8 @@ void FUN_801115e0(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2292,6 +2364,8 @@ void FUN_801115e0(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80111778(int param_1,int param_2,byte param_3)
 {
   FUN_8000680c(param_1,0x7f);
@@ -2312,6 +2386,8 @@ void FUN_80111778(int param_1,int param_2,byte param_3)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2363,6 +2439,8 @@ void FUN_8011185c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80111890(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11,int param_12,
@@ -2441,6 +2519,8 @@ LAB_80112964:
     }
   } while( true );
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2455,6 +2535,8 @@ LAB_80112964:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80111aec(void)
 {
   ushort uVar1;
@@ -2593,6 +2675,8 @@ void FUN_80111aec(void)
   FUN_8028687c();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2607,6 +2691,8 @@ void FUN_80111aec(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80111e84(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
@@ -2760,6 +2846,8 @@ LAB_80112fec:
   FUN_8028688c();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2774,6 +2862,8 @@ LAB_80112fec:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8011221c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11,int param_12,
@@ -2824,6 +2914,8 @@ void FUN_8011221c(undefined8 param_1,double param_2,double param_3,undefined8 pa
   FUN_80286888();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2838,6 +2930,8 @@ void FUN_8011221c(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801123ec(undefined4 param_1,undefined4 param_2,int param_3)
 {
   bool bVar1;
@@ -2953,6 +3047,8 @@ void FUN_801123ec(undefined4 param_1,undefined4 param_2,int param_3)
   FUN_80286884();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2967,6 +3063,8 @@ void FUN_801123ec(undefined4 param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801126b8(undefined4 param_1,undefined4 param_2,int param_3)
 {
   int *piVar1;
@@ -3004,6 +3102,8 @@ void FUN_801126b8(undefined4 param_1,undefined4 param_2,int param_3)
   FUN_8028688c();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -3018,6 +3118,8 @@ void FUN_801126b8(undefined4 param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 undefined4 FUN_801127c4(int param_1,int param_2,char param_3)
 {
   undefined4 uVar1;
@@ -3039,6 +3141,8 @@ undefined4 FUN_801127c4(int param_1,int param_2,char param_3)
   }
   return uVar1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -3084,8 +3188,6 @@ extern void audioSetVolumes(int volume, int p1, int p2, int p3, int p4);
 extern f32 lbl_803E1A88;
 extern CameraMode4FState *lbl_803DD590;
 extern CameraModeCrawlState *lbl_803DD598;
-#pragma peephole off
-#pragma scheduling off
 void CameraModeTitle_loadVolumes(void)
 {
     u8 *save = getSaveFileStruct();
@@ -3484,8 +3586,6 @@ void CameraModeTitle_moveCam(u8 newCam)
     lbl_803DB9D8 = lbl_803E1BE4;
     lbl_803DD5D0 = 1;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /* misc 8b leaves */
 f32 titleScreenGetCamProgress(void) { return lbl_803DB9D8; }
@@ -3507,7 +3607,6 @@ void dll_19_func11(void)
 
 /* baddie spawn/visibility predicate */
 extern int objPosToMapBlockIdx(double x, double y, double z);
-#pragma peephole off
 int dll_19_func0E(int p1, int p2, u8 b)
 {
   if (b != 0 && (s8)*(u8 *)(p2 + 0x354) <= 0 && ((GameObject *)p1)->anim.alpha == 0) {
@@ -3522,12 +3621,9 @@ int dll_19_func0E(int p1, int p2, u8 b)
   }
   return 1;
 }
-#pragma peephole reset
 
 /* compute progress ratio (signed numerator / unsigned denominator) */
 extern f32 lbl_803E1C2C;
-#pragma peephole off
-#pragma scheduling off
 f32 dll_19_func1A(int obj)
 {
   int p_b8 = *(int *)&((GameObject *)obj)->extra;
@@ -3541,13 +3637,9 @@ f32 dll_19_func1A(int obj)
   }
   return lbl_803E1C2C;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* baddie state reset */
 extern void ObjHits_SetHitVolumeSlot(void *obj, int animObjId, int frame, int flags);
-#pragma peephole off
-#pragma scheduling off
 void dll_19_func0D(int p1, int p2, f32 fval, s8 b)
 {
   f32 fz;
@@ -3566,8 +3658,6 @@ void dll_19_func0D(int p1, int p2, f32 fval, s8 b)
   *(int *)(p2 + 0x31c) = 0;
   *(int *)(p2 + 0x318) = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void Obj_FreeObject(void *obj);
 extern u8 Obj_IsLoadingLocked(void);
@@ -3576,8 +3666,6 @@ extern GameObject *Obj_SetupObject(ObjPlacement *setup, int mode, int mapLayer, 
 extern u8 lbl_802C2190[];
 
 /* dll_19_func19  addr=0x80111EB4  size=0x100  linkage=global */
-#pragma peephole off
-#pragma scheduling off
 void dll_19_func19(u8 *cam, u8 *ctx) {
     struct Cfg8 { u32 w0; u32 w1; };
     s16 buf[5];
@@ -3607,14 +3695,11 @@ void dll_19_func19(u8 *cam, u8 *ctx) {
     }
 }
 
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void *gPlayerInterface;
 
 /* dll_19_func0C  addr=0x80112D80  size=0x114  linkage=global */
 #pragma dont_inline on
-#pragma scheduling off
 void dll_19_func0C(int p1, u8 *p2, u8 *p3, s16 p4, u8 *p5, s16 p6, s16 p7, int p8, s8 p9) {
     if (p3 != NULL) {
         p3[0x24] = 0;
@@ -3643,7 +3728,6 @@ void dll_19_func0C(int p1, u8 *p2, u8 *p3, s16 p4, u8 *p5, s16 p6, s16 p7, int p
         GameBit_Set(p4, 1);
     }
 }
-#pragma scheduling reset
 #pragma dont_inline reset
 
 extern f32 lbl_803E1B78;
@@ -3653,8 +3737,6 @@ extern f32 lbl_803E1B84;
 extern f32 lbl_803E1B88;
 
 /* CameraModePerv_update  addr=0x80110CB0  size=0x10C  linkage=global */
-#pragma peephole off
-#pragma scheduling off
 void CameraModePerv_update(u8 *obj) {
     CameraObject *camera = (CameraObject *)obj;
     GameObject *target = (GameObject *)camera->anim.targetObj;
@@ -3674,8 +3756,6 @@ void CameraModePerv_update(u8 *obj) {
     camera->anim.rotY = -0x4000;
     camera->anim.rotZ = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E1B00;
 extern f32 lbl_803E1B04;
@@ -3694,7 +3774,6 @@ extern f32 lbl_803E1B18;
 
 
 /* CameraModeForceBehind_init  addr=0x801100B8  size=0x124  linkage=global */
-#pragma scheduling off
 void CameraModeForceBehind_init(u8 *obj, int p2, f32 *p3) {
     CameraObject *camera = (CameraObject *)obj;
     GameObject *target = (GameObject *)camera->anim.targetObj;
@@ -3727,7 +3806,6 @@ void CameraModeForceBehind_init(u8 *obj, int p2, f32 *p3) {
         lbl_803DD5AC = lbl_803E1B08;
     }
 }
-#pragma scheduling reset
 
 extern int Obj_GetPlayerObject(void);
 extern int fn_80295A04(int obj, int a);
@@ -3737,8 +3815,6 @@ extern f32 lbl_803E1C68;
 extern f32 lbl_803E1C48;
 
 /* dll_19_func13  addr=0x8011313C  size=0x13C  linkage=global */
-#pragma peephole off
-#pragma scheduling off
 int dll_19_func13(int p1, u8 *p2, f32 f, int p4) {
     int player = Obj_GetPlayerObject();
     int result = 0;
@@ -3767,14 +3843,10 @@ int dll_19_func13(int p1, u8 *p2, f32 f, int p4) {
     }
     return result;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E1C6C;
 
 /* dll_19_func10  addr=0x80113398  size=0x16C  linkage=global */
-#pragma peephole off
-#pragma scheduling off
 int dll_19_func10(int p1, u8 *p2, int p3, int p4, s16 p5, f32 *p6, f32 *p7, int *p8) {
     f32 dx, dz, dist;
     f32 zero;
@@ -3813,15 +3885,11 @@ int dll_19_func10(int p1, u8 *p2, int p3, int p4, s16 p5, f32 *p6, f32 *p7, int 
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E1AC0;
 extern f32 lbl_803E1AC4;
 
 /* CameraModeCrawl_copyToCurrent  addr=0x8010F540  size=0x1E0  linkage=global */
-#pragma peephole off
-#pragma scheduling off
 void CameraModeCrawl_copyToCurrent(void *param1, int param2) {
     int obj;
     GameObject *target;
@@ -3859,12 +3927,8 @@ void CameraModeCrawl_copyToCurrent(void *param1, int param2) {
     one = 1;
     lbl_803DD598->flags.useDefaultHandler = one;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* dll_19_func17  addr=0x80112544  size=0x19C  linkage=global */
-#pragma peephole off
-#pragma scheduling off
 int dll_19_func17(int p1, u8 *p2, u8 *p3, s16 p4, u8 *p5, s16 p6, s16 p7, s16 p8) {
     u32 msgData;
     int msgType;
@@ -3908,8 +3972,6 @@ int dll_19_func17(int p1, u8 *p2, u8 *p3, s16 p4, u8 *p5, s16 p6, s16 p7, s16 p8
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern s16 *objModelGetVecFn_800395d8(int obj, int idx);
 extern f32 lbl_803E1AE0;
@@ -3919,8 +3981,6 @@ extern f32 lbl_803E1AEC;
 extern f32 lbl_803E1AF0;
 
 /* CameraModeCannon_update  addr=0x8010FA84  size=0x168  linkage=global */
-#pragma peephole off
-#pragma scheduling off
 void CameraModeCannon_update(u8 *obj) {
     CameraObject *camera = (CameraObject *)obj;
     GameObject *target = lbl_803DD5A0->target;
@@ -3943,8 +4003,6 @@ void CameraModeCannon_update(u8 *obj) {
         target->anim.worldPosZ -
         lbl_803E1AE4 * mathCosf(lbl_803E1AE8 * (f32)(s32)(-camera->anim.rotX) / lbl_803E1AEC);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 fn_8029610C(int obj);
 extern void voxmaps_worldToGrid(f32 *pos, int *grid);
@@ -3952,8 +4010,6 @@ extern int voxmaps_traceLine(int *a, int *b, int c, u8 *out, int e);
 extern f32 lbl_803E1C64;
 
 /* dll_19_func14  addr=0x80112E94  size=0x2A8  linkage=global */
-#pragma peephole off
-#pragma scheduling off
 int dll_19_func14(u8 *p1, u8 *p2, f32 frange, int p4) {
     f32 bboxOut[20];
     int objs[2];
@@ -4039,8 +4095,6 @@ int dll_19_func14(u8 *p1, u8 *p2, f32 frange, int p4) {
     }
     return obj;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern MapEventInterface **gMapEventInterface;
 extern f32 playerMapOffsetX;
@@ -4052,8 +4106,6 @@ extern f32 lbl_803E1C4C;
 extern f32 lbl_803E1C50;
 
 /* dll_19_func16  addr=0x801126E0  size=0x348  linkage=global */
-#pragma peephole off
-#pragma scheduling off
 int dll_19_func16(u8 *p1, u8 *p2, int p3, int p4, int *p5, u8 *p6, s16 p7, u8 *p8) {
     u8 *state = *(u8 **)(p1 + 184);
     int player = Obj_GetPlayerObject();
@@ -4147,8 +4199,6 @@ int dll_19_func16(u8 *p1, u8 *p2, int p3, int p4, int *p5, u8 *p6, s16 p7, u8 *p
     }
     return hit;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern u32 lbl_803E1C18;
 extern u32 lbl_803E1C1C;
@@ -4161,8 +4211,6 @@ extern f32 lbl_803E1C60;
 extern GameObject *lbl_803DD5E4;
 
 /* dll_19_func15  addr=0x80112A28  size=0x358  linkage=global */
-#pragma peephole off
-#pragma scheduling off
 int dll_19_func15(u8 *p1, int p2, int p3, int p4) {
     GameObject *source = (GameObject *)p1;
     u8 *state = *(u8 **)(p1 + 76);
@@ -4272,8 +4320,6 @@ int dll_19_func15(u8 *p1, int p2, int p3, int p4) {
     lbl_803DD5E4 = Obj_SetupObject(setup, 5, (s8)p1[172], -1, *(int *)&source->anim.parent);
     return (int)lbl_803DD5E4;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int GameBit_Get(int bit);
 extern void voxmaps_allocRouteWork(u8 *work);
@@ -4285,8 +4331,6 @@ extern u32 lbl_803DB9E0;
 extern u32 lbl_803DD5E0;
 
 /* dll_19_func18  addr=0x80112098  size=0x47C  linkage=global */
-#pragma peephole off
-#pragma scheduling off
 void dll_19_func18(int p1, u8 *p2, u8 *p3, int p4, int p5, int p6, f32 fparam, int p7) {
     u8 flags = (u8)p7;
     int b1 = flags & 1;
@@ -4395,8 +4439,6 @@ void dll_19_func18(int p1, u8 *p2, u8 *p3, int p4, int p5, int p6, f32 fparam, i
         *(int *)(p3 + 988) = 0;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E1AD0;
 extern f32 lbl_803E1AD4;
@@ -4404,8 +4446,6 @@ extern f32 lbl_803E1AD8;
 extern f32 lbl_803E1ADC;
 
 /* CameraModeCrawl_update  addr=0x8010F74C  size=0x2B8  linkage=global */
-#pragma peephole off
-#pragma scheduling off
 void CameraModeCrawl_update(u8 *obj) {
     CameraObject *camera = (CameraObject *)obj;
     GameObject *target = (GameObject *)camera->anim.targetObj;
@@ -4448,8 +4488,6 @@ void CameraModeCrawl_update(u8 *obj) {
                                    &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
                                    *(int *)&camera->anim.parent);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int fn_802972A8(int state);
 extern void setMatrixFromObjectPos(f32 *matrix, void *objpos);
@@ -4464,8 +4502,6 @@ extern f32 lbl_803DB9D0;
 extern int lbl_803DB9D4;
 
 /* CameraModeCloudRunner_update  addr=0x80110214  size=0x36C  linkage=global */
-#pragma peephole off
-#pragma scheduling off
 void CameraModeCloudRunner_update(u8 *obj) {
     CameraObject *camera = (CameraObject *)obj;
     GameObject *target = (GameObject *)camera->anim.targetObj;
@@ -4541,13 +4577,9 @@ void CameraModeCloudRunner_update(u8 *obj) {
                                    &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
                                    *(int *)&camera->anim.parent);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /* CameraModeForceBehind_update  addr=0x8010FC7C  size=0x43C  linkage=global */
-#pragma peephole off
-#pragma scheduling off
 void CameraModeForceBehind_update(u8 *obj) {
     CameraObject *camera = (CameraObject *)obj;
     GameObject *target = (GameObject *)camera->anim.targetObj;
@@ -4612,8 +4644,6 @@ void CameraModeForceBehind_update(u8 *obj) {
                                    &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
                                    *(int *)&camera->anim.parent);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int ObjList_GetObjects(int *idx, int *count);
 extern f32 lbl_803E1B40;
@@ -4628,8 +4658,6 @@ extern f32 lbl_803E1B64;
 extern f32 lbl_803E1B68;
 
 /* dll_54_update  addr=0x801106E4  size=0x490  linkage=global */
-#pragma peephole off
-#pragma scheduling off
 void dll_54_update(u8 *obj) {
     CameraObject *camera = (CameraObject *)obj;
     CameraMode54State *state = lbl_803DD5C0;
@@ -4727,8 +4755,6 @@ void dll_54_update(u8 *obj) {
                                        *(int *)&camera->anim.parent);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int getFocusedNpc(void);
 extern int randomGetRange(int lo, int hi);
@@ -4767,8 +4793,6 @@ typedef struct CameraModeNpcSpeakInitParams {
 } CameraModeNpcSpeakInitParams;
 
 /* CameraModeNpcSpeak_init  addr=0x8010DFF0  size=0x524  linkage=global */
-#pragma peephole off
-#pragma scheduling off
 void CameraModeNpcSpeak_init(u8 *obj, int unused, u8 *p3) {
     CameraObject *camera = (CameraObject *)obj;
     GameObject *target = (GameObject *)camera->anim.targetObj;
@@ -4930,8 +4954,6 @@ void CameraModeNpcSpeak_init(u8 *obj, int unused, u8 *p3) {
     camcontrol_traceMove(&camera->anim.worldPosX, &va, (void *)&speakState->cameraX, &vd, 3, 1, 1,
                          lbl_803E1A20);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern CameraModeTitlePose lbl_803A4420;
 extern f32 lbl_803E1BE8;
@@ -4943,8 +4965,6 @@ extern f32 lbl_803E1BFC;
 extern f32 lbl_803E1C00;
 
 /* CameraModeTitle_update  addr=0x801116E0  size=0x58C  linkage=global */
-#pragma peephole off
-#pragma scheduling off
 void CameraModeTitle_update(CameraObject *camera) {
     if (lbl_803DD5D0 != 0) {
         lbl_803A4420.x = camera->anim.localPosX;
@@ -5037,8 +5057,6 @@ void CameraModeTitle_update(CameraObject *camera) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int arwarwing_isDead(int state);
 extern int arwarwing_isExplodingOrWarping(int state);
@@ -5048,8 +5066,6 @@ extern f32 lbl_803E1BAC;
 extern f32 lbl_803E1BB0;
 
 /* CameraModeArwing_update  addr=0x80110EC4  size=0x5FC  linkage=global */
-#pragma peephole off
-#pragma scheduling off
 void CameraModeArwing_update(u8 *obj) {
     u8 *state = *(u8 **)&((GameObject *)obj)->anim.targetObj;
     int yaw0, pitch0;
@@ -5142,8 +5158,6 @@ void CameraModeArwing_update(u8 *obj) {
                                    &((GameObject *)obj)->anim.localPosX, &((GameObject *)obj)->anim.localPosY, &((GameObject *)obj)->anim.localPosZ,
                                    *(int *)&((GameObject *)obj)->anim.parent);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int ObjList_FindObjectById(int id);
 extern int getButtonsHeld(int pad);
@@ -5171,8 +5185,6 @@ extern f32 lbl_803E1A68;
 extern f32 lbl_803E1A6C;
 
 /* CameraModeWorldMap_update  addr=0x8010E5B4  size=0xC8C  linkage=global */
-#pragma peephole off
-#pragma scheduling off
 void CameraModeWorldMap_update(u8 *obj) {
     GameObject *camera = (GameObject *)obj;
     GameObject *focus;
@@ -5432,15 +5444,11 @@ void CameraModeWorldMap_update(u8 *obj) {
                                    &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
                                    *(int *)&camera->anim.parent);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void turnOnBlurFilter(f32 x, f32 y, f32 z, int a, int b);
 extern f32 lbl_803DB9C4;
 
 /* CameraModeNpcSpeak_update  addr=0x8010DD58  size=0x298  linkage=global */
-#pragma peephole off
-#pragma scheduling off
 void CameraModeNpcSpeak_update(u8 *obj) {
     CameraObject *camera = (CameraObject *)obj;
     CameraModeNpcSpeakState *speakState;
@@ -5489,5 +5497,3 @@ void CameraModeNpcSpeak_update(u8 *obj) {
                                    &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
                                    *(int *)&camera->anim.parent);
 }
-#pragma peephole reset
-#pragma scheduling reset

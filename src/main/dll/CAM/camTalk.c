@@ -72,7 +72,7 @@ extern f32 lbl_803E2450;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
+#pragma peephole on
 void CameraModeBike_update(CameraObject *camera)
 {
   int iVar1;
@@ -172,7 +172,7 @@ void CameraModeBike_update(CameraObject *camera)
   }
   return;
 }
-#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -212,8 +212,6 @@ void CameraModeBike_init(CameraObject *camera)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void firstPersonPlaceCamera(GameObject *focus,int resetClamp)
 {
   register GameObject *self = focus;
@@ -257,8 +255,6 @@ void firstPersonPlaceCamera(GameObject *focus,int resetClamp)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -273,8 +269,6 @@ void firstPersonPlaceCamera(GameObject *focus,int resetClamp)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void firstPersonExit(CameraObject *camera)
 {
   register CameraObject *self = camera;
@@ -348,8 +342,6 @@ void firstPersonExit(CameraObject *camera)
   }
   curvesMove(&state->viewCurve);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */

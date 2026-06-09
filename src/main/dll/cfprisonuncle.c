@@ -254,8 +254,6 @@ extern void fn_8017F334(int obj, MagicPlantSetup *setup, MagicPlantState *state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void fn_8017F4F4(int obj, MagicPlantSetup *setupParam, MagicPlantState *stateParam)
 {
   int hitObj;
@@ -327,8 +325,6 @@ void fn_8017F4F4(int obj, MagicPlantSetup *setupParam, MagicPlantState *statePar
     Sfx_StopObjectChannel(obj, 0x40);
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -344,8 +340,6 @@ void fn_8017F4F4(int obj, MagicPlantSetup *setupParam, MagicPlantState *statePar
  * PAL Size: TODO
  */
 #pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
 void fn_8017F7B8(int obj,int objectId)
 {
   MagicPlantChildSetup *setup;
@@ -380,8 +374,6 @@ void fn_8017F7B8(int obj,int objectId)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 #pragma dont_inline reset
 
 /*
@@ -397,6 +389,8 @@ void fn_8017F7B8(int obj,int objectId)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8017f7ec(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9,undefined4 param_10,int *param_11,undefined4 param_12,
@@ -433,6 +427,8 @@ void FUN_8017f7ec(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -447,8 +443,6 @@ void FUN_8017f7ec(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void MagicPlant_update(int obj)
 {
   MagicPlantObject *plant;
@@ -555,8 +549,6 @@ void MagicPlant_update(int obj)
 
   ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, state->animStepScale, timeDelta, NULL);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -571,6 +563,8 @@ void MagicPlant_update(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8017fa14(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,undefined2 param_10)
@@ -613,6 +607,8 @@ void FUN_8017fa14(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -627,11 +623,15 @@ void FUN_8017fa14(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 undefined4 FUN_8017fba8(void)
 {
   (**(code **)(*DAT_803dd6d0 + 0x4c))();
   return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -646,6 +646,8 @@ undefined4 FUN_8017fba8(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8017fbe0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,int param_10)
@@ -662,6 +664,8 @@ void FUN_8017fbe0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -676,6 +680,8 @@ void FUN_8017fbe0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8017fccc(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   int iVar1;
@@ -692,6 +698,8 @@ void FUN_8017fccc(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -706,6 +714,8 @@ void FUN_8017fccc(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8017fd40(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  ushort *param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
@@ -832,6 +842,8 @@ void FUN_8017fd40(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -863,6 +875,8 @@ void FUN_801804a0(short *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801804a4(int param_1)
 {
   if (*(char *)(*(int *)&((GameObject *)param_1)->extra + 1) != '\0') {
@@ -870,6 +884,8 @@ void FUN_801804a4(int param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -901,6 +917,8 @@ void FUN_801804d8(int param_1,undefined4 param_2,byte *param_3,int param_4,int p
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801804dc(undefined4 param_1,undefined4 param_2,byte *param_3,int param_4,int param_5)
 {
   uint uVar1;
@@ -977,6 +995,8 @@ LAB_80180758:
   FUN_80286888();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -991,6 +1011,8 @@ LAB_80180758:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80180700(int param_1)
 {
   uint uVar1;
@@ -1010,6 +1032,8 @@ void FUN_80180700(int param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1024,6 +1048,8 @@ void FUN_80180700(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801807cc(int param_1)
 {
   uint uVar1;
@@ -1070,6 +1096,8 @@ void FUN_801807cc(int param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1084,6 +1112,8 @@ void FUN_801807cc(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80180940(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   if (((visible != 0) && (*(char *)(*(int *)&((GameObject *)param_1)->extra + 0x1b) != '\0')) &&
@@ -1092,6 +1122,8 @@ void FUN_80180940(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1106,6 +1138,8 @@ void FUN_80180940(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80180984(int *param_1)
 {
   int iVar1;
@@ -1123,6 +1157,8 @@ void FUN_80180984(int *param_1)
   param_1[0x22] = param_1[5];
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1137,6 +1173,8 @@ void FUN_80180984(int *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80180a0c(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
@@ -1353,6 +1391,8 @@ void FUN_80180a0c(undefined8 param_1,undefined8 param_2,double param_3,undefined
   FUN_8028688c();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1384,6 +1424,8 @@ void FUN_801811c8(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801811cc(void)
 {
   ushort *puVar1;
@@ -1617,6 +1659,8 @@ LAB_80181980:
   FUN_80286884();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1631,6 +1675,8 @@ LAB_80181980:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80181a90(int param_1,int param_2)
 {
   double dVar1;
@@ -1650,6 +1696,8 @@ void FUN_80181a90(int param_1,int param_2)
        (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_2 + 0x19)) - dVar1) / fVar2;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1664,6 +1712,8 @@ void FUN_80181a90(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80181b50(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11)
@@ -1754,6 +1804,8 @@ LAB_80181c38:
   FUN_8028688c();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* 8b "li r3, N; blr" returners. */
 int MagicPlant_getExtraSize(void) { return 0x10; }
@@ -1802,24 +1854,20 @@ STATIC_ASSERT(offsetof(DusterState, complete) == 0x1c);
 STATIC_ASSERT(offsetof(DusterState, useLaunchVelocity) == 0x1d);
 STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
 
-#pragma scheduling off
 int duster_SeqFn(u8* obj) {
     DusterState *state = ((GameObject *)obj)->extra;
     state->flags.floorCached = 0;
     return 0;
 }
-#pragma scheduling reset
 
 /* gCameraInterface: vtable pointer used for state-machine dispatches. */
 extern void *gCameraInterface;
 
 /* MagicPlant_SeqFn: vtable[0x13]() with obj passed through implicitly, return 0. */
-#pragma scheduling off
 int MagicPlant_SeqFn(u8* obj) {
     (*(void (***)(u8*))gCameraInterface)[0x13](obj);
     return 0;
 }
-#pragma scheduling reset
 
 u32 MagicPlant_getObjectTypeId(MagicPlantObject *obj)
 {
@@ -1829,14 +1877,10 @@ u32 MagicPlant_getObjectTypeId(MagicPlantObject *obj)
 }
 
 /* obj->u16_X |= MASK */
-#pragma peephole off
 void StayPoint_init(u16 *obj) { u32 v; v = ((GameObject *)obj)->objectFlags; v |= 0x4000; ((GameObject *)obj)->objectFlags = (u16)v; }
-#pragma peephole reset
 
 extern void objRenderFn_8003b8f4(int obj, float arg);
 
-#pragma scheduling off
-#pragma peephole off
 void MagicPlant_free(int obj, int param_2) {
   MagicPlantObject *plant;
   MagicPlantState *state;
@@ -1852,9 +1896,7 @@ void MagicPlant_free(int obj, int param_2) {
     }
   }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void MagicPlant_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
   MagicPlantObject *plant;
   MagicPlantState *state;
@@ -1874,7 +1916,6 @@ void MagicPlant_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
     }
   }
 }
-#pragma scheduling reset
 
 void trickywarp_free(int obj) {
   TrickyWarpState *state = ((GameObject *)obj)->extra;
@@ -1901,7 +1942,6 @@ typedef struct TrickyWarpCurveNode {
   s16 forbiddenGameBit;
 } TrickyWarpCurveNode;
 
-#pragma scheduling off
 int fn_8017FFD0(int obj, TrickyWarpState *state) {
   int curveCount;
   TrickyWarpCurveEntry **curveEntries;
@@ -1976,9 +2016,7 @@ int fn_8017FFD0(int obj, TrickyWarpState *state) {
   }
   return getPatchGroup((f32 *)(playerObj + 0xc),state->patchGroup);
 }
-#pragma scheduling reset
 
-#pragma peephole off
 void trickywarp_init(s16 *obj, u8 *param_2) {
   u32 v;
   v = ((GameObject *)obj)->objectFlags;
@@ -1995,7 +2033,6 @@ void trickyguard_init(s16 *obj, u8 *param_2) {
   ((GameObject *)obj)->objectFlags = (u16)v;
 }
 
-#pragma scheduling off
 void duster_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
   DusterState *state = ((GameObject *)obj)->extra;
   if (visible != 0) {
@@ -2006,13 +2043,11 @@ void duster_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
     }
   }
 }
-#pragma scheduling reset
 
 extern int objBboxFn_800640cc(f32 *from, f32 *to, f32 radius, int mode, void *hit,
                               void *obj, int flags, int mask, int arg9, int arg10);
 extern f32 lbl_803E38B4;
 
-#pragma scheduling off
 void duster_hitDetect(int param_1) {
   int obj = param_1;
   DusterState *state;
@@ -2028,7 +2063,6 @@ void duster_hitDetect(int param_1) {
   ((GameObject *)obj)->anim.previousLocalPosY = ((GameObject *)obj)->anim.localPosY;
   ((GameObject *)obj)->anim.previousLocalPosZ = ((GameObject *)obj)->anim.localPosZ;
 }
-#pragma scheduling reset
 
 typedef struct DusterSetup {
   u8 pad00[0x24];
@@ -2051,7 +2085,6 @@ typedef struct DusterLaunchRotation {
   f32 z;
 } DusterLaunchRotation;
 
-#pragma scheduling off
 void duster_init(int obj, u8 *params) {
   DusterState *state;
   DusterSetup *setup;
@@ -2080,9 +2113,7 @@ void duster_init(int obj, u8 *params) {
   ObjMsg_AllocQueue((void *)obj,1);
   ((GameObject *)obj)->animEventCallback = (void *)duster_SeqFn;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void duster_update(int obj) {
   DusterState *state;
   DusterSetup *setup;
@@ -2252,10 +2283,8 @@ void duster_update(int obj) {
 
   ((GameObject *)obj)->anim.localPosY += ((GameObject *)obj)->anim.velocityY;
 }
-#pragma scheduling reset
 
 
-#pragma scheduling off
 void MagicPlant_init(int obj, MagicPlantSetup *setup) {
     MagicPlantObject *plant;
     ObjAnimComponent *objAnim;
@@ -2298,7 +2327,6 @@ void MagicPlant_init(int obj, MagicPlantSetup *setup) {
     }
     plant->seqCallback = (void *)MagicPlant_SeqFn;
 }
-#pragma scheduling reset
 extern f32 lbl_803E3928;
 
 typedef struct CurveFishSetup {
@@ -2333,7 +2361,6 @@ typedef struct CurveFishState {
   f32 phaseTimer;
 } CurveFishState;
 
-#pragma scheduling off
 void trickywarp_update(int param_1) {
   int obj = param_1;
   TrickyWarpState *state;
@@ -2352,9 +2379,7 @@ void trickywarp_update(int param_1) {
     }
   }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void curvefish_update(int obj) {
   CurveFishState *state;
   CurveFishSetup *setup;
@@ -2530,9 +2555,7 @@ void curvefish_update(int obj) {
   ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, state->moveStepScale, timeDelta, NULL);
   state->animTimer += timeDelta;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void curvefish_init(int obj, u8 *param_2) {
   int state;
   u32 v;
@@ -2545,7 +2568,6 @@ void curvefish_init(int obj, u8 *param_2) {
   *(u8 *)(state + 0x108) = 1;
   *(f32 *)(state + 0x110) = (f32)(u32)param_2[0x19] / lbl_803E3928;
 }
-#pragma scheduling reset
 
 typedef struct DusterHitEffectPos {
   u8 pad00[0xc];
@@ -2554,7 +2576,6 @@ typedef struct DusterHitEffectPos {
   f32 z;
 } DusterHitEffectPos;
 
-#pragma scheduling off
 void fn_801814D0(int obj, int param_2, u8 *state) {
   int hitWork[4];
   DusterHitEffectPos effectPos;
@@ -2617,9 +2638,7 @@ void fn_801814D0(int obj, int param_2, u8 *state) {
     }
   }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void trickyguard_update(int *obj) {
     int *tricky;
     int *def = *(int **)&((GameObject *)obj)->anim.placementData;
@@ -2636,7 +2655,6 @@ void trickyguard_update(int *obj) {
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x08);
     objRenderFn_80041018(obj);
 }
-#pragma scheduling reset
 
 typedef struct StayPointSetup {
     u8 pad00[0x1e];
@@ -2644,7 +2662,6 @@ typedef struct StayPointSetup {
     s16 requiredGameBit;
 } StayPointSetup;
 
-#pragma scheduling off
 void StayPoint_update(int obj) {
     StayPointSetup *setup;
     void *tricky;
@@ -2682,7 +2699,6 @@ void StayPoint_update(int obj) {
         }
     }
 }
-#pragma scheduling reset
 
 ObjectDescriptor gMagicPlantObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,

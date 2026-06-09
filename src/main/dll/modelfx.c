@@ -257,8 +257,6 @@ extern f32 lbl_803DFF1C;
 extern f32 lbl_803DFF20;
 extern f32 lbl_803DFF24;
 
-#pragma scheduling off
-#pragma peephole off
 int Effect10_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcByte, f32 *p6)
 {
   EffectSpawnParams p;
@@ -732,8 +730,6 @@ int Effect10_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
   }
   return (*gExpgfxInterface)->spawnEffect(&p, -1, id, 0);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -748,6 +744,8 @@ int Effect10_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_800c2924(void)
 {
   double dVar1;
@@ -774,6 +772,8 @@ void FUN_800c2924(void)
   lbl_803DE038 = (float)dVar1;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 
 extern EffectSrcParams lbl_8039C3C8;
@@ -804,8 +804,6 @@ extern f32 lbl_803DFF94;
 extern f32 lbl_803DFF98;
 extern f32 lbl_803DFF9C;
 
-#pragma scheduling off
-#pragma peephole off
 int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcByte)
 {
   EffectSpawnParams p;
@@ -1105,8 +1103,6 @@ int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
   }
   return (*gExpgfxInterface)->spawnEffect(&p, -1, id, 0);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1147,8 +1143,6 @@ extern f32 lbl_803DFFE8;
 extern f32 lbl_803DFFEC;
 extern f32 lbl_803DFFF0;
 
-#pragma scheduling off
-#pragma peephole off
 int Effect12_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcByte, f32 *p6)
 {
   EffectSrcParams local;
@@ -1419,8 +1413,6 @@ int Effect12_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
   }
   return (*gExpgfxInterface)->spawnEffect(&p, -1, id, 0);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1491,8 +1483,6 @@ extern f64 lbl_803E0088;
 extern f32 lbl_803E0090;
 extern f32 lbl_803E0094;
 
-#pragma scheduling off
-#pragma peephole off
 int Effect14_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcByte, u16 *p6)
 {
   EffectSrcParams local;
@@ -1985,8 +1975,6 @@ int Effect14_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
   }
   return (*gExpgfxInterface)->spawnEffect(&p, -1, id, 0);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* sda21 externs for Effect10_func05 tick. */
 extern f32 lbl_803DB838;
@@ -2004,7 +1992,6 @@ extern f32 mathSinf(f32 x);
 
 /* Advance two periodic counters; compute sin of phase. */
 #pragma push
-#pragma scheduling off
 void Effect10_func05(void)
 {
     f32 sum;

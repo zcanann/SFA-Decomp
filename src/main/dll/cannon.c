@@ -71,7 +71,6 @@ STATIC_ASSERT(offsetof(TrickyRuntime, guardCanSpawnHelpers) == 0x734);
         *(s8 *)((u8 *)(st) + 0xd) = -1; \
     }
 
-#pragma peephole off
 
 extern bool FUN_800067f0();
 extern undefined4 FUN_80006824();
@@ -187,7 +186,6 @@ extern f32 lbl_803E2504;
  * EN v1.0 Address: 0x801409DC
  * EN v1.0 Size: 2224b
  */
-#pragma scheduling off
 void trickyFlame(int p1, int p2) {
     register char *strBase = lbl_8031D2E8;
     void **slot;
@@ -424,7 +422,6 @@ void trickyFlame(int p1, int p2) {
         break;
     }
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -433,6 +430,7 @@ void trickyFlame(int p1, int p2) {
  * EN v1.0 Address: 0x8013FFB8
  * EN v1.0 Size: 2276b
  */
+#pragma scheduling on
 static int trickyGuardIsBaddieTargetValid(TrickyRuntime *trickyState) {
     int target = (int)trickyState->guardTarget;
     int count;
@@ -448,8 +446,8 @@ static int trickyGuardIsBaddieTargetValid(TrickyRuntime *trickyState) {
     }
     return 0;
 }
+#pragma scheduling reset
 
-#pragma scheduling off
 void trickyGuard(ObjAnimComponent *obj, TrickyRuntime *trickyState) {
     int p1 = (int)obj;
     int p2 = (int)trickyState;
@@ -656,7 +654,6 @@ void trickyGuard(ObjAnimComponent *obj, TrickyRuntime *trickyState) {
         break;
     }
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -665,7 +662,6 @@ void trickyGuard(ObjAnimComponent *obj, TrickyRuntime *trickyState) {
  * EN v1.0 Address: 0x8014089C
  * EN v1.0 Size: 320b
  */
-#pragma scheduling off
 int trickyGuardFindBaddieTarget(TrickyRuntime *trickyState) {
     int count;
     f32 d;
@@ -702,7 +698,6 @@ int trickyGuardFindBaddieTarget(TrickyRuntime *trickyState) {
     }
     return 0;
 }
-#pragma scheduling on
 
 /* Trivial 4b 0-arg blr leaves. */
 void fn_8014128C(void) {}

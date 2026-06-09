@@ -90,8 +90,6 @@ extern f32 lbl_803E294C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int dll_19_func0F(int obj, char *state, char *st, int p4, int p5, s16 p6)
 {
     extern int *gPlayerInterface;
@@ -202,8 +200,6 @@ int dll_19_func0F(int obj, char *state, char *st, int p4, int p5, s16 p6)
     return 1;
 }
 
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -218,6 +214,8 @@ int dll_19_func0F(int obj, char *state, char *st, int p4, int p5, s16 p6)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801135c0(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
                  undefined2 param_5,float *param_6,float *param_7,int *param_8)
 {
@@ -269,6 +267,8 @@ void FUN_801135c0(undefined4 param_1,undefined4 param_2,undefined4 param_3,undef
   FUN_80286888();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -283,6 +283,8 @@ void FUN_801135c0(undefined4 param_1,undefined4 param_2,undefined4 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80113758(undefined4 param_1,undefined4 param_2,int param_3,undefined4 param_4,
                  undefined4 param_5,undefined2 param_6)
 {
@@ -384,6 +386,8 @@ void FUN_80113758(undefined4 param_1,undefined4 param_2,int param_3,undefined4 p
   FUN_80286888();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -398,6 +402,8 @@ void FUN_80113758(undefined4 param_1,undefined4 param_2,int param_3,undefined4 p
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80113a9c(double param_1,double param_2,short *param_3,int param_4)
 {
   float fVar1;
@@ -433,6 +439,8 @@ void FUN_80113a9c(double param_1,double param_2,short *param_3,int param_4)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -447,6 +455,8 @@ void FUN_80113a9c(double param_1,double param_2,short *param_3,int param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 double FUN_80113c0c(double param_1,double param_2,double param_3,int param_4,int param_5)
 {
   float fVar1;
@@ -491,6 +501,8 @@ double FUN_80113c0c(double param_1,double param_2,double param_3,int param_4,int
                            (double)(float)((double)*(float *)(param_4 + 0x14) * dVar4)) +
                   (float)(dVar3 * param_1 + (double)(float)(dVar4 * param_2)));
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -505,6 +517,8 @@ double FUN_80113c0c(double param_1,double param_2,double param_3,int param_4,int
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80113e58(undefined4 param_1,undefined4 param_2,uint param_3,undefined2 *param_4,
                  undefined2 *param_5,undefined2 *param_6)
 {
@@ -560,6 +574,8 @@ void FUN_80113e58(undefined4 param_1,undefined4 param_2,uint param_3,undefined2 
   FUN_80286888();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -574,6 +590,8 @@ void FUN_80113e58(undefined4 param_1,undefined4 param_2,uint param_3,undefined2 
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80113fdc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
@@ -674,6 +692,8 @@ void FUN_80113fdc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   FUN_80286880();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -724,6 +744,8 @@ void FUN_801141e8(int param_1,wchar_t *param_2,wchar_t *param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 double FUN_801141ec(undefined4 param_1,undefined4 param_2)
 {
   int iVar1;
@@ -738,6 +760,8 @@ double FUN_801141ec(undefined4 param_1,undefined4 param_2)
   }
   return dVar2;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -752,6 +776,8 @@ double FUN_801141ec(undefined4 param_1,undefined4 param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 undefined4 FUN_80114274(undefined4 param_1,undefined2 *param_2)
 {
   int iVar1;
@@ -785,6 +811,8 @@ undefined4 FUN_80114274(undefined4 param_1,undefined2 *param_2)
   }
   return uVar3;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -799,6 +827,8 @@ undefined4 FUN_80114274(undefined4 param_1,undefined2 *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 undefined4 FUN_80114340(int param_1,undefined2 *param_2)
 {
   undefined4 uVar1;
@@ -823,13 +853,13 @@ undefined4 FUN_80114340(int param_1,undefined2 *param_2)
   }
   return uVar1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 extern f32 Curve_EvalHermite(f32 *points, f32 t, int unused);
 extern f32 sqrtf(f32 x);
 extern f64 lbl_803E1C98;
 
-#pragma scheduling off
-#pragma peephole off
 f32 fn_80114224(int p1, int p2, int p3, int p4, int n)
 {
     extern f32 lbl_803E1C90;
@@ -878,11 +908,7 @@ f32 fn_80114224(int p1, int p2, int p3, int p4, int n)
 
     return total;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
 {
   extern void vecRotateYXZ(int, int);
@@ -938,8 +964,6 @@ int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
   }
   return ret;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -954,6 +978,8 @@ int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801143e8(undefined4 param_1,undefined4 param_2,undefined4 *param_3,undefined4 *param_4,
                  uint param_5)
 {
@@ -1067,6 +1093,8 @@ void FUN_801143e8(undefined4 param_1,undefined4 param_2,undefined4 *param_3,unde
   FUN_80286880();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1116,6 +1144,8 @@ void FUN_801145ac(undefined4 param_1,undefined4 param_2,float *param_3,uint para
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801145b0(undefined4 param_1,undefined4 param_2,int param_3,float *param_4,byte *param_5,
                  undefined4 param_6,undefined4 param_7,undefined4 param_8)
 {
@@ -1234,6 +1264,8 @@ void FUN_801145b0(undefined4 param_1,undefined4 param_2,int param_3,float *param
   FUN_8028688c();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1248,6 +1280,8 @@ void FUN_801145b0(undefined4 param_1,undefined4 param_2,int param_3,float *param
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80114920(int param_1)
 {
   uint *puVar1;
@@ -1262,6 +1296,8 @@ void FUN_80114920(int param_1)
   FUN_8003a9c8(iVar2 + 0x1c,(uint)*(byte *)(iVar2 + 0x610),0,0);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1296,6 +1332,8 @@ void FUN_801149b8(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801149bc(short *param_1,int param_2,int param_3)
 {
   float fVar1;
@@ -1336,6 +1374,8 @@ void FUN_801149bc(short *param_1,int param_2,int param_3)
   *(float *)(param_2 + 0x18) = local_28;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1350,6 +1390,8 @@ void FUN_801149bc(short *param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80114b10(int param_1,undefined4 *param_2,undefined2 param_3,undefined2 param_4,int param_5)
 {
   float fVar1;
@@ -1380,6 +1422,8 @@ void FUN_80114b10(int param_1,undefined4 *param_2,undefined2 param_3,undefined2 
   FUN_80003494((int)param_2 + 0x5da,0x8031ad30,(uint)*(byte *)(param_2 + 0x184) << 1);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -1411,17 +1455,14 @@ u16 dll_19_func0A(int obj) {
 
 extern void *memcpy(void *dst, const void *src, u32 n);
 extern u8 lbl_8031A0E0[];
-#pragma scheduling off
 void dll_2E_func09(int obj, void *src1, void *src2) {
     if (src1 == NULL) src1 = lbl_8031A0E0;
     if (src2 == NULL) src2 = lbl_8031A0E0;
     memcpy((char *)obj + 0x5bc, src1, (u32)*(u8 *)(obj + 0x610) * 2);
     memcpy((char *)obj + 0x5da, src2, (u32)*(u8 *)(obj + 0x610) * 2);
 }
-#pragma scheduling reset
 
 extern f32 lbl_803E1C88;
-#pragma scheduling off
 f32 dll_2E_func0B(int obj, int arg) {
     int r = ((int (*)(int))(*gRomCurveInterface)->slot40)(arg);
     if (r > -1) {
@@ -1429,12 +1470,10 @@ f32 dll_2E_func0B(int obj, int arg) {
     }
     return lbl_803E1C88;
 }
-#pragma scheduling reset
 
 extern void *seqFn_800394a0(void);
 extern void objFn_8003acfc(int *obj, int *types, int count, char *out);
 extern void fn_8003A9C0(char *p, int count, s16 a, s16 b);
-#pragma scheduling off
 void fn_80114B1C(int *obj) {
     char *state;
     int *types;
@@ -1449,12 +1488,9 @@ void fn_80114B1C(int *obj) {
     *(int *)(state + 0x5f8) = 0x50;
     fn_8003A9C0(state + 0x1c, *(u8 *)(state + 0x610), 0, 0);
 }
-#pragma scheduling reset
 
 /* EN v1.0 0x80114184  size: 160b  Copies a curve point's position and packed
  * angle into the caller's record. */
-#pragma scheduling off
-#pragma peephole off
 int dll_2E_func0A(int idx, char *out)
 {
     int r;
@@ -1473,8 +1509,6 @@ int dll_2E_func0A(int idx, char *out)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern s16 atan2i(int x, int z);
 extern f32 lbl_803E1C8C;
@@ -1482,8 +1516,6 @@ extern f32 lbl_803E1C8C;
 /* EN v1.0 0x80114084  size: 256b  Copies a curve point's position into the
  * caller's record and aims its angle at the nearest group-8 object (falling
  * back to the point's packed angle). */
-#pragma scheduling off
-#pragma peephole off
 int dll_2E_func0C(int idx, char *out)
 {
     f32 range;
@@ -1508,8 +1540,6 @@ int dll_2E_func0C(int idx, char *out)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 timeDelta;
 extern f32 lbl_803E1C78;
@@ -1518,7 +1548,6 @@ extern f32 lbl_803E1C7C;
 
 /* EN v1.0 0x80113864  size: 248b  Steps the movement blend factors toward the
  * current target and turns the yaw by the buffered turn rate. */
-#pragma scheduling off
 void dll_19_func06(s16 *yaw, char *st, f32 cap, f32 speed)
 {
     if (*(f32 *)(st + 0x298) < lbl_803E1C78) {
@@ -1542,15 +1571,12 @@ void dll_19_func06(s16 *yaw, char *st, f32 cap, f32 speed)
         ((BaddieState *)st)->animSpeedA = cap;
     }
 }
-#pragma scheduling reset
 
 extern void fn_8003AC14(int obj, void *types, int count);
 extern f32 lbl_803E1C90;
 
 /* EN v1.0 0x80114F64  size: 280b  Initializes the movement-state block and
  * primes the animation channel tables. */
-#pragma scheduling off
-#pragma peephole off
 void dll_2E_func05(int obj, char *st, s16 a, s16 b, int count)
 {
     f32 z;
@@ -1576,8 +1602,6 @@ void dll_2E_func05(int obj, char *st, s16 a, s16 b, int count)
     fn_8003A9C0(st + 0x1c, *(u8 *)(st + 0x610), 0, 0);
     dll_2E_func09((int)st, lbl_8031A0E0, lbl_8031A0E0);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void vecRotateZXY(s16 *angles, f32 *vec);
 extern f32 lbl_803E1CC8;
@@ -1585,8 +1609,6 @@ extern f32 lbl_803E1CCC;
 
 /* EN v1.0 0x80114DEC  size: 376b  Latches the path-relative start offset on
  * first use and refreshes the current path point position. */
-#pragma scheduling off
-#pragma peephole off
 void dll_2E_func06(int obj, char *st, int point)
 {
     struct {
@@ -1618,15 +1640,11 @@ void dll_2E_func06(int obj, char *st, int point)
     *(f32 *)(st + 0x14) = v.y0;
     *(f32 *)(st + 0x18) = v.z0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern s16 getAngle(f32 x, f32 z);
 
 /* EN v1.0 0x80113BD0  size: 396b  Computes the yaw step, signed yaw delta and
  * distance from an object to its target, updating the wide-turn flag. */
-#pragma scheduling off
-#pragma peephole off
 void dll_19_func07(int obj, int target, int div, u16 *outYaw, u16 *outDelta, u16 *outDist)
 {
     char *st = ((GameObject *)obj)->extra;
@@ -1669,8 +1687,6 @@ void dll_19_func07(int obj, int target, int div, u16 *outYaw, u16 *outDelta, u16
         *outDist = sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1]));
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void voxmaps_worldToGrid(f32 *world, int *grid);
 extern u8 voxmaps_traceLine(int *from, int *to, int a, u8 *outFlag, int b);
@@ -1685,8 +1701,6 @@ extern f32 lbl_803E1C48;
 
 /* EN v1.0 0x80113D64  size: 544b  Probes the four compass directions around
  * the object for walkable space, returning a bitmask of clear directions. */
-#pragma scheduling off
-#pragma peephole off
 u8 dll_19_func08(int obj, char *st, f32 dist)
 {
     u16 i;
@@ -1736,8 +1750,6 @@ u8 dll_19_func08(int obj, char *st, f32 dist)
     }
     return mask;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int Curve_AdvanceAlongPath(int curve);
 extern int hitDetectFn_800658a4(int obj, f32 x, f32 y, f32 z, f32 *out, int flag);
@@ -1745,8 +1757,6 @@ extern f32 lbl_803E1CB0;
 
 /* EN v1.0 0x801145BC  size: 512b  Advances the object along its movement
  * curve, snapping to ground and easing the yaw toward the path direction. */
-#pragma scheduling off
-#pragma peephole off
 int dll_2E_func0E(int obj, int curve, f32 phase, int p4, int c, f32 *d, int *flags)
 {
     int moved;
@@ -1799,8 +1809,6 @@ int dll_2E_func0E(int obj, int curve, f32 phase, int p4, int c, f32 *d, int *fla
     }
     return hit;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int Obj_GetPlayerObject(void);
 extern s16 *objModelGetVecFn_800395d8(int obj, int idx);
@@ -1809,8 +1817,6 @@ extern f32 lbl_803E1CC4;
 
 /* EN v1.0 0x80114BB0  size: 572b  Object-sequence scripted-move step: phase 4
  * arms the move, phase 5 walks the setup/playback sub-phases. */
-#pragma scheduling off
-#pragma peephole off
 int dll_2E_func07(int obj, char *state, char *st, s16 a, s16 b)
 {
     s16 pair[2];
@@ -1875,8 +1881,6 @@ int dll_2E_func07(int obj, char *state, char *st, s16 a, s16 b)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ,
                                            u32 obj);
@@ -1884,8 +1888,6 @@ extern f32 lbl_803E1C40;
 
 /* EN v1.0 0x8011395C  size: 628b  Constrains a follow point against the
  * object's facing plane and returns the lateral offset of the result. */
-#pragma scheduling off
-#pragma peephole off
 f32 dll_19_func05(int obj, f32 px, f32 pz, f32 range, char *st)
 {
     f32 dist;
@@ -1930,8 +1932,6 @@ f32 dll_19_func05(int obj, f32 px, f32 pz, f32 range, char *st)
     s = mathCosf(lbl_803E1C80 * (f32)(((GameObject *)obj)->anim.rotX + 0x4000) / lbl_803E1C84);
     return -(-(((GameObject *)obj)->anim.localPosX * c + ((GameObject *)obj)->anim.localPosZ * s) + (c * fx + s * fz));
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void normalize(f32 *x, f32 *y, f32 *z);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
@@ -1942,8 +1942,6 @@ extern f32 lbl_803E1CC0;
 
 /* EN v1.0 0x801147BC  size: 864b  Homes the object toward its target at the
  * given speed, snapping when close, easing yaw and pacing the walk anim. */
-#pragma scheduling off
-#pragma peephole off
 int dll_2E_func0D(int obj, int target, f32 speed, int move, f32 *out, u8 *flags)
 {
     f32 ground;
@@ -2010,5 +2008,3 @@ int dll_2E_func0D(int obj, int target, f32 speed, int move, f32 *out, u8 *flags)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset

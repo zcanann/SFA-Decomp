@@ -97,6 +97,8 @@ extern f32 lbl_803E35B8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80152ec0(uint param_1,int param_2)
 {
   float fVar1;
@@ -120,6 +122,8 @@ void FUN_80152ec0(uint param_1,int param_2)
   FUN_800068d0(param_1,0xe8);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -134,6 +138,8 @@ void FUN_80152ec0(uint param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80152f54(uint param_1,int param_2,undefined4 param_3,int param_4)
 {
   if ((param_4 != 0x10) && (param_4 != 0x11)) {
@@ -144,6 +150,8 @@ void FUN_80152f54(uint param_1,int param_2,undefined4 param_3,int param_4)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -158,6 +166,8 @@ void FUN_80152f54(uint param_1,int param_2,undefined4 param_3,int param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80152fb4(ushort *param_1,int param_2)
 {
   float fVar1;
@@ -254,6 +264,8 @@ void FUN_80152fb4(ushort *param_1,int param_2)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -268,6 +280,8 @@ void FUN_80152fb4(ushort *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80153358(int param_1,int param_2)
 {
   float fVar1;
@@ -303,6 +317,8 @@ void FUN_80153358(int param_1,int param_2)
   *(float *)(param_1 + 0x14) = local_18 * *(float *)(param_2 + 0x2a8) + *(float *)(param_2 + 0x32c);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -317,6 +333,8 @@ void FUN_80153358(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80153440(uint param_1,int param_2,undefined4 param_3,int param_4)
 {
   if (*(char *)(param_2 + 0x33b) == '\0') {
@@ -338,6 +356,8 @@ void FUN_80153440(uint param_1,int param_2,undefined4 param_3,int param_4)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -352,6 +372,8 @@ void FUN_80153440(uint param_1,int param_2,undefined4 param_3,int param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801534d8(ushort *param_1,undefined4 *param_2)
 {
   int iVar1;
@@ -398,6 +420,8 @@ void FUN_801534d8(ushort *param_1,undefined4 *param_2)
   param_2[0xcb] = lbl_803E3548;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -412,6 +436,8 @@ void FUN_801534d8(ushort *param_1,undefined4 *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80153738(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  ushort *param_9,undefined4 *param_10)
@@ -485,6 +511,8 @@ void FUN_80153738(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   enemy_free((double)lbl_803E3564,(double)lbl_803E3568,param_9,(int)param_10,0xf,'\0');
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -499,6 +527,8 @@ void FUN_80153738(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80153a80(int param_1,int param_2)
 {
   float fVar1;
@@ -529,6 +559,8 @@ void FUN_80153a80(int param_1,int param_2)
   *(undefined *)(param_2 + 0x33b) = 1;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -543,6 +575,8 @@ void FUN_80153a80(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80153b00(int param_1,int param_2)
 {
   char cVar1;
@@ -570,6 +604,8 @@ void FUN_80153b00(int param_1,int param_2)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -584,6 +620,8 @@ void FUN_80153b00(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80153be0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9,int param_10)
@@ -628,6 +666,8 @@ void FUN_80153be0(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -642,6 +682,8 @@ void FUN_80153be0(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80153db4(uint param_1,int param_2,undefined4 param_3,int param_4,undefined4 param_5,
                  int param_6)
 {
@@ -663,6 +705,8 @@ void FUN_80153db4(uint param_1,int param_2,undefined4 param_3,int param_4,undefi
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -677,6 +721,8 @@ void FUN_80153db4(uint param_1,int param_2,undefined4 param_3,int param_4,undefi
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80153e5c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9,int param_10)
@@ -804,6 +850,8 @@ LAB_8015407c:
   FUN_80153b00((int)param_9,param_10);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -818,6 +866,8 @@ LAB_8015407c:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801544a4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9,int param_10)
@@ -835,6 +885,8 @@ void FUN_801544a4(undefined8 param_1,double param_2,double param_3,undefined8 pa
   FUN_80153b00(param_9,param_10);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 extern f32 lbl_803E28B0;
 extern f32 lbl_803E28BC;
@@ -844,8 +896,6 @@ extern f32 lbl_803E28E0;
 extern f32 lbl_803E28E4;
 extern f32 lbl_803E28E8;
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80153790(int obj, int state, int p3, int msgFlag, int p5, int p6)
 {
     if (((GameObject *)obj)->anim.currentMove == 1) {
@@ -866,10 +916,7 @@ void fn_80153790(int obj, int state, int p3, int msgFlag, int p5, int p6)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void fn_801534D8(int obj, int state)
 {
     f32 lblBC;
@@ -900,7 +947,6 @@ void fn_801534D8(int obj, int state)
         ((BaddieState *)state)->inWhirlpoolGroup = 0;
     }
 }
-#pragma scheduling reset
 
 extern f32 lbl_803E286C;
 extern f32 lbl_803E2894;
@@ -917,8 +963,6 @@ extern void fn_8014CF7C(int obj, int state, int p3, int p4, f32 f1, f32 f2);
 extern void fn_8014C678(int obj, int state, void* vec, f32 f1, f32 f2, f32 f3, int p6);
 extern void fn_8014CD1C(int obj, int state, int p3, f32 f1, f32 f2, int p6);
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80153040(int obj, int state)
 {
     int* curve;
@@ -964,8 +1008,6 @@ void fn_80153040(int obj, int state)
     }
     *(f32*)(state + 0x32c) = lbl_803E28B0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 extern f32 lbl_803E28A0;
 extern f32 lbl_803E28A4;
 extern f32 lbl_803E28A8;
@@ -979,8 +1021,6 @@ extern f32 lbl_803E2930;
 
 extern void fn_80293018(int idx, f32* outA, f32* outB);
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80152EC0(int obj, int state)
 {
     f32 zero;
@@ -1014,16 +1054,12 @@ void fn_80152EC0(int obj, int state)
     ((GameObject *)obj)->anim.localPosX = a * ((BaddieState *)state)->unk2A8 + *(f32*)(state + 0x324);
     ((GameObject *)obj)->anim.localPosZ = b * ((BaddieState *)state)->unk2A8 + *(f32*)(state + 0x32c);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void Sfx_PlayFromObjectLimited(int obj, int sfx, int prio);
 extern void fn_8014D08C(int obj, int p2, f32 mult, int a, int b, u8 c);
 extern void fn_8015355C(int obj, int p2);
 
 #pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
 void fn_8015355C(int obj, int p2)
 {
     u8 count = 0;
@@ -1053,12 +1089,8 @@ void fn_8015355C(int obj, int p2)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 #pragma dont_inline reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80153BFC(int obj, int p2)
 {
     ((BaddieState *)p2)->inWhirlpoolGroup = ((BaddieState *)p2)->inWhirlpoolGroup & 0xbf;
@@ -1068,10 +1100,7 @@ void fn_80153BFC(int obj, int p2)
     }
     fn_8015355C(obj, p2);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void fn_80153C90(int unused, int p2)
 {
     f32 ten;
@@ -1094,10 +1123,7 @@ void fn_80153C90(int unused, int p2)
     *(f32*)(p2 + 0x324) = lbl_803E2930;
     ((BaddieState *)p2)->pathStep = oc;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80152FA8(int obj, int p2, int unused, int msgFlag)
 {
   if (((BaddieState *)p2)->inWhirlpoolGroup != 0) {
@@ -1116,8 +1142,6 @@ void fn_80152FA8(int obj, int p2, int unused, int msgFlag)
     }
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E28D4;
 extern f32 lbl_803E28D8;
@@ -1146,8 +1170,6 @@ extern int voxmaps_traceLine(int *a, int *b, int c, u8 *out, int e);
 extern f32 PSVECMag(f32 *v);
 extern s16 getAngle(f32 dx, f32 dz);
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80153248(int obj, int state)
 {
     int *curve;
@@ -1207,12 +1229,8 @@ void fn_80153248(int obj, int state)
     fn_8014C678(obj, state, vec, lbl_803E28BC, lbl_803E28C0, lbl_803E28C4, 1);
     fn_8014CD1C(obj, state, 0xf, lbl_803E28CC, lbl_803E28D0, 0);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
 void fn_80153640(int obj, int state)
 {
     u8 *fx;
@@ -1244,12 +1262,8 @@ void fn_80153640(int obj, int state)
         Sfx_PlayFromObject(obj, 0x49a);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 #pragma dont_inline reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_8015383C(int obj, int state)
 {
     u32 hit;
@@ -1346,10 +1360,7 @@ void fn_8015383C(int obj, int state)
     }
     fn_8015355C(obj, state);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void fn_80153CF8(int obj, int state, int p3, int msgFlag)
 {
     int cond = 0;
@@ -1390,10 +1401,7 @@ checkedKind:
         ((BaddieState *)state)->reactionFlags = ((BaddieState *)state)->reactionFlags | 0x10;
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80153E0C(int obj, int state)
 {
     int *curve;
@@ -1449,5 +1457,3 @@ void fn_80153E0C(int obj, int state)
         ((BaddieState *)state)->inWhirlpoolGroup = ctr - 1;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

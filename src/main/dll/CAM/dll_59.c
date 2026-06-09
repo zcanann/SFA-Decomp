@@ -36,10 +36,14 @@ extern f32 lbl_803E1778;
 
 #define gCamcontrolPathState lbl_803DD538
 
+#pragma scheduling on
+#pragma peephole on
 static f32 CameraModeStaffAnim_angleToRadians(int angle)
 {
   return (lbl_803E1760 * (f32)angle) / lbl_803E1764;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -54,8 +58,6 @@ static f32 CameraModeStaffAnim_angleToRadians(int angle)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void CameraModeStaffAnim_init(CameraObject *camera, undefined4 param_2, u8 *settings)
 {
   GameObject *target;
@@ -230,8 +232,6 @@ void CameraModeStaffAnim_init(CameraObject *camera, undefined4 param_2, u8 *sett
     gCamcontrolPathState->curveMax = lbl_803E175C;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void CameraModeBike_copyToCurrent(f32 *param_1)
 {
