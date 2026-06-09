@@ -6,6 +6,7 @@
 #include "main/dll/CAM/camera_mode_4f_state.h"
 #include "main/dll/CAM/camcloudrunner_state.h"
 #include "main/dll/CAM/camcrawl_state.h"
+#include "main/dll/CAM/camera_mode_cannon_state.h"
 #include "main/dll/CAM/camnpcspeak_state.h"
 #include "main/dll/CAM/camperv_state.h"
 #include "main/dll/CAM/camworldmap_state.h"
@@ -3159,7 +3160,7 @@ void CameraModeCrawl_init(void)
     }
 }
 
-extern u32 lbl_803DD5A0;
+extern CameraModeCannonState *lbl_803DD5A0;
 extern CameraModePervState *lbl_803DD5C8;
 extern f32 lbl_803E1B98;
 extern f32 lbl_803E1B9C;
@@ -3181,15 +3182,17 @@ void CameraModePerv_init(int *obj)
 
 void CameraModeCannon_init(int *p1, int unused, int *p3)
 {
-    if (lbl_803DD5A0 == 0) {
-        lbl_803DD5A0 = (u32)mmAlloc(4, 15, 0);
+    CameraObject *camera = (CameraObject *)p1;
+
+    if (lbl_803DD5A0 == NULL) {
+        lbl_803DD5A0 = (CameraModeCannonState *)mmAlloc(sizeof(CameraModeCannonState), 15, 0);
     }
     if (p3 != NULL) {
-        *(int*)lbl_803DD5A0 = *p3;
+        lbl_803DD5A0->target = (GameObject *)*p3;
     } else {
-        *(int*)lbl_803DD5A0 = 0;
+        lbl_803DD5A0->target = NULL;
     }
-    *(s16*)((char*)p1 + 2) = 2800;
+    camera->anim.rotY = 2800;
 }
 
 extern f32 lbl_803E1A40;
@@ -3481,7 +3484,7 @@ f32 titleScreenGetCamProgress(void) { return lbl_803DB9D8; }
 void CameraModeWorldMap_free(void) { mm_free((u32)lbl_803DD588); lbl_803DD588 = NULL; }
 void dll_4F_func05(void) { mm_free((u32)lbl_803DD590); lbl_803DD590 = NULL; }
 void CameraModeCrawl_free(void) { mm_free((u32)lbl_803DD598); lbl_803DD598 = NULL; }
-void CameraModeCannon_free(void) { mm_free(lbl_803DD5A0); lbl_803DD5A0 = 0; }
+void CameraModeCannon_free(void) { mm_free((u32)lbl_803DD5A0); lbl_803DD5A0 = NULL; }
 void fn_801101E8(void) { mm_free((u32)lbl_803DD5B8); lbl_803DD5B8 = NULL; }
 void CameraModeCloudRunner_free(void) { mm_free((u32)lbl_803DD5B8); lbl_803DD5B8 = NULL; }
 void dll_54_func05(void) { mm_free((u32)lbl_803DD5C0); lbl_803DD5C0 = NULL; }
@@ -3898,7 +3901,7 @@ int dll_19_func17(int p1, u8 *p2, u8 *p3, s16 p4, u8 *p5, s16 p6, s16 p7, s16 p8
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int objModelGetVecFn_800395d8(int model, int idx);
+extern s16 *objModelGetVecFn_800395d8(int obj, int idx);
 extern f32 lbl_803E1AE0;
 extern f32 lbl_803E1AE4;
 extern f32 lbl_803E1AE8;
@@ -3909,24 +3912,26 @@ extern f32 lbl_803E1AF0;
 #pragma peephole off
 #pragma scheduling off
 void CameraModeCannon_update(u8 *obj) {
-    int vec;
+    CameraObject *camera = (CameraObject *)obj;
+    GameObject *target = lbl_803DD5A0->target;
+    s16 *vec;
     s16 yaw;
     s16 delta;
 
-    vec = objModelGetVecFn_800395d8(*(int *)lbl_803DD5A0, 0);
-    if (*(void **)lbl_803DD5A0 == NULL) {
+    vec = objModelGetVecFn_800395d8((int)target, 0);
+    if (target == NULL) {
         return;
     }
-    yaw = *(s16 *)obj;
-    delta = (s16)((0x8000 - *(s16 *)(*(int *)lbl_803DD5A0)) - *(s16 *)(vec + 2) - yaw);
-    *(s16 *)obj = (s16)(s32)((f32)(s32)yaw + (f32)(s32)delta / lbl_803E1AE0);
-    ((GameObject *)obj)->anim.localPosX =
-        *(f32 *)(*(int *)lbl_803DD5A0 + 12) -
-        lbl_803E1AE4 * mathSinf(lbl_803E1AE8 * (f32)(s32)(-*(s16 *)obj) / lbl_803E1AEC);
-    ((GameObject *)obj)->anim.localPosY = lbl_803E1AF0 + *(f32 *)(*(int *)lbl_803DD5A0 + 16);
-    ((GameObject *)obj)->anim.localPosZ =
-        *(f32 *)(*(int *)lbl_803DD5A0 + 20) -
-        lbl_803E1AE4 * mathCosf(lbl_803E1AE8 * (f32)(s32)(-*(s16 *)obj) / lbl_803E1AEC);
+    yaw = camera->anim.rotX;
+    delta = (s16)((0x8000 - target->anim.rotX) - vec[1] - yaw);
+    camera->anim.rotX = (s16)(s32)((f32)(s32)yaw + (f32)(s32)delta / lbl_803E1AE0);
+    camera->anim.localPosX =
+        target->anim.worldPosX -
+        lbl_803E1AE4 * mathSinf(lbl_803E1AE8 * (f32)(s32)(-camera->anim.rotX) / lbl_803E1AEC);
+    camera->anim.localPosY = lbl_803E1AF0 + target->anim.worldPosY;
+    camera->anim.localPosZ =
+        target->anim.worldPosZ -
+        lbl_803E1AE4 * mathCosf(lbl_803E1AE8 * (f32)(s32)(-camera->anim.rotX) / lbl_803E1AEC);
 }
 #pragma peephole reset
 #pragma scheduling reset
