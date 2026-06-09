@@ -48,7 +48,7 @@ typedef struct CamcontrolModeSettings {
   f32 slideLeftAmount;
   f32 pad20;
   f32 pad24;
-  f32 pad28;
+  f32 avoidanceYawOffset;
   f32 savedMinDistance;
   f32 targetMinDistance;
   f32 savedMaxDistance;
@@ -87,7 +87,7 @@ typedef struct CamcontrolModeSettings {
   s32 slideAngle;
   u8 padB0[0xBC - 0xB0];
   f32 heightLockLimit;
-  u8 padC0;
+  u8 collisionBlocked;
   u8 initialized;
   u8 yawResponseFrames;
   u8 collisionProbeTimer;

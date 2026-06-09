@@ -1,6 +1,7 @@
 #include "main/dll/CAM/cutCam.h"
 #include "main/camera_interface.h"
 #include "main/camera_object.h"
+#include "main/dll/CAM/camcontrol_mode_settings.h"
 #include "main/game_object.h"
 #include "main/object_transform.h"
 #include "main/pad.h"
@@ -58,8 +59,6 @@ extern undefined4 DAT_803de18c;
 extern undefined4 gCamcontrolCurrentActionId;
 extern undefined4* gCamcontrolState;
 extern u8 lbl_803DD528;
-extern undefined4* gCamcontrolModeSettings;
-extern f32 *cameraMtxVar57;
 extern u8 framesThisStep;
 extern f64 DOUBLE_803e2318;
 extern f64 lbl_803E1698;
@@ -160,7 +159,7 @@ undefined camcontrol_traceFromTarget(float *param_1,int param_2,float *param_3)
   }
   else {
     local_88[0] = *(float *)(param_2 + 0x18);
-    local_88[1] = *(float *)(param_2 + 0x1c) + cameraMtxVar57[0x23];
+    local_88[1] = *(float *)(param_2 + 0x1c) + cameraMtxVar57->targetHeight;
     local_88[2] = *(float *)(param_2 + 0x20);
   }
   camcontrol_traceMove(local_88,param_1,param_3,auStack_7c,3,'\x01','\x01',(double)lbl_803E1688);
@@ -204,26 +203,28 @@ undefined camcontrol_getTargetPosition(int arg0,void *arg1,void *arg2,void *arg3
   param_4 = (short *)arg3;
   cosv = mathSinf((lbl_803E168C * (f32)*param_2) / lbl_803E1690);
   sinv = mathCosf((lbl_803E168C * (f32)*param_2) / lbl_803E1690);
-  d2 = cameraMtxVar57[1] * cameraMtxVar57[1] - cameraMtxVar57[2] * cameraMtxVar57[2];
+  d2 = cameraMtxVar57->maxDistance * cameraMtxVar57->maxDistance -
+       cameraMtxVar57->lowerHeightOffset * cameraMtxVar57->lowerHeightOffset;
   if (d2 < lbl_803E1694) {
     d2 = *(f32 *)&lbl_803E1694;
   }
   d2 = sqrtf(d2);
   pos[0] = cosv * d2 + *(float *)(param_2 + 0xc);
-  pos[1] = cameraMtxVar57[2] + (*(float *)(param_2 + 0xe) + cameraMtxVar57[0x23]);
+  pos[1] = cameraMtxVar57->lowerHeightOffset +
+      (*(float *)(param_2 + 0xe) + cameraMtxVar57->targetHeight);
   pos[2] = sinv * d2 + *(float *)(param_2 + 0x10);
   if (param_2[0x22] == 1) {
     cameraGetPrevPos2((int)param_2,&prev[0],&prev[1],&prev[2]);
   }
   else {
     prev[0] = *(float *)(param_2 + 0xc);
-    prev[1] = *(float *)(param_2 + 0xe) + cameraMtxVar57[0x23];
+    prev[1] = *(float *)(param_2 + 0xe) + cameraMtxVar57->targetHeight;
     prev[2] = *(float *)(param_2 + 0x10);
   }
   camcontrol_traceMove(prev,pos,param_3,box,3,'\x01','\x01',lbl_803E1688);
-  (*gCameraInterface)->getRelativePosition(cameraMtxVar57[0x23], param_1, &a, &b, &c, &d2, 0);
+  (*gCameraInterface)->getRelativePosition(cameraMtxVar57->targetHeight, param_1, &a, &b, &c, &d2, 0);
   b = *(float *)(param_1 + 0x1c) -
-      (*(float *)(param_2 + 0xe) + cameraMtxVar57[0x23]);
+      (*(float *)(param_2 + 0xe) + cameraMtxVar57->targetHeight);
   ang = getAngle(b,d2);
   d = ang & 0xffff;
   d -= (u16)*(s16 *)(param_1 + 2);
@@ -283,10 +284,10 @@ action_49:
 check_action_44:
     if ((((uVar2 & 0x10) != 0) && (*(short *)(param_2 + 0x44) == 1)) &&
        (iVar3 = objFn_802962b4(param_2), iVar3 != 0)) {
-      local_24.distance = *cameraMtxVar57;
-      local_24.yOffset = cameraMtxVar57[2];
-      local_18 = (longlong)(int)cameraMtxVar57[0x23];
-      local_24.height = (int)cameraMtxVar57[0x23];
+      local_24.distance = cameraMtxVar57->minDistance;
+      local_24.yOffset = cameraMtxVar57->lowerHeightOffset;
+      local_18 = (longlong)(int)cameraMtxVar57->targetHeight;
+      local_24.height = (int)cameraMtxVar57->targetHeight;
       cameraSetInterpMode(0);
       (*gCameraInterface)->setMode(0x44,1,0,0xc,&local_24,0xf,0xfe);
     }
@@ -363,7 +364,7 @@ int cameraFn_80103b40(short *cam, f32 *outA, f32 *outB, int angle)
 
   OSGetTick();
   result = 0;
-  (*gCameraInterface)->getRelativePosition(*(f32 *)((char *)cameraMtxVar57 + 0x8c), (int)cam,
+  (*gCameraInterface)->getRelativePosition(cameraMtxVar57->targetHeight, (int)cam,
                                            &spinB, &spinC, &spinD, &spinA, 0);
   tgt0 = *(int *)((char *)cam + 0xa4);
   *(int *)&probe[35] = tgt0;
@@ -379,7 +380,7 @@ int cameraFn_80103b40(short *cam, f32 *outA, f32 *outB, int angle)
   }
   else {
     prev[0] = ((GameObject *)tgt0)->anim.worldPosX;
-    prev[1] = ((GameObject *)tgt0)->anim.worldPosY + *(f32 *)((char *)cameraMtxVar57 + 0x8c);
+    prev[1] = ((GameObject *)tgt0)->anim.worldPosY + cameraMtxVar57->targetHeight;
     prev[2] = ((GameObject *)tgt0)->anim.worldPosZ;
   }
   s = 0xf;
@@ -504,14 +505,14 @@ int cameraFn_80103b40(short *cam, f32 *outA, f32 *outB, int angle)
     if (dir == -1) {
       g = -g;
     }
-    g = g * lbl_803DD52C + *(f32 *)((char *)cameraMtxVar57 + 0x28);
+    g = g * lbl_803DD52C + cameraMtxVar57->avoidanceYawOffset;
     if (g > lbl_803E16BC) {
       g = lbl_803E16BC;
     }
     else if (g < lbl_803E16C0) {
       g = lbl_803E16C0;
     }
-    *(f32 *)((char *)cameraMtxVar57 + 0x28) = g;
+    cameraMtxVar57->avoidanceYawOffset = g;
     result = 1;
   }
   return result;
@@ -524,11 +525,6 @@ int cameraFn_80103b40(short *cam, f32 *outA, f32 *outB, int angle)
  * EN v1.0 Address: 0x80104040
  * EN v1.0 Size: 1280b
  */
-typedef struct {
-    u8 bit80 : 1;
-    u8 rest : 7;
-} CamcontrolByteC6;
-
 void camMoveFn_80104040(int cam, short *tgt)
 {
   float path[39];
@@ -565,7 +561,7 @@ void camMoveFn_80104040(int cam, short *tgt)
   }
   else {
     prev[0] = ((GameObject *)tgt)->anim.worldPosX;
-    prev[1] = ((GameObject *)tgt)->anim.worldPosY + *(f32 *)((char *)cameraMtxVar57 + 0x8c);
+    prev[1] = ((GameObject *)tgt)->anim.worldPosY + cameraMtxVar57->targetHeight;
     prev[2] = ((GameObject *)tgt)->anim.worldPosZ;
   }
   path[0] = *(f32 *)(cam + 0x18);
@@ -615,15 +611,15 @@ void camMoveFn_80104040(int cam, short *tgt)
   if (trace == 0) {
     blocked = 1;
   }
-  *(u8 *)((char *)cameraMtxVar57 + 0xc0) = blocked;
+  cameraMtxVar57->collisionBlocked = blocked;
   if (blocked != 0) {
-    ((CamcontrolByteC6 *)((char *)cameraMtxVar57 + 0xc6))->bit80 = 0;
+    cameraMtxVar57->wallAvoidanceFlags.b7 = 0;
     if (cameraFn_80103b40((short *)cam, outA, outB, (int)tgt[0]) == 0) {
-      *(f32 *)((char *)cameraMtxVar57 + 0x28) = lbl_803E16AC;
+      cameraMtxVar57->avoidanceYawOffset = lbl_803E16AC;
     }
   }
-  if (lbl_803E16AC != *(f32 *)((char *)cameraMtxVar57 + 0x28)) {
-    spin = (s16)(int)*(f32 *)((char *)cameraMtxVar57 + 0x28);
+  if (lbl_803E16AC != cameraMtxVar57->avoidanceYawOffset) {
+    spin = (s16)(int)cameraMtxVar57->avoidanceYawOffset;
     if ((spin < -0x1e) || (0x1e < spin)) {
       rad = (lbl_803E168C * (f32)spin) / lbl_803E1690;
       cosv = mathSinf(rad);
@@ -633,10 +629,10 @@ void camMoveFn_80104040(int cam, short *tgt)
       z = t * cosv + dz * sinv;
       *(f32 *)(cam + 0x20) = z + ((GameObject *)tgt)->anim.worldPosZ;
     }
-    *(f32 *)((char *)cameraMtxVar57 + 0x28) = *(f32 *)((char *)cameraMtxVar57 + 0x28) * lbl_803E16C4;
-    if ((*(f32 *)((char *)cameraMtxVar57 + 0x28) < lbl_803E16C8) &&
-        (lbl_803E16CC < *(f32 *)((char *)cameraMtxVar57 + 0x28))) {
-      *(f32 *)((char *)cameraMtxVar57 + 0x28) = lbl_803E16AC;
+    cameraMtxVar57->avoidanceYawOffset = cameraMtxVar57->avoidanceYawOffset * lbl_803E16C4;
+    if ((cameraMtxVar57->avoidanceYawOffset < lbl_803E16C8) &&
+        (lbl_803E16CC < cameraMtxVar57->avoidanceYawOffset)) {
+      cameraMtxVar57->avoidanceYawOffset = lbl_803E16AC;
     }
   }
   Obj_TransformWorldPointToLocal(*(f32 *)(cam + 0x18), *(f32 *)(cam + 0x1c), *(f32 *)(cam + 0x20),
@@ -650,8 +646,6 @@ void camMoveFn_80104040(int cam, short *tgt)
  * Function: camcontrol_updateModeSettings
  * EN v1.0 Address: 0x80104540
  * EN v1.0 Size: 436b
- *
- * TODO: stub. Body adjusts gCamcontrolModeSettings fields with clamping.
  */
 void camcontrol_updateModeSettings(int camera)
 {
@@ -659,39 +653,54 @@ void camcontrol_updateModeSettings(int camera)
   f32 ratio;
   float curve[4];
 
-  if (*(s16 *)((int)cameraMtxVar57 + 0x82) != 0) {
-    *(s16 *)((int)cameraMtxVar57 + 0x82) -= framesThisStep;
-    if (*(s16 *)((int)cameraMtxVar57 + 0x82) < 0) {
-      *(s16 *)((int)cameraMtxVar57 + 0x82) = 0;
+  if (cameraMtxVar57->transitionTimer != 0) {
+    cameraMtxVar57->transitionTimer -= framesThisStep;
+    if (cameraMtxVar57->transitionTimer < 0) {
+      cameraMtxVar57->transitionTimer = 0;
     }
-    ratio = (f32)(*(s16 *)((int)cameraMtxVar57 + 0x84) -
-                  *(s16 *)((int)cameraMtxVar57 + 0x82)) /
-            (f32)(s32)*(s16 *)((int)cameraMtxVar57 + 0x84);
+    ratio = (f32)(cameraMtxVar57->transitionDuration -
+                  cameraMtxVar57->transitionTimer) /
+            (f32)(s32)cameraMtxVar57->transitionDuration;
     curve[0] = lbl_803E16AC;
     curve[1] = lbl_803E16A4;
     curve[2] = lbl_803E16AC;
     curve[3] = lbl_803E16AC;
     blend = Curve_EvalHermite(ratio,curve,(float *)0x0);
-    cameraMtxVar57[0x23] =
-         blend * (cameraMtxVar57[0x25] - cameraMtxVar57[0x24]) + cameraMtxVar57[0x24];
-    cameraMtxVar57[0] =
-         blend * (cameraMtxVar57[0xc] - cameraMtxVar57[0xb]) + cameraMtxVar57[0xb];
-    cameraMtxVar57[1] =
-         blend * (cameraMtxVar57[0xe] - cameraMtxVar57[0xd]) + cameraMtxVar57[0xd];
-    cameraMtxVar57[2] =
-         blend * (cameraMtxVar57[0x10] - cameraMtxVar57[0xf]) + cameraMtxVar57[0xf];
-    cameraMtxVar57[3] =
-         blend * (cameraMtxVar57[0x12] - cameraMtxVar57[0x11]) + cameraMtxVar57[0x11];
-    cameraMtxVar57[4] =
-         blend * (cameraMtxVar57[0x14] - cameraMtxVar57[0x13]) + cameraMtxVar57[0x13];
-    cameraMtxVar57[5] =
-         blend * (cameraMtxVar57[0x16] - cameraMtxVar57[0x15]) + cameraMtxVar57[0x15];
-    cameraMtxVar57[6] =
-         blend * (cameraMtxVar57[0x18] - cameraMtxVar57[0x17]) + cameraMtxVar57[0x17];
-    cameraMtxVar57[7] =
-         blend * (cameraMtxVar57[0x1a] - cameraMtxVar57[0x19]) + cameraMtxVar57[0x19];
+    cameraMtxVar57->targetHeight =
+         blend * (cameraMtxVar57->targetTargetHeight - cameraMtxVar57->savedTargetHeight) +
+         cameraMtxVar57->savedTargetHeight;
+    cameraMtxVar57->minDistance =
+         blend * (cameraMtxVar57->targetMinDistance - cameraMtxVar57->savedMinDistance) +
+         cameraMtxVar57->savedMinDistance;
+    cameraMtxVar57->maxDistance =
+         blend * (cameraMtxVar57->targetMaxDistance - cameraMtxVar57->savedMaxDistance) +
+         cameraMtxVar57->savedMaxDistance;
+    cameraMtxVar57->lowerHeightOffset =
+         blend * (cameraMtxVar57->targetLowerHeightOffset -
+                  cameraMtxVar57->savedLowerHeightOffset) +
+         cameraMtxVar57->savedLowerHeightOffset;
+    cameraMtxVar57->upperHeightOffset =
+         blend * (cameraMtxVar57->targetUpperHeightOffset -
+                  cameraMtxVar57->savedUpperHeightOffset) +
+         cameraMtxVar57->savedUpperHeightOffset;
+    cameraMtxVar57->distanceAdjustRate =
+         blend * (cameraMtxVar57->targetDistanceAdjustRate -
+                  cameraMtxVar57->savedDistanceAdjustRate) +
+         cameraMtxVar57->savedDistanceAdjustRate;
+    cameraMtxVar57->heightAdjustRate =
+         blend * (cameraMtxVar57->targetHeightAdjustRate -
+                  cameraMtxVar57->savedHeightAdjustRate) +
+         cameraMtxVar57->savedHeightAdjustRate;
+    cameraMtxVar57->slideRightAmount =
+         blend * (cameraMtxVar57->targetSlideRightAmount -
+                  cameraMtxVar57->savedSlideRightAmount) +
+         cameraMtxVar57->savedSlideRightAmount;
+    cameraMtxVar57->slideLeftAmount =
+         blend * (cameraMtxVar57->targetSlideLeftAmount -
+                  cameraMtxVar57->savedSlideLeftAmount) +
+         cameraMtxVar57->savedSlideLeftAmount;
     *(float *)(camera + 0xb4) =
-         blend * (cameraMtxVar57[0x1c] - cameraMtxVar57[0x1b]) + cameraMtxVar57[0x1b];
+         blend * (cameraMtxVar57->fov - cameraMtxVar57->savedFov) + cameraMtxVar57->savedFov;
   }
   return;
 }
