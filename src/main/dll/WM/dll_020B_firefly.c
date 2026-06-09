@@ -170,6 +170,7 @@ void FireFlyFn_801f4f88(int obj)
     if (Vec_xzDistance((f32 *)(player + 0x18), (f32 *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x8)) <
         FIREFLY_PLAYER_RADIUS(state)) {
         f32 lim;
+        f32 a;
         if (FIREFLY_KIND(state) == FIREFLY_KIND_BLUE_NEAR) {
             (*gPartfxInterface)->spawnObject((void *)obj, FIREFLY_PARTFX_BLUE_NEAR, NULL,
                                                                 FIREFLY_PARTFX_KIND, FIREFLY_PARTFX_INVALID_HANDLE, NULL);
@@ -180,17 +181,18 @@ void FireFlyFn_801f4f88(int obj)
             (*gPartfxInterface)->spawnObject((void *)obj, FIREFLY_PARTFX_ORANGE_NEAR, NULL,
                                                                 FIREFLY_PARTFX_KIND, FIREFLY_PARTFX_INVALID_HANDLE, NULL);
         }
-        if (FIREFLY_PROXIMITY_ALPHA(state) < (lim = lbl_803E5EE0)) {
-            FIREFLY_PROXIMITY_ALPHA(state) = FIREFLY_PROXIMITY_ALPHA(state) + lbl_803E5EE4;
+        if ((a = FIREFLY_PROXIMITY_ALPHA(state)) < (lim = lbl_803E5EE0)) {
+            FIREFLY_PROXIMITY_ALPHA(state) = a + lbl_803E5EE4;
             if (FIREFLY_PROXIMITY_ALPHA(state) > lim) {
                 FIREFLY_PROXIMITY_ALPHA(state) = lim;
             }
         }
     } else {
         f32 lim;
+        f32 a;
 
-        if (FIREFLY_PROXIMITY_ALPHA(state) > (lim = lbl_803E5EE8)) {
-            FIREFLY_PROXIMITY_ALPHA(state) = FIREFLY_PROXIMITY_ALPHA(state) - lbl_803E5EE4;
+        if ((a = FIREFLY_PROXIMITY_ALPHA(state)) > (lim = lbl_803E5EE8)) {
+            FIREFLY_PROXIMITY_ALPHA(state) = a - lbl_803E5EE4;
             if (FIREFLY_PROXIMITY_ALPHA(state) < lim) {
                 FIREFLY_PROXIMITY_ALPHA(state) = lim;
             }
