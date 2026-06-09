@@ -178,7 +178,7 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimHandle,
   int scanMode;
   int eventCount;
   int eventIndex;
-  s16 eventEntry;
+  ObjAnimPackedEvent eventEntry;
   int eventFrame;
   int eventId;
 
@@ -290,8 +290,8 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimHandle,
        eventIndex < eventCount && events->triggerCount < OBJANIM_EVENT_TRIGGER_CAPACITY;
        eventIndex++) {
     eventEntry = eventTable->entries[eventIndex];
-    eventFrame = eventEntry & OBJANIM_EVENT_FRAME_MASK;
-    eventId = (eventEntry >> OBJANIM_EVENT_ID_SHIFT) & OBJANIM_EVENT_ID_MASK;
+    eventFrame = ObjAnim_GetPackedEventFrame(eventEntry);
+    eventId = ObjAnim_GetPackedEventId(eventEntry);
     if (eventId == OBJANIM_EVENT_ID_NONE) {
       continue;
     }
@@ -752,7 +752,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimHandle
   int segmentCount;
   int previousSampleIndex;
   int currentSampleIndex;
-  s16 eventEntry;
+  ObjAnimPackedEvent eventEntry;
   int eventFrame;
   int eventId;
 
@@ -872,8 +872,8 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimHandle
            eventIndex < eventCount && events->triggerCount < OBJANIM_EVENT_TRIGGER_CAPACITY;
            eventIndex++) {
         eventEntry = eventTable->entries[eventIndex];
-        eventFrame = eventEntry & OBJANIM_EVENT_FRAME_MASK;
-        eventId = (eventEntry >> OBJANIM_EVENT_ID_SHIFT) & OBJANIM_EVENT_ID_MASK;
+        eventFrame = ObjAnim_GetPackedEventFrame(eventEntry);
+        eventId = ObjAnim_GetPackedEventId(eventEntry);
         if (eventId == OBJANIM_EVENT_ID_NONE) {
           continue;
         }

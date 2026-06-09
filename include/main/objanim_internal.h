@@ -27,6 +27,8 @@ typedef struct ObjAnimFrameCommand {
   u8 frameLength;
 } ObjAnimFrameCommand;
 
+typedef s16 ObjAnimPackedEvent;
+
 #define OBJANIM_DEF_FLAG_CACHED_MOVES 0x40
 #define OBJANIM_DEF_FLAG_SKELETON_HITBOXES 0x1000
 #define OBJANIM_FLAG_HIDDEN 0x4000
@@ -293,7 +295,7 @@ typedef struct ObjAnimComponent {
 
 typedef struct ObjAnimEventTable {
   s32 byteCount;
-  s16 *entries;
+  ObjAnimPackedEvent *entries;
 } ObjAnimEventTable;
 
 typedef struct ObjWeaponDaTable {
@@ -543,6 +545,14 @@ static inline ObjAnimRootCurve *ObjAnim_GetBlendMoveRootCurve(ObjAnimDef *animDe
     return NULL;
   }
   return (ObjAnimRootCurve *)((u8 *)moveData + moveData->rootCurveOffset);
+}
+
+static inline s32 ObjAnim_GetPackedEventFrame(ObjAnimPackedEvent eventEntry) {
+  return eventEntry & OBJANIM_EVENT_FRAME_MASK;
+}
+
+static inline s32 ObjAnim_GetPackedEventId(ObjAnimPackedEvent eventEntry) {
+  return (eventEntry >> OBJANIM_EVENT_ID_SHIFT) & OBJANIM_EVENT_ID_MASK;
 }
 
 #endif /* MAIN_OBJANIM_INTERNAL_H_ */
