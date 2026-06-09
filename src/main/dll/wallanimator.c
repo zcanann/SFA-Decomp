@@ -574,14 +574,12 @@ void kaldachompspit_update(int obj)
     ObjAnimComponent *objAnim;
     u32 *state;
     f32 vx;
+    u32 ptr;
+    int rnd;
     f32 vy;
     f32 vz;
-    u32 ptr;
     s16 v;
-    int rnd;
     f32 t;
-    u8 glow;
-    s8 drift;
 
     objAnim = &((GameObject *)obj)->anim;
     state = ((GameObject *)obj)->extra;
@@ -640,9 +638,7 @@ void kaldachompspit_update(int obj)
             if ((ptr != 0) && (*(u8 *)(ptr + 0x2f8) != 0) && (*(u8 *)(ptr + 0x4c) != 0)) {
                 rnd = randomGetRange(-0x19, 0x19);
                 ptr = *state;
-                glow = *(u8 *)(ptr + 0x2f9);
-                drift = *(s8 *)(ptr + 0x2fa);
-                v = glow + (drift + rnd);
+                v = *(u8 *)(ptr + 0x2f9) + *(s8 *)(ptr + 0x2fa) + rnd;
                 if (v < 0) {
                     v = 0;
                     *(u8 *)(ptr + 0x2fa) = 0;
