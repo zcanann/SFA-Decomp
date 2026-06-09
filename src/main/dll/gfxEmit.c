@@ -580,17 +580,20 @@ int collectible_SeqFn(int obj, int unused, u8* data)
 {
     int* state = ((GameObject *)obj)->extra;
     f32 buf[6];
-    int i;
     int j;
+    int i;
     f32 s_val;
     f32 c_val;
+    f32 vy;
 
     if (*(s16*)((char*)state + 0x14) != -1) {
         *(u8*)((char*)state + 0x1e) = (u8)(GameBit_Get((s32)*(s16*)((char*)state + 0x14)) == 0);
     }
     if (*(u8*)((char*)state + 0x1e) == 0) {
-        if (((GameObject *)obj)->anim.seqId == 0x6a6) {
+        switch (((GameObject *)obj)->anim.seqId) {
+        case 0x6a6:
             objfx_spawnDirectionalBurst(obj, 5, lbl_803E3454, 6, 1, 0x14, lbl_803E3458, 0, 0);
+            break;
         }
     }
 
@@ -602,19 +605,22 @@ int collectible_SeqFn(int obj, int unused, u8* data)
             c_val = lbl_803E3484 * mathSinf(lbl_803E3488);
             *(u8*)((char*)((GameObject *)obj)->extra + 0x1d) = 8;
             ((GameObject *)obj)->anim.velocityX = c_val;
-            ((GameObject *)obj)->anim.velocityY = lbl_803E3460;
+            ((GameObject *)obj)->anim.velocityY = (vy = lbl_803E3460);
             ((GameObject *)obj)->anim.velocityZ = s_val;
             *(u8*)((char*)((GameObject *)obj)->extra + 0x1d) = 8;
             ((GameObject *)obj)->anim.velocityX = lbl_803E348C;
-            ((GameObject *)obj)->anim.velocityY = lbl_803E3460;
+            ((GameObject *)obj)->anim.velocityY = vy;
             ((GameObject *)obj)->anim.velocityZ = lbl_803E345C;
         } else if (cmd == 2) {
             *(u8*)((char*)state + 0x3e) = 1;
         } else if (cmd == 3) {
-            for (j = 0; j < 10; j++) {
-                buf[3] = lbl_803E345C;
-                buf[4] = lbl_803E345C;
-                buf[5] = lbl_803E345C;
+            f32 z;
+            j = 0;
+            z = lbl_803E345C;
+            for (; j < 10; j++) {
+                buf[3] = z;
+                buf[4] = z;
+                buf[5] = z;
                 (*gPartfxInterface)->spawnObject((void *)obj, 0x7ef, buf, 1,
                                                                     -1, NULL);
             }
@@ -858,17 +864,10 @@ void collectible_render(int obj, int a, int b, int c, int d, s8 visible)
 void fn_801723DC(int obj)
 {
     u8 *state = ((GameObject *)obj)->extra;
-    u16 fs;
-    s16 t;
-    u16 nv;
 
     switch (((GameObject *)obj)->anim.seqId) {
     case 0xb:
-        fs = framesThisStep;
-        t = ((GfxEmitState *)state)->spinTimer;
-        nv = t - fs;
-        *(u16 *)(state + 0x34) = nv;
-        if ((s16)nv <= 0) {
+        if ((*(s16 *)(state + 0x34) -= framesThisStep) <= 0) {
             ((GfxEmitState *)state)->spinSpeed = (f32)(int)randomGetRange(600, 800);
             ((GfxEmitState *)state)->spinTimer = (s16)randomGetRange(180, 240);
             Sfx_PlayFromObject(obj, SFXwp_whiz3_c);
