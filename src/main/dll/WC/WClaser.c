@@ -241,15 +241,10 @@ void WM_seqobject_update(int *obj)
 
     setup = (WMSeqObjectSetup *)OBJ_PTR(obj, 0x4c);
     setupType = setup->setupType;
-    if (setupType == 8) {
-        return;
-    }
-    if (setupType >= 8) {
-        return;
-    }
-    if (setupType != 0) {
-        return;
-    }
+    switch (setupType) {
+    case 8:
+        break;
+    case 0:
     if (OBJ_S32(obj, 0xf4) != 0) {
         return;
     }
@@ -285,6 +280,8 @@ void WM_seqobject_update(int *obj)
     OBJ_S32(obj, 0xf8) = countdown;
     if (countdown < 0) {
         OBJ_S32(obj, 0xf8) = 0;
+    }
+    break;
     }
 }
 
@@ -328,10 +325,11 @@ void dll_1FB_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
     if (visible == 0) {
         return;
     }
-    if (state->hideModel != 0) {
-        return;
+    switch (state->hideModel) {
+    case 0:
+        ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E5D00);
+        break;
     }
-    ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E5D00);
 }
 
 void dll_1FB_hitDetect_nop(void) {}
