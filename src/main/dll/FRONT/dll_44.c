@@ -4,8 +4,6 @@ extern void DCInvalidateRange(void *start, u32 nBytes);
 
 #define ALIGN_NEXT_32(value) (((value) + 0x1f) & ~0x1f)
 
-#pragma peephole off
-#pragma scheduling off
 
 /*
  * --INFO--
@@ -152,5 +150,3 @@ int AttractMovie_CloseFile(void)
     return 0;
 }
 
-#pragma peephole reset
-#pragma scheduling reset

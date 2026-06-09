@@ -60,8 +60,6 @@ extern f32 lbl_803E60B8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject *obj)
 {
   SHthorntailObject **objects;
@@ -121,8 +119,6 @@ int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject *obj)
   }
   return linkedEventPending;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -137,8 +133,6 @@ int SHthorntail_HasNearbyPendingEventObject(SHthorntailObject *obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void SHthorntail_updateTailSwing(uint objectId,SHthorntailRuntime *runtime)
 {
   u8 tailSwingState;
@@ -173,8 +167,6 @@ void SHthorntail_updateTailSwing(uint objectId,SHthorntailRuntime *runtime)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -189,8 +181,6 @@ void SHthorntail_updateTailSwing(uint objectId,SHthorntailRuntime *runtime)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *runtime,
                                  SHthorntailConfig *config)
 {
@@ -262,5 +252,3 @@ uint SHthorntail_chooseNextState(SHthorntailObject *object,SHthorntailRuntime *r
   }
   return SHTHORNTAIL_STATE_CLOSE_ATTACK;
 }
-#pragma peephole reset
-#pragma scheduling reset

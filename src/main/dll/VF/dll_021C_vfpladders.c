@@ -41,8 +41,6 @@ void vfpladders_render(void) {}
 
 void vfpladders_hitDetect(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void vfpladders_update(int obj) {
     VfpLaddersState *state = ((GameObject *)obj)->extra;
     VfpLaddersSetup *setup = (VfpLaddersSetup *)((GameObject *)obj)->anim.placementData;
@@ -85,15 +83,11 @@ void vfpladders_update(int obj) {
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void vfpladders_release(void) {}
 
 void vfpladders_initialise(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void vfpladders_init(int *obj, u8 *init) {
     VfpLaddersState *state = ((GameObject *)obj)->extra;
     VfpLaddersSetup *setup = (VfpLaddersSetup *)init;
@@ -103,8 +97,6 @@ void vfpladders_init(int *obj, u8 *init) {
     ((GameObject *)obj)->objectFlags |= 0x6000;
     ((GameObject *)obj)->animEventCallback = (void *)vfpladders_SeqFn;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void vfpladders_free(int obj) {
     (*gExpgfxInterface)->freeSource2((u32)obj);

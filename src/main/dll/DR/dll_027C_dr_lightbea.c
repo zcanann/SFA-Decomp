@@ -7,7 +7,6 @@ int drlightbea_getExtraSize(void) { return 0xc; }
 
 int drlightbea_getObjectTypeId(void) { return 0; }
 
-#pragma scheduling off
 void drlightbea_free(int obj)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -18,11 +17,9 @@ void drlightbea_free(int obj)
         *(void **)state = NULL;
     }
 }
-#pragma scheduling reset
 
 void drlightbea_hitDetect(void) {}
 
-#pragma peephole off
 void drlightbea_update(int obj)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -30,7 +27,6 @@ void drlightbea_update(int obj)
         Obj_FreeObject(obj);
     }
 }
-#pragma peephole reset
 
 void drlightbea_init(int obj)
 {
@@ -44,8 +40,6 @@ void drlightbea_release(void) {}
 
 void drlightbea_initialise(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void drlightbea_render(int obj, int p2, int p3, int p4, int p5)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -101,5 +95,3 @@ void drlightbea_render(int obj, int p2, int p3, int p4, int p5)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset

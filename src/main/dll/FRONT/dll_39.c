@@ -139,8 +139,6 @@ extern f32 lbl_803E1D18;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int n_rareware_frameStart(void)
 {
   int frameStep;
@@ -174,8 +172,6 @@ int n_rareware_frameStart(void)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void n_rareware_release(void) {}
 
@@ -192,7 +188,6 @@ void n_rareware_release(void) {}
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void n_rareware_initialise(void)
 {
   fn_8001404C(0);
@@ -202,7 +197,6 @@ void n_rareware_initialise(void)
   lbl_803DD609 = 0;
   lbl_803DD608 = 0;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -217,7 +211,6 @@ void n_rareware_initialise(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void n_attractmode_releaseMovieBuffers(void)
 {
   int freeDelay;
@@ -261,7 +254,6 @@ void n_attractmode_releaseMovieBuffers(void)
   }
   return;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -276,7 +268,6 @@ void n_attractmode_releaseMovieBuffers(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void n_attractmode_prepareMovie(void)
 {
   char *attractModeStrings;
@@ -396,7 +387,6 @@ void n_attractmode_prepareMovie(void)
   }
   return;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -411,8 +401,6 @@ void n_attractmode_prepareMovie(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void TitleMenu_render(u8 *param_1)
 {
   int menuAction;
@@ -435,8 +423,6 @@ void TitleMenu_render(u8 *param_1)
     titleScreenShowCopyright(gAttractMoviePlaybackEnabled);
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Trivial 4b 0-arg blr leaves. */
 void TitleMenu_frameEnd(void) {}

@@ -1,8 +1,6 @@
 #include "main/dll/MMP/MMP_gyservent.h"
 #include "main/game_object.h"
 
-#pragma peephole off
-#pragma scheduling off
 
 extern void mtxRotateByVec3s(void *out, void *vec);
 extern void mtx44Transpose(void *m, void *out);
@@ -187,5 +185,3 @@ void objSeqFn_801992ec(void *param_1, int param_2)
     objInterpretSeq(param_1, param_2, (int)cat, (int)d1);
 }
 
-#pragma scheduling reset
-#pragma peephole reset

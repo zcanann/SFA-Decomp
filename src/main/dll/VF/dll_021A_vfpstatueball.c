@@ -30,8 +30,6 @@ void vfpstatueball_render(void) {}
 
 void vfpstatueball_hitDetect(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void vfpstatueball_update(int *obj) {
     int *setup;
     VfpStatueBallState *state;
@@ -109,8 +107,6 @@ void vfpstatueball_update(int *obj) {
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void vfpstatueball_release(void) {}
 
@@ -120,8 +116,6 @@ void vfpstatueball_free(int obj) {
     (*gExpgfxInterface)->freeSource(obj);
 }
 
-#pragma peephole off
-#pragma scheduling off
 void vfpstatueball_init(int *obj, u8 *init) {
     VfpStatueBallState *inner = ((GameObject *)obj)->extra;
     inner->gameBit = *(s16 *)((char *)init + 0x1e);
@@ -136,5 +130,3 @@ void vfpstatueball_init(int *obj, u8 *init) {
     Obj_SetActiveModelIndex((int)obj, *(s16 *)((char *)init + 0x1a));
     inner->active = (u8)GameBit_Get(inner->gameBit);
 }
-#pragma scheduling reset
-#pragma peephole reset

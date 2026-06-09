@@ -118,8 +118,6 @@ int ktrex_getObjectTypeId(void) { return 0x49; }
 
 void ktrex_release(void) {}
 
-#pragma scheduling off
-#pragma peephole off
 int ktrex_animEventCallback(int obj, int p2, u8 *arg) {
     int i;
     arg[0x56] = 0;
@@ -156,10 +154,7 @@ int ktrex_animEventCallback(int obj, int p2, u8 *arg) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma dont_inline on
 void ktrex_spawnRandomEnergyArc(int obj, int angle, f32 arcLen, int slot) {
     int *model;
@@ -191,10 +186,7 @@ void ktrex_spawnRandomEnergyArc(int obj, int angle, f32 arcLen, int slot) {
         lightningCreate(point1, point2, lbl_803E67B4, lbl_803E67C0, (u16)angle, 96, 0);
 }
 #pragma dont_inline reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int ktrex_stateHandlerA06(int obj, int runtime) {
     int slot;
     if (*(s8 *)&((KTRexRuntime *)runtime)->unk27B != 0) {
@@ -208,10 +200,7 @@ int ktrex_stateHandlerA06(int obj, int runtime) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma dont_inline on
 int ktrex_isPlayerInLaneThreatRange(int obj) {
     u8 state = ((KTRexArenaState *)gKTRexState)->laneMode;
@@ -250,7 +239,6 @@ int ktrex_isPlayerInLaneThreatRange(int obj) {
     return 0;
 }
 #pragma dont_inline reset
-#pragma scheduling reset
 
 int ktrex_setScale(int obj) {
     void *p = ((GameObject *)obj)->extra;
@@ -262,8 +250,6 @@ void ktrex_initialise(void) {
     ktrex_initialiseStateHandlerTables();
 }
 
-#pragma scheduling off
-#pragma peephole off
 int ktrex_stateHandlerB00(int obj, u8 *p2) {
     if ((s8)p2[0x27a] != 0) {
         ObjAnim_SetCurrentMove(obj, 0, lbl_803E67B8, 0);
@@ -271,10 +257,7 @@ int ktrex_stateHandlerB00(int obj, u8 *p2) {
     *(f32 *)(p2 + 0x2a0) = lbl_803E6808;
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void ktrex_hitDetect(int obj) {
     f32 z, y, x;
     if (((KTRexArenaState *)gKTRexState)->light != 0) {
@@ -283,10 +266,7 @@ void ktrex_hitDetect(int obj) {
         modelLightStruct_updateGlowAlpha(((KTRexArenaState *)gKTRexState)->light);
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void ktrex_free(int obj) {
     int i;
     gKTRexRuntime = ((GameObject *)obj)->extra;
@@ -310,11 +290,7 @@ void ktrex_free(int obj) {
     Music_Trigger(0x93, 0);
     Music_Trigger(0x94, 0);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int ktrex_shouldAdvanceArenaPhase(void) {
     int *s = gKTRexState;
     u8 a;
@@ -364,10 +340,7 @@ int ktrex_shouldAdvanceArenaPhase(void) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void ktrex_initialiseStateHandlerTables(void) {
     gKTRexStateHandlersB[0] = (void *)ktrex_stateHandlerB00;
     gKTRexStateHandlersB[1] = (void *)ktrex_stateHandlerB01;
@@ -391,10 +364,7 @@ void ktrex_initialiseStateHandlerTables(void) {
     gKTRexStateHandlersA[10] = (void *)ktrex_stateHandlerA10;
     gKTRexStateHandlersA[11] = (void *)ktrex_stateHandlerA11;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int ktrex_updateArenaPathProgress(int obj) {
     u16 flags;
     int phase;
@@ -439,11 +409,7 @@ int ktrex_updateArenaPathProgress(int obj) {
     ((KTRexArenaState *)gKTRexState)->unkF0 = *(f32 *)((char *)gKTRexState + 8) * (((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowBZ)[phase] - ((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowAZ)[phase]) + ((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowAZ)[phase];
     return changed;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void ktrex_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
     f32 m[12];
     void *e;
@@ -487,11 +453,7 @@ void ktrex_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefi
     PSMTXMultVecSR(m, (f32 *)((char *)gKTRexState + 0x16c), (f32 *)((char *)gKTRexState + 0x16c));
     *(int *)&((KTRexArenaState *)gKTRexState)->phaseFlags |= 0x100000;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void ktrex_update(int obj) {
     void *runtime;
     void *player;
@@ -564,11 +526,7 @@ void ktrex_update(int obj) {
         obj, runtime, timeDelta, timeDelta, gKTRexStateHandlersB, gKTRexStateHandlersA);
     ((GameObject *)obj)->anim.localPosY = ((KTRexArenaState *)gKTRexState)->unkEC;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int ktrex_stateHandlerB05(int obj, int runtime) {
     f32 z;
     if ((s8)((KTRexRuntime *)runtime)->unk27A != 0) {
@@ -584,11 +542,7 @@ int ktrex_stateHandlerB05(int obj, int runtime) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int ktrex_stateHandlerB07(int obj, int runtime) {
     if ((s8)((KTRexRuntime *)runtime)->unk27A != 0) {
         ObjAnim_SetCurrentMove(obj, 12, lbl_803E67B8, 0);
@@ -604,11 +558,7 @@ int ktrex_stateHandlerB07(int obj, int runtime) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int ktrex_stateHandlerB08(int obj, int runtime) {
     if ((s8)((KTRexRuntime *)runtime)->unk27A != 0) {
         ObjAnim_SetCurrentMove(obj, 13, lbl_803E67B8, 0);
@@ -622,11 +572,7 @@ int ktrex_stateHandlerB08(int obj, int runtime) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int ktrex_stateHandlerB06(int obj, int runtime) {
     f32 z;
     if ((s8)((KTRexRuntime *)runtime)->unk27A != 0) {
@@ -647,11 +593,7 @@ int ktrex_stateHandlerB06(int obj, int runtime) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int ktrex_stateHandlerB03(int obj, int runtime) {
     f32 z;
     u16 dir;
@@ -671,11 +613,7 @@ int ktrex_stateHandlerB03(int obj, int runtime) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int ktrex_stateHandlerB04(int obj, int runtime) {
     f32 z;
     u16 mask;
@@ -701,11 +639,7 @@ int ktrex_stateHandlerB04(int obj, int runtime) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int ktrex_stateHandlerB01(int obj, int runtime) {
     f32 z;
     u16 mask;
@@ -743,11 +677,7 @@ int ktrex_stateHandlerB01(int obj, int runtime) {
     ((GameObject *)obj)->anim.localPosZ = ((KTRexArenaState *)gKTRexState)->unkF0;
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int ktrex_stateHandlerB02(int obj, int runtime) {
     u16 dir;
     f32 tmpY;
@@ -795,11 +725,7 @@ int ktrex_stateHandlerB02(int obj, int runtime) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void ktrex_init(int obj, char *arg) {
     int i;
     int cp;
@@ -864,11 +790,7 @@ void ktrex_init(int obj, char *arg) {
     }
     streamFn_8000a380(3, 2, 0x1f4);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void ktrex_updateAttackEffects(int obj) {
     int i;
     f32 mag;
@@ -1031,11 +953,7 @@ void ktrex_updateAttackEffects(int obj) {
         Sfx_PlayFromObject((int)Obj_GetPlayerObject(), SFXbaddie_haga_talk1);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void ktrex_updateContactEffects(int obj, void *runtime) {
     int hitA;
     int hitC;
@@ -1117,11 +1035,7 @@ void ktrex_updateContactEffects(int obj, void *runtime) {
     }
     ObjMsg_SendToObject(hitA, 0xe0001, obj, 0);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int ktrex_stateHandlerA02(int obj, int runtime) {
     void *p;
     int phase;
@@ -1210,11 +1124,7 @@ int ktrex_stateHandlerA02(int obj, int runtime) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int ktrex_stateHandlerA03(int obj, int runtime) {
     int phase;
     f32 f4;
@@ -1243,11 +1153,7 @@ int ktrex_stateHandlerA03(int obj, int runtime) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int ktrex_stateHandlerA07(int obj, int runtime) {
     if ((s8)((KTRexRuntime *)runtime)->unk27B != 0) {
         (*(void (**)(int, int, int))((char *)*gPlayerInterface + 0x14))(obj, runtime, 6);
@@ -1267,11 +1173,7 @@ int ktrex_stateHandlerA07(int obj, int runtime) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int ktrex_stateHandlerA04(int obj, int runtime) {
     void *p;
     int popped;
@@ -1299,11 +1201,7 @@ int ktrex_stateHandlerA04(int obj, int runtime) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int ktrex_stateHandlerA05(int obj, int runtime) {
     void *p;
     int pushLo;
@@ -1338,11 +1236,7 @@ int ktrex_stateHandlerA05(int obj, int runtime) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int ktrex_stateHandlerA08(int obj, int runtime) {
     void *p;
     f32 t;
@@ -1372,11 +1266,7 @@ int ktrex_stateHandlerA08(int obj, int runtime) {
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     return 10;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int ktrex_stateHandlerA11(int obj, int runtime) {
     int phase;
     f32 f4;
@@ -1415,11 +1305,7 @@ int ktrex_stateHandlerA11(int obj, int runtime) {
     ((KTRexArenaState *)gKTRexState)->timerFA |= 0x40;
     return 3;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int ktrex_stateHandlerA09(int obj, int runtime) {
     if ((s8)((KTRexRuntime *)runtime)->unk27B != 0) {
         (*(void (**)(int, int, int))((char *)*gPlayerInterface + 0x14))(obj, runtime, 8);
@@ -1437,11 +1323,7 @@ int ktrex_stateHandlerA09(int obj, int runtime) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int ktrex_stateHandlerA10(int obj, int runtime) {
     void *p;
     u16 flags;
@@ -1532,11 +1414,7 @@ int ktrex_stateHandlerA10(int obj, int runtime) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int ktrex_stateHandlerA01(int obj, int runtime) {
     if ((s8)((KTRexRuntime *)runtime)->unk27B != 0) {
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
@@ -1572,5 +1450,3 @@ int ktrex_stateHandlerA01(int obj, int runtime) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset

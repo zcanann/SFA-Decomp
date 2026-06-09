@@ -40,8 +40,6 @@ extern f32 lbl_803E6060;
 
 void fn_801F9804(int obj);
 
-#pragma peephole off
-#pragma scheduling off
 void vfplevelcontrol_update(int obj) {
     VFPLevelControlState *state = ((GameObject *)obj)->extra;
     int player = (int)Obj_GetPlayerObject();
@@ -101,8 +99,6 @@ void vfplevelcontrol_update(int obj) {
     SCGameBitLatch_Update(state->latch.raw, 1, -1, -1, 0xdcf, 0xe1);
     SCGameBitLatch_Update(state->latch.raw, 2, -1, -1, 0xdcf, 0x96);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void vfplevelcontrol_release(void) {}
 
@@ -110,16 +106,12 @@ void vfplevelcontrol_initialise(void) {
     lbl_803DC148 = 0x82;
 }
 
-#pragma scheduling off
 void vfplevelcontrol_free(int obj) {
     timeOfDayFn_80055000();
     ObjGroup_RemoveObject(obj, 9);
     Music_Trigger(0xe1, 0);
 }
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void vfplevelcontrol_init(int *obj, u8 *init) {
     VFPLevelControlState *state = ((GameObject *)obj)->extra;
     VFPLevelControlSetup *setup = (VFPLevelControlSetup *)init;
@@ -151,11 +143,7 @@ void vfplevelcontrol_init(int *obj, u8 *init) {
         GameBit_Set(0xe18, 0);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void fn_801F9804(int obj) {
     VFPLevelControlState *state = ((GameObject *)obj)->extra;
     s16 bits[4];
@@ -188,5 +176,3 @@ void fn_801F9804(int obj) {
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset

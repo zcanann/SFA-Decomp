@@ -20,8 +20,6 @@ extern MapEventInterface **gMapEventInterface;
  * EN v1.0 Address: 0x801D7C14
  * EN v1.0 Size: 128b
  */
-#pragma peephole off
-#pragma scheduling off
 int SH_LevelControl_SeqFn(void *obj, void *unused, void *p3)
 {
     SCTotemLogPuzzleObject *puzzleObj;
@@ -39,8 +37,6 @@ int SH_LevelControl_SeqFn(void *obj, void *unused, void *p3)
     mapUnloadFn_801d7c94(obj, puzzleObj->runtime);
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -49,7 +45,6 @@ int SH_LevelControl_SeqFn(void *obj, void *unused, void *p3)
  * EN v1.0 Address: 0x801D7C94
  * EN v1.0 Size: 576b
  */
-#pragma scheduling off
 void mapUnloadFn_801d7c94(void *obj, void *p2)
 {
     SCTotemLogPuzzleObject *puzzleObj;
@@ -86,7 +81,6 @@ void mapUnloadFn_801d7c94(void *obj, void *p2)
 dec:
     runtime->eventCountdown--;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -95,8 +89,6 @@ dec:
  * EN v1.0 Address: 0x801D7ED4
  * EN v1.0 Size: 396b
  */
-#pragma peephole off
-#pragma scheduling off
 void SCGameBitLatch_Update(SCGameBitLatchState *state, int mask, s16 clearIfSetBit,
                            s16 clearIfClearBit, s16 latchBit, int musicId)
 {
@@ -139,5 +131,3 @@ void SCGameBitLatch_Update(SCGameBitLatchState *state, int mask, s16 clearIfSetB
 end:
     return;
 }
-#pragma scheduling reset
-#pragma peephole reset

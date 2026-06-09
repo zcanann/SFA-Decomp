@@ -43,11 +43,9 @@ int vfpobjcreator_getObjectTypeId(void) { return 0x0; }
 
 void vfpobjcreator_free(void) {}
 
-#pragma peephole off
 void vfpobjcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {
     if (visible == 0) return;
 }
-#pragma peephole reset
 
 void vfpobjcreator_hitDetect(void) {}
 
@@ -55,8 +53,6 @@ void vfpobjcreator_release(void) {}
 
 void vfpobjcreator_initialise(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void vfpobjcreator_init(int *obj, u8 *init) {
     VfpObjCreatorPlacement *placement = (VfpObjCreatorPlacement *)init;
     VfpObjCreatorState *state = ((GameObject *)obj)->extra;
@@ -68,8 +64,6 @@ void vfpobjcreator_init(int *obj, u8 *init) {
     state->spawnRadius = placement->spawnRadius;
     ((GameObject *)obj)->objectFlags |= 0x2000;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern u8 Obj_IsLoadingLocked(void);
 extern char *Obj_AllocObjectSetup(int size, int typeId);
@@ -83,8 +77,6 @@ extern f32 lbl_803E6078;
 
 /* EN v1.0 0x801F9D78  size: 1068b  Periodically spawns falling-object setups
  * (mode 1) or projectile bursts (mode 6) while loading is locked. */
-#pragma peephole off
-#pragma scheduling off
 void vfpobjcreator_update(int *obj)
 {
     VfpObjCreatorPlacement *placement =
@@ -186,5 +178,3 @@ void vfpobjcreator_update(int *obj)
         break;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset

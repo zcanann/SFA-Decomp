@@ -27,8 +27,6 @@ extern f64 lbl_803E5ED0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void fn_801F4C28(u8 *param_1, u8 *param_2)
 {
   *(f32 *)(param_2 + 0x04) = *(f32 *)(param_1 + 0x0c);
@@ -60,8 +58,6 @@ void fn_801F4C28(u8 *param_1, u8 *param_2)
   param_2[0x6b] = 1;
   *(f32 *)(param_2 + 0x78) = lbl_803E5EC0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -76,8 +72,6 @@ void fn_801F4C28(u8 *param_1, u8 *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void fn_801F4D54(int param_1, u8 *param_2)
 {
   struct {
@@ -122,5 +116,3 @@ void fn_801F4D54(int param_1, u8 *param_2)
   *(f32 *)(param_2 + 0x3c) =
       *(f32 *)(param_2 + 0x3c) + *(f32 *)(param_2 + 0x5c);
 }
-#pragma peephole reset
-#pragma scheduling reset

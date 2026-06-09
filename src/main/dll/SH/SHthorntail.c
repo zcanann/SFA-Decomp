@@ -34,8 +34,6 @@ extern SHthorntailEventInterface **gMapEventInterface;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
 {
   int alertTriggered;
@@ -148,8 +146,6 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -164,8 +160,6 @@ void SHthorntail_updateState(SHthorntailObject *obj,SHthorntailRuntime *runtime)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void SHthorntail_updateRootControlMode3(SHthorntailObject *obj,SHthorntailRuntime *runtime)
 {
   int randomIdleWait;
@@ -235,8 +229,6 @@ void SHthorntail_updateRootControlMode3(SHthorntailObject *obj,SHthorntailRuntim
   }
   SHthorntail_updateState(obj,runtime);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -251,8 +243,6 @@ void SHthorntail_updateRootControlMode3(SHthorntailObject *obj,SHthorntailRuntim
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void SHthorntail_updateRootControlMode2(SHthorntailObject *obj,SHthorntailRuntime *runtime)
 {
   int linkedEventPending;
@@ -323,5 +313,3 @@ void SHthorntail_updateRootControlMode2(SHthorntailObject *obj,SHthorntailRuntim
   }
   SHthorntail_updateState(obj,runtime);
 }
-#pragma peephole reset
-#pragma scheduling reset

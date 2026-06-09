@@ -21,8 +21,6 @@ extern int ObjHits_GetPriorityHit(u8 *obj, int *outOther, int a, int b);
 extern void edibleMushroomFn_801d083c(u8 *self, u8 *state, u8 *other);
 extern f32 sqrtf(f32 x);
 
-#pragma peephole off
-#pragma scheduling off
 
 /*
  * --INFO--
@@ -112,5 +110,3 @@ end:
   ;
 }
 
-#pragma peephole reset
-#pragma scheduling reset

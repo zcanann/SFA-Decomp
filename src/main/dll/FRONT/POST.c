@@ -29,8 +29,6 @@ extern f32 lbl_803E1CE0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int objAnimFn_80115650(PostObjAnimComponent *objAnim, PostObject *obj, int *turning,
                 PostControl *control, float *turnSpeed, s16 *moves)
 {
@@ -134,8 +132,6 @@ int objAnimFn_80115650(PostObjAnimComponent *objAnim, PostObject *obj, int *turn
   *turnSpeed = (float)(s32)ret / lbl_803E1CE0;
   return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Trivial 4b 0-arg blr leaves. */
 void dll_2E_release_nop(void) {}

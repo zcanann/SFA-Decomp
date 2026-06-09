@@ -84,8 +84,6 @@ void pointlight_setEffectState(int obj, int enabled)
     }
 }
 
-#pragma peephole off
-#pragma scheduling off
 void pointlight_free(int obj)
 {
     PointLightState *state = ((GameObject *)obj)->extra;
@@ -94,8 +92,6 @@ void pointlight_free(int obj)
     }
     ObjGroup_RemoveObject(obj, LGT_POINTLIGHT_GROUP);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void pointlight_render(int obj)
 {
@@ -109,8 +105,6 @@ void pointlight_render(int obj)
 
 void pointlight_hitDetect(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void pointlight_update(int obj)
 {
     u8 colorR, colorG, colorB;
@@ -149,11 +143,7 @@ void pointlight_update(int obj)
         modelLightStruct_updateGlowAlpha(state->light);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void pointlight_init(int obj, int setup)
 {
     u8 colorR, colorG, colorB;
@@ -226,8 +216,6 @@ void pointlight_init(int obj, int setup)
 
     ObjGroup_AddObject(obj, LGT_POINTLIGHT_GROUP);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void pointlight_release(void) {}
 

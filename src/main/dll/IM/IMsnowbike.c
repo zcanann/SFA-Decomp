@@ -44,8 +44,6 @@ extern u8 lbl_80327618[0x104];
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void sh_levelcontrol_update(int param_1)
 {
   uint *puVar5;
@@ -299,8 +297,6 @@ void sh_levelcontrol_update(int param_1)
   mapUnloadFn_801d7c94((void *)param_1, puVar5);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -322,8 +318,6 @@ extern void timeOfDayFn_80055000(void);
 extern f32 lbl_803E54C0;
 extern s16 lbl_80327618_ids[];
 
-#pragma scheduling off
-#pragma peephole off
 void sh_levelcontrol_init(int obj) {
     int *state = ((GameObject *)obj)->extra;
     int i;
@@ -369,10 +363,6 @@ void sh_levelcontrol_init(int obj) {
     }
     timeOfDayFn_80055000();
 }
-#pragma peephole reset
-#pragma scheduling reset
-#pragma scheduling off
-#pragma peephole off
 void warpstonelift_init(int obj, s8 *def) {
     int *state = ((GameObject *)obj)->extra;
     int i;
@@ -393,16 +383,12 @@ void warpstonelift_init(int obj, s8 *def) {
         break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void getYButtonItem(s16 *out);
 extern int cMenuGetSelectedItem(void);
 extern int ObjTrigger_IsSetById(int obj, int id);
 extern int ObjTrigger_IsSet(int obj);
 
-#pragma scheduling off
-#pragma peephole off
 void warpstonelift_update(u8 *obj) {
     u8 *state = ((GameObject *)obj)->extra;
     int off;
@@ -454,16 +440,10 @@ void warpstonelift_update(u8 *obj) {
         *(u8 *)(obj + 0xAF) |= 0x8;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
-#pragma peephole off
 void warpstonelift_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E54C8); }
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 void sh_staff_free(int *obj, int p2) {
     int *state = ((GameObject *)obj)->extra;
     char *p;
@@ -497,5 +477,3 @@ void sh_staff_free(int *obj, int p2) {
         p += 20;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

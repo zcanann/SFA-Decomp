@@ -35,19 +35,13 @@ void dll_21B_free(int obj) {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-#pragma peephole off
-#pragma scheduling off
 void dll_21B_init(int *obj, u8 *init) {
     Dll21BState *inner = ((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)((s8)init[0x18] << 8);
     inner->gameBit = *(s16 *)((char *)init + 0x1e);
     ((GameObject *)obj)->objectFlags |= 0x6000;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void dll_21B_update(int obj)
 {
     u8 *setup = *(u8 **)&((GameObject *)obj)->anim.placementData;
@@ -132,5 +126,3 @@ void dll_21B_update(int obj)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset

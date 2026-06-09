@@ -43,8 +43,6 @@ void dll_219_free(int obj) {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-#pragma peephole off
-#pragma scheduling off
 void dll_219_update(Dll219Object *obj) {
     u8 *setup = obj->setup;
     Dll219State *state = obj->state;
@@ -83,16 +81,10 @@ void dll_219_update(Dll219Object *obj) {
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void dll_219_init(int *obj, u8 *init) {
     int *inner = ((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)((s8)init[0x18] << 8);
     *(s16 *)inner = *(s16 *)((char *)init + 0x1e);
     ((GameObject *)obj)->objectFlags |= 0x6000;
 }
-#pragma scheduling reset
-#pragma peephole reset

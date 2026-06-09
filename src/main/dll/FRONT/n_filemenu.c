@@ -99,8 +99,6 @@ extern f32 lbl_803E1D28;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int TitleMenu_run(void)
 {
   int menuId;
@@ -299,8 +297,6 @@ int TitleMenu_run(void)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void TitleMenu_release(void)
 {
@@ -309,8 +305,6 @@ void TitleMenu_release(void)
   saveFn_8007d960(1);
 }
 
-#pragma scheduling off
-#pragma peephole off
 void TitleMenu_setSelection(int selection)
 {
   u8 v = (u8)selection;
@@ -318,5 +312,3 @@ void TitleMenu_setSelection(int selection)
   gTitleMenuPreviousSelection = TITLE_MENU_SELECTION_INVALID;
   (*(*(void (**)(int))((int)gTitleMenuLinkInterface->vtable + 0x18)))(v);
 }
-#pragma peephole reset
-#pragma scheduling reset

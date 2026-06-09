@@ -105,8 +105,6 @@ static inline f32 vfplift23_getRaisedOffset(int objType)
     return offset;
 }
 
-#pragma peephole off
-#pragma scheduling off
 void vfplift23_updateState(int obj)
 {
     VFPLiftPlacement *setup;
@@ -152,11 +150,7 @@ void vfplift23_updateState(int obj)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void vfplift1_updateState(int obj)
 {
     VFPLiftState *state;
@@ -230,8 +224,6 @@ void vfplift1_updateState(int obj)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 int vfplift_getExtraSize(void) { return 0x20; }
 
@@ -241,18 +233,15 @@ void vfplift_release(void) {}
 
 void vfplift_initialise(void) {}
 
-#pragma scheduling off
 int vfplift_SeqFn(int obj) {
     vfplift_getState(obj)->forceRaised = 1;
     return 0;
 }
-#pragma scheduling reset
 
 void vfplift_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
     objRenderFn_8003b8f4(lbl_803E60F0);
 }
 
-#pragma scheduling off
 void vfplift_update(int obj) {
     int v;
     Obj_GetPlayerObject();
@@ -265,10 +254,7 @@ void vfplift_update(int obj) {
         vfplift23_updateState(obj);
     }
 }
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void vfplift_hitDetect(int obj) {
     VFPLiftState *state = vfplift_getState(obj);
 
@@ -278,11 +264,7 @@ void vfplift_hitDetect(int obj) {
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode ^= 8;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void vfplift_init(int *obj, VFPLiftPlacement *init) {
     VFPLiftState *st = ((GameObject *)obj)->extra;
     ((GameObject *)obj)->animEventCallback = (void *)vfplift_SeqFn;
@@ -313,8 +295,6 @@ void vfplift_init(int *obj, VFPLiftPlacement *init) {
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void vfplift_free(int obj) {
     (*gExpgfxInterface)->freeSource2((u32)obj);

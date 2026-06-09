@@ -83,8 +83,6 @@ void directionallight_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7254);
 }
 
-#pragma peephole off
-#pragma scheduling off
 void directionallight_debugEdit(int obj, int statePtr)
 {
     DirectionalLightState *state = (DirectionalLightState *)statePtr;
@@ -193,11 +191,7 @@ void directionallight_debugEdit(int obj, int statePtr)
         break;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void directionallight_init(int obj, int setup)
 {
     u8 colorR, colorG, colorB;
@@ -239,11 +233,7 @@ void directionallight_init(int obj, int setup)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void directionallight_update(int obj)
 {
     u8 colorR, colorG, colorB;
@@ -277,8 +267,6 @@ void directionallight_update(int obj)
 
     directionallight_debugEdit(obj, (int)state);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void directionallight_release(void) {}
 

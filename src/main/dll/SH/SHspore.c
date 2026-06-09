@@ -97,8 +97,6 @@ int sh_queenearthwalker_getExtraSize(void)
   return 0x40;
 }
 
-#pragma peephole off
-#pragma scheduling off
 void sh_queenearthwalker_update(void *obj)
 {
   void *state;
@@ -249,11 +247,7 @@ void sh_queenearthwalker_update(void *obj)
     Sfx_PlayFromObject(obj, 0x410);
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void queenFeedFn_801d44a4(void *obj, void *state)
 {
   s16 triggerId;
@@ -324,11 +318,7 @@ void queenFeedFn_801d44a4(void *obj, void *state)
       break;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void openPortalFn_801d4364(void *obj, void *state)
 {
   void *player;
@@ -358,16 +348,10 @@ void openPortalFn_801d4364(void *obj, void *state)
   *(f32 *)((u8 *)state + 0x14) = *(f32 *)((u8 *)player + 0x14);
   fn_8003B500(obj, (void *)((int)state + 0x8), lbl_803E53F8);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void sh_queenearthwalker_init(void *obj, QueenEarthWalkerMapData *mapData)
 {
   *(s16 *)obj = (s16)(mapData->yawByte << 8);
   ((GameObject *)obj)->animEventCallback = (void *)sh_queenearthwalker_processAnimEvents;
   ((GameObject *)obj)->objectFlags |= 0x4000;
 }
-#pragma peephole reset
-#pragma scheduling reset

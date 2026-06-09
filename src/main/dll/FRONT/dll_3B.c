@@ -62,8 +62,6 @@ extern f32 lbl_803E1D18;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void TitleMenu_initialise(void)
 {
   int i;
@@ -140,10 +138,7 @@ void TitleMenu_initialise(void)
   audioFn_8000b694(0);
   gAttractMovieIdleFrameCount = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void *PopDecodedAudioBuffer(int flags)
 {
   void *message;
@@ -158,10 +153,7 @@ void PushFreeAudioBuffer(void *message)
 {
   OSSendMessage(&lbl_803A4480,message,0);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void AttractMovieAudio_Decode(void *readBufferArg)
 {
@@ -192,11 +184,7 @@ void AttractMovieAudio_Decode(void *readBufferArg)
   }
 }
 #pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void *AudioDecoderForOnMemory(void *param)
 {
   register int frame;
@@ -230,8 +218,6 @@ void *AudioDecoderForOnMemory(void *param)
     frame++;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void *AudioDecoder(void *param)
 {

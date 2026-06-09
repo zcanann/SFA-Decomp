@@ -87,14 +87,11 @@ int warpstone_getObjectTypeId(void)
 
 /* void f() { fn_X(N); } pattern. */
 extern void loadUiDll(s32);
-#pragma scheduling off
 void warpstone_loadBaseUi(void) { loadUiDll(0x1); }
-#pragma scheduling reset
 
 extern void ObjLink_DetachChild(int obj, int child);
 extern void Obj_FreeObject(int obj);
 
-#pragma scheduling off
 void warpstone_free(int obj, int mode)
 {
     int *state = ((GameObject *)obj)->extra;
@@ -103,7 +100,6 @@ void warpstone_free(int obj, int mode)
         Obj_FreeObject(state[0]);
     }
 }
-#pragma scheduling reset
 
 extern int ObjHits_GetPriorityHitWithPosition(int obj, int a, int b, int c, f32 *x, f32 *y, f32 *z);
 extern void objLightFn_8009a1dc(int obj, f32 light, int *p, int x, int y);
@@ -114,8 +110,6 @@ extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f32 lbl_803E54A0;
 
-#pragma scheduling off
-#pragma peephole off
 void warpstone_hitDetect(int obj)
 {
     int *state = ((GameObject *)obj)->extra;
@@ -134,8 +128,6 @@ void warpstone_hitDetect(int obj)
         objAudioFn_800393f8(obj, state + 5, 171, -1280, -1, 0);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void objRenderFn_8003b8f4(f32);
 extern int Obj_GetPlayerObject(void);
@@ -145,8 +137,6 @@ extern void fn_80295B2C(int player, f32 x, f32 y, f32 z);
 extern void playerRender(int player, int p2, int p3, int p4, int p5, int last);
 extern f32 lbl_803E549C;
 
-#pragma scheduling off
-#pragma peephole off
 void warpstone_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     void *player;
@@ -168,8 +158,6 @@ void warpstone_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void loadMapAndParent(int mapId);
 extern void unlockLevel(int a, int b, int c);
@@ -183,8 +171,6 @@ extern MapEventInterface **gMapEventInterface;
 #define WARPSTONE_MAP_EVENT_ANIM(mapId, eventId, value) \
     (*gMapEventInterface)->setAnimEvent((mapId), (eventId), (value))
 
-#pragma scheduling off
-#pragma peephole off
 int warpstone_handleMenuOptionInput(undefined4 p1, undefined4 p2, int option)
 {
     s8 horizontal;
@@ -265,8 +251,6 @@ int warpstone_handleMenuOptionInput(undefined4 p1, undefined4 p2, int option)
 
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int animatedObjGetSeqId(int obj);
 extern int fn_80080360(int obj, int seqId);
@@ -282,8 +266,6 @@ extern int getDLL16(void);
 extern void SHthorntail_updateDustEffects(int obj);
 extern f32 timeDelta;
 
-#pragma scheduling off
-#pragma peephole off
 int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
 {
     int commandOffset;
@@ -411,5 +393,3 @@ int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
     SHthorntail_updateDustEffects(obj);
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset

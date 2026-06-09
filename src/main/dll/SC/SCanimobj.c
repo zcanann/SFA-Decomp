@@ -65,8 +65,6 @@ extern f32 lbl_803E54AC;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void warpstone_update(int obj)
 {
     int state;
@@ -196,8 +194,6 @@ void warpstone_update(int obj)
         break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -233,8 +229,6 @@ void warpstone_initialise(void)
 {
 }
 
-#pragma scheduling off
-#pragma peephole off
 void warpstone_init(int obj, u8 *setup)
 {
   int state;
@@ -255,8 +249,6 @@ void warpstone_init(int obj, u8 *setup)
   GameBit_Set(*(s16 *)(state + 0x10), 0);
   *(int *)state = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -278,7 +270,6 @@ int sh_levelcontrol_getExtraSize(void)
 
 extern void envFxActFn_800887f8(int);
 
-#pragma scheduling off
 void sh_levelcontrol_free(void)
 {
     envFxActFn_800887f8(0);
@@ -289,4 +280,3 @@ void sh_levelcontrol_free(void)
         GameBit_Set(0x194, 0);
     }
 }
-#pragma scheduling reset

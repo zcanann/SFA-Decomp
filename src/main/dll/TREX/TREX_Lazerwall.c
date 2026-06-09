@@ -26,8 +26,6 @@ extern f32 lbl_803E59E0;
 extern u32 lbl_803E59D0;
 extern u32 lbl_803E59D4;
 
-#pragma peephole off
-#pragma scheduling off
 
 /*
  * --INFO--
@@ -157,5 +155,3 @@ int TREX_Lazerwall_updateTimedChallenge(int arg1)
     return 0;
 }
 
-#pragma peephole reset
-#pragma scheduling reset

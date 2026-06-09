@@ -9,14 +9,12 @@ int drmusiccont_getObjectTypeId(void) { return 0; }
 
 void drmusiccont_free(int obj) { cloudClearOverridePosition(obj); }
 
-#pragma peephole off
 void drmusiccont_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6BC8);
     }
 }
-#pragma peephole reset
 
 void drmusiccont_hitDetect(void) {}
 
@@ -24,8 +22,6 @@ void drmusiccont_release(void) {}
 
 void drmusiccont_initialise(void) {}
 
-#pragma scheduling off
-#pragma peephole off
 void drmusiccont_init(int obj)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -46,11 +42,7 @@ void drmusiccont_init(int obj)
     f->b_9e2 = (u8)GameBit_Get(0x9e2);
     f->b_9e7 = (u8)GameBit_Get(0x9e7);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void drmusiccont_update(int obj)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -147,5 +139,3 @@ void drmusiccont_update(int obj)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset

@@ -71,7 +71,6 @@ int projectedlight_getExtraSize(void) { return 8; }
 
 int projectedlight_getObjectTypeId(void) { return 0; }
 
-#pragma scheduling off
 void projectedlight_free(int obj)
 {
     ProjectedLightState *state = ((GameObject *)obj)->extra;
@@ -82,13 +81,11 @@ void projectedlight_free(int obj)
         textureFree(state->texture);
     }
 }
-#pragma scheduling reset
 
 void projectedlight_hitDetect(void) {}
 
 void projectedlight_render(void) {}
 
-#pragma scheduling off
 void projectedlight_update(int obj)
 {
     ProjectedLightSetup *setup = (ProjectedLightSetup *)((GameObject *)obj)->anim.placementData;
@@ -100,10 +97,7 @@ void projectedlight_update(int obj)
     ((GameObject *)obj)->anim.rotZ =
         (s16)((f32)(setup->rotZSpeed << 4) * timeDelta + (f32)((GameObject *)obj)->anim.rotZ);
 }
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void projectedlight_init(int obj, int setup)
 {
     PointLightVec vec;
@@ -181,8 +175,6 @@ void projectedlight_init(int obj, int setup)
             setupData->targetB, setupData->targetAlpha);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void projectedlight_release(void) {}
 

@@ -81,8 +81,6 @@ typedef struct LoadingScreenTexture {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void runLoadingScreens(void)
 {
   int alpha;
@@ -150,8 +148,6 @@ void runLoadingScreens(void)
     gameTextShowStr(gameTextGetStr(0x565),0,0x118,300);
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -166,8 +162,6 @@ void runLoadingScreens(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void initLoadingScreenTextures(void)
 {
   int arenaHi;
@@ -205,8 +199,6 @@ void initLoadingScreenTextures(void)
   lbl_803DD5EC = 0;
   lbl_803DD5E8 = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Trivial 4b 0-arg blr leaves. */
 void TitleScreenInit_render(void) {}
@@ -225,8 +217,6 @@ void TitleScreenInit_frameEnd(void) {}
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int TitleScreenInit_frameStart(void)
 {
   if (lbl_803DD5F0 != 0) {
@@ -236,8 +226,6 @@ int TitleScreenInit_frameStart(void)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void TitleScreenInit_release(void) {}
 
@@ -254,7 +242,6 @@ void TitleScreenInit_release(void) {}
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void TitleScreenInit_initialise(void)
 {
   lbl_803DD5F0 = 1;
@@ -268,7 +255,6 @@ void TitleScreenInit_initialise(void)
   lockIconInit();
   warpToMap(0x12,0);
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -283,8 +269,6 @@ void TitleScreenInit_initialise(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void n_rareware_render(void)
 {
   int frame;
@@ -306,7 +290,5 @@ void n_rareware_render(void)
     lbl_803DD600 = lbl_803E1D0C;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void n_rareware_frameEnd(void) {}

@@ -47,8 +47,6 @@ void vfpminifire_release(void) {}
 
 void vfpminifire_initialise(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void vfpminifire_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
     if (vis != 0 && ((GameObject *)p1)->anim.alpha != 0) {
         fn_80053ED0(8);
@@ -56,15 +54,11 @@ void vfpminifire_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
         fn_80053EBC(8);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void vfpminifire_free(int obj) {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-#pragma peephole off
-#pragma scheduling off
 void vfpminifire_update(int obj)
 {
     VfpMinifireState *state = ((GameObject *)obj)->extra;
@@ -142,11 +136,7 @@ void vfpminifire_update(int obj)
         Obj_FreeObject(obj);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void vfpminifire_init(int *obj, u8 *init) {
     ((GameObject *)obj)->anim.velocityY = lbl_803E6090;
     ((GameObject *)obj)->anim.localPosY = lbl_803E60A4 + *(f32 *)((char *)init + 0xc);
@@ -155,5 +145,3 @@ void vfpminifire_init(int *obj, u8 *init) {
     Sfx_PlayFromObject((int)obj, SFXqu_longsob2);
     ((GameObject *)obj)->objectFlags |= 0x2000;
 }
-#pragma scheduling reset
-#pragma peephole reset

@@ -35,8 +35,6 @@ __declspec(section ".sdata") extern char sFrontendSingleDigitFormat[];
  * EN v1.0 Address: 0x80119C20
  * EN v1.0 Size: 436b
  */
-#pragma peephole off
-#pragma scheduling off
 void saveFileSelect_checkCheatCodes(void)
 {
     u32 held;
@@ -94,8 +92,6 @@ void saveFileSelect_checkCheatCodes(void)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -104,7 +100,6 @@ void saveFileSelect_checkCheatCodes(void)
  * EN v1.0 Address: 0x80119DD4
  * EN v1.0 Size: 472b
  */
-#pragma scheduling off
 void saveSelect_drawText(int unused, int alpha)
 {
     char buf[16];
@@ -138,4 +133,3 @@ void saveSelect_drawText(int unused, int alpha)
     sprintf(buf, sFrontendSingleDigitFormat, (u32)saveFileSelect_saveSlots[(int)saveFileSelect_currentSlotIndex].magicCount);
     gameTextShowStr(buf, 0x45, 0, 0);
 }
-#pragma scheduling reset

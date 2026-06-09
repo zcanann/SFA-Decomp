@@ -12,8 +12,6 @@ void drenergydisc_render(void) {}
 
 void drenergydisc_hitDetect(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void drenergydisc_update(int obj)
 {
     int *texture;
@@ -45,11 +43,7 @@ void drenergydisc_update(int obj)
         ObjAnim_SetCurrentMove(obj, 0, lbl_803E6BB0, 0);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void drenergydisc_init(u8 *obj, u8 *setup)
 {
     int *texture;
@@ -74,8 +68,6 @@ void drenergydisc_init(u8 *obj, u8 *setup)
     }
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x6000);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void drenergydisc_release(void) {}
 

@@ -102,8 +102,6 @@ extern f32  lbl_803E56A4;
  * frame works the rope position from A-press mashing, runs both pull anims
  * and grunt/creak sfx, and ends the game through the screen transition
  * when either side wins. */
-#pragma scheduling off
-#pragma peephole off
 int platform1_control(int obj, int p2, u8 *data)
 {
     GameObject *self;
@@ -346,8 +344,6 @@ int platform1_control(int obj, int p2, u8 *data)
 done:
     return ret;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -366,8 +362,6 @@ int paymentkiosk_getObjectTypeId(void) { return 0x1; }
 
 /* render-with-fn(lbl) (no visibility check). */
 extern void objRenderFn_8003b8f4(f32);
-#pragma scheduling off
-#pragma peephole off
 void sc_totemstrength_render(void) { objRenderFn_8003b8f4(lbl_803E567C); }
 void paymentkiosk_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 void sc_totemstrength_init(int *obj) {
@@ -383,8 +377,6 @@ void sc_totemstrength_init(int *obj) {
     st->savedPosY = self->anim.localPosY;
     st->savedPosZ = self->anim.localPosZ;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void GameBit_Set(int eventId, int value);
 extern u32  GameBit_Get(int eventId);
@@ -403,8 +395,6 @@ extern KioskTextPair lbl_80327AF0[];
 
 /* EN v1.0 0x801DEE90  size: 548b  sc_totemstrength_update: drive the
  * tug-of-war intro/outro sequencing once map event 0xe reaches state 6. */
-#pragma scheduling off
-#pragma peephole off
 void sc_totemstrength_update(u8 *obj)
 {
     Platform1State *st = ((GameObject *)obj)->extra;
@@ -566,5 +556,3 @@ void paymentkiosk_update(int obj)
         objRenderFn_80041018(obj);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

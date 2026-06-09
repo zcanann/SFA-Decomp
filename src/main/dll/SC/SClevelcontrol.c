@@ -19,8 +19,6 @@ extern f32 lbl_803E5448;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void SHthorntail_render(SHthorntailObject *obj)
 {
   SHthorntailRuntime *runtime;
@@ -37,5 +35,3 @@ void SHthorntail_render(SHthorntailObject *obj)
     pointIndex = pointIndex + 1;
   } while (pointIndex < SHTHORNTAIL_RENDER_PATH_POINT_COUNT);
 }
-#pragma peephole reset
-#pragma scheduling reset

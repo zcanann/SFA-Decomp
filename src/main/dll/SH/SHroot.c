@@ -55,8 +55,6 @@ extern u8 gSHthorntailDataTables[];
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runtime,
                                          SHthorntailConfig *config)
 {
@@ -150,8 +148,6 @@ void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runti
     break;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -166,8 +162,6 @@ void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runti
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRuntime *runtime,
                                          SHthorntailConfig *config)
 {
@@ -241,8 +235,6 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
   }
   SHthorntail_updateState(obj,runtime);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -257,8 +249,6 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 undefined4 SHthorntail_updateLevelControlState(SHthorntailObject *obj,undefined4 param_2,int param_3)
 {
   SHthorntailRuntime *runtime;
@@ -295,8 +285,6 @@ undefined4 SHthorntail_updateLevelControlState(SHthorntailObject *obj,undefined4
               (int)runtime->moveScratch,lbl_803E5448,lbl_803E5448);
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -329,7 +317,6 @@ int SHthorntail_getExtraSize(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void SHthorntail_free(SHthorntailObject *obj)
 {
   u32 activeConfigToken;
@@ -340,4 +327,3 @@ void SHthorntail_free(SHthorntailObject *obj)
   }
   ObjGroup_RemoveObject((int)obj,0x4d);
 }
-#pragma scheduling reset

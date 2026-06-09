@@ -108,8 +108,6 @@ typedef struct SHthorntailTailSwingEffectScratch {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void SHthorntail_update(SHthorntailObject *obj)
 {
   SHthorntailConfig *config;
@@ -309,8 +307,6 @@ void SHthorntail_update(SHthorntailObject *obj)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -325,8 +321,6 @@ void SHthorntail_update(SHthorntailObject *obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void SHthorntail_init(SHthorntailObject *obj,SHthorntailConfig *config)
 {
   SHthorntailRuntime *runtime;
@@ -376,8 +370,6 @@ void SHthorntail_init(SHthorntailObject *obj,SHthorntailConfig *config)
   dll_2E_func08((int)runtime,400,0x78);
   ObjGroup_AddObject((int)obj,0x4d);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -392,8 +384,6 @@ void SHthorntail_init(SHthorntailObject *obj,SHthorntailConfig *config)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void SHthorntail_updateDustEffects(SHthorntailObject *obj)
 {
   undefined4 playerObj;
@@ -451,5 +441,3 @@ void SHthorntail_updateDustEffects(SHthorntailObject *obj)
     runtime->dustEffectTimer = runtime->dustEffectTimer + timeDelta;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset

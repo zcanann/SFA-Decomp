@@ -44,8 +44,6 @@ void controllight_hitDetect(void) {}
 
 void controllight_render(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void controllight_init(int obj, int setup)
 {
     ControlLightSetup *setupData = (ControlLightSetup *)setup;
@@ -56,11 +54,7 @@ void controllight_init(int obj, int setup)
     state->invertMode = setupData->invertMode % 2;
     state->lastBit = CONTROLLIGHT_LAST_BIT_INVALID;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void controllight_update(int obj)
 {
     ControlLightState *state = ((GameObject *)obj)->extra;
@@ -105,8 +99,6 @@ void controllight_update(int obj)
 
     state->lastBit = bit;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void controllight_release(void) {}
 
