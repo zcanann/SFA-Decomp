@@ -51,7 +51,14 @@ void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimS
   float blendFrameLength;
 
   requestedEventState = eventState;
-  moveIndex = ObjAnim_ResolveMoveIndex(animDef,moveId);
+  moveIndex = animDef->moveGroupBaseIndices[(s32)moveId >> OBJANIM_MOVE_GROUP_SHIFT] +
+              (moveId & OBJANIM_MOVE_INDEX_MASK);
+  if (moveIndex >= animDef->moveCount) {
+    moveIndex = animDef->moveCount - 1;
+  }
+  if (moveIndex < 0) {
+    moveIndex = 0;
+  }
   if ((animDef->flags & OBJANIM_DEF_FLAG_CACHED_MOVES) != 0) {
     if (state->lastBlendMoveIndex != moveIndex) {
       state->blendCacheSlot = (u16)state->blendToggle;
