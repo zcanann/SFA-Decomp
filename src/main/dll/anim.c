@@ -6096,7 +6096,7 @@ int dbstealerworm_stateHandlerA07(int obj, int p2, f32 t)
             ptr++;
         }
     }
-    ObjAnim_SampleRootCurvePhase(((BaddieState *)p2)->animSpeedA, (ObjAnimComponent *)obj,
+    ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)((int)obj, ((BaddieState *)p2)->animSpeedA,
                                  (float *)(p2 + 0x2a0));
     return 0;
 }
@@ -6392,7 +6392,7 @@ int dbstealerworm_stateHandlerA08(int obj, int p2, f32 t)
             ptr++;
         }
     }
-    ObjAnim_SampleRootCurvePhase(((BaddieState *)p2)->animSpeedA, (ObjAnimComponent *)obj,
+    ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)((int)obj, ((BaddieState *)p2)->animSpeedA,
                                  (float *)(p2 + 0x2a0));
     return 0;
 }
@@ -7225,7 +7225,7 @@ int dbstealerworm_stateHandlerA0F(int obj, int p2, f32 t)
         sub->unk34 = 1;
         return 0;
     }
-    ObjAnim_SampleRootCurvePhase(((BaddieState *)p2)->animSpeedA, (ObjAnimComponent *)obj,
+    ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)((int)obj, ((BaddieState *)p2)->animSpeedA,
                                  (float *)(p2 + 0x2a0));
     return 0;
 }
