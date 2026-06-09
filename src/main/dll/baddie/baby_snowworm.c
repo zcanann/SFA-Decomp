@@ -3981,7 +3981,7 @@ void fn_8012C000(void)
         f32 spin = lbl_803E218C * (f32)lbl_803DD78C;
         *(f32 *)((u8 *)lbl_803DD868[1] + 0x8) = spin * lbl_803E2190;
     }
-    ObjAnim_AdvanceCurrentMove(lbl_803E1E58, timeDelta, (int)lbl_803DD868[1], &animEvents);
+    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)lbl_803DD868[1], lbl_803E1E58, timeDelta, &animEvents);
     watermark = 0x90000000;
     c2010 = lbl_803E2010;
     c2050 = lbl_803E2050;
@@ -4004,7 +4004,7 @@ void fn_8012C000(void)
         sel = (f32)lbl_803DD784 * sel;
         *(f32 *)((u8 *)lbl_803A9410[k] + 0x8) = sel * c2190;
         *((u8 *)lbl_803A9410[k] + 0x37) = 0xff;
-        ObjAnim_AdvanceCurrentMove(lbl_8031BFA8[k], timeDelta, (int)lbl_803A9410[k], &animEvents);
+        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)lbl_803A9410[k], lbl_8031BFA8[k], timeDelta, &animEvents);
         kk *= step;
         a = c1E64 * mathSinf(c1EC8 * (f32)(lbl_803DD782 + kk) / c1E94);
         a = (f32)lbl_803DD784 * a;

@@ -3382,7 +3382,7 @@ void sandworm_turnTowardTargetAnim(int* a, int* b, u8* c, int d)
             } else {
                 t = -(s16)shifted >> 2;
             }
-            ObjAnim_AdvanceCurrentMove((f32)t / lbl_803E4240, timeDelta, (int)a, 0);
+            ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)a, (f32)t / lbl_803E4240, timeDelta, 0);
         }
     }
 }

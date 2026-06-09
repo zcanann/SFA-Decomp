@@ -679,7 +679,7 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
         }
     }
 
-    ObjAnim_SampleRootCurvePhase(((DIMSnowHorn1State *)state)->baddie.animSpeedA, (ObjAnimComponent *)obj,
+    ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)((int)obj, ((DIMSnowHorn1State *)state)->baddie.animSpeedA,
                                  (f32 *)((char *)state + 0x2a0));
     if ((*(int *)((char *)state + 0x31c) & 0x100) == 0) {
         return 0;

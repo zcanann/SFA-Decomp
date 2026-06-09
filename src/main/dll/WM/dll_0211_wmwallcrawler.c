@@ -94,7 +94,7 @@ void wmwallcrawler_update(s16 *obj)
             if (lbl_803E5FC4 < *(f32 *)(obj + 0x4c)) {
                 *(f32 *)(obj + 4) = *(f32 *)(obj + 4) * lbl_803E5FC8;
             }
-            if (ObjAnim_AdvanceCurrentMove(lbl_803E5FCC, (f32)framesThisStep, (int)obj, NULL) != 0) {
+            if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E5FCC, (f32)framesThisStep, NULL) != 0) {
                 if (*(s16 *)(st + 0x292) != 0 && *(s16 *)(st + 0x292) != -1) {
                     GameBit_Set(*(s16 *)(st + 0x292), GameBit_Get(*(s16 *)(st + 0x292)) + 1);
                 }

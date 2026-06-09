@@ -925,7 +925,7 @@ void SB_ShipMast_update(int *obj) {
         }
         speed = lbl_803E5878;
     }
-    ObjAnim_AdvanceCurrentMove(speed, (f32)(u32)framesThisStep, (int)obj, NULL);
+    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, speed, (f32)(u32)framesThisStep, NULL);
 }
 
 /* 8b "li r3, N; blr" returners. */
