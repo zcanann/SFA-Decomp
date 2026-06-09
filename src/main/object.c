@@ -508,8 +508,6 @@ extern void textureFree(void *tex);
 #pragma dont_inline on
 #pragma dont_inline reset
 
-#pragma peephole on
-#pragma peephole reset
 
 #pragma dont_inline on
 
@@ -840,8 +838,6 @@ void ObjModel_LoadRenderOpTextures(u8 *model, int arg);
 
 extern void OSReport(char *fmt, ...);
 
-#pragma peephole on
-#pragma peephole reset
 
 #pragma pop
 

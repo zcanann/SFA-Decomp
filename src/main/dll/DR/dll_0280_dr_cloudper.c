@@ -39,19 +39,10 @@ typedef struct DrCloudPerSetup {
 #define DRCLOUDPER_MAP_ANIM_EVENT 0x0c
 #define DRCLOUDPER_OBJECT_FLAGS 0xe000
 
-#pragma peephole on
-#pragma scheduling on
 int drcloudper_getExtraSize(void) { return 0x10; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int drcloudper_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void drcloudper_free(int obj)
 {
@@ -59,37 +50,16 @@ void drcloudper_free(int obj)
     ObjGroup_RemoveObject(obj, DRCLOUDPER_GROUP_SURFACE);
 }
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void drcloudper_render(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void drcloudper_hitDetect(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void drcloudper_update(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void drcloudper_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void drcloudper_initialise(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -108,7 +78,6 @@ int drcloudper_setScale(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 int drcloudper_selectActiveCloud(int obj)
 {
@@ -120,7 +89,6 @@ int drcloudper_selectActiveCloud(int obj)
     return 0;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma scheduling off
 void drcloudper_init(int obj, int setup)

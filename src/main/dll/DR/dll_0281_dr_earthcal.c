@@ -6,41 +6,17 @@
 #define DREARTHCAL_OBJECT_FLAGS_B0 0xb0
 #define DREARTHCAL_INIT_FLAGS 0x6000
 
-#pragma peephole on
-#pragma scheduling on
 int drearthcal_setScale(void) { return 1; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int drearthcal_getExtraSize(void) { return 1; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int drearthcal_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void drearthcal_free(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void drearthcal_render(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void drearthcal_hitDetect(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -94,22 +70,12 @@ void drearthcal_update(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma scheduling on
 void drearthcal_init(int obj, int setup)
 {
     *(s16 *)obj = (s16)((s8)*(u8 *)(setup + DREARTHCAL_SETUP_YAW) << 8);
     *(u16 *)(obj + DREARTHCAL_OBJECT_FLAGS_B0) |= DREARTHCAL_INIT_FLAGS;
 }
-#pragma scheduling reset
 
-#pragma peephole on
-#pragma scheduling on
 void drearthcal_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void drearthcal_initialise(void) {}
-#pragma scheduling reset
-#pragma peephole reset

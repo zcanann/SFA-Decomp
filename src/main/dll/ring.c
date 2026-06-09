@@ -40,19 +40,10 @@
 #define RING_MODEL_ALT 1
 #define RING_OBJFLAG_HIDDEN 0x4000
 
-#pragma peephole on
-#pragma scheduling on
 int ring_getExtraSize(void) { return RING_EXTRA_SIZE; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int ring_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void ring_free(int obj)
 {
@@ -63,13 +54,8 @@ void ring_free(int obj)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void ring_hitDetect(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -84,17 +70,9 @@ void ring_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void ring_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void ring_initialise(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

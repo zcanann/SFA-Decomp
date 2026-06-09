@@ -3,13 +3,8 @@
 #include "main/audio/sfx_ids.h"
 
 
-#pragma peephole on
-#pragma scheduling on
 int timer_getExtraSize(void) { return 0x20; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void timer_free(int obj)
 {
@@ -21,40 +16,26 @@ void timer_free(int obj)
     gameTimerStop();
 }
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int timer_hasExpired(int obj)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
     return ((TimerFlags *)(state + 0xd))->expired;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int timer_isEffectMode(int obj)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
     return *(u8 *)(state + 0xc) == 2;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void timer_clearManualFlags(int obj)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
     ((TimerFlags *)(state + 0xd))->manual = 0;
     ((TimerFlags *)(state + 0xd))->expired = 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void timer_forceStart(int obj)
 {
@@ -62,7 +43,6 @@ void timer_forceStart(int obj)
     ((TimerFlags *)(state + 0xd))->manual = 1;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

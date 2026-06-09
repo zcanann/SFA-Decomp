@@ -112,11 +112,7 @@ STATIC_ASSERT(offsetof(WCPressuresSetup, pressDepth) == WCPRESSURES_SETUP_PRESS_
 STATIC_ASSERT(offsetof(WCPressuresSetup, triggerHeight) == WCPRESSURES_SETUP_TRIGGER_HEIGHT_OFFSET);
 STATIC_ASSERT(offsetof(WCPressuresSetup, activateBit) == WCPRESSURES_SETUP_ACTIVATE_BIT_OFFSET);
 
-#pragma peephole on
-#pragma scheduling on
 int wcpressures_getExtraSize(void) { return WCPRESSURES_EXTRA_SIZE; }
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -150,7 +146,6 @@ int wcpressures_tileStateCallback(int obj, int unused, int callbackData)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 int wcpressures_getObjectTypeId(int obj)
 {
@@ -165,30 +160,21 @@ int wcpressures_getObjectTypeId(int obj)
     return (modelIndex << WCPRESSURES_RENDER_TYPE_SHIFT) | WCPRESSURES_RENDER_TYPE_BASE;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void wcpressures_free(int obj) { ObjGroup_RemoveObject(obj, WCPRESSURES_OBJECT_GROUP); }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
-#pragma scheduling on
 void wcpressures_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6E00);
     }
 }
-#pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void wcpressures_hitDetect(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -328,14 +314,6 @@ void wcpressures_init(u8 *obj, u8 *setup)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void wcpressures_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void wcpressures_initialise(void) {}
-#pragma scheduling reset
-#pragma peephole reset

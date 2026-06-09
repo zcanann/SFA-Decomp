@@ -115,13 +115,8 @@ STATIC_ASSERT(offsetof(WCPushBlockSetup, initialTile) == WCPUSHBLOCK_INITIAL_TIL
 #define WCPUSHBLOCK_MOVE_RESULT(state) (((WCPushBlockRuntimeState *)(state))->moveResult)
 #define WCPUSHBLOCK_FLAGS(state) (((WCPushBlockRuntimeState *)(state))->flags)
 
-#pragma peephole on
-#pragma scheduling on
 int wcpushblock_getExtraSize(void) { return WCPUSHBLOCK_EXTRA_SIZE; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 int wcpushblock_getObjectTypeId(int obj)
 {
@@ -135,30 +130,19 @@ int wcpushblock_getObjectTypeId(int obj)
     return (modelIndex << WCPUSHBLOCK_RENDER_TYPE_SHIFT) | WCPUSHBLOCK_RENDER_TYPE_BASE;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void wcpushblock_free(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
-#pragma scheduling on
 void wcpushblock_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6D54);
     }
 }
-#pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void wcpushblock_hitDetect(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma scheduling off
 void wcpushblock_init(int obj, int setup)
@@ -178,17 +162,9 @@ void wcpushblock_init(int obj, int setup)
 }
 #pragma scheduling reset
 
-#pragma peephole on
-#pragma scheduling on
 void wcpushblock_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void wcpushblock_initialise(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

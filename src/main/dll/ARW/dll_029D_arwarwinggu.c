@@ -1,8 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
-#pragma peephole on
-#pragma scheduling on
 typedef struct ArwingGuTextureState {
     u8 textureAnim[4];
     int textureFrame;
@@ -32,34 +30,15 @@ int arwarwinggu_getExtraSize(int obj)
         return 0;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int arwarwinggu_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void arwarwinggu_free(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void arwarwinggu_render(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void arwarwinggu_hitDetect(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling on
 void arwarwinggu_init(int obj)
 {
     ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
@@ -70,7 +49,6 @@ void arwarwinggu_init(int obj)
     ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     objAnim->alpha = 0;
 }
-#pragma scheduling reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -92,17 +70,9 @@ void arwarwinggu_setActiveVisible(int obj, u8 active, u8 visible)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void arwarwinggu_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void arwarwinggu_initialise(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -153,7 +123,6 @@ void arwarwinggu_update(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void fn_8022F270(int obj, int p2)
 {
@@ -161,7 +130,6 @@ void fn_8022F270(int obj, int p2)
     state->texture.textureFrame = p2;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma scheduling off
 #pragma peephole off

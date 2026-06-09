@@ -1,19 +1,10 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
-#pragma peephole on
-#pragma scheduling on
 int drbarrelgr_getExtraSize(void) { return 0x12c; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int drbarrelgr_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void drbarrelgr_free(int obj)
 {
@@ -26,25 +17,12 @@ void drbarrelgr_free(int obj)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void drbarrelgr_hitDetect(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void drbarrelgr_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void drbarrelgr_initialise(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

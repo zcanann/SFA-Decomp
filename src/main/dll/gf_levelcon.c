@@ -98,53 +98,29 @@ int gf_levelcon_handleScriptEvents(int obj, int eventId, u8 *script)
 }
 #pragma scheduling reset
 
-#pragma peephole on
-#pragma scheduling on
 int gf_levelcon_getExtraSize(void) { return 0x10; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int gf_levelcon_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void gf_levelcon_hitDetect(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void gf_levelcon_initialise(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void gf_levelcon_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void gf_levelcon_free(void)
 {
     setIsOvercast(1);
 }
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void gf_levelcon_update(int obj)
 {
     ((GameObject *)obj)->animEventCallback = (void *)gf_levelcon_handleScriptEvents;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -157,7 +133,6 @@ void gf_levelcon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void gf_levelcon_init(int obj)
 {
@@ -165,7 +140,6 @@ void gf_levelcon_init(int obj)
     (*gScreenTransitionInterface)->step(0x258, 1);
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

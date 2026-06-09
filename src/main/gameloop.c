@@ -385,9 +385,7 @@ int testAndSet_onlyUseHeap3(int v);
 void *getCache(void);
 #pragma dont_inline reset
 
-#pragma peephole on
 
-#pragma peephole reset
 #pragma pop
 
 extern void Sfx_SetObjectSoundsPaused(s32 paused);
@@ -592,9 +590,7 @@ extern void OSReport(char *fmt, ...);
 extern void waitNextFrame(void);
 extern void GXFlush_(int a, int b);
 
-#pragma peephole on
 void mmFreeTick(int arg);
-#pragma peephole reset
 
 extern void *lbl_803DCAFC;
 

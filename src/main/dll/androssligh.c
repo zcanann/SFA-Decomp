@@ -1,26 +1,12 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
-#pragma peephole on
-#pragma scheduling on
 int androssligh_getExtraSize(void) { return 0x10; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int androssligh_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void androssligh_free(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void androssligh_render(int obj)
 {
     void *p = *(void **)(*(int *)&((GameObject *)obj)->extra + 4);
@@ -29,11 +15,8 @@ void androssligh_render(int obj)
         lightningRender(p);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
-#pragma scheduling on
 void androssligh_setState(int obj, int newState, u8 force)
 {
     int state;
@@ -49,20 +32,11 @@ void androssligh_setState(int obj, int newState, u8 force)
     }
     *(s8 *)(state + 0xc) = (s8)newState;
 }
-#pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void androssligh_hitDetect(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void androssligh_init(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma scheduling off
 #pragma peephole off

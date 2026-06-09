@@ -1,11 +1,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
-#pragma peephole on
-#pragma scheduling on
 int tree_getExtraSize(void) { return 0x5c; }
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

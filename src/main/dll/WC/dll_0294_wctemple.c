@@ -30,40 +30,22 @@ STATIC_ASSERT(offsetof(WCTempleState, timer) == WCTEMPLE_STATE_TIMER);
 STATIC_ASSERT(offsetof(WCTempleState, triggerSlot) == WCTEMPLE_STATE_TRIGGER_SLOT);
 STATIC_ASSERT(offsetof(WCTempleSetup, type) == WCTEMPLE_SETUP_TYPE_OFFSET);
 
-#pragma peephole on
-#pragma scheduling on
 int wctemple_getExtraSize(void) { return WCTEMPLE_EXTRA_SIZE; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int wctemple_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void wctemple_free(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
-#pragma scheduling on
 void wctemple_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6E20);
     }
 }
-#pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void wctemple_hitDetect(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -94,7 +76,6 @@ void wctemple_update(int obj)
 #pragma peephole reset
 
 #pragma peephole off
-#pragma scheduling on
 void wctemple_init(int obj, int setup)
 {
     WCTempleSetup *setupData = (WCTempleSetup *)setup;
@@ -102,17 +83,8 @@ void wctemple_init(int obj, int setup)
 
     *(s16 *)obj = (s16)(angle << 8);
 }
-#pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void wctemple_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void wctemple_initialise(void) {}
-#pragma scheduling reset
-#pragma peephole reset

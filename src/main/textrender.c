@@ -1019,8 +1019,6 @@ void mainLoopDoGameText(void) {
     }
 }
 
-#pragma peephole on
-#pragma peephole reset
 
 #pragma dont_inline on
 int mmSetFreeDelay(int v);
@@ -1040,9 +1038,7 @@ extern void *textureLoadAsset(int assetId);
 #pragma dont_inline on
 #pragma dont_inline reset
 
-#pragma peephole on
 
-#pragma peephole reset
 #pragma pop
 
 extern void gameTextInitFn_8001c794(void);
@@ -1364,8 +1360,6 @@ int subtitleIsActive(void) {
 
 int mmCreateMemoryStore(int size);
 
-#pragma peephole on
-#pragma peephole reset
 
 extern void DCFlushRange(void *addr, u32 nBytes);
 

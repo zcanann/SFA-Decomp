@@ -59,11 +59,8 @@ int wctrexstatu_interactCallback(int obj, int unused, int callbackData)
 #pragma opt_strength_reduction reset
 #pragma scheduling reset
 
-#pragma scheduling on
 int wctrexstatu_getExtraSize(void) { return 0; }
-#pragma scheduling reset
 
-#pragma peephole on
 #pragma scheduling off
 int wctrexstatu_getObjectTypeId(int obj)
 {
@@ -77,23 +74,16 @@ int wctrexstatu_getObjectTypeId(int obj)
     return (modelIndex << WCTREXSTATU_RENDER_TYPE_SHIFT) | WCTREXSTATU_RENDER_TYPE_BASE;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void wctrexstatu_free(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
-#pragma scheduling on
 void wctrexstatu_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6E10);
     }
 }
-#pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole off
@@ -118,11 +108,7 @@ void wctrexstatu_hitDetect(u8 *obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void wctrexstatu_update(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma scheduling off
 void wctrexstatu_init(int obj, int setup, int fromLoad)
@@ -153,14 +139,6 @@ void wctrexstatu_init(int obj, int setup, int fromLoad)
 }
 #pragma scheduling reset
 
-#pragma peephole on
-#pragma scheduling on
 void wctrexstatu_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void wctrexstatu_initialise(void) {}
-#pragma scheduling reset
-#pragma peephole reset

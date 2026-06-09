@@ -29,32 +29,16 @@ typedef struct AndrossHandState {
 STATIC_ASSERT(sizeof(AndrossHandState) == 0x2C);
 
 
-#pragma peephole on
-#pragma scheduling on
 int androsshand_getExtraSize(void) { return 0x2c; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int androsshand_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void androsshand_free(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void androsshand_render(int obj, int p2, int p3, int p4, int p5)
 {
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E75B0);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma scheduling off
 void androsshand_update(int obj)
@@ -256,11 +240,7 @@ void androsshand_update(int obj)
 }
 #pragma scheduling reset
 
-#pragma peephole on
-#pragma scheduling on
 void androsshand_hitDetect(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

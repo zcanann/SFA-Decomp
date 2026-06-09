@@ -1,8 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
-#pragma peephole on
-#pragma scheduling on
 typedef struct Dll2A3State {
     f32 lifetime;
     s16 rotXSpeed;
@@ -17,47 +15,21 @@ STATIC_ASSERT(offsetof(Dll2A3State, rotYSpeed) == 0x06);
 STATIC_ASSERT(offsetof(Dll2A3State, rotZSpeed) == 0x08);
 
 int dll_2A3_getExtraSize_ret_12(void) { return 0xc; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int dll_2A3_getObjectTypeId(void) { return 0x0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void dll_2A3_release_nop(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void dll_2A3_initialise_nop(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void dll_2A3_free(void) { lbl_803DDD90 = lbl_803DDD90 - 1; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void dll_2A3_render(int obj, int p2, int p3, int p4, int p5)
 {
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7118);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void dll_2A3_hitDetect(void) { lbl_803DDD94 = 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -115,7 +87,6 @@ void dll_2A3_init(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void fn_8023137C(int obj, int src)
 {
@@ -124,9 +95,7 @@ void fn_8023137C(int obj, int src)
     ((GameObject *)obj)->anim.velocityZ = *(f32 *)(src + 0x8);
 }
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void fn_8023134C(int obj, int v)
 {
@@ -134,4 +103,3 @@ void fn_8023134C(int obj, int v)
     state->lifetime = (f32)v;
 }
 #pragma scheduling reset
-#pragma peephole reset

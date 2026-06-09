@@ -61,20 +61,10 @@ STATIC_ASSERT(offsetof(DirectionalLightSetup, rotXSpeed) == 0x32);
 STATIC_ASSERT(offsetof(DirectionalLightSetup, rotYSpeed) == 0x34);
 STATIC_ASSERT(sizeof(DirectionalLightSetup) == 0x38);
 
-#pragma peephole on
-#pragma scheduling on
 int directionallight_getExtraSize(void) { return 0x10; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int directionallight_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void directionallight_free(int obj)
 {
     DirectionalLightState *state = ((GameObject *)obj)->extra;
@@ -82,23 +72,13 @@ void directionallight_free(int obj)
         ModelLightStruct_free(state->light);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void directionallight_hitDetect(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void directionallight_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7254);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -297,14 +277,6 @@ void directionallight_update(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void directionallight_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void directionallight_initialise(void) {}
-#pragma scheduling reset
-#pragma peephole reset

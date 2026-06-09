@@ -71,13 +71,8 @@ STATIC_ASSERT(offsetof(WCAperturesSetup, modelIndex) == WCAPERTURES_SETUP_MODEL_
 STATIC_ASSERT(offsetof(WCAperturesSetup, openBit) == WCAPERTURES_SETUP_OPEN_BIT_OFFSET);
 STATIC_ASSERT(offsetof(WCAperturesSetup, armBit) == WCAPERTURES_SETUP_ARM_BIT_OFFSET);
 
-#pragma peephole on
-#pragma scheduling on
 int wcapertures_getExtraSize(void) { return WCAPERTURES_EXTRA_SIZE; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 int wcapertures_getObjectTypeId(int obj)
 {
@@ -91,9 +86,7 @@ int wcapertures_getObjectTypeId(int obj)
     return (modelIndex << WCAPERTURES_RENDER_TYPE_SHIFT) | WCAPERTURES_RENDER_TYPE_BASE;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void wcapertures_free(int obj)
 {
@@ -105,7 +98,6 @@ void wcapertures_free(int obj)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -158,17 +150,9 @@ void wcapertures_hitDetect(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void wcapertures_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void wcapertures_initialise(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

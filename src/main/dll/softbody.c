@@ -2,45 +2,27 @@
 #include "main/game_object.h"
 #include "main/objhits_types.h"
 
-#pragma peephole on
-#pragma scheduling on
 int softbody_getExtraSize(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int softbody_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void softbody_free(int obj)
 {
     if ((void *)obj == lbl_803DDD98) {
         lbl_803DDD98 = NULL;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
-#pragma scheduling on
 void softbody_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7288);
     }
 }
-#pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void softbody_hitDetect(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -68,13 +50,8 @@ void softbody_init(int obj, int setup)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void softbody_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void softbody_initialise(void)
 {
@@ -83,7 +60,6 @@ void softbody_initialise(void)
     lbl_803DDD9C = lbl_803E7298;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

@@ -255,8 +255,6 @@ FUN_80017998(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 #pragma dont_inline on
 #pragma dont_inline reset
 
-#pragma peephole on
-#pragma peephole reset
 
 #pragma dont_inline on
 
@@ -292,9 +290,7 @@ void Vec3_ScaleAdd(f32 *a, f32 s, f32 *b, f32 *out) {
     out[2] = s * b[2] + a[2];
 }
 
-#pragma peephole on
 
-#pragma peephole reset
 #pragma pop
 
 extern float fn_802924B4(float y, float x);
@@ -473,8 +469,6 @@ void initRotationMtx(f32 *m, f32 a, f32 b, f32 c) {
 #pragma dont_inline on
 #pragma dont_inline reset
 
-#pragma peephole on
-#pragma peephole reset
 
 f32 interpolate(f32 a, f32 t, f32 exp) {
     if (t <= lbl_803DE7C4) {

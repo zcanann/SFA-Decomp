@@ -48,40 +48,22 @@ STATIC_ASSERT(offsetof(WCBouncyCrateState, cooldown) == WBOUNCY_STATE_COOLDOWN);
 STATIC_ASSERT(offsetof(WCBouncyCrateState, flags) == WBOUNCY_STATE_FLAGS);
 STATIC_ASSERT(offsetof(WCBouncyCrateState, bounceCount) == WBOUNCY_STATE_BOUNCE_COUNT);
 
-#pragma peephole on
-#pragma scheduling on
 int wcbouncycra_getExtraSize(void) { return WBOUNCY_EXTRA_SIZE; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int wcbouncycra_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void wcbouncycra_free(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
-#pragma scheduling on
 void wcbouncycra_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6D38);
     }
 }
-#pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void wcbouncycra_hitDetect(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -129,7 +111,6 @@ void wcbouncycra_update(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void wcbouncycra_init(int obj, int setup)
 {
@@ -139,22 +120,12 @@ void wcbouncycra_init(int obj, int setup)
     state->cooldown = WBOUNCY_RESET_COOLDOWN;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void wcbouncycra_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void wcbouncycra_initialise(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
-#pragma scheduling on
 int wcblock_isPlayerAwayFromStoredCell(int obj, int state, int player)
 {
     ObjAnimComponent *objAnim;
@@ -208,7 +179,6 @@ int wcblock_isPlayerAwayFromStoredCell(int obj, int state, int player)
 
     return 0;
 }
-#pragma scheduling reset
 #pragma peephole reset
 
 #undef WCBLOCK_GRID_IFACE

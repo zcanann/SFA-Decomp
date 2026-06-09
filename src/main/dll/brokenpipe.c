@@ -2,11 +2,7 @@
 #include "main/game_object.h"
 #include "main/objhits_types.h"
 
-#pragma peephole on
-#pragma scheduling on
 int brokenpipe_getExtraSize(void) { return 4; }
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -31,7 +27,6 @@ void brokenpipe_init(int obj, int setup)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void brokenpipe_update(int obj)
 {
@@ -39,4 +34,3 @@ void brokenpipe_update(int obj)
         *(int *)&((GameObject *)obj)->extra);
 }
 #pragma scheduling reset
-#pragma peephole reset

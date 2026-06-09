@@ -77,14 +77,6 @@ void drenergydisc_init(u8 *obj, u8 *setup)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void drenergydisc_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void drenergydisc_initialise(void) {}
-#pragma scheduling reset
-#pragma peephole reset

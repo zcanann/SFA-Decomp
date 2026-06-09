@@ -5,8 +5,6 @@
 #include "main/objhits_types.h"
 
 
-#pragma peephole on
-#pragma scheduling on
 typedef union ArwProjectileParam0 {
     f32 scalar;
     u8 particleKind;
@@ -44,16 +42,9 @@ STATIC_ASSERT(offsetof(ArwProjectileSetup, rotY) == 0x19);
 STATIC_ASSERT(offsetof(ArwProjectileSetup, rotX) == 0x1A);
 
 int arwingandrossstuff_getExtraSize(void) { return 0x20; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int arwingandrossstuff_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void arwingandrossstuff_free(int obj)
 {
@@ -65,30 +56,19 @@ void arwingandrossstuff_free(int obj)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
-#pragma scheduling on
 void arwingandrossstuff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E701C);
     }
 }
-#pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void arwingandrossstuff_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void arwingandrossstuff_initialise(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -153,7 +133,6 @@ void arwingandrossstuff_hitDetect(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void arwprojectile_setLifetime(int obj, int lifetime)
 {
@@ -162,7 +141,6 @@ void arwprojectile_setLifetime(int obj, int lifetime)
     state->lifetime = (f32)lifetime;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -324,7 +302,6 @@ void arwprojectile_createLinkedEffect(int obj, u8 enable) {
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void fn_8022ED74(int obj, int v)
 {
@@ -332,7 +309,6 @@ void fn_8022ED74(int obj, int v)
     state->param0.scalar = (f32)v;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma scheduling off
 #pragma peephole off

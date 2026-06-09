@@ -293,8 +293,6 @@ extern int lbl_803DB434;
 #pragma dont_inline on
 #pragma dont_inline reset
 
-#pragma peephole on
-#pragma peephole reset
 
 #pragma dont_inline on
 int mmSetFreeDelay(int v) {
@@ -349,9 +347,7 @@ void *getCache(void) {
 }
 #pragma dont_inline reset
 
-#pragma peephole on
 
-#pragma peephole reset
 #pragma pop
 
 extern void LCQueueWait();

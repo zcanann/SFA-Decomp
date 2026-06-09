@@ -4,44 +4,28 @@
 #include "main/objseq.h"
 #include "main/objanim_internal.h"
 
-#pragma peephole on
-#pragma scheduling on
 int suntemple_getExtraSize(void) { return 2; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int suntemple_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void suntemple_free(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
-#pragma scheduling on
 void suntemple_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6E18);
     }
 }
-#pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole off
-#pragma scheduling on
 void suntemple_hitDetect(int obj)
 {
     if ((((ObjAnimComponent *)obj)->modelInstance->flags & 1) != 0 && *(void **)(obj + 0x74) != NULL) {
         objRenderFn_80041018(obj);
     }
 }
-#pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole off
@@ -208,14 +192,6 @@ void suntemple_update(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void suntemple_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void suntemple_initialise(void) {}
-#pragma scheduling reset
-#pragma peephole reset

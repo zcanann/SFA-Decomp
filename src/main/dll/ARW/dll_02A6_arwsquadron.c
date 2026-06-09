@@ -6,8 +6,6 @@
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 
-#pragma peephole on
-#pragma scheduling on
 #include "global.h"
 
 #define ARW_SQUADRON_STATE_WAITING 0
@@ -113,35 +111,17 @@ STATIC_ASSERT(offsetof(ArwSquadronState, leaderObj) == 0x13c);
 STATIC_ASSERT(offsetof(ArwSquadronState, flags) == 0x160);
 
 int arwsquadron_getExtraSize(void) { return 0x164; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int arwsquadron_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void arwsquadron_free(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void arwsquadron_render(int obj, int p2, int p3, int p4, int p5)
 {
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7188);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void arwsquadron_hitDetect(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

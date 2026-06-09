@@ -439,8 +439,6 @@ void tailFn_80026c38(u8 *p, f32 a, f32 b, f32 c) {
 #pragma dont_inline on
 #pragma dont_inline reset
 
-#pragma peephole on
-#pragma peephole reset
 
 #pragma dont_inline on
 
@@ -461,9 +459,7 @@ extern int randomGetRange(int lo, int hi);
 void *getCache(void);
 #pragma dont_inline reset
 
-#pragma peephole on
 
-#pragma peephole reset
 #pragma pop
 
 extern f32 lbl_803DE854;
@@ -838,8 +834,6 @@ int loadModelAndAnimTabs(void) {
 #pragma dont_inline on
 #pragma dont_inline reset
 
-#pragma peephole on
-#pragma peephole reset
 
 extern void DCFlushRange(void *addr, u32 nBytes);
 

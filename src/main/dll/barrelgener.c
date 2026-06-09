@@ -3,17 +3,12 @@
 #include "main/objseq.h"
 
 #include "main/audio/sfx_ids.h"
-#pragma peephole on
-#pragma scheduling on
 int barrelgener_getLinkId(int obj)
 {
     obj = *(int *)&((GameObject *)obj)->anim.placementData;
     return *(s8 *)(obj + 0x19);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void barrelgener_queueObjectRelease(int obj, int queuedObj, int releaseFrame)
 {
@@ -25,44 +20,26 @@ void barrelgener_queueObjectRelease(int obj, int queuedObj, int releaseFrame)
     s16toFloat((void *)(state + 8), (s16)(releaseFrame - lbl_803DC398));
 }
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int barrelgener_getExtraSize(void) { return 0x10; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int barrelgener_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void barrelgener_free(int obj) { ObjGroup_RemoveObject(obj, 0x3a); }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
-#pragma scheduling on
 void barrelgener_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6C20);
     }
 }
-#pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void barrelgener_hitDetect(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void barrelgener_init(int obj)
 {
@@ -74,19 +51,10 @@ void barrelgener_init(int obj)
     storeZeroToFloatParam((void *)(state + 8));
 }
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void barrelgener_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void barrelgener_initialise(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -444,7 +412,6 @@ int fn_80221C18(int obj, f32 dt, int p3, int p4)
 }
 #pragma scheduling reset
 
-#pragma peephole on
 #pragma scheduling off
 int voxmaps_traceWorldLine(void *p1, void *p2)
 {
@@ -457,7 +424,6 @@ int voxmaps_traceWorldLine(void *p1, void *p2)
     return voxmaps_traceLine(grid1, grid2, out, 0, 0);
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma scheduling off
 void voxmaps_traceScaledVectorEnd(f32 *p1, void *p2, f32 *p3, f32 scale)

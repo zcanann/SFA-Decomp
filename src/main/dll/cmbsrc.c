@@ -2,31 +2,14 @@
 #include "main/effect_interfaces.h"
 #include "main/dll/cmbsrc.h"
 
-#pragma peephole on
-#pragma scheduling on
 int cmbsrc_getExtraSize(void) { return 0x28; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int cmbsrc_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void cmbsrc_initialise(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void cmbsrc_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 int cmbsrc_updateAndReturnZero(int obj)
 {
@@ -34,9 +17,7 @@ int cmbsrc_updateAndReturnZero(int obj)
     return 0;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 int cmbsrc_getColorIndex(int obj)
 {
@@ -51,7 +32,6 @@ int cmbsrc_getColorIndex(int obj)
     return -1;
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

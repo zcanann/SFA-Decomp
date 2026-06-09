@@ -3,26 +3,14 @@
 #include "main/expgfx.h"
 #include "main/game_object.h"
 
-#pragma peephole on
-#pragma scheduling on
 int vortex_getExtraSize(void) { return 0x28; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int vortex_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void vortex_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -173,11 +161,7 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void vortex_hitDetect(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -274,14 +258,6 @@ void vortex_update(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void vortex_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void vortex_initialise(void) {}
-#pragma scheduling reset
-#pragma peephole reset

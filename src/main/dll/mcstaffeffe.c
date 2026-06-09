@@ -1,22 +1,17 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
-#pragma peephole on
 #pragma scheduling off
 void mcstaffeffe_render(int obj)
 {
     fn_80098B18(obj, ((GameObject *)obj)->anim.rootMotionScale, (u8)((GameObject *)obj)->unkF4, 0, 0, 0);
 }
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void mcstaffeffe_update(void) {}
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void mcstaffeffe_init(int obj, int setup)
 {
@@ -45,4 +40,3 @@ void mcstaffeffe_init(int obj, int setup)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset

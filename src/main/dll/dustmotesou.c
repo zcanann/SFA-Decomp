@@ -3,43 +3,25 @@
 #include "main/expgfx.h"
 #include "main/dll/dustmotesou.h"
 
-#pragma peephole on
-#pragma scheduling on
 int dustmotesou_getExtraSize(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int dustmotesou_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void dustmotesou_free(int obj)
 {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
-#pragma scheduling on
 void dustmotesou_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) {
         return;
     }
 }
-#pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void dustmotesou_hitDetect(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -117,14 +99,6 @@ void dustmotesou_update(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void dustmotesou_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void dustmotesou_initialise(void) {}
-#pragma scheduling reset
-#pragma peephole reset

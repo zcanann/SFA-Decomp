@@ -2,8 +2,6 @@
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 
-#pragma peephole on
-#pragma scheduling on
 
 typedef struct PointLightState {
     void *light;
@@ -70,17 +68,9 @@ STATIC_ASSERT(offsetof(PointLightSetup, affectsAabbLightSelection) == 0x3F);
 STATIC_ASSERT(sizeof(PointLightSetup) == 0x40);
 
 int pointlight_getExtraSize(void) { return 8; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int pointlight_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void pointlight_setEffectState(int obj, int flag)
 {
     PointLightState *state = ((GameObject *)obj)->extra;
@@ -89,8 +79,6 @@ void pointlight_setEffectState(int obj, int flag)
         modelLightStruct_setEnabled(light, flag, lbl_803E7230);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -105,8 +93,6 @@ void pointlight_free(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void pointlight_render(int obj)
 {
     PointLightState *state = ((GameObject *)obj)->extra;
@@ -116,14 +102,8 @@ void pointlight_render(int obj)
         queueGlowRender(light);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void pointlight_hitDetect(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -245,14 +225,6 @@ void pointlight_init(int obj, int setup)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void pointlight_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void pointlight_initialise(void) {}
-#pragma scheduling reset
-#pragma peephole reset

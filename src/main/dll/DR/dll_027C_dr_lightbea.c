@@ -3,19 +3,10 @@
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
-#pragma peephole on
-#pragma scheduling on
 int drlightbea_getExtraSize(void) { return 0xc; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int drlightbea_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void drlightbea_free(int obj)
 {
@@ -28,16 +19,10 @@ void drlightbea_free(int obj)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void drlightbea_hitDetect(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
-#pragma scheduling on
 void drlightbea_update(int obj)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -45,11 +30,8 @@ void drlightbea_update(int obj)
         Obj_FreeObject(obj);
     }
 }
-#pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void drlightbea_init(int obj)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -57,20 +39,10 @@ void drlightbea_init(int obj)
     *(void **)state = NULL;
     ((DrLightBeaFlags *)(state + 4))->bit40 = 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void drlightbea_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void drlightbea_initialise(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

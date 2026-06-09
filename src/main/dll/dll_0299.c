@@ -3,41 +3,17 @@
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 
-#pragma peephole on
-#pragma scheduling on
 int dll_299_getExtraSize_ret_2(void) { return 0x2; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int dll_299_getObjectTypeId(void) { return 0x0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void dll_299_render_nop(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void dll_299_hitDetect_nop(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void dll_299_release_nop(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void dll_299_initialise_nop(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

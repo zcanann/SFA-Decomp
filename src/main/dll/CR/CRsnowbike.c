@@ -811,7 +811,6 @@ int sc_levelcontrol_processAnimEventsCallback(int obj, int p2, int p3)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void sc_levelcontrol_applyAnimEventState(int obj, u8 scale)
 {
@@ -846,7 +845,6 @@ void sc_levelcontrol_applyAnimEventState(int obj, u8 scale)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, int f);
 extern int mapGetDirIdx(int idx);

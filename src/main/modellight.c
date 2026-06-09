@@ -625,8 +625,6 @@ void modelLightStruct_getWorldPosition(ModelLightStruct *p, f32 *a, f32 *b, f32 
     *c = p->worldZ;
 }
 
-#pragma peephole on
-#pragma peephole reset
 
 #pragma dont_inline on
 
@@ -847,9 +845,7 @@ void modelLightStruct_setProjectionNearZ(ModelLightStruct *p, f32 v) {
     p->projectionNearZ = (v < lbl_803DE78C) ? lbl_803DE78C : ((v > p->projectionFarZ) ? p->projectionFarZ : v);
 }
 
-#pragma peephole on
 
-#pragma peephole reset
 #pragma pop
 
 extern u8 gModelLightUseModelRelativePositions;
@@ -1295,8 +1291,6 @@ void updateLights(void) {
 #pragma dont_inline on
 #pragma dont_inline reset
 
-#pragma peephole on
-#pragma peephole reset
 
 #pragma pop
 

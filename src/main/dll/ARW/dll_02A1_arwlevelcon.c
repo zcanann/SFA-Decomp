@@ -2,8 +2,6 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-#pragma peephole on
-#pragma scheduling on
 
 typedef struct ARWLevelConSetup {
     u8 pad00[0x14];
@@ -49,8 +47,6 @@ void arwlevelcon_commitRingChoice(int obj)
     }
     arwingHudSetVisible(1);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -91,19 +87,10 @@ int arwlevelcon_ringEventCallback(int obj, int p2, int data)
 #pragma peephole reset
 #pragma scheduling reset
 
-#pragma peephole on
-#pragma scheduling on
 int arwlevelcon_getExtraSize(void) { return 0x24; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int arwlevelcon_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void arwlevelcon_free(void)
 {
@@ -112,22 +99,13 @@ void arwlevelcon_free(void)
     setIsOvercast(1);
 }
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void arwlevelcon_render(int obj, int p2, int p3, int p4, int p5)
 {
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E70E0);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void arwlevelcon_hitDetect(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -245,14 +223,6 @@ void arwlevelcon_init(int obj, u8 *setup)
 #pragma peephole reset
 #pragma scheduling reset
 
-#pragma peephole on
-#pragma scheduling on
 void arwlevelcon_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void arwlevelcon_initialise(void) {}
-#pragma scheduling reset
-#pragma peephole reset

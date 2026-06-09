@@ -2,8 +2,6 @@
 #include "main/game_object.h"
 #include "main/objhits_types.h"
 
-#pragma peephole on
-#pragma scheduling on
 
 typedef struct ARWProximitSetup {
     u8 pad00[0x31];
@@ -32,16 +30,9 @@ STATIC_ASSERT(offsetof(ARWProximitState, textVariant) == 0x15);
 STATIC_ASSERT(offsetof(ARWProximitSetup, textVariant) == 0x31);
 
 int arwproximit_getExtraSize(void) { return 0x18; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int arwproximit_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void arwproximit_free(int obj)
 {
@@ -52,7 +43,6 @@ void arwproximit_free(int obj)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -67,11 +57,7 @@ void arwproximit_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void arwproximit_hitDetect(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -228,14 +214,6 @@ void arwproximit_init(int obj, int setup, int p3)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void arwproximit_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void arwproximit_initialise(void) {}
-#pragma scheduling reset
-#pragma peephole reset

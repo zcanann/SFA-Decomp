@@ -2,20 +2,10 @@
 #include "main/game_object.h"
 #include "main/dll/cntcounter_state.h"
 
-#pragma peephole on
-#pragma scheduling on
 int cntcounter_getExtraSize(void) { return 8; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int cntcounter_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void cntcounter_free(int obj)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -23,31 +13,17 @@ void cntcounter_free(int obj)
         set_hudNumber_803db278(-1);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void cntcounter_hitDetect(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void cntcounter_render(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void cntcounter_init(int obj)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
     ((CntCounterState *)state)->unk4 = 0;
     ((CntCounterState *)state)->unk0 = 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -84,14 +60,6 @@ void cntcounter_update(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void cntcounter_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void cntcounter_initialise(void) {}
-#pragma scheduling reset
-#pragma peephole reset

@@ -30,35 +30,15 @@ STATIC_ASSERT(offsetof(ControlLightSetup, radius) == 0x1A);
 STATIC_ASSERT(offsetof(ControlLightSetup, gameBit) == 0x1E);
 STATIC_ASSERT(sizeof(ControlLightSetup) == 0x20);
 
-#pragma peephole on
-#pragma scheduling on
 int controllight_getExtraSize(void) { return 0xc; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int controllight_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void controllight_free(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void controllight_hitDetect(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void controllight_render(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -122,14 +102,6 @@ void controllight_update(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void controllight_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void controllight_initialise(void) {}
-#pragma scheduling reset
-#pragma peephole reset

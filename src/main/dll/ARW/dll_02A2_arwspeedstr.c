@@ -1,8 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
-#pragma peephole on
-#pragma scheduling on
 
 typedef struct ARWSpeedStrState {
     f32 speed;
@@ -25,56 +23,26 @@ STATIC_ASSERT(offsetof(ARWSpeedStrState, viewZ) == 0x14);
 STATIC_ASSERT(offsetof(ARWSpeedStrState, flags) == 0x18);
 
 int arwspeedstr_getExtraSize(void) { return 0x1c; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int arwspeedstr_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void arwspeedstr_free(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void arwspeedstr_hitDetect(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void arwspeedstr_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7100);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void arwspeedstr_init(int obj, int setup)
 {
     ((GameObject *)obj)->anim.alpha = 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void arwspeedstr_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void arwspeedstr_initialise(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -112,7 +80,6 @@ void arwspeedstr_update(int obj) {
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void fn_80231058(int obj, int src)
 {
@@ -121,9 +88,7 @@ void fn_80231058(int obj, int src)
     ((GameObject *)obj)->anim.velocityZ = *(f32 *)(src + 0x8);
 }
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void fn_80231028(int obj, int v)
 {
@@ -131,4 +96,3 @@ void fn_80231028(int obj, int v)
     state->speed = (f32)v;
 }
 #pragma scheduling reset
-#pragma peephole reset

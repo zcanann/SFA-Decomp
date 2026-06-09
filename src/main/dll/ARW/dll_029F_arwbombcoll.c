@@ -4,8 +4,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/objhits_types.h"
 #include "main/obj_placement.h"
-#pragma peephole on
-#pragma scheduling on
 typedef struct ARWBombCollSetup {
     ObjPlacement base;
     s8 rotX;
@@ -16,35 +14,17 @@ STATIC_ASSERT(sizeof(ARWBombCollSetup) == 0x24);
 STATIC_ASSERT(offsetof(ARWBombCollSetup, rotX) == 0x18);
 
 int arwbombcoll_getExtraSize(void) { return 8; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int arwbombcoll_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void arwbombcoll_free(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void arwbombcoll_hitDetect(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void arwbombcoll_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7078);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -59,17 +39,9 @@ void arwbombcoll_init(int obj, int setup)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void arwbombcoll_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void arwbombcoll_initialise(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma scheduling off
 void arwbombcoll_updateMovingAxis(int obj, RingState *state) {

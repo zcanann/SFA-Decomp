@@ -3,35 +3,15 @@
 #include "main/dll/cnthitobjec_state.h"
 
 #include "main/audio/sfx_ids.h"
-#pragma peephole on
-#pragma scheduling on
 int cnthitobjec_getExtraSize(void) { return 0xc; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int cnthitobjec_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void cnthitobjec_free(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void cnthitobjec_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void cnthitobjec_initialise(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -168,7 +148,6 @@ void cnthitobjec_update(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 int mcupgrade_SeqFn(int obj, int p2, int setup)
 {
@@ -179,4 +158,3 @@ int mcupgrade_SeqFn(int obj, int p2, int setup)
     return 0;
 }
 #pragma scheduling reset
-#pragma peephole reset

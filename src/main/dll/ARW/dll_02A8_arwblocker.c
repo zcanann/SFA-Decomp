@@ -39,38 +39,18 @@ int arwblocker_getBlockState(int obj)
 }
 #pragma scheduling reset
 
-#pragma peephole on
-#pragma scheduling on
 int arwblocker_getExtraSize(void) { return 2; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int arwblocker_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void arwblocker_free(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void arwblocker_hitDetect(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void arwblocker_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7218);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -91,17 +71,9 @@ void arwblocker_init(int obj, int setup)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void arwblocker_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void arwblocker_initialise(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma scheduling off
 void arwblocker_update(int obj) {

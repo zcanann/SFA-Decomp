@@ -178,19 +178,10 @@ void wclevelcont_setScale(int obj, s16 col, s16 row, f32 *outXp, f32 *outZp)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int wclevelcont_getExtraSize(void) { return 0x1c; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int wclevelcont_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void wclevelcont_free(int obj)
 {
@@ -213,24 +204,17 @@ void wclevelcont_free(int obj)
     gameTimerStop();
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
-#pragma scheduling on
 void wclevelcont_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6DD8);
     }
 }
-#pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void wclevelcont_hitDetect(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -431,14 +415,6 @@ void wclevelcont_init(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void wclevelcont_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void wclevelcont_initialise(void) {}
-#pragma scheduling reset
-#pragma peephole reset

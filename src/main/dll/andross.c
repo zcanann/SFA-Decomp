@@ -4,45 +4,23 @@
 #include "main/dll/andross.h"
 #include "main/mapEventTypes.h"
 
-#pragma peephole on
-#pragma scheduling on
 int andross_getExtraSize(void) { return 0xec; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int andross_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void andross_free(int obj)
 {
     fn_8006CB24(obj);
     Rcp_DisableDistortionFilter();
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void andross_hitDetect(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void andross_render(int obj, int p2, int p3, int p4, int p5)
 {
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E74DC);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void andross_setPartSignal(int obj, int signal)
 {
     int state;
@@ -53,8 +31,6 @@ void andross_setPartSignal(int obj, int signal)
     state = *(int *)&((GameObject *)obj)->extra;
     ((AndrossState *)state)->unkAD |= signal;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma scheduling off
 int andross_updateModelAlpha(int obj)

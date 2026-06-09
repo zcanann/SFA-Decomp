@@ -25,38 +25,18 @@ STATIC_ASSERT(offsetof(AndrossBrainState, health) == 0x1E);
 STATIC_ASSERT(offsetof(AndrossBrainState, flashTimer) == 0x1F);
 
 
-#pragma peephole on
-#pragma scheduling on
 int androssbrain_getExtraSize(void) { return 0x28; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int androssbrain_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void androssbrain_free(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void androssbrain_render(int obj, int p2, int p3, int p4, int p5)
 {
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7600);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void androssbrain_hitDetect(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -80,7 +60,6 @@ void androssbrain_setState(int obj, int newState, u8 force)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void androssbrain_init(int obj)
 {
@@ -90,7 +69,6 @@ void androssbrain_init(int obj)
     ObjHits_SetTargetMask(obj, 4);
 }
 #pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

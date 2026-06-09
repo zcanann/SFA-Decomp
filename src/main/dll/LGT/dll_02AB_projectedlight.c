@@ -64,19 +64,10 @@ STATIC_ASSERT(offsetof(ProjectedLightSetup, tevModeB) == 0x3E);
 STATIC_ASSERT(offsetof(ProjectedLightSetup, orthoDepthNibbles) == 0x3F);
 STATIC_ASSERT(sizeof(ProjectedLightSetup) == 0x40);
 
-#pragma peephole on
-#pragma scheduling on
 int projectedlight_getExtraSize(void) { return 8; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int projectedlight_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
 #pragma scheduling off
 void projectedlight_free(int obj)
 {
@@ -89,19 +80,10 @@ void projectedlight_free(int obj)
     }
 }
 #pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void projectedlight_hitDetect(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void projectedlight_render(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -201,14 +183,6 @@ void projectedlight_init(int obj, int setup)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void projectedlight_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void projectedlight_initialise(void) {}
-#pragma scheduling reset
-#pragma peephole reset

@@ -969,7 +969,6 @@ int ObjHits_TestTaperedCapsuleXZ(float *point, float pointRadius, float baseRadi
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma peephole on
 /*
  * --INFO--
  *
@@ -1019,7 +1018,6 @@ int ObjHits_TestTaperedCapsule3D(float *point, float pointRadius, float baseRadi
     *sumR = radiusSum;
     return *dist2 <= radiusSum * radiusSum;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /*

@@ -5,8 +5,6 @@
 
 #include "main/audio/sfx_ids.h"
 #include "main/objhits_types.h"
-#pragma peephole on
-#pragma scheduling on
 /* wcfloortile_getExtraSize == 0x8. */
 typedef struct WcFloorTileState {
     f32 shakeTime;
@@ -33,37 +31,21 @@ STATIC_ASSERT(offsetof(WcFloorTileSetup, base.posY) == 0x0C);
 STATIC_ASSERT(offsetof(WcFloorTileSetup, eventId) == 0x1A);
 
 int wcfloortile_getExtraSize(void) { return 8; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 int wcfloortile_getObjectTypeId(void) { return 0; }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void wcfloortile_free(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
-#pragma scheduling on
 void wcfloortile_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6E98);
     }
 }
-#pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void wcfloortile_hitDetect(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -78,17 +60,9 @@ void wcfloortile_init(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void wcfloortile_release(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
 void wcfloortile_initialise(void) {}
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -367,7 +341,6 @@ void arwarwing_updateBombFire(int obj, int state) {
 #pragma scheduling reset
 
 #pragma peephole off
-#pragma scheduling on
 #pragma scheduling off
 void arwarwing_spawnBomb(int obj, int state, int side) {
     ArwingState *arwing = (ArwingState *)state;
@@ -398,7 +371,6 @@ void arwarwing_spawnBomb(int obj, int state, int side) {
     fn_8022ECE0(arwing->activeBombObj, arwing->bombProjectileLifetime);
     Sfx_PlayFromObject(obj, SFXbaddie_rach_call3);
 }
-#pragma scheduling reset
 #pragma scheduling reset
 #pragma peephole reset
 
