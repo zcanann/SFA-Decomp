@@ -4654,7 +4654,6 @@ extern f32 lbl_803E1B68;
 /* dll_54_update  addr=0x801106E4  size=0x490  linkage=global */
 void dll_54_update(u8 *obj) {
     CameraObject *camera = (CameraObject *)obj;
-    CameraMode54State *state = lbl_803DD5C0;
     int i;
     int count;
     f32 zz, xx;
@@ -4668,26 +4667,26 @@ void dll_54_update(u8 *obj) {
     s16 cur;
     s16 d;
 
-    if (state->exitRequested != 0) {
+    if (lbl_803DD5C0->exitRequested != 0) {
         (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
     } else {
-        if (state->lookAtObj == NULL) {
+        if (lbl_803DD5C0->lookAtObj == NULL) {
             int *arr = (int *)ObjList_GetObjects(&i, &count);
             for (; i < count; i++) {
                 GameObject *o = (GameObject *)arr[i];
                 if (o->anim.seqId == 0x2ab) {
-                    state->lookAtObj = o;
+                    lbl_803DD5C0->lookAtObj = o;
                 } else if (o->anim.seqId == 0x4dc) {
-                    state->originObj = o;
+                    lbl_803DD5C0->originObj = o;
                 }
             }
         }
-        if (state->playerObj == NULL) {
-            state->playerObj = (GameObject *)Obj_GetPlayerObject();
+        if (lbl_803DD5C0->playerObj == NULL) {
+            lbl_803DD5C0->playerObj = (GameObject *)Obj_GetPlayerObject();
         }
         {
-            GameObject *a = state->lookAtObj;
-            GameObject *b = state->originObj;
+            GameObject *a = lbl_803DD5C0->lookAtObj;
+            GameObject *b = lbl_803DD5C0->originObj;
             dx = a->anim.worldPosX - b->anim.worldPosX;
             dy = a->anim.worldPosY - b->anim.worldPosY;
             dz = a->anim.worldPosZ - b->anim.worldPosZ;
@@ -4697,33 +4696,33 @@ void dll_54_update(u8 *obj) {
         dist = sqrtf(zz + (dy * dy + xx));
         nx = dx / dist;
         nz = dz / dist;
-        fx = -(lbl_803E1B40 * nx - state->originObj->anim.worldPosX) -
-             state->playerObj->anim.worldPosX;
-        fz = -(lbl_803E1B40 * nz - state->originObj->anim.worldPosZ) -
-             state->playerObj->anim.worldPosZ;
+        fx = -(lbl_803E1B40 * nx - lbl_803DD5C0->originObj->anim.worldPosX) -
+             lbl_803DD5C0->playerObj->anim.worldPosX;
+        fz = -(lbl_803E1B40 * nz - lbl_803DD5C0->originObj->anim.worldPosZ) -
+             lbl_803DD5C0->playerObj->anim.worldPosZ;
         d2 = sqrtf(fx * fx + fz * fz);
         t = (lbl_803E1B44 - d2) / lbl_803E1B44;
         camera->fov = lbl_803E1B4C * t + lbl_803E1B48;
         h = lbl_803E1B54 * t + lbl_803E1B50;
-        camera->anim.worldPosX = -(nx * h - state->originObj->anim.worldPosX);
+        camera->anim.worldPosX = -(nx * h - lbl_803DD5C0->originObj->anim.worldPosX);
         camera->anim.worldPosY =
-            lbl_803E1B5C * t + (lbl_803E1B58 + state->originObj->anim.worldPosY);
-        camera->anim.worldPosZ = -(nz * h - state->originObj->anim.worldPosZ);
+            lbl_803E1B5C * t + (lbl_803E1B58 + lbl_803DD5C0->originObj->anim.worldPosY);
+        camera->anim.worldPosZ = -(nz * h - lbl_803DD5C0->originObj->anim.worldPosZ);
         camera->anim.rotX = -getAngle(dx, dz);
         camera->anim.rotY =
             -getAngle(-(lbl_803E1B60 * (dist / lbl_803E1B64) - dy), sqrtf(xx + zz));
 
-        if (state->transitionDone == 0) {
-            t2 = state->transitionTimer / lbl_803E1B5C;
+        if (lbl_803DD5C0->transitionDone == 0) {
+            t2 = lbl_803DD5C0->transitionTimer / lbl_803E1B5C;
             camera->anim.worldPosX =
-                t2 * (state->startX - camera->anim.worldPosX) + camera->anim.worldPosX;
+                t2 * (lbl_803DD5C0->startX - camera->anim.worldPosX) + camera->anim.worldPosX;
             camera->anim.worldPosY =
-                t2 * (state->startY - camera->anim.worldPosY) + camera->anim.worldPosY;
+                t2 * (lbl_803DD5C0->startY - camera->anim.worldPosY) + camera->anim.worldPosY;
             camera->anim.worldPosZ =
-                t2 * (state->startZ - camera->anim.worldPosZ) + camera->anim.worldPosZ;
+                t2 * (lbl_803DD5C0->startZ - camera->anim.worldPosZ) + camera->anim.worldPosZ;
 
             cur = camera->anim.rotX;
-            d = (s16)(state->startYaw - (u16)cur);
+            d = (s16)(lbl_803DD5C0->startYaw - (u16)cur);
             if (d > 0x8000) {
                 d = (s16)(d - 0xffff);
             }
@@ -4733,15 +4732,15 @@ void dll_54_update(u8 *obj) {
             camera->anim.rotX = (f32)d * t2 + (f32)cur;
 
             cur = camera->anim.rotY;
-            d = (s16)(state->startPitch - (u16)cur);
+            d = (s16)(lbl_803DD5C0->startPitch - (u16)cur);
             d = (d > 0x8000) ? (s16)(d - 0xffff) : d;
             d = (d < -0x8000) ? (s16)(d + 0xffff) : d;
             camera->anim.rotY = (f32)d * t2 + (f32)cur;
 
-            state->transitionTimer -= timeDelta;
-            if (state->transitionTimer < (lim = *(f32 *)&lbl_803E1B68)) {
-                state->transitionDone = 1;
-                state->transitionTimer = lim;
+            lbl_803DD5C0->transitionTimer -= timeDelta;
+            if (lbl_803DD5C0->transitionTimer < (lim = *(f32 *)&lbl_803E1B68)) {
+                lbl_803DD5C0->transitionDone = 1;
+                lbl_803DD5C0->transitionTimer = lim;
             }
         }
         Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
