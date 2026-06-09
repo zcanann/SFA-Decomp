@@ -531,7 +531,7 @@ void campfire_init(int obj, int p2)
         } else {
             modelLightStruct_setEnabled(*state, 0, lbl_803E3D7C);
         }
-        modelLightStruct_setPosition(*state, lbl_803E3D7C, lbl_803E3D94, lbl_803E3D7C);
+        modelLightStruct_setPosition(*state, lbl_803E3D7C, lbl_803E3D94, *(f32 *)&lbl_803E3D7C);
         modelLightStruct_startColorFade(*state, 1, 3);
         modelLightStruct_setDiffuseTargetColor(*state, 0xff, 0x5c, 0, 0xff);
         modelLightStruct_setupGlow(*state, 0, 0xff, 0x7f, 0, 0x87, lbl_803E3D98 * ((GameObject *)obj)->anim.rootMotionScale);
