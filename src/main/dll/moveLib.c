@@ -1793,7 +1793,7 @@ int dll_2E_func0E(int obj, int curve, f32 phase, int p4, int c, f32 *d, int *fla
             *flags |= 0x10;
         }
     }
-    ObjAnim_SampleRootCurvePhase(phase, (ObjAnimComponent *)obj, d);
+    ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(obj, phase, d);
     if (*flags & 1) {
         if (hitDetectFn_800658a4(obj, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY,
                                  ((GameObject *)obj)->anim.localPosZ, &ground, 0) == 0) {

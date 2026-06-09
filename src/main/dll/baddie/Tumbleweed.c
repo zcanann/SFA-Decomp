@@ -4820,7 +4820,7 @@ void fn_80137D28(void)
 #pragma scheduling reset
 
 #pragma scheduling off
-int trickyFindNearestUsableBaddie(int p1, int p2, f32 maxRadius)
+int trickyFindNearestUsableBaddie(int p1, f32 maxRadius, int p2)
 {
   extern int dll_19_func1B(int);
   extern int *gBaddieControlInterface;
