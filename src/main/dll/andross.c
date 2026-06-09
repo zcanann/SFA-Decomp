@@ -55,6 +55,7 @@ int andross_updateModelAlpha(int obj)
 #pragma scheduling reset
 
 #pragma scheduling off
+#pragma peephole off
 void andross_init(int obj, u8 *setup)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -89,6 +90,7 @@ void andross_init(int obj, u8 *setup)
     unlockLevel(0, 0, 1);
 }
 #pragma scheduling reset
+#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
