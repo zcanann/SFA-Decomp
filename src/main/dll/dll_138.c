@@ -490,7 +490,6 @@ typedef struct Dll138Vec3 {
 } Dll138Vec3;
 
 #pragma scheduling off
-#pragma fp_contract off
 int pushable_func0B(int obj,int other)
 {
   int state;
@@ -505,5 +504,4 @@ int pushable_func0B(int obj,int other)
   return sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1])) <
          *(f32 *)(state + 0xc);
 }
-#pragma fp_contract reset
 #pragma scheduling reset

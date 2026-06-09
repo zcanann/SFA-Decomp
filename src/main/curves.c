@@ -442,7 +442,6 @@ f32 Curve_EvalBSpline(f32 t, f32* values, f32* outTangent)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma dont_inline on
 void CurveHeap_SiftDown(CurveHeapNode* heap, s32 count, s32 index)
 {
     u16 priority = heap[index].priority;
@@ -467,5 +466,4 @@ void CurveHeap_SiftDown(CurveHeapNode* heap, s32 count, s32 index)
     heap[index].priority = priority;
     heap[index].value = value;
 }
-#pragma dont_inline reset
 #pragma scheduling reset

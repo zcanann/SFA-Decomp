@@ -71,7 +71,6 @@ extern u32 synthFXSetCtrl14(u32 handle, u8 controller, u16 value);
 #define S3D_CLAMP_7BIT(value) (((value) & 0xff) > 0x7f ? 0x7f : (value))
 
 #pragma fp_contract off
-#pragma dont_inline on
 void s3dCalcEmitter(Snd3DEmitter *emitter, f32 *distanceOut, f32 *panOut, f32 *azimuthOut,
                     f32 *pitchOut, f32 *frontBackOut)
 {
@@ -235,10 +234,8 @@ void s3dCalcEmitter(Snd3DEmitter *emitter, f32 *distanceOut, f32 *panOut, f32 *a
         *frontBackOut = frontBackSum / (f32)listenerCount;
     }
 }
-#pragma dont_inline reset
 #pragma fp_contract reset
 
-#pragma dont_inline on
 void s3dApplyEmitterControls(Snd3DEmitter *emitter, f32 distance, f32 pan, f32 unused,
                              f32 azimuth, f32 pitch)
 {
@@ -286,12 +283,10 @@ void s3dApplyEmitterControls(Snd3DEmitter *emitter, f32 distance, f32 pan, f32 u
         }
     }
 }
-#pragma dont_inline reset
 
 /*
  * s3dInsertSortedEmitter - distance-sorted voice node insert.
  */
-#pragma dont_inline on
 void s3dInsertSortedEmitter(Snd3DEmitter *emitter, f32 distance)
 {
     S3DMixGroup *group;
@@ -342,12 +337,10 @@ void s3dInsertSortedEmitter(Snd3DEmitter *emitter, f32 distance)
     }
     ((S3DSortedNode *)(base + 0xb50))[lbl_803DE36D++].distance = distance;
 }
-#pragma dont_inline reset
 
 /*
  * s3dInsertActiveEmitter - active spatial voice node insert.
  */
-#pragma dont_inline on
 int s3dInsertActiveEmitter(Snd3DEmitter *emitter, f32 distance, f32 arg1, f32 arg2, f32 arg3,
                            f32 arg4)
 {
@@ -414,9 +407,7 @@ int s3dInsertActiveEmitter(Snd3DEmitter *emitter, f32 distance, f32 arg1, f32 ar
     return 1;
 }
 
-#pragma dont_inline reset
 
-#pragma dont_inline on
 void s3dStartQueuedEmitters(void)
 {
     S3DMixGroup *group;
@@ -512,4 +503,3 @@ next_node:
         groupIndex++;
     }
 }
-#pragma dont_inline reset

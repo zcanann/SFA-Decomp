@@ -1498,7 +1498,6 @@ FUN_8015e9f4(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 
 #pragma scheduling off
 #pragma peephole off
-#pragma fp_contract off
 void fn_8015EB6C(int obj, int p2, int p3)
 {
   extern int *gBaddieControlInterface;
@@ -1544,7 +1543,6 @@ void fn_8015EB6C(int obj, int p2, int p3)
     *(f32 *)(sub + 0) += timeDelta;
   }
 }
-#pragma fp_contract reset
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -1602,7 +1600,6 @@ FUN_8015ec98(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 
 #pragma scheduling off
 #pragma peephole off
-#pragma fp_contract off
 void fn_8015ED1C(int p1, int p2, int p3)
 {
   extern int *gBaddieControlInterface;
@@ -1644,7 +1641,6 @@ void fn_8015ED1C(int p1, int p2, int p3)
     (*(void (**)(void *))(**(int **)((char *)pc8 + 0x68) + 0x50))(pc8);
   }
 }
-#pragma fp_contract reset
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -2637,7 +2633,6 @@ void fn_801606F0(int obj, void *p2, int sub, GroundBaddieState *p)
 #pragma dont_inline reset
 
 #pragma dont_inline on
-#pragma fp_contract off
 void fn_8016083C(int *obj, GroundBaddieState *sub, GroundBaddieState *p)
 {
   extern void characterDoEyeAnims(int *obj, u8 *a);
@@ -2679,7 +2674,6 @@ void fn_8016083C(int *obj, GroundBaddieState *sub, GroundBaddieState *p)
     *(int *)&p->baddie.targetObj = Obj_GetPlayerObject();
   }
 }
-#pragma fp_contract reset
 #pragma dont_inline reset
 
 int dll_CB_seqFn(short *obj, int p2, u8 *e)

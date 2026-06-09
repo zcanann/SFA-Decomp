@@ -57,7 +57,6 @@ int waterfx_consumePendingImpactNearPoint(f32 *vec, f32 dist) {
 
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 void waterfx_spawnRipple(s16 p1, int p2, f32 a, f32 b, f32 c, f32 d) {
     int i = 0;
     WaterEntry7 *p = lbl_803DD238;
@@ -118,7 +117,6 @@ void waterfx_spawnRipple(s16 p1, int p2, f32 a, f32 b, f32 c, f32 d) {
     e->f18 = lbl_803DF2E8 * (f32)p2;
     lbl_803DD23C = (void *)((int)lbl_803DD23C + 1);
 }
-#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 

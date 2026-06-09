@@ -395,7 +395,6 @@ void ktrex_initialiseStateHandlerTables(void) {
 
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 int ktrex_updateArenaPathProgress(int obj) {
     u16 flags;
     int phase;
@@ -440,7 +439,6 @@ int ktrex_updateArenaPathProgress(int obj) {
     ((KTRexArenaState *)gKTRexState)->unkF0 = *(f32 *)((char *)gKTRexState + 8) * (((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowBZ)[phase] - ((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowAZ)[phase]) + ((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowAZ)[phase];
     return changed;
 }
-#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 

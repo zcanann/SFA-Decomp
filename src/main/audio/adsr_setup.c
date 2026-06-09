@@ -10,7 +10,6 @@ extern u16 lbl_8032F618[];
  * 1 = decay setup, 2 = sustain setup, 4 = done. Mode 1 scales levels
  * by the 0xC1-step volume curve.
  */
-#pragma dont_inline on
 int fn_8027A660(int state)
 {
     ADSR_VARS *adsr = (ADSR_VARS *)state;
@@ -101,7 +100,6 @@ int fn_8027A660(int state)
     }
     return ret;
 }
-#pragma dont_inline reset
 
 /*
  * Reset state's submode and call fn_8027A660.

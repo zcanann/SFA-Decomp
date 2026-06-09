@@ -57,11 +57,9 @@ float powfBitEstimate(float x, float y) {
 
 #pragma optimization_level 0
 #pragma peephole off
-#pragma optimize_for_size on
 void Vec_normalize(void* v_in, void* v_out) {
     Vec_scale(v_in, v_out, invSqrt(Vec_lengthSquared(v_in)));
 }
-#pragma optimize_for_size reset
 #pragma peephole reset
 #pragma optimization_level reset
 

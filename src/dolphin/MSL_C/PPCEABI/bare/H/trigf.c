@@ -24,7 +24,6 @@ float tanf(float x)
     return sin__Ff(x) / c;
 }
 
-#pragma dont_inline on
 
 float cos__Ff(float x)
 {
@@ -36,7 +35,6 @@ float sin__Ff(float x)
     return sinf(x);
 }
 
-#pragma dont_inline reset
 
 float cosf(float x)
 {

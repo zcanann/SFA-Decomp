@@ -315,7 +315,6 @@ void saveSelectSetupMenuItems(void **p) {
         i++;
     }
 }
-#pragma dont_inline on
 void saveSelectGoToChapterSelect(void)
 {
   int i;
@@ -364,7 +363,6 @@ void saveSelectGoToChapterSelect(void)
     lbl_803DD6C4 = 0;
   }
 }
-#pragma dont_inline reset
 /*
  * --INFO--
  *

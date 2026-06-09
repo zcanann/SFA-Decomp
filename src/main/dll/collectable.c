@@ -3683,7 +3683,6 @@ int Tricky_func13(int *obj) {
 }
 
 /* Tricky_func12: 36b - cmpwi(5) selector returning 1 or 0. */
-#pragma optimize_for_size off
 int Tricky_func12(int *obj) {
     u8 v;
     int r;
@@ -3698,7 +3697,6 @@ int Tricky_func12(int *obj) {
     }
     return r;
 }
-#pragma optimize_for_size reset
 
 /* Tricky_func10: enter state 10 against targetObj, or queue it while Tricky is busy. */
 int Tricky_func10(int *obj,int targetObj) {

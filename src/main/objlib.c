@@ -2083,7 +2083,6 @@ int ObjHits_PollPriorityHitWithCooldown(int obj,float *cooldown,int *outHitObjec
   return collisionType;
 }
 
-#pragma dont_inline on
 /*
  * --INFO--
  *
@@ -2136,7 +2135,6 @@ int ObjHits_PollPriorityHitEffectWithCooldown(int obj,uint hitFxMode,uint colorR
   }
   return collisionType;
 }
-#pragma dont_inline reset
 
 /*
  * --INFO--

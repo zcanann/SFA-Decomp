@@ -10171,7 +10171,6 @@ int fn_8029BC4C(int obj, int state, f32 fv)
 
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 void Lightfoot_ProcessHitResponseFlags(int obj, int inner)
 {
     if (*(int *)((char *)inner + 0x314) & 4) {
@@ -10208,7 +10207,6 @@ void Lightfoot_ProcessHitResponseFlags(int obj, int inner)
         doRumble(lbl_803E81D8);
     }
 }
-#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -11496,7 +11494,6 @@ int fn_802AE480(int obj, int inner, int state)
 
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 void fn_80295E90(int obj, int mode)
 {
     int inner = *(int *)&((GameObject *)obj)->extra;
@@ -11538,7 +11535,6 @@ void fn_80295E90(int obj, int mode)
         Sfx_PlayFromObject(obj, SFXmn_dimbos36);
     }
 }
-#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 

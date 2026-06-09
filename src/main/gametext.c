@@ -13,12 +13,10 @@ int isSpace(u32 c)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma dont_inline on
 void* gameTextGetBox(int box)
 {
     return &lbl_802C7400[box * 0x20];
 }
-#pragma dont_inline reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -129,7 +127,6 @@ void gameTextShow(int a)
 
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 void gameTextShowStr(char *text, int box, int arg2, int arg3)
 {
     int i;
@@ -152,7 +149,6 @@ void gameTextShowStr(char *text, int box, int arg2, int arg3)
         e[4] = arg3;
     }
 }
-#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 

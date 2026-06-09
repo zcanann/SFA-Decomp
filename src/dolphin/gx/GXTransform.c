@@ -191,7 +191,6 @@ void GXLoadTexMtxImm(const f32 mtx[][4], u32 id, GXTexMtxType type) {
 #endif
 }
 
-#pragma dont_inline on
 #pragma fp_contract off
 void GXSetViewportJitter(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz, u32 field) {
     f32 sx;
@@ -241,7 +240,6 @@ void GXSetViewportJitter(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz,
     __GXData->bpSentNot = 1;
 }
 
-#pragma dont_inline reset
 #pragma fp_contract on
 
 void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz) {

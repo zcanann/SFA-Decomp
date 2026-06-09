@@ -98,8 +98,6 @@ FUN_80017468(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 #pragma push
 #pragma scheduling off
 
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
@@ -169,8 +167,6 @@ FUN_80017998(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 }
 
 /* Pattern wrappers. */
-#pragma dont_inline on
-#pragma dont_inline reset
 
 /* ObjModel/model-file accessors. */
 
@@ -178,33 +174,19 @@ FUN_80017998(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 
 #pragma pop
 
 /* Global game-state / text accessors. */
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 #pragma peephole off
 int roundUpTo4(int x) {
@@ -215,7 +197,6 @@ int roundUpTo4(int x) {
     return x;
 }
 
-#pragma dont_inline on
 int roundUpTo8(int x) {
     int r = x & 7;
     if (r > 0) {
@@ -239,17 +220,12 @@ int roundUpTo32(int x) {
     }
     return x;
 }
-#pragma dont_inline reset
 #pragma peephole reset
 
 /* Simple field/global accessors. */
 extern u8 lbl_803DCB10;
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 extern void *mmAlloc(int size, int type, int flag);
 
@@ -260,12 +236,10 @@ extern void *mmAlloc(int size, int type, int flag);
 
 #pragma pop
 
-#pragma dont_inline on
 #pragma push
 #pragma scheduling off
 #pragma peephole off
 #pragma pop
-#pragma dont_inline reset
 
 #pragma peephole off
 void texFlagFn_80023cbc(int v) {
@@ -282,8 +256,6 @@ extern int lbl_803DB434;
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 
 #pragma dont_inline on
@@ -330,14 +302,12 @@ extern void *lbl_803DD61C;
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
 void *getCache(void) {
     if (lbl_803DD610 != 4 && lbl_803DD610 != 0) {
         return lbl_803DD61C;
     }
     return (void *)0xe0000000;
 }
-#pragma dont_inline reset
 
 
 #pragma pop
@@ -350,15 +320,12 @@ extern void mmFreeDeferred(void *p);
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
 void cacheQueueWait(int sync) {
     if (lbl_803DD610 == 4 || lbl_803DD610 == 0) {
         LCQueueWait();
     }
 }
-#pragma dont_inline reset
 
-#pragma dont_inline on
 void mm_free(void *p) {
     if (gMmFreeDelay == 0) {
         mmFree(p);
@@ -366,7 +333,6 @@ void mm_free(void *p) {
         mmFreeDeferred(p);
     }
 }
-#pragma dont_inline reset
 
 #pragma pop
 
@@ -374,12 +340,8 @@ void mm_free(void *p) {
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
 
-#pragma dont_inline reset
 
 #pragma pop
 
@@ -397,12 +359,8 @@ void AtomicSList_Push(void **list, void *node) {
     OSRestoreInterrupts(intr);
 }
 
-#pragma dont_inline on
 
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 #pragma pop
 
@@ -422,32 +380,18 @@ extern MmRegion gMmRegionTable[];
 #pragma scheduling off
 #pragma peephole off
 
-#pragma optimize_for_size on
-#pragma optimize_for_size reset
 
-#pragma optimize_for_size on
-#pragma optimize_for_size reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
 #pragma pop
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 int mmGetRegionForPtr(u8 *ptr) {
     int i;
@@ -1120,7 +1064,6 @@ extern void LCLoadBlocks(void *destTag, void *srcAddr, u32 numBlocks);
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
 void copyToCache(void *dst, void *src, u32 count) {
     if (lbl_803DD610 != 4 && lbl_803DD610 != 0) {
         int len;
@@ -1134,50 +1077,27 @@ void copyToCache(void *dst, void *src, u32 count) {
         LCLoadBlocks(dst, src, count);
     }
 }
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
-
-#pragma dont_inline on
-#pragma dont_inline reset
-#pragma pop
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
-
-#pragma dont_inline on
-#pragma dont_inline reset
-
-#pragma dont_inline on
-#pragma dont_inline reset
 
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma optimize_for_size on
-#pragma optimize_for_size reset
 
-#pragma dont_inline on
 
-#pragma dont_inline reset
+
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+
+
 
 #pragma pop
 
@@ -1187,11 +1107,8 @@ extern void LCStoreBlocks(void *destAddr, void *srcTag, u32 numBlocks);
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 
-#pragma dont_inline on
 void memcpyToCache(void *dst, void *src, u32 count) {
     if (lbl_803DD610 != 4 && lbl_803DD610 != 0) {
         int len;
@@ -1206,7 +1123,6 @@ void memcpyToCache(void *dst, void *src, u32 count) {
         LCStoreBlocks(dst, src, count);
     }
 }
-#pragma dont_inline reset
 
 #pragma pop
 
@@ -1214,8 +1130,6 @@ void memcpyToCache(void *dst, void *src, u32 count) {
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
@@ -1272,8 +1186,6 @@ void memcpyToCache(void *dst, void *src, u32 count) {
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma optimize_for_size on
-#pragma optimize_for_size reset
 
 #pragma pop
 
@@ -1290,8 +1202,6 @@ void memcpyToCache(void *dst, void *src, u32 count) {
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
@@ -1302,155 +1212,112 @@ void memcpyToCache(void *dst, void *src, u32 count) {
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 
 #pragma push
 #pragma scheduling off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 
 #pragma peephole off
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_loop_invariants off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 void *stackCreate(int count, int size)
 {
     u8 *s;
@@ -1491,13 +1358,11 @@ void *stackCreate(int count, int size)
     }
     return s;
 }
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 void *mmAlloc(int size, int type, int flag)
 {
     void *result;
@@ -1548,7 +1413,6 @@ void *mmAlloc(int size, int type, int flag)
     }
     return result;
 }
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
@@ -1556,8 +1420,6 @@ void *mmAlloc(int size, int type, int flag)
 #pragma peephole off
 #pragma dont_inline on
 #pragma opt_strength_reduction off
-#pragma opt_loop_invariants off
-#pragma opt_loop_invariants reset
 #pragma opt_strength_reduction reset
 #pragma dont_inline reset
 #pragma pop
@@ -1565,54 +1427,11 @@ void *mmAlloc(int size, int type, int flag)
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
-#pragma pop
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline on
-#pragma dont_inline reset
-#pragma dont_inline reset
-#pragma pop
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
-#pragma pop
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
-#pragma pop
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
-#pragma pop
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma dont_inline on
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
@@ -1629,21 +1448,12 @@ void *mmAlloc(int size, int type, int flag)
 
 #pragma push
 #pragma scheduling off
-#pragma pop
-
-#pragma push
-#pragma scheduling off
 #pragma peephole off
 #pragma pop
 
 #pragma push
 #pragma scheduling off
-#pragma pop
-
-#pragma push
-#pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 #pragma pop
 
 #pragma push
@@ -1651,6 +1461,40 @@ void *mmAlloc(int size, int type, int flag)
 #pragma peephole off
 #pragma dont_inline on
 #pragma dont_inline reset
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
 #pragma pop
 
 #pragma push

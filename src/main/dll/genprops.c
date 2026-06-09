@@ -7128,7 +7128,6 @@ extern f32 lbl_803E32E8;
 extern f32 lbl_803E32EC;
 extern f32 lbl_803E32F0;
 
-#pragma opt_loop_invariants off
 void staff_update(int *obj)
 {
     u8 *state = ((GameObject *)obj)->extra;
@@ -7219,7 +7218,6 @@ void staff_update(int *obj)
         }
     }
 }
-#pragma opt_loop_invariants reset
 
 extern void playerAddHealth(void *player, int amount);
 extern void gameBitIncrement(int eventId);

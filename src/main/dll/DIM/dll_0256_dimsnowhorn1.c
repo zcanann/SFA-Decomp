@@ -799,7 +799,6 @@ int DIMSnowHorn1_func16(void) { return 0; }
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma dont_inline on
 void DIMSnowHorn1_func15(s16 *packed, undefined4 outX, undefined4 outY, undefined4 outZ)
 {
     extern void setMatrixFromObjectPos(void *matrix, void *packedTransform);
@@ -826,7 +825,6 @@ void DIMSnowHorn1_func15(s16 *packed, undefined4 outX, undefined4 outY, undefine
     setMatrixFromObjectPos(matrix, &transform);
     Matrix_TransformPoint(lbl_803E8234, lbl_803E8298, lbl_803E829C, matrix, outX, outY, outZ);
 }
-#pragma dont_inline reset
 #pragma scheduling reset
 
 #pragma peephole off
@@ -889,7 +887,6 @@ int DIMSnowHorn1_func11(int obj)
 
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 int DIMSnowHorn1_animEventCallback(int obj, undefined4 unused, int setup)
 {
     DIMSnowHorn1State *state;
@@ -959,12 +956,10 @@ int DIMSnowHorn1_animEventCallback(int obj, undefined4 unused, int setup)
     ((GameObject *)obj)->anim.velocityZ = fz;
     return (u32)(-*(s8 *)(setup + 0x56) | *(s8 *)(setup + 0x56)) >> 0x1f;
 }
-#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma dont_inline on
 void DIMSnowHorn1_func22(int obj, f32 scale)
 {
     void *pathMtx;
@@ -995,12 +990,10 @@ void DIMSnowHorn1_func22(int obj, f32 scale)
     mtx44_mult(lbl_803DB0F0, pathMtx, lbl_803DB0F0);
     fn_8003B950(lbl_803DB0F0);
 }
-#pragma dont_inline reset
 #pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 int DIMSnowHorn1_setScale(int obj)
 {
     DIMSnowHorn1State *state;
@@ -1029,7 +1022,6 @@ int DIMSnowHorn1_setScale(int obj)
     }
     return 0;
 }
-#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -1117,7 +1109,6 @@ void DIMSnowHorn1_free(int obj)
 
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 void DIMSnowHorn1_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     DIMSnowHorn1State *state = ((GameObject *)obj)->extra;
@@ -1136,7 +1127,6 @@ void DIMSnowHorn1_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         ObjPath_GetPointWorldPositionArray(obj, 2, 4, (f32 *)((char *)state + 0x9b0));
     }
 }
-#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -1149,7 +1139,6 @@ void DIMSnowHorn1_hitDetect(void) {}
 
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 void fn_802BB4B4(int obj, int a, int slot)
 {
     extern u32 getButtonsJustPressed(int controller);
@@ -1213,7 +1202,6 @@ void fn_802BB4B4(int obj, int a, int slot)
         (obj, (int)state, timeDelta, timeDelta, gDIMSnowHorn1StateHandlers, &gDIMSnowHorn1DefaultStateHandler);
     fn_802BB998(obj, (int)state, (int)state);
 }
-#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 

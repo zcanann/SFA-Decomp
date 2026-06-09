@@ -170,7 +170,6 @@ int DVDRead(void* fileInfo, void* buf, int size, int offset)
 
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 void* loadFileByPathAsync(char* path, int* outSize, int unused, void (*cb)(void*))
 {
     void* fileInfo;
@@ -212,6 +211,5 @@ void* loadFileByPathAsync(char* path, int* outSize, int unused, void (*cb)(void*
     mm_free(fileInfo);
     return NULL;
 }
-#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset

@@ -5162,7 +5162,6 @@ void skyFn_80062a54(int param, f32 a, f32 b, f32 c)
   lbl_803DB658 = 1;
 }
 
-#pragma dont_inline on
 int fn_80061DD8(void *obj, void *u1, void *u2, int count, f32 *outBase, f32 *outPtr, f32 *input, int limit)
 {
   ObjModelState *modelState = ((ObjAnimComponent *)obj)->modelState;
@@ -5206,7 +5205,6 @@ int fn_80061DD8(void *obj, void *u1, void *u2, int count, f32 *outBase, f32 *out
   }
   return lbl_803DCEF2 != 0;
 }
-#pragma dont_inline reset
 
 void fn_8006135C(s16 *out, void *obj)
 {

@@ -111,8 +111,6 @@ extern f32 timeDelta;
 #pragma push
 #pragma scheduling off
 
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
@@ -182,8 +180,6 @@ FUN_80017998(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 }
 
 /* Pattern wrappers. */
-#pragma dont_inline on
-#pragma dont_inline reset
 int return0_8002969C(void) { return 0x0; }
 int return0_8002A5B8(void) { return 0x0; }
 
@@ -251,17 +247,14 @@ void *ObjModel_GetBaseVertexCoords(u8 *model, int vertexIndex) {
     return ((ModelFileHeader *)model)->vertices + vertexIndex * 6;
 }
 
-#pragma dont_inline on
 void *ObjModel_GetRenderOp(u8 *model, int renderOpIndex) {
     return ((ModelFileHeader *)model)->renderOps + renderOpIndex * 0x44;
 }
-#pragma dont_inline reset
 
 u16 modelFileHeaderGetCullDistance(u8 *modelFile) {
     return ((ModelFileHeader *)modelFile)->cullDistance;
 }
 
-#pragma dont_inline on
 void ObjModel_ClearRenderAttachment(u8 *model) {
     if (((ObjModel *)model)->renderAttachment != NULL) {
         mm_free(((ObjModel *)model)->renderAttachment);
@@ -270,15 +263,12 @@ void ObjModel_ClearRenderAttachment(u8 *model) {
         ((ObjModel *)model)->renderCallback = NULL;
     }
 }
-#pragma dont_inline reset
 
-#pragma dont_inline on
 void ObjModel_EnableDefaultRenderCallback(void *obj, u8 *model, f32 *mtx, int enabled, f32 scale) {
     if (((ObjModel *)model)->renderAttachment == NULL) {
         ((ObjModel *)model)->renderCallback = gxTextureFn_80072dfc;
     }
 }
-#pragma dont_inline reset
 
 void *ObjModel_GetCurrentVertexCoords(u8 *model, int vertexIndex) {
     model += (((((ObjModel *)model)->bufferFlags >> 1) & 1) * 4);
@@ -345,25 +335,17 @@ int ObjModel_GetUnpackedResourceSize(u8 *resource, int baseSize) {
     return baseSize + resource[8] * resource[7];
 }
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 
 #pragma pop
 
 /* Global game-state / text accessors. */
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 
 
-#pragma dont_inline on
 int getHudHiddenFrameCount(void);
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 void __set_debug_bba(u8 *p) {
     p[0x19] = 0;
@@ -371,13 +353,11 @@ void __set_debug_bba(u8 *p) {
 
 int roundUpTo4(int x);
 
-#pragma dont_inline on
 int roundUpTo8(int x);
 
 int roundUpTo16(int x);
 
 int roundUpTo32(int x);
-#pragma dont_inline reset
 
 /* Simple field/global accessors. */
 
@@ -385,11 +365,7 @@ void fn_80026C30(u8 *p, u8 v) {
     p[0x1a] = v;
 }
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 extern void *mmAlloc(int size, int type, int flag);
 extern void *memset(void *dst, int val, int n);
@@ -406,12 +382,10 @@ extern void textureFree(void *tex);
 
 #pragma pop
 
-#pragma dont_inline on
 #pragma push
 #pragma scheduling off
 #pragma peephole off
 #pragma pop
-#pragma dont_inline reset
 
 void tailFn_80026c38(u8 *p, f32 a, f32 b, f32 c) {
     *(f32 *)(p + 8) = a;
@@ -424,13 +398,9 @@ void tailFn_80026c38(u8 *p, f32 a, f32 b, f32 c) {
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 
-#pragma dont_inline on
 
-#pragma dont_inline reset
 
 int alignUp2(int x);
 
@@ -443,9 +413,7 @@ extern int randomGetRange(int lo, int hi);
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
 void *getCache(void);
-#pragma dont_inline reset
 
 
 #pragma pop
@@ -456,9 +424,7 @@ extern f32 lbl_803DE854;
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
 void cacheQueueWait(int sync);
-#pragma dont_inline reset
 
 void fn_80026C54(u8 *p) {
     p[0x18] = 0;
@@ -468,9 +434,7 @@ void fn_80026C54(u8 *p) {
     }
 }
 
-#pragma dont_inline on
 void mm_free(void *p);
-#pragma dont_inline reset
 
 #pragma pop
 
@@ -501,9 +465,7 @@ void setGQR7Packed(int a, int b, int c, int d) {
 }
 #pragma dont_inline reset
 
-#pragma dont_inline on
 
-#pragma dont_inline reset
 
 #pragma pop
 
@@ -511,12 +473,8 @@ void setGQR7Packed(int a, int b, int c, int d) {
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
 
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 int ObjModel_HasActiveBlendChannels(u8 *model) {
     ObjModelBlendChannel *ch;
@@ -562,18 +520,10 @@ extern void PSVECNormalize(f32 *src, f32 *dst);
 #pragma scheduling off
 #pragma peephole off
 
-#pragma optimize_for_size on
-#pragma optimize_for_size reset
-
-#pragma optimize_for_size on
-#pragma optimize_for_size reset
-
-#pragma dont_inline on
-#pragma dont_inline reset
 
 
-#pragma dont_inline on
-#pragma dont_inline reset
+
+
 
 extern void PSVECAdd(f32 *a, f32 *b, f32 *out);
 extern void PSMTXConcat(f32 *a, f32 *b, f32 *ab);
@@ -585,7 +535,6 @@ extern void PSMTXConcat(f32 *a, f32 *b, f32 *ab);
 
 extern int *lbl_803DCB60;
 
-#pragma dont_inline on
 int modelGetAmapSize(int a, int b, int c) {
     int size;
     if (b != 0) {
@@ -603,7 +552,6 @@ int modelGetAmapSize(int a, int b, int c) {
     }
     return size;
 }
-#pragma dont_inline reset
 
 
 extern void *getCurrentDataFile(int id);
@@ -815,8 +763,6 @@ int loadModelAndAnimTabs(void) {
     return 1;
 }
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 
 extern void DCFlushRange(void *addr, u32 nBytes);
@@ -835,12 +781,8 @@ extern f32 PSVECDotProduct(f32 *a, f32 *b);
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
 void copyToCache(void *dst, void *src, u32 count);
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 void ObjModel_InitRenderBuffers(void) {
     if ((PPCMfhid2() & 0x10000000) == 0) {
@@ -877,28 +819,16 @@ void modelFn_800292e0(void) {
     }
 }
 
-#pragma dont_inline on
 void *animationLoad(int id, int a, int b, int e, int f);
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 
 
 void model_multMtxs(u8 *model, f32 *out) {
@@ -923,11 +853,7 @@ void model_multMtxs(u8 *model, f32 *out) {
     }
 }
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 #pragma pop
 
@@ -935,12 +861,8 @@ void model_multMtxs(u8 *model, f32 *out) {
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma optimize_for_size on
-#pragma optimize_for_size reset
 
-#pragma dont_inline on
 
-#pragma dont_inline reset
 
 void fn_80026C88(u8 *p) {
     int i;
@@ -1006,13 +928,9 @@ void Model_GetVertexPosition(u8 *model, int vertexIndex, f32 *out) {
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
 int randomGetRange(int lo, int hi);
-#pragma dont_inline reset
 
-#pragma dont_inline on
 void memcpyToCache(void *dst, void *src, u32 count);
-#pragma dont_inline reset
 
 void *ObjAnim_LoadCachedMove(int animId, int moveIndex, u8 *cache, ObjAnimDef *animDef) {
     void *out = NULL;
@@ -1421,8 +1339,6 @@ void setGQR6_2(int a, int b, int c, int d) {
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma optimize_for_size on
-#pragma optimize_for_size reset
 
 #pragma pop
 
@@ -1439,8 +1355,6 @@ void setGQR6_2(int a, int b, int c, int d) {
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
@@ -1453,34 +1367,24 @@ extern void debugPrintf(char *fmt, ...);
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 
 #pragma push
 #pragma scheduling off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 extern void lbl_80006C6C(int *out, u8 *a, void *buf, int c, int d, u8 *e, int f, int g);
@@ -1489,7 +1393,6 @@ extern u8 lbl_80340740[];
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 void modelAnimUpdateChannels(u8 *hdr, u8 *stk, int n)
 {
     u8 *p2;
@@ -1675,7 +1578,6 @@ void modelWalkAnimFn_800248b8(u8 *a, u8 *b, u8 *c, int d, f32 e)
 }
 #pragma ppc_unroll_factor_limit 4
 #pragma ppc_unroll_instructions_limit 96
-#pragma dont_inline reset
 #pragma pop
 
 extern void *animLoadFromTable(u8 *hdr, int idx, int a, u8 *b);
@@ -1713,7 +1615,6 @@ extern void *animLoadFromTable(u8 *hdr, int idx, int a, u8 *b);
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 void modelAnimResetState(void *m, void *data)
 {
     u8 *p2 = (u8 *)data;
@@ -1761,7 +1662,6 @@ void modelAnimResetState(void *m, void *data)
         *(u16 *)(p2 + 0x4a) = *(u16 *)(p2 + 0x44);
     }
 }
-#pragma dont_inline reset
 #pragma pop
 
 #define BLENDTBL_ENTRY(K, OFF)                              \
@@ -1775,7 +1675,6 @@ void modelAnimResetState(void *m, void *data)
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 void ObjModel_BuildAnimBlendTable(u8 *obj, u8 *p2, u8 *hdr)
 {
     ObjAnimComponent *objAnim;
@@ -1826,13 +1725,11 @@ void ObjModel_BuildAnimBlendTable(u8 *obj, u8 *p2, u8 *hdr)
     ((s16 *)lbl_80340740)[w++] = 0x1000;
     ((s16 *)lbl_80340740)[w] = 0x1000;
 }
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 void *modelLoad_layoutBuffers(u8 *p, int b, int isType1, int c)
 {
     u8 *out;
@@ -1997,7 +1894,6 @@ void *modelLoad_layoutBuffers(u8 *p, int b, int isType1, int c)
     ((ObjModel *)out)->unk60 = 0;
     return out;
 }
-#pragma dont_inline reset
 #pragma pop
 
 extern char sModelAnimationBufferOverflowWarning[];
@@ -2006,7 +1902,6 @@ extern char sModelAnimationBufferOverflowWarning[];
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_loop_invariants off
-#pragma dont_inline on
 int modelLoadAnimations(void *model, int id, void *animBase)
 {
     u8 *hdr = (u8 *)model;
@@ -2136,7 +2031,6 @@ int modelLoadAnimations(void *model, int id, void *animBase)
     }
     return 0;
 }
-#pragma dont_inline reset
 #pragma pop
 
 extern void Obj_GetWorldPosition(u8 *obj, void *x, void *y, void *z);
@@ -2144,93 +2038,67 @@ extern void Obj_GetWorldPosition(u8 *obj, void *x, void *y, void *z);
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 void *mmAlloc(int size, int type, int flag);
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
@@ -2238,8 +2106,6 @@ void *mmAlloc(int size, int type, int flag);
 #pragma peephole off
 #pragma dont_inline on
 #pragma opt_strength_reduction off
-#pragma opt_loop_invariants off
-#pragma opt_loop_invariants reset
 #pragma opt_strength_reduction reset
 #pragma dont_inline reset
 #pragma pop
@@ -2247,14 +2113,11 @@ void *mmAlloc(int size, int type, int flag);
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 int modelLoad_calcSizes(void *model, int flags, int *sizes, int a4)
 {
     u8 *hdr = (u8 *)model;
@@ -2330,7 +2193,6 @@ int modelLoad_calcSizes(void *model, int flags, int *sizes, int a4)
     }
     return roundUpTo32(((total + 0x2f) & ~0xf) + 0x10);
 }
-#pragma dont_inline reset
 #pragma pop
 
 extern f32 lbl_803DE850;
@@ -2338,7 +2200,6 @@ extern f32 lbl_803DE850;
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 #pragma dont_inline on
 void fn_80026928(int *obj, int b, int *p3)
 {
@@ -2433,28 +2294,21 @@ void fn_80026928(int *obj, int b, int *p3)
     }
 }
 #pragma dont_inline reset
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
@@ -2495,7 +2349,6 @@ void *animLoadFromTable(u8 *hdr, int id, int idx, u8 *out)
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 void *loadAnimation(int hdr, s16 id, int b, u8 *bufout)
 {
     int tmp;
@@ -2522,7 +2375,6 @@ void *loadAnimation(int hdr, s16 id, int b, u8 *bufout)
     }
     return animLoadFromTable((u8 *)hdr, id, (s16)b, bufout);
 }
-#pragma dont_inline reset
 #pragma pop
 
 typedef struct {

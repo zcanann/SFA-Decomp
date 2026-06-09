@@ -199,7 +199,6 @@ void salDeactivateStudio(u8 studio)
  *
  * EN v1.0 Address: 0x8027BFE4, size 244b
  */
-#pragma dont_inline on
 int salCheckVolErrorAndResetDelta(u16 *dsp_vol, u16 *dsp_delta, u16 *last_vol, u16 targetVol, u16 *resetFlags,
                 u16 resetMask)
 {
@@ -235,7 +234,6 @@ int salCheckVolErrorAndResetDelta(u16 *dsp_vol, u16 *dsp_delta, u16 *last_vol, u
     *dsp_delta = 0;
     return 0;
 }
-#pragma dont_inline reset
 
 static void AddDpop(s32 *sum, s16 delta)
 {

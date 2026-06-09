@@ -584,7 +584,6 @@ void *voxLoadVoxMapActual(int mapArg, int slot, int b9, int b8)
 
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 void fn_800118EC(int a1, VoxBoxArg* a2, int a3)
 {
     s16 box[3];
@@ -605,7 +604,6 @@ void fn_800118EC(int a1, VoxBoxArg* a2, int a3)
     box[1] = a2->f2;
     voxmapsFn_80010ff4((struct RouteState *)a1, a2, a3, count, box);
 }
-#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 

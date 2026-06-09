@@ -82,7 +82,6 @@ extern u8 gSynthInitialized;
 extern s16 synthLoadedGroupCount;
 extern GSTACK synthLoadedGroupTable[];
 
-#pragma dont_inline on
 void InsertData(u16 id, void *data, u8 dataType, u32 remove)
 {
     MEM_DATA *m;
@@ -195,7 +194,6 @@ void InsertData(u16 id, void *data, u8 dataType, u32 remove)
         break;
     }
 }
-#pragma dont_inline reset
 
 /*
  * EN v1.0 Address: 0x8027B260

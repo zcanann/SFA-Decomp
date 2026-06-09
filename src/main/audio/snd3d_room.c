@@ -190,7 +190,6 @@ void salCalcVolumeMatrix(u8 voltab_index, f32 *out, u32 pan, u32 span, u32 itd, 
  * registered listeners.
  */
 #pragma fp_contract off
-#pragma dont_inline on
 void s3dUpdateRoomDistances(void)
 {
     SndSpatialListener *listener;
@@ -221,13 +220,11 @@ void s3dUpdateRoomDistances(void)
         }
     }
 }
-#pragma dont_inline reset
 
 /*
  * Allocate scarce studio voices to spatial entries and update their
  * activation fade state.
  */
-#pragma dont_inline on
 void s3dAllocateRoomStudios(void)
 {
     SndSpatialEntry *entry;
@@ -352,13 +349,11 @@ void s3dAllocateRoomStudios(void)
         }
     }
 }
-#pragma dont_inline reset
 
 /*
  * Update studio-input bridges between spatial entries as voices appear
  * and disappear.
  */
-#pragma dont_inline on
 void s3dUpdateDoorStudioInputs(void)
 {
     SndStudioInputLink *link;
@@ -405,5 +400,4 @@ void s3dUpdateDoorStudioInputs(void)
         }
     }
 }
-#pragma dont_inline reset
 #pragma fp_contract reset

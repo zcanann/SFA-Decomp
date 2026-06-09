@@ -109,8 +109,6 @@ u32 synthSendKeyOff(u32 handle) {
 }
 
 /* Stub kept so synth_control.c can link; not in v1.0 binary at this address. */
-#pragma dont_inline on
 void synthDispatchDelayedAction(SynthFade* fade) {
     (void)fade;
 }
-#pragma dont_inline reset

@@ -275,7 +275,6 @@ typedef struct SCTotemPoleState {
 #define SC_TOTEMPOLE_SETUP_FRONT 0x4490C
 #define SC_TOTEMPOLE_SETUP_LEFT 0x4490F
 
-#pragma dont_inline on
 #pragma peephole off
 #pragma scheduling off
 int sc_totempole_sortCompletionGameBits(u16 *bits, u16 param2)
@@ -308,7 +307,6 @@ int sc_totempole_sortCompletionGameBits(u16 *bits, u16 param2)
 }
 #pragma scheduling reset
 #pragma peephole reset
-#pragma dont_inline reset
 
 int sc_totempole_getExtraSize(void) { return 0x8; }
 int sc_totempole_getObjectTypeId(void) { return 0x0; }

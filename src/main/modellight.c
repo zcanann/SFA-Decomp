@@ -106,8 +106,6 @@ extern f32 timeDelta;
 #pragma push
 #pragma scheduling off
 
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
@@ -177,8 +175,6 @@ FUN_80017998(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 }
 
 /* Pattern wrappers. */
-#pragma dont_inline on
-#pragma dont_inline reset
 
 /* ObjModel/model-file accessors. */
 
@@ -186,42 +182,26 @@ FUN_80017998(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 
 #pragma pop
 
 /* Global game-state / text accessors. */
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 void objSetEventName(u8 *obj, void *name) {
     ((GameObject *)obj)->anim.eventTable = name;
 }
 
 
-#pragma dont_inline on
 
-#pragma dont_inline reset
 
 /* Simple field/global accessors. */
 
@@ -261,11 +241,7 @@ f32 modelLightStruct_getRadius(ModelLightStruct *p) {
     return p->attenuationFar;
 }
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 void modelLightStruct_setAffectsAabbLightSelection(ModelLightStruct *p, u8 v) {
     p->affectsAabbLightSelection = v;
@@ -437,7 +413,6 @@ void *modelLightStruct_createPointLight(int unused, u8 red, u8 green, u8 blue, u
 }
 #pragma pop
 
-#pragma dont_inline on
 #pragma push
 #pragma scheduling off
 #pragma peephole off
@@ -563,7 +538,6 @@ void *objAllocLight(void *owner) {
     return light;
 }
 #pragma pop
-#pragma dont_inline reset
 
 void modelLightStruct_setProjectionTevModes(ModelLightStruct *p, void *a, void *b) {
     p->projectionTevColorMode = (int)a;
@@ -602,8 +576,6 @@ void modelLightStruct_setDiffuseTargetColor(ModelLightStruct *p, u8 a, u8 b, u8 
     p->diffuseFadeTargetColor[3] = d;
 }
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 void modelLightStruct_getPosition(ModelLightStruct *p, f32 *a, f32 *b, f32 *c) {
     *a = p->viewX;
@@ -618,9 +590,7 @@ void modelLightStruct_getWorldPosition(ModelLightStruct *p, f32 *a, f32 *b, f32 
 }
 
 
-#pragma dont_inline on
 
-#pragma dont_inline reset
 
 void lightSetColor(int i, u8 a, u8 b, u8 c) {
     u8 *base = &lbl_803DB408;
@@ -695,8 +665,6 @@ void lightGetColor(int i, u8 *a, u8 *b, u8 *c) {
     *c = base[i * 4 + 2];
 }
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 void modelLightStruct_updateColorFade(ModelLightStruct *light) {
     f32 progress;
@@ -856,12 +824,8 @@ extern ModelLightChannelState gModelLightChannelStates[];
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
 void mm_free(void *p);
-#pragma dont_inline reset
 
 void modelLightChannel_configure(int i, int a, int b) {
     gModelLightChannelStates[i].mode = a;
@@ -886,12 +850,8 @@ void modelLightChannels_reset(u8 v) {
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
 
-#pragma dont_inline reset
 
 #pragma pop
 
@@ -899,12 +859,8 @@ void modelLightChannels_reset(u8 v) {
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
 
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 #pragma pop
 
@@ -916,20 +872,12 @@ extern void PSVECNormalize(f32 *src, f32 *dst);
 #pragma scheduling off
 #pragma peephole off
 
-#pragma optimize_for_size on
-#pragma optimize_for_size reset
 
-#pragma optimize_for_size on
-#pragma optimize_for_size reset
 
-#pragma dont_inline on
 void Obj_TransformLocalVectorByWorldMatrix(void *obj, f32 *src, f32 *dst);
-#pragma dont_inline reset
 
 
-#pragma dont_inline on
 void Obj_TransformLocalPointByWorldMatrix(u8 *obj, f32 *src, f32 *dst, u8 flag);
-#pragma dont_inline reset
 
 
 void modelLightStruct_setDirection(ModelLightStruct *s, f32 x, f32 y, f32 z) {
@@ -1266,18 +1214,10 @@ void updateLights(void) {
     }
 }
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 
 #pragma pop
@@ -1292,15 +1232,9 @@ extern f32 lbl_802C1A88[];
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
-#pragma dont_inline reset
-
-#pragma dont_inline on
-#pragma dont_inline reset
 
 
-#pragma dont_inline on
-#pragma dont_inline reset
+
 
 void modelLightStruct_setSpotAttenuation(ModelLightStruct *obj, f32 cutoff, int mode) {
     obj->spotCutoff = cutoff;
@@ -1319,7 +1253,6 @@ void modelLightStruct_setDistanceAttenuation(u8 *obj, f32 a, f32 b) {
     GXGetLightAttnK(obj + 0x68, (f32 *)(obj + 0x124), (f32 *)(obj + 0x128), (f32 *)(obj + 0x12c));
 }
 
-#pragma dont_inline on
 u8 modelLightStruct_projectedLightIntersectsObject(u8 *light, u8 *obj) {
     f32 localPos[3];
     f32 projected[3];
@@ -1407,7 +1340,6 @@ u8 modelLightStruct_projectedLightIntersectsObject(u8 *light, u8 *obj) {
 
     return 0;
 }
-#pragma dont_inline reset
 
 #pragma dont_inline on
 f32 modelLightStruct_getObjectIntensity(u8 *light, u8 *obj) {
@@ -1441,7 +1373,6 @@ f32 modelLightStruct_getObjectIntensity(u8 *light, u8 *obj) {
 }
 #pragma dont_inline reset
 
-#pragma dont_inline on
 void modelLightStruct_selectBrightestAabbLights(f32 minX, f32 minY, f32 minZ, f32 maxX, f32 maxY, f32 maxZ,
                  u8 **outLights, int maxLights, int *outCount) {
     int i;
@@ -1518,9 +1449,7 @@ void modelLightStruct_selectBrightestAabbLights(f32 minX, f32 minY, f32 minZ, f3
         *(f32 *)(light + 0x130) = lbl_803DE75C;
     }
 }
-#pragma dont_inline reset
 
-#pragma dont_inline on
 void modelLightStruct_selectObjectLights(u8 *obj, u8 **outLights, int maxLights, int *outCount, int typeMask) {
     f32 delta[3];
     u8 *candidates[20];
@@ -1610,18 +1539,13 @@ void modelLightStruct_selectObjectLights(u8 *obj, u8 **outLights, int maxLights,
         *(f32 *)(light + 0x130) = -*(f32 *)(light + 0x130);
     }
 }
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 void modelLightStruct_updateGlowAlpha(ModelLightStruct *light) {
     s16 v;
@@ -1643,8 +1567,6 @@ void modelLightStruct_updateGlowAlpha(ModelLightStruct *light) {
     light->glowAlpha = v;
 }
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 #pragma pop
 
@@ -1652,12 +1574,8 @@ void modelLightStruct_updateGlowAlpha(ModelLightStruct *light) {
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma optimize_for_size on
-#pragma optimize_for_size reset
 
-#pragma dont_inline on
 
-#pragma dont_inline reset
 
 #pragma pop
 
@@ -1665,12 +1583,8 @@ void modelLightStruct_updateGlowAlpha(ModelLightStruct *light) {
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
 int randomGetRange(int lo, int hi);
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 #pragma pop
 
@@ -1711,8 +1625,6 @@ void modelLightStruct_setupOrthoProjection(ModelLightStruct *obj, f32 a, f32 b, 
                     lbl_803DE790, lbl_803DE790);
 }
 
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 
@@ -1784,8 +1696,6 @@ void modelLightStruct_setSpecularAttenuation(ModelLightStruct *obj, f32 a, f32 b
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma optimize_for_size on
-#pragma optimize_for_size reset
 
 #pragma pop
 
@@ -1803,8 +1713,6 @@ void Obj_BuildInverseWorldTransformMatrix(u8 *obj, f32 *out);
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
@@ -1815,163 +1723,117 @@ void Obj_BuildInverseWorldTransformMatrix(u8 *obj, f32 *out);
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 
 #pragma peephole off
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_loop_invariants off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 void *mmAlloc(int size, int type, int flag);
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
@@ -1979,8 +1841,6 @@ void *mmAlloc(int size, int type, int flag);
 #pragma peephole off
 #pragma dont_inline on
 #pragma opt_strength_reduction off
-#pragma opt_loop_invariants off
-#pragma opt_loop_invariants reset
 #pragma opt_strength_reduction reset
 #pragma dont_inline reset
 #pragma pop
@@ -1988,54 +1848,11 @@ void *mmAlloc(int size, int type, int flag);
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
-#pragma pop
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline on
-#pragma dont_inline reset
-#pragma dont_inline reset
-#pragma pop
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
-#pragma pop
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
-#pragma pop
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
-#pragma pop
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma dont_inline on
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
@@ -2052,21 +1869,12 @@ void *mmAlloc(int size, int type, int flag);
 
 #pragma push
 #pragma scheduling off
-#pragma pop
-
-#pragma push
-#pragma scheduling off
 #pragma peephole off
 #pragma pop
 
 #pragma push
 #pragma scheduling off
-#pragma pop
-
-#pragma push
-#pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 #pragma pop
 
 #pragma push
@@ -2074,6 +1882,40 @@ void *mmAlloc(int size, int type, int flag);
 #pragma peephole off
 #pragma dont_inline on
 #pragma dont_inline reset
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
 #pragma pop
 
 #pragma push

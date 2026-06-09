@@ -684,7 +684,6 @@ extern void *Camera_GetCurrentViewSlot(void);
 extern f32 sqrtf(f32 x);
 extern void voxmaps_worldToGrid(void *world, void *grid);
 extern int voxmaps_traceLine(void *from, void *to, void *out, int p4, int p5);
-#pragma fp_contract off
 void dll_197_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     struct {
@@ -762,7 +761,6 @@ void dll_197_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
     state->sparkTimer = randomGetRange(-10, 10) + 0x3c;
 }
-#pragma fp_contract reset
 
 void dll_197_free(int obj)
 {

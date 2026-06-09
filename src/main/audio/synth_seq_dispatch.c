@@ -115,7 +115,6 @@ typedef struct {
  * Dispatch a queued voice/MIDI channel event by type, then pull the next
  * event for the channel.
  */
-#pragma dont_inline on
 int fn_8026E0E4(int event, u8 voice, u32 *flag)
 {
     SynthMidiCtrlBlock *base = (SynthMidiCtrlBlock *)lbl_803AF550;
@@ -371,7 +370,6 @@ int fn_8026E0E4(int event, u8 voice, u32 *flag)
     }
     return synthGetNextChannelEvent(*(u8 *)(event + 0x15));
 }
-#pragma dont_inline reset
 
 /*
  * Iterate 64 voice slots: for each active one, append it to the studio's
@@ -436,7 +434,6 @@ extern f32 lbl_803E7780;
 extern f32 lbl_803E7784;
 extern f32 lbl_803E7788;
 
-#pragma dont_inline on
 #pragma fp_contract off
 int fn_8026E9D0(u8 voice, u32 param)
 {
@@ -499,4 +496,3 @@ int fn_8026E9D0(u8 voice, u32 param)
     return 1;
 }
 #pragma fp_contract reset
-#pragma dont_inline reset

@@ -20,14 +20,12 @@ void ktrexlevel_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, u
 #pragma peephole reset
 
 #pragma scheduling off
-#pragma dont_inline on
 void ktrexlevel_clearPathGameBits(void) {
     GameBit_Set(0x54a, 0);
     GameBit_Set(0x54e, 0);
     GameBit_Set(0x552, 0);
     GameBit_Set(0x556, 0);
 }
-#pragma dont_inline reset
 #pragma scheduling reset
 
 #pragma scheduling off

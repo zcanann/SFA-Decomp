@@ -100,8 +100,6 @@ extern f32 timeDelta;
 #pragma push
 #pragma scheduling off
 
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
@@ -171,8 +169,6 @@ FUN_80017998(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 }
 
 /* Pattern wrappers. */
-#pragma dont_inline on
-#pragma dont_inline reset
 
 /* ObjModel/model-file accessors. */
 
@@ -180,46 +176,26 @@ FUN_80017998(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 
 #pragma pop
 
 /* Global game-state / text accessors. */
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 
 
-#pragma dont_inline on
-#pragma dont_inline reset
-
-#pragma dont_inline on
-#pragma dont_inline reset
 
 
-#pragma dont_inline on
 
-#pragma dont_inline reset
+
 
 /* Simple field/global accessors. */
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 
 #pragma push
@@ -228,25 +204,19 @@ FUN_80017998(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 
 #pragma pop
 
-#pragma dont_inline on
 #pragma push
 #pragma scheduling off
 #pragma peephole off
 #pragma pop
-#pragma dont_inline reset
 
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 
-#pragma dont_inline on
 
-#pragma dont_inline reset
 
 #pragma pop
 
@@ -256,8 +226,6 @@ extern int randomGetRange(int lo, int hi);
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 f32 getXZDistance(f32 *a, f32 *b) {
     f32 dx = a[0] - b[0];
@@ -296,11 +264,7 @@ int atan2_8002178c(float y, float x) {
     return (int)(lbl_803DE7D8 * fn_802924B4(y, x));
 }
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 #pragma pop
 
@@ -321,8 +285,6 @@ int cos16(u16 angle) {
     return (int)(lbl_803DE7D0 * fcos16(angle));
 }
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 f32 Vec3_Length(f32 *v) {
     return sqrtf(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
@@ -371,9 +333,7 @@ void Vec3_ReflectAgainstNormal(f32 *a, f32 *n, f32 *out) {
     }
 }
 
-#pragma dont_inline on
 
-#pragma dont_inline reset
 
 #pragma pop
 
@@ -381,12 +341,8 @@ void Vec3_ReflectAgainstNormal(f32 *a, f32 *n, f32 *out) {
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
 
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 #pragma pop
 
@@ -398,17 +354,9 @@ extern f32 lbl_803DE7C4;
 #pragma scheduling off
 #pragma peephole off
 
-#pragma optimize_for_size on
-#pragma optimize_for_size reset
 
-#pragma optimize_for_size on
-#pragma optimize_for_size reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 extern void mtxRotateByVec3s(f32 *mtx, void *transform);
 extern void mtx44Transpose(f32 *src, f32 *dst);
@@ -418,14 +366,8 @@ extern void mtx44Transpose(f32 *src, f32 *dst);
 #pragma peephole off
 #pragma pop
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 void initRotationMtx(f32 *m, f32 a, f32 b, f32 c) {
     f32 z = lbl_803DE7C0;
@@ -450,8 +392,6 @@ void initRotationMtx(f32 *m, f32 a, f32 b, f32 c) {
     m[10] = c;
 }
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 
 f32 interpolate(f32 a, f32 t, f32 exp) {
@@ -470,32 +410,17 @@ int atan2i(int y, int x) {
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 void mtx44Transpose(f32 *src, f32 *dst) {
     dst[0] = src[0];
     dst[1] = src[4];
@@ -510,11 +435,9 @@ void mtx44Transpose(f32 *src, f32 *dst) {
     dst[7] = src[13];
     dst[11] = src[14];
 }
-#pragma dont_inline reset
 
 extern void setMatrixFromObjectPos(f32 *mtx, u8 *obj);
 
-#pragma dont_inline on
 void setMatrixFromObjectTransposed(void *obj, f32 *out) {
     f32 m[16];
     setMatrixFromObjectPos(m, (u8 *)obj);
@@ -531,7 +454,6 @@ void setMatrixFromObjectTransposed(void *obj, f32 *out) {
     out[7] = m[13];
     out[11] = m[14];
 }
-#pragma dont_inline reset
 
 void Matrix_TransformPoint(f32 *m, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz) {
     *ox = m[12] + (m[0] * x + m[4] * y + m[8] * z);
@@ -539,20 +461,14 @@ void Matrix_TransformPoint(f32 *m, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *o
     *oz = m[14] + (m[2] * x + m[6] * y + m[10] * z);
 }
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma optimize_for_size on
-#pragma optimize_for_size reset
 
-#pragma dont_inline on
 
-#pragma dont_inline reset
 
 #pragma pop
 
@@ -600,7 +516,6 @@ void Matrix_TransformVector(f32 *m, f32 *v, f32 *out) {
 extern int rand(void);
 extern f32 lbl_803DE7F8;
 
-#pragma dont_inline on
 int randomGetRange(int lo, int hi) {
     f32 v;
     if (lo == hi) {
@@ -612,7 +527,6 @@ int randomGetRange(int lo, int hi) {
     v = v + (f32)lo;
     return (int)v;
 }
-#pragma dont_inline reset
 
 void copyMatrix44(f32 *src, f32 *dst) {
     dst[0] = src[0];
@@ -646,8 +560,6 @@ void Vec3_Normalize(f32 *v) {
     }
 }
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 #pragma pop
 
@@ -655,8 +567,6 @@ void Vec3_Normalize(f32 *v) {
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
@@ -713,8 +623,6 @@ void Vec3_Normalize(f32 *v) {
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma optimize_for_size on
-#pragma optimize_for_size reset
 
 #pragma pop
 
@@ -731,8 +639,6 @@ void Vec3_Normalize(f32 *v) {
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 extern f32 fsin16(int angle);
@@ -819,85 +725,61 @@ void mtxRotateByVec3s(f32 *mtx, void *transform) {
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 
 #pragma peephole off
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_loop_invariants off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 extern f32 mathSinf(f32);
@@ -906,84 +788,61 @@ extern f32 mathCosf(f32);
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma fp_contract off
 /* Tail residual: a1/a2/b0 FP volatile rotation (f1/f2/f3) resists decl-order
    and fresh-web restructures -- recipe #82 named-local cap. */
 void mtx44_mult(f32 *a, f32 *b, f32 *out)
@@ -1061,7 +920,6 @@ void mtx44_mult(f32 *a, f32 *b, f32 *out)
     s = a0 + b3;
     out[2] = (a1 + a2) + s;
 }
-#pragma fp_contract reset
 #pragma peephole reset
 #pragma scheduling reset
 #pragma pop
@@ -1069,9 +927,7 @@ void mtx44_mult(f32 *a, f32 *b, f32 *out)
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 #pragma opt_strength_reduction off
-#pragma opt_loop_invariants off
 void mtx44_multSafe(int a, int b, f32 *out)
 {
     f32 tmp[16];
@@ -1110,9 +966,7 @@ void mtx44_multSafe(int a, int b, f32 *out)
         *(f32 *)((int)out + ((i + 3) << 2)) = *(f32 *)((int)tmp + ((i + 3) << 2));
     }
 }
-#pragma opt_loop_invariants reset
 #pragma opt_strength_reduction reset
-#pragma dont_inline reset
 #pragma pop
 
 extern f32 lbl_803DE7E8;
@@ -1121,7 +975,6 @@ extern f32 lbl_803DE7EC;
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 void vecRotateYXZ(s16 *a, f32 *v)
 {
     f32 x, y, z;
@@ -1163,60 +1016,41 @@ void vecRotateYXZ(s16 *a, f32 *v)
     v[1] = y;
     v[2] = z;
 }
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline on
-#pragma dont_inline reset
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
@@ -1329,8 +1163,6 @@ void fn_800213D0(f32 *a, f32 *b, s16 *out0, s16 *out1, s16 *out2)
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push

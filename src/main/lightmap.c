@@ -3584,7 +3584,6 @@ typedef union {
     } u;
 } F64Cvt;
 
-#pragma opt_loop_invariants off
 void renderSceneGeometry(int *p1, s8 *order)
 {
     F64Cvt cv;
@@ -3716,7 +3715,6 @@ void renderSceneGeometry(int *p1, s8 *order)
         layer--;
     } while (layer >= 0);
 }
-#pragma opt_loop_invariants reset
 
 typedef struct {
     u32 a;

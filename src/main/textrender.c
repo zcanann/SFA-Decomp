@@ -682,7 +682,6 @@ void *gameTextGetPhrase(int textId, int phraseIndex) {
     return *(void **)(*(int *)((u8 *)entry + 8) + phraseIndex * 4);
 }
 
-#pragma dont_inline on
 void *gameTextGetStr(int textId) {
     u8 *entry;
     char *strings;
@@ -718,7 +717,6 @@ void *gameTextGetStr(int textId) {
     t = gameTextGet();
     return *(void **)*(u8 **)((u8 *)t + 8);
 }
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
@@ -883,8 +881,6 @@ FUN_80017998(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 }
 
 /* Pattern wrappers. */
-#pragma dont_inline on
-#pragma dont_inline reset
 
 /* ObjModel/model-file accessors. */
 
@@ -892,34 +888,22 @@ FUN_80017998(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 extern u8 framesThisStep;
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 
 #pragma pop
 
 /* Global game-state / text accessors. */
 
-#pragma dont_inline on
 int getGameState(void);
-#pragma dont_inline reset
 
 
 
-#pragma dont_inline on
 int getHudHiddenFrameCount(void);
-#pragma dont_inline reset
 
 int getCurLanguage(void) {
     return curLanguage;
@@ -932,9 +916,7 @@ void *getCurGameText(void) {
 #pragma dont_inline reset
 
 
-#pragma dont_inline on
 
-#pragma dont_inline reset
 
 /* Simple field/global accessors. */
 
@@ -944,11 +926,9 @@ int gameTextGetCharset(void) {
 }
 #pragma dont_inline reset
 
-#pragma dont_inline on
 void gameTextSetDrawFunc(void *fn) {
     gameTextDrawFunc = fn;
 }
-#pragma dont_inline reset
 
 extern void *mmAlloc(int size, int type, int flag);
 extern void textureFree(void *tex);
@@ -960,12 +940,10 @@ extern void textureFree(void *tex);
 
 #pragma pop
 
-#pragma dont_inline on
 #pragma push
 #pragma scheduling off
 #pragma peephole off
 #pragma pop
-#pragma dont_inline reset
 
 f32 gameTextFn_80019c00(void) {
     return *(f32 *)(gameTextFonts + 0x20);
@@ -1008,12 +986,10 @@ void mainLoopDoGameText(void) {
 }
 
 
-#pragma dont_inline on
 int mmSetFreeDelay(int v);
 
 int testAndSet_onlyUseHeap3(int v);
 
-#pragma dont_inline reset
 
 #pragma pop
 
@@ -1023,8 +999,6 @@ extern void *textureLoadAsset(int assetId);
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 
 #pragma pop
@@ -1043,12 +1017,8 @@ void gameTextInit(void) {
     gameTextLoadDir(0x1c);
 }
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
 void mm_free(void *p);
-#pragma dont_inline reset
 
 #pragma pop
 
@@ -1056,12 +1026,8 @@ void mm_free(void *p);
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
 
-#pragma dont_inline reset
 
 #pragma pop
 
@@ -1231,8 +1197,6 @@ void gameTextSetCursor(s16 x, s16 y, int flags) {
     }
 }
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 #pragma pop
 
@@ -1259,7 +1223,6 @@ int gameTextFn_8001b44c(int x) {
     return 0;
 }
 
-#pragma optimize_for_size on
 void gameTextLoadTaskText(int taskId) {
     int textId;
     int dirId;
@@ -1302,9 +1265,7 @@ checkAllowed:
         lbl_803DC9F4 = 0xff;
     }
 }
-#pragma optimize_for_size reset
 
-#pragma optimize_for_size on
 int subtitleIsActive(void) {
     int ret;
 
@@ -1316,31 +1277,18 @@ int subtitleIsActive(void) {
     }
     return ret;
 }
-#pragma optimize_for_size reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
 #pragma pop
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 int mmCreateMemoryStore(int size);
 
@@ -1355,37 +1303,19 @@ extern void *memcpy(void *dst, const void *src, int n);
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 #pragma dont_inline on
 void gameTextSetColor(u8 r, u8 g, u8 b, u8 a) {
@@ -1434,7 +1364,6 @@ extern int lbl_803DCA14;
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma optimize_for_size on
 void gameTextInitFn_8001bd14(void) {
     int i;
     int zero;
@@ -1487,7 +1416,6 @@ void gameTextInitFn_8001bd14(void) {
         i--;
     } while (i != 0);
 }
-#pragma optimize_for_size reset
 
 #pragma dont_inline on
 void subtitleFn_8001b700(void) {
@@ -1560,11 +1488,7 @@ void subtitleStart(int x) {
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 #pragma pop
 
@@ -1572,8 +1496,6 @@ void subtitleStart(int x) {
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 extern u8 curGameTexts[];
@@ -1723,7 +1645,6 @@ extern void gameTextLoadGraphicsFn_8001a918(void);
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma optimize_for_size on
 void gameTextInitFn_8001a234(void) {
     u8 *gameTextBase;
     u8 *p;
@@ -1816,7 +1737,6 @@ void gameTextInitFn_8001a234(void) {
     curGameTextDir = (void *)3;
     lbl_803DB378 = mmCreateMemoryStore(0x800);
 }
-#pragma optimize_for_size reset
 
 void gameTextRun(void) {
     u8 *gameTextBase;
@@ -2206,8 +2126,6 @@ void gameTextLoadForCurMap(int sourceId) {
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
@@ -2218,8 +2136,6 @@ void gameTextLoadForCurMap(int sourceId) {
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 extern void *lbl_8033BE40[];
@@ -2401,8 +2317,6 @@ extern int mmSetFreeDelay(int delay);
 
 #pragma push
 #pragma scheduling off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 extern u8 *textureAlloc(u32 w, u32 h, int kind, int a, int b, int c, int d, int e, int f);
@@ -2418,7 +2332,6 @@ typedef struct GameTextCharset {
 
 #pragma push
 #pragma scheduling off
-#pragma dont_inline on
 void setLanguageFn_8001ad64(void *reqp) {
     u8 *req = (u8 *)reqp;
     GameTextCharset *cs;
@@ -2551,73 +2464,54 @@ void setLanguageFn_8001ad64(void *reqp) {
     cs->status = 2;
     *(int *)(req + 0x44) = 3;
 }
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 
 #pragma peephole off
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_loop_invariants off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 extern u16 OSGetFontEncode(void);
@@ -2631,7 +2525,6 @@ extern int lbl_803DB3C4;
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 void gameTextLoadGraphicsFn_8001a918(void)
 {
     u8 *fontData;
@@ -2816,112 +2709,77 @@ void gameTextLoadGraphicsFn_8001a918(void)
     testAndSet_onlyUseHeap3(savedHeap);
     *(int *)(base31 + 0x6c) = 2;
 }
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 void *mmAlloc(int size, int type, int flag);
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma opt_strength_reduction off
-#pragma opt_loop_invariants off
-#pragma opt_loop_invariants reset
-#pragma opt_strength_reduction reset
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline on
-#pragma dont_inline reset
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 extern void subtitleUpdateAndDraw(int a);
@@ -2929,31 +2787,21 @@ extern void subtitleUpdateAndDraw(int a);
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 extern int lbl_803DCA08;
@@ -3082,8 +2930,6 @@ void boxDrawFn_8001c5ac(u16 *strPtr, int boxId, u8 *p)
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push

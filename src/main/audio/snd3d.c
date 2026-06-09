@@ -40,7 +40,6 @@ extern f32 lbl_803E7880;
 extern f32 lbl_803E78A4;
 extern f32 lbl_803E78C4;
 
-#pragma dont_inline on
 void s3dHandle(void)
 {
     Snd3DEmitter *emitter;
@@ -173,7 +172,6 @@ update_voice:
     s3dAllocateRoomStudios();
     s3dUpdateDoorStudioInputs();
 }
-#pragma dont_inline reset
 
 /*
  * Reset 3D sound bookkeeping and store a stereo flag.

@@ -311,7 +311,6 @@ fail:
 
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32 *v)
 {
     f32 x = v[0];
@@ -351,7 +350,6 @@ void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32 *v)
     v[1] = B;
     v[2] = p;
 }
-#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -785,12 +783,10 @@ checked:
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma dont_inline on
 void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId)
 {
     Sfx_KeepAliveLoopedObjectSoundLimited(obj, sfxId, 0);
 }
-#pragma dont_inline reset
 #pragma scheduling reset
 
 #pragma scheduling off
@@ -1045,7 +1041,6 @@ void Sfx_StopObjectChannel(u32 obj, u32 channel)
 
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 void Sfx_StopFromObject(u32 obj, u32 sfxId)
 {
     SfxObjectChannel* objectChannel;
@@ -1061,7 +1056,6 @@ void Sfx_StopFromObject(u32 obj, u32 sfxId)
         objectChannel->handle = (u32)-1;
     }
 }
-#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -1113,7 +1107,6 @@ void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale
 
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale)
 {
     u8 volumeByte;
@@ -1155,7 +1148,6 @@ void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale)
         sndFXCtrl14(objectChannel->handle, 0x80, (s32)(lbl_803DE578 * volumeScale));
     }
 }
-#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -1359,12 +1351,10 @@ void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u32 obj, u16 sfxId)
 #pragma scheduling reset
 
 #pragma scheduling off
-#pragma dont_inline on
 void Sfx_PlayFromObject(u32 obj, u16 sfxId)
 {
     Sfx_PlayFromObjectEx(obj, NULL, 0, sfxId);
 }
-#pragma dont_inline reset
 #pragma scheduling reset
 
 #pragma scheduling off

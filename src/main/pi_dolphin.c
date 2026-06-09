@@ -642,7 +642,6 @@ struct MldfTables {
 
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 undefined4 mapLoadDataFile(int param_1,int param_2)
 {
   struct MldfNames *nm = (struct MldfNames *)sResourceFileNameAudioTab;
@@ -1589,7 +1588,6 @@ undefined4 mapLoadDataFile(int param_1,int param_2)
   }
   return result;
 }
-#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 

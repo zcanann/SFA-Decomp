@@ -2952,7 +2952,6 @@ void mediumbasket_enterWhirlpoolGroup(int* obj, GroundBaddieState *state) {
     ((GameObject *)obj)->anim.rotX -= 256;
 }
 
-#pragma fp_contract off
 void mediumbasket_tryAcquireTarget(int obj, int p2, int p3)
 {
   extern int *gBaddieControlInterface;
@@ -2993,9 +2992,7 @@ void mediumbasket_tryAcquireTarget(int obj, int p2, int p3)
     ((GroundBaddieState *)p2)->targetState = 1;
   }
 }
-#pragma fp_contract reset
 
-#pragma fp_contract off
 int mediumbasket_checkTargetState(int obj, int p2)
 {
   extern int *gPlayerInterface;
@@ -3041,4 +3038,3 @@ int mediumbasket_checkTargetState(int obj, int p2)
 return0:
   return 0;
 }
-#pragma fp_contract reset

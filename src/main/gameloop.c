@@ -112,9 +112,7 @@ extern f32 timeDelta;
 #pragma push
 #pragma scheduling off
 
-#pragma dont_inline on
 void *gameTextGetStr(int textId);
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
@@ -198,20 +196,12 @@ int return0_8002969C(void);
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 extern void *lbl_803DCAB4;
 extern u8 framesThisStep;
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 
 #pragma pop
@@ -224,11 +214,9 @@ extern s8 lbl_803DCA3A;
 extern s8 lbl_803DCA3B;
 extern s16 lbl_803DCA46;
 
-#pragma dont_inline on
 int getGameState(void) {
     return lbl_803DCA3D;
 }
-#pragma dont_inline reset
 
 extern u8 lbl_803DCA49;
 extern void init(void);
@@ -265,38 +253,28 @@ void setFrameCountdown_800202c4(u8 v) {
     lbl_803DCA3B = v;
 }
 
-#pragma dont_inline on
 int getHudHiddenFrameCount(void) {
     return lbl_803DCA3A;
 }
-#pragma dont_inline reset
 
 s16 getScreenBlankFrameCount(void) {
     return lbl_803DCA46;
 }
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 void crash(void) {
     *(u8 *)0 = 0;
 }
 
 
-#pragma dont_inline on
 
-#pragma dont_inline reset
 
 /* Simple field/global accessors. */
 extern int lbl_803DCAE8[2];
 extern u8 lbl_803DCA48;
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
 void gameTextSetDrawFunc(void *fn);
-#pragma dont_inline reset
 
 extern void *memset(void *dst, int val, int n);
 
@@ -307,12 +285,10 @@ extern void *memset(void *dst, int val, int n);
 
 #pragma pop
 
-#pragma dont_inline on
 #pragma push
 #pragma scheduling off
 #pragma peephole off
 #pragma pop
-#pragma dont_inline reset
 
 u8 getButtonObjects(void **p) {
     *p = lbl_803DCAE8;
@@ -337,8 +313,6 @@ void fn_8001FEA8(void) {
     lbl_803DCAF0 = 0xc9;
 }
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 void mainLoopDoGameText(void);
 
@@ -358,12 +332,10 @@ void addButtonObject(void *v) {
 }
 #pragma peephole reset
 
-#pragma dont_inline on
 int mmSetFreeDelay(int v);
 
 int testAndSet_onlyUseHeap3(int v);
 
-#pragma dont_inline reset
 
 #pragma pop
 
@@ -371,9 +343,7 @@ int testAndSet_onlyUseHeap3(int v);
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
 void *getCache(void);
-#pragma dont_inline reset
 
 
 #pragma pop
@@ -392,11 +362,7 @@ void cutsceneExit(void) {
 
 void gameTextInit(void);
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 void *Obj_GetPlayerObject(void);
 
@@ -472,8 +438,6 @@ void mapReload(void) {
     lbl_803DCA39 = 1;
 }
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 #pragma dont_inline on
 void *loadAssetFileById(int id, int arg) {
@@ -499,9 +463,7 @@ void *loadTextureFile(int id, int arg) {
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
 
-#pragma dont_inline reset
 
 void gameTextLoadDir(int dirId);
 
@@ -531,17 +493,9 @@ void cutsceneFadeInOut(int a) {
     cutsceneEnterExit(a, 1);
 }
 
-#pragma optimize_for_size on
-#pragma optimize_for_size reset
 
-#pragma optimize_for_size on
-#pragma optimize_for_size reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 #pragma push
 #pragma scheduling off
@@ -549,15 +503,9 @@ void cutsceneFadeInOut(int a) {
 #pragma pop
 
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 int gameBitDecrement(int bit) {
     int val = GameBit_Get(bit);
@@ -569,8 +517,6 @@ int gameBitDecrement(int bit) {
     return 0;
 }
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 extern void OSReport(char *fmt, ...);
 extern void waitNextFrame(void);
@@ -591,11 +537,8 @@ extern void LCEnable(void);
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
 void copyToCache(void *dst, void *src, u32 count);
-#pragma dont_inline reset
 
-#pragma dont_inline on
 int cacheAllocAndCopy(u32 srcAddr, u32 size, u32 *cacheCursor, u32 *outEnd, u32 limit) {
     register u32 src;
     register u32 copySize;
@@ -636,7 +579,6 @@ int cacheAllocAndCopy(u32 srcAddr, u32 size, u32 *cacheCursor, u32 *outEnd, u32 
     *cursor = src;
     return 0;
 }
-#pragma dont_inline reset
 
 void ObjModel_InitRenderBuffers(void);
 
@@ -654,44 +596,26 @@ void *animationLoad(int id, s16 a, s16 b, int e, int f) {
 }
 #pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
-#pragma dont_inline on
 void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
-#pragma dont_inline reset
 
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma optimize_for_size on
 void gameTextInitFn_8001bd14(void);
-#pragma optimize_for_size reset
 
-#pragma dont_inline on
 
-#pragma dont_inline reset
 
 void Obj_ApplyPendingParentLinks(void);
 #pragma pop
@@ -703,8 +627,6 @@ extern u8 *lbl_803DCADC;
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 extern s16 lbl_803DCAD8;
 extern u8 *lbl_803DCAE0;
@@ -853,8 +775,6 @@ int gameBitIncrement(int bit) {
     return val;
 }
 
-#pragma dont_inline on
-#pragma dont_inline reset
 
 void Obj_FlushDeferredFreeList(void);
 
@@ -864,8 +784,6 @@ void Obj_FlushDeferredFreeList(void);
 #pragma scheduling off
 #pragma peephole off
 
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
@@ -951,9 +869,7 @@ void mapLoadByCoords(int arg) {
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma optimize_for_size on
 void gameTextInitFn_8001a234(void);
-#pragma optimize_for_size reset
 
 void gameTextRun(void);
 
@@ -972,8 +888,6 @@ void gameTextRun(void);
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
@@ -984,15 +898,11 @@ void gameTextRun(void);
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int unused);
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 extern void OSInit(void);
@@ -1252,68 +1162,50 @@ void init(void) {
 
 #pragma push
 #pragma scheduling off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 
 #pragma peephole off
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_loop_invariants off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 void Obj_UpdateAllObjects(u8 flags);
-#pragma dont_inline reset
 #pragma pop
 
 extern void playerUpdateFn_8005649c(void);
@@ -1321,79 +1213,57 @@ extern void playerUpdateFn_8005649c(void);
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 void Obj_InitObjectSystem(void);
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
@@ -1401,8 +1271,6 @@ void Obj_InitObjectSystem(void);
 #pragma peephole off
 #pragma dont_inline on
 #pragma opt_strength_reduction off
-#pragma opt_loop_invariants off
-#pragma opt_loop_invariants reset
 #pragma opt_strength_reduction reset
 #pragma dont_inline reset
 #pragma pop
@@ -1410,23 +1278,17 @@ void Obj_InitObjectSystem(void);
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-#pragma dont_inline reset
-#pragma pop
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma dont_inline reset
 #pragma pop
 
@@ -1448,7 +1310,6 @@ extern f32 lbl_803DE7B8;
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 void gameUpdate(void)
 {
     Obj_GetPlayerObject();
@@ -1543,7 +1404,6 @@ void gameUpdate(void)
         }
     }
 }
-#pragma dont_inline reset
 #pragma pop
 
 extern void voxmaps_updateTimers(void);
@@ -1562,7 +1422,6 @@ extern f32 lbl_803DE7A8;
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 void gameLoop(void)
 {
     waitNextFrame();
@@ -1608,7 +1467,6 @@ void gameLoop(void)
     mmFreeTick(1);
     doQueuedLoads();
 }
-#pragma dont_inline reset
 #pragma pop
 
 extern u8 lbl_803DCAC4;
@@ -1626,7 +1484,6 @@ extern void beginLoadingMap(void);
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 void doQueuedLoads(void)
 {
     if ((s8)lbl_803DCA39 != 0) {
@@ -1674,24 +1531,19 @@ void doQueuedLoads(void)
         lbl_803DCAC4 = 1;
     }
 }
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-#pragma opt_common_subs off
-#pragma opt_common_subs reset
 #pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 void *loadAnimation(int hdr, s16 id, int b, u8 *bufout);
-#pragma dont_inline reset
 #pragma pop
 
 extern void gameTextShowStr(int str, int a, int b, int c);
@@ -1801,8 +1653,6 @@ void cardShowMessage(void)
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
 #pragma pop
 
 #pragma push

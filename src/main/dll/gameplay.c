@@ -13420,7 +13420,6 @@ int SaveGame_gplayShouldNotSaveTime(int id) {
     }
     return 1;
 }
-#pragma fp_contract off
 void SaveGame_gplayAddTime(int id, f32 time) {
     u8 *base;
     u8 *p;
@@ -13447,7 +13446,6 @@ void SaveGame_gplayAddTime(int id, f32 time) {
     *(int *)(p + 0x6f0) = id;
     *(f32 *)(p + 0x6f4) = total;
 }
-#pragma fp_contract reset
 void *SaveGame_getTrickyEnergy(void) { return (char *)lbl_803A32A8 + 0x18; }
 void SaveGame_setCharacter(u8 c) { *(u8 *)((char *)lbl_803A32A8 + 0x20) = c; }
 u8 SaveGame_getCurChar(void) { return *(u8 *)((char *)lbl_803A32A8 + 0x20); }

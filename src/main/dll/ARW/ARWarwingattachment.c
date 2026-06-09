@@ -2355,7 +2355,6 @@ void LaserBeam_free(s16 *obj, char *arg)
 extern ObjHitReactEntry lbl_80328898[];
 void fn_801F2290(int obj);
 
-#pragma opt_strength_reduction off
 void dll_200_update(int obj)
 {
     extern u8 framesThisStep;
@@ -2401,13 +2400,11 @@ void dll_200_update(int obj)
         }
     }
 }
-#pragma opt_strength_reduction reset
 
 typedef struct LightSourceFlagByte {
     u8 looped : 1;
 } LightSourceFlagByte;
 
-#pragma opt_strength_reduction off
 void lightsource_update(int obj)
 {
     extern void *Obj_GetPlayerObject(void);
@@ -2513,7 +2510,6 @@ void lightsource_update(int obj)
         }
     }
 }
-#pragma opt_strength_reduction reset
 
 typedef struct Dll1FFSlot {
     int obj;
