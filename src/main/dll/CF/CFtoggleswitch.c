@@ -740,7 +740,7 @@ void cctestinfot_update(int *obj) {
             *(f32*)sub = lbl_803E3C8C;
         } else {
             *(f32*)sub = *(f32*)sub - timeDelta;
-            showHelpText(*(s16*)((char*)*(int**)&((GameObject *)obj)->anim.modelInstance + 0x7c + sub[4] * 2));
+            showHelpText(((s16 *)((char*)*(int**)&((GameObject *)obj)->anim.modelInstance + 0x7c))[sub[4]]);
         }
     }
 }
@@ -855,7 +855,7 @@ void infotext_update(int *obj) {
             *sub = lbl_803E3C84;
         } else {
             *sub = *sub - timeDelta;
-            showHelpText(*(s16 *)((char *)*(int **)&((GameObject *)obj)->anim.modelInstance + 0x7c + (*(u8 **)&((GameObject *)obj)->anim.placementData)[0x19] * 2));
+            showHelpText(((s16 *)((char *)*(int **)&((GameObject *)obj)->anim.modelInstance + 0x7c))[(*(u8 **)&((GameObject *)obj)->anim.placementData)[0x19]]);
         }
     }
     if ((((ObjAnimComponent *)obj)->modelInstance->flags & 1) != 0) {
