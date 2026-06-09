@@ -62,7 +62,7 @@ int wctrexstatu_getExtraSize(void) { return 0; }
 int wctrexstatu_getObjectTypeId(int obj)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-    int modelIndex = (s8)((WCTrexStatueSetup *)((GameObject *)obj)->anim.placementData)->modelIndex;
+    int modelIndex = *(s8 *)&((WCTrexStatueSetup *)((GameObject *)obj)->anim.placementData)->modelIndex;
     int modelCount = objAnim->modelInstance->modelCount;
 
     if (modelIndex >= modelCount) {
