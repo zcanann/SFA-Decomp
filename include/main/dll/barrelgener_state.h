@@ -4,8 +4,10 @@
 #include "ghidra_import.h"
 #include "global.h"
 
+typedef struct GameObject GameObject;
+
 typedef struct BarrelGeneratorState {
-    int queuedObject;
+    GameObject *queuedObject;
     u8 releaseAnimPlaying;
     u8 pad05[3];
     f32 releaseTimer;

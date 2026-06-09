@@ -15,7 +15,7 @@ void barrelgener_queueObjectRelease(int obj, int queuedObj, int releaseFrame)
 {
     BarrelGeneratorState *state = ((GameObject *)obj)->extra;
 
-    state->queuedObject = queuedObj;
+    state->queuedObject = (GameObject *)queuedObj;
     state->releaseAnimPlaying = 0;
     storeZeroToFloatParam(&state->releaseTimer);
     s16toFloat(&state->releaseTimer, (s16)(releaseFrame - lbl_803DC398));
@@ -48,7 +48,7 @@ void barrelgener_init(int obj)
 
     ObjGroup_AddObject(obj, 0x3a);
     state->releaseAnimPlaying = 0;
-    state->queuedObject = 0;
+    state->queuedObject = NULL;
     storeZeroToFloatParam(&state->releaseTimer);
 }
 #pragma scheduling reset
@@ -78,24 +78,24 @@ void barrelgener_update(int obj)
             state->releaseBeepPlayed = 0;
         }
         if (timerCountDown((void *)&state->releaseTimer) != 0) {
-            if (Obj_IsObjectAlive(state->queuedObject) != 0) {
-                int o = state->queuedObject;
+            if (Obj_IsObjectAlive((int)state->queuedObject) != 0) {
+                GameObject *releasedBarrel = state->queuedObject;
                 f32 c2c;
-                *(f32 *)(o + 12) = ((GameObject *)obj)->anim.localPosX;
-                *(f32 *)(o + 16) = ((GameObject *)obj)->anim.localPosY;
-                *(f32 *)(o + 20) = ((GameObject *)obj)->anim.localPosZ;
-                *(f32 *)(o + 128) = *(f32 *)(o + 12);
-                *(f32 *)(o + 132) = *(f32 *)(o + 16);
-                *(f32 *)(o + 136) = *(f32 *)(o + 20);
-                *(f32 *)(o + 24) = *(f32 *)(o + 12);
-                *(f32 *)(o + 28) = *(f32 *)(o + 16);
-                *(f32 *)(o + 32) = *(f32 *)(o + 20);
+                releasedBarrel->anim.localPosX = ((GameObject *)obj)->anim.localPosX;
+                releasedBarrel->anim.localPosY = ((GameObject *)obj)->anim.localPosY;
+                releasedBarrel->anim.localPosZ = ((GameObject *)obj)->anim.localPosZ;
+                releasedBarrel->anim.previousLocalPosX = releasedBarrel->anim.localPosX;
+                releasedBarrel->anim.previousLocalPosY = releasedBarrel->anim.localPosY;
+                releasedBarrel->anim.previousLocalPosZ = releasedBarrel->anim.localPosZ;
+                releasedBarrel->anim.worldPosX = releasedBarrel->anim.localPosX;
+                releasedBarrel->anim.worldPosY = releasedBarrel->anim.localPosY;
+                releasedBarrel->anim.worldPosZ = releasedBarrel->anim.localPosZ;
                 c2c = lbl_803E6C2C;
-                *(f32 *)(o + 44) = c2c;
-                *(f32 *)(o + 40) = c2c;
-                *(f32 *)(o + 36) = c2c;
-                ObjGroup_AddObject(state->queuedObject, 25);
-                state->queuedObject = 0;
+                releasedBarrel->anim.velocityZ = c2c;
+                releasedBarrel->anim.velocityY = c2c;
+                releasedBarrel->anim.velocityX = c2c;
+                ObjGroup_AddObject((int)state->queuedObject, 25);
+                state->queuedObject = NULL;
             }
         }
     }
