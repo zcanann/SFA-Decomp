@@ -1252,9 +1252,9 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
   u8 volA0[24];
 
   result = 0;
-  stateA = *(ObjHitsPriorityState **)(objA + 0x54);
-  stateB = *(ObjHitsPriorityState **)(objB + 0x54);
-  stateSrc = *(ObjHitsPriorityState **)(srcObj + 0x54);
+  stateA = ObjAnim_GetPriorityHitState((ObjAnimComponent *)objA);
+  stateB = ObjAnim_GetPriorityHitState((ObjAnimComponent *)objB);
+  stateSrc = ObjAnim_GetPriorityHitState((ObjAnimComponent *)srcObj);
   if ((stateSrc->secondaryShapeFlags & 0x10) &&
       (*(s8 *)&stateSrc->resetHitboxMode != 0 || stateSrc->activeHitboxMode != 0)) {
     return 0;
@@ -1570,13 +1570,13 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
   }
   if (checkA != 0 && result != 0) {
     if ((stateA->flags & 0x80) != 0) {
-      react = *(ObjHitsPriorityState **)(objA + 0x54);
+      react = ObjAnim_GetPriorityHitState((ObjAnimComponent *)objA);
       if (react != 0) {
         react->flags = react->flags & ~OBJHITS_PRIORITY_STATE_ENABLED;
       }
     }
     if ((stateB->flags & 0x80) != 0) {
-      react = *(ObjHitsPriorityState **)(objB + 0x54);
+      react = ObjAnim_GetPriorityHitState((ObjAnimComponent *)objB);
       if (react != 0) {
         react->flags = react->flags & ~OBJHITS_PRIORITY_STATE_ENABLED;
       }
@@ -1644,12 +1644,12 @@ void ObjHits_CheckObjectHitVolumes(int objA,int objB,int attA,int attB,f32 dt)
   stateA = (ObjHitsPriorityState *)((GameObject *)objA)->anim.hitReactState;
   stateB = (ObjHitsPriorityState *)((GameObject *)objB)->anim.hitReactState;
   if ((uint)attA != 0) {
-    attStateA = *(ObjHitsPriorityState **)(attA + 0x54);
+    attStateA = ObjAnim_GetPriorityHitState((ObjAnimComponent *)attA);
   } else {
     attStateA = NULL;
   }
   if ((uint)attB != 0) {
-    attStateB = *(ObjHitsPriorityState **)(attB + 0x54);
+    attStateB = ObjAnim_GetPriorityHitState((ObjAnimComponent *)attB);
   } else {
     attStateB = NULL;
   }
@@ -2476,7 +2476,7 @@ void ObjHits_Update(int objectCount)
         *(int *)objState = 0;
         attachedObj = *(uint *)&((GameObject *)obj)->unkC8;
         if ((attachedObj != 0) && (*(s16 *)(attachedObj + 0x44) == 0x2d)) {
-          objState = *(ObjHitsPriorityState **)(attachedObj + 0x54);
+          objState = ObjAnim_GetPriorityHitState((ObjAnimComponent *)attachedObj);
           objState->flags = objState->flags & ~OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED;
           objState->contactFlags = 0;
           *(s8 *)&objState->contactHitVolume = -1;
@@ -2496,8 +2496,8 @@ void ObjHits_Update(int objectCount)
     objState = (ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState;
     attachedObj = *(uint *)&((GameObject *)obj)->unkC8;
     if ((attachedObj != 0) &&
-        ((*(void **)(attachedObj + 0x54) == NULL) ||
-         (((*(ObjHitsPriorityState **)(attachedObj + 0x54))->flags &
+        ((ObjAnim_GetPriorityHitState((ObjAnimComponent *)attachedObj) == NULL) ||
+         ((ObjAnim_GetPriorityHitState((ObjAnimComponent *)attachedObj)->flags &
            OBJHITS_PRIORITY_STATE_ENABLED) == 0))) {
       attachedObj = 0;
     }
@@ -2522,7 +2522,7 @@ void ObjHits_Update(int objectCount)
         }
         {
           candObj = candidateEntry->obj;
-          candState = *(ObjHitsPriorityState **)(candObj + 0x54);
+          candState = ObjAnim_GetPriorityHitState((ObjAnimComponent *)candObj);
           if ((slotIndex != candidateIndex) && (*(uint *)&((GameObject *)obj)->anim.parent != (uint)candObj)) {
             axisDiff = ((GameObject *)obj)->anim.worldPosZ - *(f32 *)(candObj + 0x20);
             if (axisDiff > gObjHitsScalarZero) {
@@ -2576,8 +2576,8 @@ void ObjHits_Update(int objectCount)
                    ((candState->sourceMask & objState->targetMask) != 0))) {
                 candAttachedObj = *(uint *)(candObj + 0xc8);
                 if ((candAttachedObj != 0) &&
-                    ((*(void **)(candAttachedObj + 0x54) == NULL) ||
-                     (((*(ObjHitsPriorityState **)(candAttachedObj + 0x54))->flags &
+                    ((ObjAnim_GetPriorityHitState((ObjAnimComponent *)candAttachedObj) == NULL) ||
+                     ((ObjAnim_GetPriorityHitState((ObjAnimComponent *)candAttachedObj)->flags &
                        OBJHITS_PRIORITY_STATE_ENABLED) == 0))) {
                   candAttachedObj = 0;
                 }
