@@ -4969,7 +4969,6 @@ void CameraModeTitle_update(CameraObject *camera) {
         lbl_803DD5D0 = 0;
     }
     if (lbl_803DD5D2 != lbl_803DD5D1) {
-        CameraModeTitlePose *targetPose = &lbl_80319FB8[lbl_803DD5D2];
         u8 *save = getSaveFileStruct();
         f32 v;
 
@@ -5009,15 +5008,15 @@ void CameraModeTitle_update(CameraObject *camera) {
         v = v * ((lbl_803E1BFC * v) * v) + (lbl_803E1BF0 * v + (lbl_803E1BF8 * v) * v);
 
         camera->anim.localPosX =
-            v * (targetPose->x - lbl_803A4420.x) + lbl_803A4420.x;
+            v * (lbl_80319FB8[lbl_803DD5D2].x - lbl_803A4420.x) + lbl_803A4420.x;
         camera->anim.localPosY =
-            v * (targetPose->y - lbl_803A4420.y) + lbl_803A4420.y;
+            v * (lbl_80319FB8[lbl_803DD5D2].y - lbl_803A4420.y) + lbl_803A4420.y;
         camera->anim.localPosZ =
-            v * (targetPose->z - lbl_803A4420.z) + lbl_803A4420.z;
+            v * (lbl_80319FB8[lbl_803DD5D2].z - lbl_803A4420.z) + lbl_803A4420.z;
 
         {
             u16 sy = lbl_803A4420.yaw;
-            u16 ty = targetPose->yaw;
+            u16 ty = lbl_80319FB8[lbl_803DD5D2].yaw;
             int d = ty - sy;
             if (__fabs((f32)d) > lbl_803E1C00) {
                 int d2 = (s16)ty - (s16)sy;
@@ -5028,7 +5027,7 @@ void CameraModeTitle_update(CameraObject *camera) {
         }
         {
             u16 sy = lbl_803A4420.pitch;
-            u16 ty = targetPose->pitch;
+            u16 ty = lbl_80319FB8[lbl_803DD5D2].pitch;
             int d = ty - sy;
             if (__fabs((f32)d) > lbl_803E1C00) {
                 int d2 = (s16)ty - (s16)sy;
@@ -5039,7 +5038,7 @@ void CameraModeTitle_update(CameraObject *camera) {
         }
         {
             u16 sy = lbl_803A4420.roll;
-            u16 ty = targetPose->roll;
+            u16 ty = lbl_80319FB8[lbl_803DD5D2].roll;
             int d = ty - sy;
             if (__fabs((f32)d) > lbl_803E1C00) {
                 int d2 = (s16)ty - (s16)sy;
