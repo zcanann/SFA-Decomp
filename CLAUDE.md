@@ -3679,6 +3679,43 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
     semantically identical, but MWCC does not canonicalize the two branch
     forms to the same compare immediate.
 
+**Object-DLL lane recipe-effectiveness map (terrain note, saves trial-and-error).**
+Field-tested across the object DLL near-100 tier (src/main/dll/{baddie,DIM,DR,CF,
+WC,ARW,MMP,WM,DB,SH,...}). RELIABLE here — reach for these first:
+#12 bitfield single-bit clear (rlwimi-from-bitfield, e.g. `((Flags *)&f)->b80 = 0`);
+#14/#3 width WHEN it's a TRUE type mismatch (call-result/pointer null-test → `(void*)x
+!= NULL` for cmplwi; the shared `BaddieState.eventFlags` u32 tested signed → `(s32)`
+cast for cmpwi; the shared-field sites already use the `*(int *)&` launder convention);
+#15 array-index `(s8)arr[off]` vs `*(s8*)(p+off)` for byte sign-extend ORDER
+(target `lbz r0; extsb r3,r0` = array-index form; ours-via-deref = `lbz r3; extsb
+r3,r3`); #29/#84 arg-eval reorder; #5 decl/init SPLIT (decl-order fixes the coloring,
+init-order fixes the emission/load-order — lands "coloring right but 2 loads swapped"
+residuals); #121 defer const-load (move `f32 k = lbl;` AFTER an earlier RMW when
+target loads the const lazily). RESISTANT here — bank on sight after ≤2 tries, do NOT
+grind: #82 FP-expr-temp operand-order (commutative-reassociation-internal — fmuls/fsubs
+flips INERT); FP-compare-operand flips (regress as often as help); 2-var GPR coloring
+swaps that SEESAW (fixing one site moves the divergence to the adjacent instr —
+scarab_render, imicemountain decrement); #61c walker/value pairs (need index-form loop
+restructure, low ROI); #108 small-constant rematerialization. CONFIRMED NEGATIVE: the
+flag-word #74 bulk-sweep that worked on player.c flags360 has NO object-DLL analog —
+there is no single recurring materialized-mask field at the near-100 tier.
+
+**#84-objanim mini-sweep (confirmed, ~19 object-DLL fns +0.3 to +3.2pp).** The two
+hot ObjAnim dispatchers have float-first real signatures but ALSO object-first typedefs
+already in objanim.h: `ObjAnim_SampleRootCurvePhase(f32,obj,out)` →
+`((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(obj,f32,out)`, and
+`ObjAnim_AdvanceCurrentMove(f32,timeDelta,obj,events)` →
+`((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj,f32,timeDelta,events)`
+(use `ObjAnimAdvanceObjectFirstFn` for the `double`-arg sites). The cast flips caller
+L2R eval to obj-before-float (target's `mr rN,obj; fmr fN,..` prologue/setup shape) and
+is ABI-NEUTRAL (float/int are separate register banks, so each arg keeps its register
+regardless of position; callers' own externs are untouched). GATE PER-FN: flip ONLY
+partials whose call shows mr-before-fmr; A/B and keep only if fuzzy improves — ~1/3 of
+sites are inert (already-100 sites leave alone; some partials' divergence is elsewhere)
+and an occasional site REGRESSES (SCchieflightfoot SHthorntail_update). Same applies to
+the `ObjAnim_AdvanceCurrentMove` family per #84. Big wins seen: DBstealerworm
+SB_ShipMast_update +3.2, sandwormBoss sandworm_turnTowardTargetAnim +2.4.
+
 **OPEN — branchy-arg pre-eval hoist (the in-place L2R ternary arg).**
 When target evaluates a branchy ternary CALL ARG at its L2R slot (args 1-7
 set up first, the clamp 8th, then 9-10 — ObjHits_CheckSkeletonPair's two
