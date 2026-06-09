@@ -2342,15 +2342,15 @@ u32 Checkpoint_find(s32 key, s32 *idx_out)
     if (key < 0) return 0;
     high = lbl_803DD410 - 1;
     low = 0;
-    while (low <= high) {
-        mid = (low + high) >> 1;
+    while (high >= low) {
+        mid = (high + low) >> 1;
         if ((u32)key > lbl_8039C458[mid].key) {
             low = mid + 1;
-        } else if ((u32)key == lbl_8039C458[mid].key) {
+        } else if ((u32)key < lbl_8039C458[mid].key) {
+            high = mid - 1;
+        } else {
             *idx_out = mid;
             return lbl_8039C458[mid].value;
-        } else {
-            high = mid - 1;
         }
     }
     *idx_out = -1;
@@ -2530,12 +2530,12 @@ typedef struct PartFxItem {
 #pragma scheduling off
 s32 Checkpoint_func0F(PartFxItem *p)
 {
+    PartFxItem *q;
     s32 rank = 1;
     PartFxItem **arr = (PartFxItem **)lbl_803DD418;
-    s32 n = lbl_803DD414;
     s32 i;
-    for (i = 0; i < n; i++) {
-        PartFxItem *q = *arr;
+    for (i = 0; i < lbl_803DD414; i++) {
+        q = arr[i];
         if (q != p) {
             if (q->_0x1c > p->_0x1c) {
                 rank++;
@@ -2545,7 +2545,6 @@ s32 Checkpoint_func0F(PartFxItem *p)
                 }
             }
         }
-        arr++;
     }
     return rank;
 }
@@ -2556,11 +2555,12 @@ PartFxItem *Checkpoint_func10(s32 target_rank)
 {
     s32 i = 0;
     PartFxItem **outer = (PartFxItem **)lbl_803DD418;
+    PartFxItem **base = outer;
     s32 n = lbl_803DD414;
     for (; i < n; i++) {
         PartFxItem *cur = *outer;
         s32 rank = 1;
-        PartFxItem **inner = (PartFxItem **)lbl_803DD418;
+        PartFxItem **inner = base;
         s32 j;
         for (j = 0; j < n; j++) {
             PartFxItem *other = *inner;
@@ -2655,11 +2655,8 @@ void Checkpoint_func0C(PartFxNode *o)
  * NOTE: stuck at ~78% ? instruction scheduling differs. */
 void Checkpoint_func0D(u32 v)
 {
-    s32 i;
-    i = lbl_803DD416;
-    if (i >= 10) return;
-    lbl_803DD416 = (s16)(i + 1);
-    ((u32 *)lbl_803DD41C)[i] = v;
+    if (lbl_803DD416 >= 10) return;
+    ((u32 *)lbl_803DD41C)[lbl_803DD416++] = v;
 }
 
 /* Tick: counter1, counter2 + rate*timeDelta; clamp; periodic sin. */
@@ -6631,7 +6628,7 @@ s32 Checkpoint_func08(u8 *out, u8 *o, f32 dist, s32 p3, u8 flag)
         if (*(s32 *)(n + 0x24) > -1 && *(u8 *)(o + 0x30) != 0) {
             alt = 1;
         }
-        if (fn_800D55BC(n, alt, v1, v2, v3, mode, lbl_803E04E8, lbl_803E04E8) == 0) {
+        if (fn_800D55BC(n, alt, v1, v2, v3, mode, lbl_803E04E8, *(f32 *)&lbl_803E04E8) == 0) {
             return 1;
         }
         len = sqrtf((v3[0] - v3[1]) * (v3[0] - v3[1]) +
