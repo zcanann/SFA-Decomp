@@ -1,5 +1,52 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
+
+#define WATERFLOWWE_FOLIAGE_GROUP 0x14
+#define WATERFLOWWE_OBJECT_CURRENT_GROUP 0x50
+#define WATERFLOWWE_OBJECT_FLAGS_INIT 0x2000
+#define WATERFLOWWE_FOLIAGE_CURRENT_ENABLED 0x02
+#define WATERFLOWWE_OBJECT_CURRENT_ANGLE_OFFSET 0x84d0
+
+typedef struct WaterFlowWeState {
+    f32 currentX;
+    f32 currentZ;
+} WaterFlowWeState;
+
+typedef struct WaterFlowWeSetup {
+    ObjPlacement base;
+    u8 rotZ;
+    u8 rotY;
+    u8 rotX;
+    u8 scale;
+    u8 pad1C[3];
+    u8 phaseDriverDisabled;
+} WaterFlowWeSetup;
+
+typedef struct FoliageCurrentSetup {
+    ObjPlacement base;
+    u8 pad18;
+    u8 currentRadius;
+    u8 currentFlags;
+} FoliageCurrentSetup;
+
+typedef struct ObjectCurrentSourceSetup {
+    ObjPlacement base;
+    u8 pad18[0x29 - 0x18];
+    u8 radiusCells;
+    u8 pad2A[0x32 - 0x2A];
+    u8 strengthTenths;
+} ObjectCurrentSourceSetup;
+
+STATIC_ASSERT(sizeof(WaterFlowWeState) == 0x8);
+STATIC_ASSERT(offsetof(WaterFlowWeSetup, rotZ) == 0x18);
+STATIC_ASSERT(offsetof(WaterFlowWeSetup, scale) == 0x1b);
+STATIC_ASSERT(offsetof(WaterFlowWeSetup, phaseDriverDisabled) == 0x1f);
+STATIC_ASSERT(sizeof(WaterFlowWeSetup) == 0x20);
+STATIC_ASSERT(offsetof(FoliageCurrentSetup, currentRadius) == 0x19);
+STATIC_ASSERT(offsetof(FoliageCurrentSetup, currentFlags) == 0x1a);
+STATIC_ASSERT(offsetof(ObjectCurrentSourceSetup, radiusCells) == 0x29);
+STATIC_ASSERT(offsetof(ObjectCurrentSourceSetup, strengthTenths) == 0x32);
 
 extern f32 lbl_803E72B4;
 extern f32 lbl_803E72B8;
@@ -15,12 +62,12 @@ extern f32 lbl_803E72D4;
 #pragma scheduling off
 void waterflowwe_calcCurrentVector(int obj, f32 *vx, f32 *vz)
 {
+    GameObject *object = (GameObject *)obj;
+    WaterFlowWeState *current = object->extra;
     int count;
     int i;
-    int anyCurrent;
-    int *objects;
-    int other;
-    f32 *current;
+    int hasCurrent;
+    GameObject **objects;
     f32 currentX;
     f32 currentZ;
     f32 dx;
@@ -31,46 +78,49 @@ void waterflowwe_calcCurrentVector(int obj, f32 *vx, f32 *vz)
     f32 strength;
     f32 angle;
 
-    current = ((GameObject *)obj)->extra;
     currentX = lbl_803E72B0;
     currentZ = lbl_803E72B0;
-    objects = ObjGroup_GetObjects(0x14, &count);
-    anyCurrent = 0;
+    objects = (GameObject **)ObjGroup_GetObjects(WATERFLOWWE_FOLIAGE_GROUP, &count);
+    hasCurrent = 0;
     for (i = 0; i < count; i++) {
-        other = objects[i];
-        if (((*(u8 **)(other + 0x4c))[0x1a] & 2) != 0) {
-            anyCurrent = 1;
-            dy = *(f32 *)(other + 0x10) - ((GameObject *)obj)->anim.localPosY;
+        GameObject *other = objects[i];
+        FoliageCurrentSetup *setup = (FoliageCurrentSetup *)other->anim.placementData;
+        if ((setup->currentFlags & WATERFLOWWE_FOLIAGE_CURRENT_ENABLED) != 0) {
+            hasCurrent = 1;
+            dy = other->anim.localPosY - object->anim.localPosY;
             if ((dy <= lbl_803E72B4) && (dy >= lbl_803E72B8)) {
-                dx = *(f32 *)(other + 0xc) - ((GameObject *)obj)->anim.localPosX;
-                dz = *(f32 *)(other + 0x14) - ((GameObject *)obj)->anim.localPosZ;
+                dx = other->anim.localPosX - object->anim.localPosX;
+                dz = other->anim.localPosZ - object->anim.localPosZ;
                 distance = sqrtf(dx * dx + dz * dz);
-                radius = lbl_803E72BC * (f32)(u32)(*(u8 **)(other + 0x4c))[0x19];
+                radius = lbl_803E72BC * (f32)(u32)setup->currentRadius;
                 if (distance < radius) {
-                    strength = ((radius - distance) / radius) * (lbl_803E72C0 * *(f32 *)(other + 8));
-                    currentX += strength * mathSinf((lbl_803E72C4 * (f32)*(s16 *)other) / lbl_803E72C8);
-                    currentZ += strength * mathCosf((lbl_803E72C4 * (f32)*(s16 *)other) / lbl_803E72C8);
+                    strength = ((radius - distance) / radius) * (lbl_803E72C0 * other->anim.rootMotionScale);
+                    currentX += strength * mathSinf((lbl_803E72C4 * (f32)other->anim.rotX) / lbl_803E72C8);
+                    currentZ += strength * mathCosf((lbl_803E72C4 * (f32)other->anim.rotX) / lbl_803E72C8);
                 }
             }
         }
     }
 
-    objects = ObjGroup_GetObjects(0x50, &count);
+    objects = (GameObject **)ObjGroup_GetObjects(WATERFLOWWE_OBJECT_CURRENT_GROUP, &count);
     {
     for (i = 0; i < count; i++) {
+        GameObject *other;
+        ObjectCurrentSourceSetup *setup;
         f32 objectStrength;
         s16 currentAngle;
 
         other = objects[i];
-        objectStrength = (f32)(u32)(*(u8 **)(other + 0x4c))[0x32] / 10.0f;
-        anyCurrent = 1;
-        dy = *(f32 *)(other + 0x10) - ((GameObject *)obj)->anim.localPosY;
+        setup = (ObjectCurrentSourceSetup *)other->anim.placementData;
+        objectStrength = (f32)(u32)setup->strengthTenths / 10.0f;
+        hasCurrent = 1;
+        dy = other->anim.localPosY - object->anim.localPosY;
         if ((dy <= 200.0f) && (dy >= lbl_803E72B8)) {
-            dx = *(f32 *)(other + 0xc) - ((GameObject *)obj)->anim.localPosX;
-            dz = *(f32 *)(other + 0x14) - ((GameObject *)obj)->anim.localPosZ;
-            currentAngle = (s16)(getAngle(dx, dz) + 0x84d0);
+            dx = other->anim.localPosX - object->anim.localPosX;
+            dz = other->anim.localPosZ - object->anim.localPosZ;
+            currentAngle = (s16)(getAngle(dx, dz) + WATERFLOWWE_OBJECT_CURRENT_ANGLE_OFFSET);
             distance = sqrtf(dx * dx + dz * dz);
-            radius = (f32)(s32)((*(u8 **)(other + 0x4c))[0x29] << 3);
+            radius = (f32)(s32)(setup->radiusCells << 3);
             if (distance < radius) {
                 strength = ((radius - distance) / radius) * objectStrength;
                 angle = (lbl_803E72C4 * (f32)currentAngle) / lbl_803E72C8;
@@ -82,27 +132,27 @@ void waterflowwe_calcCurrentVector(int obj, f32 *vx, f32 *vz)
 
     }
 
-    if (anyCurrent != 0) {
-        currentX = currentX / (f32)anyCurrent;
-        currentZ = currentZ / (f32)anyCurrent;
+    if (hasCurrent != 0) {
+        currentX = currentX / (f32)hasCurrent;
+        currentZ = currentZ / (f32)hasCurrent;
         {
             f32 k = lbl_803E72CC;
-            current[0] = current[0] - k * currentX;
-            current[1] = current[1] - k * currentZ;
+            current->currentX = current->currentX - k * currentX;
+            current->currentZ = current->currentZ - k * currentZ;
         }
         {
             f32 k = lbl_803E72D0;
-            current[0] = current[0] * k;
-            current[1] = current[1] * k;
+            current->currentX = current->currentX * k;
+            current->currentZ = current->currentZ * k;
         }
-        distance = sqrtf(current[0] * current[0] + current[1] * current[1]);
+        distance = sqrtf(current->currentX * current->currentX + current->currentZ * current->currentZ);
         if (distance > lbl_803E72D4) {
             strength = lbl_803E72D4 / distance;
-            current[0] = current[0] * strength;
-            current[1] = current[1] * strength;
+            current->currentX = current->currentX * strength;
+            current->currentZ = current->currentZ * strength;
         }
-        *vx = current[0] * timeDelta;
-        *vz = current[1] * timeDelta;
+        *vx = current->currentX * timeDelta;
+        *vz = current->currentZ * timeDelta;
     } else {
         f32 z = lbl_803E72B0;
         *vx = z;
@@ -120,17 +170,20 @@ int waterflowwe_getObjectTypeId(void) { return 0; }
 #pragma scheduling off
 void waterflowwe_init(int obj, u8 *setup)
 {
-    ((GameObject *)obj)->anim.rotZ = (s16)(setup[0x18] << 8);
-    ((GameObject *)obj)->anim.rotY = (s16)(setup[0x19] << 8);
-    ((GameObject *)obj)->anim.rotX = (s16)(setup[0x1a] << 8);
-    if (setup[0x1b] != 0) {
-        ((GameObject *)obj)->anim.rootMotionScale = (f32)(u32)setup[0x1b] / lbl_803E72F4;
-        if (((GameObject *)obj)->anim.rootMotionScale == lbl_803E72B0) {
-            ((GameObject *)obj)->anim.rootMotionScale = lbl_803E72E8;
+    GameObject *object = (GameObject *)obj;
+    WaterFlowWeSetup *setupData = (WaterFlowWeSetup *)setup;
+
+    object->anim.rotZ = (s16)(setupData->rotZ << 8);
+    object->anim.rotY = (s16)(setupData->rotY << 8);
+    object->anim.rotX = (s16)(setupData->rotX << 8);
+    if (setupData->scale != 0) {
+        object->anim.rootMotionScale = (f32)(u32)setupData->scale / lbl_803E72F4;
+        if (object->anim.rootMotionScale == lbl_803E72B0) {
+            object->anim.rootMotionScale = lbl_803E72E8;
         }
-        ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale * *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4);
+        object->anim.rootMotionScale = object->anim.rootMotionScale * object->anim.modelInstance->rootMotionScaleBase;
     }
-    ((GameObject *)obj)->objectFlags = ((GameObject *)obj)->objectFlags | 0x2000;
+    object->objectFlags = object->objectFlags | WATERFLOWWE_OBJECT_FLAGS_INIT;
     ObjAnim_SetCurrentMove(obj, 0, lbl_803E72B0, 0);
 }
 #pragma scheduling reset
@@ -158,12 +211,13 @@ void waterflowwe_hitDetect(void) {}
 #pragma scheduling off
 void waterflowwe_update(int obj)
 {
-    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
+    GameObject *object = (GameObject *)obj;
+    WaterFlowWeSetup *setup = (WaterFlowWeSetup *)object->anim.placementData;
     f32 vx, vz;
 
     waterflowwe_calcCurrentVector(obj, &vx, &vz);
-    *(s16 *)obj = (s16)(getAngle(vx, vz) + 0x4000);
-    if ((u32)lbl_803DDDA8 == 0 && *(u8 *)(setup + 0x1f) == 0) {
+    object->anim.rotX = (s16)(getAngle(vx, vz) + 0x4000);
+    if ((u32)lbl_803DDDA8 == 0 && setup->phaseDriverDisabled == 0) {
         lbl_803DDDA8 = obj;
     }
     if ((u32)obj == (u32)lbl_803DDDA8) {
