@@ -90,7 +90,6 @@ void dll_19B_update(int obj)
     int unk16;
     int msg;
     int unk8;
-    void *handle;
 
     st = ((GameObject *)obj)->extra;
     player = Obj_GetPlayerObject();
@@ -169,12 +168,16 @@ void dll_19B_update(int obj)
                 *(u8 *)((char *)st + 0x13) = 1;
                 GameBit_Set(0x129, 0);
                 (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
-                handle = Resource_Acquire(0x83, 1);
-                (*(s16 (**)(int, int, int, int, int, int))(*(int *)handle + 4))(obj, 1, 0, 1, -1, 0);
-                Resource_Release(handle);
-                handle = Resource_Acquire(0x84, 1);
-                (*(s16 (**)(int, int, int, int, int, int))(*(int *)handle + 4))(obj, 0, 0, 1, -1, 0);
-                Resource_Release(handle);
+                {
+                    void *handle = Resource_Acquire(0x83, 1);
+                    (*(s16 (**)(int, int, int, int, int, int))(*(int *)handle + 4))(obj, 1, 0, 1, -1, 0);
+                    Resource_Release(handle);
+                }
+                {
+                    void *handle = Resource_Acquire(0x84, 1);
+                    (*(s16 (**)(int, int, int, int, int, int))(*(int *)handle + 4))(obj, 0, 0, 1, -1, 0);
+                    Resource_Release(handle);
+                }
                 GameBit_Set(0x126, 0);
                 (*gModgfxInterface)->releaseHandle(st + 6);
             }
@@ -245,9 +248,11 @@ void dll_19B_update(int obj)
             GameBit_Set(0x129, 1);
             GameBit_Set(0x126, 1);
             GameBit_Set(0x127, 1);
-            handle = Resource_Acquire(0x6a, 1);
-            st[6] = (*(s16 (**)(int, int, int, int, int, int))(*(int *)handle + 4))(obj, 2, 0, 0x402, -1, 0);
-            Resource_Release(handle);
+            {
+                void *handle = Resource_Acquire(0x6a, 1);
+                st[6] = (*(s16 (**)(int, int, int, int, int, int))(*(int *)handle + 4))(obj, 2, 0, 0x402, -1, 0);
+                Resource_Release(handle);
+            }
             GameBit_Set(0x1d8, 0);
             *(u8 *)((char *)st + 0x12) = 0;
             st[7] = 4000;
@@ -550,7 +555,7 @@ void dll_19D_update(int obj)
         *(s16 *)(self + 0x4) = (s16)(*(s16 *)(self + 0x4) + *(s16 *)(state + 0x2c) * (u16)framesThisStep);
         (*gPartfxInterface)->spawnObject((void *)self, 0x29d, vec, 4, -1, NULL);
 
-        if ((s16)(*(u16 *)(state + 0x30) -= (u16)framesThisStep) <= 0) {
+        if ((*(s16 *)(state + 0x30) -= framesThisStep) <= 0) {
             (*gPartfxInterface)->spawnObject((void *)self, 0x29e, vec, 4, -1, NULL);
             (*gPartfxInterface)->spawnObject((void *)self, 0x29f, vec, 4, -1, NULL);
             (*gPartfxInterface)->spawnObject((void *)self, 0x2a1, vec, 4, -1, NULL);
