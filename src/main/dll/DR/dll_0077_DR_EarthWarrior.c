@@ -448,7 +448,6 @@ int fn_802BDBE8(int obj, int p2, int p3)
 void fn_802BE6E8(int obj, int t, int p3)
 {
     int inner = *(int *)&((GameObject *)obj)->extra;
-    u8 *pathState = (u8 *)&((EarthWarriorState *)inner)->baddie + 4;
     int q;
     int slot;
     Obj_GetPlayerObject();
@@ -480,9 +479,9 @@ void fn_802BE6E8(int obj, int t, int p3)
     }
     fn_802B1BF8(obj, q, inner, timeDelta);
     fn_802B1B28(obj, timeDelta);
-    (*gPathControlInterface)->update((void *)obj, pathState, timeDelta);
-    (*gPathControlInterface)->apply((void *)obj, pathState);
-    (*gPathControlInterface)->advance((void *)obj, pathState, timeDelta);
+    (*gPathControlInterface)->update((void *)obj, (void *)(inner + 4), timeDelta);
+    (*gPathControlInterface)->apply((void *)obj, (void *)(inner + 4));
+    (*gPathControlInterface)->advance((void *)obj, (void *)(inner + 4), timeDelta);
     ((GameObject *)obj)->anim.rotX = *(s16 *)((char *)q + 0x478);
 }
 
