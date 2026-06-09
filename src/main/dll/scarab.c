@@ -1664,14 +1664,15 @@ void dll_CE_func0B(int obj, int v)
   extern void Sfx_PlayFromObject(int obj, int sfx);
   extern int *gPlayerInterface;
   GroundBaddieState *sub = ((GameObject *)obj)->extra;
+  GroundBaddieState *sub2 = (GroundBaddieState *)(int)sub;
 
   switch ((u8)v) {
   case 0x80:
     *(u8 *)(*(int *)&sub->control + 9) |= 2;
     Sfx_PlayFromObject(obj, SFXfoxcom_flame);
-    (*(void (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, (int)sub, 1);
-    sub->baddie.unk270 = 4;
-    *(s8 *)&sub->baddie.moveJustStartedB = 1;
+    (*(void (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, (int)sub2, 1);
+    sub2->baddie.unk270 = 4;
+    *(s8 *)&sub2->baddie.moveJustStartedB = 1;
     break;
   case 0x81:
     sub->configFlags &= ~4;
@@ -4634,8 +4635,9 @@ void dll_CB_initialise(void)
 int fn_80160534(int* obj)
 {
     GroundBaddieState* sub = ((GameObject *)obj)->extra;
-    if (*(u8*)((char*)obj + 54) >= framesThisStep) {
-        *(u8*)((char*)obj + 54) = *(u8*)((char*)obj + 54) - framesThisStep;
+    u8 step;
+    if (*(u8*)((char*)obj + 54) >= (step = framesThisStep)) {
+        *(u8*)((char*)obj + 54) = *(u8*)((char*)obj + 54) - step;
     } else {
         *(u8*)((char*)obj + 54) = 0;
     }
@@ -5082,11 +5084,7 @@ int scarab_updateProximityGate(int* obj, GroundBaddieState *state) {
     }
 post:
     if (state->baddie.controlMode == 1) {
-        if (dx > lbl_803E2EB8) {
-            state->baddie.moveSpeed = lbl_803E2EC8;
-        } else {
-            state->baddie.moveSpeed = lbl_803E2ECC;
-        }
+        state->baddie.moveSpeed = (dx > lbl_803E2EB8) ? lbl_803E2EC8 : lbl_803E2ECC;
     }
     }
     return 0;
