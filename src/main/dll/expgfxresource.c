@@ -3,8 +3,6 @@
 #include "main/expgfx_internal.h"
 #include "main/texture.h"
 
-extern int Obj_IsLoadingLocked(void);
-
 void expgfx_updateResourceEntries(int unused) {
     ExpgfxResourceEntry *entry;
     int i;
@@ -17,7 +15,7 @@ void expgfx_updateResourceEntries(int unused) {
             if (entry->evictionScore <= 0) {
                 entry->resourceId = 0;
                 entry->evictionScore = 0;
-                entry->wordC = 0;
+                entry->reserved = 0;
                 gExpgfxTextureFreeInProgress = 1;
                 textureFree((u8 *)entry->resource);
                 gExpgfxTextureFreeInProgress = 0;

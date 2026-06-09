@@ -314,8 +314,14 @@ typedef struct ExpgfxResourceEntry {
   void *resource;
   s32 evictionScore;
   s32 resourceId;
-  u32 wordC;
+  u32 reserved;
 } ExpgfxResourceEntry;
+
+STATIC_ASSERT(offsetof(ExpgfxResourceEntry, resource) == 0x00);
+STATIC_ASSERT(offsetof(ExpgfxResourceEntry, evictionScore) == 0x04);
+STATIC_ASSERT(offsetof(ExpgfxResourceEntry, resourceId) == 0x08);
+STATIC_ASSERT(offsetof(ExpgfxResourceEntry, reserved) == 0x0C);
+STATIC_ASSERT(sizeof(ExpgfxResourceEntry) == 0x10);
 
 typedef struct ExpgfxResourceHandle {
   u8 pad00[0x0E];
@@ -323,6 +329,9 @@ typedef struct ExpgfxResourceHandle {
   u8 pad10[0x14 - 0x10];
   u16 linkGroup;
 } ExpgfxResourceHandle;
+
+STATIC_ASSERT(offsetof(ExpgfxResourceHandle, refCount) == 0x0E);
+STATIC_ASSERT(offsetof(ExpgfxResourceHandle, linkGroup) == 0x14);
 
 typedef struct ExpgfxQuadTemplateVertex {
   s16 x;

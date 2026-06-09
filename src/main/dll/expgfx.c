@@ -2439,7 +2439,7 @@ void expgfx_resetAllPools(void)
     resourceEntry->resource = NULL;
     resourceEntry->resourceId = 0;
     resourceEntry->evictionScore = 0;
-    resourceEntry->wordC = 0;
+    resourceEntry->reserved = 0;
     resourceIndex++;
     resourceEntry++;
   }
@@ -2887,7 +2887,7 @@ void expgfx_onMapSetup(void)
     resourceEntry->resource = NULL;
     resourceEntry->resourceId = 0;
     resourceEntry->evictionScore = 0;
-    resourceEntry->wordC = 0;
+    resourceEntry->reserved = 0;
   }
   gExpgfxTextureFreeInProgress = 0;
 }

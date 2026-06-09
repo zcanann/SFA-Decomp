@@ -1121,6 +1121,7 @@ extern f32 mathCosf(f32 x);
 extern f32 lbl_803DE5AC;
 extern f32 lbl_803DE5B0;
 extern void *Obj_GetPlayerObject(void);
+extern int Obj_IsLoadingLocked(void);
 extern int getCurSeqNo(void);
 extern void PSVECAdd(f32 *a, f32 *b, f32 *out);
 extern f32 PSVECMag(f32 *v);
