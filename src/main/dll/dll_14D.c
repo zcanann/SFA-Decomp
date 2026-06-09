@@ -143,7 +143,7 @@ void dll_14D_update(undefined2 *param_1)
       *pbVar4 = 2;
     }
     break;
-  case 5:
+  case 4:
     break;
   }
 }
