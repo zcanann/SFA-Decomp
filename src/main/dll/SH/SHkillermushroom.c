@@ -150,7 +150,7 @@ void bombplantspore_startDriftBurst(void *obj, void *state)
   s32 angleDelta;
 
   params = ((GameObject *)obj)->anim.placementData;
-  baseAngle = ((BombPlantSporeParams *)params)->angleBase;
+  baseAngle = *(s16 *)((u8 *)params + 0x1c);
 
   ((BombPlantSporeState *)state)->unk298 = (f32)(int)randomGetRange(0x1e, 0x2d);
 
@@ -166,11 +166,11 @@ void bombplantspore_startDriftBurst(void *obj, void *state)
   if (angleDelta < -0x8000) {
     angleDelta += 0xffff;
   }
-  if (((BombPlantSporeParams *)params)->angleSpread < angleDelta) {
-    ((BombPlantSporeState *)state)->burstAngle = (s16)(baseAngle + ((BombPlantSporeParams *)params)->angleSpread);
+  if (*(s16 *)((u8 *)params + 0x1a) < angleDelta) {
+    ((BombPlantSporeState *)state)->burstAngle = (s16)(baseAngle + *(s16 *)((u8 *)params + 0x1a));
   }
-  if (angleDelta < -(s32)((BombPlantSporeParams *)params)->angleSpread) {
-    ((BombPlantSporeState *)state)->burstAngle = (s16)(baseAngle - ((BombPlantSporeParams *)params)->angleSpread);
+  if (angleDelta < -(s32)*(s16 *)((u8 *)params + 0x1a)) {
+    ((BombPlantSporeState *)state)->burstAngle = (s16)(baseAngle - *(s16 *)((u8 *)params + 0x1a));
   }
 
   ((BombPlantSporeState *)state)->unk29c = (f32)(int)randomGetRange(900, 0x514) / lbl_803E5390;
@@ -202,7 +202,7 @@ void bombplantspore_updateDrift(void *obj, void *state)
   s32 angleDelta;
 
   params = ((GameObject *)obj)->anim.placementData;
-  baseAngle = ((BombPlantSporeParams *)params)->angleBase;
+  baseAngle = *(s16 *)((u8 *)params + 0x1c);
 
   if (randomGetRange(0, 100) < 10 && ((BombPlantSporeState *)state)->unk2a0 <= lbl_803E5394) {
     ((BombPlantSporeState *)state)->driftAngleStep = (s16)randomGetRange(2000, 4000);
@@ -218,11 +218,11 @@ void bombplantspore_updateDrift(void *obj, void *state)
     if (angleDelta < -0x8000) {
       angleDelta += 0xffff;
     }
-    if (((BombPlantSporeParams *)params)->angleSpread < angleDelta) {
-      ((BombPlantSporeState *)state)->driftAngleStep = (s16)(baseAngle + ((BombPlantSporeParams *)params)->angleSpread);
+    if (*(s16 *)((u8 *)params + 0x1a) < angleDelta) {
+      ((BombPlantSporeState *)state)->driftAngleStep = (s16)(baseAngle + *(s16 *)((u8 *)params + 0x1a));
     }
-    if (angleDelta < -(s32)((BombPlantSporeParams *)params)->angleSpread) {
-      ((BombPlantSporeState *)state)->driftAngleStep = (s16)(baseAngle - ((BombPlantSporeParams *)params)->angleSpread);
+    if (angleDelta < -(s32)*(s16 *)((u8 *)params + 0x1a)) {
+      ((BombPlantSporeState *)state)->driftAngleStep = (s16)(baseAngle - *(s16 *)((u8 *)params + 0x1a));
     }
     ((BombPlantSporeState *)state)->unk2a0 = lbl_803E53A8;
   }

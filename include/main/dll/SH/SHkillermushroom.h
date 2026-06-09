@@ -32,12 +32,6 @@ typedef struct BombPlantSporeState {
     /* 0x2AE */ u8 pad2ae[0x2b4 - 0x2ae];
 } BombPlantSporeState;
 
-typedef struct BombPlantSporeParams {
-    /* 0x00 */ u8 pad00[0x1a];
-    /* 0x1A */ s16 angleSpread;
-    /* 0x1C */ s16 angleBase;
-} BombPlantSporeParams;
-
 void bombplantspore_free(void *obj);
 void bombplantspore_startDriftBurst(void *obj, void *state);
 void bombplantspore_updateDrift(void *obj, void *state);
