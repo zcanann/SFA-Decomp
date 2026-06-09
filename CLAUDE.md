@@ -2053,6 +2053,18 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       bank it, recognize the signature, and re-attack when a lever for
       unnamed expression-temp coloring lands (the #114 conversion-node
       splitter is the closest existing tool to try).
+      4th member — NAMED-WEB PRIORITY INVERSION (mtxRotateByVec3s,
+      probe-characterized via probe_battery): target gives the NAMED
+      multi-def temps (u, zero) the LOWEST volatiles (f0) and the unnamed
+      expr temps HIGHER — the exact inverse of #107's temp-class model.
+      The #85 double-def chain (u = t1*cx; u = sxsz - u) is load-bearing
+      for EVAL ORDER (single-def/inline spellings fold and reorder — keep
+      it); the reg assignment itself resisted decl-position x3 (#61b),
+      un-naming, w-splits, single-def forms. Same family: Vec3_Normalize
+      (div-result f2-vs-f1; recycle/embed/launder/decl x4 inert),
+      dim_bossgut fn_801D29E4 (sx/scale pair, launders x3 + named-const
+      x2 inert). Recognize: named FP temp in f0 in TARGET with your
+      compile putting the expr temp there instead.
     - Sub-class-2 EXTENSION: when the swapped pair is two named f32 locals
       init'd from DIFFERENT symbols (`f1 = lblA; ... f0 = lblB;` store-burst)
       and the decl-order swap is INERT, the #81 launder on ONE init
