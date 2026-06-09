@@ -1,6 +1,7 @@
 #include "global.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/dll/CF/CFPrisonGuard.h"
 #include "main/dll/CF/dll_163.h"
 #include "main/objseq.h"
 
@@ -33,29 +34,6 @@ extern f32 lbl_803E3BFC;
 #define STAFFACTIVATED_ENABLE_GAMEBIT 0x957
 #define STAFFACTIVATED_PARTICLE_ID 0x7c3
 
-typedef struct StaffActivatedState {
-    f32 targetX;
-    f32 targetZ;
-    u8 pad08[4];
-    s32 liftVelocity;
-    s32 previousLiftHeight;
-    s32 liftHeight;
-    s32 peakLiftHeight;
-    u8 liftReset;
-    u8 flags;
-    u8 pad1E[2];
-    f32 hitCooldown;
-} StaffActivatedState;
-
-typedef struct StaffActivatedSetup {
-    u8 pad00[0x1c];
-    u8 mode;
-    u8 size;
-    u8 pad1E[4];
-    s16 activeGameBit;
-    s16 lockGameBit;
-} StaffActivatedSetup;
-
 STATIC_ASSERT(sizeof(StaffActivatedState) == 0x24);
 STATIC_ASSERT(offsetof(StaffActivatedState, targetX) == 0x00);
 STATIC_ASSERT(offsetof(StaffActivatedState, targetZ) == 0x04);
@@ -66,36 +44,41 @@ STATIC_ASSERT(offsetof(StaffActivatedState, peakLiftHeight) == 0x18);
 STATIC_ASSERT(offsetof(StaffActivatedState, liftReset) == 0x1c);
 STATIC_ASSERT(offsetof(StaffActivatedState, flags) == STAFFACTIVATED_STATE_FLAGS);
 STATIC_ASSERT(offsetof(StaffActivatedState, hitCooldown) == 0x20);
+STATIC_ASSERT(sizeof(StaffActivatedSetup) == 0x28);
+STATIC_ASSERT(offsetof(StaffActivatedSetup, type) == 0x18);
 STATIC_ASSERT(offsetof(StaffActivatedSetup, mode) == 0x1c);
+STATIC_ASSERT(offsetof(StaffActivatedSetup, size) == 0x1d);
 STATIC_ASSERT(offsetof(StaffActivatedSetup, activeGameBit) == 0x22);
 STATIC_ASSERT(offsetof(StaffActivatedSetup, lockGameBit) == 0x24);
 
 #pragma scheduling off
 #pragma peephole off
 void staffactivated_calcInteractionTargetXZ(int obj, f32 *outX, f32 *outZ) {
-    int bMode;
-    float *pfVar1;
+    StaffActivatedState *state;
+    StaffActivatedSetup *setup;
+    int mode;
 
-    pfVar1 = ((GameObject *)obj)->extra;
-    bMode = *(byte *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x1c);
+    state = ((GameObject *)obj)->extra;
+    setup = (StaffActivatedSetup *)((GameObject *)obj)->anim.placementData;
+    mode = setup->mode;
 
-    if (bMode == 2) goto lbl_case2;
-    if (bMode >= 2) goto lbl_gt2;
-    if (bMode == 0) goto lbl_case0;
+    if (mode == 2) goto lbl_case2;
+    if (mode >= 2) goto lbl_gt2;
+    if (mode == 0) goto lbl_case0;
     goto lbl_default;
 
 lbl_gt2:
-    if (bMode >= 4) goto lbl_default;
+    if (mode >= 4) goto lbl_default;
     goto lbl_case3;
 
 lbl_case2:
-    *outX = -(lbl_803E3BF0 * mathSinf(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) - pfVar1[0]);
-    *outZ = -(lbl_803E3BF0 * mathCosf(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) - pfVar1[1]);
+    *outX = -(lbl_803E3BF0 * mathSinf(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) - state->targetX);
+    *outZ = -(lbl_803E3BF0 * mathCosf(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) - state->targetZ);
     goto lbl_done;
 
 lbl_case3:
-    *outX = lbl_803E3BF0 * mathSinf(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) + pfVar1[0];
-    *outZ = lbl_803E3BF0 * mathCosf(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) + pfVar1[1];
+    *outX = lbl_803E3BF0 * mathSinf(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) + state->targetX;
+    *outZ = lbl_803E3BF0 * mathCosf(lbl_803E3BF4 * (f32)(*(s16 *)obj) / lbl_803E3BF8) + state->targetZ;
     goto lbl_done;
 
 lbl_case0:
@@ -112,19 +95,23 @@ lbl_done:;
 #pragma peephole reset
 #pragma scheduling reset
 
-u32 cfPrisonGuard_getLiftHeight(int *obj) { return *(u32*)((char*)((int**)obj)[0xb8/4] + 0x14); }
+u32 cfPrisonGuard_getLiftHeight(int *obj) { return ((StaffActivatedState *)((GameObject *)obj)->extra)->liftHeight; }
 
 #pragma scheduling off
 #pragma peephole off
 void cfPrisonGuard_setLiftHeight(int *obj, int v) {
-    int *state = ((GameObject *)obj)->extra;
-    *(int *)((char *)state + 0x14) = v;
-    *(u8 *)((char *)state + 0x1c) = 1;
+    StaffActivatedState *state = ((GameObject *)obj)->extra;
+    state->liftHeight = v;
+    state->liftReset = 1;
 }
 #pragma peephole reset
 #pragma scheduling reset
 
-u8 objGetByteParam1C(int *obj) { return *(u8*)((char*)((int**)obj)[0x4c/4] + 0x1c); }
+u8 objGetByteParam1C(int *obj)
+{
+    StaffActivatedSetup *setup = (StaffActivatedSetup *)((GameObject *)obj)->anim.placementData;
+    return setup->mode;
+}
 
 int staffactivated_getExtraSize(void)
 {
@@ -157,7 +144,6 @@ extern EffectInterface **gPartfxInterface;
 extern f32 lbl_803E3BDC;
 extern f32 lbl_803E3C00;
 extern f32 lbl_803E3C04;
-extern void staffactivated_updateLiftHeight(int obj, int state);
 extern void landed_arwing_updateHitReaction(int obj, int state);
 extern void landed_arwing_updateDamageTexture(int obj, int state);
 

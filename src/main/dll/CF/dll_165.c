@@ -1,4 +1,5 @@
 #include "main/dll/CF/dll_165.h"
+#include "main/dll/CF/dll_163.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
@@ -48,22 +49,24 @@ typedef struct {
 #pragma peephole off
 void staffactivated_init(int obj, int setup)
 {
-  u8 *state;
+  StaffActivatedSetup *setupData;
+  StaffActivatedState *state;
   int sizeIndex;
   int modelVariant;
   f32 scale;
   StaffFlags *flags;
 
+  setupData = (StaffActivatedSetup *)setup;
   state = ((GameObject *)obj)->extra;
   ObjGroup_AddObject(obj, 0x41);
-  *(s16 *)obj = (s16)((s32)*(u8 *)(setup + 0x18) << 8);
+  *(s16 *)obj = (s16)((s32)setupData->type << 8);
 
-  sizeIndex = *(u8 *)(setup + 0x1d);
+  sizeIndex = setupData->size;
   if (sizeIndex > 2) {
     sizeIndex = 2;
   }
 
-  if (*(u8 *)(setup + 0x1c) == 2) {
+  if (setupData->mode == 2) {
     switch (sizeIndex) {
     case 2:
       modelVariant = 2;
@@ -94,49 +97,49 @@ void staffactivated_init(int obj, int setup)
     ((GameObject *)obj)->anim.rootMotionScale = lbl_803E3C10;
   }
 
-  switch (*(u8 *)(setup + 0x1c)) {
+  switch (setupData->mode) {
   case 2:
     ((GameObject *)obj)->unkE4 = modelVariant;
-    *(f32 *)state = -(lbl_803E3C14 *
+    state->targetX = -(lbl_803E3C14 *
                       (((GameObject *)obj)->anim.rootMotionScale *
                        (lbl_803E3C18 *
                         mathSinf((lbl_803E3BF4 * (f32)*(s16 *)obj) / lbl_803E3BF8))) -
                      ((GameObject *)obj)->anim.localPosX);
-    *(f32 *)(state + 4) = -(lbl_803E3C14 *
+    state->targetZ = -(lbl_803E3C14 *
                             (((GameObject *)obj)->anim.rootMotionScale *
                              (lbl_803E3C18 *
                               mathCosf((lbl_803E3BF4 * (f32)*(s16 *)obj) / lbl_803E3BF8))) -
                            ((GameObject *)obj)->anim.localPosZ);
     break;
   case 3:
-    *(f32 *)state = lbl_803E3C14 *
+    state->targetX = lbl_803E3C14 *
                     (((GameObject *)obj)->anim.rootMotionScale *
                      (lbl_803E3C18 *
                       mathSinf((lbl_803E3BF4 * (f32)*(s16 *)obj) / lbl_803E3BF8))) +
                     ((GameObject *)obj)->anim.localPosX;
-    *(f32 *)(state + 4) = lbl_803E3C14 *
+    state->targetZ = lbl_803E3C14 *
                           (((GameObject *)obj)->anim.rootMotionScale *
                            (lbl_803E3C18 *
                             mathCosf((lbl_803E3BF4 * (f32)*(s16 *)obj) / lbl_803E3BF8))) +
                           ((GameObject *)obj)->anim.localPosZ;
     break;
   default:
-    *(f32 *)state = ((GameObject *)obj)->anim.localPosX;
-    *(f32 *)(state + 4) = ((GameObject *)obj)->anim.localPosZ;
+    state->targetX = ((GameObject *)obj)->anim.localPosX;
+    state->targetZ = ((GameObject *)obj)->anim.localPosZ;
     break;
   }
 
-  flags = (StaffFlags *)(state + 0x1d);
-  if (*(s16 *)(setup + 0x22) > 0) {
-    flags->b7 = (u8)GameBit_Get(*(s16 *)(setup + 0x22));
+  flags = (StaffFlags *)&state->flags;
+  if (setupData->activeGameBit > 0) {
+    flags->b7 = (u8)GameBit_Get(setupData->activeGameBit);
   } else {
     flags->b7 = 1;
   }
   flags->b4 = 0;
 
-  if (*(s16 *)(setup + 0x24) > 0) {
-    if ((flags->b6 = (u8)GameBit_Get(*(s16 *)(setup + 0x24))) != 0) {
-      switch (*(u8 *)(setup + 0x1c)) {
+  if (setupData->lockGameBit > 0) {
+    if ((flags->b6 = (u8)GameBit_Get(setupData->lockGameBit)) != 0) {
+      switch (setupData->mode) {
       case 3:
         ObjAnim_SetMoveProgress(lbl_803E3BBC, (ObjAnimComponent *)obj);
         break;
