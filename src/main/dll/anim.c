@@ -138,6 +138,13 @@ typedef struct DfpSeqPointState {
     u8 flags0F; /* DfpFlags7-style bit 0x80 */
 } DfpSeqPointState;
 
+typedef struct DfpFlags7 {
+    u8 b80 : 1;
+    u8 b40 : 1;
+    u8 b20 : 1;
+    u8 rest : 5;
+} DfpFlags7;
+
 STATIC_ASSERT(sizeof(DfpSeqPointState) == 0x10);
 
 /* drakorenergy extra block (extraSize 0xC). */
@@ -4236,7 +4243,7 @@ void dfpseqpoint_init(int *obj, u8 *init) {
     sub->gameBitGate = *(s16*)(init + 0x1e);
     sub->gameBitDone = *(s16*)(init + 0x20);
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x2000);
-    sub->flags0F = (u8)(sub->flags0F & ~0x80);
+    ((DfpFlags7 *)&sub->flags0F)->b80 = 0;
 }
 void DFP_Torch_hitDetect(void) {}
 void DFP_Torch_release(void) {}
@@ -4653,12 +4660,6 @@ void fn_80203000(int obj, int param2)
 extern void unlockLevel(int a, int b, int c);
 extern void Music_Trigger(int a, int b);
 
-typedef struct DfpFlags7 {
-    u8 b80 : 1;
-    u8 b40 : 1;
-    u8 b20 : 1;
-    u8 rest : 5;
-} DfpFlags7;
 
 void dfplevelcontrol_init(int obj, int param2)
 {

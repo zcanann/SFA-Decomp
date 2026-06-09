@@ -289,7 +289,7 @@ void gpsh_shrine_init(int *obj, int *def) {
     ((GameObject *)obj)->anim.worldPosY = ((GameObject *)obj)->anim.localPosY;
     ((GameObject *)obj)->anim.worldPosZ = ((GameObject *)obj)->anim.localPosZ;
     state[0x14] = 0;
-    state[0x15] &= 0x7f;
+    ((GpshShrineFlags *)(state + 0x15))->b80 = 0;
     GameBit_Set(0x129, 1);
     GameBit_Set(0x12b, 0);
     GameBit_Set(0x149, 0);
