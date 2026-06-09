@@ -128,7 +128,7 @@ void vfpobjcreator_update(int *obj)
             *(s16 *)(o + 0x1c) = (s16)(randomGetRange(-0x1f4, 0x1f4) + 0x5dc);
             o[0x24] = 0;
             n = Obj_SetupObject(o, 5, *(s8 *)((char *)obj + 0xac), -1,
-                                *(int *)((char *)obj + 0x30));
+                                *(int *)&((GameObject *)obj)->anim.parent);
             if (n == NULL) {
                 break;
             }
@@ -159,7 +159,7 @@ void vfpobjcreator_update(int *obj)
             *(s16 *)(o + 0x1e) = -1;
             *(s16 *)(o + 0x20) = -1;
             n = Obj_SetupObject(o, 5, *(s8 *)((char *)obj + 0xac), -1,
-                                *(int *)((char *)obj + 0x30));
+                                *(int *)&((GameObject *)obj)->anim.parent);
             if (n == NULL) {
                 break;
             }

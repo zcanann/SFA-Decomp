@@ -94,7 +94,7 @@ static int FEseqobject_findControlObject(void)
   found = 0;
   for (i = 0; i < count; i++) {
     int obj = objects[i];
-    if (*(s16 *)(obj + 0x46) == 0xf7) {
+    if (((GameObject *)obj)->anim.seqId == 0xf7) {
       found = obj;
       i = count;
     }

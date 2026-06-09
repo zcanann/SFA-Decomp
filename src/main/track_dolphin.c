@@ -4598,7 +4598,7 @@ int fn_80060688(int obj, int type)
     offset = 0;
     count = *(u16 *)(obj + 0x9a);
     for (i = 0; i < count; i++) {
-        entry = *(int *)(obj + 0x50) + offset;
+        entry = *(int *)&((GameObject *)obj)->anim.modelInstance + offset;
         if (type == (int)((*(u32 *)(entry + 0x10) & 0xff000000) >> 24)) {
             total += *(u16 *)(entry + 0x14) - *(u16 *)entry;
         }
@@ -4653,7 +4653,7 @@ void fn_80065574(int matchVal, int obj, int flag)
     int base;
     char *e;
     if ((u32)obj != 0) {
-        base = *(int *)(obj + 0x50);
+        base = *(int *)&((GameObject *)obj)->anim.modelInstance;
         e = *(char **)(base + 0x34);
         count = *(u8 *)(base + 0x5c);
     } else {
@@ -4681,19 +4681,19 @@ void MapBlock_init(int obj)
 {
     int off;
     int i;
-    if (*(u32 *)(obj + 0x54) != 0) *(int *)(obj + 0x54) = obj + *(int *)(obj + 0x54);
-    if (*(u32 *)(obj + 0x4c) != 0) *(int *)(obj + 0x4c) = obj + *(int *)(obj + 0x4c);
-    if (*(u32 *)(obj + 0x50) != 0) *(int *)(obj + 0x50) = obj + *(int *)(obj + 0x50);
+    if (*(u32 *)&((GameObject *)obj)->anim.hitReactState != 0) *(int *)&((GameObject *)obj)->anim.hitReactState = obj + *(int *)&((GameObject *)obj)->anim.hitReactState;
+    if (*(u32 *)&((GameObject *)obj)->anim.placementData != 0) *(int *)&((GameObject *)obj)->anim.placementData = obj + *(int *)&((GameObject *)obj)->anim.placementData;
+    if (*(u32 *)&((GameObject *)obj)->anim.modelInstance != 0) *(int *)&((GameObject *)obj)->anim.modelInstance = obj + *(int *)&((GameObject *)obj)->anim.modelInstance;
     *(int *)(obj + 0x58) = obj + *(int *)(obj + 0x58);
     *(int *)(obj + 0x5c) = obj + *(int *)(obj + 0x5c);
-    *(int *)(obj + 0x60) = obj + *(int *)(obj + 0x60);
+    *(int *)&((GameObject *)obj)->anim.eventTable = obj + *(int *)&((GameObject *)obj)->anim.eventTable;
     if (*(u32 *)(obj + 0x78) != 0) *(int *)(obj + 0x78) = obj + *(int *)(obj + 0x78);
-    if (*(u32 *)(obj + 0x7c) != 0) *(int *)(obj + 0x7c) = obj + *(int *)(obj + 0x7c);
-    if (*(u32 *)(obj + 0x80) != 0) *(int *)(obj + 0x80) = obj + *(int *)(obj + 0x80);
-    *(int *)(obj + 0x68) = obj + *(int *)(obj + 0x68);
+    if (*(u32 *)&((GameObject *)obj)->anim.banks != 0) *(int *)&((GameObject *)obj)->anim.banks = obj + *(int *)&((GameObject *)obj)->anim.banks;
+    if (*(u32 *)&((GameObject *)obj)->anim.previousLocalPosX != 0) *(int *)&((GameObject *)obj)->anim.previousLocalPosX = obj + *(int *)&((GameObject *)obj)->anim.previousLocalPosX;
+    *(int *)&((GameObject *)obj)->anim.dll = obj + *(int *)&((GameObject *)obj)->anim.dll;
     if (*(u32 *)(obj + 0x64) != 0) *(int *)(obj + 0x64) = obj + *(int *)(obj + 0x64);
     for (i = 0, off = 0; i < *(u8 *)(obj + 0xa1); i++) {
-        *(int *)(*(int *)(obj + 0x68) + off) = obj + *(int *)(*(int *)(obj + 0x68) + off);
+        *(int *)(*(int *)&((GameObject *)obj)->anim.dll + off) = obj + *(int *)(*(int *)&((GameObject *)obj)->anim.dll + off);
         off += 0x1c;
     }
 }
@@ -4728,7 +4728,7 @@ void MapBlock_initHits(int obj, int index)
     }
     *(int *)(obj + 0x74) = 0;
     *(u16 *)(obj + 0x9e) = 0;
-    *(u16 *)(obj + 4) = *(u16 *)(obj + 4) & ~0x40;
+    *(u16 *)&((GameObject *)obj)->anim.rotZ = *(u16 *)&((GameObject *)obj)->anim.rotZ & ~0x40;
 }
 
 extern int lbl_803DCEB0;
@@ -4794,7 +4794,7 @@ void MapBlock_initShaders(int obj)
         for (j = 0; j < *(u8 *)(block + 0x41); j++) {
             v = *(int *)(p + 0x24);
             if (v != -1) {
-                *(int *)(p + 0x24) = ((int *)*(int *)(obj + 0x54))[v];
+                *(int *)(p + 0x24) = ((int *)*(int *)&((GameObject *)obj)->anim.hitReactState)[v];
                 v = *(u8 *)(p + 0x29);
                 if (v != 0) {
                     mapTextureOverrideAcquire(*(int *)(p + 0x24), 0, v);
@@ -4807,7 +4807,7 @@ void MapBlock_initShaders(int obj)
         }
         v = *(int *)(block + 0x34);
         if (v != -1) {
-            *(int *)(block + 0x34) = ((int *)*(int *)(obj + 0x54))[v];
+            *(int *)(block + 0x34) = ((int *)*(int *)&((GameObject *)obj)->anim.hitReactState)[v];
         } else {
             *(int *)(block + 0x34) = 0;
         }

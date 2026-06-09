@@ -88,7 +88,7 @@ void worldobj_initialise(void) {}
 #pragma scheduling off
 #pragma peephole off
 int worldobj_getObjectTypeId(int *obj) {
-    if (*(s16 *)*(int **)((char *)obj + 0x4c) != 0x5e3) {
+    if (*(s16 *)*(int **)&((GameObject *)obj)->anim.placementData != 0x5e3) {
         return 0x0;
     }
     return 0x8;

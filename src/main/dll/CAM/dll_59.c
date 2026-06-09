@@ -99,7 +99,7 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
        (f32 *)(gCamcontrolPathState + 0xc), 0, (f32 *)(gCamcontrolPathState + 0x10));
 
   gCamcontrolPathState[0x1bc] = 0;
-  *(int *)gCamcontrolPathState = *(int *)(obj + 0x30);
+  *(int *)gCamcontrolPathState = *(int *)&((GameObject *)obj)->anim.parent;
 
   cosFacing = mathSinf(CameraModeStaffAnim_angleToRadians(target[0]));
   sinFacing = mathCosf(CameraModeStaffAnim_angleToRadians(target[0]));
@@ -149,7 +149,7 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
     }
 
     Obj_TransformWorldPointToLocal(localPos[0], localPos[1], localPos[2], &localPos[0],
-                                   &localPos[1], &localPos[2], *(int *)(obj + 0x30));
+                                   &localPos[1], &localPos[2], *(int *)&((GameObject *)obj)->anim.parent);
 
     for (pointCount = 0; pointCount < 3; pointCount++) {
       *(f32 *)(gCamcontrolPathState + (pointCount * 4) + 0x1c) = ((GameObject *)obj)->anim.localPosX;

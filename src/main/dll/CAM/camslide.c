@@ -1,4 +1,5 @@
 #include "main/dll/CAM/camslide.h"
+#include "main/game_object.h"
 #include "main/camera_interface.h"
 #include "main/camera_object.h"
 

@@ -1068,7 +1068,7 @@ void *Obj_SetupObject(int a, int b, int c, int d, int e) {
     obj = loadCharacter((s16 *)a, b, c, d, (void *)e, 0);
     if (obj != NULL) {
         Obj_RegisterObject(obj, b);
-        OSReport(lbl_802CAC54, *(int *)((u8 *)obj + 0x50) + 0x91);
+        OSReport(lbl_802CAC54, *(int *)&((GameObject *)obj)->anim.modelInstance + 0x91);
     }
     return obj;
 }
@@ -1088,7 +1088,7 @@ void *loadObjectAtObject(u8 *src, int arg1) {
         obj = loadCharacter((s16 *)arg1, 5, type, -1, (void *)objF30, 0);
         if (obj != NULL) {
             Obj_RegisterObject(obj, 5);
-            OSReport(lbl_802CAC54, *(int *)((u8 *)obj + 0x50) + 0x91);
+            OSReport(lbl_802CAC54, *(int *)&((GameObject *)obj)->anim.modelInstance + 0x91);
         }
     }
     return obj;

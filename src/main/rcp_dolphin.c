@@ -2767,7 +2767,7 @@ void *textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 b8, u8 b9, u8 b1
     *(u8 *)(obj + 24) = b9;
     *(u8 *)(obj + 25) = b10;
     *(u8 *)(obj + 26) = b11;
-    *(int *)(obj + 80) = 0;
+    *(int *)&((GameObject *)obj)->anim.modelInstance = 0;
     textureFn_80053d58(obj);
     return obj;
 }
@@ -3751,7 +3751,7 @@ int objShouldUnload(u8 *obj)
     f32 z;
     f32 dist;
 
-    def = *(u8 **)(obj + 0x4c);
+    def = *(u8 **)&((GameObject *)obj)->anim.placementData;
     if (def == NULL) {
         return 0;
     }
@@ -3784,15 +3784,15 @@ int objShouldUnload(u8 *obj)
     if (flags & 0x10) {
         return !(*gMapEventInterface)->getAnimEvent((s8)obj[0xac], def[6]);
     }
-    if (*(void **)(obj + 0xc0) != NULL && *(s16 *)(obj + 0xb4) < 0) {
+    if (((GameObject *)obj)->unkC0 != NULL && ((GameObject *)obj)->unkB4 < 0) {
         return 0;
     }
-    if (*(void **)(obj + 0xc4) != NULL) {
+    if (((GameObject *)obj)->unkC4 != NULL) {
         return 0;
     }
-    if (*(void **)(obj + 0x30) == NULL) {
-        bx = (int)fastFloorf((*(f32 *)(obj + 0xc) - playerMapOffsetX) / gMapBlockWorldSize);
-        bz = (int)fastFloorf((*(f32 *)(obj + 0x14) - playerMapOffsetZ) / gMapBlockWorldSize);
+    if (((GameObject *)obj)->anim.parent == NULL) {
+        bx = (int)fastFloorf((((GameObject *)obj)->anim.localPosX - playerMapOffsetX) / gMapBlockWorldSize);
+        bz = (int)fastFloorf((((GameObject *)obj)->anim.localPosZ - playerMapOffsetZ) / gMapBlockWorldSize);
         if (bx < 0 || bz < 0 || bx >= 0x10 || bz >= 0x10) {
             return 1;
         }
@@ -3813,12 +3813,12 @@ int objShouldUnload(u8 *obj)
     if (flags & 0x20) {
         return 0;
     }
-    if ((flags & 4) && (p = (u8 *)Obj_GetPlayerObject()) != NULL && *(void **)(obj + 0x30) == NULL) {
+    if ((flags & 4) && (p = (u8 *)Obj_GetPlayerObject()) != NULL && ((GameObject *)obj)->anim.parent == NULL) {
         x = *(f32 *)(p + 0x18);
         y = *(f32 *)(p + 0x1c);
         z = *(f32 *)(p + 0x20);
     } else {
-        src = *(u8 **)(obj + 0x30);
+        src = *(u8 **)&((GameObject *)obj)->anim.parent;
         if (src != NULL) {
             idx2 = (s8)src[0x35] + 1;
         } else {
@@ -3829,14 +3829,14 @@ int objShouldUnload(u8 *obj)
         z = lbl_80386648[idx2].z;
     }
     dist = *(f32 *)(obj + 0x3c);
-    if (*(void **)(obj + 0x30) != NULL) {
-        x -= *(f32 *)(obj + 0xc);
-        y -= *(f32 *)(obj + 0x10);
-        z -= *(f32 *)(obj + 0x14);
+    if (((GameObject *)obj)->anim.parent != NULL) {
+        x -= ((GameObject *)obj)->anim.localPosX;
+        y -= ((GameObject *)obj)->anim.localPosY;
+        z -= ((GameObject *)obj)->anim.localPosZ;
     } else {
-        x -= *(f32 *)(obj + 0x18);
-        y -= *(f32 *)(obj + 0x1c);
-        z -= *(f32 *)(obj + 0x20);
+        x -= ((GameObject *)obj)->anim.worldPosX;
+        y -= ((GameObject *)obj)->anim.worldPosY;
+        z -= ((GameObject *)obj)->anim.worldPosZ;
     }
     if (x * x + y * y + z * z < (lbl_803DEBB8 + dist) * (lbl_803DEBB8 + dist)) {
         return 0;

@@ -3046,29 +3046,29 @@ void ObjModel_UpdateAnimMatrices(u8 *model, u8 *blend, u8 *obj, u8 *dst) {
     *(u16 *)(model + 0x18) ^= 1;
     ch = *(u8 **)(model + 0x2c);
     if ((s8)ch[0x63] & 4) {
-        ObjModel_SampleJointTransform(model, 0, 0, *(f32 *)(obj + 0x98), *(f32 *)(obj + 8), pos, rot);
+        ObjModel_SampleJointTransform(model, 0, 0, ((GameObject *)obj)->anim.currentMoveProgress, ((GameObject *)obj)->anim.rootMotionScale, pos, rot);
         lbl_803DC7A4 = rot[0];
         lbl_803DC7A6 = rot[1];
         lbl_803DC7A8 = rot[2];
     }
     if (*(u16 *)(*(u8 **)model + 2) & 8) {
-        ((void (*)(u8 *, u8 *, u8 *, f32, int))modelWalkAnimFn_800248b8)(dst, model, *(u8 **)(model + 0x2c), *(f32 *)(obj + 0x98), 0x7f);
+        ((void (*)(u8 *, u8 *, u8 *, f32, int))modelWalkAnimFn_800248b8)(dst, model, *(u8 **)(model + 0x2c), ((GameObject *)obj)->anim.currentMoveProgress, 0x7f);
     } else if ((s8)(*(u8 **)(model + 0x2c))[0x63] & 8) {
         ch2 = *(u8 **)(model + 0x30);
-        modelAnimFn_800246a0(dst, model, ch, *(f32 *)(obj + 0x98), 0x7f, 0, 0, 2, 0x14,
+        modelAnimFn_800246a0(dst, model, ch, ((GameObject *)obj)->anim.currentMoveProgress, 0x7f, 0, 0, 2, 0x14,
                              (s16)*(u16 *)(ch + 0x5a));
-        modelAnimFn_800246a0(dst, model, ch2, *(f32 *)(obj + 0x9c), 0x7f, 0, 0, 2, 0x18,
+        modelAnimFn_800246a0(dst, model, ch2, ((GameObject *)obj)->anim.activeMoveProgress, 0x7f, 0, 0, 2, 0x18,
                              (s16)*(u16 *)(ch2 + 0x5a));
-        modelAnimFn_800246a0(dst, model, ch, *(f32 *)(obj + 0x98), 0x7f, 0, 0, 0, 7,
+        modelAnimFn_800246a0(dst, model, ch, ((GameObject *)obj)->anim.currentMoveProgress, 0x7f, 0, 0, 0, 7,
                              (s16)*(u16 *)(ch2 + 0x58));
-        modelAnimFn_800246a0(dst, model, ch, *(f32 *)(obj + 0x98), 0x7f, 0, 1, 1, 1,
+        modelAnimFn_800246a0(dst, model, ch, ((GameObject *)obj)->anim.currentMoveProgress, 0x7f, 0, 1, 1, 1,
                              (s16)*(u16 *)(ch + 0x58));
     } else {
-        ((void (*)(u8 *, u8 *, u8 *, f32, int))modelWalkAnimFn_800248b8)(dst, model, *(u8 **)(model + 0x2c), *(f32 *)(obj + 0x98), 0x7f);
+        ((void (*)(u8 *, u8 *, u8 *, f32, int))modelWalkAnimFn_800248b8)(dst, model, *(u8 **)(model + 0x2c), ((GameObject *)obj)->anim.currentMoveProgress, 0x7f);
         ch2 = *(u8 **)(model + 0x30);
-        if (ch2 != NULL && *(s16 *)(obj + 0xa2) > -1) {
+        if (ch2 != NULL && ((GameObject *)obj)->anim.activeMove > -1) {
             ObjModel_BuildAnimBlendTable(obj, *(u8 **)(model + 0x30), blend);
-            modelWalkAnimFn_800248b8(dst, model, *(u8 **)(model + 0x30), -1, *(f32 *)(obj + 0x9c));
+            modelWalkAnimFn_800248b8(dst, model, *(u8 **)(model + 0x30), -1, ((GameObject *)obj)->anim.activeMoveProgress);
         }
     }
 }

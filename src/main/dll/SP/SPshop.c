@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/game_ui_interface.h"
 #include "main/mapEvent.h"
 #include "main/objseq.h"

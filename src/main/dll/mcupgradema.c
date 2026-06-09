@@ -35,9 +35,9 @@ int mcstaffeffe_SeqFn(int p1, int p2, int setup)
 #pragma scheduling off
 void mcupgradema_update(int obj)
 {
-    int setup = *(int *)(obj + 0x4c);
+    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
     if ((u32)GameBit_Get(*(s16 *)(setup + 0x1a)) != 0) {
-        *(u8 *)(obj + 0xaf) |= 8;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     } else if (ObjTrigger_IsSet(obj) != 0) {
         GameBit_Set(*(s16 *)(setup + 0x1a), 1);
         (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);

@@ -187,19 +187,19 @@ void wmworm_init(s16* obj, s8* p2)
     int* state;
 
     *obj = 0;
-    state = *(int**)((char*)obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     *(f32*)state = (f32)((s32)*(s8*)(p2 + 0x18) << 2);
     *(s16*)((char*)state + 0x4) = *(s16*)(p2 + 0x1a);
     *(s16*)((char*)state + 0x8) = *(s16*)(p2 + 0x1c);
     *(s16*)((char*)state + 0xc) = 0;
     if (*(s16*)((char*)state + 0x8) < 1) {
-        *(int*)((char*)obj + 0xf4) = (int)*(s16*)((char*)state + 0x8);
+        ((GameObject *)obj)->unkF4 = (int)*(s16*)((char*)state + 0x8);
     } else {
-        *(int*)((char*)obj + 0xf4) = 0;
+        ((GameObject *)obj)->unkF4 = 0;
     }
-    *(f32*)((char*)state + 0x10) = *(f32*)((char*)obj + 0xc);
-    *(f32*)((char*)state + 0x14) = *(f32*)((char*)obj + 0x10);
-    *(f32*)((char*)state + 0x18) = *(f32*)((char*)obj + 0x14);
+    *(f32*)((char*)state + 0x10) = ((GameObject *)obj)->anim.localPosX;
+    *(f32*)((char*)state + 0x14) = ((GameObject *)obj)->anim.localPosY;
+    *(f32*)((char*)state + 0x18) = ((GameObject *)obj)->anim.localPosZ;
 }
 #pragma peephole reset
 #pragma scheduling reset

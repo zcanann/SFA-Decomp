@@ -4541,7 +4541,7 @@ extern void modelDoRenderInstrs(int *obj, int *obj2, u8 *m, u8 mode);
 extern void objRenderChild(int *child, int *parent, u8 p3);
 #pragma dont_inline on
 void objRenderShadow(int *obj) {
-    if (lbl_803DEA04 == *(f32 *)((char *)obj + 8)) {
+    if (lbl_803DEA04 == ((GameObject *)obj)->anim.rootMotionScale) {
         curObjMtx = 0;
         return;
     }
@@ -4553,11 +4553,11 @@ void objRenderShadow(int *obj) {
             modelDoRenderInstrs(obj, obj, (u8 *)m, 1);
         }
     }
-    if (*(s16 *)((char *)obj + 68) == 1) {
+    if (((GameObject *)obj)->anim.classId == 1) {
         u8 *iter;
         int i = 0;
         iter = (u8 *)obj;
-        for (; i < *(u8 *)((char *)obj + 235); i++) {
+        for (; i < ((GameObject *)obj)->unkEB; i++) {
             int *child = *(int **)(iter + 200);
             if (child != NULL) {
                 objRenderChild(child, obj, 1);
@@ -4614,7 +4614,7 @@ void objRenderFn_800413d4(int *obj) {
     savedMtx = curObjMtx;
     lbl_803DCC3D = lbl_803DCC38;
     for (lbl_803DCC44 = 0; lbl_803DCC44 < 16; lbl_803DCC44 += lbl_803DCC40) {
-        modelDoRenderInstrs(obj, *(int **)((char *)obj + 0xc4) ? *(int **)((char *)obj + 0xc4) : obj, (u8 *)*model, 2);
+        modelDoRenderInstrs(obj, ((GameObject *)obj)->unkC4 ? ((GameObject *)obj)->unkC4 : obj, (u8 *)*model, 2);
         curObjMtx = savedMtx;
     }
     curObjMtx = 0;
@@ -4633,7 +4633,7 @@ void fuzzRenderFn_800412dc(int *obj) {
     lbl_803DCC3D = lbl_803DCC38;
     ObjModel_SetRenderCallback(model, modelRenderCb_8003c268);
     for (lbl_803DCC44 = 0; lbl_803DCC44 < 16; lbl_803DCC44 += lbl_803DCC40) {
-        modelDoRenderInstrs(obj, *(int **)((char *)obj + 0xc4) ? *(int **)((char *)obj + 0xc4) : obj, (u8 *)*model, 8);
+        modelDoRenderInstrs(obj, ((GameObject *)obj)->unkC4 ? ((GameObject *)obj)->unkC4 : obj, (u8 *)*model, 8);
         curObjMtx = savedMtx;
     }
     curObjMtx = 0;
@@ -4651,11 +4651,11 @@ void objRenderFuzz(int *obj) {
     int cnt;
     f32 dx, dy, dz, dist;
     int *cam = Camera_GetCurrentViewSlot();
-    if ((*(u16 *)((char *)obj + 0xb0) & 0x1000) || *(s8 *)((char *)obj + 0xac) == 0x3f
-        || *(s16 *)((char *)obj + 0x46) == 0x882 || *(s16 *)((char *)obj + 0x46) == 0x887) {
+    if ((((GameObject *)obj)->objectFlags & 0x1000) || *(s8 *)((char *)obj + 0xac) == 0x3f
+        || ((GameObject *)obj)->anim.seqId == 0x882 || ((GameObject *)obj)->anim.seqId == 0x887) {
         strong = 1;
-        if (*(s16 *)((char *)obj + 0x44) == 1 || *(s16 *)((char *)obj + 0x46) == 0x77d
-            || *(s16 *)((char *)obj + 0x46) == 0x882 || *(s16 *)((char *)obj + 0x46) == 0x887) {
+        if (((GameObject *)obj)->anim.classId == 1 || ((GameObject *)obj)->anim.seqId == 0x77d
+            || ((GameObject *)obj)->anim.seqId == 0x882 || ((GameObject *)obj)->anim.seqId == 0x887) {
             maxN = 0xf;
         } else {
             maxN = 7;
@@ -4671,17 +4671,17 @@ void objRenderFuzz(int *obj) {
             dy = *(f32 *)&((ModelFileHeader *)m)->unk1C - *(f32 *)((char *)cam + 0x10);
             dz = *(f32 *)&((ModelFileHeader *)m)->normals - (*(f32 *)((char *)cam + 0x14) - playerMapOffsetZ);
         } else {
-            dx = *(f32 *)((char *)obj + 0x18) - *(f32 *)((char *)cam + 0xc);
-            dy = *(f32 *)((char *)obj + 0x1c) - *(f32 *)((char *)cam + 0x10);
-            dz = *(f32 *)((char *)obj + 0x20) - *(f32 *)((char *)cam + 0x14);
+            dx = ((GameObject *)obj)->anim.worldPosX - *(f32 *)((char *)cam + 0xc);
+            dy = ((GameObject *)obj)->anim.worldPosY - *(f32 *)((char *)cam + 0x10);
+            dz = ((GameObject *)obj)->anim.worldPosZ - *(f32 *)((char *)cam + 0x14);
         }
     }
     dist = sqrtf(dx * dx + dy * dy + dz * dz);
     if (strong == 0) {
-        cnt = (s32)((lbl_803DEA64 * (lbl_803DEA68 * dist)) / (*(f32 *)((char *)obj + 0xa8) * *(f32 *)((char *)obj + 8)));
+        cnt = (s32)((lbl_803DEA64 * (lbl_803DEA68 * dist)) / (((GameObject *)obj)->anim.hitboxScale * ((GameObject *)obj)->anim.rootMotionScale));
         lbl_803DCC40 = 2;
     } else {
-        cnt = (s32)((lbl_803DEA68 * dist) / (*(f32 *)((char *)obj + 0xa8) * *(f32 *)((char *)obj + 8)));
+        cnt = (s32)((lbl_803DEA68 * dist) / (((GameObject *)obj)->anim.hitboxScale * ((GameObject *)obj)->anim.rootMotionScale));
         lbl_803DCC40 = 1;
     }
     n = 16 - cnt;
@@ -4695,7 +4695,7 @@ void objRenderFuzz(int *obj) {
         savedMtx = curObjMtx;
         ObjModel_SetRenderCallback(model, shaderFuzzFn_8003cc1c);
         for (lbl_803DCC44 = 0; lbl_803DCC44 < n; lbl_803DCC44++) {
-            modelDoRenderInstrs(obj, *(int **)((char *)obj + 0xc4) ? *(int **)((char *)obj + 0xc4) : obj, (u8 *)*model, 4);
+            modelDoRenderInstrs(obj, ((GameObject *)obj)->unkC4 ? ((GameObject *)obj)->unkC4 : obj, (u8 *)*model, 4);
             curObjMtx = savedMtx;
         }
         curObjMtx = 0;
@@ -4709,13 +4709,13 @@ void objRenderFn_80041018(int *obj) {
     int *model;
     u8 *base;
     int i;
-    base = *(u8 **)(*(int *)((char *)obj + 0x50) + 0x40);
+    base = *(u8 **)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x40);
     q = *(u8 **)((char *)obj + 0x74);
-    if (!(*(u8 *)((char *)obj + 0xaf) & 0x28)) {
+    if (!(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 0x28)) {
         model = Obj_GetActiveModel(obj);
         i = 0;
         p = base;
-        for (; i < *(u8 *)(*(int *)((char *)obj + 0x50) + 0x72); i++) {
+        for (; i < *(u8 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x72); i++) {
             int j = *(s8 *)(p + OBJPRINT_ACTIVE_BANK_INDEX(obj) + 0x12);
             ObjModelJointMatrix *mtx;
             if (j >= 0) {
@@ -4762,9 +4762,9 @@ void objMtxFn_80041104(f32 *mtx, f32 *out, s16 *in, int flag, int *obj, int e) {
         out[0] += playerMapOffsetX;
         out[2] += playerMapOffsetZ;
     } else {
-        blk.pos[0] = *(f32 *)((char *)obj + 0x18);
-        blk.pos[1] = *(f32 *)((char *)obj + 0x1c);
-        blk.pos[2] = *(f32 *)((char *)obj + 0x20);
+        blk.pos[0] = ((GameObject *)obj)->anim.worldPosX;
+        blk.pos[1] = ((GameObject *)obj)->anim.worldPosY;
+        blk.pos[2] = ((GameObject *)obj)->anim.worldPosZ;
         if (flag != 0) {
             blk.rot[0] = 0;
             blk.rot[1] = 0;
@@ -4793,23 +4793,23 @@ void objRenderModel(int *obj) {
     int sz;
     u32 col;
     int *model = Obj_GetActiveModel(obj);
-    if (lbl_803DEA04 == *(f32 *)((char *)obj + 8)) {
+    if (lbl_803DEA04 == ((GameObject *)obj)->anim.rootMotionScale) {
         curObjMtx = 0;
         return;
     }
     {
         int m0 = *model;
         if (*(u16 *)(m0 + 2) & 0x8000) {
-            modelDoAltRenderInstrs(obj, *(int **)((char *)obj + 0xc4) ? *(int **)((char *)obj + 0xc4) : obj, (u8 *)m0, 0);
+            modelDoAltRenderInstrs(obj, ((GameObject *)obj)->unkC4 ? ((GameObject *)obj)->unkC4 : obj, (u8 *)m0, 0);
         } else {
-            modelDoRenderInstrs(obj, *(int **)((char *)obj + 0xc4) ? *(int **)((char *)obj + 0xc4) : obj, (u8 *)m0, 0);
+            modelDoRenderInstrs(obj, ((GameObject *)obj)->unkC4 ? ((GameObject *)obj)->unkC4 : obj, (u8 *)m0, 0);
         }
     }
     {
         u8 *iter;
         int i = 0;
         iter = (u8 *)obj;
-        for (; i < *(u8 *)((char *)obj + 0xeb); i++) {
+        for (; i < ((GameObject *)obj)->unkEB; i++) {
             int *child = *(int **)(iter + 0xc8);
             if (child != NULL) {
                 objRenderChild(child, obj, 0);
@@ -4824,7 +4824,7 @@ void objRenderModel(int *obj) {
         return;
     }
     {
-        s16 t = *(s16 *)((char *)obj + 0x46);
+        s16 t = ((GameObject *)obj)->anim.seqId;
         if (t == 0x6a8) return;
         if (t == 0x6a9) return;
         if (t == 0x6aa) return;
@@ -4833,10 +4833,10 @@ void objRenderModel(int *obj) {
         if (t == 0x752) return;
     }
     Camera_ProjectWorldPointWithOffset(
-        *(f32 *)((char *)obj + 0xc) - playerMapOffsetX,
-        *(f32 *)((char *)obj + 0x10),
-        *(f32 *)((char *)obj + 0x14) - playerMapOffsetZ,
-        *(f32 *)((char *)obj + 0xa8) * *(f32 *)((char *)obj + 8),
+        ((GameObject *)obj)->anim.localPosX - playerMapOffsetX,
+        ((GameObject *)obj)->anim.localPosY,
+        ((GameObject *)obj)->anim.localPosZ - playerMapOffsetZ,
+        ((GameObject *)obj)->anim.hitboxScale * ((GameObject *)obj)->anim.rootMotionScale,
         &px, &py, &pz);
     Camera_NdcToScreen(px, py, pz, &sx, &sy, &sz);
     if (sz <= depthReadRequestPoll(sx, sy, obj)) {
@@ -5288,7 +5288,7 @@ void objRenderFn_8003d980(u8 *obj, int *p2) {
     PSMTXConcat(vm, wm, cm);
     GXLoadPosMtxImm(cm, lbl_802CAED0[0]);
     GXSetCurrentMtx(lbl_802CAED0[0]);
-    PSMTXScale(sm, lbl_803DEA1C / *(f32 *)(obj + 8), lbl_803DEA1C / *(f32 *)(obj + 8), lbl_803DEA1C);
+    PSMTXScale(sm, lbl_803DEA1C / ((GameObject *)obj)->anim.rootMotionScale, lbl_803DEA1C / ((GameObject *)obj)->anim.rootMotionScale, lbl_803DEA1C);
     cm[3] = lbl_803DEA04;
     cm[7] = lbl_803DEA04;
     cm[11] = lbl_803DEA04;
@@ -5340,13 +5340,13 @@ void objRenderFn_8003d980(u8 *obj, int *p2) {
     GXSetCurrentMtx(0);
     if (randomGetRange(0, 5) == 0) {
         int r = randomGetRange(0, *(s16 *)(data + 0xe) - 1);
-        f32 fs = *(f32 *)(obj + 8);
+        f32 fs = ((GameObject *)obj)->anim.rootMotionScale;
         int j = (r * 3) << 1;
         s16 *pv;
-        blk.pos[0] = fs * (f32)(*(s16 *)((char *)verts + j) >> 8) + *(f32 *)(obj + 0xc);
+        blk.pos[0] = fs * (f32)(*(s16 *)((char *)verts + j) >> 8) + ((GameObject *)obj)->anim.localPosX;
         pv = (s16 *)((char *)verts + j);
-        blk.pos[1] = fs * (f32)(pv[1] >> 8) + *(f32 *)(obj + 0x10);
-        blk.pos[2] = fs * (f32)(pv[2] >> 8) + *(f32 *)(obj + 0x14);
+        blk.pos[1] = fs * (f32)(pv[1] >> 8) + ((GameObject *)obj)->anim.localPosY;
+        blk.pos[2] = fs * (f32)(pv[2] >> 8) + ((GameObject *)obj)->anim.localPosZ;
         blk.scale = lbl_803DEA1C;
         blk.rot[0] = 0;
         blk.rot[2] = 0;
@@ -5691,11 +5691,11 @@ void modelDoAltRenderInstrs(int *obj, int *obj2, u8 *m, int p4) {
             lbl_803DCC48 = 3;
         }
         {
-            u8 *att = *(u8 **)((char *)obj + 0x54);
+            u8 *att = *(u8 **)&((GameObject *)obj)->anim.hitReactState;
             if (att != NULL) {
                 att[0xaf]--;
-                if (*(s8 *)(*(char **)((char *)obj + 0x54) + 0xaf) < 0) {
-                    *(u8 *)(*(char **)((char *)obj + 0x54) + 0xaf) = 0;
+                if (*(s8 *)(*(char **)&((GameObject *)obj)->anim.hitReactState + 0xaf) < 0) {
+                    *(u8 *)(*(char **)&((GameObject *)obj)->anim.hitReactState + 0xaf) = 0;
                 }
             }
         }
@@ -5864,11 +5864,11 @@ void objRenderShadow2(int *obj, int *obj2, u8 *m, int p4) {
         if (((ModelFileHeader *)m)->unkF7 != 0) {
             objUpdateHitSpheres(am, m, obj, 0, obj2);
         } else {
-            u8 *att = *(u8 **)((char *)obj + 0x54);
+            u8 *att = *(u8 **)&((GameObject *)obj)->anim.hitReactState;
             if (att != NULL) {
                 att[0xaf]--;
-                if (*(s8 *)(*(char **)((char *)obj + 0x54) + 0xaf) < 0) {
-                    *(u8 *)(*(char **)((char *)obj + 0x54) + 0xaf) = 0;
+                if (*(s8 *)(*(char **)&((GameObject *)obj)->anim.hitReactState + 0xaf) < 0) {
+                    *(u8 *)(*(char **)&((GameObject *)obj)->anim.hitReactState + 0xaf) = 0;
                 }
             }
         }
@@ -6075,7 +6075,7 @@ void modelDoRenderInstrs(int *obj, int *obj2, u8 *m, u8 mode) {
         int *player = Obj_GetPlayerObject();
         int *cam = (int *)(*gCameraInterface)->getCamera();
         if (player != NULL && !(*(u16 *)((char *)player + 0xb0) & 0x1000) && *(int **)((char *)cam + 0xa4) == player) {
-            f32 d = lbl_803DEA38 + (*(f32 *)((char *)obj + 0xa8) * *(f32 *)((char *)obj + 8) + *(f32 *)((char *)obj + 0xa4));
+            f32 d = lbl_803DEA38 + (((GameObject *)obj)->anim.hitboxScale * ((GameObject *)obj)->anim.rootMotionScale + *(f32 *)&((GameObject *)obj)->anim.targetObj);
             f32 dist = Camera_DistanceToCurrentViewPosition(*(f32 *)((char *)player + 0x18), *(f32 *)((char *)player + 0x1c), *(f32 *)((char *)player + 0x20));
             if (d > -dist) {
                 lbl_803DCC4C = 1;
@@ -6143,11 +6143,11 @@ void modelDoRenderInstrs(int *obj, int *obj2, u8 *m, u8 mode) {
         if (((ModelFileHeader *)m)->unkF7 != 0) {
             objUpdateHitSpheres(am, m, obj, 0, obj2);
         } else {
-            u8 *att = *(u8 **)((char *)obj + 0x54);
+            u8 *att = *(u8 **)&((GameObject *)obj)->anim.hitReactState;
             if (att != NULL) {
                 att[0xaf]--;
-                if (*(s8 *)(*(char **)((char *)obj + 0x54) + 0xaf) < 0) {
-                    *(u8 *)(*(char **)((char *)obj + 0x54) + 0xaf) = 0;
+                if (*(s8 *)(*(char **)&((GameObject *)obj)->anim.hitReactState + 0xaf) < 0) {
+                    *(u8 *)(*(char **)&((GameObject *)obj)->anim.hitReactState + 0xaf) = 0;
                 }
             }
         }
@@ -6186,7 +6186,7 @@ void modelDoRenderInstrs(int *obj, int *obj2, u8 *m, u8 mode) {
     modelInitMtxs(m, am);
     modelRenderInstrsState_init(&bs, ((ModelFileHeader *)m)->unkD4, *(u16 *)(m + 0xd8) << 3, *(u16 *)(m + 0xd8) << 3);
     {
-        f32 inv = lbl_803DEA1C / *(f32 *)((char *)obj + 8);
+        f32 inv = lbl_803DEA1C / ((GameObject *)obj)->anim.rootMotionScale;
         PSMTXScale(sm, inv, inv, inv);
     }
     if (*(u32 *)&((ModelFileHeader *)m)->unkA4 != 0) {
@@ -6407,7 +6407,7 @@ u8 modelRenderFn_8003e98c(u8 *obj, u8 *shader, u32 *p3, int mask, int p5, int p6
                         u32 jid = layer[5];
                         if (jid != 0) {
                             int *tbl = *(int **)(obj + 0x70);
-                            u8 *m50 = *(u8 **)(obj + 0x50);
+                            u8 *m50 = *(u8 **)&((GameObject *)obj)->anim.modelInstance;
                             u8 *q = *(u8 **)(m50 + 0xc);
                             int n = m50[0x59];
                             int k;
@@ -6423,7 +6423,7 @@ u8 modelRenderFn_8003e98c(u8 *obj, u8 *shader, u32 *p3, int mask, int p5, int p6
                                 f32 ty;
                                 u32 jid2 = layer[5];
                                 int *tbl2 = *(int **)(obj + 0x70);
-                                u8 *n50 = *(u8 **)(obj + 0x50);
+                                u8 *n50 = *(u8 **)&((GameObject *)obj)->anim.modelInstance;
                                 u8 *q2 = *(u8 **)(n50 + 0xc);
                                 int n2 = n50[0x59];
                                 int k2;
@@ -6657,7 +6657,7 @@ u32 objRenderFn_8003edf4(u8 *obj, u8 *p2, int *am, MtxBitStream *bs) {
                 f32 ty;
                 u32 jid = l1[5];
                 int *tbl = *(int **)(obj + 0x70);
-                u8 *m50 = *(u8 **)(obj + 0x50);
+                u8 *m50 = *(u8 **)&((GameObject *)obj)->anim.modelInstance;
                 u8 *q = *(u8 **)(m50 + 0xc);
                 int n = m50[0x59];
                 int k;
@@ -6693,7 +6693,7 @@ u32 objRenderFn_8003edf4(u8 *obj, u8 *p2, int *am, MtxBitStream *bs) {
         gxTextureFn_8004d5b4(op);
     }
     {
-        u8 e5 = obj[0xe5];
+        u8 e5 = ((GameObject *)obj)->unkE5;
         if ((e5 & 2) || (e5 & 0x10)) {
             color[0] = obj[0xec];
             color[1] = obj[0xed];

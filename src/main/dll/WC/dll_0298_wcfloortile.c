@@ -387,9 +387,9 @@ void arwarwing_spawnBomb(int obj, int state, int side) {
     ((ObjPlacement *)setup)->posX = px;
     ((ObjPlacement *)setup)->posY = py;
     ((ObjPlacement *)setup)->posZ = pz;
-    *(u8 *)(setup + 0x1a) = *(s16 *)(obj + 0) >> 8;
-    *(u8 *)(setup + 0x19) = *(s16 *)(obj + 2) >> 8;
-    *(u8 *)(setup + 0x18) = *(s16 *)(obj + 4) >> 8;
+    *(u8 *)(setup + 0x1a) = ((GameObject *)obj)->anim.rotX >> 8;
+    *(u8 *)(setup + 0x19) = ((GameObject *)obj)->anim.rotY >> 8;
+    *(u8 *)(setup + 0x18) = ((GameObject *)obj)->anim.rotZ >> 8;
     *(u8 *)(setup + 4) = 1;
     *(u8 *)(setup + 5) = 1;
     arwing->activeBombObj = loadObjectAtObject(obj);

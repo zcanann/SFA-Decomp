@@ -136,7 +136,7 @@ void waterflowwe_init(int obj, u8 *setup)
         if (((GameObject *)obj)->anim.rootMotionScale == lbl_803E72B0) {
             ((GameObject *)obj)->anim.rootMotionScale = lbl_803E72E8;
         }
-        ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale * *(f32 *)(*(int *)(obj + 0x50) + 4);
+        ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale * *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4);
     }
     ((GameObject *)obj)->objectFlags = ((GameObject *)obj)->objectFlags | 0x2000;
     ObjAnim_SetCurrentMove(obj, 0, lbl_803E72B0, 0);
@@ -176,7 +176,7 @@ void waterflowwe_hitDetect(void) {}
 #pragma scheduling off
 void waterflowwe_update(int obj)
 {
-    int setup = *(int *)(obj + 0x4c);
+    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
     f32 vx, vz;
 
     waterflowwe_calcCurrentVector(obj, &vx, &vz);

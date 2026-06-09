@@ -74,13 +74,13 @@ void wctemple_update(int obj)
     }
 
     if (state->triggerSlot == WCTEMPLE_SEQUENCE_SLOT_CLOSED) {
-        if ((*(u8 *)(obj + 0xaf) & WCTEMPLE_ACTIVATION_FLAG) != 0) {
+        if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & WCTEMPLE_ACTIVATION_FLAG) != 0) {
             (*gObjectTriggerInterface)
                 ->runSequence(WCTEMPLE_SEQUENCE_SLOT_CLOSED, (void *)obj, WCTEMPLE_SEQUENCE_INVALID_ARG);
             state->triggerSlot = WCTEMPLE_SEQUENCE_SLOT_OPEN;
         }
     } else {
-        if ((*(u8 *)(obj + 0xaf) & WCTEMPLE_ACTIVATION_FLAG) != 0) {
+        if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & WCTEMPLE_ACTIVATION_FLAG) != 0) {
             (*gObjectTriggerInterface)
                 ->runSequence(WCTEMPLE_SEQUENCE_SLOT_OPEN, (void *)obj, WCTEMPLE_SEQUENCE_INVALID_ARG);
             state->triggerSlot = WCTEMPLE_SEQUENCE_SLOT_CLOSED;

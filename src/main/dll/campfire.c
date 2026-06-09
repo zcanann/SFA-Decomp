@@ -135,7 +135,7 @@ void kaldaChomFn_8016821c(int obj, KaldaChomControl *control)
   int iVar3;
   int iVar2;
 
-  iVar3 = *(int *)(obj + 0x4c);
+  iVar3 = *(int *)&((GameObject *)obj)->anim.placementData;
   lbl_803DDA94 =
        lbl_803E30A0 + (float)(int)*(char *)(iVar3 + 0x28) / lbl_803E30A4;
   control->hitFlashTimer = lbl_803E308C;
@@ -147,9 +147,9 @@ void kaldaChomFn_8016821c(int obj, KaldaChomControl *control)
   } while (iVar2 != 0);
   if ((control->spawnedDustObj == NULL) && (cVar1 = Obj_IsLoadingLocked(), cVar1 != '\0')) {
     iVar2 = Obj_AllocObjectSetup(0x24,0x55e);
-    *(f32 *)(iVar2 + 8) = *(f32 *)(obj + 0xc);
-    *(float *)(iVar2 + 0xc) = lbl_803E30A8 + *(float *)(obj + 0x10);
-    *(f32 *)(iVar2 + 0x10) = *(f32 *)(obj + 0x14);
+    *(f32 *)(iVar2 + 8) = ((GameObject *)obj)->anim.localPosX;
+    *(float *)(iVar2 + 0xc) = lbl_803E30A8 + ((GameObject *)obj)->anim.localPosY;
+    *(f32 *)(iVar2 + 0x10) = ((GameObject *)obj)->anim.localPosZ;
     *(undefined *)(iVar2 + 4) = *(undefined *)(iVar3 + 4);
     *(undefined *)(iVar2 + 5) = *(undefined *)(iVar3 + 5);
     *(undefined *)(iVar2 + 6) = *(undefined *)(iVar3 + 6);
@@ -186,7 +186,7 @@ void kaldaChomFn_80168374(int obj, int state, u8 useUpperMouthPoint)
   f32 r;
 
   control = ((CampfireState *)state)->control;
-  iVar3 = *(int *)(obj + 0x4c);
+  iVar3 = *(int *)&((GameObject *)obj)->anim.placementData;
   if (Obj_IsLoadingLocked() != 0) {
     h = lbl_803E30A0 + (f32)(s32)*(s8 *)(iVar3 + 0x28) / lbl_803E30A4;
     iVar3 = Obj_AllocObjectSetup(0x24, 0x51b);

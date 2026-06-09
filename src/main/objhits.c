@@ -592,9 +592,9 @@ int ObjHits_CalcSkeletonResponse3D(f32 *pos,f32 radius,int obj,ObjHitsSkeletonHi
 
   aPtr = (float *)(int)&pj.accum;
   saved = hits;
-  move.x = *(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80);
-  move.y = *(f32 *)(obj + 0x10) - *(f32 *)(obj + 0x84);
-  move.z = *(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88);
+  move.x = ((GameObject *)obj)->anim.localPosX - ((GameObject *)obj)->anim.previousLocalPosX;
+  move.y = ((GameObject *)obj)->anim.localPosY - ((GameObject *)obj)->anim.previousLocalPosY;
+  move.z = ((GameObject *)obj)->anim.localPosZ - ((GameObject *)obj)->anim.previousLocalPosZ;
   moveLen = Vec3_Length(&move.x);
   projPos.x = pos[0];
   projPos.y = pos[1];

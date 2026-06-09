@@ -3005,7 +3005,7 @@ void *objModelGetVecFn_800395d8(void *obj, int target) {
                 u8 *entries = *(u8 **)((char *)m + 0x10);
                 int adj = OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx;
                 if (entries[adj + 1] != 0xff && (s32)entries[entryIdx] == target) {
-                    result = (char *)*(void **)((char *)obj + 0x6c) + vecOffset;
+                    result = (char *)((GameObject *)obj)->anim.jointPoseData + vecOffset;
                 }
                 entryIdx += OBJPRINT_MODEL_COUNT(m) + 1;
                 vecOffset += 0x12;
@@ -3078,7 +3078,7 @@ void fn_8003B5E0(int a, int b, int c, u8 d) {
 #pragma scheduling off
 void* objFindTexture(void* obj, int target) {
     void* result = NULL;
-    void* p50 = *(void**)((char*)obj + 0x50);
+    void* p50 = *(void**)&((GameObject *)obj)->anim.modelInstance;
     if (p50 != NULL) {
         u8* entries = *(u8**)((char*)p50 + 0xC);
         if (entries == NULL) return NULL;
@@ -3105,8 +3105,8 @@ void* objFindTexture(void* obj, int target) {
 extern void objRenderShadow(void* obj);
 #pragma scheduling off
 void objRenderShadowIfVisible(void* obj) {
-    void** arr = *(void***)((char*)obj + 0x7C);
-    s8 idx = *(s8*)((char*)obj + 0xAD);
+    void** arr = *(void***)&((GameObject *)obj)->anim.banks;
+    s8 idx = ((GameObject *)obj)->anim.bankIndex;
     if (arr[idx] != NULL) {
         objRenderShadow(obj);
     }
@@ -3703,20 +3703,20 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
     int walk;
     void (*vfn)(int, int, int, int, int, int);
 
-    if ((*(u16*)((char*)obj + 0xb0) & 0x40) != 0) return;
-    if (*(void**)((char*)obj + 0xc4) == NULL) {
+    if ((((GameObject *)obj)->objectFlags & 0x40) != 0) return;
+    if (((GameObject *)obj)->unkC4 == NULL) {
     } else {
         return;
     }
-    if ((*(s16*)((char*)obj + 6) & 0x4000) != 0) return;
-    sub = *(void**)((char*)obj + 0x30);
+    if ((((GameObject *)obj)->anim.flags & 0x4000) != 0) return;
+    sub = *(void**)&((GameObject *)obj)->anim.parent;
     if (sub != NULL && (*(s16*)((char*)sub + 6) & 0x4000) != 0) return;
 
     doNothing_beforeRenderObject(4);
-    *(u16*)((char*)obj + 0xb0) |= 0x800;
-    sub = *(void**)((char*)obj + 0x68);
+    ((GameObject *)obj)->objectFlags |= 0x800;
+    sub = *(void**)&((GameObject *)obj)->anim.dll;
     if (sub != NULL) {
-        if ((*(u16*)((char*)obj + 0xb0) & 0x4000) == 0) {
+        if ((((GameObject *)obj)->objectFlags & 0x4000) == 0) {
             vfn = *(void(**)(int, int, int, int, int, int))(*(int*)sub + 0x10);
             if (vfn != NULL) {
                 vfn(obj, a, b, c, d, flag);
@@ -3728,7 +3728,7 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
             }
         }
     } else if ((s8)flag != 0) {
-        switch (*(s16*)((char*)obj + 0x46)) {
+        switch (((GameObject *)obj)->anim.seqId) {
         case 0:
         case 0x1f:
             playerRender(obj, a, b, c, d, flag);
@@ -3744,7 +3744,7 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
         }
     }
     doNothing_afterRenderObject();
-    for (i = 0, walk = obj; i < (s32)(u32)*(u8*)((char*)obj + 0xeb); i++) {
+    for (i = 0, walk = obj; i < (s32)(u32)((GameObject *)obj)->unkEB; i++) {
         int staff = *(int*)((char*)walk + 0xc8);
         if (*(s16*)((char*)staff + 0x44) == 0x2d) {
             staffMtxFn_8003b620(staff, obj, (int)OBJPRINT_ACTIVE_BANK(staff), a, b, c);
@@ -3877,8 +3877,8 @@ void fn_8003B0D0(int obj, int p2, int p3, int p4)
         }
     }
     if (found != NULL) {
-        angle = (s16)getAngle(*(f32*)((char*)obj + 0xc) - *(f32*)((char*)p2 + 0xc),
-                              *(f32*)((char*)obj + 0x14) - *(f32*)((char*)p2 + 0x14));
+        angle = (s16)getAngle(((GameObject *)obj)->anim.localPosX - *(f32*)((char*)p2 + 0xc),
+                              ((GameObject *)obj)->anim.localPosZ - *(f32*)((char*)p2 + 0x14));
         *(s16*)((char*)p3 + 0x14) = (s16)(angle - ((GameObject *)obj)->anim.rotX);
         limit = (s16)(int)(lbl_803DE9EC * (f32)(s32)p4);
         if (*(s16*)((char*)p3 + 0x14) > limit) {
