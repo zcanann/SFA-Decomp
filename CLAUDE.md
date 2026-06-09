@@ -3275,6 +3275,11 @@ still #92-open. Pairs with #21 (snd ternary invert), #58 (u32 clamp cmplwi),
   discarded-ternary/empty-arm spellings all fold the branch. Best
   achievable is the switch's 1-byte cmpwi residual (dll_1FB_render banked
   96.5). An unsigned-compare branch-over-branch lever is still open.
+  POINTER-null operands are the same wall, worse: `switch ((int)ptr)
+  { case 0: break; default: <body> }` both DEGRADES the width (cmpwi)
+  AND still folds to a single beq — don't convert pointer-guard
+  empty-then sites at all (fxemit_update's def==NULL site, banked).
+  The s16-field variant DOES work (fxemit_update suppressed-flag → fixed).
 
 110. **GVN chained-constant residual CRACKED — `li rY,K; mr rX,rY` (target
     chains a constant-equal copy) is per-fn `#pragma optimization_level 1`,
@@ -3327,6 +3332,13 @@ still #92-open. Pairs with #21 (snd ternary invert), #58 (u32 clamp cmplwi),
       MP4 oracle: ReverbHICreate's `lens[k+5]` (optimized musyx).
     - raw pointer arith `(u8 *)table + (i << 2) + 384` re-canonicalizes
       BACK to addi-first — the array-subscript NODE is load-bearing;
+    - DISPLACEMENT-FORM sibling (`add base; lha K(base)` wanted, flat sum
+      gives `addi idx,K; lhax`): the TYPED-SUBSCRIPT spelling
+      `((s16 *)((char *)base + K))[idx]` lands K-on-base where BOTH the
+      flat sum and #112's paren grouping `(base + K) + idx*2` fold back
+      on some sites — and which spelling works is PER-SITE (CFtoggleswitch:
+      the s16-index site took the paren grouping, the u8-index site needed
+      the typed subscript). A/B both per site (cctestinfot_update → 100).
     - CONTEXT-dependent: in ASSIGNMENT context (walker-pointer inits) use
       the NESTED subscript `op = (u32 *)&(&table->flags[i << 2])[384];`
       (gives in-place `add rW,base,r0; addi rW,rW,384`); in CALL-ARG
