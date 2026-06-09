@@ -141,7 +141,7 @@ void cfccrate_init(int obj, int aux)
         break;
     case 0x4bf:
         ((GameObject *)obj)->anim.rotX = (short)((s8)*(u8 *)(aux + 0x18) << 8);
-        objAnim->bankIndex = *(u8 *)(aux + 0x19);
+        *(u8 *)&objAnim->bankIndex = *(u8 *)(aux + 0x19);
         state->gameBit = *(short *)(aux + 0x20);
         if (GameBit_Get(state->gameBit) != 0) {
             ((GameObject *)obj)->anim.localPosY = lbl_803E3DFC + *(f32 *)(aux + 0xc);
@@ -565,8 +565,8 @@ void fxemit_update(FxEmitObject *obj)
             }
 
             if (state->enableBit == -1 || GameBit_Get(state->enableBit) != 0) {
-                if (state->suppressed != 0) {
-                } else {
+                switch (state->suppressed) {
+                case 0: {
                 if (state->stopBit != -1 && GameBit_Get(state->stopBit) != 0) {
                     state->suppressed = 1;
                 }
@@ -588,6 +588,8 @@ void fxemit_update(FxEmitObject *obj)
                     obj->emitCooldown = -(int)state->emitCount;
                 } else if (e < 0 && obj->emitCooldown > 0) {
                     obj->emitCooldown -= framesThisStep;
+                }
+                break;
                 }
                 }
             }
