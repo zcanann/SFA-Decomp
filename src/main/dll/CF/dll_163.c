@@ -55,13 +55,11 @@ STATIC_ASSERT(offsetof(StaffActivatedSetup, activeGameBit) == 0x22);
 STATIC_ASSERT(offsetof(StaffActivatedSetup, lockGameBit) == 0x24);
 
 void staffactivated_calcInteractionTargetXZ(int obj, f32 *outX, f32 *outZ) {
-    StaffActivatedState *state;
-    StaffActivatedSetup *setup;
     int mode;
+    StaffActivatedState *state;
 
     state = ((GameObject *)obj)->extra;
-    setup = (StaffActivatedSetup *)((GameObject *)obj)->anim.placementData;
-    mode = setup->mode;
+    mode = ((StaffActivatedSetup *)((GameObject *)obj)->anim.placementData)->mode;
 
     if (mode == 2) goto lbl_case2;
     if (mode >= 2) goto lbl_gt2;
