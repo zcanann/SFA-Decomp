@@ -2,9 +2,6 @@
 #include "main/game_object.h"
 #include "main/dll/CAM/camcontrol.h"
 
-extern u8 *gCamcontrolTargetReticle;
-extern s8 gCamcontrolTargetState;
-extern s16 lbl_803DB990;
 extern f32 lbl_803E1628;
 extern f32 lbl_803E162C;
 
@@ -23,7 +20,7 @@ extern void objRenderFn_8003b8f4(u8 *reticle, undefined4 a, undefined4 b, undefi
  * EN v1.0 Address: 0x80100AA4
  * EN v1.0 Size: 492b
  */
-void camcontrol_updateTargetReticle(u8 *fallbackTarget, int unused2,
+void camcontrol_updateTargetReticle(CamcontrolTargetObject *fallbackTarget, int unused2,
                                     undefined4 arg3, undefined4 arg4,
                                     undefined4 arg5, undefined4 arg6)
 {
@@ -39,8 +36,8 @@ void camcontrol_updateTargetReticle(u8 *fallbackTarget, int unused2,
   int paletteIdx;
   u16 *flagsObj;
 
-  reticle = gCamcontrolTargetReticle;
-  target = fallbackTarget;
+  reticle = (u8 *)gCamcontrolTargetReticle;
+  target = (u8 *)fallbackTarget;
   if ((u32)CAMCONTROL_CAMERA->targetReticleOverride != 0) {
     target = (u8 *)CAMCONTROL_CAMERA->targetReticleOverride;
     savedReticleState = gCamcontrolTargetState;
@@ -74,7 +71,7 @@ void camcontrol_updateTargetReticle(u8 *fallbackTarget, int unused2,
     if (paletteIdx >= 4) paletteIdx = 0;
     paletteBase = (u8 *)*(u32 *)&((GameObject *)target)->anim.modelInstance;
     paletteBase = paletteBase + paletteIdx * 2;
-    lbl_803DB990 = *(s16 *)(paletteBase + 0x7C);
+    gCamcontrolTargetHelpTextId = *(s16 *)(paletteBase + 0x7C);
 
     *(f32 *)(reticle + 0x18) = *(f32 *)(slot + 0x0);
     *(f32 *)(reticle + 0x1C) = *(f32 *)(slot + 0x4);

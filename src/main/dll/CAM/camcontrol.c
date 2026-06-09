@@ -29,11 +29,7 @@ extern f32 sqrtf(f32 x);
 
 extern void *gCamcontrolHandlers[20];
 extern u8 gCamcontrolStateStorage[];
-extern undefined4* gBaddieControlInterface;
-extern s8 gCamcontrolTargetChanged;
-extern short* gCamcontrolTargetReticle;
-extern u16 lbl_803DD4C8;
-extern s8 gCamcontrolTargetState;
+extern CamcontrolBaddieControlInterface **gBaddieControlInterface;
 extern short* gCamcontrolState;
 extern f32 timeDelta;
 extern f64 lbl_803E1650;
@@ -59,48 +55,8 @@ extern u16 lbl_803DB992;
 extern s8 lbl_803DD4CB;
 extern undefined4 lbl_803DD4CC;
 
-typedef struct CamcontrolBaddieControlInterface {
-  u8 pad00[0x60];
-  f32 (*getTargetReticleDistance)(int obj);
-} CamcontrolBaddieControlInterface;
-
-typedef struct CamcontrolTargetSetup {
-  u8 pad00[0x04];
-  u8 targetKind;
-} CamcontrolTargetSetup;
-
-typedef struct CamcontrolTargetObject {
-  u8 pad00[0x46];
-  s16 objType;
-  u8 pad48[0x78 - 0x48];
-  CamcontrolTargetSetup *targetSetup;
-  u8 pad7C[0xAF - 0x7C];
-  u8 targetFlags;
-  u8 padB0[0xE4 - 0xB0];
-  u8 targetSetupIndex;
-} CamcontrolTargetObject;
-
-#define CAMCONTROL_TARGET_KIND_MASK 0x0F
-#define CAMCONTROL_TARGET_KIND_LOCKON 1
-#define CAMCONTROL_TARGET_KIND_CONTEXT_A 4
-#define CAMCONTROL_TARGET_KIND_SUPPRESSED 8
-#define CAMCONTROL_TARGET_KIND_CONTEXT_B 9
-#define CAMCONTROL_TARGET_FLAG_RETICLE_TOUCHING 0x04
-#define CAMCONTROL_TARGET_FLAG_ACCEPTS_INPUT 0x10
-#define CAMCONTROL_TARGET_FLAG_INPUT_PRESSED 0x01
-#define CAMCONTROL_CAMERA_TARGET_FLAG_ACCEPTS_INPUT 0x20
-#define CAMCONTROL_TARGET_BUTTON_PRIMARY 0x100
-#define CAMCONTROL_TARGET_BUTTON_CONTEXT 0x900
-
-STATIC_ASSERT(sizeof(CamcontrolTargetSetup) == 0x05);
-STATIC_ASSERT(offsetof(CamcontrolTargetSetup, targetKind) == 0x04);
-STATIC_ASSERT(offsetof(CamcontrolTargetObject, objType) == 0x46);
-STATIC_ASSERT(offsetof(CamcontrolTargetObject, targetSetup) == 0x78);
-STATIC_ASSERT(offsetof(CamcontrolTargetObject, targetFlags) == 0xAF);
-STATIC_ASSERT(offsetof(CamcontrolTargetObject, targetSetupIndex) == 0xE4);
-
 static inline CamcontrolBaddieControlInterface *camcontrol_GetBaddieControlInterface(void) {
-  return (CamcontrolBaddieControlInterface *)*gBaddieControlInterface;
+  return *gBaddieControlInterface;
 }
 
 static inline uint camcontrol_GetTargetKind(CamcontrolTargetObject *target) {
@@ -134,7 +90,7 @@ void camcontrol_updateTargetFeedback(void)
   f32 targetDistance;
   
   target = (CamcontrolTargetObject *)CAMCONTROL_CAMERA->currentTarget;
-  reticle = (ObjAnimComponent *)gCamcontrolTargetReticle;
+  reticle = &gCamcontrolTargetReticle->anim;
   buttonPressed = false;
   if (reticle == NULL) {
     return;
@@ -185,8 +141,8 @@ void camcontrol_updateTargetFeedback(void)
       if (target != NULL) {
         CAMCONTROL_CAMERA->targetReticleFocus = (int)target;
         CAMCONTROL_CAMERA->targetKind = camcontrol_GetTargetKind(target);
-        gCamcontrolTargetState = '\x03';
-        gCamcontrolTargetChanged = '\x01';
+        gCamcontrolTargetState = CAMCONTROL_TARGET_RETICLE_STATE_ACTIVE;
+        gCamcontrolTargetChanged = true;
       }
       else {
         CAMCONTROL_CAMERA->targetReticleFocus = 0;
@@ -203,7 +159,7 @@ void camcontrol_updateTargetFeedback(void)
                                (ObjAnimEventList *)0x0);
   }
   else {
-    gCamcontrolTargetState = '\0';
+    gCamcontrolTargetState = CAMCONTROL_TARGET_RETICLE_STATE_INACTIVE;
     if (target == NULL) {
       targetKind = CAMCONTROL_CAMERA->targetKind;
       if (targetKind == CAMCONTROL_TARGET_KIND_LOCKON) {
@@ -225,7 +181,8 @@ void camcontrol_updateTargetFeedback(void)
   if (result == 0) {
     CAMCONTROL_CAMERA->targetReticleFocus = 0;
   }
-  if ((gCamcontrolTargetState != '\x03') || ((uint)CAMCONTROL_CAMERA->targetReticleFocus == 0))
+  if ((gCamcontrolTargetState != CAMCONTROL_TARGET_RETICLE_STATE_ACTIVE) ||
+      ((uint)CAMCONTROL_CAMERA->targetReticleFocus == 0))
   goto LAB_80102ab4;
   target = (CamcontrolTargetObject *)CAMCONTROL_CAMERA->targetReticleFocus;
   if ((target->targetFlags & CAMCONTROL_TARGET_FLAG_ACCEPTS_INPUT) != 0) {
@@ -307,7 +264,7 @@ LAB_80102ab4:
     fVar4 = lbl_803E1678;
   }
   reticle->alpha = (int)fVar4;
-  lbl_803DD4C8 = 0x400;
+  gCamcontrolReticleSpin = CAMCONTROL_RETICLE_SPIN_STEP;
   *(s16 *)reticle = (short)(int)(lbl_803E167C * timeDelta + (float)*(s16 *)reticle);
   return;
 }
@@ -838,7 +795,7 @@ void Camera_init(void *focus,f32 x,f32 y,f32 z)
   CAMCONTROL_CAMERA->prevWorldZ = z;
   CAMCONTROL_CAMERA->focusObj = focus;
   CAMCONTROL_CAMERA->focusHeight = lbl_803E1684;
-  gCamcontrolTargetState = 0;
+  gCamcontrolTargetState = CAMCONTROL_TARGET_RETICLE_STATE_INACTIVE;
 }
 
 void Camera_release(void)

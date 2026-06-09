@@ -1,4 +1,5 @@
 #include "main/dll/dll_B4.h"
+#include "main/dll/CAM/camcontrol.h"
 
 extern u8 *Obj_AllocObjectSetup(int size, int type);
 extern u8 *Obj_SetupObject(u8 *obj, int a, int b, int c, int d);
@@ -14,7 +15,6 @@ extern void objSetEventName(u8 *p, int a);
 extern void modelLightStruct_setDirection(u8 *p, f32 a, f32 b, f32 c);
 extern void modelLightStruct_setDiffuseColor(u8 *p, int a, int b, int c, int d);
 
-extern u8 *gCamcontrolTargetReticle;
 extern u8 *lbl_803DD4C4;
 extern f32 lbl_803E162C;
 extern f32 lbl_803E1630;
@@ -32,12 +32,12 @@ extern f32 lbl_803E1640;
 void lockIconInit(void)
 {
   if (gCamcontrolTargetReticle == NULL) {
-    gCamcontrolTargetReticle = Obj_SetupObject(Obj_AllocObjectSetup(0x18, 0x1FE), 4, -1, -1, 0);
-    ObjModel_SetRenderCallback(Obj_GetActiveModel(gCamcontrolTargetReticle), lockIconTexCb);
-    gCamcontrolTargetReticle[0xAD] = 1;
-    ObjModel_SetRenderCallback(Obj_GetActiveModel(gCamcontrolTargetReticle), aButtonIconTexCb);
-    gCamcontrolTargetReticle[0xAD] = 2;
-    ObjModel_SetRenderCallback(Obj_GetActiveModel(gCamcontrolTargetReticle), aButtonIconTexCb);
+    gCamcontrolTargetReticle = (CamcontrolReticleObject *)Obj_SetupObject(Obj_AllocObjectSetup(0x18, 0x1FE), 4, -1, -1, 0);
+    ObjModel_SetRenderCallback(Obj_GetActiveModel((u8 *)gCamcontrolTargetReticle), lockIconTexCb);
+    gCamcontrolTargetReticle->anim.bankIndex = CAMCONTROL_RETICLE_ICON_LOCKON;
+    ObjModel_SetRenderCallback(Obj_GetActiveModel((u8 *)gCamcontrolTargetReticle), aButtonIconTexCb);
+    gCamcontrolTargetReticle->anim.bankIndex = CAMCONTROL_RETICLE_ICON_A_BUTTON;
+    ObjModel_SetRenderCallback(Obj_GetActiveModel((u8 *)gCamcontrolTargetReticle), aButtonIconTexCb);
     lightSetColor(1, 0x32, 0x3C, 0x28);
     lbl_803DD4C4 = objCreateLight(0, 1);
     if (lbl_803DD4C4 != NULL) {

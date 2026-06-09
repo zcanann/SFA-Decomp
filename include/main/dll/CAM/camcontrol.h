@@ -3,8 +3,43 @@
 
 #include "global.h"
 #include "ghidra_import.h"
+#include "main/objanim_internal.h"
 
-typedef struct ObjAnimComponent ObjAnimComponent;
+typedef struct CamcontrolBaddieControlInterface {
+  u8 pad00[0x60];
+  f32 (*getTargetReticleDistance)(int obj);
+} CamcontrolBaddieControlInterface;
+
+typedef struct CamcontrolTargetMarkerSlot {
+  f32 x;
+  f32 y;
+  f32 z;
+  u8 pad0C[0x18 - 0x0C];
+} CamcontrolTargetMarkerSlot;
+
+typedef struct CamcontrolTargetSetup {
+  u8 pad00[0x04];
+  u8 targetKind;
+} CamcontrolTargetSetup;
+
+typedef struct CamcontrolTargetObject {
+  u8 pad00[0x44];
+  s16 classId;
+  s16 objType;
+  u8 pad48[0x74 - 0x48];
+  CamcontrolTargetMarkerSlot *targetMarkerSlots;
+  CamcontrolTargetSetup *targetSetup;
+  u8 pad7C[0xAF - 0x7C];
+  u8 targetFlags;
+  u8 padB0[0xE4 - 0xB0];
+  u8 targetSetupIndex;
+  u8 padE5[0xE8 - 0xE5];
+  u8 targetPaletteIndex;
+} CamcontrolTargetObject;
+
+typedef struct CamcontrolReticleObject {
+  ObjAnimComponent anim;
+} CamcontrolReticleObject;
 
 typedef struct CamcontrolTriggeredAction {
   s8 actionKind;
@@ -98,6 +133,30 @@ typedef struct CamcontrolHandlerEntry {
   u8 pad09[3];
 } CamcontrolHandlerEntry;
 
+#define CAMCONTROL_TARGET_KIND_MASK 0x0F
+#define CAMCONTROL_TARGET_KIND_LOCKON 1
+#define CAMCONTROL_TARGET_KIND_A_BUTTON_HINT 2
+#define CAMCONTROL_TARGET_KIND_CONTEXT_A 4
+#define CAMCONTROL_TARGET_KIND_CONTEXT_B_ICON 5
+#define CAMCONTROL_TARGET_KIND_TALK_ICON 6
+#define CAMCONTROL_TARGET_KIND_SUPPRESSED 8
+#define CAMCONTROL_TARGET_KIND_CONTEXT_B 9
+#define CAMCONTROL_TARGET_FLAG_INPUT_PRESSED 0x01
+#define CAMCONTROL_TARGET_FLAG_RETICLE_TOUCHING 0x04
+#define CAMCONTROL_TARGET_FLAG_ACCEPTS_INPUT 0x10
+#define CAMCONTROL_CAMERA_TARGET_FLAG_ACCEPTS_INPUT 0x20
+#define CAMCONTROL_TARGET_BUTTON_PRIMARY 0x100
+#define CAMCONTROL_TARGET_BUTTON_CONTEXT 0x900
+#define CAMCONTROL_TARGET_RETICLE_STATE_INACTIVE 0
+#define CAMCONTROL_TARGET_RETICLE_STATE_ACTIVE 3
+#define CAMCONTROL_RETICLE_ICON_LOCKON 1
+#define CAMCONTROL_RETICLE_ICON_A_BUTTON 2
+#define CAMCONTROL_RETICLE_SPIN_STEP 0x400
+#define CAMCONTROL_HELP_TEXT_NONE -1
+#define CAMCONTROL_A_BUTTON_ICON_TALK_NPC 8
+#define CAMCONTROL_A_BUTTON_ICON_TALK_OBJECT 9
+#define CAMCONTROL_A_BUTTON_ICON_HINT 7
+#define CAMCONTROL_A_BUTTON_ICON_CONTEXT_B 0x0F
 #define CAMCONTROL_TRIGGER_KIND_LOAD_ACTION 0
 #define CAMCONTROL_TRIGGER_KIND_QUEUE_TYPE1 1
 #define CAMCONTROL_TRIGGER_KIND_QUEUE_TYPE2 2
@@ -123,6 +182,17 @@ typedef struct CamcontrolHandlerEntry {
 #define CAMCONTROL_QUEUE_SENTINEL 0xFF
 #define CAMCONTROL_CAMERA ((CamcontrolCameraState *)pCamera)
 
+STATIC_ASSERT(sizeof(CamcontrolTargetMarkerSlot) == 0x18);
+STATIC_ASSERT(sizeof(CamcontrolTargetSetup) == 0x05);
+STATIC_ASSERT(offsetof(CamcontrolTargetSetup, targetKind) == 0x04);
+STATIC_ASSERT(offsetof(CamcontrolTargetObject, classId) == 0x44);
+STATIC_ASSERT(offsetof(CamcontrolTargetObject, objType) == 0x46);
+STATIC_ASSERT(offsetof(CamcontrolTargetObject, targetMarkerSlots) == 0x74);
+STATIC_ASSERT(offsetof(CamcontrolTargetObject, targetSetup) == 0x78);
+STATIC_ASSERT(offsetof(CamcontrolTargetObject, targetFlags) == 0xAF);
+STATIC_ASSERT(offsetof(CamcontrolTargetObject, targetSetupIndex) == 0xE4);
+STATIC_ASSERT(offsetof(CamcontrolTargetObject, targetPaletteIndex) == 0xE8);
+
 extern char sCamcontrolTriggeredCamActionLoadWarning[];
 extern CamcontrolHandlerEntry *gCamcontrolHandlerEntries[20];
 extern CamcontrolHandlerEntry *gCamcontrolCurrentHandler;
@@ -142,8 +212,16 @@ extern int gCamcontrolSavedActionStartFlags;
 extern int gCamcontrolSavedActionPriority;
 extern int gCamcontrolSavedActionId;
 extern u8 *pCamera;
+extern CamcontrolReticleObject *gCamcontrolTargetReticle;
+extern s8 gCamcontrolTargetChanged;
+extern s8 gCamcontrolTargetState;
+extern s16 gCamcontrolTargetHelpTextId;
+extern u16 gCamcontrolReticleSpin;
 
 void camcontrol_updateTargetFeedback(void);
+void camcontrol_updateTargetReticle(CamcontrolTargetObject *fallbackTarget, int unused2,
+                                    undefined4 arg3, undefined4 arg4, undefined4 arg5,
+                                    undefined4 arg6);
 void camcontrol_getRelativePosition(f32 heightOffset,int targetObj,float *outX,float *outY,
                                     float *outZ,float *outDistanceXZ,int useLocalPosition);
 void camcontrol_initialise(float *dst,f32 numerator,f32 denominator,f32 minValue,f32 y,f32 z);

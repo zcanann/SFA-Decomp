@@ -1,7 +1,5 @@
 #include "main/dll/dll_8B.h"
-
-extern u8 *pCamera;
-extern s16 lbl_803DB990;
+#include "main/dll/CAM/camcontrol.h"
 
 /*
  * --INFO--
@@ -29,7 +27,7 @@ void projdfp1r_initialise(void)
  */
 u8 cameraGetTargetType(void)
 {
-  return pCamera[0x138];
+  return CAMCONTROL_CAMERA->targetKind;
 }
 
 /*
@@ -41,5 +39,5 @@ u8 cameraGetTargetType(void)
  */
 s16 Camera_getMinimapInfoText(void)
 {
-  return lbl_803DB990;
+  return gCamcontrolTargetHelpTextId;
 }

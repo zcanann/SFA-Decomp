@@ -1,11 +1,9 @@
 #include "main/dll/dll_BC.h"
 #include "main/dll/CAM/camcontrol.h"
 
-extern s16 lbl_803DB990;
 extern int lbl_803DD518;
 
 extern int gameTextFn_80134be8(void);
-extern void camcontrol_updateTargetReticle(int a, int b, int c, int d, int e, int f);
 extern void setAButtonIcon(int kind);
 
 #pragma scheduling off
@@ -20,8 +18,8 @@ extern void setAButtonIcon(int kind);
 void Camera_minimapShowHelpTextForTarget(int arg1, int arg2, int arg3, int arg4)
 {
   if (gameTextFn_80134be8() == 0) {
-    lbl_803DB990 = -1;
-    camcontrol_updateTargetReticle(CAMCONTROL_CAMERA->targetReticleFocus, lbl_803DD518 == 0x49,
+    gCamcontrolTargetHelpTextId = CAMCONTROL_HELP_TEXT_NONE;
+    camcontrol_updateTargetReticle((CamcontrolTargetObject *)CAMCONTROL_CAMERA->targetReticleFocus, lbl_803DD518 == 0x49,
                                    arg1, arg2, arg3, arg4);
     CAMCONTROL_CAMERA->targetReticleOverride = 0;
   }
@@ -36,26 +34,22 @@ void Camera_minimapShowHelpTextForTarget(int arg1, int arg2, int arg3, int arg4)
  */
 void camcontrol_playTargetTypeSfx(void)
 {
-  u8 *p = (u8 *)CAMCONTROL_CAMERA->currentTarget;
+  CamcontrolTargetObject *target = (CamcontrolTargetObject *)CAMCONTROL_CAMERA->currentTarget;
   int kind;
 
   if (gameTextFn_80134be8() != 0) return;
-  if (p == NULL) return;
+  if (target == NULL) return;
 
-  {
-    u8 *base = (u8 *)*(int *)(p + 0x78);
-    base = base + (int)*(u8 *)(p + 0xE4) * 5;
-    kind = *(base + 4) & 0xF;
-  }
-  if (kind == 6) {
-    if (*(s16 *)(p + 0x44) == 6) {
-      setAButtonIcon(8);
+  kind = target->targetSetup[target->targetSetupIndex].targetKind & CAMCONTROL_TARGET_KIND_MASK;
+  if (kind == CAMCONTROL_TARGET_KIND_TALK_ICON) {
+    if (target->classId == 6) {
+      setAButtonIcon(CAMCONTROL_A_BUTTON_ICON_TALK_NPC);
     } else {
-      setAButtonIcon(9);
+      setAButtonIcon(CAMCONTROL_A_BUTTON_ICON_TALK_OBJECT);
     }
-  } else if (kind == 2) {
-    setAButtonIcon(7);
-  } else if (kind == 5) {
-    setAButtonIcon(0xF);
+  } else if (kind == CAMCONTROL_TARGET_KIND_A_BUTTON_HINT) {
+    setAButtonIcon(CAMCONTROL_A_BUTTON_ICON_HINT);
+  } else if (kind == CAMCONTROL_TARGET_KIND_CONTEXT_B_ICON) {
+    setAButtonIcon(CAMCONTROL_A_BUTTON_ICON_CONTEXT_B);
   }
 }
