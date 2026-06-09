@@ -4974,15 +4974,7 @@ int fn_8029EBCC(int obj, int state)
         f32 x = ((PlayerState *)state)->baddie.unk28C / lbl_803E7FA8;
         f32 c;
         void *hit;
-        if (x >= lbl_803E7FF0) {
-            if (x <= lbl_803E7FC4) {
-                c = x;
-            } else {
-                c = lbl_803E7FC4;
-            }
-        } else {
-            c = lbl_803E7FF0;
-        }
+        c = (x < lbl_803E7FF0) ? lbl_803E7FF0 : ((x > lbl_803E7FC4) ? lbl_803E7FC4 : x);
         hit = *(void **)((char *)inner + 0x7f0);
         if (hit != NULL && *(s16 *)((char *)hit + 0x46) == 0x484) {
             c = c + lbl_803DC6E0;
@@ -4996,15 +4988,7 @@ int fn_8029EBCC(int obj, int state)
     {
         f32 x = ((PlayerState *)state)->baddie.unk290 / lbl_803E7FA8;
         f32 c;
-        if (x >= lbl_803E7ECC) {
-            if (x <= lbl_803E7EE0) {
-                c = x;
-            } else {
-                c = lbl_803E7EE0;
-            }
-        } else {
-            c = lbl_803E7ECC;
-        }
+        c = (x < lbl_803E7ECC) ? lbl_803E7ECC : ((x > lbl_803E7EE0) ? lbl_803E7EE0 : x);
         inner->unk7B8 +=
             interpolate(c - inner->unk7B8, lbl_803DC6D8, timeDelta);
     }
