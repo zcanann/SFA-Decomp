@@ -215,11 +215,14 @@ int DIMSnowHorn1_stateHandler01(int obj, int state, f32 fv)
 
 int DIMSnowHorn1_stateHandler0B(int obj, int state)
 {
-    DIMSnowHorn1State *inner = ((GameObject *)obj)->extra;
-    int sub = *(int *)&((GameObject *)obj)->anim.hitReactState;
-    f32 k = lbl_803E8234;
+    int sub;
+    DIMSnowHorn1State *inner;
+    f32 k;
 
+    inner = ((GameObject *)obj)->extra;
+    sub = *(int *)&((GameObject *)obj)->anim.hitReactState;
     *(u32 *)((char *)state) |= 0x200000;
+    k = lbl_803E8234;
     ((DIMSnowHorn1State *)state)->baddie.unk294 = k;
     ((DIMSnowHorn1State *)state)->baddie.animSpeedB = k;
     ((DIMSnowHorn1State *)state)->baddie.animSpeedA = k;
