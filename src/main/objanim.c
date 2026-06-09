@@ -72,8 +72,8 @@ void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimS
     state->blendCacheSlot = (u16)moveIndex;
     moveData = (ObjAnimMoveData *)animDef->moveData[state->blendCacheSlot];
   }
-  state->blendFrameData = (ObjAnimFrameCommand *)moveData->frameCmd;
-  blendFrameType = moveData->frameInfo & OBJANIM_FRAME_TYPE_MASK;
+  state->blendFrameData = (ObjAnimFrameCommand *)moveData->frameCommands;
+  blendFrameType = moveData->frameControl & OBJANIM_FRAME_TYPE_MASK;
   if (blendFrameType != state->frameType) {
     state->eventState = 0;
   }
@@ -424,13 +424,13 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimHandle,int moveId,int moveCont
     state->moveCacheSlot = (u16)moveId;
     moveData = (ObjAnimMoveData *)animDef->moveData[state->moveCacheSlot];
   }
-  state->moveFrameData = (ObjAnimFrameCommand *)moveData->frameCmd;
-  state->frameType = moveData->frameInfo & OBJANIM_FRAME_TYPE_MASK;
+  state->moveFrameData = (ObjAnimFrameCommand *)moveData->frameCommands;
+  state->frameType = moveData->frameControl & OBJANIM_FRAME_TYPE_MASK;
   state->frameLength = (float)state->moveFrameData->frameLength;
   if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
     state->frameLength = state->frameLength - gObjAnimProgressOne;
   }
-  frameStep = moveData->frameInfo & OBJANIM_FRAME_STEP_MASK;
+  frameStep = moveData->frameControl & OBJANIM_FRAME_STEP_MASK;
   if (frameStep != 0) {
     state->savedFrameStep = state->frameStep;
     eventCountdownStep = gObjAnimEventStepScale / (float)frameStep;
@@ -1125,13 +1125,13 @@ int ObjAnim_SetCurrentMove(int objAnimHandle,int moveId,f32 moveProgress,int mov
     state->moveCacheSlot = (u16)moveId;
     moveData = (ObjAnimMoveData *)animDef->moveData[state->moveCacheSlot];
   }
-  state->moveFrameData = (ObjAnimFrameCommand *)moveData->frameCmd;
-  state->frameType = moveData->frameInfo & OBJANIM_FRAME_TYPE_MASK;
+  state->moveFrameData = (ObjAnimFrameCommand *)moveData->frameCommands;
+  state->frameType = moveData->frameControl & OBJANIM_FRAME_TYPE_MASK;
   state->frameLength = (float)state->moveFrameData->frameLength;
   if (state->frameType == OBJANIM_FRAME_TYPE_CLAMPED) {
     state->frameLength = state->frameLength - gObjAnimProgressOne;
   }
-  frameStep = moveData->frameInfo & OBJANIM_FRAME_STEP_MASK;
+  frameStep = moveData->frameControl & OBJANIM_FRAME_STEP_MASK;
   if ((frameStep != 0) &&
       (((u8)moveControlFlags & OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN) == 0)) {
     state->savedFrameStep = state->frameStep;

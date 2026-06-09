@@ -41,7 +41,7 @@ typedef s16 ObjAnimPackedEvent;
 #define OBJANIM_BLEND_MOVE_INDEX_INVALID -1
 #define OBJANIM_CACHED_MOVE_DATA_OFFSET 0x80
 #define OBJANIM_MOVE_ROOT_CURVE_OFFSET 4
-#define OBJANIM_FRAME_CMD_OFFSET 6
+#define OBJANIM_FRAME_COMMANDS_OFFSET 6
 #define OBJANIM_FRAME_TYPE_CLAMPED 0
 #define OBJANIM_FRAME_TYPE_MASK 0xF0
 #define OBJANIM_FRAME_STEP_MASK 0x0F
@@ -202,10 +202,10 @@ typedef ObjDef ObjModelInstance;
 
 typedef struct ObjAnimMoveData {
   u8 pad00;
-  s8 frameInfo;
+  s8 frameControl;
   u8 pad02[OBJANIM_MOVE_ROOT_CURVE_OFFSET - 2];
   s16 rootCurveOffset;
-  u8 frameCmd[1];
+  u8 frameCommands[1];
 } ObjAnimMoveData;
 
 typedef struct ObjAnimBank {
@@ -387,9 +387,9 @@ STATIC_ASSERT(offsetof(ObjDef, mapLoadObjectId) == 0x78);
 STATIC_ASSERT(offsetof(ObjDef, secondaryHitboxShapeFlags) == 0x90);
 
 STATIC_ASSERT(sizeof(ObjAnimMoveData) == 0x08);
-STATIC_ASSERT(offsetof(ObjAnimMoveData, frameInfo) == 0x01);
+STATIC_ASSERT(offsetof(ObjAnimMoveData, frameControl) == 0x01);
 STATIC_ASSERT(offsetof(ObjAnimMoveData, rootCurveOffset) == 0x04);
-STATIC_ASSERT(offsetof(ObjAnimMoveData, frameCmd) == OBJANIM_FRAME_CMD_OFFSET);
+STATIC_ASSERT(offsetof(ObjAnimMoveData, frameCommands) == OBJANIM_FRAME_COMMANDS_OFFSET);
 
 STATIC_ASSERT(sizeof(ObjAnimBank) == 0x34);
 STATIC_ASSERT(offsetof(ObjAnimBank, animDef) == 0x00);
