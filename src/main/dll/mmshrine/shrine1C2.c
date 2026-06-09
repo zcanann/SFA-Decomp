@@ -905,7 +905,7 @@ void ecsh_creator_init(s16 *obj, s8 *def) {
     ((GameObject *)obj)->anim.alpha = 0xff;
     inner[2] = *(s16 *)(def + 0x18);
     inner[4] = 2;
-    inner[4] = inner[4] + (u8)def[0x20];
+    inner[4] += (u8)def[0x20];
 }
 
 extern void fn_80296518(int *player, int a, int b);
@@ -923,7 +923,6 @@ int gpsh_shrine_SeqFn(int *obj, int arg1, u8 *seq) {
     u8 *sub;
     int *player;
     int i;
-    int idx;
     u8 ev;
     void *light;
 
@@ -932,8 +931,7 @@ int gpsh_shrine_SeqFn(int *obj, int arg1, u8 *seq) {
     *(s16 *)((char *)seq + 0x70) = -1;
     seq[0x56] = 0;
     for (i = 0; i < seq[0x8b]; i++) {
-        idx = i + 0x81;
-        ev = seq[idx];
+        ev = seq[i + 0x81];
         if (ev != 0) {
             switch (ev) {
             case 3:
@@ -961,7 +959,7 @@ int gpsh_shrine_SeqFn(int *obj, int arg1, u8 *seq) {
                 break;
             }
         }
-        seq[idx] = 0;
+        seq[i + 0x81] = 0;
     }
     return 0;
 }
@@ -1086,6 +1084,7 @@ void fn_801C70F0(s16 *obj) {
     int *player;
     int diff;
     f32 c1;
+    f32 c2;
     f32 dist;
 
     def = *(u8 **)&((GameObject *)obj)->anim.placementData;
@@ -1102,11 +1101,13 @@ void fn_801C70F0(s16 *obj) {
             lbl_803E500C + (((ObjPlacement *)def)->posY
                             + mathSinf((lbl_803E5010 * (f32)*(s16 *)(sub + 0xc)) / lbl_803E5014));
         c1 = mathSinf((lbl_803E5010 * (f32)*(s16 *)(sub + 0xe)) / lbl_803E5014);
-        obj[2] = lbl_803E5018
-                 * (mathSinf((lbl_803E5010 * (f32)*(s16 *)(sub + 0xc)) / lbl_803E5014) + c1);
+        c2 = mathSinf((lbl_803E5010 * (f32)*(s16 *)(sub + 0xc)) / lbl_803E5014);
+        c2 = c2 + c1;
+        obj[2] = lbl_803E5018 * c2;
         c1 = mathSinf((lbl_803E5010 * (f32)*(s16 *)(sub + 0x10)) / lbl_803E5014);
-        obj[1] = lbl_803E5018
-                 * (mathSinf((lbl_803E5010 * (f32)*(s16 *)(sub + 0xc)) / lbl_803E5014) + c1);
+        c2 = mathSinf((lbl_803E5010 * (f32)*(s16 *)(sub + 0xc)) / lbl_803E5014);
+        c2 = c2 + c1;
+        obj[1] = lbl_803E5018 * c2;
         ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E501C, timeDelta, (ObjAnimEventList *)buf);
         if (player != NULL) {
             diff = (getAngle(((f32 *)obj)[6] - ((f32 *)player)[6],
