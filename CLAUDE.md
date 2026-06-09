@@ -2718,63 +2718,13 @@ case: a single compare + `beq next; b far` outside loop-break position IS
 reproducible as a single-case `switch` with `default: break;` (recipe #109(d),
 synthAdvanceVirtualSampleEntry x3 -> 100).
 
-## Coloring-campaign session addenda (cross-referenced; field-confirmed)
-
-Six findings from the register-coloring research campaign (player.c + object-DLL
-sweep, +24k matched_code). Each is an addendum to the numbered recipe cited.
-
-- **#107-FP-CLAMP is PER-CLAMP DIRECTIONAL** (extends #107 un-naming into the
-  #82 FP-pair class): for a reload-clamp, read TARGET's `fcmpo` operand order.
-  If target keeps the CLAMPED VALUE in the LOWER FP reg (f0) -> UN-NAME it
-  (inline the field load at every ternary/compare arm; CSE keeps one load but it
-  becomes an expression-temp and colors lower). If target keeps it in the HIGHER
-  reg (f1) -> KEEP the named `v` if/else form. A single fn can need MIXED
-  treatment per clamp (fn_802AE9C8: clamp1 un-name/f0, clamp2 named/f1, clamp3
-  un-name/f0) — A/B PER CLAMP, never blanket-convert. Pair with #6 const-lift
-  when the clamp constant is reused. This cracks the FP-pair sub-class that #82
-  flagged "open" for the clamp-named-local-in-f1 case (NOT conversion-bias
-  globals or saved-FP-held-across-calls — those resist).
-- **#74 SWEEP DIAGNOSTIC** (turns #74 from per-fn into a safe bulk sweep): for a
-  recurring state flag-FIELD, map every non-LL mask site (`field |= 0xK` /
-  `field &= ~0xK`) to its containing fn's fuzzy%. If ~ALL sites sit in PARTIAL
-  (<100) fns and ~NONE in 100% fns -> the original used a consistent 64-bit
-  constant -> bulk-convert ALL sites to `*(u32 *)((char*)base + off) OP 0xKLL`
-  (u32 cast — an `int` lvalue + LL emits a spurious `srawi`). Burst-convert
-  ALL-at-once (partial conversion misaligns the #74 burst and the A/B lies),
-  gate per-fn (snapshot fuzzy, rebuild, diff), exclude inconsistent line-ranges
-  (target sometimes mixes immediate at a few sites). player.c flags360:
-  bulk-converted 91 sites, +1896, 8 to 100. CAVEAT: requires ONE recurring
-  flag-field spanning many fns; object DLLs with SCATTERED single masks do NOT
-  qualify (their recurring near-100 mask class is rlwimi-bitfield #12, not a
-  sweepable field).
-- **#109(d) extends to PLAIN-STATEMENT branch-over-branch** (cracks the #92
-  plain-statement variant): `if(x==K){A}else{B}` where target emits `beq; b`
-  (branch-over-branch, NOT loop-break position) -> rewrite as
-  `switch(x){case K: A; break; default: B; break;}`. (The #92 cap text stands
-  for LOOP-BREAK position + statement-block arms; this is the plain-statement
-  escape.)
-- **#77 cross-class interleave** (param above single-def copy): when target keeps
-  a PARAM in a saved reg ABOVE a single-def copy, use a `void *` param + a
-  cast-local copy; decl-order WITHIN the copy pool sets r31/r30 (fns that color
-  first-created -> r31: declare the param's copy before the deref value).
-  fn_8029560C.
-- **#17-inverse defeats the adjacent-value RANGE-FOLD**: when target keeps
-  separate `beq` tests for `c == K1 || c == K2` (adjacent values MWCC would
-  range-fold to `(c-K1) <= 1`), write `(c = load) == K1 || c == K2` — the
-  embedded assignment keeps the separate beq tests AND places the `load` at
-  target's position. (Swept several player partials.)
-- **#108 BIDIRECTIONAL GVN small-const sub-class (OPEN — the prime next crack):**
-  two OPPOSITE shapes, often per-fn: (1) ours HOISTS a small constant
-  (li 0 / li -1) into a SAVED reg vs target REMATERIALIZES it at use (growing the
-  frame: inline stfd saves flip to the `_savegpr` helper, cascading whole-fn
-  coloring); (2) ours rematerializes vs target SHARES via `li rY,K; mr rX,rY`.
-  Same root = GVN value-keying of small constants, opposite direction. Recurs
-  ~10 player fns (fn_8029F108/FA24/E568/BDB4, playerRender, fn_8029C8C8,
-  fn_802A5048, fn_802A96D8, playerDie) + project-wide. EXHAUSTED levers: #51
-  chains, casts, decl-order (inert); #110 per-fn O1 (BLOCKED — these fns have
-  calls); #114 conversion-node (N/A — small consts fold through conversions).
-  Needs a NEW lever — MP4-oracle the rematerialize-at-use form (a 100%-matched
-  fn that does `li rX,K` fresh-at-use across a call where a saved reg was free).
+**#17-inverse defeats the adjacent-value RANGE-FOLD (coloring campaign):** when
+target keeps separate `beq` tests for `c == K1 || c == K2` (adjacent values MWCC
+would range-fold to `(c-K1) <= 1`), write `(c = load) == K1 || c == K2` — the
+embedded assignment keeps the separate beq tests AND places the `load` at
+target's position. (The other 5 coloring-campaign addenda — #74 sweep
+diagnostic, #77 interleave, #107-FP directional, #108 bidirectional, #109d
+plain-statement — are in-place on their recipes, commits 3e20114e5 / 89736fb06.)
 
 ## Flipping a unit to MatchingFor (team-lead-adopted standard)
 
