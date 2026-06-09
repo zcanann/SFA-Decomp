@@ -33,18 +33,6 @@ every partial when a new recipe lands):
   flag the function so it gets revisited with the next playbook recipe (this
   exact framing is how the cracked caps got cracked). Never asm.
 
-## Recipe numbering & ledger (MANDATORY for new recipes)
-
-Recipe numbers are allocated via `docs/recipe_ledger.txt` (one line per
-number: NUMBER, landing SHA, title). **Every commit that adds a new numbered
-recipe to CLAUDE.md MUST append its ledger line IN THE SAME COMMIT** — take
-the next free number from the ledger, not from a CLAUDE.md grep. This
-serializes numbering at push time: two crackers racing the same number now
-conflict on the ledger file and the later lander renumbers BEFORE landing
-(this ended the #107/#108/#110 collision class; the per-entry numbering
-notes in this file record the historical collisions and which commit-message
-citations map to which renumbered entry).
-
 ## High-impact one-liners (try first when a function is already 80-95%)
 
 1. **`#pragma peephole off` + `#pragma scheduling off`** around the function
@@ -3658,8 +3646,7 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
     clusters: `player.c` is register/value + branch/block; `gameplay.c` is
     mixed structure + stack layout; `track_dolphin.c`, `curves.c`, `model.c`,
     `shader.c`, `objprint.c`, and `modgfx.c` are mostly register/value
-    spelling. Detailed snapshot and examples live in
-    `docs/unmatched_failure_categories.md`. **Validation pass:** taking the
+    spelling. **Validation pass:** taking the
     `compare width/immediate/sign` bucket literally exposed `hwIsActive` as the
     wrong signed declaration (`int hwIsActive(int)` vs MusyX/reference
     `u32 hwIsActive(u32)`). Aligning the declaration/definition and making the
