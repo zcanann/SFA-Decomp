@@ -125,15 +125,15 @@ void ObjHitReact_ResetActiveObjects(int objectCount)
     obj = *objectListCursor;
     hitState = ((ObjAnimComponent *)obj)->hitReactState;
     if (hitState != (ObjHitReactState *)0x0) {
-      stateActive = hitState->flags & OBJHITREACT_FLAG_ACTIVE;
+      stateActive = hitState->flags & OBJHITS_PRIORITY_STATE_ENABLED;
       if (stateActive != 0) {
-        resetPending = hitState->resetFlags & OBJHITREACT_RESET_FLAG_PENDING;
+        resetPending = hitState->shapeFlags & OBJHITREACT_SHAPE_RESET_UPDATE;
         if (resetPending != 0) {
           if (gObjHitReactResetObjectCount < OBJHITREACT_MAX_RESET_OBJECTS) {
             gObjHitReactResetObjects[gObjHitReactResetObjectCount++] = (ObjAnimComponent *)obj;
           }
           hitState->activeHit = 0;
-          hitState->flags = (s16)(hitState->flags & ~OBJHITREACT_FLAG_RESET_PENDING);
+          hitState->flags = (s16)(hitState->flags & ~OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED);
           hitState->resetFrameCount = OBJHITREACT_RESET_FRAME_COUNT;
         }
       }
@@ -249,7 +249,7 @@ uint ObjHitReact_InitState(int objType,ObjAnimBank *bank,ObjHitReactState *hitSt
   hitState->entries = entries;
   entryArena = (uint)entries + hitState->entryByteCapacity;
   hitState->activeHitboxMode = OBJHITREACT_ACTIVE_HITBOX_MODE;
-  if ((hitState->resetFlags & OBJHITREACT_RESET_MODE_MASK) != 0) {
+  if ((hitState->shapeFlags & OBJHITS_SHAPE_RESET_MODE_MASK) != 0) {
     hitState->resetHitboxMode = OBJHITREACT_RESET_HITBOX_MODE;
   }
   ObjHitReact_LoadMoveEntries(objAnim,bank,objType,hitState,0,1);

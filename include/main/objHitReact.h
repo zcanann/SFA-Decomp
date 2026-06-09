@@ -51,9 +51,6 @@ extern int gObjHitReactResetObjectCount;
 extern ObjAnimComponent **gObjHitReactResetObjects;
 
 #define OBJHITREACT_MAX_RESET_OBJECTS 0x32
-#define OBJHITREACT_FLAG_ACTIVE 0x01
-#define OBJHITREACT_FLAG_RESET_PENDING 0x08
-#define OBJHITREACT_RESET_FLAG_PENDING 0x08
 #define OBJHITREACT_REACTION_STATE_MASK 0xff
 #define OBJHITREACT_ENTRY_COUNT_MASK 0xff
 #define OBJHITREACT_REACTION_STATE_INACTIVE 0
@@ -73,7 +70,7 @@ extern ObjAnimComponent **gObjHitReactResetObjects;
 #define OBJHITREACT_ENTRY_TAB_FILE_ID 0x41
 #define OBJHITREACT_ENTRY_ARENA_BYTES 300
 #define OBJHITREACT_ACTIVE_HITBOX_MODE 1
-#define OBJHITREACT_RESET_MODE_MASK 0x30
+#define OBJHITREACT_SHAPE_RESET_UPDATE 0x08
 #define OBJHITREACT_RESET_HITBOX_MODE 2
 #define OBJHITREACT_DISABLED_HITBOX_MODE 0x64
 #define OBJHITREACT_MOVE_ENTRY_SHORT_STRIDE (sizeof(ObjHitReactMoveEntry) / sizeof(s16))
@@ -87,7 +84,7 @@ typedef struct ObjHitReactState {
   s16 resetFrameCount;
   u8 pad5A[0x60 - 0x5A];
   s16 flags;
-  u8 resetFlags;
+  u8 shapeFlags;
   u8 pad63[0xAE - 0x63];
   u8 activeHitboxMode;
   u8 resetHitboxMode;
@@ -126,7 +123,7 @@ STATIC_ASSERT(offsetof(ObjHitReactState, entryByteCapacity) == 0x06);
 STATIC_ASSERT(offsetof(ObjHitReactState, entries) == 0x08);
 STATIC_ASSERT(offsetof(ObjHitReactState, resetFrameCount) == 0x58);
 STATIC_ASSERT(offsetof(ObjHitReactState, flags) == 0x60);
-STATIC_ASSERT(offsetof(ObjHitReactState, resetFlags) == 0x62);
+STATIC_ASSERT(offsetof(ObjHitReactState, shapeFlags) == 0x62);
 STATIC_ASSERT(offsetof(ObjHitReactState, activeHitboxMode) == 0xAE);
 STATIC_ASSERT(offsetof(ObjHitReactState, resetHitboxMode) == 0xAF);
 
