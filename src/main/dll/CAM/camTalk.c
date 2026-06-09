@@ -286,62 +286,62 @@ void firstPersonExit(short *param_1)
 
   state = lbl_803DD548;
   iVar4 = *(int *)(self + 0x52);
-  state->unk10 = *(float *)(self + 0xc);
+  state->posXCurve.start = *(float *)(self + 0xc);
   fVar1 = lbl_803E17C4;
-  state->unk18 = lbl_803E17C4;
-  state->unk1C = fVar1;
-  state->unk20 = *(float *)(self + 0xe);
-  state->unk28 = fVar1;
-  state->unk2C = fVar1;
-  state->unk30 = *(float *)(self + 0x10);
-  state->unk38 = fVar1;
-  state->unk3C = fVar1;
+  state->posXCurve.startTangent = lbl_803E17C4;
+  state->posXCurve.endTangent = fVar1;
+  state->posYCurve.start = *(float *)(self + 0xe);
+  state->posYCurve.startTangent = fVar1;
+  state->posYCurve.endTangent = fVar1;
+  state->posZCurve.start = *(float *)(self + 0x10);
+  state->posZCurve.startTangent = fVar1;
+  state->posZCurve.endTangent = fVar1;
   camcontrol_getTargetPosition((int)self,iVar4,local_24,auStack_28);
-  state->unk14 = local_24[0];
-  state->unk24 = local_24[1];
-  state->unk34 = local_24[2];
-  fVar1 = state->unk14 - state->unk10;
-  fVar2 = state->unk34 - state->unk30;
+  state->posXCurve.end = local_24[0];
+  state->posYCurve.end = local_24[1];
+  state->posZCurve.end = local_24[2];
+  fVar1 = state->posXCurve.end - state->posXCurve.start;
+  fVar2 = state->posZCurve.end - state->posZCurve.start;
   state->exitDistance = sqrtf(fVar1 * fVar1 + fVar2 * fVar2);
-  state->viewCurve.px = &state->unk40;
-  state->viewCurve.py = &state->unk50;
+  state->viewCurve.px = &state->yawCurve.start;
+  state->viewCurve.py = &state->pitchCurve.start;
   state->viewCurve.pz = NULL;
   state->viewCurve.count = 4;
   state->viewCurve.dir = 0;
   state->viewCurve.eval = Curve_EvalHermite;
   state->viewCurve.coeffFn = Curve_BuildHermiteCoeffs;
-  state->unk40 = (float)(int)*self;
-  sVar3 = getAngle((double)(state->unk14 - *(float *)(iVar4 + 0x18)),
-                   (double)(state->unk34 - *(float *)(iVar4 + 0x20)));
-  state->unk44 = (float)(int)(short)(0x8000 - sVar3);
+  state->yawCurve.start = (float)(int)*self;
+  sVar3 = getAngle((double)(state->posXCurve.end - *(float *)(iVar4 + 0x18)),
+                   (double)(state->posZCurve.end - *(float *)(iVar4 + 0x20)));
+  state->yawCurve.end = (float)(int)(short)(0x8000 - sVar3);
   fVar1 = lbl_803E17C4;
-  state->unk48 = lbl_803E17C4;
-  state->unk4C = fVar1;
-  fVar1 = state->unk40 - state->unk44;
+  state->yawCurve.startTangent = lbl_803E17C4;
+  state->yawCurve.endTangent = fVar1;
+  fVar1 = state->yawCurve.start - state->yawCurve.end;
   if ((lbl_803E17C8 < fVar1) || (fVar1 < lbl_803E17CC)) {
-    if (lbl_803E17C4 <= state->unk40) {
-      if (state->unk44 < lbl_803E17C4) {
-        state->unk44 = state->unk44 + lbl_803E17D0;
+    if (lbl_803E17C4 <= state->yawCurve.start) {
+      if (state->yawCurve.end < lbl_803E17C4) {
+        state->yawCurve.end = state->yawCurve.end + lbl_803E17D0;
       }
     }
     else {
-      state->unk40 = state->unk40 + lbl_803E17D0;
+      state->yawCurve.start = state->yawCurve.start + lbl_803E17D0;
     }
   }
-  state->unk50 = (float)(int)self[1];
+  state->pitchCurve.start = (float)(int)self[1];
   fVar1 = lbl_803E17C4;
-  state->unk54 = lbl_803E17C4;
-  state->unk58 = fVar1;
-  state->unk5C = fVar1;
-  fVar1 = state->unk50 - state->unk54;
+  state->pitchCurve.end = lbl_803E17C4;
+  state->pitchCurve.startTangent = fVar1;
+  state->pitchCurve.endTangent = fVar1;
+  fVar1 = state->pitchCurve.start - state->pitchCurve.end;
   if ((lbl_803E17C8 < fVar1) || (fVar1 < lbl_803E17CC)) {
-    if (lbl_803E17C4 <= state->unk50) {
-      if (state->unk54 < lbl_803E17C4) {
-        state->unk54 = state->unk54 + lbl_803E17D0;
+    if (lbl_803E17C4 <= state->pitchCurve.start) {
+      if (state->pitchCurve.end < lbl_803E17C4) {
+        state->pitchCurve.end = state->pitchCurve.end + lbl_803E17D0;
       }
     }
     else {
-      state->unk50 = state->unk50 + lbl_803E17D0;
+      state->pitchCurve.start = state->pitchCurve.start + lbl_803E17D0;
     }
   }
   curvesMove(&state->viewCurve);
