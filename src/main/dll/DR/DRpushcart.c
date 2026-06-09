@@ -1011,7 +1011,7 @@ int fn_801E86F4(int obj, int p2, int p3)
       ((ShopItemState *)sub)->splineT = t - lbl_803E5A30;
       v = ((ShopItemState *)sub)->segCounter;
       if (v >= 4) {
-        ((ShopItemState *)sub)->segCounter = v + 1;
+        ((ShopItemState *)sub)->segCounter += 1;
       } else {
         fn_801F4D54(obj, sub);
       }
