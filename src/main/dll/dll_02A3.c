@@ -34,11 +34,12 @@ void dll_2A3_hitDetect(void) { lbl_803DDD94 = 0; }
 void dll_2A3_update(int obj)
 {
     f32 thr;
+    f32 a;
     f32 v;
     Dll2A3State *state = ((GameObject *)obj)->extra;
 
-    if (state->lifetime > (thr = lbl_803E711C)) {
-        state->lifetime -= timeDelta;
+    if ((a = state->lifetime) > (thr = lbl_803E711C)) {
+        state->lifetime = a - timeDelta;
         if (state->lifetime <= thr) {
             state->lifetime = thr;
             Obj_FreeObject(obj);
