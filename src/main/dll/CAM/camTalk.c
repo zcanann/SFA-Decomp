@@ -270,7 +270,6 @@ void firstPersonPlaceCamera(GameObject *focus,int resetClamp)
 void firstPersonExit(CameraObject *camera)
 {
   register CameraObject *self = camera;
-  ViewfinderState *state;
   GameObject *target;
   float fVar1;
   float fVar2;
@@ -278,67 +277,66 @@ void firstPersonExit(CameraObject *camera)
   float local_24[3];
   undefined auStack_28[4];
 
-  state = lbl_803DD548;
   target = (GameObject *)self->anim.targetObj;
-  state->posXCurve.start = self->anim.worldPosX;
+  lbl_803DD548->posXCurve.start = self->anim.worldPosX;
   fVar1 = lbl_803E17C4;
-  state->posXCurve.startTangent = lbl_803E17C4;
-  state->posXCurve.endTangent = fVar1;
-  state->posYCurve.start = self->anim.worldPosY;
-  state->posYCurve.startTangent = fVar1;
-  state->posYCurve.endTangent = fVar1;
-  state->posZCurve.start = self->anim.worldPosZ;
-  state->posZCurve.startTangent = fVar1;
-  state->posZCurve.endTangent = fVar1;
+  lbl_803DD548->posXCurve.startTangent = lbl_803E17C4;
+  lbl_803DD548->posXCurve.endTangent = fVar1;
+  lbl_803DD548->posYCurve.start = self->anim.worldPosY;
+  lbl_803DD548->posYCurve.startTangent = fVar1;
+  lbl_803DD548->posYCurve.endTangent = fVar1;
+  lbl_803DD548->posZCurve.start = self->anim.worldPosZ;
+  lbl_803DD548->posZCurve.startTangent = fVar1;
+  lbl_803DD548->posZCurve.endTangent = fVar1;
   camcontrol_getTargetPosition((int)self,(int)target,local_24,auStack_28);
-  state->posXCurve.end = local_24[0];
-  state->posYCurve.end = local_24[1];
-  state->posZCurve.end = local_24[2];
-  fVar1 = state->posXCurve.end - state->posXCurve.start;
-  fVar2 = state->posZCurve.end - state->posZCurve.start;
-  state->exitDistance = sqrtf(fVar1 * fVar1 + fVar2 * fVar2);
-  state->viewCurve.px = &state->yawCurve.start;
-  state->viewCurve.py = &state->pitchCurve.start;
-  state->viewCurve.pz = NULL;
-  state->viewCurve.count = 4;
-  state->viewCurve.dir = 0;
-  state->viewCurve.eval = Curve_EvalHermite;
-  state->viewCurve.coeffFn = Curve_BuildHermiteCoeffs;
-  state->yawCurve.start = (float)(int)self->anim.rotX;
-  sVar3 = getAngle((double)(state->posXCurve.end - target->anim.worldPosX),
-                   (double)(state->posZCurve.end - target->anim.worldPosZ));
-  state->yawCurve.end = (float)(int)(short)(0x8000 - sVar3);
+  lbl_803DD548->posXCurve.end = local_24[0];
+  lbl_803DD548->posYCurve.end = local_24[1];
+  lbl_803DD548->posZCurve.end = local_24[2];
+  fVar1 = lbl_803DD548->posXCurve.end - lbl_803DD548->posXCurve.start;
+  fVar2 = lbl_803DD548->posZCurve.end - lbl_803DD548->posZCurve.start;
+  lbl_803DD548->exitDistance = sqrtf(fVar1 * fVar1 + fVar2 * fVar2);
+  lbl_803DD548->viewCurve.px = &lbl_803DD548->yawCurve.start;
+  lbl_803DD548->viewCurve.py = &lbl_803DD548->pitchCurve.start;
+  lbl_803DD548->viewCurve.pz = NULL;
+  lbl_803DD548->viewCurve.count = 4;
+  lbl_803DD548->viewCurve.dir = 0;
+  lbl_803DD548->viewCurve.eval = Curve_EvalHermite;
+  lbl_803DD548->viewCurve.coeffFn = Curve_BuildHermiteCoeffs;
+  lbl_803DD548->yawCurve.start = (float)(int)self->anim.rotX;
+  sVar3 = getAngle((double)(lbl_803DD548->posXCurve.end - target->anim.worldPosX),
+                   (double)(lbl_803DD548->posZCurve.end - target->anim.worldPosZ));
+  lbl_803DD548->yawCurve.end = (float)(int)(short)(0x8000 - sVar3);
   fVar1 = lbl_803E17C4;
-  state->yawCurve.startTangent = lbl_803E17C4;
-  state->yawCurve.endTangent = fVar1;
-  fVar1 = state->yawCurve.start - state->yawCurve.end;
+  lbl_803DD548->yawCurve.startTangent = lbl_803E17C4;
+  lbl_803DD548->yawCurve.endTangent = fVar1;
+  fVar1 = lbl_803DD548->yawCurve.start - lbl_803DD548->yawCurve.end;
   if ((lbl_803E17C8 < fVar1) || (fVar1 < lbl_803E17CC)) {
-    if (lbl_803E17C4 <= state->yawCurve.start) {
-      if (state->yawCurve.end < lbl_803E17C4) {
-        state->yawCurve.end = state->yawCurve.end + lbl_803E17D0;
+    if (lbl_803E17C4 <= lbl_803DD548->yawCurve.start) {
+      if (lbl_803DD548->yawCurve.end < lbl_803E17C4) {
+        lbl_803DD548->yawCurve.end = lbl_803DD548->yawCurve.end + lbl_803E17D0;
       }
     }
     else {
-      state->yawCurve.start = state->yawCurve.start + lbl_803E17D0;
+      lbl_803DD548->yawCurve.start = lbl_803DD548->yawCurve.start + lbl_803E17D0;
     }
   }
-  state->pitchCurve.start = (float)(int)self->anim.rotY;
+  lbl_803DD548->pitchCurve.start = (float)(int)self->anim.rotY;
   fVar1 = lbl_803E17C4;
-  state->pitchCurve.end = lbl_803E17C4;
-  state->pitchCurve.startTangent = fVar1;
-  state->pitchCurve.endTangent = fVar1;
-  fVar1 = state->pitchCurve.start - state->pitchCurve.end;
+  lbl_803DD548->pitchCurve.end = lbl_803E17C4;
+  lbl_803DD548->pitchCurve.startTangent = fVar1;
+  lbl_803DD548->pitchCurve.endTangent = fVar1;
+  fVar1 = lbl_803DD548->pitchCurve.start - lbl_803DD548->pitchCurve.end;
   if ((lbl_803E17C8 < fVar1) || (fVar1 < lbl_803E17CC)) {
-    if (lbl_803E17C4 <= state->pitchCurve.start) {
-      if (state->pitchCurve.end < lbl_803E17C4) {
-        state->pitchCurve.end = state->pitchCurve.end + lbl_803E17D0;
+    if (lbl_803E17C4 <= lbl_803DD548->pitchCurve.start) {
+      if (lbl_803DD548->pitchCurve.end < lbl_803E17C4) {
+        lbl_803DD548->pitchCurve.end = lbl_803DD548->pitchCurve.end + lbl_803E17D0;
       }
     }
     else {
-      state->pitchCurve.start = state->pitchCurve.start + lbl_803E17D0;
+      lbl_803DD548->pitchCurve.start = lbl_803DD548->pitchCurve.start + lbl_803E17D0;
     }
   }
-  curvesMove(&state->viewCurve);
+  curvesMove(&lbl_803DD548->viewCurve);
 }
 
 
