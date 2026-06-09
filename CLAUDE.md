@@ -1497,6 +1497,41 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
   closest existing tools — try them; the small-constant-store sub-case is
   still open). ~1-2 instrs per site. (Same family from both directions:
   ours-merges-T-fresh AND T-chains-ours-rematerializes.)
+  **CONFIRMED fn-GLOBAL, NOT source-bisectable (task #27, player.c #108
+  exclusion set).** Two decisive negatives that close the source-respelling
+  axis for this class: (1) **same-source-different-outcome** -- the IDENTICAL
+  walker-clear loop (`p = lbl_80332ED4; for(i=0;i<7;i++){if(*p)Obj_FreeObject;
+  *p=0; p++;}` clearing 7 obj slots, byte-for-byte the same source) byte-MATCHES
+  at 100% inside Lightfoot_UpdateProximityInteractionState (196B) yet diverges
+  at 94% inside fn_8029C8C8 (256B). Same loop text, opposite outcome -> the
+  loop spelling is provably CORRECT and the divergence is purely the
+  surrounding fn's #108-dose state. The divergence in the diverging copy is
+  exactly this class: target inits the counter `mr r30,r31` (COPIES the 0
+  already live in r31 from a `gByte=0`/`*p=NULL` store-web) where ours emits a
+  fresh `li r30,0`, COUPLED with the #160 symbol-base via-r0 (`addi r0,r3,lo;
+  mr r29,r0` ours vs `addi r29,r3,lo` direct in T). (2) **minimal /tmp probes
+  CANNOT reproduce target's good behavior** -- a 28-line probe of that exact
+  loop reproduces OURS (li-fresh + via-r0) but no spelling yields target's
+  mr-copy/direct-addi, because the trigger is whole-fn web pressure not the
+  loop. So probe-bisection (the method that cracked #74/#107/#114) structurally
+  cannot find a lever here -- you can only A/B in the real TU, and the real-TU
+  axes below are spent. NEW inert levers added to the exhausted list (all
+  real-fn or probe verified, do NOT re-run): shared single-zero variable
+  anchoring the const across the byte-store + the NULL-store + the counter-init
+  (`int z=0; gByte=z; ... for(i=z;...) *p=(void*)z`); `#pragma opt_propagation`,
+  `opt_common_subs`, `opt_dead_assignments`, `opt_loop_invariants`,
+  `global_optimizer` each on/off (prop-off and global_optimizer-off CHANGE
+  codegen but net WORSE -- extra li's, base still via-r0); sized-vs-incomplete
+  array decl and the #80 `(int)`-launder on the walker init (both inert on the
+  via-r0). The #160 INDEX form DOES remove the via-r0 (SR rebuilds the walker
+  direct) and lifts fn_8029C8C8 94.2->98.4, BUT it rotates the i/walker pair
+  (SR walker grabs the HIGHER reg, opposite target) and misrepresents the
+  source (target compiled the walker form) -- per #160's own guard (convert
+  only when target's reg assignment survives) it is NOT a faithful fix here;
+  banked. CONCLUSION: this is the #108 fn-global dose class; the next lever
+  must change the fn-global construct census / priority-fn inputs without
+  changing the instruction stream (the open research direction in the #108
+  cross-class-interleave note), reachable only via real-TU A/B, never probes.
 - **VN-internal negatives (dll_0B_func04):** distributive
   factoring `(e+c)*48` vs separate `e*48 + c*48` products is
   value-numbering-internal -- statement split and two-locals spellings
