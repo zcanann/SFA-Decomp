@@ -6,7 +6,8 @@
 typedef struct MapEventInterface {
     u8 pad00[0x1C];
     void (*triggerEvent)(int mapId, int eventId, int value, int arg);
-    u8 pad20[0x28 - 0x20];
+    u8 pad20[0x24 - 0x20];
+    void (*setEventWarpPosition)(void *position, int yaw, int layer, int arg);
     void (*finishCurrentEvent)(struct MapEventInterface *self);
     u8 pad2C[0x40 - 0x2C];
     u8 (*getMode)(s32 mapId);
@@ -30,6 +31,7 @@ typedef struct MapEventInterface {
 } MapEventInterface;
 
 STATIC_ASSERT(offsetof(MapEventInterface, triggerEvent) == 0x1C);
+STATIC_ASSERT(offsetof(MapEventInterface, setEventWarpPosition) == 0x24);
 STATIC_ASSERT(offsetof(MapEventInterface, finishCurrentEvent) == 0x28);
 STATIC_ASSERT(offsetof(MapEventInterface, getMode) == 0x40);
 STATIC_ASSERT(offsetof(MapEventInterface, setMode) == 0x44);
