@@ -44,7 +44,6 @@ void dll_199_update(int obj)
     short *state;
     char *player;
     int queue;
-    int *res;
     char *found;
     f32 dist;
     int flags;
@@ -142,12 +141,16 @@ void dll_199_update(int obj)
                 *(u8 *)((char *)state + 0xf) = 1;
                 GameBit_Set(0x129, 0);
                 (*gObjectTriggerInterface)->runSequence(0, (void *)obj, 0xffffffff);
-                res = Resource_Acquire(0x83, 1);
-                (**(void (**)(int, int, int, int, int, int))(*res + 4))(obj, 0, 0, 1, 0xffffffff, 0);
-                Resource_Release(res);
-                res = Resource_Acquire(0x84, 1);
-                (**(void (**)(int, int, int, int, int, int))(*res + 4))(obj, 0, 0, 1, 0xffffffff, 0);
-                Resource_Release(res);
+                {
+                    int *res = Resource_Acquire(0x83, 1);
+                    (**(void (**)(int, int, int, int, int, int))(*res + 4))(obj, 0, 0, 1, 0xffffffff, 0);
+                    Resource_Release(res);
+                }
+                {
+                    int *res = Resource_Acquire(0x84, 1);
+                    (**(void (**)(int, int, int, int, int, int))(*res + 4))(obj, 0, 0, 1, 0xffffffff, 0);
+                    Resource_Release(res);
+                }
                 GameBit_Set(0x126, 0);
                 (*gModgfxInterface)->releaseHandle(state + 6);
             }
@@ -198,9 +201,11 @@ void dll_199_update(int obj)
             GameBit_Set(0x127, 1);
             GameBit_Set(0x5b2, 0);
             GameBit_Set(0x5b9, 1);
-            res = Resource_Acquire(0x6a, 1);
-            state[6] = (**(short (**)(int, int, int, int, int, int))(*res + 4))(obj, 0, 0, 0x402, 0xffffffff, 0);
-            Resource_Release(res);
+            {
+                int *res = Resource_Acquire(0x6a, 1);
+                state[6] = (**(short (**)(int, int, int, int, int, int))(*res + 4))(obj, 0, 0, 0x402, 0xffffffff, 0);
+                Resource_Release(res);
+            }
             GameBit_Set(0x1cd, 0);
             *(u8 *)((char *)state + 0xe) = 0;
             *(u8 *)((char *)state + 0x10) = 0;
@@ -351,7 +356,10 @@ void dll_19A_update(int obj)
             }
             *(u8 *)(newObj + 0x29) = 0xff;
             *(s8 *)(newObj + 0x2e) = -1;
-            *(u8 *)(newObj + 0x32) = *(u8 *)(setup + 0x1f);
+            {
+                int linkIdx = *(s8 *)(setup + 0x1f);
+                *(u8 *)(newObj + 0x32) = linkIdx;
+            }
             r = Obj_SetupObject(newObj, 5, *(s8 *)(obj + 0xac), 0xffffffff, *(int *)&((GameObject *)obj)->anim.parent);
             if ((r != 0) && (*(void **)(r + 0xb8) != 0)) {
                 *(u8 *)(*(int *)(r + 0xb8) + 0x404) = 0x20;
