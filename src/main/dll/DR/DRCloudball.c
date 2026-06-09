@@ -45,8 +45,6 @@ extern int spscarab_getExtraSize(void);
  * EN v1.0 Address: 0x801E8EE0
  * EN v1.0 Size: 588b
  */
-#pragma peephole off
-#pragma scheduling off
 void spscarab_update(int param_1)
 {
     int p_b8;
@@ -113,8 +111,6 @@ void spscarab_update(int param_1)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -123,8 +119,6 @@ void spscarab_update(int param_1)
  * EN v1.0 Address: 0x801E912C
  * EN v1.0 Size: 500b
  */
-#pragma peephole off
-#pragma scheduling off
 void spscarab_init(int param_1, int param_2)
 {
     ObjAnimComponent *objAnim;
@@ -171,8 +165,6 @@ void spscarab_init(int param_1, int param_2)
         break;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--

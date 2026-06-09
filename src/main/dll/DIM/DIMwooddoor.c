@@ -70,8 +70,6 @@ extern f32 lbl_803E48D0;
 extern f32 lbl_803E48D4;
 extern f32 lbl_803E48D8;
 
-#pragma scheduling off
-#pragma peephole off
 void DIMwooddoor_spawnShard(int obj, u8 variant)
 {
     DIMWoodDoorConfig *config;
@@ -136,11 +134,7 @@ void DIMwooddoor_spawnShard(int obj, u8 variant)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void DIMwooddoor_updateShardAim(int obj, f32 targetX, f32 targetY, f32 targetZ)
 {
     DIMWoodDoorState *state;
@@ -241,5 +235,3 @@ void DIMwooddoor_updateShardAim(int obj, f32 targetX, f32 targetY, f32 targetZ)
         state->launchSpeed += (accel - state->launchSpeed) / lbl_803E48D8;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

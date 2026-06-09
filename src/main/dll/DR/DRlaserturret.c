@@ -3,8 +3,6 @@
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
-#pragma peephole off
-#pragma scheduling off
 
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern int Stack_IsFull(void *stack);
@@ -396,5 +394,3 @@ void DRlaserturret_startTimedChallenge(DRLaserTurretObject *obj)
     state->flags = 0;
 }
 
-#pragma scheduling reset
-#pragma peephole reset

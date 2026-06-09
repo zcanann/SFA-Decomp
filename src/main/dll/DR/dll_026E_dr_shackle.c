@@ -18,8 +18,6 @@ void drshackle_release(void) {}
 
 void drshackle_initialise(void) {}
 
-#pragma scheduling off
-#pragma peephole off
 int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f) {
     u8 *p = *(u8 **)((char *)obj + 0xb8);
     int *q = *(int **)((char *)obj + 0x4c);
@@ -79,24 +77,16 @@ int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 int drshackle_func0B(int obj) {
     int p = *(int *)&((GameObject *)obj)->anim.placementData;
     return *(s8 *)(p + 0x19);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void drshackle_free(int obj) {
     ObjGroup_RemoveObject(obj, 0x37);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void drshackle_init(int obj, char *arg) {
     char *p = ((GameObject *)obj)->extra;
     ObjGroup_AddObject(obj, 0x37);
@@ -110,10 +100,7 @@ void drshackle_init(int obj, char *arg) {
         *(int *)(p + 0x14) = 1;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 int drshackle_toggleEventCallback(int obj, int unused, u8 *arg) {
     char *p = ((GameObject *)obj)->extra;
     void *q = *(void **)p;
@@ -135,10 +122,7 @@ int drshackle_toggleEventCallback(int obj, int unused, u8 *arg) {
     }
     return 0;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void drshackle_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
     u8 *p = ((GameObject *)obj)->extra;
     int i;
@@ -155,11 +139,7 @@ void drshackle_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, un
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void drshackle_update(int obj) {
     char *p = ((GameObject *)obj)->extra;
     int q = *(int *)&((GameObject *)obj)->anim.placementData;
@@ -184,11 +164,7 @@ void drshackle_update(int obj) {
         ((BitFlags8 *)(p + 0x1a))->b0 = (GameBit_Get(*(s16 *)(q + 0x1e)) == 0);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void drshackle_hitDetect(int obj) {
     char *p = ((GameObject *)obj)->extra;
     if (Sfx_IsPlayingFromObjectChannel(obj, 1) == 0 && ((BitFlags8 *)(p + 0x1a))->b0 != 0) {
@@ -201,5 +177,3 @@ void drshackle_hitDetect(int obj) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

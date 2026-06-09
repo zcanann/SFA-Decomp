@@ -14,8 +14,6 @@ extern f32 lbl_803E5AEC;
  * EN v1.0 Address: 0x801ECEC4
  * EN v1.0 Size: 208b
  */
-#pragma peephole off
-#pragma scheduling off
 void SnowBike_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
 {
     void *path;
@@ -30,5 +28,3 @@ void SnowBike_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, und
         ObjPath_GetPointWorldPosition(obj, 0, (char *)path + 0x3e8, (char *)path + 0x3ec, (char *)path + 0x3f0, 0);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset

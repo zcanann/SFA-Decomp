@@ -237,8 +237,6 @@ extern f32 lbl_803E57B8;
 #define DBPROT_CLOUD_SET_RANGE(a, b) \
   (*gCloudActionInterface)->func12Nop((a), (b))
 
-#pragma scheduling off
-#pragma peephole off
 void fn_801DFA28(u8 *obj)
 {
   u8 *tricky;
@@ -851,8 +849,6 @@ void fn_801DFA28(u8 *obj)
   }
 end:;
 }
-#pragma peephole reset
-#pragma scheduling reset
 #pragma scheduling off
 #pragma peephole off
 

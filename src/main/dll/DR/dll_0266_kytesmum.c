@@ -64,8 +64,6 @@ void kytesmum_initialise(void) {}
 
 void kytesmum_release(void) {}
 
-#pragma scheduling off
-#pragma peephole off
 void kytesmum_update(int obj) {
     KytesMumObject *kytesMum = (KytesMumObject *)obj;
     KytesMumRuntime *runtime = kytesMum->runtime;
@@ -137,35 +135,25 @@ void kytesmum_update(int obj) {
             nearest, obj, 1, 2);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 int kytesmum_idleCallback(void) {
     Obj_GetPlayerObject();
     return 0;
 }
-#pragma scheduling reset
 
-#pragma peephole off
 void kytesmum_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6994);
     }
 }
-#pragma peephole reset
 
-#pragma peephole off
 void kytesmum_free(int obj) {
     KytesMumSetup *setup = ((KytesMumObject *)obj)->setup;
     if (setup->mode != 0) {
         ObjGroup_RemoveObject(obj, 0x3);
     }
 }
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 int kytesmum_spawnInteractionCallback(int obj) {
     Obj_GetPlayerObject();
     if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) {
@@ -177,11 +165,7 @@ int kytesmum_spawnInteractionCallback(int obj) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int kytesmum_updateInteractionRangeCallback(int obj, int unused, u8 *arg) {
     int *player = Obj_GetPlayerObject();
     KytesMumSetup *setup = ((KytesMumObject *)obj)->setup;
@@ -195,11 +179,7 @@ int kytesmum_updateInteractionRangeCallback(int obj, int unused, u8 *arg) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int kytesmum_animEventCallback(int obj, int unused, u8 *arg) {
     KytesMumRuntime *runtime = ((KytesMumObject *)obj)->runtime;
     KytesMumSetup *setup;
@@ -217,11 +197,7 @@ int kytesmum_animEventCallback(int obj, int unused, u8 *arg) {
     }
     return !!dll_2E_func07(obj, arg, (char *)runtime, runtime->moveSet->moves[2], runtime->moveSet->moves[2]);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void kytesmum_init(int obj, char *arg) {
     KytesMumMoveSet *moveSets = (KytesMumMoveSet *)lbl_8032A7C0;
     KytesMumObject *kytesMum = (KytesMumObject *)obj;
@@ -268,11 +244,7 @@ void kytesmum_init(int obj, char *arg) {
     ObjAnim_SetCurrentMove(obj, r, lbl_803E698C, 0);
     kytesMum->objectFlags |= 0x2000;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int kytesmum_updateNearPlayerCallback(int obj, int unused, u8 *arg) {
     int *player = Obj_GetPlayerObject();
     int *tricky = getTrickyObject();
@@ -307,11 +279,7 @@ int kytesmum_updateNearPlayerCallback(int obj, int unused, u8 *arg) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int kytesmum_updateQuestStateCallback(int obj, int unused, u8 *arg) {
     int next;
     int questBits[3];
@@ -343,11 +311,7 @@ int kytesmum_updateQuestStateCallback(int obj, int unused, u8 *arg) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void kytesmum_playAnimationEventSfx(int obj, u8 *arg, s16 *sfxData) {
     u8 flags = 0;
     int i;
@@ -384,5 +348,3 @@ void kytesmum_playAnimationEventSfx(int obj, u8 *arg, s16 *sfxData) {
         Sfx_PlayFromObject(obj, (u16)sfxData[3]);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

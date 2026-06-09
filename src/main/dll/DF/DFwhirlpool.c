@@ -48,8 +48,6 @@ extern f32 lbl_803E4E18;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void dfropenode_render(int obj, int param_2, int param_3)
 {
   ObjAnimComponent *objAnim;
@@ -149,8 +147,6 @@ void dfropenode_render(int obj, int param_2, int param_3)
     }
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--

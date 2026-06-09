@@ -51,8 +51,6 @@ extern f32 lbl_803E5B78; /* 2.0f */
  * EN v1.0 Address: 0x801EA854
  * EN v1.0 Size: 620b
  */
-#pragma peephole off
-#pragma scheduling off
 int drshackle_updateSwingBlend(int obj, int state)
 {
     f32 fVar1;
@@ -133,8 +131,6 @@ int drshackle_updateSwingBlend(int obj, int state)
     }
     return 1;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -143,8 +139,6 @@ int drshackle_updateSwingBlend(int obj, int state)
  * EN v1.0 Address: 0x801EAAC0
  * EN v1.0 Size: 908b
  */
-#pragma peephole off
-#pragma scheduling off
 int drshackle_updateAttachedPosition(int obj, int state)
 {
     ShackleFlags *flags;
@@ -233,5 +227,3 @@ int drshackle_updateAttachedPosition(int obj, int state)
     flags->positionAnchored = 0;
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset

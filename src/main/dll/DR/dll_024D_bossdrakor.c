@@ -66,8 +66,6 @@ int bossdrakor_getExtraSize(void)
     return 0x1a4;
 }
 
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_common_subs off
 
 void bossdrakor_update(int obj)
@@ -751,5 +749,3 @@ void bossdrakor_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
 }
 
 #pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset

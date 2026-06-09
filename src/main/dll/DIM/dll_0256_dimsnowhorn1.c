@@ -49,8 +49,6 @@ void DIMSnowHorn1_func23(void) {}
 
 int DIMSnowHorn1_defaultStateHandler(void) { return 0x0; }
 
-#pragma scheduling off
-#pragma peephole off
 int DIMSnowHorn1_stateHandler04(int obj, int state)
 {
     f32 k = lbl_803E8234;
@@ -79,11 +77,7 @@ int DIMSnowHorn1_stateHandler04(int obj, int state)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int DIMSnowHorn1_stateHandler00(int obj)
 {
     DIMSnowHorn1State *inner = ((GameObject *)obj)->extra;
@@ -110,11 +104,7 @@ int DIMSnowHorn1_stateHandler00(int obj)
         return 8;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int DIMSnowHorn1_stateHandler02(int obj, int state, f32 fv)
 {
     DIMSnowHorn1State *inner = ((GameObject *)obj)->extra;
@@ -147,11 +137,7 @@ int DIMSnowHorn1_stateHandler02(int obj, int state, f32 fv)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int DIMSnowHorn1_stateHandler03(int obj, int state)
 {
     DIMSnowHorn1State *inner = ((GameObject *)obj)->extra;
@@ -186,11 +172,7 @@ int DIMSnowHorn1_stateHandler03(int obj, int state)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int DIMSnowHorn1_stateHandler01(int obj, int state, f32 fv)
 {
     DIMSnowHorn1State *inner = ((GameObject *)obj)->extra;
@@ -230,11 +212,7 @@ int DIMSnowHorn1_stateHandler01(int obj, int state, f32 fv)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int DIMSnowHorn1_stateHandler0B(int obj, int state)
 {
     DIMSnowHorn1State *inner = ((GameObject *)obj)->extra;
@@ -273,11 +251,7 @@ int DIMSnowHorn1_stateHandler0B(int obj, int state)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int DIMSnowHorn1_stateHandler09(int obj, int state, f32 fv)
 {
     DIMSnowHorn1State *inner = ((GameObject *)obj)->extra;
@@ -316,11 +290,7 @@ int DIMSnowHorn1_stateHandler09(int obj, int state, f32 fv)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int DIMSnowHorn1_stateHandler08(int obj, int state)
 {
     DIMSnowHorn1State *inner = ((GameObject *)obj)->extra;
@@ -369,11 +339,7 @@ int DIMSnowHorn1_stateHandler08(int obj, int state)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int DIMSnowHorn1_stateHandler07(int obj, int state)
 {
     void *near;
@@ -437,11 +403,7 @@ int DIMSnowHorn1_stateHandler07(int obj, int state)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int DIMSnowHorn1_stateHandler06(int obj, int state)
 {
     DIMSnowHorn1State *inner;
@@ -501,11 +463,7 @@ int DIMSnowHorn1_stateHandler06(int obj, int state)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int DIMSnowHorn1_stateHandler05(int obj, int state)
 {
     DIMSnowHorn1State *inner;
@@ -605,11 +563,7 @@ int DIMSnowHorn1_stateHandler05(int obj, int state)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
 {
     int near;
@@ -732,24 +686,17 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
     }
     return 0xc;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 /*
  * Empty stub.
  */
 void DIMSnowHorn1_func21(void) {}
-#pragma scheduling reset
 
-#pragma scheduling off
 /*
  * Returns 0.
  */
 int DIMSnowHorn1_func20(void) { return 0; }
-#pragma scheduling reset
 
-#pragma scheduling off
 /*
  * Returns floored neg-velocity-Y in *out, or a constant if mode != 10;
  * also returns f1 = constant.
@@ -764,9 +711,7 @@ f32 DIMSnowHorn1_func19(int obj, f32 *out)
     }
     return lbl_803E8234;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 /*
  * Sets *out_f = 0.0f, *out_i = 0.
  */
@@ -776,10 +721,7 @@ void DIMSnowHorn1_func18(void *unused, f32 *out_f, int *out_i)
     *out_f = lbl_803E8234;
     *out_i = 0;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 /*
  * Stores arg at obj->state[0xa8a] (low byte).
  */
@@ -788,17 +730,12 @@ void DIMSnowHorn1_func17(int obj, int value)
     u8 mode = (u8)value;
     *(u8 *)(*(int *)&((GameObject *)obj)->extra + 0xa8a) = mode;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 /*
  * Returns 0.
  */
 int DIMSnowHorn1_func16(void) { return 0; }
-#pragma scheduling reset
 
-#pragma scheduling off
 void DIMSnowHorn1_func15(s16 *packed, undefined4 outX, undefined4 outY, undefined4 outZ)
 {
     extern void setMatrixFromObjectPos(void *matrix, void *packedTransform);
@@ -825,9 +762,7 @@ void DIMSnowHorn1_func15(s16 *packed, undefined4 outX, undefined4 outY, undefine
     setMatrixFromObjectPos(matrix, &transform);
     Matrix_TransformPoint(lbl_803E8234, lbl_803E8298, lbl_803E829C, matrix, outX, outY, outZ);
 }
-#pragma scheduling reset
 
-#pragma peephole off
 /*
  * Returns 2 if state->[0xa8f] != 0, else 1.
  */
@@ -838,10 +773,7 @@ int DIMSnowHorn1_func14(int obj)
     }
     return 1;
 }
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 /*
  * If bit 1 of state->[0xa8e] is set, set GameBit 0x3e3 to 0, clear
  * the bit, and return 1. Otherwise return 0.
@@ -856,10 +788,7 @@ int DIMSnowHorn1_render2(int obj)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 /*
  * Read 3 floats from state into the 3 output pointers.
  */
@@ -870,9 +799,7 @@ void DIMSnowHorn1_modelMtxFn(int obj, f32 *out_x, f32 *out_y, f32 *out_z)
     *out_y = state->unk9EC;
     *out_z = state->unk9F0;
 }
-#pragma scheduling reset
 
-#pragma peephole off
 /*
  * Returns 1 if state->[0xa90] != 0, else 2.
  */
@@ -883,10 +810,7 @@ int DIMSnowHorn1_func11(int obj)
     }
     return 2;
 }
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 int DIMSnowHorn1_animEventCallback(int obj, undefined4 unused, int setup)
 {
     DIMSnowHorn1State *state;
@@ -956,10 +880,7 @@ int DIMSnowHorn1_animEventCallback(int obj, undefined4 unused, int setup)
     ((GameObject *)obj)->anim.velocityZ = fz;
     return (u32)(-*(s8 *)(setup + 0x56) | *(s8 *)(setup + 0x56)) >> 0x1f;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void DIMSnowHorn1_func22(int obj, f32 scale)
 {
     void *pathMtx;
@@ -990,10 +911,7 @@ void DIMSnowHorn1_func22(int obj, f32 scale)
     mtx44_mult(lbl_803DB0F0, pathMtx, lbl_803DB0F0);
     fn_8003B950(lbl_803DB0F0);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int DIMSnowHorn1_setScale(int obj)
 {
     DIMSnowHorn1State *state;
@@ -1022,11 +940,7 @@ int DIMSnowHorn1_setScale(int obj)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void fn_802BB998(int obj, int pointState, int inputState)
 {
@@ -1080,24 +994,17 @@ void fn_802BB998(int obj, int pointState, int inputState)
     }
 }
 #pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 /*
  * Returns 0xd0c.
  */
 int DIMSnowHorn1_getExtraSize(void) { return 0xd0c; }
-#pragma scheduling reset
 
-#pragma scheduling off
 /*
  * Returns 0x43.
  */
 int DIMSnowHorn1_getObjectTypeId(void) { return 0x43; }
-#pragma scheduling reset
 
-#pragma scheduling off
 /*
  * Wrapper for ObjGroup_RemoveObject(obj, 0xa).
  */
@@ -1105,10 +1012,7 @@ void DIMSnowHorn1_free(int obj)
 {
     ObjGroup_RemoveObject(obj, 0xa);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void DIMSnowHorn1_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     DIMSnowHorn1State *state = ((GameObject *)obj)->extra;
@@ -1127,8 +1031,6 @@ void DIMSnowHorn1_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         ObjPath_GetPointWorldPositionArray(obj, 2, 4, (f32 *)((char *)state + 0x9b0));
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * Empty stub.
@@ -1137,8 +1039,6 @@ void DIMSnowHorn1_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
  */
 void DIMSnowHorn1_hitDetect(void) {}
 
-#pragma scheduling off
-#pragma peephole off
 void fn_802BB4B4(int obj, int a, int slot)
 {
     extern u32 getButtonsJustPressed(int controller);
@@ -1202,11 +1102,7 @@ void fn_802BB4B4(int obj, int a, int slot)
         (obj, (int)state, timeDelta, timeDelta, gDIMSnowHorn1StateHandlers, &gDIMSnowHorn1DefaultStateHandler);
     fn_802BB998(obj, (int)state, (int)state);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void DIMSnowHorn1_update(int obj)
 {
     f32 nearDist;
@@ -1384,10 +1280,7 @@ void DIMSnowHorn1_update(int obj)
                           &((GameObject *)obj)->anim.modelState->overrideWorldPosY,
                           &((GameObject *)obj)->anim.modelState->overrideWorldPosZ);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void DIMSnowHorn1_release(void)
 {
     void **p = &gDIMSnowHorn1Texture;
@@ -1397,9 +1290,7 @@ void DIMSnowHorn1_release(void)
     }
     *p = NULL;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void DIMSnowHorn1_initialise(void)
 {
     s16 *src = &gDIMSnowHorn1TextureId;
@@ -1419,10 +1310,7 @@ void DIMSnowHorn1_initialise(void)
     *(void * *)&gDIMSnowHorn1DefaultStateHandler = (void *)DIMSnowHorn1_defaultStateHandler;
     *dst = (void *)textureLoad(*src, 0);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void DIMSnowHorn1_init(int obj, int p2, int p3)
 {
     extern int GameBit_Get(int id);
@@ -1499,5 +1387,3 @@ void DIMSnowHorn1_init(int obj, int p2, int p3)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

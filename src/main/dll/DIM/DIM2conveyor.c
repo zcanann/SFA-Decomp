@@ -25,8 +25,6 @@ extern undefined4 ObjGroup_AddObject();
 extern void dimlavasmash_setBlockSurfaceFlags(int *block, int mode, int v);
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern int *mapGetBlock(int idx);
-#pragma scheduling off
-#pragma peephole off
 void dimlavasmash_init(s16 *obj, s8 *def) {
     ObjAnimComponent *objAnim;
     int *block;
@@ -53,8 +51,6 @@ void dimlavasmash_init(s16 *obj, s8 *def) {
     }
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x2000);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Trivial 4b 0-arg blr leaves. */
 void dimlavasmash_release(void) {}
@@ -69,8 +65,6 @@ extern int* ObjGroup_FindNearestObject(int group, int *obj, f32 *dist);
 extern void objRenderFn_80041018(int obj);
 extern f32 lbl_803E4910;
 
-#pragma scheduling off
-#pragma peephole off
 void dimdismountpoint_update(int *obj) {
     extern uint GameBit_Get(int eventId);
     int *nearest;
@@ -95,8 +89,6 @@ void dimdismountpoint_update(int *obj) {
         objRenderFn_80041018((int)obj);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E4908;
 extern f32 lbl_803E4914;
@@ -105,8 +97,6 @@ extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 extern unsigned long GameBit_Set(int eventId, int value);
 
-#pragma peephole off
-#pragma scheduling off
 void dimdismountpoint_init(u8* obj, u8* params) {
     f32 *sub;
 
@@ -119,8 +109,6 @@ void dimdismountpoint_init(u8* obj, u8* params) {
     sub[3] = -(sub[0] * ((GameObject *)obj)->anim.localPosX + sub[1] * ((GameObject *)obj)->anim.localPosY + sub[2] * ((GameObject *)obj)->anim.localPosZ);
     ((GameObject *)obj)->unkF8 = 1;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /* 8b "li r3, N; blr" returners. */
 int dimbridgecogmai_getExtraSize(void) { return 0x1; }
@@ -130,21 +118,15 @@ int dimdismountpoint_getExtraSize(void) { return 0x10; }
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4900;
 extern void objRenderFn_8003b8f4(f32);
-#pragma peephole off
 void dimbridgecogmai_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4900); }
-#pragma peephole reset
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-#pragma scheduling off
 void dimbridgecogmai_free(int x) { ObjGroup_RemoveObject(x, 0xf); }
 void dimdismountpoint_free(int x) { ObjGroup_RemoveObject(x, 0x13); }
-#pragma scheduling reset
 
 void dimbridgecogmai_release(void) {}
 int dimdismountpoint_getObjectTypeId(void) { return 0; }
 
-#pragma scheduling off
-#pragma peephole off
 void dimbridgecogmai_init(int *obj, int *def) {
     *(u8 *)((GameObject *)obj)->extra = 100;
     *(s16 *)obj = (s16)((u32)*(u8 *)((char *)def + 0x1c) << 8);
@@ -155,11 +137,8 @@ void dimbridgecogmai_init(int *obj, int *def) {
     }
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x6000);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E490C;
-#pragma peephole off
 void dimdismountpoint_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
     if (visible == 0 || ((GameObject *)obj)->unkF8 != 0) {
         if (((GameObject *)obj)->unkF8 != 0) {
@@ -169,10 +148,7 @@ void dimdismountpoint_render(int obj, int p1, int p2, int p3, int p4, s8 visible
         objRenderFn_8003b8f4(lbl_803E490C);
     }
 }
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 int dimbridgecogmai_SeqFn(int obj, int p2, char *r5) {
     char *param = *(char **)&((GameObject *)obj)->anim.placementData;
     r5[0x56] = 0;
@@ -182,12 +158,8 @@ int dimbridgecogmai_SeqFn(int obj, int p2, char *r5) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern ObjectTriggerInterface **gObjectTriggerInterface;
-#pragma scheduling off
-#pragma peephole off
 
 void dimbridgecogmai_update(int *obj) {
     u8 *def;
@@ -266,5 +238,3 @@ int dimdismountpoint_setScale(int obj) {
     (*gObjectTriggerInterface)->runSequence(side, (void *)obj, -1);
     return side;
 }
-#pragma peephole reset
-#pragma scheduling reset

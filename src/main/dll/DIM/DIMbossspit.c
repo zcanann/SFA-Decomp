@@ -34,8 +34,6 @@ extern void DIMbosstonsil_checkHit(void *obj,DIMbosstonsilState *state);
 #define DIMBOSSSPIT_ROUTE_SPLIT_THRESHOLD 3
 #define DIMBOSSSPIT_RUMBLE_SFX 0x189
 
-#pragma peephole off
-#pragma scheduling off
 
 /*
  * --INFO--
@@ -120,5 +118,3 @@ void dimBossTonsil_newState_hitFightMain(u8 *obj,ObjAnimUpdateState *animUpdate,
   *(u32 *)&((GameObject *)obj)->unkC0 = state->savedObjFieldC0;
 }
 
-#pragma peephole reset
-#pragma scheduling reset

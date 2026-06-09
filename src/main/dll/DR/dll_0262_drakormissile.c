@@ -52,8 +52,6 @@ void drakormissile_initialise(void) {}
 
 void drakormissile_release(void) {}
 
-#pragma scheduling off
-#pragma peephole off
 void drakormissile_startActiveLaunch(int obj) {
     void *light;
     u8 *p = ((GameObject *)obj)->extra;
@@ -83,11 +81,7 @@ void drakormissile_startActiveLaunch(int obj) {
     Sfx_PlayFromObject(obj, DRAKORMISSILE_ACTIVE_SFX_A);
     Sfx_PlayFromObject(obj, DRAKORMISSILE_ACTIVE_SFX_B);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void drakormissile_func0B(int obj, int from, int target, f32 speed) {
     u8 *p = *(u8 **)((char *)obj + 0xb8);
     void *light;
@@ -158,11 +152,7 @@ void drakormissile_func0B(int obj, int from, int target, f32 speed) {
     *(f32 *)((char *)obj + 8) = lbl_803E6958 * *(f32 *)(*(int *)((char *)obj + 0x50) + 4);
     Sfx_PlayFromObject(obj, SFXwp_barrel_bounce2);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void drakormissile_update(int obj) {
     u8 *p = *(u8 **)((char *)obj + 0xb8);
     int moving;
@@ -286,8 +276,6 @@ void drakormissile_update(int obj) {
         modelLightStruct_updateGlowAlpha(*(void **)((int)p + DRAKORMISSILE_FIELD_LIGHT));
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 int drakormissile_setScale(int obj) {
     u8 *p = ((GameObject *)obj)->extra;
@@ -301,7 +289,6 @@ void drakormissile_render2(int obj) {
     }
 }
 
-#pragma peephole off
 void drakormissile_modelMtxFn(int obj) {
     u8 *p = ((GameObject *)obj)->extra;
     p[DRAKORMISSILE_FIELD_FLAGS] |= 1;
@@ -309,10 +296,7 @@ void drakormissile_modelMtxFn(int obj) {
         Obj_FreeObject(obj);
     }
 }
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 void drakormissile_free(int obj) {
     char *p = ((GameObject *)obj)->extra;
     void *m = *(void **)(p + DRAKORMISSILE_FIELD_LIGHT);
@@ -322,11 +306,7 @@ void drakormissile_free(int obj) {
     }
     ObjGroup_RemoveObject(obj, DRAKORMISSILE_GROUP_ID);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void drakormissile_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
     char *p = ((GameObject *)obj)->extra;
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
@@ -361,11 +341,7 @@ void drakormissile_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void drakormissile_init(int obj, char *arg) {
     char *p = ((GameObject *)obj)->extra;
     int s;
@@ -400,5 +376,3 @@ void drakormissile_init(int obj, char *arg) {
         p += 2;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

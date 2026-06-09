@@ -11,8 +11,6 @@ void drcagewith_release(void) {}
 
 void drcagewith_update(void) {}
 
-#pragma scheduling off
-#pragma peephole off
 void drcagewith_hitDetect(int obj) {
     int *q = *(int **)&((GameObject *)obj)->anim.placementData;
     u8 *p;
@@ -113,16 +111,12 @@ void drcagewith_hitDetect(int obj) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 int drcagewith_setScale(int obj) {
     u8 *p = ((GameObject *)obj)->extra;
     return p[0x30];
 }
 
-#pragma scheduling off
-#pragma peephole off
 void drcagewith_free(int obj, int arg) {
     char *p = ((GameObject *)obj)->extra;
     char *x = *(char **)p;
@@ -136,10 +130,7 @@ void drcagewith_free(int obj, int arg) {
     }
     ObjGroup_RemoveObject(obj, 0x18);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma peephole off
 int drcagewith_toggleRopeStateCallback(int obj, int unused, u8 *arg) {
     char *p = ((GameObject *)obj)->extra;
     int i;
@@ -150,10 +141,7 @@ int drcagewith_toggleRopeStateCallback(int obj, int unused, u8 *arg) {
     }
     return 0;
 }
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 void drcagewith_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
     char *p = ((GameObject *)obj)->extra;
     int *b;
@@ -172,11 +160,7 @@ void drcagewith_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, u
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void drcagewith_init(int obj, char *arg) {
     char *p = ((GameObject *)obj)->extra;
     s16 type;
@@ -208,5 +192,3 @@ void drcagewith_init(int obj, char *arg) {
         ObjGroup_AddObject(obj, 0x18);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

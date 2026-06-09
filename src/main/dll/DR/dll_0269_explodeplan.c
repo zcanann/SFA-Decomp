@@ -15,15 +15,12 @@ void explodeplan_initialise(void) {}
 
 void explodeplan_release(void) {}
 
-#pragma peephole off
 void explodeplan_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E69D8);
     }
 }
-#pragma peephole reset
 
-#pragma scheduling off
 void explodeplan_init(int obj, char *arg) {
     char *p = ((GameObject *)obj)->extra;
     ((GameObject *)obj)->animEventCallback = (void *)explodeplan_updateTriggerCallback;
@@ -34,10 +31,7 @@ void explodeplan_init(int obj, char *arg) {
         *(int *)p = 0;
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void explodeplan_update(int obj) {
     int q = *(int *)&((GameObject *)obj)->anim.placementData;
     char *p = ((GameObject *)obj)->extra;
@@ -60,11 +54,7 @@ void explodeplan_update(int obj) {
         (*gObjectTriggerInterface)->runSequence(*(int *)p, (void *)obj, -1);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int explodeplan_updateTriggerCallback(int obj) {
     int ret;
     int q = *(int *)&((GameObject *)obj)->anim.placementData;
@@ -93,5 +83,3 @@ int explodeplan_updateTriggerCallback(int obj) {
     }
     return ret;
 }
-#pragma peephole reset
-#pragma scheduling reset

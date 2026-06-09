@@ -22,16 +22,12 @@ void ktfallingrocks_free(u8 *obj) {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-#pragma peephole off
 void ktfallingrocks_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
     if (visible != 0) {
         return;
     }
 }
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 void ktfallingrocks_update(int obj) {
     int q = *(int *)&((GameObject *)obj)->anim.placementData;
     ObjPosParams params;
@@ -56,5 +52,3 @@ void ktfallingrocks_update(int obj) {
     Sfx_PlayFromObject(obj, SFXbaddie_haga_spin);
     GameBit_Set(*(s16 *)(q + 0x24), 0);
 }
-#pragma peephole reset
-#pragma scheduling reset

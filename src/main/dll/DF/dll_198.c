@@ -47,8 +47,6 @@ extern f64 lbl_803E4E48;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void dfropenode_update(DFropenodeObject *obj)
 {
   DFropenodeExtra *extra;
@@ -167,8 +165,6 @@ void dfropenode_update(DFropenodeObject *obj)
 
   DFRope_UpdateSimulation((u8 *)extra->rope);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -183,8 +179,6 @@ void dfropenode_update(DFropenodeObject *obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void dfropenode_init(DFropenodeObject *obj, u8 *objDef)
 {
   DFropenodeExtra *extra;
@@ -199,8 +193,6 @@ void dfropenode_init(DFropenodeObject *obj, u8 *objDef)
   extra->linkedObj = NULL;
   ((GameObject *)obj)->anim.alpha = 0x46;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -215,8 +207,6 @@ void dfropenode_init(DFropenodeObject *obj, u8 *objDef)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void dfropenode_release(void)
 {
   int i;
@@ -225,8 +215,6 @@ void dfropenode_release(void)
     textureFree((&lbl_803DBF48)[i]);
   }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -241,8 +229,6 @@ void dfropenode_release(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void dfropenode_initialise(void)
 {
   int i;
@@ -251,8 +237,6 @@ void dfropenode_initialise(void)
     (&lbl_803DBF48)[i] = textureLoadAsset((&lbl_803DBF40)[i]);
   }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -267,8 +251,6 @@ void dfropenode_initialise(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 int DFSH_Door2Speci_SeqFn(int obj)
 {
   int *texture;
@@ -314,8 +296,6 @@ int DFSH_Door2Speci_SeqFn(int obj)
   }
   return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--

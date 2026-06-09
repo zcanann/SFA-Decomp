@@ -23,8 +23,6 @@ typedef struct DimSnowballDef {
     int targetId;
 } DimSnowballDef;
 
-#pragma scheduling off
-#pragma peephole off
 void dimsnowball_init(DimSnowballObject *param_1, DimSnowballDef *def)
 {
     DimSnowballObject *obj = param_1;
@@ -42,8 +40,6 @@ void dimsnowball_init(DimSnowballObject *param_1, DimSnowballDef *def)
     }
     obj->flags = (u16)(obj->flags | 0x4000);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void dimsnowball_release(void)
 {

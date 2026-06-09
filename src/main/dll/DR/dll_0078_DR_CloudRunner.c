@@ -75,23 +75,18 @@ int DR_CloudRunner_getObjectTypeId(void) { return 0x43; }
 
 void DR_CloudRunner_release(void) {}
 
-#pragma scheduling off
 f32 DR_CloudRunner_func19(int obj, f32 *out)
 {
     *out = lbl_803E83E8;
     return lbl_803E83A4;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void DR_CloudRunner_func18(int obj, f32 *a, int *b)
 {
     *a = lbl_803E83A4;
     *b = 0;
 }
-#pragma scheduling reset
 
-#pragma peephole off
 int DR_CloudRunner_func11(int obj)
 {
     CloudRunnerState *inner = ((GameObject *)obj)->extra;
@@ -100,16 +95,12 @@ int DR_CloudRunner_func11(int obj)
     }
     return 2;
 }
-#pragma peephole reset
 
-#pragma scheduling off
 void DR_CloudRunner_func22(int obj)
 {
     fn_8003B950(ObjPath_GetPointModelMtx(obj, 2));
 }
-#pragma scheduling reset
 
-#pragma peephole off
 int DR_CloudRunner_func14(int obj)
 {
     CloudRunnerState *inner = ((GameObject *)obj)->extra;
@@ -118,16 +109,12 @@ int DR_CloudRunner_func14(int obj)
     }
     return 1;
 }
-#pragma peephole reset
 
-#pragma scheduling off
 void DR_CloudRunner_modelMtxFn(int obj, int a, int b, int c)
 {
     ObjPath_GetPointWorldPosition(obj, 2, a, b, c, 0);
 }
-#pragma scheduling reset
 
-#pragma peephole off
 int DR_CloudRunner_stateHandler07(int obj)
 {
     CloudRunnerState *inner = ((GameObject *)obj)->extra;
@@ -138,9 +125,7 @@ int DR_CloudRunner_stateHandler07(int obj)
     }
     return 0;
 }
-#pragma peephole reset
 
-#pragma scheduling off
 void DR_CloudRunner_free(int obj)
 {
     GameBit_Set(0x7aa, *(s16 *)((char *)*(int *)&((GameObject *)obj)->extra + 0xbb0));
@@ -148,9 +133,7 @@ void DR_CloudRunner_free(int obj)
     ObjGroup_RemoveObject(obj, 0x26);
     (*gGameUIInterface)->airMeterSetShutdown();
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void DR_CloudRunner_initialise(void)
 {
     ((void **)gDRCloudRunnerStateHandlers)[0] = (void *)DR_CloudRunner_stateHandler00;
@@ -163,10 +146,7 @@ void DR_CloudRunner_initialise(void)
     ((void **)gDRCloudRunnerStateHandlers)[7] = (void *)DR_CloudRunner_stateHandler07;
     gDRCloudRunnerDefaultStateHandler = (void *)DR_CloudRunner_defaultStateHandler;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int DR_CloudRunner_stateHandler02(int obj, int p2)
 {
     CloudRunnerState *inner = ((GameObject *)obj)->extra;
@@ -197,11 +177,7 @@ int DR_CloudRunner_stateHandler02(int obj, int p2)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int DR_CloudRunner_stateHandler01(int obj, int p2)
 {
     CloudRunnerState *inner;
@@ -236,11 +212,7 @@ int DR_CloudRunner_stateHandler01(int obj, int p2)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int DR_CloudRunner_stateHandler03(int obj, int p2)
 {
     CloudRunnerState *inner = ((GameObject *)obj)->extra;
@@ -282,11 +254,7 @@ int DR_CloudRunner_stateHandler03(int obj, int p2)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void DR_CloudRunner_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
 {
     CloudRunnerState *inner = ((GameObject *)p1)->extra;
@@ -301,11 +269,7 @@ void DR_CloudRunner_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int DR_CloudRunner_stateHandler00(int obj)
 {
     CloudRunnerState *inner = ((GameObject *)obj)->extra;
@@ -317,11 +281,7 @@ int DR_CloudRunner_stateHandler00(int obj)
     ((ByteFlags *)&inner->flagsBC0)->b10 = inner->unkBB0 > 0;
     return 3;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void DR_CloudRunner_func17(int obj, int param)
 {
     CloudRunnerState *inner = ((GameObject *)obj)->extra;
@@ -342,11 +302,7 @@ void DR_CloudRunner_func17(int obj, int param)
         GameBit_Set(0xed7, 0);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int DR_CloudRunner_SeqFn(int obj, int p2, int p3)
 {
     CloudRunnerState *inner = ((GameObject *)obj)->extra;
@@ -362,10 +318,7 @@ int DR_CloudRunner_SeqFn(int obj, int p2, int p3)
     ((ByteFlags *)&inner->flagsBC1)->b80 = 1;
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void DR_CloudRunner_func15(int obj, f32 *a, f32 *b, f32 *c)
 {
     struct {
@@ -387,10 +340,7 @@ void DR_CloudRunner_func15(int obj, f32 *a, f32 *b, f32 *c)
     setMatrixFromObjectPos(matrix, v.angles);
     Matrix_TransformPoint(matrix, lbl_803E83A4, lbl_803DC78C, lbl_803DC790, a, b, c);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void DR_CloudRunner_init(int obj, int p2)
 {
     struct {
@@ -427,8 +377,6 @@ void DR_CloudRunner_init(int obj, int p2)
     ObjGroup_AddObject(obj, 0x26);
     ((ByteFlags *)((char *)inner + 0xbc0))->b01 = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 typedef struct {
     f32 x;
@@ -437,8 +385,6 @@ typedef struct {
 } Vec3x;
 
 
-#pragma scheduling off
-#pragma peephole off
 int DR_CloudRunner_stateHandler05(int obj, int p2, f32 f)
 {
     u8 *base = (u8 *)lbl_803356F0;
@@ -731,11 +677,7 @@ int DR_CloudRunner_stateHandler05(int obj, int p2, f32 f)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_802BF0C8(int obj, int p2, int mode)
 {
     u8 *base = lbl_803356F0;
@@ -759,11 +701,7 @@ void fn_802BF0C8(int obj, int p2, int mode)
     }
     (*gPathControlInterface)->attachObject((void *)obj, pathState);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void DR_CloudRunner_func23(int obj, int mode, int *out)
 {
     struct gbids {
@@ -837,11 +775,7 @@ void DR_CloudRunner_func23(int obj, int mode, int *out)
         break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int DR_CloudRunner_stateHandler06(int obj, int p2)
 {
     CloudRunnerState *inner = ((GameObject *)obj)->extra;
@@ -897,11 +831,7 @@ int DR_CloudRunner_stateHandler06(int obj, int p2)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void DR_CloudRunner_hitDetect(int obj)
 {
     CloudRunnerState *inner = ((GameObject *)obj)->extra;
@@ -933,11 +863,7 @@ void DR_CloudRunner_hitDetect(int obj)
         Sfx_PlayFromObject(obj, 0x11f);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_802C11BC(int obj, int p2, f32 f)
 {
     CloudRunnerState *inner;
@@ -982,11 +908,7 @@ void fn_802C11BC(int obj, int p2, f32 f)
         (*gGameUIInterface)->runAirMeter(inner->unkBB0 - lbl_803DE4D8);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void DR_CloudRunner_update(int obj)
 {
     CloudRunnerState *inner;
@@ -1049,11 +971,7 @@ void DR_CloudRunner_update(int obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_802BF4D8(int obj)
 {
     f32 tr[2];
@@ -1124,11 +1042,7 @@ void fn_802BF4D8(int obj)
     *(s16 *)((char *)newObj + 0) = 0;
     (*gPartfxInterface)->spawnObject(newObj, 0x66, NULL, 2, -1, NULL);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int DR_CloudRunner_stateHandler04(int obj, int p2)
 {
     CloudRunnerState *inner = ((GameObject *)obj)->extra;
@@ -1203,5 +1117,3 @@ int DR_CloudRunner_stateHandler04(int obj, int p2)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset

@@ -15,16 +15,12 @@ void ktrexfloorswitch_initialise(void) {}
 
 void ktrexfloorswitch_release(void) {}
 
-#pragma peephole off
 void ktrexfloorswitch_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6858);
     }
 }
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 void ktrexfloorswitch_init(int obj, char *arg) {
     char *p = ((GameObject *)obj)->extra;
     int q;
@@ -43,11 +39,7 @@ void ktrexfloorswitch_init(int obj, char *arg) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void ktrexfloorswitch_spawnEnergyArc(int obj, f32 scale, int angle) {
     char *runtime = ((GameObject *)obj)->extra;
     f32 pos[3];
@@ -73,11 +65,7 @@ void ktrexfloorswitch_spawnEnergyArc(int obj, f32 scale, int angle) {
     *(f32 *)(runtime + 8) = (f32)(int)randomGetRange(10, angle);
     *(void **)(runtime + 0x10) = lightningCreate(pos, dir, lbl_803E68A0, lbl_803E68A4, (u16)angle, 96, 0);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void ktrexfloorswitch_update(int obj) {
     int *sub = *(int **)&((GameObject *)obj)->anim.placementData;
     int *state = ((GameObject *)obj)->extra;
@@ -313,5 +301,3 @@ void ktrexfloorswitch_update(int obj) {
     }
     *(u8 *)((char *)state + 0x5) = *(u8 *)((char *)state + 0x4);
 }
-#pragma peephole reset
-#pragma scheduling reset

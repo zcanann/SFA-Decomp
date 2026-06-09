@@ -101,8 +101,6 @@ STATIC_ASSERT(offsetof(SCMusicTreeSetup, hearRadiusHalf) == 0x1B);
 STATIC_ASSERT(offsetof(SCMusicTreeSetup, scale) == 0x1C);
 STATIC_ASSERT(offsetof(SCMusicTreeSetup, flags) == 0x23);
 
-#pragma peephole off
-#pragma scheduling off
 void sc_musictree_update(int obj)
 {
     int inner = *(int *)&((GameObject *)obj)->extra;
@@ -218,11 +216,7 @@ end:
         *(u16 *)(inner + 0x4a) = (s32)d;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void sc_musictree_init(int obj, SCMusicTreeSetup *setup)
 {
     SCMusicTreeState *state = ((GameObject *)obj)->extra;
@@ -252,8 +246,6 @@ void sc_musictree_init(int obj, SCMusicTreeSetup *setup)
         state->flags = state->flags | 0x20;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void sc_musictree_release(void) {}
 void sc_musictree_initialise(void) {}
@@ -275,8 +267,6 @@ typedef struct SCTotemPoleState {
 #define SC_TOTEMPOLE_SETUP_FRONT 0x4490C
 #define SC_TOTEMPOLE_SETUP_LEFT 0x4490F
 
-#pragma peephole off
-#pragma scheduling off
 int sc_totempole_sortCompletionGameBits(u16 *bits, u16 param2)
 {
     u16 stk[4];
@@ -305,21 +295,15 @@ int sc_totempole_sortCompletionGameBits(u16 *bits, u16 param2)
     }
     return changed;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 int sc_totempole_getExtraSize(void) { return 0x8; }
 int sc_totempole_getObjectTypeId(void) { return 0x0; }
 void sc_totempole_free(void) {}
 
-#pragma peephole off
 void sc_totempole_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E55D0); }
-#pragma peephole reset
 
 void sc_totempole_hitDetect(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void sc_totempole_update(int obj)
 {
     SCTotemPoleState *state = ((GameObject *)obj)->extra;
@@ -364,11 +348,7 @@ void sc_totempole_update(int obj)
     ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, state->animSpeed, timeDelta, (ObjAnimEventList *)&stk);
     ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x129, (int *)&lbl_803DDC08);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void sc_totempole_init(int obj, int p2)
 {
     SCTotemPoleState *state = ((GameObject *)obj)->extra;
@@ -388,8 +368,6 @@ void sc_totempole_init(int obj, int p2)
     }
     *(s16 *)obj = (s16)((u32)*(u8 *)(p2 + 0x1a) << 8);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void sc_totempole_release(void) {}
 void sc_totempole_initialise(void) {}
@@ -397,25 +375,17 @@ void sc_totempole_initialise(void) {}
 int sc_cloudrunnera_getExtraSize(void) { return 0x140; }
 int sc_cloudrunnera_getObjectTypeId(void) { return 0xb; }
 
-#pragma scheduling off
-#pragma peephole off
 void sc_cloudrunnera_free(int *obj)
 {
     void *inner = ((GameObject *)obj)->extra;
     (*gObjectTriggerInterface)->freeState(inner);
     ((void (*)(int *, int, int, int, int))(*(int *)(*gTitleMenuControlInterface + 0x8)))(obj, 0xffff, 0, 0, 0);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma peephole off
 void sc_cloudrunnera_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E55E0); }
-#pragma peephole reset
 
 void sc_cloudrunnera_hitDetect(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void sc_cloudrunnera_update(int obj)
 {
     int i;
@@ -519,10 +489,7 @@ void sc_cloudrunnera_update(int obj)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
 void sc_cloudrunnera_init(int obj, int p2)
 {
     int inner;
@@ -554,15 +521,12 @@ void sc_cloudrunnera_init(int obj, int p2)
         ((GameObject *)obj)->anim.modelState->shadowTintB = 0x96;
     }
 }
-#pragma scheduling reset
 
 void sc_cloudrunnera_release(void) {}
 void sc_cloudrunnera_initialise(void) {}
 
-#pragma peephole off
 int fn_801DD170(void) {
     int r;
     if (GameBit_Get(0x639) != 0) { r = 0; } else { r = 1; }
     return r;
 }
-#pragma peephole reset

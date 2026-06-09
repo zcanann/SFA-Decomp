@@ -13,7 +13,6 @@ void ktlazerwall_initialise(void) {}
 
 void ktlazerwall_release(void) {}
 
-#pragma scheduling off
 void ktlazerwall_free(int obj) {
     char *p = ((GameObject *)obj)->extra;
     void *m = *(void **)(p + 0x10);
@@ -22,10 +21,7 @@ void ktlazerwall_free(int obj) {
         *(void **)(p + 0x10) = 0;
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void ktlazerwall_init(int obj, char *arg) {
     char *p = ((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)((s8)arg[0x18] << 8);
@@ -35,11 +31,7 @@ void ktlazerwall_init(int obj, char *arg) {
         *(f32 *)(p + 0xc) = -*(f32 *)(p + 0xc);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void ktlazerwall_update(int obj) {
     int q = *(int *)&((GameObject *)obj)->anim.placementData;
     u8 *runtime = ((GameObject *)obj)->extra;
@@ -95,11 +87,7 @@ void ktlazerwall_update(int obj) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void ktlazerwall_render(int obj) {
     char *p = ((GameObject *)obj)->extra;
     int q = *(int *)&((GameObject *)obj)->anim.placementData;
@@ -126,5 +114,3 @@ void ktlazerwall_render(int obj) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

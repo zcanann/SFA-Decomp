@@ -16,8 +16,6 @@ void drcreator_release(void) {}
 
 void drcreator_render(void) {}
 
-#pragma scheduling off
-#pragma peephole off
 void drcreator_init(int obj, char *arg) {
     char *p = ((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)((s8)arg[0x1e] << 8);
@@ -30,11 +28,7 @@ void drcreator_init(int obj, char *arg) {
     GameBit_Set(0x5dd, 0);
     ((GameObject *)obj)->animEventCallback = (void *)drcreator_spawnProjectileCallback;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void drcreator_update(int obj) {
     int q = *(int *)&((GameObject *)obj)->anim.placementData;
     char *runtime = ((GameObject *)obj)->extra;
@@ -82,11 +76,7 @@ void drcreator_update(int obj) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int drcreator_spawnProjectileCallback(int obj, int unused, u8 *arg) {
     int q = *(int *)&((GameObject *)obj)->anim.placementData;
     char *runtime;
@@ -128,5 +118,3 @@ int drcreator_spawnProjectileCallback(int obj, int unused, u8 *arg) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset

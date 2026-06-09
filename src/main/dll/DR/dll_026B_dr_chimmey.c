@@ -47,16 +47,12 @@ STATIC_ASSERT(offsetof(DRChimmeyObject, state) == 0xb8);
 
 int drchimmey_getExtraSize(void) { return 0x18; }
 
-#pragma peephole off
 void drchimmey_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E69E0);
     }
 }
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 void drchimmey_init(DRChimmeyObject *obj, DRChimmeySetup *setup) {
     DRChimmeyState *state;
 
@@ -67,21 +63,13 @@ void drchimmey_init(DRChimmeyObject *obj, DRChimmeySetup *setup) {
     state->offeringsRemaining = 3;
     storeZeroToFloatParam(&state->timer);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int drchimmey_countdownCallback(DRChimmeyObject *obj, int amount) {
     DRChimmeyState *state = obj->state;
     state->offeringsRemaining -= amount;
     return state->offeringsRemaining <= 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void drchimmey_update(DRChimmeyObject *obj) {
     DRChimmeySetup *setup = obj->setup;
     DRChimmeyState *state = obj->state;
@@ -115,5 +103,3 @@ void drchimmey_update(DRChimmeyObject *obj) {
         GameBit_Set(0xea4, 0);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

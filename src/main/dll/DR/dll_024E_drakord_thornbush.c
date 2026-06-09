@@ -40,8 +40,6 @@ void drakord_thornbush_initialise(void)
 {
 }
 
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_common_subs off
 
 void drakord_thornbush_free(int obj)
@@ -214,5 +212,3 @@ void drakord_thornbush_init(int obj, u8 *init)
 }
 
 #pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset

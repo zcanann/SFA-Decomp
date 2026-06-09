@@ -77,7 +77,6 @@ void dfsh_door2speci_free(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
 void dfsh_door2speci_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
   s32 v;
@@ -87,7 +86,6 @@ void dfsh_door2speci_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     objRenderFn_8003b8f4(lbl_803E4E38);
   }
 }
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -136,8 +134,6 @@ void dfsh_door2speci_update(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void dfsh_door2speci_init(int obj,int def)
 {
   int state;
@@ -162,8 +158,6 @@ void dfsh_door2speci_init(int obj,int def)
   }
   *(short *)state = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -212,8 +206,6 @@ void dfsh_door2speci_initialise(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void fn_801C2914(int obj)
 {
   int def;
@@ -278,8 +270,6 @@ void fn_801C2914(int obj)
     }
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -299,8 +289,6 @@ typedef struct LanternFlagBits {
     u8 rest : 7;
 } LanternFlagBits;
 
-#pragma scheduling off
-#pragma peephole off
 int dfsh_shrine_SeqFn(int obj,int unused,void *seq)
 {
   int objLocal;
@@ -348,8 +336,6 @@ int dfsh_shrine_SeqFn(int obj,int unused,void *seq)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -400,7 +386,6 @@ int dfsh_shrine_getObjectTypeId(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void dfsh_shrine_free(int obj)
 {
   void **state;
@@ -418,4 +403,3 @@ void dfsh_shrine_free(int obj)
   GameBit_Set(0xefa,0);
   GameBit_Set(0xcbb,1);
 }
-#pragma scheduling reset

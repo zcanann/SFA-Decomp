@@ -78,27 +78,21 @@ int hightop_render2(void) { return 0x0; }
 
 int hightop_setScale(void) { return 0x0; }
 
-#pragma scheduling off
-#pragma peephole off
 void hightop_func11(int obj, int val) {
     u8 v = val;
     HighTopRuntime *p = ((GameObject *)obj)->extra;
     p->unkC43 = v;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 f32 hightop_func13(int obj, f32 *out) {
     *out = lbl_803E6B34;
     return lbl_803E6AA8;
 }
 
-#pragma scheduling off
 void hightop_func12(int obj, f32 *a, int *b) {
     *a = lbl_803E6AA8;
     *b = 0;
 }
-#pragma scheduling reset
 
 void hightop_modelMtxFn(int obj, f32 *a, f32 *b, f32 *c) {
     HighTopRuntime *runtime = ((HighTopObject *)obj)->runtime;
@@ -107,15 +101,12 @@ void hightop_modelMtxFn(int obj, f32 *a, f32 *b, f32 *c) {
     *c = runtime->pathPoint2Z;
 }
 
-#pragma scheduling off
 void hightop_free(int obj) {
     ObjGroup_RemoveObject(obj, 0x26);
     ObjGroup_RemoveObject(obj, 0xa);
     (*gGameUIInterface)->airMeterSetShutdown();
 }
-#pragma scheduling reset
 
-#pragma peephole off
 int hightop_stateHandler00(int obj) {
     int p = *(int *)&((GameObject *)obj)->anim.placementData;
     if (*(s8 *)(p + 0x19) != 0) {
@@ -126,10 +117,7 @@ int hightop_stateHandler00(int obj) {
     }
     return 5;
 }
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 int hightop_stateHandler06(int obj, u8 *p2) {
     HighTopRuntime *p = ((GameObject *)obj)->extra;
     if ((s8)p2[0x27a] != 0) {
@@ -140,10 +128,7 @@ int hightop_stateHandler06(int obj, u8 *p2) {
     }
     return 2;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void hightop_func0F(int obj, f32 *ox, f32 *oy, f32 *oz) {
     int *player;
     ObjPosParams pos;
@@ -159,10 +144,7 @@ void hightop_func0F(int obj, f32 *ox, f32 *oy, f32 *oz) {
     setMatrixFromObjectPos(mtx, &pos);
     Matrix_TransformPoint(mtx, lbl_803E6AA8, lbl_803E6B38, lbl_803E6B3C, ox, oy, oz);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int hightop_stateHandler03(int obj, u8 *p2) {
     HighTopRuntime *p = ((GameObject *)obj)->extra;
     f32 zero = lbl_803E6AA8;
@@ -187,11 +169,7 @@ int hightop_stateHandler03(int obj, u8 *p2) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int hightop_stateHandler05(int obj, u8 *p2) {
     HighTopRuntime *p = ((GameObject *)obj)->extra;
     if ((s8)p2[0x27a] != 0) {
@@ -212,11 +190,7 @@ int hightop_stateHandler05(int obj, u8 *p2) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int hightop_interactionCallback(int obj) {
     HighTopRuntime *p;
     seqFn_800394a0(obj);
@@ -229,11 +203,7 @@ int hightop_interactionCallback(int obj) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void hightop_playMovementSfx(int obj, int p2, int p3) {
     int flags = *(int *)((char *)p3 + 0x314);
@@ -253,10 +223,7 @@ void hightop_playMovementSfx(int obj, int p2, int p3) {
     }
 }
 #pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void hightop_getLookTargetYaw(int obj, int mode, int *out) {
     f32 buf[6];
     HighTopRuntime *p;
@@ -282,9 +249,7 @@ void hightop_getLookTargetYaw(int obj, int mode, int *out) {
         break;
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void hightop_renderGroundMarker(int obj, f32 scale) {
     f32 *mtx;
     f32 lx, ly, lz;
@@ -302,10 +267,7 @@ void hightop_renderGroundMarker(int obj, f32 scale) {
     mtx44_mult(lbl_803AD208, mtx, lbl_803AD208);
     fn_8003B950(lbl_803AD208);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void hightop_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
     HighTopRuntime *runtime = ((HighTopObject *)obj)->runtime;
     if (visible != 0) {
@@ -331,11 +293,7 @@ void hightop_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, unde
         runtime->flagsC49.b5 = 0;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void hightop_init(void *obj, u8 *arg) {
     u8 *base = lbl_8032AAB0;
     HighTopRuntime *runtime = ((GameObject *)obj)->extra;
@@ -385,11 +343,7 @@ void hightop_init(void *obj, u8 *arg) {
     runtime->flagsC49.b6 = 0;
     runtime->flagsC4A.b0 = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int hightop_stateHandler08(int obj, u8 *p2) {
     HighTopRuntime *state = ((GameObject *)obj)->extra;
     if ((s8)p2[0x27a] != 0) {
@@ -437,10 +391,7 @@ int hightop_stateHandler08(int obj, u8 *p2) {
     state->unkC30 -= (f32)(u32)framesThisStep;
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void hightop_initialise(void) {
     void **t = gHighTopStateHandlers;
     t[0] = (void *)hightop_stateHandler00;
@@ -456,10 +407,7 @@ void hightop_initialise(void) {
     t[10] = (void *)hightop_stateHandler10;
     gHighTopDefaultStateHandler = (void *)hightop_defaultStateHandler;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 int hightop_handleMotionEvent(int obj, u8 event) {
     HighTopRuntime *runtime = ((GameObject *)obj)->extra;
@@ -489,11 +437,7 @@ int hightop_handleMotionEvent(int obj, u8 event) {
     return 0;
 }
 #pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void hightop_hitDetect(int obj) {
     HighTopRuntime *p = ((GameObject *)obj)->extra;
     f32 l10;
@@ -550,11 +494,7 @@ void hightop_hitDetect(int obj) {
         (*(void (**)(int, char *, int))((char *)*gPlayerInterface + 0x14))(obj, (char *)p, 3);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void hightop_update(int obj) {
     char *p = ((GameObject *)obj)->extra;
     *(s16 *)(p + 0xc16) = 5;
@@ -613,11 +553,7 @@ void hightop_update(int obj) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int hightop_stateHandler01(int obj, int p) {
     f32 v;
     v = lbl_803E6AA8;
@@ -646,11 +582,7 @@ int hightop_stateHandler01(int obj, int p) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int hightop_stateHandler07(int obj, int p) {
     HighTopRuntime *rt = ((GameObject *)obj)->extra;
     f32 v;
@@ -682,11 +614,7 @@ int hightop_stateHandler07(int obj, int p) {
     }
     return 9;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int hightop_stateHandler04(int obj, int p) {
     HighTopRuntime *state = ((GameObject *)obj)->extra;
     int move = -1;
@@ -782,11 +710,7 @@ int hightop_stateHandler04(int obj, int p) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int hightop_stateHandler02(int obj, int p, f32 t) {
     HighTopRuntime *state = ((GameObject *)obj)->extra;
     int cont = 1;
@@ -884,11 +808,7 @@ int hightop_stateHandler02(int obj, int p, f32 t) {
     ObjAnim_SampleRootCurvePhase(*(f32 *)((char *)p + 0x280), (ObjAnimComponent *)obj, (f32 *)((char *)p + 0x2a0));
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int hightop_stateHandler09(int obj, int p) {
     HighTopRuntime *state = ((GameObject *)obj)->extra;
     int *sub = *(int **)&((GameObject *)obj)->anim.placementData;
@@ -996,11 +916,7 @@ int hightop_stateHandler09(int obj, int p) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int hightop_stateHandler10(int obj, int p) {
     HighTopRuntime *rt = ((GameObject *)obj)->extra;
     int r;
@@ -1038,5 +954,3 @@ int hightop_stateHandler10(int obj, int p) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset

@@ -51,8 +51,6 @@ typedef struct {
     u8 b01 : 1;
 } HaloSnowBikeFlags;
 
-#pragma scheduling off
-#pragma peephole off
 void SnowBike_hitDetect(int obj)
 {
     SnowBikeState *state;
@@ -179,5 +177,3 @@ clamp:
     state->unk174 = ((GameObject *)obj)->anim.localPosZ;
     state->unk42C = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset

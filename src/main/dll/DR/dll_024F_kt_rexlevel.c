@@ -11,24 +11,19 @@ void ktrexlevel_initialise(void) {}
 
 void ktrexlevel_release(void) {}
 
-#pragma peephole off
 void ktrexlevel_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E67A0);
     }
 }
-#pragma peephole reset
 
-#pragma scheduling off
 void ktrexlevel_clearPathGameBits(void) {
     GameBit_Set(0x54a, 0);
     GameBit_Set(0x54e, 0);
     GameBit_Set(0x552, 0);
     GameBit_Set(0x556, 0);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void ktrexlevel_free(void) {
     GameBit_Set(0xefd, 0);
     GameBit_Set(0xcd1, 0);
@@ -38,9 +33,7 @@ void ktrexlevel_free(void) {
     GameBit_Set(0xedb, 0);
     GameBit_Set(0xcbb, 0);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void ktrexlevel_updatePathGameBits(void) {
     if (GameBit_Get(0x55a) != 0) {
         GameBit_Set(0x54a, 2);
@@ -54,10 +47,7 @@ void ktrexlevel_updatePathGameBits(void) {
         GameBit_Set(0x556, 2);
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void ktrexlevel_init(int obj) {
     char *p = ((GameObject *)obj)->extra;
     setDrawCloudsAndLights(0);
@@ -74,11 +64,7 @@ void ktrexlevel_init(int obj) {
     ((GameObject *)obj)->unkF4 = 0;
     GameBit_Set(0xefd, 1);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void ktrexlevel_update(int obj) {
     if (((GameObject *)obj)->unkF4 == 0) {
         skyFn_80088c94(7, 1);
@@ -91,5 +77,3 @@ void ktrexlevel_update(int obj) {
     }
     lbl_803DDD40 = GameBit_Get(0x572);
 }
-#pragma peephole reset
-#pragma scheduling reset

@@ -213,16 +213,12 @@ void DR_EarthWarrior_func15(int obj, f32 *x, f32 *y, f32 *z)
     *z = ((GameObject *)obj)->anim.localPosZ;
 }
 
-#pragma scheduling off
-#pragma peephole off
 int DR_EarthWarrior_stateHandler00(int obj)
 {
     EarthWarriorState *inner = ((GameObject *)obj)->extra;
     inner->sub.flags98C |= 0x20;
     return 2;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void DR_EarthWarrior_modelMtxFn(int obj, f32 *x, f32 *y, f32 *z)
 {
@@ -232,7 +228,6 @@ void DR_EarthWarrior_modelMtxFn(int obj, f32 *x, f32 *y, f32 *z)
     *z = inner->sub.unk8E8;
 }
 
-#pragma peephole off
 int DR_EarthWarrior_func11(int obj)
 {
     EarthWarriorState *inner = ((GameObject *)obj)->extra;
@@ -241,9 +236,7 @@ int DR_EarthWarrior_func11(int obj)
     }
     return 2;
 }
-#pragma peephole reset
 
-#pragma peephole off
 int DR_EarthWarrior_func14(int obj)
 {
     EarthWarriorState *inner = ((GameObject *)obj)->extra;
@@ -252,16 +245,13 @@ int DR_EarthWarrior_func14(int obj)
     }
     return 1;
 }
-#pragma peephole reset
 
-#pragma scheduling off
 void DR_EarthWarrior_func18(int obj, f32 *a, int *b)
 {
     EarthWarriorState *inner = ((GameObject *)obj)->extra;
     *a = (f32)(s32)inner->sub.unk4D4;
     *b = inner->sub.unk4D6;
 }
-#pragma scheduling reset
 
 void DR_EarthWarrior_release(void)
 {
@@ -271,8 +261,6 @@ void DR_EarthWarrior_release(void)
     }
 }
 
-#pragma scheduling off
-#pragma peephole off
 int DR_EarthWarrior_stateHandler03(int obj, int p2)
 {
     EarthWarriorState *inner = ((GameObject *)obj)->extra;
@@ -308,10 +296,7 @@ int DR_EarthWarrior_stateHandler03(int obj, int p2)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void DR_EarthWarrior_initialise(void)
 {
     ((void **)gDREarthWarriorStateHandlers)[0] = (void *)DR_EarthWarrior_stateHandler00;
@@ -323,9 +308,7 @@ void DR_EarthWarrior_initialise(void)
         lbl_803DE4D0 = Resource_Acquire(0x5a, 1);
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 f32 DR_EarthWarrior_func19(int obj, f32 *out)
 {
     EarthWarriorState *inner = ((GameObject *)obj)->extra;
@@ -338,10 +321,7 @@ f32 DR_EarthWarrior_func19(int obj, f32 *out)
     *out = -v;
     return lbl_803E8304;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void DR_EarthWarrior_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
 {
     EarthWarriorState *inner = ((GameObject *)p1)->extra;
@@ -356,11 +336,7 @@ void DR_EarthWarrior_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
         dll_2E_func06(p1, (char *)(char *)inner + 0x3ec, 0);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void DR_EarthWarrior_free(int obj)
 {
     EarthWarriorState *inner = ((GameObject *)obj)->extra;
@@ -376,10 +352,7 @@ void DR_EarthWarrior_free(int obj)
         Obj_FreeObject(inner->unkB54);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void DR_EarthWarrior_func23(int obj, int mode)
 {
     EarthWarriorState *inner = ((GameObject *)obj)->extra;
@@ -390,10 +363,7 @@ void DR_EarthWarrior_func23(int obj, int mode)
         *(f32 *)((char *)lbl_8033527C + 0x24) = inner->sub.unk8EC;
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void DR_EarthWarrior_func17(int obj, int param)
 {
     EarthWarriorState *inner = ((GameObject *)obj)->extra;
@@ -414,10 +384,7 @@ void DR_EarthWarrior_func17(int obj, int param)
         GameBit_Set(0x7d4, 0);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void DR_EarthWarrior_func22(int obj, f32 scale)
 {
     struct {
@@ -438,10 +405,7 @@ void DR_EarthWarrior_func22(int obj, f32 scale)
     mtx44_mult(lbl_803DB170, (void *)mtx, lbl_803DB170);
     fn_8003B950((int)lbl_803DB170);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int fn_802BDBE8(int obj, int p2, int p3)
 {
     EarthWarriorState *inner = ((GameObject *)obj)->extra;
@@ -480,11 +444,7 @@ int fn_802BDBE8(int obj, int p2, int p3)
     ((GameObject *)obj)->anim.velocityZ = fz;
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_802BE6E8(int obj, int t, int p3)
 {
     int inner = *(int *)&((GameObject *)obj)->extra;
@@ -525,11 +485,7 @@ void fn_802BE6E8(int obj, int t, int p3)
     (*gPathControlInterface)->advance((void *)obj, pathState, timeDelta);
     ((GameObject *)obj)->anim.rotX = *(s16 *)((char *)q + 0x478);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int fn_802BC830(int obj, int p2, int p3)
 {
     ((EarthWarriorSub *)p2)->unk360 |= 0x1000000;
@@ -566,11 +522,7 @@ int fn_802BC830(int obj, int p2, int p3)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_common_subs off
 void fn_802BCA10(int obj, int q, int p2)
 {
@@ -656,11 +608,7 @@ void fn_802BCA10(int obj, int q, int p2)
     }
 }
 #pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int DR_EarthWarrior_stateHandler02(int obj, int p2)
 {
     int inner = *(int *)&((GameObject *)obj)->extra;
@@ -870,11 +818,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
     fn_802BCA10(obj, q, p2);
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int DR_EarthWarrior_stateHandler01(int obj, int p2)
 {
     EarthWarriorState *inner = ((GameObject *)obj)->extra;
@@ -962,11 +906,7 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
     fn_802BCA10(obj, (int)q, p2);
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void DR_EarthWarrior_hitDetect(int obj)
 {
     void *hitObj;
@@ -1084,11 +1024,7 @@ void DR_EarthWarrior_hitDetect(int obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void DR_EarthWarrior_update(int obj)
 {
     EarthWarriorState *inner = ((GameObject *)obj)->extra;
@@ -1187,11 +1123,7 @@ void DR_EarthWarrior_update(int obj)
         inner->sub.flags8D8 &= ~8;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void DR_EarthWarrior_init(int obj, int p2)
 {
     register u8 *base = lbl_803351F8;
@@ -1267,5 +1199,3 @@ void DR_EarthWarrior_init(int obj, int p2)
     *(int *)((char *)obj + 0x108) = (int)fn_802BC788;
     fn_80026C30(*(int *)((char *)inner + 0x14f8), 1);
 }
-#pragma peephole reset
-#pragma scheduling reset

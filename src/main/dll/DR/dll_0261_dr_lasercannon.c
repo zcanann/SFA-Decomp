@@ -64,8 +64,6 @@ void drlasercannon_initialise(void) {}
 
 void drlasercannon_release(void) {}
 
-#pragma scheduling off
-#pragma peephole off
 int drlasercannon_aimAtTarget(int self, int target, int *out, int maxRate, f32 *eyePos) {
     extern int getAngle(f32 x, f32 z);
     s16 *vec;
@@ -148,11 +146,7 @@ int drlasercannon_aimAtTarget(int self, int target, int *out, int maxRate, f32 *
     delta = *(s16 *)self - *(s16 *)((char *)out + DR_LASERCANNON_AIM_YAW);
     return ((delta >= 0) ? delta : -delta) > 0x100;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void drlasercannon_free(int obj) {
     char *p = ((GameObject *)obj)->extra;
     if (*(void **)(p + DR_LASERCANNON_STATE_FIREPIPE_OBJECT) != 0) {
@@ -164,11 +158,7 @@ void drlasercannon_free(int obj) {
     }
     ObjGroup_RemoveObject(obj, DR_LASERCANNON_GROUP_ID);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void drlasercannon_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
     char *p = ((GameObject *)obj)->extra;
     if (visible != 0) {
@@ -179,11 +169,7 @@ void drlasercannon_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4
             *(f32 *)(p + DR_LASERCANNON_STATE_MUZZLE_Y) - lbl_803E68EC;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 int drlasercannon_getTrackedTarget(int obj, int *arg) {
     int *tricky = getTrickyObject();
@@ -213,11 +199,7 @@ int drlasercannon_getTrackedTarget(int obj, int *arg) {
     return 0;
 }
 #pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void drlasercannon_init(int obj, char *arg) {
     char *p = ((GameObject *)obj)->extra;
     f32 fz;
@@ -268,11 +250,7 @@ void drlasercannon_init(int obj, char *arg) {
         *(s16 *)(p + DR_LASERCANNON_STATE_OPTIONAL_GAMEBIT) = -1;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void drlasercannon_hitDetect(int obj) {
     char *p = ((GameObject *)obj)->extra;
     int q = *(int *)&((GameObject *)obj)->anim.placementData;
@@ -320,11 +298,7 @@ void drlasercannon_hitDetect(int obj) {
         *(int **)(p + DR_LASERCANNON_STATE_LAST_HIT_OBJECT) = a8;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void drlasercannon_update(int obj) {
     int *state = ((GameObject *)obj)->extra;
     int *sub = *(int **)&((GameObject *)obj)->anim.placementData;
@@ -509,5 +483,3 @@ void drlasercannon_update(int obj) {
                     lbl_803E692C);
     ((GameObject *)obj)->anim.localPosY += *(f32 *)((char *)state + DR_LASERCANNON_STATE_BOB_OFFSET);
 }
-#pragma peephole reset
-#pragma scheduling reset

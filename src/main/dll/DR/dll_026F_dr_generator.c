@@ -11,21 +11,16 @@ void drgenerator_initialise(void) {}
 
 void drgenerator_release(void) {}
 
-#pragma scheduling off
 void drgenerator_free(int obj) {
     ObjGroup_RemoveObject(obj, 0x3);
 }
-#pragma scheduling reset
 
-#pragma peephole off
 void drgenerator_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6B58);
     }
 }
-#pragma peephole reset
 
-#pragma scheduling off
 int drgenerator_eventCallback(int obj, int unused, u8 *arg) {
     int i;
     for (i = 0; i < arg[0x8b]; i++) {
@@ -38,10 +33,7 @@ int drgenerator_eventCallback(int obj, int unused, u8 *arg) {
     }
     return 0;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void drgenerator_init(int obj, char *arg) {
     char *p = ((GameObject *)obj)->extra;
     f32 fv;
@@ -78,11 +70,7 @@ void drgenerator_init(int obj, char *arg) {
     ((GameObject *)obj)->anim.velocityY = fv;
     ((GameObject *)obj)->anim.velocityX = fv;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void drgenerator_hitDetect(int obj) {
     char *p = ((GameObject *)obj)->extra;
     int q = *(int *)&((GameObject *)obj)->anim.placementData;
@@ -120,11 +108,7 @@ void drgenerator_hitDetect(int obj) {
         ObjHits_DisableObject(obj);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void drgenerator_update(int obj) {
     char *p = ((GameObject *)obj)->extra;
     int q = *(int *)&((GameObject *)obj)->anim.placementData;
@@ -170,5 +154,3 @@ loop:
         (*gPartfxInterface)->spawnObject((void *)obj, 0x690, NULL, 1, -1, NULL);
     } while (n-- != 0);
 }
-#pragma peephole reset
-#pragma scheduling reset

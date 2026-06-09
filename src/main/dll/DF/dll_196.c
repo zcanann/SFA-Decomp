@@ -21,7 +21,6 @@ extern f32 lbl_803E4E24;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 #pragma peephole off
 int dfropenode_syncRopeToEndpoints(DFropenodeObject *obj)
 {
@@ -115,7 +114,6 @@ int dfropenode_syncRopeToEndpoints(DFropenodeObject *obj)
   extra->maxZ += margin;
   return 0;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
