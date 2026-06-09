@@ -881,8 +881,8 @@ int fn_801A27B8(int obj, int id)
         }
         for (j = 0; j < *(u8 *)(block + 0xa2); j++) {
             u8 *g = fn_8006070C(block, j);
-            int k;
             u8 *p;
+            int k;
             k = 0;
             p = g;
             for (; k < *(u8 *)(g + 0x41); k++) {
