@@ -3,6 +3,7 @@
 #include "main/camera_interface.h"
 #include "main/camera_object.h"
 #include "main/dll/CAM/camdebug_state.h"
+#include "main/dll/CAM/camstatic_state.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/game_object.h"
 #include "main/dll/CAM/viewfinder_state.h"
@@ -56,7 +57,7 @@ extern undefined4 FUN_80294d00();
 extern u8 framesThisStep;
 extern ViewfinderState* lbl_803DD548;
 extern CameraModeDebugState* lbl_803DD550;
-extern undefined4* lbl_803DD558;
+extern CameraModeStaticState* lbl_803DD558;
 extern f64 lbl_803E17D8;
 extern f64 lbl_803E1838;
 extern f64 lbl_803E1880;
@@ -856,12 +857,12 @@ void CameraModeStatic_update(short *param_1)
   double dVar6;
   double dVar7;
   
-  if (*(byte *)((int)lbl_803DD558 + 0xf5) != 0) {
+  if (lbl_803DD558->missingObject != 0) {
     (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
   }
   else {
     iVar3 = *(int *)(param_1 + 0x52);
-    iVar4 = *(int *)(*lbl_803DD558 + 0x4c);
+    iVar4 = (int)lbl_803DD558->staticObject->anim.placementData;
     if ((*(byte *)(iVar4 + 0x1b) & 1) == 0) {
       *param_1 = *(short *)(iVar4 + 0x1c) + -0x8000;
     }
@@ -871,9 +872,9 @@ void CameraModeStatic_update(short *param_1)
     if ((*(byte *)(iVar4 + 0x1b) & 4) == 0) {
       param_1[2] = *(short *)(iVar4 + 0x20);
     }
-    *(undefined4 *)(param_1 + 0xc) = *(undefined4 *)(*lbl_803DD558 + 0x18);
-    *(undefined4 *)(param_1 + 0xe) = *(undefined4 *)(*lbl_803DD558 + 0x1c);
-    *(undefined4 *)(param_1 + 0x10) = *(undefined4 *)(*lbl_803DD558 + 0x20);
+    ((CameraObject *)param_1)->anim.worldPosX = lbl_803DD558->staticObject->anim.worldPosX;
+    ((CameraObject *)param_1)->anim.worldPosY = lbl_803DD558->staticObject->anim.worldPosY;
+    ((CameraObject *)param_1)->anim.worldPosZ = lbl_803DD558->staticObject->anim.worldPosZ;
     *(float *)(param_1 + 0x5a) = (float)(uint)*(byte *)(iVar4 + 0x1a);
     dVar6 = (double)(*(float *)(param_1 + 0xc) - *(float *)(iVar3 + 0x18));
     dVar7 = (double)(*(float *)(param_1 + 0xe) - *(float *)(iVar3 + 0x1c));
@@ -937,16 +938,16 @@ void CameraModeStatic_init(u8 *cam, int p2, int *p3)
 
   state = ((CameraObject *)cam)->anim.targetObj;
   if (lbl_803DD558 == NULL) {
-    lbl_803DD558 = (undefined4 *)mmAlloc(248, 15, 0);
+    lbl_803DD558 = (CameraModeStaticState *)mmAlloc(sizeof(CameraModeStaticState), 15, 0);
   }
-  *(u8 *)((int)lbl_803DD558 + 244) = 1;
-  *(u8 *)((int)lbl_803DD558 + 245) = 0;
+  lbl_803DD558->active = 1;
+  lbl_803DD558->missingObject = 0;
   best = (u8 *)fn_80109B04(*(f32 *)(state + 24), *(f32 *)(state + 28), *(f32 *)(state + 32), *p3, 18);
   if (best == NULL) {
-    *(u8 *)((int)lbl_803DD558 + 245) = 1;
+    lbl_803DD558->missingObject = 1;
     return;
   }
-  *(int *)lbl_803DD558 = (int)best;
+  lbl_803DD558->staticObject = (GameObject *)best;
   setup = *(u8 **)(best + 76);
   dx = *(f32 *)(best + 24) - *(f32 *)(state + 24);
   dy = *(f32 *)(best + 28) - *(f32 *)(state + 28);
