@@ -3679,7 +3679,8 @@ extern f32 lbl_803E1B18;
 /* CameraModeForceBehind_init  addr=0x801100B8  size=0x124  linkage=global */
 #pragma scheduling off
 void CameraModeForceBehind_init(u8 *obj, int p2, f32 *p3) {
-    u8 *state = *(u8 **)&((GameObject *)obj)->anim.targetObj;
+    CameraObject *camera = (CameraObject *)obj;
+    GameObject *target = (GameObject *)camera->anim.targetObj;
     f32 angle;
     f32 cosv, sinv;
     f32 baseX, baseZ;
@@ -3688,16 +3689,16 @@ void CameraModeForceBehind_init(u8 *obj, int p2, f32 *p3) {
     f32 dx, dz;
 
     {
-        int a = *(s16 *)state;
+        int a = target->anim.rotX;
         angle = lbl_803E1B00 * (f32)a / lbl_803E1B04;
     }
     cosv = mathSinf(angle);
     sinv = mathCosf(angle);
-    pos[0] = cosv * lbl_803DB9C8 + (baseX = ((GameObject *)state)->anim.worldPosX);
-    pos[1] = lbl_803E1B08 + ((GameObject *)state)->anim.worldPosY;
-    baseZ = ((GameObject *)state)->anim.worldPosZ;
+    pos[0] = cosv * lbl_803DB9C8 + (baseX = target->anim.worldPosX);
+    pos[1] = lbl_803E1B08 + target->anim.worldPosY;
+    baseZ = target->anim.worldPosZ;
     pos[2] = sinv * lbl_803DB9C8 + baseZ;
-    camcontrol_traceFromTarget(pos, state, pos, &extra);
+    camcontrol_traceFromTarget(pos, target, pos, &extra);
     dx = pos[0] - baseX;
     dz = pos[2] - baseZ;
     lbl_803DD5B0 = sqrtf(dx * dx + dz * dz);
@@ -4528,7 +4529,8 @@ void CameraModeCloudRunner_update(u8 *obj) {
 #pragma peephole off
 #pragma scheduling off
 void CameraModeForceBehind_update(u8 *obj) {
-    u8 *state = *(u8 **)&((GameObject *)obj)->anim.targetObj;
+    CameraObject *camera = (CameraObject *)obj;
+    GameObject *target = (GameObject *)camera->anim.targetObj;
     s16 extra;
     s16 pitch;
     s16 yaw;
@@ -4540,55 +4542,55 @@ void CameraModeForceBehind_update(u8 *obj) {
     f32 cosYaw, sinYaw, sinPitch, cosPitch;
     f32 radius;
 
-    angle = lbl_803E1B00 * (f32)(0x8000 - *(s16 *)obj) / lbl_803E1B04;
+    angle = lbl_803E1B00 * (f32)(0x8000 - camera->anim.rotX) / lbl_803E1B04;
     cosv = mathSinf(angle);
     sinv = mathCosf(angle);
-    sx = ((GameObject *)state)->anim.worldPosX;
+    sx = target->anim.worldPosX;
     pos[0] = cosv * lbl_803DB9C8 + sx;
-    pos[1] = lbl_803E1B08 + ((GameObject *)state)->anim.worldPosY;
-    sz = ((GameObject *)state)->anim.worldPosZ;
+    pos[1] = lbl_803E1B08 + target->anim.worldPosY;
+    sz = target->anim.worldPosZ;
     pos[2] = sinv * lbl_803DB9C8 + sz;
-    camcontrol_traceFromTarget(pos, state, pos, &extra);
+    camcontrol_traceFromTarget(pos, target, pos, &extra);
     lbl_803DD5A8 = lbl_803DD5B0 = sqrtf((pos[0] - sx) * (pos[0] - sx) + (pos[2] - sz) * (pos[2] - sz));
 
-    fn_8029697C((int)state, &yaw, &pitch);
-    yaw = (s16)((0x8000 - *(s16 *)state) + (yaw >> 1));
+    fn_8029697C((int)target, &yaw, &pitch);
+    yaw = (s16)((0x8000 - target->anim.rotX) + (yaw >> 1));
     pitch = (s16)(pitch >> 1);
-    baseX = ((GameObject *)state)->anim.worldPosX;
-    baseY = ((GameObject *)state)->anim.worldPosY + lbl_803DD5AC;
-    baseZ = ((GameObject *)state)->anim.worldPosZ;
+    baseX = target->anim.worldPosX;
+    baseY = target->anim.worldPosY + lbl_803DD5AC;
+    baseZ = target->anim.worldPosZ;
 
-    yaw = (s16)(yaw - (u16)*(s16 *)obj);
+    yaw = (s16)(yaw - (u16)camera->anim.rotX);
     if (yaw > 0x8000) {
         yaw -= 0xffff;
     }
     if (yaw < -0x8000) {
         yaw += 0xffff;
     }
-    *(s16 *)obj = (s16)(s32)((f32)(s32)*(s16 *)obj + interpolate((f32)yaw, lbl_803E1B18, timeDelta));
+    camera->anim.rotX = (s16)(s32)((f32)(s32)camera->anim.rotX + interpolate((f32)yaw, lbl_803E1B18, timeDelta));
 
-    pitch = (s16)(pitch - (u16)*(s16 *)(obj + 2));
+    pitch = (s16)(pitch - (u16)camera->anim.rotY);
     if (pitch > 0x8000) {
         pitch -= 0xffff;
     }
     if (pitch < -0x8000) {
         pitch += 0xffff;
     }
-    *(s16 *)(obj + 2) = (s16)(s32)((f32)(s32)*(s16 *)(obj + 2) +
+    camera->anim.rotY = (s16)(s32)((f32)(s32)camera->anim.rotY +
                                    interpolate((f32)pitch, lbl_803E1B18, timeDelta));
 
-    cosYaw = mathSinf(lbl_803E1B00 * (f32)(s32)(*(s16 *)obj - 0x4000) / lbl_803E1B04);
-    sinYaw = mathCosf(lbl_803E1B00 * (f32)(s32)(*(s16 *)obj - 0x4000) / lbl_803E1B04);
-    sinPitch = mathCosf(lbl_803E1B00 * (f32)(s32)*(s16 *)(obj + 2) / lbl_803E1B04);
-    cosPitch = mathSinf(lbl_803E1B00 * (f32)(s32)*(s16 *)(obj + 2) / lbl_803E1B04);
+    cosYaw = mathSinf(lbl_803E1B00 * (f32)(s32)(camera->anim.rotX - 0x4000) / lbl_803E1B04);
+    sinYaw = mathCosf(lbl_803E1B00 * (f32)(s32)(camera->anim.rotX - 0x4000) / lbl_803E1B04);
+    sinPitch = mathCosf(lbl_803E1B00 * (f32)(s32)camera->anim.rotY / lbl_803E1B04);
+    cosPitch = mathSinf(lbl_803E1B00 * (f32)(s32)camera->anim.rotY / lbl_803E1B04);
     radius = lbl_803DD5A8;
-    *(f32 *)(obj + 24) = baseX + radius * sinPitch * sinYaw;
-    *(f32 *)(obj + 28) = baseY + radius * cosPitch;
-    *(f32 *)(obj + 32) = baseZ + radius * sinPitch * cosYaw;
-    camcontrol_traceFromTarget(&((GameObject *)obj)->anim.worldPosX, state, &((GameObject *)obj)->anim.worldPosX, &((GameObject *)obj)->anim.rotY);
-    Obj_TransformWorldPointToLocal(*(f32 *)(obj + 24), *(f32 *)(obj + 28), *(f32 *)(obj + 32),
-                                   &((GameObject *)obj)->anim.localPosX, &((GameObject *)obj)->anim.localPosY, &((GameObject *)obj)->anim.localPosZ,
-                                   *(int *)(obj + 48));
+    camera->anim.worldPosX = baseX + radius * sinPitch * sinYaw;
+    camera->anim.worldPosY = baseY + radius * cosPitch;
+    camera->anim.worldPosZ = baseZ + radius * sinPitch * cosYaw;
+    camcontrol_traceFromTarget(&camera->anim.worldPosX, target, &camera->anim.worldPosX, &camera->anim.rotY);
+    Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY, camera->anim.worldPosZ,
+                                   &camera->anim.localPosX, &camera->anim.localPosY, &camera->anim.localPosZ,
+                                   *(int *)&camera->anim.parent);
 }
 #pragma peephole reset
 #pragma scheduling reset
