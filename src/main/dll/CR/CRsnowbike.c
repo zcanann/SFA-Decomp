@@ -1029,7 +1029,7 @@ void sc_levelcontrol_update(int obj)
     }
     if (((ScLevelControlState *)state)->areaCell != 0xe) {
         if (coordsToMapCell(((GameObject *)player)->anim.localPosX, ((GameObject *)player)->anim.localPosZ) == 0xe) {
-            u8 c = (*gMapEventInterface)->getMode(0xe);
+            u8 c = ((int (*)(s32))(*gMapEventInterface)->getMode)(0xe);
             Obj_GetPlayerObject();
             switch (c) {
             case 1:
@@ -1052,13 +1052,14 @@ void sc_levelcontrol_update(int obj)
     }
     if (((ScLevelControlState *)state)->fadeTimer != lbl_803E5558) {
         if ((((GameObject *)player)->objectFlags & 0x1000) == 0) {
+            f32 lim;
             if (lbl_803E5550 == ((ScLevelControlState *)state)->fadeTimer) {
                 (*gScreenTransitionInterface)->start(0x73, 1);
             }
             ((ScLevelControlState *)state)->fadeTimer -= timeDelta;
-            if (((ScLevelControlState *)state)->fadeTimer <= lbl_803E5558) {
-                ((ScLevelControlState *)state)->fadeTimer = lbl_803E5558;
-                ((ScLevelControlState *)state)->timer10 = lbl_803E5558;
+            if (((ScLevelControlState *)state)->fadeTimer <= (lim = lbl_803E5558)) {
+                ((ScLevelControlState *)state)->fadeTimer = lim;
+                ((ScLevelControlState *)state)->timer10 = lim;
                 GameBit_Set(0x2b8, 0);
                 GameBit_Set(0x4bd, 1);
                 GameBit_Set(0x81, 0);
@@ -1075,7 +1076,7 @@ void sc_levelcontrol_update(int obj)
                 (*gScreenTransitionInterface)->start(0x73, 1);
             }
             ((ScLevelControlState *)state)->timer10 -= timeDelta;
-            if (((ScLevelControlState *)state)->timer10 <= lbl_803E5558) {
+            if (((ScLevelControlState *)state)->timer10 <= *(f32 *)&lbl_803E5558) {
                 GameBit_Set(0x640, 1);
                 ((ScLevelControlState *)state)->timer10 = lbl_803E5558;
                 GameBit_Set(0x2b8, 0);
@@ -1092,7 +1093,7 @@ void sc_levelcontrol_update(int obj)
         if (((ScLevelControlState *)state)->fog0C > lbl_803E5558) {
             gameTextShow(0x429);
             ((ScLevelControlState *)state)->fog0C -= timeDelta;
-            if (((ScLevelControlState *)state)->fog0C < lbl_803E5558) {
+            if (((ScLevelControlState *)state)->fog0C < *(f32 *)&lbl_803E5558) {
                 ((ScLevelControlState *)state)->fog0C = lbl_803E5558;
             }
         }

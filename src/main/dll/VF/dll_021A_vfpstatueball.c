@@ -51,7 +51,7 @@ void vfpstatueball_update(int *obj) {
         state->particleAlpha = 5;
     }
 
-    state->timer = state->timer - (s32)timeDelta;
+    state->timer -= (s32)timeDelta;
 
     variant = *(s16 *)((char *)setup + 0x1a);
     if (variant == 0) {
