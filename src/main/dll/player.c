@@ -13059,8 +13059,8 @@ int fn_8029FA24(int obj, int state, f32 fv)
             break;
         }
         {
-            int t = (*(int (*)(int))(*(int *)(*(int *)((char *)sub + 0x68) + 0x24)))(sub);
-            (*(void (*)(int, int))(*(int *)(*(int *)((char *)sub + 0x68) + 0x3c)))(sub, 1);
+            int t = (*(int (*)(int))(*(int *)(*(int *)(*(int *)((char *)sub + 0x68)) + 0x24)))(sub);
+            (*(void (*)(int, int))(*(int *)(*(int *)(*(int *)((char *)sub + 0x68)) + 0x3c)))(sub, 1);
             switch (t) {
             case 1:
                 sel = 6;
@@ -13082,7 +13082,7 @@ int fn_8029FA24(int obj, int state, f32 fv)
                                       j0, &scratch);
         ObjModel_SampleJointTransform(joint, 0, 0, lbl_803E7EE0, ((GameObject *)obj)->anim.rootMotionScale,
                                       j1, &scratch);
-        (*(void (*)(int, void *, void *, void *))(*(int *)(*(int *)((char *)sub + 0x68) + 0x28)))(
+        (*(void (*)(int, void *, void *, void *))(*(int *)(*(int *)(*(int *)((char *)sub + 0x68)) + 0x28)))(
             sub, &wpos[0], &wpos[1], &wpos[2]);
         wpos[0] = wpos[0] - ((GameObject *)obj)->anim.localPosX;
         wpos[1] = wpos[1] - ((GameObject *)obj)->anim.localPosY;
@@ -13108,7 +13108,7 @@ int fn_8029FA24(int obj, int state, f32 fv)
         ((GameObject *)obj)->anim.localPosZ =
             ((GameObject *)obj)->anim.currentMoveProgress * inner->unk6C8 +
             inner->unk6BC;
-        (*(void (*)(int, void *, void *, void *))(*(int *)(*(int *)((char *)sub + 0x68) + 0x34)))(
+        (*(void (*)(int, void *, void *, void *))(*(int *)(*(int *)(*(int *)((char *)sub + 0x68)) + 0x34)))(
             sub, &wpos[0], &wpos[1], &wpos[2]);
         (*gCameraInterface)->overridePos(
             ((GameObject *)obj)->anim.currentMoveProgress * (wpos[0] - inner->unk6B4) +
@@ -13120,7 +13120,7 @@ int fn_8029FA24(int obj, int state, f32 fv)
     }
     if (*(s8 *)((char *)state + 0x27a) == 0 && *(s8 *)((char *)state + 0x346) != 0) {
         ObjAnim_SetCurrentMove(obj, *(s16 *)inner->unk6E8, lbl_803E7EA4, 1);
-        (*(void (*)(int, int))(*(int *)(*(int *)((char *)sub + 0x68) + 0x3c)))(sub, 2);
+        (*(void (*)(int, int))(*(int *)(*(int *)(*(int *)((char *)sub + 0x68)) + 0x3c)))(sub, 2);
         if (arrayIndexOf((s16 *)(base + 0x160), 4, *(s16 *)((char *)sub + 0x46)) != -1) {
             *(int *)((char *)state + 0x308) = (int)fn_8029F67C;
             return 0x1b;
