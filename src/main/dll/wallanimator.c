@@ -388,7 +388,7 @@ void FUN_80169834(undefined8 param_1,undefined8 param_2,double param_3,undefined
   double dVar3;
   double dVar4;
   
-  pfVar2 = *(float **)(param_9 + 0xb8);
+  pfVar2 = ((GameObject *)param_9)->extra;
   dVar4 = (double)*pfVar2;
   fVar1 = pfVar2[2];
   dVar3 = (double)fVar1;
@@ -464,14 +464,14 @@ void FUN_80169a44(undefined8 param_1,double param_2,double param_3,undefined8 pa
   undefined4 local_10;
   uint uStack_c;
   
-  piVar2 = *(int **)(param_9 + 0xb8);
+  piVar2 = ((GameObject *)param_9)->extra;
   ((GameObject *)param_9)->anim.alpha = 0;
   *(undefined4 *)(param_9 + 0xf4) = 0xdc;
-  (*(ObjHitsPriorityState **)(param_9 + 0x54))->flags &= ~1;
+  (*(ObjHitsPriorityState **)&((GameObject *)param_9)->anim.hitReactState)->flags &= ~1;
   if (*piVar2 != 0) {
     FUN_800175cc((double)lbl_803E3D78,*piVar2,'\0');
   }
-  if (*(short *)(param_9 + 0x46) == 0x869) {
+  if (((GameObject *)param_9)->anim.seqId == 0x869) {
     uVar1 = randomGetRange(0,1);
     uStack_c = randomGetRange(0x32,0x3c);
     FUN_8008112c((double)(float)((double)CONCAT44(0x43300000,uStack_c) - DOUBLE_803e3d80),param_2,

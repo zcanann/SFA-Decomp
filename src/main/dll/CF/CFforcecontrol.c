@@ -723,8 +723,8 @@ void FUN_8018c928(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   uint uStack_18;
   uint local_14;
   
-  iVar4 = *(int *)(param_9 + 0x4c);
-  puVar5 = *(undefined2 **)(param_9 + 0xb8);
+  iVar4 = *(int *)&((GameObject *)param_9)->anim.placementData;
+  puVar5 = ((GameObject *)param_9)->extra;
   iVar2 = FUN_80017a98();
   if ((*(byte *)(puVar5 + 0x2e) >> 6 & 1) == 0) {
     if (((int)*(short *)(iVar4 + 0x1e) == 0xffffffff) ||
@@ -751,10 +751,10 @@ void FUN_8018c928(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
         *(byte *)(puVar5 + 0x2e) = *(byte *)(puVar5 + 0x2e) & 0x7f | 0x80;
         ObjGroup_AddObject(param_9,0x4f);
       }
-      fVar1 = *(float *)(param_9 + 0x10) - *(float *)(iVar2 + 0x10);
+      fVar1 = ((GameObject *)param_9)->anim.localPosY - *(float *)(iVar2 + 0x10);
       if ((((FLOAT_803e49a0 < fVar1) && (fVar1 < FLOAT_803e49a4)) &&
           (uVar3 = GameBit_Get(0xe97), uVar3 == 0)) &&
-         (dVar6 = FUN_80017708((float *)(param_9 + 0x18),(float *)(iVar2 + 0x18)),
+         (dVar6 = FUN_80017708((float *)&((GameObject *)param_9)->anim.worldPosX,(float *)(iVar2 + 0x18)),
          dVar6 < (double)FLOAT_803e49a8)) {
         *puVar5 = 0xcbe;
         ObjMsg_SendToObject(dVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar2,0x7000a,

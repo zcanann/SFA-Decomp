@@ -306,12 +306,12 @@ void FUN_801c5920(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 {
   undefined8 uVar1;
   
-  (*gObjectTriggerInterface)->freeState(*(u8 **)(param_9 + 0xb8));
+  (*gObjectTriggerInterface)->freeState(((GameObject *)param_9)->extra);
   uVar1 = (*(undefined8 (*)(int, int, int, int, int))(*gTitleMenuControlInterface + 8))
               (param_9, 0xffff, 0, 0, 0);
-  if ((*(int *)(param_9 + 200) != 0) && (param_10 == 0)) {
+  if ((*(int *)&((GameObject *)param_9)->unkC8 != 0) && (param_10 == 0)) {
     FUN_80017ac8(uVar1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                 *(int *)(param_9 + 200));
+                 *(int *)&((GameObject *)param_9)->unkC8);
   }
   return;
 }
@@ -364,14 +364,14 @@ void FUN_801c5a5c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   int local_28;
   int local_24 [6];
   
-  if ((*(int *)(param_9 + 0x4c) != 0) && (*(short *)(*(int *)(param_9 + 0x4c) + 0x18) != -1)) {
+  if ((*(int *)&((GameObject *)param_9)->anim.placementData != 0) && (*(short *)(*(int *)&((GameObject *)param_9)->anim.placementData + 0x18) != -1)) {
     local_24[2] = (int)DAT_803dc071;
     local_24[1] = 0x43300000;
     local_24[0] = (*gObjectTriggerInterface)->update((u8 *)param_9,
                             (f32)((double)CONCAT44(0x43300000,local_24[2]) -
                                   DOUBLE_803e5c08));
-    if ((local_24[0] != 0) && (*(short *)(param_9 + 0xb4) == -2)) {
-      iVar4 = (int)*(char *)(*(int *)(param_9 + 0xb8) + 0x57);
+    if ((local_24[0] != 0) && (((GameObject *)param_9)->unkB4 == -2)) {
+      iVar4 = (int)*(char *)(*(int *)&((GameObject *)param_9)->extra + 0x57);
       iVar5 = 0;
       uVar6 = extraout_f1;
       piVar1 = (int *)FUN_80017b00(local_24,&local_28);

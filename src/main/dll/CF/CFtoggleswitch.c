@@ -171,17 +171,17 @@ void FUN_8018af74(undefined8 param_1,double param_2,double param_3,undefined8 pa
   undefined4 uStack_18;
   float local_14 [2];
   
-  pbVar3 = *(byte **)(param_9 + 0xb8);
-  iVar2 = *(int *)(param_9 + 0x4c);
+  pbVar3 = ((GameObject *)param_9)->extra;
+  iVar2 = *(int *)&((GameObject *)param_9)->anim.placementData;
   local_3c = FLOAT_803e48c0;
   if (((*pbVar3 >> 6 & 1) != 0) && ((char)*pbVar3 < '\0')) {
-    *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) | 8;
+    *(byte *)&((GameObject *)param_9)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_9)->anim.resetHitboxMode | 8;
     FUN_800305f8((double)FLOAT_803e48c4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                  param_9,0,0,param_12,param_13,param_14,param_15,param_16);
   }
   if (-1 < (char)*pbVar3) {
-    if ((*(byte *)(param_9 + 0xaf) & 1) != 0) {
-      *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) | 8;
+    if ((*(byte *)&((GameObject *)param_9)->anim.resetHitboxMode & 1) != 0) {
+      *(byte *)&((GameObject *)param_9)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_9)->anim.resetHitboxMode | 8;
       iVar1 = FUN_80017a98();
       FUN_80294d1c(iVar1,1);
       iVar1 = ObjGroup_FindNearestObject(4,param_9,&local_3c);
@@ -359,8 +359,8 @@ void FUN_8018b5a0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   char *pcVar3;
   undefined8 uVar4;
   
-  pcVar3 = *(char **)(param_9 + 0xb8);
-  iVar2 = *(int *)(param_9 + 0x4c);
+  pcVar3 = ((GameObject *)param_9)->extra;
+  iVar2 = *(int *)&((GameObject *)param_9)->anim.placementData;
   uVar4 = FUN_80006b8c();
   iVar1 = FUN_80017a98();
   if ((iVar1 != 0) && (iVar1 = FUN_80294cf8(iVar1), iVar1 != 0)) {

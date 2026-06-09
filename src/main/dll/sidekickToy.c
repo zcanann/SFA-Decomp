@@ -1272,7 +1272,7 @@ void FUN_8014c0b4(double param_1,double param_2,undefined8 param_3,undefined8 pa
     }
     else {
       cVar5 = FUN_80147884(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,
-                           param_10,(float *)(param_9 + 0x18),
+                           param_10,(float *)&((GameObject *)param_9)->anim.worldPosX,
                            (float *)(*(int *)(param_10 + 0x29c) + 0x18));
       if (cVar5 != '\0') {
         *(uint *)(param_10 + 0x2dc) = *(uint *)(param_10 + 0x2dc) | 0x1000000;
@@ -1417,10 +1417,10 @@ void FUN_8014c694(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   char cVar1;
   int *piVar2;
   
-  piVar2 = *(int **)(param_9 + 0xb8);
+  piVar2 = ((GameObject *)param_9)->extra;
   if (((piVar2[0xb7] & 0x2000U) == 0) ||
      (cVar1 = FUN_80147884(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,
-                           piVar2,(float *)(param_9 + 0x18),(float *)(*piVar2 + 0x68)),
+                           piVar2,(float *)&((GameObject *)param_9)->anim.worldPosX,(float *)(*piVar2 + 0x68)),
      cVar1 == '\0')) {
     cVar1 = (**(code **)(*DAT_803dd71c + 0x8c))
                       ((double)lbl_803E3270,*piVar2,param_9,&DAT_803dc8c0,0xffffffff);

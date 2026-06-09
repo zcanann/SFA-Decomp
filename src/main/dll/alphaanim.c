@@ -347,9 +347,9 @@ FUN_8017c608(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   byte *pbVar4;
   int iVar5;
   
-  if (*(short *)(param_9 + 0xb4) != -1) {
-    iVar5 = *(int *)(param_9 + 0x4c);
-    pbVar4 = *(byte **)(param_9 + 0xb8);
+  if (((GameObject *)param_9)->unkB4 != -1) {
+    iVar5 = *(int *)&((GameObject *)param_9)->anim.placementData;
+    pbVar4 = ((GameObject *)param_9)->extra;
     *(undefined *)(param_11 + 0x56) = 0;
     iVar2 = param_11;
     for (iVar3 = 0; iVar3 < (int)(uint)*(byte *)(param_11 + 0x8b); iVar3 = iVar3 + 1) {

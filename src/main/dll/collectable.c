@@ -501,11 +501,11 @@ void FUN_80145230(undefined8 param_1,undefined8 param_2,double param_3,undefined
   iVar2 = FUN_801451dc(param_9,param_10);
   if (iVar2 == 0) {
     dVar5 = (double)FUN_80293f90();
-    param_10[0x1cb] = (int)(float)((double)*(float *)(param_9 + 0x18) - dVar5);
-    param_10[0x1cc] = *(int *)(param_9 + 0x1c);
+    param_10[0x1cb] = (int)(float)((double)((GameObject *)param_9)->anim.worldPosX - dVar5);
+    param_10[0x1cc] = *(int *)&((GameObject *)param_9)->anim.worldPosY;
     dVar6 = (double)lbl_803E30E4;
     dVar5 = (double)FUN_80294964();
-    param_10[0x1cd] = (int)(float)((double)*(float *)(param_9 + 0x20) - dVar5);
+    param_10[0x1cd] = (int)(float)((double)((GameObject *)param_9)->anim.worldPosZ - dVar5);
     iVar2 = trickyFn_8013b368((double)lbl_803E310C,dVar6,param_3,param_4,param_5,param_6,param_7,
                          param_8,param_9,param_10,param_11,param_12,param_13,param_14,param_15,
                          param_16);
@@ -515,9 +515,9 @@ void FUN_80145230(undefined8 param_1,undefined8 param_2,double param_3,undefined
         uVar3 = randomGetRange(500,0x2ee);
         param_10[0x1d0] =
              (int)(f32)(s32)(uVar3);
-        iVar2 = *(int *)(param_9 + 0xb8);
+        iVar2 = *(int *)&((GameObject *)param_9)->extra;
         if (((*(byte *)(iVar2 + 0x58) >> 6 & 1) == 0) &&
-           (((0x2f < *(short *)(param_9 + 0xa0) || (*(short *)(param_9 + 0xa0) < 0x29)) &&
+           (((0x2f < ((GameObject *)param_9)->anim.currentMove || (((GameObject *)param_9)->anim.currentMove < 0x29)) &&
             (bVar4 = FUN_800067f0(param_9,0x10), !bVar4)))) {
           FUN_80039468(param_9,iVar2 + 0x3a8,0x360,0x500,0xffffffff,0);
         }
@@ -541,7 +541,7 @@ void FUN_80145230(undefined8 param_1,undefined8 param_2,double param_3,undefined
         FUN_80146fa0();
       }
       else {
-        sVar1 = *(short *)(param_9 + 0xa0);
+        sVar1 = ((GameObject *)param_9)->anim.currentMove;
         if (sVar1 != 0x31) {
           if ((sVar1 < 0x31) && (sVar1 == 0xd)) {
             if ((param_10[0x15] & 0x8000000U) != 0) {
@@ -607,7 +607,7 @@ void FUN_801455e8(undefined8 param_1,double param_2,double param_3,undefined8 pa
   if (DAT_803de6c8 == 0) {
     puVar2 = FUN_80017aa4(0x18,0x25);
     DAT_803de6c8 = FUN_80017ae4(uVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar2
-                                ,4,0xff,0xffffffff,*(uint **)(param_9 + 0x30),in_r8,in_r9,in_r10);
+                                ,4,0xff,0xffffffff,*(uint **)&((GameObject *)param_9)->anim.parent,in_r8,in_r9,in_r10);
   }
   *(byte *)(param_10 + 0x58) = *(byte *)(param_10 + 0x58) & 0x7f | 0x80;
   return;
@@ -3013,7 +3013,7 @@ void FUN_80146fa4(undefined8 param_1,double param_2,double param_3,undefined8 pa
   *(undefined *)(param_10 + 0x2ef) = 1;
   if (((*(uint *)(param_10 + 0x2dc) & 0x1000) != 0) && ((*(uint *)(param_10 + 0x2e0) & 0x1000) == 0)
      ) {
-    *(ushort *)(param_9 + 6) = *(ushort *)(param_9 + 6) & 0xbfff;
+    *(ushort *)&((GameObject *)param_9)->anim.flags = *(ushort *)&((GameObject *)param_9)->anim.flags & 0xbfff;
     param_2 = (double)*(float *)(param_10 + 0x314);
     if ((double)lbl_803E31FC == param_2) {
       *(float *)(param_10 + 0x308) = lbl_803E3208;
@@ -3025,15 +3025,15 @@ void FUN_80146fa4(undefined8 param_1,double param_2,double param_3,undefined8 pa
     FUN_800305f8((double)lbl_803E31FC,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                  param_9,(uint)*(byte *)(param_10 + 800),0x10,param_12,param_13,param_14,param_15,
                  param_16);
-    if (*(int *)(param_9 + 0x54) != 0) {
-      *(undefined *)(*(int *)(param_9 + 0x54) + 0x70) = 0;
+    if (*(int *)&((GameObject *)param_9)->anim.hitReactState != 0) {
+      *(undefined *)(*(int *)&((GameObject *)param_9)->anim.hitReactState + 0x70) = 0;
     }
     *(uint *)(param_10 + 0x2e8) = *(uint *)(param_10 + 0x2e8) | 4;
     FUN_800067e8(param_9,1099,2);
     ObjHits_EnableObject(param_9);
   }
   if ((*(uint *)(param_10 + 0x2dc) & 0x40000000) == 0) {
-    ((GameObject *)param_9)->anim.alpha = (char)(int)(lbl_803E3210 * *(float *)(param_9 + 0x98));
+    ((GameObject *)param_9)->anim.alpha = (char)(int)(lbl_803E3210 * ((GameObject *)param_9)->anim.currentMoveProgress);
     *(undefined4 *)(param_10 + 0x30c) = *(undefined4 *)(param_9 + 0x98);
   }
   else {
@@ -3041,8 +3041,8 @@ void FUN_80146fa4(undefined8 param_1,double param_2,double param_3,undefined8 pa
     *(undefined *)(param_10 + 0x323) = 0;
     FUN_800305f8((double)lbl_803E31FC,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                  param_9,0,0,param_12,param_13,param_14,param_15,param_16);
-    if (*(int *)(param_9 + 0x54) != 0) {
-      *(undefined *)(*(int *)(param_9 + 0x54) + 0x70) = 0;
+    if (*(int *)&((GameObject *)param_9)->anim.hitReactState != 0) {
+      *(undefined *)(*(int *)&((GameObject *)param_9)->anim.hitReactState + 0x70) = 0;
     }
     *(uint *)(param_10 + 0x2dc) = *(uint *)(param_10 + 0x2dc) & 0xffffef7f;
     *(uint *)(param_10 + 0x2e8) = *(uint *)(param_10 + 0x2e8) & 0xfffffffb;
@@ -3328,10 +3328,10 @@ void FUN_801476cc(undefined8 param_1,double param_2,double param_3,undefined8 pa
   int iVar4;
   undefined8 uVar5;
   
-  iVar3 = *(int *)(param_9 + 0x4c);
+  iVar3 = *(int *)&((GameObject *)param_9)->anim.placementData;
   if ((*(short *)(param_10 + 0x2b4) != *(short *)(param_10 + 0x2b6)) &&
      (((GameObject *)param_9)->anim.alpha != 0)) {
-    iVar4 = *(int *)(param_9 + 200);
+    iVar4 = *(int *)&((GameObject *)param_9)->unkC8;
     if (iVar4 != 0) {
       uVar5 = ObjLink_DetachChild(param_9,iVar4);
       param_1 = FUN_80017ac8(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar4);
@@ -3344,7 +3344,7 @@ void FUN_801476cc(undefined8 param_1,double param_2,double param_3,undefined8 pa
       puVar2 = FUN_80017aa4(0x20,*(short *)(param_10 + 0x2b6));
       *(byte *)((int)puVar2 + 5) = *(byte *)((int)puVar2 + 5) | *(byte *)(iVar3 + 5) & 0x18;
       iVar3 = FUN_80017ae4(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar2,4,
-                           *(undefined *)(param_9 + 0xac),0xffffffff,*(uint **)(param_9 + 0x30),
+                           *(undefined *)(param_9 + 0xac),0xffffffff,*(uint **)&((GameObject *)param_9)->anim.parent,
                            in_r8,in_r9,in_r10);
       ObjLink_AttachChild(param_9,iVar3,0);
       *(undefined2 *)(param_10 + 0x2b4) = *(undefined2 *)(param_10 + 0x2b6);

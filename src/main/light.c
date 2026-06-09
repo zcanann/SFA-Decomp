@@ -624,7 +624,7 @@ void FUN_801fc75c(undefined8 param_1,undefined8 param_2,double param_3,undefined
   double dVar4;
   float afStack_28 [7];
   
-  psVar3 = *(short **)(param_9 + 0xb8);
+  psVar3 = ((GameObject *)param_9)->extra;
   puVar1 = FUN_800069a8();
   if ((-1 < *(char *)(psVar3 + 1)) && (uVar2 = FUN_80017690((int)*psVar3), uVar2 != 0)) {
     FUN_80006824(0,SFXsp_lf_mutter4);
@@ -636,7 +636,7 @@ void FUN_801fc75c(undefined8 param_1,undefined8 param_2,double param_3,undefined
     dVar4 = (double)lbl_803DC074;
     ObjAnim_AdvanceCurrentMove(lbl_803E6DB0,lbl_803DC074,param_9,(ObjAnimEventList *)0x0);
     if ((*(byte *)(psVar3 + 1) >> 6 & 1) == 0) {
-      if (lbl_803E6DB4 <= *(float *)(param_9 + 0x98)) {
+      if (lbl_803E6DB4 <= ((GameObject *)param_9)->anim.currentMoveProgress) {
         FUN_80247eb8((float *)(puVar1 + 6),(float *)(param_9 + 0xc),afStack_28);
         FUN_80247ef8(afStack_28,afStack_28);
         FUN_80247edc((double)lbl_803E6DB8,afStack_28,afStack_28);
@@ -647,7 +647,7 @@ void FUN_801fc75c(undefined8 param_1,undefined8 param_2,double param_3,undefined
         FUN_8008112c((double)lbl_803E6DBC,dVar4,param_3,param_4,param_5,param_6,param_7,param_8,
                      param_9,1,1,0,0,0,0,0);
         *(byte *)(psVar3 + 1) = *(byte *)(psVar3 + 1) & 0xbf | 0x40;
-        *(ushort *)(param_9 + 6) = *(ushort *)(param_9 + 6) | 0x4000;
+        *(ushort *)&((GameObject *)param_9)->anim.flags = *(ushort *)&((GameObject *)param_9)->anim.flags | 0x4000;
       }
     }
   }
@@ -712,8 +712,8 @@ void FUN_801fc998(undefined8 param_1,undefined8 param_2,double param_3,undefined
   uint uVar1;
   short *psVar2;
   
-  if (*(short *)(param_9 + 0x46) == 999) {
-    psVar2 = *(short **)(param_9 + 0xb8);
+  if (((GameObject *)param_9)->anim.seqId == 999) {
+    psVar2 = ((GameObject *)param_9)->extra;
     if ((-1 < *(char *)(psVar2 + 1)) && (uVar1 = FUN_80017690((int)*psVar2), uVar1 != 0)) {
       FUN_80006824(0,SFXsp_lf_mutter4);
       FUN_80006824(param_9,SFXsp_skeep_mumb4);
@@ -794,7 +794,7 @@ FUN_801fcccc(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   undefined8 uVar7;
   undefined8 extraout_f1_00;
   
-  iVar6 = *(int *)(param_9 + 0xb8);
+  iVar6 = *(int *)&((GameObject *)param_9)->extra;
   *(undefined2 *)(param_11 + 0x70) = 0xffff;
   *(undefined *)(param_11 + 0x56) = 0;
   for (iVar5 = 0; iVar5 < (int)(uint)*(byte *)(param_11 + 0x8b); iVar5 = iVar5 + 1) {

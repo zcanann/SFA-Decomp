@@ -104,9 +104,9 @@ void FUN_801fd398(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   short *psVar4;
   double dVar5;
   
-  cVar1 = *(char *)(*(int *)(param_9 + 0x4c) + 0x19);
+  cVar1 = *(char *)(*(int *)&((GameObject *)param_9)->anim.placementData + 0x19);
   if (cVar1 == '\x02') {
-    iVar3 = *(int *)(param_9 + 0xb8);
+    iVar3 = *(int *)&((GameObject *)param_9)->extra;
     DAT_803de944 = DAT_803de944 - (short)(int)lbl_803DC074;
     uVar2 = GameBit_Get((int)*(short *)(iVar3 + 2));
     if (((uVar2 == 0) && (DAT_803de944 < 0xc9)) &&
@@ -114,23 +114,23 @@ void FUN_801fd398(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       (*gPartfxInterface)->spawnObject((void *)param_9, 0x391, NULL, 4, -1, NULL);
     }
   }
-  else if (*(short *)(param_9 + 0x46) == 0x3c5) {
-    iVar3 = *(int *)(param_9 + 0xb8);
+  else if (((GameObject *)param_9)->anim.seqId == 0x3c5) {
+    iVar3 = *(int *)&((GameObject *)param_9)->extra;
     *(short *)(iVar3 + 6) = *(short *)(iVar3 + 6) - (short)(int)lbl_803DC074;
-    *(float *)(param_9 + 0xc) =
-         *(float *)(param_9 + 0x24) * lbl_803DC074 + *(float *)(param_9 + 0xc);
-    *(float *)(param_9 + 0x10) =
-         *(float *)(param_9 + 0x28) * lbl_803DC074 + *(float *)(param_9 + 0x10);
+    ((GameObject *)param_9)->anim.localPosX =
+         ((GameObject *)param_9)->anim.velocityX * lbl_803DC074 + ((GameObject *)param_9)->anim.localPosX;
+    ((GameObject *)param_9)->anim.localPosY =
+         ((GameObject *)param_9)->anim.velocityY * lbl_803DC074 + ((GameObject *)param_9)->anim.localPosY;
     dVar5 = (double)lbl_803DC074;
-    *(float *)(param_9 + 0x14) =
-         (float)((double)*(float *)(param_9 + 0x2c) * dVar5 + (double)*(float *)(param_9 + 0x14));
+    ((GameObject *)param_9)->anim.localPosZ =
+         (float)((double)((GameObject *)param_9)->anim.velocityZ * dVar5 + (double)((GameObject *)param_9)->anim.localPosZ);
     if (*(short *)(iVar3 + 6) < 1) {
-      FUN_80017ac8(dVar5,(double)*(float *)(param_9 + 0x2c),param_3,param_4,param_5,param_6,param_7,
+      FUN_80017ac8(dVar5,(double)((GameObject *)param_9)->anim.velocityZ,param_3,param_4,param_5,param_6,param_7,
                    param_8,param_9);
     }
   }
   else if (cVar1 == '\0') {
-    iVar3 = *(int *)(param_9 + 0xb8);
+    iVar3 = *(int *)&((GameObject *)param_9)->extra;
     DAT_803de944 = DAT_803de944 - (short)(int)lbl_803DC074;
     uVar2 = GameBit_Get(0x522);
     if ((((uVar2 == 0) && (DAT_803de944 < 0xc9)) && (*(char *)(iVar3 + 0xb) == DAT_803de946)) &&
@@ -139,7 +139,7 @@ void FUN_801fd398(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     }
   }
   else if (cVar1 == '\x01') {
-    psVar4 = *(short **)(param_9 + 0xb8);
+    psVar4 = ((GameObject *)param_9)->extra;
     uVar2 = GameBit_Get((int)*psVar4);
     if (uVar2 != 0) {
       (*gPartfxInterface)->spawnObject((void *)param_9, 0x390, NULL, 4, -1, NULL);

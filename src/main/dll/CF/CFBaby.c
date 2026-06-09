@@ -232,7 +232,7 @@ int FUN_80187664(undefined8 param_1,double param_2,double param_3,undefined8 par
     *(undefined *)((int)puVar3 + 7) = 8;
     *(undefined4 *)(puVar3 + 4) = *(undefined4 *)(param_9 + 0xc);
     dVar4 = (double)FLOAT_803e4780;
-    *(float *)(puVar3 + 6) = (float)(dVar4 + (double)*(float *)(param_9 + 0x10));
+    *(float *)(puVar3 + 6) = (float)(dVar4 + (double)((GameObject *)param_9)->anim.localPosY);
     *(undefined4 *)(puVar3 + 8) = *(undefined4 *)(param_9 + 0x14);
     *(undefined *)((int)puVar3 + 0x19) = 4;
     puVar3[0xd] = 0x514;
@@ -354,9 +354,9 @@ void FUN_8018795c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   int *piVar3;
   int *piVar4;
   
-  piVar3 = *(int **)(param_9 + 0xb8);
+  piVar3 = ((GameObject *)param_9)->extra;
   bVar1 = false;
-  if (*(char *)(*(int *)(param_9 + 0x4c) + 0x19) == '\x01') {
+  if (*(char *)(*(int *)&((GameObject *)param_9)->anim.placementData + 0x19) == '\x01') {
     if (*(char *)(piVar3 + 7) != '\0') {
       if (*piVar3 != 0) {
         param_1 = (**(code **)(**(int **)(*piVar3 + 0x68) + 0x24))();
@@ -697,13 +697,13 @@ void FUN_801880e0(undefined8 param_1,double param_2,double param_3,undefined8 pa
   undefined8 uVar6;
   uint auStack_18 [3];
   
-  iVar5 = *(int *)(param_9 + 0xb8);
-  iVar4 = *(int *)(param_9 + 0x4c);
+  iVar5 = *(int *)&((GameObject *)param_9)->extra;
+  iVar4 = *(int *)&((GameObject *)param_9)->anim.placementData;
   bVar1 = *(byte *)(iVar5 + 10);
   if (bVar1 == 1) {
     ObjHits_ClearHitVolumes(param_9);
     ObjHits_DisableObject(param_9);
-    *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) | 8;
+    *(byte *)&((GameObject *)param_9)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_9)->anim.resetHitboxMode | 8;
     *(undefined *)(iVar5 + 10) = 2;
     *(float *)(iVar5 + 0xc) = FLOAT_803e47dc;
     *(undefined4 *)(param_9 + 0xc) = *(undefined4 *)(iVar4 + 8);
@@ -725,7 +725,7 @@ void FUN_801880e0(undefined8 param_1,double param_2,double param_3,undefined8 pa
         *(undefined4 *)(puVar3 + 6) = *(undefined4 *)(param_9 + 0x10);
         *(undefined4 *)(puVar3 + 8) = *(undefined4 *)(param_9 + 0x14);
         FUN_80017ae4(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar3,5,
-                     *(undefined *)(param_9 + 0xac),0xffffffff,*(uint **)(param_9 + 0x30),in_r8,
+                     *(undefined *)(param_9 + 0xac),0xffffffff,*(uint **)&((GameObject *)param_9)->anim.parent,in_r8,
                      in_r9,in_r10);
       }
       (*gPartfxInterface)->spawnObject((void *)param_9, 0x355, NULL, 0, -1, NULL);
@@ -736,10 +736,10 @@ void FUN_801880e0(undefined8 param_1,double param_2,double param_3,undefined8 pa
   else if (((bVar1 < 3) &&
            (*(float *)(iVar5 + 0xc) = *(float *)(iVar5 + 0xc) + FLOAT_803dc074,
            FLOAT_803e47e0 < *(float *)(iVar5 + 0xc))) &&
-          (iVar4 = FUN_800575b4((double)(*(float *)(param_9 + 0xa8) * *(float *)(param_9 + 8)),
-                                (float *)(param_9 + 0xc)), iVar4 == 0)) {
+          (iVar4 = FUN_800575b4((double)(((GameObject *)param_9)->anim.hitboxScale * ((GameObject *)param_9)->anim.rootMotionScale),
+                                (float *)&((GameObject *)param_9)->anim.localPosX), iVar4 == 0)) {
     ObjHits_EnableObject(param_9);
-    *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) & 0xf7;
+    *(byte *)&((GameObject *)param_9)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_9)->anim.resetHitboxMode & 0xf7;
     *(undefined *)(iVar5 + 10) = 0;
   }
   return;
@@ -1288,7 +1288,7 @@ void FUN_80188f94(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   int iVar1;
   int iVar2;
   
-  iVar2 = *(int *)(param_9 + 0xb8);
+  iVar2 = *(int *)&((GameObject *)param_9)->extra;
   iVar1 = *(int *)(iVar2 + 0x10);
   if (iVar1 != 0) {
     FUN_80017ac8(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar1);
@@ -1352,8 +1352,8 @@ FUN_80189054(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   undefined8 extraout_f1_03;
   undefined8 uVar8;
   
-  iVar6 = *(int *)(param_9 + 0x4c);
-  iVar5 = *(int *)(param_9 + 0xb8);
+  iVar6 = *(int *)&((GameObject *)param_9)->anim.placementData;
+  iVar5 = *(int *)&((GameObject *)param_9)->extra;
   iVar7 = 0;
   iVar4 = param_11;
   do {
@@ -1603,7 +1603,7 @@ void FUN_80189a90(undefined8 param_1,double param_2,double param_3,undefined8 pa
   int iVar8;
   undefined8 extraout_f1;
   
-  pfVar7 = *(float **)(param_9 + 0xb8);
+  pfVar7 = ((GameObject *)param_9)->extra;
   iVar2 = FUN_80017a98();
   if ((pfVar7[4] == 0.0) && (uVar3 = FUN_80017ae8(), (uVar3 & 0xff) != 0)) {
     puVar4 = FUN_80017aa4(0x24,0x606);
@@ -1621,10 +1621,10 @@ void FUN_80189a90(undefined8 param_1,double param_2,double param_3,undefined8 pa
     param_1 = FUN_8020a75c((int)pfVar7[4]);
   }
   if ((iVar2 == 0) || (iVar2 = FUN_80294dbc(iVar2), iVar2 == 0)) {
-    *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) & 0xef;
+    *(byte *)&((GameObject *)param_9)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_9)->anim.resetHitboxMode & 0xef;
   }
   else {
-    *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) | 0x10;
+    *(byte *)&((GameObject *)param_9)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_9)->anim.resetHitboxMode | 0x10;
   }
   bVar1 = *(byte *)((int)pfVar7 + 0x16);
   if (bVar1 == 1) {
@@ -1638,7 +1638,7 @@ void FUN_80189a90(undefined8 param_1,double param_2,double param_3,undefined8 pa
   else if (bVar1 == 0) {
     iVar2 = ObjTrigger_IsSet(param_9);
     if (iVar2 != 0) {
-      iVar8 = *(int *)(param_9 + 0x4c);
+      iVar8 = *(int *)&((GameObject *)param_9)->anim.placementData;
       iVar2 = ObjGroup_FindNearestObject(0xf,param_9,(float *)0x0);
       if ((*(char *)(param_9 + 0xac) == '\r') && (uVar3 = GameBit_Get(0xc92), uVar3 != 0)) {
         *(float *)(iVar2 + 0x10) = *(float *)(iVar2 + 0x10) + FLOAT_803e4838;
@@ -1656,7 +1656,7 @@ void FUN_80189a90(undefined8 param_1,double param_2,double param_3,undefined8 pa
       *(undefined *)((int)pfVar7 + 0x16) = 1;
     }
     else {
-      iVar8 = *(int *)(param_9 + 0x4c);
+      iVar8 = *(int *)&((GameObject *)param_9)->anim.placementData;
       iVar2 = ObjGroup_FindNearestObject(0xf,param_9,(float *)0x0);
       if ((*(char *)(param_9 + 0xac) == '\r') && (uVar3 = GameBit_Get(0xc92), uVar3 != 0)) {
         *(float *)(iVar2 + 0x10) = *(float *)(iVar2 + 0x10) + FLOAT_803e4838;

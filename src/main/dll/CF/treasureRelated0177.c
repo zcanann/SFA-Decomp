@@ -135,7 +135,7 @@ void FUN_8018cdb0(undefined8 param_1,double param_2,double param_3,undefined8 pa
   short *psVar2;
   float *pfVar3;
   
-  pfVar3 = *(float **)(param_9 + 0xb8);
+  pfVar3 = ((GameObject *)param_9)->extra;
   psVar2 = FUN_800069a8();
   FUN_800d7780(1);
   (*gScreenTransitionInterface)->start(1,1);
@@ -151,7 +151,7 @@ void FUN_8018cdb0(undefined8 param_1,double param_2,double param_3,undefined8 pa
   pfVar3[4] = FLOAT_803e49c4;
   pfVar3[5] = fVar1;
   FUN_80017664(param_9);
-  *(ushort *)(param_9 + 0xb0) = *(ushort *)(param_9 + 0xb0) | 0x400;
+  ((GameObject *)param_9)->objectFlags = ((GameObject *)param_9)->objectFlags | 0x400;
   return;
 }
 

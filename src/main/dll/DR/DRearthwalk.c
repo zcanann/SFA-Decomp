@@ -807,7 +807,7 @@ void FUN_801da774(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
 {
-  if ((*(ushort *)(param_9 + 6) & 0x4000) != 0) {
+  if ((*(ushort *)&((GameObject *)param_9)->anim.flags & 0x4000) != 0) {
     FUN_80017ac8(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9);
   }
   return;
@@ -860,7 +860,7 @@ void FUN_801da868(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   int iVar1;
   int *piVar2;
   
-  piVar2 = *(int **)(param_9 + 0xb8);
+  piVar2 = ((GameObject *)param_9)->extra;
   (*gExpgfxInterface)->freeSource2((u32)param_9);
   if (((param_10 == 0) && (iVar1 = *piVar2, iVar1 != 0)) &&
      ((*(ushort *)(iVar1 + 0xb0) & 0x40) == 0)) {

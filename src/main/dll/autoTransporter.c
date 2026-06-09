@@ -128,7 +128,7 @@ void FUN_80178370(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   float *pfVar2;
   double dVar3;
   
-  pfVar2 = *(float **)(param_9 + 0xb8);
+  pfVar2 = ((GameObject *)param_9)->extra;
   *pfVar2 = *pfVar2 + lbl_803DC074;
   dVar3 = (double)*pfVar2;
   if (dVar3 <= (double)lbl_803E42C8) {
@@ -144,9 +144,9 @@ void FUN_80178370(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       return;
     }
   }
-  *(float *)(param_9 + 0xc) = *(float *)(param_9 + 0x24) * *pfVar2 + pfVar2[1];
-  *(float *)(param_9 + 0x10) = *(float *)(param_9 + 0x28) * *pfVar2 + pfVar2[2];
-  *(float *)(param_9 + 0x14) = *(float *)(param_9 + 0x2c) * *pfVar2 + pfVar2[3];
+  ((GameObject *)param_9)->anim.localPosX = ((GameObject *)param_9)->anim.velocityX * *pfVar2 + pfVar2[1];
+  ((GameObject *)param_9)->anim.localPosY = ((GameObject *)param_9)->anim.velocityY * *pfVar2 + pfVar2[2];
+  ((GameObject *)param_9)->anim.localPosZ = ((GameObject *)param_9)->anim.velocityZ * *pfVar2 + pfVar2[3];
   return;
 }
 
@@ -169,7 +169,7 @@ void FUN_801784ac(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 {
   float *pfVar1;
   
-  pfVar1 = *(float **)(param_9 + 0xb8);
+  pfVar1 = ((GameObject *)param_9)->extra;
   FUN_801778e0(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,(int)pfVar1);
   *pfVar1 = lbl_803E42D0 *
             (float)((double)CONCAT44(0x43300000,(int)*(short *)(param_10 + 0x1a) ^ 0x80000000) -

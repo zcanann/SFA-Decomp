@@ -378,10 +378,10 @@ void FUN_801aa984(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   int iVar1;
   int *piVar2;
   
-  piVar2 = *(int **)(param_9 + 0xb8);
+  piVar2 = ((GameObject *)param_9)->extra;
   iVar1 = *piVar2;
   if (iVar1 != 0) {
-    if (*(int *)(param_9 + 200) != 0) {
+    if (*(int *)&((GameObject *)param_9)->unkC8 != 0) {
       param_1 = ObjLink_DetachChild(param_9,iVar1);
     }
     if (param_10 == 0) {

@@ -377,12 +377,12 @@ void FUN_801db94c(undefined8 param_1,double param_2,double param_3,double param_
   undefined8 extraout_f1_00;
   double dVar10;
   
-  pfVar8 = *(float **)(param_9 + 0xb8);
+  pfVar8 = ((GameObject *)param_9)->extra;
   iVar2 = FUN_80017a98();
-  if (*(int *)(param_9 + 0xf4) != 0) {
+  if (((GameObject *)param_9)->unkF4 != 0) {
     uVar9 = FUN_80080f28(7,'\0');
     uVar9 = FUN_80080f14(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0);
-    if (*(int *)(param_9 + 0xf4) == 2) {
+    if (((GameObject *)param_9)->unkF4 == 2) {
       uVar9 = FUN_80006724(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,0x4f,0,
                            in_r7,in_r8,in_r9,in_r10);
       uVar9 = FUN_80006724(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,0x50,0,
@@ -502,7 +502,7 @@ void FUN_801db94c(undefined8 param_1,double param_2,double param_3,double param_
       else {
         pfVar8[1] = lbl_803E61FC;
         pfVar8[2] = lbl_803E6200;
-        if (*(int *)(param_9 + 0xf8) != 0) {
+        if (((GameObject *)param_9)->unkF8 != 0) {
           FUN_80080f3c((double)lbl_803E61EC,1);
           *(undefined4 *)(param_9 + 0xf8) = 0;
         }
@@ -622,7 +622,7 @@ void FUN_801db94c(undefined8 param_1,double param_2,double param_3,double param_
     FUN_80017698(0xbe1,1);
     FUN_80017698(0xbe3,1);
   }
-  iVar2 = *(int *)(param_9 + 0xb8);
+  iVar2 = *(int *)&((GameObject *)param_9)->extra;
   FUN_80017a98();
   if (*(char *)(iVar2 + 0x1d) == '\x05') {
     FUN_80017698(0x60f,1);

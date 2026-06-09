@@ -1,4 +1,5 @@
 #include "main/dll/mmshrine/animobj1C0.h"
+#include "main/game_object.h"
 #include "main/objanim.h"
 #include "main/objseq.h"
 
@@ -109,7 +110,7 @@ void FUN_801c5990(undefined8 param_1,undefined8 param_2,double param_3,undefined
   double dVar6;
   double dVar7;
   
-  iVar5 = *(int *)(param_9 + 0xb8);
+  iVar5 = *(int *)&((GameObject *)param_9)->extra;
   *(undefined2 *)(iVar5 + 0x6a) = *(undefined2 *)(param_10 + 0x1a);
   *(undefined2 *)(iVar5 + 0x6e) = 0xffff;
   dVar6 = DOUBLE_803e5c08;
@@ -119,17 +120,17 @@ void FUN_801c5990(undefined8 param_1,undefined8 param_2,double param_3,undefined
                                                                                 (uint)*(byte *)(
                                                   param_10 + 0x24)) - DOUBLE_803e5c08)));
   *(undefined4 *)(iVar5 + 0x28) = 0xffffffff;
-  iVar4 = *(int *)(param_9 + 0xf4);
+  iVar4 = ((GameObject *)param_9)->unkF4;
   if ((iVar4 == 0) && (*(short *)(param_10 + 0x18) != 1)) {
     (*gObjectTriggerInterface)->loadAnimData((u8 *)iVar5, (u8 *)param_10);
-    *(int *)(param_9 + 0xf4) = *(short *)(param_10 + 0x18) + 1;
+    ((GameObject *)param_9)->unkF4 = *(short *)(param_10 + 0x18) + 1;
   }
   else if ((iVar4 != 0) && ((int)*(short *)(param_10 + 0x18) != iVar4 + -1)) {
     (*gObjectTriggerInterface)->freeState((u8 *)iVar5);
     if (*(short *)(param_10 + 0x18) != -1) {
       (*gObjectTriggerInterface)->loadAnimData((u8 *)iVar5, (u8 *)param_10);
     }
-    *(int *)(param_9 + 0xf4) = *(short *)(param_10 + 0x18) + 1;
+    ((GameObject *)param_9)->unkF4 = *(short *)(param_10 + 0x18) + 1;
   }
   uVar1 = FUN_80017ae8();
   if ((uVar1 & 0xff) != 0) {
@@ -143,8 +144,8 @@ void FUN_801c5990(undefined8 param_1,undefined8 param_2,double param_3,undefined
     uVar3 = FUN_80017ae4(dVar6,dVar7,param_3,param_4,param_5,param_6,param_7,param_8,puVar2,5,0xff,
                          0xffffffff,(uint *)0x0,in_r8,in_r9,in_r10);
     *(undefined4 *)(param_9 + 200) = uVar3;
-    *(float *)(*(int *)(param_9 + 200) + 8) =
-         *(float *)(*(int *)(param_9 + 200) + 8) * lbl_803E5C10;
+    *(float *)(*(int *)&((GameObject *)param_9)->unkC8 + 8) =
+         *(float *)(*(int *)&((GameObject *)param_9)->unkC8 + 8) * lbl_803E5C10;
   }
   return;
 }

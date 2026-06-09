@@ -695,25 +695,25 @@ void FUN_8016aba8(undefined8 param_1,double param_2,double param_3,undefined8 pa
   double dVar4;
   double dVar5;
   
-  iVar3 = *(int *)(param_9 + 0xb8);
+  iVar3 = *(int *)&((GameObject *)param_9)->extra;
   if (*(short *)(iVar3 + 0x12) == 0) {
-    dVar5 = (double)*(float *)(param_9 + 0x28);
-    *(float *)(param_9 + 0x28) = -(float)((double)lbl_803E3DD8 * (double)lbl_803DC074 - dVar5);
+    dVar5 = (double)((GameObject *)param_9)->anim.velocityY;
+    ((GameObject *)param_9)->anim.velocityY = -(float)((double)lbl_803E3DD8 * (double)lbl_803DC074 - dVar5);
     dVar4 = (double)lbl_803E3DD4;
-    if ((dVar4 <= dVar5) && ((double)*(float *)(param_9 + 0x28) <= dVar4)) {
+    if ((dVar4 <= dVar5) && ((double)((GameObject *)param_9)->anim.velocityY <= dVar4)) {
       FUN_8016ae64(dVar4,dVar5,param_3,param_4,param_5,param_6,param_7,param_8,param_9);
       FUN_80006824(param_9,SFXsc_projhitneg22);
       ((GameObject *)param_9)->anim.alpha = 0;
     }
-    param_2 = (double)(*(float *)(param_9 + 0x28) * lbl_803DC074);
-    param_3 = (double)(*(float *)(param_9 + 0x2c) * lbl_803DC074);
-    FUN_80017a88((double)(*(float *)(param_9 + 0x24) * lbl_803DC074),param_2,param_3,param_9);
+    param_2 = (double)(((GameObject *)param_9)->anim.velocityY * lbl_803DC074);
+    param_3 = (double)(((GameObject *)param_9)->anim.velocityZ * lbl_803DC074);
+    FUN_80017a88((double)(((GameObject *)param_9)->anim.velocityX * lbl_803DC074),param_2,param_3,param_9);
     ObjHits_SetHitVolumeSlot(param_9,0x16,1,0);
     ObjHitbox_SetSphereRadius(param_9,7);
     param_1 = ObjHits_EnableObject(param_9);
-    if (((*(ObjHitsPriorityState **)(param_9 + 0x54))->lastHitObject != 0) &&
-       ((iVar2 = FUN_80017a98(), (*(ObjHitsPriorityState **)(param_9 + 0x54))->lastHitObject == iVar2 ||
-        (iVar2 = FUN_80017a90(), (*(ObjHitsPriorityState **)(param_9 + 0x54))->lastHitObject == iVar2)))) {
+    if (((*(ObjHitsPriorityState **)&((GameObject *)param_9)->anim.hitReactState)->lastHitObject != 0) &&
+       ((iVar2 = FUN_80017a98(), (*(ObjHitsPriorityState **)&((GameObject *)param_9)->anim.hitReactState)->lastHitObject == iVar2 ||
+        (iVar2 = FUN_80017a90(), (*(ObjHitsPriorityState **)&((GameObject *)param_9)->anim.hitReactState)->lastHitObject == iVar2)))) {
       FUN_800069bc();
       FUN_80006920((double)lbl_803E3DD0);
       FUN_80006824(param_9,SFXsc_objselectyeah22);
@@ -764,7 +764,7 @@ void FUN_8016ae64(double param_1,double param_2,double param_3,undefined8 param_
   int iVar5;
   double extraout_f1;
   
-  iVar4 = *(int *)(param_9 + 0xb8);
+  iVar4 = *(int *)&((GameObject *)param_9)->extra;
   uVar2 = FUN_80017ae8();
   if ((uVar2 & 0xff) != 0) {
     iVar5 = 5;
@@ -789,17 +789,17 @@ void FUN_8016ae64(double param_1,double param_2,double param_3,undefined8 param_
         *(float *)(puVar3 + 0x12) =
              lbl_803E3DDC *
              (f32)(s32)(uVar2) +
-             *(float *)(param_9 + 0x24);
+             ((GameObject *)param_9)->anim.velocityX;
         uVar2 = randomGetRange(0xffffffce,0x32);
         *(float *)(puVar3 + 0x14) =
              lbl_803E3DE0 *
              (f32)(s32)(uVar2) +
-             *(float *)(param_9 + 0x28);
+             ((GameObject *)param_9)->anim.velocityY;
         uVar2 = randomGetRange(0xffffffce,0x32);
         param_2 = (double)(f32)(s32)(uVar2)
         ;
         param_1 = (double)lbl_803E3DDC;
-        *(float *)(puVar3 + 0x16) = (float)(param_1 * param_2 + (double)*(float *)(param_9 + 0x2c));
+        *(float *)(puVar3 + 0x16) = (float)(param_1 * param_2 + (double)((GameObject *)param_9)->anim.velocityZ);
         *(int *)(puVar3 + 0x62) = param_9;
       }
       iVar5 = iVar5 + -1;
@@ -944,7 +944,7 @@ void FUN_8016b228(undefined8 param_1,double param_2,double param_3,undefined8 pa
   int iVar3;
   undefined4 auStack_18 [4];
   
-  iVar3 = *(int *)(param_9 + 0xb8);
+  iVar3 = *(int *)&((GameObject *)param_9)->extra;
   uVar1 = FUN_8007f6c8((float *)(iVar3 + 0x20));
   if (uVar1 == 0) {
     iVar2 = ObjHits_GetPriorityHit(param_9,auStack_18,(int *)0x0,(uint *)0x0);
@@ -957,7 +957,7 @@ void FUN_8016b228(undefined8 param_1,double param_2,double param_3,undefined8 pa
       ObjHits_DisableObject(param_9);
       FUN_8007f718((float *)(iVar3 + 0x20),0x78);
     }
-    if ((*(ObjHitsPriorityState **)(param_9 + 0x54))->contactFlags != 0) {
+    if ((*(ObjHitsPriorityState **)&((GameObject *)param_9)->anim.hitReactState)->contactFlags != 0) {
       ObjHits_DisableObject(param_9);
       *(float *)(iVar3 + 8) = lbl_803E3DF8;
       if (*(short *)(*(int *)(iVar3 + 0x1c) + 4) != -1) {

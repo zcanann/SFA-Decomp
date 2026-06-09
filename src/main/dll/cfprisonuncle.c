@@ -411,7 +411,7 @@ void FUN_8017f7ec(undefined8 param_1,double param_2,double param_3,undefined8 pa
   FUN_8000680c(param_9,0x40);
   iVar2 = *param_11;
   if (((iVar2 != 0) && (*(int *)(iVar2 + 0xc4) != 0)) &&
-     (lbl_803E4508 <= *(float *)(param_9 + 0x98))) {
+     (lbl_803E4508 <= ((GameObject *)param_9)->anim.currentMoveProgress)) {
     *param_11 = 0;
     ObjLink_DetachChild(param_9,iVar2);
     uVar1 = randomGetRange(0x27,0x2c);
@@ -426,7 +426,7 @@ void FUN_8017f7ec(undefined8 param_1,double param_2,double param_3,undefined8 pa
     *(float *)(iVar2 + 0x2c) = (float)(dVar4 * dVar3);
     FUN_80006824(param_9,SFXen_lrope_powerdown);
   }
-  if (lbl_803E44F0 <= *(float *)(param_9 + 0x98)) {
+  if (lbl_803E44F0 <= ((GameObject *)param_9)->anim.currentMoveProgress) {
     *(undefined *)((int)param_11 + 0xf) = 2;
     param_11[2] = (int)lbl_803E4518;
     ObjAnim_SetCurrentMove((int)param_9,2,lbl_803E44F4,0);
@@ -583,8 +583,8 @@ void FUN_8017fa14(undefined8 param_1,double param_2,double param_3,undefined8 pa
   int *piVar3;
   int iVar4;
   
-  iVar4 = *(int *)(param_9 + 0x4c);
-  piVar3 = *(int **)(param_9 + 0xb8);
+  iVar4 = *(int *)&((GameObject *)param_9)->anim.placementData;
+  piVar3 = ((GameObject *)param_9)->extra;
   uVar1 = FUN_80017ae8();
   if ((uVar1 & 0xff) != 0) {
     puVar2 = FUN_80017aa4(0x30,param_10);
@@ -600,7 +600,7 @@ void FUN_8017fa14(undefined8 param_1,double param_2,double param_3,undefined8 pa
     *(undefined *)((int)puVar2 + 5) = *(undefined *)(iVar4 + 5);
     *(char *)((int)puVar2 + 7) = *(char *)(iVar4 + 7) + -0xf;
     iVar4 = FUN_80017ae4(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar2,5,
-                         *(undefined *)(param_9 + 0xac),0xffffffff,*(uint **)(param_9 + 0x30),in_r8,
+                         *(undefined *)(param_9 + 0xac),0xffffffff,*(uint **)&((GameObject *)param_9)->anim.parent,in_r8,
                          in_r9,in_r10);
     if (iVar4 == 0) {
       FUN_80017814((uint)puVar2);
@@ -653,10 +653,10 @@ void FUN_8017fbe0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   int *piVar1;
   undefined8 uVar2;
   
-  piVar1 = *(int **)(param_9 + 0xb8);
+  piVar1 = ((GameObject *)param_9)->extra;
   ObjGroup_RemoveObject(param_9,0x34);
   ObjGroup_RemoveObject(param_9,0x3e);
-  if ((*(char *)(param_9 + 0xeb) != '\0') && (uVar2 = ObjLink_DetachChild(param_9,*piVar1), param_10 == 0))
+  if ((*(char *)&((GameObject *)param_9)->unkEB != '\0') && (uVar2 = ObjLink_DetachChild(param_9,*piVar1), param_10 == 0))
   {
     FUN_80017ac8(uVar2,param_2,param_3,param_4,param_5,param_6,param_7,param_8,*piVar1);
   }

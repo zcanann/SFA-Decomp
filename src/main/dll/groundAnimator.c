@@ -754,7 +754,7 @@ void FUN_8017de58(undefined8 param_1,double param_2,double param_3,undefined8 pa
   double dVar4;
   undefined8 uVar5;
   
-  iVar3 = *(int *)(param_9 + 0xb8);
+  iVar3 = *(int *)&((GameObject *)param_9)->extra;
   iVar1 = FUN_80017a98();
   dVar4 = (double)FUN_80017710((float *)(iVar1 + 0x18),(float *)(param_9 + 0x18));
   if ((dVar4 < (double)lbl_803E4484) &&
@@ -776,9 +776,9 @@ void FUN_8017de58(undefined8 param_1,double param_2,double param_3,undefined8 pa
                    (uint)*(ushort *)(iVar3 + 0x38));
       FUN_80081118((double)lbl_803E4460,param_9,0xff,0x28);
       uVar5 = FUN_80006824(param_9,SFXen_waterblock_stop);
-      iVar1 = *(int *)(param_9 + 0xb8);
-      if ((*(ushort *)(param_9 + 6) & 0x2000) == 0) {
-        if (*(int *)(param_9 + 0x54) != 0) {
+      iVar1 = *(int *)&((GameObject *)param_9)->extra;
+      if ((*(ushort *)&((GameObject *)param_9)->anim.flags & 0x2000) == 0) {
+        if (*(int *)&((GameObject *)param_9)->anim.hitReactState != 0) {
           ObjHits_DisableObject(param_9);
         }
         *(byte *)(iVar1 + 0x5a) = *(byte *)(iVar1 + 0x5a) | 2;

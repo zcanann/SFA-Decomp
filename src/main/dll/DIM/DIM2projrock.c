@@ -800,8 +800,8 @@ void FUN_801b9d8c(undefined8 param_1,double param_2,double param_3,undefined8 pa
   undefined8 uVar5;
   undefined4 auStack_18 [5];
   
-  if (*(int *)(param_9 + 0xf4) != 0) {
-    if (*(int *)(param_9 + 0xf4) == 2) {
+  if (((GameObject *)param_9)->unkF4 != 0) {
+    if (((GameObject *)param_9)->unkF4 == 2) {
       uVar5 = FUN_80006724(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,0x163
                            ,0,in_r7,in_r8,in_r9,in_r10);
       uVar5 = FUN_80006724(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,0x166,0
@@ -823,7 +823,7 @@ void FUN_801b9d8c(undefined8 param_1,double param_2,double param_3,undefined8 pa
     }
     *(undefined4 *)(param_9 + 0xf4) = 0;
   }
-  pcVar4 = *(char **)(param_9 + 0xb8);
+  pcVar4 = ((GameObject *)param_9)->extra;
   if (((pcVar4[4] != '\x01') && (pcVar4[4] == '\0')) && (uVar3 = GameBit_Get(0xacd), uVar3 != 0)) {
     GameBit_Set(0xcc3,1);
     pcVar4[4] = '\x01';
@@ -899,7 +899,7 @@ void FUN_801ba288(undefined8 param_1,double param_2,double param_3,undefined8 pa
   for (bVar4 = 1; bVar4 < 0x2e; bVar4 = bVar4 + 1) {
     FUN_800ea9b8();
   }
-  puVar3 = *(undefined **)(param_9 + 0xb8);
+  puVar3 = ((GameObject *)param_9)->extra;
   *puVar3 = (char)*(undefined2 *)(param_10 + 0x1a);
   puVar3[1] = *puVar3;
   uVar2 = GameBit_Get((int)*(short *)(param_10 + 0x1e));

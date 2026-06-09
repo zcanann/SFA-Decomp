@@ -257,7 +257,7 @@ void FUN_801b0ae8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   uint uVar1;
   uint *puVar2;
   
-  puVar2 = *(uint **)(param_9 + 0xb8);
+  puVar2 = ((GameObject *)param_9)->extra;
   (*gExpgfxInterface)->freeSource2((u32)param_9);
   uVar1 = puVar2[1];
   if ((uVar1 != 0) && (param_10 == 0)) {

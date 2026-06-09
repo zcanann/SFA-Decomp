@@ -490,7 +490,7 @@ void TrickyCurve_updateState(undefined8 param_1,undefined8 param_2,undefined8 pa
 {
   char cVar1;
   
-  cVar1 = *(char *)(*(int *)(param_9 + 0xb8) + 0xe);
+  cVar1 = *(char *)(*(int *)&((GameObject *)param_9)->extra + 0xe);
   if (cVar1 == '\0') {
     TrickyCurve_updateEffectRingTrigger(param_1,param_2,param_3,param_4,param_5,param_6,param_7,
                                         param_8);

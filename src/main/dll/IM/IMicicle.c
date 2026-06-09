@@ -263,8 +263,8 @@ void FUN_801a3ac0(undefined8 param_1,double param_2,double param_3,undefined8 pa
   int iVar6;
   undefined8 uVar7;
   
-  iVar3 = *(int *)(param_9 + 0xb8);
-  iVar5 = *(int *)(param_9 + 0x4c);
+  iVar3 = *(int *)&((GameObject *)param_9)->extra;
+  iVar5 = *(int *)&((GameObject *)param_9)->anim.placementData;
   if (*(char *)(iVar3 + 0x6e4) != '\x02') {
     if (*(char *)(iVar3 + 0x6e4) == '\0') {
       uVar1 = FUN_80017690((int)*(short *)(iVar5 + 0x40));
