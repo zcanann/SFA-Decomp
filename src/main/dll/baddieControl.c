@@ -3,6 +3,7 @@
 #include "main/camera_object.h"
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camnpcspeak_state.h"
+#include "main/dll/CAM/camworldmap_state.h"
 #include "main/objanim.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
@@ -14,7 +15,6 @@ typedef struct {
     u8 b7 : 1;
     u8 rest : 7;
 } WmFlags;
-
 
 extern undefined4 ABS();
 extern undefined4 FUN_800033a8();
@@ -3161,7 +3161,7 @@ extern u32 lbl_803DD5A0;
 extern u32 lbl_803DD5C8;
 extern f32 lbl_803E1B98;
 extern f32 lbl_803E1B9C;
-extern u32 lbl_803DD588;
+extern CameraModeWorldMapState *lbl_803DD588;
 
 void CameraModePerv_init(int *obj)
 {
@@ -3191,20 +3191,18 @@ extern f32 lbl_803E1A80;
 void CameraModeWorldMap_init(int *obj)
 {
     register u32 bitval;
-    register u8 *p;
-    if (lbl_803DD588 == 0) {
-        lbl_803DD588 = (u32)mmAlloc(24, 15, 0);
+    if (lbl_803DD588 == NULL) {
+        lbl_803DD588 = (CameraModeWorldMapState *)mmAlloc(sizeof(CameraModeWorldMapState), 15, 0);
     }
-    *(f32*)lbl_803DD588 = lbl_803E1A40;
-    *(f32*)((char*)lbl_803DD588 + 4) = lbl_803E1A28;
+    lbl_803DD588->distance = lbl_803E1A40;
+    lbl_803DD588->distanceVelocity = lbl_803E1A28;
     bitval = 0;
-    *((u8*)lbl_803DD588 + 8) = bitval;
-    *((u8*)lbl_803DD588 + 9) = bitval;
-    p = (u8*)lbl_803DD588;
-    p[21] &= ~0x80;
-    *(s16*)((char*)lbl_803DD588 + 10) = 1;
-    *((u8*)lbl_803DD588 + 20) = 0;
-    *(int*)((char*)lbl_803DD588 + 16) = 0;
+    lbl_803DD588->mode = bitval;
+    lbl_803DD588->previousMode = bitval;
+    lbl_803DD588->flags.transitionActive = 0;
+    lbl_803DD588->settleFrames = 1;
+    lbl_803DD588->focusBlendTimer = 0;
+    lbl_803DD588->focusObjectId = 0;
     *(f32*)((char*)obj + 0xB4) = lbl_803E1A80;
     *(s16*)obj = -32768;
 }
@@ -3214,16 +3212,16 @@ void CameraModeWorldMap_copyToCurrent(int *p1, int kind)
     switch (kind) {
     case 0:
         if (p1 == NULL) return;
-        *((u8*)lbl_803DD588 + 8) = *(u8*)p1;
+        lbl_803DD588->mode = *(u8*)p1;
         return;
     case 1:
     case 2:
         if (p1 == NULL) return;
-        *(int*)((char*)lbl_803DD588 + 0x10) = *p1;
+        lbl_803DD588->focusObjectId = *p1;
         if (kind == 1) {
-            *((u8*)lbl_803DD588 + 0x14) = 20;
+            lbl_803DD588->focusBlendTimer = 20;
         } else {
-            *((u8*)lbl_803DD588 + 0x14) = 1;
+            lbl_803DD588->focusBlendTimer = 1;
         }
         return;
     }
@@ -3471,7 +3469,7 @@ void CameraModeTitle_moveCam(u8 newCam)
 f32 titleScreenGetCamProgress(void) { return lbl_803DB9D8; }
 
 /* fn_X(lbl); lbl = 0; */
-void CameraModeWorldMap_free(void) { mm_free(lbl_803DD588); lbl_803DD588 = 0; }
+void CameraModeWorldMap_free(void) { mm_free((u32)lbl_803DD588); lbl_803DD588 = NULL; }
 void dll_4F_func05(void) { mm_free(lbl_803DD590); lbl_803DD590 = 0; }
 void CameraModeCrawl_free(void) { mm_free(lbl_803DD598); lbl_803DD598 = 0; }
 void CameraModeCannon_free(void) { mm_free(lbl_803DD5A0); lbl_803DD5A0 = 0; }
@@ -5139,7 +5137,8 @@ extern f32 lbl_803E1A6C;
 #pragma peephole off
 #pragma scheduling off
 void CameraModeWorldMap_update(u8 *obj) {
-    u8 *state;
+    GameObject *state;
+    CameraModeWorldMapState *worldMapState;
     int objA, objB;
     int buttons;
     f32 spd = lbl_803E1A28;
@@ -5147,38 +5146,39 @@ void CameraModeWorldMap_update(u8 *obj) {
     f32 mdx, mdz;
     s16 e;
 
-    state = *(u8 **)&((GameObject *)obj)->anim.targetObj;
+    state = (GameObject *)((GameObject *)obj)->anim.targetObj;
+    worldMapState = lbl_803DD588;
     objA = ObjList_FindObjectById(0x42fff);
     objB = ObjList_FindObjectById(0x4325b);
     buttons = (u16)getButtonsHeld(0);
     getButtonsJustPressed(0);
 
-    switch (*(u8 *)(lbl_803DD588 + 8)) {
+    switch (worldMapState->mode) {
     case 0:
-        if (*(u8 *)(lbl_803DD588 + 9) != *(u8 *)(lbl_803DD588 + 8)) {
-            *(u8 *)(lbl_803DD588 + 0x14) = 1;
+        if (worldMapState->previousMode != worldMapState->mode) {
+            worldMapState->focusBlendTimer = 1;
             (*gScreenTransitionInterface)->start(0xc, 1);
-            *(s16 *)(lbl_803DD588 + 0xa) = 2;
-            ((WmFlags *)(lbl_803DD588 + 0x15))->b7 = 1;
+            worldMapState->settleFrames = 2;
+            worldMapState->flags.transitionActive = 1;
         } else {
             s16 dYaw, dPitch;
-            if (((WmFlags *)(lbl_803DD588 + 0x15))->b7 != 0 &&
+            if (worldMapState->flags.transitionActive != 0 &&
                 (*gScreenTransitionInterface)->isFinished() != 0) {
                 fn_8012DDB8(0);
                 (*gScreenTransitionInterface)->step(0xc, 1);
-                ((WmFlags *)(lbl_803DD588 + 0x15))->b7 = 0;
+                worldMapState->flags.transitionActive = 0;
                 *(u8 *)(*(int *)(ObjList_FindObjectById(0x43077) + 0xb8) + 0x27d) = 0;
             }
-            if (((WmFlags *)(lbl_803DD588 + 0x15))->b7 == 0) {
-                *(s16 *)(lbl_803DD588 + 0xa) -= 1;
-                if (*(s16 *)(lbl_803DD588 + 0xa) < 1) {
-                    *(s16 *)(lbl_803DD588 + 0xa) = 1;
+            if (worldMapState->flags.transitionActive == 0) {
+                worldMapState->settleFrames -= 1;
+                if (worldMapState->settleFrames < 1) {
+                    worldMapState->settleFrames = 1;
                 }
                 if (buttons & 8) {
-                    spd = lbl_803E1A2C * *(f32 *)lbl_803DD588;
+                    spd = lbl_803E1A2C * worldMapState->distance;
                 }
                 if (buttons & 4) {
-                    spd = lbl_803E1A30 * *(f32 *)lbl_803DD588;
+                    spd = lbl_803E1A30 * worldMapState->distance;
                 }
                 {
                     f32 a, b, rate, vel;
@@ -5187,7 +5187,7 @@ void CameraModeWorldMap_update(u8 *obj) {
                     } else {
                         a = spd;
                     }
-                    vel = *(f32 *)(lbl_803DD588 + 4);
+                    vel = worldMapState->distanceVelocity;
                     if (vel < lbl_803E1A28) {
                         b = -vel;
                     } else {
@@ -5198,49 +5198,49 @@ void CameraModeWorldMap_update(u8 *obj) {
                     } else {
                         rate = lbl_803E1A38;
                     }
-                    *(f32 *)(lbl_803DD588 + 4) =
-                        rate * (spd - vel) + *(f32 *)(lbl_803DD588 + 4);
+                    worldMapState->distanceVelocity =
+                        rate * (spd - vel) + worldMapState->distanceVelocity;
                 }
-                *(f32 *)lbl_803DD588 = *(f32 *)lbl_803DD588 + *(f32 *)(lbl_803DD588 + 4);
-                if (*(f32 *)lbl_803DD588 < lbl_803E1A3C) {
-                    *(f32 *)lbl_803DD588 = lbl_803E1A3C;
+                worldMapState->distance = worldMapState->distance + worldMapState->distanceVelocity;
+                if (worldMapState->distance < lbl_803E1A3C) {
+                    worldMapState->distance = lbl_803E1A3C;
                 }
-                if (*(f32 *)lbl_803DD588 > lbl_803E1A40) {
-                    *(f32 *)lbl_803DD588 = lbl_803E1A40;
+                if (worldMapState->distance > lbl_803E1A40) {
+                    worldMapState->distance = lbl_803E1A40;
                 }
                 dYaw = (s16)((s8)padGetCX(0) * 3);
                 dPitch = (s16)((s8)padGetCY(0) * 3);
-                if (*(u8 *)(lbl_803DD588 + 0x14) != 0) {
-                    int f = ObjList_FindObjectById(*(int *)(lbl_803DD588 + 0x10));
+                if (worldMapState->focusBlendTimer != 0) {
+                    int f = ObjList_FindObjectById(worldMapState->focusObjectId);
                     f32 dx = ((GameObject *)f)->anim.worldPosX - ((GameObject *)objA)->anim.worldPosX;
                     f32 dz = ((GameObject *)f)->anim.worldPosZ - ((GameObject *)objA)->anim.worldPosZ;
                     s16 d;
                     f32 cur;
-                    *(s16 *)(lbl_803DD588 + 0xc) = (s16)(0x8000 - getAngle(dx, dz));
-                    d = (s16)(*(s16 *)(lbl_803DD588 + 0xc) - (u16)*(s16 *)obj);
+                    worldMapState->targetAngle = (s16)(0x8000 - getAngle(dx, dz));
+                    d = (s16)(worldMapState->targetAngle - (u16)*(s16 *)obj);
                     if (d > 0x8000) {
                         d = (s16)(d - 0xffff);
                     }
                     if (d < -0x8000) {
                         d += 0xffff;
                     }
-                    *(s16 *)obj = *(s16 *)obj + d / *(u8 *)(lbl_803DD588 + 0x14);
-                    *(s16 *)(lbl_803DD588 + 0xc) =
+                    *(s16 *)obj = *(s16 *)obj + d / worldMapState->focusBlendTimer;
+                    worldMapState->targetAngle =
                         (s16)(0x47d0 - getAngle(sqrtf(dx * dx + dz * dz),
                                                 ((GameObject *)f)->anim.worldPosY - ((GameObject *)objA)->anim.worldPosY));
-                    d = (s16)(*(s16 *)(lbl_803DD588 + 0xc) - (u16)((GameObject *)obj)->anim.rotY);
+                    d = (s16)(worldMapState->targetAngle - (u16)((GameObject *)obj)->anim.rotY);
                     if (d > 0x8000) {
                         d = (s16)(d - 0xffff);
                     }
                     if (d < -0x8000) {
                         d += 0xffff;
                     }
-                    ((GameObject *)obj)->anim.rotY = ((GameObject *)obj)->anim.rotY + d / *(u8 *)(lbl_803DD588 + 0x14);
-                    cur = *(f32 *)lbl_803DD588;
-                    *(f32 *)lbl_803DD588 =
+                    ((GameObject *)obj)->anim.rotY = ((GameObject *)obj)->anim.rotY + d / worldMapState->focusBlendTimer;
+                    cur = worldMapState->distance;
+                    worldMapState->distance =
                         cur + (f32)((s16)(s32)(lbl_803E1A44 - cur) /
-                                    (s32)*(u8 *)(lbl_803DD588 + 0x14));
-                    *(u8 *)(lbl_803DD588 + 0x14) -= 1;
+                                    (s32)worldMapState->focusBlendTimer);
+                    worldMapState->focusBlendTimer -= 1;
                 }
                 *(s16 *)obj += dYaw;
                 ((GameObject *)obj)->anim.rotY += dPitch;
@@ -5259,7 +5259,7 @@ void CameraModeWorldMap_update(u8 *obj) {
                     snPit = mathCosf(lbl_803E1A48 * (f32)(((GameObject *)obj)->anim.rotY + 0x320) / lbl_803E1A4C);
                     csPit = mathSinf(lbl_803E1A48 * (f32)(((GameObject *)obj)->anim.rotY + 0x320) /
                                         lbl_803E1A4C);
-                    r = *(f32 *)lbl_803DD588;
+                    r = worldMapState->distance;
                     vy = r * csPit;
                     h = r * snPit;
                     px = h * csYaw;
@@ -5268,36 +5268,36 @@ void CameraModeWorldMap_update(u8 *obj) {
                     dyy = ((GameObject *)obj)->anim.worldPosY - ((lbl_803E1A50 + ((GameObject *)state)->anim.worldPosY) + vy);
                     dzz = ((GameObject *)obj)->anim.worldPosZ - (((GameObject *)state)->anim.worldPosZ + pz);
                     ((GameObject *)obj)->anim.worldPosX =
-                        ((GameObject *)obj)->anim.worldPosX - dxx / (f32)*(s16 *)(lbl_803DD588 + 0xa);
+                        ((GameObject *)obj)->anim.worldPosX - dxx / (f32)worldMapState->settleFrames;
                     ((GameObject *)obj)->anim.worldPosY =
-                        ((GameObject *)obj)->anim.worldPosY - dyy / (f32)*(s16 *)(lbl_803DD588 + 0xa);
+                        ((GameObject *)obj)->anim.worldPosY - dyy / (f32)worldMapState->settleFrames;
                     ((GameObject *)obj)->anim.worldPosZ =
-                        ((GameObject *)obj)->anim.worldPosZ - dzz / (f32)*(s16 *)(lbl_803DD588 + 0xa);
+                        ((GameObject *)obj)->anim.worldPosZ - dzz / (f32)worldMapState->settleFrames;
                 }
             }
         }
         break;
     case 1: {
         int g = ObjList_FindObjectById(0x43077);
-        if (*(u8 *)(lbl_803DD588 + 9) != *(u8 *)(lbl_803DD588 + 8)) {
+        if (worldMapState->previousMode != worldMapState->mode) {
             (*gScreenTransitionInterface)->start(0xc, 1);
-            *(s16 *)(lbl_803DD588 + 0xa) = 2;
-            ((WmFlags *)(lbl_803DD588 + 0x15))->b7 = 1;
+            worldMapState->settleFrames = 2;
+            worldMapState->flags.transitionActive = 1;
         } else {
-            if (((WmFlags *)(lbl_803DD588 + 0x15))->b7 != 0 &&
+            if (worldMapState->flags.transitionActive != 0 &&
                 (*gScreenTransitionInterface)->isFinished() != 0) {
                 fn_8012DDB8(1);
                 (*gScreenTransitionInterface)->step(0xc, 1);
-                ((WmFlags *)(lbl_803DD588 + 0x15))->b7 = 0;
+                worldMapState->flags.transitionActive = 0;
                 *(u8 *)(*(int *)(ObjList_FindObjectById(0x43077) + 0xb8) + 0x27d) = 1;
             }
-            if (((WmFlags *)(lbl_803DD588 + 0x15))->b7 == 0) {
+            if (worldMapState->flags.transitionActive == 0) {
                 int ang;
                 s16 d;
                 u16 my;
-                *(s16 *)(lbl_803DD588 + 0xa) -= 1;
-                if (*(s16 *)(lbl_803DD588 + 0xa) < 1) {
-                    *(s16 *)(lbl_803DD588 + 0xa) = 1;
+                worldMapState->settleFrames -= 1;
+                if (worldMapState->settleFrames < 1) {
+                    worldMapState->settleFrames = 1;
                 }
                 ang = (u16)-getAngle(((GameObject *)objA)->anim.worldPosX - ((GameObject *)state)->anim.worldPosX,
                                      ((GameObject *)objA)->anim.worldPosZ - ((GameObject *)state)->anim.worldPosZ);
@@ -5308,7 +5308,7 @@ void CameraModeWorldMap_update(u8 *obj) {
                 if (d < -0x8000) {
                     d += 0xffff;
                 }
-                *(s16 *)obj = *(s16 *)obj + d / *(s16 *)(lbl_803DD588 + 0xa);
+                *(s16 *)obj = *(s16 *)obj + d / worldMapState->settleFrames;
                 d = (s16)(0x7d0 - (u16)((GameObject *)obj)->anim.rotY);
                 if (d > 0x8000) {
                     d = (s16)(d - 0xffff);
@@ -5316,7 +5316,7 @@ void CameraModeWorldMap_update(u8 *obj) {
                 if (d < -0x8000) {
                     d += 0xffff;
                 }
-                ((GameObject *)obj)->anim.rotY = ((GameObject *)obj)->anim.rotY + d / *(s16 *)(lbl_803DD588 + 0xa);
+                ((GameObject *)obj)->anim.rotY = ((GameObject *)obj)->anim.rotY + d / worldMapState->settleFrames;
                 {
                     f32 a, sn, cs, sn54, cs54;
                     f32 t6, t5, px, pz;
@@ -5335,11 +5335,11 @@ void CameraModeWorldMap_update(u8 *obj) {
                           (lbl_803E1A5C + (((GameObject *)state)->anim.worldPosY + t6));
                     dzz = ((GameObject *)obj)->anim.worldPosZ - (((GameObject *)state)->anim.worldPosZ + pz);
                     ((GameObject *)obj)->anim.worldPosX =
-                        ((GameObject *)obj)->anim.worldPosX - dxx / (f32)*(s16 *)(lbl_803DD588 + 0xa);
+                        ((GameObject *)obj)->anim.worldPosX - dxx / (f32)worldMapState->settleFrames;
                     ((GameObject *)obj)->anim.worldPosY =
-                        ((GameObject *)obj)->anim.worldPosY - dyy / (f32)*(s16 *)(lbl_803DD588 + 0xa);
+                        ((GameObject *)obj)->anim.worldPosY - dyy / (f32)worldMapState->settleFrames;
                     ((GameObject *)obj)->anim.worldPosZ =
-                        ((GameObject *)obj)->anim.worldPosZ - dzz / (f32)*(s16 *)(lbl_803DD588 + 0xa);
+                        ((GameObject *)obj)->anim.worldPosZ - dzz / (f32)worldMapState->settleFrames;
                 }
                 my = (u16)(*(s16 *)obj + 0x1388);
                 if (isWidescreen() != 0) {
@@ -5361,14 +5361,14 @@ void CameraModeWorldMap_update(u8 *obj) {
     }
     }
 
-    *(u8 *)(lbl_803DD588 + 9) = *(u8 *)(lbl_803DD588 + 8);
+    worldMapState->previousMode = worldMapState->mode;
     m = ObjList_FindObjectById(0x431dc);
     mdx = ((GameObject *)m)->anim.worldPosX - ((GameObject *)obj)->anim.worldPosX;
     mdz = ((GameObject *)m)->anim.worldPosZ - ((GameObject *)obj)->anim.worldPosZ;
     *(s16 *)m = (s16)(getAngle(mdx, mdz) + 0x8000);
     ((GameObject *)m)->anim.rotY = (s16)(0x8000 - getAngle(sqrtf(mdx * mdx + mdz * mdz),
                                               ((GameObject *)m)->anim.worldPosY - ((GameObject *)obj)->anim.worldPosY));
-    ((GameObject *)m)->anim.rootMotionScale = lbl_803E1A64 + lbl_803E1A68 / *(f32 *)lbl_803DD588;
+    ((GameObject *)m)->anim.rootMotionScale = lbl_803E1A64 + lbl_803E1A68 / worldMapState->distance;
     *(s16 *)objB = *(s16 *)m;
     ((GameObject *)objB)->anim.rotY = ((GameObject *)m)->anim.rotY;
     ((GameObject *)objB)->anim.rootMotionScale = ((GameObject *)m)->anim.rootMotionScale;
