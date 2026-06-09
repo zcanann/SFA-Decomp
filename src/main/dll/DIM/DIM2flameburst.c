@@ -269,15 +269,11 @@ extern f32 lbl_803E569C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801b3de4(undefined4 param_1,uint param_2)
 {
   (*gObjectTriggerInterface)->runSequence((param_2 ^ 1) + 2, (void *)param_1, -1);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -292,8 +288,6 @@ void FUN_801b3de4(undefined4 param_1,uint param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 bool FUN_801b3e28(int param_1)
 {
   bool bVar1;
@@ -308,8 +302,6 @@ bool FUN_801b3e28(int param_1)
   (*gObjectTriggerInterface)->runSequence(bVar1, (void *)param_1, -1);
   return bVar1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -324,15 +316,11 @@ bool FUN_801b3e28(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801b3ec0(int param_1)
 {
   ObjGroup_RemoveObject(param_1,0x13);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -347,8 +335,6 @@ void FUN_801b3ec0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801b3ee4(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   if ((visible == 0) || (((GameObject *)param_1)->unkF8 != 0)) {
@@ -361,8 +347,6 @@ void FUN_801b3ee4(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -377,8 +361,6 @@ void FUN_801b3ee4(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801b3f2c(int param_1)
 {
   int iVar1;
@@ -408,8 +390,6 @@ void FUN_801b3f2c(int param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -424,8 +404,6 @@ void FUN_801b3f2c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801b4020(undefined2 *param_1,int param_2)
 {
   float *pfVar1;
@@ -444,8 +422,6 @@ void FUN_801b4020(undefined2 *param_1,int param_2)
   *(undefined4 *)(param_1 + 0x7c) = 1;
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -460,8 +436,6 @@ void FUN_801b4020(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801b40f0(undefined8 param_1,double param_2,double param_3,double param_4)
 {
   byte bVar1;
@@ -551,8 +525,6 @@ LAB_801b44d4:
   FUN_80286888();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -567,8 +539,6 @@ LAB_801b44d4:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801b43a8(byte param_1,undefined *param_2)
 {
   undefined uVar1;
@@ -628,8 +598,6 @@ void FUN_801b43a8(byte param_1,undefined *param_2)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -685,8 +653,6 @@ void FUN_801b45ac(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801b45b0(undefined8 param_1,double param_2,double param_3,double param_4,double param_5,
                  double param_6,undefined8 param_7,undefined8 param_8)
 {
@@ -983,8 +949,6 @@ void FUN_801b45b0(undefined8 param_1,double param_2,double param_3,double param_
   FUN_80286888();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -999,8 +963,6 @@ void FUN_801b45b0(undefined8 param_1,double param_2,double param_3,double param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801b4f60(void)
 {
   int iVar1;
@@ -1181,8 +1143,6 @@ void FUN_801b4f60(void)
   FUN_80286888();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1197,8 +1157,6 @@ void FUN_801b4f60(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801b55c0(void)
 {
   int iVar1;
@@ -1216,8 +1174,6 @@ void FUN_801b55c0(void)
   } while (iVar1 < 4);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1252,8 +1208,6 @@ void FUN_801b5624(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801b5628(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   if (visible != 0) {
@@ -1261,8 +1215,6 @@ void FUN_801b5628(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1280,6 +1232,8 @@ void FUN_801b5628(int param_1,int param_2,int param_3,int param_4,int param_5,s8
 extern void textureFree(int tex);
 extern int lbl_803AC960[4];
 
+#pragma scheduling off
+#pragma peephole off
 void explosion_release(uint param_1)
 {
     int i;
@@ -1295,9 +1249,9 @@ void explosion_release(uint param_1)
         p++;
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
-#pragma scheduling on
-#pragma peephole on
 void fn_explosion_release_v11_unused(uint param_1)
 {
   short sVar1;
@@ -1353,8 +1307,6 @@ void fn_explosion_release_v11_unused(uint param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1369,8 +1321,6 @@ void fn_explosion_release_v11_unused(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801b57b4(undefined2 *param_1,int param_2)
 {
   float fVar1;
@@ -1393,8 +1343,6 @@ void FUN_801b57b4(undefined2 *param_1,int param_2)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1426,8 +1374,6 @@ void FUN_801b5844(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801b5848(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   if (visible != 0) {
@@ -1435,8 +1381,6 @@ void FUN_801b5848(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1451,8 +1395,6 @@ void FUN_801b5848(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801b5870(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined2 *param_9)
@@ -1536,8 +1478,6 @@ void FUN_801b5870(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1552,8 +1492,6 @@ void FUN_801b5870(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801b5b00(undefined2 *param_1,int param_2)
 {
   uint uVar1;
@@ -1573,8 +1511,6 @@ void FUN_801b5b00(undefined2 *param_1,int param_2)
   *(float *)(iVar2 + 4) = lbl_803E5688;
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1589,8 +1525,6 @@ void FUN_801b5b00(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801b5b8c(void)
 {
   int iVar1;
@@ -1632,8 +1566,6 @@ void FUN_801b5b8c(void)
   FUN_80286880();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1648,8 +1580,6 @@ void FUN_801b5b8c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801b5d00(int param_1,int param_2)
 {
   int iVar1;
@@ -1681,8 +1611,6 @@ void FUN_801b5d00(int param_1,int param_2)
   *(short *)(param_2 + 0x62) = (short)uVar2;
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1697,8 +1625,6 @@ void FUN_801b5d00(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 undefined4 FUN_801b5df0(int param_1,undefined4 param_2,int param_3)
 {
   uint uVar1;
@@ -1738,8 +1664,6 @@ undefined4 FUN_801b5df0(int param_1,undefined4 param_2,int param_3)
   FUN_801b5b8c();
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1754,8 +1678,6 @@ undefined4 FUN_801b5df0(int param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801b6108(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   if (visible != 0) {
@@ -1763,8 +1685,6 @@ void FUN_801b6108(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1779,8 +1699,6 @@ void FUN_801b6108(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801b6130(int param_1)
 {
   int iVar1;
@@ -1802,8 +1720,6 @@ void FUN_801b6130(int param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1843,6 +1759,8 @@ extern int Obj_GetActiveModel(int obj);
 extern int ObjModel_GetCurrentVertexCoords(int model, int idx);
 extern void fn_80065574(int a, int b, int c);
 
+#pragma peephole off
+#pragma scheduling off
 void dimmagicbridge_init(u8* obj, u8* params) {
     DimMagicBridgeState* sub;
     int model;
@@ -1905,6 +1823,8 @@ void dimmagicbridge_init(u8* obj, u8* params) {
         }
     }
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /* 8b "li r3, N; blr" returners. */
 int explosion_getExtraSize(void) { return 0xa60; }
@@ -1922,10 +1842,12 @@ extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 v);
 extern f32 lbl_803E49E8;
 extern f32 lbl_803E4A18;
 extern f32 lbl_803E4A20;
+#pragma peephole off
 void dimwooddoor2_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E49D0); }
 void dll_1CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E49E8); }
 void dimmagicbridge_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E4A18); }
 void dim_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E4A20); }
+#pragma peephole reset
 
 /* conditional init/free pair. */
 extern void *lbl_803DDB78;
@@ -1949,6 +1871,7 @@ extern int EmissionController_IsLingering(void* player);
  * either fire the death VFX (fn_80065574(0x11, 0, 0)) when sub->_5f is set or,
  * when GameBit 0x1ef is on and the player's emission controller is lingering,
  * latch GameBit 0x1e8. */
+#pragma scheduling off
 void dimmagicbridge_update(int obj)
 {
     DimMagicBridgeState* sub;
@@ -1967,9 +1890,12 @@ void dimmagicbridge_update(int obj)
         fn_80065574(0x11, 0, 0);
     }
 }
+#pragma scheduling reset
 
 /* dimwooddoor2 variant: trigger-init writing extra block [4]=[8]=lbl_803E49D4
  * and using mask 0x6000 + initial state byte 3 at +0. */
+#pragma peephole off
+#pragma scheduling off
 void dimwooddoor2_init(u8* obj, u8* params)
 {
     DimWoodDoor2State* sub;
@@ -1987,7 +1913,11 @@ void dimwooddoor2_init(u8* obj, u8* params)
         ((GameObject *)obj)->anim.alpha = 0;
     }
 }
+#pragma scheduling reset
+#pragma peephole reset
 
+#pragma peephole off
+#pragma scheduling off
 void dll_1CE_init(u8* obj, u8* params)
 {
     Dll1CEState* sub;
@@ -2002,6 +1932,8 @@ void dll_1CE_init(u8* obj, u8* params)
     }
     sub->openVelocity = lbl_803E49F0;
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /* explosion_free: model-light release if present. */
 extern void ModelLightStruct_free(void *);
@@ -2014,6 +1946,7 @@ void explosion_free(int obj)
 }
 
 /* explosion_getObjectTypeId: tile/index lookup capped by table count. */
+#pragma scheduling off
 int explosion_getObjectTypeId(int obj)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
@@ -2023,23 +1956,26 @@ int explosion_getObjectTypeId(int obj)
     }
     return (idx << 11) | 0x400;
 }
+#pragma scheduling reset
 
 /* dim_levelcontrol_free: gameplay music + time-of-day reset. */
 extern void Music_Trigger(s32 triggerId, s32 mode);
 extern void timeOfDayFn_80055000(void);
+#pragma scheduling off
 void dim_levelcontrol_free(int p1)
 {
     Music_Trigger(0xa1, 0);
     Music_Trigger(0xed, 0);
     timeOfDayFn_80055000();
 }
+#pragma scheduling reset
 
 /* dimmagicbridge_scrollTextureChannels: scroll two material channels and keep
  * the bridge wave phases in sub[0x60]/sub[0x62] moving with framesThisStep. */
 extern void *objFindTexture(int obj, int a, int b);
 extern u8 framesThisStep;
+#pragma scheduling off
 #pragma dont_inline on
-#pragma peephole on
 void dimmagicbridge_scrollTextureChannels(int param_1, u8* obj)
 {
     u8* tex;
@@ -2066,12 +2002,14 @@ void dimmagicbridge_scrollTextureChannels(int param_1, u8* obj)
     if (v > 0xffff) v = v - 0xffff;
     *(u16*)(obj + 0x62) = (u16)v;
 }
-#pragma peephole reset
 #pragma dont_inline reset
+#pragma scheduling reset
 
 /* dimmagicbridge_flameSeqFn: tick the spawn timer, allocate a free flame slot
  * every 16 frames, and ramp each active slot's alpha toward full; then update
  * the animated bridge mesh. */
+#pragma scheduling off
+#pragma peephole off
 int dimmagicbridge_flameSeqFn(int* obj, int p2, u8* p3)
 {
     u8* sub = ((GameObject *)obj)->extra;
@@ -2103,6 +2041,8 @@ int dimmagicbridge_flameSeqFn(int* obj, int p2, u8* p3)
     dimmagicbridge_updateVertexWave((int)obj, (u8 *)sub);
     return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 extern f32 timeDelta;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -2115,6 +2055,8 @@ extern f32 lbl_803E49E4;
  * shake anim and decay its wobble; while idle near map-cue 0x338 bleed off
  * alpha, otherwise scan the nearby objects and, if a key object is present,
  * snap the door open (reset wobble, ring the gamebit, play the open sfx). */
+#pragma scheduling off
+#pragma peephole off
 void dimwooddoor2_update(int* obj)
 {
     int* q = *(int**)&((GameObject *)obj)->anim.placementData;
@@ -2154,6 +2096,8 @@ void dimwooddoor2_update(int* obj)
         }
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 extern int Obj_IsLoadingLocked(void);
 extern int *Obj_AllocObjectSetup(int a, int b);
@@ -2167,6 +2111,8 @@ extern f32 lbl_803E49FC;
  * the lid open with clamped velocity while idle, and once a key object is
  * nearby, count down then ring the gamebit and (if the load isn't locked)
  * spawn the contents object seeded from the door's transform. */
+#pragma scheduling off
+#pragma peephole off
 void dll_1CE_update(int* obj)
 {
     int* q = *(int**)&((GameObject *)obj)->anim.placementData;
@@ -2224,6 +2170,8 @@ void dll_1CE_update(int* obj)
         Obj_SetupObject(no, 5, (s8)*(s8*)((char*)obj + 0xac), -1, 0);
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 typedef union {
     u8 u8;
@@ -2327,6 +2275,8 @@ extern void *memcpy(void *dst, const void *src, unsigned long n);
 void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z);
 void fn_801B40B8(u8 mode, u8 *out, f32 a, f32 b);
 
+#pragma scheduling off
+#pragma peephole off
 void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z)
 {
     int p4c = *(int *)&((GameObject *)obj)->anim.placementData;
@@ -2400,7 +2350,11 @@ void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z)
         *(u8 *)((char *)p + 0x2f) = 1;
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 void fn_801B40B8(u8 mode, u8 *out, f32 a, f32 b)
 {
     s16 c1;
@@ -2456,7 +2410,11 @@ void fn_801B40B8(u8 mode, u8 *out, f32 a, f32 b)
         break;
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     u32 colB2;
@@ -2549,7 +2507,11 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
     renderResetFn_8003fc60();
 }
+#pragma peephole reset
+#pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 void explosion_update(int obj)
 {
     ExplosionPartfxSource fake;
@@ -2723,7 +2685,11 @@ void explosion_update(int obj)
         }
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 void explosion_init(int obj, int p2)
 {
     f32 vsp[3];
@@ -2844,7 +2810,11 @@ void explosion_init(int obj, int p2)
     *(f32 *)((char *)state + 0xa54) = scale;
     ((GameObject *)obj)->anim.rootMotionScale = lbl_803E4960;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 void explosion_initialise(void)
 {
     FbTexTbl t;
@@ -2864,7 +2834,11 @@ void explosion_initialise(void)
         dst++;
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 void dimmagicbridge_updateVertexWave(int obj, u8 *sub)
 {
     int model = (int)Obj_GetActiveModel((int)obj);
@@ -2884,3 +2858,5 @@ void dimmagicbridge_updateVertexWave(int obj, u8 *sub)
     DCStoreRange((void *)ObjModel_GetCurrentVertexCoords(model, 0), cnt * 6);
     ((GameObject *)obj)->anim.alpha = *(u8 *)(sub + 0x51);
 }
+#pragma peephole reset
+#pragma scheduling reset
