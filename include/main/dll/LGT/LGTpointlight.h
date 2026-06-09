@@ -1,8 +1,54 @@
 #ifndef MAIN_DLL_LGT_LGTPOINTLIGHT_H_
 #define MAIN_DLL_LGT_LGTPOINTLIGHT_H_
 
-#include "ghidra_import.h"
+#include "global.h"
+#include "main/game_object.h"
+#include "main/obj_placement.h"
 
-void lightsource_init(s16 *obj,int mapData);
+typedef struct LightSourceSetup {
+    ObjPlacement base;
+    s8 yaw;
+    u8 mode;
+    s16 range;
+    s16 flags;
+    s16 gameBit;
+    u8 pad20[2];
+    u8 options;
+} LightSourceSetup;
+
+typedef struct LightSourceState {
+    void *light;
+    f32 fxTimer;
+    u8 pad08[4];
+    f32 sparkTimer;
+    int gameBit;
+    u8 mode;
+    u8 fxType;
+    u8 fxArg;
+    u8 lit;
+    u8 litPrev;
+    u8 sparks;
+    u8 loopFlags;
+    u8 pad1B;
+} LightSourceState;
+
+STATIC_ASSERT(offsetof(LightSourceSetup, yaw) == 0x18);
+STATIC_ASSERT(offsetof(LightSourceSetup, mode) == 0x19);
+STATIC_ASSERT(offsetof(LightSourceSetup, range) == 0x1a);
+STATIC_ASSERT(offsetof(LightSourceSetup, flags) == 0x1c);
+STATIC_ASSERT(offsetof(LightSourceSetup, gameBit) == 0x1e);
+STATIC_ASSERT(offsetof(LightSourceSetup, options) == 0x22);
+STATIC_ASSERT(sizeof(LightSourceState) == 0x1c);
+STATIC_ASSERT(offsetof(LightSourceState, fxTimer) == 0x04);
+STATIC_ASSERT(offsetof(LightSourceState, sparkTimer) == 0x0c);
+STATIC_ASSERT(offsetof(LightSourceState, gameBit) == 0x10);
+STATIC_ASSERT(offsetof(LightSourceState, mode) == 0x14);
+STATIC_ASSERT(offsetof(LightSourceState, fxType) == 0x15);
+STATIC_ASSERT(offsetof(LightSourceState, fxArg) == 0x16);
+STATIC_ASSERT(offsetof(LightSourceState, lit) == 0x17);
+STATIC_ASSERT(offsetof(LightSourceState, sparks) == 0x19);
+STATIC_ASSERT(offsetof(LightSourceState, loopFlags) == 0x1a);
+
+void lightsource_init(GameObject *obj, LightSourceSetup *setup);
 
 #endif /* MAIN_DLL_LGT_LGTPOINTLIGHT_H_ */
