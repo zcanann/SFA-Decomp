@@ -2662,7 +2662,7 @@ int objGetTotalDataSize(void *tmpl, u8 *def, s16 *data, int flags)
     }
     if (*(u8 *)(def + 0x61) != 0) {
         size = roundUpTo4(size) + 0xb8;
-        if (modelDef->primaryHitboxShapeFlags & 8) {
+        if ((s8)modelDef->primaryHitboxShapeFlags & 8) {
             size += 0x110;
         }
     }
