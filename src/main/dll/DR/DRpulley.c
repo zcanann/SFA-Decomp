@@ -1,4 +1,5 @@
 #include "main/dll/DR/DRpulley.h"
+#include "main/game_object.h"
 
 extern void objRenderFn_8003b8f4(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
 extern void fn_801E991C(void *obj, void *path);
@@ -19,7 +20,7 @@ void SnowBike_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, und
 {
     void *path;
 
-    path = *(void **)((char *)obj + 0xb8);
+    path = ((GameObject *)obj)->extra;
     fn_801E991C(obj, path);
     if (visible == -1) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E5AEC);

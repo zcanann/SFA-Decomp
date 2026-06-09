@@ -42,7 +42,7 @@ void dll_21B_free(int obj) {
 #pragma peephole off
 #pragma scheduling off
 void dll_21B_init(int *obj, u8 *init) {
-    Dll21BState *inner = *(Dll21BState **)((char *)obj + 0xb8);
+    Dll21BState *inner = ((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)((s8)init[0x18] << 8);
     inner->gameBit = *(s16 *)((char *)init + 0x1e);
     ((GameObject *)obj)->objectFlags |= 0x6000;
@@ -54,8 +54,8 @@ void dll_21B_init(int *obj, u8 *init) {
 #pragma scheduling off
 void dll_21B_update(int obj)
 {
-    u8 *setup = *(u8 **)(obj + 0x4c);
-    Dll21BState *state = *(Dll21BState **)(obj + 0xb8);
+    u8 *setup = *(u8 **)&((GameObject *)obj)->anim.placementData;
+    Dll21BState *state = ((GameObject *)obj)->extra;
     f32 limit;
 
     if ((s8)setup[0x19] == 1) {

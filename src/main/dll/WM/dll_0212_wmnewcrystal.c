@@ -72,7 +72,7 @@ int wmnewcrystal_SeqFn(int *obj, int unused, WmNewCrystalEventData *eventData) {
     f32 cameraDelta[3];
     int i;
 
-    state = *(WmNewCrystalState **)((char *)obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     for (i = 0; i < eventData->eventCount; i++) {
         switch (eventData->events[i]) {
         case 1:
@@ -81,7 +81,7 @@ int wmnewcrystal_SeqFn(int *obj, int unused, WmNewCrystalEventData *eventData) {
             PSVECNormalize(cameraDelta, cameraDelta);
             PSVECScale(cameraDelta, cameraDelta, lbl_803E6038);
             PSVECAdd(&((GameObject *)obj)->anim.localPosX, cameraDelta, &((GameObject *)obj)->anim.localPosX);
-            ((GameObject *)obj)->anim.worldPosX = *(f32 *)((char *)obj + 0xc);
+            ((GameObject *)obj)->anim.worldPosX = ((GameObject *)obj)->anim.localPosX;
             ((GameObject *)obj)->anim.worldPosY = ((GameObject *)obj)->anim.localPosY;
             ((GameObject *)obj)->anim.worldPosZ = ((GameObject *)obj)->anim.localPosZ;
             spawnExplosion(obj, lbl_803E6038, 1, 1, 0, 0, 0, 0, 0);
@@ -143,7 +143,7 @@ void wmnewcrystal_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
 #pragma peephole off
 #pragma scheduling off
 void wmnewcrystal_init(int *obj, u8 *init) {
-    WmNewCrystalState *inner = *(WmNewCrystalState **)((char *)obj + 0xb8);
+    WmNewCrystalState *inner = ((GameObject *)obj)->extra;
     ((GameObject *)obj)->animEventCallback = (void *)wmnewcrystal_SeqFn;
     if ((*gMapEventInterface)->getMode(*(s8 *)((char *)obj + 0xac)) > 1) {
         GameBit_Set(WMNEWCRYSTAL_GAMEBIT_ACTIVE, 1);

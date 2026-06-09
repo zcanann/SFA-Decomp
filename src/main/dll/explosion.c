@@ -75,12 +75,12 @@ void dll_197_init(int obj, int data)
         f32 f;
     } stk;
 
-    st = *(u8 **)(obj + 0xb8);
+    st = ((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)(((s8)*(u8 *)(data + 0x18) & 0x3fu) << 10);
     if (*(s16 *)(data + 0x1a) > 0) {
-        *(f32 *)(obj + 8) = (f32)*(s16 *)(data + 0x1a) / lbl_803E5140;
+        ((GameObject *)obj)->anim.rootMotionScale = (f32)*(s16 *)(data + 0x1a) / lbl_803E5140;
     } else {
-        *(f32 *)(obj + 8) = lbl_803E5144;
+        ((GameObject *)obj)->anim.rootMotionScale = lbl_803E5144;
     }
     *(u8 *)(st + 0xb) = *(u8 *)(data + 0x19);
     *(u8 *)(st + 0xc) = 0;
@@ -454,9 +454,9 @@ extern void getEnvfxAct(int a, int b, int c, int d);
 #pragma scheduling off
 #pragma peephole off
 void nwsh_levcon_update(int *obj) {
-    if (*(int*)((char*)obj + 0xf4) != 0) {
-        *(int*)((char*)obj + 0xf4) = *(int*)((char*)obj + 0xf4) - 1;
-        if (*(int*)((char*)obj + 0xf4) == 0) {
+    if (((GameObject *)obj)->unkF4 != 0) {
+        ((GameObject *)obj)->unkF4 = ((GameObject *)obj)->unkF4 - 1;
+        if (((GameObject *)obj)->unkF4 == 0) {
             skyFn_80088c94(7, 1);
             getEnvfxAct(0, 0, 0xd1, 0);
             getEnvfxAct(0, 0, 0xd6, 0);
@@ -473,7 +473,7 @@ void nwsh_levcon_init(int *obj) {
     ((GameObject *)obj)->animEventCallback = (void *)NWSH_levcon_SeqFn;
     unlockLevel(mapGetDirIdx(0x28), 1, 0);
     Music_Trigger(6, 1);
-    *(int*)((char*)obj + 0xf4) = 1;
+    ((GameObject *)obj)->unkF4 = 1;
     GameBit_Set(0xea2, 1);
     GameBit_Set(0xefd, 1);
 }
@@ -535,7 +535,7 @@ int dll_199_SeqFn(int obj, int p2, u8 *p3)
     int i;
     int idx;
 
-    st = *(u8 **)(obj + 0xb8);
+    st = ((GameObject *)obj)->extra;
     *(s16 *)(p3 + 0x70) = -1;
     *(u8 *)(p3 + 0x56) = 0;
     if (*(s16 *)(st + 0xa) != 0) {

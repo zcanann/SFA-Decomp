@@ -1,4 +1,5 @@
 #include "main/dll/laser19F.h"
+#include "main/game_object.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
@@ -308,7 +309,7 @@ extern void audioStopByMask(int mask);
 #pragma scheduling off
 void mmsh_shrine_free(int obj)
 {
-    int t = *(int *)(obj + 0xb8);
+    int t = *(int *)&((GameObject *)obj)->extra;
     if ((*(int *)(t + 0x18) & 0x20) != 0) {
         fn_8011F6D4(0);
         *(int *)(t + 0x18) = *(int *)(t + 0x18) & 0xffffffdf;

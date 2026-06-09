@@ -1,4 +1,5 @@
 #include "main/dll/torch1CD.h"
+#include "main/game_object.h"
 #include "main/dll/torch1cd_state.h"
 #include "main/effect_interfaces.h"
 
@@ -24,7 +25,7 @@ int dll_19B_SeqFn(int obj, int unused, u8 *buf)
     int state;
     int i;
 
-    state = *(int *)(obj + 0xb8);
+    state = *(int *)&((GameObject *)obj)->extra;
     *(s16 *)(buf + 0x6e) = -1;
     buf[0x56] = 0;
 

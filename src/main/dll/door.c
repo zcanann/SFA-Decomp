@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/door.h"
 #include "main/dll/fruit.h"
 
@@ -158,7 +159,7 @@ void dfptargetblock_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
   DfpTargetBlockAudioState *state;
 
-  state = *(DfpTargetBlockAudioState **)(obj + 0xb8);
+  state = ((GameObject *)obj)->extra;
   if (state->completionSfxReady != 0) return;
   if (state->stateSfxReady == 0) return;
   if (state->mode != DFPTARGETBLOCK_AUDIO_MODE_SETTLED) {

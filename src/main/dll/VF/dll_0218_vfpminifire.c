@@ -71,7 +71,7 @@ void vfpminifire_free(int obj) {
 #pragma scheduling off
 void vfpminifire_update(int obj)
 {
-    VfpMinifireState *state = *(VfpMinifireState **)(obj + 0xb8);
+    VfpMinifireState *state = ((GameObject *)obj)->extra;
     VfpMinifirePartfxArgs args;
     int linkedGfx;
     int i;
@@ -118,7 +118,7 @@ void vfpminifire_update(int obj)
         VFPMINIFIRE_SPAWN(obj, VFPMINIFIRE_SPARK_EFFECT, &args, 1);
     }
 
-    linkedGfx = *(int *)(obj + 0x54);
+    linkedGfx = *(int *)&((GameObject *)obj)->anim.hitReactState;
     if (linkedGfx != 0) {
         *(u8 *)(linkedGfx + 0x6e) = 0xb;
         *(u8 *)(linkedGfx + 0x6f) = 1;

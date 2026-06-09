@@ -205,7 +205,7 @@ void dimbossfire_init(int obj,undefined4 param_2,int param_3)
   undefined uVar2;
   int state;
 
-  state = *(int *)(obj + 0xb8);
+  state = *(int *)&((GameObject *)obj)->extra;
   ObjHits_SetHitVolumeSlot(obj,0,0,0);
   ObjHitbox_SetSphereRadius(obj,0);
   ObjHits_DisableObject(obj);

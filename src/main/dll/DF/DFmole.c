@@ -1,4 +1,5 @@
 #include "main/dll/DF/DFmole.h"
+#include "main/game_object.h"
 #include "main/objlib.h"
 
 extern void mm_free(void *p);
@@ -19,7 +20,7 @@ void dfropenode_free(void *obj)
     int count;
     int i;
 
-    node = *(void **)((char *)obj + 0xb8);
+    node = ((GameObject *)obj)->extra;
     ObjGroup_RemoveObject((u32)obj, 0x17);
     if (*(void **)((char *)node + 0x2c) != NULL && *(void **)((char *)node + 0x2c) != NULL) {
         mm_free(*(void **)((char *)node + 0x2c));

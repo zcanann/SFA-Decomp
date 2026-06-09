@@ -1,4 +1,5 @@
 #include "main/dll/CF/dll_179.h"
+#include "main/game_object.h"
 #include "main/dll/CF/CFTreasSharpy.h"
 #include "main/effect_interfaces.h"
 
@@ -18,9 +19,9 @@ void cfccrate_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     int objectType;
     CfCcrateState *state;
 
-    state = *(CfCcrateState **)(obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     if ((s32)visible != 0) {
-        objectType = *(s16 *)(obj + 0x46);
+        objectType = ((GameObject *)obj)->anim.seqId;
         if (objectType == 0x1b8) {
             return;
         }
@@ -38,8 +39,8 @@ int CFCrate_SeqFn(int obj, int unused, u8 *seq)
     CfCcrateState *state;
     int i;
 
-    state = *(CfCcrateState **)(obj + 0xb8);
-    switch (*(s16 *)(obj + 0x46)) {
+    state = ((GameObject *)obj)->extra;
+    switch (((GameObject *)obj)->anim.seqId) {
     case 0x85:
     case 0x87:
     case 0x88:

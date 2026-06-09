@@ -257,7 +257,7 @@ void SpiritDoorLock_init(int obj, int *params, int mode)
     if (mult < lbl_803E4430) {
         mult = lbl_803E4440;
     }
-    ((GameObject *)obj)->anim.rootMotionScale = (*(f32 **)((char *)obj + 0x50))[1] * mult;
+    ((GameObject *)obj)->anim.rootMotionScale = (*(f32 **)&((GameObject *)obj)->anim.modelInstance)[1] * mult;
     SPIRITDOORLOCK_SPIN_ANGLE(state) = 0;
 
     ObjHits_DisableObject(obj);
@@ -287,7 +287,7 @@ void SpiritDoorLock_update(int obj)
     ((int *)local_58)[2] = lbl_802C22F8[2];
 
     state = ((GameObject *)obj)->extra;
-    descriptor = *(int **)((char *)obj + 0x4c);
+    descriptor = *(int **)&((GameObject *)obj)->anim.placementData;
 
     player = Obj_GetPlayerObject();
 
@@ -306,7 +306,7 @@ void SpiritDoorLock_update(int obj)
                 GameBit_Get(*(s16 *)((char *)descriptor + SPIRITDOORLOCK_SETUP_ACTIVE_GAMEBIT));
             if (SPIRITDOORLOCK_ACTIVE(state) != 0) {
                 ((GameObject *)obj)->anim.rootMotionScale =
-                    (*(f32 **)((char *)obj + 0x50))[1] *
+                    (*(f32 **)&((GameObject *)obj)->anim.modelInstance)[1] *
                     (f32)(int)*(s8 *)((char *)descriptor + SPIRITDOORLOCK_SETUP_SCALE) *
                     lbl_803E4448;
                 if (SPIRITDOORLOCK_LIGHT(state) == 0) {
@@ -404,7 +404,7 @@ void RollingBarrel_update(int obj)
 
     state = ((GameObject *)obj)->extra;
     hitInfo = 0;
-    descriptor = *(int **)((char *)obj + 0x4c);
+    descriptor = *(int **)&((GameObject *)obj)->anim.placementData;
     blocked = 0;
     dist_sq = lbl_803E4468;
     bVar1 = ROLLINGBARREL_STATE(state);
@@ -441,7 +441,7 @@ void RollingBarrel_update(int obj)
             }
 
             ROLLINGBARREL_HIT_VOLUME_SLOT(state) = 10;
-            ObjHitbox_SetSphereRadius(obj, *(u8 *)(*(int *)((char *)obj + 0x50) + 0x62));
+            ObjHitbox_SetSphereRadius(obj, *(u8 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x62));
 
             if (*(s16 *)descriptor == ROLLINGBARREL_SPECIAL_DESCRIPTOR_TYPE) {
                 floor_y = lbl_803E4478 + *(f32 *)((char *)state + 0x6c);
@@ -552,7 +552,7 @@ int MMP_LevelControl_SeqFn(int obj, int p2, u8 *seq)
 #pragma scheduling off
 #pragma peephole off
 void fn_801A5D88(int obj, int unused) {
-    int state = *(int*)(obj + 0xb8);
+    int state = *(int *)&((GameObject *)obj)->extra;
     u32 r;
     u32 r2;
     int player;
@@ -577,7 +577,7 @@ void fn_801A5D88(int obj, int unused) {
     ROLLINGBARREL_TIMER(state) = lbl_803E4468;
     ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
     ObjHitbox_SetSphereRadius(obj,
-        (s32)(lbl_803E446C * (f32)(u32) * (u8*)(*(int*)(obj + 0x50) + 0x62)));
+        (s32)(lbl_803E446C * (f32)(u32) * (u8*)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x62)));
     player = (int)Obj_GetPlayerObject();
     if ((*(u16*)(player + 0xb0) & 0x1000) == 0) {
         dist = Vec_distance(&((GameObject *)obj)->anim.worldPosX, (f32*)(player + 0x18));

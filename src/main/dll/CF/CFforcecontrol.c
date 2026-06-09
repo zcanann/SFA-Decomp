@@ -121,7 +121,7 @@ extern f32 lbl_803E3D2C;
 
 void deathseq_init(int* obj)
 {
-  f32* state = *(f32**)((char*)obj + 0xb8);
+  f32* state = ((GameObject *)obj)->extra;
   s16* cam = Camera_GetCurrentViewSlot();
   f32 f;
 
@@ -138,7 +138,7 @@ void deathseq_init(int* obj)
   state[4] = f;
   state[5] = f;
   addButtonObject(obj);
-  *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x400);
+  ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x400);
 }
 
 /*
@@ -896,10 +896,10 @@ void deathseq_free(int* obj)
 #pragma peephole off
 void deathgas_init(int* obj)
 {
-    register DeathGasState* state = *(DeathGasState**)((char*)obj + 0xb8);
-    *(u16*)((char*)obj + 176) = (u16)(*(u16*)((char*)obj + 176) | 0x4000);
+    register DeathGasState* state = ((GameObject *)obj)->extra;
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x4000);
     state->radius = lbl_803E3CC0;
-    if (*(s16*)((char*)obj + 0x46) != 2103) return;
+    if (((GameObject *)obj)->anim.seqId != 2103) return;
     state->noFog = 1;
     state->radius = *(f32*)((char*)obj + 64);
 }
@@ -908,7 +908,7 @@ void deathgas_init(int* obj)
 
 int fuelcell_func0B(int* obj)
 {
-    FuelcellState* state = *(FuelcellState**)((char*)obj + 0xb8);
+    FuelcellState* state = ((GameObject *)obj)->extra;
     state->unkBit5 = 1;
     state->resetPos = 1;
     return 0;
@@ -928,7 +928,7 @@ void fuelcell_modelMtxFn(u8 *model)
 
 void fuelcell_free(int *obj)
 {
-    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    u8 *state = ((GameObject *)obj)->extra;
     u8 i;
 
     for (i = 0; i < 10; i++) {
@@ -945,7 +945,7 @@ void fuelcell_free(int *obj)
 
 void fuelcell_init(int* obj)
 {
-    *(void**)((char*)obj + 188) = (void*)fuelcell_func0B;
+    ((GameObject *)obj)->animEventCallback = (void*)fuelcell_func0B;
     ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), (void*)fuelcell_modelMtxFn);
     ObjMsg_AllocQueue(obj, 2);
 }
@@ -954,7 +954,7 @@ extern void disableHeavyFog(void);
 
 void deathgas_free(int* obj)
 {
-    u8* state = *(u8**)((char*)obj + 0xb8);
+    u8* state = ((GameObject *)obj)->extra;
     u8 flags = state[12];
     if (((u32)flags >> 7) & 1u) {
         if (!(((u32)flags >> 5) & 1u)) {
@@ -984,8 +984,8 @@ extern f32 lbl_803E3CB4;
 
 void deathgas_update(int* obj)
 {
-    DeathGasSetup* setup = *(DeathGasSetup**)((char*)obj + 0x4c);
-    DeathGasState* state = *(DeathGasState**)((char*)obj + 0xb8);
+    DeathGasSetup* setup = *(DeathGasSetup**)&((GameObject *)obj)->anim.placementData;
+    DeathGasState* state = ((GameObject *)obj)->extra;
     int* player;
     u8 active;
     int bit;
@@ -1013,8 +1013,8 @@ void deathgas_update(int* obj)
 
     if (!state->fogOn) {
         if (!state->noFog) {
-            enableHeavyFog(lbl_803E3C90 + *(f32*)((char*)obj + 0x1c),
-                           *(f32*)((char*)obj + 0x1c) - lbl_803E3C94,
+            enableHeavyFog(lbl_803E3C90 + ((GameObject *)obj)->anim.worldPosY,
+                           ((GameObject *)obj)->anim.worldPosY - lbl_803E3C94,
                            lbl_803E3C98, lbl_803E3C9C, lbl_803E3CA0, 0);
         }
         state->fogOn = 1;
@@ -1022,7 +1022,7 @@ void deathgas_update(int* obj)
 
     player = Obj_GetPlayerObject();
     if (!playerIsDisguised()
-        && *(f32*)((char*)player + 0x1c) <= lbl_803E3CA4 + *(f32*)((char*)obj + 0x1c)
+        && *(f32*)((char*)player + 0x1c) <= lbl_803E3CA4 + ((GameObject *)obj)->anim.worldPosY
         && Vec_distance((char*)player + 0x18, (char*)obj + 0x18) <= state->radius) {
         if (!state->draining) {
             (*gGameUIInterface)->initAirMeter(6000, 0x603);
@@ -1063,8 +1063,8 @@ extern f32 lbl_803E3D10;
 
 void fuelcell_update(int* obj)
 {
-    FuelcellSetup* setup = *(FuelcellSetup**)((char*)obj + 0x4c);
-    FuelcellState* state = *(FuelcellState**)((char*)obj + 0xb8);
+    FuelcellSetup* setup = *(FuelcellSetup**)&((GameObject *)obj)->anim.placementData;
+    FuelcellState* state = ((GameObject *)obj)->extra;
     int* player;
     int msgId;
     int msgParam;
@@ -1090,13 +1090,13 @@ void fuelcell_update(int* obj)
                     state->lit = 1;
                     ObjGroup_AddObject(obj, 0x4f);
                 } else if (state->resetPos) {
-                    *(f32*)((char*)obj + 0xc) = setup->homeX;
-                    *(f32*)((char*)obj + 0x10) = setup->homeY;
-                    *(f32*)((char*)obj + 0x14) = setup->homeZ;
+                    ((GameObject *)obj)->anim.localPosX = setup->homeX;
+                    ((GameObject *)obj)->anim.localPosY = setup->homeY;
+                    ((GameObject *)obj)->anim.localPosZ = setup->homeZ;
                     ((GameObject *)obj)->anim.alpha = 0xff;
                     state->resetPos = 0;
                 }
-                dy = *(f32*)((char*)obj + 0x10) - *(f32*)((char*)player + 0x10);
+                dy = ((GameObject *)obj)->anim.localPosY - *(f32*)((char*)player + 0x10);
                 if (dy > lbl_803E3D08 && dy < lbl_803E3D0C
                     && GameBit_Get(0xe97) == 0
                     && getXZDistance((char*)obj + 0x18, (char*)player + 0x18) < lbl_803E3D10) {
@@ -1143,7 +1143,7 @@ typedef struct {
 
 void fuelcell_render(int* obj, int p2, int p3, int p4, int p5)
 {
-    FuelcellState* state = *(FuelcellState**)((char*)obj + 0xb8);
+    FuelcellState* state = ((GameObject *)obj)->extra;
     int** list;
     u8* slot;
     u8 mode;
@@ -1279,7 +1279,7 @@ extern f32 lbl_803E3D48;
 void deathseq_update(int* obj)
 {
     s16* cam = Camera_GetCurrentViewSlot();
-    DeathSeqState* state = *(DeathSeqState**)((char*)obj + 0xb8);
+    DeathSeqState* state = ((GameObject *)obj)->extra;
     int ready;
     int* player = Obj_GetPlayerObject();
     int* tex;
@@ -1287,19 +1287,19 @@ void deathseq_update(int* obj)
     ready = 0;
     if (fn_80296C5C() != 0) {
         state->distTarget = lbl_803E3D18;
-        if (*(s16*)((char*)obj + 0xa0) != 0x92) {
+        if (((GameObject *)obj)->anim.currentMove != 0x92) {
             AudioStream_StopCurrent();
             AudioStream_Play(0x51e1, (void*)AudioStream_StartPrepared);
             ObjAnim_SetCurrentMove((int)obj, 0x92, lbl_803E3D1C, 0);
         }
         ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E3D20, timeDelta, NULL);
-        if (*(f32*)((char*)obj + 0x98) > lbl_803E3D24) {
+        if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E3D24) {
             tex = objFindTexture(obj, 5, 0);
             *tex = 0;
             tex = objFindTexture(obj, 4, 0);
             *tex = 0;
         }
-        if (*(f32*)((char*)obj + 0x98) >= lbl_803E3D28) {
+        if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E3D28) {
             if (!state->transitionStarted) {
                 setScreenTransitionPause(0);
                 (*gScreenTransitionInterface)->step(10, 1);
@@ -1322,7 +1322,7 @@ void deathseq_update(int* obj)
             ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E3D20, timeDelta, NULL);
             ready = 1;
         }
-        if (*(f32*)((char*)obj + 0x98) > lbl_803E3D24) {
+        if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E3D24) {
             tex = objFindTexture(obj, 5, 0);
             *tex = 0x200;
             tex = objFindTexture(obj, 4, 0);
@@ -1357,9 +1357,9 @@ void deathseq_update(int* obj)
         negSin = -mathCosf((lbl_803E3D3C * (f32)*(s16*)obj) / lbl_803E3D40);
         fz = lbl_803E3D38;
         zTerm = fz * negSin;
-        *(f32*)((char*)cam + 0xc) = sin30 + (*(f32*)((char*)obj + 0x18) + xTerm);
-        *(f32*)((char*)cam + 0x10) = (fz + *(f32*)((char*)obj + 0x1c)) + dz;
-        *(f32*)((char*)cam + 0x14) = sin34 + (*(f32*)((char*)obj + 0x20) + zTerm);
+        *(f32*)((char*)cam + 0xc) = sin30 + (((GameObject *)obj)->anim.worldPosX + xTerm);
+        *(f32*)((char*)cam + 0x10) = (fz + ((GameObject *)obj)->anim.worldPosY) + dz;
+        *(f32*)((char*)cam + 0x14) = sin34 + (((GameObject *)obj)->anim.worldPosZ + zTerm);
         Camera_SetFovY(lbl_803E3D44);
         state->camActive = 1;
         state->dist += interpolate(state->distTarget - state->dist, lbl_803E3D48, timeDelta);
@@ -1374,9 +1374,9 @@ void deathseq_update(int* obj)
     }
 
     if (state->camActive) {
-        *(s16*)((char*)obj + 6) = *(s16*)((char*)obj + 6) & ~0x4000;
+        ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags & ~0x4000;
     } else {
-        *(s16*)((char*)obj + 6) = *(s16*)((char*)obj + 6) | 0x4000;
+        ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags | 0x4000;
     }
 }
 

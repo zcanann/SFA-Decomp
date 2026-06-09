@@ -52,7 +52,7 @@ void wmplanets_update(int *obj) {
     WmPlanetsVector vec;
     WmPlanetsRotationWork rotate;
 
-    state = *(WmPlanetsState **)((char *)obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     vec.word[0] = lbl_802C2500[0];
     vec.word[1] = lbl_802C2500[1];
     vec.word[2] = lbl_802C2500[2];
@@ -89,8 +89,8 @@ void wmplanets_update(int *obj) {
 #pragma peephole off
 #pragma scheduling off
 void wmplanets_init(int *obj, u8 *init) {
-    WmPlanetsState *inner = *(WmPlanetsState **)((char *)obj + 0xb8);
-    f32 a = lbl_803E5FA0 * *(f32 *)((char *)*(int *)((char *)obj + 0x50) + 4);
+    WmPlanetsState *inner = ((GameObject *)obj)->extra;
+    f32 a = lbl_803E5FA0 * *(f32 *)((char *)*(int *)&((GameObject *)obj)->anim.modelInstance + 4);
     ((GameObject *)obj)->anim.rootMotionScale = a * (lbl_803E5F98 + (f32)(s32)(s8)init[0x18]);
     if (*(s16 *)init != 0) {
         inner->heightOffset = -(f32)(s32)((s8)init[0x19] << 4);

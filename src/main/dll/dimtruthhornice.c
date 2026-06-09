@@ -55,7 +55,7 @@ int TreeBird_SeqFn(int obj, int param_2, int data)
   int j;
   u8 cmd;
 
-  state = *(TreeBirdState **)(obj + 0xb8);
+  state = ((GameObject *)obj)->extra;
   seqData = (TreeBirdSeqData *)data;
   i = 0;
   while (i < (int)seqData->commandCount) {
@@ -146,7 +146,7 @@ void treebird_render(int obj)
   TreeBirdState *state;
   float fx, fy, fz;
 
-  state = *(TreeBirdState **)(obj + 0xb8);
+  state = ((GameObject *)obj)->extra;
   objRenderFn_8003b8f4(obj, lbl_803E51F8);
   if (state->targetObj != NULL) {
     ObjPath_GetPointWorldPosition(obj, 0, &fx, &fy, &fz, 0);
@@ -169,7 +169,7 @@ void treebird_update(int obj)
   int immediateTrigger;
   float dist;
 
-  state = *(TreeBirdState **)(obj + 0xb8);
+  state = ((GameObject *)obj)->extra;
   dist = lbl_803E51FC;
   if (state->searchDelay != 0) {
     state->targetObj = (void *)ObjGroup_FindNearestObject(4, obj, &dist);

@@ -139,11 +139,11 @@ void mmsh_scales_update(int param_1)
       n = 0;
       for (i = 0, id = typeId; i < count; i++) {
         obj = *list;
-        if (*(short *)(obj + 0xb4) == typeId) {
+        if (((GameObject *)obj)->unkB4 == typeId) {
           found = obj;
         }
-        if (((*(short *)(obj + 0xb4) == -2) && (*(short *)(obj + 0x44) == 0x10)) &&
-           (id == *(char *)(*(int *)(obj + 0xb8) + 0x57))) {
+        if (((((GameObject *)obj)->unkB4 == -2) && (((GameObject *)obj)->anim.classId == 0x10)) &&
+           (id == *(char *)(*(int *)&((GameObject *)obj)->extra + 0x57))) {
           n = n + 1;
         }
         list = list + 1;

@@ -39,8 +39,8 @@ void vfpstatueball_update(int *obj) {
     int hitType;
     int variant;
 
-    setup = *(int **)((char *)obj + 0x4c);
-    state = *(VfpStatueBallState **)((char *)obj + 0xb8);
+    setup = *(int **)&((GameObject *)obj)->anim.placementData;
+    state = ((GameObject *)obj)->extra;
     hitObj = 0;
 
     if (state->active != 0) {
@@ -127,7 +127,7 @@ void vfpstatueball_free(int obj) {
 #pragma peephole off
 #pragma scheduling off
 void vfpstatueball_init(int *obj, u8 *init) {
-    VfpStatueBallState *inner = *(VfpStatueBallState **)((char *)obj + 0xb8);
+    VfpStatueBallState *inner = ((GameObject *)obj)->extra;
     inner->gameBit = *(s16 *)((char *)init + 0x1e);
     inner->timer = 0x19;
     ((GameObject *)obj)->objectFlags |= 0x4000;

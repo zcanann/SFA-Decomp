@@ -1361,7 +1361,7 @@ typedef struct {
 /* fn_801FD4A8: decrement extra->[4] by x; return whether it reached 0. */
 #pragma scheduling off
 int fn_801FD4A8(void *obj, int x) {
-    u8 *extra = *(u8 **)((char *)obj + 0xb8);
+    u8 *extra = ((GameObject *)obj)->extra;
     if (extra != NULL) {
         s8 v = extra[4] - x;
         extra[4] = v;
@@ -1502,14 +1502,14 @@ void dbegg_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
 #pragma scheduling off
 #pragma peephole off
 void dll_224_init(void *obj, void *other) {
-    s16 *extra = *(s16 **)((char *)obj + 0xb8);
+    s16 *extra = ((GameObject *)obj)->extra;
     s16 v = (s16)((s8)*((s8 *)other + 0x18) << 8);
     u8 t;
     *(s16 *)obj = v;
     *(s16 *)((char *)extra + 0) = *(s16 *)((char *)other + 0x1e);
     *(s16 *)((char *)extra + 2) = *(s16 *)((char *)other + 0x20);
-    t = (u8)(*(u8 *)((char *)obj + 0xaf) | 0x8);
-    *(u8 *)((char *)obj + 0xaf) = t;
+    t = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x8);
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = t;
 }
 
 void vfpflamepoint_init(int *obj, s8 *def) {
@@ -1518,7 +1518,7 @@ void vfpflamepoint_init(int *obj, s8 *def) {
     d->noCheck = (u8)*(s16 *)(def + 0x1c);
     d->showGameBit = *(s16 *)(def + 0x1e);
     d->checkGameBit = *(s16 *)(def + 0x20);
-    *(u16 *)((u8 *)obj + 0xb0) |= 0x6000;
+    ((GameObject *)obj)->objectFlags |= 0x6000;
 }
 #pragma peephole reset
 #pragma scheduling reset

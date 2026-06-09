@@ -52,7 +52,7 @@ void largecrate_init(int obj, u8 *initData)
   constArrA = lbl_802C2280;
   constArrB = lbl_802C228C;
 
-  state = *(int *)(obj + 0xb8);
+  state = *(int *)&((GameObject *)obj)->extra;
   ((GameObject *)obj)->animEventCallback = (void *)LargeCrate_SeqFn;
   *(short *)obj = (short)((int)(signed char)initData[0x18] << 8);
   ((CfForcefieldState *)state)->enableGameBit = *(short *)(initData + 0x1e);
@@ -155,7 +155,7 @@ int objHitboxFn_801843c0(int obj)
   int idx;
   u8 hit;
 
-  state = *(u8 **)(obj + 0x54);
+  state = *(u8 **)&((GameObject *)obj)->anim.hitReactState;
   if (state != 0) {
     endPoints[0] = ((GameObject *)obj)->anim.localPosX;
     endPoints[1] = ((GameObject *)obj)->anim.localPosY;

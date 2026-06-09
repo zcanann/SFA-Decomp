@@ -53,7 +53,7 @@ void DIMbosstonsil_init(int obj,undefined4 param_2,int isAltVariant)
   u32 variant;
   int state;
   
-  state = *(int *)(obj + 0xb8);
+  state = *(int *)&((GameObject *)obj)->extra;
   variant = 6;
   if (isAltVariant != 0) {
     variant = variant | 1;

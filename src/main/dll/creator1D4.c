@@ -1,4 +1,5 @@
 #include "main/dll/creator1D4.h"
+#include "main/game_object.h"
 #include "main/game_ui_interface.h"
 
 extern void objRenderFn_8003b8f4(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
@@ -20,7 +21,7 @@ void nw_mammoth_free(void *obj)
 {
     void *node;
 
-    node = *(void **)((char *)obj + 0xb8);
+    node = ((GameObject *)obj)->extra;
     ObjGroup_RemoveObject(obj, 0x4d);
     if ((*((u8 *)node + 0x43c) & 0x40) != 0) {
         (*gGameUIInterface)->airMeterShutdown();
@@ -43,7 +44,7 @@ void nw_mammoth_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, u
     int i;
     void *node;
 
-    node = *(void **)((char *)obj + 0xb8);
+    node = ((GameObject *)obj)->extra;
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E5210);
     for (i = 0; i < 4; i++) {
         ObjPath_GetPointWorldPosition(obj, i,

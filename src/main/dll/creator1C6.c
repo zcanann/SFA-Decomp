@@ -68,7 +68,7 @@ int fn_801C8EBC(int obj,undefined4 unused,int animEvents)
   int i;
   u32 event;
 
-  state = *(void ***)(obj + 0xb8);
+  state = ((GameObject *)obj)->extra;
   player = Obj_GetPlayerObject();
   *(s16 *)(animEvents + 0x70) = -1;
   *(u8 *)(animEvents + 0x56) = 0;
@@ -89,13 +89,13 @@ int fn_801C8EBC(int obj,undefined4 unused,int animEvents)
         lockLevel(mapGetDirIdx(10),0);
         break;
       case 0xe:
-        *(s16 *)(obj + 6) = (s16)(*(s16 *)(obj + 6) | 0x4000);
+        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
         if (state[0] != NULL) {
           modelLightStruct_setEnabled((int)state[0],0,(double)lbl_803E50D8);
         }
         break;
       case 0xf:
-        *(s16 *)(obj + 6) = (s16)(*(s16 *)(obj + 6) & ~0x4000);
+        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags & ~0x4000);
         if (state[0] != NULL) {
           modelLightStruct_setEnabled((int)state[0],0,(double)lbl_803E50D8);
         }
@@ -224,7 +224,7 @@ void dbsh_shrine_free(int obj)
 {
   void **state;
 
-  state = *(void ***)(obj + 0xb8);
+  state = ((GameObject *)obj)->extra;
   if (state[0] != NULL) {
     ModelLightStruct_free((int)state[0]);
     state[0] = NULL;
@@ -247,7 +247,7 @@ void dbsh_shrine_render(int obj,undefined4 p2,undefined4 p3,undefined4 p4,undefi
 {
   void **state;
 
-  state = *(void ***)(obj + 0xb8);
+  state = ((GameObject *)obj)->extra;
   if (visible == 0) {
     if (state[0] != NULL) {
       modelLightStruct_setEnabled((int)state[0],0,(double)lbl_803E50D8);

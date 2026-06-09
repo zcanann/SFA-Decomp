@@ -157,7 +157,7 @@ void trickyFn_80141290(int obj, int ball)
         if (*(float *)(ball + CANNONBALL_SFX_TIMER) < lbl_803E23DC) {
             *(float *)(ball + CANNONBALL_SFX_TIMER) = (f32)(int)randomGetRange(200, 600);
 
-            sfxState = *(int *)(obj + 0xb8);
+            sfxState = *(int *)&((GameObject *)obj)->extra;
             if (((u32)(*(u8 *)(sfxState + 0x58) >> 6 & 1) == 0) &&
                 ((((GameObject *)obj)->anim.currentMove >= 0x30 || ((GameObject *)obj)->anim.currentMove < 0x29) &&
                  !Sfx_IsPlayingFromObjectChannel(obj, 0x10))) {

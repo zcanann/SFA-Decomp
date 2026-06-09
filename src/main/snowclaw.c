@@ -119,19 +119,19 @@ void snowclaw_init(int *obj, u8 *init) {
     ObjModelState *sub;
 
     table = lbl_8032A310;
-    *(void **)((char *)obj + 0xbc) = (void *)snowclaw_animEventCallback;
+    ((GameObject *)obj)->animEventCallback = (void *)snowclaw_animEventCallback;
     sub = ((GameObject *)obj)->anim.modelState;
     if (sub != NULL) {
         sub->flags |= 0x4000;
         sub->shadowTintA = 0x64;
         sub->shadowTintB = 0x96;
     }
-    inner = *(int **)((char *)obj + 0xb8);
+    inner = ((GameObject *)obj)->extra;
     *(int *)inner = 0;
     *(u8 *)((char *)inner + 0xa2) = init[0x27];
     *(u8 *)((char *)inner + 0xa4) = 4;
     *(s8 *)((char *)inner + 0xa5) = -1;
-    switch (*(s16 *)((char *)obj + 0x46)) {
+    switch (((GameObject *)obj)->anim.seqId) {
     case 0x16d:
     case 0x170:
     default:
@@ -330,21 +330,21 @@ void snowclaw_render(int obj, int p2, int p3, int p4, int p5, int vis) {
         }
     }
     if (found != 0) {
-        *(s16 *)((char *)obj + 6) |= 8;
+        ((GameObject *)obj)->anim.flags |= 8;
         {
             extern s8 objUpdateOpacity(int);
             vis = objUpdateOpacity(sub);
         }
         snowclaw_syncMountTransform(obj, sub, p2, p3, p4, p5, vis, *(u8 *)((char *)inner + 0xa0), 1);
     } else {
-        *(s16 *)((char *)obj + 6) &= ~8;
+        ((GameObject *)obj)->anim.flags &= ~8;
     }
     if ((s8)vis != 0 && *(u8 *)((char *)inner + 0xa0) != 0) {
         oldFlag = *(u8 *)((char *)obj + 0x37);
         if (found != 0) {
             *(u8 *)((char *)obj + 0x37) = *(u8 *)((char *)inner + 0xa0);
         }
-        if (*(u8 *)((char *)obj + 0xeb) == 0 && *(s16 *)((char *)obj + 0x46) == 0x389 &&
+        if (((GameObject *)obj)->unkEB == 0 && ((GameObject *)obj)->anim.seqId == 0x389 &&
             ((SnowclawAaFlags *)((char *)inner + 0xaa))->b0 != 0) {
             near = ObjGroup_FindNearestObject(0x1e, obj, &dist);
             if ((u32)near != 0 &&
@@ -403,23 +403,23 @@ void snowclaw_hitDetect(int obj) {
                 if (sub2 != 0) {
                     (*(void (*)(int *, int))(*(int *)(*(int *)(*(int *)((char *)sub2 + 0x68)) + 0x3c)))(sub2, 0);
                 }
-                if (*(s16 *)((char *)obj + 0x46) == 0x389) {
+                if (((GameObject *)obj)->anim.seqId == 0x389) {
                     near = (int *)ObjGroup_FindNearestObject(0x1e, obj, &dist);
                     if (near != 0) {
                         ObjLink_DetachChild(obj, near);
                         (*(void (*)(int *, int))(*(int *)(*(int *)(*(int *)((char *)near + 0x68)) + 0x20)))(near, 2);
                     }
                 }
-                if (*(s16 *)((char *)obj + 0x46) == 0x16d || *(s16 *)((char *)obj + 0x46) == 0x170) {
+                if (((GameObject *)obj)->anim.seqId == 0x16d || ((GameObject *)obj)->anim.seqId == 0x170) {
                     (*gObjectTriggerInterface)->runSequence(0, (void *)obj, 1);
                 } else {
                     (*gObjectTriggerInterface)->runSequence(0, (void *)obj, 3);
                 }
                 ((SnowclawAaFlags *)((char *)inner + 0xaa))->flag6 = 1;
                 *(f32 *)((char *)inner + 0xac) = lbl_803E670C;
-                *(f32 *)((char *)inner + 0x24) = lbl_803E6728 * mathSinf((f32)*(s16 *)((char *)obj + 0) * lbl_803E672C / lbl_803E6730);
+                *(f32 *)((char *)inner + 0x24) = lbl_803E6728 * mathSinf((f32)((GameObject *)obj)->anim.rotX * lbl_803E672C / lbl_803E6730);
                 *(f32 *)((char *)inner + 0x28) = lbl_803E6734 * (f32)(int)randomGetRange(0x28, 0x64);
-                *(f32 *)((char *)inner + 0x2c) = lbl_803E6728 * mathCosf((f32)*(s16 *)((char *)obj + 0) * lbl_803E672C / lbl_803E6730);
+                *(f32 *)((char *)inner + 0x2c) = lbl_803E6728 * mathCosf((f32)((GameObject *)obj)->anim.rotX * lbl_803E672C / lbl_803E6730);
                 player = (int *)fn_802972A8(Obj_GetPlayerObject());
                 if (player != 0) {
                     int *sub3 = *(int **)((char *)player + 0xb8);
@@ -587,20 +587,20 @@ int snowclaw_animEventCallback(int obj, int a2, int evt) {
 
     dist = lbl_803E6708;
     eventBytes = (u8 *)evt;
-    inner = *(int **)((char *)obj + 0xb8);
+    inner = ((GameObject *)obj)->extra;
     *(u8 *)((char *)inner + 0xa1) = 1;
     ObjHits_DisableObject(obj);
     if (*(int **)inner != 0) {
         ObjHits_DisableObject(*(int *)inner);
     }
-    if (*(s16 *)((char *)obj + 0xb4) != -1 &&
-        (*(s16 *)((char *)obj + 0x46) == 0x16d || *(s16 *)((char *)obj + 0x46) == 0x170) &&
+    if (((GameObject *)obj)->unkB4 != -1 &&
+        (((GameObject *)obj)->anim.seqId == 0x16d || ((GameObject *)obj)->anim.seqId == 0x170) &&
         GameBit_Get(0x3a3) != 0) {
-        (*gObjectTriggerInterface)->endSequence(*(s16 *)((char *)obj + 0xb4));
+        (*gObjectTriggerInterface)->endSequence(((GameObject *)obj)->unkB4);
         *(f32 *)((char *)inner + 0xac) = lbl_803E66F0;
         return 4;
     }
-    *(s16 *)((char *)obj + 6) &= ~0x4000;
+    ((GameObject *)obj)->anim.flags &= ~0x4000;
     sub = *(int **)inner;
     *(u8 *)((char *)inner + 0xa0) = 0xff;
     if (sub != 0) {
@@ -676,16 +676,16 @@ int snowclaw_animEventCallback(int obj, int a2, int evt) {
     }
     tbl = lbl_802C2540;
     if (*(s8 *)((char *)inner + 0xa2) != *(s8 *)((char *)inner + 0xa3)) {
-        if (*(int **)((char *)obj + 0xc8) != 0) {
-            Obj_FreeObject(*(int *)((char *)obj + 0xc8));
-            *(int *)((char *)obj + 0xc8) = 0;
-            *(u8 *)((char *)obj + 0xeb) = 0;
+        if (((GameObject *)obj)->unkC8 != 0) {
+            Obj_FreeObject(*(int *)&((GameObject *)obj)->unkC8);
+            *(int *)&((GameObject *)obj)->unkC8 = 0;
+            ((GameObject *)obj)->unkEB = 0;
         }
         if (*(s8 *)((char *)inner + 0xa2) > 0 && Obj_IsLoadingLocked() != 0) {
-            *(int *)((char *)obj + 0xc8) =
+            *(int *)&((GameObject *)obj)->unkC8 =
                 Obj_SetupObject(Obj_AllocObjectSetup(0x18, tbl.v[*(s8 *)((char *)inner + 0xa2)]), 4,
-                                *(s8 *)((char *)obj + 0xac), -1, *(int *)((char *)obj + 0x30));
-            *(u8 *)((char *)obj + 0xeb) = 1;
+                                *(s8 *)((char *)obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
+            ((GameObject *)obj)->unkEB = 1;
         }
         *(s8 *)((char *)inner + 0xa3) = *(s8 *)((char *)inner + 0xa2);
     }

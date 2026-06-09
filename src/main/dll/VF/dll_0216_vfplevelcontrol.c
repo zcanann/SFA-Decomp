@@ -43,7 +43,7 @@ void fn_801F9804(int obj);
 #pragma peephole off
 #pragma scheduling off
 void vfplevelcontrol_update(int obj) {
-    VFPLevelControlState *state = *(VFPLevelControlState **)((char *)obj + 0xb8);
+    VFPLevelControlState *state = ((GameObject *)obj)->extra;
     int player = (int)Obj_GetPlayerObject();
     u8 mapEventState;
 
@@ -127,7 +127,7 @@ void vfplevelcontrol_free(int obj) {
 #pragma peephole off
 #pragma scheduling off
 void vfplevelcontrol_init(int *obj, u8 *init) {
-    VFPLevelControlState *state = *(VFPLevelControlState **)((char *)obj + 0xb8);
+    VFPLevelControlState *state = ((GameObject *)obj)->extra;
     VFPLevelControlSetup *setup = (VFPLevelControlSetup *)init;
     ObjGroup_AddObject(obj, 9);
     state->cueTimers[0] = 0;
@@ -163,7 +163,7 @@ void vfplevelcontrol_init(int *obj, u8 *init) {
 #pragma peephole off
 #pragma scheduling off
 void fn_801F9804(int obj) {
-    VFPLevelControlState *state = *(VFPLevelControlState **)((char *)obj + 0xb8);
+    VFPLevelControlState *state = ((GameObject *)obj)->extra;
     s16 bits[4];
     s16 *p;
     int i;

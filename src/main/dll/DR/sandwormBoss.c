@@ -2645,7 +2645,7 @@ void babycloudrunner_init(int *obj, u8 *def) {
     ((GameObject *)obj)->animEventCallback = (void *)babycloudrunner_SeqFn;
     *(s16*)obj = (s16)(def[0x1d] << 8);
     ObjGroup_AddObject(obj, 3);
-    sub = *(BabyCloudRunnerState**)((char*)obj + 0xb8);
+    sub = ((GameObject *)obj)->extra;
     sub->unkB0 = 0;
     sub->unkB4 = 0;
     sub->unkB8 = 0;
@@ -2661,13 +2661,13 @@ void babycloudrunner_init(int *obj, u8 *def) {
     sub->runnerState = 0;
     if (GameBit_Get(*(s16*)(def + 0x22)) != 0) {
         ObjHits_DisableObject(obj);
-        *(s16*)((char*)obj + 6) = (s16)(*(s16*)((char*)obj + 6) | 0x4000);
+        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
         sub->flags22C = (u8)(sub->flags22C & ~1);
         Obj_RemoveFromUpdateList(obj);
         ObjGroup_RemoveObject(obj, 3);
     } else {
         sub->runnerIndex = *(s16*)(def + 0x22) - 0x2fc;
-        if (*(s16*)((char*)obj + 0x46) == 0x788) {
+        if (((GameObject *)obj)->anim.seqId == 0x788) {
             sub->runnerIndex = -1;
             sub->curveSpeed = lbl_803E4244;
             sub->mutterSfxTable = &lbl_803DBE30;
@@ -3266,13 +3266,13 @@ void cfguardian_init(int *obj, u8 *params) {
     GuardianVec stk1;
     GuardianVec stk2;
 
-    sub = *(CfGuardianState**)((char*)obj + 0xb8);
+    sub = ((GameObject *)obj)->extra;
     stk1 = lbl_802C22C0;
     stk2 = lbl_802C22CC;
     if (sub == NULL) return;
     ObjMsg_AllocQueue(obj, 4);
     sub->questState = (u8)GameBit_Get(0x4b);
-    *(int*)((char*)obj + 0xf4) = 1;
+    ((GameObject *)obj)->unkF4 = 1;
     ((GameObject *)obj)->animEventCallback = (void *)cfguardian_SeqFn;
     *(s16*)obj = (s16)((s8)params[0x18] << 8);
     sub->landingPhase = 0;
@@ -3286,7 +3286,7 @@ void cfguardian_init(int *obj, u8 *params) {
     if (GameBit_Get(0x57) != 0) {
         sub->questState = 4;
         if ((s8)params[0x19] == 0) {
-            *(s16*)((char*)obj + 6) = (s16)(*(s16*)((char*)obj + 6) | 0x4000);
+            ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
             Obj_RemoveFromUpdateList(obj);
         }
     } else if (GameBit_Get(0x60) != 0 && (s8)params[0x19] == 0) {
@@ -3321,9 +3321,9 @@ int cfguardian_SeqFn(int* obj, int p2, int* p3)
 {
     int* sel;
     GuardianMsg stk;
-    CfGuardianState* sub = *(CfGuardianState**)((char*)obj + 0xb8);
+    CfGuardianState* sub = ((GameObject *)obj)->extra;
     stk = lbl_802C22D8;
-    if (*(s16*)((char*)obj + 0xb4) < 0) {
+    if (((GameObject *)obj)->unkB4 < 0) {
         saveGame_saveObjectPos((int)obj);
         return 0;
     }
@@ -3401,13 +3401,13 @@ int cfprisoncage_SeqFn(int* obj, int p2, u8* p3)
     int msg;
     int v;
     int w = 0;
-    u8* sub = *(u8**)((char*)obj + 0x4c);
+    u8* sub = *(u8**)&((GameObject *)obj)->anim.placementData;
     if (GameBit_Get(*(s16*)(sub + 0x18)) != 0) {
-        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x8);
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x8);
         *(u8*)((char*)p3 + 0x90) = (u8)(*(u8*)((char*)p3 + 0x90) | 0x4);
         return 0;
     }
-    if (*(s16*)((char*)obj + 0x46) == 0x127) {
+    if (((GameObject *)obj)->anim.seqId == 0x127) {
         return 0;
     }
     while (ObjMsg_Pop(obj, &msg, &v, &w) != 0) {
@@ -3416,13 +3416,13 @@ int cfprisoncage_SeqFn(int* obj, int p2, u8* p3)
         }
     }
     if (GameBit_Get(0x44) != 0) {
-        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~0x10);
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x10);
     } else {
-        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x10);
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x10);
     }
-    if ((*(u8*)((char*)obj + 0xaf) & 1) != 0) {
+    if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) {
         if ((*gGameUIInterface)->isEventReady(0x44) != 0) {
-            *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x8);
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x8);
             (*gObjectTriggerInterface)->runSequence(0, obj, -1);
         }
     }
@@ -3452,28 +3452,28 @@ int babycloudrunner_func0B(void* p)
     u8* q;
     void* player;
     obj = (int*)p;
-    sub = *(BabyCloudRunnerState**)((char*)obj + 0xb8);
-    q = *(u8**)((char*)obj + 0x4c);
+    sub = ((GameObject *)obj)->extra;
+    q = *(u8**)&((GameObject *)obj)->anim.placementData;
     player = Obj_GetPlayerObject();
-    r = *(u8**)((char*)obj + 0x4c);
+    r = *(u8**)&((GameObject *)obj)->anim.placementData;
     flag = 0;
     if (Vec_distance((char*)player + 0x18, (char*)obj + 0x18) < (f32)(s16)*(s16*)(r + 0x1a)) {
         if (sub->runnerState == 3) {
-            if ((*(u16*)((char*)obj + 0xb0) & 0x1000) == 0) {
+            if ((((GameObject *)obj)->objectFlags & 0x1000) == 0) {
                 flag = 1;
             }
         }
     }
     if (flag != 0) {
         s16toFloat((int)sub, 0x3c);
-        *(int*)((char*)obj + 0xf4) = 1;
+        ((GameObject *)obj)->unkF4 = 1;
         *(s16*)obj = sub->roostYaw;
         (*gObjectTriggerInterface)->runSequence(4, obj, -1);
         sub->unk00 = lbl_803E4244;
         gameBitIncrement(0x901);
         sub->behaviourState = 0xc;
         GameBit_Set(*(s16*)(q + 0x1e), 1);
-        *(int*)((char*)obj + 0xf4) = 0;
+        ((GameObject *)obj)->unkF4 = 0;
         return 1;
     }
     objAudioFn_800393f8((int)obj, (char*)sub + 0x6c, 0x296, 0x1000, -1, 1);
@@ -3575,7 +3575,7 @@ typedef struct SpiritDoorSpiritState {
 #pragma scheduling off
 #pragma peephole off
 void cfpowerbase_init(int* obj, u8* params) {
-    CfPowerBaseState* sub = *(CfPowerBaseState**)((char*)obj + 0xb8);
+    CfPowerBaseState* sub = ((GameObject *)obj)->extra;
     s16 type;
     *(s16*)obj = (s16)((s8)params[0x18] << 8);
     sub->typeBit = *(s16*)(params + 0x1e);
@@ -3599,13 +3599,13 @@ void cfpowerbase_init(int* obj, u8* params) {
     ((GameObject *)obj)->animEventCallback = (void *)cfpowerbase_SeqFn;
     ObjMsg_AllocQueue(obj, 2);
     if (GameBit_Get(sub->litBit) != 0) {
-        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~0x10);
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x10);
     } else {
-        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x10);
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x10);
     }
     if (GameBit_Get(sub->typeBit) != 0) {
-        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x8);
-        *(int*)((char*)obj + 0xf4) = 1;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x8);
+        ((GameObject *)obj)->unkF4 = 1;
     }
 }
 #pragma peephole reset
@@ -3618,20 +3618,20 @@ void cfpowerbase_init(int* obj, u8* params) {
 #pragma scheduling off
 #pragma peephole off
 void cfpowerbase_update(int* obj) {
-    CfPowerBaseState* sub = *(CfPowerBaseState**)((char*)obj + 0xb8);
+    CfPowerBaseState* sub = ((GameObject *)obj)->extra;
     if (GameBit_Get(sub->litBit) != 0) {
-        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~0x10);
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x10);
     } else {
-        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x10);
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x10);
     }
-    if (*(int*)((char*)obj + 0xf4) != 0) {
+    if (((GameObject *)obj)->unkF4 != 0) {
         (*gObjectTriggerInterface)->preempt((int)obj, 0xfa);
         (*gObjectTriggerInterface)->runSequence(sub->typeIndex, obj, 3);
-        *(int*)((char*)obj + 0xf4) = 0;
+        ((GameObject *)obj)->unkF4 = 0;
     }
-    if ((*(u8*)((char*)obj + 0xaf) & 1) != 0) {
+    if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) {
         if ((*gGameUIInterface)->isEventReady(sub->litBit) != 0) {
-            *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x8);
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x8);
             GameBit_Set(sub->litBit, 0);
             GameBit_Set(0x973, 0);
             (*gObjectTriggerInterface)->runSequence(sub->typeIndex, obj, -1);
@@ -3658,7 +3658,7 @@ typedef struct { u8 top : 1; u8 rest : 7; } Bit80;
 #pragma scheduling off
 #pragma peephole off
 void cfprisonguard_init(int* obj, u8* params) {
-    CfPrisonGuardState* sub = *(CfPrisonGuardState**)((char*)obj + 0xb8);
+    CfPrisonGuardState* sub = ((GameObject *)obj)->extra;
     sub->flags = 1;
     *(s16*)obj = (s16)((s8)params[0x18] << 8);
     ((GameObject *)obj)->animEventCallback = (void *)cfprisonguard_SeqFn;
@@ -3667,7 +3667,7 @@ void cfprisonguard_init(int* obj, u8* params) {
     if (GameBit_Get(0x4d) != 0) {
         sub->flags = (u8)(sub->flags | 4);
     }
-    *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~0x10);
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x10);
     ((Bit80*)&sub->flags39)->top = 1;
 }
 #pragma peephole reset
@@ -3686,15 +3686,15 @@ void cfprisonguard_update(int *obj) {
     int bit44;
     f32 dist;
 
-    sub = *(CfPrisonGuardState**)((char*)obj + 0xb8);
+    sub = ((GameObject *)obj)->extra;
     player = (int*)Obj_GetPlayerObject();
-    def = *(u8**)((char*)obj + 0x4c);
+    def = *(u8**)&((GameObject *)obj)->anim.placementData;
     if (((u32)sub->flags39 >> 7) & 1u) {
         sub->flags39 = (u8)(sub->flags39 & ~0x80);
     }
     if (GameBit_Get(*(s16*)(def + 0x1e)) != 0) {
-        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x8);
-        *(s16*)((char*)obj + 6) = (s16)(*(s16*)((char*)obj + 6) | 0x4000);
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x8);
+        ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
         ObjHits_DisableObject(obj);
         Obj_RemoveFromUpdateList(obj);
         return;
@@ -3738,7 +3738,7 @@ extern f32  lbl_803E428C;
 #pragma peephole off
 void cfprisonuncle_update(int* obj)
 {
-    CfPrisonUncleState* sub = *(CfPrisonUncleState**)((char*)obj + 0xb8);
+    CfPrisonUncleState* sub = ((GameObject *)obj)->extra;
     void* player;
     int m2, objectIndex, objectCount, m1, m3;
     int* objects;
@@ -3774,8 +3774,8 @@ void cfprisonuncle_update(int* obj)
             ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E428C, (f32)(u32)framesThisStep, 0);
         }
     } else {
-        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 0x8);
-        if (*(s16*)((char*)obj + 0xb4) == -1) {
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x8);
+        if (((GameObject *)obj)->unkB4 == -1) {
             (*gObjectTriggerInterface)->runSequence(0, obj, -1);
         }
     }
@@ -3799,11 +3799,11 @@ void gcrobotlightbea_hitDetect(int* obj)
     int out;
     f32 vec[3];
     void* hit;
-    GcRobotLightBeaState* sub = *(GcRobotLightBeaState**)((char*)obj + 0xb8);
+    GcRobotLightBeaState* sub = ((GameObject *)obj)->extra;
     ((Bit80*)&sub->hitFlags)->top = 0;
-    if (*(void**)((char*)obj + 0xc4) == NULL) return;
+    if (((GameObject *)obj)->unkC4 == NULL) return;
     if (ObjHits_GetPriorityHit((int)obj, &hit, 0, 0) == 0) {
-        hit = (void *)(*(ObjHitsPriorityState **)((char *)obj + 0x54))->lastHitObject;
+        hit = (void *)(*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject;
         if (hit == NULL) return;
     }
     if (hit != Obj_GetPlayerObject()) return;
@@ -3812,7 +3812,7 @@ void gcrobotlightbea_hitDetect(int* obj)
     vec[1] = lbl_803E4298 + *(f32*)((char*)hit + 0x10);
     vec[2] = *(f32*)((char*)hit + 0x14);
     if (voxmaps_traceWorldLine((void *)((int)obj + 0xc), vec) == 0) return;
-    if (*(int*)((char*)obj + 0xf4) != 0 ||
+    if (((GameObject *)obj)->unkF4 != 0 ||
         objBboxFn_800640cc((int)obj + 0xc, vec, 0, &out, (int)obj, 4, -1, 0, 0) == 0) {
         ((Bit80*)&sub->hitFlags)->top = 1;
     }
@@ -3832,14 +3832,14 @@ void cfprisoncage_initialise(void) {}
 void cfprisoncage_update(int *obj) {
     extern ObjectTriggerInterface **gObjectTriggerInterface;
     int v;
-    if (*(int*)((char*)obj + 0xf4) != 0) {
-        switch (*(s16*)((char*)obj + 0x46)) {
+    if (((GameObject *)obj)->unkF4 != 0) {
+        switch (((GameObject *)obj)->anim.seqId) {
         case 0x127: v = 0; break;
         case 0x128:
         default:    v = 1; break;
         }
         (*gObjectTriggerInterface)->runSequence(v, obj, -1);
-        *(int*)((char*)obj + 0xf4) = 0;
+        ((GameObject *)obj)->unkF4 = 0;
     }
 }
 #pragma peephole reset
@@ -3895,7 +3895,7 @@ extern void  objParticleFn_80099d84(int obj, f32 f, int a, int b);
 #pragma peephole off
 void cfprisonguard_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    CfPrisonGuardState* sub = *(CfPrisonGuardState**)((char*)obj + 0xb8);
+    CfPrisonGuardState* sub = ((GameObject *)obj)->extra;
     if (visible != 0) {
         objRenderFn_8003b8f4(lbl_803E4280);
     }
@@ -3923,7 +3923,7 @@ void spiritdoorspirit_free(int x) { ObjGroup_RemoveObject(x, 0x4e); }
 #pragma peephole off
 #pragma scheduling off
 #pragma peephole off
-int cfprisoncage_getObjectTypeId(int *obj) { if (*(s16*)((char*)obj + 0x46) == 0x128) return 0x8; return 0x0; }
+int cfprisoncage_getObjectTypeId(int *obj) { if (((GameObject *)obj)->anim.seqId == 0x128) return 0x8; return 0x0; }
 #pragma peephole reset
 #pragma scheduling reset
 #pragma peephole reset
@@ -3940,9 +3940,9 @@ extern f32 lbl_803E42C0;
 #pragma scheduling off
 #pragma peephole off
 void gunpowderbarrel_setHeldState(int* obj) {
-    GunpowderBarrelState* sub = *(GunpowderBarrelState**)((char*)obj + 0xb8);
+    GunpowderBarrelState* sub = ((GameObject *)obj)->extra;
     ((GpbHeldByte*)&sub->heldFlags)->held = 1;
-    *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 8);
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
     sub->flags49 = (u8)(sub->flags49 & ~2);
 }
 
@@ -3950,13 +3950,13 @@ void gunpowderbarrel_setHeldState(int* obj) {
  * barrel's velocity/throw vectors, mark it sleeping, clear obj-active and
  * the held flag. */
 void gunpowderbarrel_clearHeldState(int* obj) {
-    GunpowderBarrelState* sub = *(GunpowderBarrelState**)((char*)obj + 0xb8);
+    GunpowderBarrelState* sub = ((GameObject *)obj)->extra;
     f32 z = lbl_803E42C0;
     sub->velY = z;
     sub->velX = z;
     sub->velZ = z;
     sub->flags49 = (u8)(sub->flags49 | 1);
-    *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~8);
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~8);
     sub->unk38 = z;
     ((GpbHeldByte*)&sub->heldFlags)->held = 0;
 }
@@ -3965,12 +3965,12 @@ void gunpowderbarrel_clearHeldState(int* obj) {
  * grabbed by the player, copy the held-pose and enable hit reactions; when
  * released, restore the default pose and clear them. */
 void gunpowderbarrel_setPlayerHeldState(int* obj, u8 heldByPlayer) {
-    GunpowderBarrelState* sub = *(GunpowderBarrelState**)((char*)obj + 0xb8);
-    u8* h = *(u8**)((char*)obj + 0x54);
+    GunpowderBarrelState* sub = ((GameObject *)obj)->extra;
+    u8* h = *(u8**)&((GameObject *)obj)->anim.hitReactState;
     if (heldByPlayer != 0) {
         h[0x6a] = 1;
         h[0x6b] = 1;
-        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 8);
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
         ((GpbHeldByte*)&sub->heldFlags)->playerHeld = 1;
         sub->flags49 = (u8)(sub->flags49 & ~2);
         ObjHits_SetFlags((int)obj, 0x480);
@@ -3978,10 +3978,10 @@ void gunpowderbarrel_setPlayerHeldState(int* obj, u8 heldByPlayer) {
         ObjHits_EnableObject((int)obj);
         ObjHits_SyncObjectPositionIfDirty((int)obj);
     } else {
-        h[0x6a] = (*(u8**)((char*)obj + 0x50))[0x63];
-        h[0x6b] = (*(u8**)((char*)obj + 0x50))[0x64];
+        h[0x6a] = (*(u8**)&((GameObject *)obj)->anim.modelInstance)[0x63];
+        h[0x6b] = (*(u8**)&((GameObject *)obj)->anim.modelInstance)[0x64];
         ((GpbHeldByte*)&sub->heldFlags)->playerHeld = 0;
-        *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~8);
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~8);
         ObjHits_ClearFlags((int)obj, 0x400);
         sub->flags49 = (u8)(sub->flags49 | 1);
     }
@@ -3992,7 +3992,7 @@ void gunpowderbarrel_setPlayerHeldState(int* obj, u8 heldByPlayer) {
 /* state-transition: kicks player into mode 2 when sandworm not yet eaten. */
 #pragma peephole off
 int fn_8019FC84(int *obj, int p2, void *p3) {
-    CfPrisonUncleState *p = *(CfPrisonUncleState**)((char*)obj + 0xb8);
+    CfPrisonUncleState *p = ((GameObject *)obj)->extra;
     if (p->kicked != 0) return 0;
     if (*(u8*)((char*)p3 + 0x80) == 2) {
         p->kicked = 1;
@@ -4036,7 +4036,7 @@ int babycloudrunner_getObjectTypeId(void) { return 0; }
 
 void spiritdoorspirit_init(int* obj)
 {
-    SpiritDoorSpiritState* state = *(SpiritDoorSpiritState**)((char*)obj + 0xb8);
+    SpiritDoorSpiritState* state = ((GameObject *)obj)->extra;
     state->active = 0;
     *(s8*)((char*)obj + 54) = 0;
 }
@@ -4050,8 +4050,8 @@ void spiritdoorspirit_update(int *obj) {
     SpiritDoorSpiritState *sub;
     u8 *def;
 
-    sub = *(SpiritDoorSpiritState**)((char*)obj + 0xb8);
-    def = *(u8**)((char*)obj + 0x4c);
+    sub = ((GameObject *)obj)->extra;
+    def = *(u8**)&((GameObject *)obj)->anim.placementData;
     if (sub->active == 0) {
         sub->active = (u8)(GameBit_Get(*(s16*)(def + 0x1e)) == 0);
         if (sub->active != 0) {
@@ -4076,14 +4076,14 @@ void spiritdoorspirit_update(int *obj) {
 
 int babycloudrunner_setScale(int* obj)
 {
-    BabyCloudRunnerState* state = *(BabyCloudRunnerState**)((char*)obj + 0xb8);
+    BabyCloudRunnerState* state = ((GameObject *)obj)->extra;
     return !(state->flags22C & 1);
 }
 
 void cfperch_init(int* obj)
 {
-    *(int*)((char*)obj + 244) = 1;
-    *(void**)((char*)obj + 188) = (void*)fn_801A04F4;
+    ((GameObject *)obj)->unkF4 = 1;
+    ((GameObject *)obj)->animEventCallback = (void*)fn_801A04F4;
 }
 
 void cfmaincrystal_free(int* obj)
@@ -4104,7 +4104,7 @@ void babycloudrunner_free(int* obj)
 
 void gcrobotlightbea_init(int* obj)
 {
-    GcRobotLightBeaState* state = *(GcRobotLightBeaState**)((char*)obj + 0xb8);
+    GcRobotLightBeaState* state = ((GameObject *)obj)->extra;
     state->light = 0;
     state->unk4 = 0;
     ObjHits_EnableObject(obj);
@@ -4134,7 +4134,7 @@ void gcrobotlightbea_update(int *obj) {
     f32 vec2[3];
     u8 b_byte, g_byte, r_byte;
 
-    sub = *(GcRobotLightBeaState**)((char*)obj + 0xb8);
+    sub = ((GameObject *)obj)->extra;
     if (sub->light == NULL) {
         sub->light = modelLightStruct_createPointLight(0xfa, 0xfa, 0xfa, 1);
         if (sub->light != NULL) {
@@ -4164,7 +4164,7 @@ void gcrobotlightbea_update(int *obj) {
 
 void spiritdoorspirit_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    SpiritDoorSpiritState* state = *(SpiritDoorSpiritState**)((char*)obj + 0xb8);
+    SpiritDoorSpiritState* state = ((GameObject *)obj)->extra;
     if ((s32)visible != 0) {
         if (state->active != 0) {
             ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E42B8);
@@ -4174,7 +4174,7 @@ void spiritdoorspirit_render(int* obj, int p2, int p3, int p4, int p5, s8 visibl
 
 void cfprisonguard_hitDetect(int* obj)
 {
-    CfPrisonGuardState* state = *(CfPrisonGuardState**)((char*)obj + 0xb8);
+    CfPrisonGuardState* state = ((GameObject *)obj)->extra;
     if (ObjHits_GetPriorityHit(obj, NULL, NULL, NULL) == 19) {
         state->guardState = 7;
     }
@@ -4182,18 +4182,18 @@ void cfprisonguard_hitDetect(int* obj)
 
 void gcrobotlightbea_free(int* obj)
 {
-    GcRobotLightBeaState* state = *(GcRobotLightBeaState**)((char*)obj + 0xb8);
+    GcRobotLightBeaState* state = ((GameObject *)obj)->extra;
     if (state->light != NULL) {
         modelLightStruct_freeSlot((int*)state);
     }
-    if (*(int**)((char*)obj + 196) != NULL) {
-        ObjLink_DetachChild(*(int**)((char*)obj + 196), obj);
+    if (((GameObject *)obj)->unkC4 != NULL) {
+        ObjLink_DetachChild(((GameObject *)obj)->unkC4, obj);
     }
 }
 
 void cfguardian_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    int* state = *(int**)((char*)obj + 0xb8);
+    int* state = ((GameObject *)obj)->extra;
     if ((s32)visible != 0) {
         objRenderFn_8003b8f4(lbl_803E4130);
         dll_2E_func06(obj, state, 0);
@@ -4242,7 +4242,7 @@ void windlift_free(int* obj)
 
 void cfguardian_free(int* obj, int p2)
 {
-    char* state = *(char**)((char*)obj + 0xb8);
+    char* state = ((GameObject *)obj)->extra;
     if (p2 == 0) {
         int i;
         for (i = 0; i < 6; i++) {
@@ -4257,7 +4257,7 @@ void cfguardian_free(int* obj, int p2)
 
 void gunpowderbarrel_setScale(int* obj, f32* params)
 {
-    int* state = *(int**)((char*)obj + 0xb8);
+    int* state = ((GameObject *)obj)->extra;
     if (((GunpowderBarrelState*)state)->unk15 != 0) return;
     if (((GunpowderBarrelState*)state)->unk17 != 0) return;
     ((GunpowderBarrelState*)state)->velY = ((GunpowderBarrelState*)state)->velY + params[1];
@@ -4268,7 +4268,7 @@ void gunpowderbarrel_setScale(int* obj, f32* params)
 
 int gunpowderbarrel_canBeGrabbed(int* obj)
 {
-    GunpowderBarrelState* state = *(GunpowderBarrelState**)((char*)obj + 0xb8);
+    GunpowderBarrelState* state = ((GameObject *)obj)->extra;
     int result = 0;
     if (state->unk15 == 0 &&
         state->unk18 == lbl_803E42C0 &&
@@ -4282,8 +4282,8 @@ void cfprisonuncle_init(int* obj)
 {
     CfPrisonUncleState* state;
     ObjMsg_AllocQueue(obj, 1);
-    *(void**)((char*)obj + 188) = (void*)fn_8019FC84;
-    state = *(CfPrisonUncleState**)((char*)obj + 0xb8);
+    ((GameObject *)obj)->animEventCallback = (void*)fn_8019FC84;
+    state = ((GameObject *)obj)->extra;
     state->unk64 = 464;
     state->unk68 = 465;
     state->unk70 = 0;
@@ -4298,9 +4298,9 @@ void cfprisonuncle_init(int* obj)
 
 /* copy 3 floats within same struct */
 void cfguardian_hitDetect(int *obj) {
-    *(f32*)((char*)obj + 0x80) = *(f32*)((char*)obj + 0xc);
-    *(f32*)((char*)obj + 0x84) = *(f32*)((char*)obj + 0x10);
-    *(f32*)((char*)obj + 0x88) = *(f32*)((char*)obj + 0x14);
+    ((GameObject *)obj)->anim.previousLocalPosX = ((GameObject *)obj)->anim.localPosX;
+    ((GameObject *)obj)->anim.previousLocalPosY = ((GameObject *)obj)->anim.localPosY;
+    ((GameObject *)obj)->anim.previousLocalPosZ = ((GameObject *)obj)->anim.localPosZ;
 }
 
 #pragma scheduling off
@@ -4348,7 +4348,7 @@ void cfmaincrystal_update(int *obj) {
     uint msgType;
     uint srcObjId;
     s8 t;
-    t = ((s8 *)*(int *)((char *)obj + 0x4c))[0x19];
+    t = ((s8 *)*(int *)&((GameObject *)obj)->anim.placementData)[0x19];
     switch (t) {
     case 0:
         fn_8019D9F0(obj);
@@ -4430,7 +4430,7 @@ void cfperch_update(int *obj) {
 #pragma scheduling off
 #pragma peephole off
 void cfmaincrystal_init(int *obj, u8 *def) {
-    CfMainCrystalState *state = *(CfMainCrystalState **)((char *)obj + 0xb8);
+    CfMainCrystalState *state = ((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)((s32)*(s8 *)((char *)def + 0x18) << 8);
     if (*(s8 *)((char *)def + 0x19) == 0) {
         state->chime[0] = 0x28;
@@ -4467,7 +4467,7 @@ extern f32 lbl_803E42DC;
 #pragma scheduling off
 #pragma peephole off
 void gunpowderbarrel_launchAtTarget(int obj, u8 flag) {
-    GunpowderBarrelState* state = *(GunpowderBarrelState**)(obj + 0xb8);
+    GunpowderBarrelState* state = ((GameObject *)obj)->extra;
     u8* playerState;
     s16 stk[8];
     f32 fz;
@@ -4496,7 +4496,7 @@ void gunpowderbarrel_launchAtTarget(int obj, u8 flag) {
     Sfx_PlayFromObject(obj, SFXsk_baptr6_c);
     state->flags49 = (u8)(state->flags49 | 2);
     if ((state->flags48 & 0x40) != 0) {
-        u8* params = *(u8**)(obj + 0x4c);
+        u8* params = *(u8**)&((GameObject *)obj)->anim.placementData;
         target = 0;
         if (*(s16*)(params + 0x1a) != 0) {
             int count;
@@ -4546,17 +4546,17 @@ typedef struct { u8 _p0 : 1; u8 spitLatch : 1; u8 _p1 : 6; } WormSpitByte;
 int fn_8019E3F4(int* obj)
 {
     f32 speed;
-    BabyCloudRunnerState* sub = *(BabyCloudRunnerState**)((char*)obj + 0xb8);
-    if (*(s16*)((char*)obj + 0xa0) != 5 && *(s16*)((char*)obj + 0xa0) != 0xd) {
-        ObjAnim_SetCurrentMove((int)obj, 0xd, *(f32*)((char*)obj + 0x98), 0);
+    BabyCloudRunnerState* sub = ((GameObject *)obj)->extra;
+    if (((GameObject *)obj)->anim.currentMove != 5 && ((GameObject *)obj)->anim.currentMove != 0xd) {
+        ObjAnim_SetCurrentMove((int)obj, 0xd, ((GameObject *)obj)->anim.currentMoveProgress, 0);
     }
-    if (*(s16*)((char*)obj + 0xa0) == 5 && *(f32*)((char*)obj + 0x28) > lbl_803E422C) {
-        ObjAnim_SetCurrentMove((int)obj, 0xd, *(f32*)((char*)obj + 0x98), 0);
+    if (((GameObject *)obj)->anim.currentMove == 5 && ((GameObject *)obj)->anim.velocityY > lbl_803E422C) {
+        ObjAnim_SetCurrentMove((int)obj, 0xd, ((GameObject *)obj)->anim.currentMoveProgress, 0);
     }
-    if (*(s16*)((char*)obj + 0xa0) == 0xd && *(f32*)((char*)obj + 0x28) < lbl_803E4218) {
-        ObjAnim_SetCurrentMove((int)obj, 5, *(f32*)((char*)obj + 0x98), 0);
+    if (((GameObject *)obj)->anim.currentMove == 0xd && ((GameObject *)obj)->anim.velocityY < lbl_803E4218) {
+        ObjAnim_SetCurrentMove((int)obj, 5, ((GameObject *)obj)->anim.currentMoveProgress, 0);
     }
-    speed = *(f32*)((char*)obj + 0x28) * lbl_803DBE4C + lbl_803E4230;
+    speed = ((GameObject *)obj)->anim.velocityY * lbl_803DBE4C + lbl_803E4230;
     speed *= lbl_803E4234;
     if (speed < lbl_803E4218) {
         speed = lbl_803E4218;
@@ -4564,8 +4564,8 @@ int fn_8019E3F4(int* obj)
     if (speed > lbl_803E4234) {
         speed = lbl_803E4234;
     }
-    if (*(s16*)((char*)obj + 0xa0) == 0xd) {
-        if (*(f32*)((char*)obj + 0x98) > lbl_803E4234) {
+    if (((GameObject *)obj)->anim.currentMove == 0xd) {
+        if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E4234) {
             if (!((WormSpitByte*)&sub->spitFlags)->spitLatch) {
                 Sfx_PlayFromObject((int)obj, SFXand_spitout);
                 ((WormSpitByte*)&sub->spitFlags)->spitLatch = 1;
@@ -4592,7 +4592,7 @@ extern f32 lbl_803E4288;
 #pragma peephole off
 void cfprisonuncle_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    CfPrisonUncleState* sub = *(CfPrisonUncleState**)((char*)obj + 0xb8);
+    CfPrisonUncleState* sub = ((GameObject *)obj)->extra;
     if (GameBit_Get(0x50) != 0) {
         if (*(void**)&sub->target != NULL && objUpdateOpacity(sub->target) != 0) {
             ((void(*)(int,int,int,int,int,f32))objRenderFn_8003b8f4)(sub->target, p2, p3, p4, p5, lbl_803E4288);
@@ -4647,17 +4647,17 @@ int fn_8019B1D8(int* obj, int* target, f32 speed, int p4)
     if (target == NULL) {
         return 0;
     }
-    dx = ((GameObject *)target)->anim.localPosX - *(f32*)((char*)obj + 0xc);
-    dy = ((GameObject *)target)->anim.localPosY - *(f32*)((char*)obj + 0x10);
-    dz = ((GameObject *)target)->anim.localPosZ - *(f32*)((char*)obj + 0x14);
+    dx = ((GameObject *)target)->anim.localPosX - ((GameObject *)obj)->anim.localPosX;
+    dy = ((GameObject *)target)->anim.localPosY - ((GameObject *)obj)->anim.localPosY;
+    dz = ((GameObject *)target)->anim.localPosZ - ((GameObject *)obj)->anim.localPosZ;
     dist = sqrtf(dz * dz + (dx * dx + dy * dy));
     if (dist < lbl_803E4124 * speed) {
         return 1;
     }
     normalize(&dx, &dy, &dz);
-    *(f32*)((char*)obj + 0x24) = timeDelta * (dx * speed);
-    *(f32*)((char*)obj + 0x28) = timeDelta * (dy * speed);
-    *(f32*)((char*)obj + 0x2c) = timeDelta * (dz * speed);
+    ((GameObject *)obj)->anim.velocityX = timeDelta * (dx * speed);
+    ((GameObject *)obj)->anim.velocityY = timeDelta * (dy * speed);
+    ((GameObject *)obj)->anim.velocityZ = timeDelta * (dz * speed);
     d = (*(s16*)target + 0x8000) - (u16)*(s16*)obj;
     if (d > 0x8000) {
         d = d - 0xffff;
@@ -4666,8 +4666,8 @@ int fn_8019B1D8(int* obj, int* target, f32 speed, int p4)
         d = d + 0xffff;
     }
     *(s16*)obj = (f32)*(s16*)obj + ((lbl_803E4128 + (f32)d) * (speed * timeDelta)) / dist;
-    objMove((int)obj, *(f32*)((char*)obj + 0x24), *(f32*)((char*)obj + 0x28), *(f32*)((char*)obj + 0x2c));
-    if (*(s16*)((char*)obj + 0xa0) != 0x1a) {
+    objMove((int)obj, ((GameObject *)obj)->anim.velocityX, ((GameObject *)obj)->anim.velocityY, ((GameObject *)obj)->anim.velocityZ);
+    if (((GameObject *)obj)->anim.currentMove != 0x1a) {
         ObjAnim_SetCurrentMove((int)obj, 0x1a, lbl_803E4110, 0);
     }
     ((int(*)(int*, f32, int))ObjAnim_SampleRootCurvePhase)(obj, speed, p4);
@@ -4719,7 +4719,7 @@ typedef struct {
 void windlift_init(int* obj, u8* def)
 {
     int i;
-    WindLiftSub* sub = *(WindLiftSub**)((char*)obj + 0xb8);
+    WindLiftSub* sub = ((GameObject *)obj)->extra;
     sub->seqId = *(s16*)(def + 0x1e);
     sub->duration = seqStreamLookupFn_8007fff8(lbl_80322A48, 4, sub->seqId);
     sub->gamebit = seqStreamLookupFn_8007fff8(lbl_80322A68, 3, sub->seqId);
@@ -4736,7 +4736,7 @@ void windlift_init(int* obj, u8* def)
     } else {
         sub->liftHeight = lbl_803E41CC;
     }
-    *(f32*)((char*)obj + 8) = (*(f32*)(*(char**)((char*)obj + 0x50) + 4) * sub->liftHeight) / lbl_803E41CC;
+    ((GameObject *)obj)->anim.rootMotionScale = (*(f32*)(*(char**)&((GameObject *)obj)->anim.modelInstance + 4) * sub->liftHeight) / lbl_803E41CC;
     if (GameBit_Get(0x57) != 0 || sub->duration >= 0xa) {
         sub->timer = 0x3c;
     }
@@ -4802,40 +4802,40 @@ void fn_801A0F58(int* obj, s16 a, s16 b)
     if (dy < lbl_803E42E4) {
         return;
     }
-    dx = *(f32*)(near + 0xc) - *(f32*)((char*)obj + 0xc);
-    dy2 = *(f32*)(near + 0x10) - *(f32*)((char*)obj + 0x10);
+    dx = *(f32*)(near + 0xc) - ((GameObject *)obj)->anim.localPosX;
+    dy2 = *(f32*)(near + 0x10) - ((GameObject *)obj)->anim.localPosY;
     scale = 0.0f;
     if (dy2 > scale) {
         return;
     }
-    dz = *(f32*)(near + 0x14) - *(f32*)((char*)obj + 0x14);
-    rate = (dy2 != scale) ? *(f32*)((char*)obj + 0x28) / dy2 : scale;
+    dz = *(f32*)(near + 0x14) - ((GameObject *)obj)->anim.localPosZ;
+    rate = (dy2 != scale) ? ((GameObject *)obj)->anim.velocityY / dy2 : scale;
     if (rate >= lbl_803E42DC) {
         Sfx_PlayFromObject((int)obj, 0xd2);
         rate = lbl_803E42DC;
-        *(f32*)((char*)obj + 0x28) = dy2;
+        ((GameObject *)obj)->anim.velocityY = dy2;
         *(f32*)(near + 0xc) += lbl_803E42E8;
         *(f32*)(near + 0x2c) += lbl_803E42E8;
         if (*(f32*)(near + 0x2c) > lbl_803E42EC) {
             *(f32*)(near + 0xc) -= *(f32*)(near + 0x2c);
             *(f32*)(near + 0x2c) = 0.0f;
         }
-        *(s16*)((char*)obj + 2) = 0;
-        *(s16*)((char*)obj + 4) = 0;
+        ((GameObject *)obj)->anim.rotY = 0;
+        ((GameObject *)obj)->anim.rotZ = 0;
         a = 0;
         b = 0;
     }
-    *(f32*)((char*)obj + 0x24) = dx * rate;
-    *(f32*)((char*)obj + 0x2c) = dz * rate;
+    ((GameObject *)obj)->anim.velocityX = dx * rate;
+    ((GameObject *)obj)->anim.velocityZ = dz * rate;
     v = a;
     if (v != 0) {
         f32 t;
         if (v == 1) {
-            t = (lbl_803E42F0 - (f32)(u16)*(s16*)((char*)obj + 2)) * rate;
+            t = (lbl_803E42F0 - (f32)(u16)((GameObject *)obj)->anim.rotY) * rate;
         } else {
-            t = (f32)(u16)*(s16*)((char*)obj + 2) * (rate * (f32)v);
+            t = (f32)(u16)((GameObject *)obj)->anim.rotY * (rate * (f32)v);
         }
-        *(s16*)((char*)obj + 2) = (f32)*(s16*)((char*)obj + 2) + t;
+        ((GameObject *)obj)->anim.rotY = (f32)((GameObject *)obj)->anim.rotY + t;
     }
     w = b;
     if (w != 0) {
@@ -4843,9 +4843,9 @@ void fn_801A0F58(int* obj, s16 a, s16 b)
         if (w == 1) {
             t = 0.0f;
         } else {
-            t = (f32)(u16)*(s16*)((char*)obj + 4) * (rate * (f32)w);
+            t = (f32)(u16)((GameObject *)obj)->anim.rotZ * (rate * (f32)w);
         }
-        *(s16*)((char*)obj + 4) = (f32)*(s16*)((char*)obj + 4) + t;
+        ((GameObject *)obj)->anim.rotZ = (f32)((GameObject *)obj)->anim.rotZ + t;
     }
 }
 #pragma peephole reset
@@ -4868,9 +4868,9 @@ int babycloudrunner_SeqFn(int* obj, int p2, u8* p3)
     f32 dx;
     f32 dz;
     f32 distSq;
-    u8* def = *(u8**)((char*)obj + 0x4c);
-    BabyCloudRunnerState* sub = *(BabyCloudRunnerState**)((char*)obj + 0xb8);
-    if (*(s16*)((char*)obj + 0xb4) == 4) {
+    u8* def = *(u8**)&((GameObject *)obj)->anim.placementData;
+    BabyCloudRunnerState* sub = ((GameObject *)obj)->extra;
+    if (((GameObject *)obj)->unkB4 == 4) {
         return 0;
     }
     p3[0x56] = 0;
@@ -4883,21 +4883,21 @@ int babycloudrunner_SeqFn(int* obj, int p2, u8* p3)
     } else {
         inRange = 0;
     }
-    *(u8*)((char*)obj + 0xaf) &= ~0x8;
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x8;
     {
-        BabyCloudRunnerState* sub2 = *(BabyCloudRunnerState**)((char*)obj + 0xb8);
+        BabyCloudRunnerState* sub2 = ((GameObject *)obj)->extra;
         char* pp = (char*)Obj_GetPlayerObject();
-        u8* def2 = *(u8**)((char*)obj + 0x4c);
+        u8* def2 = *(u8**)&((GameObject *)obj)->anim.placementData;
         int found = 0;
         if (Vec_distance(pp + 0x18, (char*)obj + 0x18) < (f32)*(s16*)(def2 + 0x1a)
             && sub2->runnerState == 3
-            && (*(u16*)((char*)obj + 0xb0) & 0x1000) == 0) {
+            && (((GameObject *)obj)->objectFlags & 0x1000) == 0) {
             found = 1;
         }
         if (found != 0) {
-            *(u8*)((char*)obj + 0xaf) &= ~0x10;
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x10;
         } else {
-            *(u8*)((char*)obj + 0xaf) |= 0x10;
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x10;
         }
     }
     if (inRange == 0 && sub->runnerState == 2) {
@@ -4922,7 +4922,7 @@ int babycloudrunner_SeqFn(int* obj, int p2, u8* p3)
         }
         sub->behaviourState = 0xb;
         if (Vec_distance((char*)obj + 0x18, player + 0x18) < (f32)*(s16*)(def + 0x1a)
-            && (*(u8*)((char*)obj + 0xaf) & 1) != 0) {
+            && (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) {
             sub->behaviourState = 7;
             return 4;
         }
@@ -4963,7 +4963,7 @@ extern void Sfx_StopObjectChannel(int obj, int ch);
 int cfprisonguard_SeqFn(int* obj, int p2, u8* p3)
 {
     char* player;
-    CfPrisonGuardState* sub = *(CfPrisonGuardState**)((char*)obj + 0xb8);
+    CfPrisonGuardState* sub = ((GameObject *)obj)->extra;
     s8 gb50;
     s8 gb48;
     s8 moved;
@@ -4971,7 +4971,7 @@ int cfprisonguard_SeqFn(int* obj, int p2, u8* p3)
     int msgB;
     int msgA;
     int payload = 0;
-    u8* def = *(u8**)((char*)obj + 0x4c);
+    u8* def = *(u8**)&((GameObject *)obj)->anim.placementData;
     switch (p3[0x80]) {
     case 0x29:
         sub->alarmRamp = lbl_803E4260;
@@ -4983,7 +4983,7 @@ int cfprisonguard_SeqFn(int* obj, int p2, u8* p3)
         sub->alarmRamp = lbl_803E4264 * (f32)framesThisStep + sub->alarmRamp;
         break;
     }
-    if (*(s16*)((char*)obj + 0xb4) < 0) {
+    if (((GameObject *)obj)->unkB4 < 0) {
         return 0;
     }
     ObjHits_EnableObject(obj);
@@ -5013,7 +5013,7 @@ int cfprisonguard_SeqFn(int* obj, int p2, u8* p3)
                     moved = 1;
                     sub->guardState = 4;
                 } else {
-                    *(u8*)((char*)obj + 0xaf) |= 8;
+                    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
                     sub->guardState = 5;
                     sub->stateTimer = 0x14;
                     (*gObjectTriggerInterface)->runSequence(2, obj, -1);
@@ -5055,7 +5055,7 @@ int cfprisonguard_SeqFn(int* obj, int p2, u8* p3)
         sub->guardState = 4;
         break;
     }
-    if (*(s16*)((char*)obj + 0xa0) == 0x103 || *(s16*)((char*)obj + 0xa0) == 0x2e) {
+    if (((GameObject *)obj)->anim.currentMove == 0x103 || ((GameObject *)obj)->anim.currentMove == 0x2e) {
         Sfx_PlayFromObject((int)obj, SFXsk_doggydig11);
     } else {
         Sfx_StopObjectChannel((int)obj, 0x10);
@@ -5117,7 +5117,7 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
     u8 fl;
     int fe;
     player = (char*)Obj_GetPlayerObject();
-    dy = *(f32*)((char*)rider + 0x10) - *(f32*)((char*)obj + 0x10);
+    dy = *(f32*)((char*)rider + 0x10) - ((GameObject *)obj)->anim.localPosY;
     if (dy < lbl_803E416C) {
         return;
     }
@@ -5271,7 +5271,7 @@ extern f32  lbl_803E41BC;
 void windlift_update(int* obj)
 {
     u8* def;
-    WindLiftSub* sub = *(WindLiftSub**)((char*)obj + 0xb8);
+    WindLiftSub* sub = ((GameObject *)obj)->extra;
     int level;
     int gb2;
     char* player;
@@ -5281,7 +5281,7 @@ void windlift_update(int* obj)
     int found;
     int count;
     int** objs;
-    def = *(u8**)((char*)obj + 0x4c);
+    def = *(u8**)&((GameObject *)obj)->anim.placementData;
     if (sub->active) {
         level = (int)(lbl_803E41BC * timeDelta + (f32)(int)((GameObject *)obj)->anim.alpha);
         if (sub->gamebit != -1 && GameBit_Get(sub->gamebit) == 0) {
@@ -5614,7 +5614,7 @@ void fn_8019D9F0(int* obj)
     char* p16;
     char* p32;
     int i;
-    CfMainCrystalState* sub = *(CfMainCrystalState**)((char*)obj + 0xb8);
+    CfMainCrystalState* sub = ((GameObject *)obj)->extra;
     int idx;
     int count;
     PartPayload pay;
@@ -5779,9 +5779,9 @@ void fn_8019D9F0(int* obj)
             sl->b18 = 0;
             sl->b19 = 0;
             sl->b1a = 0;
-            sl->f0 = *(f32*)((char*)obj + 0xc);
-            sl->f8 = lbl_803E41F0 + *(f32*)((char*)obj + 0x10);
-            sl->f10 = *(f32*)((char*)obj + 0x14);
+            sl->f0 = ((GameObject *)obj)->anim.localPosX;
+            sl->f8 = lbl_803E41F0 + ((GameObject *)obj)->anim.localPosY;
+            sl->f10 = ((GameObject *)obj)->anim.localPosZ;
             sl->f4 = sl->f0;
             sl->fc = -(lbl_803E41F4 * fr - sl->f8);
             sl->f14 = sl->f10;
@@ -5862,18 +5862,18 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
     f32 k;
     f32 nearDist = lbl_803E412C;
     f32 ground = lbl_803E4130;
-    def = *(u8**)((char*)obj + 0x4c);
+    def = *(u8**)&((GameObject *)obj)->anim.placementData;
     evbuf[0x1b] = 0;
-    sub = *(CfGuardianState**)((char*)obj + 0xb8);
+    sub = ((GameObject *)obj)->extra;
     sub->flagsA9B &= ~0x2;
     sub->moveSpeed = lbl_803E4134;
     player = (char*)Obj_GetPlayerObject();
     ObjTrigger_UpdateIdBlockFlag((int)obj);
     if (*(s8*)(def + 0x19) == 1 && GameBit_Get(0x57) == 0) {
-        *(u8*)((char*)obj + 0xaf) |= 8;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
         return 0;
     }
-    *(u8*)((char*)obj + 0xaf) &= ~8;
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
     switch (sub->questState) {
     case 0:
         if (sub->chatterState == 2) {
@@ -5890,7 +5890,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
         if (GameBit_Get(0x4e) != 0) {
             sub->questState = 3;
             ObjAnim_SetCurrentMove((int)obj, 0x1a, lbl_803E4110, 0);
-            *(int*)((char*)obj + 0xf4) = 0;
+            ((GameObject *)obj)->unkF4 = 0;
             GameBit_Set(0x48, 1);
             sub->flagsA9B |= 1;
         }
@@ -5931,17 +5931,17 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
             }
         } else {
             if (sub->landingPhase >= 2) {
-                *(f32*)((char*)obj + 0x24) = lbl_803E4110;
-                *(f32*)((char*)obj + 0x2c) = lbl_803E4110;
-                *(f32*)((char*)obj + 0x10) = *(f32*)((char*)obj + 0x28) * timeDelta + *(f32*)((char*)obj + 0x10);
-                hitDetectFn_800658a4(obj, *(f32*)((char*)obj + 0xc), *(f32*)((char*)obj + 0x10), *(f32*)((char*)obj + 0x14), &ground, 0);
+                ((GameObject *)obj)->anim.velocityX = lbl_803E4110;
+                ((GameObject *)obj)->anim.velocityZ = lbl_803E4110;
+                ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.velocityY * timeDelta + ((GameObject *)obj)->anim.localPosY;
+                hitDetectFn_800658a4(obj, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ, &ground, 0);
                 *(s16*)obj = (s16)((0xc0 << (*(s16*)obj + 8)) >> 1);
-                (*(ObjHitsPriorityState **)((char *)obj + 0x54))->flags &= ~0x400;
+                (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~0x400;
                 if (ground <= lbl_803E4130) {
                     sub->landingPhase = 2;
-                    *(f32*)((char*)obj + 0x10) -= ground;
+                    ((GameObject *)obj)->anim.localPosY -= ground;
                     sub->chatterState = 1;
-                    *(int*)((char*)obj + 0xf4) = 0;
+                    ((GameObject *)obj)->unkF4 = 0;
                     ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E4110, 0);
                     {
                         char* pt = (char*)findRomCurvePointNearObject(obj, 0, 0, 2);
@@ -5950,7 +5950,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
                         sub->homeY = *(f32*)(pt + 0xc);
                         sub->homeZ = *(f32*)(pt + 0x10);
                         sub->homeYaw = (s16)(*(s8*)(pt + 0x2c) << 8);
-                        d = sub->homeY - *(f32*)((char*)obj + 0x10);
+                        d = sub->homeY - ((GameObject *)obj)->anim.localPosY;
                         d = (d >= lbl_803E4110) ? d : -d;
                         if (d < lbl_803E413C) {
                             ObjGroup_AddObject(obj, 0x16);
@@ -5959,45 +5959,45 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
                         }
                     }
                 } else {
-                    *(f32*)((char*)obj + 0x28) -= lbl_803E4140;
+                    ((GameObject *)obj)->anim.velocityY -= lbl_803E4140;
                 }
             } else {
-                f32 w = lbl_803E4144 * *(f32*)((char*)obj + 0x28);
+                f32 w = lbl_803E4144 * ((GameObject *)obj)->anim.velocityY;
                 w = (w >= lbl_803E4110) ? w : -w;
                 *(s16*)obj = (f32)*(s16*)obj + w;
                 sub->moveSpeed = lbl_803E4148;
                 if (GameBit_Get(0x8e9) != 0) {
                     ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E4110, 0);
                     ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x32);
-                    *(f32*)((char*)obj + 0x28) = lbl_803E4110;
+                    ((GameObject *)obj)->anim.velocityY = lbl_803E4110;
                     ObjGroup_RemoveObject(obj, 0x16);
-                    *(f32*)((char*)obj + 0x24) = lbl_803E4110;
-                    *(f32*)((char*)obj + 0x28) = lbl_803E414C;
-                    *(f32*)((char*)obj + 0x2c) = lbl_803E4110;
+                    ((GameObject *)obj)->anim.velocityX = lbl_803E4110;
+                    ((GameObject *)obj)->anim.velocityY = lbl_803E414C;
+                    ((GameObject *)obj)->anim.velocityZ = lbl_803E4110;
                     sub->landingPhase = 2;
                     sub->flagsA9B &= ~1;
                 }
             }
             if (sub->landingPhase < 2) {
-                *(f32*)((char*)obj + 0xc) = timeDelta * *(f32*)((char*)obj + 0x24) + *(f32*)((char*)obj + 0xc);
-                *(f32*)((char*)obj + 0x14) = timeDelta * *(f32*)((char*)obj + 0x2c) + *(f32*)((char*)obj + 0x14);
+                ((GameObject *)obj)->anim.localPosX = timeDelta * ((GameObject *)obj)->anim.velocityX + ((GameObject *)obj)->anim.localPosX;
+                ((GameObject *)obj)->anim.localPosZ = timeDelta * ((GameObject *)obj)->anim.velocityZ + ((GameObject *)obj)->anim.localPosZ;
                 if (sub->unkA5E != 0) {
-                    *(f32*)((char*)obj + 0x24) = lbl_803E4150 * -*(f32*)((char*)obj + 0x24);
-                    *(f32*)((char*)obj + 0x2c) = lbl_803E4150 * -*(f32*)((char*)obj + 0x2c);
+                    ((GameObject *)obj)->anim.velocityX = lbl_803E4150 * -((GameObject *)obj)->anim.velocityX;
+                    ((GameObject *)obj)->anim.velocityZ = lbl_803E4150 * -((GameObject *)obj)->anim.velocityZ;
                 }
-                v[0] = *(f32*)((char*)obj + 0xc) - *(f32*)((char*)obj + 0x80);
-                v[1] = *(f32*)((char*)obj + 0x10) - *(f32*)((char*)obj + 0x84);
-                v[2] = *(f32*)((char*)obj + 0x14) - *(f32*)((char*)obj + 0x88);
+                v[0] = ((GameObject *)obj)->anim.localPosX - ((GameObject *)obj)->anim.previousLocalPosX;
+                v[1] = ((GameObject *)obj)->anim.localPosY - ((GameObject *)obj)->anim.previousLocalPosY;
+                v[2] = ((GameObject *)obj)->anim.localPosZ - ((GameObject *)obj)->anim.previousLocalPosZ;
                 k = lbl_803E4154 * oneOverTimeDelta;
                 v[0] = v[0] * k;
                 v[1] = v[1] * k;
                 v[2] = v[2] * k;
-                *(f32*)((char*)obj + 0x24) = v[0] + *(f32*)((char*)obj + 0x24);
-                *(f32*)((char*)obj + 0x28) = v[1] + *(f32*)((char*)obj + 0x28);
-                *(f32*)((char*)obj + 0x2c) = v[2] + *(f32*)((char*)obj + 0x2c);
-                *(f32*)((char*)obj + 0x24) = lbl_803E4138 * *(f32*)((char*)obj + 0x24);
-                *(f32*)((char*)obj + 0x28) = lbl_803E4138 * *(f32*)((char*)obj + 0x28);
-                *(f32*)((char*)obj + 0x2c) = lbl_803E4138 * *(f32*)((char*)obj + 0x2c);
+                ((GameObject *)obj)->anim.velocityX = v[0] + ((GameObject *)obj)->anim.velocityX;
+                ((GameObject *)obj)->anim.velocityY = v[1] + ((GameObject *)obj)->anim.velocityY;
+                ((GameObject *)obj)->anim.velocityZ = v[2] + ((GameObject *)obj)->anim.velocityZ;
+                ((GameObject *)obj)->anim.velocityX = lbl_803E4138 * ((GameObject *)obj)->anim.velocityX;
+                ((GameObject *)obj)->anim.velocityY = lbl_803E4138 * ((GameObject *)obj)->anim.velocityY;
+                ((GameObject *)obj)->anim.velocityZ = lbl_803E4138 * ((GameObject *)obj)->anim.velocityZ;
             }
         }
         break;
@@ -6014,10 +6014,10 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
     case 8:
         if ((void*)ObjGroup_FindNearestObject(3, obj, &nearDist) != NULL && nearDist < lbl_803E4158) {
             dll_2E_func04(sub);
-            *(u8*)((char*)obj + 0xaf) |= 0x10;
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x10;
         }
         if (nearDist > lbl_803E4158 && Vec_xzDistance(player + 0x18, (char*)obj + 0x18) < lbl_803E413C) {
-            *(u8*)((char*)obj + 0xaf) &= ~0x10;
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x10;
             if ((sub->flagsA9B & 4) == 0 && lbl_80322954[sub->questState] != 0) {
                 dll_2E_func0C(0xf, (u8*)sub + 0xa68);
                 sub->flagsA9B |= 5;
@@ -6075,7 +6075,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
         if (GameBit_Get(0x4be) != 0) {
             sub->questState = 0xa;
             ObjAnim_SetCurrentMove((int)obj, 0x1a, lbl_803E4110, 0);
-            *(int*)((char*)obj + 0xf4) = 0;
+            ((GameObject *)obj)->unkF4 = 0;
         }
         break;
     case 10:
@@ -6092,9 +6092,9 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
             sub->chatterState = 1;
         }
         ((GameObject *)obj)->anim.alpha = 0;
-        (*(ObjHitsPriorityState **)((char *)obj + 0x54))->flags &= ~1;
+        (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
         Obj_RemoveFromUpdateList(obj);
-        *(s16*)((char*)obj + 6) |= 0x4000;
+        ((GameObject *)obj)->anim.flags |= 0x4000;
         sub->questState = 0xf;
         break;
     case 12:
@@ -6129,9 +6129,9 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
         }
         break;
     case 15:
-        *(s16*)((char*)obj + 6) |= 0x4000;
+        ((GameObject *)obj)->anim.flags |= 0x4000;
         Obj_RemoveFromUpdateList(obj);
-        (*(ObjHitsPriorityState **)((char *)obj + 0x54))->flags &= ~1;
+        (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
         break;
     }
     dll_2E_func03(obj, sub);
@@ -6167,15 +6167,15 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
     }
     {
         int mv = lbl_80322954[sub->questState];
-        if (mv != -1 && (sub->flagsA9B & 1) == 0 && *(s16*)((char*)obj + 0xa0) != mv) {
+        if (mv != -1 && (sub->flagsA9B & 1) == 0 && ((GameObject *)obj)->anim.currentMove != mv) {
             ObjAnim_SetCurrentMove((int)obj, mv, lbl_803E4110, 0);
             ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent*)obj, 0x50);
         }
     }
     if (((int (*)(int, f32, f32, void*))ObjAnim_AdvanceCurrentMove)((int)obj, sub->moveSpeed, (f32)framesThisStep, evbuf) != 0
         && (sub->flagsA9B & 1) != 0
-        && *(s16*)((char*)obj + 0xa0) != 0x1a
-        && *(s16*)((char*)obj + 0xa0) != 9) {
+        && ((GameObject *)obj)->anim.currentMove != 0x1a
+        && ((GameObject *)obj)->anim.currentMove != 9) {
         sub->flagsA9B &= ~1;
     }
     fn_8019AE3C(obj, evbuf, &lbl_803DBE20);

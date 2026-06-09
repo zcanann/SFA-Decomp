@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/dll/flybaddie1D7.h"
 #include "main/dll/projball1D8.h"
@@ -226,7 +227,7 @@ void sh_tricky_update(int *obj) {
     u8 *state;
     int *tricky;
 
-    state = *(u8 **)((char *)obj + 0xb8);
+    state = ((GameObject *)obj)->extra;
     tricky = getTrickyObject();
     if (tricky == NULL) {
         return;
@@ -266,7 +267,7 @@ void sh_tricky_update(int *obj) {
 
 #pragma scheduling off
 int EdibleMushroom_SeqFn(int *obj) {
-    *(u8*)(*(int*)((char*)obj + 0xb8) + 0x139) = 1;
+    *(u8*)(*(int *)&((GameObject *)obj)->extra + 0x139) = 1;
     return 0;
 }
 #pragma scheduling reset
@@ -277,13 +278,13 @@ extern uint GameBit_Get(int id);
 #pragma peephole off
 void sh_tricky_init(int* obj)
 {
-    u8* state = *(u8**)((char*)obj + 0xb8);
+    u8* state = ((GameObject *)obj)->extra;
     if (GameBit_Get(0xbf) != 0) {
         *state = 4;
     } else {
         *state = 0;
     }
-    *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x6000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x6000);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -301,10 +302,10 @@ extern void getEnvfxAct(int a, int b, int c, int d);
 void nw_levcontrol_init(int* obj)
 {
     char* base = lbl_803269F8;
-    u8* state = *(u8**)((char*)obj + 0xb8);
+    u8* state = ((GameObject *)obj)->extra;
 
     Obj_GetPlayerObject();
-    *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x6000);
+    ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x6000);
 
     if (GameBit_Get(0x19f) != 0) {
         state[4] = 0xc;

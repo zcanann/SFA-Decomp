@@ -1323,7 +1323,7 @@ void dll_224_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (vi
 void seqpoint_update(int *obj)
 {
     void *player = Obj_GetPlayerObject();
-    SeqPointState *self = *(SeqPointState **)((char *)obj + 0xb8);
+    SeqPointState *self = ((GameObject *)obj)->extra;
     int key = self->disableBit;
 
     if (key != -1) {
@@ -1393,27 +1393,27 @@ extern u8 lbl_803DDCC6;
 #pragma peephole off
 void vfpdraghead_update(int *obj)
 {
-    int state = *(s8 *)(*(char **)((char *)obj + 0x4c) + 0x19);
+    int state = *(s8 *)(*(char **)&((GameObject *)obj)->anim.placementData + 0x19);
     VfpDragHeadState *self2;
 
     if (state == 2) {
-        self2 = *(VfpDragHeadState **)((char *)obj + 0xb8);
+        self2 = ((GameObject *)obj)->extra;
         lbl_803DDCC4 -= (int)timeDelta;
         if (GameBit_Get(self2->gameBitB) != 0) return;
         if (lbl_803DDCC4 > 0xc8) return;
         if (self2->headIndex != lbl_803DDCC6) return;
         if (randomGetRange(0, 2) != 0) return;
         (*gPartfxInterface)->spawnObject(obj, 0x391, NULL, 4, -1, NULL);
-    } else if (*(s16 *)((char *)obj + 0x46) == 0x3c5) {
-        self2 = *(VfpDragHeadState **)((char *)obj + 0xb8);
+    } else if (((GameObject *)obj)->anim.seqId == 0x3c5) {
+        self2 = ((GameObject *)obj)->extra;
         self2->despawnTimer -= (int)timeDelta;
-        *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)obj + 0x24) * timeDelta + *(f32 *)((char *)obj + 0xc);
-        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)obj + 0x28) * timeDelta + *(f32 *)((char *)obj + 0x10);
-        *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)obj + 0x2c) * timeDelta + *(f32 *)((char *)obj + 0x14);
+        ((GameObject *)obj)->anim.localPosX = ((GameObject *)obj)->anim.velocityX * timeDelta + ((GameObject *)obj)->anim.localPosX;
+        ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.velocityY * timeDelta + ((GameObject *)obj)->anim.localPosY;
+        ((GameObject *)obj)->anim.localPosZ = ((GameObject *)obj)->anim.velocityZ * timeDelta + ((GameObject *)obj)->anim.localPosZ;
         if (self2->despawnTimer > 0) return;
         Obj_FreeObject(obj);
     } else if (state == 0) {
-        self2 = *(VfpDragHeadState **)((char *)obj + 0xb8);
+        self2 = ((GameObject *)obj)->extra;
         lbl_803DDCC4 -= (int)timeDelta;
         if (GameBit_Get(0x522) != 0) return;
         if (lbl_803DDCC4 > 0xc8) return;
@@ -1421,7 +1421,7 @@ void vfpdraghead_update(int *obj)
         if (randomGetRange(0, 2) != 0) return;
         (*gPartfxInterface)->spawnObject(obj, 0x391, NULL, 4, -1, NULL);
     } else if (state == 1) {
-        self2 = *(VfpDragHeadState **)((char *)obj + 0xb8);
+        self2 = ((GameObject *)obj)->extra;
         if (GameBit_Get(self2->gameBitA) != 0) {
             (*gPartfxInterface)->spawnObject(obj, 0x390, NULL, 4, -1, NULL);
             (*gPartfxInterface)->spawnObject(obj, 0x390, NULL, 4, -1, NULL);

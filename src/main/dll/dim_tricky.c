@@ -70,7 +70,7 @@ void dll_19E_update(void *obj)
   undefined4 resourceArgs[4];
   int i;
 
-  state = *(Dll19EState **)((u8 *)obj + 0xb8);
+  state = ((GameObject *)obj)->extra;
   resourceArgs[0] = lbl_802C23D8[0];
   resourceArgs[1] = lbl_802C23D8[1];
   resourceArgs[2] = lbl_802C23D8[2];
@@ -189,7 +189,7 @@ void dll_19E_init(u8 *obj, Dll19ESetup *setup)
   undefined stackArg[16];
   volatile f32 localScale;
 
-  state = *(Dll19EState **)(obj + 0xb8);
+  state = ((GameObject *)obj)->extra;
   *(s16 *)obj = (s16)(((s32)setup->objectType & 0x3f) << 10);
   if (setup->scaleTimer > 0) {
     ((GameObject *)obj)->anim.rootMotionScale = (f32)setup->scaleTimer / lbl_803E51E4;

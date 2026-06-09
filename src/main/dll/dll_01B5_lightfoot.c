@@ -76,7 +76,7 @@ void lightfoot_free(int obj, int p2)
 {
     int i;
     int count;
-    int inner = *(int *)((char *)obj + 0xb8);
+    int inner = *(int *)&((GameObject *)obj)->extra;
     ObjGroup_RemoveObject(obj, 3);
     count = ((GameObject *)obj)->unkEB;
     for (i = 0; i < count; i++) {
@@ -97,8 +97,8 @@ void lightfoot_free(int obj, int p2)
 #pragma peephole off
 void lightfoot_update(int obj)
 {
-    int inner = *(int *)((char *)obj + 0xb8);
-    int p30 = *(int *)((char *)obj + 0x4c);
+    int inner = *(int *)&((GameObject *)obj)->extra;
+    int p30 = *(int *)&((GameObject *)obj)->anim.placementData;
     int anim = *(int *)((char *)inner + 0x40c);
     f32 snd[3];
     f32 buf[6];
@@ -232,7 +232,7 @@ void lightfoot_update(int obj)
 #pragma peephole off
 void lightfoot_init(int obj, int p2, int p3)
 {
-    int inner = *(int *)((char *)obj + 0xb8);
+    int inner = *(int *)&((GameObject *)obj)->extra;
     int sub;
     int flags = 0x16;
 
@@ -258,7 +258,7 @@ void lightfoot_init(int obj, int p2, int p3)
         *(s16 *)((char *)sub + 0x28) = 0x6f1;
         *(int *)((char *)sub + 0) = (int)&lbl_803DC6F0;
         *(int *)((char *)sub + 4) = (int)&lbl_803DC6F4;
-        *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) | 8);
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
         ((GameObject *)obj)->unkF8 = 0;
     } else {
         switch (*(int *)((char *)p2 + 0x14)) {
@@ -266,21 +266,21 @@ void lightfoot_init(int obj, int p2, int p3)
             *(int *)((char *)sub + 0) = (int)&lbl_803DC714;
             *(int *)((char *)sub + 4) = (int)&lbl_803DC718;
             ObjHits_DisableObject(obj);
-            *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) | 8);
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
             ((GameObject *)obj)->anim.currentMoveProgress = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
             break;
         case 0x33e3c:
             *(int *)((char *)sub + 0) = (int)&lbl_803DC6F0;
             *(int *)((char *)sub + 4) = (int)&lbl_803DC6F4;
             *(s16 *)((char *)sub + 0x28) = 0x6f1;
-            *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) | 8);
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
             ((GameObject *)obj)->anim.currentMoveProgress = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
             break;
         case 0x33e34:
             *(int *)((char *)sub + 0) = (int)&lbl_803DC6FC;
             *(int *)((char *)sub + 4) = (int)&lbl_803DC700;
             *(s16 *)((char *)sub + 0x28) = 0x6f1;
-            *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) | 8);
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
             ((GameObject *)obj)->anim.currentMoveProgress = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
             break;
         case 0x45c47:
@@ -288,39 +288,39 @@ void lightfoot_init(int obj, int p2, int p3)
             *(int *)((char *)sub + 4) = (int)&lbl_803DC70C;
             ObjHits_DisableObject(obj);
             *(s16 *)((char *)sub + 0x28) = 0x6f2;
-            *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) | 8);
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
             ((GameObject *)obj)->anim.currentMoveProgress = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
             break;
         case 0x460b6:
             *(int *)((char *)sub + 0) = (int)&lbl_803DC720;
             *(int *)((char *)sub + 4) = (int)&lbl_803DC724;
             ObjHits_DisableObject(obj);
-            *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) | 8);
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
             ((GameObject *)obj)->anim.currentMoveProgress = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
             break;
         case 0x3433f:
             *(int *)((char *)sub + 0) = (int)((char *)lbl_80334EE8 + 0x30);
             *(int *)((char *)sub + 4) = (int)((char *)lbl_80334EE8 + 0x40);
-            *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) | 8);
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
             ((GameObject *)obj)->anim.currentMoveProgress = (f32)(s32)randomGetRange(0, 0x63) / lbl_803E817C;
             break;
         case 0x46a51:
             if (GameBit_Get(0xc52)) {
-                *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) | 8);
+                *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
             }
             *(int *)((char *)sub + 0) = (int)lbl_80334EE8;
             *(int *)((char *)sub + 4) = (int)((char *)lbl_80334EE8 + 0x10);
             break;
         case 0x46a55:
             if (GameBit_Get(0xc53)) {
-                *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) | 8);
+                *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
             }
             *(int *)((char *)sub + 0) = (int)lbl_80334EE8;
             *(int *)((char *)sub + 4) = (int)((char *)lbl_80334EE8 + 0x10);
             break;
         case 0x49928:
             if (GameBit_Get(0xc54)) {
-                *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) | 8);
+                *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
             }
             *(int *)((char *)sub + 0) = (int)lbl_80334EE8;
             *(int *)((char *)sub + 4) = (int)((char *)lbl_80334EE8 + 0x10);

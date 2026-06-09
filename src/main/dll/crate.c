@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/game_object.h"
 #include "main/dll/crate.h"
 
 extern undefined4 FUN_80006824();
@@ -31,7 +32,7 @@ undefined4 sfxplayer_updateState(int obj,undefined4 param_2,int hitState)
   SfxplayerState *state;
   int i;
 
-  state = *(SfxplayerState **)(obj + 0xb8);
+  state = ((GameObject *)obj)->extra;
   *(s16 *)(hitState + 0x6e) = -1;
   *(u8 *)(hitState + 0x56) = 0;
   i = 0;

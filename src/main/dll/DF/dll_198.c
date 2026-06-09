@@ -280,8 +280,8 @@ int DFSH_Door2Speci_SeqFn(int obj)
   f64 phaseBits;
   u64 phaseBitsRaw;
 
-  extra = *(DFDoorSpeciExtra **)(obj + 0xb8);
-  objDef = *(int *)(obj + 0x4c);
+  extra = ((GameObject *)obj)->extra;
+  objDef = *(int *)&((GameObject *)obj)->anim.placementData;
   switch (extra->state) {
   case 0:
     if (GameBit_Get(*(s16 *)(objDef + 0x22)) != 0) {

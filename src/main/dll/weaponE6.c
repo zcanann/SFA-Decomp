@@ -108,7 +108,7 @@ void fn_8013F100(int obj, register int state)
                 ((TrickyState *)state)->unkA = 3;
                 fn_80179678(*(int *)(state + 0x700), obj);
             } else if (iVar2 == 2) {
-                iVar3 = *(int *)(obj + 0xb8);
+                iVar3 = *(int *)&((GameObject *)obj)->extra;
                 if ((((uint)*(u8 *)(iVar3 + 0x58) >> 6) & 1) == 0) {
                     sVar = ((GameObject *)obj)->anim.currentMove;
                     if (sVar >= 48 || sVar < 41) {
@@ -174,7 +174,7 @@ void fn_8013F100(int obj, register int state)
                 *(float *)(state + 0x7a4) -= timeDelta;
                 if (*(float *)(state + 0x7a4) <= lbl_803E23DC) {
                     *(float *)(state + 0x7a4) = (f32)(s32)randomGetRange(150, 300);
-                    iVar3 = *(int *)(obj + 0xb8);
+                    iVar3 = *(int *)&((GameObject *)obj)->extra;
                     if ((((uint)*(u8 *)(iVar3 + 0x58) >> 6) & 1) != 0) {
                         break;
                     }
@@ -328,7 +328,7 @@ void fn_8013F9E4(int obj, int state)
             ((TrickyState *)state)->unk740 -= timeDelta;
             if (((TrickyState *)state)->unk740 <= lbl_803E23DC) {
                 ((TrickyState *)state)->unk740 = (f32)(s32)randomGetRange(500, 750);
-                iVar3 = *(int *)(obj + 0xb8);
+                iVar3 = *(int *)&((GameObject *)obj)->extra;
                 if ((((uint)*(u8 *)(iVar3 + 0x58) >> 6) & 1) == 0) {
                     sVar = ((GameObject *)obj)->anim.currentMove;
                     if (sVar >= 48 || sVar < 41) {
