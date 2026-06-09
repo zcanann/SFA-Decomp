@@ -306,7 +306,9 @@ int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
     child = *(int *)state;
     if (child != 0) {
         ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
-            (child, ((GameObject *)obj)->anim.currentMoveProgress - *(f32 *)(child + 0x98), timeDelta, NULL);
+            (child, ((GameObject *)obj)->anim.currentMoveProgress -
+                        ((GameObject *)child)->anim.currentMoveProgress,
+             timeDelta, NULL);
     }
 
     *(void **)(animObj + 0xec) = warpstone_handleMenuOptionInput;

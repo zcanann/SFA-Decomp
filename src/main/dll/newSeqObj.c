@@ -241,7 +241,7 @@ void fn_80150EDC(void *p1, void *p2) {
         }
     }
 
-    if ((s32)*(s16 *)((u8 *)p1 + 0xa0) == *(u8 *)((u8 *)r30 + 0x2c)) {
+    if ((s32)((GameObject *)p1)->anim.currentMove == *(u8 *)((u8 *)r30 + 0x2c)) {
         *(f32 *)((u8 *)p2 + 0x308) =
             *(f32 *)((u8 *)p2 + 0x2fc) *
             (((f32)(u32)*(u16 *)((u8 *)p2 + 0x2a4) /
