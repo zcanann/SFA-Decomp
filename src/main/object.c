@@ -320,8 +320,8 @@ void Obj_TickModelColorFadeRecursive(u8 *obj) {
 
 #pragma dont_inline on
 void Obj_SetModelColorFadeRecursive(u8 *obj, int frames, u8 red, u8 green, u8 blue, u8 startAtHalf) {
-    int i;
     u8 *childScan;
+    int i;
 
     ((GameObject *)obj)->unkE6 = (s16)frames;
     ((GameObject *)obj)->unkE5 &= ~4;
