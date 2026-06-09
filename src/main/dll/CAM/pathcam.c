@@ -2,6 +2,7 @@
 #include "main/camera_interface.h"
 #include "main/camera_object.h"
 #include "main/dll/CAM/camcontrol_mode_settings.h"
+#include "main/dll/CAM/camcontrol_path_state.h"
 #include "main/game_object.h"
 #include "main/mm.h"
 #include "main/object_transform.h"
@@ -15,7 +16,6 @@ extern undefined4 camcontrol_getTargetPosition();
 extern f32 Curve_EvalHermite(f32 param_1, f32 *param_2, f32 *param_3);
 extern undefined4 Curve_AdvanceAlongPath(f32 param_1, f32 *param_2);
 
-extern undefined4 lbl_803DD538;
 extern f64 DOUBLE_803e1698;
 extern f64 DOUBLE_803e16f8;
 extern f32 lbl_803E16D0;
@@ -257,10 +257,9 @@ void camcontrol_samplePathState(f32 *outX,f32 *height,f32 *outZ,undefined4 param
 
   memset(&work,0,0x144);
   work.model = *(int *)(param_5 + 0x30);
-  iVar1 = gCamcontrolPathState + *(int *)(gCamcontrolPathState + 0x1b0) * 4;
-  work.sampleX = *(float *)(iVar1 + 0x14);
+  work.sampleX = gCamcontrolPathState->pointsX[gCamcontrolPathState->pointCount - 2];
   work.sampleY = *height;
-  work.sampleZ = *(float *)(iVar1 + 0xb4);
+  work.sampleZ = gCamcontrolPathState->pointsZ[gCamcontrolPathState->pointCount - 2];
   work.localX = work.sampleX;
   work.localY = work.sampleY;
   work.localZ = work.sampleZ;
@@ -272,17 +271,15 @@ void camcontrol_samplePathState(f32 *outX,f32 *height,f32 *outZ,undefined4 param
   Obj_TransformLocalPointToWorld(work.sampleX,work.sampleY,work.sampleZ,
                                  &work.targetX,&work.targetY,work.targetZ,work.model);
   (*(code *)(**(int **)(iVar1 + 4) + 0x24))
-            (&work,1,3,gCamcontrolPathState + 0x14,gCamcontrolPathState + 0x18);
-  iVar2 = *(int *)(gCamcontrolPathState + 0x1b0) + -3;
-  iVar1 = iVar2 * 4;
-  for (; iVar2 < *(int *)(gCamcontrolPathState + 0x1b0); iVar2 = iVar2 + 1) {
-    *(float *)(gCamcontrolPathState + iVar1 + 0x1c) = work.sampleX;
-    *(float *)(gCamcontrolPathState + iVar1 + 0xbc) = work.sampleZ;
-    iVar1 = iVar1 + 4;
+            (&work,1,3,&gCamcontrolPathState->curveMin,&gCamcontrolPathState->curveMax);
+  iVar2 = gCamcontrolPathState->pointCount + -3;
+  for (; iVar2 < gCamcontrolPathState->pointCount; iVar2 = iVar2 + 1) {
+    gCamcontrolPathState->pointsX[iVar2] = work.sampleX;
+    gCamcontrolPathState->pointsZ[iVar2] = work.sampleZ;
   }
-  if (lbl_803E1740 != *(float *)(gCamcontrolPathState + 300)) {
-    pathT = *(float *)(gCamcontrolPathState + 0x128) /
-            *(float *)(gCamcontrolPathState + 300);
+  if (lbl_803E1740 != *(float *)(gCamcontrolPathState->curveWork + 0xc)) {
+    pathT = *(float *)(gCamcontrolPathState->curveWork + 8) /
+            *(float *)(gCamcontrolPathState->curveWork + 0xc);
   } else {
     pathT = lbl_803E1740;
   }
@@ -292,12 +289,12 @@ void camcontrol_samplePathState(f32 *outX,f32 *height,f32 *outZ,undefined4 param
   else if (pathT < lbl_803E1740) {
     pathT = lbl_803E1740;
   }
-  pathT = Curve_EvalHermite(pathT,(float *)(gCamcontrolPathState + 0x10c),(float *)0x0);
+  pathT = Curve_EvalHermite(pathT,gCamcontrolPathState->initialiseCurve,(float *)0x0);
   if (pathT < lbl_803E1748) {
     pathT = lbl_803E1748;
   }
-  Curve_AdvanceAlongPath(pathT,(float *)(gCamcontrolPathState + 0x120));
-  *outX = *(float *)(gCamcontrolPathState + 0x188);
-  *outZ = *(float *)(gCamcontrolPathState + 400);
+  Curve_AdvanceAlongPath(pathT,(float *)gCamcontrolPathState->curveWork);
+  *outX = *(float *)(gCamcontrolPathState->curveWork + 0x68);
+  *outZ = *(float *)(gCamcontrolPathState->curveWork + 0x90);
   return;
 }
