@@ -27,7 +27,7 @@ extern undefined4 FUN_80286888();
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 
-extern u8 gSHthorntailDataTables[];
+extern SHthorntailDataTables gSHthorntailDataTables;
 extern u8 gSHthorntailPathHeaders[0x30];
 extern u8 gSHthorntailPathData[0x4AC];
 extern undefined4 lbl_803E5410;
@@ -129,7 +129,7 @@ void SHthorntail_update(SHthorntailObject *obj)
   ObjAnimEventList animEvents;
   SHthorntailTailSwingEffectScratch effectScratch;
   
-  stateTables = gSHthorntailDataTables;
+  stateTables = (u8 *)&gSHthorntailDataTables;
   runtime = obj->runtime;
   config = obj->config;
   iVar9 = (int)config;

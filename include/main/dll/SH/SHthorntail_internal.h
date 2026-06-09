@@ -16,6 +16,29 @@ typedef struct SHthorntailConfig {
   u16 initScale;
 } SHthorntailConfig;
 
+#define SHTHORNTAIL_LINKED_CONFIG_GROUP_COUNT 6
+#define SHTHORNTAIL_LINKED_CONFIG_COUNT 3
+#define SHTHORNTAIL_LEVEL_MODE0_SFX_VARIANT_BYTES 0x0C
+
+typedef struct SHthorntailLinkedConfigRow {
+  s32 configToken;
+  s32 linkedConfigTokens[SHTHORNTAIL_LINKED_CONFIG_COUNT];
+} SHthorntailLinkedConfigRow;
+
+typedef struct SHthorntailDataTables {
+  SHthorntailLinkedConfigRow linkedConfigRows[SHTHORNTAIL_LINKED_CONFIG_GROUP_COUNT];
+  u8 pathHeaders[0x30];
+  u8 pathData[0x4AC];
+  u8 levelMode0DefaultImpactSfxTable[0x10];
+  u8 levelMode0Locomotion1ImpactSfxVariants[SHTHORNTAIL_LEVEL_MODE0_SFX_VARIANT_BYTES];
+  u8 levelMode0Locomotion2ClearImpactSfxVariants[SHTHORNTAIL_LEVEL_MODE0_SFX_VARIANT_BYTES];
+  u8 levelMode0Locomotion2SetImpactSfxVariants[SHTHORNTAIL_LEVEL_MODE0_SFX_VARIANT_BYTES];
+  u8 levelMode0Locomotion3ClearImpactSfxVariants[SHTHORNTAIL_LEVEL_MODE0_SFX_VARIANT_BYTES];
+  u8 levelMode0Locomotion3SetImpactSfxVariants[SHTHORNTAIL_LEVEL_MODE0_SFX_VARIANT_BYTES];
+  u8 levelMode0Locomotion5ClearImpactSfxVariants[SHTHORNTAIL_LEVEL_MODE0_SFX_VARIANT_BYTES];
+  u8 levelMode0Locomotion8ImpactSfxVariants[SHTHORNTAIL_LEVEL_MODE0_SFX_VARIANT_BYTES];
+} SHthorntailDataTables;
+
 typedef struct SHthorntailRuntime {
   u8 pad00[0x04];
   float dustEffectTimer;

@@ -22,16 +22,7 @@ extern f32 lbl_803E5424;
 extern f64 lbl_803E5428;
 extern f32 lbl_803E5438;
 extern f32 lbl_803E5448;
-extern u8 gSHthorntailDataTables[];
-
-#define SHTHORNTAIL_LEVEL_MODE0_SFX_BASE 0x53C
-#define SHTHORNTAIL_LEVEL_MODE0_SFX_LOC1 0x54C
-#define SHTHORNTAIL_LEVEL_MODE0_SFX_LOC2_CLEAR 0x558
-#define SHTHORNTAIL_LEVEL_MODE0_SFX_LOC2_SET 0x564
-#define SHTHORNTAIL_LEVEL_MODE0_SFX_LOC3_CLEAR 0x570
-#define SHTHORNTAIL_LEVEL_MODE0_SFX_LOC3_SET 0x57C
-#define SHTHORNTAIL_LEVEL_MODE0_SFX_LOC5_CLEAR 0x588
-#define SHTHORNTAIL_LEVEL_MODE0_SFX_LOC8 0x594
+extern SHthorntailDataTables gSHthorntailDataTables;
 
 #define SHTHORNTAIL_LEVEL_MODE1_GATE_OPEN_GAMEBIT 0x13E
 #define SHTHORNTAIL_LEVEL_MODE1_FREEZE_GAMEBIT 0x168
@@ -168,47 +159,42 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
   int linkedEventPending;
   uint gameBit;
   int randomIdleWait;
-  u8 *levelControlTables;
+  SHthorntailDataTables *dataTables;
 
-  levelControlTables = gSHthorntailDataTables;
-  runtime->impactSfxTable = levelControlTables + SHTHORNTAIL_LEVEL_MODE0_SFX_BASE;
+  dataTables = &gSHthorntailDataTables;
+  runtime->impactSfxTable = dataTables->levelMode0DefaultImpactSfxTable;
   switch(runtime->locomotionMode) {
   case SHTHORNTAIL_LOCOMOTION_1:
     runtime->impactSfxTable =
-        levelControlTables + config->impactSfxVariant * 2 + SHTHORNTAIL_LEVEL_MODE0_SFX_LOC1;
+        dataTables->levelMode0Locomotion1ImpactSfxVariants + config->impactSfxVariant * 2;
     break;
   case SHTHORNTAIL_LOCOMOTION_2:
     gameBit = GameBit_Get(SHTHORNTAIL_LEVEL_MODE0_LOCOMOTION2_GAMEBIT);
     if (gameBit != 0) {
       runtime->impactSfxTable =
-          levelControlTables + config->impactSfxVariant * 2 +
-          SHTHORNTAIL_LEVEL_MODE0_SFX_LOC2_SET;
+          dataTables->levelMode0Locomotion2SetImpactSfxVariants + config->impactSfxVariant * 2;
     }
     else {
       runtime->impactSfxTable =
-          levelControlTables + config->impactSfxVariant * 2 +
-          SHTHORNTAIL_LEVEL_MODE0_SFX_LOC2_CLEAR;
+          dataTables->levelMode0Locomotion2ClearImpactSfxVariants + config->impactSfxVariant * 2;
     }
     break;
   case SHTHORNTAIL_LOCOMOTION_3:
     gameBit = GameBit_Get(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION3_GAMEBIT);
     if (gameBit != 0) {
       runtime->impactSfxTable =
-          levelControlTables + config->impactSfxVariant * 2 +
-          SHTHORNTAIL_LEVEL_MODE0_SFX_LOC3_SET;
+          dataTables->levelMode0Locomotion3SetImpactSfxVariants + config->impactSfxVariant * 2;
     }
     else {
       runtime->impactSfxTable =
-          levelControlTables + config->impactSfxVariant * 2 +
-          SHTHORNTAIL_LEVEL_MODE0_SFX_LOC3_CLEAR;
+          dataTables->levelMode0Locomotion3ClearImpactSfxVariants + config->impactSfxVariant * 2;
     }
     break;
   case SHTHORNTAIL_LOCOMOTION_5:
     gameBit = GameBit_Get(SHTHORNTAIL_ROOT_MODE3_LOCOMOTION5_PLAYER_GAMEBIT);
     if (gameBit == 0) {
       runtime->impactSfxTable =
-          levelControlTables + config->impactSfxVariant * 2 +
-          SHTHORNTAIL_LEVEL_MODE0_SFX_LOC5_CLEAR;
+          dataTables->levelMode0Locomotion5ClearImpactSfxVariants + config->impactSfxVariant * 2;
     }
     break;
   case SHTHORNTAIL_LOCOMOTION_6:
@@ -230,7 +216,7 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
     break;
   case SHTHORNTAIL_LOCOMOTION_8:
     runtime->impactSfxTable =
-        levelControlTables + config->impactSfxVariant * 2 + SHTHORNTAIL_LEVEL_MODE0_SFX_LOC8;
+        dataTables->levelMode0Locomotion8ImpactSfxVariants + config->impactSfxVariant * 2;
     break;
   }
   SHthorntail_updateState(obj,runtime);
