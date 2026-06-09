@@ -1,10 +1,12 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
+#include "main/dll/mcstaffeffe_state.h"
 #include "main/objseq.h"
 
 #pragma scheduling off
 int mcstaffeffe_SeqFn(int p1, int p2, int setup)
 {
+    McStaffEffectObject *staffEffect = (McStaffEffectObject *)p1;
     int staff;
     int i;
 
@@ -21,7 +23,7 @@ int mcstaffeffe_SeqFn(int p1, int p2, int setup)
             staffSetGlow(staff, 5, 1);
             break;
         case 2:
-            staffSetGlow(staff, 5, (u8)*(int *)(p1 + 0xf8));
+            staffSetGlow(staff, 5, (u8)staffEffect->staffGlowLevel);
             break;
         case 3:
             staffSetGlow(staff, 5, 0);
