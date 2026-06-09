@@ -1696,8 +1696,9 @@ void modgfx_updateVertexRgb(int param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void modgfx_updateEffectPosition(int state,int command,int mode)
+void modgfx_updateEffectPosition(int param_1,int command,int mode)
 {
+  ModgfxState *state;
   double dVar1;
   ushort local_38;
   ushort local_36;
@@ -1706,49 +1707,50 @@ void modgfx_updateEffectPosition(int state,int command,int mode)
   float local_2c;
   float local_28;
   float local_24;
-  
+
+  state = (ModgfxState *)param_1;
   dVar1 = DOUBLE_803e00c8;
   if (mode == 1) {
-    if (*(short *)(state + *(short *)(state + 0xfc) * 2 + 0xee) == 0) {
-      if (((*(uint *)(state + 0xa4) & 4) != 0) || ((*(uint *)(state + 0xa4) & 0x80000) != 0)) {
+    if (*(s16 *)((u8 *)state + state->activeChannel * 2 + 0xee) == 0) {
+      if (((state->flags & 4) != 0) || ((state->flags & 0x80000) != 0)) {
         local_2c = lbl_803E00B0;
         local_28 = lbl_803E00B0;
         local_24 = lbl_803E00B0;
         local_30 = lbl_803E00B4;
-        local_38 = **(ushort **)(state + 4);
+        local_38 = *(ushort *)state->unk04;
         local_36 = local_38;
         local_34 = local_38;
         FUN_80017748(&local_38,(float *)(command + 4));
       }
-      *(undefined4 *)(state + 0x24) = *(undefined4 *)(command + 4);
-      *(undefined4 *)(state + 0x28) = *(undefined4 *)(command + 8);
-      *(undefined4 *)(state + 0x2c) = *(undefined4 *)(command + 0xc);
+      *(undefined4 *)&state->posStepX = *(undefined4 *)(command + 4);
+      *(undefined4 *)&state->posStepY = *(undefined4 *)(command + 8);
+      *(undefined4 *)&state->posStepZ = *(undefined4 *)(command + 0xc);
     }
     else {
-      *(float *)(state + 0x24) =
+      state->posStepX =
            *(float *)(command + 4) /
-           (float)((double)CONCAT44(0x43300000,(int)*(short *)(state + 0xfe) ^ 0x80000000) -
+           (float)((double)CONCAT44(0x43300000,(int)state->blendFrameCount ^ 0x80000000) -
                   DOUBLE_803e00c8);
-      *(float *)(state + 0x28) =
+      state->posStepY =
            *(float *)(command + 8) /
-           (float)((double)CONCAT44(0x43300000,(int)*(short *)(state + 0xfe) ^ 0x80000000) - dVar1
+           (float)((double)CONCAT44(0x43300000,(int)state->blendFrameCount ^ 0x80000000) - dVar1
                   );
-      *(float *)(state + 0x2c) =
+      state->posStepZ =
            *(float *)(command + 0xc) /
-           (float)((double)CONCAT44(0x43300000,(int)*(short *)(state + 0xfe) ^ 0x80000000) - dVar1
+           (float)((double)CONCAT44(0x43300000,(int)state->blendFrameCount ^ 0x80000000) - dVar1
                   );
     }
-    *(float *)(state + 0x60) = *(float *)(state + 0x60) + *(float *)(state + 0x24);
-    *(float *)(state + 100) = *(float *)(state + 100) + *(float *)(state + 0x28);
-    *(float *)(state + 0x68) = *(float *)(state + 0x68) + *(float *)(state + 0x2c);
+    state->posCurX = state->posCurX + state->posStepX;
+    state->posCurY = state->posCurY + state->posStepY;
+    state->posCurZ = state->posCurZ + state->posStepZ;
   }
   else {
-    *(float *)(state + 0x60) =
-         *(float *)(state + 0x24) * lbl_803DDF04 + *(float *)(state + 0x60);
-    *(float *)(state + 100) =
-         *(float *)(state + 0x28) * lbl_803DDF04 + *(float *)(state + 100);
-    *(float *)(state + 0x68) =
-         *(float *)(state + 0x2c) * lbl_803DDF04 + *(float *)(state + 0x68);
+    state->posCurX =
+         state->posStepX * lbl_803DDF04 + state->posCurX;
+    state->posCurY =
+         state->posStepY * lbl_803DDF04 + state->posCurY;
+    state->posCurZ =
+         state->posStepZ * lbl_803DDF04 + state->posCurZ;
   }
   return;
 }
@@ -1766,39 +1768,41 @@ void modgfx_updateEffectPosition(int state,int command,int mode)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void modgfx_updateEffectRotation(int state,int command,int mode)
+void modgfx_updateEffectRotation(int param_1,int command,int mode)
 {
+  ModgfxState *state;
   short sVar1;
   short sVar2;
   short sVar3;
-  
+
+  state = (ModgfxState *)param_1;
   if (mode == 1) {
     sVar1 = (short)(int)*(float *)(command + 4);
     sVar2 = (short)(int)*(float *)(command + 8);
     sVar3 = (short)(int)*(float *)(command + 0xc);
-    if (*(short *)(state + 0xfe) == 0) {
-      *(short *)(state + 0x106) = sVar1;
-      *(undefined2 *)(state + 0x100) = 0;
-      *(short *)(state + 0x108) = sVar2;
-      *(undefined2 *)(state + 0x102) = 0;
-      *(short *)(state + 0x10a) = sVar3;
-      *(undefined2 *)(state + 0x104) = 0;
+    if (state->blendFrameCount == 0) {
+      state->rotOffsetZ = sVar1;
+      state->rotStepZ = 0;
+      state->rotOffsetY = sVar2;
+      state->rotStepY = 0;
+      state->rotOffsetX = sVar3;
+      state->rotStepX = 0;
     }
     else {
-      *(short *)(state + 0x100) =
-           (short)(((int)sVar1 - (int)*(short *)(state + 0x106)) / (int)*(short *)(state + 0xfe)
+      state->rotStepZ =
+           (short)(((int)sVar1 - (int)state->rotOffsetZ) / (int)state->blendFrameCount
                   );
-      *(short *)(state + 0x102) =
-           (short)(((int)sVar2 - (int)*(short *)(state + 0x108)) / (int)*(short *)(state + 0xfe)
+      state->rotStepY =
+           (short)(((int)sVar2 - (int)state->rotOffsetY) / (int)state->blendFrameCount
                   );
-      *(short *)(state + 0x104) =
-           (short)(((int)sVar3 - (int)*(short *)(state + 0x10a)) / (int)*(short *)(state + 0xfe)
+      state->rotStepX =
+           (short)(((int)sVar3 - (int)state->rotOffsetX) / (int)state->blendFrameCount
                   );
     }
   }
-  *(short *)(state + 0x106) = *(short *)(state + 0x106) + *(short *)(state + 0x100);
-  *(short *)(state + 0x108) = *(short *)(state + 0x108) + *(short *)(state + 0x102);
-  *(short *)(state + 0x10a) = *(short *)(state + 0x10a) + *(short *)(state + 0x104);
+  state->rotOffsetZ = state->rotOffsetZ + state->rotStepZ;
+  state->rotOffsetY = state->rotOffsetY + state->rotStepY;
+  state->rotOffsetX = state->rotOffsetX + state->rotStepX;
   return;
 }
 

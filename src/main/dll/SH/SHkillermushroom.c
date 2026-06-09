@@ -123,10 +123,10 @@ void bombplantspore_free(void *obj)
 
   state = ((GameObject *)obj)->extra;
   (*gExpgfxInterface)->freeSource((u32)obj);
-  light = *(void **)((u8 *)state + 0x270);
+  light = ((BombPlantSporeState *)state)->light;
   if (light != NULL) {
     ModelLightStruct_free(light);
-    *(void **)((u8 *)state + 0x270) = NULL;
+    ((BombPlantSporeState *)state)->light = NULL;
   }
 }
 
@@ -150,36 +150,36 @@ void bombplantspore_startDriftBurst(void *obj, void *state)
   s32 angleDelta;
 
   params = ((GameObject *)obj)->anim.placementData;
-  baseAngle = *(s16 *)((u8 *)params + 0x1c);
+  baseAngle = ((BombPlantSporeParams *)params)->angleBase;
 
-  *(f32 *)((u8 *)state + 0x298) = (f32)(int)randomGetRange(0x1e, 0x2d);
+  ((BombPlantSporeState *)state)->unk298 = (f32)(int)randomGetRange(0x1e, 0x2d);
 
-  *(f32 *)((u8 *)state + 0x284) =
-      *(f32 *)((u8 *)state + 0x298) + (f32)(int)randomGetRange(0x78, 0xb4);
+  ((BombPlantSporeState *)state)->unk284 =
+      ((BombPlantSporeState *)state)->unk298 + (f32)(int)randomGetRange(0x78, 0xb4);
 
-  *(s16 *)((u8 *)state + 0x2aa) =
-      *(s16 *)((u8 *)state + 0x2a8) + (s16)randomGetRange(-2000, 2000);
-  angleDelta = (s32)*(s16 *)((u8 *)state + 0x2aa) - (u16)baseAngle;
+  ((BombPlantSporeState *)state)->burstAngle =
+      ((BombPlantSporeState *)state)->driftAngle + (s16)randomGetRange(-2000, 2000);
+  angleDelta = (s32)((BombPlantSporeState *)state)->burstAngle - (u16)baseAngle;
   if (0x8000 < angleDelta) {
     angleDelta -= 0xffff;
   }
   if (angleDelta < -0x8000) {
     angleDelta += 0xffff;
   }
-  if (*(s16 *)((u8 *)params + 0x1a) < angleDelta) {
-    *(s16 *)((u8 *)state + 0x2aa) = (s16)(baseAngle + *(s16 *)((u8 *)params + 0x1a));
+  if (((BombPlantSporeParams *)params)->angleSpread < angleDelta) {
+    ((BombPlantSporeState *)state)->burstAngle = (s16)(baseAngle + ((BombPlantSporeParams *)params)->angleSpread);
   }
-  if (angleDelta < -(s32)*(s16 *)((u8 *)params + 0x1a)) {
-    *(s16 *)((u8 *)state + 0x2aa) = (s16)(baseAngle - *(s16 *)((u8 *)params + 0x1a));
+  if (angleDelta < -(s32)((BombPlantSporeParams *)params)->angleSpread) {
+    ((BombPlantSporeState *)state)->burstAngle = (s16)(baseAngle - ((BombPlantSporeParams *)params)->angleSpread);
   }
 
-  *(f32 *)((u8 *)state + 0x29c) = (f32)(int)randomGetRange(900, 0x514) / lbl_803E5390;
-  *(f32 *)((u8 *)state + 0x27c) = lbl_803E5394;
+  ((BombPlantSporeState *)state)->unk29c = (f32)(int)randomGetRange(900, 0x514) / lbl_803E5390;
+  ((BombPlantSporeState *)state)->driftRadiusRate = lbl_803E5394;
 
-  *(f32 *)((u8 *)state + 0x290) =
-      mathSinf((lbl_803E5398 * (f32)*(s16 *)((u8 *)state + 0x2aa)) / lbl_803E539C);
-  *(f32 *)((u8 *)state + 0x294) =
-      mathCosf((lbl_803E5398 * (f32)*(s16 *)((u8 *)state + 0x2aa)) / lbl_803E539C);
+  ((BombPlantSporeState *)state)->burstSin =
+      mathSinf((lbl_803E5398 * (f32)((BombPlantSporeState *)state)->burstAngle) / lbl_803E539C);
+  ((BombPlantSporeState *)state)->burstCos =
+      mathCosf((lbl_803E5398 * (f32)((BombPlantSporeState *)state)->burstAngle) / lbl_803E539C);
 }
 
 /*
@@ -202,60 +202,60 @@ void bombplantspore_updateDrift(void *obj, void *state)
   s32 angleDelta;
 
   params = ((GameObject *)obj)->anim.placementData;
-  baseAngle = *(s16 *)((u8 *)params + 0x1c);
+  baseAngle = ((BombPlantSporeParams *)params)->angleBase;
 
-  if (randomGetRange(0, 100) < 10 && *(f32 *)((u8 *)state + 0x2a0) <= lbl_803E5394) {
-    *(s16 *)((u8 *)state + 0x2ac) = (s16)randomGetRange(2000, 4000);
+  if (randomGetRange(0, 100) < 10 && ((BombPlantSporeState *)state)->unk2a0 <= lbl_803E5394) {
+    ((BombPlantSporeState *)state)->driftAngleStep = (s16)randomGetRange(2000, 4000);
     if (randomGetRange(0, 1) != 0) {
-      *(s16 *)((u8 *)state + 0x2ac) = -*(s16 *)((u8 *)state + 0x2ac);
+      ((BombPlantSporeState *)state)->driftAngleStep = -((BombPlantSporeState *)state)->driftAngleStep;
     }
-    *(s16 *)((u8 *)state + 0x2ac) =
-        *(s16 *)((u8 *)state + 0x2ac) + *(s16 *)((u8 *)state + 0x2a8);
-    angleDelta = (s32)*(s16 *)((u8 *)state + 0x2ac) - (u16)baseAngle;
+    ((BombPlantSporeState *)state)->driftAngleStep =
+        ((BombPlantSporeState *)state)->driftAngleStep + ((BombPlantSporeState *)state)->driftAngle;
+    angleDelta = (s32)((BombPlantSporeState *)state)->driftAngleStep - (u16)baseAngle;
     if (0x8000 < angleDelta) {
       angleDelta -= 0xffff;
     }
     if (angleDelta < -0x8000) {
       angleDelta += 0xffff;
     }
-    if (*(s16 *)((u8 *)params + 0x1a) < angleDelta) {
-      *(s16 *)((u8 *)state + 0x2ac) = (s16)(baseAngle + *(s16 *)((u8 *)params + 0x1a));
+    if (((BombPlantSporeParams *)params)->angleSpread < angleDelta) {
+      ((BombPlantSporeState *)state)->driftAngleStep = (s16)(baseAngle + ((BombPlantSporeParams *)params)->angleSpread);
     }
-    if (angleDelta < -(s32)*(s16 *)((u8 *)params + 0x1a)) {
-      *(s16 *)((u8 *)state + 0x2ac) = (s16)(baseAngle - *(s16 *)((u8 *)params + 0x1a));
+    if (angleDelta < -(s32)((BombPlantSporeParams *)params)->angleSpread) {
+      ((BombPlantSporeState *)state)->driftAngleStep = (s16)(baseAngle - ((BombPlantSporeParams *)params)->angleSpread);
     }
-    *(f32 *)((u8 *)state + 0x2a0) = lbl_803E53A8;
+    ((BombPlantSporeState *)state)->unk2a0 = lbl_803E53A8;
   }
 
-  if (randomGetRange(0, 100) < 10 && *(f32 *)((u8 *)state + 0x2a0) <= lbl_803E5394) {
-    *(f32 *)((u8 *)state + 0x280) =
-        *(f32 *)((u8 *)state + 0x278) + (f32)(int)randomGetRange(-200, 200) / lbl_803E5390;
-    if (*(f32 *)((u8 *)state + 0x280) < lbl_803E53AC) {
-      *(f32 *)((u8 *)state + 0x280) = lbl_803E53AC;
-    } else if (lbl_803E53B0 < *(f32 *)((u8 *)state + 0x280)) {
-      *(f32 *)((u8 *)state + 0x280) = lbl_803E53B0;
+  if (randomGetRange(0, 100) < 10 && ((BombPlantSporeState *)state)->unk2a0 <= lbl_803E5394) {
+    ((BombPlantSporeState *)state)->driftRadiusTarget =
+        ((BombPlantSporeState *)state)->driftRadius + (f32)(int)randomGetRange(-200, 200) / lbl_803E5390;
+    if (((BombPlantSporeState *)state)->driftRadiusTarget < lbl_803E53AC) {
+      ((BombPlantSporeState *)state)->driftRadiusTarget = lbl_803E53AC;
+    } else if (lbl_803E53B0 < ((BombPlantSporeState *)state)->driftRadiusTarget) {
+      ((BombPlantSporeState *)state)->driftRadiusTarget = lbl_803E53B0;
     }
   }
 
-  angleDelta = (s32)*(s16 *)((u8 *)state + 0x2ac) - (u16)*(s16 *)((u8 *)state + 0x2a8);
+  angleDelta = (s32)((BombPlantSporeState *)state)->driftAngleStep - (u16)((BombPlantSporeState *)state)->driftAngle;
   if (0x8000 < angleDelta) {
     angleDelta -= 0xffff;
   }
   if (angleDelta < -0x8000) {
     angleDelta += 0xffff;
   }
-  *(s16 *)((u8 *)state + 0x2a8) += (s16)((angleDelta * (s32)framesThisStep) >> 4);
-  *(f32 *)((u8 *)state + 0x278) =
-      lbl_803E53B4 * (*(f32 *)((u8 *)state + 0x280) - *(f32 *)((u8 *)state + 0x278)) *
+  ((BombPlantSporeState *)state)->driftAngle += (s16)((angleDelta * (s32)framesThisStep) >> 4);
+  ((BombPlantSporeState *)state)->driftRadius =
+      lbl_803E53B4 * (((BombPlantSporeState *)state)->driftRadiusTarget - ((BombPlantSporeState *)state)->driftRadius) *
           timeDelta +
-      *(f32 *)((u8 *)state + 0x278);
+      ((BombPlantSporeState *)state)->driftRadius;
 
-  *(f32 *)((u8 *)state + 0x288) =
-      *(f32 *)((u8 *)state + 0x278) *
-      mathSinf((lbl_803E5398 * (f32)*(s16 *)((u8 *)state + 0x2a8)) / lbl_803E539C);
-  *(f32 *)((u8 *)state + 0x28c) =
-      *(f32 *)((u8 *)state + 0x278) *
-      mathCosf((lbl_803E5398 * (f32)*(s16 *)((u8 *)state + 0x2a8)) / lbl_803E539C);
+  ((BombPlantSporeState *)state)->driftSin =
+      ((BombPlantSporeState *)state)->driftRadius *
+      mathSinf((lbl_803E5398 * (f32)((BombPlantSporeState *)state)->driftAngle) / lbl_803E539C);
+  ((BombPlantSporeState *)state)->driftCos =
+      ((BombPlantSporeState *)state)->driftRadius *
+      mathCosf((lbl_803E5398 * (f32)((BombPlantSporeState *)state)->driftAngle) / lbl_803E539C);
 }
 
 /*
@@ -275,7 +275,7 @@ void bombplant_init(void *obj, void *param, int flag)
   *(s16 *)obj = (s16)((s32)(s8) * ((u8 *)param + 0x1f) << 8);
   ((GameObject *)obj)->objectFlags |= 0x2000;
   ((GameObject *)obj)->animEventCallback = (void *)bombplant_SeqFn;
-  *(f32 *)((u8 *)state + 0xc) = ((GameObject *)obj)->anim.rootMotionScale;
+  ((BombPlantSporeState *)state)->fadeTarget = ((GameObject *)obj)->anim.rootMotionScale;
 
   if (flag != 0) {
     return;
@@ -290,13 +290,13 @@ void bombplant_init(void *obj, void *param, int flag)
     ((GameObject *)obj)->anim.localPosY = *(f32 *)((u8 *)p4c + 0xc);
     ((GameObject *)obj)->anim.localPosZ = *(f32 *)((u8 *)p4c + 0x10);
     ((GameObject *)obj)->anim.rootMotionScale = lbl_803E5358;
-    *(f32 *)((u8 *)state + 0x8) = lbl_803E535C;
-    *(f32 *)((u8 *)state + 0x4) = *(f32 *)((u8 *)state + 0xc);
-    *(f32 *)((u8 *)state + 0x10) =
-        *(f32 *)((u8 *)state + 0x4) / *(f32 *)((u8 *)state + 0x8);
-    *(f32 *)state = *(f32 *)((u8 *)state + 0x8);
+    ((BombPlantSporeState *)state)->fadeTime = lbl_803E535C;
+    ((BombPlantSporeState *)state)->fadeFrom = ((BombPlantSporeState *)state)->fadeTarget;
+    ((BombPlantSporeState *)state)->fadeRate =
+        ((BombPlantSporeState *)state)->fadeFrom / ((BombPlantSporeState *)state)->fadeTime;
+    ((BombPlantSporeState *)state)->fadeValue = ((BombPlantSporeState *)state)->fadeTime;
     ObjHits_RefreshObjectState(obj);
-    *(u8 *)((u8 *)state + 0x14) = 1;
+    ((BombPlantSporeState *)state)->stateIndex = 1;
   } else {
     p4c = ((GameObject *)obj)->anim.placementData;
     ((GameObject *)obj)->anim.alpha = 0xff;
@@ -340,14 +340,14 @@ void bombplant_update(void *obj)
   }
 
   state = ((GameObject *)obj)->extra;
-  entry = &lbl_80326D20[*(u8 *)((u8 *)state + 0x14) * 0xc];
+  entry = &lbl_80326D20[((BombPlantSporeState *)state)->stateIndex * 0xc];
 
-  switch (*(u8 *)((u8 *)state + 0x14)) {
+  switch (((BombPlantSporeState *)state)->stateIndex) {
   case 1:
     param = ((GameObject *)obj)->anim.placementData;
-    if ((*(u8 *)((u8 *)state + 0x15) & 0x2) != 0) {
-      *(u8 *)((u8 *)state + 0x15) &= ~0x2;
-      *(f32 *)state = (f32)(int)*(s16 *)((u8 *)param + 0x18);
+    if ((((BombPlantSporeState *)state)->flags & 0x2) != 0) {
+      ((BombPlantSporeState *)state)->flags &= ~0x2;
+      ((BombPlantSporeState *)state)->fadeValue = (f32)(int)*(s16 *)((u8 *)param + 0x18);
     }
     bitId = *(s16 *)((u8 *)param + 0x1c);
     if (bitId != -1) {
@@ -356,30 +356,30 @@ void bombplant_update(void *obj)
         dist =
             vec3f_distanceSquared((f32 *)((u8 *)obj + 0x18), (f32 *)((u8 *)plr + 0x18));
         if (dist > lbl_803E5368) {
-          *(u8 *)((u8 *)state + 0x14) = 2;
-          *(u8 *)((u8 *)state + 0x15) |= 0x2;
+          ((BombPlantSporeState *)state)->stateIndex = 2;
+          ((BombPlantSporeState *)state)->flags |= 0x2;
         }
       }
     } else {
-      f32 t = *(f32 *)state - timeDelta;
-      *(f32 *)state = t;
+      f32 t = ((BombPlantSporeState *)state)->fadeValue - timeDelta;
+      ((BombPlantSporeState *)state)->fadeValue = t;
       if (t <= lbl_803E536C) {
         plr = Obj_GetPlayerObject();
         dist =
             vec3f_distanceSquared((f32 *)((u8 *)obj + 0x18), (f32 *)((u8 *)plr + 0x18));
         if (dist > lbl_803E5368) {
-          *(u8 *)((u8 *)state + 0x14) = 2;
-          *(u8 *)((u8 *)state + 0x15) |= 0x2;
+          ((BombPlantSporeState *)state)->stateIndex = 2;
+          ((BombPlantSporeState *)state)->flags |= 0x2;
         }
-        *(f32 *)state = lbl_803E536C;
+        ((BombPlantSporeState *)state)->fadeValue = lbl_803E536C;
       }
     }
     break;
 
   case 2:
-    if ((*(u8 *)((u8 *)state + 0x15) & 0x2) != 0) {
+    if ((((BombPlantSporeState *)state)->flags & 0x2) != 0) {
       Sfx_PlayFromObject(obj, SFXmv_sliftloop11);
-      *(u8 *)((u8 *)state + 0x15) &= ~0x2;
+      ((BombPlantSporeState *)state)->flags &= ~0x2;
       p4c = ((GameObject *)obj)->anim.placementData;
       ((GameObject *)obj)->anim.alpha = 0xff;
       ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
@@ -387,27 +387,27 @@ void bombplant_update(void *obj)
       ((GameObject *)obj)->anim.localPosY = *(f32 *)((u8 *)p4c + 0xc);
       ((GameObject *)obj)->anim.localPosZ = *(f32 *)((u8 *)p4c + 0x10);
       ((GameObject *)obj)->anim.rootMotionScale = lbl_803E5358;
-      *(f32 *)((u8 *)state + 0x8) = lbl_803E535C;
-      *(f32 *)((u8 *)state + 0x4) = *(f32 *)((u8 *)state + 0xc);
-      *(f32 *)((u8 *)state + 0x10) =
-          *(f32 *)((u8 *)state + 0x4) / *(f32 *)((u8 *)state + 0x8);
-      *(f32 *)state = *(f32 *)((u8 *)state + 0x8);
+      ((BombPlantSporeState *)state)->fadeTime = lbl_803E535C;
+      ((BombPlantSporeState *)state)->fadeFrom = ((BombPlantSporeState *)state)->fadeTarget;
+      ((BombPlantSporeState *)state)->fadeRate =
+          ((BombPlantSporeState *)state)->fadeFrom / ((BombPlantSporeState *)state)->fadeTime;
+      ((BombPlantSporeState *)state)->fadeValue = ((BombPlantSporeState *)state)->fadeTime;
       ObjHits_RefreshObjectState(obj);
     }
-    if (((GameObject *)obj)->anim.rootMotionScale > *(f32 *)((u8 *)state + 0x4)) {
-      *(f32 *)((u8 *)state + 0x10) = *(f32 *)((u8 *)state + 0x10) / lbl_803E537C;
+    if (((GameObject *)obj)->anim.rootMotionScale > ((BombPlantSporeState *)state)->fadeFrom) {
+      ((BombPlantSporeState *)state)->fadeRate = ((BombPlantSporeState *)state)->fadeRate / lbl_803E537C;
     }
-    if (*(f32 *)((u8 *)state + 0x10) < lbl_803E5358) {
-      *(f32 *)((u8 *)state + 0x10) = lbl_803E536C;
+    if (((BombPlantSporeState *)state)->fadeRate < lbl_803E5358) {
+      ((BombPlantSporeState *)state)->fadeRate = lbl_803E536C;
     }
     ((GameObject *)obj)->anim.rootMotionScale =
-        *(f32 *)((u8 *)state + 0x10) * timeDelta + ((GameObject *)obj)->anim.rootMotionScale;
+        ((BombPlantSporeState *)state)->fadeRate * timeDelta + ((GameObject *)obj)->anim.rootMotionScale;
     {
-      f32 t = *(f32 *)state - timeDelta;
-      *(f32 *)state = t;
+      f32 t = ((BombPlantSporeState *)state)->fadeValue - timeDelta;
+      ((BombPlantSporeState *)state)->fadeValue = t;
       if (t < lbl_803E536C) {
-        *(u8 *)((u8 *)state + 0x14) = 0;
-        *(u8 *)((u8 *)state + 0x15) |= 0x2;
+        ((BombPlantSporeState *)state)->stateIndex = 0;
+        ((BombPlantSporeState *)state)->flags |= 0x2;
       }
     }
     break;
@@ -421,9 +421,9 @@ void bombplant_update(void *obj)
     /* fallthrough */
   default:
     param = ((GameObject *)obj)->anim.placementData;
-    if ((*(u8 *)((u8 *)state + 0x15) & 0x2) != 0) {
-      *(u8 *)((u8 *)state + 0x15) &= ~0x2;
-      *(f32 *)state =
+    if ((((BombPlantSporeState *)state)->flags & 0x2) != 0) {
+      ((BombPlantSporeState *)state)->flags &= ~0x2;
+      ((BombPlantSporeState *)state)->fadeValue =
           (f32)(int)(*(s16 *)((u8 *)param + 0x1a) + randomGetRange(-0x32, 0x32));
     }
     if ((((GameObject *)obj)->objectFlags & 0x800) != 0) {
@@ -444,8 +444,8 @@ void bombplant_update(void *obj)
         hitZ = hitZ + playerMapOffsetZ;
         objLightFn_8009a1dc(obj, lightVec, 1, 0, lbl_803E5380);
         Obj_SetModelColorFadeRecursive(obj, 0xf, 0xc8, 0, 0, 1);
-        *(u8 *)((u8 *)state + 0x14) = 4;
-        *(u8 *)((u8 *)state + 0x15) |= 0x2;
+        ((BombPlantSporeState *)state)->stateIndex = 4;
+        ((BombPlantSporeState *)state)->flags |= 0x2;
         p50 = ((GameObject *)obj)->anim.modelInstance;
         ObjHitbox_SetCapsuleBounds(obj, (s16)(*(u8 *)((u8 *)p50 + 0x62) + 0x50),
                                    (s16)(*(s16 *)((u8 *)p50 + 0x68) - 0x50),
@@ -489,9 +489,9 @@ void bombplant_update(void *obj)
 
   if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
           (int)obj, *(f32 *)(entry + 0x4), timeDelta, NULL) != 0) {
-    *(u8 *)((u8 *)state + 0x15) |= 0x1;
+    ((BombPlantSporeState *)state)->flags |= 0x1;
   } else {
-    *(u8 *)((u8 *)state + 0x15) &= ~0x1;
+    ((BombPlantSporeState *)state)->flags &= ~0x1;
   }
 
 epilogue:
