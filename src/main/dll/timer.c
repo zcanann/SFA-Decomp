@@ -1,6 +1,40 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
+#include "main/obj_placement.h"
+
+#define TIMER_MODE_GLOBAL 1
+#define TIMER_MODE_EFFECT 2
+
+typedef struct TimerSetup {
+    ObjPlacement base;
+    u8 pad18;
+    u8 mode;
+    s16 durationMinutes;
+    s16 pad1C;
+    s16 expiredGameBit;
+    s16 startGameBit;
+} TimerSetup;
+
+typedef struct TimerState {
+    f32 countdownTimer;
+    int lightSlot;
+    f32 lightScale;
+    u8 mode;
+    TimerFlags flags;
+    u8 padE[0x20 - 0xE];
+} TimerState;
+
+STATIC_ASSERT(offsetof(TimerSetup, mode) == 0x19);
+STATIC_ASSERT(offsetof(TimerSetup, durationMinutes) == 0x1A);
+STATIC_ASSERT(offsetof(TimerSetup, expiredGameBit) == 0x1E);
+STATIC_ASSERT(offsetof(TimerSetup, startGameBit) == 0x20);
+STATIC_ASSERT(sizeof(TimerSetup) == 0x24);
+STATIC_ASSERT(offsetof(TimerState, lightSlot) == 0x04);
+STATIC_ASSERT(offsetof(TimerState, lightScale) == 0x08);
+STATIC_ASSERT(offsetof(TimerState, mode) == 0x0C);
+STATIC_ASSERT(offsetof(TimerState, flags) == 0x0D);
+STATIC_ASSERT(sizeof(TimerState) == 0x20);
 
 
 int timer_getExtraSize(void) { return 0x20; }
@@ -8,10 +42,10 @@ int timer_getExtraSize(void) { return 0x20; }
 #pragma scheduling off
 void timer_free(int obj)
 {
-    int state = *(int *)&((GameObject *)obj)->extra;
+    TimerState *state = ((GameObject *)obj)->extra;
     ObjGroup_RemoveObject(obj, 0x4c);
-    if (*(void **)(state + 4) != NULL) {
-        modelLightStruct_freeSlot(state + 4);
+    if (state->lightSlot != 0) {
+        modelLightStruct_freeSlot((int)&state->lightSlot);
     }
     gameTimerStop();
 }
@@ -19,39 +53,39 @@ void timer_free(int obj)
 
 int timer_hasExpired(int obj)
 {
-    int state = *(int *)&((GameObject *)obj)->extra;
-    return ((TimerFlags *)(state + 0xd))->expired;
+    TimerState *state = ((GameObject *)obj)->extra;
+    return state->flags.expired;
 }
 
 int timer_isEffectMode(int obj)
 {
-    int state = *(int *)&((GameObject *)obj)->extra;
-    return *(u8 *)(state + 0xc) == 2;
+    TimerState *state = ((GameObject *)obj)->extra;
+    return state->mode == TIMER_MODE_EFFECT;
 }
 
 void timer_clearManualFlags(int obj)
 {
-    int state = *(int *)&((GameObject *)obj)->extra;
-    ((TimerFlags *)(state + 0xd))->manual = 0;
-    ((TimerFlags *)(state + 0xd))->expired = 0;
+    TimerState *state = ((GameObject *)obj)->extra;
+    state->flags.manual = 0;
+    state->flags.expired = 0;
 }
 
 #pragma scheduling off
 void timer_forceStart(int obj)
 {
-    int state = *(int *)&((GameObject *)obj)->extra;
-    ((TimerFlags *)(state + 0xd))->manual = 1;
+    TimerState *state = ((GameObject *)obj)->extra;
+    state->flags.manual = 1;
 }
 #pragma scheduling reset
 
 #pragma scheduling off
 void timer_addDuration(int obj, int duration)
 {
-    int state = *(int *)&((GameObject *)obj)->extra;
-    if (fn_80080150(state) != 0) {
-        *(f32 *)(state + 0) = *(f32 *)(state + 0) + (f32)duration;
-        if (*(u8 *)(state + 0xc) == 1) {
-            gameTimerInit(0x1d, (int)(*(f32 *)(state + 0) / lbl_803E7408));
+    TimerState *state = ((GameObject *)obj)->extra;
+    if (fn_80080150((int)state) != 0) {
+        state->countdownTimer = state->countdownTimer + (f32)duration;
+        if (state->mode == TIMER_MODE_GLOBAL) {
+            gameTimerInit(0x1d, (int)(state->countdownTimer / lbl_803E7408));
             timerSetToCountUp();
         }
     }
@@ -62,7 +96,8 @@ void timer_addDuration(int obj, int duration)
 #pragma scheduling off
 void timer_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
-    void *light = *(void **)(*(int *)&((GameObject *)obj)->extra + 4);
+    TimerState *state = ((GameObject *)obj)->extra;
+    void *light = (void *)state->lightSlot;
     if (light != NULL && *(u8 *)((char *)light + 0x2f8) != 0 &&
         *(u8 *)((char *)light + 0x4c) != 0) {
         queueGlowRender(light);
@@ -78,16 +113,17 @@ void timer_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 #pragma scheduling off
 void timer_init(int obj, int setup)
 {
-    int state = *(int *)&((GameObject *)obj)->extra;
+    TimerState *state = ((GameObject *)obj)->extra;
+    TimerSetup *setupData = (TimerSetup *)setup;
 
     storeZeroToFloatParam((void *)state);
-    *(u8 *)(state + 0xc) = *(u8 *)(setup + 0x19);
-    *(f32 *)(state + 8) = lbl_803E7424;
-    ((TimerFlags *)(state + 0xd))->expired = 0;
-    ((TimerFlags *)(state + 0xd))->manual = 0;
-    *(int *)(state + 4) = 0;
+    state->mode = setupData->mode;
+    state->lightScale = lbl_803E7424;
+    state->flags.expired = 0;
+    state->flags.manual = 0;
+    state->lightSlot = 0;
     ObjGroup_AddObject(obj, 0x4c);
-    ((TimerFlags *)(state + 0xd))->flag20 = 0;
+    state->flags.flag20 = 0;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -97,17 +133,17 @@ void timer_init(int obj, int setup)
 void timer_update(int obj)
 {
     int v;
-    int state = *(int *)&((GameObject *)obj)->extra;
-    int setup = *(int *)&((GameObject *)obj)->anim.placementData;
-    TimerFlags *f = (TimerFlags *)(state + 0xd);
+    TimerState *state = ((GameObject *)obj)->extra;
+    TimerSetup *setup = (TimerSetup *)((GameObject *)obj)->anim.placementData;
+    TimerFlags *f = &state->flags;
     int flag;
 
-    if (fn_80080150(state) != 0) {
+    if (fn_80080150((int)state) != 0) {
         flag = 0;
-        if (f->manual == 0 && (u32)GameBit_Get(*(s16 *)(setup + 0x20)) == 0) {
+        if (f->manual == 0 && (u32)GameBit_Get(setup->startGameBit) == 0) {
             storeZeroToFloatParam((void *)state);
-            if (*(u8 *)(state + 0xc) == 1) {
-                switch (*(int *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x14)) {
+            if (state->mode == TIMER_MODE_GLOBAL) {
+                switch (setup->base.mapId) {
                 case 0x466ED:
                     break;
                 default:
@@ -118,50 +154,50 @@ void timer_update(int obj)
             flag = 1;
         }
         if (timerCountDown((void *)state) != 0) {
-            GameBit_Set(*(s16 *)(setup + 0x1e), 1);
-            GameBit_Set(*(s16 *)(setup + 0x20), 0);
+            GameBit_Set(setup->expiredGameBit, 1);
+            GameBit_Set(setup->startGameBit, 0);
             flag = 1;
         }
         if (flag != 0) {
             f->expired = 1;
-            switch (*(u8 *)(state + 0xc)) {
-            case 1:
-                if (*(u8 *)(state + 0xc) == 0) {
+            switch (state->mode) {
+            case TIMER_MODE_GLOBAL:
+                if (state->mode == 0) {
                     break;
                 }
                 gameTimerStop();
                 break;
-            case 2:
-                modelLightStruct_freeSlot(state + 4);
+            case TIMER_MODE_EFFECT:
+                modelLightStruct_freeSlot((int)&state->lightSlot);
                 break;
             }
             f->manual = 0;
         }
     } else {
-        if ((u32)GameBit_Get(*(s16 *)(setup + 0x20)) != 0 || f->manual != 0) {
+        if ((u32)GameBit_Get(setup->startGameBit) != 0 || f->manual != 0) {
             storeZeroToFloatParam((void *)state);
-            if (*(s16 *)(setup + 0x1a) != 0) {
-                s16toFloat((void *)state, (s16)(*(s16 *)(setup + 0x1a) * 60));
+            if (setup->durationMinutes != 0) {
+                s16toFloat((void *)state, (s16)(setup->durationMinutes * 60));
             }
-            switch (*(u8 *)(state + 0xc)) {
-            case 1:
-                gameTimerInit(29, *(s16 *)(setup + 0x1a));
+            switch (state->mode) {
+            case TIMER_MODE_GLOBAL:
+                gameTimerInit(29, setup->durationMinutes);
                 timerSetToCountUp();
                 break;
-            case 2:
-                *(int *)(state + 4) = modelLightStruct_createPointLight(obj, 255, 0, 0, 0);
-                if (*(void **)(state + 4) != NULL) {
-                    modelLightStruct_setupGlow((void *)*(int *)(state + 4), 0, 255, 0, 0, 100, lbl_803DC418);
-                    modelLightStruct_setPosition((void *)*(int *)(state + 4), lbl_803E741C, lbl_803E7420,
+            case TIMER_MODE_EFFECT:
+                state->lightSlot = modelLightStruct_createPointLight(obj, 255, 0, 0, 0);
+                if (state->lightSlot != 0) {
+                    modelLightStruct_setupGlow((void *)state->lightSlot, 0, 255, 0, 0, 100, lbl_803DC418);
+                    modelLightStruct_setPosition((void *)state->lightSlot, lbl_803E741C, lbl_803E7420,
                                         *(f32 *)&lbl_803E741C);
                 }
                 break;
             }
         }
-        if (*(u8 *)(state + 0xc) == 2 && fn_80080150(state) != 0) {
-            void *hold = *(void **)(state + 4);
+        if (state->mode == TIMER_MODE_EFFECT && fn_80080150((int)state) != 0) {
+            void *hold = (void *)state->lightSlot;
             f32 fm;
-            int tv = (int)((f32)(*(s16 *)(setup + 0x1a) * 60) / *(f32 *)(state + 0) *
+            int tv = (int)((f32)(setup->durationMinutes * 60) / state->countdownTimer *
                            (fm = lbl_803DC41C));
             int *texPtr = objFindTexture(obj, 0, 0);
             if (texPtr != 0) {
@@ -176,16 +212,16 @@ void timer_update(int obj)
             } else {
                 tv = 0;
             }
-            if (*(void **)(state + 4) != NULL) {
+            if (state->lightSlot != 0) {
                 if (tv == 1 && tv != f->flag20) {
                     Sfx_PlayFromObject(obj, 986);
                 }
-                modelLightStruct_setEnabled((void *)*(int *)(state + 4), (u8)tv, lbl_803E741C);
+                modelLightStruct_setEnabled((void *)state->lightSlot, (u8)tv, lbl_803E741C);
             }
             f->flag20 = (u8)tv;
         }
-        if (*(void **)(state + 4) != NULL) {
-            modelLightStruct_updateGlowAlpha((void *)*(int *)(state + 4));
+        if (state->lightSlot != 0) {
+            modelLightStruct_updateGlowAlpha((void *)state->lightSlot);
         }
     }
 }
