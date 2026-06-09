@@ -137,33 +137,31 @@ uint fn_8010AEA8(CameraObject *camera, uint flagsIn)
 void cameraModeTestStrengthFn_8010b238(f32 fovEnd, CameraObject *camera, f32 *posEnd,
                  s32 rotXEnd, s32 rotYEnd, s32 rotZEnd)
 {
-  CamCannonState *state;
   f32 fVar1;
   f32 fVar2;
   f32 fVar3;
 
-  state = lbl_803DD560;
-  state->transitionComplete = 0;
-  state->posXStart = camera->anim.localPosX;
-  state->posYStart = camera->anim.localPosY;
-  state->posZStart = camera->anim.localPosZ;
-  state->rotXStart = (f32)(s32)camera->anim.rotX;
-  state->rotYStart = (f32)(s32)camera->anim.rotY;
-  state->rotZStart = (f32)(s32)camera->anim.rotZ;
-  state->fovStart = camera->fov;
-  state->posXEnd = posEnd[0];
-  state->posYEnd = posEnd[1];
-  state->posZEnd = posEnd[2];
-  state->rotXEnd = (f32)rotXEnd;
-  state->rotYEnd = (f32)rotYEnd;
-  state->rotZEnd = (f32)rotZEnd;
-  state->fovEnd = fovEnd;
-  state->elapsed = lbl_803E1888;
-  fVar1 = state->posXEnd - state->posXStart;
-  fVar2 = state->posYEnd - state->posYStart;
-  fVar3 = state->posZEnd - state->posZStart;
-  state->duration = sqrtf(fVar1 * fVar1 + fVar2 * fVar2 + fVar3 * fVar3);
-  (*gCameraInterface)->initialise(state->speedCurve, (f64)state->duration,
+  lbl_803DD560->transitionComplete = 0;
+  lbl_803DD560->posXStart = camera->anim.localPosX;
+  lbl_803DD560->posYStart = camera->anim.localPosY;
+  lbl_803DD560->posZStart = camera->anim.localPosZ;
+  lbl_803DD560->rotXStart = (f32)(s32)camera->anim.rotX;
+  lbl_803DD560->rotYStart = (f32)(s32)camera->anim.rotY;
+  lbl_803DD560->rotZStart = (f32)(s32)camera->anim.rotZ;
+  lbl_803DD560->fovStart = camera->fov;
+  lbl_803DD560->posXEnd = posEnd[0];
+  lbl_803DD560->posYEnd = posEnd[1];
+  lbl_803DD560->posZEnd = posEnd[2];
+  lbl_803DD560->rotXEnd = (f32)rotXEnd;
+  lbl_803DD560->rotYEnd = (f32)rotYEnd;
+  lbl_803DD560->rotZEnd = (f32)rotZEnd;
+  lbl_803DD560->fovEnd = fovEnd;
+  lbl_803DD560->elapsed = lbl_803E1888;
+  fVar1 = lbl_803DD560->posXEnd - lbl_803DD560->posXStart;
+  fVar2 = lbl_803DD560->posYEnd - lbl_803DD560->posYStart;
+  fVar3 = lbl_803DD560->posZEnd - lbl_803DD560->posZStart;
+  lbl_803DD560->duration = sqrtf(fVar1 * fVar1 + fVar2 * fVar2 + fVar3 * fVar3);
+  (*gCameraInterface)->initialise(lbl_803DD560->speedCurve, (f64)lbl_803DD560->duration,
                                   (f64)lbl_803E18B0, (f64)lbl_803E18B4,
                                   (f64)lbl_803E18B4, (f64)lbl_803E18B8);
 }
