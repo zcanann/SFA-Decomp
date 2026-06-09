@@ -235,7 +235,7 @@ void fn_801C5990(MmShrineAnimObj *obj)
     f32 trigB;
     f32 distance;
     s32 angleDelta;
-    int animEvents;
+    ObjAnimEventList animEvents;
 
     config = obj->config;
     state = (MmShrineAnimState *)obj->state;
@@ -266,7 +266,7 @@ void fn_801C5990(MmShrineAnimObj *obj)
     obj->pitch = lbl_803E4FA8 * trigB;
 
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E4FAC, timeDelta,
-                               (ObjAnimEventList *)&animEvents);
+                               &animEvents);
 
     if (player != NULL) {
         angleDelta = (u16)getAngle(obj->posX - *(f32 *)((u8 *)player + 0x18),
