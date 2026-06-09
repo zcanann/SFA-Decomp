@@ -152,7 +152,6 @@ void scarab_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
   int state;
   int model;
-  int displayList;
   u8 *shellColors;
   int i;
 
@@ -163,12 +162,11 @@ void scarab_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     shellColors = &lbl_803DBDBC;
     for (; i < 7; i++) {
       if (*shellColors == *(u8 *)(*(int *)(model + 0x34) + 8)) {
-        displayList = *(int *)(model + 0x34);
         i++;
         if (i == 7) {
           i = 0;
         }
-        *(u8 *)(displayList + 8) = (&lbl_803DBDBC)[i];
+        *(u8 *)(*(int *)(model + 0x34) + 8) = (&lbl_803DBDBC)[i];
         break;
       }
       shellColors++;
