@@ -10,7 +10,7 @@
 
 extern void memset(void *ptr, int value, int size);
 extern int getAngle(f32 dx, f32 dz);
-extern undefined camcontrol_getTargetPosition(int obj, s16 *target, f32 *outPos, s16 *outAngle);
+extern undefined camcontrol_getTargetPosition(int obj, GameObject *target, f32 *outPos, s16 *outAngle);
 extern void camcontrol_buildPathPoints(f32 baseX, f32 baseZ, f32 targetX, f32 targetY, f32 targetZ,
                                        f32 height, s16 angleRange, s16 angleLimit,
                                        int *outPointCount);
@@ -56,10 +56,9 @@ static f32 CameraModeStaffAnim_angleToRadians(int angle)
  */
 #pragma scheduling off
 #pragma peephole off
-void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
+void CameraModeStaffAnim_init(CameraObject *camera, undefined4 param_2, u8 *settings)
 {
-  int cameraObj;
-  s16 *target;
+  GameObject *target;
   int view;
   f32 cosFacing;
   f32 sinFacing;
@@ -83,7 +82,7 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
   int i;
 
   settings[3] = 1;
-  target = ((GameObject *)obj)->anim.targetObj;
+  target = (GameObject *)camera->anim.targetObj;
 
   if (gCamcontrolPathState == NULL) {
     gCamcontrolPathState = mmAlloc(sizeof(CamcontrolPathState), 0xf, 0);
@@ -96,24 +95,24 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
        &gCamcontrolPathState->actionParamZ, 0, &gCamcontrolPathState->actionParamY);
 
   gCamcontrolPathState->active = 0;
-  gCamcontrolPathState->localFrameObj = *(int *)&((GameObject *)obj)->anim.parent;
+  gCamcontrolPathState->localFrameObj = *(int *)&camera->anim.parent;
 
-  cosFacing = mathSinf(CameraModeStaffAnim_angleToRadians(target[0]));
-  sinFacing = mathCosf(CameraModeStaffAnim_angleToRadians(target[0]));
+  cosFacing = mathSinf(CameraModeStaffAnim_angleToRadians(target->anim.rotX));
+  sinFacing = mathCosf(CameraModeStaffAnim_angleToRadians(target->anim.rotX));
 
   if (gCamcontrolPathState->localFrameObj != 0) {
-    facingDelta = target[0] - ((s16 *)gCamcontrolPathState->localFrameObj)[0];
+    facingDelta = target->anim.rotX - ((s16 *)gCamcontrolPathState->localFrameObj)[0];
   }
   else {
-    facingDelta = target[0];
+    facingDelta = target->anim.rotX;
   }
 
   relAngleRad = CameraModeStaffAnim_angleToRadians(facingDelta);
   relCos = mathSinf(relAngleRad);
   relSin = mathCosf(relAngleRad);
 
-  approachAngle = target[0] - (u16)getAngle(((GameObject *)obj)->anim.worldPosX - *(f32 *)(target + 0xc),
-                                            ((GameObject *)obj)->anim.worldPosZ - *(f32 *)(target + 0x10));
+  approachAngle = target->anim.rotX - (u16)getAngle(camera->anim.worldPosX - target->anim.worldPosX,
+                                                    camera->anim.worldPosZ - target->anim.worldPosZ);
   if (approachAngle > 0x8000) {
     approachAngle = approachAngle - 0xffff;
   }
@@ -136,26 +135,26 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
     }
     pathRadius = sqrtf(pathRadius);
 
-    localPos[0] = (cosFacing * pathRadius) + *(f32 *)(target + 0xc);
+    localPos[0] = (cosFacing * pathRadius) + target->anim.worldPosX;
     localPos[1] = gCamcontrolPathState->actionParamZ +
-                  (*(f32 *)(target + 0xe) + gCamcontrolPathState->actionParamY);
-    localPos[2] = (sinFacing * pathRadius) + *(f32 *)(target + 0x10);
+                  (target->anim.worldPosY + gCamcontrolPathState->actionParamY);
+    localPos[2] = (sinFacing * pathRadius) + target->anim.worldPosZ;
 
     if (settings[3] != 0) {
-      camcontrol_getTargetPosition(obj, target, localPos, 0);
+      camcontrol_getTargetPosition((int)camera, target, localPos, 0);
     }
 
     Obj_TransformWorldPointToLocal(localPos[0], localPos[1], localPos[2], &localPos[0],
-                                   &localPos[1], &localPos[2], *(int *)&((GameObject *)obj)->anim.parent);
+                                   &localPos[1], &localPos[2], *(int *)&camera->anim.parent);
 
     for (pointCount = 0; pointCount < 3; pointCount++) {
-      gCamcontrolPathState->pointsX[pointCount] = ((GameObject *)obj)->anim.localPosX;
-      gCamcontrolPathState->pointsY[pointCount] = ((GameObject *)obj)->anim.localPosY;
-      gCamcontrolPathState->pointsZ[pointCount] = ((GameObject *)obj)->anim.localPosZ;
+      gCamcontrolPathState->pointsX[pointCount] = camera->anim.localPosX;
+      gCamcontrolPathState->pointsY[pointCount] = camera->anim.localPosY;
+      gCamcontrolPathState->pointsZ[pointCount] = camera->anim.localPosZ;
     }
 
-    dx = ((GameObject *)obj)->anim.localPosX - localPos[0];
-    dz = ((GameObject *)obj)->anim.localPosZ - localPos[2];
+    dx = camera->anim.localPosX - localPos[0];
+    dz = camera->anim.localPosZ - localPos[2];
     pathRadius = lbl_803E1770 * sqrtf(dx * dx + dz * dz);
     turnAmount = getAngle(-relCos, -relSin) - (u16)getAngle(dx, dz);
 
@@ -201,7 +200,7 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
     gCamcontrolPathState->pathCurve.coeffFn = Curve_BuildBSplineCoeffs;
 
     camcontrol_buildPathPoints(baseX, baseZ,
-                               ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ,
+                               camera->anim.localPosX, camera->anim.localPosY, camera->anim.localPosZ,
                                localPos[1], pathAngle, 0x1555, &pointCount);
 
     i = pointCount;

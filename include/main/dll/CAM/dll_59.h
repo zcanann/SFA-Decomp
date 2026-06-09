@@ -2,8 +2,9 @@
 #define MAIN_DLL_CAM_DLL_59_H_
 
 #include "ghidra_import.h"
+#include "main/camera_object.h"
 
-void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings);
+void CameraModeStaffAnim_init(CameraObject *camera, undefined4 param_2, u8 *settings);
 void CameraModeStaffAnim_release(void);
 void CameraModeStaffAnim_initialise(void);
 void CameraModeBike_copyToCurrent(f32 *param_1);

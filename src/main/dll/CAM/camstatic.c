@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/camera_interface.h"
 #include "main/camera_object.h"
+#include "main/dll/CAM/attention.h"
 #include "main/dll/CAM/camcontrol_mode_settings.h"
 #include "main/dll/CAM/camslide.h"
 #include "main/dll/CAM/firstperson.h"
@@ -11,8 +12,6 @@ extern void camcontrol_traceMove(f32 radius, f32 *from, void *to, f32 *out, void
 extern void camcontrol_updateTargetAction(int camera, int obj);
 extern void camMoveFn_80104040(int camera, int obj);
 extern void camcontrol_updateModeSettings(int camera);
-extern void camcontrol_updateVerticalBounds(int camera, int flags, s8 param_3, f32 *upperBound,
-                                            f32 *lowerBound);
 extern int EmissionController_IsLingering(int obj);
 extern void fn_8029656C(int obj, float *out);
 extern void cameraGetPrevPos2(int obj, float *x, float *y, float *z);
@@ -116,7 +115,7 @@ void camstatic_update(CameraObject *camera)
                                  &camera->anim.worldPosY,&camera->anim.worldPosZ,
                                  (u32)camera->anim.parent);
   camslide_update(camera,target);
-  camcontrol_updateVerticalBounds((int)camera,1,8,&gCamcontrolModeSettings->verticalLowerBound,
+  camcontrol_updateVerticalBounds(camera,1,8,&gCamcontrolModeSettings->verticalLowerBound,
                                   &gCamcontrolModeSettings->verticalUpperBound);
   if (gCamcontrolModeSettings->wallAvoidanceFlags.b7 == 0) {
     gCamcontrolModeSettings->targetActionFlags = *(u8 *)((int)camera + 0xa2);

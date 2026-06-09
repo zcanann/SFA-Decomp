@@ -2,12 +2,12 @@
 #include "main/dll/CAM/camcontrol_mode_settings.h"
 #include "main/object_transform.h"
 
-extern int objBboxFn_800640cc(int startPoints,int endPoints,int radii,int hitOut,int objOut,
+extern int objBboxFn_800640cc(f32 *startPoints,f32 *endPoints,int radii,int hitOut,int objOut,
                               int pointCount,int mask,int flags,int mode);
 extern int hitDetectFn_80065e50(int obj,f32 x,f32 y,f32 z,int *hitsOut,int pointCount,
                                 int mask);
 extern void hitDetectFn_80067958(int obj,float *startPoints,float *endPoints,int pointCount,
-                                 int outPos,int mode);
+                                 void *outPos,int mode);
 extern void hitDetectFn_800691c0(int obj,uint *bounds,int mask,int flags);
 extern void hitDetect_calcSweptSphereBounds(uint *boundsOut,float *startPoints,float *endPoints,float *radii,
                         int pointCount);
@@ -52,20 +52,20 @@ void camcontrol_updateVerticalBounds(CameraObject *camera,int flags,int param_3,
   int hits;
 
   cameraAddr = (int)camera;
-  camObj = *(int *)&camera->anim.targetObj;
+  camObj = (int)camera->anim.targetObj;
   if ((flags & 1) != 0) {
     zB = lbl_803E1688;
     *(float *)(cameraAddr + 0x74) = zB;
     *(s8 *)(cameraAddr + 0x84) = -1;
     *(s8 *)(cameraAddr + 0x88) = (s8)param_3;
-    res = objBboxFn_800640cc((int)&camera->probePosX,(int)&camera->anim.worldPosX,1,0,0,0x10,0xffffffff,0xff,0);
+    res = objBboxFn_800640cc(&camera->probePosX,&camera->anim.worldPosX,1,0,0,0x10,0xffffffff,0xff,0);
     camera->unk142 = res;
     pos[0] = camera->anim.worldPosX;
     pos[1] = camera->anim.worldPosY;
     pos[2] = camera->anim.worldPosZ;
     hitDetect_calcSweptSphereBounds(bounds,&camera->probePosX,pos,(float *)(cameraAddr + 0x74),1);
     hitDetectFn_800691c0(camObj,bounds,0x240,1);
-    hitDetectFn_80067958(camObj,&camera->probePosX,pos,1,(int)&camera->anim.pad34[0],0);
+    hitDetectFn_80067958(camObj,&camera->probePosX,pos,1,&camera->anim.pad34[0],0);
     camera->anim.worldPosX = pos[0];
     camera->anim.worldPosY = pos[1];
     camera->anim.worldPosZ = pos[2];
