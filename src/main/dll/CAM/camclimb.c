@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/camera_interface.h"
 #include "main/camera_object.h"
+#include "main/dll/CAM/camcontrol_path_state.h"
 #include "main/object_transform.h"
 
 extern uint getAngle();
@@ -9,7 +10,6 @@ extern char camcontrol_getTargetPosition();
 extern char camcontrol_samplePathState();
 extern undefined4 camcontrol_updatePathTargetAction();
 
-extern int *lbl_803DD538;
 extern f32 timeDelta;
 extern f32 lbl_803E1740;
 extern f32 lbl_803E1758;
@@ -34,9 +34,10 @@ void camclimb_update(short *param_1)
 {
   byte cVar2;
   uint uVar1;
-  int iVar3;
+  int defaultHandler;
+  int yawDelta;
   short *psVar4;
-  int iVar5;
+  int pointIndex;
   float local_20 [4];
   float local_24;
   float local_28;
@@ -45,48 +46,43 @@ void camclimb_update(short *param_1)
   float local_34;
   float local_38;
 
-  if (*(u8 *)((int)lbl_803DD538 + 0x1bc) != 0) {
+  if (lbl_803DD538->active != 0) {
     (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
   }
   else {
-    if (*lbl_803DD538 != *(uint *)(param_1 + 0x18)) {
-      int base;
-      iVar3 = 0;
-      for (iVar5 = 0; iVar5 < *(int *)((int)lbl_803DD538 + 0x1b0); iVar5 = iVar5 + 1) {
-        base = (int)lbl_803DD538 + iVar3;
-        Obj_TransformLocalPointToWorld(*(float *)(base + 0x1c),*(float *)(base + 0x6c),
-                     *(float *)(base + 0xbc),(float *)(base + 0x1c),
-                     (float *)(base + 0x6c),(float *)(base + 0xbc),*lbl_803DD538);
-        iVar3 = iVar3 + 4;
+    if (lbl_803DD538->localFrameObj != *(uint *)(param_1 + 0x18)) {
+      for (pointIndex = 0; pointIndex < lbl_803DD538->pointCount; pointIndex = pointIndex + 1) {
+        Obj_TransformLocalPointToWorld(lbl_803DD538->pointsX[pointIndex],
+                     lbl_803DD538->pointsY[pointIndex], lbl_803DD538->pointsZ[pointIndex],
+                     &lbl_803DD538->pointsX[pointIndex], &lbl_803DD538->pointsY[pointIndex],
+                     &lbl_803DD538->pointsZ[pointIndex], lbl_803DD538->localFrameObj);
       }
-      iVar3 = 0;
-      for (iVar5 = 0; iVar5 < *(int *)((int)lbl_803DD538 + 0x1b0); iVar5 = iVar5 + 1) {
-        base = (int)lbl_803DD538 + iVar3;
-        Obj_TransformWorldPointToLocal(*(float *)(base + 0x1c),*(float *)(base + 0x6c),
-                     *(float *)(base + 0xbc),(float *)(base + 0x1c),(float *)(base + 0x6c),
-                     (float *)(base + 0xbc),*(int *)(param_1 + 0x18));
-        iVar3 = iVar3 + 4;
+      for (pointIndex = 0; pointIndex < lbl_803DD538->pointCount; pointIndex = pointIndex + 1) {
+        Obj_TransformWorldPointToLocal(lbl_803DD538->pointsX[pointIndex],
+                     lbl_803DD538->pointsY[pointIndex], lbl_803DD538->pointsZ[pointIndex],
+                     &lbl_803DD538->pointsX[pointIndex], &lbl_803DD538->pointsY[pointIndex],
+                     &lbl_803DD538->pointsZ[pointIndex], *(int *)(param_1 + 0x18));
       }
-      *lbl_803DD538 = *(int *)(param_1 + 0x18);
+      lbl_803DD538->localFrameObj = *(int *)(param_1 + 0x18);
     }
     psVar4 = ((CameraObject *)param_1)->anim.targetObj;
     local_24 = *(float *)(param_1 + 8);
     cVar2 = camcontrol_samplePathState(&local_28, &local_24, local_20, psVar4, param_1);
     *(float *)(param_1 + 6) = local_28;
     *(float *)(param_1 + 10) = local_20[0];
-    iVar3 = (int)(*gCameraInterface)->getDefaultHandlerEntry();
+    defaultHandler = (int)(*gCameraInterface)->getDefaultHandlerEntry();
     Obj_TransformLocalPointToWorld(*(float *)(param_1 + 6),*(float *)(param_1 + 8),
                  *(float *)(param_1 + 10),(float *)(param_1 + 0xc),(float *)(param_1 + 0xe),
                  (float *)(param_1 + 0x10),*(int *)(param_1 + 0x18));
-    (*(code *)(**(int **)(iVar3 + 4) + 0x1c))
+    (*(code *)(**(int **)(defaultHandler + 4) + 0x1c))
               ((double)lbl_803E1758, (double)lbl_803E175C, param_1, psVar4);
-    (*(code *)(**(int **)(iVar3 + 4) + 0x24))(param_1, 1, 3,
-                                                 (int)lbl_803DD538 + 0x14,
-                                                 (int)lbl_803DD538 + 0x18);
+    (*(code *)(**(int **)(defaultHandler + 4) + 0x24))(param_1, 1, 3,
+                                                 &lbl_803DD538->curveMin,
+                                                 &lbl_803DD538->curveMax);
     if ((param_1[0x50] != 0) || (((CameraObject *)param_1)->unk142 != 0)) {
-      *(float *)((int)lbl_803DD538 + 0x11c) = *(float *)((int)lbl_803DD538 + 0x11c) + timeDelta;
+      lbl_803DD538->initialiseCurve[4] = lbl_803DD538->initialiseCurve[4] + timeDelta;
     }
-    if (*(float *)((int)lbl_803DD538 + 0x11c) > lbl_803E1740) {
+    if (lbl_803DD538->initialiseCurve[4] > lbl_803E1740) {
       cVar2 = camcontrol_getTargetPosition(param_1, psVar4, param_1 + 0xc, param_1 + 1);
       if (cVar2 == 1) {
         doNothing_80103660(1);
@@ -99,16 +95,16 @@ void camclimb_update(short *param_1)
     (*gCameraInterface)->getRelativePosition(lbl_803E1740, (int)param_1, &local_2c,
                                              (f32 *)auStack_30, &local_34, &local_38, 0);
     uVar1 = getAngle((double)local_2c, (double)local_34);
-    iVar5 = 0x8000 - (uVar1 & 0xffff);
-    iVar5 = iVar5 - (uint)*(ushort *)param_1;
-    if (0x8000 < iVar5) {
-      iVar5 = iVar5 + -0xffff;
+    yawDelta = 0x8000 - (uVar1 & 0xffff);
+    yawDelta = yawDelta - (uint)*(ushort *)param_1;
+    if (0x8000 < yawDelta) {
+      yawDelta = yawDelta + -0xffff;
     }
-    if (iVar5 < -0x8000) {
-      iVar5 = iVar5 + 0xffff;
+    if (yawDelta < -0x8000) {
+      yawDelta = yawDelta + 0xffff;
     }
-    *param_1 = (short)(*param_1 + iVar5);
-    (*(code *)(**(int **)(iVar3 + 4) + 0x18))
+    *param_1 = (short)(*param_1 + yawDelta);
+    (*(code *)(**(int **)(defaultHandler + 4) + 0x18))
               ((double)*(float *)(psVar4 + 0xe), (double)local_38, param_1);
     if (cVar2 != 0) {
       (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
