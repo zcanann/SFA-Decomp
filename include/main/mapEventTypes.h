@@ -30,6 +30,8 @@ typedef struct MapEventInterface {
     u8 *(*getProgressPtr)(void);
 } MapEventInterface;
 
+extern MapEventInterface **gMapEventInterface;
+
 STATIC_ASSERT(offsetof(MapEventInterface, triggerEvent) == 0x1C);
 STATIC_ASSERT(offsetof(MapEventInterface, setEventWarpPosition) == 0x24);
 STATIC_ASSERT(offsetof(MapEventInterface, finishCurrentEvent) == 0x28);

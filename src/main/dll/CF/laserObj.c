@@ -1,8 +1,6 @@
 #include "main/dll/CF/laser.h"
 #include "main/gameplay_runtime.h"
 
-extern MapEventInterface **gMapEventInterface;
-
 int laserObj_getExtraSize(void)
 {
   return sizeof(LaserState);
