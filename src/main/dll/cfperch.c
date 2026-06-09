@@ -145,13 +145,13 @@ void fn_80183250(int obj, int def)
     player = (int)Obj_GetPlayerObject();
     if ((*(u16 *)(*(int *)&((GameObject *)obj)->anim.parent + 0xb0) & 0x1000) != 0) {
         ((GameObject *)obj)->anim.localPosX = *(f32 *)(def + 0x24);
-        ((GameObject *)obj)->anim.velocityX = lbl_803E39B8;
+        ((GameObject *)obj)->anim.velocityX = 0.0f;
     } else {
         oldVel = ((GameObject *)obj)->anim.velocityX;
         sum = *(s16 *)(*(int *)&((GameObject *)obj)->anim.parent + 0x4) + *(u16 *)(def + 0x20);
         ((GameObject *)obj)->anim.velocityX = -(f32)sum / *(f32 *)(def + 0x1c);
-        if ((oldVel <= (limit = lbl_803E39B8) && ((GameObject *)obj)->anim.velocityX >= limit) ||
-            (oldVel >= lbl_803E39B8 && ((GameObject *)obj)->anim.velocityX <= lbl_803E39B8)) {
+        if ((oldVel <= 0.0f && ((GameObject *)obj)->anim.velocityX >= 0.0f) ||
+            (oldVel >= 0.0f && ((GameObject *)obj)->anim.velocityX <= 0.0f)) {
             v = *(u32 *)(state31 + 0x14);
             adj = v - SMALLBASKET_LINKED_ID_BASE;
             if ((adj == SMALLBASKET_ROB_WAVE_ID_65D7) ||
