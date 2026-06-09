@@ -1255,18 +1255,18 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
   stateA = ObjAnim_GetPriorityHitState((ObjAnimComponent *)objA);
   stateB = ObjAnim_GetPriorityHitState((ObjAnimComponent *)objB);
   stateSrc = ObjAnim_GetPriorityHitState((ObjAnimComponent *)srcObj);
-  if ((stateSrc->secondaryShapeFlags & 0x10) &&
+  if ((stateSrc->secondaryShapeFlags & OBJHITS_SHAPE_MODEL_HIT_VOLUMES) &&
       (*(s8 *)&stateSrc->resetHitboxMode != 0 || stateSrc->activeHitboxMode != 0)) {
     return 0;
   }
-  if ((stateB->secondaryShapeFlags & 0x10) &&
+  if ((stateB->secondaryShapeFlags & OBJHITS_SHAPE_MODEL_HIT_VOLUMES) &&
       (*(s8 *)&stateB->resetHitboxMode != 0 || stateB->activeHitboxMode != 0)) {
     return 0;
   }
   modeA = 0;
   modeB = 0;
-  if ((checkA != 0 && (stateA->secondaryShapeFlags & 0x10) != 0) ||
-      (checkB != 0 && stateA->shapeFlags == 0x10)) {
+  if ((checkA != 0 && (stateA->secondaryShapeFlags & OBJHITS_SHAPE_MODEL_HIT_VOLUMES) != 0) ||
+      (checkB != 0 && stateA->shapeFlags == OBJHITS_SHAPE_MODEL_HIT_VOLUMES)) {
     piVar11 = ObjHits_GetActiveModel(objA);
     modelFile = *piVar11;
     countA = *(u8 *)(modelFile + 0xf7);
@@ -1279,7 +1279,7 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
     else {
       radiusA = stateA->secondaryRadiusXZ;
     }
-    if ((((GameObject *)objA)->anim.flags & 0x4000) != 0) {
+    if ((((GameObject *)objA)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0) {
       return 0;
     }
   }
@@ -1288,7 +1288,7 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
     spheresA = sphs;
     defA = defs;
     volA = volA0;
-    if (stateA->secondaryShapeFlags & 2) {
+    if (stateA->secondaryShapeFlags & OBJHITS_SHAPE_CAPSULE) {
       modeA = 1;
     }
     radiusA = (f32)stateA->secondaryRadius;
@@ -1304,15 +1304,15 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
     volA0[23] = 0;
     *(u16 *)(volA0 + 20) = 0;
   }
-  if ((checkA != 0 && (stateB->secondaryShapeFlags & 0x10) != 0) ||
-      (checkB != 0 && stateB->shapeFlags == 0x10)) {
+  if ((checkA != 0 && (stateB->secondaryShapeFlags & OBJHITS_SHAPE_MODEL_HIT_VOLUMES) != 0) ||
+      (checkB != 0 && stateB->shapeFlags == OBJHITS_SHAPE_MODEL_HIT_VOLUMES)) {
     piVar11 = ObjHits_GetActiveModel(objB);
     modelFile = *piVar11;
     countB = *(u8 *)(modelFile + 0xf7);
     spheresB = (float *)piVar11[0x14];
     volB = *(u8 **)(modelFile + 0x58);
     radiusB = stateB->secondaryRadiusXZ;
-    if ((((GameObject *)objB)->anim.flags & 0x4000) != 0) {
+    if ((((GameObject *)objB)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0) {
       return 0;
     }
   }
@@ -1320,7 +1320,7 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
     countB = 1;
     spheresB = &sphs[4];
     volB = volB0;
-    if (stateB->secondaryShapeFlags & 2) {
+    if (stateB->secondaryShapeFlags & OBJHITS_SHAPE_CAPSULE) {
       modeB = 1;
     }
     radiusB = (f32)stateB->secondaryRadius;
@@ -2287,7 +2287,7 @@ void ObjHits_CheckTrackContact(int objA,int objB)
                                    : stateA->objectHitMask & 0xf;
   if ((mask2 != 0) && (*(s8 *)&stateA->suppressOutgoingHits == 0)) {
     stateB = (ObjHitsPriorityState *)((GameObject *)objB)->anim.hitReactState;
-    if ((stateB->secondaryShapeFlags & 0x10) != 0) {
+    if ((stateB->secondaryShapeFlags & OBJHITS_SHAPE_MODEL_HIT_VOLUMES) != 0) {
       piVar9 = ObjHits_GetActiveModel(objB);
       iVar12 = *piVar9;
       uVar7 = *(ushort *)(piVar9 + 6) >> 2 & 1;
@@ -2555,7 +2555,8 @@ void ObjHits_Update(int objectCount)
                        ObjHits_CheckSkeletonPair)(obj, candObj, skeletonHits, skeletonScratchB,
                                                   skeletonScratchC, skeletonScratchD,
                                                   skeletonScratchE, 0);
-                } else if ((objState->shapeFlags == 0x10) || (candState->shapeFlags == 0x10)) {
+                } else if ((objState->shapeFlags == OBJHITS_SHAPE_MODEL_HIT_VOLUMES) ||
+                           (candState->shapeFlags == OBJHITS_SHAPE_MODEL_HIT_VOLUMES)) {
                   if ((objState->lateralResponseWeight != 0) ||
                       (candState->lateralResponseWeight != 0)) {
                     ObjHits_CheckHitVolumes(obj, candObj, obj, 0, 1, 0xffffffff, 0);
