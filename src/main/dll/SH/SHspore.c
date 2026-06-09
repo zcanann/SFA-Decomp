@@ -110,26 +110,26 @@ void sh_queenearthwalker_update(void *obj)
   s16 targetMove;
 
   state = ((GameObject *)obj)->extra;
-  *(u8 *)((u8 *)state + 0x2) &= ~0x20;
+  ((QueenEarthWalkerState *)state)->flags &= ~0x20;
   actionParam = *(s8 *)((u8 *)obj + 0xac);
   action = (*gMapEventInterface)->getMode(actionParam);
 
-  if ((*(u8 *)((u8 *)state + 0x2) & 0x1) != 0) {
+  if ((((QueenEarthWalkerState *)state)->flags & 0x1) != 0) {
     switch (action) {
       case 0:
         queenFeedFn_801d44a4(obj, state);
         break;
       case 1:
         if (GameBit_Get(0x193) != 0) {
-          *(u8 **)((u8 *)state + 0x38) = &lbl_803DBFEC;
+          ((QueenEarthWalkerState *)state)->eventTable = &lbl_803DBFEC;
         } else {
-          *(u8 **)((u8 *)state + 0x38) = &lbl_803DBFD4;
+          ((QueenEarthWalkerState *)state)->eventTable = &lbl_803DBFD4;
         }
         player = Obj_GetPlayerObject();
         *(u8 *)((u8 *)state + 0x8) = 1;
-        *(f32 *)((u8 *)state + 0xc) = *(f32 *)((u8 *)player + 0xc);
-        *(f32 *)((u8 *)state + 0x10) = *(f32 *)((u8 *)player + 0x10);
-        *(f32 *)((u8 *)state + 0x14) = *(f32 *)((u8 *)player + 0x14);
+        ((QueenEarthWalkerState *)state)->targetX = *(f32 *)((u8 *)player + 0xc);
+        ((QueenEarthWalkerState *)state)->targetY = *(f32 *)((u8 *)player + 0x10);
+        ((QueenEarthWalkerState *)state)->targetZ = *(f32 *)((u8 *)player + 0x14);
         fn_8003B500(obj, (u8 *)state + 0x8, lbl_803E53F8);
         break;
       case 2:
@@ -137,36 +137,36 @@ void sh_queenearthwalker_update(void *obj)
         break;
       case 3:
         if (GameBit_Get(0x13f) != 0) {
-          *(u8 **)((u8 *)state + 0x38) = &lbl_803DBFEC;
+          ((QueenEarthWalkerState *)state)->eventTable = &lbl_803DBFEC;
         } else {
-          *(u8 **)((u8 *)state + 0x38) = &lbl_803DBFE0;
+          ((QueenEarthWalkerState *)state)->eventTable = &lbl_803DBFE0;
         }
         player = Obj_GetPlayerObject();
         *(u8 *)((u8 *)state + 0x8) = 1;
-        *(f32 *)((u8 *)state + 0xc) = *(f32 *)((u8 *)player + 0xc);
-        *(f32 *)((u8 *)state + 0x10) = *(f32 *)((u8 *)player + 0x10);
-        *(f32 *)((u8 *)state + 0x14) = *(f32 *)((u8 *)player + 0x14);
+        ((QueenEarthWalkerState *)state)->targetX = *(f32 *)((u8 *)player + 0xc);
+        ((QueenEarthWalkerState *)state)->targetY = *(f32 *)((u8 *)player + 0x10);
+        ((QueenEarthWalkerState *)state)->targetZ = *(f32 *)((u8 *)player + 0x14);
         fn_8003B500(obj, (u8 *)state + 0x8, lbl_803E53F8);
         break;
       case 4:
         if (GameBit_Get(0x199) != 0) {
-          *(u8 **)((u8 *)state + 0x38) = &lbl_803DBFEC;
+          ((QueenEarthWalkerState *)state)->eventTable = &lbl_803DBFEC;
         } else {
-          *(u8 **)((u8 *)state + 0x38) = &lbl_803DBFE4;
+          ((QueenEarthWalkerState *)state)->eventTable = &lbl_803DBFE4;
         }
         player = Obj_GetPlayerObject();
         *(u8 *)((u8 *)state + 0x8) = 1;
-        *(f32 *)((u8 *)state + 0xc) = *(f32 *)((u8 *)player + 0xc);
-        *(f32 *)((u8 *)state + 0x10) = *(f32 *)((u8 *)player + 0x10);
-        *(f32 *)((u8 *)state + 0x14) = *(f32 *)((u8 *)player + 0x14);
+        ((QueenEarthWalkerState *)state)->targetX = *(f32 *)((u8 *)player + 0xc);
+        ((QueenEarthWalkerState *)state)->targetY = *(f32 *)((u8 *)player + 0x10);
+        ((QueenEarthWalkerState *)state)->targetZ = *(f32 *)((u8 *)player + 0x14);
         fn_8003B500(obj, (u8 *)state + 0x8, lbl_803E53F8);
         break;
       case 5:
         player = Obj_GetPlayerObject();
         *(u8 *)((u8 *)state + 0x8) = 1;
-        *(f32 *)((u8 *)state + 0xc) = *(f32 *)((u8 *)player + 0xc);
-        *(f32 *)((u8 *)state + 0x10) = *(f32 *)((u8 *)player + 0x10);
-        *(f32 *)((u8 *)state + 0x14) = *(f32 *)((u8 *)player + 0x14);
+        ((QueenEarthWalkerState *)state)->targetX = *(f32 *)((u8 *)player + 0xc);
+        ((QueenEarthWalkerState *)state)->targetY = *(f32 *)((u8 *)player + 0x10);
+        ((QueenEarthWalkerState *)state)->targetZ = *(f32 *)((u8 *)player + 0x14);
         fn_8003B500(obj, (u8 *)state + 0x8, lbl_803E53F8);
         break;
       case 6:
@@ -182,67 +182,67 @@ void sh_queenearthwalker_update(void *obj)
         target = ObjGroup_FindNearestObject(0xf, obj, NULL);
         (*gObjectTriggerInterface)->preempt((int)target, 0x1324);
         (*gObjectTriggerInterface)->runSequence(1, target, 0x10);
-        *(u8 *)((u8 *)state + 0x2) |= 0xc;
-        *(u8 **)((u8 *)state + 0x38) = &lbl_803DBFC8;
+        ((QueenEarthWalkerState *)state)->flags |= 0xc;
+        ((QueenEarthWalkerState *)state)->eventTable = &lbl_803DBFC8;
         break;
       case 2:
         if (GameBit_Get(0xc2) == 6) {
           (*gObjectTriggerInterface)->preempt((int)obj, 0x18f6);
           (*gObjectTriggerInterface)->runSequence(6, obj, 1);
-          *(u8 *)state = 3;
+          ((QueenEarthWalkerState *)state)->stateIndex = 3;
         } else {
           if (GameBit_Get(0xbf) != 0) {
-            *(u8 *)state = 1;
+            ((QueenEarthWalkerState *)state)->stateIndex = 1;
           }
-          *(u8 *)((u8 *)state + 0x2) |= 0xc;
-          *(u8 **)((u8 *)state + 0x38) = &lbl_803DBFCC;
+          ((QueenEarthWalkerState *)state)->flags |= 0xc;
+          ((QueenEarthWalkerState *)state)->eventTable = &lbl_803DBFCC;
         }
         break;
       case 3:
       case 4:
         (*gObjectTriggerInterface)->preempt((int)obj, 0x18f6);
         (*gObjectTriggerInterface)->runSequence(6, obj, 1);
-        *(u8 *)state = 3;
+        ((QueenEarthWalkerState *)state)->stateIndex = 3;
         break;
       case 8:
         target = ObjGroup_FindNearestObject(0xf, obj, NULL);
         (*gObjectTriggerInterface)->preempt((int)target, 0x6a4);
         (*gObjectTriggerInterface)->runSequence(7, target, 8);
-        *(u8 *)state = 4;
-        *(u8 **)((u8 *)state + 0x38) = &lbl_803DBFE8;
+        ((QueenEarthWalkerState *)state)->stateIndex = 4;
+        ((QueenEarthWalkerState *)state)->eventTable = &lbl_803DBFE8;
         break;
       default:
         break;
     }
-    *(u8 *)((u8 *)state + 0x2) |= 0x1;
+    ((QueenEarthWalkerState *)state)->flags |= 0x1;
     return;
   }
 
-  if ((*(u8 *)((u8 *)state + 0x2) & 0x8) != 0) {
+  if ((((QueenEarthWalkerState *)state)->flags & 0x8) != 0) {
     fn_8003B228(obj, (u8 *)state + 0x8);
   } else {
     characterDoEyeAnims(obj, (u8 *)state + 0x8);
   }
 
   currentMove = ((GameObject *)obj)->anim.currentMove;
-  targetMove = lbl_80326E18[*(u8 *)state];
+  targetMove = lbl_80326E18[((QueenEarthWalkerState *)state)->stateIndex];
   if (currentMove != targetMove) {
     ObjAnim_SetCurrentMove((int)obj, targetMove, lbl_803E53F8, 0);
   }
-  ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_80326E24[*(u8 *)state], timeDelta, NULL);
+  ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_80326E24[((QueenEarthWalkerState *)state)->stateIndex], timeDelta, NULL);
 
-  stateFlags = *(u8 *)((u8 *)state + 0x2);
+  stateFlags = ((QueenEarthWalkerState *)state)->flags;
   if ((stateFlags & 0x10) == 0) {
-    *(u8 *)((u8 *)state + 0x2) &= ~0x2;
+    ((QueenEarthWalkerState *)state)->flags &= ~0x2;
     if (ObjTrigger_IsSet(obj) != 0 && *(u8 *)(*(int *)((u8 *)obj + 0x78) + 0x4) != 4) {
-      eventIndex = (u8)randomGetRange(1, **(u8 **)((u8 *)state + 0x38));
-      *(u8 *)((u8 *)state + 0x2) |= 0x2;
+      eventIndex = (u8)randomGetRange(1, *((QueenEarthWalkerState *)state)->eventTable);
+      ((QueenEarthWalkerState *)state)->flags |= 0x2;
       (*gObjectTriggerInterface)->runSequence(
-          ((u8 *)*(u8 **)((u8 *)state + 0x38))[eventIndex], obj, -1);
+          ((u8 *)((QueenEarthWalkerState *)state)->eventTable)[eventIndex], obj, -1);
     }
   }
 
-  if (RandomTimer_UpdateRangeTrigger((f32 *)((u8 *)state + 0x3c), lbl_803E5404,
+  if (RandomTimer_UpdateRangeTrigger(&((QueenEarthWalkerState *)state)->attackTimer, lbl_803E5404,
                                      lbl_803E5408) != 0) {
     Sfx_PlayFromObject(obj, 0x410);
   }
@@ -255,11 +255,11 @@ void queenFeedFn_801d44a4(void *obj, void *state)
   void *tricky;
   void *player;
 
-  switch (*(u8 *)state) {
+  switch (((QueenEarthWalkerState *)state)->stateIndex) {
     case 0:
       if (GameBit_Get(0xbf) != 0) {
         (*gObjectTriggerInterface)->runSequence(1, obj, -1);
-        *(u8 *)state = 1;
+        ((QueenEarthWalkerState *)state)->stateIndex = 1;
       }
       break;
     case 1:
@@ -279,13 +279,13 @@ void queenFeedFn_801d44a4(void *obj, void *state)
       }
       fn_8002B6D8(obj, 0, 0, 0, 0, 4);
       if (ObjTrigger_IsSetById(obj, 0x66d) != 0) {
-        *(u8 *)((u8 *)state + 0x2) |= 0x10;
+        ((QueenEarthWalkerState *)state)->flags |= 0x10;
         total = GameBit_Get(0x66d);
         total += GameBit_Get(0xc2);
         GameBit_Set(0x66d, 0);
         GameBit_Set(0xc2, total);
         if (total != 6) {
-          *(u8 *)((u8 *)state + 0x2) |= 0x2;
+          ((QueenEarthWalkerState *)state)->flags |= 0x2;
           if (randomGetRange(0, 1) != 0) {
             (*gObjectTriggerInterface)->runSequence(3, obj, -1);
           } else {
@@ -293,25 +293,25 @@ void queenFeedFn_801d44a4(void *obj, void *state)
           }
         } else {
           (*gObjectTriggerInterface)->runSequence(5, obj, -1);
-          *(u8 *)state = 2;
+          ((QueenEarthWalkerState *)state)->stateIndex = 2;
         }
       }
       break;
     case 2:
       (*gObjectTriggerInterface)->runSequence(6, obj, -1);
       GameBit_Set(0x9e, 1);
-      *(u8 *)state = 3;
+      ((QueenEarthWalkerState *)state)->stateIndex = 3;
       break;
     case 3:
       fn_8002B6D8(obj, 0, 0, 0, 0, 2);
-      *(u8 *)((u8 *)state + 0x2) &= ~0x4;
-      *(u8 *)((u8 *)state + 0x2) &= ~0x8;
-      *(u8 **)((u8 *)state + 0x38) = &lbl_803DBFD0;
+      ((QueenEarthWalkerState *)state)->flags &= ~0x4;
+      ((QueenEarthWalkerState *)state)->flags &= ~0x8;
+      ((QueenEarthWalkerState *)state)->eventTable = &lbl_803DBFD0;
       player = Obj_GetPlayerObject();
       *(u8 *)((u8 *)state + 0x8) = 1;
-      *(f32 *)((u8 *)state + 0xc) = *(f32 *)((u8 *)player + 0xc);
-      *(f32 *)((u8 *)state + 0x10) = *(f32 *)((u8 *)player + 0x10);
-      *(f32 *)((u8 *)state + 0x14) = *(f32 *)((u8 *)player + 0x14);
+      ((QueenEarthWalkerState *)state)->targetX = *(f32 *)((u8 *)player + 0xc);
+      ((QueenEarthWalkerState *)state)->targetY = *(f32 *)((u8 *)player + 0x10);
+      ((QueenEarthWalkerState *)state)->targetZ = *(f32 *)((u8 *)player + 0x14);
       fn_8003B500(obj, (void *)((int)state + 0x8), lbl_803E53F8);
       break;
     default:
@@ -326,9 +326,9 @@ void openPortalFn_801d4364(void *obj, void *state)
   player = Obj_GetPlayerObject();
   *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x8;
   if (GameBit_Get(0xc48) != 0) {
-    *(u8 **)((u8 *)state + 0x38) = &lbl_803DBFEC;
+    ((QueenEarthWalkerState *)state)->eventTable = &lbl_803DBFEC;
   } else if (GameBit_Get(0x23c) != 0) {
-    *(u8 **)((u8 *)state + 0x38) = &lbl_803DBFDC;
+    ((QueenEarthWalkerState *)state)->eventTable = &lbl_803DBFDC;
   } else if (GameBit_Get(0x5bd) != 0) {
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x8;
     if (playerHasSpell(player, 3) != 0 &&
@@ -336,16 +336,16 @@ void openPortalFn_801d4364(void *obj, void *state)
       GameBit_Set(0x23b, 1);
     }
   } else if (GameBit_Get(0xa31) != 0) {
-    *(u8 **)((u8 *)state + 0x38) = &lbl_803DBFEC;
+    ((QueenEarthWalkerState *)state)->eventTable = &lbl_803DBFEC;
   } else {
-    *(u8 **)((u8 *)state + 0x38) = &lbl_803DBFD8;
+    ((QueenEarthWalkerState *)state)->eventTable = &lbl_803DBFD8;
   }
 
   player = Obj_GetPlayerObject();
   *(u8 *)((u8 *)state + 0x8) = 1;
-  *(f32 *)((u8 *)state + 0xc) = *(f32 *)((u8 *)player + 0xc);
-  *(f32 *)((u8 *)state + 0x10) = *(f32 *)((u8 *)player + 0x10);
-  *(f32 *)((u8 *)state + 0x14) = *(f32 *)((u8 *)player + 0x14);
+  ((QueenEarthWalkerState *)state)->targetX = *(f32 *)((u8 *)player + 0xc);
+  ((QueenEarthWalkerState *)state)->targetY = *(f32 *)((u8 *)player + 0x10);
+  ((QueenEarthWalkerState *)state)->targetZ = *(f32 *)((u8 *)player + 0x14);
   fn_8003B500(obj, (void *)((int)state + 0x8), lbl_803E53F8);
 }
 

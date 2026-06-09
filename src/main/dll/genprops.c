@@ -6991,6 +6991,18 @@ typedef struct SwipeColorTable {
     u32 w[16];
 } SwipeColorTable;
 
+/* per-swipe trail record (stride 0x18, 3 records) */
+typedef struct SwipeRecord {
+    u8 *vertexData;
+    u8 pad04[0xc - 0x4];
+    u16 startIndex;
+    u16 endIndex;
+    u8 pad10[2];
+    s16 vertexCount;
+    u8 flags;
+    u8 pad15[0x18 - 0x15];
+} SwipeRecord;
+
 extern SwipeColorTable lbl_802C2220;
 void staffDrawSwipe(int *obj, int *swipe);
 
@@ -7066,7 +7078,7 @@ extern f32 lbl_803E3294;
 #pragma opt_common_subs off
 void staffDrawSwipe(int *obj, int *swipe)
 {
-    u8 *swp;
+    SwipeRecord *swp;
     int i;
 
     selectTexture(lbl_803DDAA8[*(s8 *)((char *)swipe + 0xb9)], 0);
@@ -7086,18 +7098,18 @@ void staffDrawSwipe(int *obj, int *swipe)
     GXSetCurrentMtx(0);
 
     i = 0;
-    swp = (u8 *)swipe;
+    swp = (SwipeRecord *)swipe;
     for (; i < 3; i++) {
-        if ((*(u8 *)(swp + 0x14) & 2) && *(s16 *)(swp + 0x12) >= 4) {
+        if ((swp->flags & 2) && swp->vertexCount >= 4) {
             u8 *vp;
             int j;
             f32 v1, v0, u;
-            j = *(u16 *)(swp + 0xc);
-            vp = *(u8 **)swp + j * 20;
+            j = swp->startIndex;
+            vp = swp->vertexData + j * 20;
             u = lbl_803E3294;
             v0 = lbl_803E32B4;
             v1 = lbl_803E3288;
-            for (; j < *(u16 *)(swp + 0xe) - 2; j += 2) {
+            for (; j < swp->endIndex - 2; j += 2) {
                 GXBegin(128, 2, 4);
                 swipePos3f32(*(f32 *)(vp + 0) - playerMapOffsetX, *(f32 *)(vp + 4), *(f32 *)(vp + 8) - playerMapOffsetZ);
                 swipeColor4u8(255, 255, 255, (u8)*(s16 *)(vp + 0x10));
@@ -7114,7 +7126,7 @@ void staffDrawSwipe(int *obj, int *swipe)
                 vp += 0x28;
             }
         }
-        swp += 0x18;
+        swp++;
     }
 }
 
