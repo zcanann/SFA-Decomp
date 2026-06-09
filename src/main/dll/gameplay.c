@@ -13533,12 +13533,10 @@ void SaveGame_gplaySetAct(int idx, int act) {
 }
 s8 SaveGame_findTransientMapBit(int a, int b) {
     int i;
-    MapBitTransient *p;
-    for (i = 0, p = gTransientMapBits; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++) {
-        if (a == p->mapId && b == p->shift) {
+    for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++) {
+        if (a == gTransientMapBits[i].mapId && b == gTransientMapBits[i].shift) {
             return (s8)i;
         }
-        p++;
     }
     return -1;
 }
@@ -13621,16 +13619,14 @@ void loadTaskTexts(void) {
     }
 }
 void SaveGame_updateTransientMapBits(void) {
-    MapBitTransient *p;
     int i;
-    for (i = 0, p = gTransientMapBits; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++) {
-        if (p->mapId != -1) {
-            p->timer--;
-            if (p->timer <= 0) {
-                p->mapId = -1;
+    for (i = 0; i < SAVEGAME_TRANSIENT_MAP_BIT_COUNT; i++) {
+        if (gTransientMapBits[i].mapId != -1) {
+            gTransientMapBits[i].timer--;
+            if (gTransientMapBits[i].timer <= 0) {
+                gTransientMapBits[i].mapId = -1;
             }
         }
-        p++;
     }
 }
 extern s16 lbl_803119E0[];
