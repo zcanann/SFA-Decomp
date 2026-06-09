@@ -40,7 +40,7 @@ typedef struct ViewfinderState {
     u8 unk60[0x78 - 0x60];
     Curve viewCurve;
     f32 unk114;
-    u8 unk118[0x11C - 0x118];
+    f32 exitDistance;
     f32 yawSpeed;
     f32 camPosX;
     f32 camPosY;
@@ -52,6 +52,7 @@ typedef struct ViewfinderState {
 } ViewfinderState;
 
 STATIC_ASSERT(offsetof(ViewfinderState, yawSpeed) == 0x11C);
+STATIC_ASSERT(offsetof(ViewfinderState, exitDistance) == 0x118);
 STATIC_ASSERT(offsetof(ViewfinderState, viewCurve) == 0x78);
 STATIC_ASSERT(offsetof(ViewfinderState, viewCurve.sample) == 0xE0);
 STATIC_ASSERT(offsetof(ViewfinderState, viewCurve.dir) == 0xF8);

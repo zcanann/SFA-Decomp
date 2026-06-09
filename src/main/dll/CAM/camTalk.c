@@ -1,6 +1,7 @@
 #include "main/dll/CAM/camTalk.h"
 #include "main/camera_interface.h"
 #include "main/camera_object.h"
+#include "main/dll/CAM/viewfinder_state.h"
 #include "main/mm.h"
 #include "main/object_transform.h"
 
@@ -14,9 +15,6 @@ extern void Matrix_TransformPoint(void *matrix, f32 x, f32 y, f32 z, f32 *outX, 
 extern undefined4 FUN_80017814();
 extern undefined4 FUN_80017830();
 extern undefined4 camcontrol_getTargetPosition(int param_1,int param_2,float *outPos,void *outAngle);
-extern void curvesMove(void *param_1);
-extern f32 Curve_EvalHermite(f32 param_1,float *param_2,float *param_3);
-extern void Curve_BuildHermiteCoeffs(void);
 extern int getAngle(f32 dx,f32 dz);
 extern void *getSbGalleon(void);
 extern int DBprotection_getCameraState(int *obj);
@@ -27,7 +25,7 @@ extern f32 mathCosf(f32);
 extern void cameraGetPrevPos2(int obj, float *x, float *y, float *z);
 
 extern u8* lbl_803DD540;
-extern u8* lbl_803DD548;
+extern ViewfinderState *lbl_803DD548;
 extern f64 lbl_803E17B8;
 extern f64 DOUBLE_803e2458;
 extern f32 timeDelta;
@@ -217,6 +215,7 @@ void CameraModeBike_init(int param_1)
 void firstPersonPlaceCamera(int param_1,int param_2)
 {
   register int self = param_1;
+  ViewfinderState *state;
   int *puVar1;
   int iVar2;
   float local_20;
@@ -224,21 +223,22 @@ void firstPersonPlaceCamera(int param_1,int param_2)
   float local_28;
   float local_1c[3];
 
+  state = lbl_803DD548;
   if (*(short *)(self + 0x44) == 1) {
     cameraGetPrevPos2(self,&local_28,&local_24,&local_20);
-    if (((param_2 != 0) || (*(float *)(lbl_803DD548 + 0x120) != local_28)) ||
-       (*(float *)(lbl_803DD548 + 0x128) != local_20)) {
-      *(float *)(lbl_803DD548 + 0x130) = local_24;
+    if (((param_2 != 0) || (state->camPosX != local_28)) ||
+       (state->camPosZ != local_20)) {
+      state->clampedPosY = local_24;
     }
-    *(float *)(lbl_803DD548 + 0x120) = local_28;
-    *(float *)(lbl_803DD548 + 0x124) = local_24;
-    *(float *)(lbl_803DD548 + 0x128) = local_20;
+    state->camPosX = local_28;
+    state->camPosY = local_24;
+    state->camPosZ = local_20;
   }
   else {
-    *(float *)(lbl_803DD548 + 0x120) = *(float *)(self + 0x18);
-    *(float *)(lbl_803DD548 + 0x124) = lbl_803E17C0 + *(float *)(self + 0x1c);
-    *(float *)(lbl_803DD548 + 0x128) = *(float *)(self + 0x20);
-    *(float *)(lbl_803DD548 + 0x130) = *(float *)(lbl_803DD548 + 0x124);
+    state->camPosX = *(float *)(self + 0x18);
+    state->camPosY = lbl_803E17C0 + *(float *)(self + 0x1c);
+    state->camPosZ = *(float *)(self + 0x20);
+    state->clampedPosY = state->camPosY;
   }
   puVar1 = (int *)getSbGalleon();
   if (puVar1 != (int *)0x0) {
@@ -248,9 +248,9 @@ void firstPersonPlaceCamera(int param_1,int param_2)
       local_1c[1] = (lbl_803E17C0 + *(float *)(self + 0x1c)) - *(float *)(puVar1 + 7);
       local_1c[2] = *(float *)(self + 0x20) - *(float *)(puVar1 + 8);
       vecRotateZXY(puVar1,local_1c);
-      *(float *)(lbl_803DD548 + 0x120) = *(float *)(puVar1 + 6) + local_1c[0];
-      *(float *)(lbl_803DD548 + 0x124) = *(float *)(puVar1 + 7) + local_1c[1];
-      *(float *)(lbl_803DD548 + 0x128) = *(float *)(puVar1 + 8) + local_1c[2];
+      state->camPosX = *(float *)(puVar1 + 6) + local_1c[0];
+      state->camPosY = *(float *)(puVar1 + 7) + local_1c[1];
+      state->camPosZ = *(float *)(puVar1 + 8) + local_1c[2];
     }
   }
   return;
@@ -276,6 +276,7 @@ void firstPersonPlaceCamera(int param_1,int param_2)
 void firstPersonExit(short *param_1)
 {
   register short *self = param_1;
+  ViewfinderState *state;
   float fVar1;
   float fVar2;
   int sVar3;
@@ -283,66 +284,67 @@ void firstPersonExit(short *param_1)
   float local_24[3];
   undefined auStack_28[4];
 
+  state = lbl_803DD548;
   iVar4 = *(int *)(self + 0x52);
-  *(float *)(lbl_803DD548 + 0x10) = *(float *)(self + 0xc);
+  state->unk10 = *(float *)(self + 0xc);
   fVar1 = lbl_803E17C4;
-  *(float *)(lbl_803DD548 + 0x18) = lbl_803E17C4;
-  *(float *)(lbl_803DD548 + 0x1c) = fVar1;
-  *(float *)(lbl_803DD548 + 0x20) = *(float *)(self + 0xe);
-  *(float *)(lbl_803DD548 + 0x28) = fVar1;
-  *(float *)(lbl_803DD548 + 0x2c) = fVar1;
-  *(float *)(lbl_803DD548 + 0x30) = *(float *)(self + 0x10);
-  *(float *)(lbl_803DD548 + 0x38) = fVar1;
-  *(float *)(lbl_803DD548 + 0x3c) = fVar1;
+  state->unk18 = lbl_803E17C4;
+  state->unk1C = fVar1;
+  state->unk20 = *(float *)(self + 0xe);
+  state->unk28 = fVar1;
+  state->unk2C = fVar1;
+  state->unk30 = *(float *)(self + 0x10);
+  state->unk38 = fVar1;
+  state->unk3C = fVar1;
   camcontrol_getTargetPosition((int)self,iVar4,local_24,auStack_28);
-  *(float *)(lbl_803DD548 + 0x14) = local_24[0];
-  *(float *)(lbl_803DD548 + 0x24) = local_24[1];
-  *(float *)(lbl_803DD548 + 0x34) = local_24[2];
-  fVar1 = *(float *)(lbl_803DD548 + 0x14) - *(float *)(lbl_803DD548 + 0x10);
-  fVar2 = *(float *)(lbl_803DD548 + 0x34) - *(float *)(lbl_803DD548 + 0x30);
-  *(float *)(lbl_803DD548 + 0x118) = sqrtf(fVar1 * fVar1 + fVar2 * fVar2);
-  *(int *)(lbl_803DD548 + 0xfc) = (int)(lbl_803DD548 + 0x40);
-  *(int *)(lbl_803DD548 + 0x100) = (int)(lbl_803DD548 + 0x50);
-  *(undefined4 *)(lbl_803DD548 + 0x104) = 0;
-  *(undefined4 *)(lbl_803DD548 + 0x108) = 4;
-  *(undefined4 *)(lbl_803DD548 + 0xf8) = 0;
-  *(code **)(lbl_803DD548 + 0x10c) = (code *)Curve_EvalHermite;
-  *(void **)(lbl_803DD548 + 0x110) = Curve_BuildHermiteCoeffs;
-  *(float *)(lbl_803DD548 + 0x40) = (float)(int)*self;
-  sVar3 = getAngle((double)(*(float *)(lbl_803DD548 + 0x14) - *(float *)(iVar4 + 0x18)),
-                   (double)(*(float *)(lbl_803DD548 + 0x34) - *(float *)(iVar4 + 0x20)));
-  *(float *)(lbl_803DD548 + 0x44) = (float)(int)(short)(0x8000 - sVar3);
+  state->unk14 = local_24[0];
+  state->unk24 = local_24[1];
+  state->unk34 = local_24[2];
+  fVar1 = state->unk14 - state->unk10;
+  fVar2 = state->unk34 - state->unk30;
+  state->exitDistance = sqrtf(fVar1 * fVar1 + fVar2 * fVar2);
+  state->viewCurve.px = &state->unk40;
+  state->viewCurve.py = &state->unk50;
+  state->viewCurve.pz = NULL;
+  state->viewCurve.count = 4;
+  state->viewCurve.dir = 0;
+  state->viewCurve.eval = Curve_EvalHermite;
+  state->viewCurve.coeffFn = Curve_BuildHermiteCoeffs;
+  state->unk40 = (float)(int)*self;
+  sVar3 = getAngle((double)(state->unk14 - *(float *)(iVar4 + 0x18)),
+                   (double)(state->unk34 - *(float *)(iVar4 + 0x20)));
+  state->unk44 = (float)(int)(short)(0x8000 - sVar3);
   fVar1 = lbl_803E17C4;
-  *(float *)(lbl_803DD548 + 0x48) = lbl_803E17C4;
-  *(float *)(lbl_803DD548 + 0x4c) = fVar1;
-  fVar1 = *(float *)(lbl_803DD548 + 0x40) - *(float *)(lbl_803DD548 + 0x44);
+  state->unk48 = lbl_803E17C4;
+  state->unk4C = fVar1;
+  fVar1 = state->unk40 - state->unk44;
   if ((lbl_803E17C8 < fVar1) || (fVar1 < lbl_803E17CC)) {
-    if (lbl_803E17C4 <= *(float *)(lbl_803DD548 + 0x40)) {
-      if (*(float *)(lbl_803DD548 + 0x44) < lbl_803E17C4) {
-        *(float *)(lbl_803DD548 + 0x44) = *(float *)(lbl_803DD548 + 0x44) + lbl_803E17D0;
+    if (lbl_803E17C4 <= state->unk40) {
+      if (state->unk44 < lbl_803E17C4) {
+        state->unk44 = state->unk44 + lbl_803E17D0;
       }
     }
     else {
-      *(float *)(lbl_803DD548 + 0x40) = *(float *)(lbl_803DD548 + 0x40) + lbl_803E17D0;
+      state->unk40 = state->unk40 + lbl_803E17D0;
     }
   }
-  *(float *)(lbl_803DD548 + 0x50) = (float)(int)self[1];
+  state->unk50 = (float)(int)self[1];
   fVar1 = lbl_803E17C4;
-  *(float *)(lbl_803DD548 + 0x54) = lbl_803E17C4;
-  *(float *)(lbl_803DD548 + 0x58) = fVar1;
-  *(float *)(lbl_803DD548 + 0x5c) = fVar1;
-  fVar1 = *(float *)(lbl_803DD548 + 0x50) - *(float *)(lbl_803DD548 + 0x54);
+  state->unk54 = lbl_803E17C4;
+  state->unk58 = fVar1;
+  state->unk5C = fVar1;
+  fVar1 = state->unk50 - state->unk54;
   if ((lbl_803E17C8 < fVar1) || (fVar1 < lbl_803E17CC)) {
-    if (lbl_803E17C4 <= *(float *)(lbl_803DD548 + 0x50)) {
-      if (*(float *)(lbl_803DD548 + 0x54) < lbl_803E17C4) {
-        *(float *)(lbl_803DD548 + 0x54) = *(float *)(lbl_803DD548 + 0x54) + lbl_803E17D0;
+    if (lbl_803E17C4 <= state->unk50) {
+      if (state->unk54 < lbl_803E17C4) {
+        state->unk54 = state->unk54 + lbl_803E17D0;
       }
     }
     else {
-      *(float *)(lbl_803DD548 + 0x50) = *(float *)(lbl_803DD548 + 0x50) + lbl_803E17D0;
+      state->unk50 = state->unk50 + lbl_803E17D0;
     }
   }
-  curvesMove(lbl_803DD548 + 0x78);
+  curvesMove(&state->viewCurve);
 }
 #pragma peephole reset
 #pragma scheduling reset
