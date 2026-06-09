@@ -1,6 +1,7 @@
 #include "main/dll/CAM/pathcam.h"
 #include "main/camera_interface.h"
 #include "main/camera_object.h"
+#include "main/dll/CAM/camcontrol_mode_settings.h"
 #include "main/game_object.h"
 #include "main/mm.h"
 #include "main/object_transform.h"
@@ -14,7 +15,6 @@ extern undefined4 camcontrol_getTargetPosition();
 extern f32 Curve_EvalHermite(f32 param_1, f32 *param_2, f32 *param_3);
 extern undefined4 Curve_AdvanceAlongPath(f32 param_1, f32 *param_2);
 
-extern f32 *cameraMtxVar57;
 extern undefined4 lbl_803DD538;
 extern f64 DOUBLE_803e1698;
 extern f64 DOUBLE_803e16f8;
@@ -32,12 +32,6 @@ extern f32 lbl_803E1748;
 
 #define gCamcontrolModeSettings cameraMtxVar57
 #define gCamcontrolPathState lbl_803DD538
-
-typedef struct {
-    u8 b7 : 1;
-    u8 b6 : 1;
-    u8 rest : 6;
-} CamcontrolFlagByte;
 
 /*
  * --INFO--
@@ -62,52 +56,52 @@ void pathcam_loadSettings(u16 *cam, int mode, u8 *data)
     f32 fVal;
     u32 uVal;
 
-    ((CamcontrolFlagByte *)((char *)gCamcontrolModeSettings + 0xc6))->b7 = 0;
-    *((char *)gCamcontrolModeSettings + 0xc4) = 0;
-    *((char *)gCamcontrolModeSettings + 0xc3) = 0;
-    *((char *)gCamcontrolModeSettings + 0xc7) = 0;
-    ((CamcontrolFlagByte *)((char *)gCamcontrolModeSettings + 0xc8))->b7 = 0;
-    *((char *)gCamcontrolModeSettings + 0xc2) = 8;
+    gCamcontrolModeSettings->wallAvoidanceFlags.b7 = 0;
+    gCamcontrolModeSettings->collisionState = 0;
+    gCamcontrolModeSettings->collisionProbeTimer = 0;
+    gCamcontrolModeSettings->wallAvoidanceTimer = 0;
+    gCamcontrolModeSettings->distanceClampFlags.b7 = 0;
+    gCamcontrolModeSettings->yawResponseFrames = 8;
     target = ((CameraObject *)cam)->anim.targetObj;
     switch (mode) {
     case 0:
-        memset(gCamcontrolModeSettings, 0, 0xcc);
+        memset(gCamcontrolModeSettings, 0, sizeof(CamcontrolModeSettings));
         if (data != NULL) {
             fVal = (f32)(u32)*(u16 *)(data + 0x1c);
-            gCamcontrolModeSettings[0] = fVal;
-            gCamcontrolModeSettings[0xc] = fVal;
+            gCamcontrolModeSettings->minDistance = fVal;
+            gCamcontrolModeSettings->targetMinDistance = fVal;
             fVal = (f32)(u32)*(u16 *)(data + 0x1a);
-            gCamcontrolModeSettings[1] = fVal;
-            gCamcontrolModeSettings[0xe] = fVal;
+            gCamcontrolModeSettings->maxDistance = fVal;
+            gCamcontrolModeSettings->targetMaxDistance = fVal;
             fVal = (f32)(u32)data[0x1f];
-            gCamcontrolModeSettings[0x26] = fVal;
-            gCamcontrolModeSettings[2] = fVal;
-            gCamcontrolModeSettings[0x10] = fVal;
+            gCamcontrolModeSettings->baseLowerHeightOffset = fVal;
+            gCamcontrolModeSettings->lowerHeightOffset = fVal;
+            gCamcontrolModeSettings->targetLowerHeightOffset = fVal;
             fVal = (f32)(u32)data[0x1f];
-            gCamcontrolModeSettings[0x27] = fVal;
-            gCamcontrolModeSettings[3] = fVal;
-            gCamcontrolModeSettings[0x12] = fVal;
+            gCamcontrolModeSettings->baseUpperHeightOffset = fVal;
+            gCamcontrolModeSettings->upperHeightOffset = fVal;
+            gCamcontrolModeSettings->targetUpperHeightOffset = fVal;
         }
         fVal = lbl_803E16F0;
-        gCamcontrolModeSettings[0x23] = fVal;
-        gCamcontrolModeSettings[0x25] = fVal;
+        gCamcontrolModeSettings->targetHeight = fVal;
+        gCamcontrolModeSettings->targetTargetHeight = fVal;
         fVal = lbl_803E1714;
-        gCamcontrolModeSettings[4] = fVal;
-        gCamcontrolModeSettings[0x14] = fVal;
+        gCamcontrolModeSettings->distanceAdjustRate = fVal;
+        gCamcontrolModeSettings->targetDistanceAdjustRate = fVal;
         fVal = lbl_803E1734;
-        gCamcontrolModeSettings[0x15] = fVal;
-        gCamcontrolModeSettings[5] = fVal;
-        gCamcontrolModeSettings[0x16] = fVal;
+        gCamcontrolModeSettings->savedHeightAdjustRate = fVal;
+        gCamcontrolModeSettings->heightAdjustRate = fVal;
+        gCamcontrolModeSettings->targetHeightAdjustRate = fVal;
         fVal = lbl_803E1738;
-        gCamcontrolModeSettings[6] = fVal;
-        gCamcontrolModeSettings[0x18] = fVal;
+        gCamcontrolModeSettings->slideRightAmount = fVal;
+        gCamcontrolModeSettings->targetSlideRightAmount = fVal;
         fVal = lbl_803E16DC;
-        gCamcontrolModeSettings[7] = fVal;
-        gCamcontrolModeSettings[0x1a] = fVal;
-        gCamcontrolModeSettings[9] = lbl_803E16D0;
-        gCamcontrolModeSettings[8] = lbl_803E16D4;
-        *((char *)gCamcontrolModeSettings + 0xc1) = 1;
-        gCamcontrolModeSettings[0x1c] = ((CameraObject *)cam)->fov;
+        gCamcontrolModeSettings->slideLeftAmount = fVal;
+        gCamcontrolModeSettings->targetSlideLeftAmount = fVal;
+        gCamcontrolModeSettings->pad24 = lbl_803E16D0;
+        gCamcontrolModeSettings->pad20 = lbl_803E16D4;
+        gCamcontrolModeSettings->initialized = 1;
+        gCamcontrolModeSettings->fov = ((CameraObject *)cam)->fov;
         camcontrol_getTargetPosition((int)cam, target, (f32 *)(cam + 0xc), cam + 1);
         fVal = *(f32 *)(cam + 0xc);
         *(f32 *)(cam + 6) = fVal;
@@ -132,9 +126,9 @@ void pathcam_loadSettings(u16 *cam, int mode, u8 *data)
         Obj_TransformWorldPointToLocal(*(f32 *)(cam + 0xc), ((CameraObject *)cam)->anim.worldPosY, ((CameraObject *)cam)->anim.worldPosZ,
                                        (f32 *)(cam + 6), (f32 *)(cam + 8), (f32 *)(cam + 10),
                                        *(int *)(cam + 0x18));
-        (*gCameraInterface)->getRelativePosition(gCamcontrolModeSettings[0x23], (int)cam,
+        (*gCameraInterface)->getRelativePosition(gCamcontrolModeSettings->targetHeight, (int)cam,
                                                  &vOutA, &vOutB, &vOutC, &vOutD, 0);
-        vOutB = *(f32 *)(cam + 8) - (*(f32 *)(target + 8) + gCamcontrolModeSettings[0x23]);
+        vOutB = *(f32 *)(cam + 8) - (*(f32 *)(target + 8) + gCamcontrolModeSettings->targetHeight);
         ((s16 *)cam)[1] = getAngle(vOutB, vOutD);
         cam[2] = 0;
         ((CameraObject *)cam)->probePosX = *(f32 *)(cam + 0xc);
@@ -143,100 +137,105 @@ void pathcam_loadSettings(u16 *cam, int mode, u8 *data)
         ((CameraObject *)cam)->anim.hitboxScale = *(f32 *)(cam + 6);
         *(f32 *)(cam + 0x56) = *(f32 *)(cam + 8);
         *(f32 *)(cam + 0x58) = *(f32 *)(cam + 10);
-        ((CameraObject *)cam)->fov = gCamcontrolModeSettings[0x1c];
-        *(s16 *)((char *)gCamcontrolModeSettings + 0x82) = 0;
+        ((CameraObject *)cam)->fov = gCamcontrolModeSettings->fov;
+        gCamcontrolModeSettings->transitionTimer = 0;
         break;
     case 2:
         if (data != NULL) {
-            gCamcontrolModeSettings[0x25] = lbl_803E16F0;
+            gCamcontrolModeSettings->targetTargetHeight = lbl_803E16F0;
             fVal = (f32)(u32)data[6];
-            gCamcontrolModeSettings[0x26] = fVal;
-            gCamcontrolModeSettings[0x10] = fVal;
+            gCamcontrolModeSettings->baseLowerHeightOffset = fVal;
+            gCamcontrolModeSettings->targetLowerHeightOffset = fVal;
             fVal = (f32)(u32)data[8];
-            gCamcontrolModeSettings[0x27] = fVal;
-            gCamcontrolModeSettings[0x12] = fVal;
-            gCamcontrolModeSettings[0xc] = (f32)(u32)data[3];
-            gCamcontrolModeSettings[0xe] = (f32)(u32)data[4];
-            gCamcontrolModeSettings[0x1c] = (f32)*(s8 *)(data + 2);
-            gCamcontrolModeSettings[0x18] = (f32)(u32)data[9];
-            gCamcontrolModeSettings[0x1a] = (f32)(u32)data[0xa];
+            gCamcontrolModeSettings->baseUpperHeightOffset = fVal;
+            gCamcontrolModeSettings->targetUpperHeightOffset = fVal;
+            gCamcontrolModeSettings->targetMinDistance = (f32)(u32)data[3];
+            gCamcontrolModeSettings->targetMaxDistance = (f32)(u32)data[4];
+            gCamcontrolModeSettings->fov = (f32)*(s8 *)(data + 2);
+            gCamcontrolModeSettings->targetSlideRightAmount = (f32)(u32)data[9];
+            gCamcontrolModeSettings->targetSlideLeftAmount = (f32)(u32)data[0xa];
             uVal = data[0xb];
             if (uVal != 0) {
-                gCamcontrolModeSettings[0x14] = (f32)uVal / lbl_803E1710;
+                gCamcontrolModeSettings->targetDistanceAdjustRate = (f32)uVal / lbl_803E1710;
             } else {
-                gCamcontrolModeSettings[0x14] = lbl_803E1714;
+                gCamcontrolModeSettings->targetDistanceAdjustRate = lbl_803E1714;
             }
             uVal = data[0xc];
             if (uVal != 0) {
-                gCamcontrolModeSettings[0x16] = (f32)uVal / lbl_803E1710;
+                gCamcontrolModeSettings->targetHeightAdjustRate = (f32)uVal / lbl_803E1710;
             } else {
-                gCamcontrolModeSettings[0x16] = lbl_803E1714;
+                gCamcontrolModeSettings->targetHeightAdjustRate = lbl_803E1714;
             }
-            *(s16 *)((char *)gCamcontrolModeSettings + 0x82) = (s16)*(s8 *)(data + 1);
-            *(s16 *)((char *)gCamcontrolModeSettings + 0x84) = (s16)*(s8 *)(data + 1);
+            gCamcontrolModeSettings->transitionTimer = (s16)*(s8 *)(data + 1);
+            gCamcontrolModeSettings->transitionDuration = (s16)*(s8 *)(data + 1);
             *((u8 *)cam + 0x13b) = data[7];
         } else {
-            gCamcontrolModeSettings[0x25] = gCamcontrolModeSettings[0x24];
-            fVal = gCamcontrolModeSettings[0xf];
-            gCamcontrolModeSettings[0x26] = fVal;
-            gCamcontrolModeSettings[0x10] = fVal;
-            fVal = gCamcontrolModeSettings[0x11];
-            gCamcontrolModeSettings[0x27] = fVal;
-            gCamcontrolModeSettings[0x12] = fVal;
-            gCamcontrolModeSettings[0xc] = gCamcontrolModeSettings[0xb];
-            gCamcontrolModeSettings[0xe] = gCamcontrolModeSettings[0xd];
-            gCamcontrolModeSettings[0x1c] = gCamcontrolModeSettings[0x1b];
-            gCamcontrolModeSettings[0x18] = gCamcontrolModeSettings[0x17];
-            gCamcontrolModeSettings[0x1a] = gCamcontrolModeSettings[0x19];
-            gCamcontrolModeSettings[0x14] = gCamcontrolModeSettings[0x13];
-            gCamcontrolModeSettings[0x16] = gCamcontrolModeSettings[0x15];
-            *(s16 *)((char *)gCamcontrolModeSettings + 0x82) = 0x3c;
-            *(s16 *)((char *)gCamcontrolModeSettings + 0x84) = 0x3c;
+            gCamcontrolModeSettings->targetTargetHeight = gCamcontrolModeSettings->savedTargetHeight;
+            fVal = gCamcontrolModeSettings->savedLowerHeightOffset;
+            gCamcontrolModeSettings->baseLowerHeightOffset = fVal;
+            gCamcontrolModeSettings->targetLowerHeightOffset = fVal;
+            fVal = gCamcontrolModeSettings->savedUpperHeightOffset;
+            gCamcontrolModeSettings->baseUpperHeightOffset = fVal;
+            gCamcontrolModeSettings->targetUpperHeightOffset = fVal;
+            gCamcontrolModeSettings->targetMinDistance = gCamcontrolModeSettings->savedMinDistance;
+            gCamcontrolModeSettings->targetMaxDistance = gCamcontrolModeSettings->savedMaxDistance;
+            gCamcontrolModeSettings->fov = gCamcontrolModeSettings->savedFov;
+            gCamcontrolModeSettings->targetSlideRightAmount =
+                gCamcontrolModeSettings->savedSlideRightAmount;
+            gCamcontrolModeSettings->targetSlideLeftAmount =
+                gCamcontrolModeSettings->savedSlideLeftAmount;
+            gCamcontrolModeSettings->targetDistanceAdjustRate =
+                gCamcontrolModeSettings->savedDistanceAdjustRate;
+            gCamcontrolModeSettings->targetHeightAdjustRate =
+                gCamcontrolModeSettings->savedHeightAdjustRate;
+            gCamcontrolModeSettings->transitionTimer = 0x3c;
+            gCamcontrolModeSettings->transitionDuration = 0x3c;
         }
-        gCamcontrolModeSettings[0x24] = gCamcontrolModeSettings[0x23];
-        gCamcontrolModeSettings[0xf] = gCamcontrolModeSettings[2];
-        gCamcontrolModeSettings[0x11] = gCamcontrolModeSettings[3];
-        gCamcontrolModeSettings[0xb] = gCamcontrolModeSettings[0];
-        gCamcontrolModeSettings[0xd] = gCamcontrolModeSettings[1];
-        gCamcontrolModeSettings[0x1b] = ((CameraObject *)cam)->fov;
-        gCamcontrolModeSettings[0x17] = gCamcontrolModeSettings[6];
-        gCamcontrolModeSettings[0x19] = gCamcontrolModeSettings[7];
-        gCamcontrolModeSettings[0x13] = gCamcontrolModeSettings[4];
-        gCamcontrolModeSettings[0x15] = gCamcontrolModeSettings[5];
+        gCamcontrolModeSettings->savedTargetHeight = gCamcontrolModeSettings->targetHeight;
+        gCamcontrolModeSettings->savedLowerHeightOffset = gCamcontrolModeSettings->lowerHeightOffset;
+        gCamcontrolModeSettings->savedUpperHeightOffset = gCamcontrolModeSettings->upperHeightOffset;
+        gCamcontrolModeSettings->savedMinDistance = gCamcontrolModeSettings->minDistance;
+        gCamcontrolModeSettings->savedMaxDistance = gCamcontrolModeSettings->maxDistance;
+        gCamcontrolModeSettings->savedFov = ((CameraObject *)cam)->fov;
+        gCamcontrolModeSettings->savedSlideRightAmount = gCamcontrolModeSettings->slideRightAmount;
+        gCamcontrolModeSettings->savedSlideLeftAmount = gCamcontrolModeSettings->slideLeftAmount;
+        gCamcontrolModeSettings->savedDistanceAdjustRate =
+            gCamcontrolModeSettings->distanceAdjustRate;
+        gCamcontrolModeSettings->savedHeightAdjustRate = gCamcontrolModeSettings->heightAdjustRate;
         if ((data != NULL) && (data[0xd] != 0)) {
             camcontrol_getTargetPosition((int)cam, target, (f32 *)(cam + 0xc), cam + 1);
             Obj_TransformWorldPointToLocal(*(f32 *)(cam + 0xc), ((CameraObject *)cam)->anim.worldPosY, ((CameraObject *)cam)->anim.worldPosZ,
                                            (f32 *)(cam + 6), (f32 *)(cam + 8), (f32 *)(cam + 10),
                                            *(int *)(cam + 0x18));
-            *(s16 *)((char *)gCamcontrolModeSettings + 0x82) = 0;
+            gCamcontrolModeSettings->transitionTimer = 0;
         }
         break;
     case 3:
-        ((CameraObject *)cam)->fov = gCamcontrolModeSettings[0x1c];
-        *(f32 *)(cam + 0xc) = gCamcontrolModeSettings[0x1d];
-        ((CameraObject *)cam)->anim.worldPosY = gCamcontrolModeSettings[0x1e];
-        ((CameraObject *)cam)->anim.worldPosZ = gCamcontrolModeSettings[0x1f];
+        ((CameraObject *)cam)->fov = gCamcontrolModeSettings->fov;
+        *(f32 *)(cam + 0xc) = gCamcontrolModeSettings->savedWorldX;
+        ((CameraObject *)cam)->anim.worldPosY = gCamcontrolModeSettings->savedWorldY;
+        ((CameraObject *)cam)->anim.worldPosZ = gCamcontrolModeSettings->savedWorldZ;
         Obj_TransformWorldPointToLocal(*(f32 *)(cam + 0xc), ((CameraObject *)cam)->anim.worldPosY, ((CameraObject *)cam)->anim.worldPosZ,
                                        (f32 *)(cam + 6), (f32 *)(cam + 8), (f32 *)(cam + 10),
                                        *(int *)(cam + 0x18));
-        ((s16 *)cam)[0] = *(s16 *)((char *)gCamcontrolModeSettings + 0x86);
-        ((s16 *)cam)[1] = *(s16 *)((char *)gCamcontrolModeSettings + 0x88);
-        ((s16 *)cam)[2] = *(s16 *)((char *)gCamcontrolModeSettings + 0x8a);
+        ((s16 *)cam)[0] = gCamcontrolModeSettings->savedRotX;
+        ((s16 *)cam)[1] = gCamcontrolModeSettings->savedRotY;
+        ((s16 *)cam)[2] = gCamcontrolModeSettings->savedRotZ;
         ((CameraObject *)cam)->anim.hitboxScale = *(f32 *)(cam + 6);
         *(f32 *)(cam + 0x56) = *(f32 *)(cam + 8);
         *(f32 *)(cam + 0x58) = *(f32 *)(cam + 10);
         ((CameraObject *)cam)->probePosX = *(f32 *)(cam + 0xc);
         ((CameraObject *)cam)->probePosY = ((CameraObject *)cam)->anim.worldPosY;
         ((CameraObject *)cam)->probePosZ = ((CameraObject *)cam)->anim.worldPosZ;
-        *(s16 *)((char *)gCamcontrolModeSettings + 0x82) = 0;
+        gCamcontrolModeSettings->transitionTimer = 0;
         break;
     case 1:
-        ((CameraObject *)cam)->fov = gCamcontrolModeSettings[0x1c];
-        ((CamcontrolFlagByte *)((char *)gCamcontrolModeSettings + 0xc6))->b7 =
-            ((CamcontrolFlagByte *)((char *)gCamcontrolModeSettings + 0xc6))->b6;
+        ((CameraObject *)cam)->fov = gCamcontrolModeSettings->fov;
+        gCamcontrolModeSettings->wallAvoidanceFlags.b7 =
+            gCamcontrolModeSettings->wallAvoidanceFlags.b6;
         break;
     }
-    ((CamcontrolFlagByte *)((char *)gCamcontrolModeSettings + 0xc6))->b6 = 0;
+    gCamcontrolModeSettings->wallAvoidanceFlags.b6 = 0;
     *((u8 *)cam + 0x13e) = 1;
 }
 
@@ -244,8 +243,8 @@ void camcontrol_releaseModeSettings(void) { mm_free(cameraMtxVar57); cameraMtxVa
 
 void camcontrol_initialiseModeSettings(void)
 {
-  cameraMtxVar57 = (f32 *)mmAlloc(0xcc,0xf,0);
-  memset(cameraMtxVar57,0,0xcc);
+  cameraMtxVar57 = (CamcontrolModeSettings *)mmAlloc(sizeof(CamcontrolModeSettings),0xf,0);
+  memset(cameraMtxVar57,0,sizeof(CamcontrolModeSettings));
   return;
 }
 
