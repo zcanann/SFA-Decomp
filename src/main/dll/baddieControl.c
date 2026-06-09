@@ -2,6 +2,7 @@
 #include "main/dll/baddieControl.h"
 #include "main/camera_object.h"
 #include "main/camera_interface.h"
+#include "main/dll/CAM/camera_mode_4f_state.h"
 #include "main/dll/CAM/camcrawl_state.h"
 #include "main/dll/CAM/camnpcspeak_state.h"
 #include "main/dll/CAM/camworldmap_state.h"
@@ -3076,7 +3077,7 @@ extern void *mmAlloc(int size, int heap, int flags);
 extern void *memset(void *dst, int val, u32 n);
 extern void audioSetVolumes(int volume, int p1, int p2, int p3, int p4);
 extern f32 lbl_803E1A88;
-extern u32 lbl_803DD590;
+extern CameraMode4FState *lbl_803DD590;
 extern CameraModeCrawlState *lbl_803DD598;
 #pragma peephole off
 #pragma scheduling off
@@ -3088,10 +3089,10 @@ void CameraModeTitle_loadVolumes(void)
 
 void dll_4F_init(void)
 {
-    if (lbl_803DD590 == 0) {
-        lbl_803DD590 = (u32)mmAlloc(8, 15, 0);
+    if (lbl_803DD590 == NULL) {
+        lbl_803DD590 = (CameraMode4FState *)mmAlloc(sizeof(CameraMode4FState), 15, 0);
     }
-    *(f32*)((char*)lbl_803DD590 + 4) = lbl_803E1A88;
+    lbl_803DD590->blendProgress = lbl_803E1A88;
 }
 
 extern f32 Curve_EvalHermite(f32 *pts, int mode, f32 t);
@@ -3111,37 +3112,39 @@ extern f32 lbl_803E1AB0;
 extern f32 lbl_803E1AB4;
 
 void dll_4F_update(int *obj) {
+    CameraObject *camera;
+    GameObject *target;
     f32 pts[4];
     f32 fz;
     f32 sn;
     f32 cs;
     s16 a;
-    int *r30;
 
+    camera = (CameraObject *)obj;
     pts[0] = lbl_803E1A88;
     pts[1] = lbl_803E1A8C;
     pts[2] = lbl_803E1A88;
     pts[3] = lbl_803E1A88;
-    fz = Curve_EvalHermite(pts, 0, *(f32*)((char*)lbl_803DD590 + 4));
-    r30 = *(int**)&((GameObject *)obj)->anim.targetObj;
-    a = (s16)(0x8000 - *(s16*)r30);
+    fz = Curve_EvalHermite(pts, 0, lbl_803DD590->blendProgress);
+    target = (GameObject *)camera->anim.targetObj;
+    a = (s16)(0x8000 - target->anim.rotX);
     a = (s16)(a + (s32)(lbl_803E1A90 * fz));
     {
         f32 t = (lbl_803E1A94 * (f32)(s32)a) / lbl_803E1A98;
         sn = mathCosf(t);
         cs = mathSinf(t);
     }
-    ((GameObject *)obj)->anim.localPosX = *(f32*)((char*)r30 + 0x18) + (lbl_803E1A9C * sn - lbl_803E1AA0 * cs);
-    ((GameObject *)obj)->anim.localPosZ = *(f32*)((char*)r30 + 0x20) + (lbl_803E1A9C * cs + lbl_803E1AA0 * sn);
-    ((GameObject *)obj)->anim.localPosY = (lbl_803E1AA4 + *(f32*)((char*)r30 + 0x1c)) - lbl_803E1AA8 * fz;
-    ((GameObject *)obj)->anim.rotY = (s16)(0x11c6 - (s32)(lbl_803E1AA4 * (lbl_803E1AAC * fz)));
-    *(s16*)obj = (s16)(a + 0x1ffe);
-    ((GameObject *)obj)->anim.rotZ = 0;
-    *(u8*)((char*)obj + 0x13b) = 0;
-    *(f32*)((char*)obj + 0xb4) = lbl_803E1AB0;
-    *(f32*)((char*)lbl_803DD590 + 4) = lbl_803E1AB4 * timeDelta + *(f32*)((char*)lbl_803DD590 + 4);
-    if (*(f32*)((char*)lbl_803DD590 + 4) > lbl_803E1A8C) {
-        *(f32*)((char*)lbl_803DD590 + 4) = lbl_803E1A8C;
+    camera->anim.localPosX = target->anim.worldPosX + (lbl_803E1A9C * sn - lbl_803E1AA0 * cs);
+    camera->anim.localPosZ = target->anim.worldPosZ + (lbl_803E1A9C * cs + lbl_803E1AA0 * sn);
+    camera->anim.localPosY = (lbl_803E1AA4 + target->anim.worldPosY) - lbl_803E1AA8 * fz;
+    camera->anim.rotY = (s16)(0x11c6 - (s32)(lbl_803E1AA4 * (lbl_803E1AAC * fz)));
+    camera->anim.rotX = (s16)(a + 0x1ffe);
+    camera->anim.rotZ = 0;
+    camera->unk13B = 0;
+    camera->fov = lbl_803E1AB0;
+    lbl_803DD590->blendProgress = lbl_803E1AB4 * timeDelta + lbl_803DD590->blendProgress;
+    if (lbl_803DD590->blendProgress > lbl_803E1A8C) {
+        lbl_803DD590->blendProgress = lbl_803E1A8C;
     }
 }
 
@@ -3466,7 +3469,7 @@ f32 titleScreenGetCamProgress(void) { return lbl_803DB9D8; }
 
 /* fn_X(lbl); lbl = 0; */
 void CameraModeWorldMap_free(void) { mm_free((u32)lbl_803DD588); lbl_803DD588 = NULL; }
-void dll_4F_func05(void) { mm_free(lbl_803DD590); lbl_803DD590 = 0; }
+void dll_4F_func05(void) { mm_free((u32)lbl_803DD590); lbl_803DD590 = NULL; }
 void CameraModeCrawl_free(void) { mm_free((u32)lbl_803DD598); lbl_803DD598 = NULL; }
 void CameraModeCannon_free(void) { mm_free(lbl_803DD5A0); lbl_803DD5A0 = 0; }
 void fn_801101E8(void) { mm_free(lbl_803DD5B8); lbl_803DD5B8 = 0; }
