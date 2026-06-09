@@ -41,8 +41,6 @@ extern undefined8 ObjGroup_RemoveObject();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 undefined4 pressureswitchfb_updateStateMode(int obj,undefined4 param_2,int stateParam)
 {
   s16 objType;
@@ -99,8 +97,6 @@ undefined4 pressureswitchfb_updateStateMode(int obj,undefined4 param_2,int state
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -133,9 +129,7 @@ int pressureswitchfb_getExtraSize(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void pressureswitchfb_free(int obj)
 {
   ObjGroup_RemoveObject(obj,PRESSURESWITCHFB_REMOVE_GROUP_ID);
 }
-#pragma scheduling reset

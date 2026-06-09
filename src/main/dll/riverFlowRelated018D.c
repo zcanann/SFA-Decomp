@@ -46,8 +46,6 @@ extern f32 lbl_803E4CCC;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void DIMbosstonsil_init(int obj,undefined4 param_2,int isAltVariant)
 {
   u32 variant;
@@ -90,8 +88,6 @@ void DIMbosstonsil_init(int obj,undefined4 param_2,int isAltVariant)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -110,7 +106,6 @@ void DIMbosstonsil_release(void)
 {
 }
 
-#pragma scheduling off
 void DIMbosstonsil_initialise(void)
 {
   lbl_803DDBB0[0] = DIMbosstonsil_startIdleHitReaction;
@@ -118,4 +113,3 @@ void DIMbosstonsil_initialise(void)
   lbl_803DDBA8[0] = DIMbosstonsil_enableHitReaction;
   lbl_803DDBA8[1] = DIMbosstonsil_updateHitReaction;
 }
-#pragma scheduling reset

@@ -18,8 +18,6 @@ extern void *lbl_803DDBE0;
  * EN v1.0 Address: 0x801CBA98
  * EN v1.0 Size: 636b
  */
-#pragma peephole off
-#pragma scheduling off
 int dll_19B_SeqFn(int obj, int unused, u8 *buf)
 {
     int state;
@@ -99,8 +97,6 @@ int dll_19B_SeqFn(int obj, int unused, u8 *buf)
     }
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /* Trivial 4b 0-arg blr leaves. */
 void dll_19B_hitDetect(void) {}
@@ -112,9 +108,7 @@ int dll_19B_getObjectTypeId(void) { return 0x0; }
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5188;
 extern void objRenderFn_8003b8f4(f32);
-#pragma peephole off
 void dll_19B_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5188); }
-#pragma peephole reset
 
 extern ModgfxInterface **gModgfxInterface;
 void dll_19B_free(int *obj) {

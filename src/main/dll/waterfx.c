@@ -2,8 +2,6 @@
 
 volatile PPCWGPipe GXWGFifo : (0xCC008000);
 
-#pragma scheduling off
-#pragma peephole off
 void waterfx_setupSplashDropPointRender(void) {
     u8 col[4];
     u8 kcol[4];
@@ -40,10 +38,7 @@ void waterfx_setupSplashDropPointRender(void) {
     *(int *)kcol = *(int *)col;
     GXSetTevKColor(0, kcol);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 int waterfx_consumePendingImpactNearPoint(f32 *vec, f32 dist) {
     if (gWaterfxPendingImpactPositionValid != 0 &&
         PSVECSquareDistance(vec, gWaterfxPendingImpactPosition) < dist * dist) {
@@ -53,10 +48,7 @@ int waterfx_consumePendingImpactNearPoint(f32 *vec, f32 dist) {
     gWaterfxPendingImpactPositionValid = 0;
     return 0;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void waterfx_spawnRipple(s16 p1, int p2, f32 a, f32 b, f32 c, f32 d) {
     int i = 0;
     WaterEntry7 *p = lbl_803DD238;
@@ -117,8 +109,6 @@ void waterfx_spawnRipple(s16 p1, int p2, f32 a, f32 b, f32 c, f32 d) {
     e->f18 = lbl_803DF2E8 * (f32)p2;
     lbl_803DD23C = (void *)((int)lbl_803DD23C + 1);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void waterfx_setRippleScale(int flag, f32 val) {
     if (flag != 0) {
@@ -127,8 +117,6 @@ void waterfx_setRippleScale(int flag, f32 val) {
     lbl_803DD20C = val;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void waterfx_func08(s16 p1, f32 a, f32 b, f32 c, f32 d) {
     int i = 0;
     WaterEntry *p = lbl_803DD228;
@@ -179,11 +167,7 @@ void waterfx_func08(s16 p1, f32 a, f32 b, f32 c, f32 d) {
     entry->f18 = 0;
     lbl_803DD22C = (void *)((int)lbl_803DD22C + 1);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void waterfx_spawnSplashBurst(void *obj, f32 a, f32 b, f32 c, f32 d) {
     WaterParticle *p;
@@ -216,11 +200,7 @@ void waterfx_spawnSplashBurst(void *obj, f32 a, f32 b, f32 c, f32 d) {
     slot->f14 = lbl_803DF2EC / (lbl_803DF320 * sqrtf(slot->f0c));
 }
 #pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int waterfx_spawnSplashDrops(WaterParticle *src, int idx, int count, f32 v) {
     int cur;
     f32 scale;
@@ -262,11 +242,7 @@ int waterfx_spawnSplashDrops(WaterParticle *src, int idx, int count, f32 v) {
     }
     return count;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void waterfx_func05(int p1, int p2) {
     int i;
     f32 thr;
@@ -345,11 +321,7 @@ void waterfx_func05(int p1, int p2) {
         fn_800542F4();
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void waterfx_run(void) {
     int i;
     for (i = 0; i < 30; i++) {
@@ -404,11 +376,7 @@ void waterfx_run(void) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void waterfx_func04(u8 *p3, u16 mask, f32 *vecs, u8 *p6, f32 fval) {
     u8 *q = p6;
     f32 *v = vecs;
@@ -432,11 +400,7 @@ void waterfx_func04(u8 *p3, u16 mask, f32 *vecs, u8 *p6, f32 fval) {
         v += 3;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void waterfx_onMapSetup(void) {
     int i;
     VtxDesc *vd;
@@ -517,8 +481,6 @@ void waterfx_onMapSetup(void) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void waterfx_release(void) {
     if (lbl_803DD248 != NULL) {
@@ -554,7 +516,6 @@ void waterfx_release(void) {
     }
 }
 
-#pragma scheduling off
 void waterfx_initialise(void) {
     char *buf;
 
@@ -587,7 +548,6 @@ void waterfx_initialise(void) {
     waterfx_onMapSetup();
     waterfx_drawFn_800953fc();
 }
-#pragma scheduling reset
 
 
 extern void PSMTXScale(f32 *m, f32 x, f32 y, f32 z);
@@ -603,8 +563,6 @@ extern f32 lbl_803DF2F4;
 extern f32 lbl_803DF2F8;
 extern f32 lbl_803DF304;
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80095164(WaterParticle *s) {
     f32 mtxD[12];
     f32 scale[12];
@@ -668,8 +626,6 @@ void fn_80095164(WaterParticle *s) {
     GXSetCullMode(2);
     GXCallDisplayList(lbl_803DD208, lbl_803DD204);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void GXSetMisc(int token, int val);
 extern void DCInvalidateRange(void *p, int n);
@@ -681,8 +637,6 @@ extern f32 fn_80293F7C(f32);
 extern f32 lbl_803DF310;
 extern f32 lbl_803DF314;
 
-#pragma scheduling off
-#pragma peephole off
 void waterfx_drawFn_800953fc(void) {
     int k;
     int i;
@@ -742,5 +696,3 @@ void waterfx_drawFn_800953fc(void) {
     lbl_803DD204 = GXEndDisplayList();
     GXSetMisc(1, 8);
 }
-#pragma peephole reset
-#pragma scheduling reset

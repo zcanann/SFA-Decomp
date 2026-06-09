@@ -1,16 +1,13 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
-#pragma scheduling off
 void mcstaffeffe_render(int obj)
 {
     fn_80098B18(obj, ((GameObject *)obj)->anim.rootMotionScale, (u8)((GameObject *)obj)->unkF4, 0, 0, 0);
 }
-#pragma scheduling reset
 
 void mcstaffeffe_update(void) {}
 
-#pragma scheduling off
 void mcstaffeffe_init(int obj, int setup)
 {
     ((GameObject *)obj)->animEventCallback = (void *)mcstaffeffe_SeqFn;
@@ -37,4 +34,3 @@ void mcstaffeffe_init(int obj, int setup)
         break;
     }
 }
-#pragma scheduling reset

@@ -79,8 +79,6 @@ STATIC_ASSERT(sizeof(TreeState) == 0x5c);
 
 int tree_getExtraSize(void) { return 0x5c; }
 
-#pragma peephole off
-#pragma scheduling off
 void tree_spawnAmbientEffect(int obj, int p2, s8 index)
 {
     TreeSetup *setup = (TreeSetup *)((GameObject *)obj)->anim.placementData;
@@ -114,11 +112,7 @@ void tree_spawnAmbientEffect(int obj, int p2, s8 index)
             Obj_SetupObject(newObj, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void tree_updateAmbientEffects(int obj, int p2)
 {
     TreeState *state = (TreeState *)p2;
@@ -146,11 +140,7 @@ void tree_updateAmbientEffects(int obj, int p2)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void tree_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     TreeSetup *setup = (TreeSetup *)((GameObject *)obj)->anim.placementData;
@@ -169,11 +159,7 @@ void tree_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         ((GameObject *)obj)->unkF8 = 1;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void tree_init(int obj, u8 *setup)
 {
     GameObject *object = (GameObject *)obj;
@@ -249,11 +235,7 @@ void tree_init(int obj, u8 *setup)
         ObjHits_DisableObject(obj);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void tree_update(int obj)
 {
     GameObject *object = (GameObject *)obj;
@@ -363,5 +345,3 @@ void tree_update(int obj)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset

@@ -39,7 +39,6 @@ STATIC_ASSERT(sizeof(TimerState) == 0x20);
 
 int timer_getExtraSize(void) { return 0x20; }
 
-#pragma scheduling off
 void timer_free(int obj)
 {
     TimerState *state = ((GameObject *)obj)->extra;
@@ -49,7 +48,6 @@ void timer_free(int obj)
     }
     gameTimerStop();
 }
-#pragma scheduling reset
 
 int timer_hasExpired(int obj)
 {
@@ -70,15 +68,12 @@ void timer_clearManualFlags(int obj)
     state->flags.expired = 0;
 }
 
-#pragma scheduling off
 void timer_forceStart(int obj)
 {
     TimerState *state = ((GameObject *)obj)->extra;
     state->flags.manual = 1;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void timer_addDuration(int obj, int duration)
 {
     TimerState *state = ((GameObject *)obj)->extra;
@@ -90,10 +85,7 @@ void timer_addDuration(int obj, int duration)
         }
     }
 }
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void timer_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
     TimerState *state = ((GameObject *)obj)->extra;
@@ -106,11 +98,7 @@ void timer_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7418);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void timer_init(int obj, int setup)
 {
     TimerState *state = ((GameObject *)obj)->extra;
@@ -125,11 +113,7 @@ void timer_init(int obj, int setup)
     ObjGroup_AddObject(obj, 0x4c);
     state->flags.flag20 = 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void timer_update(int obj)
 {
     int v;
@@ -225,5 +209,3 @@ void timer_update(int obj)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset

@@ -45,8 +45,6 @@ extern f32 lbl_803E5F14;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void nw_levcontrol_update(int param_1)
 {
   int iVar1;
@@ -198,8 +196,6 @@ void nw_levcontrol_update(int param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -221,8 +217,6 @@ int sh_tricky_getExtraSize(void)
 
 extern int *getTrickyObject(void);
 
-#pragma scheduling off
-#pragma peephole off
 void sh_tricky_update(int *obj) {
     u8 *state;
     int *tricky;
@@ -262,20 +256,14 @@ void sh_tricky_update(int *obj) {
         break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 int EdibleMushroom_SeqFn(int *obj) {
     *(u8*)(*(int *)&((GameObject *)obj)->extra + 0x139) = 1;
     return 0;
 }
-#pragma scheduling reset
 
 extern uint GameBit_Get(int id);
 
-#pragma scheduling off
-#pragma peephole off
 void sh_tricky_init(int* obj)
 {
     u8* state = ((GameObject *)obj)->extra;
@@ -286,8 +274,6 @@ void sh_tricky_init(int* obj)
     }
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x6000);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern char lbl_803269F8[];
 extern f32 lbl_803E5280;
@@ -297,8 +283,6 @@ extern void envFxActFn_800887f8(int id);
 extern void getEnvfxActImmediately(int a, int b, int c, int d);
 extern void getEnvfxAct(int a, int b, int c, int d);
 
-#pragma scheduling off
-#pragma peephole off
 void nw_levcontrol_init(int* obj)
 {
     char* base = lbl_803269F8;
@@ -334,5 +318,3 @@ void nw_levcontrol_init(int* obj)
     (*gMapEventInterface)->setAnimEvent(7, 0x1c, 0);
     (*gMapEventInterface)->setAnimEvent(7, 9, 1);
 }
-#pragma peephole reset
-#pragma scheduling reset

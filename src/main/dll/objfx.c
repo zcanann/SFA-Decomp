@@ -6,8 +6,6 @@ extern s16 lbl_803DB788[4];
 extern f64 lbl_803DF360;
 extern f32 fcos16(u16 angle);
 
-#pragma scheduling off
-#pragma peephole off
 void WM_newcrystalFn_800969b0(void *obj, s16 *state, u8 flags, f32 period, f32 xMul, f32 yMul, f32 xOff, f32 yOff)
 {
     PartfxParams params;
@@ -44,11 +42,7 @@ void WM_newcrystalFn_800969b0(void *obj, s16 *state, u8 flags, f32 period, f32 x
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void objfx_spawnRandomBurst(void *obj, u8 type, u8 count, void *origin, u8 flagByte, f32 mult) {
     PartfxParams params;
     ParticlePairTbl partbl = *(ParticlePairTbl *)lbl_802C212C;
@@ -94,10 +88,7 @@ void objfx_spawnRandomBurst(void *obj, u8 type, u8 count, void *origin, u8 flagB
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void objfx_spawnHitEmitterAtPos(f32 *pos, u8 a, u8 b, u8 c, u8 d) {
     int args[4];
     ParticleEmit s1;
@@ -116,10 +107,7 @@ void objfx_spawnHitEmitterAtPos(f32 *pos, u8 a, u8 b, u8 c, u8 d) {
     args[3] = d;
     (*(void (*)(int, int, void *, int, int, void *))(*(int *)(*(int *)res + 4)))(0, 1, &s1, 0x401, -1, args);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void hitDetectFn_80097070(void *obj, u8 a, u8 b, u8 count, void *p7, f32 fval) {
     PartfxParams params;
     Tbl11 table = *(Tbl11 *)lbl_802C2114;
@@ -145,11 +133,7 @@ void hitDetectFn_80097070(void *obj, u8 a, u8 b, u8 count, void *p7, f32 fval) {
         (*gPartfxInterface)->spawnObject(obj, ps[a], &params, 2, -1, NULL);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void objfx_spawnMaskedHitEffect(void *obj, u8 a, u8 b, u8 mask, void *p7, f32 fval) {
     PartfxParams params;
     Tbl11 table1 = *(Tbl11 *)lbl_802C20EC;
@@ -173,11 +157,7 @@ void objfx_spawnMaskedHitEffect(void *obj, u8 a, u8 b, u8 mask, void *p7, f32 fv
     }
     (*gPartfxInterface)->spawnObject(obj, table2.v[a], &params, 2, -1, NULL);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void objfx_spawnDirectionalBurst(void *obj, u8 idx, u8 kind, u8 mode, u8 chance, void *origin,
                     int flags, f32 f8val, f32 mult) {
     PartfxParams params;
@@ -254,11 +234,7 @@ void objfx_spawnDirectionalBurst(void *obj, u8 idx, u8 kind, u8 mode, u8 chance,
         (*gPartfxInterface)->spawnObject(obj, tB.v[idx], &params, flags | 2, -1, NULL);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void objfx_spawnArcedBurst(void *obj, u8 idx, u8 kind, u8 mode, u8 chance,
                             void *origin, int flags, f32 f8val, f32 angBase,
                             f32 lo, f32 hi) {
@@ -334,11 +310,7 @@ void objfx_spawnArcedBurst(void *obj, u8 idx, u8 kind, u8 mode, u8 chance,
         (*gPartfxInterface)->spawnObject(obj, tB.v[idx], &params, flags | 2, -1, NULL);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void objfx_spawnBoxBurst(void *obj, u8 idx, u8 kind, u8 mode, u8 chance, void *origin,
                          int flags, f32 f8val, f32 mulX, f32 mulY, f32 mulZ) {
     PartfxParams params;
@@ -415,11 +387,7 @@ void objfx_spawnBoxBurst(void *obj, u8 idx, u8 kind, u8 mode, u8 chance, void *o
         (*gPartfxInterface)->spawnObject(obj, tB.v[idx], &params, flags | 2, -1, NULL);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void objShowButtonGlow(void *obj, u8 mode, f32 intensity) {
     PartfxParams params;
     int i;
@@ -465,11 +433,7 @@ void objShowButtonGlow(void *obj, u8 mode, f32 intensity) {
         break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void objfx_spawnFrameTimedHitPulse(void *obj, u8 a, u8 b, f32 c, f32 d) {
     Tbl5 t1 = *(Tbl5 *)lbl_802C1FF8;
     Tbl5 t2 = *(Tbl5 *)lbl_802C200C;
@@ -496,11 +460,7 @@ void objfx_spawnFrameTimedHitPulse(void *obj, u8 a, u8 b, f32 c, f32 d) {
         fn_80098B18(obj, c, (u8)t1.v[b], frame, 0, vec);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void objfx_spawnLightPulse(void *obj, u8 type, int a3, u8 mode, void *light, f32 fa, f32 fb) {
     PartfxParams params;
     f32 lvec[3];
@@ -623,11 +583,7 @@ void objfx_spawnLightPulse(void *obj, u8 type, int a3, u8 mode, void *light, f32
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void objfx_spawnFlaggedTrailBurst(void *obj, u8 mode, int p5, int p6, int p7, f32 fval) {
     PartfxFlags params;
     int i;
@@ -675,11 +631,7 @@ void objfx_spawnFlaggedTrailBurst(void *obj, u8 mode, int p5, int p6, int p7, f3
         break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void projectileParticleFxFn_80099660(void *obj, int mode) {
     PartfxParams ps;
     f32 tailScale;
@@ -755,10 +707,7 @@ void projectileParticleFxFn_80099660(void *obj, int mode) {
     }
     (*gPartfxInterface)->spawnObject(obj, 0x79f, NULL, 1, -1, &tailScale);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void itemPickupDoParticleFx(void *obj, int mode, u8 count, f32 fval) {
     PartfxParams params;
     int i;
@@ -836,9 +785,7 @@ void itemPickupDoParticleFx(void *obj, int mode, u8 count, f32 fval) {
         break;
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void objParticleFn_80099d84(void *obj, f32 scale, int type, f32 fextra, void *light) {
     f32 p8 = fextra;
     PartfxParams params;
@@ -916,13 +863,10 @@ void objParticleFn_80099d84(void *obj, f32 scale, int type, f32 fextra, void *li
         modelLightStruct_setAffectsAabbLightSelection(light, 1);
     }
 }
-#pragma scheduling reset
 
 extern u8 lbl_8030FA30[];
 extern f32 lbl_803DF39C;
 
-#pragma scheduling off
-#pragma peephole off
 void objLightFn_8009a1dc(f32 scale, void *obj, void *origin, u8 type, void *light)
 {
     u8 args[40];
@@ -1026,11 +970,7 @@ void objLightFn_8009a1dc(f32 scale, void *obj, void *origin, u8 type, void *ligh
         modelLightStruct_setAffectsAabbLightSelection(light, 1);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_8009A8C8(u8 *obj, f32 thresh) {
     u8 *player = Obj_GetPlayerObject();
     if (player == NULL) {
@@ -1048,11 +988,7 @@ void fn_8009A8C8(u8 *obj, f32 thresh) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void DIMexplosionFn_8009a96c(u8 *src, f32 vx, f32 vy, f32 vz, f32 fval, u8 a, u8 flag4,
                              u8 flag8, u8 flag10, u8 doShake, u8 flag20, u8 f1cinit) {
     u8 *obj;
@@ -1094,11 +1030,7 @@ void DIMexplosionFn_8009a96c(u8 *src, f32 vx, f32 vy, f32 vz, f32 fval, u8 a, u8
         Obj_SetupObject(obj, 5, *(s8 *)(src + 0xac), -1, 0);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void spawnExplosion(u8 *src, f32 fval, u8 a, u8 flag4, u8 flag8, u8 flag10, u8 doShake,
                     u8 flag20, u8 f1cinit) {
     u8 *obj;
@@ -1140,15 +1072,11 @@ void spawnExplosion(u8 *src, f32 fval, u8 a, u8 flag4, u8 flag8, u8 flag10, u8 d
         Obj_SetupObject(obj, 5, *(s8 *)(src + 0xac), -1, 0);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 extern f32 lbl_803DF388;
 extern f32 lbl_803DF38C;
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80098B18(void *obj, f32 scale, int type, int count, int mode, f32 *vec) {
     PartfxParams params;
     int i;
@@ -1382,5 +1310,3 @@ void fn_80098B18(void *obj, f32 scale, int type, int count, int mode, f32 *vec) 
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

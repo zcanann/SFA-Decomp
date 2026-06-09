@@ -28,8 +28,6 @@ extern f32 lbl_803E4CC8;
  * EN v1.0 Address: 0x801BE8F8
  * EN v1.0 Size: 324b
  */
-#pragma peephole off
-#pragma scheduling off
 void DIMbosstonsil_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
 {
     struct {
@@ -63,8 +61,6 @@ void DIMbosstonsil_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -73,13 +69,11 @@ void DIMbosstonsil_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4
  * EN v1.0 Address: 0x801BEA3C
  * EN v1.0 Size: 56b
  */
-#pragma scheduling off
 void DIMbosstonsil_hitDetect(void *obj)
 {
     (*(void (***)(void *,DIMbosstonsilState *,int *))gPlayerInterface)[3](
         obj,((GameObject *)obj)->extra,&lbl_803DDBB0);
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -88,8 +82,6 @@ void DIMbosstonsil_hitDetect(void *obj)
  * EN v1.0 Address: 0x801BEA74
  * EN v1.0 Size: 0x1FC
  */
-#pragma peephole off
-#pragma scheduling off
 void DIMbosstonsil_update(void *obj)
 {
     DIMbosstonsilState *state;
@@ -150,5 +142,3 @@ void DIMbosstonsil_update(void *obj)
         gDIMbosstonsilLight->glowIntensity = (u8)r30_local;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset

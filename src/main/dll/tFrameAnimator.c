@@ -29,8 +29,6 @@ int levelname_SeqFn(int obj, int unused, u8 *setupData);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 undefined4 sidekickball_init(int obj)
 {
   u8 pathFlag;
@@ -55,8 +53,6 @@ undefined4 sidekickball_init(int obj)
   ObjMsg_AllocQueue((void *)obj, 1);
   GameBit_Set(0x3f8, 0);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 int area_getExtraSize(void) { return 0x0; }
@@ -67,9 +63,7 @@ void area_hitDetect(void) {}
 void area_update(void) {}
 
 /* obj->u16_X |= MASK */
-#pragma peephole off
 void area_init(u16 *obj) { u32 v; v = ((GameObject *)obj)->objectFlags; v |= 0xa000; ((GameObject *)obj)->objectFlags = (u16)v; }
-#pragma peephole reset
 
 void area_release(void) {}
 void area_initialise(void) {}
@@ -88,8 +82,6 @@ extern f32 lbl_803E36E0;
 extern f32 lbl_803E36E4;
 extern f32 lbl_803E36E8;
 
-#pragma scheduling off
-#pragma peephole off
 void levelname_update(int *obj) {
     u8 *sub;
     int *player;
@@ -132,11 +124,7 @@ void levelname_update(int *obj) {
         break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void levelname_init(int obj, int objDef)
 {
     int *state;
@@ -160,8 +148,6 @@ void levelname_init(int obj, int objDef)
     }
     ((GameObject *)obj)->objectFlags |= 0x2000;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void ProjectileSwitch_free(void) {}
 
@@ -170,7 +156,6 @@ int levelname_getExtraSize(void) { return 0x18; }
 int levelname_getObjectTypeId(void) { return 0x0; }
 int ProjectileSwitch_getExtraSize(void) { return 0x8; }
 
-#pragma scheduling off
 int ProjectileSwitch_getObjectTypeId(int *obj) {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
     int v = (int)*(u8 *)((char *)*(int **)&((GameObject *)obj)->anim.placementData + 0x1e) >> 2;
@@ -180,9 +165,7 @@ int ProjectileSwitch_getObjectTypeId(int *obj) {
     }
     return ((u32)v << 11) | 0x400;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 int levelname_SeqFn(int obj, int unused, u8 *setupData) {
     int *state = ((GameObject *)obj)->extra;
     int i;
@@ -197,7 +180,6 @@ int levelname_SeqFn(int obj, int unused, u8 *setupData) {
     }
     return 0;
 }
-#pragma scheduling reset
 
 ObjectDescriptor gAreaObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,

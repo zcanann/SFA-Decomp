@@ -1,7 +1,5 @@
 #include "main/engine_shared.h"
 
-#pragma scheduling off
-#pragma peephole off
 void dvdCheckError(void)
 {
     int msgId = 0xffff;
@@ -86,8 +84,6 @@ void dvdCheckError(void)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void fileReadCb_80015954(void* result)
 {
@@ -99,8 +95,6 @@ void setFileInfo(void* fileInfo)
     lbl_803DC954 = fileInfo;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void* loadFileByPath(char* path, int* outSize)
 {
     u8 fileInfo[0x3c];
@@ -134,11 +128,7 @@ void* loadFileByPath(char* path, int* outSize)
     }
     return buf;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int DVDRead(void* fileInfo, void* buf, int size, int offset)
 {
     u8 resetSeen = 0;
@@ -165,11 +155,7 @@ int DVDRead(void* fileInfo, void* buf, int size, int offset)
     }
     return gDvdReadCallbackResult;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void* loadFileByPathAsync(char* path, int* outSize, int unused, void (*cb)(void*))
 {
     void* fileInfo;
@@ -211,5 +197,3 @@ void* loadFileByPathAsync(char* path, int* outSize, int unused, void (*cb)(void*
     mm_free(fileInfo);
     return NULL;
 }
-#pragma peephole reset
-#pragma scheduling reset

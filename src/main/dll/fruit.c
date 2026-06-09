@@ -3,8 +3,6 @@
 #include "main/dll/door.h"
 #include "main/dll/fruit.h"
 
-#pragma peephole off
-#pragma scheduling off
 
 typedef struct DfpTargetBlockPartfxArgs {
   s16 rotX;
@@ -204,5 +202,3 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject *obj)
   }
 }
 
-#pragma peephole reset
-#pragma scheduling reset

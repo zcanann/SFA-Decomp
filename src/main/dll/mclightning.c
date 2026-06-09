@@ -2,8 +2,6 @@
 #include "main/game_object.h"
 #include "main/dll/mclightning_state.h"
 
-#pragma peephole off
-#pragma scheduling off
 int mclightning_handleScriptEvents(int obj, int eventId, u8 *script) {
     int state = *(int *)&((GameObject *)obj)->extra;
     int i;
@@ -38,12 +36,9 @@ int mclightning_handleScriptEvents(int obj, int eventId, u8 *script) {
     }
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 int mclightning_getExtraSize(void) { return 0x1c; }
 
-#pragma scheduling off
 void mclightning_free(int obj)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -53,10 +48,7 @@ void mclightning_free(int obj)
         mm_free(*(void **)state);
     }
 }
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void mclightning_update(int obj)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -68,11 +60,7 @@ void mclightning_update(int obj)
     ((McLightningFlags *)(state + 0x1b))->hi = 0;
     ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void mclightning_init(int obj, u8 *setup)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -86,11 +74,7 @@ void mclightning_init(int obj, u8 *setup)
     ((McLightningState *)state)->unk10 = v;
     ((McLightningState *)state)->unk14 = v;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale) {
     int state = *(int *)&((GameObject *)obj)->extra;
     McLightningFlags *f = (McLightningFlags *)(state + 0x1b);
@@ -147,5 +131,3 @@ void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale) {
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset

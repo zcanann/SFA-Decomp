@@ -65,8 +65,6 @@ extern f32 lbl_803E34A0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void collectible_init(int obj,int setup)
 {
   ObjAnimComponent *objAnim;
@@ -151,8 +149,6 @@ void collectible_init(int obj,int setup)
     (*gPathControlInterface)->attachObject((void *)obj, state + 0x50);
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -171,8 +167,6 @@ void FUN_80173364(short *param_1,int param_2)
 {
 }
 
-#pragma scheduling off
-#pragma peephole off
 void magicdust_free(int param_1)
 {
   if (*(uint *)(param_1 + 0xc4) != 0) {
@@ -181,8 +175,6 @@ void magicdust_free(int param_1)
   (*gExpgfxInterface)->freeSource2((u32)param_1);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--

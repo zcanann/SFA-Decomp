@@ -3,7 +3,6 @@
 
 extern uint GameBit_Get(int eventId);
 
-#pragma scheduling off
 void texscroll2_setScale(TexScroll2Object *obj, s8 scale)
 {
   TexScroll2State *state = obj->state;
@@ -14,7 +13,6 @@ void texscroll2_setScale(TexScroll2Object *obj, s8 scale)
   state->stepY = scale;
   state->needsApply = 1;
 }
-#pragma scheduling reset
 
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern void* mapGetBlock(int idx);
@@ -38,8 +36,6 @@ typedef struct TexScrollMapLayer {
     u8 materialCount;
 } TexScrollMapLayer;
 
-#pragma scheduling off
-#pragma peephole off
 void texscroll2_applyMapTextureScroll(int obj, TexScroll2State* state)
 {
     int* placement;
@@ -109,8 +105,6 @@ void texscroll2_applyMapTextureScroll(int obj, TexScroll2State* state)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void texscroll2_free(void) {}
 void texscroll2_hitDetect(void) {}
@@ -118,8 +112,6 @@ void texscroll2_release(void) {}
 void texscroll2_initialise(void) {}
 
 
-#pragma scheduling off
-#pragma peephole off
 void texscroll2_update(TexScroll2Object *obj) {
     TexScroll2State *state;
     TexScrollMapBlock *block;
@@ -148,8 +140,6 @@ void texscroll2_update(TexScroll2Object *obj) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 void texscroll_free(void) {}
 void texscroll_hitDetect(void) {}
 void texscroll_update(void) {}
@@ -161,8 +151,6 @@ int texscroll2_getObjectTypeId(void) { return 0x0; }
 int texscroll_getExtraSize(void) { return 0x1c; }
 int texscroll_getObjectTypeId(void) { return 0x0; }
 
-#pragma scheduling off
-#pragma peephole off
 void waveanimator_modelMtxFn(int obj, int a, int b, int c) {
     int *state = *(int **)((char *)obj + 0xB8);
     u32 v;
@@ -201,13 +189,9 @@ void texscroll_init(TexScrollObject *obj, TexScrollPlacement *placement, int loa
     }
     state->initLock = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E3F30;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E3F38;
-#pragma peephole off
 void texscroll2_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3F30); }
 void texscroll_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3F38); }
-#pragma peephole reset

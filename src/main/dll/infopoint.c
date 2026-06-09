@@ -35,8 +35,6 @@ typedef struct TrickyCurveState {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void TrickyCurve_updateCooldownTrigger(int obj)
 {
   TrickyCurveObject *curve;
@@ -104,5 +102,3 @@ void TrickyCurve_updateCooldownTrigger(int obj)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset

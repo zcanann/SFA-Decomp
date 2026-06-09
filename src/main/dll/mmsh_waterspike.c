@@ -17,8 +17,6 @@ extern int cos16(s16 angle);
  * EN v1.0 Address: 0x801BEEA0
  * EN v1.0 Size: 424b
  */
-#pragma scheduling off
-#pragma peephole off
 void fn_801BEEA0(s16 *obj, u8 *state)
 {
   u8 *motion;
@@ -56,5 +54,3 @@ void fn_801BEEA0(s16 *obj, u8 *state)
   *(f32 *)(motion + 0x0) = *(f32 *)(motion + 0x0) / lbl_803E4D0C;
   *(f32 *)(motion + 0x4) = *(f32 *)(motion + 0x4) / lbl_803E4D10;
 }
-#pragma peephole reset
-#pragma scheduling reset

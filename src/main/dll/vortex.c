@@ -12,8 +12,6 @@ void vortex_free(int obj)
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 
-#pragma peephole off
-#pragma scheduling off
 void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     VortexState *state = ((GameObject *)obj)->extra;
@@ -158,13 +156,9 @@ void vortex_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         ((GameObject *)obj)->anim.localPosY = objZ;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void vortex_hitDetect(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void vortex_init(int obj, int initData)
 {
     f32 *base = lbl_8032BE20;
@@ -215,11 +209,7 @@ void vortex_init(int obj, int initData)
     state->particleTimer = (f32)randomGetRange(0, 0x14);
     *(f32 *)(obj + 0x40) = *(f32 *)(obj + 0x40) * lbl_803E7404;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void vortex_update(int obj)
 {
     VortexState *state = ((GameObject *)obj)->extra;
@@ -256,8 +246,6 @@ void vortex_update(int obj)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void vortex_release(void) {}
 

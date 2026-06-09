@@ -35,8 +35,6 @@ extern f32 lbl_803E64D4;
  * EN v1.0 Address: 0x80208B70
  * EN v1.0 Size: 524b
  */
-#pragma scheduling off
-#pragma peephole off
 void dfptargetblock_update(DfpTargetBlockObject *obj)
 {
   u8 cVar1;
@@ -101,11 +99,7 @@ void dfptargetblock_update(DfpTargetBlockObject *obj)
  * EN v1.0 Address: 0x80208D7C
  * EN v1.0 Size: 600b
  */
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void dfptargetblock_init(DfpTargetBlockObject *obj,int param_2)
 {
   char cVar1;
@@ -173,8 +167,6 @@ void dfptargetblock_init(DfpTargetBlockObject *obj,int param_2)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void dfptargetblock_release(void)
 {

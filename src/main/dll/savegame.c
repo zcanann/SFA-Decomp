@@ -150,8 +150,6 @@ extern f32 lbl_803E1334;
 extern f32 lbl_803E1338;
 extern f32 lbl_803E133C;
 
-#pragma peephole off
-#pragma scheduling off
 void dll_91_func03(int param_1,int param_2,int param_3,uint param_4)
 {
   GfxBuf buf;
@@ -228,12 +226,8 @@ void dll_91_func03(int param_1,int param_2,int param_3,uint param_4)
   }
   (*gModgfxInterface)->spawnEffect(&buf,0,0x12,base,0x10,base + 0xb4,0x45,0);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 
-#pragma peephole off
-#pragma scheduling off
 void dll_92_func03(int param_1,int param_2,int param_3,uint param_4,undefined4 param_5,f32 *param_6
                  )
 {
@@ -308,8 +302,6 @@ void dll_92_func03(int param_1,int param_2,int param_3,uint param_4,undefined4 p
   }
   (*gModgfxInterface)->spawnEffect(&buf,0,6,base,4,base + 0x3c,0x3c,0);
 }
-#pragma scheduling reset
-#pragma peephole reset
 extern u8 lbl_80317260[];
 extern f32 lbl_803E1240;
 extern f32 lbl_803E1244;
@@ -320,8 +312,6 @@ extern f32 lbl_803E1254;
 extern f32 lbl_803E1258;
 
 
-#pragma peephole off
-#pragma scheduling off
 void dll_93_func03(int param_1,int param_2,int param_3,uint param_4)
 {
   GfxBuf buf;
@@ -374,8 +364,6 @@ void dll_93_func03(int param_1,int param_2,int param_3,uint param_4)
   }
   (*gModgfxInterface)->spawnEffect(&buf,0,0x15,(u8 *)(int)lbl_80317260,0x18,base + 0xd4,0x89,0);
 }
-#pragma scheduling reset
-#pragma peephole reset
 extern u8 lbl_80317488[];
 extern u8 lbl_80317810[];
 extern u8 lbl_803178B0[];
@@ -403,8 +391,6 @@ extern f32 lbl_803E1354;
 extern f32 lbl_803E135C;
 extern f32 lbl_803E1360;
 extern f32 lbl_803E1364;
-#pragma peephole off
-#pragma scheduling off
 void dll_94_func03(int param_1,int param_2,int param_3,uint param_4,undefined4 param_5,f32 *param_6
                  )
 {
@@ -479,11 +465,7 @@ void dll_94_func03(int param_1,int param_2,int param_3,uint param_4,undefined4 p
   }
   (*gModgfxInterface)->spawnEffect(&buf,0,6,base,4,base + 0x3c,0x3c,0);
 }
-#pragma scheduling reset
-#pragma peephole reset
 extern u8 lbl_803175E8[];
-#pragma peephole off
-#pragma scheduling off
 void dll_95_func03(int param_1,int param_2,int param_3)
 {
   GfxBuf buf;
@@ -539,10 +521,6 @@ void dll_95_func03(int param_1,int param_2,int param_3)
   }
   (*gModgfxInterface)->spawnEffect(&buf,0,8,base,8,base + 0x50,0x46,0);
 }
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole off
-#pragma scheduling off
 int dll_96_func03(int param_1,int param_2,int param_3,uint param_4)
 {
   GfxBuf buf;
@@ -605,10 +583,6 @@ int dll_96_func03(int param_1,int param_2,int param_3,uint param_4)
   }
   return (*gModgfxInterface)->spawnEffect(&buf,0,0x15,base,0x18,base + 0xd4,0x89,0);
 }
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole off
-#pragma scheduling off
 void dll_97_func03(int param_1,int param_2,int param_3,uint param_4,undefined4 param_5,f32 *param_6
                  )
 {
@@ -683,10 +657,6 @@ void dll_97_func03(int param_1,int param_2,int param_3,uint param_4,undefined4 p
   }
   (*gModgfxInterface)->spawnEffect(&buf,0,6,base,4,base + 0x3c,0x3c,0);
 }
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole off
-#pragma scheduling off
 void dll_98_func03(int param_1,int param_2,int param_3,uint param_4,int param_5,int param_6)
 {
   GfxBuf buf;
@@ -786,10 +756,6 @@ void dll_98_func03(int param_1,int param_2,int param_3,uint param_4,int param_5,
     (*gModgfxInterface)->spawnEffect(&buf,0,0x12,(uint)param_6 != 0 ? base + 0xb4 : base,0x10,base + 0x168,v,0);
   }
 }
-#pragma scheduling reset
-#pragma peephole reset
-#pragma peephole off
-#pragma scheduling off
 void dll_99_func03(int param_1,int param_2,int param_3,uint param_4,undefined4 param_5,f32 *param_6
                  )
 {
@@ -864,5 +830,3 @@ void dll_99_func03(int param_1,int param_2,int param_3,uint param_4,undefined4 p
   }
   (*gModgfxInterface)->spawnEffect(&buf,0,6,base,4,base + 0x3c,0x3c,0);
 }
-#pragma scheduling reset
-#pragma peephole reset

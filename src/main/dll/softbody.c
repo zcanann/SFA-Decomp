@@ -33,19 +33,15 @@ void softbody_free(int obj)
     }
 }
 
-#pragma peephole off
 void softbody_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7288);
     }
 }
-#pragma peephole reset
 
 void softbody_hitDetect(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void softbody_init(int obj, int setup)
 {
     GameObject *object = (GameObject *)obj;
@@ -69,21 +65,16 @@ void softbody_init(int obj, int setup)
                   object->anim.rootMotionScale));
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void softbody_release(void) {}
 
-#pragma scheduling off
 void softbody_initialise(void)
 {
     lbl_803DDD98 = NULL;
     lbl_803DDDA0 = lbl_803E7298;
     lbl_803DDD9C = lbl_803E7298;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void softbody_update(int obj)
 {
     GameObject *object = (GameObject *)obj;
@@ -111,4 +102,3 @@ void softbody_update(int obj)
         ObjAnim_SetCurrentMove(obj, 0, lbl_803DDD9C, 0);
     }
 }
-#pragma scheduling reset

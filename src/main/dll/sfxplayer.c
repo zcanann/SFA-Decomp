@@ -49,8 +49,6 @@ extern MapEventInterface **gMapEventInterface;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void sfxplayer_update(int obj)
 {
   s16 i;
@@ -138,8 +136,6 @@ void sfxplayer_update(int obj)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -154,8 +150,6 @@ void sfxplayer_update(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void sfxplayer_init(int obj,int config)
 {
   SfxplayerState *state;
@@ -183,8 +177,6 @@ void sfxplayer_init(int obj,int config)
   *(u16 *)(obj + SFXPLAYER_OBJECT_FLAGS_OFFSET) =
       *(u16 *)(obj + SFXPLAYER_OBJECT_FLAGS_OFFSET) | SFXPLAYER_OBJECT_FLAGS;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--

@@ -17,7 +17,6 @@ static inline u8 *Gameplay_GetActiveModel(void *obj) {
 
 
 
-#pragma peephole off
 #pragma scheduling off
 extern undefined4 FUN_800033a8();
 extern undefined8 FUN_80003494();
@@ -16860,4 +16859,3 @@ int modgfx_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, int param
   }
   return ret;
 }
-#pragma peephole reset

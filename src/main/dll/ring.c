@@ -44,7 +44,6 @@ int ring_getExtraSize(void) { return RING_EXTRA_SIZE; }
 
 int ring_getObjectTypeId(void) { return 0; }
 
-#pragma scheduling off
 void ring_free(int obj)
 {
     RingState *state = ((GameObject *)obj)->extra;
@@ -53,12 +52,9 @@ void ring_free(int obj)
         state->light = NULL;
     }
 }
-#pragma scheduling reset
 
 void ring_hitDetect(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void ring_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
     RingState *state = ((GameObject *)obj)->extra;
@@ -67,15 +63,11 @@ void ring_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
     }
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E70B0);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void ring_release(void) {}
 
 void ring_initialise(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void ring_init(int obj, int setup) {
     RingState *state = ((GameObject *)obj)->extra;
     RingFlags *f = &state->flags;
@@ -120,11 +112,7 @@ void ring_init(int obj, int setup) {
         ((GameObject *)obj)->anim.alpha = 0;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 void ring_update(int obj)
 {
     RingState *state = ((GameObject *)obj)->extra;
@@ -302,5 +290,3 @@ void ring_update(int obj)
         modelLightStruct_updateGlowAlpha(state->light);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

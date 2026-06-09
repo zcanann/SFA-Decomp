@@ -7,8 +7,6 @@
 
 extern undefined4 GameBit_Set(int eventId, int value);
 
-#pragma scheduling off
-#pragma peephole off
 int kaldachom_stateHandlerA04(int obj, int p2)
 {
   extern f32 lbl_803E3060;
@@ -26,11 +24,7 @@ int kaldachom_stateHandlerA04(int obj, int p2)
   ((GroundBaddieState *)p2)->baddie.animSpeedA = lbl_803E3060;
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int kaldachom_stateHandlerA06(int obj, int p2)
 {
   extern f32 lbl_803E3060;
@@ -49,11 +43,7 @@ int kaldachom_stateHandlerA06(int obj, int p2)
   ((GroundBaddieState *)p2)->baddie.animSpeedA = lbl_803E3060;
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int kaldachom_stateHandlerA03(int obj, int p2)
 {
   extern void ObjHits_EnableObject(int);
@@ -71,11 +61,7 @@ int kaldachom_stateHandlerA03(int obj, int p2)
   ((GroundBaddieState *)p2)->baddie.unk34D = 1;
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int kaldachom_stateHandlerA05(int obj, int p2)
 {
   extern char lbl_803203F8[];
@@ -94,11 +80,7 @@ int kaldachom_stateHandlerA05(int obj, int p2)
   ((GroundBaddieState *)p2)->baddie.unk34D = 1;
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int kaldachom_stateHandlerA02(int obj, int p2)
 {
   extern void ObjHits_EnableObject(int);
@@ -119,11 +101,7 @@ int kaldachom_stateHandlerA02(int obj, int p2)
   ((GroundBaddieState *)p2)->baddie.unk34D = 1;
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int kaldachom_stateHandlerA01(int obj, int p2)
 {
   extern void ObjHits_DisableObject(int);
@@ -154,11 +132,7 @@ int kaldachom_stateHandlerA01(int obj, int p2)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int kaldachom_stateHandlerA00(int obj, int p2)
 {
   extern void ObjHits_EnableObject(int);
@@ -187,5 +161,3 @@ int kaldachom_stateHandlerA00(int obj, int p2)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset

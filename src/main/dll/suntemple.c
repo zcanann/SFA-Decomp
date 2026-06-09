@@ -76,16 +76,13 @@ int suntemple_getObjectTypeId(void) { return 0; }
 
 void suntemple_free(void) {}
 
-#pragma peephole off
 void suntemple_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6E18);
     }
 }
-#pragma peephole reset
 
-#pragma peephole off
 void suntemple_hitDetect(int obj)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
@@ -93,10 +90,7 @@ void suntemple_hitDetect(int obj)
         objRenderFn_80041018(obj);
     }
 }
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 int suntemple_interactCallback(int obj, int p2, int p3)
 {
     SunTempleSetup *setup = (SunTempleSetup *)((GameObject *)obj)->anim.placementData;
@@ -128,11 +122,7 @@ int suntemple_interactCallback(int obj, int p2, int p3)
     }
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void suntemple_init(u8 *obj, u8 *setup)
 {
     ObjAnimComponent *objAnim;
@@ -162,11 +152,7 @@ void suntemple_init(u8 *obj, u8 *setup)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void suntemple_update(int obj)
 {
     GameObject *gameObj = (GameObject *)obj;
@@ -259,8 +245,6 @@ void suntemple_update(int obj)
     }
     gameObj->unkF4 = 1;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void suntemple_release(void) {}
 

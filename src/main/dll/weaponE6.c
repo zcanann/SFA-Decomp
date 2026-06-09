@@ -69,8 +69,6 @@ extern f32 lbl_803E24F8;
 extern f32 lbl_803E24FC;
 extern f32 lbl_803E2500;
 
-#pragma peephole off
-#pragma scheduling off
 void fn_8013F100(int obj, register int state)
 {
     int iVar2;
@@ -312,11 +310,7 @@ void fn_8013F100(int obj, register int state)
         fn_8017962C(*(int *)(state + 0x700));
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void fn_8013F9E4(int obj, int state)
 {
     int iVar3;
@@ -370,16 +364,12 @@ void fn_8013F9E4(int obj, int state)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 typedef struct {
     u8 hi : 4;
     u8 lo : 4;
 } WeaponNibble;
 
-#pragma peephole off
-#pragma scheduling off
 void fn_8013FBE4(int obj, register int state)
 {
     int iVar4;
@@ -458,10 +448,7 @@ void fn_8013FBE4(int obj, register int state)
         break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void fn_8013FEC0(int obj, int state)
 {
     bool inWater;
@@ -489,4 +476,3 @@ void fn_8013FEC0(int obj, int state)
         }
     }
 }
-#pragma scheduling reset

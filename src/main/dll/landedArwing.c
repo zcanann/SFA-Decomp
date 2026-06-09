@@ -49,8 +49,6 @@ typedef struct {
     u8 bit0 : 1;
 } LandedArwingFlags;
 
-#pragma peephole off
-#pragma scheduling off
 
 /*
  * --INFO--
@@ -172,5 +170,3 @@ undefined4 LandedArwing_UpdateFlightChase(int obj, int state)
     return 0;
 }
 
-#pragma peephole reset
-#pragma scheduling reset

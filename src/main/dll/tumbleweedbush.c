@@ -1,8 +1,6 @@
 #include "main/dll/tumbleweedbush.h"
 #include "main/game_object.h"
 
-#pragma peephole off
-#pragma scheduling off
 
 extern int trickyDebugPrint(const char *fmt, ...);
 extern int trickyFn_8013b368(void *param_1, float threshold, void *param_2);
@@ -147,5 +145,3 @@ void trickyGrowl(void *param_1, void *param_2)
     }
 }
 
-#pragma scheduling reset
-#pragma peephole reset

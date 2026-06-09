@@ -58,8 +58,6 @@ extern f32 lbl_803E72CC;
 extern f32 lbl_803E72D0;
 extern f32 lbl_803E72D4;
 
-#pragma peephole off
-#pragma scheduling off
 void waterflowwe_calcCurrentVector(int obj, f32 *vx, f32 *vz)
 {
     GameObject *object = (GameObject *)obj;
@@ -159,15 +157,11 @@ void waterflowwe_calcCurrentVector(int obj, f32 *vx, f32 *vz)
         *vz = z;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 int waterflowwe_getExtraSize(void) { return 8; }
 
 int waterflowwe_getObjectTypeId(void) { return 0; }
 
-#pragma peephole off
-#pragma scheduling off
 void waterflowwe_init(int obj, u8 *setup)
 {
     GameObject *object = (GameObject *)obj;
@@ -186,8 +180,6 @@ void waterflowwe_init(int obj, u8 *setup)
     object->objectFlags = object->objectFlags | WATERFLOWWE_OBJECT_FLAGS_INIT;
     ObjAnim_SetCurrentMove(obj, 0, lbl_803E72B0, 0);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void waterflowwe_free(int obj)
 {
@@ -196,19 +188,15 @@ void waterflowwe_free(int obj)
     }
 }
 
-#pragma peephole off
 void waterflowwe_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E72E8);
     }
 }
-#pragma peephole reset
 
 void waterflowwe_hitDetect(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void waterflowwe_update(int obj)
 {
     GameObject *object = (GameObject *)obj;
@@ -242,16 +230,12 @@ void waterflowwe_update(int obj)
         ObjAnim_SetCurrentMove(obj, 0, lbl_803DDDB0, 0);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void waterflowwe_release(void) {}
 
-#pragma scheduling off
 void waterflowwe_initialise(void)
 {
     lbl_803DDDA8 = 0;
     lbl_803DDDB0 = lbl_803E72B0;
     lbl_803DDDAC = lbl_803E72B0;
 }
-#pragma scheduling reset

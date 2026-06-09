@@ -15,8 +15,6 @@ extern s32 lbl_803269F8[];
  * EN v1.0 Address: 0x801CFD68
  * EN v1.0 Size: 348b
  */
-#pragma scheduling off
-#pragma peephole off
 int fn_801CFD68(u8 *state)
 {
   s32 *table;
@@ -47,8 +45,6 @@ int fn_801CFD68(u8 *state)
 
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -76,8 +72,6 @@ extern void   gameTimerStop(void);
  * vtable+0x4c on the singleton at gMapEventInterface with the s8 obj+0xac;
  * when the call returns 0 also fires envFxActFn_800887f8(0); always tails into
  * gameTimerStop. */
-#pragma scheduling off
-#pragma peephole off
 void nw_levcontrol_free(s8* obj)
 {
     s8 v = obj[0xac];
@@ -87,5 +81,3 @@ void nw_levcontrol_free(s8* obj)
     }
     gameTimerStop();
 }
-#pragma peephole reset
-#pragma scheduling reset

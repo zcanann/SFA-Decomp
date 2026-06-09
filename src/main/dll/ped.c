@@ -43,8 +43,6 @@ typedef struct TreeBirdState {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void treebird_init(int obj,int setup)
 {
   TreeBirdState *state;
@@ -61,8 +59,6 @@ void treebird_init(int obj,int setup)
   }
   state->searchDelay = 4;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -77,8 +73,6 @@ void treebird_init(int obj,int setup)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void nw_geyser_init(int obj)
 {
   ((GameObject *)obj)->objectFlags = (ushort)(((GameObject *)obj)->objectFlags | 0x6000);
@@ -128,11 +122,7 @@ int NW_geyser_SeqFn(int *obj, int p2, void *p3) {
     *(u8 *)((char *)p3 + 0x56) = 0;
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int fn_801CDE7C(int obj, int param_2, u8 *seqData)
 {
     u8 *state;
@@ -168,8 +158,6 @@ int fn_801CDE7C(int obj, int param_2, u8 *seqData)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void fn_8003A168(int obj, void* p);
 extern void fn_8003B228(int obj, void* p);
@@ -178,8 +166,6 @@ extern void characterDoEyeAnims(int obj, void* p);
 extern u8 lbl_803268B4[];
 extern f32 lbl_803E5214;
 
-#pragma scheduling off
-#pragma peephole off
 void fn_801CDF94(int obj, int state, int flag)
 {
     if (flag != 0 && *(void**)(state + 0x28) != NULL && *(f32*)(state + 0x18) < lbl_803E5214) {
@@ -198,5 +184,3 @@ void fn_801CDF94(int obj, int state, int flag)
         characterDoEyeAnims(obj, (void*)(state + 0x40c));
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

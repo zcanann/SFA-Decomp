@@ -47,8 +47,6 @@ typedef struct ProjNearSearch {
   f32 dz;
 } ProjNearSearch;
 
-#pragma scheduling off
-#pragma peephole off
 void dll_2E_func03(ushort *puVar5,int iVar10,undefined4 unused)
 {
   register int sVar11;
@@ -222,8 +220,6 @@ void dll_2E_func03(ushort *puVar5,int iVar10,undefined4 unused)
 LAB_801158cc:
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void FUN_801150a4(int param_1,undefined4 param_2)
 {

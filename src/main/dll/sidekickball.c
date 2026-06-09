@@ -35,8 +35,6 @@ enum SidekickBallMode {
  * EN v1.0 Address: 0x801797A4
  * EN v1.0 Size: 648b
  */
-#pragma scheduling off
-#pragma peephole off
 void sidekickball_update(u8 *self)
 {
   SidekickBallState *state;
@@ -118,5 +116,3 @@ void sidekickball_update(u8 *self)
   (*gPathControlInterface)->apply(self, state);
   (*gPathControlInterface)->advance(self, state, timeDelta);
 }
-#pragma peephole reset
-#pragma scheduling reset
