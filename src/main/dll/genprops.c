@@ -6648,6 +6648,16 @@ typedef struct DllF7Vec {
 } DllF7Vec;
 
 extern DllF7Vec lbl_802C2260;
+
+/* dll_F7 (bouncing prop) object extra-state */
+typedef struct DllF7State {
+    f32 bounceOffset;
+    f32 bounceVelocity;
+    u8 byte8;
+    s8 byte9;
+    s8 hitsRemaining;
+    s8 byteB;
+} DllF7State;
 extern void Sfx_PlayAtPositionFromObject(int *obj, f32 x, f32 y, f32 z, int sfx);
 extern void Obj_SetActiveModelIndex(int *obj, int idx);
 extern f32 lbl_803E3408;
@@ -6658,7 +6668,7 @@ extern f32 lbl_803E3418;
 
 void dll_F7_update(int *obj)
 {
-    u8 *state = ((GameObject *)obj)->extra;
+    DllF7State *state = ((GameObject *)obj)->extra;
     f32 pz;
     f32 py;
     f32 px;
@@ -6668,13 +6678,13 @@ void dll_F7_update(int *obj)
     f32 radius;
     int hit;
 
-    if (*(s8 *)(state + 9) != 0) {
+    if (state->byte9 != 0) {
         int *params = *(int **)&((GameObject *)obj)->anim.placementData;
-        if (*(s8 *)(state + 0xb) == 0 &&
+        if (state->byteB == 0 &&
             (*gMapEventInterface)->isTimedEventActive(*(int *)((char *)params + 0x14)) != 0) {
-            *(u8 *)(state + 9) = 0;
-            *(u8 *)(state + 8) = 1;
-            *(u8 *)(state + 0xa) = 2;
+            state->byte9 = 0;
+            state->byte8 = 1;
+            state->hitsRemaining = 2;
             (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags |= 1;
             *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x8;
         } else {
@@ -6683,13 +6693,13 @@ void dll_F7_update(int *obj)
         return;
     }
     if (ObjHits_GetPriorityHitWithPosition(obj, 0, 0, &hit, &px, &py, &pz) != 0) {
-        if ((*(s8 *)(state + 0xa) -= hit) > 0) {
+        if ((state->hitsRemaining -= hit) > 0) {
             Sfx_PlayAtPositionFromObject(obj, px, py, pz, 72);
-            Obj_SetActiveModelIndex(obj, 2 - *(s8 *)(state + 0xa));
+            Obj_SetActiveModelIndex(obj, 2 - state->hitsRemaining);
             {
                 f32 fz = lbl_803E3404;
-                *(f32 *)state = fz;
-                *(f32 *)(state + 4) = lbl_803E3408;
+                state->bounceOffset = fz;
+                state->bounceVelocity = lbl_803E3408;
                 px += playerMapOffsetX;
                 pz += playerMapOffsetZ;
                 fz2 = fz;
@@ -6700,19 +6710,19 @@ void dll_F7_update(int *obj)
             ((void (*)(int, int, s16 *, int, int, DllF7Vec *))((int *)*(int **)lbl_803DDAB4)[1])(0, 1, trio, 1025, -1, &vec);
         }
     }
-    if (*(s8 *)(state + 0xa) <= 0) {
+    if (state->hitsRemaining <= 0) {
         int *params = *(int **)&((GameObject *)obj)->anim.placementData;
-        if (*(s8 *)(state + 0xb) == 0) {
+        if (state->byteB == 0) {
             (*gMapEventInterface)->startTimedEvent(*(int *)((char *)params + 0x14), lbl_803E340C);
         }
-        *(u8 *)(state + 9) = 1;
-        *(u8 *)(state + 8) = 0;
+        state->byte9 = 1;
+        state->byte8 = 0;
         Sfx_PlayFromObject(obj, 74);
         (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
         if ((int)*(s16 *)((char *)params + 0x1e) != -1) {
             GameBit_Set((int)*(s16 *)((char *)params + 0x1e), 1);
         }
-        if (*(s8 *)(state + 0xb) == 0) {
+        if (state->byteB == 0) {
             if ((u8)Obj_IsLoadingLocked() != 0) {
                 s16 *alloc = (s16 *)Obj_AllocObjectSetup(0x30, 0xb);
                 alloc[0xe] = -1;
@@ -6737,13 +6747,13 @@ void dll_F7_update(int *obj)
         }
         ((void (*)(int *, int, int, int, int, int))((int *)*(int **)lbl_803DDAB0)[1])(obj, 1, 0, 2, -1, 0);
     }
-    if (*(f32 *)state > lbl_803E3400) {
-        *(f32 *)state = timeDelta * *(f32 *)(state + 4) + *(f32 *)state;
-        if (*(f32 *)state < lbl_803E3400) {
-            *(f32 *)state = lbl_803E3400;
-        } else if (*(f32 *)state > lbl_803E3418) {
-            *(f32 *)state = lbl_803E3418 - (*(f32 *)state - lbl_803E3418);
-            *(f32 *)(state + 4) = -*(f32 *)(state + 4);
+    if (state->bounceOffset > lbl_803E3400) {
+        state->bounceOffset = timeDelta * state->bounceVelocity + state->bounceOffset;
+        if (state->bounceOffset < lbl_803E3400) {
+            state->bounceOffset = lbl_803E3400;
+        } else if (state->bounceOffset > lbl_803E3418) {
+            state->bounceOffset = lbl_803E3418 - (state->bounceOffset - lbl_803E3418);
+            state->bounceVelocity = -state->bounceVelocity;
         }
     }
 }
