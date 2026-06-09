@@ -12909,15 +12909,7 @@ int fn_802A2918(int obj, int state, f32 fv)
     if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E7F18) {
         f32 g = lbl_803E8028 * (lbl_803E802C * ((GameObject *)obj)->anim.currentMoveProgress - lbl_803E7F18);
         f32 c;
-        if (g >= lbl_803E7EA4) {
-            if (g <= lbl_803E7EE0) {
-                c = g;
-            } else {
-                c = lbl_803E7EE0;
-            }
-        } else {
-            c = lbl_803E7EA4;
-        }
+        c = (g < lbl_803E7EA4) ? lbl_803E7EA4 : ((g > lbl_803E7EE0) ? lbl_803E7EE0 : g);
         ((GameObject *)obj)->anim.localPosY = c * (lbl_803DE43C - lbl_803DE438) + inner->unk4F8;
     }
     ((void (*)(int, int, int, int))ObjAnim_WriteStateWord)
