@@ -6867,7 +6867,6 @@ extern f32 lbl_803E8160;
 void playerDoHitDetection(int obj)
 {
     int inner = *(int *)&((GameObject *)obj)->extra;
-    u8 *pathState = (u8 *)&((PlayerState *)inner)->baddie + 4;
     f32 dt = timeDelta;
     f32 spd;
     int sub;
@@ -6882,9 +6881,9 @@ void playerDoHitDetection(int obj)
         (((GameObject *)obj)->objectFlags & 0x1000) != 0) {
         ((PlayerState *)inner)->baddie.unk25F = 0;
     }
-    (*gPathControlInterface)->update((void *)obj, pathState, timeDelta);
-    (*gPathControlInterface)->apply((void *)obj, pathState);
-    (*gPathControlInterface)->advance((void *)obj, pathState, timeDelta);
+    (*gPathControlInterface)->update((void *)obj, (void *)(inner + 4), timeDelta);
+    (*gPathControlInterface)->apply((void *)obj, (void *)(inner + 4));
+    (*gPathControlInterface)->advance((void *)obj, (void *)(inner + 4), timeDelta);
     fn_80026C54(lbl_803DE420);
     if (!(((PlayerState *)inner)->unk820 >= lbl_803E7EF0)) {
         (*(void (*)(int, int, void *))(*(int *)(*gPlayerInterface + 0xc)))(obj, inner,
