@@ -807,14 +807,7 @@ int fn_802A36EC(int obj, int state)
             *(f32 *)((char *)state + 0x2a0) = lbl_803E804C;
         }
         t = (inner->unk5A8 - lo) / (hi - lo) * lbl_803E7FAC;
-        r = lbl_803E7EA4;
-        if (t >= lbl_803E7EA4) {
-            if (t <= lbl_803E7FAC) {
-                r = t;
-            } else {
-                r = lbl_803E7FAC;
-            }
-        }
+        r = (t < lbl_803E7EA4) ? lbl_803E7EA4 : ((t > lbl_803E7FAC) ? lbl_803E7FAC : t);
         inner->unk604 = (s16)r;
         ObjAnim_SetCurrentMove(obj, lbl_80332EF0[lbl_803DC6A0], lbl_803E7EA4, 0);
         ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 0xa);
@@ -896,14 +889,7 @@ int fn_802A3B04(int obj, int state)
         ((GameObject *)obj)->anim.currentMove == 0xd) {
         f32 c;
         f32 d = ((GameObject *)obj)->anim.currentMoveProgress / lbl_803E7F44;
-        c = lbl_803E7EA4;
-        if (d >= lbl_803E7EA4) {
-            if (d <= lbl_803E7EE0) {
-                c = d;
-            } else {
-                c = lbl_803E7EE0;
-            }
-        }
+        c = (d < lbl_803E7EA4) ? lbl_803E7EA4 : ((d > lbl_803E7EE0) ? lbl_803E7EE0 : d);
         ((GameObject *)obj)->anim.localPosX =
             c * (*(f32 *)((char *)inner + 0x5f8) - ((PlayerState *)inner)->unk5B4) +
             ((PlayerState *)inner)->unk5B4;
