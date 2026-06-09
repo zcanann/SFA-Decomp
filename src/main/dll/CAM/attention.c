@@ -30,7 +30,7 @@ extern f32 lbl_803E16D4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void camcontrol_updateVerticalBounds(int camera,int flags,int param_3,float *upperBound,
+void camcontrol_updateVerticalBounds(CameraObject *camera,int flags,int param_3,float *upperBound,
                                      float *lowerBound)
 {
   float zLim;
@@ -46,31 +46,33 @@ void camcontrol_updateVerticalBounds(int camera,int flags,int param_3,float *upp
   int off;
   int off2;
   int camObj;
+  int cameraAddr;
   uint bounds[6];
   f32 pos[3];
   int hits;
 
-  camObj = *(int *)(camera + 0xa4);
+  cameraAddr = (int)camera;
+  camObj = *(int *)&camera->anim.targetObj;
   if ((flags & 1) != 0) {
     zB = lbl_803E1688;
-    *(float *)(camera + 0x74) = zB;
-    *(s8 *)(camera + 0x84) = -1;
-    *(s8 *)(camera + 0x88) = (s8)param_3;
-    res = objBboxFn_800640cc(camera + 0xb8,camera + 0x18,1,0,0,0x10,0xffffffff,0xff,0);
-    *(u8 *)(camera + 0x142) = res;
-    pos[0] = *(f32 *)(camera + 0x18);
-    pos[1] = *(f32 *)(camera + 0x1c);
-    pos[2] = *(f32 *)(camera + 0x20);
-    hitDetect_calcSweptSphereBounds(bounds,(float *)(camera + 0xb8),pos,(float *)(camera + 0x74),1);
+    *(float *)(cameraAddr + 0x74) = zB;
+    *(s8 *)(cameraAddr + 0x84) = -1;
+    *(s8 *)(cameraAddr + 0x88) = (s8)param_3;
+    res = objBboxFn_800640cc((int)&camera->probePosX,(int)&camera->anim.worldPosX,1,0,0,0x10,0xffffffff,0xff,0);
+    camera->unk142 = res;
+    pos[0] = camera->anim.worldPosX;
+    pos[1] = camera->anim.worldPosY;
+    pos[2] = camera->anim.worldPosZ;
+    hitDetect_calcSweptSphereBounds(bounds,&camera->probePosX,pos,(float *)(cameraAddr + 0x74),1);
     hitDetectFn_800691c0(camObj,bounds,0x240,1);
-    hitDetectFn_80067958(camObj,(float *)(camera + 0xb8),pos,1,camera + 0x34,0);
-    *(f32 *)(camera + 0x18) = pos[0];
-    *(f32 *)(camera + 0x1c) = pos[1];
-    *(f32 *)(camera + 0x20) = pos[2];
+    hitDetectFn_80067958(camObj,&camera->probePosX,pos,1,(int)&camera->anim.pad34[0],0);
+    camera->anim.worldPosX = pos[0];
+    camera->anim.worldPosY = pos[1];
+    camera->anim.worldPosZ = pos[2];
   }
   if ((flags & 2) != 0) {
-    count = hitDetectFn_80065e50(camObj,*(float *)(camera + 0x18),*(float *)(camera + 0x1c),
-                                 *(float *)(camera + 0x20),&hits,1,0x40);
+    count = hitDetectFn_80065e50(camObj,camera->anim.worldPosX,camera->anim.worldPosY,
+                                 camera->anim.worldPosZ,&hits,1,0x40);
     *upperBound = lbl_803E16D0;
     bestUpper = (*lowerBound = lbl_803E16D4);
     bestLower = bestUpper;
@@ -80,14 +82,14 @@ void camcontrol_updateVerticalBounds(int camera,int flags,int param_3,float *upp
       zB = lbl_803E16B4;
       if ((*(float **)(hits + off))[2] < zLim) {
         pt0 = **(float **)(hits + off);
-        if (pt0 > *(float *)(camera + 0x1c) - zB) {
-          diff = *(float *)(camera + 0x1c) - pt0;
+        if (pt0 > camera->anim.worldPosY - zB) {
+          diff = camera->anim.worldPosY - pt0;
           if (diff < zLim) {
             diff = -diff;
           }
           if (diff < bestLower) {
             *lowerBound = pt0;
-            *(f32 *)(camera + 0x12c) = (*(float **)(hits + off))[2];
+            camera->unk12C = (*(float **)(hits + off))[2];
             bestLower = diff;
           }
         }
@@ -100,14 +102,14 @@ void camcontrol_updateVerticalBounds(int camera,int flags,int param_3,float *upp
       zB = lbl_803E16B4;
       if ((*(float **)(hits + off2))[2] > zLim) {
         pt0 = **(float **)(hits + off2);
-        if (pt0 < zB + *(float *)(camera + 0x1c)) {
-          diff = *(float *)(camera + 0x1c) - pt0;
+        if (pt0 < zB + camera->anim.worldPosY) {
+          diff = camera->anim.worldPosY - pt0;
           if (diff < zLim) {
             diff = -diff;
           }
           if (diff < bestUpper) {
             *upperBound = pt0;
-            *(f32 *)(camera + 0x130) = (*(float **)(hits + off2))[2];
+            camera->unk130 = (*(float **)(hits + off2))[2];
             bestUpper = diff;
           }
         }
@@ -115,10 +117,10 @@ void camcontrol_updateVerticalBounds(int camera,int flags,int param_3,float *upp
       off2 += 4;
     }
   }
-  Obj_TransformWorldPointToLocal(*(float *)(camera + 0x18),*(float *)(camera + 0x1c),
-                                 *(float *)(camera + 0x20),(float *)(camera + 0xc),
-                                 (float *)(camera + 0x10),(float *)(camera + 0x14),
-                                 *(int *)(camera + 0x30));
+  Obj_TransformWorldPointToLocal(camera->anim.worldPosX,camera->anim.worldPosY,
+                                 camera->anim.worldPosZ,&camera->anim.localPosX,
+                                 &camera->anim.localPosY,&camera->anim.localPosZ,
+                                 *(int *)&camera->anim.parent);
 }
 
 /*
