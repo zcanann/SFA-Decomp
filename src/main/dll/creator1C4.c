@@ -146,8 +146,7 @@ void gpsh_shrine_update(int obj)
         SCGameBitLatch_Update(data + 0x13, 2, -1, -1, 0xdd2, 0xb);
         SCGameBitLatch_UpdateInverted(data + 0x13, 1, -1, -1, 0xcbb, 8);
         SCGameBitLatch_Update(data + 0x13, 4, -1, -1, 0xcbb, 0xc4);
-        k = lbl_803E503C;
-        if (*(f32 *)((char *)data + 4) > k) {
+        if (*(f32 *)((char *)data + 4) > (k = lbl_803E503C)) {
             *(f32 *)((char *)data + 4) -= timeDelta;
             if (*(f32 *)((char *)data + 4) <= k) {
                 *(f32 *)((char *)data + 4) = k;
