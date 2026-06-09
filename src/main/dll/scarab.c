@@ -2716,7 +2716,7 @@ int dll_CB_seqFn(short *obj, int p2, u8 *e)
       if (*(u8 *)(sub + 0x405) == 1) {
         *(s16 *)(sub + 0x270) = 5;
         (*(void (**)(short *, int, f32, f32, void *, void *))(*(int *)gPlayerInterface + 8))(
-            obj, sub, lbl_803E2E8C, lbl_803E2E8C, lbl_803AC5E8, lbl_803AC5D0);
+            obj, sub, lbl_803E2E8C, *(f32 *)&lbl_803E2E8C, lbl_803AC5E8, lbl_803AC5D0);
         *(s8 *)(e + 0x56) = 0;
       }
       break;
@@ -4080,10 +4080,9 @@ extern f32 lbl_803E2E98;
 #pragma peephole off
 void dll_CB_update(int *obj) {
     extern int *gBaddieControlInterface;
+    int *path;
     GroundBaddieState *sub;
     u8 *def;
-    int *path;
-    int one_local;
 
     sub = ((GameObject *)obj)->extra;
     def = *(u8**)&((GameObject *)obj)->anim.placementData;
@@ -4096,8 +4095,7 @@ void dll_CB_update(int *obj) {
         return;
     }
     if ((sub->flags400 & 2) != 0) {
-        one_local = 1;
-        ((void(*)(u8*, u8*, s16, u8*, int, int, int, int*))((int**)*(int**)gBaddieControlInterface)[10])((u8 *)sub, sub->route35C, sub->gameBitB, &sub->unk405, 0, 0, 0, &one_local);
+        ((void(*)(int*, u8*, u8*, s16, u8*, int, int, int, int))((int**)*(int**)gBaddieControlInterface)[10])(obj, (u8 *)sub, sub->route35C, sub->gameBitB, &sub->unk405, 0, 0, 0, 1);
         sub->flags400 = (u16)(sub->flags400 & ~2);
     }
     if (((int(*)(int*, u8*, int))((int**)*(int**)gBaddieControlInterface)[12])(obj, (u8 *)sub, 1) == 0) return;
@@ -4206,7 +4204,7 @@ void chukchuk_update(short *obj)
   extern f32 lbl_803E2E3C;
   extern f32 lbl_803E2E40;
   ChukChukState *v;
-  int di;
+  u16 di;
   int pl;
   int *tex;
   int ang;
@@ -4227,15 +4225,14 @@ void chukchuk_update(short *obj)
   if (v->steamTimer != lbl_803E2E34) {
     v->steamTimer -= timeDelta;
     objParticleFn_80099d84(lbl_803E2E30, obj, 1, v->steamTimer / lbl_803E2E38, 0);
-    if (v->steamTimer <= lbl_803E2E34) {
+    if (v->steamTimer <= *(f32 *)&lbl_803E2E34) {
       v->steamTimer = lbl_803E2E34;
     }
   }
   if ((v->flags & 2) == 0) {
     tex = objFindTexture(obj, 0, 0);
-    ph = v->glowPhase;
-    if (ph < lbl_803E2E3C) {
-      if ((int)ph == 10) {
+    if (v->glowPhase < lbl_803E2E3C) {
+      if ((int)v->glowPhase == 10) {
         v->flags |= 1;
       }
       *tex = lbl_8031FF80[(int)v->glowPhase] << 8;
@@ -4246,8 +4243,8 @@ void chukchuk_update(short *obj)
         v->glowPhase = (f32)(int)randomGetRange(16, 245);
       }
     } else {
-      if (lbl_803E2E40 - ph >= timeDelta) {
-        v->glowPhase = ph + timeDelta;
+      if (lbl_803E2E40 - v->glowPhase >= timeDelta) {
+        v->glowPhase = v->glowPhase + timeDelta;
       } else {
         v->glowPhase = lbl_803E2E34;
       }
@@ -4256,8 +4253,8 @@ void chukchuk_update(short *obj)
     pl = Obj_GetPlayerObject();
     dx = *(f32 *)(pl + 0xc) - ((GameObject *)obj)->anim.localPosX;
     dz = *(f32 *)(pl + 0x14) - ((GameObject *)obj)->anim.localPosZ;
-    di = (int)sqrtf(dx * dx + dz * dz);
-    if (((u32)di & 0xffff) < v->triggerDistance) {
+    di = sqrtf(dx * dx + dz * dz);
+    if (di < v->triggerDistance) {
       if (v->prevDistance >= v->triggerDistance) {
         v->flags = 5;
         v->glowPhase = lbl_803E2E34;
@@ -4266,7 +4263,8 @@ void chukchuk_update(short *obj)
         stk.d[0] = *(f32 *)(pl + 0x18) - ((GameObject *)obj)->anim.worldPosX;
         stk.d[1] = *(f32 *)(pl + 0x1c) - ((GameObject *)obj)->anim.worldPosY;
         stk.d[2] = *(f32 *)(pl + 0x20) - ((GameObject *)obj)->anim.worldPosZ;
-        ang = (getAngle(stk.d[0], stk.d[2]) & 0xffff) - (*obj & 0xffff);
+        ang = getAngle(stk.d[0], stk.d[2]) & 0xffff;
+        ang -= *obj & 0xffff;
         if (ang > 0x8000) {
           ang -= 0xffff;
         }
@@ -4289,7 +4287,7 @@ void chukchuk_update(short *obj)
     } else if ((v->flags & 1) != 0) {
       Sfx_PlayFromObject(obj, SFXkr_impact2);
     }
-    *(s16 *)&v->prevDistance = di;
+    v->prevDistance = di;
     if (ObjHits_GetPriorityHit(obj, &stk.a, &stk.b, &stk.c) == 14) {
       v->hitsLeft -= 1;
       if (v->hitsLeft < 1) {
