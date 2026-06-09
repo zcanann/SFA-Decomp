@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
 #include "main/camera_interface.h"
 #include "main/dll/CAM/camclimb_state.h"
+#include "main/dll/CAM/camnpcspeak_state.h"
+#include "main/game_object.h"
 #include "main/mm.h"
 #include "main/object_transform.h"
 
@@ -12,7 +14,7 @@ extern void Rcp_DisableBlurFilter(void);
 extern void memset(void *dst, int val, int size);
 
 extern CameraModeClimbState *lbl_803DD578;
-extern f32 *lbl_803DD584;
+extern CameraModeNpcSpeakState *lbl_803DD584;
 
 extern f32 lbl_803E19B8;
 extern f32 lbl_803E19BC;
@@ -101,8 +103,8 @@ void CameraModeFixed_init(f32 *param_1, undefined4 param_2, f32 *param_3) {
 void CameraModeFixed_release(void) {}
 void CameraModeFixed_initialise(void) {}
 
-void fn_8010DB7C(f32 *param_1, f32 *param_2, f32 *param_3, f32 *param_4) {
-    f32 *pfVar2 = lbl_803DD584;
+void fn_8010DB7C(GameObject *target, f32 *outX, f32 *outY, f32 *outZ) {
+    CameraModeNpcSpeakState *state = lbl_803DD584;
     f32 dx;
     f32 dz;
     f32 dist;
@@ -110,30 +112,30 @@ void fn_8010DB7C(f32 *param_1, f32 *param_2, f32 *param_3, f32 *param_4) {
     f32 cosVal;
     f32 sinVal;
 
-    dx = param_1[6] - pfVar2[0];
-    dz = param_1[8] - pfVar2[2];
+    dx = target->anim.worldPosX - state->anchorX;
+    dz = target->anim.worldPosZ - state->anchorZ;
     dist = sqrtf(dz * dz + dx * dx);
     angle = (u16)getAngle(dx, dz);
 
     {
-        f32 scale = lbl_803DD584[17];
+        f32 scale = state->anchorLerpScale;
         dx *= scale;
         dz *= scale;
     }
-    dx += pfVar2[0];
-    dz += pfVar2[2];
+    dx += state->anchorX;
+    dz += state->anchorZ;
 
-    cosVal = mathSinf(lbl_803E19D0 * (f32)(s32)((angle & 0xFFFF) + *(s32 *)&lbl_803DD584[6]) / lbl_803E19D4);
-    sinVal = mathCosf(lbl_803E19D0 * (f32)(s32)((angle & 0xFFFF) + *(s32 *)&lbl_803DD584[6]) / lbl_803E19D4);
+    cosVal = mathSinf(lbl_803E19D0 * (f32)(s32)((angle & 0xFFFF) + state->orbitAngleOffset) / lbl_803E19D4);
+    sinVal = mathCosf(lbl_803E19D0 * (f32)(s32)((angle & 0xFFFF) + state->orbitAngleOffset) / lbl_803E19D4);
 
-    if (dist < lbl_803DD584[16]) {
-        dist = lbl_803DD584[16];
+    if (dist < state->minDistance) {
+        dist = state->minDistance;
     }
-    dist += lbl_803DD584[4];
+    dist += state->distanceOffset;
 
-    *param_2 = cosVal * dist + dx;
-    *param_3 = (param_1[7] + lbl_803DD584[12]) - lbl_803E19D8 * ((lbl_803E19DC + param_1[7]) - pfVar2[1]);
-    *param_4 = sinVal * dist + dz;
+    *outX = cosVal * dist + dx;
+    *outY = (target->anim.worldPosY + state->targetHeightOffset) - lbl_803E19D8 * ((lbl_803E19DC + target->anim.worldPosY) - state->anchorY);
+    *outZ = sinVal * dist + dz;
 }
 
 void CameraModeNpcSpeak_copyToCurrent_nop(void) {}
