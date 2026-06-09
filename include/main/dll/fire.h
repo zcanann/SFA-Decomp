@@ -15,9 +15,8 @@
 typedef struct LinkALevelControlObject LinkALevelControlObject;
 typedef LinkALevelControlObject FireObject;
 
-typedef undefined4 (*LinkALevelControlAnimEventCallback)(
-    LinkALevelControlObject *obj, undefined4 unused,
-    ObjAnimUpdateState *animUpdate);
+typedef int (*LinkALevelControlAnimEventCallback)(LinkALevelControlObject *obj, int unused,
+                                                  ObjAnimUpdateState *animUpdate);
 
 struct LinkALevelControlObject {
     u8 pad00[0xAC];
@@ -35,6 +34,8 @@ typedef struct LinkALevelControlTriggerInterface {
 
 typedef LinkALevelControlTriggerInterface FireObjectInterface;
 
+#define LINKA_LEVCONTROL_SEQUENCE_OBJECT_FLAGS 0x2000
+
 STATIC_ASSERT(offsetof(LinkALevelControlObject, mapEventMapId) == 0xAC);
 STATIC_ASSERT(offsetof(LinkALevelControlObject, flags) == 0xB0);
 STATIC_ASSERT(offsetof(LinkALevelControlObject, animEventCallback) == 0xBC);
@@ -42,7 +43,7 @@ STATIC_ASSERT(offsetof(LinkALevelControlTriggerInterface, refresh) == 0x48);
 
 extern ObjectDescriptor gFireObjDescriptor;
 
-undefined4 fire_updateState(FireObject *obj,undefined4 param_2,ObjAnimUpdateState *animUpdate);
+int fire_updateState(FireObject *obj,int unused,ObjAnimUpdateState *animUpdate);
 int fireObj_getExtraSize(void);
 int fireObj_getObjectTypeId(void);
 void fireObj_free(void);

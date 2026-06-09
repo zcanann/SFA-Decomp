@@ -2,7 +2,6 @@
 #include "main/gameplay_runtime.h"
 
 extern FireObjectInterface **gObjectTriggerInterface;
-extern MapEventInterface **gMapEventInterface;
 extern f32 lbl_803E64D8;
 
 #define LINKA_LEVCONTROL_LOOP_SFX_ID 0x48B
@@ -49,12 +48,12 @@ extern f32 lbl_803E64D8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 fire_updateState(FireObject *obj,undefined4 param_2,ObjAnimUpdateState *animUpdate)
+int fire_updateState(FireObject *obj,int unused,ObjAnimUpdateState *animUpdate)
 {
   int stateIndex;
   u8 mode;
   u8 eventId;
-  undefined4 anim;
+  int mapDir;
 
   mode = (u8)(*gMapEventInterface)->getMode((int)obj->mapEventMapId);
   Sfx_KeepAliveLoopedObjectSound(0,LINKA_LEVCONTROL_LOOP_SFX_ID);
@@ -73,18 +72,18 @@ undefined4 fire_updateState(FireObject *obj,undefined4 param_2,ObjAnimUpdateStat
         (*gMapEventInterface)->setAnimEvent(10,7,0);
         GameBit_Set(LINKA_LEVCONTROL_LIGHTFOOT_UNLOCK_GAMEBIT,1);
         loadMapAndParent(LINKA_LEVCONTROL_MAP_ID_17);
-        anim = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_17);
-        lockLevel(anim,0);
+        mapDir = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_17);
+        lockLevel(mapDir,0);
         break;
       case LINKA_LEVCONTROL_MODE_2:
         loadMapAndParent(LINKA_LEVCONTROL_MAP_ID_0B);
-        anim = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_0B);
-        lockLevel(anim,0);
+        mapDir = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_0B);
+        lockLevel(mapDir,0);
         break;
       case LINKA_LEVCONTROL_MODE_3:
         loadMapAndParent(LINKA_LEVCONTROL_MAP_ID_7);
-        anim = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_7);
-        lockLevel(anim,0);
+        mapDir = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_7);
+        lockLevel(mapDir,0);
         break;
       }
     }
@@ -126,12 +125,12 @@ undefined4 fire_updateState(FireObject *obj,undefined4 param_2,ObjAnimUpdateStat
       case LINKA_LEVCONTROL_MODE_0:
       case LINKA_LEVCONTROL_MODE_1:
       case LINKA_LEVCONTROL_MODE_2:
-        anim = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_7);
-        mapUnload(anim,0x20000000);
+        mapDir = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_7);
+        mapUnload(mapDir,0x20000000);
         break;
       case LINKA_LEVCONTROL_MODE_3:
-        anim = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_0B);
-        mapUnload(anim,0x20000000);
+        mapDir = mapGetDirIdx(LINKA_LEVCONTROL_MAP_ID_0B);
+        mapUnload(mapDir,0x20000000);
         break;
       }
     }
@@ -175,7 +174,7 @@ void fireObj_init(FireObject *obj)
   u32 v;
   obj->animEventCallback = fire_updateState;
   unlockLevel(0,0,1);
-  v = obj->flags | 0x2000;
+  v = obj->flags | LINKA_LEVCONTROL_SEQUENCE_OBJECT_FLAGS;
   obj->flags = (u16)v;
   envFxActFn_800887f8(0);
   GameBit_Set(LINKA_LEVCONTROL_INIT_GAMEBIT_0,1);
