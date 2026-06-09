@@ -16,7 +16,6 @@ void androssligh_render(int obj)
     }
 }
 
-#pragma peephole off
 void androssligh_setState(int obj, int newState, u8 force)
 {
     int state;
@@ -32,14 +31,11 @@ void androssligh_setState(int obj, int newState, u8 force)
     }
     *(s8 *)(state + 0xc) = (s8)newState;
 }
-#pragma peephole reset
 
 void androssligh_hitDetect(void) {}
 
 void androssligh_init(void) {}
 
-#pragma scheduling off
-#pragma peephole off
 void androssligh_update(int obj)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -63,11 +59,7 @@ void androssligh_update(int obj)
         break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void androssligh_updateBeam(int obj, int beam)
 {
     f32 start[3];
@@ -113,5 +105,3 @@ void androssligh_updateBeam(int obj, int beam)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset

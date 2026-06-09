@@ -32,8 +32,6 @@ extern ObjectTriggerInterface **gObjectTriggerInterface;
  * PAL Size: TODO
  */
 #pragma dont_inline on
-#pragma peephole off
-#pragma scheduling off
 void dfpstatue1_updateState(DfpStatue1Object *obj)
 {
   DfpStatue1State *state;
@@ -74,8 +72,6 @@ void dfpstatue1_updateState(DfpStatue1Object *obj)
     }
   }
 }
-#pragma scheduling reset
-#pragma peephole reset
 #pragma dont_inline reset
 
 
@@ -89,8 +85,6 @@ void dfpstatue1_hitDetect(void) {}
 
 void dfpstatue1_update(DfpStatue1Object *obj) { dfpstatue1_updateState(obj); }
 
-#pragma peephole off
-#pragma scheduling off
 void dfpstatue1_init(DfpStatue1Object *obj, DfpStatue1MapData *mapData)
 {
   DfpStatue1State *state = obj->state;
@@ -108,8 +102,6 @@ void dfpstatue1_init(DfpStatue1Object *obj, DfpStatue1MapData *mapData)
   state->stateFlags = 0;
   obj->objectFlags |= 0x4000;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void dfpstatue1_release(void) {}
 void dfpstatue1_initialise(void) {}
@@ -122,10 +114,8 @@ void dfperchwitch_hitDetect(void) {}
 
 /* OSReport(string) wrappers. */
 extern void OSReport(const char *fmt, ...);
-#pragma scheduling off
 void dfperchwitch_update(void) { OSReport(sDfperchwitchInitNoLongerSupported); }
 void dfperchwitch_init(void) { OSReport(sDfperchwitchInitNoLongerSupported); }
-#pragma scheduling reset
 
 void dfperchwitch_release(void) {}
 void dfperchwitch_initialise(void) {}

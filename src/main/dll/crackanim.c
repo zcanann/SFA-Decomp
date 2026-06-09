@@ -69,8 +69,6 @@ extern f32 lbl_803E3818;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void appleontree_update(int param_1)
 {
   float fVar1;
@@ -308,8 +306,6 @@ void appleontree_update(int param_1)
 switchD_8017e864_caseD_7:
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -324,8 +320,6 @@ switchD_8017e864_caseD_7:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void appleontree_init(int obj, int def)
 {
     int state;
@@ -389,8 +383,6 @@ void appleontree_init(int obj, int def)
 
     ObjMsg_AllocQueue(obj, 2);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Trivial 4b 0-arg blr leaves. */
 void dll_FC_free_nop(void) {}
@@ -402,9 +394,7 @@ int dll_FC_getObjectTypeId(void) { return 0x0; }
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3848;
 extern void objRenderFn_8003b8f4(f32);
-#pragma peephole off
 void dll_FC_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3848); }
-#pragma peephole reset
 
 extern void dll_FC_initialise_nop(void);
 extern void dll_FC_release_nop(void);
@@ -413,14 +403,12 @@ extern void dll_FC_update(void);
 extern void dll_FC_hitDetect(int *obj);
 
 extern void objRenderFn_80041018(int *obj);
-#pragma peephole off
 void dll_FC_hitDetect(int *obj) {
     int *state = (int *)obj[0x50/4];
     if (((u32)state[0x44/4] & 1u) == 0u) return;
     if (*(void**)((char*)obj + 0x74) == NULL) return;
     objRenderFn_80041018(obj);
 }
-#pragma peephole reset
 
 ObjectDescriptor gDllFCObjDescriptor = {
     0, 0, 0, OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,

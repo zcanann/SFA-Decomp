@@ -73,19 +73,15 @@ extern f32 lbl_803E39C0;
 extern f32 lbl_803E39C4;
 extern f64 lbl_803E39C8;
 
-#pragma scheduling off
 f32 fn_80183204(int obj)
 {
     u8* state = ((GameObject *)obj)->extra;
     return lbl_803E39AC - (f32)(u32)state[0x13] / (f32)(u32)state[0x28];
 }
-#pragma scheduling reset
 
 extern void ObjGroup_AddObject(int obj, int group);
 extern void* lbl_803DDAC0;
 
-#pragma scheduling off
-#pragma peephole off
 void smallbasket_init(int obj, int def)
 {
     int state;
@@ -134,11 +130,7 @@ void smallbasket_init(int obj, int def)
         ((CfperchState *)state)->unk10 = 0x4a;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80183250(int obj, int def)
 {
     int state31;
@@ -185,8 +177,6 @@ void fn_80183250(int obj, int def)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void ObjHits_ClearHitVolumes(int obj);
 extern void ObjHits_SetHitVolumeSlot(int obj, int volumeIdx, int hitType, int extra);
@@ -247,8 +237,6 @@ typedef struct {
  * EN v1.0 Address: 0x801826E8
  * EN v1.0 Size: 2476b
  */
-#pragma scheduling off
-#pragma peephole off
 void smallbasket_update(int obj)
 {
     int player;
@@ -507,5 +495,3 @@ void smallbasket_update(int obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

@@ -83,7 +83,6 @@ STATIC_ASSERT(offsetof(WCTileSetup, initialTile) == WCTILE_INITIAL_TILE_OFFSET);
 
 int wctile_getExtraSize(void) { return WCTILE_EXTRA_SIZE; }
 
-#pragma scheduling off
 int wctile_getObjectTypeId(int obj)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
@@ -95,23 +94,18 @@ int wctile_getObjectTypeId(int obj)
     }
     return (modelIndex << WCTILE_RENDER_TYPE_SHIFT) | WCTILE_RENDER_TYPE_BASE;
 }
-#pragma scheduling reset
 
 void wctile_free(void) {}
 
-#pragma peephole off
 void wctile_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6DF0);
     }
 }
-#pragma peephole reset
 
 void wctile_hitDetect(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void wctile_init(u8 *obj, u8 *setupBytes)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
@@ -127,15 +121,11 @@ void wctile_init(u8 *obj, u8 *setupBytes)
     ObjModel_SetPostRenderCallback(Obj_GetActiveModel((int)obj), postRenderSetAlphaBlendState);
     objAnim->alpha = 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void wctile_release(void) {}
 
 void wctile_initialise(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void wctile_update(int obj)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
@@ -238,5 +228,3 @@ void wctile_update(int obj)
         break;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset

@@ -51,8 +51,6 @@ extern f32 lbl_803E6014;
 extern f32 lbl_803E6018;
 extern void fn_801F8008(int a, f32 *b);
 
-#pragma scheduling off
-#pragma peephole off
 void wmwallcrawler_update(s16 *obj)
 {
     u8 *st;
@@ -401,23 +399,16 @@ void wmwallcrawler_update(s16 *obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 int wmwallcrawler_animEventCallback(int obj) {
     *(u8 *)(*(int *)&((GameObject *)obj)->extra + 0x296) = 1;
     return 0;
 }
-#pragma scheduling reset
 
-#pragma peephole off
 void wmwallcrawler_free(int obj) {
     ObjGroup_RemoveObject(obj, 3);
 }
-#pragma peephole reset
 
-#pragma peephole off
 void wmwallcrawler_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
     ObjAnimComponent *objAnim = &((GameObject *)p1)->anim;
     int *inner = ((GameObject *)p1)->extra;
@@ -433,13 +424,10 @@ void wmwallcrawler_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E5FB4);
     }
 }
-#pragma peephole reset
 
 extern void vecRotateZXY(void* mtx, f32* vec);
 typedef struct { s16 r0, r1, r2; f32 m8, mc, m10, m14; } WcXf;
 
-#pragma peephole off
-#pragma scheduling off
 void fn_801F8008(int a, f32* b)
 {
     WcXf mtx;
@@ -461,14 +449,10 @@ void fn_801F8008(int a, f32* b)
     *(s16*)(a + 2) = (s16)ang2;
     *(s16*)(a + 4) = (s16)ang;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern f32 lbl_803E5FB8;
 typedef struct { u8 hit:1; u8 _r299:7; } WcHitBits;
 
-#pragma peephole off
-#pragma scheduling off
 void wmwallcrawler_hitDetect(int obj)
 {
     int inner = *(int *)&((GameObject *)obj)->extra;
@@ -497,8 +481,6 @@ void wmwallcrawler_hitDetect(int obj)
         ((WcHitBits*)(inner + 0x299))->hit = 0;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern u16 lbl_80328DD0[];
 extern u8 lbl_80328DE0[];
@@ -506,8 +488,6 @@ extern u8 lbl_803DC134;
 extern f32 lbl_803E6030;
 extern f32 lbl_803E6034;
 
-#pragma peephole off
-#pragma scheduling off
 void wmwallcrawler_init(int obj, int spawn)
 {
     ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
@@ -560,5 +540,3 @@ void wmwallcrawler_init(int obj, int spawn)
     ObjHits_EnableObject(obj);
     ObjHits_SyncObjectPositionIfDirty(obj);
 }
-#pragma scheduling reset
-#pragma peephole reset

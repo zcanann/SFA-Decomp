@@ -2,8 +2,6 @@
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 
-#pragma peephole off
-#pragma scheduling off
 void wclevelcont_func16(s16 value, s16 *outRow, s16 *outCol)
 {
     int i, j;
@@ -18,11 +16,7 @@ void wclevelcont_func16(s16 value, s16 *outRow, s16 *outCol)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void wclevelcont_func15(s16 value, s16 *outRow, s16 *outCol)
 {
     int i, j;
@@ -37,11 +31,7 @@ void wclevelcont_func15(s16 value, s16 *outRow, s16 *outCol)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 int wclevelcont_func14(s16 i, s16 j)
 {
     if (i < 0 || i > 7 || j < 0 || j > 7) {
@@ -49,11 +39,7 @@ int wclevelcont_func14(s16 i, s16 j)
     }
     return lbl_803AD298[i][j];
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void wclevelcont_func13(int value, s16 i, s16 j)
 {
     if (i < 0 || i > 7 || j < 0 || j > 7) {
@@ -61,11 +47,7 @@ void wclevelcont_func13(int value, s16 i, s16 j)
     }
     lbl_803AD298[i][j] = (u8)value;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void wclevelcont_func12(int obj, s16 *outRow, s16 *outCol, f32 px, f32 pz)
 {
     f32 outX, outZ;
@@ -74,10 +56,7 @@ void wclevelcont_func12(int obj, s16 *outRow, s16 *outCol, f32 px, f32 pz)
     *outRow = (s16)((s16)(px - outX - lbl_803E6DB8) / 48);
     *outCol = (s16)((s16)(pz - outZ - lbl_803E6DC0) / 48);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
 void wclevelcont_func11(int obj, s16 col, s16 row, f32 *outXp, f32 *outZp)
 {
     f32 outX, outZ;
@@ -86,10 +65,7 @@ void wclevelcont_func11(int obj, s16 col, s16 row, f32 *outXp, f32 *outZp)
     *outXp = lbl_803E6DB4 + (lbl_803E6DB8 + outX + (f32)(col * 48));
     *outZp = lbl_803E6DB4 + (lbl_803E6DC0 + outZ + (f32)(row * 48));
 }
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void wclevelcont_func0F(s16 value, s16 *outRow, s16 *outCol)
 {
     int i, j;
@@ -104,11 +80,7 @@ void wclevelcont_func0F(s16 value, s16 *outRow, s16 *outCol)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void wclevelcont_func0E(s16 value, s16 *outRow, s16 *outCol)
 {
     int i, j;
@@ -123,11 +95,7 @@ void wclevelcont_func0E(s16 value, s16 *outRow, s16 *outCol)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 int wclevelcont_render2(s16 i, s16 j)
 {
     if (i < 0 || i > 7 || j < 0 || j > 7) {
@@ -135,11 +103,7 @@ int wclevelcont_render2(s16 i, s16 j)
     }
     return lbl_803AD2D8[i][j];
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void wclevelcont_modelMtxFn(int value, s16 i, s16 j)
 {
     if (i < 0 || i > 7 || j < 0 || j > 7) {
@@ -147,11 +111,7 @@ void wclevelcont_modelMtxFn(int value, s16 i, s16 j)
     }
     lbl_803AD2D8[i][j] = (u8)value;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void wclevelcont_func0B(int obj, s16 *outRow, s16 *outCol, f32 px, f32 pz)
 {
     f32 outX, outZ;
@@ -160,10 +120,7 @@ void wclevelcont_func0B(int obj, s16 *outRow, s16 *outCol, f32 px, f32 pz)
     *outRow = (s16)((s16)(px - outX - lbl_803E6DD0) / 48);
     *outCol = (s16)((s16)(pz - outZ - lbl_803E6DD4) / 48);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
 void wclevelcont_setScale(int obj, s16 col, s16 row, f32 *outXp, f32 *outZp)
 {
     f32 outX, outZ;
@@ -172,13 +129,11 @@ void wclevelcont_setScale(int obj, s16 col, s16 row, f32 *outXp, f32 *outZp)
     *outXp = lbl_803E6DB4 + (lbl_803E6DD0 + outX + (f32)(col * 48));
     *outZp = lbl_803E6DB4 + (lbl_803E6DD4 + outZ + (f32)(row * 48));
 }
-#pragma scheduling reset
 
 int wclevelcont_getExtraSize(void) { return 0x1c; }
 
 int wclevelcont_getObjectTypeId(void) { return 0; }
 
-#pragma scheduling off
 void wclevelcont_free(int obj)
 {
     WcLevelControlState *state = ((GameObject *)obj)->extra;
@@ -199,21 +154,16 @@ void wclevelcont_free(int obj)
     }
     gameTimerStop();
 }
-#pragma scheduling reset
 
-#pragma peephole off
 void wclevelcont_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6DD8);
     }
 }
-#pragma peephole reset
 
 void wclevelcont_hitDetect(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void wclevelcont_syncProgressBits(WcLevelControlState *state)
 {
     int flag;
@@ -248,11 +198,7 @@ void wclevelcont_syncProgressBits(WcLevelControlState *state)
     GameBit_Set(0xf31, flag);
     SCGameBitLatch_Update((int)&state->gameBitLatch, 0x80, -1, -1, 0xf31, 0xaf);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void wclevelcont_update(int obj)
 {
     WcLevelControlState *state = ((GameObject *)obj)->extra;
@@ -287,11 +233,7 @@ void wclevelcont_update(int obj)
         GameBit_Set(0x7f1, 1);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 int wclevelcont_func10(int obj, s16 a, s16 b, f32 *outX, f32 *outZ, int dx, int dy)
 {
     int i;
@@ -369,11 +311,7 @@ int wclevelcont_func10(int obj, s16 a, s16 b, f32 *outX, f32 *outZ, int dx, int 
         return 4;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void wclevelcont_init(int obj)
 {
     WcLevelControlState *state = ((GameObject *)obj)->extra;
@@ -408,8 +346,6 @@ void wclevelcont_init(int obj)
     state->dialogueFlags.b20 = GameBit_Get(0xc59);
     state->dialogueFlags.b18 = GameBit_Get(0xc5a);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void wclevelcont_release(void) {}
 

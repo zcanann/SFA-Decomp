@@ -42,8 +42,6 @@ void cntcounter_init(int obj)
     state->remainingCount = 0;
 }
 
-#pragma peephole off
-#pragma scheduling off
 void cntcounter_update(int obj)
 {
     CntCounterState *state = ((GameObject *)obj)->extra;
@@ -74,8 +72,6 @@ void cntcounter_update(int obj)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void cntcounter_release(void) {}
 

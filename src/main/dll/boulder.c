@@ -17,8 +17,6 @@ extern f32 lbl_803E5ED8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void fn_801F4ECC(int param_1, u8 *param_2)
 {
   *(f32 *)(param_2 + 0x04) = *(f32 *)(param_2 + 0x08);
@@ -36,5 +34,3 @@ void fn_801F4ECC(int param_1, u8 *param_2)
   *(f32 *)(param_2 + 0x20) = *(f32 *)(param_2 + 0x38);
   *(f32 *)(param_2 + 0x30) = *(f32 *)(param_2 + 0x3c);
 }
-#pragma peephole reset
-#pragma scheduling reset

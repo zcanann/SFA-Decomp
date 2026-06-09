@@ -15,8 +15,6 @@ extern f32 lbl_803E5210;
  * EN v1.0 Address: 0x801CEFBC
  * EN v1.0 Size: 84b
  */
-#pragma peephole off
-#pragma scheduling off
 void nw_mammoth_free(void *obj)
 {
     void *node;
@@ -27,8 +25,6 @@ void nw_mammoth_free(void *obj)
         (*gGameUIInterface)->airMeterShutdown();
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -37,8 +33,6 @@ void nw_mammoth_free(void *obj)
  * EN v1.0 Address: 0x801CF010
  * EN v1.0 Size: 156b
  */
-#pragma peephole off
-#pragma scheduling off
 void nw_mammoth_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible)
 {
     int i;
@@ -59,5 +53,3 @@ void nw_mammoth_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, u
         (char *)node + 0x14,
         0);
 }
-#pragma scheduling reset
-#pragma peephole reset

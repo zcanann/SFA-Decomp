@@ -57,8 +57,6 @@ void cloudaction_func08_nop(void) {}
 
 void cloudaction_func09_nop(void) {}
 
-#pragma scheduling off
-#pragma peephole off
 void cloudaction_free(void) {
     if (*(void **)lbl_8039AB28 != NULL) {
         Obj_FreeObject(*(int *)lbl_8039AB28);
@@ -76,11 +74,7 @@ void cloudaction_free(void) {
     }
     *(int *)(lbl_8039AB28 + 0x14) = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void renderClouds(int a, int b, int c, int d) {
     u8 p0;
     u8 p1;
@@ -242,10 +236,7 @@ void renderClouds(int a, int b, int c, int d) {
         objRender(a, b, c, d, *(int *)(lbl_8039AB28 + 8), 1);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void cloudaction_func05(void) {
     char *tex;
     if (*(void **)lbl_8039AB28 != NULL) {
@@ -258,16 +249,11 @@ void cloudaction_func05(void) {
         }
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void cloudaction_onMapSetup(void) {
     memset(lbl_8039AB28, 0, 0x1c);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void cloudaction_update(int p1, int p2, u8 *state, int p4, int val) {
     CloudEnvTbl *tbl = (CloudEnvTbl *)lbl_8030F7B0;
 
@@ -346,16 +332,12 @@ void cloudaction_update(int p1, int p2, u8 *state, int p4, int val) {
         *(int *)(lbl_8039AB28 + 0x14) = 0;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void cloudaction_release(void) {}
 
-#pragma scheduling off
 void cloudaction_initialise(void) {
     lbl_803DB618[0] = -1;
     lbl_803DB618[1] = -1;
     lbl_803DD1F0 = 0;
 }
-#pragma scheduling reset
 

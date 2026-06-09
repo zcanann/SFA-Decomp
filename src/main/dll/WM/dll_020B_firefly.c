@@ -123,8 +123,6 @@ STATIC_ASSERT(offsetof(FireFlyState, flags) == FIREFLY_STATE_FLAGS);
 STATIC_ASSERT(offsetof(FireFlyState, messageParam) == FIREFLY_STATE_MESSAGE_PARAM);
 
 
-#pragma peephole off
-#pragma scheduling off
 void FireFlyFn_801f4f88(int obj)
 {
     FireFlyState *state = ((GameObject *)obj)->extra;
@@ -221,11 +219,7 @@ void FireFlyFn_801f4f88(int obj)
     }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void firefly_free(int obj)
 {
     FireFlyState *state = ((GameObject *)obj)->extra;
@@ -233,11 +227,7 @@ void firefly_free(int obj)
     modelLightStruct_freeSlot(state);
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void firefly_update(int obj)
 {
     FireFlyState *state;
@@ -287,11 +277,7 @@ void firefly_update(int obj)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void firefly_init(int obj, int def)
 {
     FireFlyState *state;
@@ -308,8 +294,6 @@ void firefly_init(int obj, int def)
         s16toFloat(state->activateDelay, 0xe10);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /* Pattern wrappers. */
 int firefly_getExtraSize(void) { return FIREFLY_EXTRA_SIZE; }

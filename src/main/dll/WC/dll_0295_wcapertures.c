@@ -73,7 +73,6 @@ STATIC_ASSERT(offsetof(WCAperturesSetup, armBit) == WCAPERTURES_SETUP_ARM_BIT_OF
 
 int wcapertures_getExtraSize(void) { return WCAPERTURES_EXTRA_SIZE; }
 
-#pragma scheduling off
 int wcapertures_getObjectTypeId(int obj)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
@@ -85,7 +84,6 @@ int wcapertures_getObjectTypeId(int obj)
     }
     return (modelIndex << WCAPERTURES_RENDER_TYPE_SHIFT) | WCAPERTURES_RENDER_TYPE_BASE;
 }
-#pragma scheduling reset
 
 void wcapertures_free(int obj)
 {
@@ -97,8 +95,6 @@ void wcapertures_free(int obj)
     }
 }
 
-#pragma peephole off
-#pragma scheduling off
 void wcapertures_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     WCAperturesState *state = ((GameObject *)obj)->extra;
@@ -117,11 +113,7 @@ void wcapertures_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6E2C);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void wcapertures_hitDetect(int obj)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
@@ -145,8 +137,6 @@ void wcapertures_hitDetect(int obj)
     if (state->light != NULL)
         modelLightStruct_updateGlowAlpha(state->light);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void wcapertures_release(void) {}
 
@@ -164,8 +154,6 @@ int wcapertures_interactCallback(int obj, int p2, int p3)
     return 0;
 }
 
-#pragma peephole off
-#pragma scheduling off
 void wcapertures_init(int obj, int initData)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
@@ -198,11 +186,7 @@ void wcapertures_init(int obj, int initData)
         modelLightStruct_setGlowProjectionRadius(state->light, lbl_803E6E40);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void wcapertures_update(int obj)
 {
     ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
@@ -257,5 +241,3 @@ void wcapertures_update(int obj)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset

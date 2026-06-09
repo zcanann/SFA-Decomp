@@ -17,8 +17,6 @@ extern f32 timeDelta;
 extern f32 lbl_803E3060;
 extern int *gBaddieControlInterface;
 
-#pragma scheduling off
-#pragma peephole off
 int kaldachom_stateHandlerB05(int obj, int p)
 {
   int state;
@@ -48,11 +46,7 @@ int kaldachom_stateHandlerB05(int obj, int p)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int kaldachom_stateHandlerB04(int obj, GroundBaddieState *state)
 {
     if ((s8)state->baddie.moveJustStartedB != 0) {
@@ -60,11 +54,7 @@ int kaldachom_stateHandlerB04(int obj, GroundBaddieState *state)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int kaldachom_stateHandlerB03(int obj, GroundBaddieState *state)
 {
     if ((s8)state->baddie.moveJustStartedB != 0) {
@@ -75,11 +65,7 @@ int kaldachom_stateHandlerB03(int obj, GroundBaddieState *state)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int kaldachom_stateHandlerA07(int obj, int p)
 {
   extern int *gBaddieControlInterface;
@@ -139,13 +125,9 @@ int kaldachom_stateHandlerA07(int obj, int p)
       (s32)((lbl_803E3078 - ((GameObject *)obj)->anim.currentMoveProgress) * lbl_803E308C);
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E3080;
 
-#pragma scheduling off
-#pragma peephole off
 int kaldachom_stateHandlerB01(int* obj, GroundBaddieState *state) {
     KaldaChomControl *control = ((CfDoorlightState *)((GameObject *)obj)->extra)->control;
     if (state->baddie.controlMode == 6) {
@@ -183,11 +165,7 @@ int kaldachom_stateHandlerB00(int* obj, GroundBaddieState *state) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int kaldachom_stateHandlerB02(int obj, GroundBaddieState *p2)
 {
   extern void ObjHits_DisableObject(int);
@@ -213,5 +191,3 @@ int kaldachom_stateHandlerB02(int obj, GroundBaddieState *p2)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset

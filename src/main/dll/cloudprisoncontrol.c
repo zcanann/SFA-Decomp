@@ -19,8 +19,6 @@ extern f32 lbl_803E3750;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void InvisibleHitSwitch_init(int param_1, u8 *param_2)
 {
   u8 *info;
@@ -52,5 +50,3 @@ void InvisibleHitSwitch_init(int param_1, u8 *param_2)
     break;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset

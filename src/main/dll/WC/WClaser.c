@@ -106,8 +106,6 @@ STATIC_ASSERT(offsetof(WMGalleonSetup, yawByte) == 0x18);
 STATIC_ASSERT(offsetof(WMSeqObjectSetup, yawByte) == 0x18);
 STATIC_ASSERT(offsetof(WMSeqObjectSetup, setupType) == 0x19);
 
-#pragma scheduling off
-#pragma peephole off
 void WM_Galleon_update(int *obj)
 {
     int player;
@@ -198,14 +196,10 @@ void WM_Galleon_init(int *obj, WMGalleonSetup *setup)
     }
     GameBit_Set(0xa4, 1);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void WM_Galleon_release(void) {}
 void WM_Galleon_initialise(void) {}
 
-#pragma scheduling off
-#pragma peephole off
 int WM_seqobject_SeqFn(int p1, int p2, u8 *arg3)
 {
     int i;
@@ -219,14 +213,11 @@ int WM_seqobject_SeqFn(int p1, int p2, u8 *arg3)
     arg3[0x56] = 0;
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 int WM_seqobject_getExtraSize(void) { return 1; }
 int WM_seqobject_getObjectTypeId(void) { return 0; }
 void WM_seqobject_free(void) {}
 
-#pragma peephole off
 void WM_seqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -235,12 +226,9 @@ void WM_seqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
         objRenderFn_8003b8f4(lbl_803E5CF8);
     }
 }
-#pragma peephole reset
 
 void WM_seqobject_hitDetect(void) {}
 
-#pragma scheduling off
-#pragma peephole off
 void WM_seqobject_update(int *obj)
 {
     int count;
@@ -299,11 +287,7 @@ void WM_seqobject_update(int *obj)
         OBJ_S32(obj, 0xf8) = 0;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void WM_seqobject_init(int *obj, s8 *def)
 {
     s16 angle;
@@ -314,14 +298,10 @@ void WM_seqobject_init(int *obj, s8 *def)
     ((GameObject *)obj)->animEventCallback = (void *)WM_seqobject_SeqFn;
     OBJ_S32(obj, 0xf8) = 0x14;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void WM_seqobject_release(void) {}
 void WM_seqobject_initialise(void) {}
 
-#pragma scheduling off
-#pragma peephole off
 int dll_1FB_SeqFn(int *obj, int unused, s16 *p)
 {
     Dll1FBState *state = (Dll1FBState *)OBJ_PTR(obj, 0xb8);
@@ -336,15 +316,11 @@ int dll_1FB_SeqFn(int *obj, int unused, s16 *p)
     *(u8 *)((u8 *)p + 0x56) = 0;
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 int dll_1FB_getExtraSize_ret_12(void) { return 0xc; }
 int dll_1FB_getObjectTypeId(void) { return 0; }
 void dll_1FB_free_nop(void) {}
 
-#pragma scheduling off
-#pragma peephole off
 void dll_1FB_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     Dll1FBState *state = (Dll1FBState *)OBJ_PTR(obj, 0xb8);
@@ -357,13 +333,9 @@ void dll_1FB_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
     }
     ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E5D00);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void dll_1FB_hitDetect_nop(void) {}
 
-#pragma scheduling off
-#pragma peephole off
 void dll_1FB_update(int *obj)
 {
     Dll1FBState *state = (Dll1FBState *)OBJ_PTR(obj, 0xb8);
@@ -393,8 +365,6 @@ void dll_1FB_init(int *obj, u8 *def)
     state->triggerMode = setup->triggerMode;
     ObjAnim_SetCurrentMove((int)obj, (int)state->baseMove + 0x100, lbl_803E5D08, 0);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void dll_1FB_release_nop(void) {}
 void dll_1FB_initialise_nop(void) {}
@@ -402,7 +372,6 @@ void dll_1FB_initialise_nop(void) {}
 int LaserBeam_getExtraSize(void) { return 0x50; }
 int LaserBeam_getObjectTypeId(void) { return 0; }
 
-#pragma scheduling off
 void LaserBeam_init(int *obj)
 {
     void **state;
@@ -414,7 +383,6 @@ void LaserBeam_init(int *obj)
         state[0] = 0;
     }
 }
-#pragma scheduling reset
 
 void LaserBeam_render(void) {}
 void LaserBeam_hitDetect(void) {}

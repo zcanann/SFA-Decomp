@@ -41,8 +41,6 @@ STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, triggerIdMax) == 0x1E);
 STATIC_ASSERT(offsetof(BabyCloudRunnerPlacement, flags) == 0x1F);
 STATIC_ASSERT(offsetof(BabyCloudRunnerState, target) == 0x4);
 
-#pragma scheduling off
-#pragma peephole off
 void dll_FC_update(int obj)
 {
   BabyCloudRunnerPlacement *placement;
@@ -119,8 +117,6 @@ void dll_FC_update(int obj)
 end:
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -135,7 +131,6 @@ end:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
 void dll_FC_init(int obj, int objDef)
 {
   BabyCloudRunnerState *state;
@@ -148,7 +143,6 @@ void dll_FC_init(int obj, int objDef)
   ((GameObject *)obj)->objectFlags |= 0x4000;
   return;
 }
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -163,7 +157,6 @@ void dll_FC_init(int obj, int objDef)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
 void dll_14D_hitDetect(int param_1)
 {
   if (((((ObjAnimComponent *)param_1)->modelInstance->flags & 1) != 0) && (*(uint *)(param_1 + 0x74) != 0)) {
@@ -171,7 +164,6 @@ void dll_14D_hitDetect(int param_1)
   }
   return;
 }
-#pragma peephole reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -186,6 +178,4 @@ int dll_14D_getObjectTypeId(void) { return 0x0; }
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3850;
 extern void objRenderFn_8003b8f4(f32);
-#pragma peephole off
 void dll_14D_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3850); }
-#pragma peephole reset

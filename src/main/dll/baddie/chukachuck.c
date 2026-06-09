@@ -42,8 +42,6 @@ extern f32 lbl_803E642C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void dfpfloorbar_update(int param_1)
 {
     int iVar6 = *(int *)&((GameObject *)param_1)->anim.placementData;
@@ -153,8 +151,6 @@ void dfpfloorbar_update(int param_1)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -180,8 +176,6 @@ void dfpfloorbar_release(void)
  * EN v1.0 Address: 0x80206844
  * EN v1.0 Size: 228b
  */
-#pragma scheduling off
-#pragma peephole off
 void dfpfloorbar_init(int obj, int params)
 {
     DfpFloorbarState *state = ((GameObject *)obj)->extra;
@@ -202,12 +196,8 @@ void dfpfloorbar_init(int obj, int params)
         ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)params)->posY - lbl_803E640C;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* EN v1.0 0x8020692C  size: 60b */
-#pragma scheduling off
-#pragma peephole off
 void dfpfloorbar_initialise(void)
 {
     u8 *modeRow = gDfpfloorbarModeTable;
@@ -224,8 +214,6 @@ void dfpfloorbar_initialise(void)
     modeRow[1] = 0;
     modeRow[2] = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 ObjectDescriptor10WithPadding gDfpfloorbarObjDescriptor = {
     {

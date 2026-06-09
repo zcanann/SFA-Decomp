@@ -50,8 +50,6 @@ void cnthitobjec_release(void) {}
 
 void cnthitobjec_initialise(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void cnthitobjec_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
     CntHitObjectState *state = ((GameObject *)obj)->extra;
@@ -60,10 +58,7 @@ void cnthitobjec_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7430);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
 int cnthitobjec_emitHitEvents(int obj, int p2, int p3)
 {
     int i;
@@ -73,10 +68,7 @@ int cnthitobjec_emitHitEvents(int obj, int p2, int p3)
     }
     return 0;
 }
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void cnthitobjec_hitDetect(int obj)
 {
     CntHitObjectSetup *setup = (CntHitObjectSetup *)((GameObject *)obj)->anim.placementData;
@@ -127,11 +119,7 @@ void cnthitobjec_hitDetect(int obj)
         Sfx_PlayFromObject(obj, SFXdn_hightop_ambi1);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void cnthitobjec_init(int obj, int setup)
 {
     CntHitObjectState *state = ((GameObject *)obj)->extra;
@@ -155,11 +143,7 @@ void cnthitobjec_init(int obj, int setup)
     }
     ((GameObject *)obj)->animEventCallback = (void *)cnthitobjec_emitHitEvents;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void cnthitobjec_update(int obj)
 {
     CntHitObjectState *state = ((GameObject *)obj)->extra;
@@ -182,10 +166,7 @@ void cnthitobjec_update(int obj)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
 int mcupgrade_SeqFn(int obj, int p2, int setup)
 {
     CntHitObjectAnimEvent *event = (CntHitObjectAnimEvent *)setup;
@@ -195,4 +176,3 @@ int mcupgrade_SeqFn(int obj, int p2, int setup)
     }
     return 0;
 }
-#pragma scheduling reset

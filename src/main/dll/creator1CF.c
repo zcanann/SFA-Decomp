@@ -32,13 +32,11 @@ extern f32 lbl_803E51DC;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void dll_19E_free(int param_1)
 {
   (*gModgfxInterface)->detachSource((void *)param_1);
   (*gExpgfxInterface)->freeSource2((u32)param_1);
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -53,8 +51,6 @@ void dll_19E_free(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void dll_19E_render(int param_1, int param_2, int param_3, int param_4,
                  int param_5, s8 visible)
 {
@@ -137,8 +133,6 @@ void dll_19E_render(int param_1, int param_2, int param_3, int param_4,
     }
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */

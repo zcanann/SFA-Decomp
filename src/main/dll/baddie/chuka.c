@@ -21,8 +21,6 @@ extern f32 lbl_803E63FC;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void chuka_init(int obj, int params)
 {
     ChukaState *state = ((GameObject *)obj)->extra;
@@ -56,8 +54,6 @@ void chuka_init(int obj, int params)
     *modeTable = 0; modeTable++;
     *modeTable = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -72,7 +68,6 @@ void chuka_init(int obj, int params)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void dfpfloorbar_free(int *obj)
 {
   DfpFloorbarState *state;
@@ -82,7 +77,6 @@ void dfpfloorbar_free(int *obj)
   state->linkedObject = NULL;
   return;
 }
-#pragma scheduling reset
 
 /* EN v1.0 0x80206474  size: 8b   trivial 0-returner. */
 int dfpfloorbar_SeqFn(void) { return 0; }
@@ -148,7 +142,6 @@ extern void objRenderFn_8003b8f4(f32);
 /* EN v1.0 0x802064D0  size: 48b   if (p6) objRenderFn_8003b8f4(lbl_803E6408).
  * Logic-only (~91%): retail uses extsb+cmpwi, MWCC -O4,p folds to extsb.
  */
-#pragma peephole off
 void dfpfloorbar_render(int p1, int p2, int p3, int p4, int p5, s8 p6)
 {
     s32 t = p6;
@@ -156,10 +149,8 @@ void dfpfloorbar_render(int p1, int p2, int p3, int p4, int p5, s8 p6)
         objRenderFn_8003b8f4(lbl_803E6408);
     }
 }
-#pragma peephole reset
 
 /* EN v1.0 0x80206500  size: 44b   if (b->_8 && (b->_8->_6 & 0x40)) clear. */
-#pragma peephole off
 void dfpfloorbar_hitDetect(int *obj)
 {
     int *x;
@@ -172,4 +163,3 @@ void dfpfloorbar_hitDetect(int *obj)
     if (v == 0) return;
     b[2] = NULL;
 }
-#pragma peephole reset

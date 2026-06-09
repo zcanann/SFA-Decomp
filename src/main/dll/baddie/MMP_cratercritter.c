@@ -27,7 +27,6 @@ extern int trickyDebugPrint(const char *fmt, ...);
  * EN v1.0 Address: 0x8013D8F0
  * EN v1.0 Size: 588b
  */
-#pragma scheduling off
 void trickyFn_8013d8f0(u8 *self, u8 *state)
 {
   u8 *nearest;
@@ -102,4 +101,3 @@ void trickyFn_8013d8f0(u8 *self, u8 *state)
     trickyDebugPrint(lbl_8031D478);
   }
 }
-#pragma scheduling reset

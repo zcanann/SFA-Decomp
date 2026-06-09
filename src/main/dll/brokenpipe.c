@@ -26,8 +26,6 @@ STATIC_ASSERT(sizeof(BrokenPipeState) == 4);
 
 int brokenpipe_getExtraSize(void) { return 4; }
 
-#pragma peephole off
-#pragma scheduling off
 void brokenpipe_init(int obj, int setup)
 {
     GameObject *object = (GameObject *)obj;
@@ -48,10 +46,7 @@ void brokenpipe_init(int obj, int setup)
     }
     object->objectFlags |= BROKENPIPE_OBJECT_FLAGS_INIT;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
 void brokenpipe_update(int obj)
 {
     BrokenPipeState *state = ((GameObject *)obj)->extra;
@@ -59,4 +54,3 @@ void brokenpipe_update(int obj)
     ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f,
         (int)&state->hitEffectCooldown);
 }
-#pragma scheduling reset

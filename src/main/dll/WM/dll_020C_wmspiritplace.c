@@ -22,8 +22,6 @@ typedef struct WmSpiritPlaceState {
 
 void fn_801F568C(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 int wmspiritplace_SeqFn(int obj, int unused, int actor)
 {
     int i;
@@ -130,8 +128,6 @@ int wmspiritplace_SeqFn(int obj, int unused, int actor)
 
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 int wmspiritplace_getExtraSize(void) { return 0x18; }
 
@@ -139,14 +135,12 @@ int wmspiritplace_getObjectTypeId(void) { return 0x0; }
 
 void wmspiritplace_free(void) {}
 
-#pragma peephole off
 void wmspiritplace_render(undefined4 p1, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, s8 visible)
 {
     if (visible == 0) {
         return;
     }
 }
-#pragma peephole reset
 
 void wmspiritplace_hitDetect(int obj)
 {
@@ -155,8 +149,6 @@ void wmspiritplace_hitDetect(int obj)
     }
 }
 
-#pragma peephole off
-#pragma scheduling off
 void wmspiritplace_update(int obj)
 {
     WmSpiritPlaceState *state;
@@ -377,8 +369,6 @@ void wmspiritplace_init(int obj, int setup)
         ((GameObject *)obj)->anim.localPosX = ((GameObject *)obj)->anim.localPosX + lbl_803E5F00;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void wmspiritplace_release(void) {}
 

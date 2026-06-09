@@ -45,8 +45,6 @@ void wmplanets_release(void) {}
 
 void wmplanets_initialise(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void wmplanets_update(int *obj) {
     WmPlanetsState *state;
     WmPlanetsVector vec;
@@ -83,11 +81,7 @@ void wmplanets_update(int *obj) {
     ((GameObject *)obj)->anim.localPosZ = vec.f[2] + state->baseZ;
     *(s16 *)obj = (s16)(*(s16 *)obj + state->yawStep * (s32)timeDelta);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void wmplanets_init(int *obj, u8 *init) {
     WmPlanetsState *inner = ((GameObject *)obj)->extra;
     f32 a = lbl_803E5FA0 * *(f32 *)((char *)*(int *)&((GameObject *)obj)->anim.modelInstance + 4);
@@ -107,13 +101,9 @@ void wmplanets_init(int *obj, u8 *init) {
     Obj_SetActiveModelIndex((int)obj, *(s16 *)((char *)init + 0x1a));
     ((GameObject *)obj)->anim.localPosZ = *(f32 *)((char *)init + 0x10) + inner->heightOffset;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
 void wmplanets_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
     if (vis != 0) {
         objRenderFn_8003b8f4(lbl_803E5F98);
     }
 }
-#pragma peephole reset

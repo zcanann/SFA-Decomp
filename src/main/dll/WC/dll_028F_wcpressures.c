@@ -114,8 +114,6 @@ STATIC_ASSERT(offsetof(WCPressuresSetup, activateBit) == WCPRESSURES_SETUP_ACTIV
 
 int wcpressures_getExtraSize(void) { return WCPRESSURES_EXTRA_SIZE; }
 
-#pragma peephole off
-#pragma scheduling off
 int wcpressures_tileStateCallback(int obj, int unused, int callbackData)
 {
     WCPressuresState *state = *(WCPressuresState **)(obj + WCPRESSURES_OBJECT_STATE_OFFSET);
@@ -143,10 +141,7 @@ int wcpressures_tileStateCallback(int obj, int unused, int callbackData)
 
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
 int wcpressures_getObjectTypeId(int obj)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
@@ -159,25 +154,18 @@ int wcpressures_getObjectTypeId(int obj)
     }
     return (modelIndex << WCPRESSURES_RENDER_TYPE_SHIFT) | WCPRESSURES_RENDER_TYPE_BASE;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void wcpressures_free(int obj) { ObjGroup_RemoveObject(obj, WCPRESSURES_OBJECT_GROUP); }
-#pragma scheduling reset
 
-#pragma peephole off
 void wcpressures_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6E00);
     }
 }
-#pragma peephole reset
 
 void wcpressures_hitDetect(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void wcpressures_update(int obj)
 {
     WCPressuresSetup *setup = *(WCPressuresSetup **)(obj + WCPRESSURES_OBJECT_SETUP_OFFSET);
@@ -274,11 +262,7 @@ void wcpressures_update(int obj)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void wcpressures_init(u8 *obj, u8 *setup)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
@@ -311,8 +295,6 @@ void wcpressures_init(u8 *obj, u8 *setup)
     }
     ((GameObject *)obj)->animEventCallback = wcpressures_tileStateCallback;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void wcpressures_release(void) {}
 

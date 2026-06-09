@@ -50,8 +50,6 @@ extern f32 lbl_803E5600;
 extern f32 lbl_803E5604;
 extern f32 lbl_803E5608;
 
-#pragma scheduling off
-#pragma peephole off
 int sc_totempuzzle_checkSolvedSequence(SCTotemPuzzleObject *obj, SCTotemPuzzleState *state)
 {
     SCTotemPuzzleParticleBox particleBox;
@@ -132,8 +130,6 @@ int sc_totempuzzle_checkSolvedSequence(SCTotemPuzzleObject *obj, SCTotemPuzzleSt
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 int sc_totempuzzle_getExtraSize(void)
 {
@@ -149,7 +145,6 @@ void sc_totempuzzle_free(void)
 {
 }
 
-#pragma peephole off
 void sc_totempuzzle_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 v = visible;
@@ -158,7 +153,6 @@ void sc_totempuzzle_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
         objRenderFn_8003b8f4(lbl_803E55FC);
     }
 }
-#pragma peephole reset
 
 void sc_totempuzzle_hitDetect(void)
 {

@@ -88,8 +88,6 @@ extern f32 timeDelta;
 extern f32 lbl_803E503C;
 extern f32 lbl_803E5040;
 
-#pragma scheduling off
-#pragma peephole off
 void gpsh_shrine_update(int obj)
 {
     int count;
@@ -279,12 +277,8 @@ void gpsh_shrine_update(int obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
-#pragma scheduling off
-#pragma peephole off
 void gpsh_shrine_init(int *obj, int *def) {
     u8 *state;
 
@@ -311,8 +305,6 @@ void gpsh_shrine_init(int *obj, int *def) {
     GameBit_Set(0xea1, 1);
     GameBit_Set(0xefa, 1);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Trivial 4b 0-arg blr leaves. */
 void gpsh_shrine_release(void) {}
@@ -332,8 +324,6 @@ extern f32 lbl_803E5050;
 extern f32 lbl_803E5054;
 extern s16 lbl_803263B8[];
 
-#pragma scheduling off
-#pragma peephole off
 void gpsh_objcreator_update(int *obj) {
     u8 *sub;
     void *setup;
@@ -372,8 +362,6 @@ void gpsh_objcreator_update(int *obj) {
         Obj_SetupObject(setup, 5, *(s8*)((char*)obj + 0xac), -1, *(void**)&((GameObject *)obj)->anim.parent);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 void gpsh_scene_free(void) {}
 void gpsh_scene_hitDetect(void) {}
 void gpsh_scene_update(void) {}
@@ -394,14 +382,10 @@ extern f32 lbl_803E5048;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5058;
 extern f32 lbl_803E5060;
-#pragma peephole off
 void gpsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5048); }
 void gpsh_scene_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5058); }
 void ecsh_cup_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5060); }
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 void ecsh_cup_free(int *obj) {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
@@ -424,5 +408,3 @@ void gpsh_objcreator_init(int *obj, int *def) {
     *(u8 *)((char *)obj + 0x37) = 0xff;
     ((GameObject *)obj)->anim.alpha = 0xff;
 }
-#pragma peephole reset
-#pragma scheduling reset

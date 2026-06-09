@@ -10,15 +10,12 @@ void cmbsrc_initialise(void) {}
 
 void cmbsrc_release(void) {}
 
-#pragma scheduling off
 int cmbsrc_updateAndReturnZero(int obj)
 {
     cmbsrc_update(obj);
     return 0;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 int cmbsrc_getColorIndex(int obj)
 {
     CmbSrcObject *cmbsrc = (CmbSrcObject *)obj;
@@ -31,10 +28,7 @@ int cmbsrc_getColorIndex(int obj)
     }
     return -1;
 }
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void cmbsrc_setExternalActive(int obj, u8 active)
 {
     CmbSrcState *state = ((CmbSrcObject *)obj)->state;
@@ -45,11 +39,7 @@ void cmbsrc_setExternalActive(int obj, u8 active)
         state->flags &= ~CMBSRC_STATE_EXTERNAL_ACTIVE;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void cmbsrc_free(int obj)
 {
     CmbSrcState *state = ((CmbSrcObject *)obj)->state;
@@ -60,11 +50,7 @@ void cmbsrc_free(int obj)
     }
     Sfx_StopObjectChannel(obj, CMBSRC_LOOP_SOUND_CHANNEL);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void cmbsrc_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     CmbSrcObject *cmbsrc = (CmbSrcObject *)obj;
@@ -82,11 +68,7 @@ void cmbsrc_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 int cmbsrc_shouldActivate(int obj, int state, int setup)
 {
     CmbSrcState *sourceState = (CmbSrcState *)state;
@@ -113,11 +95,7 @@ int cmbsrc_shouldActivate(int obj, int state, int setup)
     }
     return result;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 int cmbsrc_shouldDeactivate(int obj, int state, int setup)
 {
     CmbSrcState *sourceState = (CmbSrcState *)state;
@@ -139,11 +117,7 @@ int cmbsrc_shouldDeactivate(int obj, int state, int setup)
     }
     return result;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void cmbsrc_hitDetect(int obj)
 {
     CmbSrcObject *cmbsrc = (CmbSrcObject *)obj;
@@ -174,11 +148,7 @@ void cmbsrc_hitDetect(int obj)
         state->hitCharge = (s8)v;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 int cmbsrc_cycleColor(int obj, int state)
 {
     CmbSrcObject *cmbsrc = (CmbSrcObject *)obj;
@@ -219,11 +189,7 @@ int cmbsrc_cycleColor(int obj, int state)
     }
     return idx;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void cmbsrc_updateVisuals(int obj, int state)
 {
     CmbSrcObject *cmbsrc = (CmbSrcObject *)obj;
@@ -337,11 +303,7 @@ void cmbsrc_updateVisuals(int obj, int state)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 int cmbsrc_update(int obj)
 {
     CmbSrcObject *cmbsrc = (CmbSrcObject *)obj;
@@ -403,11 +365,7 @@ int cmbsrc_update(int obj)
     }
     cmbsrc_updateVisuals(obj, (int)state);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void cmbsrc_init(int obj, u8 *setup)
 {
     CmbSrcObject *cmbsrc = (CmbSrcObject *)obj;
@@ -541,5 +499,3 @@ void cmbsrc_init(int obj, u8 *setup)
     state->radius = lbl_803E7374 * mapData->radius;
     cmbsrc->updateCallback = cmbsrc_updateAndReturnZero;
 }
-#pragma scheduling reset
-#pragma peephole reset

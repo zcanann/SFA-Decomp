@@ -64,8 +64,6 @@ void wmnewcrystal_release(void) {}
 
 void wmnewcrystal_initialise(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 int wmnewcrystal_SeqFn(int *obj, int unused, WmNewCrystalEventData *eventData) {
     WmNewCrystalState *state;
     WmNewCrystalParticleParams params;
@@ -129,14 +127,11 @@ int wmnewcrystal_SeqFn(int *obj, int unused, WmNewCrystalEventData *eventData) {
     }
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void wmnewcrystal_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
     objRenderFn_8003b8f4(lbl_803E605C);
 }
 
-#pragma scheduling off
 void wmnewcrystal_init(int *obj, u8 *init) {
     WmNewCrystalState *inner = ((GameObject *)obj)->extra;
     ((GameObject *)obj)->animEventCallback = (void *)wmnewcrystal_SeqFn;
@@ -145,4 +140,3 @@ void wmnewcrystal_init(int *obj, u8 *init) {
         inner->active = 1;
     }
 }
-#pragma scheduling reset

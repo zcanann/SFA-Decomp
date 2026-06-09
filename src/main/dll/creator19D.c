@@ -184,8 +184,6 @@ typedef struct DFSHLaserBeamObject {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void DFSH_LaserBeam_update(uint param_1)
 {
   DFSHLaserBeamObject *obj;
@@ -376,8 +374,6 @@ void DFSH_LaserBeam_update(uint param_1)
     ((GameObject *)obj)->anim.currentMoveProgress -= lbl_803E4EC8;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -388,8 +384,6 @@ void DFSH_LaserBeam_update(uint param_1)
  *
  * Object setup: initializes the rotating DarkIce Mines shrine laser beam state.
  */
-#pragma scheduling off
-#pragma peephole off
 void DFSH_LaserBeam_free(void *objArg,void *configArg)
 {
   DFSHLaserBeamObject *obj;
@@ -413,8 +407,6 @@ void DFSH_LaserBeam_free(void *objArg,void *configArg)
     runtime->beamTexture = textureLoadAsset(0x2E);
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -430,8 +422,6 @@ void DFSH_LaserBeam_initialise(void) {}
  *
  * Advances the ambient laser-beam bob, aim, and player proximity alpha.
  */
-#pragma scheduling off
-#pragma peephole off
 void fn_801C4664(void *objArg)
 {
   DFSHLaserBeamObject *obj;
@@ -503,8 +493,6 @@ void fn_801C4664(void *objArg)
     obj->alpha = 0xFF;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -515,8 +503,6 @@ void fn_801C4664(void *objArg)
  *
  * Drives the shrine sway controller used by MMSH shrine sequences.
  */
-#pragma scheduling off
-#pragma peephole off
 int fn_801C49B8(void *objArg)
 {
   DFSHLaserBeamObject *obj;
@@ -560,5 +546,3 @@ int fn_801C49B8(void *objArg)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset

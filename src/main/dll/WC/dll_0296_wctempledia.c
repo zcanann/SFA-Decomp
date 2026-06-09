@@ -60,8 +60,6 @@ STATIC_ASSERT(offsetof(WCTempleDiaSetup, type) == WCTEMPLE_DIA_SETUP_TYPE_OFFSET
 STATIC_ASSERT(offsetof(WCTempleDiaSetup, modelIndex) == WCTEMPLE_DIA_SETUP_MODEL_INDEX_OFFSET);
 STATIC_ASSERT(offsetof(WCTempleDiaSetup, solvedBit) == WCTEMPLE_DIA_SETUP_SOLVED_BIT_OFFSET);
 
-#pragma peephole off
-#pragma scheduling off
 void wctempledia_syncPartVisibility(int obj, u8 mask)
 {
     u8 *block;
@@ -86,11 +84,7 @@ void wctempledia_syncPartVisibility(int obj, u8 mask)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 int wctempledia_interactCallback(int obj, int p2, int p3)
 {
     WCTempleDiaState *state = ((GameObject *)obj)->extra;
@@ -102,8 +96,6 @@ int wctempledia_interactCallback(int obj, int p2, int p3)
     *(s16 *)(p3 + WCTEMPLE_DIA_PAYLOAD_FLAGS_B) &= ~WCTEMPLE_DIA_PAYLOAD_BLOCK_FLAG;
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 int wctempledia_getExtraSize(void) { return WCTEMPLE_DIA_EXTRA_SIZE; }
 
@@ -111,19 +103,15 @@ int wctempledia_getObjectTypeId(void) { return 0; }
 
 void wctempledia_free(void) {}
 
-#pragma peephole off
 void wctempledia_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6E58);
     }
 }
-#pragma peephole reset
 
 void wctempledia_hitDetect(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void wctempledia_update(int obj)
 {
     WCTempleDiaState *state = ((GameObject *)obj)->extra;
@@ -182,11 +170,7 @@ void wctempledia_update(int obj)
         state->flags |= WCTEMPLE_DIA_FLAG_SOLVED;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void wctempledia_init(int obj, int setup)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
@@ -226,8 +210,6 @@ void wctempledia_init(int obj, int setup)
     ((GameObject *)obj)->animEventCallback = (void *)wctempledia_interactCallback;
     wctempledia_syncPartVisibility(obj, state->stageMask);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void wctempledia_release(void) {}
 

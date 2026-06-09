@@ -106,8 +106,6 @@ extern f32 lbl_803E5C98;
 extern f32 lbl_803E5CA8;
 extern f32 lbl_803E5CAC;
 
-#pragma scheduling off
-#pragma peephole off
 void WCPushBlock_SpawnFromPath(s16 *path)
 {
     WCPushBlockObjectSetup *setup;
@@ -167,11 +165,7 @@ void WCPushBlock_SpawnFromPath(s16 *path)
     block->pitch = 0;
     block->yaw = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void WCPushBlock_UpdateCloudAction(int obj, WCPushBlockState *state)
 {
     f32 angle;
@@ -211,11 +205,7 @@ void WCPushBlock_UpdateCloudAction(int obj, WCPushBlockState *state)
     moveX = (moveX * timeDelta) / lbl_803E5C98;
     (*gCloudActionInterface)->moveRelative(moveZ, moveX);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void WCPushBlock_UpdateRideTilt(WCPushBlockObject *obj, WCPushBlockState *state)
 {
     int targetPitch;
@@ -287,5 +277,3 @@ void WCPushBlock_UpdateRideTilt(WCPushBlockObject *obj, WCPushBlockState *state)
 
     obj->actionState = 1;
 }
-#pragma peephole reset
-#pragma scheduling reset

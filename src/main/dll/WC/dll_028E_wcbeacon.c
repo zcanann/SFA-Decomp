@@ -64,7 +64,6 @@ STATIC_ASSERT(offsetof(WCBeaconSetup, modelIndex) == WCBEACON_SETUP_MODEL_INDEX_
 STATIC_ASSERT(offsetof(WCBeaconSetup, solvedBit) == WCBEACON_SETUP_SOLVED_BIT_OFFSET);
 STATIC_ASSERT(offsetof(WCBeaconSetup, armBit) == WCBEACON_SETUP_ARM_BIT_OFFSET);
 
-#pragma scheduling off
 int wcbeacon_aButtonCallback(int obj)
 {
     WCBeaconState *state = ((GameObject *)obj)->extra;
@@ -76,11 +75,9 @@ int wcbeacon_aButtonCallback(int obj)
     }
     return 1;
 }
-#pragma scheduling reset
 
 int wcbeacon_getExtraSize(void) { return WCBEACON_EXTRA_SIZE; }
 
-#pragma scheduling off
 int wcbeacon_getObjectTypeId(int obj)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
@@ -92,19 +89,14 @@ int wcbeacon_getObjectTypeId(int obj)
     }
     return (modelIndex << WCBEACON_RENDER_TYPE_SHIFT) | WCBEACON_RENDER_TYPE_BASE;
 }
-#pragma scheduling reset
 
-#pragma peephole off
 void wcbeacon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6DE0);
     }
 }
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void wcbeacon_update(int obj)
 {
     WCBeaconSetup *setup = (WCBeaconSetup *)((GameObject *)obj)->anim.placementData;
@@ -160,11 +152,7 @@ void wcbeacon_update(int obj)
     }
     ((GameObject *)obj)->unkF4 = 1;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void wcbeacon_init(u8 *obj, u8 *setup)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
@@ -187,5 +175,3 @@ void wcbeacon_init(u8 *obj, u8 *setup)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset

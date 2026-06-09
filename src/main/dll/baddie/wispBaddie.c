@@ -161,8 +161,6 @@ extern f32 lbl_803E20D0;
 void pauseMenuDrawStatus_801274a0(int *arg1);
 void fn_80127F24(s32 param_1);
 
-#pragma peephole off
-#pragma scheduling off
 void pauseMenuDraw(int *arg1, int *arg2, int *arg3) {
     int *player;
     int *model;
@@ -491,11 +489,7 @@ void pauseMenuDraw(int *arg1, int *arg2, int *arg3) {
         break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void pauseMenuDrawStatus_801274a0(int *arg1) {
     int *model;
     s32 alpha;
@@ -657,11 +651,7 @@ void pauseMenuDrawStatus_801274a0(int *arg1) {
     Camera_RebuildProjectionMatrix();
     Camera_ApplyFullViewport();
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void fn_80127F24(s32 param_1) {
     f32 baseSub;
     f32 baseAdd;
@@ -701,5 +691,3 @@ void fn_80127F24(s32 param_1) {
                     (u8)param_1, (s32)(lbl_803E20C4 - phase * lbl_803E1E6C), 0);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

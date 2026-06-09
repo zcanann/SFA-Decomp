@@ -38,8 +38,6 @@ void androssbrain_render(int obj, int p2, int p3, int p4, int p5)
 
 void androssbrain_hitDetect(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void androssbrain_setState(int obj, int newState, u8 force)
 {
     AndrossBrainState *state;
@@ -57,10 +55,7 @@ void androssbrain_setState(int obj, int newState, u8 force)
         andross_setPartSignal((int)state->andross, 1);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
 void androssbrain_init(int obj)
 {
     AndrossBrainState *state = ((GameObject *)obj)->extra;
@@ -68,10 +63,7 @@ void androssbrain_init(int obj)
     state->health = 0x50;
     ObjHits_SetTargetMask(obj, 4);
 }
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void androssbrain_update(int obj)
 {
     AndrossBrainState *state = ((GameObject *)obj)->extra;
@@ -147,5 +139,3 @@ void androssbrain_update(int obj)
         break;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
