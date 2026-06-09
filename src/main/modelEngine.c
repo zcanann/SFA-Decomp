@@ -495,16 +495,17 @@ void gameTimerRun(void)
 
     if ((lbl_803DC8F9 & 4) != 0) {
         f32 panByte;
+        f32 volume;
         Sfx_KeepAliveLoopedObjectSound(0, SFXsc_clubhit01);
+        ratio = lbl_803DC900 / lbl_803DC8FC;
         if ((lbl_803DC8F9 & 1) != 0) {
-            ratio = lbl_803DC900 / lbl_803DC8FC;
             panByte = (f32)(0x7F - ((int)(lbl_803DE6C0 * ratio) & 0xFF));
-            Sfx_SetObjectSfxVolume(0, SFXsc_clubhit01, panByte, lbl_803DE6C4 - lbl_803DE6C8 * ratio);
+            volume = lbl_803DE6C4 - lbl_803DE6C8 * ratio;
         } else {
-            ratio = lbl_803DC900 / lbl_803DC8FC;
             panByte = (f32)(((int)(lbl_803DE6C0 * ratio) & 0xFF) + 0x2F);
-            Sfx_SetObjectSfxVolume(0, SFXsc_clubhit01, panByte, lbl_803DE6C8 * ratio + lbl_803DE6CC);
+            volume = lbl_803DE6C8 * ratio + lbl_803DE6CC;
         }
+        Sfx_SetObjectSfxVolume(0, SFXsc_clubhit01, panByte, volume);
     }
 
     if ((lbl_803DC8F9 & 0x10) == 0 || pauseMenuState != 0 || getHudHiddenFrameCount() != 0) {
