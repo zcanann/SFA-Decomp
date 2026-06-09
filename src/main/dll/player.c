@@ -9215,23 +9215,23 @@ int fn_802A97D0(int obj, int p2)
     u8 c;
     s16 sel = ((PlayerState *)p2)->baddie.controlMode;
 
-    if ((sel != 1 && sel != 2 && sel != 0x26) ||
-        !GameBit_Get(0x957) ||
-        (slot = inner->unk4B8) == NULL ||
-        *(s16 *)((char *)slot + 0x46) != 0x64f ||
-        ((af = *(u8 *)((char *)slot + 0xaf)) & 4) == 0 ||
-        (af & 0x18) != 0 ||
-        ((PlayerState *)p2)->baddie.targetObj != NULL ||
-        (c = inner->curAnimId) == 0x48 || c == 0x47 || c == 0x44 ||
-        *(void **)((char *)inner + 0x7f8) != NULL ||
-        ((ByteFlags *)((char *)inner + 0x3f0))->b20 ||
-        ((ByteFlags *)((char *)inner + 0x3f0))->b04 ||
-        ((ByteFlags *)((char *)inner + 0x3f0))->b08 ||
-        ((ByteFlags *)((char *)inner + 0x3f4))->b40 == 0 ||
-        *(s16 *)((char *)*(int *)((char *)*(int *)&((GameObject *)obj)->extra + 0x35c) + 4) < 0xa) {
-        return 0;
+    if (!((sel != 1 && sel != 2 && sel != 0x26) ||
+          !GameBit_Get(0x957) ||
+          (slot = inner->unk4B8) == NULL ||
+          *(s16 *)((char *)slot + 0x46) != 0x64f ||
+          ((af = *(u8 *)((char *)slot + 0xaf)) & 4) == 0 ||
+          (af & 0x18) != 0 ||
+          ((PlayerState *)p2)->baddie.targetObj != NULL ||
+          (c = inner->curAnimId) == 0x48 || c == 0x47 || c == 0x44 ||
+          *(void **)((char *)inner + 0x7f8) != NULL ||
+          ((ByteFlags *)((char *)inner + 0x3f0))->b20 ||
+          ((ByteFlags *)((char *)inner + 0x3f0))->b04 ||
+          ((ByteFlags *)((char *)inner + 0x3f0))->b08 ||
+          ((ByteFlags *)((char *)inner + 0x3f4))->b40 == 0 ||
+          *(s16 *)((char *)*(int *)((char *)*(int *)&((GameObject *)obj)->extra + 0x35c) + 4) < 0xa)) {
+        return 1;
     }
-    return 1;
+    return 0;
 }
 #pragma dont_inline reset
 
@@ -9734,7 +9734,7 @@ int fn_8029E3F4(int obj, int state)
     if (*(s8 *)((char *)state + 0x27a) != 0) {
         s1 = 0;
         a = inner->unk654;
-        if (a < lbl_803E7EA4) {
+        if (a < k) {
             s1 = 1;
             a = -a;
         }
@@ -11414,7 +11414,8 @@ void fn_802A81B8(int obj, int state, f32 *out)
         out[2] = ((GameObject *)obj)->anim.velocityZ;
         mag = PSVECMag(out);
         if (mag > lbl_803E7EA4) {
-            PSVECScale(out, out, lbl_803E7EE0 / mag);
+            extern void PSVECScale(f32 scale, f32 *src, f32 *dst);
+            PSVECScale(lbl_803E7EE0 / mag, out, out);
         } else {
             out[0] = -mathSinf(lbl_803E7F94 * (f32)((PlayerState *)state)->targetYaw /
                                   lbl_803E7F98);
@@ -15775,8 +15776,9 @@ void fn_802AAD44(int obj)
     GXSetColorUpdate(1);
 }
 
-void fn_8029560C(int obj, int *state)
+void fn_8029560C(int obj, void *statep)
 {
+    int *state = (int *)statep;
     int v = *state;
     if ((void *)lbl_803DE420 != NULL) {
         tailFn_80026c38(lbl_803DE420, lbl_803DC670, lbl_803DC674, lbl_803DC678);
