@@ -12,6 +12,7 @@
 #include "main/dll/CAM/camworldmap_state.h"
 #include "main/objanim.h"
 #include "main/game_object.h"
+#include "main/obj_placement.h"
 #include "main/mapEvent.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/rom_curve_interface.h"
@@ -3311,24 +3312,33 @@ void CameraModeArwing_init(int *obj, int mode, int unused)
 }
 #pragma opt_common_subs reset
 
-extern u8 lbl_80319FB8[];
+typedef struct CameraModeTitlePose {
+    f32 x, y, z;
+    u16 yaw, pitch, roll;
+} CameraModeTitlePose;
+
+extern CameraModeTitlePose lbl_80319FB8[];
 extern u8 lbl_803DD5D2;
 extern u8 lbl_803DD5D1;
 extern u8 lbl_803DD5D0;
 extern f32 lbl_803E1BE0;
 extern f32 lbl_803DB9D8;
-void CameraModeTitle_init(int *obj)
+void CameraModeTitle_init(CameraObject *camera)
 {
+    CameraModeTitlePose *targetPose;
+
     lbl_803DD5D2 = 4;
     lbl_803DD5D1 = 4;
     lbl_803DB9D8 = lbl_803E1BE0;
     lbl_803DD5D0 = 0;
-    ((GameObject *)obj)->anim.localPosX = *(f32*)(lbl_80319FB8 + 4 * 20 + 0);
-    ((GameObject *)obj)->anim.localPosY = *(f32*)(lbl_80319FB8 + lbl_803DD5D2 * 20 + 4);
-    ((GameObject *)obj)->anim.localPosZ = *(f32*)(lbl_80319FB8 + lbl_803DD5D2 * 20 + 8);
-    ((GameObject *)obj)->anim.rotX = (s16)*(u16*)(lbl_80319FB8 + lbl_803DD5D2 * 20 + 12);
-    ((GameObject *)obj)->anim.rotY = (s16)*(u16*)(lbl_80319FB8 + lbl_803DD5D2 * 20 + 14);
-    ((GameObject *)obj)->anim.rotZ = (s16)*(u16*)(lbl_80319FB8 + lbl_803DD5D2 * 20 + 16);
+
+    targetPose = &lbl_80319FB8[lbl_803DD5D2];
+    camera->anim.localPosX = targetPose->x;
+    camera->anim.localPosY = targetPose->y;
+    camera->anim.localPosZ = targetPose->z;
+    camera->anim.rotX = targetPose->yaw;
+    camera->anim.rotY = targetPose->pitch;
+    camera->anim.rotZ = targetPose->roll;
 }
 
 extern CameraMode54State *lbl_803DD5C0;
@@ -3561,8 +3571,8 @@ void dll_19_func0D(int p1, int p2, f32 fval, s8 b)
 
 extern void Obj_FreeObject(void *obj);
 extern u8 Obj_IsLoadingLocked(void);
-extern int Obj_AllocObjectSetup(int type, int id);
-extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
+extern ObjPlacement *Obj_AllocObjectSetup(int size, int id);
+extern GameObject *Obj_SetupObject(ObjPlacement *setup, int mode, int mapLayer, int objIndex, int parent);
 extern u8 lbl_802C2190[];
 
 /* dll_19_func19  addr=0x80111EB4  size=0x100  linkage=global */
@@ -3587,8 +3597,8 @@ void dll_19_func19(u8 *cam, u8 *ctx) {
     }
     if (Obj_IsLoadingLocked() != 0) {
         if ((s8)ctx[1031] > 0) {
-            int obj = Obj_AllocObjectSetup(24, buf[(s8)ctx[1031] - 1]);
-            *(int *)&((GameObject *)cam)->unkC8 = Obj_SetupObject(obj, 4, -1, -1, *(int *)&((GameObject *)cam)->anim.parent);
+            ObjPlacement *setup = Obj_AllocObjectSetup(24, buf[(s8)ctx[1031] - 1]);
+            *(int *)&((GameObject *)cam)->unkC8 = (int)Obj_SetupObject(setup, 4, -1, -1, *(int *)&((GameObject *)cam)->anim.parent);
             *(u16 *)(*(int *)&((GameObject *)cam)->unkC8 + 0xb0) = ((GameObject *)cam)->objectFlags & 7;
         }
         ctx[1033] = ctx[1031];
@@ -4148,14 +4158,15 @@ extern f32 lbl_803E1C54;
 extern f32 lbl_803E1C58;
 extern f32 lbl_803E1C5C;
 extern f32 lbl_803E1C60;
-extern u32 lbl_803DD5E4;
+extern GameObject *lbl_803DD5E4;
 
 /* dll_19_func15  addr=0x80112A28  size=0x358  linkage=global */
 #pragma peephole off
 #pragma scheduling off
 int dll_19_func15(u8 *p1, int p2, int p3, int p4) {
+    GameObject *source = (GameObject *)p1;
     u8 *state = *(u8 **)(p1 + 76);
-    int obj;
+    ObjPlacement *setup;
     f32 scale;
     u16 ids1[4];
     u16 ids2[4];
@@ -4179,7 +4190,7 @@ int dll_19_func15(u8 *p1, int p2, int p3, int p4) {
         if (idx > 3) {
             idx = 3;
         }
-        obj = Obj_AllocObjectSetup(48, ids1[idx]);
+        setup = Obj_AllocObjectSetup(48, ids1[idx]);
         scale = lbl_803E1C54;
     }
     if ((*(s16 *)(state + 34) & 0xf000) != 0) {
@@ -4187,79 +4198,79 @@ int dll_19_func15(u8 *p1, int p2, int p3, int p4) {
         if (idx > 3) {
             idx = 3;
         }
-        obj = Obj_AllocObjectSetup(48, ids2[idx]);
+        setup = Obj_AllocObjectSetup(48, ids2[idx]);
         scale = lbl_803E1C54;
     }
     if ((u8)*(s16 *)(state + 34) != 0) {
         switch (p2) {
         case 1:
-            obj = Obj_AllocObjectSetup(48, 717);
+            setup = Obj_AllocObjectSetup(48, 717);
             scale = lbl_803E1C54;
             break;
         case 2:
-            obj = Obj_AllocObjectSetup(48, 9);
+            setup = Obj_AllocObjectSetup(48, 9);
             scale = lbl_803E1C54;
             break;
         case 3:
-            obj = Obj_AllocObjectSetup(48, 11);
+            setup = Obj_AllocObjectSetup(48, 11);
             scale = lbl_803E1C54;
             break;
         case 4:
-            obj = Obj_AllocObjectSetup(48, 717);
+            setup = Obj_AllocObjectSetup(48, 717);
             scale = lbl_803E1C54;
             break;
         case 5:
-            savedX = *(f32 *)(p1 + 24);
-            savedY = *(f32 *)(p1 + 28);
-            savedZ = *(f32 *)(p1 + 32);
+            savedX = source->anim.worldPosX;
+            savedY = source->anim.worldPosY;
+            savedZ = source->anim.worldPosZ;
             if (state != NULL) {
-                *(f32 *)(p1 + 24) = *(f32 *)(state + 8);
-                *(f32 *)(p1 + 28) = *(f32 *)(state + 12);
-                *(f32 *)(p1 + 32) = *(f32 *)(state + 16);
+                source->anim.worldPosX = ((ObjPlacement *)state)->posX;
+                source->anim.worldPosY = ((ObjPlacement *)state)->posY;
+                source->anim.worldPosZ = ((ObjPlacement *)state)->posZ;
             }
             nearDist = lbl_803E1C58;
-            lbl_803DD5E4 = (u32)ObjGroup_FindNearestObject(4, p1, &nearDist);
-            *(f32 *)(p1 + 24) = savedX;
-            *(f32 *)(p1 + 28) = savedY;
-            *(f32 *)(p1 + 32) = savedZ;
-            if (lbl_803DD5E4 != 0) {
-                *(f32 *)(lbl_803DD5E4 + 24) = *(f32 *)(p1 + 12);
-                *(f32 *)(lbl_803DD5E4 + 12) = *(f32 *)(p1 + 12);
-                *(f32 *)(lbl_803DD5E4 + 28) = *(f32 *)(p1 + 16) + lbl_803E1C5C;
-                *(f32 *)(lbl_803DD5E4 + 16) = *(f32 *)(p1 + 16) + lbl_803E1C5C;
-                *(f32 *)(lbl_803DD5E4 + 32) = *(f32 *)(p1 + 20);
-                *(f32 *)(lbl_803DD5E4 + 20) = *(f32 *)(p1 + 20);
+            lbl_803DD5E4 = (GameObject *)ObjGroup_FindNearestObject(4, p1, &nearDist);
+            source->anim.worldPosX = savedX;
+            source->anim.worldPosY = savedY;
+            source->anim.worldPosZ = savedZ;
+            if (lbl_803DD5E4 != NULL) {
+                lbl_803DD5E4->anim.worldPosX = source->anim.localPosX;
+                lbl_803DD5E4->anim.localPosX = source->anim.localPosX;
+                lbl_803DD5E4->anim.worldPosY = source->anim.localPosY + lbl_803E1C5C;
+                lbl_803DD5E4->anim.localPosY = source->anim.localPosY + lbl_803E1C5C;
+                lbl_803DD5E4->anim.worldPosZ = source->anim.localPosZ;
+                lbl_803DD5E4->anim.localPosZ = source->anim.localPosZ;
             }
-            return lbl_803DD5E4;
+            return (int)lbl_803DD5E4;
         case 6:
-            obj = Obj_AllocObjectSetup(48, 1702);
-            *(u8 *)(obj + 27) = 0;
-            *(u8 *)(obj + 34) = 0;
-            *(u8 *)(obj + 35) = 64;
+            setup = Obj_AllocObjectSetup(48, 1702);
+            *(u8 *)((u8 *)setup + 27) = 0;
+            *(u8 *)((u8 *)setup + 34) = 0;
+            *(u8 *)((u8 *)setup + 35) = 64;
             scale = lbl_803E1C60;
             break;
         default:
             return 0;
         }
     }
-    *(u8 *)(obj + 26) = 20;
-    *(s16 *)(obj + 44) = -1;
-    *(s16 *)(obj + 28) = -1;
-    *(s16 *)(obj + 36) = -1;
-    ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(p1 + 12);
-    ((GameObject *)obj)->anim.localPosX = *(f32 *)(p1 + 16) + scale;
-    ((GameObject *)obj)->anim.localPosY = *(f32 *)(p1 + 20);
+    *(u8 *)((u8 *)setup + 26) = 20;
+    *(s16 *)((u8 *)setup + 44) = -1;
+    *(s16 *)((u8 *)setup + 28) = -1;
+    *(s16 *)((u8 *)setup + 36) = -1;
+    setup->posX = source->anim.localPosX;
+    setup->posY = source->anim.localPosY + scale;
+    setup->posZ = source->anim.localPosZ;
     if ((u8)p4 != 0) {
-        *(s16 *)(obj + 46) = 2;
+        *(s16 *)((u8 *)setup + 46) = 2;
     } else {
-        *(s16 *)(obj + 46) = 1;
+        *(s16 *)((u8 *)setup + 46) = 1;
     }
-    *(u8 *)(obj + 4) = state[4];
-    *(u8 *)(obj + 6) = state[6];
-    *(u8 *)(obj + 5) = state[5];
-    *(u8 *)(obj + 7) = state[7];
-    lbl_803DD5E4 = (u32)Obj_SetupObject(obj, 5, (s8)p1[172], -1, *(int *)(p1 + 48));
-    return lbl_803DD5E4;
+    *(u8 *)((u8 *)setup + 4) = state[4];
+    *(u8 *)((u8 *)setup + 6) = state[6];
+    *(u8 *)((u8 *)setup + 5) = state[5];
+    *(u8 *)((u8 *)setup + 7) = state[7];
+    lbl_803DD5E4 = Obj_SetupObject(setup, 5, (s8)p1[172], -1, *(int *)&source->anim.parent);
+    return (int)lbl_803DD5E4;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -4912,12 +4923,7 @@ void CameraModeNpcSpeak_init(u8 *obj, int unused, u8 *p3) {
 #pragma peephole reset
 #pragma scheduling reset
 
-typedef struct {
-    f32 x, y, z;
-    u16 yaw, pitch, roll;
-} TitleCamPos;
-
-extern TitleCamPos lbl_803A4420;
+extern CameraModeTitlePose lbl_803A4420;
 extern f32 lbl_803E1BE8;
 extern f32 lbl_803E1BEC;
 extern f32 lbl_803E1BF0;
@@ -4929,17 +4935,18 @@ extern f32 lbl_803E1C00;
 /* CameraModeTitle_update  addr=0x801116E0  size=0x58C  linkage=global */
 #pragma peephole off
 #pragma scheduling off
-void CameraModeTitle_update(u8 *obj) {
+void CameraModeTitle_update(CameraObject *camera) {
     if (lbl_803DD5D0 != 0) {
-        lbl_803A4420.x = ((GameObject *)obj)->anim.localPosX;
-        lbl_803A4420.y = ((GameObject *)obj)->anim.localPosY;
-        lbl_803A4420.z = ((GameObject *)obj)->anim.localPosZ;
-        lbl_803A4420.yaw = *(s16 *)obj;
-        lbl_803A4420.pitch = ((GameObject *)obj)->anim.rotY;
-        lbl_803A4420.roll = ((GameObject *)obj)->anim.rotZ;
+        lbl_803A4420.x = camera->anim.localPosX;
+        lbl_803A4420.y = camera->anim.localPosY;
+        lbl_803A4420.z = camera->anim.localPosZ;
+        lbl_803A4420.yaw = camera->anim.rotX;
+        lbl_803A4420.pitch = camera->anim.rotY;
+        lbl_803A4420.roll = camera->anim.rotZ;
         lbl_803DD5D0 = 0;
     }
     if (lbl_803DD5D2 != lbl_803DD5D1) {
+        CameraModeTitlePose *targetPose = &lbl_80319FB8[lbl_803DD5D2];
         u8 *save = getSaveFileStruct();
         f32 v;
 
@@ -4978,44 +4985,44 @@ void CameraModeTitle_update(u8 *obj) {
         }
         v = v * ((lbl_803E1BFC * v) * v) + (lbl_803E1BF0 * v + (lbl_803E1BF8 * v) * v);
 
-        ((GameObject *)obj)->anim.localPosX =
-            v * (((TitleCamPos *)lbl_80319FB8)[lbl_803DD5D2].x - lbl_803A4420.x) + lbl_803A4420.x;
-        ((GameObject *)obj)->anim.localPosY =
-            v * (((TitleCamPos *)lbl_80319FB8)[lbl_803DD5D2].y - lbl_803A4420.y) + lbl_803A4420.y;
-        ((GameObject *)obj)->anim.localPosZ =
-            v * (((TitleCamPos *)lbl_80319FB8)[lbl_803DD5D2].z - lbl_803A4420.z) + lbl_803A4420.z;
+        camera->anim.localPosX =
+            v * (targetPose->x - lbl_803A4420.x) + lbl_803A4420.x;
+        camera->anim.localPosY =
+            v * (targetPose->y - lbl_803A4420.y) + lbl_803A4420.y;
+        camera->anim.localPosZ =
+            v * (targetPose->z - lbl_803A4420.z) + lbl_803A4420.z;
 
         {
             u16 sy = lbl_803A4420.yaw;
-            u16 ty = *(u16 *)((u32)(lbl_80319FB8 + 0xc) + (u32)lbl_803DD5D2 * 0x14);
+            u16 ty = targetPose->yaw;
             int d = ty - sy;
             if (__fabs((f32)d) > lbl_803E1C00) {
                 int d2 = (s16)ty - (s16)sy;
-                *(s16 *)obj = (s16)(s32)(v * (f32)d2 + (f32)(s16)sy);
+                camera->anim.rotX = (s16)(s32)(v * (f32)d2 + (f32)(s16)sy);
             } else {
-                *(u16 *)obj = v * (f32)d + (f32)sy;
+                *(u16 *)&camera->anim.rotX = v * (f32)d + (f32)sy;
             }
         }
         {
             u16 sy = lbl_803A4420.pitch;
-            u16 ty = *(u16 *)((u32)(lbl_80319FB8 + 0xe) + (u32)lbl_803DD5D2 * 0x14);
+            u16 ty = targetPose->pitch;
             int d = ty - sy;
             if (__fabs((f32)d) > lbl_803E1C00) {
                 int d2 = (s16)ty - (s16)sy;
-                ((GameObject *)obj)->anim.rotY = (s16)(s32)(v * (f32)d2 + (f32)(s16)sy);
+                camera->anim.rotY = (s16)(s32)(v * (f32)d2 + (f32)(s16)sy);
             } else {
-                *(u16 *)&((GameObject *)obj)->anim.rotY = v * (f32)d + (f32)sy;
+                *(u16 *)&camera->anim.rotY = v * (f32)d + (f32)sy;
             }
         }
         {
             u16 sy = lbl_803A4420.roll;
-            u16 ty = *(u16 *)((u32)(lbl_80319FB8 + 0x10) + (u32)lbl_803DD5D2 * 0x14);
+            u16 ty = targetPose->roll;
             int d = ty - sy;
             if (__fabs((f32)d) > lbl_803E1C00) {
                 int d2 = (s16)ty - (s16)sy;
-                ((GameObject *)obj)->anim.rotZ = (s16)(s32)(v * (f32)d2 + (f32)(s16)sy);
+                camera->anim.rotZ = (s16)(s32)(v * (f32)d2 + (f32)(s16)sy);
             } else {
-                *(u16 *)&((GameObject *)obj)->anim.rotZ = v * (f32)d + (f32)sy;
+                *(u16 *)&camera->anim.rotZ = v * (f32)d + (f32)sy;
             }
         }
     }
