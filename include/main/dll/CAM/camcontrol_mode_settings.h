@@ -81,8 +81,8 @@ typedef struct CamcontrolModeSettings {
   f32 targetTargetHeight;
   f32 baseLowerHeightOffset;
   f32 baseUpperHeightOffset;
-  f32 verticalLowerBound;
   f32 verticalUpperBound;
+  f32 verticalLowerBound;
   u8 padA8[0xAC - 0xA8];
   s32 slideAngle;
   u8 padB0[0xBC - 0xB0];
@@ -101,8 +101,8 @@ typedef struct CamcontrolModeSettings {
 
 STATIC_ASSERT(sizeof(CamcontrolModeSettings) == 0xCC);
 STATIC_ASSERT(offsetof(CamcontrolModeSettings, targetHeight) == 0x8C);
-STATIC_ASSERT(offsetof(CamcontrolModeSettings, verticalLowerBound) == 0xA0);
-STATIC_ASSERT(offsetof(CamcontrolModeSettings, verticalUpperBound) == 0xA4);
+STATIC_ASSERT(offsetof(CamcontrolModeSettings, verticalUpperBound) == 0xA0);
+STATIC_ASSERT(offsetof(CamcontrolModeSettings, verticalLowerBound) == 0xA4);
 STATIC_ASSERT(offsetof(CamcontrolModeSettings, slideAngle) == 0xAC);
 STATIC_ASSERT(offsetof(CamcontrolModeSettings, heightLockLimit) == 0xBC);
 STATIC_ASSERT(offsetof(CamcontrolModeSettings, yawResponseFrames) == 0xC2);

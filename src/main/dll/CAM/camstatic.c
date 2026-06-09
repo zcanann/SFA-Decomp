@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/camera_interface.h"
 #include "main/camera_object.h"
+#include "main/dll/CAM/camcontrol_mode_settings.h"
 #include "main/object_transform.h"
 
 extern void camcontrol_traceMove(f32 radius, f32 *from, void *to, f32 *out, void *work, int a,
@@ -18,7 +19,6 @@ extern void cameraGetPrevPos2(int obj, float *x, float *y, float *z);
 extern s16 getAngle(f32 dx, f32 dz);
 extern f32 interpolate(f32 cur, f32 target, f32 t);
 
-extern u8 *cameraMtxVar57;
 extern f64 lbl_803E1698;
 extern f64 lbl_803E16F8;
 extern f32 lbl_803DD52C;
@@ -37,12 +37,6 @@ extern f32 lbl_803E1730;
 extern f32 timeDelta;
 
 #define gCamcontrolModeSettings cameraMtxVar57
-
-typedef struct {
-    u8 b7 : 1;
-    u8 b6 : 1;
-    u8 rest : 6;
-} CamFlagByte;
 
 /*
  * --INFO--
@@ -90,24 +84,25 @@ void camstatic_update(short *param_1)
     iVar2 = EmissionController_IsLingering((int)psVar4);
     switch (iVar2) {
     case 1:
-      *(float *)(gCamcontrolModeSettings + 0x14) = lbl_803E16AC;
-      *(undefined *)(gCamcontrolModeSettings + 0xc2) = 0xff;
+      gCamcontrolModeSettings->heightAdjustRate = lbl_803E16AC;
+      gCamcontrolModeSettings->yawResponseFrames = 0xff;
       break;
     case 2:
-      *(float *)(gCamcontrolModeSettings + 0x14) = lbl_803E1718;
-      *(undefined *)(gCamcontrolModeSettings + 0xc2) = 0xc;
+      gCamcontrolModeSettings->heightAdjustRate = lbl_803E1718;
+      gCamcontrolModeSettings->yawResponseFrames = 0xc;
       break;
     case 4:
-      *(float *)(gCamcontrolModeSettings + 0x14) = lbl_803E171C;
-      *(undefined *)(gCamcontrolModeSettings + 0xc2) = 2;
+      gCamcontrolModeSettings->heightAdjustRate = lbl_803E171C;
+      gCamcontrolModeSettings->yawResponseFrames = 2;
       break;
     case 3:
-      *(float *)(gCamcontrolModeSettings + 0x14) = lbl_803E1720;
-      *(undefined *)(gCamcontrolModeSettings + 0xc2) = 8;
+      gCamcontrolModeSettings->heightAdjustRate = lbl_803E1720;
+      gCamcontrolModeSettings->yawResponseFrames = 8;
       break;
     default:
-      *(float *)(gCamcontrolModeSettings + 0x14) = *(float *)(gCamcontrolModeSettings + 0x58);
-      *(undefined *)(gCamcontrolModeSettings + 0xc2) = 8;
+      gCamcontrolModeSettings->heightAdjustRate =
+          gCamcontrolModeSettings->targetHeightAdjustRate;
+      gCamcontrolModeSettings->yawResponseFrames = 8;
       break;
     }
   }
@@ -122,27 +117,27 @@ void camstatic_update(short *param_1)
                                  *(f32 *)(param_1 + 10),(f32 *)(param_1 + 0xc),
                                  (f32 *)(param_1 + 0xe),(f32 *)(param_1 + 0x10),
                                  *(int *)(param_1 + 0x18));
-  camslide_update((int)param_1,(int)psVar4,*(f32 *)(gCamcontrolModeSettings + 0xa0),
-                  *(f32 *)(gCamcontrolModeSettings + 0xa4));
-  camcontrol_updateVerticalBounds((int)param_1,1,8,(f32 *)(gCamcontrolModeSettings + 0xa0),
-                                  (f32 *)(gCamcontrolModeSettings + 0xa4));
-  if (((CamFlagByte *)(gCamcontrolModeSettings + 0xc6))->b7 == 0) {
-    *(undefined *)(gCamcontrolModeSettings + 0xc5) = *(u8 *)((int)param_1 + 0xa2);
+  camslide_update((int)param_1,(int)psVar4,gCamcontrolModeSettings->verticalLowerBound,
+                  gCamcontrolModeSettings->verticalUpperBound);
+  camcontrol_updateVerticalBounds((int)param_1,1,8,&gCamcontrolModeSettings->verticalLowerBound,
+                                  &gCamcontrolModeSettings->verticalUpperBound);
+  if (gCamcontrolModeSettings->wallAvoidanceFlags.b7 == 0) {
+    gCamcontrolModeSettings->targetActionFlags = *(u8 *)((int)param_1 + 0xa2);
     if (((((CameraObject *)param_1)->unk142 != 0) ||
-        ((*(u8 *)(gCamcontrolModeSettings + 0xc5) == 1 &&
+        ((gCamcontrolModeSettings->targetActionFlags == 1 &&
          (*(f32 *)(param_1 + 0x1c) >= lbl_803E16AC)))) &&
-       (((CamFlagByte *)(gCamcontrolModeSettings + 200))->b7 == 0)) {
+       (gCamcontrolModeSettings->clampFlags.b7 == 0)) {
       if (((*(f32 *)(param_1 + 0xe) > lbl_803E16DC + *(f32 *)(psVar4 + 0xe)) &&
           (*(f32 *)(param_1 + 0xe) < lbl_803E1724 + *(f32 *)(psVar4 + 0xe))) &&
          (*(int *)(param_1 + 0x18) == 0)) {
-        ((CamFlagByte *)(gCamcontrolModeSettings + 0xc6))->b7 = 1;
+        gCamcontrolModeSettings->wallAvoidanceFlags.b7 = 1;
       }
     }
-    if ((((*(u8 *)(gCamcontrolModeSettings + 0xc5) & 0x10) != 0) &&
+    if ((((gCamcontrolModeSettings->targetActionFlags & 0x10) != 0) &&
         (*(f32 *)(param_1 + 0x1c) < lbl_803E1728)) &&
        (*(f32 *)(psVar4 + 0x14) <= lbl_803E16AC)) {
-      ((CamFlagByte *)(gCamcontrolModeSettings + 200))->b6 = 1;
-      *(f32 *)(gCamcontrolModeSettings + 0xbc) = *(f32 *)(param_1 + 0xe);
+      gCamcontrolModeSettings->clampFlags.b6 = 1;
+      gCamcontrolModeSettings->heightLockLimit = *(f32 *)(param_1 + 0xe);
     }
   }
   else {
@@ -150,27 +145,27 @@ void camstatic_update(short *param_1)
     ((CameraObject *)param_1)->unk130 = fVar1;
     ((CameraObject *)param_1)->unk12C = fVar1;
     if ((*(u8 *)((int)param_1 + 0xa2) == 1) && (*(f32 *)(param_1 + 0x1c) < fVar1)) {
-      ((CamFlagByte *)(gCamcontrolModeSettings + 0xc6))->b7 = 0;
+      gCamcontrolModeSettings->wallAvoidanceFlags.b7 = 0;
     }
     if ((*(f32 *)(param_1 + 0xe) > lbl_803E172C + *(f32 *)(psVar4 + 0xe)) ||
        (*(f32 *)(param_1 + 0xe) < lbl_803E1708 + *(f32 *)(psVar4 + 0xe))) {
-      ((CamFlagByte *)(gCamcontrolModeSettings + 0xc6))->b7 = 0;
+      gCamcontrolModeSettings->wallAvoidanceFlags.b7 = 0;
     }
   }
-  if (((CamFlagByte *)(gCamcontrolModeSettings + 200))->b7 != 0) {
-    if ((*(u8 *)(gCamcontrolModeSettings + 0xc5) == 1) || (((CameraObject *)param_1)->unk142 != 0)) {
-      *(u8 *)(gCamcontrolModeSettings + 199) += 1;
+  if (gCamcontrolModeSettings->clampFlags.b7 != 0) {
+    if ((gCamcontrolModeSettings->targetActionFlags == 1) || (((CameraObject *)param_1)->unk142 != 0)) {
+      gCamcontrolModeSettings->wallAvoidanceTimer += 1;
     }
     else {
-      *(undefined *)(gCamcontrolModeSettings + 199) = 0;
+      gCamcontrolModeSettings->wallAvoidanceTimer = 0;
     }
-    if (10 < *(u8 *)(gCamcontrolModeSettings + 199)) {
+    if (10 < gCamcontrolModeSettings->wallAvoidanceTimer) {
       if (psVar4[0x22] == 1) {
         cameraGetPrevPos2((int)psVar4,&local_128,&local_124,&local_120);
       }
       else {
         local_128 = *(f32 *)(psVar4 + 0xc);
-        local_124 = *(f32 *)(psVar4 + 0xe) + *(f32 *)(gCamcontrolModeSettings + 0x8c);
+        local_124 = *(f32 *)(psVar4 + 0xe) + gCamcontrolModeSettings->targetHeight;
         local_120 = *(f32 *)(psVar4 + 0x10);
       }
       camcontrol_traceMove(lbl_803E1688,&local_128,(f32 *)(param_1 + 0xc),
@@ -178,23 +173,23 @@ void camstatic_update(short *param_1)
       ((CameraObject *)param_1)->probePosX = *(f32 *)(param_1 + 0xc);
       ((CameraObject *)param_1)->probePosY = *(f32 *)(param_1 + 0xe);
       ((CameraObject *)param_1)->probePosZ = *(f32 *)(param_1 + 0x10);
-      *(undefined *)(gCamcontrolModeSettings + 199) = 0;
+      gCamcontrolModeSettings->wallAvoidanceTimer = 0;
     }
   }
-  if (((CamFlagByte *)(gCamcontrolModeSettings + 0xc6))->b7 == 0) {
-    if ((*(u8 *)(gCamcontrolModeSettings + 0xc5) & 0x10) != 0) {
-      *(u8 *)(gCamcontrolModeSettings + 0xc3) += 1;
+  if (gCamcontrolModeSettings->wallAvoidanceFlags.b7 == 0) {
+    if ((gCamcontrolModeSettings->targetActionFlags & 0x10) != 0) {
+      gCamcontrolModeSettings->collisionProbeTimer += 1;
     }
     else {
-      *(undefined *)(gCamcontrolModeSettings + 0xc3) = 0;
+      gCamcontrolModeSettings->collisionProbeTimer = 0;
     }
-    if (5 < *(u8 *)(gCamcontrolModeSettings + 0xc3)) {
+    if (5 < gCamcontrolModeSettings->collisionProbeTimer) {
       if (psVar4[0x22] == 1) {
         cameraGetPrevPos2((int)psVar4,&local_134,&local_130,&local_12c);
       }
       else {
         local_134 = *(f32 *)(psVar4 + 0xc);
-        local_130 = *(f32 *)(psVar4 + 0xe) + *(f32 *)(gCamcontrolModeSettings + 0x8c);
+        local_130 = *(f32 *)(psVar4 + 0xe) + gCamcontrolModeSettings->targetHeight;
         local_12c = *(f32 *)(psVar4 + 0x10);
       }
       camcontrol_traceMove(lbl_803E1688,&local_134,(f32 *)(param_1 + 0xc),
@@ -202,17 +197,17 @@ void camstatic_update(short *param_1)
       ((CameraObject *)param_1)->probePosX = *(f32 *)(param_1 + 0xc);
       ((CameraObject *)param_1)->probePosY = *(f32 *)(param_1 + 0xe);
       ((CameraObject *)param_1)->probePosZ = *(f32 *)(param_1 + 0x10);
-      *(undefined *)(gCamcontrolModeSettings + 0xc3) = 0;
+      gCamcontrolModeSettings->collisionProbeTimer = 0;
     }
   }
-  (*gCameraInterface)->getRelativePosition(*(f32 *)(gCamcontrolModeSettings + 0x8c),
+  (*gCameraInterface)->getRelativePosition(gCamcontrolModeSettings->targetHeight,
                                            (int)param_1, &local_138, (f32 *)auStack_13c,
                                            &local_140, &local_144, 0);
   sVar4 = getAngle(local_138,local_140);
-  *(undefined2 *)(gCamcontrolModeSettings + 0x80) = 0;
-  *param_1 = (-0x8000 - sVar4) - *(short *)(gCamcontrolModeSettings + 0x80);
+  gCamcontrolModeSettings->pitchOffset = 0;
+  *param_1 = (-0x8000 - sVar4) - gCamcontrolModeSettings->pitchOffset;
   uVar3 = getAngle(*(f32 *)(param_1 + 0xe) -
-                   (*(f32 *)(psVar4 + 0xe) + *(f32 *)(gCamcontrolModeSettings + 0x8c)),
+                   (*(f32 *)(psVar4 + 0xe) + gCamcontrolModeSettings->targetHeight),
                    local_144);
   uVar3 = (uVar3 & 0xffff) - ((int)param_1[1] & 0xffffU);
   if (0x8000 < (int)uVar3) {
@@ -223,7 +218,7 @@ void camstatic_update(short *param_1)
   }
   iVar2 = (int)interpolate((f32)(int)uVar3,
                            lbl_803E16A4 /
-                           (f32)(u32)*(u8 *)(gCamcontrolModeSettings + 0xc2),timeDelta);
+                           (f32)(u32)gCamcontrolModeSettings->yawResponseFrames,timeDelta);
   param_1[1] = param_1[1] + (short)iVar2;
   camcontrol_updateTargetAction((int)param_1,(int)psVar4);
   iVar2 = (int)interpolate((f32)param_1[2],lbl_803E1730,timeDelta);
