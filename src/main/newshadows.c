@@ -235,8 +235,6 @@ extern f32 lbl_803DFA9C;
 extern void DCFlushRange(void *addr, u32 nBytes);
 
 /* Box-blur a square tiled texture in place (8-bit and 16-bit texel paths). */
-#pragma scheduling off
-#pragma peephole off
 void fn_8006A028(u8 *texData, int size, int window, u32 fill)
 {
     u8 blurred[128];
@@ -442,8 +440,6 @@ void fn_8006A028(u8 *texData, int size, int window, u32 fill)
     }
     DCFlushRange(data, size * size);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -458,6 +454,8 @@ void fn_8006A028(u8 *texData, int size, int window, u32 fill)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void newshadows_captureProjectedShadow(ushort *object)
 {
   float fVar1;
@@ -529,6 +527,8 @@ void newshadows_captureProjectedShadow(ushort *object)
   pfVar3[6] = -(fVar1 * *pfVar3 - pfVar3[6]);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -543,6 +543,8 @@ void newshadows_captureProjectedShadow(ushort *object)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void newshadows_sortQueuedShadowCasters(int queueBase,int casterCount)
 {
   int iVar1;
@@ -596,6 +598,8 @@ void newshadows_sortQueuedShadowCasters(int queueBase,int casterCount)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -610,6 +614,8 @@ void newshadows_sortQueuedShadowCasters(int queueBase,int casterCount)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void newshadows_renderQueuedShadowCasters(void)
 {
   undefined2 uVar1;
@@ -1006,6 +1012,8 @@ void newshadows_renderQueuedShadowCasters(void)
   FUN_80286858();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1020,6 +1028,8 @@ void newshadows_renderQueuedShadowCasters(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void newshadows_queueShadowCaster(int object)
 {
   ObjAnimComponent *objAnim;
@@ -1062,6 +1072,8 @@ void newshadows_queueShadowCaster(int object)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1076,6 +1088,8 @@ void newshadows_queueShadowCaster(int object)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void newshadows_getShadowTextureTable4x8(int *tableOut,int *columnsOut,int *rowsOut)
 {
   *tableOut = (int)&DAT_8038ee48;
@@ -1083,6 +1097,8 @@ void newshadows_getShadowTextureTable4x8(int *tableOut,int *columnsOut,int *rows
   *rowsOut = 8;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1097,12 +1113,16 @@ void newshadows_getShadowTextureTable4x8(int *tableOut,int *columnsOut,int *rows
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void newshadows_getShadowTextureTable16(int *tableOut,int *countOut)
 {
   *tableOut = (int)&DAT_8038eec8;
   *countOut = 0x10;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1250,6 +1270,8 @@ void newshadows_getSoftShadowTexture(int *textureOut)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 int FUN_8006af98(void)
 {
   int iVar1;
@@ -1259,6 +1281,8 @@ int FUN_8006af98(void)
   FUN_802420e0(iVar1 + 0x60,*(int *)(iVar1 + 0x44));
   return iVar1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1367,6 +1391,8 @@ void newshadows_getShadowNoiseTexture(int *textureOut)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8006b03c(int param_1,undefined4 *param_2,undefined4 *param_3,int *param_4,int *param_5)
 {
   ObjModelState *modelState = ((GameObject *)param_1)->anim.modelState;
@@ -1376,6 +1402,8 @@ void FUN_8006b03c(int param_1,undefined4 *param_2,undefined4 *param_3,int *param
   *param_5 = (int)modelState->shadowOffsetY;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1408,11 +1436,15 @@ double newshadows_getShadowNoiseScale(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8006b0bc(int param_1)
 {
   FUN_8025b054((uint *)(DAT_803ddc50 + 0x20),param_1);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1427,6 +1459,8 @@ void FUN_8006b0bc(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8006b0e8(int param_1)
 {
   if (*(char *)(DAT_803ddc4c + 0x48) == '\0') {
@@ -1437,6 +1471,8 @@ void FUN_8006b0e8(int param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1451,6 +1487,8 @@ void FUN_8006b0e8(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void newshadows_bindShadowRenderTexture(int textureSlot)
 {
   if (*(char *)(DAT_803ddbfc + 0x48) == '\0') {
@@ -1461,6 +1499,8 @@ void newshadows_bindShadowRenderTexture(int textureSlot)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1547,6 +1587,8 @@ int newshadows_getRadialFalloffTexture(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void newshadows_bindShadowCaptureTexture(int textureSlot)
 {
   if (*(char *)(DAT_803ddc64 + 0x48) == '\0') {
@@ -1557,6 +1599,8 @@ void newshadows_bindShadowCaptureTexture(int textureSlot)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1571,6 +1615,8 @@ void newshadows_bindShadowCaptureTexture(int textureSlot)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void newshadows_refreshShadowCaptureTexture(void)
 {
   FUN_800709e8((double)lbl_803DF9A8,(double)lbl_803DF9A8,DAT_803ddbfc,0xff,0x40);
@@ -1582,6 +1628,8 @@ void newshadows_refreshShadowCaptureTexture(void)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1596,6 +1644,8 @@ void newshadows_refreshShadowCaptureTexture(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void newshadows_flushShadowRenderTargets(void)
 {
   FUN_80259400(0,0,0x280,0x1e0);
@@ -1616,6 +1666,8 @@ void newshadows_flushShadowRenderTargets(void)
   FUN_80258c24();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1630,6 +1682,8 @@ void newshadows_flushShadowRenderTargets(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void newshadows_updateFrameState(void)
 {
   uint uVar1;
@@ -1691,6 +1745,8 @@ void newshadows_updateFrameState(void)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1725,6 +1781,8 @@ void newshadows_getShadowNoiseScroll(float *xOffsetOut,float *yOffsetOut)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8006b4f8(undefined *param_1)
 {
   undefined *puVar1;
@@ -1745,6 +1803,8 @@ void FUN_8006b4f8(undefined *param_1)
   (&DAT_8038ebb8)[iVar2 * 0x14] = 0;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1779,6 +1839,8 @@ void newshadows_freeShadowDirectionTexture(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void newshadows_buildShadowDirectionTexture(void)
 {
   float fVar1;
@@ -1839,6 +1901,8 @@ void newshadows_buildShadowDirectionTexture(void)
   FUN_802420e0(DAT_803ddc3c + 0x60,*(int *)(DAT_803ddc3c + 0x44));
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1853,6 +1917,8 @@ void newshadows_buildShadowDirectionTexture(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8006b824(double param_1,double param_2,double param_3,float *param_4,int param_5,
                  float *param_6,float *param_7)
 {
@@ -1959,6 +2025,8 @@ void FUN_8006b824(double param_1,double param_2,double param_3,float *param_4,in
   *param_7 = (float)dVar5;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1973,6 +2041,8 @@ void FUN_8006b824(double param_1,double param_2,double param_3,float *param_4,in
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8006bce4(void)
 {
   float fVar1;
@@ -2190,6 +2260,8 @@ void FUN_8006bce4(void)
   FUN_8028686c();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2204,6 +2276,8 @@ void FUN_8006bce4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8006c2d8(void)
 {
   int iVar1;
@@ -2816,6 +2890,8 @@ void FUN_8006c2d8(void)
   FUN_80286880();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2830,6 +2906,8 @@ void FUN_8006c2d8(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 ushort FUN_8006dc08(uint param_1,undefined param_2)
 {
   uint uVar1;
@@ -2874,6 +2952,8 @@ ushort FUN_8006dc08(uint param_1,undefined param_2)
   }
   return puVar2[uVar1];
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2888,6 +2968,8 @@ ushort FUN_8006dc08(uint param_1,undefined param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8006dca8(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
                  uint param_5,int param_6,int param_7)
 {
@@ -2931,6 +3013,8 @@ void FUN_8006dca8(undefined8 param_1,double param_2,undefined4 param_3,undefined
   FUN_8028688c();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* sda21 accessors. */
 extern u32 lbl_803DCFD4;
@@ -2983,39 +3067,32 @@ void fn_8006CB24(void) { mm_free(lbl_803DCFBC); lbl_803DCFBC = 0; }
 
 /* Three-out info getter:  *p1 = &lbl; *p2 = 4; *p3 = 8; */
 extern u8 lbl_8038E1E8[0x80];
-#pragma scheduling off
 void fn_8006C4C0(int *p1, int *p2, int *p3)
 {
     *p1 = (int)lbl_8038E1E8;
     *p2 = 4;
     *p3 = 8;
 }
-#pragma scheduling reset
 
 /* Two-out info getter:  *p1 = &lbl; *p2 = 0x10; */
 extern u8 lbl_8038E268[0x40];
-#pragma scheduling off
 void textureFn_8006c4e0(int *p1, int *p2)
 {
     *p1 = (int)lbl_8038E268;
     *p2 = 0x10;
 }
-#pragma scheduling reset
 
 /* Trivial GXLoadTexObj wrapper at offset 0x20 of sda21 pointer. */
 extern u32 lbl_803DCFD0;
 extern void GXLoadTexObj(void *obj, int id);
 extern void GXLoadTexObjPreLoaded(void *obj, void *region, int id);
-#pragma scheduling off
 void fn_8006C678(int id)
 {
     GXLoadTexObj((char *)lbl_803DCFD0 + 0x20, id);
 }
-#pragma scheduling reset
 
 /* PreLoaded-or-direct wrapper based on byte 0x48 of sda21 pointer.  Variant A. */
 extern u32 lbl_803DCFCC;
-#pragma scheduling off
 void fn_8006C6A4(int id)
 {
     register int idCopy = id;
@@ -3026,10 +3103,8 @@ void fn_8006C6A4(int id)
         GXLoadTexObj(p + 0x20, idCopy);
     }
 }
-#pragma scheduling reset
 
 /* PreLoaded-or-direct wrapper using lbl_803DCF7C as base. */
-#pragma scheduling off
 void selectReflectionTexture(int id)
 {
     register int idCopy = id;
@@ -3040,11 +3115,9 @@ void selectReflectionTexture(int id)
         GXLoadTexObj(p + 0x20, idCopy);
     }
 }
-#pragma scheduling reset
 
 /* PreLoaded-or-direct wrapper using lbl_803DCFE4 as base. */
 extern u32 lbl_803DCFE4;
-#pragma scheduling off
 void textureFn_8006c75c(int id)
 {
     register int idCopy = id;
@@ -3055,7 +3128,6 @@ void textureFn_8006c75c(int id)
         GXLoadTexObj(p + 0x20, idCopy);
     }
 }
-#pragma scheduling reset
 
 typedef struct NewShadowEntry {
     u8 pad00[0x10];
@@ -3066,7 +3138,6 @@ typedef struct NewShadowEntry {
 /* Linear search by pointer identity through the shadow entry table.
  * Clears the active flag when the entry matches the needle. */
 extern NewShadowEntry lbl_8038DF48[0x25];
-#pragma scheduling off
 void findSomething(void *needle)
 {
     int i;
@@ -3078,12 +3149,10 @@ void findSomething(void *needle)
         }
     }
 }
-#pragma scheduling reset
 
 /* Cycles a 3-element table, then samples 3 fields from obj->0x64 ptr block. */
 extern u8 lbl_803DCF8C;
 extern u32 lbl_8038E1DC[3];
-#pragma scheduling off
 void objShadowFn_8006c5f0(int obj, u32 *outTable, f32 *outF, int *outX, int *outY)
 {
     int idx = (lbl_803DCF8C + 1) % 3;
@@ -3094,12 +3163,9 @@ void objShadowFn_8006c5f0(int obj, u32 *outTable, f32 *outF, int *outX, int *out
     *outX = (int)modelState->shadowOffsetX;
     *outY = (int)modelState->shadowOffsetY;
 }
-#pragma scheduling reset
 
 /* Allocate a 512x512 texture (1bpp?), set field, flush. */
 extern void *textureAlloc(int w, int h, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
-#pragma scheduling off
-#pragma peephole off
 void *textureAlloc512(void)
 {
     void *tex = textureAlloc(0x200, 0x200, 1, 0, 0, 0, 0, 0, 0);
@@ -3107,8 +3173,6 @@ void *textureAlloc512(void)
     DCFlushRange((char *)tex + 0x60, *(u32 *)((char *)tex + 0x44));
     return tex;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Draw the reflection texture and copy to the reflection2 region. */
 extern f32 lbl_803DED28;
@@ -3117,7 +3181,6 @@ extern void GXSetTexCopySrc(u16 left, u16 top, u16 wd, u16 ht);
 extern void GXSetTexCopyDst(u16 wd, u16 ht, int fmt, u8 mipmap);
 extern void GXCopyTex(void *dest, u8 clear);
 extern void GXPreLoadEntireTexture(void *obj, void *region);
-#pragma scheduling off
 void drawReflectionTexture(void)
 {
     void *texture;
@@ -3131,12 +3194,10 @@ void drawReflectionTexture(void)
         GXPreLoadEntireTexture((char *)lbl_803DCFE4 + 0x20, *(void **)(lbl_803DCFE4 + 0x40));
     }
 }
-#pragma scheduling reset
 
 /* Copy the frame buffer into both reflection textures, optionally preload. */
 extern void GXInvalidateTexAll(void);
 extern void GXPixModeSync(void);
-#pragma scheduling off
 void updateReflectionTextures(void)
 {
     GXSetTexCopySrc(0, 0, 0x280, 0x1e0);
@@ -3156,7 +3217,6 @@ void updateReflectionTextures(void)
     }
     GXPixModeSync();
 }
-#pragma scheduling reset
 
 typedef struct {
     int id;
@@ -3164,7 +3224,6 @@ typedef struct {
     int flags;
 } ShadowSortEntry;
 
-#pragma scheduling off
 #pragma dont_inline on
 void fn_8006B830(ShadowSortEntry *arr, int count)
 {
@@ -3188,11 +3247,8 @@ void fn_8006B830(ShadowSortEntry *arr, int count)
     }
 }
 #pragma dont_inline reset
-#pragma scheduling reset
 
 extern u8 lbl_8030E8B0[];
-#pragma scheduling off
-#pragma peephole off
 u16 audioPickSoundEffect_8006ed24(s8 a, u8 b) {
     u8 *base = lbl_8030E8B0;
     int idx = (u8)a;
@@ -3212,8 +3268,6 @@ u16 audioPickSoundEffect_8006ed24(s8 a, u8 b) {
     }
     return *(u16 *)(base + v * 2);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern u8 lbl_803DCF78;
 extern int *lbl_803DCFE8;
@@ -3236,7 +3290,6 @@ extern inline float sqrtf(float x)
 }
 extern f32 CPUFifo_803DED38, GPFifo_803DED3C, __GXCurrentThread_803DED40, lbl_803DED2C;
 extern f32 Vdchuff_803DEDC0[2];
-#pragma scheduling off
 void fn_8006CD20(f32 *arr, int n, f32 *out1, f32 *out2, f32 a, f32 b, f32 c) {
     f32 *p;
     int i;
@@ -3286,7 +3339,6 @@ void fn_8006CD20(f32 *arr, int n, f32 *out1, f32 *out2, f32 a, f32 b, f32 c) {
     *out1 = __GXCurrentThread_803DED40 * acc6 + Vdchuff_803DEDC0[5];
     *out2 = acc5;
 }
-#pragma scheduling reset
 
 extern int testAndSet_onlyUseHeap3(int);
 extern f32 fn_802943F4(f32);
@@ -3295,8 +3347,6 @@ extern f32 Yachuff_803DEDE0[2];
 extern f32 __PADFixBits;
 extern f32 lbl_80391978[];
 extern f32 lbl_803DCFA8, lbl_803DCFAC;
-#pragma scheduling off
-#pragma peephole off
 void initFn_8006d020(void) {
     u8 saved;
     int placed, attempts, tex, row, col, collide, j;
@@ -3389,8 +3439,6 @@ void initFn_8006d020(void) {
     lbl_803DCFA8 = 0.0f;
     testAndSet_onlyUseHeap3(saved);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int textureLoadAsset(int);
 extern void DCInvalidateRange(void *, int);
@@ -3398,8 +3446,6 @@ extern void fn_80069EB8();
 extern void GXTexModeSync(void);
 extern f32 lbl_803DED10, lbl_803DED34, Dev_803DED1C;
 extern f32 Udchuff_803DEDA0[2], Uachuff_803DEE00[2];
-#pragma scheduling off
-#pragma peephole off
 #pragma ppc_unroll_speculative off
 void allocLotsOfTextures(void) {
     char *g = (char *)(int)lbl_8038DF48;
@@ -3726,10 +3772,6 @@ void allocLotsOfTextures(void) {
     testAndSet_onlyUseHeap3(saved);
 }
 #pragma ppc_unroll_speculative on
-#pragma peephole reset
-#pragma scheduling reset
-#pragma scheduling off
-#pragma peephole off
 void shadowCreate(int *obj) {
     ObjAnimComponent *objAnim;
     ObjModelInstance *modelDef;
@@ -3758,11 +3800,7 @@ void shadowCreate(int *obj) {
         lbl_803DCF78 = lbl_803DCF78 + 1;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void objAudioFn_8006edcc(int p1, int mask, int p5, int p6, int p7, f32 f1, f32 f2) {
     s8 buf[0x1c];
     int bit;
@@ -3775,8 +3813,6 @@ void objAudioFn_8006edcc(int p1, int mask, int p5, int p6, int p7, f32 f1, f32 f
     }
     objAudioFn_8006ef38(p1, buf, p5, p6, p7, f1, f2);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int getHudHiddenFrameCount(void);
 extern f32 timeDelta;
@@ -3790,7 +3826,7 @@ extern f32 *Camera_GetInverseViewMatrix(void);
 extern void fn_8004C234(f32 *a, f32 *b);
 extern f32 Dev_803DED1C;
 extern u16 lbl_803DCFA0;
-#pragma scheduling off
+#pragma peephole on
 void maybeHudFn_8006c91c(void) {
     f32 lo, hi;
     if (getHudHiddenFrameCount() == 0) {
@@ -3817,7 +3853,7 @@ void maybeHudFn_8006c91c(void) {
         if ((u8)v != lbl_803DCF80) fn_80069EB8();
     }
 }
-#pragma scheduling reset
+#pragma peephole reset
 
 extern void Obj_BuildWorldTransformMatrix(int *obj, f32 *mtx, int x);
 extern f32 playerMapOffsetX, playerMapOffsetZ;
@@ -3830,8 +3866,6 @@ extern void set_shadowFlag_803dcc29(int x);
 extern void objRender(int a, int b, int c, int d, int *obj, int e);
 extern int *Obj_GetActiveModel(int *obj);
 extern void Camera_ApplyFullViewport(void);
-#pragma scheduling off
-#pragma peephole off
 void shadowRenderFn_8006b558(int *obj) {
     f32 mtx[12];
     f32 vF, vE, vD, vC, vB, vA;
@@ -3881,12 +3915,8 @@ void shadowRenderFn_8006b558(int *obj) {
     o64[5] = o64[5] - Dev_803DED1C * o64[0];
     o64[6] = o64[6] - Dev_803DED1C * o64[0];
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803DED34, GXOverflowSuspendInProgress_803DED48;
-#pragma scheduling off
-#pragma peephole off
 void fn_8006CB50(void) {
     int y, x;
     lbl_803DCFBC = (u32)textureAlloc(0x100, 0x100, 3, 0, 0, 0, 0, 1, 1);
@@ -3913,8 +3943,6 @@ void fn_8006CB50(void) {
     }
     DCFlushRange((char *)lbl_803DCFBC + 0x60, *(u32 *)((char *)lbl_803DCFBC + 0x44));
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void Camera_DisableViewYOffset(void);
 extern void Camera_EnableViewYOffset(void);
@@ -3963,8 +3991,6 @@ extern int lbl_803DCCF0;
 extern f32 lbl_803DCED0, lbl_803DCECC;
 extern int lbl_803DCF84, lbl_803DCF88;
 extern char lbl_8038DF48b[];
-#pragma scheduling off
-#pragma peephole off
 void renderShadows(void) {
     char *B = (char *)lbl_8038DF48;
     int *slot;
@@ -4209,5 +4235,3 @@ void renderShadows(void) {
     Camera_ApplyFullViewport();
     Camera_EnableViewYOffset();
 }
-#pragma peephole reset
-#pragma scheduling reset

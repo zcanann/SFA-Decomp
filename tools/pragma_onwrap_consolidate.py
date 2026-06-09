@@ -24,6 +24,31 @@ PRAG = re.compile(r'^\s*#pragma\s+(scheduling|peephole)\s+(off|on|reset)\s*$')
 def sh(p):
     return hashlib.sha1(open(p,'rb').read()).hexdigest() if os.path.exists(p) else None
 
+class BraceCounter:
+    """Net {}-depth counter that ignores braces in //, /* */, "..." and '...'."""
+    def __init__(self): self.in_block=False
+    def net(self, s):
+        d=0; i=0; n=len(s); inblk=self.in_block
+        while i<n:
+            c=s[i]
+            if inblk:
+                if c=='*' and i+1<n and s[i+1]=='/': inblk=False; i+=2; continue
+                i+=1; continue
+            if c=='/' and i+1<n and s[i+1]=='/': break
+            if c=='/' and i+1<n and s[i+1]=='*': inblk=True; i+=2; continue
+            if c=='"' or c=="'":
+                q=c; i+=1
+                while i<n:
+                    if s[i]=='\\': i+=2; continue
+                    if s[i]==q: i+=1; break
+                    i+=1
+                continue
+            if c=='{': d+=1
+            elif c=='}': d-=1
+            i+=1
+        self.in_block=inblk
+        return d
+
 def effective_states(lines):
     """Return list of (sched,peep) effective state per line index (True=on)."""
     sched=['on']; peep=['on']  # default-on stacks (cflags_base)
@@ -60,11 +85,11 @@ def find_def_span(lines, name):
                 is_def=False; break
         if is_def is False or is_def is None:
             continue  # prototype or unparseable -> try next match
-        # brace-match the body from the '{' line
-        depth=0; started=False
-        for j in range(is_def, min(is_def+600,len(lines))):
+        # brace-match the body from the '{' line (string/comment aware)
+        bc=BraceCounter(); depth=0; started=False
+        for j in range(is_def, min(is_def+2000,len(lines))):
             t=lines[j].decode('latin1')
-            depth += t.count('{') - t.count('}')
+            depth += bc.net(t)
             if '{' in t: started=True
             if started and depth<=0:
                 return (i, j)
@@ -119,6 +144,9 @@ def main():
     cfg=cfg0; applied=[]; errs={}
     for u in objs:
         won=[s for s in pertu[u]['wants_on']]
+        woff=pertu[u].get('wants_off',[])
+        if len(won) > len(woff):
+            errs[u]='majority-on (left default-on)'; continue
         new,err=transform(os.path.join(ROOT,u),won)
         if err: errs[u]=err; continue
         open(os.path.join(ROOT,u),'wb').write(new)
