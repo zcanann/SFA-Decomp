@@ -163,7 +163,7 @@ void wispbaddie_update(int obj)
   (*gPartfxInterface)->spawnObject((void *)obj, state->particleId, NULL, 2, -1,
                                    &particleParam);
   state->playerObj = Obj_GetPlayerObject();
-  if (state->playerObj != 0) {
+  if ((void *)state->playerObj != NULL) {
     d[0] = *(f32 *)(state->playerObj + 0x18) - ((GameObject *)obj)->anim.worldPosX;
     d[1] = *(f32 *)(state->playerObj + 0x1c) - ((GameObject *)obj)->anim.worldPosY;
     d[2] = *(f32 *)(state->playerObj + 0x20) - ((GameObject *)obj)->anim.worldPosZ;
