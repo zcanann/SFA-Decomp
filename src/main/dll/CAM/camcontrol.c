@@ -620,7 +620,7 @@ CamcontrolTriggeredAction *Camera_getCamActionsBinEntry(int actionNo)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void camcontrol_release(int camAction, int recordSize)
+void camcontrol_release(void *camAction,int recordSize)
 {
   CamcontrolHandlerEntry *currentHandler;
 
@@ -643,7 +643,7 @@ void camcontrol_release(int camAction, int recordSize)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void camcontrol_queueSavedAction(undefined4 blendFrames,undefined queueMode)
+void camcontrol_queueSavedAction(int blendFrames,u8 queueMode)
 {
   if (gCamcontrolSavedActionId != CAMCONTROL_SAVED_ACTION_NONE) {
     Camera_setMode(gCamcontrolSavedActionId,gCamcontrolSavedActionPriority,
@@ -666,7 +666,7 @@ void camcontrol_queueSavedAction(undefined4 blendFrames,undefined queueMode)
  * PAL Size: TODO
  */
 void Camera_setMode(s32 actionId,int priority,int startFlags,int dataSize,void *data,
-                    undefined4 blendFrames,undefined queueMode)
+                    int blendFrames,u8 queueMode)
 {
   if (gCamcontrolQueuedActionData != (void *)0x0) {
     mm_free(gCamcontrolQueuedActionData);

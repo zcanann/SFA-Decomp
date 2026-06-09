@@ -83,7 +83,7 @@ typedef struct CamcontrolHandlerVTable {
   void (*activate)(void *camera,int startFlags,void *actionData);
   void (*update)(void *camera);
   void (*release)(void *camera);
-  void (*actionCallback)();
+  void (*actionCallback)(void *actionData,int dataSize);
 } CamcontrolHandlerVTable;
 
 typedef struct CamcontrolHandler {
@@ -157,10 +157,10 @@ void Camera_overridePos(f32 x,f32 y,f32 z);
 void Camera_setFocus(void *target);
 void camcontrol_loadTriggeredCamAction(int triggerType,int actionNo,int triggerMode);
 CamcontrolTriggeredAction *Camera_getCamActionsBinEntry(int actionNo);
-void camcontrol_release(int camAction, int recordSize);
-void camcontrol_queueSavedAction(undefined4 blendFrames,undefined queueMode);
+void camcontrol_release(void *camAction,int recordSize);
+void camcontrol_queueSavedAction(int blendFrames,u8 queueMode);
 void Camera_setMode(s32 actionId,int priority,int startFlags,int dataSize,void *data,
-                    undefined4 blendFrames,undefined queueMode);
+                    int blendFrames,u8 queueMode);
 void Camera_update(void);
 void *Camera_getDefaultHandlerEntry(void);
 void *Camera_GetFollowPos(void);
