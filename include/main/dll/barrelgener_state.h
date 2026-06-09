@@ -6,6 +6,11 @@
 
 typedef struct GameObject GameObject;
 
+typedef struct BarrelGeneratorSetup {
+    u8 pad00[0x19];
+    s8 linkId;
+} BarrelGeneratorSetup;
+
 typedef struct BarrelGeneratorState {
     GameObject *queuedObject;
     u8 releaseAnimPlaying;
@@ -15,6 +20,7 @@ typedef struct BarrelGeneratorState {
     u8 pad0D[3];
 } BarrelGeneratorState;
 
+STATIC_ASSERT(offsetof(BarrelGeneratorSetup, linkId) == 0x19);
 STATIC_ASSERT(offsetof(BarrelGeneratorState, queuedObject) == 0x0);
 STATIC_ASSERT(offsetof(BarrelGeneratorState, releaseAnimPlaying) == 0x4);
 STATIC_ASSERT(offsetof(BarrelGeneratorState, releaseTimer) == 0x8);

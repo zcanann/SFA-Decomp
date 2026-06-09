@@ -6,8 +6,8 @@
 #include "main/audio/sfx_ids.h"
 int barrelgener_getLinkId(int obj)
 {
-    obj = *(int *)&((GameObject *)obj)->anim.placementData;
-    return *(s8 *)(obj + 0x19);
+    BarrelGeneratorSetup *setup = (BarrelGeneratorSetup *)((GameObject *)obj)->anim.placementData;
+    return setup->linkId;
 }
 
 #pragma scheduling off
