@@ -53,7 +53,7 @@ void ecsh_shrine_setScale(s16 *out) {
     int *obj = (int *)lbl_803DDBC4;
     int *state;
     if (obj == NULL) return;
-    state = *(int **)((char *)obj + 0xB8);
+    state = ((GameObject *)obj)->extra;
     *out = *(s16 *)((char *)state + 0x20);
 }
 #pragma peephole reset
