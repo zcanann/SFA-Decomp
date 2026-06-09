@@ -1,3 +1,5 @@
+#include <string.h>
+
 #include "main/game_object.h"
 #include "main/model.h"
 #include "main/objhits.h"
@@ -7,7 +9,6 @@
 
 #pragma peephole off
 #pragma scheduling off
-extern undefined8 memcpy();
 extern void Obj_TransformWorldVectorToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, int obj);
 extern undefined4 Obj_TransformWorldPointToLocal();
 extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, int obj);
