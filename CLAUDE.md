@@ -1617,6 +1617,25 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
     100%). player_SeqFn's 9 mask sites + warpDarkIceMines also recovered
     with #74 — the "11 missing instructions" diagnosis was entirely this
     class.
+    **SWEEP DIAGNOSTIC — turn #74 from per-fn into a SAFE BULK operation
+    (coloring-A, player.c flags360: +1896, 8 fns to 100% in one sweep).**
+    A recurring flag WORD (e.g. a state struct's 0x360 field) whose masks
+    are MATERIALIZED in target means the ORIGINAL used a consistent 64-bit
+    constant for ALL of that field's ops. To prove it safe to bulk-convert:
+    map EVERY non-LL mask site (`field |= 0xK` / `&= ~0xK`) to its
+    containing fn's fuzzy%. If ~all sites sit in PARTIAL fns and ~NONE in
+    100% fns (player.c: 1 of ~100 in a 100% fn), the field is uniformly
+    materialized — bulk-convert ALL to the u32-cast LL form (`*(u32 *)
+    ((char *)base + off) OP 0xKLL`; the u32 cast avoids the signed srawi an
+    `int` lvalue + LL emits, per the foxtrot refinement above). GATE: snapshot
+    per-fn fuzzy, convert all-at-once (#74 burst — partial conversion of a
+    field misaligns and the A/B lies), rebuild report, diff per-fn. A few
+    sites may genuinely use the immediate form (target inconsistent) and
+    regress their fn — EXCLUDE those fns' line-ranges and re-apply (player.c:
+    4 fns excluded — fn_8029F108/FA24/playerRender/fn_8029BDB4, whose mask
+    change perturbs an independent #108 li-0 web). Leave positive-literal
+    AND-clears (`&= 0xFFFFFFFD`) for the `~K` subcase. Apply per recurring
+    flag word; each is its own bulk sweep.
 
 75. **`union { f32 m[16]; f64 a8; }` 8-ALIGNS a stack array — fixes the
     "+4 stack-offset" frame residual.** When target places an f32 array at
@@ -1708,6 +1727,19 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
     sandwormBoss/CFBaby/gasvent/groundAnimator) — when a "family" state's
     offsets recur across TUs, check for an interface vtable taking the
     state pointer before defining a private struct.
+    **#77 CROSS-CLASS INTERLEAVE — a real (small) dent in the #108 frontier
+    (coloring-A, fn_8029560C → 100).** When target keeps a PARAM in the
+    HIGHER saved reg ABOVE a single-def copy local (e.g. target state(param)
+    =r31, *state(deref copy)=r30; ours inverts), lift the param into the
+    copy pool: change the signature's pointer param to `void *` and copy it
+    into a typed cast-local (`int *state = (int *)statep;`). Both the cast-
+    copy and the deref value are then single-def copies in the TOP block, and
+    DECL ORDER within the copy pool sets r31/r30. ORDERING RULE observed: this
+    fn colored FIRST-CREATED → r31 (declare `state` cast-copy BEFORE the
+    deref value `v` to land state in r31) — opposite of #108's E1 "last-
+    created → r31", so the within-copy-pool direction is PER-FN; A/B both decl
+    orders. ABI-neutral (pointer param, regs assign by class). One data point
+    on the #108 within-class/cross-class ordering frontier.
 
 78. **Triple-multiply REGROUP: `A * lbl * conv` → `A * (lbl * conv)` —
     Ghidra always left-flattens; target groups the constant-by-conversion
@@ -2859,6 +2891,22 @@ today's #100. Same resolution pattern as the #70-72/#93-95 collision.)*
     the dispatch → 100). And dimlogfire_init's listed "#61c copy-pair"
     was actually a #90 doubled-float-arg hoist — launder the repeated
     const arg (`*(f32 *)&lbl`) → 100.
+    **#107 EXTENDS to FP-PAIR CLAMPS — un-naming cracks part of the #82 open
+    FP-pair sub-class, and it is PER-CLAMP DIRECTIONAL (coloring-A,
+    fn_802ADC08/fn_802AE9C8 → 100).** A reload-clamp `v = field; if (v<lo)..
+    else if (v>hi).. else ..; field = v;` where target's `fcmpo` keeps the
+    CLAMPED VALUE in the LOWER FP reg (f0) but your named `v` puts it in f1:
+    UN-NAME `v` — inline the field load at EVERY ternary arm
+    (`field = (field<lo)?lo:((field>hi)?hi:field);`). CSE keeps ONE load but
+    the value becomes an expression-temp and colors LOWER (f0), matching.
+    DIRECTIONAL: read target's fcmpo — un-name only when target holds the
+    value in f0; KEEP the named `v` if/else form when target holds it in f1.
+    MIXED within one fn is normal (fn_802AE9C8 had 3 reload-clamps: unk408 →
+    un-name(f0), velocityY-1 → keep-named(f1), velocityY-2 → un-name(f0)).
+    A/B per clamp off the target fcmpo; pairs with #6 const-lift for adjacent
+    same-const stores. This is the read that cracks the symbol/field-CSE half
+    of the #82 FP-pair "open" sub-class (the pure expression-temp pairs with
+    no field/symbol to un-name remain open).
 
 108. **Saved-reg assignment is CLASS-POOLED, not weight-ranked — partial
     allocator model from controlled probes (task #12; /tmp battery
@@ -2997,6 +3045,25 @@ extension; mtx44_multSafe copy loop), and that an explicit `f32 *tp = tmp;`
 pointer local positions a stack array's base web in decl order where the
 bare array's base web is created first regardless of decl position
 (mtx44_multSafe 52.43->100).
+    **OPEN SUB-CLASS — small-constant-web rematerialization (coloring-A
+    characterization; flagged research target, see task #27 / MP4-oracle).**
+    The dominant remaining player.c coloring residual is a GVN small-constant
+    web (`li 0` / `li -1` / a `mr`-copy of 0) where OUR -O4 compile and TARGET
+    disagree on share-vs-rematerialize — and it is BIDIRECTIONAL:
+    (a) TARGET rematerializes `li r0,0` AT THE USE while ours HOISTS `li
+    rSAVED,0` into a saved reg (→ frame grows, inline saves → `_savegpr`
+    helper, whole-fn coloring cascade) — fn_8029F108/FA24/E568/BDB4,
+    playerRender; (b) TARGET SHARES the 0 via `mr r30,r31` (copy of an
+    existing 0) while ours rematerializes a fresh `li r30,0` — fn_8029C8C8/
+    802A5048/802A96D8/playerDie. Same web class, OPPOSITE direction per fn.
+    These were exactly the flags360-sweep EXCLUSION set (the #74 mask change
+    perturbs the same web). EXHAUSTED levers (don't re-run): #51 chains,
+    casts, decl-order (inert), #110 per-fn O1 (BLOCKED — all affected fns have
+    calls, O1 wrecks them), #114 conversion-node (N/A — constants fold through
+    conversions). The crux (per the cross-class section below): a lever must
+    change the construct census WITHOUT changing the instruction stream. NEEDS
+    the MP4 oracle (find a 100%-matched fn with li-rematerialize-at-use, read
+    its C) — a fresh-headroom probe-batch job, not a deep-context grind.
 
 *(Numbering note: the entry below landed twice into collisions — first as
 #107 (vs the #61c un-naming crack), then as #108 (vs the class-pooled
@@ -3134,6 +3201,19 @@ bank the partial, and keep it open for a lever that controls n-ary sum
 collection (the probes above are spent — a new axis is needed).
 (fn_80069B1C also carries one #92 branch-over-branch site in its guard
 chain — independent open residual.)
+
+**#109(d) ADDENDUM — the single-case-switch reading extends to PLAIN-STATEMENT
+`if (x==K) {A} else {B}` (cracks the #92 plain-statement variant; coloring-A,
+fn_802A4D34/fn_802A14F8/fn_80298CCC → 100).** When target emits `cmpwi x,K;
+beq <A>; b <B>` (branch-over-branch: beq jumps over an unconditional `b` to the
+then-block) in PLAIN STATEMENT position — NOT loop-break — the original was a
+`switch (x) { case K: A; break; default: B; break; }`, not an if/else (if/else
+folds to a single inverted `bne <B>`). Rewrite the if/else as that switch and
+MWCC regenerates the `beq; b`. This is the non-loop-break companion to the #92
+cap (which stays open for VARIABLE-compare loop-break-position branch-over-
+branch). Read the position: plain statement → switch reading; loop-break →
+still #92-open. Pairs with #21 (snd ternary invert), #58 (u32 clamp cmplwi),
+#93c (drop (int) on float→s16 store) when those co-occur in the same fn.
 
 110. **GVN chained-constant residual CRACKED — `li rY,K; mr rX,rY` (target
     chains a constant-equal copy) is per-fn `#pragma optimization_level 1`,
