@@ -3,6 +3,7 @@
 #include "main/camera_object.h"
 #include "main/dll/CAM/camcontrol_mode_settings.h"
 #include "main/dll/CAM/camslide.h"
+#include "main/dll/CAM/firstperson.h"
 #include "main/object_transform.h"
 
 extern void camcontrol_traceMove(f32 radius, f32 *from, void *to, f32 *out, void *work, int a,
@@ -12,7 +13,6 @@ extern void camMoveFn_80104040(int camera, int obj);
 extern void camcontrol_updateModeSettings(int camera);
 extern void camcontrol_updateVerticalBounds(int camera, int flags, s8 param_3, f32 *upperBound,
                                             f32 *lowerBound);
-extern void firstperson_updatePosition(int camera, void *obj);
 extern int EmissionController_IsLingering(int obj);
 extern void fn_8029656C(int obj, float *out);
 extern void cameraGetPrevPos2(int obj, float *x, float *y, float *z);
@@ -51,9 +51,9 @@ extern f32 timeDelta;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void camstatic_update(short *param_1)
+void camstatic_update(CameraObject *camera)
 {
-  short *psVar4;
+  GameObject *target;
   float fVar1;
   int iVar2;
   uint uVar3;
@@ -72,14 +72,14 @@ void camstatic_update(short *param_1)
   undefined auStack_11c [112];
   undefined auStack_ac [116];
 
-  psVar4 = ((CameraObject *)param_1)->anim.targetObj;
-  if (psVar4 == (short *)0x0) {
+  target = (GameObject *)camera->anim.targetObj;
+  if (target == NULL) {
     return;
   }
-  if (psVar4[0x22] == 1) {
-    fn_8029656C((int)psVar4,&local_148);
+  if (target->anim.classId == 1) {
+    fn_8029656C((int)target,&local_148);
     lbl_803DD52C = timeDelta * local_148;
-    iVar2 = EmissionController_IsLingering((int)psVar4);
+    iVar2 = EmissionController_IsLingering((int)target);
     switch (iVar2) {
     case 1:
       gCamcontrolModeSettings->heightAdjustRate = lbl_803E16AC;
@@ -107,69 +107,69 @@ void camstatic_update(short *param_1)
   else {
     lbl_803DD52C = timeDelta;
   }
-  ((CameraObject *)param_1)->unk13E = 0;
-  camcontrol_updateModeSettings((int)param_1);
-  camMoveFn_80104040((int)param_1,(int)psVar4);
-  firstperson_updatePosition((int)param_1,psVar4);
-  Obj_TransformLocalPointToWorld(*(f32 *)(param_1 + 6),*(f32 *)(param_1 + 8),
-                                 *(f32 *)(param_1 + 10),(f32 *)(param_1 + 0xc),
-                                 (f32 *)(param_1 + 0xe),(f32 *)(param_1 + 0x10),
-                                 *(int *)(param_1 + 0x18));
-  camslide_update((CameraObject *)param_1,(GameObject *)psVar4);
-  camcontrol_updateVerticalBounds((int)param_1,1,8,&gCamcontrolModeSettings->verticalLowerBound,
+  camera->unk13E = 0;
+  camcontrol_updateModeSettings((int)camera);
+  camMoveFn_80104040((int)camera,(int)target);
+  firstperson_updatePosition(camera,&target->anim);
+  Obj_TransformLocalPointToWorld(camera->anim.localPosX,camera->anim.localPosY,
+                                 camera->anim.localPosZ,&camera->anim.worldPosX,
+                                 &camera->anim.worldPosY,&camera->anim.worldPosZ,
+                                 (u32)camera->anim.parent);
+  camslide_update(camera,target);
+  camcontrol_updateVerticalBounds((int)camera,1,8,&gCamcontrolModeSettings->verticalLowerBound,
                                   &gCamcontrolModeSettings->verticalUpperBound);
   if (gCamcontrolModeSettings->wallAvoidanceFlags.b7 == 0) {
-    gCamcontrolModeSettings->targetActionFlags = *(u8 *)((int)param_1 + 0xa2);
-    if (((((CameraObject *)param_1)->unk142 != 0) ||
+    gCamcontrolModeSettings->targetActionFlags = *(u8 *)((int)camera + 0xa2);
+    if (((camera->unk142 != 0) ||
         ((gCamcontrolModeSettings->targetActionFlags == 1 &&
-         (*(f32 *)(param_1 + 0x1c) >= lbl_803E16AC)))) &&
+         (*(f32 *)((u8 *)camera + 0x38) >= lbl_803E16AC)))) &&
        (gCamcontrolModeSettings->clampFlags.b7 == 0)) {
-      if (((*(f32 *)(param_1 + 0xe) > lbl_803E16DC + *(f32 *)(psVar4 + 0xe)) &&
-          (*(f32 *)(param_1 + 0xe) < lbl_803E1724 + *(f32 *)(psVar4 + 0xe))) &&
-         (*(int *)(param_1 + 0x18) == 0)) {
+      if (((camera->anim.worldPosY > lbl_803E16DC + target->anim.worldPosY) &&
+          (camera->anim.worldPosY < lbl_803E1724 + target->anim.worldPosY)) &&
+         (camera->anim.parent == NULL)) {
         gCamcontrolModeSettings->wallAvoidanceFlags.b7 = 1;
       }
     }
     if ((((gCamcontrolModeSettings->targetActionFlags & 0x10) != 0) &&
-        (*(f32 *)(param_1 + 0x1c) < lbl_803E1728)) &&
-       (*(f32 *)(psVar4 + 0x14) <= lbl_803E16AC)) {
+        (*(f32 *)((u8 *)camera + 0x38) < lbl_803E1728)) &&
+       (target->anim.localPosZ <= lbl_803E16AC)) {
       gCamcontrolModeSettings->clampFlags.b6 = 1;
-      gCamcontrolModeSettings->heightLockLimit = *(f32 *)(param_1 + 0xe);
+      gCamcontrolModeSettings->heightLockLimit = camera->anim.worldPosY;
     }
   }
   else {
     fVar1 = lbl_803E16AC;
-    ((CameraObject *)param_1)->unk130 = fVar1;
-    ((CameraObject *)param_1)->unk12C = fVar1;
-    if ((*(u8 *)((int)param_1 + 0xa2) == 1) && (*(f32 *)(param_1 + 0x1c) < fVar1)) {
+    camera->unk130 = fVar1;
+    camera->unk12C = fVar1;
+    if ((*(u8 *)((int)camera + 0xa2) == 1) && (*(f32 *)((u8 *)camera + 0x38) < fVar1)) {
       gCamcontrolModeSettings->wallAvoidanceFlags.b7 = 0;
     }
-    if ((*(f32 *)(param_1 + 0xe) > lbl_803E172C + *(f32 *)(psVar4 + 0xe)) ||
-       (*(f32 *)(param_1 + 0xe) < lbl_803E1708 + *(f32 *)(psVar4 + 0xe))) {
+    if ((camera->anim.worldPosY > lbl_803E172C + target->anim.worldPosY) ||
+       (camera->anim.worldPosY < lbl_803E1708 + target->anim.worldPosY)) {
       gCamcontrolModeSettings->wallAvoidanceFlags.b7 = 0;
     }
   }
   if (gCamcontrolModeSettings->clampFlags.b7 != 0) {
-    if ((gCamcontrolModeSettings->targetActionFlags == 1) || (((CameraObject *)param_1)->unk142 != 0)) {
+    if ((gCamcontrolModeSettings->targetActionFlags == 1) || (camera->unk142 != 0)) {
       gCamcontrolModeSettings->wallAvoidanceTimer += 1;
     }
     else {
       gCamcontrolModeSettings->wallAvoidanceTimer = 0;
     }
     if (10 < gCamcontrolModeSettings->wallAvoidanceTimer) {
-      if (psVar4[0x22] == 1) {
-        cameraGetPrevPos2((int)psVar4,&local_128,&local_124,&local_120);
+      if (target->anim.classId == 1) {
+        cameraGetPrevPos2((int)target,&local_128,&local_124,&local_120);
       }
       else {
-        local_128 = *(f32 *)(psVar4 + 0xc);
-        local_124 = *(f32 *)(psVar4 + 0xe) + gCamcontrolModeSettings->targetHeight;
-        local_120 = *(f32 *)(psVar4 + 0x10);
+        local_128 = target->anim.worldPosX;
+        local_124 = target->anim.worldPosY + gCamcontrolModeSettings->targetHeight;
+        local_120 = target->anim.worldPosZ;
       }
-      camcontrol_traceMove(lbl_803E1688,&local_128,(f32 *)(param_1 + 0xc),
-                           (f32 *)(param_1 + 0xc),auStack_ac,3,1,1);
-      ((CameraObject *)param_1)->probePosX = *(f32 *)(param_1 + 0xc);
-      ((CameraObject *)param_1)->probePosY = *(f32 *)(param_1 + 0xe);
-      ((CameraObject *)param_1)->probePosZ = *(f32 *)(param_1 + 0x10);
+      camcontrol_traceMove(lbl_803E1688,&local_128,&camera->anim.worldPosX,
+                           &camera->anim.worldPosX,auStack_ac,3,1,1);
+      camera->probePosX = camera->anim.worldPosX;
+      camera->probePosY = camera->anim.worldPosY;
+      camera->probePosZ = camera->anim.worldPosZ;
       gCamcontrolModeSettings->wallAvoidanceTimer = 0;
     }
   }
@@ -181,32 +181,32 @@ void camstatic_update(short *param_1)
       gCamcontrolModeSettings->collisionProbeTimer = 0;
     }
     if (5 < gCamcontrolModeSettings->collisionProbeTimer) {
-      if (psVar4[0x22] == 1) {
-        cameraGetPrevPos2((int)psVar4,&local_134,&local_130,&local_12c);
+      if (target->anim.classId == 1) {
+        cameraGetPrevPos2((int)target,&local_134,&local_130,&local_12c);
       }
       else {
-        local_134 = *(f32 *)(psVar4 + 0xc);
-        local_130 = *(f32 *)(psVar4 + 0xe) + gCamcontrolModeSettings->targetHeight;
-        local_12c = *(f32 *)(psVar4 + 0x10);
+        local_134 = target->anim.worldPosX;
+        local_130 = target->anim.worldPosY + gCamcontrolModeSettings->targetHeight;
+        local_12c = target->anim.worldPosZ;
       }
-      camcontrol_traceMove(lbl_803E1688,&local_134,(f32 *)(param_1 + 0xc),
-                           (f32 *)(param_1 + 0xc),auStack_11c,3,1,1);
-      ((CameraObject *)param_1)->probePosX = *(f32 *)(param_1 + 0xc);
-      ((CameraObject *)param_1)->probePosY = *(f32 *)(param_1 + 0xe);
-      ((CameraObject *)param_1)->probePosZ = *(f32 *)(param_1 + 0x10);
+      camcontrol_traceMove(lbl_803E1688,&local_134,&camera->anim.worldPosX,
+                           &camera->anim.worldPosX,auStack_11c,3,1,1);
+      camera->probePosX = camera->anim.worldPosX;
+      camera->probePosY = camera->anim.worldPosY;
+      camera->probePosZ = camera->anim.worldPosZ;
       gCamcontrolModeSettings->collisionProbeTimer = 0;
     }
   }
   (*gCameraInterface)->getRelativePosition(gCamcontrolModeSettings->targetHeight,
-                                           (int)param_1, &local_138, (f32 *)auStack_13c,
+                                           (int)camera, &local_138, (f32 *)auStack_13c,
                                            &local_140, &local_144, 0);
   sVar4 = getAngle(local_138,local_140);
   gCamcontrolModeSettings->pitchOffset = 0;
-  *param_1 = (-0x8000 - sVar4) - gCamcontrolModeSettings->pitchOffset;
-  uVar3 = getAngle(*(f32 *)(param_1 + 0xe) -
-                   (*(f32 *)(psVar4 + 0xe) + gCamcontrolModeSettings->targetHeight),
+  camera->anim.rotX = (-0x8000 - sVar4) - gCamcontrolModeSettings->pitchOffset;
+  uVar3 = getAngle(camera->anim.worldPosY -
+                   (target->anim.worldPosY + gCamcontrolModeSettings->targetHeight),
                    local_144);
-  uVar3 = (uVar3 & 0xffff) - ((int)param_1[1] & 0xffffU);
+  uVar3 = (uVar3 & 0xffff) - ((int)camera->anim.rotY & 0xffffU);
   if (0x8000 < (int)uVar3) {
     uVar3 = uVar3 - 0xffff;
   }
@@ -216,12 +216,12 @@ void camstatic_update(short *param_1)
   iVar2 = (int)interpolate((f32)(int)uVar3,
                            lbl_803E16A4 /
                            (f32)(u32)gCamcontrolModeSettings->yawResponseFrames,timeDelta);
-  param_1[1] = param_1[1] + (short)iVar2;
-  camcontrol_updateTargetAction((int)param_1,(int)psVar4);
-  iVar2 = (int)interpolate((f32)param_1[2],lbl_803E1730,timeDelta);
-  param_1[2] = param_1[2] - (short)iVar2;
-  Obj_TransformWorldPointToLocal(*(f32 *)(param_1 + 0xc),*(f32 *)(param_1 + 0xe),
-                                 *(f32 *)(param_1 + 0x10),(f32 *)(param_1 + 6),
-                                 (f32 *)(param_1 + 8),(f32 *)(param_1 + 10),
-                                 *(int *)(param_1 + 0x18));
+  camera->anim.rotY = camera->anim.rotY + (short)iVar2;
+  camcontrol_updateTargetAction((int)camera,(int)target);
+  iVar2 = (int)interpolate((f32)camera->anim.rotZ,lbl_803E1730,timeDelta);
+  camera->anim.rotZ = camera->anim.rotZ - (short)iVar2;
+  Obj_TransformWorldPointToLocal(camera->anim.worldPosX,camera->anim.worldPosY,
+                                 camera->anim.worldPosZ,&camera->anim.localPosX,
+                                 &camera->anim.localPosY,&camera->anim.localPosZ,
+                                 (u32)camera->anim.parent);
 }
