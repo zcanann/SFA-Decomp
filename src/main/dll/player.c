@@ -8856,8 +8856,8 @@ int fn_802A9A0C(int obj, int p2)
         !((ByteFlags *)((char *)inner + 0x3f0))->b04 &&
         !((ByteFlags *)((char *)inner + 0x3f0))->b08 &&
         ((ByteFlags *)((char *)inner + 0x3f4))->b40) {
-        s16 v = ((PlayerState *)p2)->baddie.controlMode;
-        if (v == 1 || v == 2 || v == 0x25 || v == 0x24) {
+        s16 v;
+        if ((v = ((PlayerState *)p2)->baddie.controlMode) == 1 || v == 2 || v == 0x25 || v == 0x24) {
             return 1;
         }
     }
