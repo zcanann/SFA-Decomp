@@ -2819,17 +2819,20 @@ typedef struct {
 void lavaball1be_init(s16 *obj, u8 *p) {
     Lavaball1beState *state;
     if (obj[0x23] == 0x1fa) {
-        LavaVec vec;
-        s16 rot[3];
-        vec = *(LavaVec *)lbl_802C2318;
-        rot[2] = 0;
-        rot[1] = (s16)randomGetRange(-0x2ee0, 0x2ee0);
-        rot[0] = (s16)randomGetRange(0, 0xfffe);
-        vecRotateZXY(rot, &vec);
+        struct {
+            LavaVec vec;
+            s16 rot[3];
+            u8 pad[18];
+        } s;
+        s.vec = *(LavaVec *)lbl_802C2318;
+        s.rot[2] = 0;
+        s.rot[1] = (s16)randomGetRange(-0x2ee0, 0x2ee0);
+        s.rot[0] = (s16)randomGetRange(0, 0xfffe);
+        vecRotateZXY((u8 *)&s + 12, &s.vec);
         ((GameObject *)obj)->unkF4 = 0x4b;
-        ((GameObject *)obj)->anim.velocityX = vec.x;
-        ((GameObject *)obj)->anim.velocityY = vec.y;
-        ((GameObject *)obj)->anim.velocityZ = vec.z;
+        ((GameObject *)obj)->anim.velocityX = s.vec.x;
+        ((GameObject *)obj)->anim.velocityY = s.vec.y;
+        ((GameObject *)obj)->anim.velocityZ = s.vec.z;
         ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale * lbl_803E47D4;
     } else {
         f32 vy;
