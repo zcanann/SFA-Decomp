@@ -75,6 +75,8 @@ extern f32 lbl_803E6958;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801ee668(ushort *param_1,int param_2)
 {
   float fVar1;
@@ -106,6 +108,8 @@ void FUN_801ee668(ushort *param_1,int param_2)
                      lbl_803E6930));
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -120,6 +124,8 @@ void FUN_801ee668(ushort *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801ee7bc(short *param_1,int param_2,undefined4 param_3,undefined4 param_4,
                  undefined4 param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8)
 {
@@ -204,6 +210,8 @@ void FUN_801ee7bc(short *param_1,int param_2,undefined4 param_3,undefined4 param
   param_1[0x7b] = 1;
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -218,6 +226,8 @@ void FUN_801ee7bc(short *param_1,int param_2,undefined4 param_3,undefined4 param
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801eeafc(ushort *param_1,int param_2,undefined4 param_3,undefined4 param_4,
                  undefined4 param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8)
 {
@@ -344,6 +354,8 @@ void FUN_801eeafc(ushort *param_1,int param_2,undefined4 param_3,undefined4 para
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -375,6 +387,8 @@ void FUN_801eefcc(undefined4 param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801eefd0(uint param_1,int param_2)
 {
   int iVar1;
@@ -418,6 +432,8 @@ void FUN_801eefd0(uint param_1,int param_2)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -475,6 +491,8 @@ void FUN_801ef1e0(int param_1,undefined4 *param_2,undefined4 *param_3,undefined4
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801ef200(int param_1)
 {
   undefined4 uVar1;
@@ -483,6 +501,8 @@ void FUN_801ef200(int param_1)
   FUN_8004036c(uVar1);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -497,6 +517,8 @@ void FUN_801ef200(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801ef228(int param_1)
 {
   int iVar1;
@@ -516,6 +538,8 @@ void FUN_801ef228(int param_1)
   ObjGroup_RemoveObject(param_1,10);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -530,6 +554,8 @@ void FUN_801ef228(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801ef2c0(int param_1,int param_2,int param_3,int param_4,int param_5,s8 renderState)
 {
   float *pfVar1;
@@ -563,6 +589,8 @@ void FUN_801ef2c0(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -577,6 +605,8 @@ void FUN_801ef2c0(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801ef3f8(ushort *param_1,undefined4 param_2,int param_3,undefined4 param_4,
                  undefined4 param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8)
 {
@@ -667,6 +697,8 @@ void FUN_801ef3f8(ushort *param_1,undefined4 param_2,int param_3,undefined4 para
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -701,6 +733,8 @@ void FUN_801ef980(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801ef984(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   if (visible != 0) {
@@ -708,6 +742,8 @@ void FUN_801ef984(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -735,9 +771,7 @@ int WM_ObjCreator_getObjectTypeId(void) { return 0x0; }
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5CC8;
 extern void objRenderFn_8003b8f4(f32);
-#pragma peephole off
 void WM_ObjCreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5CC8); }
-#pragma peephole reset
 
 extern f32 lbl_803E5C70;
 f32 fn_801EEDB4(int unused, f32 *p) { f32 v = lbl_803E5C70; *p = v; return v; }
@@ -766,18 +800,14 @@ void fn_801EED5C(int *obj, f32 *x, f32 *y, f32 *z) {
 }
 
 extern void objSetMtxFn_800412d4();
-#pragma scheduling off
 void fn_801EED80(void *obj) {
     objSetMtxFn_800412d4(ObjPath_GetPointModelMtx((int)obj, 3));
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void fn_801EEDC0(int p1, f32 *out, int *outInt) {
     *out = lbl_803E5C70;
     *outInt = 0;
 }
-#pragma scheduling reset
 
 void fn_801EEE0C(int *obj, f32 *x, f32 *y, f32 *z) {
     f32* p = ((GameObject *)obj)->extra;
@@ -807,8 +837,6 @@ typedef struct {
     s8 sfxFlag;
 } WCAnimEvents;
 
-#pragma scheduling off
-#pragma peephole off
 void fn_801EE668(s16 *obj, u8 *state) {
     WCAnimEvents events;
     int doSpawn;
@@ -899,8 +927,6 @@ void fn_801EE668(s16 *obj, u8 *state) {
         WCPushBlock_SpawnFromPath(obj, state);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* SB_CloudRunner_HandlePriorityHit: when the laser hits an object whose
  * type isn't 281 and isn't currently in fade state, fade it red, rumble,
@@ -920,7 +946,6 @@ struct WCPartfxArgs {
     f32 scale;
 };
 
-#pragma scheduling off
 void SB_CloudRunner_HandlePriorityHit(int obj, u8 *state) {
     int hitObj;
     f32 pos[3];
@@ -959,14 +984,11 @@ void SB_CloudRunner_HandlePriorityHit(int obj, u8 *state) {
         }
     }
 }
-#pragma scheduling reset
 
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern void Obj_BuildInverseWorldTransformMatrix(int obj, f32 *mtx);
 extern void PSMTXMultVec(f32 *mtx, f32 *in, f32 *out);
-#pragma scheduling off
-#pragma peephole off
 void SB_CloudRunner_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
     f32 *state = ((GameObject *)obj)->extra;
     f32 mtx[16];
@@ -994,15 +1016,11 @@ void SB_CloudRunner_render(int obj, int p2, int p3, int p4, int p5, s8 visible) 
         state[2] = ((GameObject *)obj)->anim.localPosZ;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int Obj_GetPlayerObject(void);
 extern void SB_CloudRunner_onSeqFree(void);
 extern void objHitDetectFn_80062e84(int player, int hitObj, int p3);
 extern void fn_80295918(int player, int p2, f32 p3);
-#pragma scheduling off
-#pragma peephole off
 int SB_CloudRunner_SeqFn(int obj, int unused, u8 *setupData) {
     int *state = ((GameObject *)obj)->extra;
     int player = Obj_GetPlayerObject();
@@ -1024,11 +1042,7 @@ int SB_CloudRunner_SeqFn(int obj, int unused, u8 *setupData) {
     ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 extern void textureFree(void *tex);
-#pragma scheduling off
-#pragma peephole off
 void SB_CloudRunner_free(int *obj) {
     int *state = ((GameObject *)obj)->extra;
     (*gExpgfxInterface)->freeSource2((u32)obj);
@@ -1044,11 +1058,7 @@ void SB_CloudRunner_free(int *obj) {
     *(void **)((char *)state + 0x14) = NULL;
     ObjGroup_RemoveObject(obj, 10);
 }
-#pragma peephole reset
-#pragma scheduling reset
 extern void *textureLoadAsset(int id);
-#pragma scheduling off
-#pragma peephole off
 void SB_CloudRunner_init(int *obj) {
     int *state = ((GameObject *)obj)->extra;
     ((GameObject *)obj)->animEventCallback = (void *)SB_CloudRunner_SeqFn;
@@ -1063,8 +1073,6 @@ void SB_CloudRunner_init(int *obj) {
     ObjHits_SetTargetMask(obj, 1);
     ObjGroup_AddObject(obj, 10);
 }
-#pragma peephole reset
-#pragma scheduling reset
 extern void setAButtonIcon(int idx);
 extern int padGetStickX(int controller);
 extern int padGetStickY(int controller);
@@ -1073,8 +1081,6 @@ extern f32 lbl_803E5CBC;
 extern f32 lbl_803E5CC0;
 extern void WCPushBlock_UpdateRideTilt(int obj, int state);
 extern void WCPushBlock_UpdateCloudAction(int obj, int state);
-#pragma scheduling off
-#pragma peephole off
 void SB_CloudRunner_update(int obj)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -1131,5 +1137,3 @@ void SB_CloudRunner_update(int obj)
     }
     ((void (*)(int, int))WCPushBlock_UpdateCloudAction)(obj, state);
 }
-#pragma peephole reset
-#pragma scheduling reset

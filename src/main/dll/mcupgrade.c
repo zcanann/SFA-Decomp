@@ -4,7 +4,6 @@
 #include "main/objanim_update.h"
 #include "main/objseq.h"
 
-#pragma scheduling off
 int mcupgradema_SeqFn(int obj, int unused, void *eventData)
 {
     ObjAnimUpdateState *animUpdate = (ObjAnimUpdateState *)eventData;
@@ -26,9 +25,8 @@ int mcupgradema_SeqFn(int obj, int unused, void *eventData)
     }
     return 0;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
+#pragma peephole on
 void mcupgrade_update(int obj)
 {
     GameObject *gameObj = (GameObject *)obj;
@@ -43,6 +41,6 @@ void mcupgrade_update(int obj)
         objRenderFn_80041018(obj);
     }
 }
-#pragma scheduling reset
+#pragma peephole reset
 
 void mcupgrade_init(int obj) { ((GameObject *)obj)->animEventCallback = (void *)mcupgrade_SeqFn; }

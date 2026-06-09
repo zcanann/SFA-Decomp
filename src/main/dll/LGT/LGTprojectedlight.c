@@ -99,6 +99,8 @@ extern undefined2 uRam803de91a;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void wmlevelcontrol_readParams(undefined2 *param_1,int param_2)
 {
   float *pfVar1;
@@ -121,6 +123,8 @@ void wmlevelcontrol_readParams(undefined2 *param_1,int param_2)
   pfVar1[6] = *(float *)(param_1 + 10);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -135,6 +139,8 @@ void wmlevelcontrol_readParams(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801f456c(int param_1)
 {
   float fVar1;
@@ -251,6 +257,8 @@ void FUN_801f456c(int param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -265,6 +273,8 @@ void FUN_801f456c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801f4b64(int param_1)
 {
   ObjGroup_RemoveObject(param_1,9);
@@ -274,6 +284,8 @@ void FUN_801f4b64(int param_1)
   GameBit_Set(0x390,1);
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -288,6 +300,8 @@ void FUN_801f4b64(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801f4bb8(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   if (visible != 0) {
@@ -295,6 +309,8 @@ void FUN_801f4bb8(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -309,8 +325,6 @@ void FUN_801f4bb8(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void wmlevelcontrol_update(int obj)
 {
   uint areaId;
@@ -348,8 +362,6 @@ void wmlevelcontrol_update(int obj)
   *(uint *)(state + 6) = *(uint *)(state + 6) + 1;
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void ObjGroup_AddObject(int obj, int group);
 extern int mapGetDirIdx(int mapId);
@@ -364,7 +376,6 @@ extern f32 lbl_803E5E90;
  * EN v1.0 Address: 0x801F4628
  * EN v1.0 Size: 656b
  */
-#pragma scheduling off
 void wmlevelcontrol_init(int obj)
 {
     f32 *state;
@@ -432,7 +443,6 @@ void wmlevelcontrol_init(int obj)
         break;
     }
 }
-#pragma scheduling reset
 
 extern void Obj_SetModelRenderOpAlpha(int obj, int alpha);
 extern u8 Obj_IsLoadingLocked(void);
@@ -454,8 +464,6 @@ extern void ObjLink_DetachChild(int *parent, int *child);
  * EN v1.0 Address: 0x801F48C0
  * EN v1.0 Size: 652b
  */
-#pragma scheduling off
-#pragma peephole off
 int wmgeneralscales_SeqFn(int obj, int p2, u8 *seq)
 {
     f32 *state;
@@ -535,8 +543,6 @@ int wmgeneralscales_SeqFn(int obj, int p2, u8 *seq)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -551,19 +557,13 @@ void wmgeneralscales_initialise(void) {}
 int wmgeneralscales_getExtraSize(void) { return 0x8; }
 int wmgeneralscales_getObjectTypeId(void) { return 0x9; }
 
-#pragma scheduling off
 void wmgeneralscales_free(int *obj) { int *p = (int*)obj[0xc8/4]; if (p != NULL) ObjLink_DetachChild(obj, p); }
-#pragma scheduling reset
 
 extern void FireFlyFn_801f4f88(int *obj);
-#pragma scheduling off
 int fn_801F4C04(int *obj) { FireFlyFn_801f4f88(obj); return 0; }
-#pragma scheduling reset
 
 extern f32 lbl_803E5EA4;
 extern void objRenderFn_8003b8f4(f32);
-#pragma scheduling off
-#pragma peephole off
 void wmgeneralscales_init(int *obj) {
     int *state = ((GameObject *)obj)->extra;
     ((GameObject *)obj)->animEventCallback = (void *)wmgeneralscales_SeqFn;
@@ -577,5 +577,3 @@ void wmgeneralscales_render(int *obj, int p2, int p3, int p4, int p5, s8 visible
     if (visible == 0) return;
     ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E5EA4);
 }
-#pragma peephole reset
-#pragma scheduling reset

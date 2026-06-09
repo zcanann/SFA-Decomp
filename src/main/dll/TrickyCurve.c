@@ -101,8 +101,6 @@ typedef struct TrickyCurveBurstFxParams {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void TrickyCurve_updateBurstTrigger(int obj)
 {
   u8 *state;
@@ -208,8 +206,6 @@ void TrickyCurve_updateBurstTrigger(int obj)
   state[0x11] = ySide;
   state[0x12] = zSide;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -224,6 +220,8 @@ void TrickyCurve_updateBurstTrigger(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void TrickyCurve_updateBoundsTrigger(int param_1)
 {
   float fVar1;
@@ -274,6 +272,8 @@ void TrickyCurve_updateBoundsTrigger(int param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -288,6 +288,8 @@ void TrickyCurve_updateBoundsTrigger(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void TrickyCurve_updateEffectRingTrigger(undefined8 param_1,undefined8 param_2,undefined8 param_3,
                                          undefined8 param_4,undefined8 param_5,undefined8 param_6,
                                          undefined8 param_7,undefined8 param_8)
@@ -451,6 +453,8 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1,undefined8 param_2,u
   FUN_80286884();
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -484,6 +488,8 @@ void FUN_80207c10(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void TrickyCurve_updateState(undefined8 param_1,undefined8 param_2,undefined8 param_3,
                              undefined8 param_4,undefined8 param_5,undefined8 param_6,
                              undefined8 param_7,undefined8 param_8,int param_9)
@@ -506,6 +512,8 @@ void TrickyCurve_updateState(undefined8 param_1,undefined8 param_2,undefined8 pa
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -520,6 +528,8 @@ void TrickyCurve_updateState(undefined8 param_1,undefined8 param_2,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void sfxplayer_updateEffectHandlePositions(short *param_1)
 {
   int iVar1;
@@ -597,6 +607,8 @@ void sfxplayer_updateEffectHandlePositions(short *param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 #define SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handle, obj, rot, angleStep) \
     do { \
@@ -612,8 +624,6 @@ void sfxplayer_updateEffectHandlePositions(short *param_1)
         } \
     } while (0)
 
-#pragma peephole off
-#pragma scheduling off
 void TrickyCurve_updateEffectHandleRing(int obj)
 {
     SfxplayerState *state = *(SfxplayerState **)(obj + SFXPLAYER_OBJECT_STATE_OFFSET);
@@ -660,11 +670,7 @@ void TrickyCurve_updateEffectHandleRing(int obj)
         angleStep += SFXPLAYER_EFFECT_RING_ROT_STEP;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
 {
     u32 ringIdWords[2];
@@ -734,11 +740,7 @@ int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
 
     return 1;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 int TrickyCurve_activateEffectHandleRing(int obj, int unused, u8 *eventData)
 {
     SfxplayerState *state = *(SfxplayerState **)(obj + SFXPLAYER_OBJECT_STATE_OFFSET);
@@ -762,10 +764,7 @@ int TrickyCurve_activateEffectHandleRing(int obj, int unused, u8 *eventData)
     TrickyCurve_updateEffectHandleRing(obj);
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
 void sfxplayer_free(int obj, int arg1)
 {
     int *handles;
@@ -788,7 +787,6 @@ void sfxplayer_free(int obj, int arg1)
     }
     gameTimerStop();
 }
-#pragma scheduling reset
 
 #undef SFXPLAYER_UPDATE_EFFECT_HANDLE_POS
 
@@ -809,8 +807,6 @@ int sfxplayer_getObjectTypeId(void) { return 0x0; }
 
 extern void fn_80206C18(int *obj);
 extern void fn_80206968(int *obj);
-#pragma scheduling off
-#pragma peephole off
 void TrickyCurve_update(int *obj) {
     u8 *inner = ((GameObject *)obj)->extra;
     u32 state = inner[0xe];
@@ -844,5 +840,3 @@ void TrickyCurve_init(int *obj, u8 *def) {
     ((TrickyCurveObjState *)state)->unk6 = 0;
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x2000);
 }
-#pragma peephole reset
-#pragma scheduling reset

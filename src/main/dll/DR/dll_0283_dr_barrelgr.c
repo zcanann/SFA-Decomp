@@ -5,7 +5,6 @@ int drbarrelgr_getExtraSize(void) { return 0x12c; }
 
 int drbarrelgr_getObjectTypeId(void) { return 0; }
 
-#pragma scheduling off
 void drbarrelgr_free(int obj)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -16,7 +15,6 @@ void drbarrelgr_free(int obj)
         ((DrBarrelGrFlags *)(state + 0x12a))->bit80 = 0;
     }
 }
-#pragma scheduling reset
 
 void drbarrelgr_hitDetect(void) {}
 
@@ -24,8 +22,6 @@ void drbarrelgr_release(void) {}
 
 void drbarrelgr_initialise(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void drbarrelgr_init(int obj, int setup)
 {
     int one;
@@ -54,11 +50,7 @@ void drbarrelgr_init(int obj, int setup)
     ((GameObject *)obj)->anim.localPosZ = *(f32 *)(state + 0x90);
     ((GameObject *)obj)->anim.localPosY = *(f32 *)(state + 0x8c);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void drbarrelgr_update(int obj)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -201,10 +193,8 @@ void drbarrelgr_update(int obj)
         *(f32 *)(*(int *)(state + 8) + 20) = *(f32 *)(state + 0x1c);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
+#pragma peephole on
 void drbarrelgr_render(int obj, int p2, int p3, int p4, int p5)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -244,4 +234,4 @@ void drbarrelgr_render(int obj, int p2, int p3, int p4, int p5)
         }
     }
 }
-#pragma scheduling reset
+#pragma peephole reset

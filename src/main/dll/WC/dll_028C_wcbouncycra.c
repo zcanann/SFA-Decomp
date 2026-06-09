@@ -54,19 +54,15 @@ int wcbouncycra_getObjectTypeId(void) { return 0; }
 
 void wcbouncycra_free(void) {}
 
-#pragma peephole off
 void wcbouncycra_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6D38);
     }
 }
-#pragma peephole reset
 
 void wcbouncycra_hitDetect(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void wcbouncycra_update(int obj)
 {
     WCBouncyCrateState *state = ((GameObject *)obj)->extra;
@@ -108,10 +104,7 @@ void wcbouncycra_update(int obj)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
 void wcbouncycra_init(int obj, int setup)
 {
     WCBouncyCrateState *state = ((GameObject *)obj)->extra;
@@ -119,13 +112,12 @@ void wcbouncycra_init(int obj, int setup)
     state->homeY = ((ObjPlacement *)setup)->posY;
     state->cooldown = WBOUNCY_RESET_COOLDOWN;
 }
-#pragma scheduling reset
 
 void wcbouncycra_release(void) {}
 
 void wcbouncycra_initialise(void) {}
 
-#pragma peephole off
+#pragma scheduling on
 int wcblock_isPlayerAwayFromStoredCell(int obj, int state, int player)
 {
     ObjAnimComponent *objAnim;
@@ -179,6 +171,6 @@ int wcblock_isPlayerAwayFromStoredCell(int obj, int state, int player)
 
     return 0;
 }
-#pragma peephole reset
+#pragma scheduling reset
 
 #undef WCBLOCK_GRID_IFACE

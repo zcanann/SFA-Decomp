@@ -117,7 +117,6 @@ STATIC_ASSERT(offsetof(WCPushBlockSetup, initialTile) == WCPUSHBLOCK_INITIAL_TIL
 
 int wcpushblock_getExtraSize(void) { return WCPUSHBLOCK_EXTRA_SIZE; }
 
-#pragma scheduling off
 int wcpushblock_getObjectTypeId(int obj)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
@@ -129,22 +128,19 @@ int wcpushblock_getObjectTypeId(int obj)
     }
     return (modelIndex << WCPUSHBLOCK_RENDER_TYPE_SHIFT) | WCPUSHBLOCK_RENDER_TYPE_BASE;
 }
-#pragma scheduling reset
 
 void wcpushblock_free(void) {}
 
-#pragma peephole off
 void wcpushblock_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6D54);
     }
 }
-#pragma peephole reset
 
 void wcpushblock_hitDetect(void) {}
 
-#pragma scheduling off
+#pragma peephole on
 void wcpushblock_init(int obj, int setup)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
@@ -160,14 +156,12 @@ void wcpushblock_init(int obj, int setup)
     state->initialTile = (u8)setupData->initialTile;
     state->baseY = lbl_803E6DA0 + setupData->base.posY;
 }
-#pragma scheduling reset
+#pragma peephole reset
 
 void wcpushblock_release(void) {}
 
 void wcpushblock_initialise(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void wcpushblock_update(int obj)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
@@ -502,11 +496,7 @@ void wcpushblock_update(int obj)
         lbl_803E6D8C * mathSinf(lbl_803E6D90 * (f32)(u32)WCPUSHBLOCK_BOB_ANGLE(state) / lbl_803E6D94);
     ((GameObject *)obj)->anim.localPosY = WCPUSHBLOCK_BASE_Y(state) + WCPUSHBLOCK_BOB_Y(state);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void fn_802251B4(int obj, WcLevelControlState *state)
 {
     int scratch;
@@ -639,11 +629,7 @@ void fn_802251B4(int obj, WcLevelControlState *state)
             GameBit_Set(0x4e3, randomGetRange(6, 7));
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void wcpushblock_updateLevelControlState(int obj, WcLevelControlState *state)
 {
     if (state->completionFlags & 0x2)
@@ -742,11 +728,7 @@ void wcpushblock_updateLevelControlState(int obj, WcLevelControlState *state)
     }
     state->completionFlags &= ~1;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 int wcpushblock_levelControlTriggerCallback(int obj, int p2, int p3)
 {
     WcLevelControlState *state = ((GameObject *)obj)->extra;
@@ -782,11 +764,7 @@ int wcpushblock_levelControlTriggerCallback(int obj, int p2, int p3)
     }
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 int fn_80225D2C(int obj, s16 a, s16 b, f32 *outX, f32 *outZ, int dx, int dy)
 {
     int i;
@@ -866,8 +844,6 @@ int fn_80225D2C(int obj, s16 a, s16 b, f32 *outX, f32 *outZ, int dx, int dy)
         return 4;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 #undef WCPUSHBLOCK_IFACE
 #undef SFXmn_sml_trex_fstep

@@ -26,8 +26,6 @@ void arwbombcoll_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7078);
 }
 
-#pragma peephole off
-#pragma scheduling off
 void arwbombcoll_init(int obj, int setup)
 {
     ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
@@ -36,14 +34,11 @@ void arwbombcoll_init(int obj, int setup)
     ((GameObject *)obj)->anim.rotX = (s16)(mapData->rotX << 8);
     objAnim->alpha = 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void arwbombcoll_release(void) {}
 
 void arwbombcoll_initialise(void) {}
 
-#pragma scheduling off
 void arwbombcoll_updateMovingAxis(int obj, RingState *state) {
     u8 mode = state->route;
     u16 raw = state->linkId;
@@ -81,9 +76,8 @@ void arwbombcoll_updateMovingAxis(int obj, RingState *state) {
         }
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
+#pragma peephole on
 void arwbombcoll_handleArwingHit(int obj, RingState *state, int arwing) {
     int setup = *(int *)&((GameObject *)obj)->anim.placementData;
     u8 mode = state->mode;
@@ -121,10 +115,8 @@ void arwbombcoll_handleArwingHit(int obj, RingState *state, int arwing) {
     }
     state->phase = 2;
 }
-#pragma scheduling reset
+#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 int arwbombcoll_checkArwingCollision(int obj, RingState *state, int arwing) {
     RingFlags *f = &state->flags;
     if (f->bit10) {
@@ -153,11 +145,7 @@ int arwbombcoll_checkArwingCollision(int obj, RingState *state, int arwing) {
     }
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void arwbombcoll_update(int obj)
 {
     ObjAnimComponent *objAnim;
@@ -262,5 +250,3 @@ active : {
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset

@@ -24,8 +24,6 @@ extern void GameBit_Set(int eventId,int value);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 undefined4 sfxplayer_updateState(int obj,undefined4 param_2,int hitState)
 {
   int event;
@@ -72,7 +70,6 @@ undefined4 sfxplayer_updateState(int obj,undefined4 param_2,int hitState)
   }
   return 0;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -87,6 +84,7 @@ undefined4 sfxplayer_updateState(int obj,undefined4 param_2,int hitState)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
 void FUN_802081e0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9,int param_10)
@@ -113,3 +111,4 @@ void FUN_802081e0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   FUN_80006b4c();
   return;
 }
+#pragma scheduling reset

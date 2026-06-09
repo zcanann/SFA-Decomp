@@ -1,7 +1,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
-#pragma scheduling off
+#pragma peephole on
 int gf_levelcon_handleScriptEvents(int obj, int eventId, u8 *script)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -96,7 +96,7 @@ int gf_levelcon_handleScriptEvents(int obj, int eventId, u8 *script)
     }
     return 0;
 }
-#pragma scheduling reset
+#pragma peephole reset
 
 int gf_levelcon_getExtraSize(void) { return 0x10; }
 
@@ -108,37 +108,29 @@ void gf_levelcon_initialise(void) {}
 
 void gf_levelcon_release(void) {}
 
-#pragma scheduling off
 void gf_levelcon_free(void)
 {
     setIsOvercast(1);
 }
-#pragma scheduling reset
 
 void gf_levelcon_update(int obj)
 {
     ((GameObject *)obj)->animEventCallback = (void *)gf_levelcon_handleScriptEvents;
 }
 
-#pragma peephole off
 void gf_levelcon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7480);
     }
 }
-#pragma peephole reset
 
-#pragma scheduling off
 void gf_levelcon_init(int obj)
 {
     setIsOvercast(0);
     (*gScreenTransitionInterface)->step(0x258, 1);
 }
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void gf_levelcon_findLinkedObjects(int obj)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -168,11 +160,7 @@ void gf_levelcon_findLinkedObjects(int obj)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void fn_80239DD8(int p1, int p2)
 {
     f32 maxDist;
@@ -198,10 +186,8 @@ void fn_80239DD8(int p1, int p2)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
+#pragma peephole on
 void fn_80239EAC(int p1, int p2)
 {
     f32 dx, dy, dz;
@@ -226,10 +212,8 @@ void fn_80239EAC(int p1, int p2)
         objs++;
     }
 }
-#pragma scheduling reset
+#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void fn_8023A168(int p1, int p2)
 {
     int yawRnd;
@@ -257,11 +241,7 @@ void fn_8023A168(int p1, int p2)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void fn_8023A268(int p1, int p2, int p3)
 {
     f32 dx, dz, dist;
@@ -291,11 +271,7 @@ void fn_8023A268(int p1, int p2, int p3)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void fn_80239FCC(int p1, int p2)
 {
     f32 ang;
@@ -328,8 +304,6 @@ void fn_80239FCC(int p1, int p2)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 typedef struct GfHitState {
     u8 pad0[0x88];
@@ -344,8 +318,6 @@ typedef struct GfHitState {
     u8 texState[3];
 } GfHitState;
 
-#pragma peephole off
-#pragma scheduling off
 void fn_8023A3E4(int p1, int p2)
 {
     u8 i;
@@ -426,5 +398,3 @@ void fn_8023A3E4(int p1, int p2)
         *tex = state << 8;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset

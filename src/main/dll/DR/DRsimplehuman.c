@@ -82,8 +82,6 @@ extern f32 lbl_803E5AB4;
 extern f32 lbl_803E5AB8;
 extern f32 lbl_803E5ABC;
 
-#pragma scheduling off
-#pragma peephole off
 void spdrape_update(int obj)
 {
     f32 *state;
@@ -160,8 +158,6 @@ void spdrape_update(int obj)
     }
     *(u8 *)((char *)state + 0x16) = ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, *state, timeDelta, NULL);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -195,6 +191,8 @@ void FUN_801e9348(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801e9368(int *param_1)
 {
   int iVar1;
@@ -248,6 +246,8 @@ void FUN_801e9368(int *param_1)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -262,6 +262,8 @@ void FUN_801e9368(int *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801e9690(short *param_1,int param_2)
 {
   ObjAnimComponent *objAnim;
@@ -323,6 +325,8 @@ void FUN_801e9690(short *param_1,int param_2)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -357,12 +361,10 @@ void FUN_801e983c(undefined8 param_1,double param_2,double param_3,double param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
 void spitembeam_init(int obj)
 {
   ((GameObject *)obj)->objectFlags = (ushort)(((GameObject *)obj)->objectFlags | 0x6000);
 }
-#pragma peephole reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -378,8 +380,6 @@ extern int* ObjGroup_FindNearestObject(int group, int *obj, f32 *dist);
 extern int* objFindTexture(int *obj, int a, int b);
 extern f32 lbl_803E5AD8;
 
-#pragma scheduling off
-#pragma peephole off
 void spitembeam_update(int *obj) {
     int *target;
     u8 *def;
@@ -406,8 +406,6 @@ void spitembeam_update(int *obj) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* 8b "li r3, N; blr" returners. */
 int spitembeam_getExtraSize(void) { return 0x0; }
@@ -421,8 +419,6 @@ extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
 extern unsigned long randomGetRange(int a, int b);
 
-#pragma scheduling off
-#pragma peephole off
 void spdrape_init(int *obj, u8 *def) {
     f32 *state;
     int *player;
@@ -447,8 +443,6 @@ void spdrape_init(int *obj, u8 *def) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 typedef union {
     u8 u8;
@@ -499,8 +493,6 @@ extern f32 playerMapOffsetZ;
  * EN v1.0 Address: 0x801E991C
  * EN v1.0 Size: 740b
  */
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_common_subs off
 void fn_801E991C(int p1, char *table)
 {
@@ -560,6 +552,4 @@ void fn_801E991C(int p1, char *table)
         p += 8;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 #pragma opt_common_subs reset

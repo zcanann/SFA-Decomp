@@ -10,7 +10,6 @@ int barrelgener_getLinkId(int obj)
     return setup->linkId;
 }
 
-#pragma scheduling off
 void barrelgener_queueObjectRelease(int obj, int queuedObj, int releaseFrame)
 {
     BarrelGeneratorState *state = ((GameObject *)obj)->extra;
@@ -20,28 +19,22 @@ void barrelgener_queueObjectRelease(int obj, int queuedObj, int releaseFrame)
     storeZeroToFloatParam(&state->releaseTimer);
     s16toFloat(&state->releaseTimer, (s16)(releaseFrame - lbl_803DC398));
 }
-#pragma scheduling reset
 
 int barrelgener_getExtraSize(void) { return 0x10; }
 
 int barrelgener_getObjectTypeId(void) { return 0; }
 
-#pragma scheduling off
 void barrelgener_free(int obj) { ObjGroup_RemoveObject(obj, 0x3a); }
-#pragma scheduling reset
 
-#pragma peephole off
 void barrelgener_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6C20);
     }
 }
-#pragma peephole reset
 
 void barrelgener_hitDetect(void) {}
 
-#pragma scheduling off
 void barrelgener_init(int obj)
 {
     BarrelGeneratorState *state = ((GameObject *)obj)->extra;
@@ -51,14 +44,11 @@ void barrelgener_init(int obj)
     state->queuedObject = NULL;
     storeZeroToFloatParam(&state->releaseTimer);
 }
-#pragma scheduling reset
 
 void barrelgener_release(void) {}
 
 void barrelgener_initialise(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void barrelgener_update(int obj)
 {
     BarrelGeneratorState *state = ((GameObject *)obj)->extra;
@@ -110,10 +100,7 @@ void barrelgener_update(int obj)
             !((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E6C34, timeDelta, 0);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
 void Obj_SteerVelocityTowardVector(int out, f32 *v1, f32 *v2, f32 a, f32 b, f32 c)
 {
     f32 mtx[12];
@@ -164,10 +151,7 @@ void Obj_SteerVelocityTowardVector(int out, f32 *v1, f32 *v2, f32 a, f32 b, f32 
     *(f32 *)(out + 0x28) = n2[1] * t;
     *(f32 *)(out + 0x2c) = n2[2] * t;
 }
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 int Obj_UpdateRomCurveFollowVelocity(int p1, int p2, f32 a, f32 b, f32 c, int flag)
 {
     f32 d[3];
@@ -203,11 +187,7 @@ int Obj_UpdateRomCurveFollowVelocity(int p1, int p2, f32 a, f32 b, f32 c, int fl
     }
     return result;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 int Obj_UpdateRomCurveFollowVelocityIndexed(int p1, int p2, f32 a, f32 b, f32 c, int flag, int *p6)
 {
     f32 d[3];
@@ -244,10 +224,7 @@ int Obj_UpdateRomCurveFollowVelocityIndexed(int p1, int p2, f32 a, f32 b, f32 c,
     }
     return result;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
 void Obj_SpawnHitLightAndFade(int obj, f32 *p2)
 {
     struct {
@@ -261,9 +238,7 @@ void Obj_SpawnHitLightAndFade(int obj, f32 *p2)
     objLightFn_8009a1dc(obj, lbl_803E6C68, &s, 1, 0);
     Obj_SetModelColorFadeRecursive(obj, 0x5a, 0xc8, 0, 0, 1);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 int fn_80221978(int obj, void **entries, int count, void **light, f32 intensity)
 {
     int i;
@@ -316,9 +291,8 @@ int fn_80221978(int obj, void **entries, int count, void **light, f32 intensity)
     }
     return 1;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
+#pragma peephole on
 void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
 {
     f32 rate;
@@ -373,9 +347,8 @@ void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
         *(s16 *)(a + 2) = *(s16 *)(a + 2) + (int)(delta * rate);
     }
 }
-#pragma scheduling reset
+#pragma peephole reset
 
-#pragma scheduling off
 int fn_80221C18(int obj, f32 dt, int p3, int p4)
 {
     f32 vel[3];
@@ -408,9 +381,7 @@ int fn_80221C18(int obj, f32 dt, int p3, int p4)
     voxmaps_worldToGrid(pos, gridB);
     return voxmaps_traceLine(gridA, gridB, gridOut, 0, 0) != 0;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 int voxmaps_traceWorldLine(void *p1, void *p2)
 {
     int grid1[2];
@@ -421,9 +392,7 @@ int voxmaps_traceWorldLine(void *p1, void *p2)
     voxmaps_worldToGrid(p2, grid2);
     return voxmaps_traceLine(grid1, grid2, out, 0, 0);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void voxmaps_traceScaledVectorEnd(f32 *p1, void *p2, f32 *p3, f32 scale)
 {
     f32 endPos[3];
@@ -447,4 +416,3 @@ void voxmaps_traceScaledVectorEnd(f32 *p1, void *p2, f32 *p3, f32 scale)
     *(int *)&p1[1] = e1;
     *(int *)&p1[2] = *(int *)&endPos[2];
 }
-#pragma scheduling reset

@@ -5,7 +5,7 @@
 #include "main/objanim_update.h"
 #include "main/objseq.h"
 
-#pragma scheduling off
+#pragma peephole on
 int mcstaffeffe_SeqFn(int obj, int unused, void *eventData)
 {
     McStaffEffectObject *staffEffect = (McStaffEffectObject *)obj;
@@ -35,9 +35,9 @@ int mcstaffeffe_SeqFn(int obj, int unused, void *eventData)
     }
     return 0;
 }
-#pragma scheduling reset
+#pragma peephole reset
 
-#pragma scheduling off
+#pragma peephole on
 void mcupgradema_update(int obj)
 {
     GameObject *gameObj = (GameObject *)obj;
@@ -52,6 +52,6 @@ void mcupgradema_update(int obj)
         objRenderFn_80041018(obj);
     }
 }
-#pragma scheduling reset
+#pragma peephole reset
 
 void mcupgradema_init(int obj) { ((GameObject *)obj)->animEventCallback = (void *)mcupgradema_SeqFn; }

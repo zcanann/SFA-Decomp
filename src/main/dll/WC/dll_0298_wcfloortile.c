@@ -36,18 +36,15 @@ int wcfloortile_getObjectTypeId(void) { return 0; }
 
 void wcfloortile_free(void) {}
 
-#pragma peephole off
 void wcfloortile_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6E98);
     }
 }
-#pragma peephole reset
 
 void wcfloortile_hitDetect(void) {}
 
-#pragma peephole off
 void wcfloortile_init(int obj)
 {
     WcFloorTileState *state = ((GameObject *)obj)->extra;
@@ -56,14 +53,11 @@ void wcfloortile_init(int obj)
     (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags |= 0x1800;
     state->flags |= 2;
 }
-#pragma peephole reset
 
 void wcfloortile_release(void) {}
 
 void wcfloortile_initialise(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void wcfloortile_update(int obj)
 {
     ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
@@ -154,10 +148,7 @@ void wcfloortile_update(int obj)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
 void arwarwing_clampToFlightBounds(int obj, int state) {
     ArwingState *arwing = (ArwingState *)state;
     f32 cx = arwing->homeX;
@@ -184,10 +175,7 @@ void arwarwing_clampToFlightBounds(int obj, int state) {
     arwing->camPos[1] = ((GameObject *)obj)->anim.localPosY - arwing->homeY;
     arwing->camPos[2] = lbl_803E6ECC;
 }
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void arwarwing_updateFlightPhysics(int obj, int state)
 {
     ArwingState *arwing = (ArwingState *)state;
@@ -308,10 +296,8 @@ void arwarwing_updateFlightPhysics(int obj, int state)
         (arwing->bobYRate * timeDelta + (f32)(u32)arwing->bobYPhase);
     arwarwing_clampToFlightBounds(obj, state);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
+#pragma peephole on
 void arwarwing_updateBombFire(int obj, int state) {
     ArwingState *arwing = (ArwingState *)state;
     if (*(void * *)&arwing->activeBombObj != NULL)
@@ -336,10 +322,8 @@ void arwarwing_updateBombFire(int obj, int state) {
         arwing->bombCooldown = (f32)(u32) *(u16 *)&arwing->bombFireDelay;
     }
 }
-#pragma scheduling reset
+#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void arwarwing_spawnBomb(int obj, int state, int side) {
     ArwingState *arwing = (ArwingState *)state;
     f32 pz, py, px;
@@ -369,11 +353,7 @@ void arwarwing_spawnBomb(int obj, int state, int side) {
     fn_8022ECE0(arwing->activeBombObj, arwing->bombProjectileLifetime);
     Sfx_PlayFromObject(obj, SFXbaddie_rach_call3);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void arwarwing_updateThrusters(int obj, int state)
 {
     extern void Matrix_TransformPoint(f32 *mtx, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
@@ -413,10 +393,8 @@ void arwarwing_updateThrusters(int obj, int state)
     *(s16 *)(((ArwingState *)state)->thrusterR + 2) = -*(s16 *)(slot + 2);
     *(s16 *)(((ArwingState *)state)->thrusterR + 0) = 0x8000 - *(s16 *)slot;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
+#pragma peephole on
 void arwarwing_readControls(int obj, int state)
 {
     f32 nx;
@@ -479,10 +457,8 @@ void arwarwing_readControls(int obj, int state)
         }
     }
 }
-#pragma scheduling reset
+#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 void arwarwing_updateBarrelRoll(int obj, int state)
 {
     int tgt;
@@ -539,5 +515,3 @@ void arwarwing_updateBarrelRoll(int obj, int state)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

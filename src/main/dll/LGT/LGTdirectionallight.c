@@ -120,7 +120,7 @@ extern f32 lbl_803E6AF8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
+#pragma peephole on
 void wmworm_update(GameObject *obj)
 {
   float fVar1;
@@ -180,9 +180,8 @@ void wmworm_update(GameObject *obj)
   }
   return;
 }
-#pragma scheduling reset
+#pragma peephole reset
 
-#pragma scheduling off
 void wmworm_init(GameObject *obj, WmWormSetup *setup)
 {
     WmWormState *state;
@@ -202,14 +201,13 @@ void wmworm_init(GameObject *obj, WmWormSetup *setup)
     state->homeY = obj->anim.localPosY;
     state->homeZ = obj->anim.localPosZ;
 }
-#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
 void wmworm_release(void) {}
 void wmworm_initialise(void) {}
 
-#pragma scheduling off
+#pragma peephole on
 void fn_801F3F18(int obj)
 {
     LightVecSet L;
@@ -307,13 +305,12 @@ void fn_801F3F18(int obj)
                                  lbl_803E5E84);
     skyFn_800894a8(1, L.fog.x, L.fog.y, L.fog.z);
 }
-#pragma scheduling reset
+#pragma peephole reset
 
 /* 8b "li r3, N; blr" returners. */
 int wmlevelcontrol_getExtraSize(void) { return 0x1c; }
 int wmlevelcontrol_getObjectTypeId(void) { return 0x0; }
 
-#pragma scheduling off
 void wmlevelcontrol_free(int obj)
 {
     ObjGroup_RemoveObject(obj, 9);
@@ -322,12 +319,9 @@ void wmlevelcontrol_free(int obj)
     GameBit_Set(0x372, 1);
     GameBit_Set(0x390, 1);
 }
-#pragma scheduling reset
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
-#pragma peephole off
 void wmlevelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5E74); }
-#pragma peephole reset
 
 void wmlevelcontrol_hitDetect(void) {}

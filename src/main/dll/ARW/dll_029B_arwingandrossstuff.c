@@ -45,7 +45,6 @@ int arwingandrossstuff_getExtraSize(void) { return 0x20; }
 
 int arwingandrossstuff_getObjectTypeId(void) { return 0; }
 
-#pragma scheduling off
 void arwingandrossstuff_free(int obj)
 {
     ArwProjectileState *state = ((GameObject *)obj)->extra;
@@ -55,23 +54,18 @@ void arwingandrossstuff_free(int obj)
         ModelLightStruct_free(state->light);
     }
 }
-#pragma scheduling reset
 
-#pragma peephole off
 void arwingandrossstuff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E701C);
     }
 }
-#pragma peephole reset
 
 void arwingandrossstuff_release(void) {}
 
 void arwingandrossstuff_initialise(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void arwingandrossstuff_hitDetect(int obj)
 {
     struct {
@@ -130,20 +124,14 @@ void arwingandrossstuff_hitDetect(int obj)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
 void arwprojectile_setLifetime(int obj, int lifetime)
 {
     ArwProjectileState *state = ((GameObject *)obj)->extra;
 
     state->lifetime = (f32)lifetime;
 }
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void arwprojectile_placeForward(int obj, f32 dist)
 {
     ArwProjectileState *state = ((GameObject *)obj)->extra;
@@ -164,10 +152,8 @@ void arwprojectile_placeForward(int obj, f32 dist)
     *(s16 *)obj += 0x8000;
     ((GameObject *)obj)->anim.rotY = -((GameObject *)obj)->anim.rotY;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
+#pragma peephole on
 void arwingandrossstuff_init(int obj, u8 *setup)
 {
     ArwProjectileState *state = ((GameObject *)obj)->extra;
@@ -214,10 +200,8 @@ void arwingandrossstuff_init(int obj, u8 *setup)
     }
     ObjGroup_AddObject(obj, 2);
 }
-#pragma scheduling reset
+#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void arwingandrossstuff_update(int obj)
 {
     ArwProjectileState *state = ((GameObject *)obj)->extra;
@@ -268,11 +252,7 @@ void arwingandrossstuff_update(int obj)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void arwprojectile_createLinkedEffect(int obj, u8 enable) {
     ArwProjectileState *state = ((GameObject *)obj)->extra;
     if (enable == 0)
@@ -299,19 +279,13 @@ void arwprojectile_createLinkedEffect(int obj, u8 enable) {
     }
     modelLightStruct_setAffectsAabbLightSelection(state->light, 1);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
 void fn_8022ED74(int obj, int v)
 {
     ArwProjectileState *state = ((GameObject *)obj)->extra;
     state->param0.scalar = (f32)v;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_8022ECE0(int obj, f32 param)
 {
     ArwProjectileState *state = ((GameObject *)obj)->extra;
@@ -330,5 +304,3 @@ void fn_8022ECE0(int obj, f32 param)
     Matrix_TransformPoint(mtx, lbl_803E7044, lbl_803E7044, state->lifetime,
                           &((GameObject *)obj)->anim.velocityX, &((GameObject *)obj)->anim.velocityY, &((GameObject *)obj)->anim.velocityZ);
 }
-#pragma peephole reset
-#pragma scheduling reset

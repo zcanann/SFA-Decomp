@@ -14,8 +14,6 @@ typedef struct WmSeqPointState {
     u8 skyWasOn;
 } WmSeqPointState;
 
-#pragma scheduling off
-#pragma peephole off
 void fn_801F654C(int obj)
 {
     WmSeqPointState *state;
@@ -45,12 +43,8 @@ void fn_801F654C(int obj)
         }
     }
 }
-#pragma peephole reset
 
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int wmseqpoint_SeqFn(int obj, int unused, int actor)
 {
     WmSeqPointState *state;
@@ -121,8 +115,6 @@ int wmseqpoint_SeqFn(int obj, int unused, int actor)
 
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 int wmseqpoint_getExtraSize(void) { return 0x10; }
 
@@ -130,7 +122,6 @@ int wmseqpoint_getObjectTypeId(void) { return 0x0; }
 
 void wmseqpoint_free(void) {}
 
-#pragma peephole off
 void wmseqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
     s32 isVisible;
@@ -140,11 +131,10 @@ void wmseqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
         objRenderFn_8003b8f4(lbl_803E5F10);
     }
 }
-#pragma peephole reset
 
 void wmseqpoint_hitDetect(void) {}
 
-#pragma scheduling off
+#pragma peephole on
 void wmseqpoint_update(int obj)
 {
     WmSeqPointState *state;
@@ -238,10 +228,8 @@ void wmseqpoint_update(int obj)
             break;
     }
 }
-#pragma scheduling reset
+#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 void wmseqpoint_init(int obj, int setup)
 {
     WmSeqPointState *state;
@@ -258,8 +246,6 @@ void wmseqpoint_init(int obj, int setup)
     state->command = 0;
     state->unk0A = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void wmseqpoint_release(void) {}
 

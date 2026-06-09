@@ -77,7 +77,7 @@ STATIC_ASSERT(offsetof(WCTempleBriSetup, type) == WCTEMPLEBRI_SETUP_TYPE_OFFSET)
 STATIC_ASSERT(offsetof(WCTempleBriSetup, modelIndex) == WCTEMPLEBRI_SETUP_MODEL_INDEX_OFFSET);
 STATIC_ASSERT(offsetof(WCTempleBriSetup, solvedBit) == WCTEMPLEBRI_SETUP_SOLVED_BIT_OFFSET);
 
-#pragma scheduling off
+#pragma peephole on
 void wctemplebri_updateModelWarp(int obj, int p2)
 {
     WCTempleBriState *state = (WCTempleBriState *)p2;
@@ -99,10 +99,8 @@ void wctemplebri_updateModelWarp(int obj, int p2)
     if (v > WCTEMPLEBRI_WAVE_WRAP) v -= WCTEMPLEBRI_WAVE_WRAP;
     state->wavePhaseB = (u16)v;
 }
-#pragma scheduling reset
+#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 int wctemplebri_interactCallback(int obj, int p2, int p3)
 {
     ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
@@ -151,12 +149,9 @@ int wctemplebri_interactCallback(int obj, int p2, int p3)
     }
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 int wctemplebri_getExtraSize(void) { return WCTEMPLEBRI_EXTRA_SIZE; }
 
-#pragma scheduling off
 int wctemplebri_getObjectTypeId(int obj)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
@@ -168,12 +163,9 @@ int wctemplebri_getObjectTypeId(int obj)
     }
     return (modelIndex << WCTEMPLEBRI_RENDER_TYPE_SHIFT) | WCTEMPLEBRI_RENDER_TYPE_BASE;
 }
-#pragma scheduling reset
 
 void wctemplebri_free(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void wctemplebri_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     WCTempleBriState *state = ((GameObject *)obj)->extra;
@@ -184,8 +176,6 @@ void wctemplebri_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void wctemplebri_hitDetect(void) {}
 
@@ -193,8 +183,6 @@ void wctemplebri_release(void) {}
 
 void wctemplebri_initialise(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void wctemplebri_update(int obj)
 {
     ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
@@ -249,11 +237,7 @@ void wctemplebri_update(int obj)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void wctemplebri_init(int obj, int initData)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
@@ -312,5 +296,3 @@ void wctemplebri_init(int obj, int initData)
     ((GameObject *)obj)->objectFlags |= 0x6000;
     ObjModel_SetPostRenderCallback(model, postRenderSetAlphaBlendState);
 }
-#pragma scheduling reset
-#pragma peephole reset

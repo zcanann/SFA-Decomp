@@ -43,13 +43,11 @@ int drcloudper_getExtraSize(void) { return 0x10; }
 
 int drcloudper_getObjectTypeId(void) { return 0; }
 
-#pragma scheduling off
 void drcloudper_free(int obj)
 {
     ObjGroup_RemoveObject(obj, DRCLOUDPER_GROUP_TRIGGER);
     ObjGroup_RemoveObject(obj, DRCLOUDPER_GROUP_SURFACE);
 }
-#pragma scheduling reset
 
 void drcloudper_render(void) {}
 
@@ -61,8 +59,6 @@ void drcloudper_release(void) {}
 
 void drcloudper_initialise(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 int drcloudper_setScale(int obj)
 {
     DrCloudPerObject *cloud = (DrCloudPerObject *)obj;
@@ -75,10 +71,7 @@ int drcloudper_setScale(int obj)
     (*gObjectTriggerInterface)->runSequence(2, (void *)obj, -1);
     return 1;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
 int drcloudper_selectActiveCloud(int obj)
 {
     DrCloudPerObject *cloud = (DrCloudPerObject *)obj;
@@ -88,9 +81,8 @@ int drcloudper_selectActiveCloud(int obj)
     (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
     return 0;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
+#pragma peephole on
 void drcloudper_init(int obj, int setup)
 {
     DrCloudPerObject *cloud;
@@ -114,4 +106,4 @@ void drcloudper_init(int obj, int setup)
         (*gMapEventInterface)->setAnimEvent(cloud->mapDir, DRCLOUDPER_MAP_ANIM_EVENT, 1);
     }
 }
-#pragma scheduling reset
+#pragma peephole reset

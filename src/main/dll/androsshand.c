@@ -40,7 +40,7 @@ void androsshand_render(int obj, int p2, int p3, int p4, int p5)
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E75B0);
 }
 
-#pragma scheduling off
+#pragma peephole on
 void androsshand_update(int obj)
 {
     f32 fScale = lbl_803DC4F8;
@@ -238,12 +238,10 @@ void androsshand_update(int obj)
     }
     ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, state->animSpeed, timeDelta, 0);
 }
-#pragma scheduling reset
+#pragma peephole reset
 
 void androsshand_hitDetect(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void androsshand_setState(int obj, int newState, u8 force)
 {
     AndrossHandState *state;
@@ -267,11 +265,7 @@ void androsshand_setState(int obj, int newState, u8 force)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void androsshand_handleDamage(int obj, int hand)
 {
     int hitVol;
@@ -315,11 +309,7 @@ void androsshand_handleDamage(int obj, int hand)
         *texture = *(u8 *)(hand + 0x28) << 8;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void androsshand_init(int obj, u8 *setup)
 {
     AndrossHandState *state = ((GameObject *)obj)->extra;
@@ -337,11 +327,7 @@ void androsshand_init(int obj, u8 *setup)
     ((GameObject *)obj)->anim.currentMoveProgress = lbl_803E75B0;
     ObjHits_SetTargetMask(obj, 4);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void androsshand_spawnShot(int obj, int hand, int p3)
 {
     f32 pt[3];
@@ -372,5 +358,3 @@ void androsshand_spawnShot(int obj, int hand, int p3)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset

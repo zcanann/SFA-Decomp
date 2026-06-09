@@ -59,7 +59,6 @@ int wctrexstatu_interactCallback(int obj, int unused, int callbackData)
 
 int wctrexstatu_getExtraSize(void) { return 0; }
 
-#pragma scheduling off
 int wctrexstatu_getObjectTypeId(int obj)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
@@ -71,21 +70,16 @@ int wctrexstatu_getObjectTypeId(int obj)
     }
     return (modelIndex << WCTREXSTATU_RENDER_TYPE_SHIFT) | WCTREXSTATU_RENDER_TYPE_BASE;
 }
-#pragma scheduling reset
 
 void wctrexstatu_free(void) {}
 
-#pragma peephole off
 void wctrexstatu_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E6E10);
     }
 }
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void wctrexstatu_hitDetect(u8 *obj)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
@@ -103,12 +97,10 @@ void wctrexstatu_hitDetect(u8 *obj)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void wctrexstatu_update(void) {}
 
-#pragma scheduling off
+#pragma peephole on
 void wctrexstatu_init(int obj, int setup, int fromLoad)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
@@ -135,7 +127,7 @@ void wctrexstatu_init(int obj, int setup, int fromLoad)
         ((GameObject *)obj)->unkF4 = 1;
     }
 }
-#pragma scheduling reset
+#pragma peephole reset
 
 void wctrexstatu_release(void) {}
 
