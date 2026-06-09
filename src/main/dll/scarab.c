@@ -2555,7 +2555,7 @@ int fn_801601C4(int obj, GroundBaddieState *p)
     }
     if (*(u8 *)(wp + 0x25) == 0) {
       (*(void (**)(int, u8 *, f32, f32, f32, f32, f32))(*(int *)gPlayerInterface + 0x1c))(
-          obj, (u8 *)p, *(f32 *)(wp + 0x18), *(f32 *)(wp + 0x20), lbl_803E2E68, lbl_803E2E68,
+          obj, (u8 *)p, *(f32 *)(wp + 0x18), *(f32 *)(wp + 0x20), lbl_803E2E68, *(f32 *)&lbl_803E2E68,
           lbl_803E2E70);
     } else {
       (*(void (**)(int, u8 *, f32, f32, f32, f32, f32))(*(int *)gPlayerInterface + 0x1c))(
