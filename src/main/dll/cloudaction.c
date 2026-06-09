@@ -264,15 +264,15 @@ void cloudaction_update(int p1, int p2, u8 *state, int p4, int val) {
     if ((state[0x58] & 2) == 0) {
         return;
     }
-    *(s16 *)((char *)tbl + 0xa) = (s16)((s16)*(u16 *)(state + 0x24) - 1);
+    *(s16 *)((int)tbl + 0xa) = (s16)((s16)*(u16 *)(state + 0x24) - 1);
     if ((state[0x59] & 1) == 0) {
         return;
     }
     lbl_803DB618[0] = lbl_803DB618[1];
     lbl_803DB618[1] = (u16)val;
-    lbl_8039AB28[0x18] = (int)(*(f32 *)(state + 8) / lbl_803DF2DC);
+    lbl_8039AB28[0x18] = *(f32 *)(state + 8) / lbl_803DF2DC;
     lbl_8039AB28[0x19] = 0;
-    if ((state[0x59] & 4) != 0) {
+    if ((*(volatile u8 *)(state + 0x59) & 4) != 0) {
         lbl_8039AB28[0x1a] = 0;
     } else {
         lbl_8039AB28[0x1a] = 1;
