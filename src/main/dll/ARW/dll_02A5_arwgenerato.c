@@ -14,7 +14,6 @@ void arwgenerato_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7150);
 }
 
-#pragma scheduling off
 void arwgenerato_init(int obj, int setup)
 {
     ARWGeneratorState *state = ((GameObject *)obj)->extra;
@@ -22,13 +21,11 @@ void arwgenerato_init(int obj, int setup)
 
     state->spawnTimer = (f32)(u32)mapData->spawnInterval;
 }
-#pragma scheduling reset
 
 void arwgenerato_release(void) {}
 
 void arwgenerato_initialise(void) {}
 
-#pragma scheduling off
 void arwgenerato_update(int obj)
 {
     ARWGeneratorState *state = ((GameObject *)obj)->extra;
@@ -51,4 +48,3 @@ void arwgenerato_update(int obj)
         }
     }
 }
-#pragma scheduling reset

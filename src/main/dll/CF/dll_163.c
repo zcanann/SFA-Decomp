@@ -54,8 +54,6 @@ STATIC_ASSERT(offsetof(StaffActivatedSetup, timedEventSeconds) == 0x20);
 STATIC_ASSERT(offsetof(StaffActivatedSetup, activeGameBit) == 0x22);
 STATIC_ASSERT(offsetof(StaffActivatedSetup, lockGameBit) == 0x24);
 
-#pragma scheduling off
-#pragma peephole off
 void staffactivated_calcInteractionTargetXZ(int obj, f32 *outX, f32 *outZ) {
     StaffActivatedState *state;
     StaffActivatedSetup *setup;
@@ -95,20 +93,14 @@ lbl_default:
 
 lbl_done:;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 u32 cfPrisonGuard_getLiftHeight(int *obj) { return ((StaffActivatedState *)((GameObject *)obj)->extra)->liftHeight; }
 
-#pragma scheduling off
-#pragma peephole off
 void cfPrisonGuard_setLiftHeight(int *obj, int v) {
     StaffActivatedState *state = ((GameObject *)obj)->extra;
     state->liftHeight = v;
     state->liftReset = 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 u8 objGetByteParam1C(int *obj)
 {
@@ -126,17 +118,9 @@ int staffactivated_getObjectTypeId(void)
   return 0x40;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void staffactivated_free(int x) { ObjGroup_RemoveObject(x, 0x41); }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void staffactivated_render(void) { objRenderFn_8003b8f4(lbl_803E3BBC); }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void Obj_GetPlayerObject(void);
 extern int fn_80295CE4(void);
@@ -150,8 +134,6 @@ extern f32 lbl_803E3C04;
 extern void landed_arwing_updateHitReaction(int obj, int state);
 extern void landed_arwing_updateDamageTexture(int obj, int state);
 
-#pragma scheduling off
-#pragma peephole off
 void staffactivated_update(int obj) {
     struct PartfxParams {
         int pad;
@@ -243,5 +225,3 @@ default_case:
     state->flags =
         (u8)(isSet << 7) | (state->flags & 0x7f);
 }
-#pragma peephole reset
-#pragma scheduling reset

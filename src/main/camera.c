@@ -1,8 +1,6 @@
 #include "main/engine_shared.h"
 #include "main/game_object.h"
 
-#pragma scheduling off
-#pragma peephole off
 void Obj_RotateLocalOffsetByYaw(f32 *local, f32 *out, s8 yawIndex)
 {
     s32 matrixIndex;
@@ -18,11 +16,7 @@ void Obj_RotateLocalOffsetByYaw(f32 *local, f32 *out, s8 yawIndex)
         Matrix_TransformPoint(matrix, local[0], local[1], local[2], &out[0], &out[1], &out[2]);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Obj_UpdateWorldTransform(s16 *obj)
 {
     s16 *parent;
@@ -47,10 +41,7 @@ void Obj_UpdateWorldTransform(s16 *obj)
         obj[0x2A] = obj[2];
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 s32 Angle_AddWrappedS16(s32 angle, s16 *delta)
 {
     if ((angle += *delta) > 0x8000) {
@@ -61,9 +52,7 @@ s32 Angle_AddWrappedS16(s32 angle, s16 *delta)
     }
     return angle + 0xFFFF;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 s32 Angle_SubWrappedS16(s32 angle, s16 *delta)
 {
     if ((angle -= *delta) > 0x8000) {
@@ -74,10 +63,7 @@ s32 Angle_SubWrappedS16(s32 angle, s16 *delta)
     }
     return angle + 0xFFFF;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Obj_TransformLocalVectorToWorld(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, u32 obj)
 {
     f32 vec[3];
@@ -92,11 +78,7 @@ void Obj_TransformLocalVectorToWorld(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, 
     *outY = vec[1];
     *outZ = vec[2];
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Obj_TransformWorldVectorToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, u32 obj)
 {
     f32 vec[3];
@@ -111,11 +93,7 @@ void Obj_TransformWorldVectorToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, 
     *outY = vec[1];
     *outZ = vec[2];
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, u32 obj)
 {
     s32 matrixIndex;
@@ -130,11 +108,7 @@ void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f
         *outZ = z;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, u32 obj)
 {
     s32 matrixIndex;
@@ -148,11 +122,7 @@ void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f
         *outZ = z;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Obj_GetWorldPosition(u32 obj, f32 *outX, f32 *outY, f32 *outZ)
 {
     u32 parent;
@@ -169,11 +139,7 @@ void Obj_GetWorldPosition(u32 obj, f32 *outX, f32 *outY, f32 *outZ)
                               ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ, outX, outY, outZ);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Obj_BuildTransformMatricesForYaw(u32 obj, s32 yawIndex)
 {
     u8 *base;
@@ -231,22 +197,18 @@ void Obj_BuildTransformMatricesForYaw(u32 obj, s32 yawIndex)
         mtxRotateByVec3s(inverseYawMatrix, &inverseTransform);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void Obj_BuildTransformMatrices(u32 obj)
 {
     Obj_BuildTransformMatricesForYaw(obj, *(s8 *)(obj + 0x35));
 }
 
-#pragma scheduling off
 s32 Obj_BuildTransformMatrixSlot(u32 obj)
 {
     Obj_BuildTransformMatricesForYaw(obj, gObjTransformMatrixSlot);
     gObjTransformMatrixSlot++;
     return gObjTransformMatrixSlot - 1;
 }
-#pragma scheduling reset
 
 f32* Camera_GetViewRotationMatrix(void)
 {
@@ -268,15 +230,11 @@ f32* Camera_GetInverseViewMatrix(void)
     return gCameraInverseViewMatrix;
 }
 
-#pragma scheduling off
 void* Camera_GetCurrentViewSlot(void)
 {
     return &gCameraShakeSlots[gCameraCurrentViewIndex];
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 u8 CameraShake_IsActive(void)
 {
     s32 offset = gCameraCurrentViewIndex * sizeof(CameraViewSlot);
@@ -284,10 +242,7 @@ u8 CameraShake_IsActive(void)
 
     return slot->shakeActive == 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void CameraShake_Start(f32 magnitude, f32 duration, f32 falloff)
 {
     CameraViewSlot* slot = &gCameraShakeSlots[0];
@@ -299,10 +254,7 @@ void CameraShake_Start(f32 magnitude, f32 duration, f32 falloff)
     slot->shakeFalloff = falloff;
     slot->shakeActive = 1;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void CameraShake_SetAllMagnitudes(f32 magnitude)
 {
     CameraViewSlot* slot = gCameraShakeSlots;
@@ -318,11 +270,7 @@ void CameraShake_SetAllMagnitudes(f32 magnitude)
         slot += 6;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void CameraShake_ApplyRadial(f32 x, f32 y, f32 z, f32 radius, f32 magnitude)
 {
     CameraViewSlot* slot;
@@ -349,16 +297,12 @@ void CameraShake_ApplyRadial(f32 x, f32 y, f32 z, f32 radius, f32 magnitude)
         i++;
     } while (i <= 7);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void* fn_8000E814(void)
 {
     return lbl_80338090;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void Camera_LoadModelViewMatrix(void* unused0, void* unused1, CameraViewSlot* transform, f32 scale, f32* matrix)
 {
     f32* modelMatrix;
@@ -387,10 +331,7 @@ void Camera_LoadModelViewMatrix(void* unused0, void* unused1, CameraViewSlot* tr
     transform->x += playerMapOffsetX;
     transform->z += playerMapOffsetZ;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void Camera_NdcToScreen(f32 ndcX, f32 ndcY, f32 ndcZ, s32* outX, s32* outY, s32* outZ)
 {
     f32 t;
@@ -412,10 +353,7 @@ void Camera_NdcToScreen(f32 ndcX, f32 ndcY, f32 ndcZ, s32* outX, s32* outY, s32*
         *outZ = (s32)(lbl_803DE620 * (lbl_803DE5F0 + ndcZ));
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void screenFn_8000e944(void* viewportArg)
 {
     u32 resolution;
@@ -457,10 +395,7 @@ void screenFn_8000e944(void* viewportArg)
 
     gCameraCurrentViewIndex = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void Camera_ProjectWorldPoint(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, f32* outViewZ)
 {
     f32 pos[3];
@@ -497,9 +432,7 @@ void Camera_ProjectWorldPoint(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* ou
         *outZ *= invW;
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 offset, f32* outX, f32* outY, f32* outZ)
 {
     f32 pos[3];
@@ -539,10 +472,7 @@ void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 offset, f32* ou
         *outZ *= invW;
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Camera_ProjectWorldSphere(
     f32 x,
     f32 y,
@@ -604,11 +534,7 @@ void Camera_ProjectWorldSphere(
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void viewportEffectFn_8000e380(void)
 {
     CameraViewSlot* slot;
@@ -702,11 +628,7 @@ void viewportEffectFn_8000e380(void)
         slot->shakeTimer += timeDelta / lbl_803DE610;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void Camera_ApplyCurrentViewport(void* viewportArg)
 {
@@ -723,11 +645,7 @@ void Camera_ApplyCurrentViewport(void* viewportArg)
     gxSetScissorRect(0, 0, 0, viewportY, height, clipped);
 }
 #pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Camera_UpdateProjection(void* viewportArg)
 {
     u8 viewIndex = gCameraCurrentViewIndex;
@@ -809,10 +727,7 @@ void Camera_UpdateProjection(void* viewportArg)
         gCameraCurrentViewIndex = viewIndex;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void Camera_GetCurrentViewport(s32* outX, s32* outY, u32* outHeight, s32* outWidth)
 {
     u32 resolution = getScreenResolution();
@@ -822,9 +737,7 @@ void Camera_GetCurrentViewport(s32* outX, s32* outY, u32* outHeight, s32* outWid
     *outY = lbl_803DC884 + 6;
     *outWidth = (resolution >> 16) - (lbl_803DC884 + 6);
 }
-#pragma scheduling reset
 
-#pragma peephole off
 void Camera_SetCurrentViewIndex(int index)
 {
     if (index >= 0 && index < 4) {
@@ -833,9 +746,7 @@ void Camera_SetCurrentViewIndex(int index)
     }
     gCameraCurrentViewIndex = 0;
 }
-#pragma peephole reset
 
-#pragma scheduling off
 f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z)
 {
     CameraViewSlot* slot = &gCameraShakeSlots[gCameraCurrentViewIndex];
@@ -852,10 +763,7 @@ f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z)
     dy = t * t;
     return sqrtf(dz + (dx + dy));
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Camera_SetCurrentViewRotation(int pitch, int yaw, int roll)
 {
     CameraViewSlot* slot = &gCameraShakeSlots[gCameraCurrentViewIndex];
@@ -864,10 +772,7 @@ void Camera_SetCurrentViewRotation(int pitch, int yaw, int roll)
     slot->yaw = yaw;
     slot->roll = roll;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void Camera_SetCurrentViewPosition(f32 x, f32 y, f32 z)
 {
     CameraViewSlot* slot = &gCameraShakeSlots[gCameraCurrentViewIndex];
@@ -876,10 +781,7 @@ void Camera_SetCurrentViewPosition(f32 x, f32 y, f32 z)
     slot->y = y;
     slot->z = z;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Camera_UpdateViewMatrices(void)
 {
     u8* base = (u8*)gObjInverseYawTransformMatrices;
@@ -934,10 +836,7 @@ void Camera_UpdateViewMatrices(void)
     *(f32*)(base + 5632 + 28) = lbl_803DE60C;
     *(f32*)(base + 5632 + 44) = lbl_803DE60C;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void Camera_ApplyFullViewport(void)
 {
     CameraRenderMode* renderMode = lbl_803DCCF0;
@@ -951,9 +850,7 @@ void Camera_ApplyFullViewport(void)
                       (f32)renderMode->xfbHeight, lbl_803DE60C, lbl_803DE5F0);
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void fn_8000F83C(void)
 {
     CameraRenderMode* renderMode = lbl_803DCCF0;
@@ -967,9 +864,7 @@ void fn_8000F83C(void)
                       (f32)renderMode->xfbHeight, lbl_803DE640, lbl_803DB26C);
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void fn_8000F8F8(void)
 {
     CameraRenderMode* renderMode = lbl_803DCCF0;
@@ -983,9 +878,7 @@ void fn_8000F8F8(void)
                       (f32)renderMode->xfbHeight, lbl_803DE644, lbl_803DE5F0);
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void fn_8000F9B4(void)
 {
     CameraRenderMode* renderMode = lbl_803DCCF0;
@@ -999,21 +892,16 @@ void fn_8000F9B4(void)
                       (f32)renderMode->xfbHeight, lbl_803DE648, lbl_803DE5F0);
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 u16 fn_8000FA70(void)
 {
     return (u16)gCameraShakeSlots[gCameraCurrentViewIndex].yaw;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 u16 fn_8000FA90(void)
 {
     return (u16)gCameraShakeSlots[gCameraCurrentViewIndex].pitch;
 }
-#pragma scheduling reset
 
 u8 Camera_IsViewYOffsetEnabled(void)
 {
@@ -1045,7 +933,6 @@ f32* Camera_GetProjectionMatrix(void)
     return gCameraProjectionMatrix;
 }
 
-#pragma scheduling off
 void Camera_RebuildProjectionMatrix(void)
 {
     if (gCameraProjectionMode == 1) {
@@ -1063,15 +950,12 @@ void Camera_RebuildProjectionMatrix(void)
     }
     GXSetProjection(gCameraProjectionMatrix, gCameraProjectionMode);
 }
-#pragma scheduling reset
 
 f32 Camera_GetFarPlane(void)
 {
     return gCameraFarPlane;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void Camera_SetFarPlane(f32 farPlane, int transitionFrames)
 {
     if (transitionFrames != 0) {
@@ -1084,8 +968,6 @@ void Camera_SetFarPlane(f32 farPlane, int transitionFrames)
         gCameraFarPlane = farPlane;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 f32 Camera_GetNearPlane(void)
 {
@@ -1115,8 +997,6 @@ void Camera_SetFovY(f32 fovY)
     gCameraFovY = fovY;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void Camera_InitState(void)
 {
     u8* base = (u8*)gObjInverseYawTransformMatrices;
@@ -1171,5 +1051,3 @@ void Camera_InitState(void)
                       lbl_803DE5F0, (f32*)(base + 0x1080), &lbl_803DC88A);
     copyMatrix44((f32*)((int)base + 0x1080), (f32*)(base + 0x0FC0));
 }
-#pragma peephole reset
-#pragma scheduling reset

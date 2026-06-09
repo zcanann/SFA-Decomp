@@ -28,8 +28,6 @@ extern THPAudioDecodeContext lbl_803A4448;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 BOOL CreateAudioDecodeThread(OSPriority priority, void *param)
 {
     THPAudioDecodeContext *context = &lbl_803A4448;
@@ -50,5 +48,3 @@ BOOL CreateAudioDecodeThread(OSPriority priority, void *param)
     gAttractMovieAudioThreadActive = 1;
     return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset

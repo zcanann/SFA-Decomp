@@ -17,7 +17,6 @@ int dfppowersl_getExtraSize(void)
   return sizeof(DfpPowerSlState);
 }
 
-#pragma scheduling off
 void dfppowersl_free(DfpPowerSlObject *obj)
 {
   if (obj != 0) {
@@ -25,10 +24,7 @@ void dfppowersl_free(DfpPowerSlObject *obj)
   }
   return;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void dfppowersl_render(DfpPowerSlObject *obj)
 {
   DfpPowerSlObject *powerSl;
@@ -47,11 +43,7 @@ void dfppowersl_render(DfpPowerSlObject *obj)
   return;
 }
 
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void dfppowersl_update(DfpPowerSlObject *obj)
 {
   DfpPowerSlObject *powerSl;
@@ -66,11 +58,7 @@ void dfppowersl_update(DfpPowerSlObject *obj)
   return;
 }
 
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void dfppowersl_init(DfpPowerSlObject *obj,DfpPowerSlMapData *mapData)
 {
   DfpPowerSlState *state;
@@ -92,8 +80,6 @@ void dfppowersl_init(DfpPowerSlObject *obj,DfpPowerSlMapData *mapData)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 ObjectDescriptor gDfppowerslObjDescriptor = {
   0,

@@ -34,7 +34,6 @@ int dfplightni_getExtraSize(void)
   return sizeof(DfpLightniState);
 }
 
-#pragma scheduling off
 void dfplightni_free(DfpLightniObject *obj)
 {
   DfpLightniState *state;
@@ -48,9 +47,7 @@ void dfplightni_free(DfpLightniObject *obj)
   }
   return;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void dfplightni_render(DfpLightniObject *obj)
 {
   DfpLightniState *state;
@@ -76,10 +73,7 @@ void dfplightni_render(DfpLightniObject *obj)
   return;
 }
 
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void dfplightni_update(DfpLightniObject *obj)
 {
   DfpLightniObject *playerObj;
@@ -169,11 +163,7 @@ void dfplightni_update(DfpLightniObject *obj)
   return;
 }
 
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void dfplightni_init(DfpLightniObject *obj,DfpLightniMapData *mapData)
 {
   DfpLightniState *state;
@@ -204,11 +194,7 @@ void dfplightni_init(DfpLightniObject *obj,DfpLightniMapData *mapData)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int dfppowersl_spawnSeqObjectsOnHit(DfpPowerSlObject *obj)
 {
   int i;
@@ -228,8 +214,6 @@ int dfppowersl_spawnSeqObjectsOnHit(DfpPowerSlObject *obj)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 ObjectDescriptor gDfplightniObjDescriptor = {
   0,

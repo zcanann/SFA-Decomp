@@ -1,7 +1,5 @@
 #include "main/engine_shared.h"
 
-#pragma scheduling off
-#pragma peephole off
 void audioStopByMask(int mask)
 {
     if ((mask & 4) != 0) {
@@ -17,10 +15,7 @@ void audioStopByMask(int mask)
         AudioStream_StopCurrent();
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void audioReset(void)
 {
     if (gAudioInitStarted != 0) {
@@ -28,18 +23,14 @@ void audioReset(void)
     }
     AIReset();
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma dont_inline on
 int audioIsResetting(void)
 {
     return gAudioResetting;
 }
 #pragma dont_inline reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void audioStopAll(void)
 {
     gAudioResetting = 1;
@@ -54,18 +45,14 @@ void audioStopAll(void)
     }
     AudioStream_CancelPrepared();
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void audioUpdate(void)
 {
     Music_Update();
     Sfx_UpdateObjectSounds();
     AudioStream_UpdateFadeTimer();
 }
-#pragma scheduling reset
 
-#pragma peephole off
 #pragma dont_inline on
 u32 audioFlagFn_8000a188(u32 mask)
 {
@@ -76,24 +63,17 @@ u32 audioFlagFn_8000a188(u32 mask)
     return (gAudioActiveChannelMask & mask) != 0;
 }
 #pragma dont_inline reset
-#pragma peephole reset
 
-#pragma scheduling off
 void audioFree(void *ptr)
 {
     mm_free(ptr);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void *_audioAlloc(u32 size)
 {
     return mmAlloc(size, 0xb, NULL);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Music_ChannelLoadedCallback(MusicBank *bank, MusicChannel *channel, MusicTrigParam *trigger)
 {
     MusicSeqStartParams params = lbl_802C1A68;
@@ -131,11 +111,7 @@ void Music_ChannelLoadedCallback(MusicBank *bank, MusicChannel *channel, MusicTr
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int Sfx_ReadTriggerParams(SfxTriggerFull *trigger, u16 *outSfxId, u8 *outVol, f32 *outF6,
                           f32 *outF7, f32 *outF8, int *outI9, int *outI10, int *outI11)
 {
@@ -200,11 +176,7 @@ int Sfx_ReadTriggerParams(SfxTriggerFull *trigger, u16 *outSfxId, u8 *outVol, f3
     *outI11 = trigger->e_bit3;
     return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 SfxTrigger *Sfx_FindTrigger(u16 id)
 {
@@ -231,11 +203,7 @@ SfxTrigger *Sfx_FindTrigger(u16 id)
     return NULL;
 }
 #pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 SfxObjectChannel *Sfx_AllocObjectChannel(a, b, pitch, c, d)
 s16 a;
 int b;
@@ -306,11 +274,7 @@ fail:
     ch->handle = (u32)-1;
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32 *v)
 {
     f32 x = v[0];
@@ -350,10 +314,7 @@ void Sfx_RotateVectorByAngles(s16 angX, s16 angY, s16 angZ, f32 *v)
     v[1] = B;
     v[2] = p;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma dont_inline on
 f32 Sfx_GetListenerRelativeDistance(f32 *soundPos, f32 *outDelta)
 {
@@ -391,9 +352,7 @@ retDefault:
     return lbl_803DE570;
 }
 #pragma dont_inline reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void AudioStream_StopAll(void)
 {
     if (gAudioStreamDvdState != 0) {
@@ -430,9 +389,7 @@ void AudioStream_StopAll(void)
     gAudioStreamMusicFadeFlagB = 0;
     gAudioStreamMusicFadeFlagA = 0;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma dont_inline on
 u32 AudioStream_GetMusicFadeFlagA(void)
 {
@@ -442,9 +399,7 @@ u32 AudioStream_GetMusicFadeFlagA(void)
     return gAudioStreamMusicFadeFlagA;
 }
 #pragma dont_inline reset
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma dont_inline on
 u32 AudioStream_GetMusicFadeFlagB(void)
 {
@@ -454,23 +409,17 @@ u32 AudioStream_GetMusicFadeFlagB(void)
     return gAudioStreamMusicFadeFlagB;
 }
 #pragma dont_inline reset
-#pragma scheduling reset
 
-#pragma scheduling off
 u32 AudioStream_GetCurrentId(void)
 {
     return gAudioStreamCurrentId;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 u8 AudioStream_IsPreparing(void)
 {
     return gAudioStreamDvdState;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma dont_inline on
 void AudioStream_SetVolume(u8 volume)
 {
@@ -480,9 +429,7 @@ void AudioStream_SetVolume(u8 volume)
     AISetStreamVolRight(volume);
 }
 #pragma dont_inline reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void AudioStream_CancelCallback(s32 result)
 {
     if (result == 0) {
@@ -491,9 +438,7 @@ void AudioStream_CancelCallback(s32 result)
     gAudioActiveChannelMask = 0;
     gAudioStreamPlaying = 0;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void AudioStream_StopCurrent(void)
 {
     if (gAudioStreamCurrentId != 0) {
@@ -514,16 +459,12 @@ void AudioStream_StopCurrent(void)
         gAudioStreamPlaying = 0;
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void fn_8000D0B4(void)
 {
     gAudioStreamDvdState = 0;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void AudioStream_CancelPrepared(void)
 {
     AISetStreamVolLeft(0);
@@ -539,9 +480,7 @@ void AudioStream_CancelPrepared(void)
     gAudioStreamMusicFadeFlagB = 0;
     gAudioStreamMusicFadeFlagA = 0;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void AudioStream_StartPrepared(void)
 {
     if (gAudioStreamPreparingId != 0) {
@@ -569,9 +508,7 @@ void AudioStream_StartPrepared(void)
         gAudioActiveChannelMask = 0;
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void AudioStream_UpdateFadeTimer(void)
 {
     if (gAudioStreamCurrentId != 0) {
@@ -581,18 +518,14 @@ void AudioStream_UpdateFadeTimer(void)
         gAudioStreamPos = lbl_803DE5D0;
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma dont_inline on
 void AudioStream_SetDefaultVolume(u8 volume)
 {
     gAudioStreamDefaultVolume = volume;
 }
 #pragma dont_inline reset
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma dont_inline on
 void AudioStream_Init(void)
 {
@@ -605,9 +538,7 @@ void AudioStream_Init(void)
     gAudioStreamStartWhenPrepared = 0;
 }
 #pragma dont_inline reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void AudioStream_PrepareCallback(void)
 {
     if (getGameState() != 1) {
@@ -635,10 +566,7 @@ void AudioStream_PrepareCallback(void)
     }
     gAudioStreamDvdState = 0;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void AudioStream_PlayAddrCallback(u32 result)
 {
     if ((result & 0xff) == 0) {
@@ -656,18 +584,12 @@ void AudioStream_PlayAddrCallback(u32 result)
     gAudioStreamPlayAddrCallbackResult = result;
     gAudioStreamPlayAddrCallbackDone = 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void Sfx_ClearLoopedObjectSounds(void)
 {
     gSfxLoopedObjectSoundCount = 0;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Sfx_UpdateLoopedObjectSounds(void)
 {
     SfxLoopedObjectSoundTable *table = &gSfxLoopedObjectSoundFlags;
@@ -722,11 +644,7 @@ void Sfx_UpdateLoopedObjectSounds(void)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Sfx_KeepAliveLoopedObjectSoundLimited(u32 obj, u16 sfxId, u16 limit)
 {
     SfxLoopedObjectSoundTable *table = &gSfxLoopedObjectSoundFlags;
@@ -779,18 +697,12 @@ checked:
         flags[count] |= SFX_LOOPED_OBJECT_SOUND_FLAG_ALIVE | SFX_LOOPED_OBJECT_SOUND_FLAG_SEEN;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void Sfx_KeepAliveLoopedObjectSound(u32 obj, u16 sfxId)
 {
     Sfx_KeepAliveLoopedObjectSoundLimited(obj, sfxId, 0);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Sfx_RemoveLoopedObjectSoundForObject(u32 obj)
 {
     SfxLoopedObjectSoundTable *table = &gSfxLoopedObjectSoundFlags;
@@ -818,11 +730,7 @@ void Sfx_RemoveLoopedObjectSoundForObject(u32 obj)
         op--;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId)
 {
     SfxLoopedObjectSoundTable *table = &gSfxLoopedObjectSoundFlags;
@@ -855,11 +763,7 @@ void Sfx_RemoveLoopedObjectSound(u32 obj, u32 sfxId)
         ip--;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Sfx_AddLoopedObjectSound(u32 obj, u32 sfxId)
 {
     SfxLoopedObjectSoundTable *table;
@@ -892,27 +796,18 @@ checked:
         Sfx_PlayFromObject(obj, sfxId);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 int return0x64_8000A378(void) { return 0x64; }
-#pragma scheduling reset
 
-#pragma scheduling off
 void doNothing_8000CF54(void) {}
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma dont_inline on
 s32 Music_GetActivePriority(void)
 {
     return gMusicActivePriority;
 }
 #pragma dont_inline reset
-#pragma scheduling reset
 
-#pragma peephole off
 s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel)
 {
     SfxObjectChannel* objectChannel;
@@ -928,10 +823,7 @@ s32 Sfx_IsPlayingFromObjectChannel(u32 obj, u32 channel)
     }
     return 0;
 }
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 s32 Sfx_IsPlayingFromObject(u32 obj, u32 sfxId)
 {
     SfxObjectChannel* objectChannel;
@@ -947,11 +839,7 @@ s32 Sfx_IsPlayingFromObject(u32 obj, u32 sfxId)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void Sfx_StopAllObjectSounds(void)
 {
@@ -969,11 +857,7 @@ void Sfx_StopAllObjectSounds(void)
     } while (i-- != 0);
 }
 #pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void audioFn_8000b694(u32 value)
 {
     s32 i;
@@ -989,11 +873,7 @@ void audioFn_8000b694(u32 value)
         objectChannel++;
     } while (i-- != 0);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Sfx_SetObjectSoundsPaused(s32 paused)
 {
     u8 pausedByte;
@@ -1016,11 +896,7 @@ void Sfx_SetObjectSoundsPaused(s32 paused)
         objectChannel++;
     } while (i-- != 0);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Sfx_StopObjectChannel(u32 obj, u32 channel)
 {
     SfxObjectChannel* objectChannel;
@@ -1036,11 +912,7 @@ void Sfx_StopObjectChannel(u32 obj, u32 channel)
         objectChannel->handle = (u32)-1;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Sfx_StopFromObject(u32 obj, u32 sfxId)
 {
     SfxObjectChannel* objectChannel;
@@ -1056,11 +928,7 @@ void Sfx_StopFromObject(u32 obj, u32 sfxId)
         objectChannel->handle = (u32)-1;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale)
 {
     u8 volumeByte;
@@ -1102,11 +970,7 @@ void Sfx_SetObjectChannelVolume(u32 obj, u32 channel, u8 volume, f32 volumeScale
         sndFXCtrl14(objectChannel->handle, 0x80, (s32)(lbl_803DE578 * volumeScale));
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale)
 {
     u8 volumeByte;
@@ -1148,11 +1012,7 @@ void Sfx_SetObjectSfxVolume(u32 obj, u32 sfxId, u8 volume, f32 volumeScale)
         sndFXCtrl14(objectChannel->handle, 0x80, (s32)(lbl_803DE578 * volumeScale));
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Sfx_UpdateObjectChannel3D(SfxObjectChannel *objectChannel)
 {
     void *slot;
@@ -1235,11 +1095,7 @@ void Sfx_UpdateObjectChannel3D(SfxObjectChannel *objectChannel)
         sndFXCtrl(objectChannel->handle, 7, (u8)v);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Sfx_PlayFromObjectEx(u32 obj, f32 *pos, u32 channel, u16 sfxId)
 {
     u16 outSfxId;
@@ -1328,17 +1184,12 @@ void Sfx_PlayFromObjectEx(u32 obj, f32 *pos, u32 channel, u16 sfxId)
         ch->volume = 0x7f;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void Sfx_PlayFromObjectChannel(u32 obj, u32 channel, u16 sfxId)
 {
     Sfx_PlayFromObjectEx(obj, NULL, channel, sfxId);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u32 obj, u16 sfxId)
 {
     f32 pos[3];
@@ -1348,17 +1199,12 @@ void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u32 obj, u16 sfxId)
     pos[2] = z;
     Sfx_PlayFromObjectEx(obj, pos, 0, sfxId);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void Sfx_PlayFromObject(u32 obj, u16 sfxId)
 {
     Sfx_PlayFromObjectEx(obj, NULL, 0, sfxId);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Sfx_UpdateObjectSounds(void)
 {
     SfxObjectChannel* objectChannel;
@@ -1429,11 +1275,7 @@ void Sfx_UpdateObjectSounds(void)
         objectChannel++;
     } while (i-- != 0);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void Sfx_InitObjectChannels(void)
 {
@@ -1464,11 +1306,7 @@ checkNextChannel:
     } while (i-- != 0);
 }
 #pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 SfxObjectChannel* Sfx_FindObjectChannel(u32 obj, u32 channel, u32 sfxId, s32 mode)
 {
     SfxObjectChannel* objectChannel = gSfxObjectChannels;
@@ -1515,10 +1353,7 @@ SfxObjectChannel* Sfx_FindObjectChannel(u32 obj, u32 channel, u32 sfxId, s32 mod
 
     return bestChannel;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma dont_inline on
 int concatThreeStrings(char* dst, void* unused, const char* first, const char* second, const char* third)
 {
@@ -1528,16 +1363,12 @@ int concatThreeStrings(char* dst, void* unused, const char* first, const char* s
     return 1;
 }
 #pragma dont_inline reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void fn_80009008(void)
 {
     lbl_803DC7BC = 1;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void fn_80008EDC(TextCallbackEntry* p)
 {
     int i;
@@ -1550,9 +1381,7 @@ void fn_80008EDC(TextCallbackEntry* p)
         e++;
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void audioSetVolumes(u8 volume, u16 time, int musicFlag, int fxFlag, int streamFlag)
 {
     if (musicFlag != 0 || fxFlag != 0) {
@@ -1563,9 +1392,7 @@ void audioSetVolumes(u8 volume, u16 time, int musicFlag, int fxFlag, int streamF
         AudioStream_SetDefaultVolume(volume);
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void MIDIWADLoadedCallback(int status, void* fileInfo)
 {
     if (status == -1) {
@@ -1579,10 +1406,7 @@ void MIDIWADLoadedCallback(int status, void* fileInfo)
         gAudioCompletedLoadFlags |= 0x800;
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int musicInitMidiWad(void)
 {
     MusicTrackSlot *table;
@@ -1653,10 +1477,7 @@ int musicInitMidiWad(void)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void poolDataMLoadedCallback(int status, void* fileInfo)
 {
     uint saved;
@@ -1675,9 +1496,7 @@ void poolDataMLoadedCallback(int status, void* fileInfo)
         gAudioCompletedLoadFlags |= 0x8;
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void poolDataSLoadedCallback(int status, void* fileInfo)
 {
     uint saved;
@@ -1696,9 +1515,7 @@ void poolDataSLoadedCallback(int status, void* fileInfo)
         gAudioCompletedLoadFlags |= 0x80;
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void projectDataMLoadedCallback(int status, void* fileInfo)
 {
     uint saved;
@@ -1717,9 +1534,7 @@ void projectDataMLoadedCallback(int status, void* fileInfo)
         gAudioCompletedLoadFlags |= 0x10;
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void projectDataSLoadedCallback(int status, void* fileInfo)
 {
     uint saved;
@@ -1738,9 +1553,7 @@ void projectDataSLoadedCallback(int status, void* fileInfo)
         gAudioCompletedLoadFlags |= 0x100;
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void sampleBufferMLoadedCallback(int status, void* fileInfo)
 {
     uint saved;
@@ -1759,9 +1572,7 @@ void sampleBufferMLoadedCallback(int status, void* fileInfo)
         gAudioCompletedLoadFlags |= 0x40;
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void sampleBufferSLoadedCallback(int status, void* fileInfo)
 {
     uint saved;
@@ -1780,9 +1591,7 @@ void sampleBufferSLoadedCallback(int status, void* fileInfo)
         gAudioCompletedLoadFlags |= 0x400;
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void sampleDirectoryMLoadedCallback(int status, void* fileInfo)
 {
     uint saved;
@@ -1801,9 +1610,7 @@ void sampleDirectoryMLoadedCallback(int status, void* fileInfo)
         gAudioCompletedLoadFlags |= 0x20;
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void sampleDirectorySLoadedCallback(int status, void* fileInfo)
 {
     uint saved;
@@ -1822,9 +1629,7 @@ void sampleDirectorySLoadedCallback(int status, void* fileInfo)
         gAudioCompletedLoadFlags |= 0x200;
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void sfxTriggersLoadedCallback(int status, void* fileInfo)
 {
     uint saved;
@@ -1843,9 +1648,7 @@ void sfxTriggersLoadedCallback(int status, void* fileInfo)
         gAudioCompletedLoadFlags |= 0x2;
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void musicTriggersLoadedCallback(int status, void* fileInfo)
 {
     uint saved;
@@ -1864,10 +1667,7 @@ void musicTriggersLoadedCallback(int status, void* fileInfo)
         gAudioCompletedLoadFlags |= 0x1;
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void streamsLoadedCallback(int status, void* fileInfo)
 {
     uint saved;
@@ -1895,11 +1695,7 @@ void streamsLoadedCallback(int status, void* fileInfo)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80008F38(void* addr, u32 dest, u32 size)
 {
     int idx;
@@ -1919,11 +1715,7 @@ void fn_80008F38(void* addr, u32 dest, u32 size)
     while (lbl_803DC7BC == 0) {
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 p5, u32 p6, u32 p7)
 {
@@ -1950,10 +1742,7 @@ void audioAllocFn_80008df4(void* source, u32 size, void** outBuf, u32 cb, u32 p5
     ARQPostRequest(entry, 0x64, 1, 1, (u32)source, (u32)buf, size, (void (*)(void*))fn_80008EDC);
 }
 #pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 int Sfx_ResolveObjectSfxId(int* outChannel, u16* sfxId)
 {
     switch (*sfxId) {
@@ -1979,10 +1768,7 @@ int Sfx_ResolveObjectSfxId(int* outChannel, u16* sfxId)
     }
     return 1;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 u32 Sfx_PlayFromObjectLimited(u32 obj, u16 sfxId, int limit)
 {
     extern SfxObjectChannel *Sfx_FindObjectChannel(u32 obj, u32 channel, u16 sfxId, s32 mode);
@@ -1996,11 +1782,7 @@ u32 Sfx_PlayFromObjectLimited(u32 obj, u16 sfxId, int limit)
     }
     return gSfxObjectChannelMatchCount;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int AudioStream_Play(int id, void (*preparedCallback)(void))
 {
     char path[64];
@@ -2110,11 +1892,7 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
 ret0:
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Music_Trigger(int id, int arg)
 {
     extern void sndSeqVolume(u8 volume, u16 time, u32 handle, u8 mode);
@@ -2212,11 +1990,7 @@ foundChannel:
         channel->status = 2;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 static void Music_FreeChannel(MusicChannel *ch)
 {
     sndSeqStop(ch->seqHandle);
@@ -2229,11 +2003,7 @@ static void Music_FreeChannel(MusicChannel *ch)
     ch->field_12 = 0;
     ch->field_20 = lbl_803DE560;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void streamFn_8000a380(int mask, int mode, int time)
 {
     MusicChannel *ch = (MusicChannel *)(int)gMusicChannels;
@@ -2272,10 +2042,7 @@ void streamFn_8000a380(int mask, int mode, int time)
         ch++;
     } while (i-- != 0);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 static int Music_IsTriggerExcluded(int id)
 {
     switch (id) {
@@ -2286,10 +2053,7 @@ static int Music_IsTriggerExcluded(int id)
     }
     return 0;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Music_Update(void)
 {
     extern void sndSeqVolume(u8 volume, u16 time, u32 handle, u8 mode);
@@ -2480,11 +2244,7 @@ void Music_Update(void)
         ch++;
     } while (i-- != 0);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Music_LoadChannelForTrigger(MusicTrigger *trigger)
 {
     MusicTrackSlot *slot;
@@ -2546,11 +2306,7 @@ foundChannel:
     audioAllocFn_80008df4((void *)slot->offset, slot->size, &channel->bankData,
                           (u32)Music_ChannelLoadedCallback, (u32)slot, (u32)channel, (u32)trigger);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Music_PlayTrackByIndex(int index)
 {
     int count = gMusicTriggersCount;
@@ -2568,11 +2324,7 @@ found:
     trigger->track = *(s16*)((u8*)sMusicTrackTable + (index << 4));
     Music_Trigger(0xec, 1);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void audioSetSoundMode(int mode, u8 forceFlag)
 {
     if (forceFlag == 0) {
@@ -2605,10 +2357,7 @@ void audioSetSoundMode(int mode, u8 forceFlag)
     }
     gAudioSoundMode = (s8)mode;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma dont_inline on
 void audioLoadTriggerData(void)
 {
@@ -2633,10 +2382,7 @@ void audioLoadTriggerData(void)
     gStreamsCount = (u32)info / sizeof(StreamEntry);
 }
 #pragma dont_inline reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int audioInit(void)
 {
     char *base = sSampleBufferSLoadedCallbackLoadError;
@@ -2764,5 +2510,3 @@ int audioInit(void)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset

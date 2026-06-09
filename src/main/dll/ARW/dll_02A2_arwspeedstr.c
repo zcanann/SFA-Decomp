@@ -44,8 +44,6 @@ void arwspeedstr_release(void) {}
 
 void arwspeedstr_initialise(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void arwspeedstr_update(int obj) {
     ARWSpeedStrState *state = ((GameObject *)obj)->extra;
     if (state->flags == 0) {
@@ -77,8 +75,6 @@ void arwspeedstr_update(int obj) {
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void fn_80231058(int obj, int src)
 {
@@ -87,10 +83,8 @@ void fn_80231058(int obj, int src)
     ((GameObject *)obj)->anim.velocityZ = *(f32 *)(src + 0x8);
 }
 
-#pragma scheduling off
 void fn_80231028(int obj, int v)
 {
     ARWSpeedStrState *state = ((GameObject *)obj)->extra;
     state->speed = (f32)v;
 }
-#pragma scheduling reset

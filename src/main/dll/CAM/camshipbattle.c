@@ -23,8 +23,6 @@ extern int objFn_80296700(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void camcontrol_updatePathTargetAction(int param_1,int param_2)
 {
   short sVar1;
@@ -72,8 +70,6 @@ sendFollowAction:
 done:
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--

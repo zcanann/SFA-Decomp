@@ -12,7 +12,6 @@ int laser_getObjectTypeId(void)
   return 0;
 }
 
-#pragma scheduling off
 void laser_freeUnsupported(void)
 {
   OSReport(sTextBlockInitNoLongerSupported);
@@ -40,7 +39,6 @@ void laser_init(void)
   OSReport(sLaserInitNoLongerSupported);
   return;
 }
-#pragma scheduling reset
 
 void laser_releaseUnsupported(void)
 {

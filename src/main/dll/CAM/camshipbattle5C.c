@@ -33,8 +33,6 @@ extern f32 lbl_803E1894;
 extern f32 lbl_803E1898;
 extern f32 lbl_803E1888;
 
-#pragma scheduling off
-#pragma peephole off
 void pathcam_buildWindowSamples(int *nodes, f32 *o1, f32 *o2, f32 *o3, f32 *o4,
                                 f32 *o5, f32 *o6, f32 *o7)
 {
@@ -161,8 +159,6 @@ void pathcam_buildWindowSamples(int *nodes, f32 *o1, f32 *o2, f32 *o3, f32 *o4,
     } while (k < 3);
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern char sPathCamNeedTwoControlPointsError[];
 extern void debugPrintf(const char *fmt, ...);
@@ -174,8 +170,6 @@ extern void debugPrintf(const char *fmt, ...);
  * EN v1.0 Address: 0x8010AA54
  * EN v1.0 Size: 500b
  */
-#pragma scheduling off
-#pragma peephole off
 void pathcam_findTaggedNodeWindow(u8 *node, int *out, int tag)
 {
     int i;
@@ -245,13 +239,9 @@ void pathcam_findTaggedNodeWindow(u8 *node, int *out, int tag)
         debugPrintf(sPathCamNeedTwoControlPointsError);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern float sqrtf(float x);
 extern f32 lbl_803E18A8;
-#pragma scheduling off
-#pragma peephole off
 f32 fn_8010AC48(int *obj, f32 px, f32 py, f32 pz) {
     int *pts[4];
     int **dp;
@@ -320,5 +310,3 @@ f32 fn_8010AC48(int *obj, f32 px, f32 py, f32 pz) {
     }
     return -t1 / (t2 - t1);
 }
-#pragma peephole reset
-#pragma scheduling reset

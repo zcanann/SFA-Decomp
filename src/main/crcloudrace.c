@@ -40,8 +40,6 @@ void crcloudrace_free(void)
   return;
 }
 
-#pragma peephole off
-#pragma scheduling off
 void crcloudrace_render(undefined4 param_1,undefined4 param_2,undefined4 param_3,
                         undefined4 param_4,undefined4 param_5,char visible)
 {
@@ -95,8 +93,6 @@ void crcloudrace_init(CrCloudRaceObject *obj)
   return;
 }
 
-#pragma scheduling reset
-#pragma peephole reset
 
 void crcloudrace_release(void)
 {
@@ -125,8 +121,6 @@ ObjectDescriptor gCrCloudRaceObjDescriptor = {
     crcloudrace_getExtraSize,
 };
 
-#pragma scheduling off
-#pragma peephole off
 int crcloudrace_completionCallback(int obj, int arg2, u8 *data) {
     CrCloudRaceState *state = ((CrCloudRaceObject *)obj)->state;
     int i;
@@ -146,10 +140,7 @@ int crcloudrace_completionCallback(int obj, int arg2, u8 *data) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma dont_inline on
 void crcloudrace_updateCompletionState(int obj, CrCloudRaceState *state) {
     f32 dist;
@@ -178,10 +169,7 @@ void crcloudrace_updateCompletionState(int obj, CrCloudRaceState *state) {
     }
 }
 #pragma dont_inline reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void crcloudrace_updateRaceState(int obj) {
     CrCloudRaceObject *raceObj;
     CrCloudRaceState *inner;
@@ -240,5 +228,3 @@ void crcloudrace_updateRaceState(int obj) {
         break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

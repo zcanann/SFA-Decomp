@@ -12,8 +12,6 @@ extern f32 lbl_803E3DD8;
 #define PARTFX_SPAWN(obj, fxId, a, b, c, d) \
   (*gPartfxInterface)->spawnObject((void *)(obj), (fxId), (void *)(a), (b), (c), (void *)(d))
 
-#pragma scheduling off
-#pragma peephole off
 void cfccrate_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     int objectType;
@@ -77,5 +75,3 @@ int CFCrate_SeqFn(int obj, int unused, u8 *seq)
 
 void cfccrate_hitDetect(void) {}
 
-#pragma peephole reset
-#pragma scheduling reset

@@ -33,7 +33,6 @@ int arwproximit_getExtraSize(void) { return 0x18; }
 
 int arwproximit_getObjectTypeId(void) { return 0; }
 
-#pragma scheduling off
 void arwproximit_free(int obj)
 {
     ARWProximitState *state = ((GameObject *)obj)->extra;
@@ -42,10 +41,7 @@ void arwproximit_free(int obj)
         state->light = NULL;
     }
 }
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void arwproximit_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
     ARWProximitState *state = ((GameObject *)obj)->extra;
@@ -54,13 +50,9 @@ void arwproximit_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
     }
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E71E4);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void arwproximit_hitDetect(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void arwproximit_update(int obj)
 {
     ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
@@ -186,11 +178,7 @@ void arwproximit_update(int obj)
     if (state->light != NULL && modelLightStruct_getActiveState(state->light) != 0)
         modelLightStruct_updateGlowAlpha(state->light);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void arwproximit_init(int obj, int setup, int p3)
 {
     ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
@@ -211,8 +199,6 @@ void arwproximit_init(int obj, int setup, int p3)
     ObjHits_DisableObject(obj);
     ObjHits_MarkObjectPositionDirty(obj);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void arwproximit_release(void) {}
 

@@ -30,8 +30,6 @@ extern f32 lbl_803E16D4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void camcontrol_updateVerticalBounds(int camera,int flags,int param_3,float *upperBound,
                                      float *lowerBound)
 {
@@ -122,8 +120,6 @@ void camcontrol_updateVerticalBounds(int camera,int flags,int param_3,float *upp
                                  (float *)(camera + 0x10),(float *)(camera + 0x14),
                                  *(int *)(camera + 0x30));
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -138,7 +134,6 @@ void camcontrol_updateVerticalBounds(int camera,int flags,int param_3,float *upp
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void CameraModeNormal_func0A(float *minDistanceOut,float *maxDistanceOut,
                              float *lowerHeightOffsetOut,float *upperHeightOffsetOut,
                              float *targetHeightOut)
@@ -156,4 +151,3 @@ void CameraModeNormal_func0A(float *minDistanceOut,float *maxDistanceOut,
   }
   return;
 }
-#pragma scheduling reset

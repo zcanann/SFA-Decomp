@@ -53,8 +53,6 @@ typedef struct GuardianAngleParams {
  * EN v1.0 Address: 0x801845FC
  * EN v1.0 Size: 492b
  */
-#pragma scheduling off
-#pragma peephole off
 void fn_801845FC(u8 *obj, f32 *p2, u8 mode, f32 *p3)
 {
   extern int getAngle(f32, f32);
@@ -115,8 +113,6 @@ void fn_801845FC(u8 *obj, f32 *p2, u8 mode, f32 *p3)
     ((GameObject *)obj)->anim.rotX = (s16)getAngle(p3[0], p3[2]);
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 /*
  * --INFO--
  *
@@ -152,8 +148,6 @@ void scarab_free(void)
 {
 }
 
-#pragma scheduling off
-#pragma peephole off
 void scarab_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
   int state;
@@ -197,5 +191,3 @@ void scarab_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
   }
 }
-#pragma peephole reset
-#pragma scheduling reset

@@ -52,8 +52,6 @@ typedef struct {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void staffactivated_init(int obj, int setup)
 {
   StaffActivatedSetup *setupData;
@@ -161,8 +159,6 @@ void staffactivated_init(int obj, int setup)
     }
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -171,8 +167,6 @@ void staffactivated_init(int obj, int setup)
  * EN v1.0 Address: 0x8018A8BC
  * EN v1.0 Size: 248b
  */
-#pragma scheduling off
-#pragma peephole off
 int treasurechest_SeqFn(int obj, int unused, u8 *events)
 {
   int i;
@@ -206,8 +200,6 @@ int treasurechest_SeqFn(int obj, int unused, u8 *events)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -255,8 +247,6 @@ void treasurechest_free(void) { Resource_Release(lbl_803DDAE0); }
 
 extern f32 lbl_803E3C24;
 extern void hitDetectFn_80097070(f32 radius, int obj, int a, int b, int c, int d);
-#pragma scheduling off
-#pragma peephole off
 void treasurechest_hitDetect(int obj)
 {
   u8 *state;
@@ -268,5 +258,3 @@ void treasurechest_hitDetect(int obj)
     hitDetectFn_80097070(lbl_803E3C24, obj, 2, (u8)(setup->hitboxKind + 6), 4, 0);
   }
 }
-#pragma peephole reset
-#pragma scheduling reset

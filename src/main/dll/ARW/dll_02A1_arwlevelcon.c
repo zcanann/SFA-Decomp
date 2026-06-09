@@ -48,8 +48,6 @@ void arwlevelcon_commitRingChoice(int obj)
     arwingHudSetVisible(1);
 }
 
-#pragma peephole off
-#pragma scheduling off
 int arwlevelcon_ringEventCallback(int obj, int p2, int data)
 {
     int i;
@@ -84,21 +82,17 @@ int arwlevelcon_ringEventCallback(int obj, int p2, int data)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 int arwlevelcon_getExtraSize(void) { return 0x24; }
 
 int arwlevelcon_getObjectTypeId(void) { return 0; }
 
-#pragma scheduling off
 void arwlevelcon_free(void)
 {
     arwingHudSetVisible(2);
     fn_80125D04();
     setIsOvercast(1);
 }
-#pragma scheduling reset
 
 void arwlevelcon_render(int obj, int p2, int p3, int p4, int p5)
 {
@@ -107,8 +101,6 @@ void arwlevelcon_render(int obj, int p2, int p3, int p4, int p5)
 
 void arwlevelcon_hitDetect(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void arwlevelcon_update(int obj)
 {
     extern u8 AudioStream_IsPreparing(void);
@@ -165,11 +157,7 @@ void arwlevelcon_update(int obj)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void arwlevelcon_init(int obj, u8 *setup)
 {
     ARWLevelConState *state = ((GameObject *)obj)->extra;
@@ -220,8 +208,6 @@ void arwlevelcon_init(int obj, u8 *setup)
         break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void arwlevelcon_release(void) {}
 

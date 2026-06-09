@@ -40,8 +40,6 @@ void crfueltank_render(void)
   return;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void crfueltank_hitDetect(CrFuelTankObject *obj)
 {
   CrFuelTankDef *def;
@@ -67,11 +65,7 @@ void crfueltank_hitDetect(CrFuelTankObject *obj)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void crfueltank_update(CrFuelTankObject *obj)
 {
   CrFuelTankDef *def;
@@ -97,11 +91,7 @@ void crfueltank_update(CrFuelTankObject *obj)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void crfueltank_init(CrFuelTankObject *obj,CrFuelTankDef *def)
 {
   CrFuelTankState *state;
@@ -118,8 +108,6 @@ void crfueltank_init(CrFuelTankObject *obj,CrFuelTankDef *def)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void crfueltank_release(void)
 {

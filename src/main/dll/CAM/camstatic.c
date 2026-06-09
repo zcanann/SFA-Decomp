@@ -51,8 +51,6 @@ extern f32 timeDelta;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void camstatic_update(short *param_1)
 {
   short *psVar4;
@@ -228,5 +226,3 @@ void camstatic_update(short *param_1)
                                  (f32 *)(param_1 + 8),(f32 *)(param_1 + 10),
                                  *(int *)(param_1 + 0x18));
 }
-#pragma peephole reset
-#pragma scheduling reset

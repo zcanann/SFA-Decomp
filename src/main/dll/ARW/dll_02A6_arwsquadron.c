@@ -123,8 +123,6 @@ void arwsquadron_render(int obj, int p2, int p3, int p4, int p5)
 
 void arwsquadron_hitDetect(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void arwsquadron_spawnProjectile(int obj, int pathIdx, int angle, u8 flag) {
     f32 pz, py, px;
     int proj;
@@ -151,11 +149,7 @@ void arwsquadron_spawnProjectile(int obj, int pathIdx, int angle, u8 flag) {
     arwprojectile_placeForward(proj, lbl_803E71A8);
     Sfx_PlayFromObjectLimited(proj, SFXbaddie_eba_smallswipe1, 4);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void arwsquadron_init(int obj, int setup)
 {
     SquadFlags *flags;
@@ -270,11 +264,7 @@ void arwsquadron_init(int obj, int setup)
     state->rollAmplitude = (f32)(int)randomGetRange(0x3e8, 0x7d0);
     state->dialogueVariant = setupData->dialogueVariant;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void arwsquadron_applyCommandParams(int p1, int p2)
 {
     ArwSquadronState *state = (ArwSquadronState *)p2;
@@ -324,11 +314,7 @@ void arwsquadron_applyCommandParams(int p1, int p2)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void arwsquadron_followPath(int p1, int p2)
 {
     ArwSquadronState *state = (ArwSquadronState *)p2;
@@ -356,11 +342,7 @@ void arwsquadron_followPath(int p1, int p2)
                 *(f32 *)(p1 + 0x2c) * timeDelta);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void arwsquadron_updateVolley(int p1, int p2, int p3)
 {
     ArwSquadronState *state = (ArwSquadronState *)p2;
@@ -391,11 +373,7 @@ void arwsquadron_updateVolley(int p1, int p2, int p3)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void arwsquadron_emitEffects(int p1, int p2)
 {
     ArwSquadronState *state = (ArwSquadronState *)p2;
@@ -431,11 +409,7 @@ void arwsquadron_emitEffects(int p1, int p2)
         objfx_spawnLightPulse(p1, state->muzzleLightRadius, 2, 0, 0, state->muzzleLightIntensity, (int)&pfx);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void arwsquadron_handleDamage(int obj, int state)
 {
     ArwSquadronState *squad = (ArwSquadronState *)state;
@@ -496,11 +470,7 @@ void arwsquadron_handleDamage(int obj, int state)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void arwsquadron_followLeader(int p1, int p2)
 {
     ArwSquadronState *state = (ArwSquadronState *)p2;
@@ -548,11 +518,7 @@ void arwsquadron_followLeader(int p1, int p2)
         state->phase = ARW_SQUADRON_STATE_DISABLED;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void arwsquadron_update(int obj)
 {
     ArwSquadronState *state = *(ArwSquadronState **)&((GameObject *)obj)->extra;
@@ -716,5 +682,3 @@ void arwsquadron_update(int obj)
     if (((ObjAnimComponent *)obj)->modelInstance->flags == 0)
         ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E71BC, timeDelta, 0);
 }
-#pragma scheduling reset
-#pragma peephole reset

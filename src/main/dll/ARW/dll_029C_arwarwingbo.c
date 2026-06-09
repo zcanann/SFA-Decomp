@@ -32,27 +32,21 @@ int arwarwingbo_getExtraSize(void) { return 0xc; }
 
 int arwarwingbo_getObjectTypeId(void) { return 0; }
 
-#pragma scheduling off
 void arwarwingbo_free(int obj)
 {
     (*gExpgfxInterface)->freeSource(obj);
     ObjGroup_RemoveObject(obj, 0x52);
 }
-#pragma scheduling reset
 
 void arwarwingbo_hitDetect(void) {}
 
-#pragma peephole off
 void arwarwingbo_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
     if (visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E704C);
     }
 }
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void arwarwingbo_init(int obj, int setup)
 {
     ArwingBombSetup *mapData = (ArwingBombSetup *)setup;
@@ -62,11 +56,7 @@ void arwarwingbo_init(int obj, int setup)
     ((GameObject *)obj)->anim.rotZ = (s16)(mapData->rotZ << 8);
     ObjGroup_AddObject(obj, 0x52);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void arwarwingbo_setActiveVisible(int obj, u8 active, u8 visible)
 {
     ArwingBombState *state = ((GameObject *)obj)->extra;
@@ -79,15 +69,11 @@ void arwarwingbo_setActiveVisible(int obj, u8 active, u8 visible)
         ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void arwarwingbo_release(void) {}
 
 void arwarwingbo_initialise(void) {}
 
-#pragma peephole off
-#pragma scheduling off
 void arwarwingbo_update(int obj)
 {
     ArwingBombState *state = ((GameObject *)obj)->extra;
@@ -147,5 +133,3 @@ void arwarwingbo_update(int obj)
                 ((GameObject *)obj)->anim.velocityZ * timeDelta);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset

@@ -120,8 +120,6 @@ static inline uint camcontrol_GetTargetKind(CamcontrolTargetObject *target) {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void camcontrol_updateTargetFeedback(void)
 {
   uint targetKind;
@@ -313,15 +311,11 @@ LAB_80102ab4:
   *(s16 *)reticle = (short)(int)(lbl_803E167C * timeDelta + (float)*(s16 *)reticle);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 int Camera_isZooming(void)
 {
   return CAMCONTROL_CAMERA->zoomDistance > lbl_803E1630;
 }
-#pragma scheduling reset
 
 void Camera_setTargetReticleOverride(int target)
 {
@@ -357,7 +351,6 @@ int Camera_getOverrideTarget(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void camcontrol_getRelativePosition(f32 heightOffset,int targetObj,float *outX,float *outY,
                                     float *outZ,float *outDistanceXZ,int useLocalPosition)
 {
@@ -387,7 +380,6 @@ void camcontrol_getRelativePosition(f32 heightOffset,int targetObj,float *outX,f
   }
   return;
 }
-#pragma scheduling reset
 
 void camcontrol_initialise(float *dst,f32 numerator,f32 denominator,f32 minValue,f32 y,f32 z)
 {
@@ -410,7 +402,6 @@ void Camera_moveBy(f32 x,f32 y,f32 z)
   CAMCONTROL_CAMERA->localZ += z;
 }
 
-#pragma scheduling off
 void Camera_overridePos(f32 x,f32 y,f32 z)
 {
   CAMCONTROL_CAMERA->overrideWorldPosPending = 1;
@@ -418,7 +409,6 @@ void Camera_overridePos(f32 x,f32 y,f32 z)
   CAMCONTROL_CAMERA->overrideWorldY = y;
   CAMCONTROL_CAMERA->overrideWorldZ = z;
 }
-#pragma scheduling reset
 
 void Camera_setFocus(void *target)
 {
@@ -441,8 +431,6 @@ void Camera_setFocus(void *target)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void camcontrol_loadTriggeredCamAction(int triggerType,int actionNo,int triggerMode)
 {
   int handlerCount;
@@ -590,8 +578,6 @@ LAB_80102f3c_b:
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -606,8 +592,6 @@ LAB_80102f3c_b:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 CamcontrolTriggeredAction *Camera_getCamActionsBinEntry(int actionNo)
 {
   CamcontrolTriggeredAction *camAction;
@@ -622,8 +606,6 @@ CamcontrolTriggeredAction *Camera_getCamActionsBinEntry(int actionNo)
   }
   return camAction;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -661,7 +643,6 @@ void camcontrol_release(int camAction, int recordSize)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void camcontrol_queueSavedAction(undefined4 blendFrames,undefined queueMode)
 {
   if (gCamcontrolSavedActionId != CAMCONTROL_SAVED_ACTION_NONE) {
@@ -670,7 +651,6 @@ void camcontrol_queueSavedAction(undefined4 blendFrames,undefined queueMode)
   }
   return;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -685,8 +665,6 @@ void camcontrol_queueSavedAction(undefined4 blendFrames,undefined queueMode)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void Camera_setMode(s32 actionId,int priority,int startFlags,int dataSize,void *data,
                     undefined4 blendFrames,undefined queueMode)
 {
@@ -715,8 +693,6 @@ void Camera_setMode(s32 actionId,int priority,int startFlags,int dataSize,void *
   gCamcontrolQueuedActionMode = queueMode;
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -731,8 +707,6 @@ void Camera_setMode(s32 actionId,int priority,int startFlags,int dataSize,void *
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void Camera_update(void)
 {
   CamcontrolCameraState *camera;
@@ -824,10 +798,7 @@ void Camera_update(void)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void *Camera_getDefaultHandlerEntry(void)
 {
   int i;
@@ -888,4 +859,3 @@ void Camera_initialise(void)
   lbl_803DD4CB = -1;
   lbl_803DB992 = 0xffff;
 }
-#pragma scheduling reset

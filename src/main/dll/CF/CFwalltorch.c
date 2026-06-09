@@ -52,8 +52,6 @@ extern void timeOfDayFn_80055000(void);
 extern MapEventInterface **gMapEventInterface;
 extern f32 lbl_803E3E98;
 
-#pragma peephole off
-#pragma scheduling off
 int Transporter_SeqFn(int* obj, int p2, u8* seq)
 {
     int i;
@@ -239,8 +237,6 @@ int Transporter_SeqFn(int* obj, int p2, u8* seq)
     warpPadFn_8019042c((int)obj);
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -271,8 +267,6 @@ extern short lbl_803DCEB8;
  * EN v1.0 Address: 0x80191658
  * EN v1.0 Size: 72b
  */
-#pragma peephole off
-#pragma scheduling off
 void transporter_update(int obj)
 {
     register int self = obj;
@@ -282,8 +276,6 @@ void transporter_update(int obj)
     }
     warpPadFn_8019042c(self);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -292,8 +284,6 @@ void transporter_update(int obj)
  * EN v1.0 Address: 0x801914AC
  * EN v1.0 Size: 428b
  */
-#pragma peephole off
-#pragma scheduling off
 void transporter_hitDetect(int obj)
 {
     register int self = obj;
@@ -338,8 +328,6 @@ void transporter_hitDetect(int obj)
     }
     state->flags = (u8)((u32)state->flags & ~1);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--

@@ -23,8 +23,6 @@ extern f32 lbl_803E19D4;
 extern f32 lbl_803E19D8;
 extern f32 lbl_803E19DC;
 
-#pragma scheduling off
-#pragma peephole off
 void CameraModeClimb_init(undefined4 param_1, int param_2, s8 *param_3) {
     f32 local_58;
     f32 local_5c;
@@ -77,8 +75,6 @@ void CameraModeClimb_init(undefined4 param_1, int param_2, s8 *param_3) {
         break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void CameraModeClimb_release(void) {}
 void CameraModeClimb_initialise(void) {}
@@ -86,8 +82,6 @@ void CameraModeFixed_copyToCurrent_nop(void) {}
 void CameraModeFixed_free_nop(void) {}
 void CameraModeFixed_update(void) {}
 
-#pragma scheduling off
-#pragma peephole off
 void CameraModeFixed_init(f32 *param_1, undefined4 param_2, f32 *param_3) {
     if (param_3 != (f32 *)0) {
         param_1[6] = param_3[6];
@@ -102,14 +96,10 @@ void CameraModeFixed_init(f32 *param_1, undefined4 param_2, f32 *param_3) {
         param_1[45] = param_3[45];
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void CameraModeFixed_release(void) {}
 void CameraModeFixed_initialise(void) {}
 
-#pragma scheduling off
-#pragma peephole off
 void fn_8010DB7C(f32 *param_1, f32 *param_2, f32 *param_3, f32 *param_4) {
     f32 *pfVar2 = lbl_803DD584;
     f32 dx;
@@ -144,8 +134,6 @@ void fn_8010DB7C(f32 *param_1, f32 *param_2, f32 *param_3, f32 *param_4) {
     *param_3 = (param_1[7] + lbl_803DD584[12]) - lbl_803E19D8 * ((lbl_803E19DC + param_1[7]) - pfVar2[1]);
     *param_4 = sinVal * dist + dz;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void CameraModeNpcSpeak_copyToCurrent_nop(void) {}
 

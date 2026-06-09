@@ -60,8 +60,6 @@ extern f32 lbl_803E3C2C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
-#pragma scheduling off
 void treasurechest_update(int obj)
 {
   ChestFlags *flags;
@@ -123,8 +121,6 @@ void treasurechest_update(int obj)
   }
   return;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -178,16 +174,12 @@ int magiccavebottom_getExtraSize(void)
   return 1;
 }
 
-#pragma scheduling off
 void magiccavebottom_free(int obj) {
     (void)obj;
     GameBit_Set(0xefb, 0);
     Music_Trigger(0x2f, 0);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void treasurechest_init(int *obj) {
     register ChestFlags *state = ((GameObject *)obj)->extra;
     register TreasureChestSetup *cfg = (TreasureChestSetup *)((GameObject *)obj)->anim.placementData;
@@ -207,5 +199,3 @@ void treasurechest_init(int *obj) {
     lbl_803DDAE0 = Resource_Acquire(90, 1);
     state->trigger = 1;
 }
-#pragma peephole reset
-#pragma scheduling reset

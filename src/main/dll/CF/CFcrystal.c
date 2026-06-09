@@ -81,9 +81,7 @@ extern f32 mathSinf(f32 value);
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern void objRenderFn_8003b8f4(f32);
-#pragma peephole off
 void LanternFireFly_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3AA0); }
-#pragma peephole reset
 
 void LanternFireFly_hitDetect(void) {}
 
@@ -99,8 +97,6 @@ void LanternFireFly_hitDetect(void) {}
 extern void fn_801868D0(int obj);
 extern void fn_801869DC(int obj);
 
-#pragma scheduling off
-#pragma peephole off
 void LanternFireFly_update(int obj)
 {
     LanternFireFlyState *state;
@@ -197,16 +193,12 @@ void LanternFireFly_update(int obj)
         LANTERN_SPAWN_FX(obj, 0x1a0, 0, 1, -1, 0);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 #undef LANTERN_SPAWN_FX
 #undef LANTERN_SPAWN_FX_VEC
 #undef LANTERN_FIREFLY_IS_ACTIVE
 #undef LANTERN_FIREFLY_MODE
 
-#pragma scheduling off
-#pragma peephole off
 void LanternFireFly_init(int obj, int def)
 {
     LanternFireFlyState *state;
@@ -255,8 +247,6 @@ void LanternFireFly_init(int obj, int def)
     state->field6F = flagValue;
     state->modeFlags = (u8)((state->modeFlags & 0x3F) | (flagValue << 6));
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void LanternFireFly_release(void) {}
 void LanternFireFly_initialise(void) {}
@@ -266,8 +256,6 @@ extern int Obj_AllocObjectSetup(int size, int type);
 extern int loadObjectAtObject(int *obj);
 extern f32 lbl_803E3AE8;
 
-#pragma scheduling off
-#pragma peephole off
 int FireFlyLantern_spawnFireFly(int *obj) {
     FireFlyLanternSpawnSetup *setup;
     if (Obj_IsLoadingLocked() == 0) return 0;
@@ -287,11 +275,7 @@ int FireFlyLantern_spawnFireFly(int *obj) {
     setup->field18 = 30;
     return loadObjectAtObject(obj);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int FireFlyLantern_SeqFn(int obj, int unused, int events)
 {
     FireFlyLanternState *state;
@@ -333,8 +317,6 @@ int FireFlyLantern_SeqFn(int obj, int unused, int events)
 
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* 8b "li r3, N; blr" returners. */
 int FireFlyLantern_getExtraSize(void) { return 0x24; }
@@ -343,7 +325,6 @@ int FireFlyLantern_getObjectTypeId(void) { return 0x8; }
 extern void *getTrickyObject(void);
 extern void trickyImpress(void *trickyObj);
 
-#pragma scheduling off
 void FireFlyLantern_free(int obj) {
     void *tricky = getTrickyObject();
     if (tricky != NULL) {
@@ -351,14 +332,11 @@ void FireFlyLantern_free(int obj) {
     }
     ObjGroup_RemoveObject(obj, 15);
 }
-#pragma scheduling reset
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E3AF0;
 void FireFlyLantern_render(void) { objRenderFn_8003b8f4(lbl_803E3AF0); }
 
-#pragma scheduling off
-#pragma peephole off
 void FireFlyLantern_update(int obj)
 {
     FireFlyLanternState *state;
@@ -396,5 +374,3 @@ void FireFlyLantern_update(int obj)
         Obj_FreeObject(obj);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

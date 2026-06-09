@@ -55,9 +55,14 @@ def conf_path(unit):
     return unit[len('src/'):] if unit.startswith('src/') else unit
 
 
+CFLAG_VAR = 'cflags_noopt'
+CFLAG_MODE = 'extra'  # 'extra' -> extra_cflags=VAR ; 'replace' -> cflags=VAR
+
+
 def add_extra_cflags(cfg, path):
     pat = re.compile(r'(Object\([^\n]*?"' + re.escape(path) + r'")\)')
-    new, n = pat.subn(r'\1, extra_cflags=cflags_noopt)', cfg, count=1)
+    kw = 'cflags' if CFLAG_MODE == 'replace' else 'extra_cflags'
+    new, n = pat.subn(r'\1, ' + kw + '=' + CFLAG_VAR + ')', cfg, count=1)
     return new, n == 1
 
 
@@ -81,7 +86,13 @@ def main():
     ap.add_argument('--units', default='/tmp/scoped_units.json')
     ap.add_argument('--start', type=int, default=0)
     ap.add_argument('--count', type=int, default=30)
+    ap.add_argument('--cflag-var', default='cflags_noopt')
+    ap.add_argument('--mode', choices=['extra', 'replace'], default='extra')
     args = ap.parse_args()
+
+    global CFLAG_VAR, CFLAG_MODE
+    CFLAG_VAR = args.cflag_var
+    CFLAG_MODE = args.mode
 
     all_units = json.load(open(args.units))
     tus = pia.discover_tus()
