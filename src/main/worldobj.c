@@ -86,17 +86,13 @@ void worldobj_release(void) {}
 
 void worldobj_initialise(void) {}
 
-#pragma peephole off
 int worldobj_getObjectTypeId(int *obj) {
     if (((WorldObjSetup *)((GameObject *)obj)->anim.placementData)->objectId != 0x5e3) {
         return 0x0;
     }
     return 0x8;
 }
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 void worldobj_free(int obj) {
     WorldObjState *state = ((GameObject *)obj)->extra;
     if (*(void **)&state->light != NULL) {
@@ -105,11 +101,7 @@ void worldobj_free(int obj) {
     }
     (*gExpgfxInterface)->freeSource(obj);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void worldobj_init(int obj, int arg) {
     WorldObjState *state = ((GameObject *)obj)->extra;
     WorldObjSetup *setup = (WorldObjSetup *)arg;
@@ -218,8 +210,6 @@ void worldobj_init(int obj, int arg) {
         break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 mathCosf(f32 x);
 extern f32 sqrtf(f32 x);
@@ -254,8 +244,6 @@ extern f32 lbl_803E66A8;
 extern f32 lbl_803E66B0;
 extern f32 lbl_803E66B8;
 
-#pragma scheduling off
-#pragma peephole off
 void worldobj_update(int obj) {
     s16 rot[3];
     f32 vec[10];
@@ -540,10 +528,7 @@ void worldobj_update(int obj) {
         break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void worldobj_spawnGreatFoxEffects(int obj) {
     WorldObjEffectParams params;
     u8 i;
@@ -573,10 +558,7 @@ void worldobj_spawnGreatFoxEffects(int obj) {
     params.offsetZ = lbl_803E6640 * (lbl_803E6650 * ((GameObject *)obj)->anim.rootMotionScale);
     objfx_spawnLightPulse(obj, lbl_803E6654 * ((GameObject *)obj)->anim.rootMotionScale, 1, 0, 6, lbl_803E6658, &params);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void worldobj_spawnAsteroidBatch(int obj, int xMin, int xMax, int yMin, int yMax, int count, int dispatchId) {
     s16 rot[3];
     f32 vec[3];
@@ -600,11 +582,7 @@ void worldobj_spawnAsteroidBatch(int obj, int xMin, int xMax, int yMin, int yMax
                                                             -1, NULL);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {
     WorldObjState *state = ((GameObject *)p1)->extra;
     int modelId = ((WorldObjSetup *)((GameObject *)p1)->anim.placementData)->objectId;
@@ -657,5 +635,3 @@ void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {
         break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

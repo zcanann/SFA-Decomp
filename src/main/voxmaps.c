@@ -1,7 +1,5 @@
 #include "main/engine_shared.h"
 
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 int *voxmaps_getRouteNode(u8 *header, int *nodeBase, u8 *bitmap, int d, int e, int f)
 {
@@ -37,8 +35,6 @@ int *voxmaps_getRouteNode(u8 *header, int *nodeBase, u8 *bitmap, int d, int e, i
     return nodeBase + count;
 }
 #pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 
 s16 Queue_GetCount(RingBufferQueue* queue)
 {
@@ -50,17 +46,11 @@ BOOL Queue_IsEmpty(RingBufferQueue* queue)
     return queue->count == 0;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void Queue_Peek(RingBufferQueue* queue, void* dst)
 {
     memcpy(dst, (u8*)queue->data + queue->readIndex * queue->elemSize, queue->elemSize);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Queue_Pop(RingBufferQueue* queue, void* dst)
 {
     s16 readIndex;
@@ -73,11 +63,7 @@ void Queue_Pop(RingBufferQueue* queue, void* dst)
     }
     queue->count--;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Queue_Push(RingBufferQueue* queue, void* src)
 {
     s16 writeIndex;
@@ -90,11 +76,7 @@ void Queue_Push(RingBufferQueue* queue, void* src)
     }
     queue->count++;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Queue_Init(RingBufferQueue* queue, void* data, int capacity, int elemSize)
 {
     queue->data = data;
@@ -104,23 +86,17 @@ void Queue_Init(RingBufferQueue* queue, void* data, int capacity, int elemSize)
     queue->writeIndex = 0;
     queue->readIndex = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 BOOL Stack_IsEmpty(RingBufferQueue* stack)
 {
     return stack->count == 0;
 }
 
-#pragma scheduling off
 BOOL Stack_IsFull(RingBufferQueue* stack)
 {
     return stack->count == stack->capacity - 1;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Stack_Pop(RingBufferQueue* stack, void* dst)
 {
     if (--stack->writeIndex < 0) {
@@ -129,11 +105,7 @@ void Stack_Pop(RingBufferQueue* stack, void* dst)
     memcpy(dst, (u8*)stack->data + stack->writeIndex * stack->elemSize, stack->elemSize);
     stack->count--;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Stack_Push(RingBufferQueue* stack, void* src)
 {
     s16 writeIndex;
@@ -146,16 +118,12 @@ void Stack_Push(RingBufferQueue* stack, void* src)
     }
     stack->count++;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void Stack_Free(RingBufferQueue* stack)
 {
     mm_free(stack);
 }
 
-#pragma scheduling off
-#pragma peephole off
 void voxmaps_freeRouteWork(void** p)
 {
     if (p[0] != NULL) {
@@ -163,19 +131,14 @@ void voxmaps_freeRouteWork(void** p)
         p[0] = NULL;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void voxmaps_allocRouteWork(void** p)
 {
     p[0] = mmAlloc(0xe88, 0x10, NULL);
     p[1] = (u8*)p[0] + 0xaf0;
     p[2] = (u8*)p[1] + 0x320;
 }
-#pragma scheduling reset
 
-#pragma peephole off
 void voxmaps_updateTimers(void)
 {
     int* p = lbl_803387B8;
@@ -187,9 +150,7 @@ void voxmaps_updateTimers(void)
         p++;
     }
 }
-#pragma peephole reset
 
-#pragma scheduling off
 void voxmaps_gridToWorld(f32* out, s16* grid)
 {
     int v;
@@ -203,10 +164,7 @@ void voxmaps_gridToWorld(f32* out, s16* grid)
         Obj_TransformLocalPointToWorld(out[0], out[1], out[2], out, &out[1], &out[2], lbl_803DC8CC);
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void voxmaps_worldToGrid(f32* in, s16* out)
 {
@@ -235,11 +193,7 @@ void voxmaps_worldToGrid(f32* in, s16* out)
     out[2] = iz / 10;
 }
 #pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void voxmaps_resetLoadedMaps(void)
 {
     VoxMapSlotOrigin* slotOrigin = lbl_803387A0.slotOrigin;
@@ -265,10 +219,7 @@ void voxmaps_resetLoadedMaps(void)
         slotOrigin++;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void voxmaps_initialise(void)
 {
     VoxMaps *mgr = &lbl_803387A0;
@@ -301,10 +252,7 @@ void voxmaps_initialise(void)
     lbl_803DC8B8[0] = textureAlloc(16, 16, 4, 0, 0, 0, 0, 0, 0);
     lbl_803DC8B8[1] = textureAlloc(16, 16, 4, 0, 0, 0, 0, 0, 0);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int *voxmaps_updateActiveMap(VoxPos *obj)
 {
     VoxMaps *vm = &lbl_803387A0;
@@ -374,11 +322,7 @@ int *voxmaps_updateActiveMap(VoxPos *obj)
     }
     return &vm->blockOriginWorldX;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int voxmaps_traceLine(VoxPos *start, VoxPos *end, VoxPos *coordOut, u8 *occOut, u8 skipFirst) {
     int stepZ, twiceDx, twiceDy, twiceDz;
     int errXY, errXZ, errYZ;
@@ -532,11 +476,7 @@ int voxmaps_traceLine(VoxPos *start, VoxPos *end, VoxPos *coordOut, u8 *occOut, 
     }
     return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void *voxLoadVoxMapActual(int mapArg, int slot, int b9, int b8)
 {
     char *msg = sVoxmapsRouteNodesListOverflow;
@@ -579,11 +519,7 @@ void *voxLoadVoxMapActual(int mapArg, int slot, int b9, int b8)
     hdr->f18 += (int)hdr;
     return hdr;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_800118EC(int a1, VoxBoxArg* a2, int a3)
 {
     s16 box[3];
@@ -604,10 +540,7 @@ void fn_800118EC(int a1, VoxBoxArg* a2, int a3)
     box[1] = a2->f2;
     voxmapsFn_80010ff4((struct RouteState *)a1, a2, a3, count, box);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 static void heapSiftUp(CurveHeapNode *q, int i)
 {
     int parent;
@@ -622,10 +555,7 @@ static void heapSiftUp(CurveHeapNode *q, int i)
     q[i].priority = key;
     q[i].value = val;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void voxmapsFn_80010ff4(struct RouteState *state, VoxBoxArg *a2, int a3, u16 count, s16 *box)
 {
     VoxState *vs;
@@ -856,11 +786,7 @@ searched:
         heapSiftUp(q, state->queueCount);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 int voxmaps_processRouteQueue(RouteState *state, int count)
 {
@@ -899,11 +825,7 @@ int voxmaps_processRouteQueue(RouteState *state, int count)
     return ret;
 }
 #pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int voxmaps_updateRoutePath(RouteNav *nav, RouteState *state) {
     RouteNode *node;
     int navState;
@@ -1041,11 +963,7 @@ int voxmaps_updateRoutePath(RouteNav *nav, RouteState *state) {
     nav->flag25 = (u8)flag;
     return ret;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int fn_800119FC(s16 *dest, s16 *start, s16 *out) {
     VoxPos cur = *(VoxPos *)dest;
     VoxPos found;
@@ -1197,11 +1115,7 @@ int fn_800119FC(s16 *dest, s16 *start, s16 *out) {
     }
     return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int fn_80011EB0(RouteState *state, int count) {
     f32 local[3];
     RouteNode startNode;
@@ -1282,5 +1196,3 @@ int fn_80011EB0(RouteState *state, int count) {
     state->pad22 = 0;
     return idx;
 }
-#pragma peephole reset
-#pragma scheduling reset

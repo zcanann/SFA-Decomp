@@ -179,8 +179,6 @@ void ObjSeq_setCamVars(int camA, int camB, int camC, int camD)
     lbl_803DD100 = camD;
 }
 
-#pragma peephole off
-#pragma scheduling off
 #pragma dont_inline on
 int objSeqFindLabel(u8 *seq, int label)
 {
@@ -214,11 +212,7 @@ int objSeqFindLabel(u8 *seq, int label)
     return -1;
 }
 #pragma dont_inline reset
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 #pragma dont_inline on
 int objSeqFindConditional(u8 *seq, u8 *seqState)
 {
@@ -255,11 +249,7 @@ int objSeqFindConditional(u8 *seq, u8 *seqState)
     return -1;
 }
 #pragma dont_inline reset
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void objCallSeqFn(u8 *obj, u8 *sourceObj, u8 *seq, int action)
 {
     int callbackResult;
@@ -338,11 +328,7 @@ void objCallSeqFn(u8 *obj, u8 *sourceObj, u8 *seq, int action)
         *(u8 *)(*(u8 **)(obj + 0x58) + 0x10f) = 0;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void *ObjSeq_ToggleCommand3Target(u8 *obj, u8 *seq, u8 *src)
 {
     void *result;
@@ -405,11 +391,7 @@ void *ObjSeq_ToggleCommand3Target(u8 *obj, u8 *seq, u8 *src)
     }
     return result;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void ObjSeq_run(void)
 {
     int count;
@@ -550,11 +532,7 @@ void ObjSeq_run(void)
     }
     lbl_803DD0BC = (s8)keepCount;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void objSeqDoBgCmds0D(u8 *seq, u8 *obj, int skipSpawns)
 {
     ObjSeqBgCmd *cmd;
@@ -647,11 +625,7 @@ void objSeqDoBgCmds0D(u8 *seq, u8 *obj, int skipSpawns)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 int seqDoSubCmd0B(u8 *obj, u8 *sourceObj, u8 *seq, u8 *cmdsArg, s16 xrot, int countArg,
                   s8 flag1, s8 flag2)
 {
@@ -833,11 +807,7 @@ int seqDoSubCmd0B(u8 *obj, u8 *sourceObj, u8 *seq, u8 *cmdsArg, s16 xrot, int co
     }
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void ObjSeq_updateCamera(void)
 {
     CamRequest block;
@@ -1000,11 +970,7 @@ void ObjSeq_updateCamera(void)
     lbl_803DD0B8 = NULL;
     lbl_803DD0F8 = 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 int objSeqExecCmd06(u8 *obj, u8 *sourceObj, u8 *seq, int cmd, s8 flag)
 {
     u8 *base = lbl_80396918;
@@ -1293,11 +1259,7 @@ int objSeqExecCmd06(u8 *obj, u8 *sourceObj, u8 *seq, int cmd, s8 flag)
     }
     return 1;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void ObjSeq_RebuildCurveStateToFrame(u8 *obj, u8 *seqObj, u8 *seq, int mode)
 {
     struct {
@@ -1569,11 +1531,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8 *obj, u8 *seqObj, u8 *seq, int mode)
         lbl_803DD0C0 = 0;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void ObjSeq_ApplyFrameCurves(u8 *obj, u8 *seqObj, u8 *seq, int frame)
 {
     u8 *model;
@@ -1952,11 +1910,7 @@ void ObjSeq_ApplyFrameCurves(u8 *obj, u8 *seqObj, u8 *seq, int frame)
         lbl_803DD114 = 1;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 int ObjSeq_ExecuteActionCommand(u8 *obj, u8 *action, u8 **cmdPtr, int flags, void *out)
 {
     u8 *base = lbl_80396918;
@@ -2280,11 +2234,7 @@ int ObjSeq_ExecuteActionCommand(u8 *obj, u8 *action, u8 **cmdPtr, int flags, voi
     }
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 int ObjSeq_update(u8 *obj, f32 t)
 {
     u8 *base = lbl_80396918;
@@ -2773,11 +2723,7 @@ int ObjSeq_update(u8 *obj, f32 t)
 
     return 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void ObjSeq_SetupInitialPlaybackState(u8 *obj, u8 **seqObj, u8 *seq, u8 *sourceObj, void **outAction)
 {
     u8 *activeObj;
@@ -2846,11 +2792,7 @@ void ObjSeq_SetupInitialPlaybackState(u8 *obj, u8 **seqObj, u8 *seq, u8 *sourceO
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void ObjSeq_ApplyLinkedObjectTransform(u8 *obj, u8 *seqObj, u8 *seq)
 {
     s16 basePitch;
@@ -2909,11 +2851,7 @@ void ObjSeq_ApplyLinkedObjectTransform(u8 *obj, u8 *seqObj, u8 *seq)
     Obj_GetWorldPosition(seqObj, (f32 *)(seqObj + 0x18), (f32 *)(seqObj + 0x1c),
                          (f32 *)(seqObj + 0x20));
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 int ObjSeq_EvaluateCondition(int condition, u8 *seq, int obj)
 {
     int tailState;
@@ -3010,11 +2948,7 @@ int ObjSeq_EvaluateCondition(int condition, u8 *seq, int obj)
     }
     return result;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void ObjSeq_setXrot(int index, int xrot)
 {
     s16 xrot16;
@@ -3023,8 +2957,6 @@ void ObjSeq_setXrot(int index, int xrot)
     xrot16 = xrot;
     objSeqXrotValues[index] = xrot16;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 int ObjSeq_getBool(int index)
 {
@@ -3034,8 +2966,6 @@ int ObjSeq_getBool(int index)
     return lbl_8039A45C[index];
 }
 
-#pragma peephole off
-#pragma scheduling off
 void ObjSeq_setFlag(int index, int value)
 {
     s8 flag;
@@ -3049,11 +2979,7 @@ void ObjSeq_setFlag(int index, int value)
     flag = value;
     lbl_8039A45C[index] = flag;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void ObjSeq_addBgCmd(int index, int xrot, int yrot)
 {
     s8 count;
@@ -3081,11 +3007,7 @@ void ObjSeq_addBgCmd(int index, int xrot, int yrot)
     lbl_803DD0BC++;
     lbl_80399398[count * 3 + 1] = shortXrot;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void ObjSeq_objLoadAnimData(u8 *seq, u8 *obj)
 {
     u8 *base = lbl_80396918;
@@ -3155,11 +3077,7 @@ void ObjSeq_objLoadAnimData(u8 *seq, u8 *obj)
     }
     ObjSeq_seqState_init(seq);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void ObjSeq_seqState_free(u8 *seq)
 {
     void *ptr;
@@ -3176,11 +3094,7 @@ void ObjSeq_seqState_free(u8 *seq)
         ((ObjSeqState *)seq)->curveInterp = NULL;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void ObjSeq_seqState_init(u8 *seq)
 {
     int animIndex;
@@ -3219,8 +3133,6 @@ void ObjSeq_seqState_init(u8 *seq)
         commandIndex++;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 void fn_80081940(void)
 {
@@ -3273,8 +3185,6 @@ typedef struct SeqRunTables {
     s16 modes[0x55];
 } SeqRunTables;
 
-#pragma peephole off
-#pragma scheduling off
 int objRunSeq(int seqIdx, u8 *obj, int flags)
 {
     u8 *base;
@@ -3641,11 +3551,7 @@ gotFlags:
     lbl_803DD0B4.useWorldSpace = 0;
     return slot;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 int ObjSeq_ResolveAndAssignTargetObject(u8 *obj)
 {
     int objectCount;
@@ -3749,11 +3655,7 @@ int ObjSeq_ResolveAndAssignTargetObject(u8 *obj)
     }
     return -1;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void *ObjSeq_FindTargetObject(u8 *obj)
 {
     void *unused;
@@ -3801,11 +3703,7 @@ void *ObjSeq_FindTargetObject(u8 *obj)
     }
     return bestObj;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void ObjSeq_RefreshActionCursor(void *obj, void *seqFile, u8 *seq)
 {
     int stop;
@@ -3850,10 +3748,7 @@ void ObjSeq_RefreshActionCursor(void *obj, void *seqFile, u8 *seq)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
 #pragma ppc_unroll_speculative off
 void objSeq_onMapSetup(void)
 {
@@ -4009,14 +3904,12 @@ void objSeq_onMapSetup(void)
     lbl_803DD0BC = 0;
 }
 #pragma ppc_unroll_speculative on
-#pragma scheduling reset
 
 void ObjSeq_release(void)
 {
     mm_free(lbl_803DD0D4);
 }
 
-#pragma scheduling off
 void ObjSeq_initialise(void)
 {
     lbl_803DD0D4 = mmAlloc(0x10, 0x11, 0);
@@ -4026,9 +3919,7 @@ void ObjSeq_initialise(void)
     lbl_803DD10C = 0x42;
     objSeqInitFn_80080078(lbl_8030ECA8, 5);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 int ObjSeq_takeXrotChanged(int index)
 {
     int changed;
@@ -4037,9 +3928,7 @@ int ObjSeq_takeXrotChanged(int index)
     objSeqXrotChanged[index] = 0;
     return changed;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void fn_80088730(u8 *out)
 {
     u8 *src;
@@ -4050,10 +3939,7 @@ void fn_80088730(u8 *out)
     out[2] = src[2];
     out[3] = src[3];
 }
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void RomCurveInterp_BuildSegmentTimeTable(RomCurveInterpState *out, RomCurveNode *curve, RomCurveNode *next, f32 t,
                                           int flag) {
     f32 curveScale;
@@ -4106,11 +3992,7 @@ void RomCurveInterp_BuildSegmentTimeTable(RomCurveInterpState *out, RomCurveNode
         times[i] += t;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void RomCurveInterp_UpdateSegmentWindow(RomCurveInterpState *state, f32 t) {
     RomCurveNode *node;
     RomCurveNode *prev;
@@ -4175,11 +4057,7 @@ void RomCurveInterp_UpdateSegmentWindow(RomCurveInterpState *state, f32 t) {
         RomCurveInterp_BuildSegmentTimeTable(state, prev, node, state->toTime, 0);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void RomCurveInterp_InitFromNode(RomCurveInterpState *out, int id) {
     RomCurveNode *curve;
     int i;
@@ -4208,11 +4086,7 @@ void RomCurveInterp_InitFromNode(RomCurveInterpState *out, int id) {
             lbl_803DEFB0, 0);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 int RomCurveInterp_EvaluateOffsetPosition(RomCurveInterpState *state, f32 *offset, f32 *outPos, s16 *outAngle,
                                           int ignoreY) {
     RomCurveNode *from;
@@ -4305,11 +4179,7 @@ int RomCurveInterp_EvaluateOffsetPosition(RomCurveInterpState *state, f32 *offse
     *outAngle = (s16)(((s32)from->yaw << 8) - 0x8000);
     return 1;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void ObjSeq_UpdateCurvePosition(u8 *obj, u8 *seq) {
     u8 *base;
     RomCurveNode *node;
@@ -4377,11 +4247,7 @@ void ObjSeq_UpdateCurvePosition(u8 *obj, u8 *seq) {
     ((GameObject *)obj)->anim.localPosX = angleCos * offset[2] + (angleSin * offset[0] + *(f32 *)(base + 0x08));
     ((GameObject *)obj)->anim.localPosZ = -(angleCos * offset[0] - (angleSin * offset[2] + *(f32 *)(base + 0x10)));
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void animatedObjFreeAndSavePlayerPos(u8 *obj, u8 *seqObj, u8 *seq) {
     void (*callback)(void *ctx, u8 *obj);
     u8 *player;
@@ -4422,11 +4288,7 @@ void animatedObjFreeAndSavePlayerPos(u8 *obj, u8 *seqObj, u8 *seq) {
 
     ((ObjSeqState *)seq)->unk7E = 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 f32 objCurveInterpolate(ObjCurveKey *keys, int count, int frame) {
     int index;
     int mode;
@@ -4517,5 +4379,3 @@ f32 objCurveInterpolate(ObjCurveKey *keys, int count, int frame) {
     }
     return values[1];
 }
-#pragma scheduling reset
-#pragma peephole reset

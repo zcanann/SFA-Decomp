@@ -107,7 +107,6 @@ void snowclaw_free(int obj) {
     }
 }
 
-#pragma scheduling off
 void snowclaw_init(int *obj, u8 *init) {
     u8 *table;
     int *inner;
@@ -153,10 +152,7 @@ void snowclaw_init(int *obj, u8 *init) {
     lbl_803DDD38 = 0x96;
     ((SnowclawAaFlags *)((char *)inner + 0xaa))->b0 = 0;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void snowclaw_spawnDropBomb(int obj, int a, int b, int c) {
     int player;
@@ -195,11 +191,7 @@ void snowclaw_spawnDropBomb(int obj, int a, int b, int c) {
     }
 }
 #pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void snowclaw_updateMountAttack(int obj, int mount) {
     char *inner;
     f32 mountPhase;
@@ -262,11 +254,7 @@ void snowclaw_updateMountAttack(int obj, int mount) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void snowclaw_syncMountTransform(int obj, int sub, int p2, int p3, int p4, int p5, int opacity, int a8, int a9) {
     f32 va, vb, vc;
@@ -298,11 +286,7 @@ void snowclaw_syncMountTransform(int obj, int sub, int p2, int p3, int p4, int p
     ((GameObject *)obj)->anim.velocityZ = *(f32 *)(sub + 0x2c);
 }
 #pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void snowclaw_render(int obj, int p2, int p3, int p4, int p5, int vis) {
     int *inner;
     int sub;
@@ -360,11 +344,7 @@ void snowclaw_render(int obj, int p2, int p3, int p4, int p5, int vis) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void snowclaw_hitDetect(int obj) {
     int *inner;
     int *sub;
@@ -437,11 +417,7 @@ void snowclaw_hitDetect(int obj) {
         *(s8 *)((char *)inner + 0xa5) = a5 - framesThisStep;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void snowclaw_update(int obj) {
     char *inner;
     int *objects;
@@ -566,11 +542,7 @@ void snowclaw_update(int obj) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int snowclaw_animEventCallback(int obj, int a2, int evt) {
     int *sub;
     int *inner;
@@ -688,5 +660,3 @@ int snowclaw_animEventCallback(int obj, int a2, int evt) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset

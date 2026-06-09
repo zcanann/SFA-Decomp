@@ -47,7 +47,6 @@ int worldplanet_getObjectTypeId(void)
   return 0;
 }
 
-#pragma peephole off
 void worldplanet_free(void)
 {
   setShowWorldMapHud(0);
@@ -65,7 +64,6 @@ void worldplanet_render(undefined4 param_1,undefined4 param_2,undefined4 param_3
   }
   return;
 }
-#pragma peephole reset
 
 void worldplanet_hitDetect(void)
 {
@@ -76,8 +74,6 @@ void worldplanet_release(void) {}
 
 void worldplanet_initialise(void) {}
 
-#pragma scheduling off
-#pragma peephole off
 void worldplanet_init(int obj) {
     WorldPlanetState *state;
     int mask;
@@ -131,11 +127,7 @@ void worldplanet_init(int obj) {
     state->foxSpawnTimer = 0x78;
     envFxActFn_800887f8(0);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void worldplanet_readMapInput(int obj, u8 *outX, u8 *outY) {
     WorldPlanetState *state = ((GameObject *)obj)->extra;
     int stickX;
@@ -195,8 +187,6 @@ void worldplanet_readMapInput(int obj, u8 *outX, u8 *outY) {
         *outY = 0;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 extern u8 Obj_IsLoadingLocked(void);
@@ -241,8 +231,6 @@ extern f32 lbl_803E662C;
 extern f32 lbl_803E6630;
 extern f32 lbl_803E6618_2;
 
-#pragma scheduling off
-#pragma peephole off
 void worldplanet_update(int obj) {
     WorldPlanetState *state;
     int *tbl;
@@ -536,5 +524,3 @@ void worldplanet_update(int obj) {
         state->orbitSoundFrameCount += 1;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

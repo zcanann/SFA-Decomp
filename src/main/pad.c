@@ -7,26 +7,20 @@ void setJoypadDisabled(void)
     lbl_803DC908 = 1;
 }
 
-#pragma peephole off
 void padFn_80014b18(int value)
 {
     lbl_803DB2A8 = (u8)value;
 }
-#pragma peephole reset
 
-#pragma scheduling off
 u32 buttonGetDisabled(int port)
 {
     return ~lbl_802C6E50[port];
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void buttonDisable(int port, u32 mask)
 {
     lbl_802C6E50[port] &= ~mask;
 }
-#pragma scheduling reset
 
 void padClearAnalogInputY(int port)
 {
@@ -54,7 +48,6 @@ void stopRumble(void)
     }
 }
 
-#pragma scheduling off
 void doRumble(f32 duration)
 {
     if (lbl_803DC909 != 0 && getGameState() == 1) {
@@ -68,14 +61,12 @@ void doRumble(f32 duration)
         lbl_803DC90C = rumbleTimer;
     }
 }
-#pragma scheduling reset
 
 void setRumbleEnabled(u8 enabled)
 {
     lbl_803DC909 = enabled;
 }
 
-#pragma scheduling off
 void padGetAnalogInput(int port, u8* x, u8* y)
 {
     if (lbl_803DC908 != 0 || port > 0 || gDvdErrorPauseActive != 0) {
@@ -86,9 +77,7 @@ void padGetAnalogInput(int port, u8* x, u8* y)
     *x = (&lbl_803DC938)[port];
     *y = (&lbl_803DC934)[port];
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 u8 padGetCY(int port)
 {
     PadStatusLite* statuses;
@@ -102,9 +91,7 @@ u8 padGetCY(int port)
     statuses = (PadStatusLite*)lbl_803398F0;
     return statuses[lbl_803DC94C * 4 + port].substickY;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 u8 padGetCX(int port)
 {
     PadStatusLite* statuses;
@@ -118,9 +105,7 @@ u8 padGetCX(int port)
     statuses = (PadStatusLite*)lbl_803398F0;
     return statuses[lbl_803DC94C * 4 + port].substickX;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 u8 padGetStickY(int port)
 {
     PadStatusLite* statuses;
@@ -134,9 +119,7 @@ u8 padGetStickY(int port)
     statuses = (PadStatusLite*)lbl_803398F0;
     return statuses[lbl_803DC94C * 4 + port].stickY;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 u8 padGetStickX(int port)
 {
     PadStatusLite* statuses;
@@ -150,9 +133,7 @@ u8 padGetStickX(int port)
     statuses = (PadStatusLite*)lbl_803398F0;
     return statuses[lbl_803DC94C * 4 + port].stickX;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 u8 padGetLTrigger(int port)
 {
     PadStatusLite* statuses;
@@ -163,9 +144,7 @@ u8 padGetLTrigger(int port)
     statuses = (PadStatusLite*)lbl_803398F0;
     return statuses[lbl_803DC94C * 4 + port].triggerLeft;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 u8 padGetRTrigger(int port)
 {
     PadStatusLite* statuses;
@@ -176,7 +155,6 @@ u8 padGetRTrigger(int port)
     statuses = (PadStatusLite*)lbl_803398F0;
     return statuses[lbl_803DC94C * 4 + port].triggerRight;
 }
-#pragma scheduling reset
 
 u16 getPadFn_80014d9c(int port)
 {
@@ -200,7 +178,6 @@ u16 getButtons_80014dd8(int port)
     return (&lbl_803DC91C)[port];
 }
 
-#pragma scheduling off
 u32 getButtonsJustPressedIfNotBusy(int port)
 {
     if (port > 0) {
@@ -214,9 +191,7 @@ u32 getButtonsJustPressedIfNotBusy(int port)
     }
     return lbl_803398D0[port] & lbl_802C6E50[port];
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 u32 getButtonsJustPressed(int port)
 {
     if (port > 0) {
@@ -227,9 +202,7 @@ u32 getButtonsJustPressed(int port)
     }
     return lbl_803398E0[port] & lbl_802C6E50[port];
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 u32 getNewInputs(int port)
 {
     if (port > 0) {
@@ -237,9 +210,7 @@ u32 getNewInputs(int port)
     }
     return lbl_803398C0[port];
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 u32 getButtonsHeld(int port)
 {
     if (port > 0) {
@@ -250,10 +221,7 @@ u32 getButtonsHeld(int port)
     }
     return lbl_803398C0[port] & lbl_802C6E50[port];
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int initControllers(void)
 {
     s32 i;
@@ -337,11 +305,7 @@ int initControllers(void)
     lbl_803DC90C = lbl_803DE6E8;
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void padUpdate(void)
 {
     u32 *padStateBlock;
@@ -540,5 +504,3 @@ void padUpdate(void)
     }
     lbl_803DCCA5 = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset

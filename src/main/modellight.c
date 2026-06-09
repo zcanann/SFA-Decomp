@@ -288,8 +288,6 @@ extern f32 lbl_803DE79C;
 extern f32 lbl_803DE7A0;
 extern void textureFree(void *tex);
 
-#pragma peephole off
-#pragma scheduling off
 void *objCreateLight(int arg, u8 addToList) {
     void *light;
     if (addToList) {
@@ -312,8 +310,6 @@ void *objCreateLight(int arg, u8 addToList) {
     }
     return NULL;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 #pragma push
 #pragma scheduling off

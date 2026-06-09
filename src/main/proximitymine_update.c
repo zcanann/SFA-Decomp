@@ -49,8 +49,6 @@ typedef struct MineLaunchParams {
   f32 z;
 } MineLaunchParams;
 
-#pragma scheduling off
-#pragma peephole off
 void proximitymine_update(ProximityMineObject *obj)
 {
   f32 groundY;
@@ -228,5 +226,3 @@ void proximitymine_update(ProximityMineObject *obj)
     }
   }
 }
-#pragma peephole reset
-#pragma scheduling reset

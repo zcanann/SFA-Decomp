@@ -39,7 +39,6 @@ void worldasteroids_free(void)
   return;
 }
 
-#pragma peephole off
 void worldasteroids_render(undefined4 param_1,undefined4 param_2,undefined4 param_3,
                            undefined4 param_4,undefined4 param_5,s8 visible)
 {
@@ -48,15 +47,12 @@ void worldasteroids_render(undefined4 param_1,undefined4 param_2,undefined4 para
     objRenderFn_8003b8f4(lbl_803E65D0);
   }
 }
-#pragma peephole reset
 
 void worldasteroids_hitDetect(void)
 {
   return;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void worldasteroids_update(WorldAsteroidsObject *obj)
 {
   WorldAsteroidsObject *anchor;
@@ -89,11 +85,7 @@ void worldasteroids_update(WorldAsteroidsObject *obj)
   return;
 }
 
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void worldasteroids_init(WorldAsteroidsObject *obj)
 {
   int baseAngle;
@@ -134,8 +126,6 @@ void worldasteroids_init(WorldAsteroidsObject *obj)
       worldasteroids_s32AsFloat(radiusSeed) * fcos16Approx(baseAngle);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void worldasteroids_release(void)
 {

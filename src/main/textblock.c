@@ -24,7 +24,6 @@ int textblockObj_getObjectTypeId(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void textblockObj_freeUnsupported(void)
 {
   OSReport(sTextBlockObjInitNoLongerSupported);
@@ -76,7 +75,6 @@ void textblockObj_init(void)
   OSReport(sTextBlockObjInitNoLongerSupported);
   return;
 }
-#pragma scheduling reset
 
 void textblockObj_release(void)
 {

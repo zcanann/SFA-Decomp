@@ -19,8 +19,6 @@ extern f32 lbl_803E6770;
 extern f32 lbl_803E6774;
 extern f32 lbl_803DC24C;
 
-#pragma scheduling off
-#pragma peephole off
 void proximitymine_resetToIdle(ProximityMineObject *obj)
 {
     ProximityMineState *state;
@@ -52,5 +50,3 @@ void proximitymine_resetToIdle(ProximityMineObject *obj)
         modelLightStruct_freeSlot(&state->effectHandle);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

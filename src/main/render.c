@@ -1,6 +1,5 @@
 #include "main/engine_shared.h"
 
-#pragma scheduling off
 int getLActions(int a, int b, u16 idx)
 {
     void* buf = mmAlloc(0x28, -1, NULL);
@@ -8,11 +7,8 @@ int getLActions(int a, int b, u16 idx)
     mm_free(buf);
     return 0;
 }
-#pragma scheduling reset
 
 #pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
 void render_copyPackedU64Tail(u64 *dst, u32 packed)
 {
     /* Preserve bytes before the unaligned source offset; fill the tail from
@@ -30,13 +26,9 @@ void render_copyPackedU64Tail(u64 *dst, u32 packed)
     case 7: *dst = (*dst & 0xffffffffffffff00ULL) | (src >> 56); break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 #pragma dont_inline reset
 
 #pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
 void render_copyPackedU64Head(u64 *dst, u32 packed)
 {
     /* Fill the head from the aligned 64-bit word; preserve bytes after the
@@ -54,12 +46,8 @@ void render_copyPackedU64Head(u64 *dst, u32 packed)
     case 7: *dst = (*dst & 0xffffffffffffffULL) | (src << 56); break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 #pragma dont_inline reset
 
-#pragma scheduling off
-#pragma peephole off
 int getEnvfxActImmediately(int a, int b, u16 idx, int d)
 {
     u8 raw[0x80];
@@ -81,11 +69,7 @@ int getEnvfxActImmediately(int a, int b, u16 idx, int d)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int getEnvfxAct(int a, int b, u16 idx, int d)
 {
     u8 raw[0x80];
@@ -105,11 +89,7 @@ int getEnvfxAct(int a, int b, u16 idx, int d)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 u8 *modelRenderFn_80006744(u8 *p, int count, ModelRenderInstrsState *state, int gap, u8 bw)
 {
     int acc;
@@ -145,11 +125,7 @@ u8 *modelRenderFn_80006744(u8 *p, int count, ModelRenderInstrsState *state, int 
     }
     return p;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int fn_80006B1C(ModelRenderInstrsState *src, ModelRenderInstrsState *dst, int count, int gap, u8 bitWidth)
 {
     int startBit = modelRenderInstrsState_getBit(dst);
@@ -183,8 +159,6 @@ int fn_80006B1C(ModelRenderInstrsState *src, ModelRenderInstrsState *dst, int co
     modelRenderInstrsState_setBit(dst, startBit + bitWidth);
     return ((u8 *)src->instrs)[(src->bit >> 3) + 1];
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 floorf(f32);
 extern f32 lbl_803DE544;
@@ -206,8 +180,6 @@ extern f32 lbl_803DE544;
     bufB <<= (bitpos & 0xFFFFFFFF);                  \
     bitpos += (nb);
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80007F78(u8 *anim, u16 *dst, u16 *out)
 {
     f32 t = *(f32 *)(anim + 0x4);
@@ -319,8 +291,6 @@ void fn_80007F78(u8 *anim, u16 *dst, u16 *out)
         dst++;
     } while ((u64)(u32)dst != end);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma peephole reset
 #pragma scheduling reset

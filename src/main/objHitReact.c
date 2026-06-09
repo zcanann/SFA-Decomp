@@ -21,8 +21,6 @@ extern void objLightFn_8009a1dc(int obj,double scale,ObjHitReactEffectPos *pos,u
  * EN v1.0 Address: 0x800353A4
  * EN v1.0 Size: 652b
  */
-#pragma scheduling off
-#pragma peephole off
 int ObjHitReact_Update(int obj,ObjHitReactEntry *reactionEntryTable,u32 reactionEntryCount,
                        u32 reactionState,float *reactionStepScale)
 {
@@ -103,8 +101,6 @@ int ObjHitReact_Update(int obj,ObjHitReactEntry *reactionEntryTable,u32 reaction
   }
   return reactionState;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -113,8 +109,6 @@ int ObjHitReact_Update(int obj,ObjHitReactEntry *reactionEntryTable,u32 reaction
  * EN v1.0 Address: 0x80035630
  * EN v1.0 Size: 192b
  */
-#pragma scheduling off
-#pragma peephole off
 void ObjHitReact_ResetActiveObjects(int objectCount)
 {
   ObjHitReactState *hitState;
@@ -148,8 +142,6 @@ void ObjHitReact_ResetActiveObjects(int objectCount)
     objectCount = objectCount + -1;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -164,7 +156,6 @@ void ObjHitReact_ResetActiveObjects(int objectCount)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 int ObjHitbox_AllocRotatedBounds(ObjHitbox *hitbox,uint arena)
 {
   ObjHitboxTransformState *transformState;
@@ -180,7 +171,6 @@ int ObjHitbox_AllocRotatedBounds(ObjHitbox *hitbox,uint arena)
   }
   return (uint)transformState + sizeof(ObjHitboxTransformState);
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -196,7 +186,6 @@ int ObjHitbox_AllocRotatedBounds(ObjHitbox *hitbox,uint arena)
  * PAL Size: TODO
  */
 #pragma dont_inline on
-#pragma scheduling off
 void ObjHitReact_LoadMoveEntries(ObjAnimComponent *objAnim,ObjAnimBank *bank,int objType,
                                  ObjHitReactState *hitState,int moveId,int async)
 {
@@ -232,7 +221,6 @@ void ObjHitReact_LoadMoveEntries(ObjAnimComponent *objAnim,ObjAnimBank *bank,int
   }
   return;
 }
-#pragma scheduling reset
 #pragma dont_inline reset
 
 /*
@@ -248,8 +236,6 @@ void ObjHitReact_LoadMoveEntries(ObjAnimComponent *objAnim,ObjAnimBank *bank,int
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 uint ObjHitReact_InitState(int objType,ObjAnimBank *bank,ObjHitReactState *hitState,
                            uint entryArena,ObjAnimComponent *objAnim)
 {
@@ -269,5 +255,3 @@ uint ObjHitReact_InitState(int objType,ObjAnimBank *bank,ObjHitReactState *hitSt
   ObjHitReact_LoadMoveEntries(objAnim,bank,objType,hitState,0,1);
   return entryArena;
 }
-#pragma peephole reset
-#pragma scheduling reset

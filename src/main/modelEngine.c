@@ -1,8 +1,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/engine_shared.h"
 
-#pragma scheduling off
-#pragma peephole off
 RingBufferQueue* allocModelStruct_800139e8(int capacity, int elemSize)
 {
     RingBufferQueue* queue = mmAlloc(elemSize * capacity + sizeof(RingBufferQueue), 0x1a, NULL);
@@ -13,8 +11,6 @@ RingBufferQueue* allocModelStruct_800139e8(int capacity, int elemSize)
     queue->writeIndex = 0;
     return queue;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 s32 modelRenderInstrsState_getBit(ModelRenderInstrsState* state)
 {
@@ -26,8 +22,6 @@ void modelRenderInstrsState_setBit(ModelRenderInstrsState* state, s32 bit)
     state->bit = bit;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void modelRenderInstrsState_init(ModelRenderInstrsState* state, void* instrs, int bitCount, int fieldC)
 {
     state->byteCount = bitCount >> 3;
@@ -39,10 +33,7 @@ void modelRenderInstrsState_init(ModelRenderInstrsState* state, void* instrs, in
     state->instrs = instrs;
     state->bit = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 void objList_remove(ObjLinkedList* list, int item)
 {
     int head;
@@ -76,9 +67,7 @@ void objList_remove(ObjLinkedList* list, int item)
     }
     list->count--;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void objListAdd(ObjLinkedList* list, int prev, int item)
 {
     int next;
@@ -97,7 +86,6 @@ void objListAdd(ObjLinkedList* list, int prev, int item)
     }
     list->count++;
 }
-#pragma scheduling reset
 
 void fn_80013B6C(ObjLinkedList* list, s16 nextOffset)
 {
@@ -105,8 +93,6 @@ void fn_80013B6C(ObjLinkedList* list, s16 nextOffset)
     list->nextOffset = nextOffset;
 }
 
-#pragma scheduling off
-#pragma peephole off
 BOOL model_findIdxInModelList(ModelList* list, void* header, int* outIndex)
 {
     s16* entry;
@@ -121,11 +107,7 @@ BOOL model_findIdxInModelList(ModelList* list, void* header, int* outIndex)
     }
     return FALSE;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 BOOL ModelList_getHeader(ModelList* list, int index, void* outHeader)
 {
     s16* entry;
@@ -140,8 +122,6 @@ BOOL ModelList_getHeader(ModelList* list, int index, void* outHeader)
     }
     return FALSE;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void model_adjustModelList(ModelList* list, int index)
 {
@@ -169,8 +149,6 @@ checkTail:
     return;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void modelInitModelList(ModelList* list, s16 index, void* header)
 {
     s16* entry;
@@ -187,11 +165,7 @@ void modelInitModelList(ModelList* list, s16 index, void* header)
         list->end += list->strideShorts;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 ModelList* allocModelStruct(int capacity, int dataSize)
 {
     ModelList* list;
@@ -207,10 +181,7 @@ ModelList* allocModelStruct(int capacity, int dataSize)
     memset(list->entries, -1, capacity * list->strideShorts * 2);
     return list;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma dont_inline on
 BOOL Resource_Release(void* handleSlot)
 {
@@ -240,10 +211,7 @@ BOOL Resource_Release(void* handleSlot)
     return FALSE;
 }
 #pragma dont_inline reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void* Resource_Acquire(u32 id, int unused)
 {
@@ -260,11 +228,7 @@ void* Resource_Acquire(u32 id, int unused)
     return &gResourceLoadedHandles[index];
 }
 #pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Resource_ResetRefCounts(void)
 {
     s32 i;
@@ -273,8 +237,6 @@ void Resource_ResetRefCounts(void)
         gResourceRefCounts[i] = 0;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void fn_8001404C(s32 value)
 {
@@ -286,7 +248,6 @@ u32 gameTimerIsRunning(void)
     return lbl_803DC8F8 & 4;
 }
 
-#pragma scheduling off
 void hudNumberFn_80014060(void)
 {
     if (lbl_803DB278 != -1) {
@@ -294,7 +255,6 @@ void hudNumberFn_80014060(void)
         gameTextShowStr(lbl_803398A0, 13, 0, 0);
     }
 }
-#pragma scheduling reset
 
 void set_hudNumber_803db278(s32 value)
 {
@@ -306,18 +266,12 @@ u32 isGameTimerDisabled(void)
     return lbl_803DC8F8 & 2;
 }
 
-#pragma scheduling off
-#pragma peephole off
 void gameTimerStop(void)
 {
     lbl_803DC8F8 &= ~4;
     lbl_803DC8F8 |= 2;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 f32 fn_8001461C(void)
 {
     if (((s8)lbl_803DC8F9 & 1) != 0) {
@@ -325,25 +279,19 @@ f32 fn_8001461C(void)
     }
     return lbl_803DE6E0 * (lbl_803DC900 / lbl_803DE6D4);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 f32 fn_80014668(void)
 {
     return lbl_803DC900;
 }
 
-#pragma peephole off
 void timerSetToCountUp(void)
 {
     if ((lbl_803DC8F8 & 1) != 0) {
         lbl_803DC8F8 &= ~1;
     }
 }
-#pragma peephole reset
 
-#pragma scheduling off
-#pragma peephole off
 void gameTimerInit(s8 flags, int minutes)
 {
     lbl_803DC8F9 = flags;
@@ -361,8 +309,6 @@ void gameTimerInit(s8 flags, int minutes)
         lbl_803DC8F8 &= ~4;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void curUiDllDraw(int a, int b, int c, int d)
 {
@@ -374,7 +320,6 @@ void curUiDllDraw(int a, int b, int c, int d)
     }
 }
 
-#pragma scheduling off
 void uiDll_runFrameEndAndLoadNext(void)
 {
     UiDllVTable* callbacks;
@@ -404,9 +349,7 @@ void uiDll_runFrameEndAndLoadNext(void)
         lbl_803DC8EC = 0;
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 int uiDll_runFrameStartAndLoadNext(void)
 {
     UiDllVTable* callbacks;
@@ -439,7 +382,6 @@ int uiDll_runFrameStartAndLoadNext(void)
     }
     return result;
 }
-#pragma scheduling reset
 
 void set_uiDllIdx_803dc8f0(int idx)
 {
@@ -461,7 +403,6 @@ void* getDLL16(void)
     return lbl_803DC8E8;
 }
 
-#pragma scheduling off
 void loadUiDll(int index)
 {
     s32 current;
@@ -492,9 +433,7 @@ void loadUiDll(int index)
         }
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void initGameTimer(void)
 {
     lbl_803DC8E8 = NULL;
@@ -506,10 +445,7 @@ void initGameTimer(void)
     lbl_803DC900 = 0.0f;
     lbl_803DC8FC = 0.0f;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void gameTimerRun(void)
 {
     f32 dt = timeDelta;
@@ -609,5 +545,3 @@ void gameTimerRun(void)
         gameTextShowStr(lbl_803DB2A0, 0xD, lbl_803DB288, 3);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

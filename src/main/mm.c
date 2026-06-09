@@ -188,7 +188,6 @@ FUN_80017998(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 
 
 
-#pragma peephole off
 int roundUpTo4(int x) {
     int r = x & 3;
     if (r > 0) {
@@ -220,7 +219,6 @@ int roundUpTo32(int x) {
     }
     return x;
 }
-#pragma peephole reset
 
 /* Simple field/global accessors. */
 extern u8 lbl_803DCB10;
@@ -241,11 +239,9 @@ extern void *mmAlloc(int size, int type, int flag);
 #pragma peephole off
 #pragma pop
 
-#pragma peephole off
 void texFlagFn_80023cbc(int v) {
     lbl_803DCB10 = (u8)v;
 }
-#pragma peephole reset
 
 extern int gMmFreeDelay;
 extern int lbl_803DCB14;

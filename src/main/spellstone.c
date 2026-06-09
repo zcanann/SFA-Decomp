@@ -17,8 +17,6 @@ extern f32 lbl_803E6750;
 extern f32 lbl_803E6754;
 extern f32 lbl_803E6758;
 
-#pragma peephole off
-#pragma scheduling off
 
 int spellstone_getState(SpellStoneObject *obj)
 {
@@ -160,5 +158,3 @@ ObjectDescriptor12 gSpellStoneObjDescriptor = {
     (ObjectDescriptorCallback)spellstone_getState,
 };
 
-#pragma peephole reset
-#pragma scheduling reset

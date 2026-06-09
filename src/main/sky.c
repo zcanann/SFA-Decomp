@@ -2,15 +2,11 @@
 #include "main/game_object.h"
 #include "main/sky_80080E58_shared.h"
 
-#pragma peephole off
 int getEnvFxBit2BA(void)
 {
     return (u8)GameBit_Get(0x2ba);
 }
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void setGameBit2BA(int value)
 {
     if ((u8)value >= 0x1c) {
@@ -18,18 +14,12 @@ void setGameBit2BA(int value)
     }
     GameBit_Set(0x2ba, (u8)value);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
 void envFxFn_800887cc(void)
 {
     playerEnvFxFn_80088ad4((u8)GameBit_Get(0x2ba));
 }
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void envFxActFn_800887f8(u8 value)
 {
     void *player;
@@ -45,10 +35,7 @@ void envFxActFn_800887f8(u8 value)
         getEnvfxAct(player, player, 0x143, 0);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
 void fn_80088870(int a, int b, int c, int d)
 {
     lbl_803DD13C = a;
@@ -56,10 +43,7 @@ void fn_80088870(int a, int b, int c, int d)
     lbl_803DD138 = c;
     lbl_803DD134 = d;
 }
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void envFxFn_80088884(void)
 {
     u8 a;
@@ -111,10 +95,7 @@ void envFxFn_80088884(void)
     playerEnvFxFn_80088ad4(b);
     lbl_803DD140 &= ~0x20;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
 void loadSunAndMoon(void)
 {
     void *moonObj;
@@ -127,9 +108,7 @@ void loadSunAndMoon(void)
         ObjModel_SetRenderCallback(Obj_GetActiveModel(moonObj), moonFxCb_80074110);
     }
 }
-#pragma scheduling reset
 
-#pragma peephole off
 int getSkyColorFn_80088e08(int slot)
 {
     u8 *sky;
@@ -140,9 +119,7 @@ int getSkyColorFn_80088e08(int slot)
     }
     return 0;
 }
-#pragma peephole reset
 
-#pragma peephole off
 int getSkyColorFn_80088e30(int slot)
 {
     u8 *sky;
@@ -153,9 +130,7 @@ int getSkyColorFn_80088e30(int slot)
     }
     return 0xff;
 }
-#pragma peephole reset
 
-#pragma peephole off
 int getSkyStructField24C(void)
 {
     u8 *sky;
@@ -166,9 +141,7 @@ int getSkyStructField24C(void)
     }
     return 0;
 }
-#pragma peephole reset
 
-#pragma scheduling off
 void skyGetCurrentTextureColor(u8 *red, u8 *green, u8 *blue)
 {
     u8 *color;
@@ -184,9 +157,7 @@ void skyGetCurrentTextureColor(u8 *red, u8 *green, u8 *blue)
     *green = 0xff;
     *blue = 0xff;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void skyGetCurrentAmbientAndLightColors(u8 *ambientRed, u8 *ambientGreen, u8 *ambientBlue, u8 *lightRed,
                  u8 *lightGreen, u8 *lightBlue)
 {
@@ -228,16 +199,12 @@ void skyGetCurrentAmbientAndLightColors(u8 *ambientRed, u8 *ambientGreen, u8 *am
     *lightGreen = 0xff;
     *lightBlue = 0xff;
 }
-#pragma scheduling reset
 
-#pragma peephole off
 void *fn_8008912C(void)
 {
     return lbl_803DD150;
 }
-#pragma peephole reset
 
-#pragma scheduling off
 void skyBuildSunModelMatrix(f32 mtx[3][4])
 {
     f32 scale;
@@ -248,9 +215,7 @@ void skyBuildSunModelMatrix(f32 mtx[3][4])
     Obj_BuildWorldTransformMatrix(gSkySunObject, mtx, 0);
     PSMTXConcat(mtx, scaleMtx, mtx);
 }
-#pragma scheduling reset
 
-#pragma peephole off
 int skyFn_8008919c(int slot)
 {
     u8 *sky;
@@ -265,9 +230,7 @@ int skyFn_8008919c(int slot)
     }
     return gSkySunObject[0x37];
 }
-#pragma peephole reset
 
-#pragma peephole off
 void skySetOverrideLightColor(u8 red, u8 green, u8 blue)
 {
     u8 *color;
@@ -277,17 +240,12 @@ void skySetOverrideLightColor(u8 red, u8 green, u8 blue)
     color[1] = green;
     color[2] = blue;
 }
-#pragma peephole reset
 
-#pragma peephole off
 void skySetOverrideLightColorEnabled(u8 enabled)
 {
     gSkyOverrideLightColorEnabled = enabled;
 }
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void skySetOverrideLightDirection(f32 x, f32 y, f32 z, f32 intensity)
 {
     gSkyOverrideLightDirection[0] = x;
@@ -296,17 +254,12 @@ void skySetOverrideLightDirection(f32 x, f32 y, f32 z, f32 intensity)
     gSkyOverrideLightIntensity = intensity;
     PSVECNormalize(gSkyOverrideLightDirection, gSkyOverrideLightDirection);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
 void skySetOverrideLightDirectionEnabled(u8 enabled)
 {
     gSkyOverrideLightDirectionEnabled = enabled;
 }
-#pragma peephole reset
 
-#pragma peephole off
 void skyFn_800894a8(int flags, f32 x, f32 y, f32 z)
 {
     int bit;
@@ -322,9 +275,7 @@ void skyFn_800894a8(int flags, f32 x, f32 y, f32 z)
         }
     }
 }
-#pragma peephole reset
 
-#pragma peephole off
 void fn_80089510(int flags, u8 red, u8 green, u8 blue)
 {
     int bit;
@@ -340,9 +291,7 @@ void fn_80089510(int flags, u8 red, u8 green, u8 blue)
         }
     }
 }
-#pragma peephole reset
 
-#pragma peephole off
 void fn_80089578(int flags, u8 red, u8 green, u8 blue)
 {
     int bit;
@@ -358,10 +307,7 @@ void fn_80089578(int flags, u8 red, u8 green, u8 blue)
         }
     }
 }
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void skyFn_800895e0(int flags, u8 red, u8 green, u8 blue, u8 m1, u8 m2)
 {
     int r1, g1, b1, r2, g2, b2;
@@ -390,10 +336,7 @@ void skyFn_800895e0(int flags, u8 red, u8 green, u8 blue, u8 m1, u8 m2)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
 void getTimeOfDay(f32 *time)
 {
     u8 *sky;
@@ -405,9 +348,7 @@ void getTimeOfDay(f32 *time)
     }
     *time = ((SkyState *)sky)->timeOfDay;
 }
-#pragma peephole reset
 
-#pragma peephole off
 void renderSky(void)
 {
     if (gSkySunObject != NULL && gSkyMoonObject != NULL) {
@@ -416,9 +357,7 @@ void renderSky(void)
     skyFn_8008a500();
     skyFn_8008a04c();
 }
-#pragma peephole reset
 
-#pragma peephole off
 #pragma dont_inline on
 void getAmbientColor(int slot, u8 *red, u8 *green, u8 *blue)
 {
@@ -439,9 +378,7 @@ void getAmbientColor(int slot, u8 *red, u8 *green, u8 *blue)
     *blue = lbl_803DD12C[offset + 0x7a];
 }
 #pragma dont_inline reset
-#pragma peephole reset
 
-#pragma peephole off
 void textureColorFn_8008991c(int slot, u8 *red, u8 *green, u8 *blue)
 {
     u8 *sky;
@@ -460,9 +397,7 @@ void textureColorFn_8008991c(int slot, u8 *red, u8 *green, u8 *blue)
     *green = lbl_803DD12C[offset + 0x89];
     *blue = lbl_803DD12C[offset + 0x8a];
 }
-#pragma peephole reset
 
-#pragma scheduling off
 void modelTextureFn_80089970(int slot)
 {
     int offset;
@@ -490,23 +425,17 @@ void modelTextureFn_80089970(int slot)
     lightSetColor(0, lbl_803DD12C[offset + 0x88], lbl_803DD12C[offset + 0x89],
                      lbl_803DD12C[offset + 0x8a]);
 }
-#pragma scheduling reset
 
-#pragma peephole off
 void *fn_80089A50(void)
 {
     return lbl_803DD168;
 }
-#pragma peephole reset
 
-#pragma peephole off
 void *fn_80089A58(void)
 {
     return lbl_803DD144;
 }
-#pragma peephole reset
 
-#pragma scheduling off
 #pragma opt_common_subs off
 #pragma dont_inline on
 int getSunPos(f32 *outTime)
@@ -538,9 +467,7 @@ int getSunPos(f32 *outTime)
     return 0;
 }
 #pragma dont_inline reset
-#pragma scheduling reset
 
-#pragma peephole off
 void fn_8008B88C(int *outTimer)
 {
     u8 *sky;
@@ -552,10 +479,7 @@ void fn_8008B88C(int *outTimer)
     }
     *outTimer = ((SkyState *)sky)->unk218;
 }
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void skyFn_80089710(int flags, u32 enabled, int startComplete)
 {
     u8 *sky;
@@ -585,10 +509,7 @@ void skyFn_80089710(int flags, u32 enabled, int startComplete)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
 void fn_800897D4(int slot, f32 *x, f32 *y, f32 *z)
 {
     u8 *sky;
@@ -613,9 +534,7 @@ void fn_800897D4(int slot, f32 *x, f32 *y, f32 *z)
     sky += offset;
     *z = ((SkyState *)sky)->lights[0].unk78;
 }
-#pragma scheduling reset
 
-#pragma peephole off
 void objGetColor(int slot, u8 *red, u8 *green, u8 *blue)
 {
     u8 *sky;
@@ -637,9 +556,7 @@ void objGetColor(int slot, u8 *red, u8 *green, u8 *blue)
     *green = (u8)((*green * colorScale) >> 8);
     *blue = (u8)((*blue * colorScale) >> 8);
 }
-#pragma peephole reset
 
-#pragma peephole off
 void dll_06_func0B(int *x, int *y)
 {
     u8 *state;
@@ -653,9 +570,7 @@ void dll_06_func0B(int *x, int *y)
         *y = value;
     }
 }
-#pragma peephole reset
 
-#pragma peephole off
 void dll_06_func0A(int *a, int *b, int *c, f32 *scale)
 {
     u8 *state;
@@ -669,9 +584,7 @@ void dll_06_func0A(int *a, int *b, int *c, f32 *scale)
     *c = *(int *)(lbl_803DD184 + 0x2c);
     *scale = *(f32 *)(lbl_803DD184 + 0x30c);
 }
-#pragma peephole reset
 
-#pragma peephole off
 void dll_06_func0E(void)
 {
     if (lbl_803DD184 == NULL) {
@@ -681,9 +594,7 @@ void dll_06_func0E(void)
         lbl_803DD180 = 1;
     }
 }
-#pragma peephole reset
 
-#pragma peephole off
 void dll_06_func0D(void)
 {
     if (lbl_803DD184 == NULL) {
@@ -693,9 +604,7 @@ void dll_06_func0D(void)
         lbl_803DD180 = 2;
     }
 }
-#pragma peephole reset
 
-#pragma scheduling off
 void sky2_initialise(void)
 {
     u8 **states;
@@ -714,9 +623,7 @@ void sky2_initialise(void)
     lbl_803DD184 = NULL;
     states[1] = NULL;
 }
-#pragma scheduling reset
 
-#pragma peephole off
 void fn_8008EDE8(f32 *out)
 {
     u8 *state;
@@ -729,9 +636,7 @@ void fn_8008EDE8(f32 *out)
     out[1] = *(f32 *)(lbl_803DD19C + 4);
     out[2] = *(f32 *)(lbl_803DD19C + 8);
 }
-#pragma peephole reset
 
-#pragma peephole off
 int fn_8008B71C(int slot)
 {
     u8 *sky;
@@ -742,10 +647,7 @@ int fn_8008B71C(int slot)
     }
     return 0;
 }
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void skyTimeToDayHourMinute(f32 time, s16 *days, s16 *hours, s16 *minutes)
 {
     s32 remaining;
@@ -757,10 +659,7 @@ void skyTimeToDayHourMinute(f32 time, s16 *days, s16 *hours, s16 *minutes)
     remaining -= *hours * 0xe10;
     *minutes = remaining / 0x3c;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
 void skyGetClockTime(f32 *time)
 {
     u8 *sky;
@@ -772,9 +671,7 @@ void skyGetClockTime(f32 *time)
         *time = ((SkyState *)sky)->clockTime;
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 int dll_06_func0F(void)
 {
     u8 *state;
@@ -793,9 +690,7 @@ int dll_06_func0F(void)
     }
     return (int)(lbl_803DF118 * ((y - lbl_803DF138) / lbl_803DF140));
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 f32 fn_8008ED88(void)
 {
     u8 *state;
@@ -810,46 +705,25 @@ f32 fn_8008ED88(void)
     }
     return lbl_803DF1A0;
 }
-#pragma scheduling reset
 
-#pragma peephole off
 int return0_80088758(void) { return 0x0; }
-#pragma peephole reset
 
-#pragma peephole off
 void doNothing_800887C4(void) {}
-#pragma peephole reset
 
-#pragma peephole off
 void doNothing_800887C8(void) {}
-#pragma peephole reset
 
-#pragma peephole off
 int return0_8008B7E8(void) { return 0x0; }
-#pragma peephole reset
 
-#pragma peephole off
 void doNothing_8008B8B0(void) {}
-#pragma peephole reset
 
-#pragma peephole off
 void pDll_Sky_setTimeOfDay_nop(void) {}
-#pragma peephole reset
 
-#pragma peephole off
 void dll_06_func0C_nop(void) {}
-#pragma peephole reset
 
-#pragma peephole off
 int dll_06_func07_ret_0(void) { return 0x0; }
-#pragma peephole reset
 
-#pragma peephole off
 void sky2_release(void) {}
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void loadLightFn_8008bbc4(void)
 {
     u8 done = 0;
@@ -905,10 +779,7 @@ void loadLightFn_8008bbc4(void)
     lbl_8030F2D4[2] = pEXIInputFlag;
     lbl_803DD150 = textureLoadAsset(0x5fa);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
 void dll_06_func06(int obj) {
     u8 *s = lbl_803DD184;
 
@@ -928,10 +799,7 @@ void dll_06_func06(int obj) {
         fogFn_80070404(*(f32 *)(s + 0x14), *(f32 *)(s + 0x18));
     }
 }
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void dll_06_func08(int obj) {
     u8 *s = lbl_803DD184;
     f32 v;
@@ -954,11 +822,7 @@ void dll_06_func08(int obj) {
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void fn_8008DAE8(int obj) {
     u8 *s;
     f32 v;
@@ -983,11 +847,7 @@ void fn_8008DAE8(int obj) {
         Obj_SetModelColorOverrideRecursive(obj, 0, 0, 0, 0, 0);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void playerEnvFxFn_80088ad4(u8 idx) {
     void *player;
     int alt;
@@ -1025,11 +885,7 @@ void playerEnvFxFn_80088ad4(u8 idx) {
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void dll_06_func09(s32 *x, s32 *y, s32 *z) {
     Dll06InterpState *state;
     s32 targetX;
@@ -1064,11 +920,7 @@ void dll_06_func09(s32 *x, s32 *y, s32 *z) {
     *y = (s32)((f32)(targetY - oldY) * blend + (f32)oldY);
     *z = (s32)((f32)(targetZ - oldZ) * blend + (f32)oldZ);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void sky2_run(void)
 {
     SkyRotQ q;
@@ -1407,11 +1259,7 @@ void sky2_run(void)
         i++;
     } while (i < 2);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void sky2_onMapSetup(void) {
     int i;
     void **slot;
@@ -1444,11 +1292,7 @@ void sky2_onMapSetup(void) {
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 #pragma dont_inline on
 void skyFn_80088c94(int flags, int mode) {
     u8 *env;
@@ -1479,11 +1323,7 @@ void skyFn_80088c94(int flags, int mode) {
     }
 }
 #pragma dont_inline reset
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void skyFn_80088e54(int mode, f32 brightness)
 {
     u8 *env;
@@ -1531,10 +1371,7 @@ void skyFn_80088e54(int mode, f32 brightness)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma scheduling off
 void timeOfDayFn_8008b964(void)
 {
     u8 *env;
@@ -1602,10 +1439,7 @@ void timeOfDayFn_8008b964(void)
         }
     }
 }
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void fn_8008923C(u8 *obj, f32 *x, f32 *y, f32 *z)
 {
     u8 *lights[4];
@@ -1699,11 +1533,7 @@ void fn_8008923C(u8 *obj, f32 *x, f32 *y, f32 *z)
         *(u8 **)(*(u8 **)(obj + 0x64) + 0x3c) = cur;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void skyFn_8008a500(void)
 {
     f32 dot;
@@ -1753,11 +1583,7 @@ void skyFn_8008a500(void)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void sky2_update(int a, int b, u8 *cfg)
 {
     u8 *env;
@@ -1851,11 +1677,7 @@ void sky2_update(int a, int b, u8 *cfg)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void fn_8008C9F4(u8 *cfg, u8 flags)
 {
     int b1;
@@ -1920,11 +1742,7 @@ void fn_8008C9F4(u8 *cfg, u8 flags)
     }
     *(int *)((&lbl_803DD184)[b1] + 0x44) = 0;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 #pragma opt_common_subs on
 void fn_8008D088(int slot)
 {
@@ -2013,12 +1831,8 @@ void fn_8008D088(int slot)
     }
 }
 #pragma opt_common_subs reset
-#pragma scheduling reset
-#pragma peephole reset
 
 
-#pragma peephole off
-#pragma scheduling off
 void fn_8008BDA8(void)
 {
     u8 *tex0;
@@ -2116,11 +1930,7 @@ void fn_8008BDA8(void)
         i++;
     } while (i < 3);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void skyFn_8008a04c(void)
 {
     int cC;
@@ -2239,11 +2049,7 @@ void skyFn_8008a04c(void)
                     0xff);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int b2, int c2)
 {
     f32 dir[3];
@@ -2358,11 +2164,7 @@ void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int
     lbl_803DD12C[slot * 0xa4 + 0x8a] = (u8)c13;
     lbl_803DD12C[slot * 0xa4 + 0xc0] = c2;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void renderSunAndMoon(int a, int b, int c, int d, int visible)
 {
     SkyRotQ q1;
@@ -2545,11 +2347,7 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
     }
 }
 #pragma opt_common_subs reset
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 #pragma opt_common_subs off
 void skyFn_8008aee8(void)
 {
@@ -2706,11 +2504,7 @@ void skyFn_8008aee8(void)
     }
 }
 #pragma opt_common_subs reset
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void Sky_func03(int a, int b, u8 *cfg)
 {
     s16 *envp;
@@ -2858,6 +2652,4 @@ void Sky_func03(int a, int b, u8 *cfg)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 

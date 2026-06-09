@@ -11,8 +11,6 @@ extern f64 lbl_803E6790;
 extern f32 lbl_803E6798;
 extern f32 lbl_803E679C;
 
-#pragma scheduling off
-#pragma peephole off
 void proximitymine_init(ProximityMineObject *obj,ProximityMineDef *def)
 {
   s8 mode;
@@ -67,8 +65,6 @@ void proximitymine_init(ProximityMineObject *obj,ProximityMineDef *def)
   state->effectHandle = NULL;
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 void proximitymine_release(void)
 {

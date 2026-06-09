@@ -94,8 +94,6 @@ extern undefined4 jumptable_8030E844;
  * EN v1.1 Address: 0x8005E0D8
  * EN v1.1 Size: 1004b
  */
-#pragma scheduling off
-#pragma peephole off
 u8 mapBlockBounds_HasCornerPastDepthThreshold(int param_1,float *param_2)
 {
   float v[3];
@@ -165,8 +163,6 @@ u8 mapBlockBounds_HasCornerPastDepthThreshold(int param_1,float *param_2)
     return 0;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -177,8 +173,6 @@ u8 mapBlockBounds_HasCornerPastDepthThreshold(int param_1,float *param_2)
  * EN v1.1 Address: 0x8005E4C4
  * EN v1.1 Size: 536b
  */
-#pragma scheduling off
-#pragma peephole off
 typedef struct IndMtxCopy {
     int w[6];
 } IndMtxCopy;
@@ -239,8 +233,6 @@ void mapBlockRender_drawLightmapIndirectPasses(int param_1,u8 *param_2,int *para
     GXCallDisplayList(*(void **)ptr,(uint)*(u16 *)(ptr + 4));
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -251,8 +243,6 @@ void mapBlockRender_drawLightmapIndirectPasses(int param_1,u8 *param_2,int *para
  * EN v1.1 Address: 0x8005E6DC
  * EN v1.1 Size: 464b
  */
-#pragma scheduling off
-#pragma peephole off
 int mapBlockRender_setLightmapShader(int param_1,int *param_3,int *param_2)
 {
   int iVar1;
@@ -312,8 +302,6 @@ LAB_8005E6D0:
 LAB_8005E718:
   return iVar1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -324,8 +312,6 @@ LAB_8005E718:
  * EN v1.1 Address: 0x8005E8AC
  * EN v1.1 Size: 588b
  */
-#pragma scheduling off
-#pragma peephole off
 void mapBlockRender_drawDimmedAabbLights(undefined4 param_1,undefined4 param_2,int param_3)
 {
   int *piVar3;
@@ -376,8 +362,6 @@ void mapBlockRender_drawDimmedAabbLights(undefined4 param_1,undefined4 param_2,i
   GXSetAlphaCompare(7,0,0,7,0);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -388,8 +372,6 @@ void mapBlockRender_drawDimmedAabbLights(undefined4 param_1,undefined4 param_2,i
  * EN v1.1 Address: 0x8005EAF8
  * EN v1.1 Size: 296b
  */
-#pragma scheduling off
-#pragma peephole off
 undefined4
 frustumTestAabbWithPlaneOffsets(f32 minX, f32 maxX, f32 minY, f32 maxY, f32 minZ,
             f32 maxZ, f32 *planeOffsets)
@@ -434,8 +416,6 @@ frustumTestAabbWithPlaneOffsets(f32 minX, f32 maxX, f32 minY, f32 maxY, f32 minZ
   }
   return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -446,8 +426,6 @@ frustumTestAabbWithPlaneOffsets(f32 minX, f32 maxX, f32 minY, f32 maxY, f32 minZ
  * EN v1.1 Address: 0x8005EC20
  * EN v1.1 Size: 476b
  */
-#pragma scheduling off
-#pragma peephole off
 u8
 mapBlockBounds_ComputeAndTestPlanes(int bounds,int block,FrustumPlane *planes,int planeCount,f32 *minX,
             f32 *minY,f32 *minZ,f32 *maxX,f32 *maxY,f32 *maxZ)
@@ -502,8 +480,6 @@ mapBlockBounds_ComputeAndTestPlanes(int bounds,int block,FrustumPlane *planes,in
   }
   return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -514,8 +490,6 @@ mapBlockBounds_ComputeAndTestPlanes(int bounds,int block,FrustumPlane *planes,in
  * EN v1.1 Address: 0x8005EDFC
  * EN v1.1 Size: 1376b
  */
-#pragma scheduling off
-#pragma peephole off
 void mapBlockRender_callList(uint hi,uint lo,int block,u8 *obj,int *stream,float *mtx)
 {
   u8 dBig[16];
@@ -680,8 +654,6 @@ void mapBlockRender_callList(uint hi,uint lo,int block,u8 *obj,int *stream,float
 end:
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -692,8 +664,6 @@ end:
  * EN v1.1 Address: 0x8005F35C
  * EN v1.1 Size: 888b
  */
-#pragma scheduling off
-#pragma peephole off
 void mapBlockRender_setupShaderTextures(int param_1, int param_2)
 {
   int iVar1;
@@ -822,8 +792,6 @@ void mapBlockRender_setupShaderTextures(int param_1, int param_2)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -834,8 +802,6 @@ void mapBlockRender_setupShaderTextures(int param_1, int param_2)
  * EN v1.1 Address: 0x8005F6D4
  * EN v1.1 Size: 968b
  */
-#pragma scheduling off
-#pragma peephole off
 int mapBlockRender_setShader(byte param_1,int param_2,int *param_3)
 {
   uint iVar1;
@@ -958,5 +924,3 @@ LAB_8005F8E4:
 LAB_8005F908:
   return iVar1;
 }
-#pragma peephole reset
-#pragma scheduling reset
