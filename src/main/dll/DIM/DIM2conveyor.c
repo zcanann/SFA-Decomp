@@ -184,8 +184,8 @@ void dimbridgecogmai_update(int *obj) {
                 break;
             case 0x1e3:
                 bits = (u8)GameBit_Get(0x182);
-                bits = (u8)(bits | (GameBit_Get(0x183) << 1));
-                bits = (u8)(bits | (GameBit_Get(0x184) << 2));
+                bits |= GameBit_Get(0x183) << 1;
+                bits |= GameBit_Get(0x184) << 2;
                 if (bits == 7) {
                     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x8000);
                     code = -1;
