@@ -9840,7 +9840,8 @@ int fn_80298CCC(int obj, int state)
     ((GameObject *)obj)->anim.velocityY = k;
     ((GameObject *)obj)->anim.velocityZ = k;
 
-    if (((GameObject *)obj)->anim.currentMove == 0xdd) {
+    switch (((GameObject *)obj)->anim.currentMove) {
+    case 0xdd:
         if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E7F44) {
             cfPrisonGuard_setLiftHeight(lbl_803DE434, 0);
         }
@@ -9854,17 +9855,19 @@ int fn_80298CCC(int obj, int state)
             *(int *)((char *)state + 0x308) = (int)fn_802A514C;
             return 2;
         }
-    } else {
+        break;
+    default:
         ObjAnim_SetCurrentMove(obj, 0xdd, k, 0);
         staffactivated_calcInteractionTargetXZ(lbl_803DE434, (char *)obj + 0xc, (char *)obj + 0x14);
         *(f32 *)((char *)state + 0x2a0) = lbl_803E7EF8;
         *(u8 *)((char *)state + 0x356) = 0;
         inner->targetYaw = *(s16 *)((char *)lbl_803DE434);
         inner->yaw = inner->targetYaw;
-        if ((int)lbl_803DE44C != 0 && ((ByteFlags *)((char *)inner + 0x3f4))->b40) {
+        if ((void *)lbl_803DE44C != NULL && ((ByteFlags *)((char *)inner + 0x3f4))->b40) {
             inner->unk8B4 = 4;
             ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 1;
         }
+        break;
     }
     return 0;
 }
@@ -9909,6 +9912,7 @@ void fn_80295CF4(int obj, int a)
 void fn_802AE83C(int obj, int inner)
 {
     int sub;
+    f32 z;
 
     ((ByteFlags *)((char *)inner + 0x3f1))->b40 = 0;
     ((ByteFlags *)((char *)inner + 0x3f0))->b40 = 0;
@@ -9918,17 +9922,18 @@ void fn_802AE83C(int obj, int inner)
     *(u8 *)((char *)inner + 0x40d) = 0;
     ((ByteFlags *)((char *)inner + 0x3f0))->b20 = 1;
     ((ByteFlags *)((char *)inner + 0x3f0))->b10 = 0;
-    *(f32 *)((char *)inner + 0x440) = lbl_803E7EA4;
-    *(f32 *)((char *)inner + 0x43c) = lbl_803E7EA4;
+    z = lbl_803E7EA4;
+    *(f32 *)((char *)inner + 0x440) = z;
+    *(f32 *)((char *)inner + 0x43c) = z;
     Sfx_StopFromObject(obj, (u16)(*(s16 *)((char *)inner + 0x81a) == 0 ? 0x2d0 : 0x26));
 
-    if ((int)lbl_803DE44C != 0 && ((ByteFlags *)((char *)inner + 0x3f4))->b40) {
+    if ((void *)lbl_803DE44C != NULL && ((ByteFlags *)((char *)inner + 0x3f4))->b40) {
         *(u8 *)((char *)inner + 0x8b4) = 1;
         ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 1;
     }
     *(u8 *)((char *)inner + 0x800) = 0;
     sub = *(int *)((char *)inner + 0x7f8);
-    if (sub != 0) {
+    if ((void *)sub != NULL) {
         s16 id = *(s16 *)((char *)sub + 0x46);
         if (id == 0x3cf || id == 0x662) {
             objThrowFn_80182504(sub);
