@@ -215,7 +215,6 @@ void CameraModeBike_init(CameraObject *camera)
 void firstPersonPlaceCamera(GameObject *focus,int resetClamp)
 {
   register GameObject *self = focus;
-  ViewfinderState *state;
   GameObject *galleon;
   int iVar2;
   float local_20;
@@ -223,22 +222,21 @@ void firstPersonPlaceCamera(GameObject *focus,int resetClamp)
   float local_28;
   float local_1c[3];
 
-  state = lbl_803DD548;
   if (self->anim.classId == 1) {
     cameraGetPrevPos2((int)self,&local_28,&local_24,&local_20);
-    if (((resetClamp != 0) || (state->camPosX != local_28)) ||
-       (state->camPosZ != local_20)) {
-      state->clampedPosY = local_24;
+    if (((resetClamp != 0) || (lbl_803DD548->camPosX != local_28)) ||
+       (lbl_803DD548->camPosZ != local_20)) {
+      lbl_803DD548->clampedPosY = local_24;
     }
-    state->camPosX = local_28;
-    state->camPosY = local_24;
-    state->camPosZ = local_20;
+    lbl_803DD548->camPosX = local_28;
+    lbl_803DD548->camPosY = local_24;
+    lbl_803DD548->camPosZ = local_20;
   }
   else {
-    state->camPosX = self->anim.worldPosX;
-    state->camPosY = lbl_803E17C0 + self->anim.worldPosY;
-    state->camPosZ = self->anim.worldPosZ;
-    state->clampedPosY = state->camPosY;
+    lbl_803DD548->camPosX = self->anim.worldPosX;
+    lbl_803DD548->camPosY = lbl_803E17C0 + self->anim.worldPosY;
+    lbl_803DD548->camPosZ = self->anim.worldPosZ;
+    lbl_803DD548->clampedPosY = lbl_803DD548->camPosY;
   }
   galleon = getSbGalleon();
   if (galleon != NULL) {
@@ -248,9 +246,9 @@ void firstPersonPlaceCamera(GameObject *focus,int resetClamp)
       local_1c[1] = (lbl_803E17C0 + self->anim.worldPosY) - galleon->anim.worldPosY;
       local_1c[2] = self->anim.worldPosZ - galleon->anim.worldPosZ;
       vecRotateZXY(galleon,local_1c);
-      state->camPosX = galleon->anim.worldPosX + local_1c[0];
-      state->camPosY = galleon->anim.worldPosY + local_1c[1];
-      state->camPosZ = galleon->anim.worldPosZ + local_1c[2];
+      lbl_803DD548->camPosX = galleon->anim.worldPosX + local_1c[0];
+      lbl_803DD548->camPosY = galleon->anim.worldPosY + local_1c[1];
+      lbl_803DD548->camPosZ = galleon->anim.worldPosZ + local_1c[2];
     }
   }
   return;
