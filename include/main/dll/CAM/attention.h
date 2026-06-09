@@ -5,7 +5,8 @@
 
 void camcontrol_updateVerticalBounds(int camera,int flags,int param_3,float *upperBound,
                                      float *lowerBound);
-void CameraModeNormal_func0A(float *distanceOut,float *yOffsetOut,float *zOffsetOut,
-                             float *xAngleOut,float *targetHeightOut);
+void CameraModeNormal_func0A(float *minDistanceOut,float *maxDistanceOut,
+                             float *lowerHeightOffsetOut,float *upperHeightOffsetOut,
+                             float *targetHeightOut);
 
 #endif /* MAIN_DLL_CAM_ATTENTION_H_ */

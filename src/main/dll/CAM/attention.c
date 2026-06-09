@@ -1,4 +1,5 @@
 #include "main/dll/CAM/attention.h"
+#include "main/dll/CAM/camcontrol_mode_settings.h"
 #include "main/object_transform.h"
 
 extern int objBboxFn_800640cc(int startPoints,int endPoints,int radii,int hitOut,int objOut,
@@ -10,7 +11,6 @@ extern void hitDetectFn_80067958(int obj,float *startPoints,float *endPoints,int
 extern void hitDetectFn_800691c0(int obj,uint *bounds,int mask,int flags);
 extern void hitDetect_calcSweptSphereBounds(uint *boundsOut,float *startPoints,float *endPoints,float *radii,
                         int pointCount);
-extern f32 *cameraMtxVar57;
 extern f32 lbl_803E1688;
 extern f32 lbl_803E16AC;
 extern f32 lbl_803E16B4;
@@ -139,19 +139,20 @@ void camcontrol_updateVerticalBounds(int camera,int flags,int param_3,float *upp
  * PAL Size: TODO
  */
 #pragma scheduling off
-void CameraModeNormal_func0A(float *distanceOut,float *yOffsetOut,float *zOffsetOut,
-                             float *xAngleOut,float *targetHeightOut)
+void CameraModeNormal_func0A(float *minDistanceOut,float *maxDistanceOut,
+                             float *lowerHeightOffsetOut,float *upperHeightOffsetOut,
+                             float *targetHeightOut)
 {
-  *distanceOut = cameraMtxVar57[0];
-  *yOffsetOut = cameraMtxVar57[1];
-  if (zOffsetOut != (float *)0x0) {
-    *zOffsetOut = cameraMtxVar57[2];
+  *minDistanceOut = cameraMtxVar57->minDistance;
+  *maxDistanceOut = cameraMtxVar57->maxDistance;
+  if (lowerHeightOffsetOut != (float *)0x0) {
+    *lowerHeightOffsetOut = cameraMtxVar57->lowerHeightOffset;
   }
-  if (xAngleOut != (float *)0x0) {
-    *xAngleOut = cameraMtxVar57[3];
+  if (upperHeightOffsetOut != (float *)0x0) {
+    *upperHeightOffsetOut = cameraMtxVar57->upperHeightOffset;
   }
   if (targetHeightOut != (float *)0x0) {
-    *targetHeightOut = cameraMtxVar57[0x23];
+    *targetHeightOut = cameraMtxVar57->targetHeight;
   }
   return;
 }
