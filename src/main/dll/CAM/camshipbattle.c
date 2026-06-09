@@ -1,13 +1,12 @@
 #include "main/dll/CAM/camshipbattle.h"
 #include "main/camera_interface.h"
 #include "main/camera_object.h"
+#include "main/dll/CAM/camcontrol_path_state.h"
 #include "main/pad.h"
 
 extern undefined4 FUN_80017814();
 extern int objFn_802962b4(int obj);
 extern int objFn_80296700(int obj);
-
-extern u8 *lbl_803DD538;
 
 #define gCamcontrolPathState lbl_803DD538
 
@@ -64,9 +63,9 @@ sendFollowAction:
     }
     if ((((buttons & 0x10) != 0) && (*(short *)(param_2 + 0x44) == 1)) &&
         (objFn_802962b4(param_2) != 0)) {
-      local_28.x = *(float *)(lbl_803DD538 + 4);
-      local_28.z = *(float *)(lbl_803DD538 + 0xc);
-      local_28.y = (s16)*(float *)(lbl_803DD538 + 0x10);
+      local_28.x = gCamcontrolPathState->actionParamX;
+      local_28.z = gCamcontrolPathState->actionParamZ;
+      local_28.y = (s16)gCamcontrolPathState->actionParamY;
       (*gCameraInterface)->setMode(0x44,1,0,0xc,&local_28,0,0xff);
     }
   }

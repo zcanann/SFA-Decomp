@@ -1,11 +1,11 @@
 #include "main/dll/CAM/camlockon.h"
+#include "main/dll/CAM/camcontrol_path_state.h"
 
 #pragma peephole off
 #pragma scheduling off
 
 extern void vecRotateZXY(s16 *rot, f32 *vec);
 
-extern u8 *lbl_803DD538;
 extern f64 lbl_803E1750;
 
 #define gCamcontrolPathState lbl_803DD538
@@ -91,10 +91,10 @@ void camcontrol_buildPathPoints(f32 baseX, f32 baseZ, f32 targetX, f32 baseY, f3
     rot[2] = 0;
     vecRotateZXY(rot, vec);
 
-    *(f32 *)(gCamcontrolPathState + pointCount * 4 + 0x1c) = baseX + vec[0];
-    *(f32 *)(gCamcontrolPathState + pointCount * 4 + 0x6c) =
+    gCamcontrolPathState->pointsX[pointCount] = baseX + vec[0];
+    gCamcontrolPathState->pointsY[pointCount] =
         baseY + (deltaY * ((f32)pathAngles[i] / (f32)absAngleRange));
-    *(f32 *)(gCamcontrolPathState + pointCount * 4 + 0xbc) = baseZ + vec[2];
+    gCamcontrolPathState->pointsZ[pointCount] = baseZ + vec[2];
 
     i++;
     pointCount++;
