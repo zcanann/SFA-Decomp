@@ -87,7 +87,7 @@ void SnowBike_hitDetect(int obj)
             if (*(void **)&state->unk42C == NULL) {
                 goto clamp;
             }
-            if (state->unk3E0 <= lbl_803E5AEC) {
+            if (!(state->unk3E0 <= lbl_803E5AEC)) {
                 goto clamp;
             }
         }
@@ -133,16 +133,20 @@ void SnowBike_hitDetect(int obj)
     Matrix_TransformPoint((f32 *)((u8 *)state + 0x12c), ((GameObject *)obj)->anim.velocityX, lbl_803E5AE8, ((GameObject *)obj)->anim.velocityZ,
                           &state->unk494, &dummy, &state->unk49C);
 clamp:
-    v = state->unk494;
-    lim = state->unk47C;
-    if (v < -lim) {
-        c = -lim;
-    } else if (v > lim) {
-        c = lim;
-    } else {
-        c = v;
+    {
+        f32 lim;
+        f32 v = state->unk494;
+        f32 c;
+        lim = state->unk47C;
+        if (v < -lim) {
+            c = -lim;
+        } else if (v > lim) {
+            c = lim;
+        } else {
+            c = v;
+        }
+        state->unk494 = c;
     }
-    state->unk494 = c;
     if (state->unk494 < lbl_803E5B8C && state->unk494 > lbl_803E5BA4) {
         state->unk494 = lbl_803E5AE8;
     }
@@ -159,16 +163,20 @@ clamp:
     if (state->unk498 < lbl_803E5B8C && state->unk498 > lbl_803E5BA4) {
         state->unk498 = lbl_803E5AE8;
     }
-    v = state->unk49C;
-    lim = state->unk484;
-    if (v < -lim) {
-        c = -lim;
-    } else if (v > lim) {
-        c = lim;
-    } else {
-        c = v;
+    {
+        f32 lim;
+        f32 v = state->unk49C;
+        f32 c;
+        lim = state->unk484;
+        if (v < -lim) {
+            c = -lim;
+        } else if (v > lim) {
+            c = lim;
+        } else {
+            c = v;
+        }
+        state->unk49C = c;
     }
-    state->unk49C = c;
     if (state->unk49C < lbl_803E5B8C && state->unk49C > lbl_803E5BA4) {
         state->unk49C = lbl_803E5AE8;
     }
