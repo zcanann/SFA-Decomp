@@ -1624,10 +1624,10 @@ void ccsharpclawpad_update(int obj)
         particleArgs.offset[1] = lbl_803E46AC;
         particleArgs.offset[2] = lbl_803E46B0;
         objfx_spawnArcedBurst(obj, 5, lbl_803E46B4, 2, 2, 0x19, lbl_803E46B8,
-                              lbl_803E46B8, lbl_803E46BC, &particleArgs, 0);
+                              *(f32 *)&lbl_803E46B8, lbl_803E46BC, &particleArgs, 0);
         particleArgs.offset[0] = lbl_803E46AC;
         objfx_spawnArcedBurst(obj, 5, lbl_803E46B4, 2, 2, 0x19, lbl_803E46B8,
-                              lbl_803E46B8, lbl_803E46BC, &particleArgs, 0);
+                              *(f32 *)&lbl_803E46B8, lbl_803E46BC, &particleArgs, 0);
     } else {
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
         if (GameBit_Get(0x40) == 0) {
@@ -1658,10 +1658,10 @@ void ccsharpclawpad_update(int obj)
         particleArgs.offset[1] = lbl_803E46AC;
         particleArgs.offset[2] = lbl_803E46B0;
         objfx_spawnArcedBurst(obj, 5, lbl_803E46B4, 5, 2, 0x19, lbl_803E46B8,
-                              lbl_803E46B8, lbl_803E46BC, &particleArgs, 0);
+                              *(f32 *)&lbl_803E46B8, lbl_803E46BC, &particleArgs, 0);
         particleArgs.offset[0] = lbl_803E46AC;
         objfx_spawnArcedBurst(obj, 5, lbl_803E46B4, 5, 2, 0x19, lbl_803E46B8,
-                              lbl_803E46B8, lbl_803E46BC, &particleArgs, 0);
+                              *(f32 *)&lbl_803E46B8, lbl_803E46BC, &particleArgs, 0);
     }
 }
 #pragma peephole reset
