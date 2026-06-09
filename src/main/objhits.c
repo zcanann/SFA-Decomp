@@ -1279,7 +1279,7 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
     else {
       radiusA = stateA->secondaryRadiusXZ;
     }
-    if ((*(s16 *)(objA + 6) & 0x4000) != 0) {
+    if ((((GameObject *)objA)->anim.flags & 0x4000) != 0) {
       return 0;
     }
   }
@@ -1293,9 +1293,9 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
     }
     radiusA = (f32)stateA->secondaryRadius;
     sphs[0] = radiusA;
-    sphs[1] = *(f32 *)(objA + 0x18) - playerMapOffsetX;
-    sphs[2] = *(f32 *)(objA + 0x1c);
-    sphs[3] = *(f32 *)(objA + 0x20) - playerMapOffsetZ;
+    sphs[1] = ((GameObject *)objA)->anim.worldPosX - playerMapOffsetX;
+    sphs[2] = ((GameObject *)objA)->anim.worldPosY;
+    sphs[3] = ((GameObject *)objA)->anim.worldPosZ - playerMapOffsetZ;
     defs[0] = radiusA;
     defs[1] = stateA->worldPosX - playerMapOffsetX;
     defs[2] = stateA->worldPosY;
@@ -1312,7 +1312,7 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
     spheresB = (float *)piVar11[0x14];
     volB = *(u8 **)(modelFile + 0x58);
     radiusB = stateB->secondaryRadiusXZ;
-    if ((*(s16 *)(objB + 6) & 0x4000) != 0) {
+    if ((((GameObject *)objB)->anim.flags & 0x4000) != 0) {
       return 0;
     }
   }
@@ -1325,9 +1325,9 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
     }
     radiusB = (f32)stateB->secondaryRadius;
     sphs[4] = radiusB;
-    sphs[5] = *(f32 *)(objB + 0x18) - playerMapOffsetX;
-    sphs[6] = *(f32 *)(objB + 0x1c);
-    sphs[7] = *(f32 *)(objB + 0x20) - playerMapOffsetZ;
+    sphs[5] = ((GameObject *)objB)->anim.worldPosX - playerMapOffsetX;
+    sphs[6] = ((GameObject *)objB)->anim.worldPosY;
+    sphs[7] = ((GameObject *)objB)->anim.worldPosZ - playerMapOffsetZ;
     defs[4] = sphs[0];
     defs[5] = stateA->worldPosX - playerMapOffsetX;
     defs[6] = stateA->worldPosY;
@@ -1339,9 +1339,9 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
   if (countA > 64 || countB > 64) {
     debugPrintf(sObjHitsTooManyHitSpheresWarning);
   }
-  dxs = *(f32 *)(objA + 0x18) - *(f32 *)(objB + 0x18);
-  dys = *(f32 *)(objA + 0x1c) - *(f32 *)(objB + 0x1c);
-  dzs = *(f32 *)(objA + 0x20) - *(f32 *)(objB + 0x20);
+  dxs = ((GameObject *)objA)->anim.worldPosX - ((GameObject *)objB)->anim.worldPosX;
+  dys = ((GameObject *)objA)->anim.worldPosY - ((GameObject *)objB)->anim.worldPosY;
+  dzs = ((GameObject *)objA)->anim.worldPosZ - ((GameObject *)objB)->anim.worldPosZ;
   dsq = sqrtf(dzs * dzs + (dxs * dxs + (dys * dys)));
   if (dsq > lbl_803DE934 + (radiusA + radiusB)) {
     return 0;
@@ -2475,7 +2475,7 @@ void ObjHits_Update(int objectCount)
         *(s8 *)&objState->contactHitVolume = -1;
         *(int *)objState = 0;
         attachedObj = *(uint *)&((GameObject *)obj)->unkC8;
-        if ((attachedObj != 0) && (*(s16 *)(attachedObj + 0x44) == 0x2d)) {
+        if ((attachedObj != 0) && (((GameObject *)attachedObj)->anim.classId == 0x2d)) {
           objState = ObjAnim_GetPriorityHitState((ObjAnimComponent *)attachedObj);
           objState->flags = objState->flags & ~OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED;
           objState->contactFlags = 0;
@@ -2523,15 +2523,18 @@ void ObjHits_Update(int objectCount)
         {
           candObj = candidateEntry->obj;
           candState = ObjAnim_GetPriorityHitState((ObjAnimComponent *)candObj);
-          if ((slotIndex != candidateIndex) && (*(uint *)&((GameObject *)obj)->anim.parent != (uint)candObj)) {
-            axisDiff = ((GameObject *)obj)->anim.worldPosZ - *(f32 *)(candObj + 0x20);
+          if ((slotIndex != candidateIndex) &&
+              ((uint)((GameObject *)obj)->anim.parent != (uint)candObj)) {
+            axisDiff = ((GameObject *)obj)->anim.worldPosZ -
+                       ((GameObject *)candObj)->anim.worldPosZ;
             if (axisDiff > gObjHitsScalarZero) {
               diff = axisDiff;
             } else {
               diff = -axisDiff;
             }
             if (diff < objState->primaryRadiusXZ + candState->primaryRadiusXZ) {
-              diff = ((GameObject *)obj)->anim.worldPosY - *(f32 *)(candObj + 0x1c);
+              diff = ((GameObject *)obj)->anim.worldPosY -
+                     ((GameObject *)candObj)->anim.worldPosY;
               if (diff > gObjHitsScalarZero) {
               } else {
                 diff = -diff;
@@ -2540,8 +2543,8 @@ void ObjHits_Update(int objectCount)
                   ((objState->flags & OBJHITS_PRIORITY_STATE_POSITION_DIRTY) == 0) &&
                   ((candState->flags & OBJHITS_PRIORITY_STATE_POSITION_DIRTY) == 0) &&
                   (((candState->flags & 4) == 0) || (slotIndex >= candidateIndex)) &&
-                  ((*(u8 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x71) & candState->targetMask) != 0) &&
-                  ((*(u8 *)(*(int *)(candObj + 0x50) + 0x71) & objState->targetMask) != 0)) {
+                  ((*(u8 *)((u8 *)((GameObject *)obj)->anim.modelInstance + 0x71) & candState->targetMask) != 0) &&
+                  ((*(u8 *)((u8 *)((GameObject *)candObj)->anim.modelInstance + 0x71) & objState->targetMask) != 0)) {
                 if ((candState->shapeFlags & OBJHITS_SHAPE_SKELETON) != 0) {
                   ((void (*)(int, int, void *, void *, void *, void *, void *, int))
                        ObjHits_CheckSkeletonPair)(candObj, obj, skeletonHits, skeletonScratchB,
@@ -2564,7 +2567,8 @@ void ObjHits_Update(int objectCount)
               }
             }
             if (diff < objState->secondaryRadiusXZ + candState->secondaryRadiusXZ) {
-              axisDiff = ((GameObject *)obj)->anim.worldPosY - *(f32 *)(candObj + 0x1c);
+              axisDiff = ((GameObject *)obj)->anim.worldPosY -
+                         ((GameObject *)candObj)->anim.worldPosY;
               if (axisDiff > gObjHitsScalarZero) {
               } else {
                 axisDiff = -axisDiff;
@@ -2574,7 +2578,7 @@ void ObjHits_Update(int objectCount)
                   ((objState->sourceMask & candState->targetMask) != 0) &&
                   (((candState->sourceMask & 0x80) != 0) ||
                    ((candState->sourceMask & objState->targetMask) != 0))) {
-                candAttachedObj = *(uint *)(candObj + 0xc8);
+                candAttachedObj = (uint)((GameObject *)candObj)->unkC8;
                 if ((candAttachedObj != 0) &&
                     ((ObjAnim_GetPriorityHitState((ObjAnimComponent *)candAttachedObj) == NULL) ||
                      ((ObjAnim_GetPriorityHitState((ObjAnimComponent *)candAttachedObj)->flags &
@@ -2596,7 +2600,7 @@ void ObjHits_Update(int objectCount)
     if (((((GameObject *)obj)->anim.hitReactState)->flags &
          OBJHITS_PRIORITY_STATE_TRACK_CONTACT) != 0) {
       ObjHits_CheckTrackContact(obj, obj);
-      attachedObj = *(uint *)&((GameObject *)obj)->unkC8;
+      attachedObj = (uint)((GameObject *)obj)->unkC8;
       if (attachedObj != 0) {
         ObjHits_CheckTrackContact(obj, attachedObj);
       }
@@ -2608,10 +2612,10 @@ void ObjHits_Update(int objectCount)
     objState->localPosX = ((GameObject *)obj)->anim.localPosX;
     objState->localPosY = ((GameObject *)obj)->anim.localPosY;
     objState->localPosZ = ((GameObject *)obj)->anim.localPosZ;
-    if (*(int *)&((GameObject *)obj)->anim.parent != 0) {
+    if (((GameObject *)obj)->anim.parent != NULL) {
       Obj_TransformLocalPointToWorld(objState->localPosX, objState->localPosY, objState->localPosZ,
                                      &objState->worldPosX, &objState->worldPosY,
-                                     &objState->worldPosZ, *(int *)&((GameObject *)obj)->anim.parent);
+                                     &objState->worldPosZ, (int)((GameObject *)obj)->anim.parent);
     } else {
       objState->worldPosX = ((GameObject *)obj)->anim.localPosX;
       objState->worldPosY = ((GameObject *)obj)->anim.localPosY;
