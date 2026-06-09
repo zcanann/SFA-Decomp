@@ -920,10 +920,8 @@ int ObjHits_TestTaperedCapsuleXZ(float *point, float pointRadius, float baseRadi
     deltaZ = point[2] - base[2];
     *axial = deltaX * axis[0] + deltaZ * axis[2];
     if (*axial > length) {
-        tipDeltaX = tip[0] - point[0];
-        tipDeltaX *= tipDeltaX;
-        tipDeltaZ = tip[2] - point[2];
-        tipDeltaZ *= tipDeltaZ;
+        tipDeltaX = (tip[0] - point[0]) * (tip[0] - point[0]);
+        tipDeltaZ = (tip[2] - point[2]) * (tip[2] - point[2]);
         *dist2 = tipDeltaX + tipDeltaZ;
         radiusSum = pointRadius + tipRadius;
         *sumR = radiusSum;
