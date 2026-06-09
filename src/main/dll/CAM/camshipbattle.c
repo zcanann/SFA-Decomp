@@ -2,6 +2,7 @@
 #include "main/camera_interface.h"
 #include "main/camera_object.h"
 #include "main/dll/CAM/camcontrol_path_state.h"
+#include "main/game_object.h"
 #include "main/pad.h"
 
 extern undefined4 FUN_80017814();
@@ -23,22 +24,22 @@ extern int objFn_80296700(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void camcontrol_updatePathTargetAction(int param_1,int param_2)
+void camcontrol_updatePathTargetAction(CameraObject *camera,GameObject *target)
 {
   short sVar1;
   u16 buttons;
-  u8 *targetObj;
+  GameObject *targetObj;
   struct {
     f32 x;
     f32 z;
     s16 y;
   } local_28;
   
-  if (*(u32 *)(param_2 + 0xc0) == 0) {
+  if (*(u32 *)&target->unkC0 == 0) {
     buttons = getButtonsJustPressed(0);
-    targetObj = *(u8 **)(param_1 + 0x124);
+    targetObj = (GameObject *)camera->unk124;
     if (targetObj != NULL) {
-      sVar1 = *(short *)(targetObj + 0x44);
+      sVar1 = targetObj->anim.classId;
       if (sVar1 == 0x1c) {
         goto checkActiveTarget;
       }
@@ -46,21 +47,21 @@ void camcontrol_updatePathTargetAction(int param_1,int param_2)
         goto checkOverrideFlag;
       }
 checkActiveTarget:
-      if (*(short *)(param_2 + 0x44) != 1) {
+      if (target->anim.classId != 1) {
         goto checkOverrideFlag;
       }
-      if (objFn_80296700(param_2) != 0) {
+      if (objFn_80296700((int)target) != 0) {
         goto sendFollowAction;
       }
     }
 checkOverrideFlag:
-    if ((((CameraObject *)param_1)->unk141 & 2) != 0) {
+    if ((camera->unk141 & 2) != 0) {
 sendFollowAction:
-      (*gCameraInterface)->setMode(0x49,1,0,4,(void *)(param_1 + 0x124),0x3c,0xff);
+      (*gCameraInterface)->setMode(0x49,1,0,4,&camera->unk124,0x3c,0xff);
       goto done;
     }
-    if ((((buttons & 0x10) != 0) && (*(short *)(param_2 + 0x44) == 1)) &&
-        (objFn_802962b4(param_2) != 0)) {
+    if ((((buttons & 0x10) != 0) && (target->anim.classId == 1)) &&
+        (objFn_802962b4((int)target) != 0)) {
       local_28.x = gCamcontrolPathState->actionParamX;
       local_28.z = gCamcontrolPathState->actionParamZ;
       local_28.y = (s16)gCamcontrolPathState->actionParamY;
