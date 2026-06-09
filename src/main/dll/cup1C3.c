@@ -234,17 +234,19 @@ int DBSH_Symbol_SeqFn(int *obj, int *anim, u8 *seq)
         if (ObjAnim_AdvanceCurrentMove(
                 ((f32)state->spinProgress - (f32)state->prevSpinProgress) / animDiv,
                 timeDelta, player, NULL) != 0) {
-            if (*(f32 *)(player + 0x98) < lbl_803E50EC) {
-                *(f32 *)(player + 0x98) = lbl_803E5104 + *(f32 *)(player + 0x98);
+            if (((GameObject *)player)->anim.currentMoveProgress < lbl_803E50EC) {
+                ((GameObject *)player)->anim.currentMoveProgress =
+                    lbl_803E5104 + ((GameObject *)player)->anim.currentMoveProgress;
             }
         }
         if (state->partnerObj != NULL) {
             if (ObjAnim_AdvanceCurrentMove(
                     -((f32)state->spinProgress - (f32)state->prevSpinProgress) / lbl_803E5100,
                     timeDelta, *(int *)&state->partnerObj, NULL) != 0) {
-                f32 h = *(f32 *)(*(int *)&state->partnerObj + 0x98);
+                f32 h = ((GameObject *)state->partnerObj)->anim.currentMoveProgress;
                 if (h < lbl_803E50EC) {
-                    *(f32 *)(*(int *)&state->partnerObj + 0x98) = lbl_803E5104 + h;
+                    ((GameObject *)state->partnerObj)->anim.currentMoveProgress =
+                        lbl_803E5104 + h;
                 }
             }
         }

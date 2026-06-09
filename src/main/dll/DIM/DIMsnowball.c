@@ -1981,7 +1981,7 @@ void cclightfoot_update(int obj)
         }
         break;
     case 5:
-        if (*(s16 *)(targetObj + 0xa0) != 0x19) {
+        if (((GameObject *)targetObj)->anim.currentMove != 0x19) {
             *((u8 *)state + 0x10) = 7;
         }
         if (*((u8 *)state + 0x11) & 1) {
@@ -1989,13 +1989,13 @@ void cclightfoot_update(int obj)
         }
         break;
     case 6:
-        if (*(s16 *)(targetObj + 0xa0) != 0x19) {
+        if (((GameObject *)targetObj)->anim.currentMove != 0x19) {
             *((u8 *)state + 0x10) = 7;
         }
         break;
     case 7:
-        t = *(s16 *)(targetObj + 0xa0);
-        if (t == 0x18 && *(f32 *)(targetObj + 0x98) > lbl_803E467C) {
+        t = ((GameObject *)targetObj)->anim.currentMove;
+        if (t == 0x18 && ((GameObject *)targetObj)->anim.currentMoveProgress > lbl_803E467C) {
             *((u8 *)state + 0x10) = 8;
         } else if (t == 0x19) {
             *((u8 *)state + 0x10) = 5;
@@ -2004,8 +2004,9 @@ void cclightfoot_update(int obj)
         }
         break;
     case 8:
-        t = *(s16 *)(targetObj + 0xa0);
-        if (t != 0x18 || (t == 0x18 && *(f32 *)(targetObj + 0x98) < lbl_803E467C)) {
+        t = ((GameObject *)targetObj)->anim.currentMove;
+        if (t != 0x18 ||
+            (t == 0x18 && ((GameObject *)targetObj)->anim.currentMoveProgress < lbl_803E467C)) {
             *((u8 *)state + 0x10) = 0xa;
         }
         if (*((u8 *)state + 0x11) & 1) {
@@ -2013,14 +2014,15 @@ void cclightfoot_update(int obj)
         }
         break;
     case 9:
-        t = *(s16 *)(targetObj + 0xa0);
-        if (t != 0x18 || (t == 0x18 && *(f32 *)(targetObj + 0x98) < lbl_803E467C)) {
+        t = ((GameObject *)targetObj)->anim.currentMove;
+        if (t != 0x18 ||
+            (t == 0x18 && ((GameObject *)targetObj)->anim.currentMoveProgress < lbl_803E467C)) {
             *((u8 *)state + 0x10) = 0xa;
         }
         break;
     case 10:
-        t = *(s16 *)(targetObj + 0xa0);
-        if (t == 0x18 && *(f32 *)(targetObj + 0x98) > lbl_803E467C) {
+        t = ((GameObject *)targetObj)->anim.currentMove;
+        if (t == 0x18 && ((GameObject *)targetObj)->anim.currentMoveProgress > lbl_803E467C) {
             *((u8 *)state + 0x10) = 8;
         } else if (t == 0x19) {
             *((u8 *)state + 0x10) = 5;
