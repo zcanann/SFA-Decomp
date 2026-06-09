@@ -158,7 +158,7 @@ EnterSaveNameScreen_run(undefined4 param_1,undefined4 param_2,int param_3,undefi
     if (buttons & 0x100) {
       if ((lbl_803DD6E4 <= 0x25) && (lbl_803DD6F4 < ENTER_SAVE_NAME_MAX_LENGTH)) {
         (&lbl_803DD6F0)[lbl_803DD6F4++] = *gameTextGetStr(lbl_8031A880[lbl_803DD6E4]);
-        (&lbl_803DD6F0)[lbl_803DD6F4] = 0;
+        (&lbl_803DD6F0)[*(volatile u8 *)&lbl_803DD6F4] = 0;
         lbl_803DD6EC = 2;
         Sfx_PlayFromObject(0,ENTER_SAVE_NAME_SFX_TYPE);
         if (lbl_803DD6F4 == ENTER_SAVE_NAME_MAX_LENGTH) {
