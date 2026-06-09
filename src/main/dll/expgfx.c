@@ -558,11 +558,11 @@ void expgfx_initSlotQuad(void *slotPtr)
   texT0 = EXPGFX_QUAD_TEXCOORD_MAX;
   texS1 = 0;
   texT1 = 0;
-  if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX1_T) != 0) {
+  if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX_S) != 0) {
     texS1 = EXPGFX_QUAD_TEXCOORD_MAX;
     texS0 = 0;
   }
-  if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX0_T) != 0) {
+  if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX_T) != 0) {
     texT1 = EXPGFX_QUAD_TEXCOORD_MAX;
     texT0 = 0;
   }
@@ -1155,11 +1155,11 @@ foundFirst:
             texS0 = 0x80;
             texT0 = 0x80;
             texS1 = 0;
-            if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX1_T) != 0) {
+            if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX_S) != 0) {
               texS1 = 0x80;
               texS0 = 0;
             }
-            if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX0_T) != 0) {
+            if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX_T) != 0) {
               texT1 = 0x80;
               texT0 = 0;
             }
@@ -2620,11 +2620,11 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
   resourceHandle->linkGroup = (u16)config->linkGroup;
 
   behaviorFlags = slot->behaviorFlags;
-  if ((behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX1_T) != 0) {
+  if ((behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX_S) != 0) {
     texS1 = 0;
     texS0 = 0;
   }
-  if ((behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX0_T) != 0) {
+  if ((behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX_T) != 0) {
     texT1 = 0;
     texT0 = 0;
   }
