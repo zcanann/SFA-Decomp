@@ -926,8 +926,8 @@ void CameraModeStatic_update(short *param_1)
  */
 void CameraModeStatic_init(u8 *cam, int p2, int *p3)
 {
-  u8 *state;
-  u8 *best;
+  GameObject *state;
+  GameObject *best;
   u8 *setup;
   s16 yaw;
   int pitch;
@@ -942,16 +942,16 @@ void CameraModeStatic_init(u8 *cam, int p2, int *p3)
   }
   lbl_803DD558->active = 1;
   lbl_803DD558->missingObject = 0;
-  best = (u8 *)fn_80109B04(*(f32 *)(state + 24), *(f32 *)(state + 28), *(f32 *)(state + 32), *p3, 18);
+  best = (GameObject *)fn_80109B04(state->anim.worldPosX, state->anim.worldPosY, state->anim.worldPosZ, *p3, 18);
   if (best == NULL) {
     lbl_803DD558->missingObject = 1;
     return;
   }
-  lbl_803DD558->staticObject = (GameObject *)best;
-  setup = *(u8 **)(best + 76);
-  dx = *(f32 *)(best + 24) - *(f32 *)(state + 24);
-  dy = *(f32 *)(best + 28) - *(f32 *)(state + 28);
-  dz = *(f32 *)(best + 32) - *(f32 *)(state + 32);
+  lbl_803DD558->staticObject = best;
+  setup = (u8 *)best->anim.placementData;
+  dx = best->anim.worldPosX - state->anim.worldPosX;
+  dy = best->anim.worldPosY - state->anim.worldPosY;
+  dz = best->anim.worldPosZ - state->anim.worldPosZ;
   if ((setup[27] & 1) != 0) {
     yaw = 0x8000 - getAngle(dx, dz);
   } else {
@@ -963,15 +963,15 @@ void CameraModeStatic_init(u8 *cam, int p2, int *p3)
     pitch = *(s16 *)(setup + 30);
   }
   if ((setup[27] & 4) != 0) {
-    roll = *(s16 *)(state + 4);
+    roll = state->anim.rotZ;
   } else {
     roll = *(s16 *)(setup + 32);
   }
   {
     f32 fov = (f32)(u32)setup[26];
-    ((CameraObject *)cam)->anim.worldPosX = *(f32 *)(best + 24);
-    ((CameraObject *)cam)->anim.worldPosY = *(f32 *)(best + 28);
-    ((CameraObject *)cam)->anim.worldPosZ = *(f32 *)(best + 32);
+    ((CameraObject *)cam)->anim.worldPosX = best->anim.worldPosX;
+    ((CameraObject *)cam)->anim.worldPosY = best->anim.worldPosY;
+    ((CameraObject *)cam)->anim.worldPosZ = best->anim.worldPosZ;
     ((CameraObject *)cam)->anim.rotX = yaw;
     ((CameraObject *)cam)->anim.rotY = pitch;
     ((CameraObject *)cam)->anim.rotZ = roll;
