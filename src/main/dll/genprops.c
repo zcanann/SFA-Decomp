@@ -7143,22 +7143,22 @@ extern f32 lbl_803E32F0;
 void staff_update(int *obj)
 {
     u8 *state = ((GameObject *)obj)->extra;
-    u8 *swp;
+    SwipeRecord *swp;
     int n;
     int *model = Obj_GetActiveModel((int)obj);
     *(u16 *)((char *)model + 0x18) &= ~0x8;
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
         (int)obj, *(f32 *)(state + 0x50), timeDelta, NULL);
 
-    swp = state;
+    swp = (SwipeRecord *)state;
     for (n = 3; n != 0; n--) {
-        if (*(u8 *)(swp + 0x14) & 2) {
+        if (swp->flags & 2) {
             int j;
             u8 *vp;
-            j = *(u16 *)(swp + 0xc);
-            vp = *(u8 **)swp + j * 20;
-            for (; j < *(u16 *)(swp + 0xe); j += 2) {
-                if (swp == *(u8 **)(state + 0x48)) {
+            j = swp->startIndex;
+            vp = swp->vertexData + j * 20;
+            for (; j < swp->endIndex; j += 2) {
+                if ((u8 *)swp == *(u8 **)(state + 0x48)) {
                     f32 k = lbl_803E32F4;
                     f32 t = lbl_803E330C * *(f32 *)(state + 0x98) - *(f32 *)(vp + 0xc);
                     f32 v;
@@ -7193,16 +7193,16 @@ void staff_update(int *obj)
                     *(s16 *)(vp + 0x24) = (s16)c;
                 }
                 if (*(s16 *)(vp + 0x10) <= 0 && *(s16 *)(vp + 0x24) <= 0) {
-                    *(s16 *)(swp + 0x12) += -2;
-                    *(u16 *)(swp + 0xc) += 2;
+                    swp->vertexCount += -2;
+                    swp->startIndex += 2;
                 }
                 vp += 0x28;
             }
-            if (swp != *(u8 **)(state + 0x48) && *(s16 *)(swp + 0x12) == 0) {
-                *(u8 *)(swp + 0x14) &= ~2;
+            if ((u8 *)swp != *(u8 **)(state + 0x48) && swp->vertexCount == 0) {
+                swp->flags &= ~2;
             }
         }
-        swp += 0x18;
+        swp++;
     }
 
     quakeSpellFn_8016cee8(obj, ((GameObject *)obj)->unkC4);
