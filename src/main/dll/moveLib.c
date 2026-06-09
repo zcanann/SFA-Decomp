@@ -2004,7 +2004,7 @@ int dll_2E_func0D(int obj, int target, f32 speed, int move, f32 *out, u8 *flags)
             delta = delta + 0xffff;
         }
         speed = speed * -mathCosf(lbl_803E1CBC * (f32)delta / lbl_803E1CC0);
-        ObjAnim_SampleRootCurvePhase(speed, (ObjAnimComponent *)obj, out);
+        ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(obj, speed, out);
     }
     return 0;
 }
