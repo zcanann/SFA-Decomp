@@ -17,7 +17,8 @@ typedef struct WorldPlanetState {
   u8 pad0E[0x10 - 0x0E];
   s8 selectedPlanet;
   u8 unlockedPlanetMask;
-  u8 pad12[0x18 - 0x12];
+  u8 pad12[0x14 - 0x12];
+  u32 orbitSoundFrameCount;
 } WorldPlanetState;
 
 STATIC_ASSERT(sizeof(WorldPlanetState) == 0x18);
@@ -30,6 +31,7 @@ STATIC_ASSERT(offsetof(WorldPlanetState, stickXRepeatFrames) == 0x0C);
 STATIC_ASSERT(offsetof(WorldPlanetState, stickYRepeatFrames) == 0x0D);
 STATIC_ASSERT(offsetof(WorldPlanetState, selectedPlanet) == 0x10);
 STATIC_ASSERT(offsetof(WorldPlanetState, unlockedPlanetMask) == 0x11);
+STATIC_ASSERT(offsetof(WorldPlanetState, orbitSoundFrameCount) == 0x14);
 
 extern ObjectDescriptor gWorldPlanetObjDescriptor;
 
