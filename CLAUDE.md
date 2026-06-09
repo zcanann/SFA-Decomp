@@ -4493,6 +4493,26 @@ is one level less indirect. The matched-code convention is `extern int *lbl;`
 
 ## Tooling
 
+- `python3 tools/ndiff.py <unit> <symbol> [--classify] [--fingerprint REGEX]
+  [--context N]` — normalized per-function instruction diff (branch-target
+  addresses masked, divergences grouped into regions; exit 0 = streams match).
+  THE first diagnostic to run on any partial. `--classify` pattern-matches each
+  region against the recipe taxonomy (ext-insert/reg-perm/via-r0/
+  branch-over-branch/cmp-width/fcmpo-swap/frame/pool-reloc/mr-copy/
+  deref-via-copy/sched-order/...) and prints the recipe numbers to try first.
+  `--fingerprint 'fmuls|fadds'` prints just the operand columns of matching
+  instructions — the probe-battery comparison format. Same reloc-tolerance
+  caveat as --diff: certify 100% only via report.json.
+- `python3 tools/probe_battery.py extract <unit> <symbol> --out DIR` then
+  `run --dir DIR [--fp REGEX]` — the /tmp probe-batch workflow (recipes
+  #74/#80/#83/#107, mtx44_mult) as a tool: extracts the fn slice + the unit's
+  EXACT mwcc invocation from build.ninja + normalized target asm into DIR;
+  `run` compiles every `*.c` variant in DIR and prints regions-vs-target (or
+  fingerprints) one line per variant. Hand-fix base.c first (decls + the
+  unit's pragma state — #113 probe-trap) until it reproduces the in-tree
+  divergence; if base.c MATCHES target while the in-tree fn diverges, the
+  divergence is fn-global/context-bound (#108 dose) — stop probing, A/B
+  in-tree.
 - `python3 tools/function_objdump.py --diff <unit> <symbol>` — per-function diff.
   **⚠️ DO NOT use --diff to declare a match %.** It MASKS two real diff classes:
   (1) scheduling REORDERINGS of same-opcode instructions, and (2) SIZE diffs from
