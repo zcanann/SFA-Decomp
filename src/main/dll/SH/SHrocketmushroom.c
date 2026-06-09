@@ -5,6 +5,7 @@
 #include "main/dll/path_control_interface.h"
 #include "main/objseq.h"
 #include "main/dll/SH/SHrocketmushroom.h"
+#include "main/dll/SH/SHspore.h"
 
 #pragma peephole off
 #pragma scheduling off
@@ -312,45 +313,45 @@ int sh_queenearthwalker_processAnimEvents(void *obj, void *unused, ObjAnimUpdate
     int i;
     u8 b2;
 
-    if ((*(u8 *)((u8 *)pState + 0x2) & 0x20) == 0) {
+    if ((((QueenEarthWalkerState *)pState)->flags & 0x20) == 0) {
         Sfx_StopObjectChannel(obj, 0x7f);
-        *(u8 *)((u8 *)pState + 0x2) &= ~0x10;
-        *(u8 *)((u8 *)pState + 0x2) |= 0x20;
+        ((QueenEarthWalkerState *)pState)->flags &= ~0x10;
+        ((QueenEarthWalkerState *)pState)->flags |= 0x20;
     }
 
     for (i = 0; i < animUpdate->eventCount; i++) {
         switch (animUpdate->eventIds[i]) {
             case 0:
-                *(u8 *)((u8 *)pState + 0x2) |= 0x8;
+                ((QueenEarthWalkerState *)pState)->flags |= 0x8;
                 break;
             case 1:
-                *(u8 *)((u8 *)pState + 0x2) &= ~0x8;
+                ((QueenEarthWalkerState *)pState)->flags &= ~0x8;
                 break;
             case 2:
-                *(u8 *)((u8 *)pState + 0x2) |= 0x2;
+                ((QueenEarthWalkerState *)pState)->flags |= 0x2;
                 break;
             case 3:
-                *(u8 *)((u8 *)pState + 0x2) &= ~0x2;
+                ((QueenEarthWalkerState *)pState)->flags &= ~0x2;
                 animUpdate->hitVolumePair |= 0x8;
                 animUpdate->hitVolumePair |= 0x40;
                 break;
         }
     }
 
-    b2 = *(u8 *)((u8 *)pState + 0x2);
+    b2 = ((QueenEarthWalkerState *)pState)->flags;
     if ((b2 & 0x2) != 0) {
         if ((b2 & 0x4) == 0) {
             void *player;
             animUpdate->hitVolumePair &= ~0x8;
             player = Obj_GetPlayerObject();
             *(u8 *)((int)pState + 0x8) = 1;
-            *(f32 *)((u8 *)pState + 0xc) = *(f32 *)((u8 *)player + 0xc);
-            *(f32 *)((u8 *)pState + 0x10) = *(f32 *)((u8 *)player + 0x10);
-            *(f32 *)((u8 *)pState + 0x14) = *(f32 *)((u8 *)player + 0x14);
+            ((QueenEarthWalkerState *)pState)->targetX = *(f32 *)((u8 *)player + 0xc);
+            ((QueenEarthWalkerState *)pState)->targetY = *(f32 *)((u8 *)player + 0x10);
+            ((QueenEarthWalkerState *)pState)->targetZ = *(f32 *)((u8 *)player + 0x14);
             fn_8003B500(obj, (u8 *)pState + 0x8, lbl_803E53F8);
         }
         animUpdate->hitVolumePair &= ~0x40;
-        if ((*(u8 *)((u8 *)pState + 0x2) & 0x8) != 0) {
+        if ((((QueenEarthWalkerState *)pState)->flags & 0x8) != 0) {
             fn_8003B228(obj, (u8 *)pState + 0x8);
         } else {
             characterDoEyeAnims(obj, (u8 *)pState + 0x8);

@@ -2327,24 +2327,6 @@ void FUN_8003b878(undefined4 param_1,undefined4 param_2,undefined4 param_3,undef
 /*
  * --INFO--
  *
- * Function: FUN_8003ba68
- * EN v1.0 Address: 0x8003BA68
- * EN v1.0 Size: 12b
- * EN v1.1 Address: 0x8003BC6C
- * EN v1.1 Size: 8b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined FUN_8003ba68(void)
-{
-  return DAT_803dd8bc;
-}
-
-/*
- * --INFO--
- *
  * Function: FUN_8003ba74
  * EN v1.0 Address: 0x8003BA74
  * EN v1.0 Size: 12b

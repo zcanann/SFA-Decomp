@@ -3969,9 +3969,9 @@ static inline int Objfsa_FindRomCurveById(int curveId) {
     while (lo <= hi) {
         mid = (hi + lo) >> 1;
         curve = (int)romCurves[mid];
-        if (id > *(u32 *)(curve + 0x14)) {
+        if (id > ((ObjfsaRomCurveDef *)curve)->id) {
             lo = mid + 1;
-        } else if (id < *(u32 *)(curve + 0x14)) {
+        } else if (id < ((ObjfsaRomCurveDef *)curve)->id) {
             hi = mid - 1;
         } else {
             return curve;
@@ -5399,8 +5399,8 @@ int RomCurve_getControlPointId_2A(int curve, int exclude, int pickIdx) {
     u32 mask = 1;
     int i;
     for (i = 0; i < 4; i++) {
-        neighbor = *(int *)(curve + 0x1C + i * 4);
-        if (neighbor > -1 && ((s32)*(s8 *)(curve + 0x1B) & mask) == 0 && neighbor != exclude) {
+        neighbor = ((ObjfsaRomCurveDef *)curve)->linkIds[i];
+        if (neighbor > -1 && ((s32)((ObjfsaRomCurveDef *)curve)->blockedLinkMask & mask) == 0 && neighbor != exclude) {
             candidates[count++] = neighbor;
         }
         mask <<= 1;
@@ -5422,8 +5422,8 @@ int RomCurve_getControlPointId_2B(int curve, int exclude, int pickIdx) {
     u32 mask = 1;
     int i;
     for (i = 0; i < 4; i++) {
-        neighbor = *(int *)(curve + 0x1C + i * 4);
-        if (neighbor > -1 && ((s32)*(s8 *)(curve + 0x1B) & mask) != 0 && neighbor != exclude) {
+        neighbor = ((ObjfsaRomCurveDef *)curve)->linkIds[i];
+        if (neighbor > -1 && ((s32)((ObjfsaRomCurveDef *)curve)->blockedLinkMask & mask) != 0 && neighbor != exclude) {
             candidates[count++] = neighbor;
         }
         mask <<= 1;
@@ -5461,10 +5461,10 @@ int RomCurve_findProjectedCurveFromStart(f32 x,f32 y,f32 z,int curve,float *outP
   int n;
   int k;
 
-  while (!((*(int *)(curve + 0x1c) == -1 || (*(u8 *)(curve + 0x1b) & 1) != 0) &&
-           (*(int *)(curve + 0x20) == -1 || (*(u8 *)(curve + 0x1b) & 2) != 0) &&
-           (*(int *)(curve + 0x24) == -1 || (*(u8 *)(curve + 0x1b) & 4) != 0) &&
-           (*(int *)(curve + 0x28) == -1 || (*(u8 *)(curve + 0x1b) & 8) != 0))) {
+  while (!((((ObjfsaRomCurveDef *)curve)->linkIds[0] == -1 || (((ObjfsaRomCurveDef *)curve)->blockedLinkMask & 1) != 0) &&
+           (((ObjfsaRomCurveDef *)curve)->linkIds[1] == -1 || (((ObjfsaRomCurveDef *)curve)->blockedLinkMask & 2) != 0) &&
+           (((ObjfsaRomCurveDef *)curve)->linkIds[2] == -1 || (((ObjfsaRomCurveDef *)curve)->blockedLinkMask & 4) != 0) &&
+           (((ObjfsaRomCurveDef *)curve)->linkIds[3] == -1 || (((ObjfsaRomCurveDef *)curve)->blockedLinkMask & 8) != 0))) {
     RomCurve_getAdjacentWindow(curve, adjacentWindow);
     projected = RomCurve_projectPointToAdjacentWindow(x, y, z, adjacentWindow,
                                                       &lateralOffset, &verticalOffset, &phase);
@@ -5477,8 +5477,8 @@ int RomCurve_findProjectedCurveFromStart(f32 x,f32 y,f32 z,int curve,float *outP
     count = 0;
     mask = 1;
     for (k = 0; k < 4; k++) {
-      n = *(int *)(curve + 0x1C + k * 4);
-      if (n > -1 && (*(s8 *)(curve + 0x1B) & mask) == 0 && n != 0) {
+      n = ((ObjfsaRomCurveDef *)curve)->linkIds[k];
+      if (n > -1 && (((ObjfsaRomCurveDef *)curve)->blockedLinkMask & mask) == 0 && n != 0) {
         candidates[count++] = n;
       }
       mask <<= 1;
