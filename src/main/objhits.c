@@ -729,7 +729,7 @@ float *ObjHits_ProjectPointToTaperedCapsuleXZ(float *point, float pointRadius, f
     axisDir[0] = axisDir[0] * invLength;
     axisDir[1] = axisDir[1] * invLength;
     axisDir[2] = axisDir[2] * invLength;
-    Vec3_ScaleAdd(axial, base, axisDir, surfacePoint);
+    Vec3_ScaleAdd(base, axisDir, axial, surfacePoint);
     out[0] = point[0] - surfacePoint[0];
     out[1] = gObjHitsScalarZero;
     out[2] = point[2] - surfacePoint[2];
@@ -801,7 +801,7 @@ float *ObjHits_ProjectPointToTaperedCapsule3D(float *point, float pointRadius, f
     axisDir[0] = axisDir[0] * invLength;
     axisDir[1] = axisDir[1] * invLength;
     axisDir[2] = axisDir[2] * invLength;
-    Vec3_ScaleAdd(axial, base, axisDir, surfacePoint);
+    Vec3_ScaleAdd(base, axisDir, axial, surfacePoint);
     out[0] = point[0] - surfacePoint[0];
     out[1] = point[1] - surfacePoint[1];
     out[2] = point[2] - surfacePoint[2];
