@@ -86,9 +86,9 @@ extern f32 lbl_803DF5D8;
 extern f32 lbl_803DF5DC;
 extern f32 lbl_803DF5E0;
 
-static inline int *ObjHits_GetActiveModel(int obj) {
+static inline ObjHitsModelBank *ObjHits_GetActiveModel(int obj) {
   ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-  return (int *)objAnim->banks[objAnim->bankIndex];
+  return (ObjHitsModelBank *)objAnim->banks[objAnim->bankIndex];
 }
 
 /*
@@ -1193,7 +1193,7 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
   float *cr;
   ObjHitsModelHitVolume *p;
   float *pb2;
-  int *piVar11;
+  ObjHitsModelBank *modelBank;
   ObjHitsModelFileHeader *modelFile;
   s64 maskA;
   s64 maskB;
@@ -1267,11 +1267,11 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
   modeB = 0;
   if ((checkA != 0 && (stateA->secondaryShapeFlags & OBJHITS_SHAPE_MODEL_HIT_VOLUMES) != 0) ||
       (checkB != 0 && stateA->shapeFlags == OBJHITS_SHAPE_MODEL_HIT_VOLUMES)) {
-    piVar11 = ObjHits_GetActiveModel(objA);
-    modelFile = (ObjHitsModelFileHeader *)*piVar11;
+    modelBank = ObjHits_GetActiveModel(objA);
+    modelFile = modelBank->modelFile;
     countA = modelFile->hitVolumeCount;
-    spheresA = (float *)piVar11[0x14];
-    defA = (float *)piVar11[(*(u16 *)(piVar11 + 6) >> 2 & 1 ^ 1) + 0x12];
+    spheresA = modelBank->activeHitVolumeSpheres;
+    defA = modelBank->hitVolumeSphereBuffers[((modelBank->hitBufferFlags >> 2) & 1) ^ 1];
     volA = modelFile->hitVolumes;
     if ((uint)srcObj != (uint)objA) {
       radiusA = stateSrc->secondaryRadiusXZ;
@@ -1306,10 +1306,10 @@ u8 ObjHits_CheckHitVolumes(int objA,int objB,int srcObj,char checkA,char checkB,
   }
   if ((checkA != 0 && (stateB->secondaryShapeFlags & OBJHITS_SHAPE_MODEL_HIT_VOLUMES) != 0) ||
       (checkB != 0 && stateB->shapeFlags == OBJHITS_SHAPE_MODEL_HIT_VOLUMES)) {
-    piVar11 = ObjHits_GetActiveModel(objB);
-    modelFile = (ObjHitsModelFileHeader *)*piVar11;
+    modelBank = ObjHits_GetActiveModel(objB);
+    modelFile = modelBank->modelFile;
     countB = modelFile->hitVolumeCount;
-    spheresB = (float *)piVar11[0x14];
+    spheresB = modelBank->activeHitVolumeSpheres;
     volB = modelFile->hitVolumes;
     radiusB = stateB->secondaryRadiusXZ;
     if ((((GameObject *)objB)->anim.flags & OBJANIM_FLAG_HIDDEN) != 0) {
@@ -1636,7 +1636,7 @@ void ObjHits_CheckObjectHitVolumes(int objA,int objB,int attA,int attB,f32 dt)
   ObjHitsPriorityState *stateB;
   ObjHitsPriorityState *attStateA;
   ObjHitsPriorityState *attStateB;
-  int *hitboxBuf;
+  ObjHitsModelBank *hitboxBuf;
   uint bufIndex;
   uint mask;
   u8 result;
@@ -1657,31 +1657,33 @@ void ObjHits_CheckObjectHitVolumes(int objA,int objB,int attA,int attB,f32 dt)
   if ((stateA->objectHitMask != 0) && (stateA->suppressOutgoingHits == 0)) {
     if (((GameObject *)objA)->anim.classId == 1) {
       hitboxBuf = ObjHits_GetActiveModel(objA);
-      bufIndex = (*(u16 *)((int)hitboxBuf + 0x18) >> 2) & 1;
+      bufIndex = (hitboxBuf->hitBufferFlags >> 2) & 1;
       if ((stateA->flags & OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED) != 0) {
-        memcpy((void *)hitboxBuf[bufIndex + 0x12], gObjHitsPrimaryHitboxBufferScratch0,
-               (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
-        memcpy((void *)hitboxBuf[(bufIndex ^ 1) + 0x12], gObjHitsPrimaryHitboxBufferScratch1,
-               (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
+        memcpy(hitboxBuf->hitVolumeSphereBuffers[bufIndex], gObjHitsPrimaryHitboxBufferScratch0,
+               (uint)hitboxBuf->modelFile->hitVolumeCount << 4);
+        memcpy(hitboxBuf->hitVolumeSphereBuffers[bufIndex ^ 1], gObjHitsPrimaryHitboxBufferScratch1,
+               (uint)hitboxBuf->modelFile->hitVolumeCount << 4);
       } else {
-        memcpy(gObjHitsPrimaryHitboxBufferScratch0, (void *)hitboxBuf[bufIndex + 0x12],
-               (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
-        memcpy(gObjHitsPrimaryHitboxBufferScratch1, (void *)hitboxBuf[(bufIndex ^ 1) + 0x12],
-               (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
+        memcpy(gObjHitsPrimaryHitboxBufferScratch0, hitboxBuf->hitVolumeSphereBuffers[bufIndex],
+               (uint)hitboxBuf->modelFile->hitVolumeCount << 4);
+        memcpy(gObjHitsPrimaryHitboxBufferScratch1, hitboxBuf->hitVolumeSphereBuffers[bufIndex ^ 1],
+               (uint)hitboxBuf->modelFile->hitVolumeCount << 4);
       }
       if (attA != 0) {
         hitboxBuf = ObjHits_GetActiveModel(attA);
-        bufIndex = (*(u16 *)((int)hitboxBuf + 0x18) >> 2) & 1;
+        bufIndex = (hitboxBuf->hitBufferFlags >> 2) & 1;
         if ((stateA->flags & OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED) != 0) {
-          memcpy((void *)hitboxBuf[bufIndex + 0x12], gObjHitsSecondaryHitboxBufferScratch0,
-                 (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
-          memcpy((void *)hitboxBuf[(bufIndex ^ 1) + 0x12], gObjHitsSecondaryHitboxBufferScratch1,
-                 (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
+          memcpy(hitboxBuf->hitVolumeSphereBuffers[bufIndex], gObjHitsSecondaryHitboxBufferScratch0,
+                 (uint)hitboxBuf->modelFile->hitVolumeCount << 4);
+          memcpy(hitboxBuf->hitVolumeSphereBuffers[bufIndex ^ 1],
+                 gObjHitsSecondaryHitboxBufferScratch1,
+                 (uint)hitboxBuf->modelFile->hitVolumeCount << 4);
         } else {
-          memcpy(gObjHitsSecondaryHitboxBufferScratch0, (void *)hitboxBuf[bufIndex + 0x12],
-                 (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
-          memcpy(gObjHitsSecondaryHitboxBufferScratch1, (void *)hitboxBuf[(bufIndex ^ 1) + 0x12],
-                 (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
+          memcpy(gObjHitsSecondaryHitboxBufferScratch0, hitboxBuf->hitVolumeSphereBuffers[bufIndex],
+                 (uint)hitboxBuf->modelFile->hitVolumeCount << 4);
+          memcpy(gObjHitsSecondaryHitboxBufferScratch1,
+                 hitboxBuf->hitVolumeSphereBuffers[bufIndex ^ 1],
+                 (uint)hitboxBuf->modelFile->hitVolumeCount << 4);
           stateA->flags = stateA->flags | OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED;
         }
       }
@@ -1703,31 +1705,33 @@ void ObjHits_CheckObjectHitVolumes(int objA,int objB,int attA,int attB,f32 dt)
       (stateB->suppressOutgoingHits == 0)) {
     if (((GameObject *)objB)->anim.classId == 1) {
       hitboxBuf = ObjHits_GetActiveModel(objB);
-      bufIndex = (*(u16 *)((int)hitboxBuf + 0x18) >> 2) & 1;
+      bufIndex = (hitboxBuf->hitBufferFlags >> 2) & 1;
       if ((stateB->flags & OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED) != 0) {
-        memcpy((void *)hitboxBuf[bufIndex + 0x12], gObjHitsPrimaryHitboxBufferScratch0,
-               (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
-        memcpy((void *)hitboxBuf[(bufIndex ^ 1) + 0x12], gObjHitsPrimaryHitboxBufferScratch1,
-               (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
+        memcpy(hitboxBuf->hitVolumeSphereBuffers[bufIndex], gObjHitsPrimaryHitboxBufferScratch0,
+               (uint)hitboxBuf->modelFile->hitVolumeCount << 4);
+        memcpy(hitboxBuf->hitVolumeSphereBuffers[bufIndex ^ 1], gObjHitsPrimaryHitboxBufferScratch1,
+               (uint)hitboxBuf->modelFile->hitVolumeCount << 4);
       } else {
-        memcpy(gObjHitsPrimaryHitboxBufferScratch0, (void *)hitboxBuf[bufIndex + 0x12],
-               (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
-        memcpy(gObjHitsPrimaryHitboxBufferScratch1, (void *)hitboxBuf[(bufIndex ^ 1) + 0x12],
-               (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
+        memcpy(gObjHitsPrimaryHitboxBufferScratch0, hitboxBuf->hitVolumeSphereBuffers[bufIndex],
+               (uint)hitboxBuf->modelFile->hitVolumeCount << 4);
+        memcpy(gObjHitsPrimaryHitboxBufferScratch1, hitboxBuf->hitVolumeSphereBuffers[bufIndex ^ 1],
+               (uint)hitboxBuf->modelFile->hitVolumeCount << 4);
       }
       if (attB != 0) {
         hitboxBuf = ObjHits_GetActiveModel(attB);
-        bufIndex = (*(u16 *)((int)hitboxBuf + 0x18) >> 2) & 1;
+        bufIndex = (hitboxBuf->hitBufferFlags >> 2) & 1;
         if ((stateB->flags & OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED) != 0) {
-          memcpy((void *)hitboxBuf[bufIndex + 0x12], gObjHitsSecondaryHitboxBufferScratch0,
-                 (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
-          memcpy((void *)hitboxBuf[(bufIndex ^ 1) + 0x12], gObjHitsSecondaryHitboxBufferScratch1,
-                 (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
+          memcpy(hitboxBuf->hitVolumeSphereBuffers[bufIndex], gObjHitsSecondaryHitboxBufferScratch0,
+                 (uint)hitboxBuf->modelFile->hitVolumeCount << 4);
+          memcpy(hitboxBuf->hitVolumeSphereBuffers[bufIndex ^ 1],
+                 gObjHitsSecondaryHitboxBufferScratch1,
+                 (uint)hitboxBuf->modelFile->hitVolumeCount << 4);
         } else {
-          memcpy(gObjHitsSecondaryHitboxBufferScratch0, (void *)hitboxBuf[bufIndex + 0x12],
-                 (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
-          memcpy(gObjHitsSecondaryHitboxBufferScratch1, (void *)hitboxBuf[(bufIndex ^ 1) + 0x12],
-                 (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
+          memcpy(gObjHitsSecondaryHitboxBufferScratch0, hitboxBuf->hitVolumeSphereBuffers[bufIndex],
+                 (uint)hitboxBuf->modelFile->hitVolumeCount << 4);
+          memcpy(gObjHitsSecondaryHitboxBufferScratch1,
+                 hitboxBuf->hitVolumeSphereBuffers[bufIndex ^ 1],
+                 (uint)hitboxBuf->modelFile->hitVolumeCount << 4);
           stateB->flags = stateB->flags | OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED;
         }
       }
@@ -2146,7 +2150,7 @@ void ObjHits_CheckSkeletonPair(int objA,int objB,void *hits,void *scratchB,void 
       (objBState->activeHitboxMode == 0)) {
    switch ((u32)objAState->activeHitboxMode) {
    case 0:
-    hitboxBuf = ObjHits_GetActiveModel(objA);
+    hitboxBuf = (int *)ObjHits_GetActiveModel(objA);
     shapeFlags = objBState->shapeFlags;
     if ((shapeFlags & OBJHITBOX_SHAPE_SKELETON_3D) != 0) {
       point.x = ((GameObject *)objB)->anim.worldPosX - playerMapOffsetX;
@@ -2252,16 +2256,16 @@ void ObjHits_CheckTrackContact(int objA,int objB)
 {
   uint uVar1;
   int mask2;
-  int iVar3;
   byte bVar4;
   ObjHitsPriorityState *stateA;
   ObjHitsPriorityState *stateB;
   uint uVar7;
   float *puVar8;
-  int *piVar9;
+  ObjHitsModelBank *modelBank;
+  int iVar3;
   int iVar10;
   int iVar11;
-  int iVar12;
+  ObjHitsModelFileHeader *modelFile;
   float *puVar13;
   int iVar14;
   int iVar15;
@@ -2269,6 +2273,7 @@ void ObjHits_CheckTrackContact(int objA,int objB)
   float *puVar17;
   int iVar18;
   int iVar23;
+  ObjHitsModelHitVolume *hitVolume;
   uint auStack_148 [6];
   struct {
     u8 out[64];
@@ -2288,22 +2293,22 @@ void ObjHits_CheckTrackContact(int objA,int objB)
   if ((mask2 != 0) && (*(s8 *)&stateA->suppressOutgoingHits == 0)) {
     stateB = (ObjHitsPriorityState *)((GameObject *)objB)->anim.hitReactState;
     if ((stateB->secondaryShapeFlags & OBJHITS_SHAPE_MODEL_HIT_VOLUMES) != 0) {
-      piVar9 = ObjHits_GetActiveModel(objB);
-      iVar12 = *piVar9;
-      uVar7 = *(ushort *)(piVar9 + 6) >> 2 & 1;
-      puVar13 = (float *)piVar9[uVar7 + 0x12];
-      iVar14 = piVar9[(uVar7 ^ 1) + 0x12];
+      modelBank = ObjHits_GetActiveModel(objB);
+      modelFile = modelBank->modelFile;
+      uVar7 = modelBank->hitBufferFlags >> 2 & 1;
+      puVar13 = modelBank->hitVolumeSphereBuffers[uVar7];
+      iVar14 = (int)modelBank->hitVolumeSphereBuffers[uVar7 ^ 1];
       iVar23 = 0;
       iVar15 = 0;
       iVar16 = 0;
       iVar3 = 0;
       puVar8 = puVar13;
       iVar10 = iVar14;
-      for (iVar11 = 0; iVar11 < (int)(uint)*(byte *)(iVar12 + 0xf7); iVar11 = iVar11 + 1) {
-        iVar18 = *(int *)(iVar12 + 0x58) + iVar3;
-        if ((iVar11 == *(char *)(iVar18 + 0x16)) &&
-           ((mask2 & 1 << (int)*(char *)(iVar18 + 0x17)) != 0)) {
-          uVar7 = (uint)*(ushort *)(iVar18 + 0x14);
+      for (iVar11 = 0; iVar11 < (int)(uint)modelFile->hitVolumeCount; iVar11 = iVar11 + 1) {
+        hitVolume = (ObjHitsModelHitVolume *)((u8 *)modelFile->hitVolumes + iVar3);
+        if ((iVar11 == hitVolume->sphereIndex) &&
+           ((mask2 & 1 << (int)hitVolume->maskBit) != 0)) {
+          uVar7 = (uint)hitVolume->linkedSpheres;
           if (uVar7 != 0) {
             float *pfVar22 = (float *)((int)local_e8 + iVar16);
             float *pfVar21 = (float *)((int)local_130 + iVar16);
@@ -2350,7 +2355,7 @@ void ObjHits_CheckTrackContact(int objA,int objB)
             }
           }
         }
-        iVar3 = iVar3 + 0x18;
+        iVar3 = iVar3 + OBJHITS_MODEL_HIT_VOLUME_SIZE;
         puVar8 = puVar8 + 4;
         iVar10 = iVar10 + 0x10;
       }

@@ -183,6 +183,16 @@ typedef struct ObjHitsSkeletonJointData {
   u8 *touchedJoints;
 } ObjHitsSkeletonJointData;
 
+typedef struct ObjHitsModelBank {
+  ObjHitsModelFileHeader *modelFile;
+  u8 pad04[0x14 - 0x04];
+  ObjHitsSkeletonJointData *skeletonJointData;
+  u16 hitBufferFlags;
+  u8 pad1A[0x48 - 0x1A];
+  f32 *hitVolumeSphereBuffers[2];
+  f32 *activeHitVolumeSpheres;
+} ObjHitsModelBank;
+
 /*
  * The skeleton collectors fill a 0x48-byte hit record and terminate the list
  * by writing -1 to pointIndexA. Response code then walks the same records to
@@ -219,6 +229,10 @@ STATIC_ASSERT(offsetof(ObjHitsSkeletonJointData, jointRadii) == 0x04);
 STATIC_ASSERT(offsetof(ObjHitsSkeletonJointData, jointLengths) == 0x0C);
 STATIC_ASSERT(offsetof(ObjHitsSkeletonJointData, jointCullDistances) == 0x10);
 STATIC_ASSERT(offsetof(ObjHitsSkeletonJointData, touchedJoints) == 0x18);
+STATIC_ASSERT(offsetof(ObjHitsModelBank, skeletonJointData) == 0x14);
+STATIC_ASSERT(offsetof(ObjHitsModelBank, hitBufferFlags) == 0x18);
+STATIC_ASSERT(offsetof(ObjHitsModelBank, hitVolumeSphereBuffers) == 0x48);
+STATIC_ASSERT(offsetof(ObjHitsModelBank, activeHitVolumeSpheres) == 0x50);
 
 STATIC_ASSERT(sizeof(ObjHitsSkeletonHit) == OBJHITS_SKELETON_HIT_SIZE);
 STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, pointARef) == 0x00);
