@@ -1,6 +1,7 @@
 #include "main/dll/CAM/camTalk.h"
 #include "main/camera_interface.h"
 #include "main/camera_object.h"
+#include "main/dll/CAM/cambike_state.h"
 #include "main/dll/CAM/viewfinder_state.h"
 #include "main/mm.h"
 #include "main/object_transform.h"
@@ -24,7 +25,7 @@ extern f32 sqrtf(f32 value);
 extern f32 mathCosf(f32);
 extern void cameraGetPrevPos2(int obj, float *x, float *y, float *z);
 
-extern u8* lbl_803DD540;
+extern CameraModeBikeState *lbl_803DD540;
 extern ViewfinderState *lbl_803DD548;
 extern f64 lbl_803E17B8;
 extern f64 DOUBLE_803e2458;
@@ -116,20 +117,20 @@ void CameraModeBike_update(short *param_1)
     local_fc.z = *(float *)(puVar5 + 0x10);
     local_fc.scale = lbl_803E1788;
     local_fc.yaw = *(short *)puVar5;
-    local_a0 = (longlong)(int)*(float *)(lbl_803DD540 + 0x30);
-    local_fc.pitch = (undefined2)(int)*(float *)(lbl_803DD540 + 0x30);
+    local_a0 = (longlong)(int)lbl_803DD540->pitchTarget;
+    local_fc.pitch = (undefined2)(int)lbl_803DD540->pitchTarget;
     local_fc.roll = 0;
     setMatrixFromObjectPos(afStack_e4,&local_fc);
     Matrix_TransformPoint(afStack_e4,lbl_803E1780,lbl_803E178C,lbl_803E1780,
                  &local_100,&local_104,&local_108);
     *param_1 = -0x8000 - *puVar5;
-    *(float *)(lbl_803DD540 + 0x20) =
+    lbl_803DD540->smoothedYawOffset =
          lbl_803E1790 *
-         (lbl_803E1794 * *(float *)(lbl_803DD540 + 0x1c) - *(float *)(lbl_803DD540 + 0x20)) +
-         *(float *)(lbl_803DD540 + 0x20);
-    iVar1 = (int)((f32)(s32)*param_1 + *(f32 *)(lbl_803DD540 + 0x20));
+         (lbl_803E1794 * lbl_803DD540->turnInput - lbl_803DD540->smoothedYawOffset) +
+         lbl_803DD540->smoothedYawOffset;
+    iVar1 = (int)((f32)(s32)*param_1 + lbl_803DD540->smoothedYawOffset);
     *param_1 = (short)iVar1;
-    iVar1 = (int)(lbl_803E1798 - *(f32 *)(lbl_803DD540 + 0x30));
+    iVar1 = (int)(lbl_803E1798 - lbl_803DD540->pitchTarget);
     sVar4 = (short)iVar1 - param_1[1];
     if (0x8000 < sVar4) {
       sVar4 = sVar4 + 1;
@@ -142,18 +143,18 @@ void CameraModeBike_update(short *param_1)
     dVar7 = mathCosf(lbl_803E179C * (f32)(s32)((int)*param_1 - 0x4000) / lbl_803E17A0);
     dVar8 = mathCosf(lbl_803E179C * (f32)(s32)param_1[1] / lbl_803E17A0);
     dVar9 = mathSinf(lbl_803E179C * (f32)(s32)param_1[1] / lbl_803E17A0);
-    fVar2 = -*(float *)(lbl_803DD540 + 0x24) / lbl_803E17A4;
+    fVar2 = -lbl_803DD540->heightInput / lbl_803E17A4;
     fVar3 = (fVar2 < lbl_803E1780) ? lbl_803E1780 : ((fVar2 > lbl_803E1788) ? lbl_803E1788 : fVar2);
-    *(float *)(lbl_803DD540 + 0x28) =
+    lbl_803DD540->followDistance =
          lbl_803E17A8 *
-         ((lbl_803E17B0 * fVar3 + lbl_803E17AC) - *(float *)(lbl_803DD540 + 0x28)) +
-         *(float *)(lbl_803DD540 + 0x28);
-    fVar2 = *(float *)(lbl_803DD540 + 0x28);
+         ((lbl_803E17B0 * fVar3 + lbl_803E17AC) - lbl_803DD540->followDistance) +
+         lbl_803DD540->followDistance;
+    fVar2 = lbl_803DD540->followDistance;
     dVar8 = fVar2 * dVar8;
     ((CameraObject *)param_1)->anim.worldPosX = local_100 + dVar8 * dVar7;
     ((CameraObject *)param_1)->anim.worldPosY = local_104 + fVar2 * dVar9;
     ((CameraObject *)param_1)->anim.worldPosZ = local_108 + dVar8 * dVar6;
-    iVar1 = (int)(lbl_803E17A8 * *(float *)(lbl_803DD540 + 0x2c));
+    iVar1 = (int)(lbl_803E17A8 * lbl_803DD540->rollInput);
     local_60 = (longlong)iVar1;
     sVar4 = (short)iVar1 - param_1[2];
     if (0x8000 < sVar4) {
@@ -188,13 +189,13 @@ void CameraModeBike_update(short *param_1)
 void CameraModeBike_init(int param_1)
 {
   if (lbl_803DD540 == 0) {
-    lbl_803DD540 = (u8 *)mmAlloc(0x38,0xf,0);
+    lbl_803DD540 = (CameraModeBikeState *)mmAlloc(sizeof(CameraModeBikeState),0xf,0);
   }
-  memset(lbl_803DD540,0,0x38);
-  *(float *)(lbl_803DD540 + 0x18) = ((CameraObject *)param_1)->fov;
-  *(float *)(lbl_803DD540 + 0) = lbl_803E1784;
-  *(float *)(lbl_803DD540 + 0x14) = lbl_803E1788;
-  *(float *)(lbl_803DD540 + 0x28) = lbl_803E17AC;
+  memset(lbl_803DD540,0,sizeof(CameraModeBikeState));
+  lbl_803DD540->entryFov = ((CameraObject *)param_1)->fov;
+  lbl_803DD540->defaultFov = lbl_803E1784;
+  lbl_803DD540->defaultScale = lbl_803E1788;
+  lbl_803DD540->followDistance = lbl_803E17AC;
 }
 
 /*

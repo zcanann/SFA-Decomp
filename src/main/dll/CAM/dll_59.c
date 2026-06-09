@@ -2,6 +2,7 @@
 #include "main/audio/sfx.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
+#include "main/dll/CAM/cambike_state.h"
 #include "main/dll/CAM/camcontrol_path_state.h"
 #include "main/dll/CAM/dll_59.h"
 #include "main/mm.h"
@@ -19,7 +20,7 @@ extern f32 sqrtf(f32 value);
 extern f32 mathSinf(f32 angle);
 extern f32 mathCosf(f32 angle);
 
-extern f32* lbl_803DD540;
+extern CameraModeBikeState *lbl_803DD540;
 extern f64 lbl_803E1750;
 extern f32 lbl_803E1740;
 extern f32 lbl_803E1744;
@@ -235,10 +236,10 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
 
 void CameraModeBike_copyToCurrent(f32 *param_1)
 {
-  lbl_803DD540[7] = param_1[0];
-  lbl_803DD540[9] = param_1[1];
-  lbl_803DD540[0xb] = param_1[2];
-  lbl_803DD540[0xc] = param_1[3];
+  lbl_803DD540->turnInput = param_1[0];
+  lbl_803DD540->heightInput = param_1[1];
+  lbl_803DD540->rollInput = param_1[2];
+  lbl_803DD540->pitchTarget = param_1[3];
 }
 
 
