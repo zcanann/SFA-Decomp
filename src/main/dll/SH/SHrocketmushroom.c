@@ -106,7 +106,7 @@ void bombplantspore_update(void *obj) {
                     (*gPartfxInterface)->spawnObject(obj, 0x3f3, NULL, 4, -1, NULL);
                 }
                 modelLightStruct_setEnabled(state->light, 0, lbl_803E53AC);
-                *(f32 *)((u8 *)state + 0x2a4) = lbl_803E53BC;
+                state->detonateTimer = lbl_803E53BC;
                 ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 ObjHits_DisableObject(obj);
                 state->stateFlags &= ~BOMBPLANTSPORE_STATE_FLAG_WAITING_FOR_DETONATE_ACK;
@@ -117,10 +117,10 @@ void bombplantspore_update(void *obj) {
         }
     }
 
-    if (*(f32 *)((u8 *)state + 0x2a4) != lbl_803E5394) {
+    if (state->detonateTimer != lbl_803E5394) {
         *(s16 *)obj += (u16)framesThisStep * 0x40;
-        *(f32 *)((u8 *)state + 0x2a4) -= timeDelta;
-        if (*(f32 *)((u8 *)state + 0x2a4) <= lbl_803E5394) {
+        state->detonateTimer -= timeDelta;
+        if (state->detonateTimer <= lbl_803E5394) {
             Obj_FreeObject(obj);
         }
         return;
@@ -136,13 +136,13 @@ void bombplantspore_update(void *obj) {
         ObjHits_GetPriorityHit(obj, hitPosition, 0, 0);
         hitObj = **(void ***)&((GameObject *)obj)->anim.hitReactState;
         if ((state->stateFlags & 0x80) == 0) {
-            *(f32 *)((u8 *)state + 0x284) -= timeDelta;
-            if (*(f32 *)((u8 *)state + 0x284) < lbl_803E5394) {
-                *(f32 *)((u8 *)state + 0x284) = lbl_803E5394;
+            state->driftTimer -= timeDelta;
+            if (state->driftTimer < lbl_803E5394) {
+                state->driftTimer = lbl_803E5394;
             }
-            *(f32 *)((u8 *)state + 0x2a0) -= timeDelta;
-            if (*(f32 *)((u8 *)state + 0x2a0) < lbl_803E5394) {
-                *(f32 *)((u8 *)state + 0x2a0) = lbl_803E5394;
+            state->unk2a0 -= timeDelta;
+            if (state->unk2a0 < lbl_803E5394) {
+                state->unk2a0 = lbl_803E5394;
             }
             *(s16 *)obj += *(u16 *)&state->yawStep;
             ((GameObject *)obj)->anim.velocityY = lbl_803E53E0 * timeDelta + ((GameObject *)obj)->anim.velocityY;
@@ -157,27 +157,27 @@ void bombplantspore_update(void *obj) {
             }
             bombplantspore_updateDrift(obj, state);
             if (randomGetRange(0, 100) < 5 &&
-                *(f32 *)((u8 *)state + 0x284) <= lbl_803E5394) {
+                state->driftTimer <= lbl_803E5394) {
                 bombplantspore_startDriftBurst(obj, state);
             }
-            *(f32 *)((u8 *)state + 0x298) -= timeDelta;
-            if (*(f32 *)((u8 *)state + 0x298) <= lbl_803E5394) {
-                *(f32 *)((u8 *)state + 0x290) *= lbl_803E53E8;
-                *(f32 *)((u8 *)state + 0x294) *= lbl_803E53E8;
-                *(f32 *)((u8 *)state + 0x298) = lbl_803E5394;
+            state->spinTimer -= timeDelta;
+            if (state->spinTimer <= lbl_803E5394) {
+                state->driftSin *= lbl_803E53E8;
+                state->driftCos *= lbl_803E53E8;
+                state->spinTimer = lbl_803E5394;
             } else {
-                *(f32 *)((u8 *)state + 0x27c) =
+                state->driftSpeed =
                     lbl_803E53EC *
-                        (*(f32 *)((u8 *)state + 0x29c) - *(f32 *)((u8 *)state + 0x27c)) *
+                        (state->driftSpeedTarget - state->driftSpeed) *
                         timeDelta +
-                    *(f32 *)((u8 *)state + 0x27c);
+                    state->driftSpeed;
             }
             ((GameObject *)obj)->anim.velocityX =
-                *(f32 *)((u8 *)state + 0x290) * *(f32 *)((u8 *)state + 0x27c) +
-                *(f32 *)((u8 *)state + 0x288);
+                state->driftSin * state->driftSpeed +
+                state->driftBaseX;
             ((GameObject *)obj)->anim.velocityZ =
-                *(f32 *)((u8 *)state + 0x294) * *(f32 *)((u8 *)state + 0x27c) +
-                *(f32 *)((u8 *)state + 0x28c);
+                state->driftCos * state->driftSpeed +
+                state->driftBaseZ;
             objMove(((GameObject *)obj)->anim.velocityX * timeDelta,
                     ((GameObject *)obj)->anim.velocityY * timeDelta,
                     ((GameObject *)obj)->anim.velocityZ * timeDelta, obj);
@@ -206,7 +206,7 @@ void bombplantspore_update(void *obj) {
         }
         playerObj = Obj_GetPlayerObject();
         if (hitObj == playerObj) {
-            *(u16 *)state = BOMBPLANTSPORE_PLAYER_DAMAGE_TYPE;
+            state->damageType = BOMBPLANTSPORE_PLAYER_DAMAGE_TYPE;
             ObjMsg_SendToObject(hitObj, BOMBPLANTSPORE_MSG_HIT_PLAYER, obj, state);
             state->stateFlags =
                 state->stateFlags &
@@ -222,7 +222,7 @@ void bombplantspore_update(void *obj) {
                     (*gPartfxInterface)->spawnObject(obj, 0x3f3, NULL, 4, -1, NULL);
                 }
                 modelLightStruct_setEnabled(state->light, 0, lbl_803E53AC);
-                *(f32 *)((u8 *)state + 0x2a4) = lbl_803E53BC;
+                state->detonateTimer = lbl_803E53BC;
                 ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 ObjHits_DisableObject(obj);
             }
