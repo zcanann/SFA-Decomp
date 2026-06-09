@@ -32,6 +32,16 @@ typedef struct LightSourceState {
     u8 pad1B;
 } LightSourceState;
 
+#define LIGHTSOURCE_FLAG_FX_ARG_6 0x01
+#define LIGHTSOURCE_FLAG_DISABLE_FX_TYPE 0x02
+#define LIGHTSOURCE_FLAG_FX_TYPE_4 0x04
+#define LIGHTSOURCE_FLAG_FX_TYPE_8 0x08
+#define LIGHTSOURCE_FLAG_FX_TYPE_6 0x10
+#define LIGHTSOURCE_FLAG_FX_ARG_ZERO 0x20
+#define LIGHTSOURCE_FLAG_CREATE_LIGHT 0x40
+#define LIGHTSOURCE_FLAG_CREATE_GLOW 0x80
+#define LIGHTSOURCE_OPTION_SPARKS 0x01
+
 STATIC_ASSERT(offsetof(LightSourceSetup, yaw) == 0x18);
 STATIC_ASSERT(offsetof(LightSourceSetup, mode) == 0x19);
 STATIC_ASSERT(offsetof(LightSourceSetup, range) == 0x1a);

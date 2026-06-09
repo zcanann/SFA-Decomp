@@ -66,13 +66,13 @@ void lightsource_init(GameObject *obj, LightSourceSetup *setup)
   state->mode = setup->mode;
   state->gameBit = setup->gameBit;
   state->fxType = 1;
-  if (setup->flags & 0x20) {
+  if (setup->flags & LIGHTSOURCE_FLAG_FX_ARG_ZERO) {
     state->fxArg = 0;
   }
   else {
     state->fxArg = 3;
   }
-  if (setup->options & 1) {
+  if (setup->options & LIGHTSOURCE_OPTION_SPARKS) {
     state->sparks = 1;
   }
   else {
@@ -83,22 +83,22 @@ void lightsource_init(GameObject *obj, LightSourceSetup *setup)
   case 0:
     state->lit = 1;
     flags = setup->flags;
-    if (flags & 4) {
+    if (flags & LIGHTSOURCE_FLAG_FX_TYPE_4) {
       state->fxType = 4;
     }
-    else if (flags & 8) {
+    else if (flags & LIGHTSOURCE_FLAG_FX_TYPE_8) {
       state->fxType = 8;
     }
-    else if (flags & 0x10) {
+    else if (flags & LIGHTSOURCE_FLAG_FX_TYPE_6) {
       state->fxType = 6;
     }
-    else if (flags & 1) {
+    else if (flags & LIGHTSOURCE_FLAG_FX_ARG_6) {
       state->fxArg = 6;
     }
     break;
   }
 
-  if (setup->flags & 0x40) {
+  if (setup->flags & LIGHTSOURCE_FLAG_CREATE_LIGHT) {
     if (state->light == NULL) {
       state->light = objCreateLight(obj, 1);
       if (state->light != NULL) {
@@ -127,7 +127,7 @@ void lightsource_init(GameObject *obj, LightSourceSetup *setup)
                       (int)(lbl_803E5E34 * (f32)(u32)colors.c[colorBase + 2]), 0xff);
       lightSetField4D(state->light, 1);
 
-      if (setup->flags & 0x80) {
+      if (setup->flags & LIGHTSOURCE_FLAG_CREATE_GLOW) {
         if (obj->anim.seqId == 0x705 || obj->anim.seqId == 0x712) {
           colorBase = state->fxType * 3;
           modelLightStruct_setupGlow(state->light, 0, colors.c[colorBase], colors.c[colorBase + 1], colors.c[colorBase + 2],
@@ -146,7 +146,7 @@ void lightsource_init(GameObject *obj, LightSourceSetup *setup)
     state->light = NULL;
   }
 
-  if (setup->flags & 2) {
+  if (setup->flags & LIGHTSOURCE_FLAG_DISABLE_FX_TYPE) {
     state->fxType = 0;
   }
   obj->objectFlags |= 0x2000;
