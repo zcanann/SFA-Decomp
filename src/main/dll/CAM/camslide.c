@@ -13,7 +13,7 @@ extern void Matrix_TransformPoint(void *matrix, f64 x, f64 y, f64 z, f32 *outX, 
 extern f64 interpolate(f64 value, f64 rate, f64 t);
 extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
-extern f32 fn_802966F4(int obj);
+extern f32 fn_802966F4(GameObject *obj);
 
 extern u8 framesThisStep;
 extern f32 lbl_803E168C;
@@ -43,6 +43,17 @@ typedef struct CamSlideRot {
     f32 unk98;
 } CamSlideRot;
 
+typedef struct CamSlideObjectState {
+    u8 pad00[0x1A4];
+    f32 vectorX;
+    f32 vectorY;
+    f32 vectorZ;
+} CamSlideObjectState;
+
+STATIC_ASSERT(offsetof(CamSlideObjectState, vectorX) == 0x1A4);
+STATIC_ASSERT(offsetof(CamSlideObjectState, vectorY) == 0x1A8);
+STATIC_ASSERT(offsetof(CamSlideObjectState, vectorZ) == 0x1AC);
+
 /*
  * --INFO--
  *
@@ -52,10 +63,10 @@ typedef struct CamSlideRot {
  * EN v1.1 Address: 0x80104C4C
  * EN v1.1 Size: 1552b
  */
-void camslide_update(int param_1, int param_2)
+void camslide_update(CameraObject *camera, GameObject *target)
 {
     f32 fVar1;
-    int obj;
+    CamSlideObjectState *state;
     uint angle;
     int cur;
     f32 high;
@@ -73,7 +84,7 @@ void camslide_update(int param_1, int param_2)
     f32 outY;
     f32 outZ;
 
-    (*gCameraInterface)->getRelativePosition(gCamcontrolModeSettings->targetHeight, param_1, &velX,
+    (*gCameraInterface)->getRelativePosition(gCamcontrolModeSettings->targetHeight, (int)camera, &velX,
                                              &step, &velZ, &speed, 0);
     speed = velZ * velZ + (velX * velX + step * step);
     if (speed > lbl_803E16AC) {
@@ -83,11 +94,11 @@ void camslide_update(int param_1, int param_2)
         speed = lbl_803E1694;
     }
     high = gCamcontrolModeSettings->upperHeightOffset +
-        (*(f32 *)(param_2 + 0x1c) + gCamcontrolModeSettings->targetHeight);
+        (target->anim.worldPosY + gCamcontrolModeSettings->targetHeight);
     low = gCamcontrolModeSettings->lowerHeightOffset +
-        (*(f32 *)(param_2 + 0x1c) + gCamcontrolModeSettings->targetHeight);
-    if (*(s16 *)(param_2 + 0x44) == 1) {
-        obj = *(int *)(param_2 + 0xb8);
+        (target->anim.worldPosY + gCamcontrolModeSettings->targetHeight);
+    if (target->anim.classId == 1) {
+        state = (CamSlideObjectState *)target->extra;
         angle = getAngle((f64)velX, (f64)velZ);
         rot.angles[0] = (s16)(0x8000 - angle);
         rot.angles[1] = 0;
@@ -97,8 +108,8 @@ void camslide_update(int param_1, int param_2)
         rot.unk9C = lbl_803E16AC;
         rot.unk98 = lbl_803E16AC;
         mtxRotateByVec3s(mtx, rot.angles);
-        Matrix_TransformPoint(mtx, (f64)*(f32 *)(obj + 0x1a4), (f64)*(f32 *)(obj + 0x1a8),
-                              (f64)*(f32 *)(obj + 0x1ac), &outX, &outY, &outZ);
+        Matrix_TransformPoint(mtx, (f64)state->vectorX, (f64)state->vectorY,
+                              (f64)state->vectorZ, &outX, &outY, &outZ);
         angle = getAngle((f64)outY, (f64)outZ);
         gCamcontrolModeSettings->slideAngle +=
             (int)(framesThisStep * ((0x4000 - (angle & 0xffff)) -
@@ -123,8 +134,8 @@ void camslide_update(int param_1, int param_2)
     if (range < lbl_803E16DC) {
         range = lbl_803E16DC;
     }
-    if (*(s16 *)(param_2 + 0x44) == 1) {
-        if (fn_802966F4(param_2) <= lbl_803E16DC) {
+    if (target->anim.classId == 1) {
+        if (fn_802966F4(target) <= lbl_803E16DC) {
             step = lbl_803E16E0 * gCamcontrolModeSettings->maxDistance -
                 gCamcontrolModeSettings->lowerHeightOffset;
             step *= lbl_803E16E4;
@@ -190,22 +201,22 @@ void camslide_update(int param_1, int param_2)
                     } else if (speed > lbl_803E16A4) {
                         speed = lbl_803E16A4;
                     }
-                    fVar1 = lbl_803E16F0 + *(f32 *)(param_2 + 0x1c);
+                    fVar1 = lbl_803E16F0 + target->anim.worldPosY;
                     low = speed * ((gCamcontrolModeSettings->targetHeight +
                         gCamcontrolModeSettings->lowerHeightOffset) - lbl_803E16F0) + fVar1;
                     high = speed * ((gCamcontrolModeSettings->targetHeight +
                         gCamcontrolModeSettings->upperHeightOffset) - lbl_803E16F0) + fVar1;
                 }
             } else {
-                high = lbl_803E16E0 * (lbl_803E16DC - speed) + (lbl_803E16F0 + *(f32 *)(param_2 + 0x1c));
+                high = lbl_803E16E0 * (lbl_803E16DC - speed) + (lbl_803E16F0 + target->anim.worldPosY);
                 low = high;
             }
         }
     }
-    if (((CameraObject *)param_1)->anim.worldPosY < low) {
-        step = low - ((CameraObject *)param_1)->anim.worldPosY;
-    } else if (((CameraObject *)param_1)->anim.worldPosY > high) {
-        step = high - ((CameraObject *)param_1)->anim.worldPosY;
+    if (camera->anim.worldPosY < low) {
+        step = low - camera->anim.worldPosY;
+    } else if (camera->anim.worldPosY > high) {
+        step = high - camera->anim.worldPosY;
     } else {
         step = lbl_803E16AC;
     }
@@ -215,16 +226,16 @@ void camslide_update(int param_1, int param_2)
     if ((f32)approach > lbl_803E16E8 && (f32)approach < lbl_803E16F4) {
         step = lbl_803E16AC;
     }
-    ((CameraObject *)param_1)->anim.worldPosY = ((CameraObject *)param_1)->anim.worldPosY + step;
-    if (((CameraObject *)param_1)->anim.worldPosY > lbl_803E16B8 + high) {
-        ((CameraObject *)param_1)->anim.worldPosY = lbl_803E16B8 + high;
+    camera->anim.worldPosY = camera->anim.worldPosY + step;
+    if (camera->anim.worldPosY > lbl_803E16B8 + high) {
+        camera->anim.worldPosY = lbl_803E16B8 + high;
     }
     if (gCamcontrolModeSettings->upperHeightOffset > gCamcontrolModeSettings->baseUpperHeightOffset) {
         if (gCamcontrolModeSettings->clampFlags.b6 &&
-            ((CameraObject *)param_1)->anim.worldPosY > gCamcontrolModeSettings->heightLockLimit) {
-            ((CameraObject *)param_1)->anim.worldPosY = gCamcontrolModeSettings->heightLockLimit;
+            camera->anim.worldPosY > gCamcontrolModeSettings->heightLockLimit) {
+            camera->anim.worldPosY = gCamcontrolModeSettings->heightLockLimit;
         }
-        if (*(f32 *)(param_2 + 0x28) > lbl_803E16AC) {
+        if (target->anim.velocityY > lbl_803E16AC) {
             gCamcontrolModeSettings->clampFlags.b6 = 0;
         }
     } else {
@@ -241,14 +252,14 @@ void camslide_update(int param_1, int param_2)
  * EN v1.1 Address: 0x8010525C
  * EN v1.1 Size: 220b
  */
-void firstperson_updatePitch(f32 param_1, int param_2)
+void firstperson_updatePitch(f32 targetY, CameraObject *camera)
 {
     int v;
     f64 d;
 
-    v = (getAngle((f64)(*(f32 *)(param_2 + 0x1c) -
-        (param_1 + gCamcontrolModeSettings->targetHeight))) & 0xffff) -
-        ((uint)*(s16 *)(param_2 + 2) & 0xffff);
+    v = (getAngle((f64)(camera->anim.worldPosY -
+        (targetY + gCamcontrolModeSettings->targetHeight))) & 0xffff) -
+        ((uint)camera->anim.rotY & 0xffff);
     if (v > 0x8000) {
         v -= 0xffff;
     }
@@ -258,5 +269,5 @@ void firstperson_updatePitch(f32 param_1, int param_2)
     d = interpolate((f64)(f32)v,
                     (f64)(lbl_803E16A4 / (f32)gCamcontrolModeSettings->yawResponseFrames),
                     (f64)timeDelta);
-    *(s16 *)(param_2 + 2) = (s16)((int)d + *(s16 *)(param_2 + 2));
+    camera->anim.rotY = (s16)((int)d + camera->anim.rotY);
 }

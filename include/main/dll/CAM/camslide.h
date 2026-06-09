@@ -2,8 +2,10 @@
 #define MAIN_DLL_CAM_CAMSLIDE_H_
 
 #include "ghidra_import.h"
+#include "main/camera_object.h"
+#include "main/game_object.h"
 
-void camslide_update(int param_1,int param_2);
-void firstperson_updatePitch(f32 param_1,int param_2);
+void camslide_update(CameraObject *camera, GameObject *target);
+void firstperson_updatePitch(f32 targetY, CameraObject *camera);
 
 #endif /* MAIN_DLL_CAM_CAMSLIDE_H_ */

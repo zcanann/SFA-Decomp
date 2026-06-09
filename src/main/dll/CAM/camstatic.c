@@ -2,6 +2,7 @@
 #include "main/camera_interface.h"
 #include "main/camera_object.h"
 #include "main/dll/CAM/camcontrol_mode_settings.h"
+#include "main/dll/CAM/camslide.h"
 #include "main/object_transform.h"
 
 extern void camcontrol_traceMove(f32 radius, f32 *from, void *to, f32 *out, void *work, int a,
@@ -11,7 +12,6 @@ extern void camMoveFn_80104040(int camera, int obj);
 extern void camcontrol_updateModeSettings(int camera);
 extern void camcontrol_updateVerticalBounds(int camera, int flags, s8 param_3, f32 *upperBound,
                                             f32 *lowerBound);
-extern void camslide_update(int camera, int obj, f32 upper, f32 lower);
 extern void firstperson_updatePosition(int camera, void *obj);
 extern int EmissionController_IsLingering(int obj);
 extern void fn_8029656C(int obj, float *out);
@@ -115,8 +115,7 @@ void camstatic_update(short *param_1)
                                  *(f32 *)(param_1 + 10),(f32 *)(param_1 + 0xc),
                                  (f32 *)(param_1 + 0xe),(f32 *)(param_1 + 0x10),
                                  *(int *)(param_1 + 0x18));
-  camslide_update((int)param_1,(int)psVar4,gCamcontrolModeSettings->verticalLowerBound,
-                  gCamcontrolModeSettings->verticalUpperBound);
+  camslide_update((CameraObject *)param_1,(GameObject *)psVar4);
   camcontrol_updateVerticalBounds((int)param_1,1,8,&gCamcontrolModeSettings->verticalLowerBound,
                                   &gCamcontrolModeSettings->verticalUpperBound);
   if (gCamcontrolModeSettings->wallAvoidanceFlags.b7 == 0) {
