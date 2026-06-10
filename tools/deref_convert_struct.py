@@ -92,6 +92,10 @@ def main():
     path, header, sname = argv[1], argv[2], argv[3]
     varnames = argv[4:]
     htxt = open(header, errors='ignore').read()
+    # substitute simple numeric #defines so macro array dims parse
+    # (e.g. s16 randomHeadings[CHECKPOINT4_RANDOM_HEADING_COUNT])
+    for dm in re.finditer(r'^#define\s+(\w+)\s+(0[xX][0-9a-fA-F]+|\d+)\s*$', htxt, re.M):
+        htxt = re.sub(r'\b%s\b' % dm.group(1), dm.group(2), htxt)
     structs = {}
     for _ in range(2):
         for m in struct_re.finditer(htxt):
