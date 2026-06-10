@@ -38,7 +38,7 @@ int dfropenode_syncRopeToEndpoints(DFropenodeObject *obj)
   f32 temp;
   f32 margin;
 
-  baseObj = obj;
+  baseObj = (DFropenodeObject *)(int)obj;
   flag = baseObj->definition[0x18] & 1;
   if (flag != 0) {
     extra = baseObj->extra;
