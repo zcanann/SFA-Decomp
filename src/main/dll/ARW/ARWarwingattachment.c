@@ -2243,28 +2243,28 @@ extern void playerAddRemoveMagic(int player, int amount);
 extern void fn_80296474(int player, int a, int b);
 extern void GameBit_Set(int slot, int val);
 
-int fn_801F2974(int* arg0, int arg1, int* arg2, int arg3);
+int fn_801F2974(int *obj, int unused, ObjAnimUpdateState *animUpdate, int arg3);
 
 #pragma opt_strength_reduction off
-int dll_200_SeqFn(int p1, int p2, int p3, int p4)
+int dll_200_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate, int arg3)
 {
-    u8 ev;
+    u8 mode;
     int i;
     int state;
 
-    ev = (*gMapEventInterface)->getMode((int)((GameObject *)p1)->anim.mapEventSlot);
-    switch (ev) {
+    mode = (*gMapEventInterface)->getMode((int)((GameObject *)obj)->anim.mapEventSlot);
+    switch (mode) {
     case 1:
-        fn_801F2974((int *)p1, p2, (int *)p3, p4);
+        fn_801F2974((int *)obj, unused, animUpdate, arg3);
         break;
     case 4:
-        *(u8 *)&((GameObject *)p1)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)p1)->anim.resetHitboxMode | 8);
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
         break;
     case 6:
-        state = *(int *)&((GameObject *)p1)->extra;
-        *(u8 *)&((GameObject *)p1)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)p1)->anim.resetHitboxMode | 8);
-        for (i = 0; i < (int)*(u8 *)((char *)p3 + 0x8b); i++) {
-            switch (*((u8 *)p3 + (i + 0x81))) {
+        state = *(int *)&((GameObject *)obj)->extra;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
+        for (i = 0; i < (int)animUpdate->eventCount; i++) {
+            switch (animUpdate->eventIds[i]) {
             case 0:
                 break;
             case 1:
@@ -2288,28 +2288,28 @@ int dll_200_SeqFn(int p1, int p2, int p3, int p4)
 }
 
 #pragma opt_strength_reduction off
-int fn_801F2974(int* arg0, int arg1, int* arg2, int arg3)
+int fn_801F2974(int *obj, int unused, ObjAnimUpdateState *animUpdate, int arg3)
 {
     int state;
     int player;
     int i;
 
     player = Obj_GetPlayerObject();
-    state = *(int*)((char*)arg0 + 0xb8);
-    *(u8*)((char*)arg0 + 0xaf) = (u8)(*(u8*)((char*)arg0 + 0xaf) | 8);
+    state = *(int*)((char*)obj + 0xb8);
+    *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 8);
 
-    for (i = 0; i < (int)*(u8*)((char*)arg2 + 0x8b); i++) {
+    for (i = 0; i < (int)animUpdate->eventCount; i++) {
         u8 mode = ((Dll200State *)state)->mode25;
         if (mode == 1) {
-            if (*((u8*)arg2 + (i + 0x81)) == 4) {
+            if (animUpdate->eventIds[i] == 4) {
                 playerAddRemoveMagic(player, 5);
             }
         } else if (mode != 2) {
-            u8 v = *((u8*)arg2 + (i + 0x81));
-            if (v == 1) {
+            u8 eventId = animUpdate->eventIds[i];
+            if (eventId == 1) {
                 GameBit_Set(208, 1);
                 ((Dll200State *)state)->latch24 = 1;
-            } else if (v == 2) {
+            } else if (eventId == 2) {
                 fn_80296474(player, 0, 1);
                 playerAddRemoveMagic(player, 5);
             }
