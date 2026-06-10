@@ -5400,7 +5400,7 @@ void babycloudrunner_update(int* obj)
 {
     char* player;
     BabyCloudRunnerState* sub;
-    u8* def = *(u8**)((char*)obj + 0x4c);
+    u8* def = *(u8**)&((GameObject *)obj)->anim.placementData;
     int found;
     u8* def2;
     int* near;
@@ -5409,11 +5409,11 @@ void babycloudrunner_update(int* obj)
     RunnerTarget tgt;
     int mode;
     f32 radius;
-    sub = *(BabyCloudRunnerState**)((char*)obj + 0xb8);
+    sub = ((GameObject *)obj)->extra;
     player = (char*)Obj_GetPlayerObject();
     getTrickyObject();
     if (GameBit_Get(*(s16*)(def + 0x22)) != 0) {
-        *(s16*)((char*)obj + 6) |= 0x4000;
+        ((GameObject *)obj)->anim.flags |= 0x4000;
         sub->flags22C &= ~1;
         Obj_RemoveFromUpdateList(obj);
         ObjGroup_RemoveObject(obj, 0x20);
@@ -5425,22 +5425,22 @@ void babycloudrunner_update(int* obj)
     } else if (fn_80080150(sub) != 0) {
         sub->flags22C |= 1;
         sub->behaviourState = 0;
-        if (*(int*)((char*)obj + 0xf4) < 0) {
+        if (((GameObject *)obj)->unkF4 < 0) {
             if (*(s16*)(def + 0x22) != -1) {
                 GameBit_Set(*(s16*)(def + 0x22), 1);
             }
             ObjHits_DisableObject(obj);
-            *(s16*)((char*)obj + 6) |= 0x4000;
+            ((GameObject *)obj)->anim.flags |= 0x4000;
             sub->flags22C &= ~1;
             Obj_RemoveFromUpdateList(obj);
             ObjGroup_RemoveObject(obj, 0x20);
             ObjGroup_RemoveObject(obj, 3);
-            *(s16*)((char*)obj + 6) |= 0x4000;
+            ((GameObject *)obj)->anim.flags |= 0x4000;
         } else {
-            *(int*)((char*)obj + 0xf4) = *(int*)((char*)obj + 0xf4) - 1;
+            ((GameObject *)obj)->unkF4 = ((GameObject *)obj)->unkF4 - 1;
         }
     } else {
-        *(u8*)((char*)obj + 0xaf) |= 8;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
         if (sub->runnerState == 0) {
             mode = 0x19;
             if ((*gRomCurveInterface)->initCurve((char*)sub + 0x124, obj, lbl_803E424C, &mode, 0) == 0) {
@@ -5480,8 +5480,8 @@ void babycloudrunner_update(int* obj)
                             fn_8014C66C(near, Obj_GetPlayerObject());
                         } else {
                             fn_8014C66C(near, obj);
-                            if (*(s16*)((char*)obj + 0xa0) != 0xd) {
-                                ObjAnim_SetCurrentMove((int)obj, 0xd, *(f32*)((char*)obj + 0x98), 0);
+                            if (((GameObject *)obj)->anim.currentMove != 0xd) {
+                                ObjAnim_SetCurrentMove((int)obj, 0xd, ((GameObject *)obj)->anim.currentMoveProgress, 0);
                             }
                             ((int (*)(int, f32, f32, int))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E422C, timeDelta, 0);
                         }
@@ -5510,22 +5510,22 @@ void babycloudrunner_update(int* obj)
                     storeZeroToFloatParam((char*)sub + 0x238);
                 }
             } else {
-                *(u8*)((char*)obj + 0xaf) &= ~0x8;
-                sub2 = *(BabyCloudRunnerState**)((char*)obj + 0xb8);
+                *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x8;
+                sub2 = ((GameObject *)obj)->extra;
                 {
                     char* pp = (char*)Obj_GetPlayerObject();
-                    def2 = *(u8**)((char*)obj + 0x4c);
+                    def2 = *(u8**)&((GameObject *)obj)->anim.placementData;
                     found = 0;
                     if (Vec_distance(pp + 0x18, (char*)obj + 0x18) < (f32)*(s16*)(def2 + 0x1a)
                         && sub2->runnerState == 3
-                        && (*(u16*)((char*)obj + 0xb0) & 0x1000) == 0) {
+                        && (((GameObject *)obj)->objectFlags & 0x1000) == 0) {
                         found = 1;
                     }
                 }
                 if (found != 0) {
-                    *(u8*)((char*)obj + 0xaf) &= ~0x10;
+                    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x10;
                 } else {
-                    *(u8*)((char*)obj + 0xaf) |= 0x10;
+                    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x10;
                 }
             }
             if (sub->runnerState == 3) {
@@ -5536,8 +5536,8 @@ void babycloudrunner_update(int* obj)
                     tgt.a = sub->roostYaw;
                     tgt.b = 0;
                     tgt.c = 0;
-                    *(s16*)((char*)obj + 2) = 0;
-                    *(s16*)((char*)obj + 4) = 0;
+                    ((GameObject *)obj)->anim.rotY = 0;
+                    ((GameObject *)obj)->anim.rotZ = 0;
                     if (dll_2E_func0D(obj, &tgt, lbl_803DBE40, -1, &lbl_803DBE44, &lbl_803DBE48) != 0) {
                         ((WormSpitByte*)&sub->spitFlags)->_p0 = 1;
                         GameBit_Set(0x66, 0);

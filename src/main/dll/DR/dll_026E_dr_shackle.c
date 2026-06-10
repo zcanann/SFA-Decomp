@@ -19,8 +19,8 @@ void drshackle_release(void) {}
 void drshackle_initialise(void) {}
 
 int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f) {
-    u8 *p = *(u8 **)((char *)obj + 0xb8);
-    int *q = *(int **)((char *)obj + 0x4c);
+    u8 *p = ((GameObject *)obj)->extra;
+    int *q = *(int **)&((GameObject *)obj)->anim.placementData;
     int *model;
     int *modelData;
     s8 joint1;
@@ -42,24 +42,24 @@ int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f) {
     model = DrShackle_GetActiveModel((void *)a);
     modelData = *(int **)model;
 
-    *(s16 *)((char *)obj + 4) = 0;
-    *(s16 *)((char *)obj + 2) = 0;
+    ((GameObject *)obj)->anim.rotZ = 0;
+    ((GameObject *)obj)->anim.rotY = 0;
     ObjModel_CopyJointTranslation(model, joint1, jointPos);
     ObjModel_CopyJointTranslation(model, *(s8 *)(*(int *)((char *)modelData + 0x3c) + joint1 * 28),
                                   parentPos);
     PSVECSubtract(parentPos, jointPos, jointPos);
 
     if (*(s16 *)((char *)q + 0x1c) != 0) {
-        *(s16 *)((char *)obj + 4) =
+        ((GameObject *)obj)->anim.rotZ =
             (s16)((*(s16 *)((char *)q + 0x1c) << 14) + getAngle(jointPos[2], jointPos[0]));
-        *(s16 *)((char *)obj + 2) = (s16)getAngle(jointPos[2], jointPos[1]);
+        ((GameObject *)obj)->anim.rotY = (s16)getAngle(jointPos[2], jointPos[1]);
     } else {
         f32 savedY = jointPos[1];
         f32 mag;
         jointPos[1] = lbl_803E6A28;
         mag = PSVECMag(jointPos);
-        *(s16 *)((char *)obj + 4) = (s16)(lbl_803DC2F0 + getAngle(jointPos[0], jointPos[2]));
-        *(s16 *)((char *)obj + 2) = (s16)(lbl_803DDD70 + getAngle(mag, savedY));
+        ((GameObject *)obj)->anim.rotZ = (s16)(lbl_803DC2F0 + getAngle(jointPos[0], jointPos[2]));
+        ((GameObject *)obj)->anim.rotY = (s16)(lbl_803DDD70 + getAngle(mag, savedY));
         objSetMtxFn_800412d4(ObjPath_GetPointModelMtx(a, b));
     }
     ObjPath_GetPointWorldPosition(a, b, (f32 *)((char *)obj + 0xc), (f32 *)((char *)obj + 0x10),

@@ -794,7 +794,7 @@ extern void ObjHits_SyncObjectPositionIfDirty(int* obj);
 
 void fn_8017962C(int* obj)
 {
-    SidekickBallState* state = *(SidekickBallState**)((char*)obj + 0xb8);
+    SidekickBallState* state = ((GameObject *)obj)->extra;
     u8 b = state->ballMode;
     if (b != 3 && b != 2) return;
     state->fadeTimer = lbl_803E369C;
@@ -803,14 +803,14 @@ void fn_8017962C(int* obj)
 int fn_80179650(int* obj)
 {
     int r = 0;
-    u8 b = (*(SidekickBallState**)((char*)obj + 0xb8))->ballMode;
+    u8 b = (*(SidekickBallState**)&((GameObject *)obj)->extra)->ballMode;
     if (b == 2 || b == 1) r = 1;
     return r;
 }
 
 void fn_80179678(int* obj)
 {
-    SidekickBallState* state = *(SidekickBallState**)((char*)obj + 0xb8);
+    SidekickBallState* state = ((GameObject *)obj)->extra;
     state->fadeTimer = lbl_803E369C;
     state->ballMode = 0;
     ObjHits_DisableObject(obj);
@@ -819,18 +819,18 @@ void fn_80179678(int* obj)
 
 void fn_801796BC(int* obj, f32 a, f32 b, f32 c)
 {
-    SidekickBallState* state = *(SidekickBallState**)((char*)obj + 0xb8);
+    SidekickBallState* state = ((GameObject *)obj)->extra;
     state->ballMode = 3;
     state->fadeTimer = lbl_803E369C;
     *(f32*)((char*)obj + 36) = a;
-    *(f32*)((char*)obj + 40) = b;
-    *(f32*)((char*)obj + 44) = c;
+    ((GameObject *)obj)->anim.velocityY = b;
+    ((GameObject *)obj)->anim.velocityZ = c;
     ObjHits_EnableObject(obj);
     ObjHits_SyncObjectPositionIfDirty(obj);
     state->unk25B = 1;
-    state->launchX = *(f32*)((char*)obj + 12);
-    state->launchY = *(f32*)((char*)obj + 16);
-    state->launchZ = *(f32*)((char*)obj + 20);
+    state->launchX = ((GameObject *)obj)->anim.localPosX;
+    state->launchY = ((GameObject *)obj)->anim.localPosY;
+    state->launchZ = ((GameObject *)obj)->anim.localPosZ;
 }
 
 extern int *Obj_GetPlayerObject(void);
@@ -869,7 +869,7 @@ void trickyBallFn_801793b8(int *obj, u8 *params)
     }
 
     ObjHits_DisableObject(obj);
-    *(u8 *)((char *)obj + 0xaf) |= 8;
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
 
     getYButtonItem(&yItem);
     btns = getButtonsJustPressed(0);
@@ -933,10 +933,10 @@ end:
 extern u32 GameBit_Get(int eventId);
 void doorf4_update(int *obj)
 {
-    DoorF4State *state = *(DoorF4State **)((char *)obj + 0xb8);
+    DoorF4State *state = ((GameObject *)obj)->extra;
     state->triggerLatch = 0;
     if (((GameObject *)obj)->unkF4 == 0) {
-        int *src = *(int **)((char *)obj + 0x4c);
+        int *src = *(int **)&((GameObject *)obj)->anim.placementData;
         s16 type;
         ((GameObject *)obj)->anim.localPosX = ((ObjPlacement *)src)->posX;
         ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)src)->posY;
@@ -971,13 +971,13 @@ extern f32 mathCosf(f32 x);
 
 void doorf4_init(int *obj, int *params)
 {
-    DoorF4State *state = *(DoorF4State **)((char *)obj + 0xb8);
+    DoorF4State *state = ((GameObject *)obj)->extra;
     s16 type;
 
     ObjMsg_AllocQueue(obj, 4);
     *(s16 *)obj = (s16)((s8) * (s8 *)((char *)params + 0x18) << 8);
     ((GameObject *)obj)->animEventCallback = (void *)doorf4_SeqFn;
-    *(u8 *)((char *)obj + 0xaf) |= 8;
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     ((GameObject *)obj)->objectFlags |= 0x6000;
     state->gameBitA = *(s16 *)((char *)params + 0x1e);
     state->unk18 = *(s16 *)((char *)params + 0x20);
@@ -1052,8 +1052,8 @@ int doorf4_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate) {
     u8 *seq;
 
     seq = (u8 *)animUpdate;
-    def = *(u8 **)((char *)obj + 0x4c);
-    sub = *(DoorF4State **)((char *)obj + 0xb8);
+    def = *(u8 **)&((GameObject *)obj)->anim.placementData;
+    sub = ((GameObject *)obj)->extra;
     sd = lbl_803E3648;
     list = ObjList_GetObjects(&objIdx, &objCount);
     animUpdate->sequenceEventActive = 0;
@@ -1129,11 +1129,11 @@ int doorf4_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate) {
         break;
     case 2:
         if (gb == 0) {
-            if ((*(u8 *)((char *)obj + 0xaf) & 8) != 0 && GameBit_Get(0x2c) != 0) {
-                *(u8 *)((char *)obj + 0xaf) &= ~8;
+            if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 8) != 0 && GameBit_Get(0x2c) != 0) {
+                *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
             }
-            if ((*(u8 *)((char *)obj + 0xaf) & 1) != 0) {
-                *(u8 *)((char *)obj + 0xaf) |= 8;
+            if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) {
+                *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
                 GameBit_Set(sub->gameBitA, 1);
             }
         } else if (gb != 0) {
@@ -1141,7 +1141,7 @@ int doorf4_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate) {
         }
         break;
     case 4:
-        *(u8 *)((char *)obj + 0xaf) &= ~8;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
         if (gb != 0) {
             i = objIdx;
             walk = (int **)((char *)list + i * 4);
@@ -1192,9 +1192,9 @@ int doorf4_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate) {
         break;
     case 5:
         if (GameBit_Get(sub->gameBitB) != 0 && gb == 0) {
-            *(u8 *)((char *)obj + 0xaf) &= ~8;
-            if ((*(u8 *)((char *)obj + 0xaf) & 1) != 0) {
-                *(u8 *)((char *)obj + 0xaf) |= 8;
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
+            if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) {
+                *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
                 GameBit_Set(sub->gameBitA, 1);
                 (*gObjectTriggerInterface)->runSequence(1, obj, -1);
                 gb = 1;
@@ -1202,7 +1202,7 @@ int doorf4_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate) {
         }
         if (gb != 0) {
             active = 1;
-            *(u8 *)((char *)obj + 0xaf) |= 8;
+            *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
         }
         break;
     }
