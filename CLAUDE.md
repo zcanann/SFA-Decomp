@@ -154,6 +154,12 @@ probes on the bundled compilers):
 3. **`*(void **)ptr != NULL` instead of `*(int *)ptr != 0`**. The pointer form
    emits `cmplwi` (unsigned); the int form emits `cmpwi` (signed). Target
    almost always uses `cmplwi` for pointer-typed compares. See `a42bb90b`.
+   **U-SUFFIX LITERALS are the width lever the `(u32)` cast can't be: `x == 0u`
+   / `(x >> 6 & 1) == 0u` forces `cmplwi` on u8/bit-extract compares** where
+   the `(u32)`-cast form is inert (probe-verified t3/t19/t20 + trickyGrowl's
+   two banked width sites -> fixed). The suffix rides the COMPARE's type
+   instead of the operand's, so nothing folds it away. Use before reaching
+   for #58 width locals.
    **MWCC DROPS a `(u32)` cast on a `!= 0` compare — so `(u32)x != 0` still
    emits `cmpwi`; use `(void *)x != NULL` to force `cmplwi`.** For an `int`
    field/local holding a handle/pointer that target null-tests unsigned, the
