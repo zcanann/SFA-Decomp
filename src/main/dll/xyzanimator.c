@@ -172,7 +172,7 @@ void kaldachompspit_render(undefined4 param_1,undefined4 param_2,undefined4 para
   
   iVar1 = FUN_8028683c();
   iVar2 = **(int **)(iVar1 + 0xb8);
-  if (((iVar2 != 0) && (*(char *)(iVar2 + 0x2f8) != '\0')) && (((XyzAnimatorState *)iVar2)->unk4C != '\0')) {
+  if (((iVar2 != 0) && (*(char *)(iVar2 + 0x2f8) != '\0')) && (((XyzAnimatorState *)iVar2)->gameBitValue != '\0')) {
     FUN_8005fe14(iVar2);
   }
   if (visible != '\0') {

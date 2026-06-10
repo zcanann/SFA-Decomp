@@ -104,9 +104,9 @@ void fn_8023A87C(int p1, int p2)
         *(f32 *)((char *)spawned + 0x14) -= lbl_803E74D8;
         ((AndrossState *)p2)->effectLifetime -= framesThisStep;
         if (((AndrossState *)p2)->effectLifetime < 0) {
-            fn_8022F558(((AndrossState *)p2)->unk10, 5);
+            fn_8022F558(((AndrossState *)p2)->effectHandle, 5);
             ((AndrossState *)p2)->effectLifetime = 0;
-            ((AndrossState *)p2)->unk10 = 0;
+            ((AndrossState *)p2)->effectHandle = 0;
         }
     } else {
         f32 v = ((AndrossState *)p2)->spawnCooldown;
@@ -1253,7 +1253,7 @@ LAB_8023cbdc:
     ((AndrossState *)piVar14)->targetPosZ = ((AndrossState *)piVar14)->homePosZ;
     iVar12 = *piVar14;
     local_e4.x = (((AndrossState *)piVar14)->cachedPosX - *(float *)&((AndrossState *)iVar12)->lightAnchorObj) * lbl_803DC468;
-    local_e4.y = (((AndrossState *)piVar14)->cachedPosY - *(float *)&((AndrossState *)iVar12)->unk10) * lbl_803DC468;
+    local_e4.y = (((AndrossState *)piVar14)->cachedPosY - *(float *)&((AndrossState *)iVar12)->effectHandle) * lbl_803DC468;
     local_e4.z = (((AndrossState *)piVar14)->cachedPosZ - *(float *)&((AndrossState *)iVar12)->unk14) * lbl_803DC468;
     local_d8 = local_e4;
     arwarwing_setVelocity(iVar12,(int)&local_d8);
@@ -1418,7 +1418,7 @@ LAB_8023d7cc:
         iVar5 = Obj_AllocObjectSetup(0x24,0x819);
         *(f32 *)&((AndrossState *)iVar5)->handObjB = ((AndrossState *)piVar14)->cachedPosX;
         *(f32 *)&((AndrossState *)iVar5)->lightAnchorObj = ((AndrossState *)piVar14)->cachedPosY;
-        *(f32 *)&((AndrossState *)iVar5)->unk10 = ((AndrossState *)piVar14)->cachedPosZ;
+        *(f32 *)&((AndrossState *)iVar5)->effectHandle = ((AndrossState *)piVar14)->cachedPosZ;
         *(undefined *)(iVar5 + 4) = 1;
         *(undefined *)(iVar5 + 5) = 1;
         ((AndrossState *)iVar5)->unk20 = 0xffff;
@@ -1630,7 +1630,7 @@ LAB_8023de5c:
     if (*(u8 *)(piVar14 + 0x2e) != 0) {
       iVar12 = *piVar14;
       local_fc.x = (((AndrossState *)piVar14)->cachedPosX - *(float *)&((AndrossState *)iVar12)->lightAnchorObj) * lbl_803DC488;
-      local_fc.y = (((AndrossState *)piVar14)->cachedPosY - *(float *)&((AndrossState *)iVar12)->unk10) * lbl_803DC488;
+      local_fc.y = (((AndrossState *)piVar14)->cachedPosY - *(float *)&((AndrossState *)iVar12)->effectHandle) * lbl_803DC488;
       local_fc.z = (((AndrossState *)piVar14)->cachedPosZ - *(float *)&((AndrossState *)iVar12)->unk14) * lbl_803DC488;
       local_f0 = local_fc;
       arwarwing_setVelocity(iVar12,(int)&local_f0);
@@ -1737,7 +1737,7 @@ LAB_8023de5c:
       ((AndrossState *)piVar14)->cachedPosZ = ((GameObject *)obj)->anim.localPosZ - lbl_803E7580;
       iVar12 = *piVar14;
       local_114.x = (((AndrossState *)piVar14)->cachedPosX - *(float *)&((AndrossState *)iVar12)->lightAnchorObj) * lbl_803DC494;
-      local_114.y = (((AndrossState *)piVar14)->cachedPosY - *(float *)&((AndrossState *)iVar12)->unk10) * lbl_803DC494;
+      local_114.y = (((AndrossState *)piVar14)->cachedPosY - *(float *)&((AndrossState *)iVar12)->effectHandle) * lbl_803DC494;
       local_114.z = (((AndrossState *)piVar14)->cachedPosZ - *(float *)&((AndrossState *)iVar12)->unk14) * lbl_803DC494;
       local_108 = local_114;
       arwarwing_setVelocity(iVar12,(int)&local_108);
@@ -1775,7 +1775,7 @@ LAB_8023de5c:
     if (((GameObject *)obj)->anim.currentMoveProgress <= lbl_803DC4A0) {
       iVar12 = *piVar14;
       local_12c.x = (((AndrossState *)piVar14)->cachedPosX - *(float *)&((AndrossState *)iVar12)->lightAnchorObj) * lbl_803DC4A4;
-      local_12c.y = (((AndrossState *)piVar14)->cachedPosY - *(float *)&((AndrossState *)iVar12)->unk10) * lbl_803DC4A4;
+      local_12c.y = (((AndrossState *)piVar14)->cachedPosY - *(float *)&((AndrossState *)iVar12)->effectHandle) * lbl_803DC4A4;
       local_12c.z = (((AndrossState *)piVar14)->cachedPosZ - *(float *)&((AndrossState *)iVar12)->unk14) * lbl_803DC4A4;
       local_120 = local_12c;
       arwarwing_setVelocity(iVar12,(int)&local_120);
@@ -1888,9 +1888,9 @@ LAB_8023de5c:
       }
       if ((((AndrossState *)iVar12)->unk44 != 0x10) ||
          (iVar5 = animatedObjGetSeqId(((AndrossState *)iVar12)->unkB8), iVar5 != 0x598)) {
-        *(f32 *)(((AndrossState *)iVar12)->unk4C + 8) = ((GameObject *)obj)->anim.localPosX;
-        *(f32 *)(((AndrossState *)iVar12)->unk4C + 0xc) = ((GameObject *)obj)->anim.localPosY;
-        *(f32 *)(((AndrossState *)iVar12)->unk4C + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+        *(f32 *)(((AndrossState *)iVar12)->targetPosPtr + 8) = ((GameObject *)obj)->anim.localPosX;
+        *(f32 *)(((AndrossState *)iVar12)->targetPosPtr + 0xc) = ((GameObject *)obj)->anim.localPosY;
+        *(f32 *)(((AndrossState *)iVar12)->targetPosPtr + 0x10) = ((GameObject *)obj)->anim.localPosZ;
       }
     }
     local_13c = lbl_803E7490;
@@ -1901,9 +1901,9 @@ LAB_8023de5c:
       }
       if ((((AndrossState *)iVar12)->unk44 != 0x10) ||
          (iVar5 = animatedObjGetSeqId(((AndrossState *)iVar12)->unkB8), iVar5 != 0x598)) {
-        *(f32 *)(((AndrossState *)iVar12)->unk4C + 8) = ((GameObject *)obj)->anim.localPosX;
-        *(f32 *)(((AndrossState *)iVar12)->unk4C + 0xc) = ((GameObject *)obj)->anim.localPosY;
-        *(f32 *)(((AndrossState *)iVar12)->unk4C + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+        *(f32 *)(((AndrossState *)iVar12)->targetPosPtr + 8) = ((GameObject *)obj)->anim.localPosX;
+        *(f32 *)(((AndrossState *)iVar12)->targetPosPtr + 0xc) = ((GameObject *)obj)->anim.localPosY;
+        *(f32 *)(((AndrossState *)iVar12)->targetPosPtr + 0x10) = ((GameObject *)obj)->anim.localPosZ;
       }
     }
     local_140 = lbl_803E7490;
@@ -1914,9 +1914,9 @@ LAB_8023de5c:
       }
       if ((((AndrossState *)iVar12)->unk44 != 0x10) ||
          (iVar5 = animatedObjGetSeqId(((AndrossState *)iVar12)->unkB8), iVar5 != 0x598)) {
-        *(f32 *)(((AndrossState *)iVar12)->unk4C + 8) = ((GameObject *)obj)->anim.localPosX;
-        *(f32 *)(((AndrossState *)iVar12)->unk4C + 0xc) = ((GameObject *)obj)->anim.localPosY;
-        *(f32 *)(((AndrossState *)iVar12)->unk4C + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+        *(f32 *)(((AndrossState *)iVar12)->targetPosPtr + 8) = ((GameObject *)obj)->anim.localPosX;
+        *(f32 *)(((AndrossState *)iVar12)->targetPosPtr + 0xc) = ((GameObject *)obj)->anim.localPosY;
+        *(f32 *)(((AndrossState *)iVar12)->targetPosPtr + 0x10) = ((GameObject *)obj)->anim.localPosZ;
       }
     }
     local_144 = lbl_803E7490;
@@ -1927,9 +1927,9 @@ LAB_8023de5c:
       }
       if ((((AndrossState *)iVar12)->unk44 != 0x10) ||
          (iVar5 = animatedObjGetSeqId(((AndrossState *)iVar12)->unkB8), iVar5 != 0x598)) {
-        *(f32 *)(((AndrossState *)iVar12)->unk4C + 8) = ((GameObject *)obj)->anim.localPosX;
-        *(f32 *)(((AndrossState *)iVar12)->unk4C + 0xc) = ((GameObject *)obj)->anim.localPosY;
-        *(f32 *)(((AndrossState *)iVar12)->unk4C + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+        *(f32 *)(((AndrossState *)iVar12)->targetPosPtr + 8) = ((GameObject *)obj)->anim.localPosX;
+        *(f32 *)(((AndrossState *)iVar12)->targetPosPtr + 0xc) = ((GameObject *)obj)->anim.localPosY;
+        *(f32 *)(((AndrossState *)iVar12)->targetPosPtr + 0x10) = ((GameObject *)obj)->anim.localPosZ;
       }
     }
     local_148 = lbl_803E7490;
@@ -1940,9 +1940,9 @@ LAB_8023de5c:
       }
       if ((((AndrossState *)iVar12)->unk44 != 0x10) ||
          (iVar5 = animatedObjGetSeqId(((AndrossState *)iVar12)->unkB8), iVar5 != 0x598)) {
-        *(f32 *)(((AndrossState *)iVar12)->unk4C + 8) = ((GameObject *)obj)->anim.localPosX;
-        *(f32 *)(((AndrossState *)iVar12)->unk4C + 0xc) = ((GameObject *)obj)->anim.localPosY;
-        *(f32 *)(((AndrossState *)iVar12)->unk4C + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+        *(f32 *)(((AndrossState *)iVar12)->targetPosPtr + 8) = ((GameObject *)obj)->anim.localPosX;
+        *(f32 *)(((AndrossState *)iVar12)->targetPosPtr + 0xc) = ((GameObject *)obj)->anim.localPosY;
+        *(f32 *)(((AndrossState *)iVar12)->targetPosPtr + 0x10) = ((GameObject *)obj)->anim.localPosZ;
       }
     }
   }

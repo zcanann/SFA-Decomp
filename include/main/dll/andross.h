@@ -14,7 +14,7 @@ typedef struct AndrossState {
     int handObjA; /* ObjList_FindObjectById(0x47b78); driven via androsshand_setState */
     int handObjB; /* ObjList_FindObjectById(0x47b6a); driven via androsshand_setState */
     int lightAnchorObj;
-    int unk10;
+    int effectHandle;
     int unk14;
     u8 unk18[0x20 - 0x18];
     s16 unk20;
@@ -24,7 +24,7 @@ typedef struct AndrossState {
     s8 unk43;
     s16 unk44;
     u8 unk46[0x4C - 0x46];
-    int unk4C;
+    int targetPosPtr;
     u8 unk50[0x58 - 0x50];
     f32 homePosX; /* anchor position from the placement (setup->posX/Y/Z) */
     f32 homePosY;

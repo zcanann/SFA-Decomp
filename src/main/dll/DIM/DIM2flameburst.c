@@ -1124,8 +1124,8 @@ void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z)
     int off;
     int e;
     int p;
-    idx = ((ExplosionState *)state)->unkA58;
-    ((ExplosionState *)state)->unkA58 = idx + 1;
+    idx = ((ExplosionState *)state)->flameCount;
+    ((ExplosionState *)state)->flameCount = idx + 1;
     off = idx * 0x30;
     *(f32 *)((char *)state + off) = x;
     e = state + off;
@@ -1271,7 +1271,7 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         GXSetVtxDesc(0xd, 1);
         GXSetCurrentMtx(0);
         p = state;
-        for (i = 0; i < ((ExplosionState *)state)->unkA58; i++) {
+        for (i = 0; i < ((ExplosionState *)state)->flameCount; i++) {
             if (*(s8 *)&((ExplosionDebris *)p)->unk2F != 0) {
                 void **tex;
                 int k;
@@ -1351,7 +1351,7 @@ void explosion_update(int obj)
     int p;
     lbl_803DDB58 += 1;
     ((ExplosionState *)state)->frameCounter += framesThisStep;
-    for (i = 0, p = state; i < ((ExplosionState *)state)->unkA58; i++) {
+    for (i = 0, p = state; i < ((ExplosionState *)state)->flameCount; i++) {
         ((ExplosionDebris *)p)->unk10 += framesThisStep;
         if (((ExplosionDebris *)p)->unk2F != 0) {
             f32 sp = ((ExplosionDebris *)p)->unk1C;
@@ -1385,7 +1385,7 @@ void explosion_update(int obj)
                         vpos[1] += ((ExplosionDebris *)p)->unk4;
                         vpos[2] += ((ExplosionDebris *)p)->unk8;
                         sv = sp2 * (f32)(int)randomGetRange(0xc0, 0x100);
-                        if (((ExplosionState *)st2)->unkA58 < 0x32) {
+                        if (((ExplosionState *)st2)->flameCount < 0x32) {
                             fn_801B3DE4(obj, (u8)(c + 1), sv * lbl_803E4974, vpos[0], vpos[1], vpos[2]);
                         }
                         ((ExplosionDebris *)p)->unk20 = ((ExplosionDebris *)p)->unk24;
@@ -1497,7 +1497,7 @@ void explosion_update(int obj)
                 ((GameObject *)obj)->anim.rootMotionScale = lbl_803E49A4 * frac * ((ExplosionState *)state)->scale;
                 ((GameObject *)obj)->anim.alpha = (s8)(int)-(lbl_803E4938 * frac - lbl_803E4938);
             }
-            if (((ExplosionState *)state)->unkA5B == 0 && (((ExplosionState *)state)->lifeFrames >> 1) <= ((ExplosionState *)state)->frameCounter) {
+            if (((ExplosionState *)state)->halfLifeFired == 0 && (((ExplosionState *)state)->lifeFrames >> 1) <= ((ExplosionState *)state)->frameCounter) {
                 u32 k;
                 ang[0] = randomGetRange(0x1000, 0x6000);
                 ang[3] = *(s16 *)((char *)state + 0x14);
@@ -1505,7 +1505,7 @@ void explosion_update(int obj)
                 while ((f32)(int)k < ((ExplosionState *)state)->scale) {
                     k++;
                 }
-                *(u8 *)&((ExplosionState *)state)->unkA5B = 1;
+                *(u8 *)&((ExplosionState *)state)->halfLifeFired = 1;
                 ang[1] = ang[0];
                 ang[2] = ang[0];
             }
@@ -1523,7 +1523,7 @@ void explosion_init(int obj, int p2)
     int p;
     int i;
     int n;
-    ((ExplosionState *)state)->unkA58 = 0;
+    ((ExplosionState *)state)->flameCount = 0;
     if (*(s16 *)((char *)p2 + 0x1a) == 0) {
         scale = lbl_803E49A8;
     } else {
@@ -1618,7 +1618,7 @@ void explosion_init(int obj, int p2)
     } else {
         ((ExplosionState *)state)->rayMode = 0;
     }
-    *(u8 *)&((ExplosionState *)state)->unkA5B = 0;
+    *(u8 *)&((ExplosionState *)state)->halfLifeFired = 0;
     ((ExplosionState *)state)->frameCounter = 0;
     ((ExplosionState *)state)->lifeFrames = (int)(lbl_803E4930 * sqrtf(scale));
     {

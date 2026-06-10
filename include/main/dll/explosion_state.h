@@ -16,10 +16,10 @@ typedef struct ExplosionState {
     int frameCounter;
     int lifeFrames; /* scale-derived, clamped 0..60 */
     f32 scale;
-    u8 unkA58;
+    u8 flameCount;
     u8 rayMode; /* 0 none, 1 grounded pair, 2 random pair */
     u8 debrisCount;
-    s8 unkA5B;
+    s8 halfLifeFired;
     s8 nearGround; /* spawned close to the probed floor */
     u8 modelKind; /* params & 3, active model index */
     u8 padA5E[2];
