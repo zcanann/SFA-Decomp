@@ -4,6 +4,7 @@
 #include "main/mm.h"
 #include "main/objHitReact.h"
 #include "main/objanim_internal.h"
+#include "main/objfx.h"
 #include "main/objhits.h"
 #include "main/objlib.h"
 #include "main/resource.h"
@@ -11,8 +12,6 @@
 extern f32 timeDelta;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
-extern void objLightFn_8009a1dc(int obj,double scale,ObjHitReactEffectPos *pos,u32 count,
-                                int *params);
 
 /*
  * --INFO--
@@ -87,8 +86,8 @@ int ObjHitReact_Update(int obj,ObjHitReactEntry *reactionEntryTable,u32 reaction
         }
       }
       else {
-        objLightFn_8009a1dc(obj,(double)gObjHitReactAltEffectScale,&effectPos,
-                            OBJHITREACT_ALT_EFFECT_COUNT,0);
+        objLightFn_8009a1dc((void *)obj,gObjHitReactAltEffectScale,&effectPos,
+                            OBJHITREACT_ALT_EFFECT_COUNT,NULL);
       }
     }
     if (((reactionState & OBJHITREACT_REACTION_STATE_MASK) == OBJHITREACT_REACTION_STATE_INACTIVE) &&
@@ -156,7 +155,7 @@ void ObjHitReact_ResetActiveObjects(int objectCount)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int ObjHitbox_AllocRotatedBounds(ObjHitbox *hitbox,uint arena)
+int ObjHitbox_AllocRotatedBounds(ObjHitbox *hitbox,u32 arena)
 {
   ObjHitboxTransformState *transformState;
 
@@ -169,7 +168,7 @@ int ObjHitbox_AllocRotatedBounds(ObjHitbox *hitbox,uint arena)
     ObjHitbox_UpdateRotatedBounds(hitbox,1);
     ObjHitbox_UpdateRotatedBounds(hitbox,1);
   }
-  return (uint)transformState + sizeof(ObjHitboxTransformState);
+  return (u32)transformState + sizeof(ObjHitboxTransformState);
 }
 
 /*
@@ -236,8 +235,8 @@ void ObjHitReact_LoadMoveEntries(ObjAnimComponent *objAnim,ObjAnimBank *bank,int
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint ObjHitReact_InitState(int objType,ObjAnimBank *bank,ObjHitReactState *hitState,
-                           uint entryArena,ObjAnimComponent *objAnim)
+u32 ObjHitReact_InitState(int objType,ObjAnimBank *bank,ObjHitReactState *hitState,
+                          u32 entryArena,ObjAnimComponent *objAnim)
 {
   ObjHitReactEntry *entries;
 
@@ -247,7 +246,7 @@ uint ObjHitReact_InitState(int objType,ObjAnimBank *bank,ObjHitReactState *hitSt
   hitState->entryByteCapacity = OBJHITREACT_ENTRY_ARENA_BYTES;
   entries = (ObjHitReactEntry *)roundUpTo8(entryArena);
   hitState->entries = entries;
-  entryArena = (uint)entries + hitState->entryByteCapacity;
+  entryArena = (u32)entries + hitState->entryByteCapacity;
   hitState->activeHitboxMode = OBJHITREACT_ACTIVE_HITBOX_MODE;
   if ((hitState->shapeFlags & OBJHITS_SHAPE_RESET_MODE_MASK) != 0) {
     hitState->resetHitboxMode = OBJHITREACT_RESET_HITBOX_MODE;

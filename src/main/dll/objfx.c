@@ -1,5 +1,6 @@
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/game_object.h"
+#include "main/objfx.h"
 
 extern f32 lbl_8030F9D8[];
 extern s16 lbl_803DB788[4];
@@ -867,7 +868,7 @@ void objParticleFn_80099d84(void *obj, f32 scale, int type, f32 fextra, void *li
 extern u8 lbl_8030FA30[];
 extern f32 lbl_803DF39C;
 
-void objLightFn_8009a1dc(f32 scale, void *obj, void *origin, u8 type, void *light)
+void objLightFn_8009a1dc(void *obj, f32 scale, void *origin, u8 type, void *light)
 {
     u8 args[40];
     int i;

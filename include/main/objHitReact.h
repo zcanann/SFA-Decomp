@@ -2,7 +2,6 @@
 #define MAIN_OBJHITREACT_H_
 
 #include "global.h"
-#include "ghidra_import.h"
 
 typedef struct ObjHitReactEntry ObjHitReactEntry;
 typedef struct ObjAnimBank ObjAnimBank;
@@ -137,11 +136,11 @@ STATIC_ASSERT(offsetof(ObjHitReactEntry, reactionStepScale) == 0x0C);
 int ObjHitReact_Update(int obj,ObjHitReactEntry *reactionEntryTable,u32 reactionEntryCount,
                        u32 reactionState,float *reactionStepScale);
 void ObjHitReact_ResetActiveObjects(int objectCount);
-int ObjHitbox_AllocRotatedBounds(ObjHitbox *hitbox,uint arena);
+int ObjHitbox_AllocRotatedBounds(ObjHitbox *hitbox,u32 arena);
 void ObjHitReact_LoadMoveEntries(ObjAnimComponent *objAnim,ObjAnimBank *bank,int objType,
                                  ObjHitReactState *hitState,int moveId,int async);
-uint ObjHitReact_InitState(int objType,ObjAnimBank *bank,ObjHitReactState *hitState,
-                           uint entryArena,ObjAnimComponent *objAnim);
+u32 ObjHitReact_InitState(int objType,ObjAnimBank *bank,ObjHitReactState *hitState,
+                          u32 entryArena,ObjAnimComponent *objAnim);
 void ObjHitReact_UpdateResetObjects(void);
 ObjAnimComponent **ObjHitReact_GetResetObjects(int *outObjectCount);
 
