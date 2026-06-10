@@ -53,7 +53,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
   u8 bloopsRemaining;
   u8 j;
 
-  if (((*gMapEventInterface)->getAnimEvent(*(s8 *)(obj + 0xac), 0) == 0) &&
+  if (((*gMapEventInterface)->getAnimEvent(((GameObject *)obj)->anim.mapEventSlot, 0) == 0) &&
       (GameBit_Get(0x13f) == 0)) {
     *(u8 *)(state + 6) = 0;
     (*gGameUIInterface)->airMeterShutdown();
@@ -96,7 +96,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
       *(f32 *)(state + 8) -= (f32)bloopsRemaining * timeDelta;
       if (*(f32 *)(state + 8) >= lbl_803E54B4) {
         (*gGameUIInterface)->runAirMeter((int)*(f32 *)(state + 8));
-      } else if ((*gMapEventInterface)->getAnimEvent(*(s8 *)(obj + 0xac), 0) != 0) {
+      } else if ((*gMapEventInterface)->getAnimEvent(((GameObject *)obj)->anim.mapEventSlot, 0) != 0) {
         (*gGameUIInterface)->airMeterShutdown();
         (*gScreenTransitionInterface)->start(0x14, 1);
         *(u8 *)(state + 6) = 5;

@@ -2882,9 +2882,9 @@ void shop_update(int obj)
     }
 
     if (((GameObject *)obj)->unkF4 == 0) {
-        (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 0, 1);
-        (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 5, 1);
-        (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 6, 1);
+        (*gMapEventInterface)->setAnimEvent(((GameObject *)obj)->anim.mapEventSlot, 0, 1);
+        (*gMapEventInterface)->setAnimEvent(((GameObject *)obj)->anim.mapEventSlot, 5, 1);
+        (*gMapEventInterface)->setAnimEvent(((GameObject *)obj)->anim.mapEventSlot, 6, 1);
         GameBit_Set(0x617, 1);
         skyFn_80088c94(7, 1);
         ((GameObject *)obj)->unkF4 = 1;

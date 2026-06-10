@@ -475,7 +475,7 @@ void fn_801E7DC8(int p1, int p2, int count)
 
   if (Obj_IsLoadingLocked() == 0) return;
 
-  (*gMapEventInterface)->setAnimEvent((s32)(s8)*(u8 *)(p1 + 0xac), 6, 1);
+  (*gMapEventInterface)->setAnimEvent((s32)((GameObject *)p1)->anim.mapEventSlot, 6, 1);
 
   hitDetectFn_800658a4(p1, &local, 0, *(f32 *)(p1 + 0xc), *(f32 *)(p1 + 0x10), *(f32 *)(p1 + 0x14));
 
@@ -550,7 +550,7 @@ void FUN_801e7d3c(undefined4 param_1,undefined4 param_2,int param_3,undefined4 p
   iVar3 = (int)((ulonglong)uVar9 >> 0x20);
   uVar4 = FUN_80017ae8();
   if ((uVar4 & 0xff) != 0) {
-    (*gMapEventInterface)->setAnimEvent((int)*(char *)(iVar3 + 0xac),6,1);
+    (*gMapEventInterface)->setAnimEvent((int)((GameObject *)iVar3)->anim.mapEventSlot,6,1);
     dVar7 = (double)*(float *)(iVar3 + 0x10);
     dVar8 = (double)*(float *)(iVar3 + 0x14);
     FUN_800632e8((double)*(float *)(iVar3 + 0xc),dVar7,dVar8,iVar3,local_28,0);
@@ -571,7 +571,7 @@ void FUN_801e7d3c(undefined4 param_1,undefined4 param_2,int param_3,undefined4 p
       *(undefined *)(puVar5 + 3) = 6;
       *(undefined4 *)(puVar5 + 10) = *(undefined4 *)((int)uVar9 + 0x9b4);
       FUN_80017ae4((double)fVar2,dVar7,dVar8,in_f4,in_f5,in_f6,in_f7,in_f8,puVar5,5,
-                   *(undefined *)(iVar3 + 0xac),0xffffffff,*(uint **)(iVar3 + 0x30),param_6,param_7,
+                   ((GameObject *)iVar3)->anim.mapEventSlot,0xffffffff,*(uint **)(iVar3 + 0x30),param_6,param_7,
                    param_8);
     }
     for (iVar6 = 0; iVar6 < param_3; iVar6 = iVar6 + 1) {
@@ -592,7 +592,7 @@ void FUN_801e7d3c(undefined4 param_1,undefined4 param_2,int param_3,undefined4 p
       *(undefined *)((int)puVar5 + 0x19) = 1;
       *(undefined4 *)(puVar5 + 10) = *(undefined4 *)((int)uVar9 + 0x9b4);
       FUN_80017ae4((double)fVar2,dVar7,dVar8,in_f4,in_f5,in_f6,in_f7,in_f8,puVar5,5,
-                   *(undefined *)(iVar3 + 0xac),0xffffffff,*(uint **)(iVar3 + 0x30),param_6,param_7,
+                   ((GameObject *)iVar3)->anim.mapEventSlot,0xffffffff,*(uint **)(iVar3 + 0x30),param_6,param_7,
                    param_8);
     }
   }

@@ -1,4 +1,5 @@
 #include "main/mapEvent.h"
+#include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/TREX/TREX_Lazerwall.h"
 
@@ -147,7 +148,7 @@ int TREX_Lazerwall_updateTimedChallenge(int arg1)
 
         hudFn_8011f38c(2);
 
-        (*gMapEventInterface)->setAnimEvent((s32)*(s8 *)(arg1 + 0xac), 6, 0);
+        (*gMapEventInterface)->setAnimEvent((s32)((GameObject *)arg1)->anim.mapEventSlot, 6, 0);
 
         (*(void (**)(int, int, int, int, int))((char *)*gTitleMenuControlInterface + 0x4))(0, 0xf3, 0, 0, 0);
     }

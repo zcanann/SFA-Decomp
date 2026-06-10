@@ -173,7 +173,7 @@ void vfplift1_updateState(int obj)
     gate1 = GameBit_Get(VFPLIFT1_GATE_GAMEBIT_1);
     gate2 = GameBit_Get(VFPLIFT1_GATE_GAMEBIT_2);
     gate3 = GameBit_Get(VFPLIFT1_GATE_GAMEBIT_3);
-    if ((*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 2) {
+    if ((*gMapEventInterface)->getMode(((GameObject *)obj)->anim.mapEventSlot) == 2) {
         gate0 = 1;
         gate3 = gate2 = gate1 = gate0;
     }

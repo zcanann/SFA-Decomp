@@ -57,7 +57,7 @@ void vfplevelcontrol_update(int obj) {
     }
 
     coordsToMapCell(*(f32 *)(player + 0xc), *(f32 *)(player + 0x14));
-    mapEventState = (*gMapEventInterface)->getMode((s8)*(u8 *)((char *)obj + 0xac));
+    mapEventState = (*gMapEventInterface)->getMode(((GameObject *)obj)->anim.mapEventSlot);
     switch (mapEventState) {
     case 1:
         if (lbl_803DC148 != 0) {
@@ -127,7 +127,7 @@ void vfplevelcontrol_init(int *obj, u8 *init) {
         state->areaMode = setup->areaMode;
     }
     lbl_803DC148 = 0x82;
-    (*gMapEventInterface)->getMode(*(s8 *)((char *)obj + 0xac));
+    (*gMapEventInterface)->getMode(((GameObject *)obj)->anim.mapEventSlot);
     state->cueTimers[4] = 0;
     state->cueTimers[5] = 0;
     ((GameObject *)obj)->objectFlags |= 0x6000;

@@ -128,7 +128,7 @@ undefined4 FUN_801ce07c(int param_1,undefined4 param_2,int param_3)
  */
 void FUN_801ce144(int param_1)
 {
-  (*gMapEventInterface)->setAnimEvent((int)*(char *)(param_1 + 0xac),0x1f,0);
+  (*gMapEventInterface)->setAnimEvent((int)((GameObject *)param_1)->anim.mapEventSlot,0x1f,0);
   return;
 }
 

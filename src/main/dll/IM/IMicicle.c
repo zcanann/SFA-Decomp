@@ -1418,10 +1418,10 @@ void cflevelcontrol_init(u8* obj, u8* params) {
             GameBit_Set(lbl_80323008[i], 0);
         }
     }
-    (*gMapEventInterface)->setAnimEvent(*(s8*)(obj + 0xac), 4, 0);
-    (*gMapEventInterface)->setAnimEvent(*(s8*)(obj + 0xac), 0x11, 0);
-    (*gMapEventInterface)->setAnimEvent(*(s8*)(obj + 0xac), 0x15, 0);
-    (*gMapEventInterface)->setAnimEvent(*(s8*)(obj + 0xac), 0x16, 0);
+    (*gMapEventInterface)->setAnimEvent(((GameObject *)obj)->anim.mapEventSlot, 4, 0);
+    (*gMapEventInterface)->setAnimEvent(((GameObject *)obj)->anim.mapEventSlot, 0x11, 0);
+    (*gMapEventInterface)->setAnimEvent(((GameObject *)obj)->anim.mapEventSlot, 0x15, 0);
+    (*gMapEventInterface)->setAnimEvent(((GameObject *)obj)->anim.mapEventSlot, 0x16, 0);
     ((LevelControlFlags *)(sub + 0xc))->b5 = (u8)GameBit_Get(0x974);
     ((LevelControlFlags *)(sub + 0xc))->b4 = (u8)GameBit_Get(0x975);
     objSetSlot(obj, 0x51);

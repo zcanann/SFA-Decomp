@@ -1085,7 +1085,7 @@ LAB_8019b350:
       if (local_10[0] == 0xf0008) break;
       if ((int)local_10[0] < 0xf0008) {
         if (local_10[0] == 0xf0004) {
-          if (*(char *)(local_14 + 0xac) == *(char *)(param_9 + 0xac)) {
+          if (((GameObject *)local_14)->anim.mapEventSlot == ((GameObject *)param_9)->anim.mapEventSlot) {
             bVar1 = false;
             puVar4 = &DAT_803ad438;
             iVar3 = (int)DAT_803de789;
@@ -1369,7 +1369,7 @@ void cloudprisoncontrol_update(int obj)
     while (ObjMsg_Pop(obj, msg, &target, &data) != 0) {
         switch (msg[0]) {
         case 0xf0004:
-            if (*(s8 *)(target + 0xac) == *(s8 *)(obj + 0xac)) {
+            if (((GameObject *)target)->anim.mapEventSlot == ((GameObject *)obj)->anim.mapEventSlot) {
                 found = 0;
                 p = lbl_803AC7D8;
                 dval = data;
@@ -1777,7 +1777,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     break;
                 case 0x13:
                     (*gMapEventInterface)->setAnimEvent(
-                        (int)*(s8 *)(obj + 0xac), (u16)((p[2] << 8) | p[3]), 1);
+                        (int)((GameObject *)obj)->anim.mapEventSlot, (u16)((p[2] << 8) | p[3]), 1);
                     break;
                 case 0x27:
                     id = (u16)((p[2] << 8) | p[3]);
@@ -1809,12 +1809,12 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     break;
                 case 0x14:
                     (*gMapEventInterface)->setAnimEvent(
-                        (int)*(s8 *)(obj + 0xac), (u16)((p[2] << 8) | p[3]), 0);
+                        (int)((GameObject *)obj)->anim.mapEventSlot, (u16)((p[2] << 8) | p[3]), 0);
                     break;
                 case 0x22:
                     id = (u16)((p[2] << 8) | p[3]);
-                    c = (*gMapEventInterface)->getAnimEvent((int)*(s8 *)(obj + 0xac), id);
-                    (*gMapEventInterface)->setAnimEvent((int)*(s8 *)(obj + 0xac), id, c ^ 1);
+                    c = (*gMapEventInterface)->getAnimEvent((int)((GameObject *)obj)->anim.mapEventSlot, id);
+                    (*gMapEventInterface)->setAnimEvent((int)((GameObject *)obj)->anim.mapEventSlot, id, c ^ 1);
                     break;
                 case 0x15:
                     tbl = (int *)getTablesBinEntry((u16)((p[2] << 8) | p[3]) + 2);
@@ -1838,7 +1838,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     break;
                 case 0x18:
                     (*gMapEventInterface)->setMode(
-                        (int)*(s8 *)(obj + 0xac), (u16)((p[2] << 8) | p[3]));
+                        (int)((GameObject *)obj)->anim.mapEventSlot, (u16)((p[2] << 8) | p[3]));
                     break;
                 case 0x1a:
                     (*gMapEventInterface)->setAnimEvent(p[3], p[2], 1);
