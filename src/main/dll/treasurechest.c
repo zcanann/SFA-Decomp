@@ -114,9 +114,9 @@ void dll_D3_update(int *obj)
     }
 
     rc = ((int (*)(int *, int *, int))((void **)*(int *)gBaddieControlInterface)[0x30 / 4])(obj, state, 0);
-    if (rc == 0) return;
+    if (rc == 0u) return;
 
-    if ((extra->flags92 & 2) == 0) {
+    if ((extra->flags92 >> 1 & 1) == 0u) {
         if (ObjContact_AddCallback(obj, (int)player, fn_80167550) != 0) {
             extra->flags92 =
                 (u8)((extra->flags92 & 0xfd) | 2);
@@ -129,7 +129,7 @@ void dll_D3_update(int *obj)
         rc = ((int (*)(f32, int *, int *, int))((void **)*(int *)gBaddieControlInterface)[0x48 / 4])(
             (f32)((double)(u32)((TreasureChestState *)state)->aggroRange - lbl_803E3040),
             obj, state, 0x18000);
-        if (rc != 0) {
+        if (rc != 0u) {
             ((void (*)(int *, int *, int, int, int, int, int, int, int))((void **)*(int *)gBaddieControlInterface)[0x28 / 4])(
                 obj, state,
                 (int)state + 0x35c,
@@ -150,7 +150,7 @@ void dll_D3_update(int *obj)
         }
     }
 
-    if (((TreasureChestState *)state)->targetObj != 0) {
+    if (((TreasureChestState *)state)->targetObj != 0u) {
         local_8c = *(f32 *)((char *)(((TreasureChestState *)state)->targetObj) + 0x18) -
                    ((GameObject *)obj)->anim.worldPosX;
         local_88 = *(f32 *)((char *)(((TreasureChestState *)state)->targetObj) + 0x1c) -
