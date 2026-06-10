@@ -13,17 +13,17 @@
 #define LASER_UNSUPPORTED_OBJECT_DEF_DFP_LASERBE 0x0355
 
 typedef struct LaserState {
-  s16 primaryGameBit;
-  s16 secondaryGameBit;
-  u8 gameBitLatched;
+  s16 completionGameBit;
+  s16 activationGameBit;
+  u8 completionLatched;
 } LaserState;
 
 typedef struct LaserObjectMapData {
   ObjPlacement base;
   s8 mapEventSlot;
   u8 pad19[0x1E - 0x19];
-  s16 primaryGameBit;
-  s16 secondaryGameBit;
+  s16 completionGameBit;
+  s16 activationGameBit;
 } LaserObjectMapData;
 
 typedef struct LaserObject {
@@ -45,13 +45,13 @@ typedef struct LaserReleaseInterface {
 } LaserReleaseInterface;
 
 STATIC_ASSERT(sizeof(LaserState) == 0x06);
-STATIC_ASSERT(offsetof(LaserState, primaryGameBit) == 0x00);
-STATIC_ASSERT(offsetof(LaserState, secondaryGameBit) == 0x02);
-STATIC_ASSERT(offsetof(LaserState, gameBitLatched) == 0x04);
+STATIC_ASSERT(offsetof(LaserState, completionGameBit) == 0x00);
+STATIC_ASSERT(offsetof(LaserState, activationGameBit) == 0x02);
+STATIC_ASSERT(offsetof(LaserState, completionLatched) == 0x04);
 
 STATIC_ASSERT(offsetof(LaserObjectMapData, mapEventSlot) == 0x18);
-STATIC_ASSERT(offsetof(LaserObjectMapData, primaryGameBit) == 0x1E);
-STATIC_ASSERT(offsetof(LaserObjectMapData, secondaryGameBit) == 0x20);
+STATIC_ASSERT(offsetof(LaserObjectMapData, completionGameBit) == 0x1E);
+STATIC_ASSERT(offsetof(LaserObjectMapData, activationGameBit) == 0x20);
 STATIC_ASSERT(sizeof(LaserObjectMapData) == 0x24);
 
 STATIC_ASSERT(offsetof(LaserObject, modeWord) == 0x00);

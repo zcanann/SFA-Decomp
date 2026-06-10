@@ -775,8 +775,8 @@ void FUN_801fe1c4(LaserObject *obj)
   int iVar2;
   
   state = obj->state;
-  if ((state->gameBitLatched == '\0') &&
-     (uVar1 = GameBit_Get((int)state->primaryGameBit), uVar1 != 0)) {
+  if ((state->completionLatched == '\0') &&
+     (uVar1 = GameBit_Get((int)state->completionGameBit), uVar1 != 0)) {
     obj->statusFlags = obj->statusFlags & ~LASER_OBJECT_STATUS_DISABLED;
   }
   else {
@@ -788,18 +788,18 @@ void FUN_801fe1c4(LaserObject *obj)
     if (bVar3 == LASEROBJ_MODE_SEQUENCE_B) {
       iVar2 = (*gGameUIInterface)->isEventReady(LASEROBJ_MAIN_SEQUENCE_B_EVENT);
       if (iVar2 != 0) {
-        GameBit_Set((int)state->primaryGameBit,1);
-        GameBit_Set((int)state->secondaryGameBit,0);
-        state->gameBitLatched = 1;
+        GameBit_Set((int)state->completionGameBit,1);
+        GameBit_Set((int)state->activationGameBit,0);
+        state->completionLatched = 1;
         obj->statusFlags = obj->statusFlags | LASER_OBJECT_STATUS_DISABLED;
       }
     }
     else if ((bVar3 < 2) && (bVar3 != 0)) {
       iVar2 = (*gGameUIInterface)->isEventReady(LASEROBJ_MAIN_SEQUENCE_A_EVENT);
       if (iVar2 != 0) {
-        GameBit_Set((int)state->primaryGameBit,1);
-        GameBit_Set((int)state->secondaryGameBit,0);
-        state->gameBitLatched = 1;
+        GameBit_Set((int)state->completionGameBit,1);
+        GameBit_Set((int)state->activationGameBit,0);
+        state->completionLatched = 1;
         obj->statusFlags = obj->statusFlags | LASER_OBJECT_STATUS_DISABLED;
       }
     }
@@ -826,13 +826,13 @@ void FUN_801fe324(LaserObject *obj,LaserObjectMapData *mapData)
   uint uVar1;
   
   state = obj->state;
-  state->primaryGameBit = mapData->primaryGameBit;
-  state->secondaryGameBit = mapData->secondaryGameBit;
-  state->gameBitLatched = 0;
+  state->completionGameBit = mapData->completionGameBit;
+  state->activationGameBit = mapData->activationGameBit;
+  state->completionLatched = 0;
   obj->modeWord = (s16)(mapData->mapEventSlot << LASEROBJ_MODE_WORD_SHIFT);
-  uVar1 = GameBit_Get((int)state->primaryGameBit);
+  uVar1 = GameBit_Get((int)state->completionGameBit);
   if (uVar1 != 0) {
-    state->gameBitLatched = 1;
+    state->completionLatched = 1;
     obj->statusFlags = obj->statusFlags | LASER_OBJECT_STATUS_DISABLED;
   }
   obj->objectFlags = obj->objectFlags | LASER_OBJECT_FLAGS_SEQUENCE_CONTROL;
@@ -1760,7 +1760,7 @@ void vfpspellplace_update(int obj) {
 
     spellPlace = (LaserObject *)obj;
     state = spellPlace->state;
-    if (state->gameBitLatched == 0 && GameBit_Get((int)state->secondaryGameBit) != 0) {
+    if (state->completionLatched == 0 && GameBit_Get((int)state->activationGameBit) != 0) {
         spellPlace->statusFlags &= ~LASER_OBJECT_STATUS_DISABLED;
     } else {
         spellPlace->statusFlags |= LASER_OBJECT_STATUS_DISABLED;
@@ -1771,17 +1771,17 @@ void vfpspellplace_update(int obj) {
         switch (mode) {
             case LASEROBJ_MODE_SEQUENCE_A:
                 if ((*gGameUIInterface)->isEventReady(LASEROBJ_MAIN_SEQUENCE_A_EVENT) != 0) {
-                    GameBit_Set(state->primaryGameBit, 1);
-                    GameBit_Set(state->secondaryGameBit, 0);
-                    state->gameBitLatched = 1;
+                    GameBit_Set(state->completionGameBit, 1);
+                    GameBit_Set(state->activationGameBit, 0);
+                    state->completionLatched = 1;
                     spellPlace->statusFlags |= LASER_OBJECT_STATUS_DISABLED;
                 }
                 break;
             case LASEROBJ_MODE_SEQUENCE_B:
                 if ((*gGameUIInterface)->isEventReady(LASEROBJ_MAIN_SEQUENCE_B_EVENT) != 0) {
-                    GameBit_Set(state->primaryGameBit, 1);
-                    GameBit_Set(state->secondaryGameBit, 0);
-                    state->gameBitLatched = 1;
+                    GameBit_Set(state->completionGameBit, 1);
+                    GameBit_Set(state->activationGameBit, 0);
+                    state->completionLatched = 1;
                     spellPlace->statusFlags |= LASER_OBJECT_STATUS_DISABLED;
                 }
                 break;
@@ -1801,12 +1801,12 @@ void vfpspellplace_init(int obj, s8 *def) {
     spellPlace = (LaserObject *)obj;
     mapData = (LaserObjectMapData *)def;
     state = spellPlace->state;
-    state->primaryGameBit = mapData->primaryGameBit;
-    state->secondaryGameBit = mapData->secondaryGameBit;
-    state->gameBitLatched = 0;
+    state->completionGameBit = mapData->completionGameBit;
+    state->activationGameBit = mapData->activationGameBit;
+    state->completionLatched = 0;
     spellPlace->modeWord = (s16)(mapData->mapEventSlot << LASEROBJ_MODE_WORD_SHIFT);
-    if (GameBit_Get(state->primaryGameBit) != 0) {
-        state->gameBitLatched = 1;
+    if (GameBit_Get(state->completionGameBit) != 0) {
+        state->completionLatched = 1;
         spellPlace->statusFlags |= LASER_OBJECT_STATUS_DISABLED;
     }
     spellPlace->objectFlags |= LASER_OBJECT_FLAGS_SEQUENCE_CONTROL;
