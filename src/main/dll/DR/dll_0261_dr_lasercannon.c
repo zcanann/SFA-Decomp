@@ -396,8 +396,7 @@ void drlasercannon_update(int obj) {
     ((GameObject *)obj)->anim.localPosY -= state->bobOffset;
     if (state->flags.b7 != 0) {
         nearDist = lbl_803E68F8;
-        state->firepipeObject = ObjGroup_FindNearestObject(DR_LASERCANNON_FIREPIPE_GROUP_ID, obj, &nearDist);
-        if (state->firepipeObject != 0) {
+        if ((state->firepipeObject = ObjGroup_FindNearestObject(DR_LASERCANNON_FIREPIPE_GROUP_ID, obj, &nearDist)) != 0u) {
             state->hasFirepipe = 1;
             ObjLink_AttachChild(obj, state->firepipeObject, 0);
             firepipe_setLinkedUpdateFlag(state->firepipeObject);
