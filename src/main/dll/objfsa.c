@@ -4156,23 +4156,23 @@ void UIController_render(void *p, int a, int b) {
 /* player_setState */
 void player_setState(void *ctx, void *p, int new_state) {
     void *q;
-    if (*(s16 *)((char *)p + 0x274) == new_state) goto end;
-    *(s16 *)((char *)p + 0x276) = *(s16 *)((char *)p + 0x274);
-    *(s16 *)((char *)p + 0x274) = (s16)new_state;
+    if (((BaddieState *)p)->controlMode == new_state) goto end;
+    ((BaddieState *)p)->unk276 = ((BaddieState *)p)->controlMode;
+    ((BaddieState *)p)->controlMode = (s16)new_state;
     {
         void (*fn)(void) = *(void (**)(void))((char *)p + 0x304);
         if (fn != 0) {
             fn();
-            *(void **)((char *)p + 0x304) = 0;
+            *(void **)&((BaddieState *)p)->unk304 = 0;
         }
     }
-    *(void **)((char *)p + 0x304) = *(void **)((char *)p + 0x308);
+    *(void **)&((BaddieState *)p)->unk304 = *(void **)&((BaddieState *)p)->unk308;
 end:
     *(s16 *)((char *)p + 0x338) = 0;
-    *(u8 *)((char *)p + 0x27a) = 1;
-    *(u8 *)((char *)p + 0x34d) = 0;
+    ((BaddieState *)p)->moveJustStartedA = 1;
+    ((BaddieState *)p)->unk34D = 0;
     *(u8 *)((char *)p + 0x34c) = 0;
-    *(u8 *)((char *)p + 0x356) = 0;
+    ((BaddieState *)p)->unk356 = 0;
     *(s16 *)((char *)p + 0x278) = 0;
     q = *(void **)((char *)ctx + 0x54);
     if (q != 0) *(u8 *)((char *)q + 0x70) = 0;

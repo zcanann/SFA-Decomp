@@ -1,3 +1,4 @@
+#include "main/dll/baddie_state.h"
 #include "ghidra_import.h"
 #include "main/camera_interface.h"
 #include "main/game_object.h"
@@ -1388,7 +1389,7 @@ void fn_8014B878(int *arg1, int *sub) {
                 ((TrickyState *)sub)->flags2DC |= 0x400;
                 ((TrickyState *)sub)->flags2DC &= 0xfffffdff;
             } else {
-                f32 midf = *(f32*)((char*)sub + 0x2a8);
+                f32 midf = ((BaddieState *)sub)->unk2A8;
                 u16 mid = (u16)(int)midf;
                 if (dist < mid) {
                     ((TrickyState *)sub)->flags2DC |= 0x200;
@@ -1458,7 +1459,7 @@ void fn_8014B878(int *arg1, int *sub) {
             }
         }
     }
-    if (*(u16*)((char*)sub + 0x2b0) == 0) {
+    if (((BaddieState *)sub)->hitCounter == 0) {
         ((TrickyState *)sub)->flags2DC |= 0x800;
     }
 }
