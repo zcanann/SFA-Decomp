@@ -292,7 +292,6 @@ int fn_80221978(int obj, void **entries, int count, void **light, f32 intensity)
     return 1;
 }
 
-#pragma peephole on
 void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
 {
     f32 rate;

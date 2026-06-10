@@ -51,7 +51,6 @@ void dll_2A4_init(int obj)
     *(s16 *)(state + 8) = randomGetRange(-0x14, 0x14);
 }
 
-#pragma peephole on
 void fn_802315EC(int obj, ARWGeneratorState *state, ARWGeneratorSetup *setup)
 {
     int newObj;

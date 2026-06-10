@@ -1,7 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
-#pragma peephole on
 int gf_levelcon_handleScriptEvents(int obj, int eventId, ObjAnimUpdateState *animUpdate)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -187,7 +186,6 @@ void fn_80239DD8(int p1, int p2)
     }
 }
 
-#pragma peephole on
 void fn_80239EAC(int p1, int p2)
 {
     f32 dx, dy, dz;

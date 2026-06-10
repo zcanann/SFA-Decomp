@@ -5,7 +5,6 @@
 #include "main/objanim_update.h"
 #include "main/objseq.h"
 
-#pragma peephole on
 int mcstaffeffe_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     McStaffEffectObject *staffEffect = (McStaffEffectObject *)obj;
