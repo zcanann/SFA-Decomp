@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
+#include "main/objanim_update.h"
 
 extern ObjectDescriptor14 gPushableObjDescriptor;
 extern ObjectDescriptor gWarpPointObjDescriptor;
@@ -49,6 +50,7 @@ int pushable_getObjectTypeId(void);
 
 int WarpPoint_getExtraSize(void);
 int WarpPoint_getObjectTypeId(void);
+int WarpPoint_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate);
 
 int invhit_getExtraSize(void);
 int invhit_getObjectTypeId(void);

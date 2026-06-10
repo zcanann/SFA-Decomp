@@ -3305,7 +3305,7 @@ void cfguardian_init(int *obj, u8 *params) {
 
 typedef struct { int a, b, c, d; } GuardianMsg;
 extern GuardianMsg lbl_802C22D8;
-extern int  dll_2E_func07(int* obj, int* p3, u8* sub, int x, int y);
+extern int  dll_2E_func07(int* obj, ObjAnimUpdateState *animUpdate, u8* sub, int x, int y);
 extern int  animatedObjGetSeqId(int* p);
 extern void saveGame_saveObjectPos(int obj);
 extern void* Obj_GetPlayerObject(void);
@@ -3317,7 +3317,7 @@ extern void playerAddRemoveMagic(void* player, int n);
  * tops the player back up. Returns 1 if the move was consumed. */
 #pragma scheduling off
 #pragma peephole off
-int cfguardian_SeqFn(int* obj, int p2, int* p3)
+int cfguardian_SeqFn(int* obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     int* sel;
     GuardianMsg stk;
@@ -3332,12 +3332,12 @@ int cfguardian_SeqFn(int* obj, int p2, int* p3)
     } else {
         sel = &stk.c;
     }
-    if (animatedObjGetSeqId(p3) != 0x283) {
-        if (dll_2E_func07(obj, p3, (u8*)sub, (s16)sel[0], (s16)sel[1]) != 0) {
+    if (animatedObjGetSeqId((int *)animUpdate) != 0x283) {
+        if (dll_2E_func07(obj, animUpdate, (u8*)sub, (s16)sel[0], (s16)sel[1]) != 0) {
             return 1;
         }
     }
-    if (*(u8*)((char*)p3 + 0x80) == 2) {
+    if (animUpdate->triggerCommand == 2) {
         playerAddRemoveMagic(Obj_GetPlayerObject(), 0xa);
     }
     return 0;
@@ -3985,10 +3985,10 @@ void gunpowderbarrel_setPlayerHeldState(int* obj, u8 heldByPlayer) {
 
 /* state-transition: kicks player into mode 2 when sandworm not yet eaten. */
 #pragma peephole off
-int fn_8019FC84(int *obj, int p2, void *p3) {
+int fn_8019FC84(int *obj, int unused, ObjAnimUpdateState *animUpdate) {
     CfPrisonUncleState *p = ((GameObject *)obj)->extra;
     if (p->kicked != 0) return 0;
-    if (*(u8*)((char*)p3 + 0x80) == 2) {
+    if (animUpdate->triggerCommand == 2) {
         p->kicked = 1;
         playerAddRemoveMagic(Obj_GetPlayerObject(), 2);
     }
