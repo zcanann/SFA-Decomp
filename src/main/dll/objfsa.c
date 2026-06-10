@@ -1,3 +1,4 @@
+#include "main/dll/baddie_state.h"
 #include "main/dll/objfsa.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/rom_curve_interface.h"
@@ -313,13 +314,13 @@ void player_setScale(f32 dt, short *moveState, uint *obj, uint flags)
   f32 stopVal;
 
   buf.flag = 0;
-  *(s8 *)((char *)obj + 0x346) = (s8)ObjAnim_AdvanceCurrentMove(
-      *(f32 *)((char *)obj + 0x2a0), dt, (int)moveState, (ObjAnimEventList *)&buf);
+  *(s8 *)&((BaddieState *)obj)->moveDone = (s8)ObjAnim_AdvanceCurrentMove(
+      ((BaddieState *)obj)->moveSpeed, dt, (int)moveState, (ObjAnimEventList *)&buf);
 
-  *(u32 *)((char *)obj + 0x314) = 0;
+  ((BaddieState *)obj)->eventFlags = 0;
   ptr = (s8 *)&buf;
   for (i = 0; i < buf.count; i++) {
-    *(u32 *)((char *)obj + 0x314) |= 1 << ptr[0x13];
+    ((BaddieState *)obj)->eventFlags |= 1 << ptr[0x13];
     ptr++;
   }
 
@@ -341,10 +342,10 @@ void player_setScale(f32 dt, short *moveState, uint *obj, uint flags)
       }
     } else {
       if ((flags & 1) != 0) {
-        *(f32 *)((char *)obj + 0x280) = (f32)(-(f64)buf.c / dt);
+        ((BaddieState *)obj)->animSpeedA = (f32)(-(f64)buf.c / dt);
       }
       if ((flags & 2) != 0) {
-        *(f32 *)((char *)obj + 0x284) = (f32)((f64)buf.a / dt);
+        ((BaddieState *)obj)->animSpeedB = (f32)((f64)buf.a / dt);
       }
       if ((flags & 8) != 0) {
         *moveState += buf.angleDelta;
@@ -356,8 +357,8 @@ void player_setScale(f32 dt, short *moveState, uint *obj, uint flags)
     }
   } else {
     stopVal = lbl_803E0570;
-    *(f32 *)((char *)obj + 0x280) = stopVal;
-    *(f32 *)((char *)obj + 0x284) = stopVal;
+    ((BaddieState *)obj)->animSpeedA = stopVal;
+    ((BaddieState *)obj)->animSpeedB = stopVal;
   }
 
   lbl_803DD440 = 1;
@@ -2360,8 +2361,8 @@ void player_init(int unused, void *obj, int a, int b) {
     memset(obj, 0, 0x35c);
     *(s16 *)((char *)obj + 0x26c) = (s16)a;
     *(s16 *)((char *)obj + 0x26e) = (s16)b;
-    *(u8 *)((char *)obj + 0x27a) = 1;
-    *(u8 *)((char *)obj + 0x27b) = 1;
+    ((BaddieState *)obj)->moveJustStartedA = 1;
+    ((BaddieState *)obj)->moveJustStartedB = 1;
     *(f32 *)((char *)obj + 0x2b8) = lbl_803E05BC;
     *(s32 *)((char *)obj + 0x33c) = -1;
     *(s32 *)((char *)obj + 0x340) = -1;
@@ -4236,29 +4237,29 @@ void fn_800D915C(int p1, int *obj, void *fnTable, f32 fval)
     int done;
     s16 startState;
     int result;
-    if (*(s16 *)((char *)obj + 0x270) != *(s16 *)((char *)obj + 0x272)) {
-        *(u8 *)((char *)obj + 0x27b) = 1;
-        *(s16 *)((char *)obj + 0x32e) = 0;
+    if (((BaddieState *)obj)->unk270 != ((BaddieState *)obj)->unk272) {
+        ((BaddieState *)obj)->moveJustStartedB = 1;
+        ((BaddieState *)obj)->unk32E = 0;
     }
     do {
         done = 0;
-        startState = *(s16 *)((char *)obj + 0x270);
+        startState = ((BaddieState *)obj)->unk270;
         result = ((int (*)(int, int *, f32))((int **)fnTable)[startState])(p1, obj, fval);
         if (result > 0) {
-            *(s16 *)((char *)obj + 0x272) = *(s16 *)((char *)obj + 0x270);
-            *(s16 *)((char *)obj + 0x270) = result - 1;
-            *(u8 *)((char *)obj + 0x27b) = 1;
-            *(s16 *)((char *)obj + 0x32e) = 0;
+            ((BaddieState *)obj)->unk272 = ((BaddieState *)obj)->unk270;
+            ((BaddieState *)obj)->unk270 = result - 1;
+            ((BaddieState *)obj)->moveJustStartedB = 1;
+            ((BaddieState *)obj)->unk32E = 0;
         } else if (result < 0) {
             result = -result;
             if (result == startState) {
-                *(u8 *)((char *)obj + 0x27b) = 0;
+                ((BaddieState *)obj)->moveJustStartedB = 0;
             } else {
-                *(s16 *)((char *)obj + 0x272) = startState;
-                *(u8 *)((char *)obj + 0x27b) = 1;
-                *(s16 *)((char *)obj + 0x32e) = 0;
+                ((BaddieState *)obj)->unk272 = startState;
+                ((BaddieState *)obj)->moveJustStartedB = 1;
+                ((BaddieState *)obj)->unk32E = 0;
             }
-            *(s16 *)((char *)obj + 0x270) = result;
+            ((BaddieState *)obj)->unk270 = result;
             done = 1;
             flag30 = 1;
         } else {
@@ -4269,11 +4270,11 @@ void fn_800D915C(int p1, int *obj, void *fnTable, f32 fval)
             done = 1;
         }
     } while (done == 0);
-    *(s16 *)((char *)obj + 0x272) = *(s16 *)((char *)obj + 0x270);
+    ((BaddieState *)obj)->unk272 = ((BaddieState *)obj)->unk270;
     if (flag30 == 0) {
-        *(u8 *)((char *)obj + 0x27b) = 0;
+        ((BaddieState *)obj)->moveJustStartedB = 0;
         if ((f32)*(s16 *)((char *)obj + 0x338) > lbl_803E05BC) {
-            *(u8 *)((char *)obj + 0x27b) = 0;
+            ((BaddieState *)obj)->moveJustStartedB = 0;
         }
     }
 }
