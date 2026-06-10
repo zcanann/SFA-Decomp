@@ -330,8 +330,8 @@ void drakorhoverpad_updateMain(int obj) {
             (*gRomCurveInterface)->initCurve(p + 4, (void *)obj, lbl_803E6A4C, &curveArg, -1);
             Curve_AdvanceAlongPath(p + 4, lbl_803E6A50);
             ((GameObject *)obj)->anim.localPosX = *(f32 *)&((GameObject *)p)->anim.jointPoseData;
-            ((GameObject *)obj)->anim.localPosY = *(f32 *)(p + 0x70);
-            ((GameObject *)obj)->anim.localPosZ = *(f32 *)(p + 0x74);
+            ((GameObject *)obj)->anim.localPosY = ((DrakorHoverpadState *)p)->curve.unk6C;
+            ((GameObject *)obj)->anim.localPosZ = ((DrakorHoverpadState *)p)->curve.unk70;
             *(f32 *)p = lbl_803E6A38;
             Sfx_PlayFromObject(obj, SFXfend_fox_keytap2);
             Sfx_PlayFromObject(obj, SFXfend_pep_wakeup);

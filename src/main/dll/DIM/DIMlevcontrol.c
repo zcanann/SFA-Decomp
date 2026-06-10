@@ -910,7 +910,7 @@ int fn_801B2550(int *obj, int p2, ObjAnimUpdateState *animUpdate)
     animUpdate->hitVolumePair &= ~0x608;
     state = ((GameObject *)obj)->extra;
 
-    if (*(u8 *)(state + 0xac) == 0x3) {
+    if (((DimCannonState *)state)->fireState == 0x3) {
         s16 *vec;
         s8 timer;
         int delta;
@@ -928,10 +928,10 @@ int fn_801B2550(int *obj, int p2, ObjAnimUpdateState *animUpdate)
             return 0;
         }
         vec = objModelGetVecFn_800395d8(obj, 0);
-        timer = *(s8 *)(state + 0xb0);
+        timer = ((DimCannonState *)state)->unkB0;
         if (timer > 0) {
-            *(s8 *)(state + 0xb0) = (s8)(timer - framesThisStep);
-            if (*(s8 *)(state + 0xb0) <= 0) {
+            ((DimCannonState *)state)->unkB0 = (s8)(timer - framesThisStep);
+            if (((DimCannonState *)state)->unkB0 <= 0) {
                 (*gGameUIInterface)->initAirMeter(lbl_803DBF00, 0x5d5);
             }
         } else {
@@ -959,21 +959,21 @@ int fn_801B2550(int *obj, int p2, ObjAnimUpdateState *animUpdate)
                 *(s16 *)((int)vec + 0x2) = (s16)(*(s16 *)((int)vec + 0x2) + delta);
                 Sfx_KeepAliveLoopedObjectSound(obj, 0x1ff);
             } else {
-                if (*(int *)(state + 0xa8) != 0) {
+                if (((DimCannonState *)state)->unkA8 != 0) {
                     Sfx_PlayFromObject((int)obj, 0x1fe);
                 }
             }
-            *(int *)(state + 0xa8) = delta;
-            if (*(s16 *)(state + 0xa4) > 0) {
-                *(s16 *)(state + 0xa4) -= framesThisStep;
+            ((DimCannonState *)state)->unkA8 = delta;
+            if (((DimCannonState *)state)->aimYaw > 0) {
+                ((DimCannonState *)state)->aimYaw -= framesThisStep;
             }
-            if (*(s16 *)(state + 0xa6) > 0) {
-                *(s16 *)(state + 0xa6) -= framesThisStep;
+            if (((DimCannonState *)state)->aimPitch > 0) {
+                ((DimCannonState *)state)->aimPitch -= framesThisStep;
             }
-            if ((getButtonsHeld(0) & 0x100) && *(s16 *)(state + 0xa4) <= 0) {
+            if ((getButtonsHeld(0) & 0x100) && ((DimCannonState *)state)->aimYaw <= 0) {
                 buttonDisable(0, 0x100);
                 if (fn_80296A14(player) >= 1) {
-                    *(u8 *)(state + 0xae) += framesThisStep;
+                    ((DimCannonState *)state)->unkAE += framesThisStep;
                     if (Sfx_IsPlayingFromObjectChannel(obj, 2) == 0) {
                         Sfx_PlayFromObject((int)obj, 0x201);
                         Sfx_PlayFromObject((int)obj, 0x202);
@@ -984,31 +984,31 @@ int fn_801B2550(int *obj, int p2, ObjAnimUpdateState *animUpdate)
             } else {
                 Sfx_StopObjectChannel(obj, 2);
             }
-            if (*(u8 *)(state + 0xae) > lbl_803DBF00) {
-                *(u8 *)(state + 0xae) = lbl_803DBF00;
+            if (((DimCannonState *)state)->unkAE > lbl_803DBF00) {
+                ((DimCannonState *)state)->unkAE = lbl_803DBF00;
             }
-            (*gGameUIInterface)->runAirMeter(*(u8 *)(state + 0xae));
-            *(f32 *)(state + 0x98) = (f32)*(u8 *)(state + 0xae) * lbl_803DBEFC + lbl_803DBEF8;
+            (*gGameUIInterface)->runAirMeter(((DimCannonState *)state)->unkAE);
+            ((DimCannonState *)state)->unk98 = (f32)((DimCannonState *)state)->unkAE * lbl_803DBEFC + lbl_803DBEF8;
             if ((getButtonsJustPressedIfNotBusy(0) & 0x100) ||
-                *(u8 *)(state + 0xae) == lbl_803DBF00) {
-                if (*(s16 *)(state + 0xa4) <= 0 && fn_80296A14(player) >= 1) {
+                ((DimCannonState *)state)->unkAE == lbl_803DBF00) {
+                if (((DimCannonState *)state)->aimYaw <= 0 && fn_80296A14(player) >= 1) {
                     buttonDisable(0, 0x100);
                     playerAddRemoveMagic(player, -1);
-                    *(u8 *)(state + 0xad) = 1;
-                    *(u8 *)(state + 0xae) = 0;
+                    ((DimCannonState *)state)->unkAD = 1;
+                    ((DimCannonState *)state)->unkAE = 0;
                 }
             }
             DIMwooddoor_spawnShard(obj, 1);
-            if (((GameObject *)obj)->anim.mapEventSlot == 0x13 && *(u8 *)(state + 0xb2) == 0 &&
+            if (((GameObject *)obj)->anim.mapEventSlot == 0x13 && ((DimCannonState *)state)->unkB2 == 0 &&
                 GameBit_Get(0xc17) && GameBit_Get(0xa21)) {
-                *(u8 *)(state + 0xb2) = 1;
-                *(u8 *)(state + 0xb1) = 1;
+                ((DimCannonState *)state)->unkB2 = 1;
+                ((DimCannonState *)state)->unkB1 = 1;
             }
             {
-                u8 b1 = *(u8 *)(state + 0xb1);
+                u8 b1 = ((DimCannonState *)state)->unkB1;
                 if (b1 != 0) {
-                    *(u8 *)(state + 0xb1) += framesThisStep;
-                    if (*(u8 *)(state + 0xb1) > 0x3c) {
+                    ((DimCannonState *)state)->unkB1 += framesThisStep;
+                    if (((DimCannonState *)state)->unkB1 > 0x3c) {
                         done = 1;
                     }
                 }
@@ -1018,8 +1018,8 @@ int fn_801B2550(int *obj, int p2, ObjAnimUpdateState *animUpdate)
                 hudFn_8011f38c(0);
                 (*gGameUIInterface)->airMeterSetShutdown();
                 (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
-                *(u8 *)(state + 0xac) = 5;
-                *(u8 *)(state + 0xb0) = 0x3c;
+                ((DimCannonState *)state)->fireState = 5;
+                *(u8 *)&((DimCannonState *)state)->unkB0 = 0x3c;
                 animUpdate->sequenceControlFlags |= 0x4;
                 *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x8);
                 if (Sfx_IsPlayingFromObjectChannel(obj, 8) != 0) {
@@ -1036,7 +1036,7 @@ int fn_801B2550(int *obj, int p2, ObjAnimUpdateState *animUpdate)
         *(s16 *)((char *)vec2 + 0x2) =
             (s16)(((GameObject *)obj)->anim.rotX - ((s8)*(s8 *)((char *)src + 0x28) << 8));
         ((GameObject *)obj)->anim.rotX = (s16)((s8)*(s8 *)((char *)src + 0x28) << 8);
-        *(u8 *)(state + 0xac) = 4;
+        ((DimCannonState *)state)->fireState = 4;
     }
 
     return 0;

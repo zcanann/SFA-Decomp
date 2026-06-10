@@ -76,7 +76,9 @@ def parse_struct(body, structs):
                 except Exception:
                     return None
         off = (off + align - 1) & ~(align - 1)
-        cls = 'PTR' if ptr else CLASS_OF.get(t)
+        # array fields can't be assigned/read as scalars - exclude from the
+        # member map ('ARR' blocks both mapping and nested-struct recursion)
+        cls = 'ARR' if count != 1 else ('PTR' if ptr else CLASS_OF.get(t))
         fields.append((off, fname, t + ('*' if ptr else ''), size, cls))
         off += size * count
     return fields
@@ -107,7 +109,7 @@ def main():
             if cls is None and not ty.endswith('*') and base_ty in structs and structs[base_ty]:
                 flatten(base_ty, base + off, prefix + fname + '.', out)
             else:
-                if 'pad' in low or cls is None or ('unk' in low and not include_unk):
+                if 'pad' in low or cls in (None, 'ARR') or ('unk' in low and not include_unk):
                     continue
                 out[base + off] = (prefix + fname, cls, ty)
     M = {}

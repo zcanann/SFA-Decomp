@@ -2307,7 +2307,7 @@ void smallbasket_playReactionEffects(int *obj, int *st) {
 /* Initializes the tail-model variant state. */
 void smallbasket_initTailModelState(int *obj, int *st) {
     u8 *tab;
-    *(f32*)((char*)st + 0x2ac) = lbl_803E2C7C;
+    ((BaddieState *)st)->unk2AC = lbl_803E2C7C;
     *(u32 *)&((BaddieState *)st)->unk2E4 = 0x405009;
     ((BaddieState *)st)->unk304 = lbl_803E2C80;
     *((u8*)st + 0x320) = 0;
@@ -2348,7 +2348,7 @@ void smallbasket_initScaledVariantState(int *obj, int *st) {
         ratio = lbl_803E2B38;
     }
     ratio = ratio / lbl_803E2B38;
-    *(f32*)((char*)st + 0x2ac) = lbl_803E2B64;
+    ((BaddieState *)st)->unk2AC = lbl_803E2B64;
     *(u32 *)&((BaddieState *)st)->unk2E4 = 0x8b;
     v = *(u32 *)&((BaddieState *)st)->unk2E4;
     *(u32 *)&((BaddieState *)st)->unk2E4 = v | 0x20;
@@ -2409,9 +2409,9 @@ void smallbasket_handleHitStateEvent(int obj, int *st, int p3, int cmd) {
 
 /* Initializes the state used by the alternate smallbasket variant. */
 void smallbasket_initVariantState(int *obj, int *st) {
-    *(f32*)((char*)st + 0x2ac) = lbl_803E2CC0;
-    *((u8*)st + 0x33b) = *(f32*)((char*)st + 0x2a8);
-    *(f32*)((char*)st + 0x2a8) = lbl_803E2CC4;
+    ((BaddieState *)st)->unk2AC = lbl_803E2CC0;
+    *((u8*)st + 0x33b) = ((BaddieState *)st)->unk2A8;
+    ((BaddieState *)st)->unk2A8 = lbl_803E2CC4;
     *(u32 *)&((BaddieState *)st)->unk2E4 = 0x42003;
     ((BaddieState *)st)->unk308 = lbl_803E2CC8;
     ((BaddieState *)st)->unk300 = lbl_803E2CCC;
@@ -2690,7 +2690,7 @@ void fn_8015A924(int* obj, u8* state)
     }
 
     if ((((BaddieState *)state)->controlFlags & 0x40000000) != 0) {
-        *(char*)(state + 0x33a) += 1;
+        *(char *)&((BaddieState *)state)->unk33A += 1;
         if (((BaddieState *)state)->unk33A > lbl_803DBD2C[*(u16*)(state + 0x338)]) {
             ((BaddieState *)state)->unk33A = lbl_803DBD28[*(u16*)(state + 0x338)];
         }
