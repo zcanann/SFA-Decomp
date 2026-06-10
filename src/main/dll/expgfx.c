@@ -14,59 +14,11 @@
 #include "main/texture.h"
 #include "track/intersect.h"
 
-extern undefined4 ABS();
 extern int renderModeSetOrGet(int mode);
-extern int FUN_80006714();
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_800068d4();
-extern undefined4 FUN_80006964();
-extern undefined4 FUN_80006974();
-extern undefined4 FUN_80006988();
-extern undefined4 FUN_8000698c();
-extern void* FUN_800069a8();
-extern undefined4 FUN_800069cc();
-extern int FUN_80017a90();
-extern int FUN_80017a98();
-extern undefined4 FUN_8004812c();
-extern undefined8 FUN_80053754();
-extern uint FUN_8005e558();
 extern u8 fn_8005E97C(float minX,float maxX,float minY,float maxY,float minZ,float maxZ,
                       ExpgfxBounds *boundsTemplate);
-extern int FUN_80080f40();
-extern undefined4 FUN_80080f84();
-extern undefined4 FUN_80080f8c();
-extern undefined4 FUN_80081130();
-extern int FUN_80081134();
-extern undefined8 FUN_80135810();
 extern void debugPrintf(char *message,...);
-extern double FUN_80136594();
-extern undefined4 FUN_802420e0();
-extern undefined4 FUN_802475e4();
-/* PSMTXMultVec is declared by dolphin/mtx.h */
-extern undefined4 FUN_80247bf8();
-extern undefined4 FUN_80247ef8();
-extern undefined4 FUN_802570dc();
-extern undefined4 FUN_80257b5c();
-extern undefined4 FUN_80259000();
-extern undefined4 FUN_80259288();
-extern undefined4 FUN_8025a5bc();
-extern undefined4 FUN_8025a608();
-extern undefined4 FUN_8025c754();
-extern undefined4 FUN_8025cce8();
-extern undefined4 FUN_8025d80c();
-extern undefined4 FUN_8025d888();
 extern undefined8 FUN_80286830();
-extern undefined4 FUN_80293470();
-extern double FUN_80293900();
-extern double FUN_80294c4c();
-extern void _savegpr_20(void);
-extern void _restgpr_20(void);
-extern void _savegpr_21(void);
-extern void _restgpr_21(void);
-extern void _savegpr_23(void);
-extern void _restgpr_23(void);
-extern void _savegpr_25(void);
-extern void _restgpr_25(void);
 
 extern ExpgfxBounds gExpgfxBoundsTemplates[];
 extern s16 gExpgfxPoolSlotTypeIds[];
