@@ -22,9 +22,9 @@ void dll_28B_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
 void dll_28B_update(int obj)
 {
-    f32 ox, oy, oz;
+    f32 oz, oy, ox;
     ObjXform xform;
-    f32 mtx[12];
+    f32 mtx[16];
     int state = *(int *)&((GameObject *)obj)->extra;
     int player = Obj_GetPlayerObject();
 
