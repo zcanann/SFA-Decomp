@@ -6628,7 +6628,7 @@ void fireball_update(int *obj)
         return;
     }
     ((FireballState *)state)->unk3C -= timeDelta;
-    if (((FireballState *)state)->unk3C < lbl_803E3330) {
+    if (((FireballState *)state)->unk3C < *(f32 *)&lbl_803E3330) {
         ((FireballState *)state)->unk3C = lbl_803E3330;
     }
     if (((GameObject *)obj)->anim.seqId == 2110) {
