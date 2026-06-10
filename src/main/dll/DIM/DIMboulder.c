@@ -1608,14 +1608,12 @@ int dll_16C_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate)
     int *p;
     int *extra = ((GameObject *)obj)->extra;
     s16 ids[5];
-    u8 *animUpdateBytes;
 
-    animUpdateBytes = (u8 *)animUpdate;
     *(u8 *)((char *)extra + 0x20) = 0xff;
     p = (int *)*extra;
-    if (animUpdateBytes[0x80] == 3) {
+    if (animUpdate->triggerCommand == 3) {
         *(s8 *)((char *)extra + 0x21) = -1;
-        animUpdateBytes[0x80] = 0;
+        animUpdate->triggerCommand = 0;
     }
     *(Blob10 *)ids = *(Blob10 *)lbl_802C2308;
 
@@ -1641,7 +1639,7 @@ int dll_16C_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate)
 
     animUpdate->hitVolumePair = animUpdate->activeHitVolumePair;
 
-    if (p != NULL && animUpdateBytes[0x80] == 2) {
+    if (p != NULL && animUpdate->triggerCommand == 2) {
         *(f32 *)((char *)extra + 4) = lbl_803E4758;
         *(f32 *)((char *)extra + 8) = *(f32 *)((char *)extra + 0x14);
         *(f32 *)((char *)extra + 0xc) = *(f32 *)((char *)extra + 0x18);
@@ -1652,10 +1650,10 @@ int dll_16C_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate)
             ((GameObject *)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         }
         animUpdate->hitVolumePair &= ~4;
-        animUpdateBytes[0x80] = 0;
-    } else if (p != NULL && animUpdateBytes[0x80] == 1) {
+        animUpdate->triggerCommand = 0;
+    } else if (p != NULL && animUpdate->triggerCommand == 1) {
         (*(void (**)(int *, int))(**(int **)((char *)p + 0x68) + 0x3c))(p, 0);
-        animUpdateBytes[0x80] = 0;
+        animUpdate->triggerCommand = 0;
     }
 
     if (p != NULL) {

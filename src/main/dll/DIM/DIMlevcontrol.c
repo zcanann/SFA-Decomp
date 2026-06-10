@@ -619,12 +619,10 @@ void dimlavasmash_setBlockSurfaceFlags(int arg1, int arg2, int arg3)
 
 int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
-    u8 *animUpdateBytes;
     int *def;
     int hit;
     int block;
     int *state;
-    animUpdateBytes = (u8 *)animUpdate;
     state = ((GameObject *)obj)->extra;
     def = *(int **)&((GameObject *)obj)->anim.placementData;
     if (*(u8 *)((char *)state + 2) == 0) {
@@ -646,7 +644,7 @@ int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
             }
         }
     } else {
-        if (animUpdateBytes[0x80] == 1) {
+        if (animUpdate->triggerCommand == 1) {
             GameBit_Set(*(s16 *)((char *)def + 0x1e), 1);
             *(u8 *)((char *)state + 2) = 1;
         }

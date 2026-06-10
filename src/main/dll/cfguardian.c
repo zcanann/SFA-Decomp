@@ -917,14 +917,14 @@ int Lock_DoorLock_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
   int def;
 
   def = *(int *)&((GameObject *)obj)->anim.placementData;
-  if (((u8 *)animUpdate)[0x80] != 0) {
-    if (((*(u8 *)(def + 0x1b) & 4) != 0) && (((u8 *)animUpdate)[0x80] == 1)) {
+  if (animUpdate->triggerCommand != 0) {
+    if (((*(u8 *)(def + 0x1b) & 4) != 0) && (animUpdate->triggerCommand == 1)) {
       GameBit_Set(*(s16 *)(def + 0x1c), 1);
     }
-    if ((((u8 *)animUpdate)[0x80] == 2) && (*(s16 *)(def + 0x24) != 0)) {
+    if ((animUpdate->triggerCommand == 2) && (*(s16 *)(def + 0x24) != 0)) {
       (*gObjectTriggerInterface)->yield((u8 *)animUpdate, *(s16 *)(def + 0x24));
     }
-    ((u8 *)animUpdate)[0x80] = 0;
+    animUpdate->triggerCommand = 0;
   }
   ((GameObject *)obj)->unkF8 = 0;
   return 0;

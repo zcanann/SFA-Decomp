@@ -149,12 +149,12 @@ void dimdismountpoint_render(int obj, int p1, int p2, int p3, int p4, s8 visible
     }
 }
 
-int dimbridgecogmai_SeqFn(int obj, int p2, char *r5) {
+int dimbridgecogmai_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate) {
     char *param = *(char **)&((GameObject *)obj)->anim.placementData;
-    r5[0x56] = 0;
-    if ((*(u8 *)(param + 0x1d) & 0x2) != 0 && *(u8 *)(r5 + 0x80) == 1) {
+    animUpdate->sequenceEventActive = 0;
+    if ((*(u8 *)(param + 0x1d) & 0x2) != 0 && animUpdate->triggerCommand == 1) {
         GameBit_Set(*(s16 *)(param + 0x18), 1);
-        *(u8 *)(r5 + 0x80) = 0;
+        animUpdate->triggerCommand = 0;
     }
     return 0;
 }

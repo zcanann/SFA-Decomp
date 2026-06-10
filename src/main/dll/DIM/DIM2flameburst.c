@@ -2013,14 +2013,13 @@ void dimmagicbridge_scrollTextureChannels(int param_1, u8* obj)
 int dimmagicbridge_flameSeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     u8* sub = ((GameObject *)obj)->extra;
-    u8 *animUpdateBytes = (u8 *)animUpdate;
     int j;
     int i;
     animUpdate->sequenceEventActive = 0;
     animUpdate->hitVolumePair &= ~0x40;
     dimmagicbridge_scrollTextureChannels((int)obj, (u8 *)sub);
-    if (animUpdateBytes[0x80] == 1) {
-        animUpdateBytes[0x80] = 0;
+    if (animUpdate->triggerCommand == 1) {
+        animUpdate->triggerCommand = 0;
         sub[0x5f] = 1;
     }
     if (sub[0x5f] != 0) {

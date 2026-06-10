@@ -94,7 +94,7 @@ void cfforcefield_init(s16 *obj, void *data);
 void cfforcefield_release(void);
 void cfforcefield_initialise(void);
 
-int slidingdoor_SeqFn(u8 *obj, int unused, u8 *data);
+int slidingdoor_SeqFn(u8 *obj, int unused, ObjAnimUpdateState *animUpdate);
 int slidingdoor_getExtraSize(void);
 int slidingdoor_getObjectTypeId(void);
 void slidingdoor_free(void);

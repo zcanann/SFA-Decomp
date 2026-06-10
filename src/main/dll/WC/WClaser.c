@@ -209,7 +209,7 @@ int WM_seqobject_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
             lbl_803DDC78 = (u8)(1 - lbl_803DDC78);
         }
     }
-    ((u8 *)animUpdate)[0x80] = 0;
+    animUpdate->triggerCommand = 0;
     animUpdate->sequenceEventActive = 0;
     return 0;
 }

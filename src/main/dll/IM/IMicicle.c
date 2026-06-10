@@ -1724,7 +1724,7 @@ extern int atan2i(int y, int x);
  * tricky is within lbl_803E43B8 xz-distance and steps a 3-bit state field
  * (state[0] bits 5..7) through the door's open/close machine. Returns 1
  * while in the static states (0/1) and 0 while in transition (2/3). */
-int slidingdoor_SeqFn(u8* obj, int unused, u8* data) {
+int slidingdoor_SeqFn(u8* obj, int unused, ObjAnimUpdateState *animUpdate) {
     typedef struct DoorFlags {
         u8 mode : 3;
         u8 rest : 5;
@@ -1778,11 +1778,11 @@ int slidingdoor_SeqFn(u8* obj, int unused, u8* data) {
     {
         register DoorFlags *fl = (DoorFlags*)state;
         if (fl->mode == 2) {
-            if (data[0x80] == 2) {
+            if (animUpdate->triggerCommand == 2) {
                 fl->mode = 1;
             }
         } else if (fl->mode == 3) {
-            if (data[0x80] == 1) {
+            if (animUpdate->triggerCommand == 1) {
                 fl->mode = 0;
             }
         }
