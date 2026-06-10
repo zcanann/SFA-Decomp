@@ -47,9 +47,11 @@ void fn_801BEEA0(s16 *obj, u8 *state)
     turnDelta = (s16)((turnDelta + 0x10000) - 1);
   }
 
-  *(f32 *)(motion + 0x4) = *(f32 *)(motion + 0x4) + (f32)((int)((s16)turnDelta / 16) * (int)framesThisStep);
-
-  obj[2] = *(f32 *)(motion + 0x4) + (f32)(int)obj[2];
+  {
+    f32 turnVel = *(f32 *)(motion + 0x4) + (f32)((int)((s16)turnDelta / 16) * (int)framesThisStep);
+    *(f32 *)(motion + 0x4) = turnVel;
+    obj[2] = turnVel + (f32)(int)obj[2];
+  }
 
   *(f32 *)(motion + 0x0) = *(f32 *)(motion + 0x0) / lbl_803E4D0C;
   *(f32 *)(motion + 0x4) = *(f32 *)(motion + 0x4) / lbl_803E4D10;
