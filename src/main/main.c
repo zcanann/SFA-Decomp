@@ -438,7 +438,7 @@ void FUN_801fdc60(uint param_1)
   
   iVar4 = *(int *)&((GameObject *)param_1)->extra;
   iVar3 = *(int *)&((GameObject *)param_1)->anim.placementData;
-  local_40 = (double)CONCAT44(0x43300000,(uint)*(byte *)(param_1 + 0x36));
+  local_40 = (double)CONCAT44(0x43300000,(uint)((GameObject *)param_1)->anim.alpha);
   dVar5 = local_40 - DOUBLE_803e6e38;
   *(float *)(iVar4 + 0xc) =
        lbl_803DC074 * ((lbl_803E6DF8 * *(float *)(iVar4 + 0x10)) / lbl_803E6DF8) +
@@ -485,7 +485,7 @@ void FUN_801fdc60(uint param_1)
     dVar5 = (double)lbl_803E6E08;
   }
   local_40 = (double)(longlong)(int)dVar5;
-  *(char *)(param_1 + 0x36) = (char)(int)dVar5;
+  *(char *)&((GameObject *)param_1)->anim.alpha = (char)(int)dVar5;
   iVar3 = FUN_80039520(param_1,0);
   if (iVar3 != 0) {
     local_30 = (double)CONCAT44(0x43300000,(int)*(short *)(iVar3 + 10) ^ 0x80000000);
@@ -1644,7 +1644,7 @@ void fn_801FD6B4(int obj) {
 
     extra = ((GameObject *)obj)->extra;
     def = *(int *)&((GameObject *)obj)->anim.placementData;
-    speed = (f32)(u32)*(u8 *)(obj + 0x36);
+    speed = (f32)(u32)((GameObject *)obj)->anim.alpha;
     *(f32 *)(extra + 0xc) += timeDelta * ((lbl_803E6160 * *(f32 *)(extra + 0x10)) / lbl_803E6160);
     if (*(f32 *)(extra + 0xc) > lbl_803E6164) {
         *(f32 *)(extra + 0x10) = (f32)(int)randomGetRange(0x32, 100);
@@ -1669,7 +1669,7 @@ void fn_801FD6B4(int obj) {
     if (c < lbl_803E6190) {
         speed = lbl_803E6170 * (c / lbl_803E6190);
     }
-    *(s8 *)(obj + 0x36) = (int)((speed < lbl_803E616C) ? lbl_803E616C : ((speed > lbl_803E6170) ? lbl_803E6170 : speed));
+    *(s8 *)&((GameObject *)obj)->anim.alpha = (int)((speed < lbl_803E616C) ? lbl_803E616C : ((speed > lbl_803E6170) ? lbl_803E6170 : speed));
     tex = objFindTexture(obj, 0, 0);
     if (tex != NULL) {
         v = (f32)(int)*(s16 *)((u8 *)tex + 0xa) + lbl_803E6160;

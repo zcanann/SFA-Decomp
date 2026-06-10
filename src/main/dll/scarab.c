@@ -312,13 +312,13 @@ void FUN_8015da00(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   undefined4 uVar1;
   undefined8 uVar2;
   
-  uVar1 = *(undefined4 *)(param_9 + 0xb8);
+  uVar1 = *(undefined4 *)&((GameObject *)param_9)->extra;
   FUN_800069b8();
   uVar2 = ObjGroup_RemoveObject(param_9,3);
   if (*(int *)&((GameObject *)param_9)->unkC8 != 0) {
     FUN_80017ac8(uVar2,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                  *(int *)&((GameObject *)param_9)->unkC8);
-    *(undefined4 *)(param_9 + 200) = 0;
+    *(undefined4 *)&((GameObject *)param_9)->unkC8 = 0;
   }
   (**(code **)(*DAT_803dd738 + 0x40))(param_9,uVar1,0x20);
   return;
@@ -1843,10 +1843,10 @@ void FUN_8015f068(undefined8 param_1,double param_2,double param_3,undefined8 pa
   uVar3 = FUN_80017ae8();
   if ((uVar3 & 0xff) == 0) {
     puVar4 = FUN_80017aa4(0x24,0x30a);
-    *(undefined4 *)(puVar4 + 4) = *(undefined4 *)(param_9 + 0xc);
+    *(undefined4 *)(puVar4 + 4) = *(undefined4 *)&((GameObject *)param_9)->anim.localPosX;
     dVar6 = (double)lbl_803E3A8C;
     *(float *)(puVar4 + 6) = (float)(dVar6 + (double)((GameObject *)param_9)->anim.localPosY);
-    *(undefined4 *)(puVar4 + 8) = *(undefined4 *)(param_9 + 0x14);
+    *(undefined4 *)(puVar4 + 8) = *(undefined4 *)&((GameObject *)param_9)->anim.localPosZ;
     *(undefined *)(puVar4 + 2) = 1;
     *(undefined *)((int)puVar4 + 5) = 1;
     *(undefined *)(puVar4 + 3) = 0xff;
@@ -2031,12 +2031,12 @@ void FUN_8015f5dc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   undefined4 uVar1;
   undefined8 uVar2;
   
-  uVar1 = *(undefined4 *)(param_9 + 0xb8);
+  uVar1 = *(undefined4 *)&((GameObject *)param_9)->extra;
   uVar2 = ObjGroup_RemoveObject(param_9,3);
   if (*(int *)&((GameObject *)param_9)->unkC8 != 0) {
     FUN_80017ac8(uVar2,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                  *(int *)&((GameObject *)param_9)->unkC8);
-    *(undefined4 *)(param_9 + 200) = 0;
+    *(undefined4 *)&((GameObject *)param_9)->unkC8 = 0;
   }
   (**(code **)(*DAT_803dd738 + 0x40))(param_9,uVar1,0x20);
   return;
@@ -2176,10 +2176,10 @@ void FUN_8015f910(undefined8 param_1,double param_2,double param_3,undefined8 pa
   uVar2 = FUN_80017ae8();
   if ((uVar2 & 0xff) != 0) {
     puVar3 = FUN_80017aa4(0x24,0x51b);
-    *(undefined4 *)(puVar3 + 4) = *(undefined4 *)(param_9 + 0xc);
+    *(undefined4 *)(puVar3 + 4) = *(undefined4 *)&((GameObject *)param_9)->anim.localPosX;
     dVar7 = (double)lbl_803E3AB8;
     *(float *)(puVar3 + 6) = (float)(dVar7 + (double)((GameObject *)param_9)->anim.localPosY);
-    *(undefined4 *)(puVar3 + 8) = *(undefined4 *)(param_9 + 0x14);
+    *(undefined4 *)(puVar3 + 8) = *(undefined4 *)&((GameObject *)param_9)->anim.localPosZ;
     *(undefined *)(puVar3 + 2) = 1;
     *(undefined *)((int)puVar3 + 5) = 4;
     *(undefined *)((int)puVar3 + 7) = 0xff;
@@ -3022,7 +3022,7 @@ void FUN_80160464(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  */
 void FUN_8016075c(int param_1)
 {
-  *(undefined4 *)(param_1 + 0xf4) = 0xb4;
+  ((GameObject *)param_1)->unkF4 = 0xb4;
   ObjHits_DisableObject(param_1);
   ((GameObject *)param_1)->anim.alpha = 0xff;
   return;
@@ -3361,7 +3361,7 @@ void FUN_80160fb8(int param_1,int param_2,int param_3)
   double dVar6;
   
   if (*(int *)&((GameObject *)param_1)->unkC8 != 0) {
-    *(undefined4 *)(*(int *)&((GameObject *)param_1)->unkC8 + 0x30) = *(undefined4 *)(param_1 + 0x30);
+    *(undefined4 *)(*(int *)&((GameObject *)param_1)->unkC8 + 0x30) = *(undefined4 *)&((GameObject *)param_1)->anim.parent;
   }
   iVar4 = *(int *)(param_3 + 0x2d0);
   if (iVar4 != 0) {
@@ -3429,12 +3429,12 @@ void FUN_80161130(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   undefined4 uVar1;
   undefined8 uVar2;
   
-  uVar1 = *(undefined4 *)(param_9 + 0xb8);
+  uVar1 = *(undefined4 *)&((GameObject *)param_9)->extra;
   uVar2 = ObjGroup_RemoveObject(param_9,3);
   if (*(int *)&((GameObject *)param_9)->unkC8 != 0) {
     FUN_80017ac8(uVar2,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                  *(int *)&((GameObject *)param_9)->unkC8);
-    *(undefined4 *)(param_9 + 200) = 0;
+    *(undefined4 *)&((GameObject *)param_9)->unkC8 = 0;
   }
   (**(code **)(*DAT_803dd738 + 0x40))(param_9,uVar1,1);
   return;
@@ -4606,12 +4606,12 @@ int fn_80160534(int* obj)
 {
     GroundBaddieState* sub = ((GameObject *)obj)->extra;
     u8 step;
-    if (*(u8*)((char*)obj + 54) >= (step = framesThisStep)) {
-        *(u8*)((char*)obj + 54) = *(u8*)((char*)obj + 54) - step;
+    if (((GameObject *)obj)->anim.alpha >= (step = framesThisStep)) {
+        ((GameObject *)obj)->anim.alpha = ((GameObject *)obj)->anim.alpha - step;
     } else {
-        *(u8*)((char*)obj + 54) = 0;
+        ((GameObject *)obj)->anim.alpha = 0;
     }
-    if (*(u8*)((char*)obj + 54) == 0) {
+    if (((GameObject *)obj)->anim.alpha == 0) {
         GameBit_Set(sub->gameBitB, 0);
         GameBit_Set(sub->gameBitA, 1);
     }

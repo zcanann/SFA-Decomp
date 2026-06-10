@@ -298,7 +298,7 @@ void snowclaw_render(int obj, int p2, int p3, int p4, int p5, int vis) {
     dist = lbl_803E6708;
     inner = ((GameObject *)obj)->extra;
     sub = *(int *)inner;
-    if (*(u8 *)((char *)obj + 0x36) < 5) {
+    if (((GameObject *)obj)->anim.alpha < 5) {
         *(f32 *)((char *)inner + 0xac) = lbl_803E66F0;
     }
     found = 0;
@@ -336,7 +336,7 @@ void snowclaw_render(int obj, int p2, int p3, int p4, int p5, int vis) {
         *(u8 *)((char *)obj + 0x37) = oldFlag;
         if (((SnowclawAaFlags *)((char *)inner + 0xaa))->flag6 != 0) {
             if (*(f32 *)((char *)inner + 0xac) != lbl_803E66F0) {
-                *(f32 *)((char *)inner + 0xac) = lbl_803E670C + (f32)(s32)(0xff - *(u8 *)((char *)obj + 0x36)) / lbl_803E6710;
+                *(f32 *)((char *)inner + 0xac) = lbl_803E670C + (f32)(s32)(0xff - ((GameObject *)obj)->anim.alpha) / lbl_803E6710;
             } else {
                 ((SnowclawAaFlags *)((char *)inner + 0xaa))->flag6 = 0;
             }

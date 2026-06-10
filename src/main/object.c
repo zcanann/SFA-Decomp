@@ -1610,8 +1610,8 @@ void objFreeObjDef(void *objp, int flag) {
         *(s8 *)(lbl_803DCBA4 + type) -= 1;
         if (*(s8 *)(lbl_803DCBA4 + type) == 0) {
             o = ((u8 **)lbl_803DCBA8)[type];
-            if (*(int *)(o + 0x30) != 0) {
-                mm_free(*(void **)(o + 0x30));
+            if (*(int *)&((GameObject *)o)->anim.parent != 0) {
+                mm_free(((GameObject *)o)->anim.parent);
             }
             if (*(int *)(o + 0x34) != 0) {
                 mm_free(*(void **)(o + 0x34));

@@ -363,7 +363,7 @@ void FUN_80172b40(undefined8 param_1,double param_2,double param_3,undefined8 pa
   uVar10 = FUN_80286840();
   uVar2 = (uint)((ulonglong)uVar10 >> 0x20);
   pfVar6 = (float *)uVar10;
-  iVar7 = *(int *)(uVar2 + 0x4c);
+  iVar7 = *(int *)&((GameObject *)uVar2)->anim.placementData;
   iVar3 = FUN_80017a98();
   if ((iVar3 == 0) || ((*(byte *)((int)pfVar6 + 0x37) & 1) != 0)) goto LAB_80172f50;
   iVar4 = FUN_80294dbc(iVar3);
@@ -371,14 +371,14 @@ void FUN_80172b40(undefined8 param_1,double param_2,double param_3,undefined8 pa
     iVar4 = iVar3;
   }
   dVar8 = (double)FUN_80017710((float *)(uVar2 + 0x18),(float *)(iVar4 + 0x18));
-  dVar9 = (double)(*(float *)(iVar4 + 0x1c) - *(float *)(uVar2 + 0x1c));
+  dVar9 = (double)(*(float *)(iVar4 + 0x1c) - ((GameObject *)uVar2)->anim.worldPosY);
   if (dVar9 < (double)lbl_803E40F4) {
     dVar9 = -dVar9;
   }
   if (((dVar9 < (double)lbl_803E4128) && (dVar8 < (double)pfVar6[1])) &&
      (uVar5 = FUN_80294c78(iVar3), uVar5 != 0)) {
     *(undefined2 *)(pfVar6 + 0x12) = 0xffff;
-    sVar1 = *(short *)(uVar2 + 0x46);
+    sVar1 = ((GameObject *)uVar2)->anim.seqId;
     if (sVar1 == 0x319) {
       FUN_801713ac(dVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,uVar2);
       *(byte *)((int)pfVar6 + 0x37) = *(byte *)((int)pfVar6 + 0x37) | 1;

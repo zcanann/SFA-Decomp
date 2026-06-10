@@ -1143,7 +1143,7 @@ void FUN_8019c690(int param_1)
   if (((GameObject *)param_1)->unkF4 != 0) {
     (*gObjectTriggerInterface)->preempt(param_1, 0xfa);
     (*gObjectTriggerInterface)->runSequence((int)*(char *)(iVar3 + 4), (void *)param_1, 3);
-    *(undefined4 *)(param_1 + 0xf4) = 0;
+    ((GameObject *)param_1)->unkF4 = 0;
   }
   if (((*(byte *)&((GameObject *)param_1)->anim.resetHitboxMode & 1) != 0) &&
      (iVar2 = (**(code **)(*DAT_803dd6e8 + 0x20))((int)*(short *)(iVar3 + 2)), iVar2 != 0)) {
@@ -1953,9 +1953,9 @@ void FUN_8019dcb8(undefined8 param_1,double param_2,double param_3,undefined8 pa
     param_2 = (double)lbl_803E4EFC;
     uStack_24 = (uint)DAT_803dc070;
     local_28 = 0x43300000;
-    *(float *)(iVar10 + 0x30) =
+    *(float *)&((GameObject *)iVar10)->anim.parent =
          (float)(param_2 * (double)(float)((double)CONCAT44(0x43300000,uStack_24) - DOUBLE_803e4f08)
-                + (double)*(float *)(iVar10 + 0x30));
+                + (double)*(float *)&((GameObject *)iVar10)->anim.parent);
   }
   else if (bVar2 < 5) {
     if (3 < bVar2) {
@@ -1964,7 +1964,7 @@ void FUN_8019dcb8(undefined8 param_1,double param_2,double param_3,undefined8 pa
     }
   }
   else if (bVar2 == 0x29) {
-    *(float *)(iVar10 + 0x30) = lbl_803E4EF8;
+    *(float *)&((GameObject *)iVar10)->anim.parent = lbl_803E4EF8;
   }
   if (*(short *)(uVar4 + 0xb4) < 0) goto LAB_8019fe8c;
   ObjHits_EnableObject(uVar4);
@@ -2758,7 +2758,7 @@ void FUN_8019ecf0(int param_1)
   if ((((GameObject *)param_1)->unkF4 != 0) && (uVar1 = FUN_80017690(0x50), uVar1 == 0)) {
     (*gObjectTriggerInterface)->runSequence(0, (void *)param_1, -1);
   }
-  *(undefined4 *)(param_1 + 0xf4) = 0;
+  ((GameObject *)param_1)->unkF4 = 0;
   return;
 }
 
@@ -2891,7 +2891,7 @@ void FUN_8019ef2c(int param_1)
       uVar2 = 0;
     }
     (*gObjectTriggerInterface)->runSequence(uVar2, (void *)param_1, -1);
-    *(undefined4 *)(param_1 + 0xf4) = 0;
+    ((GameObject *)param_1)->unkF4 = 0;
   }
   return;
 }
@@ -4006,7 +4006,7 @@ void spiritdoorspirit_init(int* obj)
 {
     SpiritDoorSpiritState* state = ((GameObject *)obj)->extra;
     state->active = 0;
-    *(s8*)((char*)obj + 54) = 0;
+    *(s8 *)&((GameObject *)obj)->anim.alpha = 0;
 }
 
 extern f32 lbl_803DBE78;
@@ -4072,7 +4072,7 @@ void gcrobotlightbea_init(int* obj)
     state->light = 0;
     state->unk4 = 0;
     ObjHits_EnableObject(obj);
-    *(u8*)((char*)obj + 54) = 0x80;
+    ((GameObject *)obj)->anim.alpha = 0x80;
 }
 
 extern f32 lbl_803E42A0;

@@ -168,9 +168,9 @@ void FUN_801f456c(int param_1)
     if (bVar11 == 0) {
       FUN_80080f60(1);
       FUN_80080f5c(0x88,0xb7,0xba);
-      if ((*(uint *)(param_1 + 0xf4) & 4) == 0) {
+      if ((*(uint *)&((GameObject *)param_1)->unkF4 & 4) == 0) {
         skyFn_80089710(1,1,0);
-        *(uint *)(param_1 + 0xf4) = *(uint *)(param_1 + 0xf4) | 4;
+        *(uint *)&((GameObject *)param_1)->unkF4 = *(uint *)&((GameObject *)param_1)->unkF4 | 4;
       }
       else {
         skyFn_80089710(1,1,1);

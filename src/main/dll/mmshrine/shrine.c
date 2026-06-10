@@ -390,7 +390,7 @@ void FUN_801c5a5c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
         (*gObjectTriggerInterface)->endSequence(iVar4);
         uVar6 = extraout_f1;
       }
-      *(undefined2 *)(param_9 + 0xb4) = 0xffff;
+      *(undefined2 *)&((GameObject *)param_9)->unkB4 = 0xffff;
       FUN_80017ac8(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9);
     }
   }

@@ -375,7 +375,7 @@ void FUN_801ac490(undefined8 param_1,double param_2,double param_3,undefined8 pa
       getLActions(uVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,
                    0x17b,0,0,0,param_15,param_16);
       (**(code **)(*DAT_803dd6e4 + 0x1c))(1);
-      *(undefined4 *)(param_9 + 0xf4) = 1;
+      ((GameObject *)param_9)->unkF4 = 1;
     }
     break;
   case 4:
@@ -495,7 +495,7 @@ void FUN_801acda4(undefined8 param_1,double param_2,double param_3,undefined8 pa
     FUN_80006728(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,param_9,0x104
                  ,0,param_13,param_14,param_15,param_16);
     param_1 = (**(code **)(*DAT_803dd6e4 + 0x1c))(1);
-    *(undefined4 *)(param_9 + 0xf4) = 1;
+    ((GameObject *)param_9)->unkF4 = 1;
     param_10 = extraout_r4;
   }
   bVar1 = *(byte *)(iVar4 + 0xc);

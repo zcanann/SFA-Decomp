@@ -520,9 +520,9 @@ void FUN_801a2350(undefined8 param_1,double param_2,double param_3,undefined8 pa
   undefined8 local_30;
   
   uVar2 = FUN_80286838();
-  iVar12 = *(int *)(uVar2 + 0xb8);
+  iVar12 = *(int *)&((GameObject *)uVar2)->extra;
   psVar3 = (short *)FUN_80017a98();
-  iVar10 = *(int *)(uVar2 + 0x4c);
+  iVar10 = *(int *)&((GameObject *)uVar2)->anim.placementData;
   if (*(float *)(iVar12 + 0x54) <= lbl_803E4FCC) {
     *(float *)(iVar12 + 0x54) = *(float *)(iVar12 + 0x54) + lbl_803DC074;
   }
@@ -533,13 +533,13 @@ void FUN_801a2350(undefined8 param_1,double param_2,double param_3,undefined8 pa
       if ((*(byte *)(iVar12 + 0x4a) >> 5 & 1) == 0) {
         if (((*(byte *)(iVar12 + 0x4a) >> 2 & 1) == 0) ||
            (bVar8 = FUN_80294c20((int)psVar3), bVar8 != 0)) {
-          *(byte *)(uVar2 + 0xaf) = *(byte *)(uVar2 + 0xaf) & 0xef;
+          *(byte *)&((GameObject *)uVar2)->anim.resetHitboxMode = *(byte *)&((GameObject *)uVar2)->anim.resetHitboxMode & 0xef;
         }
         else {
-          *(byte *)(uVar2 + 0xaf) = *(byte *)(uVar2 + 0xaf) | 0x10;
+          *(byte *)&((GameObject *)uVar2)->anim.resetHitboxMode = *(byte *)&((GameObject *)uVar2)->anim.resetHitboxMode | 0x10;
         }
       }
-      if (*(int *)(uVar2 + 200) == 0) {
+      if (*(int *)&((GameObject *)uVar2)->unkC8 == 0) {
         local_4c[0] = lbl_803E4FD0;
         iVar5 = ObjGroup_FindNearestObject(0x4c,uVar2,local_4c);
         *(int *)(iVar12 + 0x10) = iVar5;
@@ -569,10 +569,10 @@ void FUN_801a2350(undefined8 param_1,double param_2,double param_3,undefined8 pa
         }
       }
       if ((*(byte *)(iVar12 + 0x4a) >> 5 & 1) == 0) {
-        *(byte *)(uVar2 + 0xaf) = *(byte *)(uVar2 + 0xaf) & 0xf7;
+        *(byte *)&((GameObject *)uVar2)->anim.resetHitboxMode = *(byte *)&((GameObject *)uVar2)->anim.resetHitboxMode & 0xf7;
       }
       else {
-        *(byte *)(uVar2 + 0xaf) = *(byte *)(uVar2 + 0xaf) | 8;
+        *(byte *)&((GameObject *)uVar2)->anim.resetHitboxMode = *(byte *)&((GameObject *)uVar2)->anim.resetHitboxMode | 8;
       }
       if (*(char *)(iVar12 + 0x17) == '\0') {
         if (*(char *)(iVar12 + 0x15) == '\0') {
@@ -626,23 +626,23 @@ void FUN_801a2350(undefined8 param_1,double param_2,double param_3,undefined8 pa
                   local_30 = CONCAT44(0x43300000,(int)*psVar3 ^ 0x80000000);
                   dVar14 = (double)FUN_80293f90();
                   *(float *)(iVar12 + 0x20) = (float)dVar14;
-                  *(float *)(uVar2 + 0x24) = (float)dVar14;
+                  ((GameObject *)uVar2)->anim.velocityX = (float)dVar14;
                   fVar1 = lbl_803E4F58;
                   *(float *)(iVar12 + 0x24) = lbl_803E4F58;
-                  *(float *)(uVar2 + 0x28) = fVar1;
+                  ((GameObject *)uVar2)->anim.velocityY = fVar1;
                   local_38 = CONCAT44(0x43300000,(int)*psVar3 ^ 0x80000000);
                   dVar14 = (double)FUN_80294964();
                   *(float *)(iVar12 + 0x28) = (float)dVar14;
-                  *(float *)(uVar2 + 0x2c) = (float)dVar14;
+                  ((GameObject *)uVar2)->anim.velocityZ = (float)dVar14;
                   local_40 = CONCAT44(0x43300000,(int)*psVar3 ^ 0x80000000);
                   dVar14 = (double)FUN_80293f90();
-                  *(float *)(uVar2 + 0xc) =
-                       (float)((double)lbl_803DCAE8 * -dVar14 + (double)*(float *)(uVar2 + 0xc));
+                  ((GameObject *)uVar2)->anim.localPosX =
+                       (float)((double)lbl_803DCAE8 * -dVar14 + (double)((GameObject *)uVar2)->anim.localPosX);
                   uStack_44 = (int)*psVar3 ^ 0x80000000;
                   local_4c[1] = 176.0;
                   dVar14 = (double)FUN_80294964();
-                  *(float *)(uVar2 + 0x14) =
-                       (float)((double)lbl_803DCAE8 * -dVar14 + (double)*(float *)(uVar2 + 0x14));
+                  ((GameObject *)uVar2)->anim.localPosZ =
+                       (float)((double)lbl_803DCAE8 * -dVar14 + (double)((GameObject *)uVar2)->anim.localPosZ);
                   ObjGroup_AddObject(uVar2,0x16);
                 }
               }
@@ -659,12 +659,12 @@ void FUN_801a2350(undefined8 param_1,double param_2,double param_3,undefined8 pa
           gunpowderbarrel_hitDetect(uVar2);
         }
         if (*(char *)(iVar12 + 0x4a) < '\0') {
-          *(byte *)(uVar2 + 0xaf) = *(byte *)(uVar2 + 0xaf) | 8;
+          *(byte *)&((GameObject *)uVar2)->anim.resetHitboxMode = *(byte *)&((GameObject *)uVar2)->anim.resetHitboxMode | 8;
           if (((*(byte *)(iVar12 + 0x4a) >> 6 & 1) != 0) && ((char)*(byte *)(iVar12 + 0x4a) < '\0'))
           {
-            *(undefined4 *)(iVar12 + 0x20) = *(undefined4 *)(uVar2 + 0x24);
-            *(undefined4 *)(iVar12 + 0x24) = *(undefined4 *)(uVar2 + 0x28);
-            *(undefined4 *)(iVar12 + 0x28) = *(undefined4 *)(uVar2 + 0x2c);
+            *(undefined4 *)(iVar12 + 0x20) = *(undefined4 *)&((GameObject *)uVar2)->anim.velocityX;
+            *(undefined4 *)(iVar12 + 0x24) = *(undefined4 *)&((GameObject *)uVar2)->anim.velocityY;
+            *(undefined4 *)(iVar12 + 0x28) = *(undefined4 *)&((GameObject *)uVar2)->anim.velocityZ;
             *(float *)(iVar12 + 0x24) = lbl_803E4F58;
             *(byte *)(iVar12 + 0x4a) = *(byte *)(iVar12 + 0x4a) & 0xbf;
           }
@@ -713,7 +713,7 @@ void FUN_801a2350(undefined8 param_1,double param_2,double param_3,undefined8 pa
           if (iVar5 == 0) {
             FUN_80017ad0(uVar2);
             ObjHits_DisableObject(uVar2);
-            *(ushort *)(uVar2 + 6) = *(ushort *)(uVar2 + 6) | 0x4000;
+            *(ushort *)&((GameObject *)uVar2)->anim.flags = *(ushort *)&((GameObject *)uVar2)->anim.flags | 0x4000;
             FUN_8007f718((float *)(iVar12 + 0x18),0x3c);
           }
           else {
@@ -728,32 +728,32 @@ void FUN_801a2350(undefined8 param_1,double param_2,double param_3,undefined8 pa
               FUN_8020a470(iVar5,uVar2,0x46);
               ObjHits_ClearHitVolumes(uVar2);
               ObjHits_DisableObject(uVar2);
-              *(ushort *)(uVar2 + 6) = *(ushort *)(uVar2 + 6) | 0x4000;
+              *(ushort *)&((GameObject *)uVar2)->anim.flags = *(ushort *)&((GameObject *)uVar2)->anim.flags | 0x4000;
             }
             else {
               FUN_80017ad0(uVar2);
               ObjHits_DisableObject(uVar2);
-              *(ushort *)(uVar2 + 6) = *(ushort *)(uVar2 + 6) | 0x4000;
+              *(ushort *)&((GameObject *)uVar2)->anim.flags = *(ushort *)&((GameObject *)uVar2)->anim.flags | 0x4000;
             }
           }
         }
       }
     }
     else {
-      *(byte *)(uVar2 + 0xaf) = *(byte *)(uVar2 + 0xaf) | 8;
+      *(byte *)&((GameObject *)uVar2)->anim.resetHitboxMode = *(byte *)&((GameObject *)uVar2)->anim.resetHitboxMode | 8;
       FUN_8007f764((float *)(iVar12 + 0x1c));
       FUN_800033a8(iVar12 + 0x20,0,0xc);
       FUN_800033a8(uVar2 + 0x24,0,0xc);
     }
   }
   else {
-    *(byte *)(uVar2 + 0xaf) = *(byte *)(uVar2 + 0xaf) | 8;
+    *(byte *)&((GameObject *)uVar2)->anim.resetHitboxMode = *(byte *)&((GameObject *)uVar2)->anim.resetHitboxMode | 8;
     iVar10 = FUN_8007f764((float *)(iVar12 + 0x18));
     if (iVar10 != 0) {
       *(undefined *)(iVar12 + 0x17) = 0;
       *(undefined *)(iVar12 + 0x16) = 0;
       *(byte *)(iVar12 + 0x49) = *(byte *)(iVar12 + 0x49) | 1;
-      *(ushort *)(uVar2 + 6) = *(ushort *)(uVar2 + 6) & 0xbfff;
+      *(ushort *)&((GameObject *)uVar2)->anim.flags = *(ushort *)&((GameObject *)uVar2)->anim.flags & 0xbfff;
       ObjHits_ClearHitVolumes(uVar2);
       ObjHitbox_SetCapsuleBounds(uVar2,8,-2,0x19);
       ObjHits_EnableObject(uVar2);

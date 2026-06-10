@@ -1899,7 +1899,7 @@ undefined4 FUN_80057690(int param_1)
   undefined auStack_34 [4];
   undefined8 local_30;
   
-  if (*(byte *)(param_1 + 0x36) == 0) {
+  if (((GameObject *)param_1)->anim.alpha == 0) {
     *(undefined *)(param_1 + 0x37) = 0;
     return 0;
   }
@@ -1945,10 +1945,10 @@ undefined4 FUN_80057690(int param_1)
       uVar6 = (uint)(((float)(local_30 - DOUBLE_803df840) * (fVar1 - lbl_803DF860)) /
                     lbl_803DF864);
     }
-    *(char *)(param_1 + 0x37) = (char)(uVar6 * (*(byte *)(param_1 + 0x36) + 1) >> 8);
+    *(char *)(param_1 + 0x37) = (char)(uVar6 * (((GameObject *)param_1)->anim.alpha + 1) >> 8);
   }
   else {
-    *(char *)(param_1 + 0x37) = (char)((*(byte *)(param_1 + 0x36) + 1) * 0xff >> 8);
+    *(char *)(param_1 + 0x37) = (char)((((GameObject *)param_1)->anim.alpha + 1) * 0xff >> 8);
   }
   if (*(char *)(param_1 + 0x37) == '\0') {
     uVar3 = 0;
@@ -3685,7 +3685,7 @@ int objUpdateOpacity(char* obj)
     f32 o5, o6;
     f32 prod;
 
-    op = *(u8*)(obj + 0x36);
+    op = ((GameObject *)obj)->anim.alpha;
     if (op == 0) {
         *(u8*)(obj + 0x37) = 0;
         return 0;
@@ -3730,7 +3730,7 @@ int objUpdateOpacity(char* obj)
         if (sz < (&lbl_803DEBCC)[7]) {
             alpha = (int)(((f32)alpha * (sz - (&lbl_803DEBCC)[5])) / (&lbl_803DEBCC)[6]);
         }
-        *(u8*)(obj + 0x37) = (u8)((alpha * (*(u8*)(obj + 0x36) + 1)) >> 8);
+        *(u8*)(obj + 0x37) = (u8)((alpha * (((GameObject *)obj)->anim.alpha + 1)) >> 8);
     }
     if (*(u8*)(obj + 0x37) == 0) {
         return 0;

@@ -125,8 +125,8 @@ int TREX_Lazerwall_updateTimedChallenge(int arg1)
     int localC;
     int local8;
 
-    state = *(int *)(arg1 + 0xb8);
-    *(u8 *)(arg1 + 0xaf) = (u8)(*(u8 *)(arg1 + 0xaf) | 8);
+    state = *(int *)&((GameObject *)arg1)->extra;
+    *(u8 *)&((GameObject *)arg1)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)arg1)->anim.resetHitboxMode | 8);
     *(u8 *)(state + 0x9d6) = 0;
     ObjHits_DisableObject(arg1);
 

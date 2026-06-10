@@ -2021,11 +2021,11 @@ void pushable_init(s16 *obj, char *def) {
         break;
     }
     {
-        char *r = *(char **)((char *)obj + 0x64);
+        char *r = *(char **)&((GameObject *)obj)->anim.modelState;
         if (r != NULL) {
             *(u32 *)(r + 0x30) = *(u32 *)(r + 0x30) | 0xa10;
-            (*(char **)((char *)obj + 0x64))[0x3a] = 0x60;
-            (*(char **)((char *)obj + 0x64))[0x3b] = 0x40;
+            (*(char **)&((GameObject *)obj)->anim.modelState)[0x3a] = 0x60;
+            (*(char **)&((GameObject *)obj)->anim.modelState)[0x3b] = 0x40;
         }
     }
     state->flags = state->flags | 0x40;

@@ -764,7 +764,7 @@ void FUN_8015801c(int param_1,int param_2)
   float fVar3;
   uint uVar4;
   
-  uVar4 = (uint)*(byte *)(*(int *)(param_1 + 0x4c) + 0x2f);
+  uVar4 = (uint)*(byte *)(*(int *)&((GameObject *)param_1)->anim.placementData + 0x2f);
   fVar1 = (float)((double)CONCAT44(0x43300000,uVar4) - DOUBLE_803e37f0);
   if (lbl_803E37B0 == (float)((double)CONCAT44(0x43300000,uVar4) - DOUBLE_803e37f0)) {
     fVar1 = lbl_803E37D0;

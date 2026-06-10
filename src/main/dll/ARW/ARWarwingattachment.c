@@ -753,8 +753,8 @@ void FUN_801f1104(void)
   
   uVar3 = FUN_8028683c();
   iVar4 = FUN_80017a98();
-  iVar10 = *(int *)(uVar3 + 0x4c);
-  pcVar9 = *(char **)(uVar3 + 0xb8);
+  iVar10 = *(int *)&((GameObject *)uVar3)->anim.placementData;
+  pcVar9 = *(char **)&((GameObject *)uVar3)->extra;
   dVar13 = (double)FUN_8001771c((float *)(uVar3 + 0x18),(float *)(iVar4 + 0x18));
   dVar12 = (double)lbl_803E69F4;
   *pcVar9 = *pcVar9 + -1;
@@ -781,7 +781,7 @@ void FUN_801f1104(void)
       if (*(short *)(iVar7 + 0x46) == 0x6d) {
         pcVar9[6] = pcVar9[6] & 0x7fU | 0x80;
       }
-      if (dVar14 < (double)(*(float *)(iVar7 + 0x10) - *(float *)(uVar3 + 0x10))) {
+      if (dVar14 < (double)(*(float *)(iVar7 + 0x10) - ((GameObject *)uVar3)->anim.localPosY)) {
         *pcVar9 = '\x05';
       }
       if (((pcVar9[1] == '\0') && (iVar7 != 0)) && (*(short *)(iVar7 + 0x46) == 0x146)) {
@@ -802,7 +802,7 @@ void FUN_801f1104(void)
       }
     }
     else {
-      fVar1 = *(float *)(iVar10 + 0xc) - *(float *)(uVar3 + 0x10);
+      fVar1 = *(float *)(iVar10 + 0xc) - ((GameObject *)uVar3)->anim.localPosY;
       if (((fVar1 <= lbl_803E6A00) || (lbl_803E6A04 <= fVar1)) ||
          (uVar5 = FUN_80017690((int)*(short *)(pcVar9 + 4)), uVar5 != 0)) {
         uVar5 = FUN_80017690(0x905);
@@ -818,10 +818,10 @@ void FUN_801f1104(void)
   bVar11 = false;
   if (*pcVar9 == '\0') {
     if (*(short *)(pcVar9 + 2) == 0) {
-      *(float *)(uVar3 + 0x10) = lbl_803E6A0C * lbl_803DC074 + *(float *)(uVar3 + 0x10);
-      bVar11 = *(float *)(uVar3 + 0x10) <= *(float *)(iVar10 + 0xc);
+      ((GameObject *)uVar3)->anim.localPosY = lbl_803E6A0C * lbl_803DC074 + ((GameObject *)uVar3)->anim.localPosY;
+      bVar11 = ((GameObject *)uVar3)->anim.localPosY <= *(float *)(iVar10 + 0xc);
       if (!bVar11) {
-        *(float *)(uVar3 + 0x10) = *(float *)(iVar10 + 0xc);
+        ((GameObject *)uVar3)->anim.localPosY = *(float *)(iVar10 + 0xc);
       }
       FUN_80017698((int)*(short *)(iVar10 + 0x1c),0);
       if (((int)*(short *)(pcVar9 + 4) != 0xffffffff) && (((byte)pcVar9[6] >> 6 & 1) == 0)) {
@@ -831,14 +831,14 @@ void FUN_801f1104(void)
   }
   else {
     fVar2 = *(float *)(iVar10 + 0xc) - lbl_803E6A04;
-    fVar1 = *(float *)(uVar3 + 0x10);
+    fVar1 = ((GameObject *)uVar3)->anim.localPosY;
     if (fVar2 <= fVar1) {
-      *(float *)(uVar3 + 0x10) = -(lbl_803E6A0C * lbl_803DC074 - fVar1);
-      if (fVar2 <= *(float *)(uVar3 + 0x10)) {
+      ((GameObject *)uVar3)->anim.localPosY = -(lbl_803E6A0C * lbl_803DC074 - fVar1);
+      if (fVar2 <= ((GameObject *)uVar3)->anim.localPosY) {
         bVar11 = true;
       }
       else {
-        *(float *)(uVar3 + 0x10) = fVar2;
+        ((GameObject *)uVar3)->anim.localPosY = fVar2;
         FUN_80017698((int)*(short *)(iVar10 + 0x1c),1);
         if ((int)*(short *)(pcVar9 + 4) != 0xffffffff) {
           FUN_80017698((int)*(short *)(pcVar9 + 4),1);
@@ -849,9 +849,9 @@ void FUN_801f1104(void)
       }
     }
     else {
-      *(float *)(uVar3 + 0x10) = lbl_803E6A08 * lbl_803DC074 + fVar1;
-      if (fVar2 < *(float *)(uVar3 + 0x10)) {
-        *(float *)(uVar3 + 0x10) = fVar2;
+      ((GameObject *)uVar3)->anim.localPosY = lbl_803E6A08 * lbl_803DC074 + fVar1;
+      if (fVar2 < ((GameObject *)uVar3)->anim.localPosY) {
+        ((GameObject *)uVar3)->anim.localPosY = fVar2;
       }
       FUN_80017698((int)*(short *)(iVar10 + 0x1c),1);
       if (pcVar9[6] < '\0') {

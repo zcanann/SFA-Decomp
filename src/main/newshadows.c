@@ -802,7 +802,7 @@ void newshadows_renderQueuedShadowCasters(void)
             uVar15 = uVar14 << 1;
           }
           if (*(char *)(piVar19 + 2) == '\x02') {
-            uVar15 = (uint)*(ushort *)(*(int *)(*(int *)(iVar13 + 100) + 4) + 10);
+            uVar15 = (uint)*(ushort *)(*(int *)(*(int *)&((GameObject *)iVar13)->anim.modelState + 4) + 10);
             uVar14 = uVar15;
           }
           FUN_80080f6c(iVar13,&local_234,&local_230,&local_22c);
@@ -858,13 +858,13 @@ void newshadows_renderQueuedShadowCasters(void)
           *(float *)(puVar5 + 6) = (float)(dVar27 + (double)*(float *)(iVar8 + 0xc));
           *(float *)(puVar5 + 8) = (float)(dVar29 + (double)*(float *)(iVar8 + 0x1c));
           *(float *)(puVar5 + 10) = (float)(dVar28 + (double)*(float *)(iVar8 + 0x2c));
-          if (*(int *)(iVar13 + 0x30) == 0) {
+          if (*(int *)&((GameObject *)iVar13)->anim.parent == 0) {
             *(float *)(puVar5 + 6) = *(float *)(puVar5 + 6) + lbl_803DDB50;
             *(float *)(puVar5 + 10) = *(float *)(puVar5 + 10) + lbl_803DDB4C;
           }
           dVar22 = (double)*pfVar12;
           dVar27 = -dVar22;
-          if (*(int *)(iVar13 + 0x30) != 0) {
+          if (*(int *)&((GameObject *)iVar13)->anim.parent != 0) {
             *(float *)(puVar5 + 6) = *(float *)(puVar5 + 6) + lbl_803DDA58;
             *(float *)(puVar5 + 10) = *(float *)(puVar5 + 10) + lbl_803DDA5C;
           }
@@ -902,9 +902,9 @@ void newshadows_renderQueuedShadowCasters(void)
             FUN_80259400(0,0,uVar15,uVar15);
             FUN_80259504((ushort)uVar15,(ushort)uVar15,0x11,0);
             FUN_80259858('\0',(byte *)(DAT_803dd970 + 0x1a),'\0',(byte *)(DAT_803dd970 + 0x32));
-            FUN_80259c0c(*(int *)(*(int *)(iVar13 + 100) + 4) + 0x60,1);
+            FUN_80259c0c(*(int *)(*(int *)&((GameObject *)iVar13)->anim.modelState + 4) + 0x60,1);
             FUN_80045be8();
-            (&DAT_8038fd78)[uVar3 * 0x1a] = *(undefined4 *)(*(int *)(iVar13 + 100) + 4);
+            (&DAT_8038fd78)[uVar3 * 0x1a] = *(undefined4 *)(*(int *)&((GameObject *)iVar13)->anim.modelState + 4);
           }
           else {
             if (bVar17 == 0) {
@@ -918,14 +918,14 @@ void newshadows_renderQueuedShadowCasters(void)
           }
         }
         else {
-          (&DAT_8038fd78)[uVar3 * 0x1a] = *(undefined4 *)(*(int *)(iVar13 + 100) + 4);
-          dVar23 = (double)*(float *)(iVar13 + 0xc);
-          dVar22 = (double)*(float *)(iVar13 + 0x14);
-          if (*(int *)(iVar13 + 0x30) == 0) {
+          (&DAT_8038fd78)[uVar3 * 0x1a] = *(undefined4 *)(*(int *)&((GameObject *)iVar13)->anim.modelState + 4);
+          dVar23 = (double)((GameObject *)iVar13)->anim.localPosX;
+          dVar22 = (double)((GameObject *)iVar13)->anim.localPosZ;
+          if (*(int *)&((GameObject *)iVar13)->anim.parent == 0) {
             dVar23 = (double)(float)(dVar23 - (double)lbl_803DDA58);
             dVar22 = (double)(float)(dVar22 - (double)lbl_803DDA5C);
           }
-          FUN_80247a48(-dVar23,-(double)*(float *)(iVar13 + 0x10),-dVar22,afStack_1a0);
+          FUN_80247a48(-dVar23,-(double)((GameObject *)iVar13)->anim.localPosY,-dVar22,afStack_1a0);
           local_1d0 = lbl_803DF9B8 / *pfVar12;
           local_1cc = lbl_803DF9A8;
           local_1c8 = lbl_803DF9A8;
@@ -1033,9 +1033,9 @@ void newshadows_queueShadowCaster(int object)
     objAnim = (ObjAnimComponent *)object;
     modelDef = objAnim->modelInstance;
     (&DAT_8038ef08)[(uint)DAT_803ddbf8 * 3] = object;
-    fVar1 = *(float *)(object + 0x18) - *(float *)(DAT_803ddc68 + 0xc);
-    fVar2 = *(float *)(object + 0x1c) - *(float *)(DAT_803ddc68 + 0x10);
-    fVar3 = *(float *)(object + 0x20) - *(float *)(DAT_803ddc68 + 0x14);
+    fVar1 = ((GameObject *)object)->anim.worldPosX - *(float *)(DAT_803ddc68 + 0xc);
+    fVar2 = ((GameObject *)object)->anim.worldPosY - *(float *)(DAT_803ddc68 + 0x10);
+    fVar3 = ((GameObject *)object)->anim.worldPosZ - *(float *)(DAT_803ddc68 + 0x14);
     dVar6 = (double)(fVar3 * fVar3 + fVar1 * fVar1 + fVar2 * fVar2);
     if ((double)lbl_803DF9A8 < dVar6) {
       dVar5 = 1.0 / SQRT(dVar6);

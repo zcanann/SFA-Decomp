@@ -41,8 +41,8 @@ void ediblemushroom_update(u8 *self)
   f32 distState;
   f32 distEnemy;
 
-  state = (u8 *)*(int *)(self + 0xB8);
-  other = (u8 *)*(int *)(self + 0x4C);
+  state = (u8 *)*(int *)&((GameObject *)self)->extra;
+  other = (u8 *)*(int *)&((GameObject *)self)->anim.placementData;
   player = Obj_GetPlayerObject();
   enemy = getTrickyObject();
 
@@ -51,11 +51,11 @@ void ediblemushroom_update(u8 *self)
   if (state[0x136] == 8) {
     while (ObjMsg_Pop(self, &msg, 0, 0) != 0) {
       if (((u32)msg - 0x70000) != 0xB) continue;
-      *(s16 *)(self + 6) = (s16)(*(s16 *)(self + 6) | 0x4000);
+      ((GameObject *)self)->anim.flags = (s16)(((GameObject *)self)->anim.flags | 0x4000);
       ObjHits_DisableObject(self);
       gameBitIncrement(*(s16 *)(state + 0x134));
       GameBit_Set(0x12E, 0);
-      if (*(s16 *)(self + 0x46) == 0x658) {
+      if (((GameObject *)self)->anim.seqId == 0x658) {
         itemPickupDoParticleFx(self, lbl_803E52A8, 0xFF, 0x28);
       } else {
         itemPickupDoParticleFx(self, lbl_803E52A8, 6, 0x28);
@@ -66,9 +66,9 @@ void ediblemushroom_update(u8 *self)
   }
 
   if (state[0x139] != 0) {
-    *(f32 *)(self + 0xC) = *(f32 *)(other + 0x8);
-    *(f32 *)(self + 0x10) = *(f32 *)(other + 0xC);
-    *(f32 *)(self + 0x14) = *(f32 *)(other + 0x10);
+    ((GameObject *)self)->anim.localPosX = *(f32 *)(other + 0x8);
+    ((GameObject *)self)->anim.localPosY = *(f32 *)(other + 0xC);
+    ((GameObject *)self)->anim.localPosZ = *(f32 *)(other + 0x10);
     ((GameObject *)self)->anim.alpha = 0xFF;
     state[0x139] = 0;
   }

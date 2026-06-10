@@ -753,7 +753,7 @@ void FUN_801a4520(int param_1)
     if (iVar1 != -1) {
       (*gObjectTriggerInterface)->runSequence(iVar1, (void *)param_1, -1);
     }
-    *(undefined4 *)(param_1 + 0xf4) = 1;
+    ((GameObject *)param_1)->unkF4 = 1;
   }
   return;
 }

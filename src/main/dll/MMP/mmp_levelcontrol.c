@@ -830,7 +830,7 @@ void xyzanimator_free(int obj,int param_2)
 
   zero = lbl_803E4000;
   state = *(int *)&((GameObject *)obj)->extra;
-  def = *(undefined4 *)(obj + 0x4c);
+  def = *(undefined4 *)&((GameObject *)obj)->anim.placementData;
   *(float *)(state + 0x40) = lbl_803E4000;
   *(float *)(state + 0x44) = zero;
   *(float *)(state + 0x48) = zero;

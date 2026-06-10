@@ -180,7 +180,7 @@ undefined4 FUN_801e76a0(int param_1)
     if (uVar1 == 0) {
       GameBit_Set(0xad3,1);
       iVar3 = *(int *)(iVar3 + 0x9b4);
-      (**(code **)(**(int **)(iVar3 + 0x68) + 0x24))(iVar3,1,2);
+      (**(code **)(**(int **)&((GameObject *)iVar3)->anim.dll + 0x24))(iVar3,1,2);
     }
     uVar2 = 2;
   }
@@ -469,37 +469,37 @@ void fn_801E7DC8(int p1, int p2, int count)
 
   (*gMapEventInterface)->setAnimEvent((s32)((GameObject *)p1)->anim.mapEventSlot, 6, 1);
 
-  hitDetectFn_800658a4(p1, &local, 0, *(f32 *)(p1 + 0xc), *(f32 *)(p1 + 0x10), *(f32 *)(p1 + 0x14));
+  hitDetectFn_800658a4(p1, &local, 0, ((GameObject *)p1)->anim.localPosX, ((GameObject *)p1)->anim.localPosY, ((GameObject *)p1)->anim.localPosZ);
 
   for (i = 0; i < count; i++) {
     o = Obj_AllocObjectSetup(36, 1151);
-    *(f32 *)(o + 8) = *(f32 *)(p1 + 0xc);
-    *(f32 *)(o + 12) = *(f32 *)(p1 + 0x10);
-    *(f32 *)(o + 16) = *(f32 *)(p1 + 0x14);
+    *(f32 *)(o + 8) = ((GameObject *)p1)->anim.localPosX;
+    *(f32 *)(o + 12) = ((GameObject *)p1)->anim.localPosY;
+    *(f32 *)(o + 16) = ((GameObject *)p1)->anim.localPosZ;
     *(u8 *)(o + 24) = (u8)(s8)randomGetRange(-128, 127);
-    *(s16 *)(o + 26) = (s16)(s32)(*(f32 *)(p1 + 0x10) - *(f32 *)&local);
+    *(s16 *)(o + 26) = (s16)(s32)(((GameObject *)p1)->anim.localPosY - *(f32 *)&local);
     *(u8 *)(o + 5) = 1;
     *(u8 *)(o + 7) = 255;
     *(u8 *)(o + 4) = 16;
     *(u8 *)(o + 6) = 6;
     *(int *)(o + 20) = ((ShopkeeperState *)p2)->vendorObj;
-    Obj_SetupObject(o, 5, ((GameObject *)p1)->anim.mapEventSlot, -1, *(int *)(p1 + 0x30));
+    Obj_SetupObject(o, 5, ((GameObject *)p1)->anim.mapEventSlot, -1, *(int *)&((GameObject *)p1)->anim.parent);
   }
 
   for (i = 0; i < count; i++) {
     o = Obj_AllocObjectSetup(36, 1151);
-    *(f32 *)(o + 8) = *(f32 *)(p1 + 0xc);
-    *(f32 *)(o + 12) = *(f32 *)(p1 + 0x10);
-    *(f32 *)(o + 16) = *(f32 *)(p1 + 0x14);
+    *(f32 *)(o + 8) = ((GameObject *)p1)->anim.localPosX;
+    *(f32 *)(o + 12) = ((GameObject *)p1)->anim.localPosY;
+    *(f32 *)(o + 16) = ((GameObject *)p1)->anim.localPosZ;
     *(u8 *)(o + 24) = (u8)(s8)randomGetRange(-128, 127);
-    *(s16 *)(o + 26) = (s16)(s32)(*(f32 *)(p1 + 0x10) - *(f32 *)&local);
+    *(s16 *)(o + 26) = (s16)(s32)(((GameObject *)p1)->anim.localPosY - *(f32 *)&local);
     *(u8 *)(o + 5) = 1;
     *(u8 *)(o + 7) = 255;
     *(u8 *)(o + 4) = 16;
     *(u8 *)(o + 6) = 6;
     *(u8 *)(o + 25) = 1;
     *(int *)(o + 20) = ((ShopkeeperState *)p2)->vendorObj;
-    Obj_SetupObject(o, 5, ((GameObject *)p1)->anim.mapEventSlot, -1, *(int *)(p1 + 0x30));
+    Obj_SetupObject(o, 5, ((GameObject *)p1)->anim.mapEventSlot, -1, *(int *)&((GameObject *)p1)->anim.parent);
   }
 }
 
@@ -543,17 +543,17 @@ void FUN_801e7d3c(undefined4 param_1,undefined4 param_2,int param_3,undefined4 p
   uVar4 = FUN_80017ae8();
   if ((uVar4 & 0xff) != 0) {
     (*gMapEventInterface)->setAnimEvent((int)((GameObject *)iVar3)->anim.mapEventSlot,6,1);
-    dVar7 = (double)*(float *)(iVar3 + 0x10);
-    dVar8 = (double)*(float *)(iVar3 + 0x14);
-    FUN_800632e8((double)*(float *)(iVar3 + 0xc),dVar7,dVar8,iVar3,local_28,0);
+    dVar7 = (double)((GameObject *)iVar3)->anim.localPosY;
+    dVar8 = (double)((GameObject *)iVar3)->anim.localPosZ;
+    FUN_800632e8((double)((GameObject *)iVar3)->anim.localPosX,dVar7,dVar8,iVar3,local_28,0);
     for (iVar6 = 0; iVar6 < param_3; iVar6 = iVar6 + 1) {
       puVar5 = FUN_80017aa4(0x24,0x47f);
-      *(undefined4 *)(puVar5 + 4) = *(undefined4 *)(iVar3 + 0xc);
-      *(undefined4 *)(puVar5 + 6) = *(undefined4 *)(iVar3 + 0x10);
-      *(undefined4 *)(puVar5 + 8) = *(undefined4 *)(iVar3 + 0x14);
+      *(undefined4 *)(puVar5 + 4) = *(undefined4 *)&((GameObject *)iVar3)->anim.localPosX;
+      *(undefined4 *)(puVar5 + 6) = *(undefined4 *)&((GameObject *)iVar3)->anim.localPosY;
+      *(undefined4 *)(puVar5 + 8) = *(undefined4 *)&((GameObject *)iVar3)->anim.localPosZ;
       uVar4 = randomGetRange(0xffffff80,0x7f);
       *(char *)(puVar5 + 0xc) = (char)uVar4;
-      fVar2 = *(float *)(iVar3 + 0x10);
+      fVar2 = ((GameObject *)iVar3)->anim.localPosY;
       iVar1 = (int)((double)fVar2 - (double)local_28[0]);
       local_20 = (longlong)iVar1;
       puVar5[0xd] = (short)iVar1;
@@ -563,17 +563,17 @@ void FUN_801e7d3c(undefined4 param_1,undefined4 param_2,int param_3,undefined4 p
       *(undefined *)(puVar5 + 3) = 6;
       *(undefined4 *)(puVar5 + 10) = *(undefined4 *)((int)uVar9 + 0x9b4);
       FUN_80017ae4((double)fVar2,dVar7,dVar8,in_f4,in_f5,in_f6,in_f7,in_f8,puVar5,5,
-                   ((GameObject *)iVar3)->anim.mapEventSlot,0xffffffff,*(uint **)(iVar3 + 0x30),param_6,param_7,
+                   ((GameObject *)iVar3)->anim.mapEventSlot,0xffffffff,*(uint **)&((GameObject *)iVar3)->anim.parent,param_6,param_7,
                    param_8);
     }
     for (iVar6 = 0; iVar6 < param_3; iVar6 = iVar6 + 1) {
       puVar5 = FUN_80017aa4(0x24,0x47f);
-      *(undefined4 *)(puVar5 + 4) = *(undefined4 *)(iVar3 + 0xc);
-      *(undefined4 *)(puVar5 + 6) = *(undefined4 *)(iVar3 + 0x10);
-      *(undefined4 *)(puVar5 + 8) = *(undefined4 *)(iVar3 + 0x14);
+      *(undefined4 *)(puVar5 + 4) = *(undefined4 *)&((GameObject *)iVar3)->anim.localPosX;
+      *(undefined4 *)(puVar5 + 6) = *(undefined4 *)&((GameObject *)iVar3)->anim.localPosY;
+      *(undefined4 *)(puVar5 + 8) = *(undefined4 *)&((GameObject *)iVar3)->anim.localPosZ;
       uVar4 = randomGetRange(0xffffff80,0x7f);
       *(char *)(puVar5 + 0xc) = (char)uVar4;
-      fVar2 = *(float *)(iVar3 + 0x10);
+      fVar2 = ((GameObject *)iVar3)->anim.localPosY;
       iVar1 = (int)((double)fVar2 - (double)local_28[0]);
       local_20 = (longlong)iVar1;
       puVar5[0xd] = (short)iVar1;
@@ -584,7 +584,7 @@ void FUN_801e7d3c(undefined4 param_1,undefined4 param_2,int param_3,undefined4 p
       *(undefined *)((int)puVar5 + 0x19) = 1;
       *(undefined4 *)(puVar5 + 10) = *(undefined4 *)((int)uVar9 + 0x9b4);
       FUN_80017ae4((double)fVar2,dVar7,dVar8,in_f4,in_f5,in_f6,in_f7,in_f8,puVar5,5,
-                   ((GameObject *)iVar3)->anim.mapEventSlot,0xffffffff,*(uint **)(iVar3 + 0x30),param_6,param_7,
+                   ((GameObject *)iVar3)->anim.mapEventSlot,0xffffffff,*(uint **)&((GameObject *)iVar3)->anim.parent,param_6,param_7,
                    param_8);
     }
   }

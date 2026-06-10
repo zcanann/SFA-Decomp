@@ -73,7 +73,7 @@ undefined4 LandedArwing_UpdateFlightChase(int obj, int state)
 
     objLocal = obj;
     stateWord = state;
-    sub = (LandedArwingState *)((GroundBaddieState *)*(int *)(objLocal + 0xb8))->control;
+    sub = (LandedArwingState *)((GroundBaddieState *)*(int *)&((GameObject *)objLocal)->extra)->control;
     playerObj = (int)Obj_GetPlayerObject();
     *(u8 *)(stateWord + 0x34d) = 1;
 
@@ -91,8 +91,8 @@ undefined4 LandedArwing_UpdateFlightChase(int obj, int state)
     }
 
     ObjHits_SetHitVolumeSlot(objLocal, LANDED_ARWING_OBJECT_PAIR_PRIORITY, LANDED_ARWING_OBJECT_PAIR_HIT_VOLUME, -1);
-    (*(ObjHitsPriorityState **)(objLocal + 0x54))->objectPairPriority = LANDED_ARWING_OBJECT_PAIR_PRIORITY;
-    (*(ObjHitsPriorityState **)(objLocal + 0x54))->objectPairHitVolume = LANDED_ARWING_OBJECT_PAIR_HIT_VOLUME;
+    (*(ObjHitsPriorityState **)&((GameObject *)objLocal)->anim.hitReactState)->objectPairPriority = LANDED_ARWING_OBJECT_PAIR_PRIORITY;
+    (*(ObjHitsPriorityState **)&((GameObject *)objLocal)->anim.hitReactState)->objectPairHitVolume = LANDED_ARWING_OBJECT_PAIR_HIT_VOLUME;
     ObjHits_RegisterActiveHitVolumeObject(objLocal);
 
     (*gPathControlInterface)->advance((void *)objLocal, (void *)(stateWord + 4), timeDelta);

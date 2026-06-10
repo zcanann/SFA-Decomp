@@ -361,8 +361,8 @@ void FUN_801ae378(undefined8 param_1,double param_2,double param_3,undefined8 pa
     if (*(int *)&((GameObject *)param_9)->unkC8 != 0) {
       param_1 = FUN_80017ac8(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                              *(int *)&((GameObject *)param_9)->unkC8);
-      *(undefined4 *)(param_9 + 200) = 0;
-      *(undefined *)(param_9 + 0xeb) = 0;
+      *(undefined4 *)&((GameObject *)param_9)->unkC8 = 0;
+      ((GameObject *)param_9)->unkEB = 0;
     }
     uVar3 = FUN_80017ae8();
     if ((uVar3 & 0xff) == 0) {
@@ -376,8 +376,8 @@ void FUN_801ae378(undefined8 param_1,double param_2,double param_3,undefined8 pa
         param_13 = *(uint **)&((GameObject *)param_9)->anim.parent;
         uVar5 = FUN_80017ae4(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar4,
                              4,0xff,0xffffffff,param_13,param_14,param_15,param_16);
-        *(undefined4 *)(param_9 + 200) = uVar5;
-        *(undefined *)(param_9 + 0xeb) = 1;
+        *(undefined4 *)&((GameObject *)param_9)->unkC8 = uVar5;
+        ((GameObject *)param_9)->unkEB = 1;
       }
       *(undefined *)((int)piVar8 + 0x22) = *(undefined *)((int)piVar8 + 0x21);
     }
@@ -856,9 +856,9 @@ void FUN_801aef94(short *param_1)
   param_1[2] = param_1[2] + *(short *)(iVar1 + 0x1c) * (ushort)DAT_803dc070;
   if (DAT_803de7c8 != 0) {
     ((GameObject *)param_1)->anim.alpha = ((GameObject *)DAT_803de7c8)->anim.alpha;
-    FUN_80017a88((double)(*(float *)(DAT_803de7c8 + 0xc) - *(float *)(param_1 + 6)),
+    FUN_80017a88((double)(((GameObject *)DAT_803de7c8)->anim.localPosX - *(float *)(param_1 + 6)),
                  (double)(*(float *)(DAT_803de7c8 + 0x10) - *(float *)(param_1 + 8)),
-                 (double)(*(float *)(DAT_803de7c8 + 0x14) - *(float *)(param_1 + 10)),(int)param_1);
+                 (double)(((GameObject *)DAT_803de7c8)->anim.localPosZ - *(float *)(param_1 + 10)),(int)param_1);
   }
   return;
 }
@@ -1500,10 +1500,10 @@ void FUN_801b031c(int param_1)
   ((GameObject *)param_1)->objectFlags = ((GameObject *)param_1)->objectFlags | 0x4000;
   iVar2 = FUN_800e8b98();
   if (iVar2 == 0) {
-    *(undefined4 *)(param_1 + 0xf4) = 1;
+    ((GameObject *)param_1)->unkF4 = 1;
   }
   else {
-    *(undefined4 *)(param_1 + 0xf4) = 2;
+    ((GameObject *)param_1)->unkF4 = 2;
   }
   return;
 }
@@ -1928,9 +1928,9 @@ void FUN_801b0df4(undefined8 param_1,double param_2,double param_3,undefined8 pa
     *(undefined *)(puVar4 + 3) = 0xff;
     *(undefined *)((int)puVar4 + 5) = 4;
     *(undefined *)((int)puVar4 + 7) = 0x50;
-    *(undefined4 *)(puVar4 + 4) = *(undefined4 *)(param_9 + 0xc);
-    *(undefined4 *)(puVar4 + 6) = *(undefined4 *)(param_9 + 0x10);
-    *(undefined4 *)(puVar4 + 8) = *(undefined4 *)(param_9 + 0x14);
+    *(undefined4 *)(puVar4 + 4) = *(undefined4 *)&((GameObject *)param_9)->anim.localPosX;
+    *(undefined4 *)(puVar4 + 6) = *(undefined4 *)&((GameObject *)param_9)->anim.localPosY;
+    *(undefined4 *)(puVar4 + 8) = *(undefined4 *)&((GameObject *)param_9)->anim.localPosZ;
     *(undefined *)(puVar4 + 0xc) = *(undefined *)(iVar9 + 0x1c);
     puVar4[0xd] = (ushort)*(byte *)(iVar9 + 0x1a);
     puVar4[0xe] = (ushort)*(byte *)(iVar9 + 0x1b);
@@ -2492,9 +2492,9 @@ void imspacering_update(s16 *obj) {
     if (lbl_803DDB48 != 0) {
         ((GameObject *)obj)->anim.alpha = ((GameObject *)lbl_803DDB48)->anim.alpha;
         objMove((int)obj,
-            *(f32 *)((char *)lbl_803DDB48 + 0xc) - ((GameObject *)obj)->anim.localPosX,
-            *(f32 *)((char *)lbl_803DDB48 + 0x10) - ((GameObject *)obj)->anim.localPosY,
-            *(f32 *)((char *)lbl_803DDB48 + 0x14) - ((GameObject *)obj)->anim.localPosZ);
+            ((GameObject *)lbl_803DDB48)->anim.localPosX - ((GameObject *)obj)->anim.localPosX,
+            ((GameObject *)lbl_803DDB48)->anim.localPosY - ((GameObject *)obj)->anim.localPosY,
+            ((GameObject *)lbl_803DDB48)->anim.localPosZ - ((GameObject *)obj)->anim.localPosZ);
     }
 }
 void imspaceringgen_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {

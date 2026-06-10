@@ -159,7 +159,7 @@ void FUN_801ce188(uint param_1)
     ObjHits_EnableObject(param_1);
   }
   else {
-    *(undefined2 *)(param_1 + 6) = 0x4000;
+    *(undefined2 *)&((GameObject *)param_1)->anim.flags = 0x4000;
     ((GameObject *)param_1)->objectFlags = ((GameObject *)param_1)->objectFlags | 0x8000;
     FUN_800068cc();
     FUN_800068cc();

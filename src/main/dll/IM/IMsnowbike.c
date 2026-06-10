@@ -242,7 +242,7 @@ void sh_levelcontrol_update(int param_1)
   iVar1 = GameBit_Get(0xd36);
   if (iVar1 != 0) {
     if (((GameObject *)param_1)->unkF8 != 2) {
-      *(undefined4 *)(param_1 + 0xf8) = 2;
+      ((GameObject *)param_1)->unkF8 = 2;
       envFxActFn_800887f8(0);
       if (((GameObject *)param_1)->unkF4 == 2) {
         getEnvfxActImmediately(0, 0, 0x1bf, 0);
@@ -262,7 +262,7 @@ void sh_levelcontrol_update(int param_1)
     iVar1 = GameBit_Get(0xd35);
     if (iVar1 != 0) {
       if (((GameObject *)param_1)->unkF8 != 1) {
-        *(undefined4 *)(param_1 + 0xf8) = 1;
+        ((GameObject *)param_1)->unkF8 = 1;
         if (((GameObject *)param_1)->unkF4 == 2) {
           envFxActFn_800887f8(0);
           getEnvfxActImmediately(0, 0, 0x1bf, 0);
@@ -280,7 +280,7 @@ void sh_levelcontrol_update(int param_1)
       }
     }
     else if (((GameObject *)param_1)->unkF8 != 0) {
-      *(undefined4 *)(param_1 + 0xf8) = 0;
+      ((GameObject *)param_1)->unkF8 = 0;
       if (((GameObject *)param_1)->unkF4 == 2) {
         fn_80088870(&base[0x5c], &base[0x24], &base[0x94], &base[0xcc]);
         envFxActFn_800887f8(0x3f);

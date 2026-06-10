@@ -765,9 +765,9 @@ void FUN_8016ae64(double param_1,double param_2,double param_3,undefined8 param_
     iVar5 = 5;
     do {
       puVar3 = FUN_80017aa4(0x24,0x482);
-      *(undefined4 *)(puVar3 + 4) = *(undefined4 *)(param_9 + 0xc);
-      *(undefined4 *)(puVar3 + 6) = *(undefined4 *)(param_9 + 0x10);
-      *(undefined4 *)(puVar3 + 8) = *(undefined4 *)(param_9 + 0x14);
+      *(undefined4 *)(puVar3 + 4) = *(undefined4 *)&((GameObject *)param_9)->anim.localPosX;
+      *(undefined4 *)(puVar3 + 6) = *(undefined4 *)&((GameObject *)param_9)->anim.localPosY;
+      *(undefined4 *)(puVar3 + 8) = *(undefined4 *)&((GameObject *)param_9)->anim.localPosZ;
       *(undefined *)(puVar3 + 2) = 1;
       *(undefined *)((int)puVar3 + 5) = 1;
       *(undefined *)(puVar3 + 3) = 0xff;

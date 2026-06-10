@@ -203,10 +203,10 @@ void FUN_8017c29c(int param_1)
     if ((*(byte *)(iVar4 + 0x1b) & 1) == 0) {
       if ((*(ushort *)(iVar4 + 0x26) & 1) != 0) {
         if (*pcVar5 == '\0') {
-          *(undefined4 *)(param_1 + 0xf8) = 1;
+          ((GameObject *)param_1)->unkF8 = 1;
         }
         else {
-          *(undefined4 *)(param_1 + 0xf8) = 0;
+          ((GameObject *)param_1)->unkF8 = 0;
         }
       }
     }
@@ -238,7 +238,7 @@ void FUN_8017c29c(int param_1)
         }
         if ((*(byte *)(iVar4 + 0x1b) & 8) == 0) {
           *pcVar5 = '\x01';
-          *(undefined4 *)(param_1 + 0xf4) = 1;
+          ((GameObject *)param_1)->unkF4 = 1;
         }
         else {
           FUN_80017698((int)*(short *)(iVar4 + 0x22),0);
@@ -264,7 +264,7 @@ void FUN_8017c29c(int param_1)
           (*gObjectTriggerInterface)->runSequence((int)*(char *)(iVar4 + 0x20),
                                                   (void *)param_1, uVar2);
         }
-        *(undefined4 *)(param_1 + 0xf4) = 1;
+        ((GameObject *)param_1)->unkF4 = 1;
       }
       *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode | 8;
     }
@@ -315,7 +315,7 @@ void FUN_8017c5c0(short *param_1,int param_2)
 void FUN_8017c5c4(int param_1)
 {
   if (param_1 != 0) {
-    (**(code **)(**(int **)&((GameObject *)param_1)->anim.dll + 4))(param_1,*(undefined4 *)(param_1 + 0x4c),0);
+    (**(code **)(**(int **)&((GameObject *)param_1)->anim.dll + 4))(param_1,*(undefined4 *)&((GameObject *)param_1)->anim.placementData,0);
   }
   return;
 }

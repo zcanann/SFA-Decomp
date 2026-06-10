@@ -137,15 +137,15 @@ void FUN_801c5990(undefined8 param_1,undefined8 param_2,double param_3,undefined
   uVar1 = FUN_80017ae8();
   if ((uVar1 & 0xff) != 0) {
     puVar2 = FUN_80017aa4(0x24,0x1b8);
-    *(undefined4 *)(puVar2 + 4) = *(undefined4 *)(param_9 + 0xc);
-    *(undefined4 *)(puVar2 + 6) = *(undefined4 *)(param_9 + 0x10);
-    *(undefined4 *)(puVar2 + 8) = *(undefined4 *)(param_9 + 0x14);
+    *(undefined4 *)(puVar2 + 4) = *(undefined4 *)&((GameObject *)param_9)->anim.localPosX;
+    *(undefined4 *)(puVar2 + 6) = *(undefined4 *)&((GameObject *)param_9)->anim.localPosY;
+    *(undefined4 *)(puVar2 + 8) = *(undefined4 *)&((GameObject *)param_9)->anim.localPosZ;
     *(undefined *)(puVar2 + 2) = 0x20;
     *(undefined *)((int)puVar2 + 5) = 4;
     *(undefined *)((int)puVar2 + 7) = 0xff;
     uVar3 = FUN_80017ae4(dVar6,dVar7,param_3,param_4,param_5,param_6,param_7,param_8,puVar2,5,0xff,
                          0xffffffff,(uint *)0x0,in_r8,in_r9,in_r10);
-    *(undefined4 *)(param_9 + 200) = uVar3;
+    *(undefined4 *)&((GameObject *)param_9)->unkC8 = uVar3;
     *(float *)(*(int *)&((GameObject *)param_9)->unkC8 + 8) =
          *(float *)(*(int *)&((GameObject *)param_9)->unkC8 + 8) * lbl_803E5C10;
   }

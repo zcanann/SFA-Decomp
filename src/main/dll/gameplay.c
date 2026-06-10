@@ -1649,9 +1649,9 @@ undefined4 FUN_800e82e0(int param_1)
      (((GameObject *)param_1)->anim.localPosZ == (float)(&DAT_803a407c)[iVar2 * 4])) {
     return 0;
   }
-  *(undefined4 *)(param_1 + 0xc) = (&DAT_803a4074)[iVar2 * 4];
-  *(undefined4 *)(param_1 + 0x10) = (&DAT_803a4078)[iVar2 * 4];
-  *(undefined4 *)(param_1 + 0x14) = (&DAT_803a407c)[iVar2 * 4];
+  *(undefined4 *)&((GameObject *)param_1)->anim.localPosX = (&DAT_803a4074)[iVar2 * 4];
+  *(undefined4 *)&((GameObject *)param_1)->anim.localPosY = (&DAT_803a4078)[iVar2 * 4];
+  *(undefined4 *)&((GameObject *)param_1)->anim.localPosZ = (&DAT_803a407c)[iVar2 * 4];
   return 1;
 }
 
@@ -1679,9 +1679,9 @@ undefined4 FUN_800e83c8(int param_1)
   iVar3 = 0x3f;
   do {
     if (*(int *)&((GameObject *)param_1)->anim.localPosZ == *(int *)(puVar1 + 0x168)) {
-      *(undefined4 *)(param_1 + 8) = (&DAT_803a4074)[iVar2 * 4];
-      *(undefined4 *)(param_1 + 0xc) = (&DAT_803a4078)[iVar2 * 4];
-      *(undefined4 *)(param_1 + 0x10) = (&DAT_803a407c)[iVar2 * 4];
+      *(undefined4 *)&((GameObject *)param_1)->anim.rootMotionScale = (&DAT_803a4074)[iVar2 * 4];
+      *(undefined4 *)&((GameObject *)param_1)->anim.localPosX = (&DAT_803a4078)[iVar2 * 4];
+      *(undefined4 *)&((GameObject *)param_1)->anim.localPosY = (&DAT_803a407c)[iVar2 * 4];
       return 1;
     }
     puVar1 = puVar1 + 0x10;
@@ -1841,12 +1841,12 @@ void FUN_800e8630(int param_1)
     return;
   }
   (&DAT_803a4070)[iVar4 * 4] = *(undefined4 *)(*(int *)&((GameObject *)param_1)->anim.placementData + 0x14);
-  (&DAT_803a4074)[iVar4 * 4] = *(undefined4 *)(param_1 + 0xc);
-  (&DAT_803a4078)[iVar4 * 4] = *(undefined4 *)(param_1 + 0x10);
-  (&DAT_803a407c)[iVar4 * 4] = *(undefined4 *)(param_1 + 0x14);
-  *(undefined4 *)(*(int *)&((GameObject *)param_1)->anim.placementData + 8) = *(undefined4 *)(param_1 + 0xc);
-  *(undefined4 *)(*(int *)&((GameObject *)param_1)->anim.placementData + 0xc) = *(undefined4 *)(param_1 + 0x10);
-  *(undefined4 *)(*(int *)&((GameObject *)param_1)->anim.placementData + 0x10) = *(undefined4 *)(param_1 + 0x14);
+  (&DAT_803a4074)[iVar4 * 4] = *(undefined4 *)&((GameObject *)param_1)->anim.localPosX;
+  (&DAT_803a4078)[iVar4 * 4] = *(undefined4 *)&((GameObject *)param_1)->anim.localPosY;
+  (&DAT_803a407c)[iVar4 * 4] = *(undefined4 *)&((GameObject *)param_1)->anim.localPosZ;
+  *(undefined4 *)(*(int *)&((GameObject *)param_1)->anim.placementData + 8) = *(undefined4 *)&((GameObject *)param_1)->anim.localPosX;
+  *(undefined4 *)(*(int *)&((GameObject *)param_1)->anim.placementData + 0xc) = *(undefined4 *)&((GameObject *)param_1)->anim.localPosY;
+  *(undefined4 *)(*(int *)&((GameObject *)param_1)->anim.placementData + 0x10) = *(undefined4 *)&((GameObject *)param_1)->anim.localPosZ;
   return;
 }
 
@@ -3749,7 +3749,7 @@ int FUN_800eafb4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefi
             if ((((GameObject *)param_9)->anim.localPosY < fVar2) &&
                (fVar2 - lbl_803E1360 < ((GameObject *)param_9)->anim.localPosY)) {
               iVar9 = ((undefined4 *)local_18[0][iVar10])[4];
-              *(undefined4 *)(param_9 + 0x10) = *(undefined4 *)local_18[0][iVar10];
+              *(undefined4 *)&((GameObject *)param_9)->anim.localPosY = *(undefined4 *)local_18[0][iVar10];
               ((GameObject *)param_9)->anim.velocityY = lbl_803E1364;
               break;
             }

@@ -888,9 +888,9 @@ void FUN_80190008(int param_1,int param_2)
   *(undefined2 *)(iVar1 + 0x118) = *(undefined2 *)(param_2 + 0x18);
   *(undefined2 *)(iVar1 + 0x11a) = *(undefined2 *)(param_2 + 0x1a);
   *(undefined2 *)(iVar1 + 0x11c) = *(undefined2 *)(param_2 + 0x1c);
-  *(undefined4 *)(param_1 + 0xc) = *(undefined4 *)(param_2 + 8);
-  *(undefined4 *)(param_1 + 0x10) = *(undefined4 *)(param_2 + 0xc);
-  *(undefined4 *)(param_1 + 0x14) = *(undefined4 *)(param_2 + 0x10);
+  *(undefined4 *)&((GameObject *)param_1)->anim.localPosX = *(undefined4 *)(param_2 + 8);
+  *(undefined4 *)&((GameObject *)param_1)->anim.localPosY = *(undefined4 *)(param_2 + 0xc);
+  *(undefined4 *)&((GameObject *)param_1)->anim.localPosZ = *(undefined4 *)(param_2 + 0x10);
   if (*(short *)(iVar1 + 0x110) == 0) {
     *(undefined *)(iVar1 + 0x11e) = 0;
   }

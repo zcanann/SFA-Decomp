@@ -1231,9 +1231,9 @@ void FUN_8013939c(uint param_1)
   iVar2 = FUN_8005b398((double)((GameObject *)param_1)->anim.worldPosX,(double)((GameObject *)param_1)->anim.worldPosY);
   if ((iVar2 == -1) && ((((TrickyState *)iVar3)->unk54 & 0x80000) == 0)) {
     ((TrickyState *)iVar3)->unk353 = 0;
-    *(undefined4 *)(param_1 + 0xc) = *(undefined4 *)(param_1 + 0x80);
-    *(undefined4 *)(param_1 + 0x10) = *(undefined4 *)(param_1 + 0x84);
-    *(undefined4 *)(param_1 + 0x14) = *(undefined4 *)(param_1 + 0x88);
+    *(undefined4 *)&((GameObject *)param_1)->anim.localPosX = *(undefined4 *)&((GameObject *)param_1)->anim.previousLocalPosX;
+    *(undefined4 *)&((GameObject *)param_1)->anim.localPosY = *(undefined4 *)&((GameObject *)param_1)->anim.previousLocalPosY;
+    *(undefined4 *)&((GameObject *)param_1)->anim.localPosZ = *(undefined4 *)&((GameObject *)param_1)->anim.previousLocalPosZ;
   }
   ((TrickyState *)iVar3)->unk54 = ((TrickyState *)iVar3)->unk54 & 0xfff7ffff;
   if (*(char *)&((TrickyState *)iVar3)->unk374 == '\0') {
@@ -1349,8 +1349,8 @@ void FUN_8013939c(uint param_1)
   (*gPathControlInterface)->update(param_1, &((TrickyState *)iVar3)->pathControlFlags, FLOAT_803dc074);
   (*gPathControlInterface)->apply(param_1, &((TrickyState *)iVar3)->pathControlFlags);
   (*gPathControlInterface)->advance(param_1, &((TrickyState *)iVar3)->pathControlFlags, FLOAT_803dc074);
-  *(undefined2 *)(param_1 + 2) = *(u16 *)&((TrickyState *)iVar3)->pathRotY;
-  *(undefined2 *)(param_1 + 4) = *(u16 *)&((TrickyState *)iVar3)->pathRotZ;
+  *(undefined2 *)&((GameObject *)param_1)->anim.rotY = *(u16 *)&((TrickyState *)iVar3)->pathRotY;
+  *(undefined2 *)&((GameObject *)param_1)->anim.rotZ = *(u16 *)&((TrickyState *)iVar3)->pathRotZ;
   return;
 }
 

@@ -350,10 +350,10 @@ void FUN_801b6d24(int param_1)
   *pfVar4 = lbl_803E56C0;
   iVar1 = FUN_800e8b98();
   if (iVar1 == 0) {
-    *(undefined4 *)(param_1 + 0xf4) = 1;
+    ((GameObject *)param_1)->unkF4 = 1;
   }
   else {
-    *(undefined4 *)(param_1 + 0xf4) = 2;
+    ((GameObject *)param_1)->unkF4 = 2;
   }
   for (bVar3 = 1; bVar3 < 0x27; bVar3 = bVar3 + 1) {
     FUN_800ea9b8();

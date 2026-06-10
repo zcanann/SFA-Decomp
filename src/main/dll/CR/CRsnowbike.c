@@ -418,7 +418,7 @@ void FUN_801db94c(undefined8 param_1,double param_2,double param_3,double param_
                      0x246,0,in_r7,in_r8,in_r9,in_r10);
       }
     }
-    *(undefined4 *)(param_9 + 0xf4) = 0;
+    ((GameObject *)param_9)->unkF4 = 0;
   }
   if ((-1 < *(char *)((int)pfVar8 + 0x22)) && (uVar3 = FUN_80017690(0xc53), uVar3 != 0)) {
     (*gMapEventInterface)->setAnimEvent(0xe,10,1);
@@ -506,7 +506,7 @@ void FUN_801db94c(undefined8 param_1,double param_2,double param_3,double param_
         pfVar8[2] = lbl_803E6200;
         if (((GameObject *)param_9)->unkF8 != 0) {
           FUN_80080f3c((double)lbl_803E61EC,1);
-          *(undefined4 *)(param_9 + 0xf8) = 0;
+          ((GameObject *)param_9)->unkF8 = 0;
         }
       }
     }

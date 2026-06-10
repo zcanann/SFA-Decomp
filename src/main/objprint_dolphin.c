@@ -5876,7 +5876,7 @@ void objRenderShadow2(int *obj, int *obj2, u8 *m, int p4) {
         u8 *o;
         u8 *nxt;
         o = (u8 *)obj;
-        while ((nxt = *(u8 **)(o + 0xc4)) != NULL) {
+        while ((nxt = *(u8 **)&((GameObject *)o)->unkC4) != NULL) {
             o = nxt;
         }
         sh = ((u8 *)((GameObject *)o)->anim.modelState->shadowCastSlot)[0x65];
@@ -6218,7 +6218,7 @@ void modelDoRenderInstrs(int *obj, int *obj2, u8 *m, u8 mode) {
             u8 *o;
             u8 *nxt;
             o = (u8 *)obj;
-            while ((nxt = *(u8 **)(o + 0xc4)) != NULL) {
+            while ((nxt = *(u8 **)&((GameObject *)o)->unkC4) != NULL) {
                 o = nxt;
             }
             sh = ((u8 *)((GameObject *)o)->anim.modelState->shadowCastSlot)[0x65];

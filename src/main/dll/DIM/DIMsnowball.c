@@ -1854,8 +1854,8 @@ void cclightfoot_update(int obj)
                 dist = lbl_803E4674;
             }
         }
-        angle = (s16)getAngle(-(*(f32 *)(targetObj + 0xc) - ((GameObject *)obj)->anim.localPosX),
-                              -(*(f32 *)(targetObj + 0x14) - ((GameObject *)obj)->anim.localPosZ));
+        angle = (s16)getAngle(-(((GameObject *)targetObj)->anim.localPosX - ((GameObject *)obj)->anim.localPosX),
+                              -(((GameObject *)targetObj)->anim.localPosZ - ((GameObject *)obj)->anim.localPosZ));
         diff = (s16)(*(s16 *)obj - (u16)angle);
         if (diff > 0x8000) {
             diff = (s16)(diff - 0xffff);

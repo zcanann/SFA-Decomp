@@ -2818,7 +2818,7 @@ void renderObjects(s8 *arg0) {
         idx = keys[i] & 0x3ff;
         obj = (u8 *)objects[idx];
         flags = *(u32 *)((u8 *)((GameObject *)obj)->anim.modelInstance + 0x44);
-        if ((flags & 0x800) != 0 || ((*(u8 **)((u8 *)obj + 0x50))[0x5f] & 0x10) != 0) {
+        if ((flags & 0x800) != 0 || ((*(u8 **)&((GameObject *)obj)->anim.modelInstance)[0x5f] & 0x10) != 0) {
             if (arg0[idx] != 0 && lbl_803DCDF0 < 0x14) {
                 slot = lbl_803DCDF0;
                 lbl_803DCDF0 = slot + 1;
@@ -3805,8 +3805,8 @@ void getVisibleObjects(s8 *opacity)
             *cur = (s8)objUpdateOpacity(o);
             if (*cur != 0 || (modelDef->flags & 0x200000) != 0) {
                 if ((modelDef->flags & 0x80000) != 0) {
-                    *(f32 *)(o + 0xa4) = (f32)(*((u8 *)((GameObject *)o)->anim.modelInstance + 0x74) * 100);
-                    depthInt = (int)*(f32 *)(o + 0xa4);
+                    *(f32 *)&((GameObject *)o)->anim.targetObj = (f32)(*((u8 *)((GameObject *)o)->anim.modelInstance + 0x74) * 100);
+                    depthInt = (int)*(f32 *)&((GameObject *)o)->anim.targetObj;
                 } else {
                     if (((GameObject *)o)->anim.parent != NULL) {
                         Camera_ProjectWorldPoint(((GameObject *)o)->anim.worldPosX, ((GameObject *)o)->anim.worldPosY,

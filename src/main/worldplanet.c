@@ -502,7 +502,7 @@ void worldplanet_update(int obj) {
             f32 r;
             for (b = 0; b < 5; b++) {
                 int p = ObjList_FindObjectById(tbl[b + 10]);
-                *(s16 *)(p + 4) = -(s16)ang;
+                ((GameObject *)p)->anim.rotZ = -(s16)ang;
             }
             r = lbl_803E6630;
             for (b = 0; b < 5; b++) {

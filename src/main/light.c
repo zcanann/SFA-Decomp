@@ -640,9 +640,9 @@ void FUN_801fc75c(undefined8 param_1,undefined8 param_2,double param_3,undefined
         FUN_80247ef8(afStack_28,afStack_28);
         FUN_80247edc((double)lbl_803E6DB8,afStack_28,afStack_28);
         FUN_80247e94((float *)(param_9 + 0xc),afStack_28,(float *)(param_9 + 0xc));
-        *(undefined4 *)(param_9 + 0x18) = *(undefined4 *)(param_9 + 0xc);
-        *(undefined4 *)(param_9 + 0x1c) = *(undefined4 *)(param_9 + 0x10);
-        *(undefined4 *)(param_9 + 0x20) = *(undefined4 *)(param_9 + 0x14);
+        *(undefined4 *)&((GameObject *)param_9)->anim.worldPosX = *(undefined4 *)&((GameObject *)param_9)->anim.localPosX;
+        *(undefined4 *)&((GameObject *)param_9)->anim.worldPosY = *(undefined4 *)&((GameObject *)param_9)->anim.localPosY;
+        *(undefined4 *)&((GameObject *)param_9)->anim.worldPosZ = *(undefined4 *)&((GameObject *)param_9)->anim.localPosZ;
         FUN_8008112c((double)lbl_803E6DBC,dVar4,param_3,param_4,param_5,param_6,param_7,param_8,
                      param_9,1,1,0,0,0,0,0);
         *(byte *)(psVar3 + 1) = *(byte *)(psVar3 + 1) & 0xbf | 0x40;

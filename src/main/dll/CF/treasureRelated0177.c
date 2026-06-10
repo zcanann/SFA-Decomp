@@ -563,8 +563,8 @@ void kt_torch_init(int obj, int p2)
     scale *= lbl_803E3DC4;
     ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4) * scale;
     *(s16 *)obj = (s16)((*(u8 *)(p2 + 0x1d) & 0x3f) << 10);
-    if (*(void **)(obj + 0x64) != NULL) {
-        **(f32 **)(obj + 0x64) = **(f32 **)&((GameObject *)obj)->anim.modelInstance * scale;
+    if (((GameObject *)obj)->anim.modelState != NULL) {
+        **(f32 **)&((GameObject *)obj)->anim.modelState = **(f32 **)&((GameObject *)obj)->anim.modelInstance * scale;
     }
     objAnim->bankIndex = (s8)*(u8 *)(p2 + 0x18);
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {

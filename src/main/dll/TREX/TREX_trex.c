@@ -1002,7 +1002,7 @@ void FUN_801e56ac(int param_1)
   if (((((GameObject *)param_1)->anim.seqId == 0x173) && (((GameObject *)param_1)->unkF4 == 0)) &&
      (uVar1 = FUN_80017690(0xa4b), uVar1 != 0)) {
     (*gObjectTriggerInterface)->runSequence(0, (void *)param_1, -1);
-    *(undefined4 *)(param_1 + 0xf4) = 1;
+    ((GameObject *)param_1)->unkF4 = 1;
   }
   *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode | 0x10;
   return;
@@ -1154,7 +1154,7 @@ void FUN_801e59ec(uint param_1)
   uint uVar2;
   int *piVar3;
   
-  *(undefined4 *)(param_1 + 0xf4) = 0xb4;
+  ((GameObject *)param_1)->unkF4 = 0xb4;
   uVar2 = randomGetRange(0x14,0x28);
   fVar1 = lbl_803E65E0;
   ((GameObject *)param_1)->anim.velocityX =
@@ -1275,7 +1275,7 @@ void FUN_801e5bd4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
         *(undefined2 *)(iVar5 + 0xb4) = 0xffff;
         (*gObjectTriggerInterface)->endSequence(iVar4);
       }
-      *(undefined2 *)(param_9 + 0xb4) = 0xffff;
+      *(undefined2 *)&((GameObject *)param_9)->unkB4 = 0xffff;
       FUN_80017ac8(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9);
     }
   }
@@ -1466,7 +1466,7 @@ void FUN_801e60cc(uint param_1)
   }
   if (((GameObject *)param_1)->anim.seqId != 0x3e4) {
     if (((GameObject *)param_1)->unkF8 == 0) {
-      *(undefined4 *)(param_1 + 0xf8) = 1;
+      ((GameObject *)param_1)->unkF8 = 1;
       uStack_1c = randomGetRange(0,0x5a);
       uStack_1c = uStack_1c ^ 0x80000000;
       local_24[1] = 176.0;

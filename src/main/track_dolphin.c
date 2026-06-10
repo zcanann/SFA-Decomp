@@ -4617,13 +4617,13 @@ void MapBlock_init(int obj)
     if (*(u32 *)&((GameObject *)obj)->anim.placementData != 0) *(int *)&((GameObject *)obj)->anim.placementData = obj + *(int *)&((GameObject *)obj)->anim.placementData;
     if (*(u32 *)&((GameObject *)obj)->anim.modelInstance != 0) *(int *)&((GameObject *)obj)->anim.modelInstance = obj + *(int *)&((GameObject *)obj)->anim.modelInstance;
     *(int *)(obj + 0x58) = obj + *(int *)(obj + 0x58);
-    *(int *)(obj + 0x5c) = obj + *(int *)(obj + 0x5c);
+    *(int *)&((GameObject *)obj)->anim.weaponDaTable = obj + *(int *)&((GameObject *)obj)->anim.weaponDaTable;
     *(int *)&((GameObject *)obj)->anim.eventTable = obj + *(int *)&((GameObject *)obj)->anim.eventTable;
     if (*(u32 *)(obj + 0x78) != 0) *(int *)(obj + 0x78) = obj + *(int *)(obj + 0x78);
     if (*(u32 *)&((GameObject *)obj)->anim.banks != 0) *(int *)&((GameObject *)obj)->anim.banks = obj + *(int *)&((GameObject *)obj)->anim.banks;
     if (*(u32 *)&((GameObject *)obj)->anim.previousLocalPosX != 0) *(int *)&((GameObject *)obj)->anim.previousLocalPosX = obj + *(int *)&((GameObject *)obj)->anim.previousLocalPosX;
     *(int *)&((GameObject *)obj)->anim.dll = obj + *(int *)&((GameObject *)obj)->anim.dll;
-    if (*(u32 *)(obj + 0x64) != 0) *(int *)(obj + 0x64) = obj + *(int *)(obj + 0x64);
+    if (*(u32 *)&((GameObject *)obj)->anim.modelState != 0) *(int *)&((GameObject *)obj)->anim.modelState = obj + *(int *)&((GameObject *)obj)->anim.modelState;
     for (i = 0, off = 0; i < *(u8 *)(obj + 0xa1); i++) {
         *(int *)(*(int *)&((GameObject *)obj)->anim.dll + off) = obj + *(int *)(*(int *)&((GameObject *)obj)->anim.dll + off);
         off += 0x1c;
@@ -4721,7 +4721,7 @@ void MapBlock_initShaders(int obj)
     char *p;
     int v;
     for (i = 0, outerOff = 0; i < *(u8 *)(obj + 0xa2); i++) {
-        block = *(int *)(obj + 0x64) + outerOff;
+        block = *(int *)&((GameObject *)obj)->anim.modelState + outerOff;
         p = (char *)block;
         for (j = 0; j < *(u8 *)(block + 0x41); j++) {
             v = *(int *)(p + 0x24);

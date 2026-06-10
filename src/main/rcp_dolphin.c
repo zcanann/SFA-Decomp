@@ -2220,7 +2220,7 @@ uint FUN_80053f60(int param_1)
   int iVar12;
   double dVar13;
   
-  iVar12 = *(int *)(param_1 + 0x4c);
+  iVar12 = *(int *)&((GameObject *)param_1)->anim.placementData;
   if (iVar12 == 0) {
     return 0;
   }
@@ -2250,9 +2250,9 @@ LAB_80055824:
   if (bVar9) {
     if ((*(byte *)(iVar12 + 4) & 1) == 0) {
       if ((*(byte *)(iVar12 + 4) & 0x10) == 0) {
-        if ((*(int *)(param_1 + 0xc0) == 0) || (-1 < *(short *)(param_1 + 0xb4))) {
-          if (*(int *)(param_1 + 0xc4) == 0) {
-            if (*(int *)(param_1 + 0x30) == 0) {
+        if ((*(int *)&((GameObject *)param_1)->unkC0 == 0) || (-1 < ((GameObject *)param_1)->unkB4)) {
+          if (*(int *)&((GameObject *)param_1)->unkC4 == 0) {
+            if (*(int *)&((GameObject *)param_1)->anim.parent == 0) {
               dVar13 = (double)FUN_802924c4();
               iVar11 = (int)dVar13;
               dVar13 = (double)FUN_802924c4();
@@ -2271,12 +2271,12 @@ LAB_80055824:
             }
             if ((*(byte *)(iVar12 + 4) & 0x20) == 0) {
               if ((((*(byte *)(iVar12 + 4) & 4) == 0) || (iVar12 = FUN_80017a98(), iVar12 == 0)) ||
-                 (*(int *)(param_1 + 0x30) != 0)) {
-                if (*(int *)(param_1 + 0x30) == 0) {
+                 (*(int *)&((GameObject *)param_1)->anim.parent != 0)) {
+                if (*(int *)&((GameObject *)param_1)->anim.parent == 0) {
                   iVar12 = 0;
                 }
                 else {
-                  iVar12 = *(char *)(*(int *)(param_1 + 0x30) + 0x35) + 1;
+                  iVar12 = *(char *)(*(int *)&((GameObject *)param_1)->anim.parent + 0x35) + 1;
                 }
                 fVar2 = (float)(&DAT_803872a8)[iVar12 * 4];
                 fVar3 = (float)(&DAT_803872ac)[iVar12 * 4];
@@ -2287,15 +2287,15 @@ LAB_80055824:
                 fVar3 = *(float *)(iVar12 + 0x1c);
                 fVar4 = *(float *)(iVar12 + 0x20);
               }
-              if (*(int *)(param_1 + 0x30) == 0) {
-                fVar5 = *(float *)(param_1 + 0x18);
-                fVar6 = *(float *)(param_1 + 0x1c);
-                fVar7 = *(float *)(param_1 + 0x20);
+              if (*(int *)&((GameObject *)param_1)->anim.parent == 0) {
+                fVar5 = ((GameObject *)param_1)->anim.worldPosX;
+                fVar6 = ((GameObject *)param_1)->anim.worldPosY;
+                fVar7 = ((GameObject *)param_1)->anim.worldPosZ;
               }
               else {
-                fVar5 = *(float *)(param_1 + 0xc);
-                fVar6 = *(float *)(param_1 + 0x10);
-                fVar7 = *(float *)(param_1 + 0x14);
+                fVar5 = ((GameObject *)param_1)->anim.localPosX;
+                fVar6 = ((GameObject *)param_1)->anim.localPosY;
+                fVar7 = ((GameObject *)param_1)->anim.localPosZ;
               }
               fVar8 = lbl_803DF838 + *(float *)(param_1 + 0x3c);
               if (fVar8 * fVar8 <=

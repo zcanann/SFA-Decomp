@@ -1174,7 +1174,7 @@ void sky2_run(void)
                 } else if (*(s8 *)(p + 0x314) == 1) {
                     hv = *(f32 *)&((GameObject *)p)->anim.jointPoseData;
                     sa = sa + hv;
-                    *(f32 *)&((GameObject *)p)->anim.jointPoseData = hv + *(f32 *)(p + 0x64);
+                    *(f32 *)&((GameObject *)p)->anim.jointPoseData = hv + *(f32 *)&((GameObject *)p)->anim.modelState;
                     p = *pp;
                     if (*(f32 *)&((GameObject *)p)->anim.jointPoseData > *(f32 *)&((GameObject *)p)->anim.dll) {
                         *(s8 *)(p + 0x314) = (s8)(1 - *(s8 *)(p + 0x314));
@@ -1182,7 +1182,7 @@ void sky2_run(void)
                 } else {
                     hv = *(f32 *)&((GameObject *)p)->anim.jointPoseData;
                     sa = sa + hv;
-                    *(f32 *)&((GameObject *)p)->anim.jointPoseData = hv - *(f32 *)(p + 0x64);
+                    *(f32 *)&((GameObject *)p)->anim.jointPoseData = hv - *(f32 *)&((GameObject *)p)->anim.modelState;
                     p = *pp;
                     if (*(f32 *)&((GameObject *)p)->anim.jointPoseData < (frzero = lbl_803DF108)) {
                         *(s8 *)(p + 0x314) = (s8)(1 - *(s8 *)(p + 0x314));
@@ -1473,8 +1473,8 @@ void fn_8008923C(u8 *obj, f32 *x, f32 *y, f32 *z)
         if (flag != 0) {
             modelLightStruct_selectObjectLights(obj, lights, 4, &count, 2);
             if (count > 0) {
-                if (*(u8 **)(obj + 0x64) != NULL) {
-                    found = *(u8 **)(*(u8 **)(obj + 0x64) + 0x3c);
+                if (*(u8 **)&((GameObject *)obj)->anim.modelState != NULL) {
+                    found = *(u8 **)(*(u8 **)&((GameObject *)obj)->anim.modelState + 0x3c);
                 }
                 cur = lights[0];
                 if (found != lights[0] && found != NULL) {
@@ -1529,8 +1529,8 @@ void fn_8008923C(u8 *obj, f32 *x, f32 *y, f32 *z)
             }
         }
     }
-    if (*(u8 **)(obj + 0x64) != NULL) {
-        *(u8 **)(*(u8 **)(obj + 0x64) + 0x3c) = cur;
+    if (*(u8 **)&((GameObject *)obj)->anim.modelState != NULL) {
+        *(u8 **)(*(u8 **)&((GameObject *)obj)->anim.modelState + 0x3c) = cur;
     }
 }
 

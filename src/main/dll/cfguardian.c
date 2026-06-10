@@ -337,12 +337,12 @@ void FUN_8017b3bc(int obj, int unused, ObjAnimUpdateState *animUpdate)
   ushort *puVar8;
   
   uVar1 = FUN_8028683c();
-  puVar8 = *(ushort **)(uVar1 + 0xb8);
-  iVar7 = *(int *)(uVar1 + 0x4c);
+  puVar8 = *(ushort **)&((GameObject *)uVar1)->extra;
+  iVar7 = *(int *)&((GameObject *)uVar1)->anim.placementData;
   if (((GameObject *)uVar1)->anim.alpha == 0) {
     ObjHits_DisableObject(uVar1);
   }
-  if (*(char *)(*(int *)(uVar1 + 0x50) + 0x59) != '\0') {
+  if (*(char *)(*(int *)&((GameObject *)uVar1)->anim.modelInstance + 0x59) != '\0') {
     if (((*(byte *)(puVar8 + 3) & 1) != 0) &&
        (puVar2 = (undefined4 *)FUN_80039520(uVar1,0), puVar2 != (undefined4 *)0x0)) {
       *puVar2 = 0x100;
@@ -360,13 +360,13 @@ void FUN_8017b3bc(int obj, int unused, ObjAnimUpdateState *animUpdate)
       bVar5 = true;
     }
     if ((uVar3 != 0) && ((*(byte *)(puVar8 + 3) & 1) == 0)) {
-      if (*(char *)(*(int *)(uVar1 + 0x50) + 0x59) != '\0') {
+      if (*(char *)(*(int *)&((GameObject *)uVar1)->anim.modelInstance + 0x59) != '\0') {
         FUN_80006824(uVar1,SFXen_weetinkoneshot);
       }
       *(byte *)(puVar8 + 3) = *(byte *)(puVar8 + 3) | 1;
     }
     if ((bVar5) && ((*(byte *)(puVar8 + 3) & 2) == 0)) {
-      if (*(char *)(*(int *)(uVar1 + 0x50) + 0x59) != '\0') {
+      if (*(char *)(*(int *)&((GameObject *)uVar1)->anim.modelInstance + 0x59) != '\0') {
         FUN_80006824(uVar1,SFXen_weetinkoneshot);
       }
       *(byte *)(puVar8 + 3) = *(byte *)(puVar8 + 3) | 2;

@@ -332,7 +332,7 @@ void FUN_801b9354(uint param_1)
     ((GameObject *)param_1)->anim.localPosY = *pfVar8 * lbl_803DC074 + ((GameObject *)param_1)->anim.localPosY;
     if (*(float *)(iVar7 + 0xc) < ((GameObject *)param_1)->anim.localPosY) {
       FUN_80006824(param_1,SFXchar_on_firelp);
-      *(undefined4 *)(param_1 + 0x10) = *(undefined4 *)(iVar7 + 0xc);
+      *(undefined4 *)&((GameObject *)param_1)->anim.localPosY = *(undefined4 *)(iVar7 + 0xc);
       *(undefined *)(pfVar8 + 1) = 1;
       if (bVar2) {
         *(undefined *)((int)pfVar8 + 5) = 1;
@@ -643,14 +643,14 @@ void FUN_801b9914(uint param_1)
       return;
     }
     if (bVar1 < 4) {
-      *(undefined2 *)(param_1 + 2) = *(undefined2 *)(pfVar7 + 1);
+      *(undefined2 *)&((GameObject *)param_1)->anim.rotY = *(undefined2 *)(pfVar7 + 1);
       *(short *)(pfVar7 + 1) =
            (short)(int)((float)((double)CONCAT44(0x43300000,(int)*(short *)(pfVar7 + 1) ^ 0x80000000
                                                 ) - DOUBLE_803e5820) * lbl_803E5804);
       if (9 < ((GameObject *)param_1)->anim.rotY) {
         return;
       }
-      *(undefined2 *)(param_1 + 2) = 0;
+      *(undefined2 *)&((GameObject *)param_1)->anim.rotY = 0;
       *(undefined *)((int)pfVar7 + 6) = 1;
       *(undefined2 *)(pfVar7 + 2) = 0x3c;
       return;
@@ -664,7 +664,7 @@ void FUN_801b9914(uint param_1)
   iVar2 = (uint)((GameObject *)param_1)->anim.alpha + (uint)DAT_803dc070 * -8;
   if (iVar2 < 0) {
     iVar2 = 0;
-    *(undefined4 *)(param_1 + 0x10) = *(undefined4 *)(iVar6 + 0xc);
+    *(undefined4 *)&((GameObject *)param_1)->anim.localPosY = *(undefined4 *)(iVar6 + 0xc);
     ((GameObject *)param_1)->anim.velocityY = lbl_803E5818;
   }
   ((GameObject *)param_1)->anim.alpha = (char)iVar2;
@@ -827,7 +827,7 @@ void FUN_801b9d8c(undefined8 param_1,double param_2,double param_3,undefined8 pa
       FUN_80006728(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,0x164,0,in_r7,
                    in_r8,in_r9,in_r10);
     }
-    *(undefined4 *)(param_9 + 0xf4) = 0;
+    ((GameObject *)param_9)->unkF4 = 0;
   }
   pcVar4 = ((GameObject *)param_9)->extra;
   if (((pcVar4[4] != '\x01') && (pcVar4[4] == '\0')) && (uVar3 = GameBit_Get(0xacd), uVar3 != 0)) {
@@ -897,10 +897,10 @@ void FUN_801ba288(undefined8 param_1,double param_2,double param_3,undefined8 pa
   
   iVar1 = FUN_800e8b98();
   if (iVar1 == 0) {
-    *(undefined4 *)(param_9 + 0xf4) = 1;
+    ((GameObject *)param_9)->unkF4 = 1;
   }
   else {
-    *(undefined4 *)(param_9 + 0xf4) = 2;
+    ((GameObject *)param_9)->unkF4 = 2;
   }
   for (bVar4 = 1; bVar4 < 0x2e; bVar4 = bVar4 + 1) {
     FUN_800ea9b8();
@@ -1605,7 +1605,7 @@ void dll_1DF_init(void* obj, void* p)
         ((GameObject *)obj)->anim.rootMotionScale = *(f32*)((char*)p50 + 4) * ((f32)flag / lbl_803E4BA8);
     }
     *(f32*)((char*)*(void**)&((GameObject *)obj)->extra + 0x10) = lbl_803E4BAC;
-    p64 = *(void**)((char*)obj + 0x64);
+    p64 = *(void**)&((GameObject *)obj)->anim.modelState;
     if (p64 != 0) {
         *(u32*)((char*)p64 + 0x30) |= 0x810;
     }

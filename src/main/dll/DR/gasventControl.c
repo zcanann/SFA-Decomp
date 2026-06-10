@@ -73,7 +73,7 @@ void fn_blasted_init_v11_unused(int param_1,int param_2)
   ObjGroup_AddObject(param_1,0x19);
   ObjGroup_AddObject(param_1,0x16);
   ObjMsg_AllocQueue(param_1,8);
-  *(undefined4 *)(param_1 + 0xf8) = 0;
+  ((GameObject *)param_1)->unkF8 = 0;
   *(undefined2 *)(iVar1 + 0x44) = 0;
   *(undefined2 *)(iVar1 + 0x46) = 0;
   *(undefined *)(iVar1 + 0x15) = 0;
@@ -797,9 +797,9 @@ int fn_801A2BDC(int p1, int p2, int p3, int p4)
     *(u8 *)(s + 6) = 0xff;
     *(u8 *)(s + 5) = 1;
     *(u8 *)(s + 7) = 0xff;
-    *(f32 *)(s + 8) = *(f32 *)(p1 + 0xc);
-    *(f32 *)(s + 0xc) = *(f32 *)(p1 + 0x10);
-    *(f32 *)(s + 0x10) = *(f32 *)(p1 + 0x14);
+    *(f32 *)(s + 8) = ((GameObject *)p1)->anim.localPosX;
+    *(f32 *)(s + 0xc) = ((GameObject *)p1)->anim.localPosY;
+    *(f32 *)(s + 0x10) = ((GameObject *)p1)->anim.localPosZ;
     f1 = lbl_803E4350;
     *(u16 *)(s + 0x20) = lbl_803E4350 * c->velX;
     *(u16 *)(s + 0x22) = f1 * c->velY;
@@ -819,7 +819,7 @@ int fn_801A2BDC(int p1, int p2, int p3, int p4)
     *(u16 *)(s + 0x28) = f1 * c->unk38;
     *(u16 *)(s + 0x2a) = f1 * c->unk3C;
     *(u8 *)(s + 0x18) = p4;
-    *(s8 *)(s + 0x3d) = (s8)(int)(lbl_803E435C * (*(f32 *)(p1 + 8) / *(f32 *)(*(int *)(p1 + 0x50) + 4)));
+    *(s8 *)(s + 0x3d) = (s8)(int)(lbl_803E435C * (((GameObject *)p1)->anim.rootMotionScale / *(f32 *)(*(int *)&((GameObject *)p1)->anim.modelInstance + 4)));
     *(u16 *)(s + 0x38) = c->unk5C;
     *(u16 *)(s + 0x3a) = (int)c->unk58;
     return Obj_SetupObject(s, 5, ((GameObject *)p1)->anim.mapEventSlot, -1, 0);

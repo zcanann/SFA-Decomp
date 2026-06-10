@@ -179,9 +179,9 @@ void CameraModeCombat_update(short *cam)
             (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
         } else {
             tgt = *(char **)((char *)cam + 0x11c);
-            if (tgt == NULL || (((GameObject *)tgt)->objectFlags & 0x40) || (*(u8 *)(tgt + 0xaf) & 0x28)) {
+            if (tgt == NULL || (((GameObject *)tgt)->objectFlags & 0x40) || (*(u8 *)&((GameObject *)tgt)->anim.resetHitboxMode & 0x28)) {
                 if (tgt != NULL) {
-                    if ((*(u8 *)(tgt + 0xaf) & 0x40) || (((CameraObject *)cam)->unk141 & 2)) {
+                    if ((*(u8 *)&((GameObject *)tgt)->anim.resetHitboxMode & 0x40) || (((CameraObject *)cam)->unk141 & 2)) {
                         return;
                     }
                     (*gCameraInterface)->setTarget(0);
@@ -190,7 +190,7 @@ void CameraModeCombat_update(short *cam)
             } else {
                 path = *(CombatPathPoint **)(tgt + 0x74);
                 if (path != NULL) {
-                    range = (f32)(s32)((u32)*(u8 *)(*(int *)(*(int *)(tgt + 0x50) + 0x40) + 0xd) << 2);
+                    range = (f32)(s32)((u32)*(u8 *)(*(int *)(*(int *)&((GameObject *)tgt)->anim.modelInstance + 0x40) + 0xd) << 2);
                     if (((u16)getButtonsJustPressed(0) & 0x200) && (int)fn_8029630C(focus) != 0) {
                         if (((CameraObject *)cam)->targetObj != NULL) {
                             if ((*(u8 *)(*(int *)((char *)cam + 0x11c) + 0xaf) & 0x40) || (((CameraObject *)cam)->unk141 & 2)) {
@@ -206,7 +206,7 @@ void CameraModeCombat_update(short *cam)
                             if (((GameObject *)tgt)->anim.seqId == 0x200) {
                                 ty = ty + lbl_803E18D0;
                             }
-                            if (*(u8 *)(*(int *)(tgt + 0x50) + 0x72) <= 1) {
+                            if (*(u8 *)(*(int *)&((GameObject *)tgt)->anim.modelInstance + 0x72) <= 1) {
                                 dx = path[((GameObject *)tgt)->unkE4].x - ((GameObject *)focus)->anim.worldPosX;
                                 dy = path[((GameObject *)tgt)->unkE4].y - ty;
                                 dz = path[((GameObject *)tgt)->unkE4].z - ((GameObject *)focus)->anim.worldPosZ;

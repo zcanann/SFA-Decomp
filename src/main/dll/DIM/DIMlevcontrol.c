@@ -647,10 +647,10 @@ void dimcannon_init(int *obj, int *arg)
         void *state;
         int *p;
         ((GameObject *)obj)->unkF4 = 0;
-        p = *(int **)((char *)obj + 0x64);
+        p = *(int **)&((GameObject *)obj)->anim.modelState;
         if (p != 0) {
             *(int *)((char *)p + 0x30) |= 0xc10;
-            p = *(int **)((char *)obj + 0x64);
+            p = *(int **)&((GameObject *)obj)->anim.modelState;
             *(u32 *)((char *)p + 0x30) |= 0x8000LL;
         }
         state = ((GameObject *)obj)->extra;

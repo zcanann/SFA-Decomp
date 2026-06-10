@@ -71,34 +71,34 @@ void camcontrol_updateTargetReticle(CamcontrolTargetObject *fallbackTarget, int 
     paletteBase = paletteBase + paletteIdx * 2;
     gCamcontrolTargetHelpTextId = *(s16 *)(paletteBase + 0x7C);
 
-    *(f32 *)(reticle + 0x18) = *(f32 *)(slot + 0x0);
-    *(f32 *)(reticle + 0x1C) = *(f32 *)(slot + 0x4);
-    *(f32 *)(reticle + 0x20) = *(f32 *)(slot + 0x8);
-    *(s8 *)(reticle + 0xAD) = mode;
+    ((GameObject *)reticle)->anim.worldPosX = *(f32 *)(slot + 0x0);
+    ((GameObject *)reticle)->anim.worldPosY = *(f32 *)(slot + 0x4);
+    ((GameObject *)reticle)->anim.worldPosZ = *(f32 *)(slot + 0x8);
+    ((GameObject *)reticle)->anim.bankIndex = mode;
 
-    *(u32 *)(reticle + 0x30) = *(u32 *)&((GameObject *)target)->anim.parent;
-    if (*(u32 *)(reticle + 0x30) != 0) {
-      Obj_TransformWorldPointToLocal(*(f32 *)(reticle + 0x18),
-                                     *(f32 *)(reticle + 0x1C),
-                                     *(f32 *)(reticle + 0x20),
+    *(u32 *)&((GameObject *)reticle)->anim.parent = *(u32 *)&((GameObject *)target)->anim.parent;
+    if (*(u32 *)&((GameObject *)reticle)->anim.parent != 0) {
+      Obj_TransformWorldPointToLocal(((GameObject *)reticle)->anim.worldPosX,
+                                     ((GameObject *)reticle)->anim.worldPosY,
+                                     ((GameObject *)reticle)->anim.worldPosZ,
                                      (f32 *)(reticle + 0xC), (f32 *)(reticle + 0x10),
                                      (f32 *)(reticle + 0x14),
-                                     (void *)*(u32 *)(reticle + 0x30));
+                                     (void *)*(u32 *)&((GameObject *)reticle)->anim.parent);
     } else {
-      *(f32 *)(reticle + 0xC) = *(f32 *)(reticle + 0x18);
-      *(f32 *)(reticle + 0x10) = *(f32 *)(reticle + 0x1C);
-      *(f32 *)(reticle + 0x14) = *(f32 *)(reticle + 0x20);
+      ((GameObject *)reticle)->anim.localPosX = ((GameObject *)reticle)->anim.worldPosX;
+      ((GameObject *)reticle)->anim.localPosY = ((GameObject *)reticle)->anim.worldPosY;
+      ((GameObject *)reticle)->anim.localPosZ = ((GameObject *)reticle)->anim.worldPosZ;
     }
-    *(s16 *)(reticle + 0x2) = 0;
-    *(s16 *)(reticle + 0x4) = 0;
-    *(f32 *)(reticle + 0x8) = lbl_803E1628;
+    ((GameObject *)reticle)->anim.rotY = 0;
+    ((GameObject *)reticle)->anim.rotZ = 0;
+    ((GameObject *)reticle)->anim.rootMotionScale = lbl_803E1628;
     reticle[0x37] = ((GameObject *)reticle)->anim.alpha;
     objRenderFn_8003b8f4(reticle, arg3, arg4, arg5, arg6, lbl_803E162C);
   } else {
-    *(u32 *)(reticle + 0x30) = 0;
+    *(u32 *)&((GameObject *)reticle)->anim.parent = 0;
   }
 
-  flagsObj = *(u16 **)((u8 *)*(u32 *)(reticle + 0x7C) + (s8)reticle[0xAD] * 4);
+  flagsObj = *(u16 **)((u8 *)*(u32 *)&((GameObject *)reticle)->anim.banks + (s8)reticle[0xAD] * 4);
   *(u16 *)((u8 *)flagsObj + 0x18) = (u16)(*(u16 *)((u8 *)flagsObj + 0x18) & ~8);
 
   if ((u32)CAMCONTROL_CAMERA->targetReticleOverride != 0) {

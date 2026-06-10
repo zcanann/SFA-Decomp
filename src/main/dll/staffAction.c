@@ -338,211 +338,211 @@ void fn_80165C8C(short *param_1,LandedArwingState *param_2)
 {
   int iVar2;
 
-  objMove((int)param_1,*(float *)(param_1 + 0x12),*(float *)(param_1 + 0x14),
-          *(float *)(param_1 + 0x16));
+  objMove((int)param_1,((GameObject *)param_1)->anim.velocityX,((GameObject *)param_1)->anim.velocityY,
+          ((GameObject *)param_1)->anim.velocityZ);
   switch (param_2->surfaceMode) {
   case 0:
-    if (*(float *)(param_1 + 8) < param_2->boundsMinY) {
-      *(float *)(param_1 + 8) = param_2->boundsMinY;
+    if (((GameObject *)param_1)->anim.localPosY < param_2->boundsMinY) {
+      ((GameObject *)param_1)->anim.localPosY = param_2->boundsMinY;
       if ((param_2->bounceFlags & 0x20) != 0) {
-        *(float *)(param_1 + 0x12) = -*(float *)(param_1 + 0x14);
+        ((GameObject *)param_1)->anim.velocityX = -((GameObject *)param_1)->anim.velocityY;
         param_2->surfaceMode = 5;
       }
-      *(float *)(param_1 + 0x14) = lbl_803E2FDC;
+      ((GameObject *)param_1)->anim.velocityY = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 8) > param_2->boundsMaxY) {
-      *(float *)(param_1 + 8) = param_2->boundsMaxY;
+    else if (((GameObject *)param_1)->anim.localPosY > param_2->boundsMaxY) {
+      ((GameObject *)param_1)->anim.localPosY = param_2->boundsMaxY;
       if ((param_2->bounceFlags & 0x10) != 0) {
-        *(float *)(param_1 + 0x12) = *(float *)(param_1 + 0x14);
+        ((GameObject *)param_1)->anim.velocityX = ((GameObject *)param_1)->anim.velocityY;
         param_2->surfaceMode = 4;
       }
-      *(float *)(param_1 + 0x14) = lbl_803E2FDC;
+      ((GameObject *)param_1)->anim.velocityY = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 10) > param_2->boundsMaxZ) {
-      *(float *)(param_1 + 10) = param_2->boundsMaxZ;
+    else if (((GameObject *)param_1)->anim.localPosZ > param_2->boundsMaxZ) {
+      ((GameObject *)param_1)->anim.localPosZ = param_2->boundsMaxZ;
       if ((param_2->bounceFlags & 4) != 0) {
-        *(float *)(param_1 + 0x12) = *(float *)(param_1 + 0x16);
+        ((GameObject *)param_1)->anim.velocityX = ((GameObject *)param_1)->anim.velocityZ;
         param_2->surfaceMode = 2;
       }
-      *(float *)(param_1 + 0x16) = lbl_803E2FDC;
+      ((GameObject *)param_1)->anim.velocityZ = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 10) < param_2->boundsMinZ) {
-      *(float *)(param_1 + 10) = param_2->boundsMinZ;
+    else if (((GameObject *)param_1)->anim.localPosZ < param_2->boundsMinZ) {
+      ((GameObject *)param_1)->anim.localPosZ = param_2->boundsMinZ;
       if ((param_2->bounceFlags & 8) != 0) {
-        *(float *)(param_1 + 0x12) = -*(float *)(param_1 + 0x16);
+        ((GameObject *)param_1)->anim.velocityX = -((GameObject *)param_1)->anim.velocityZ;
         param_2->surfaceMode = 3;
       }
-      *(float *)(param_1 + 0x16) = lbl_803E2FDC;
+      ((GameObject *)param_1)->anim.velocityZ = lbl_803E2FDC;
     }
     break;
   case 1:
-    if (*(float *)(param_1 + 8) < param_2->boundsMinY) {
-      *(float *)(param_1 + 8) = param_2->boundsMinY;
+    if (((GameObject *)param_1)->anim.localPosY < param_2->boundsMinY) {
+      ((GameObject *)param_1)->anim.localPosY = param_2->boundsMinY;
       if ((param_2->bounceFlags & 0x20) != 0) {
-        *(float *)(param_1 + 0x12) = *(float *)(param_1 + 0x14);
+        ((GameObject *)param_1)->anim.velocityX = ((GameObject *)param_1)->anim.velocityY;
         param_2->surfaceMode = 5;
       }
-      *(float *)(param_1 + 0x14) = lbl_803E2FDC;
+      ((GameObject *)param_1)->anim.velocityY = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 8) > param_2->boundsMaxY) {
-      *(float *)(param_1 + 8) = param_2->boundsMaxY;
+    else if (((GameObject *)param_1)->anim.localPosY > param_2->boundsMaxY) {
+      ((GameObject *)param_1)->anim.localPosY = param_2->boundsMaxY;
       if ((param_2->bounceFlags & 0x10) != 0) {
-        *(float *)(param_1 + 0x12) = -*(float *)(param_1 + 0x14);
+        ((GameObject *)param_1)->anim.velocityX = -((GameObject *)param_1)->anim.velocityY;
         param_2->surfaceMode = 4;
       }
-      *(float *)(param_1 + 0x14) = lbl_803E2FDC;
+      ((GameObject *)param_1)->anim.velocityY = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 10) > param_2->boundsMaxZ) {
-      *(float *)(param_1 + 10) = param_2->boundsMaxZ;
+    else if (((GameObject *)param_1)->anim.localPosZ > param_2->boundsMaxZ) {
+      ((GameObject *)param_1)->anim.localPosZ = param_2->boundsMaxZ;
       if ((param_2->bounceFlags & 4) != 0) {
-        *(float *)(param_1 + 0x12) = -*(float *)(param_1 + 0x16);
+        ((GameObject *)param_1)->anim.velocityX = -((GameObject *)param_1)->anim.velocityZ;
         param_2->surfaceMode = 2;
       }
-      *(float *)(param_1 + 0x16) = lbl_803E2FDC;
+      ((GameObject *)param_1)->anim.velocityZ = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 10) < param_2->boundsMinZ) {
-      *(float *)(param_1 + 10) = param_2->boundsMinZ;
+    else if (((GameObject *)param_1)->anim.localPosZ < param_2->boundsMinZ) {
+      ((GameObject *)param_1)->anim.localPosZ = param_2->boundsMinZ;
       if ((param_2->bounceFlags & 8) != 0) {
-        *(float *)(param_1 + 0x12) = *(float *)(param_1 + 0x16);
+        ((GameObject *)param_1)->anim.velocityX = ((GameObject *)param_1)->anim.velocityZ;
         param_2->surfaceMode = 3;
       }
-      *(float *)(param_1 + 0x16) = lbl_803E2FDC;
+      ((GameObject *)param_1)->anim.velocityZ = lbl_803E2FDC;
     }
     break;
   case 2:
-    if (*(float *)(param_1 + 6) < param_2->boundsMinX) {
-      *(float *)(param_1 + 6) = param_2->boundsMinX;
+    if (((GameObject *)param_1)->anim.localPosX < param_2->boundsMinX) {
+      ((GameObject *)param_1)->anim.localPosX = param_2->boundsMinX;
       if ((param_2->bounceFlags & 1) != 0) {
-        *(float *)(param_1 + 0x16) = *(float *)(param_1 + 0x12);
+        ((GameObject *)param_1)->anim.velocityZ = ((GameObject *)param_1)->anim.velocityX;
         param_2->surfaceMode = 0;
       }
-      *(float *)(param_1 + 0x12) = lbl_803E2FDC;
+      ((GameObject *)param_1)->anim.velocityX = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 6) > param_2->boundsMaxX) {
-      *(float *)(param_1 + 6) = param_2->boundsMaxX;
+    else if (((GameObject *)param_1)->anim.localPosX > param_2->boundsMaxX) {
+      ((GameObject *)param_1)->anim.localPosX = param_2->boundsMaxX;
       if ((param_2->bounceFlags & 2) != 0) {
-        *(float *)(param_1 + 0x16) = -*(float *)(param_1 + 0x12);
+        ((GameObject *)param_1)->anim.velocityZ = -((GameObject *)param_1)->anim.velocityX;
         param_2->surfaceMode = 1;
       }
-      *(float *)(param_1 + 0x12) = lbl_803E2FDC;
+      ((GameObject *)param_1)->anim.velocityX = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 8) < param_2->boundsMinY) {
-      *(float *)(param_1 + 8) = param_2->boundsMinY;
+    else if (((GameObject *)param_1)->anim.localPosY < param_2->boundsMinY) {
+      ((GameObject *)param_1)->anim.localPosY = param_2->boundsMinY;
       if ((param_2->bounceFlags & 0x20) != 0) {
-        *(float *)(param_1 + 0x16) = *(float *)(param_1 + 0x14);
+        ((GameObject *)param_1)->anim.velocityZ = ((GameObject *)param_1)->anim.velocityY;
         param_2->surfaceMode = 5;
       }
-      *(float *)(param_1 + 0x14) = lbl_803E2FDC;
+      ((GameObject *)param_1)->anim.velocityY = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 8) > param_2->boundsMaxY) {
-      *(float *)(param_1 + 8) = param_2->boundsMaxY;
+    else if (((GameObject *)param_1)->anim.localPosY > param_2->boundsMaxY) {
+      ((GameObject *)param_1)->anim.localPosY = param_2->boundsMaxY;
       if ((param_2->bounceFlags & 0x10) != 0) {
-        *(float *)(param_1 + 0x16) = -*(float *)(param_1 + 0x14);
+        ((GameObject *)param_1)->anim.velocityZ = -((GameObject *)param_1)->anim.velocityY;
         param_2->surfaceMode = 4;
       }
-      *(float *)(param_1 + 0x14) = lbl_803E2FDC;
+      ((GameObject *)param_1)->anim.velocityY = lbl_803E2FDC;
     }
     break;
   case 3:
-    if (*(float *)(param_1 + 6) < param_2->boundsMinX) {
-      *(float *)(param_1 + 6) = param_2->boundsMinX;
+    if (((GameObject *)param_1)->anim.localPosX < param_2->boundsMinX) {
+      ((GameObject *)param_1)->anim.localPosX = param_2->boundsMinX;
       if ((param_2->bounceFlags & 1) != 0) {
-        *(float *)(param_1 + 0x16) = -*(float *)(param_1 + 0x12);
+        ((GameObject *)param_1)->anim.velocityZ = -((GameObject *)param_1)->anim.velocityX;
         param_2->surfaceMode = 0;
       }
-      *(float *)(param_1 + 0x12) = lbl_803E2FDC;
+      ((GameObject *)param_1)->anim.velocityX = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 6) > param_2->boundsMaxX) {
-      *(float *)(param_1 + 6) = param_2->boundsMaxX;
+    else if (((GameObject *)param_1)->anim.localPosX > param_2->boundsMaxX) {
+      ((GameObject *)param_1)->anim.localPosX = param_2->boundsMaxX;
       if ((param_2->bounceFlags & 2) != 0) {
-        *(float *)(param_1 + 0x16) = *(float *)(param_1 + 0x12);
+        ((GameObject *)param_1)->anim.velocityZ = ((GameObject *)param_1)->anim.velocityX;
         param_2->surfaceMode = 1;
       }
-      *(float *)(param_1 + 0x12) = lbl_803E2FDC;
+      ((GameObject *)param_1)->anim.velocityX = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 8) < param_2->boundsMinY) {
-      *(float *)(param_1 + 8) = param_2->boundsMinY;
+    else if (((GameObject *)param_1)->anim.localPosY < param_2->boundsMinY) {
+      ((GameObject *)param_1)->anim.localPosY = param_2->boundsMinY;
       if ((param_2->bounceFlags & 0x20) != 0) {
-        *(float *)(param_1 + 0x16) = -*(float *)(param_1 + 0x14);
+        ((GameObject *)param_1)->anim.velocityZ = -((GameObject *)param_1)->anim.velocityY;
         param_2->surfaceMode = 5;
       }
-      *(float *)(param_1 + 0x14) = lbl_803E2FDC;
+      ((GameObject *)param_1)->anim.velocityY = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 8) > param_2->boundsMaxY) {
-      *(float *)(param_1 + 8) = param_2->boundsMaxY;
+    else if (((GameObject *)param_1)->anim.localPosY > param_2->boundsMaxY) {
+      ((GameObject *)param_1)->anim.localPosY = param_2->boundsMaxY;
       if ((param_2->bounceFlags & 0x10) != 0) {
-        *(float *)(param_1 + 0x16) = *(float *)(param_1 + 0x14);
+        ((GameObject *)param_1)->anim.velocityZ = ((GameObject *)param_1)->anim.velocityY;
         param_2->surfaceMode = 4;
       }
-      *(float *)(param_1 + 0x14) = lbl_803E2FDC;
+      ((GameObject *)param_1)->anim.velocityY = lbl_803E2FDC;
     }
     break;
   case 5:
-    if (*(float *)(param_1 + 6) < param_2->boundsMinX) {
-      *(float *)(param_1 + 6) = param_2->boundsMinX;
+    if (((GameObject *)param_1)->anim.localPosX < param_2->boundsMinX) {
+      ((GameObject *)param_1)->anim.localPosX = param_2->boundsMinX;
       if ((param_2->bounceFlags & 1) != 0) {
-        *(float *)(param_1 + 0x14) = -*(float *)(param_1 + 0x12);
+        ((GameObject *)param_1)->anim.velocityY = -((GameObject *)param_1)->anim.velocityX;
         param_2->surfaceMode = 0;
       }
-      *(float *)(param_1 + 0x12) = lbl_803E2FDC;
+      ((GameObject *)param_1)->anim.velocityX = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 6) > param_2->boundsMaxX) {
-      *(float *)(param_1 + 6) = param_2->boundsMaxX;
+    else if (((GameObject *)param_1)->anim.localPosX > param_2->boundsMaxX) {
+      ((GameObject *)param_1)->anim.localPosX = param_2->boundsMaxX;
       if ((param_2->bounceFlags & 2) != 0) {
-        *(float *)(param_1 + 0x14) = *(float *)(param_1 + 0x12);
+        ((GameObject *)param_1)->anim.velocityY = ((GameObject *)param_1)->anim.velocityX;
         param_2->surfaceMode = 1;
       }
-      *(float *)(param_1 + 0x12) = lbl_803E2FDC;
+      ((GameObject *)param_1)->anim.velocityX = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 10) > param_2->boundsMaxZ) {
-      *(float *)(param_1 + 10) = param_2->boundsMaxZ;
+    else if (((GameObject *)param_1)->anim.localPosZ > param_2->boundsMaxZ) {
+      ((GameObject *)param_1)->anim.localPosZ = param_2->boundsMaxZ;
       if ((param_2->bounceFlags & 4) != 0) {
-        *(float *)(param_1 + 0x14) = *(float *)(param_1 + 0x16);
+        ((GameObject *)param_1)->anim.velocityY = ((GameObject *)param_1)->anim.velocityZ;
         param_2->surfaceMode = 2;
       }
-      *(float *)(param_1 + 0x16) = lbl_803E2FDC;
+      ((GameObject *)param_1)->anim.velocityZ = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 10) < param_2->boundsMinZ) {
-      *(float *)(param_1 + 10) = param_2->boundsMinZ;
+    else if (((GameObject *)param_1)->anim.localPosZ < param_2->boundsMinZ) {
+      ((GameObject *)param_1)->anim.localPosZ = param_2->boundsMinZ;
       if ((param_2->bounceFlags & 8) != 0) {
-        *(float *)(param_1 + 0x14) = -*(float *)(param_1 + 0x16);
+        ((GameObject *)param_1)->anim.velocityY = -((GameObject *)param_1)->anim.velocityZ;
         param_2->surfaceMode = 3;
       }
-      *(float *)(param_1 + 0x16) = lbl_803E2FDC;
+      ((GameObject *)param_1)->anim.velocityZ = lbl_803E2FDC;
     }
     break;
   case 4:
-    if (*(float *)(param_1 + 6) < param_2->boundsMinX) {
-      *(float *)(param_1 + 6) = param_2->boundsMinX;
+    if (((GameObject *)param_1)->anim.localPosX < param_2->boundsMinX) {
+      ((GameObject *)param_1)->anim.localPosX = param_2->boundsMinX;
       if ((param_2->bounceFlags & 1) != 0) {
-        *(float *)(param_1 + 0x14) = *(float *)(param_1 + 0x12);
+        ((GameObject *)param_1)->anim.velocityY = ((GameObject *)param_1)->anim.velocityX;
         param_2->surfaceMode = 0;
       }
-      *(float *)(param_1 + 0x12) = lbl_803E2FDC;
+      ((GameObject *)param_1)->anim.velocityX = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 6) > param_2->boundsMaxX) {
-      *(float *)(param_1 + 6) = param_2->boundsMaxX;
+    else if (((GameObject *)param_1)->anim.localPosX > param_2->boundsMaxX) {
+      ((GameObject *)param_1)->anim.localPosX = param_2->boundsMaxX;
       if ((param_2->bounceFlags & 2) != 0) {
-        *(float *)(param_1 + 0x14) = -*(float *)(param_1 + 0x12);
+        ((GameObject *)param_1)->anim.velocityY = -((GameObject *)param_1)->anim.velocityX;
         param_2->surfaceMode = 1;
       }
-      *(float *)(param_1 + 0x12) = lbl_803E2FDC;
+      ((GameObject *)param_1)->anim.velocityX = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 10) > param_2->boundsMaxZ) {
-      *(float *)(param_1 + 10) = param_2->boundsMaxZ;
+    else if (((GameObject *)param_1)->anim.localPosZ > param_2->boundsMaxZ) {
+      ((GameObject *)param_1)->anim.localPosZ = param_2->boundsMaxZ;
       if ((param_2->bounceFlags & 4) != 0) {
-        *(float *)(param_1 + 0x14) = -*(float *)(param_1 + 0x16);
+        ((GameObject *)param_1)->anim.velocityY = -((GameObject *)param_1)->anim.velocityZ;
         param_2->surfaceMode = 2;
       }
-      *(float *)(param_1 + 0x16) = lbl_803E2FDC;
+      ((GameObject *)param_1)->anim.velocityZ = lbl_803E2FDC;
     }
-    else if (*(float *)(param_1 + 10) < param_2->boundsMinZ) {
-      *(float *)(param_1 + 10) = param_2->boundsMinZ;
+    else if (((GameObject *)param_1)->anim.localPosZ < param_2->boundsMinZ) {
+      ((GameObject *)param_1)->anim.localPosZ = param_2->boundsMinZ;
       if ((param_2->bounceFlags & 8) != 0) {
-        *(float *)(param_1 + 0x14) = *(float *)(param_1 + 0x16);
+        ((GameObject *)param_1)->anim.velocityY = ((GameObject *)param_1)->anim.velocityZ;
         param_2->surfaceMode = 3;
       }
-      *(float *)(param_1 + 0x16) = lbl_803E2FDC;
+      ((GameObject *)param_1)->anim.velocityZ = lbl_803E2FDC;
     }
     break;
   }
@@ -550,39 +550,39 @@ void fn_80165C8C(short *param_1,LandedArwingState *param_2)
   switch (param_2->surfaceMode) {
   case 0:
     *param_1 = 0;
-    iVar2 = atan2_8002178c(*(float *)(param_1 + 0x16),*(float *)(param_1 + 0x14));
-    param_1[1] = (short)(iVar2 + 0x4000);
-    param_1[2] = -0x4000;
+    iVar2 = atan2_8002178c(((GameObject *)param_1)->anim.velocityZ,((GameObject *)param_1)->anim.velocityY);
+    ((GameObject *)param_1)->anim.rotY = (short)(iVar2 + 0x4000);
+    ((GameObject *)param_1)->anim.rotZ = -0x4000;
     break;
   case 1:
     *param_1 = 0;
-    iVar2 = atan2_8002178c(*(float *)(param_1 + 0x16),*(float *)(param_1 + 0x14));
-    param_1[1] = (short)(iVar2 + 0x4000);
-    param_1[2] = 0x4000;
+    iVar2 = atan2_8002178c(((GameObject *)param_1)->anim.velocityZ,((GameObject *)param_1)->anim.velocityY);
+    ((GameObject *)param_1)->anim.rotY = (short)(iVar2 + 0x4000);
+    ((GameObject *)param_1)->anim.rotZ = 0x4000;
     break;
   case 2:
     *param_1 = 0x4000;
-    iVar2 = atan2_8002178c(*(float *)(param_1 + 0x12),*(float *)(param_1 + 0x14));
-    param_1[1] = (short)(iVar2 + 0x4000);
-    param_1[2] = -0x4000;
+    iVar2 = atan2_8002178c(((GameObject *)param_1)->anim.velocityX,((GameObject *)param_1)->anim.velocityY);
+    ((GameObject *)param_1)->anim.rotY = (short)(iVar2 + 0x4000);
+    ((GameObject *)param_1)->anim.rotZ = -0x4000;
     break;
   case 3:
     *param_1 = 0x4000;
-    iVar2 = atan2_8002178c(*(float *)(param_1 + 0x12),*(float *)(param_1 + 0x14));
-    param_1[1] = (short)(iVar2 + 0x4000);
-    param_1[2] = 0x4000;
+    iVar2 = atan2_8002178c(((GameObject *)param_1)->anim.velocityX,((GameObject *)param_1)->anim.velocityY);
+    ((GameObject *)param_1)->anim.rotY = (short)(iVar2 + 0x4000);
+    ((GameObject *)param_1)->anim.rotZ = 0x4000;
     break;
   case 5:
-    iVar2 = atan2_8002178c(*(float *)(param_1 + 0x12),*(float *)(param_1 + 0x16));
+    iVar2 = atan2_8002178c(((GameObject *)param_1)->anim.velocityX,((GameObject *)param_1)->anim.velocityZ);
     *param_1 = (short)(iVar2 + 0x8000);
-    param_1[1] = 0;
-    param_1[2] = 0;
+    ((GameObject *)param_1)->anim.rotY = 0;
+    ((GameObject *)param_1)->anim.rotZ = 0;
     break;
   case 4:
-    iVar2 = atan2_8002178c(*(float *)(param_1 + 0x12),*(float *)(param_1 + 0x16));
+    iVar2 = atan2_8002178c(((GameObject *)param_1)->anim.velocityX,((GameObject *)param_1)->anim.velocityZ);
     *param_1 = (short)(iVar2 + 0x8000);
-    param_1[1] = 0;
-    param_1[2] = -0x8000;
+    ((GameObject *)param_1)->anim.rotY = 0;
+    ((GameObject *)param_1)->anim.rotZ = -0x8000;
     break;
   }
   return;

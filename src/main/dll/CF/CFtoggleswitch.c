@@ -426,8 +426,8 @@ void FUN_8018b6ac(undefined8 param_1,double param_2,double param_3,undefined8 pa
   fStack_4 = (float)in_ps31_1;
   uVar3 = FUN_8028683c();
   iVar4 = FUN_80017a98();
-  pbVar10 = *(byte **)(uVar3 + 0xb8);
-  iVar9 = *(int *)(uVar3 + 0x4c);
+  pbVar10 = *(byte **)&((GameObject *)uVar3)->extra;
+  iVar9 = *(int *)&((GameObject *)uVar3)->anim.placementData;
   uVar8 = 0;
   if (iVar4 != 0) {
     uVar8 = GameBit_Get(0x91e);

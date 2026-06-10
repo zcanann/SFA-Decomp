@@ -1498,8 +1498,8 @@ void fn_801862CC(int obj, int p)
     sub->radius = lbl_803E3A84;
   }
   ((GameObject *)obj)->unkF4 = 0;
-  if (*(void **)(obj + 0x64) != NULL) {
-    p64 = *(int *)(obj + 0x64);
+  if (((GameObject *)obj)->anim.modelState != NULL) {
+    p64 = *(int *)&((GameObject *)obj)->anim.modelState;
     *(u32 *)(p64 + 0x30) |= 0x8000;
   }
 }

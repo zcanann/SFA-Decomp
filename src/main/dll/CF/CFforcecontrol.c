@@ -737,9 +737,9 @@ void FUN_8018c928(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
             (uVar3 = GameBit_Get((int)*(short *)(iVar4 + 0x20)), uVar3 != 0)) {
       if ((char)*(byte *)(puVar5 + 0x2e) < '\0') {
         if ((*(byte *)(puVar5 + 0x2e) >> 4 & 1) != 0) {
-          *(undefined4 *)(param_9 + 0xc) = *(undefined4 *)(iVar4 + 8);
-          *(undefined4 *)(param_9 + 0x10) = *(undefined4 *)(iVar4 + 0xc);
-          *(undefined4 *)(param_9 + 0x14) = *(undefined4 *)(iVar4 + 0x10);
+          *(undefined4 *)&((GameObject *)param_9)->anim.localPosX = *(undefined4 *)(iVar4 + 8);
+          *(undefined4 *)&((GameObject *)param_9)->anim.localPosY = *(undefined4 *)(iVar4 + 0xc);
+          *(undefined4 *)&((GameObject *)param_9)->anim.localPosZ = *(undefined4 *)(iVar4 + 0x10);
           ((GameObject *)param_9)->anim.alpha = 0xff;
           *(byte *)(puVar5 + 0x2e) = *(byte *)(puVar5 + 0x2e) & 0xef;
         }

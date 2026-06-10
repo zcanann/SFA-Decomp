@@ -585,9 +585,9 @@ void FUN_8017fa14(undefined8 param_1,double param_2,double param_3,undefined8 pa
     *(undefined *)(puVar2 + 0xd) = 0x14;
     puVar2[0x16] = 0xffff;
     puVar2[0xe] = 0xffff;
-    *(undefined4 *)(puVar2 + 4) = *(undefined4 *)(param_9 + 0xc);
-    *(undefined4 *)(puVar2 + 6) = *(undefined4 *)(param_9 + 0x10);
-    *(undefined4 *)(puVar2 + 8) = *(undefined4 *)(param_9 + 0x14);
+    *(undefined4 *)(puVar2 + 4) = *(undefined4 *)&((GameObject *)param_9)->anim.localPosX;
+    *(undefined4 *)(puVar2 + 6) = *(undefined4 *)&((GameObject *)param_9)->anim.localPosY;
+    *(undefined4 *)(puVar2 + 8) = *(undefined4 *)&((GameObject *)param_9)->anim.localPosZ;
     puVar2[0x12] = 0xffff;
     *(undefined *)(puVar2 + 2) = *(undefined *)(iVar4 + 4);
     *(undefined *)(puVar2 + 3) = *(undefined *)(iVar4 + 6);

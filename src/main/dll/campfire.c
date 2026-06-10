@@ -545,12 +545,12 @@ void kaldachom_update(int param_1)
         if (((CampfireState *)iVar9)->controlMode != 6) {
           (**(code **)(*gPlayerInterface + 0x30))((double)timeDelta,param_1,iVar9,5);
         }
-        *(undefined4 *)(iVar9 + 0x3e0) = *(undefined4 *)(param_1 + 0xc0);
-        *(undefined4 *)(param_1 + 0xc0) = 0;
+        *(undefined4 *)(iVar9 + 0x3e0) = *(undefined4 *)&((GameObject *)param_1)->unkC0;
+        *(undefined4 *)&((GameObject *)param_1)->unkC0 = 0;
         (**(code **)(*gPlayerInterface + 8))
                   ((double)timeDelta,(double)timeDelta,param_1,iVar9,&gKaldaChomStateHandlersA,
                    &gKaldaChomStateHandlersB);
-        *(undefined4 *)(param_1 + 0xc0) = *(undefined4 *)(iVar9 + 0x3e0);
+        *(undefined4 *)&((GameObject *)param_1)->unkC0 = *(undefined4 *)(iVar9 + 0x3e0);
       }
     }
   }

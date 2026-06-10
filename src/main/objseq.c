@@ -2288,8 +2288,8 @@ int ObjSeq_update(u8 *obj, f32 t)
 
     if (((ObjSeqState *)seq)->unk7E == 3) {
         if (((ObjSeqState *)seq)->targetObj != NULL) {
-            *(void **)(activeObj + 0xc0) = obj;
-            *(u16 *)(activeObj + 0xb0) |= 0x1000;
+            ((GameObject *)activeObj)->unkC0 = obj;
+            ((GameObject *)activeObj)->objectFlags |= 0x1000;
         }
         return 0;
     }
@@ -2326,8 +2326,8 @@ int ObjSeq_update(u8 *obj, f32 t)
         activeObj = obj;
         if (((ObjSeqState *)seq)->targetObj != NULL) {
             activeObj = *(u8 **)seq;
-            *(void **)(activeObj + 0xc0) = obj;
-            *(u16 *)(activeObj + 0xb0) |= 0x1000;
+            ((GameObject *)activeObj)->unkC0 = obj;
+            ((GameObject *)activeObj)->objectFlags |= 0x1000;
         } else if ((s8)((ObjSeqState *)seq)->unk7B == 0 && (s8)((ObjSeqState *)seq)->movementState < 4) {
             *(s8 *)&((ObjSeqState *)seq)->movementState = -1;
         }

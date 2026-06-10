@@ -426,7 +426,7 @@ void FUN_8014e898(int param_1,int param_2,int param_3)
   }
   if (((int)*(short *)(param_2 + 0x20) != 0xffffffff) &&
      (uVar3 = GameBit_Get((int)*(short *)(param_2 + 0x20)), uVar3 != 0)) {
-    *(undefined4 *)(param_1 + 0xf4) = 1;
+    ((GameObject *)param_1)->unkF4 = 1;
   }
   return;
 }
