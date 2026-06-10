@@ -1,3 +1,4 @@
+#include "main/map_block.h"
 #include "main/frustum.h"
 #include "main/asset_load.h"
 #include "main/game_object.h"
@@ -4095,21 +4096,21 @@ void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *
     col[0] = 0;
     col[1] = 0;
     col[2] = 0;
-    col[3] = *(u8 *)(*(int *)((char *)blockData + 0xc) + 0x64);
+    col[3] = *(u8 *)(((MapBlockData *)blockData)->unkC + 0x64);
     f31 = ((GameObject *)obj)->anim.rootMotionScale;
     s31 = ((GameObject *)obj)->anim.rotX;
     s30 = ((GameObject *)obj)->anim.rotZ;
     s29 = ((GameObject *)obj)->anim.rotY;
-    handle = *(u32 *)((char *)blockData + 0x10);
+    handle = *(u32 *)&((MapBlockData *)blockData)->unk10;
     if (handle == 0 || handle != 0xFFFFFFFF)
         ((GameObject *)obj)->anim.rootMotionScale = lbl_803DEC78;
     else
         ((GameObject *)obj)->anim.rootMotionScale = lbl_803DEC68;
     ((GameObject *)obj)->anim.rotX = 0;
     ((GameObject *)obj)->anim.rotY = 0;
-    if ((*(u32 *)((char *)blockData + 0x30) & 0x2000) == 0)
+    if ((*(u32 *)&((MapBlockData *)blockData)->unk30 & 0x2000) == 0)
         ((GameObject *)obj)->anim.rotZ = 0;
-    if (*(u32 *)((char *)blockData + 0x30) & 0x20) {
+    if (*(u32 *)&((MapBlockData *)blockData)->unk30 & 0x20) {
         memcpy(save_c, (char *)obj + 0xc, 0xc);
         memcpy(save_18, (char *)obj + 0x18, 0xc);
         memcpy((char *)((int)obj + 0x18), (char *)blockData + 0x20, 0xc);
@@ -4121,31 +4122,31 @@ void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *
     GXLoadPosMtxImm(outMtx, 0);
     if (((ObjAnimComponent *)obj)->modelInstance->renderFlags & 0x4) {
         int c = *(int *)col;
-        objectShadow_setupSwappedProjectedTexture(*(int *)((char *)blockData + 0xc), &c, mtx);
+        objectShadow_setupSwappedProjectedTexture(((MapBlockData *)blockData)->unkC, &c, mtx);
     } else {
         if (obj == Obj_GetPlayerObject())
             f30 = 10.0f;
         else
             f30 = ((GameObject *)obj)->anim.hitboxScale * ((GameObject *)obj)->anim.rootMotionScale;
-        handle = *(u32 *)((char *)blockData + 0x10);
+        handle = *(u32 *)&((MapBlockData *)blockData)->unk10;
         if (handle == 0xFFFFFFFF) {
             u32 h2 = textureFn_8006c5c4();
-            hdr = *(int *)((char *)blockData + 0xc);
+            hdr = ((MapBlockData *)blockData)->unkC;
             if (*(u32 *)(hdr + 0x60) != h2)
                 goto drawSpecial;
         }
         {
             int c = *(int *)col;
-            objectShadow_setupProjectedTexture(*(int *)((char *)blockData + 0xc), &c, mtx);
+            objectShadow_setupProjectedTexture(((MapBlockData *)blockData)->unkC, &c, mtx);
         }
         goto afterDraw;
     drawSpecial:
         if (*(u8 *)(hdr + 0x65) == 0xff) {
             int c = *(int *)col;
-            fn_80077AD8(*(int *)((char *)blockData + 0xc), &c, mtx, f30);
+            fn_80077AD8(((MapBlockData *)blockData)->unkC, &c, mtx, f30);
         } else {
             int c = *(int *)col;
-            fn_80077EF8(*(int *)((char *)blockData + 0xc), &c, mtx, f30);
+            fn_80077EF8(((MapBlockData *)blockData)->unkC, &c, mtx, f30);
         }
     afterDraw:;
     }
@@ -4155,37 +4156,37 @@ void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *
     ((GameObject *)obj)->anim.rotX = s31;
     ((GameObject *)obj)->anim.rotY = s29;
     ((GameObject *)obj)->anim.rotZ = s30;
-    if (*(u32 *)((char *)blockData + 0x10) == 0) {
+    if (*(u32 *)&((MapBlockData *)blockData)->unk10 == 0) {
         f32 *cv;
         int off;
         int i;
         int *vbuf;
-        *(int *)((char *)blockData + 0x10) = (int)mmAlloc(slot * 0x12 + 8, 0x18, 0);
-        vbuf = *(int **)((char *)blockData + 0x10);
+        ((MapBlockData *)blockData)->unk10 = (int)mmAlloc(slot * 0x12 + 8, 0x18, 0);
+        vbuf = *(int **)&((MapBlockData *)blockData)->unk10;
         if (vbuf == NULL) return;
         vbuf[0] = (int)vbuf + 8;
-        *(int *)(*(int *)((char *)blockData + 0x10) + 4) = slot * 3;
+        *(int *)(((MapBlockData *)blockData)->unk10 + 4) = slot * 3;
         i = 0;
         cv = (f32 *)cache;
         off = 0;
         kf = lbl_803DEC80;
-        for (; (u32)i < *(u32 *)(*(int *)((char *)blockData + 0x10) + 4); off += 6) {
-            *(s16 *)(*(int *)(*(int *)((char *)blockData + 0x10)) + off + 0) = kf * cv[0];
-            *(s16 *)(*(int *)(*(int *)((char *)blockData + 0x10)) + off + 2) = kf * cv[1];
-            *(s16 *)(*(int *)(*(int *)((char *)blockData + 0x10)) + off + 4) = kf * cv[2];
+        for (; (u32)i < *(u32 *)(((MapBlockData *)blockData)->unk10 + 4); off += 6) {
+            *(s16 *)(*(int *)(((MapBlockData *)blockData)->unk10) + off + 0) = kf * cv[0];
+            *(s16 *)(*(int *)(((MapBlockData *)blockData)->unk10) + off + 2) = kf * cv[1];
+            *(s16 *)(*(int *)(((MapBlockData *)blockData)->unk10) + off + 4) = kf * cv[2];
             cv += 3;
             i++;
         }
     }
-    handle = *(u32 *)((char *)blockData + 0x10);
+    handle = *(u32 *)&((MapBlockData *)blockData)->unk10;
     if (handle != 0xFFFFFFFF) {
         int k;
         int off;
-        GXBegin(0x90, 0, *(int *)(*(int *)((char *)blockData + 0x10) + 4) & 0xffff);
+        GXBegin(0x90, 0, *(int *)(((MapBlockData *)blockData)->unk10 + 4) & 0xffff);
         k = 0;
         off = k;
-        for (; (u32)k < *(u32 *)(*(int *)((char *)blockData + 0x10) + 4); off += 6) {
-            s16 *ep = (s16 *)(*(int *)(*(int *)((char *)blockData + 0x10)) + off);
+        for (; (u32)k < *(u32 *)(((MapBlockData *)blockData)->unk10 + 4); off += 6) {
+            s16 *ep = (s16 *)(*(int *)(((MapBlockData *)blockData)->unk10) + off);
             s16 e2 = ep[2];
             s16 e1 = ep[1];
             s16 e0 = ep[0];
@@ -4231,7 +4232,7 @@ void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *
             off += 0x24;
         }
     }
-    if (*(u32 *)((char *)blockData + 0x30) & 0x20) {
+    if (*(u32 *)&((MapBlockData *)blockData)->unk30 & 0x20) {
         memcpy((char *)((int)obj + 0xc), save_c, 0xc);
         memcpy((char *)((int)obj + 0x18), save_18, 0xc);
     }

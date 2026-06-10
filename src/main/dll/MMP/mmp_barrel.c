@@ -1,3 +1,4 @@
+#include "main/map_block.h"
 #include "main/dll/groundanimator_state.h"
 #include "main/dll/MMP/mmp_barrel.h"
 #include "main/game_object.h"
@@ -639,15 +640,15 @@ void groundanimator_free(int *obj, int flag) {
                                                 (double)((GameObject *)obj)->anim.localPosZ));
         if (block != NULL) {
             off = 0;
-            for (blkIdx = 0; blkIdx < *(u16 *)((char *)block + 0x9a); blkIdx++) {
+            for (blkIdx = 0; blkIdx < ((MapBlockData *)block)->unk9A; blkIdx++) {
                 entry = mapBlockFn_800606ec(block, blkIdx);
                 if (((GroundanimatorPlacement *)r21)->unk25 == mapBlockFn_80060678(entry)) {
                     midoff = off;
-                    for (mid = *(u16 *)entry; mid < *(u16 *)((char *)block + 0x14); mid++) {
+                    for (mid = *(u16 *)entry; mid < ((MapBlockData *)block)->unk14; mid++) {
                         vtx = fn_800606DC(block, mid);
                         innoff = midoff;
                         for (inner = 0; inner < 3; inner++) {
-                            cell = (int *)((char *)*(int *)((char *)block + 0x58) +
+                            cell = (int *)((char *)((MapBlockData *)block)->unk58 +
                                            *(u16 *)vtx * 6);
                             fn_800605F0(cell, local);
                             if (w->heightBuf != 0) {
@@ -740,7 +741,7 @@ void fn_801932C8(int *obj, GroundAnimatorState *p2, int *p3) {
     if (block == NULL) {
         return;
     }
-    if ((*(u16 *)((char *)block + 4) & 8) == 0) {
+    if ((((MapBlockData *)block)->unk4 & 8) == 0) {
         return;
     }
     ix = (int)fastFloorf((((GameObject *)obj)->anim.localPosX - playerMapOffsetX) / lbl_803E3FC0);
@@ -750,15 +751,15 @@ void fn_801932C8(int *obj, GroundAnimatorState *p2, int *p3) {
     p2->entryCount = 0;
     radsq = p2->radius * p2->radius;
     foff = 0;
-    for (blkIdx = 0; blkIdx < *(u16 *)((char *)block + 0x9a); blkIdx++) {
+    for (blkIdx = 0; blkIdx < ((MapBlockData *)block)->unk9A; blkIdx++) {
         entry = mapBlockFn_800606ec(block, blkIdx);
         if (*(u8 *)((char *)p3 + 0x25) == mapBlockFn_80060678(entry)) {
             mid = *(u16 *)entry;
             clampMax = lbl_803E3FC4;
-            for (; mid < *(u16 *)((char *)block + 0x14); mid++) {
+            for (; mid < ((MapBlockData *)block)->unk14; mid++) {
                 vtx = fn_800606DC(block, mid);
                 for (inner = 0; inner < 3; inner++) {
-                    void *cell = (char *)*(int *)((char *)block + 0x58) + *(u16 *)vtx * 6;
+                    void *cell = (char *)((MapBlockData *)block)->unk58 + *(u16 *)vtx * 6;
                     f32 dx;
                     f32 dz;
                     f32 d;
@@ -875,7 +876,7 @@ void groundanimator_update(int *obj) {
     if (block == NULL) {
         return;
     }
-    if ((*(u16 *)((char *)block + 4) & 8) == 0) {
+    if ((((MapBlockData *)block)->unk4 & 8) == 0) {
         return;
     }
     if (g->sinkDepth > lbl_803E3FB0) {
@@ -917,7 +918,7 @@ void groundanimator_update(int *obj) {
                     vtx = fn_800606DC(block, mid);
                     for (inner = 0; inner < 3; inner++) {
                         if (*(f32 *)((char *)g->falloffBuf + foff) > lbl_803E3FB0) {
-                            void *cell = (char *)*(int *)((char *)block + 0x58) + *(u16 *)vtx * 6;
+                            void *cell = (char *)((MapBlockData *)block)->unk58 + *(u16 *)vtx * 6;
                             f32 fv = (f32)*(s16 *)((char *)g->heightBuf + hoff);
                             fn_800605F0(cell, &vbuf[1]);
                             vbuf[0] = fv - (g->lastDepth / lbl_803E3F98) *
@@ -930,8 +931,8 @@ void groundanimator_update(int *obj) {
                     }
                 }
             }
-            DCStoreRangeNoSync((void *)*(int *)((char *)block + 0x58),
-                               *(u16 *)((char *)block + 0x90) * 6);
+            DCStoreRangeNoSync((void *)((MapBlockData *)block)->unk58,
+                               ((MapBlockData *)block)->unk90 * 6);
         }
     }
     if (((GroundanimatorPlacement *)r20)->unk1A == -1) {
@@ -974,7 +975,7 @@ void alphaanimator_update(int *obj) {
         s->doneCount = 0;
         return;
     }
-    if ((*(u16 *)((char *)block + 4) & 8) == 0) {
+    if ((((MapBlockData *)block)->unk4 & 8) == 0) {
         return;
     }
     if (s->vertCount == 0) {
@@ -1002,8 +1003,8 @@ void alphaanimator_update(int *obj) {
         if (mode == 3) {
             *(int *)&s->buf = (int)mmAlloc(s->vertCount << 2, 5, 0);
         }
-        *(u16 *)((char *)block + 4) = *(u16 *)((char *)block + 4) ^ 1;
-        *(u16 *)((char *)block + 4) = *(u16 *)((char *)block + 4) ^ 1;
+        ((MapBlockData *)block)->unk4 = ((MapBlockData *)block)->unk4 ^ 1;
+        ((MapBlockData *)block)->unk4 = ((MapBlockData *)block)->unk4 ^ 1;
     }
     if ((s8)s->active == 0) {
         return;
@@ -1239,7 +1240,7 @@ void hitAnimatorFn_80193dbc(void *block, HitAnimatorObject *obj, HitAnimatorStat
     char *m;
 
     if ((desc->flags & 0x10) == 0) {
-        for (i = 0; i < *(u16 *)((char *)block + 0x9a); i++) {
+        for (i = 0; i < ((MapBlockData *)block)->unk9A; i++) {
             m = (char *)mapBlockFn_800606ec(block, i);
             if (desc->blockEffectId == mapBlockFn_80060678(m)) {
                 if (vstate->activeBit != 0) {

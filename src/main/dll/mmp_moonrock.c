@@ -1,3 +1,4 @@
+#include "main/map_block.h"
 #include "main/game_object.h"
 #include "main/dll/mmp_moonrock.h"
 #include "global.h"
@@ -74,7 +75,7 @@ void texscroll2_applyMapTextureScroll(int obj, TexScroll2State* state)
     tex = getLoadedTexture(-tables[(s32)*(s16*)((char*)placement + 0x18)]);
     if (tex == NULL) return;
 
-    for (i = 0; i < (s32)*(u8*)((char*)block + 0xa2); i++) {
+    for (i = 0; i < (s32)((MapBlockData *)block)->unkA2; i++) {
         layer = fn_8006070C(block, i);
         for (j = 0, material = layer; j < (s32)*(u8*)((char*)layer + 0x41); j++) {
             if (*(void**)((char*)material + 0x24) == tex) {
