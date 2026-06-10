@@ -12,14 +12,14 @@
 typedef struct RomCurveWalker {
     f32 phase; /* 0x00: position along the current segment */
     u8 unk04[0x10 - 0x04];
-    s32 unk10; /* 0x10: nonzero = segment end/advance flag (magicPlant/seqObj11E/NWsfx census) */
+    s32 atSegmentEnd; /* 0x10: nonzero = segment end/advance flag (magicPlant/seqObj11E/NWsfx census) */
     u8 unk14[0x68 - 0x14];
-    f32 unk68; /* 0x68: current position X */
-    f32 unk6C; /* 0x6C: current position Y */
-    f32 unk70; /* 0x70: current position Z */
-    u8 unk74[4];
-    f32 unk78; /* 0x78: heading/derivative term (sign tested) */
-    u8 unk7C[0x80 - 0x7C];
+    f32 posX; /* 0x68: current position X */
+    f32 posY; /* 0x6C: current position Y */
+    f32 posZ; /* 0x70: current position Z */
+    f32 tangentX; /* 0x74 */
+    f32 tangentY; /* 0x78: heading/derivative term (sign tested) */
+    f32 tangentZ; /* 0x7C */
     s32 reverse; /* 0x80: walk direction */
     void *unk84;
     void *unk88;
@@ -38,8 +38,9 @@ typedef struct RomCurveWalker {
     f32 hermZ2[4]; /* 0xF8 */
 } RomCurveWalker;
 
-STATIC_ASSERT(offsetof(RomCurveWalker, unk10) == 0x10);
-STATIC_ASSERT(offsetof(RomCurveWalker, unk68) == 0x68);
+STATIC_ASSERT(offsetof(RomCurveWalker, atSegmentEnd) == 0x10);
+STATIC_ASSERT(offsetof(RomCurveWalker, posX) == 0x68);
+STATIC_ASSERT(offsetof(RomCurveWalker, tangentX) == 0x74);
 STATIC_ASSERT(offsetof(RomCurveWalker, reverse) == 0x80);
 STATIC_ASSERT(offsetof(RomCurveWalker, hermX) == 0xA8);
 

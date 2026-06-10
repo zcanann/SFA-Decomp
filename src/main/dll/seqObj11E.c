@@ -288,7 +288,7 @@ void fn_80152514(int *obj, u8 *state)
     if (((BaddieState *)state)->controlFlags & 0x2000) {
         int step;
 
-        if (Curve_AdvanceAlongPath(path, ((BaddieState *)state)->pathStep) != 0 || ((RomCurveWalker *)path)->unk10 != 0) {
+        if (Curve_AdvanceAlongPath(path, ((BaddieState *)state)->pathStep) != 0 || ((RomCurveWalker *)path)->atSegmentEnd != 0) {
             if ((*gRomCurveInterface)->goNextPoint(path) != 0) {
                 if ((*gRomCurveInterface)->initCurve(*(u8 **)state, obj, lbl_803E2824, (int *)&lbl_803DBCA8, -1) != 0) {
                     ((BaddieState *)state)->controlFlags &= ~0x2000;
@@ -296,32 +296,32 @@ void fn_80152514(int *obj, u8 *state)
             }
         }
         ((GameObject *)obj)->anim.velocityX =
-            (((RomCurveWalker *)path)->unk68 - ((GameObject *)obj)->anim.localPosX) / timeDelta;
+            (((RomCurveWalker *)path)->posX - ((GameObject *)obj)->anim.localPosX) / timeDelta;
         ((GameObject *)obj)->anim.velocityZ =
-            (((RomCurveWalker *)path)->unk70 - ((GameObject *)obj)->anim.localPosZ) / timeDelta;
+            (((RomCurveWalker *)path)->posZ - ((GameObject *)obj)->anim.localPosZ) / timeDelta;
         step = (s8)*((u8 *)def + 0x2a);
         if (step == 0) {
-            fn_8014CF7C(obj, state, ((RomCurveWalker *)path)->unk68, ((RomCurveWalker *)path)->unk70, 0xf, 0);
+            fn_8014CF7C(obj, state, ((RomCurveWalker *)path)->posX, ((RomCurveWalker *)path)->posZ, 0xf, 0);
         } else if (((BaddieState *)state)->controlFlags & 0x2000) {
             spd = step << 8;
-            if ((int)(lbl_803E2828 * ((RomCurveWalker *)path)->unk78) >= 0) {
+            if ((int)(lbl_803E2828 * ((RomCurveWalker *)path)->tangentY) >= 0) {
                 step = spd;
             } else {
                 step = -spd;
             }
             *(s16 *)obj = *(s16 *)obj - step;
-            fn_8014CF7C(obj, state, ((RomCurveWalker *)path)->unk68, ((RomCurveWalker *)path)->unk70, 0xf, 0);
-            if ((int)(lbl_803E2828 * ((RomCurveWalker *)path)->unk78) >= 0) {
+            fn_8014CF7C(obj, state, ((RomCurveWalker *)path)->posX, ((RomCurveWalker *)path)->posZ, 0xf, 0);
+            if ((int)(lbl_803E2828 * ((RomCurveWalker *)path)->tangentY) >= 0) {
                 step = spd;
             } else {
                 step = -spd;
             }
             *(s16 *)obj += step;
         } else {
-            step = ((int)(lbl_803E2828 * ((RomCurveWalker *)path)->unk78) >= 0) ? step : -step;
+            step = ((int)(lbl_803E2828 * ((RomCurveWalker *)path)->tangentY) >= 0) ? step : -step;
             *(s16 *)obj += step;
         }
-        if (((GameObject *)obj)->anim.localPosY - ((RomCurveWalker *)path)->unk6C < lbl_803E282C) {
+        if (((GameObject *)obj)->anim.localPosY - ((RomCurveWalker *)path)->posY < lbl_803E282C) {
             if (Sfx_IsPlayingFromObject(obj, SFXar_laser216) == 0) {
                 Sfx_PlayFromObject(obj, SFXar_laser216);
             }
