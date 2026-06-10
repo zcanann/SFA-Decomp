@@ -9,8 +9,6 @@
 #include "main/resource.h"
 
 
-#pragma peephole off
-#pragma scheduling off
 typedef struct ObjLibRegionList ObjLibRegionList;
 
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
@@ -247,7 +245,7 @@ typedef struct ObjPathTransform {
  * PAL Size: TODO
  */
 #pragma optimization_level 1
-#pragma peephole on
+#pragma scheduling off
 void ObjHitbox_SetStateIndex(int objPtr,int hitStatePtr,int stateIndex)
 {
   ObjAnimComponent *obj;
@@ -283,7 +281,6 @@ void ObjHitbox_SetStateIndex(int objPtr,int hitStatePtr,int stateIndex)
   hitState->stateIndex = (s8)stateIndex;
   return;
 }
-#pragma peephole reset
 #pragma optimization_level reset
 
 /*
@@ -299,6 +296,7 @@ void ObjHitbox_SetStateIndex(int objPtr,int hitStatePtr,int stateIndex)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
 void ObjHits_SetTargetMask(int objPtr,undefined targetMask)
 {
   ObjHitsPriorityState *hitState;

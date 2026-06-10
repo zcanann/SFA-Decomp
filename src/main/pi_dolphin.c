@@ -1588,8 +1588,6 @@ undefined4 mapLoadDataFile(int param_1,int param_2)
   }
   return result;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void padUpdate(void);
 extern void checkReset(void);
@@ -1615,8 +1613,6 @@ extern void ObjModel_UnpackResourcePayload(int p, u32 size, int dst, u32 unpacke
 void loadDataFiles(void);
 int GXFlush_(u8 visible, int unused);
 
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void loadAndDecompressDataFile(int param_1,int param_2,u32 param_3,u32 param_4,u32 *param_5,int param_6,u32 param_7)
 {
@@ -2513,8 +2509,6 @@ void loadAndDecompressDataFile(int param_1,int param_2,u32 param_3,u32 param_4,u
   }
 }
 #pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2529,6 +2523,8 @@ void loadAndDecompressDataFile(int param_1,int param_2,u32 param_3,u32 param_4,u
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_800443fc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
@@ -2649,8 +2645,6 @@ void piRomLoadSection(int param_1,int param_2,int param_3)
     }
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 /*
  * --INFO--
  *
@@ -2664,6 +2658,8 @@ void piRomLoadSection(int param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80044840(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,undefined4 *param_11,undefined4 *param_12,
@@ -7251,9 +7247,7 @@ void fn_8004C1E4(u8 b, f32 scale) {
         lbl_803DB5F0 = lbl_803DEAC8;
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 void *fn_8004B118(int *p) {
     void **arr;
@@ -7623,7 +7617,6 @@ extern void C_MTXOrtho(f32 *mtx, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
 void initViewport(void) {
     C_MTXOrtho(hudMatrix, lbl_803DEA70, lbl_803DEA88, *(f32 *)&lbl_803DEA70, lbl_803DEA8C, lbl_803DEA78, lbl_803DEA90);
 }
-#pragma scheduling reset
 
 extern int lbl_803DCD88;
 extern int lbl_803DCD8C;
@@ -7637,7 +7630,6 @@ extern void GXSetTevAlphaIn(int, int, int, int, int);
 extern void GXSetTevColorOp(int, int, int, int, int, int);
 extern void GXSetTevAlphaOp(int, int, int, int, int, int);
 
-#pragma scheduling off
 void fn_80050F2C(void) {
     GXSetTevDirect(lbl_803DCD90);
     GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 255);
@@ -7649,9 +7641,7 @@ void fn_80050F2C(void) {
     lbl_803DCD90 = lbl_803DCD90 + 1;
     lbl_803DCD6A++;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma dont_inline on
 int fn_8004AA24(int *ctx, int *ref) {
     int *node;
@@ -7953,7 +7943,6 @@ found:
         }
     }
 }
-#pragma scheduling reset
 
 extern void gxSetZMode_(int a, int b, int c);
 extern void GXSetAlphaUpdate(u8 v);
@@ -7970,7 +7959,6 @@ extern void *lbl_803DCCE8;
 extern u8 lbl_803DCCA7;
 extern u16 lbl_803DB5CE;
 extern char lbl_8035F730[];
-#pragma scheduling off
 int GXFlush_(u8 visible, int unused) {
     void *fifo_get;
     void *fifo_put;
@@ -8008,12 +7996,12 @@ int GXFlush_(u8 visible, int unused) {
     return 0;
 }
 #pragma optimize_for_size reset
-#pragma peephole reset
 
 extern u8 GXNtsc480Prog[];
 extern u8 lbl_803DB5D4;
 extern u8 *lbl_803DCCF0;
 extern void GXSetCopyFilter(u8 aa, u8 *pat, u8 vf_en, u8 *vfilter);
+#pragma peephole on
 void setDisplayCopyFilter(void) {
     u8 *p = lbl_803DCCF0;
     if (p == GXNtsc480Prog || p[0x18] != 0) {
@@ -8042,9 +8030,7 @@ void textureFn_8004c264(u8 *tex, int mapId) {
         GXLoadTexObj(lbl_803779A0, 1);
     }
 }
-#pragma peephole reset
 
-#pragma peephole off
 void selectTexture(u8 *tex, int mapId) {
     void *base;
     if (tex == NULL) return;
@@ -8055,8 +8041,6 @@ void selectTexture(u8 *tex, int mapId) {
         GXLoadTexObj(base, mapId);
     }
 }
-#pragma peephole reset
-#pragma peephole off
 void loadModelsBin(int a, int *p1c, int *p20, int *p18, int *p4) {
     u32 v31 = 0;
     u32 v30 = 0;
@@ -8090,8 +8074,6 @@ void loadModelsBin(int a, int *p1c, int *p20, int *p18, int *p4) {
         *p4 = *(int *)(p + 0x4);
     }
 }
-#pragma peephole reset
-#pragma peephole off
 void checkLoadBlock(int a, int *pc, int *p8) {
     int idx = -1;
     int flags;
@@ -9932,8 +9914,8 @@ void loadDataFiles(void) {
     } while (i <= 0x57);
     loadTableFiles();
 }
-#pragma peephole reset
 extern void VIConfigure(void *mode);
+#pragma peephole on
 void tvInit(void) {
     *(s16 *)((char *)lbl_803DCCF0 + 0xe) = 0x294;
     *(u16 *)((char *)lbl_803DCCF0 + 0xa) = *(u16 *)((char *)lbl_803DCCF0 + 0xa) - 0xa;
@@ -10011,7 +9993,7 @@ int fileLoadToBufferOffset(int id, void *buffer, int offset, int size) {
     DCStoreRange(buffer, size);
     return size;
 }
-#pragma peephole reset
+#pragma peephole on
 void fn_8004EECC(void) {
     GXSetTevDirect(lbl_803DCD90);
     GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 4);
@@ -10190,8 +10172,6 @@ extern u16 gDepthReadPendingCount;
 extern u16 gDepthReadResultCount;
 extern u8 lbl_803DCCA8;
 
-#pragma scheduling off
-#pragma peephole off
 extern int stackCreate(int n, int stride);
 extern int testAndSet_onlyUseHeap3(int v);
 extern void dvdReadCb_80041d30();
@@ -10199,6 +10179,7 @@ extern u8 lbl_803DCC90;
 extern int lbl_803DCC88;
 extern int lbl_803DCC98;
 extern int lbl_803DCC84;
+#pragma peephole off
 int initLoadFiles(void) {
     struct MldfTables *t = (struct MldfTables *)lbl_80345E10;
     int i;
@@ -10286,9 +10267,7 @@ int initLoadFiles(void) {
     return 0;
 }
 #pragma optimize_for_size reset
-#pragma peephole reset
 
-#pragma peephole off
 extern char sThreadStateAttrSuspendFormat[];
 void waitNextFrame(void)
 {
@@ -10334,12 +10313,12 @@ void waitNextFrame(void)
     GXInvalidateVtxCache();
     GXInvalidateTexAll();
 }
-#pragma peephole reset
 
 void logGpuHang(void);
 extern void *lbl_803DCCD8;
 extern void *lbl_803DCCE4;
 extern void *lbl_803DCCCC;
+#pragma peephole on
 void videoSwapFrameBuffers(void)
 {
     u16 sync;
@@ -10464,7 +10443,6 @@ void logGpuHang(void)
         OSReport(strs + 0x4019c);
     }
 }
-#pragma peephole reset
 
 extern void debugPrintfxy(int x, int y, const char *fmt, ...);
 extern int OSGetResetButtonState(void);
@@ -10474,7 +10452,6 @@ extern u8 lbl_803DCCA6;
 extern u8 lbl_803DCCA4;
 extern u8 lbl_803DDA28;
 extern char lbl_803DB5DC;
-#pragma peephole off
 void gpuErrorHandler(void)
 {
     char *strs = (char *)lbl_802CC6A0;
@@ -10550,9 +10527,7 @@ void gpuErrorHandler(void)
         debugPrintfxy(0x32, 0xa0, &lbl_803DB5DC, *(int *)(lbl_803DCCDC + 0x198));
     }
 }
-#pragma peephole reset
 
-#pragma peephole off
 extern void *OSGetArenaLo(void);
 extern void *OSGetArenaHi(void);
 extern void OSSetArenaLo(void *lo);
@@ -10724,9 +10699,7 @@ void videoInit(void) {
     PPCMtmsr(PPCMfmsr() | MSR_PM);
     PPCMthid0(PPCMfhid0() | HID0_SPD);
 }
-#pragma peephole reset
 
-#pragma peephole off
 #pragma optimize_for_size on
 extern int __rlwnm(int, int, int, int);
 extern u8 lbl_8030C880[];
@@ -11018,4 +10991,3 @@ int zlbDecompress(void *srcv, int size, int dstv, void *outp) {
     return 0;
 }
 #pragma optimize_for_size reset
-#pragma peephole reset

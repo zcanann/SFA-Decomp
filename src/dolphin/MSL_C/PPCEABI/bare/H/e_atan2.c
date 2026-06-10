@@ -60,9 +60,9 @@ float powfBitEstimate(float x, float y) {
 void Vec_normalize(void* v_in, void* v_out) {
     Vec_scale(v_in, v_out, invSqrt(Vec_lengthSquared(v_in)));
 }
-#pragma peephole reset
 #pragma optimization_level reset
 
+#pragma peephole on
 void Vec_scale(void* v_in, void* v_out, float s) {
     Vec3f* in = v_in;
     Vec3f* out = v_out;
@@ -77,8 +77,8 @@ float Vec_lengthSquared(void* v) {
 }
 
 #pragma optimization_level 0
-#pragma peephole off
 #pragma optimize_for_size on
+#pragma peephole off
 float trigReduceQuadrant(u16* p, float x) {
     float scaled = lbl_803E7BF8 * __fabsf(x);
     float reduced;
@@ -88,5 +88,4 @@ float trigReduceQuadrant(u16* p, float x) {
     return scaled - reduced;
 }
 #pragma optimize_for_size reset
-#pragma peephole reset
 #pragma optimization_level reset

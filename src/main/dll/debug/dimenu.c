@@ -171,8 +171,6 @@ void OptionsScreen_render(int arg)
         lbl_803DD706 = 0;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void gameTextLoadDir(int);
 extern s8 lbl_803DD70C;
@@ -192,7 +190,7 @@ extern void setRumbleEnabled(u8 enabled);
 extern void setSubtitlesEnabled(u8 enabled);
 extern u8 framesThisStep;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-#pragma scheduling off
+#pragma peephole on
 void OptionsScreen_initialise(void)
 {
     (*gScreenTransitionInterface)->step(20, 5);
@@ -210,7 +208,6 @@ void OptionsScreen_initialise(void)
     lbl_803DD705 = 0;
     lbl_803DD6F9 = 0;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -225,7 +222,6 @@ void OptionsScreen_initialise(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 #pragma peephole off
 int OptionsScreen_run(void)
 {
@@ -344,8 +340,6 @@ int OptionsScreen_run(void)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -360,6 +354,8 @@ int OptionsScreen_run(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_8011d67c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
@@ -628,15 +624,11 @@ void WeirdUnusedMenu_release(void) {
     warpToMap(0, 1);
     (*(void (*)(void))(*(int *)(*gTitleMenuLinkInterface + 0x8)))();
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern u32 lbl_803DD720;
 extern u32 lbl_8031AD98[];
 extern u32 textureLoadAsset(int);
 extern int Obj_GetPlayerObject(void);
-#pragma scheduling off
-#pragma peephole off
 int Dummy39_run(void) {
     s32 v;
     u8 cur;
@@ -655,12 +647,10 @@ int Dummy39_run(void) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern s16 lbl_803DD8C2;
 extern void Sfx_PlayFromObjectLimited(int obj, u16 sfx, int);
-#pragma scheduling off
+#pragma peephole on
 void cMenuPlaySelectedItemSfx(int obj) {
     int sfx = 0;
     switch (lbl_803DD8C2) {
@@ -675,8 +665,6 @@ void cMenuPlaySelectedItemSfx(int obj) {
         Sfx_PlayFromObjectLimited(obj, (u16)sfx, 1);
     }
 }
-#pragma scheduling reset
-#pragma scheduling off
 void WeirdUnusedMenu_initialise(void) {
     lbl_803DD71C = textureLoadAsset(0x31e);
     lbl_803DD718 = textureLoadAsset(0x310);
@@ -687,4 +675,3 @@ void WeirdUnusedMenu_initialise(void) {
     lbl_803DD710 = 0;
     lbl_803DD713 = 0;
 }
-#pragma scheduling reset

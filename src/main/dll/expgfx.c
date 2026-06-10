@@ -242,8 +242,6 @@ void expgfxRemove(uint slotPoolBase,int poolIndex,int slotIndex,int skipTextureF
     gExpgfxStaticPoolSlotTypeIds[poolIndex] = EXPGFX_INVALID_SLOT_TYPE;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -258,8 +256,6 @@ void expgfxRemove(uint slotPoolBase,int poolIndex,int slotIndex,int skipTextureF
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void expgfxRemoveAll(void)
 {
   ExpgfxRuntimeDataLayout *runtime;
@@ -325,8 +321,6 @@ void expgfxRemoveAll(void)
     poolIndex++;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -341,8 +335,6 @@ void expgfxRemoveAll(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int expgfxGetSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
                        int preferredPoolIndex,uint sourceId)
 {
@@ -424,8 +416,6 @@ int expgfxGetSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
 
   return EXPGFX_INVALID_POOL_INDEX;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -440,8 +430,6 @@ int expgfxGetSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void expgfx_initSlotQuad(void *slotPtr)
 {
   ExpgfxStaticDataLayout *staticData;
@@ -541,8 +529,6 @@ void expgfx_initSlotQuad(void *slotPtr)
   quad[3].texS = texS0;
   quad[3].texT = texT1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 fn_80138F78(void *tricky);
 extern f32 fn_8029610C(void *player);
@@ -609,8 +595,6 @@ STATIC_ASSERT(offsetof(ExpgfxCameraViewSlot, x) == 0x0C);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameState)
 {
   ExpgfxStaticDataLayout *staticData;
@@ -1511,8 +1495,6 @@ foundFirst:
     cacheQueueWait(0);
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1528,8 +1510,6 @@ foundFirst:
  * PAL Size: TODO
  */
 #pragma dont_inline on
-#pragma scheduling off
-#pragma peephole off
 int expgfx_addToTable(uint resourceHandle,uint sourceId,uint attachedTableKey,s16 resourceId)
 {
   ExpgfxTableEntry *entry;
@@ -1568,8 +1548,6 @@ int expgfx_addToTable(uint resourceHandle,uint sourceId,uint attachedTableKey,s1
   debugPrintf(sExpgfxExpTabIsFull);
   return EXPGFX_INVALID_TABLE_INDEX;
 }
-#pragma peephole reset
-#pragma scheduling reset
 #pragma dont_inline reset
 
 /*
@@ -1585,8 +1563,6 @@ int expgfx_addToTable(uint resourceHandle,uint sourceId,uint attachedTableKey,s1
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int expgfx_updateSourceFrameFlags(void *sourceObject)
 {
   ExpgfxSourceObject *source;
@@ -1640,8 +1616,6 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
 
   return result;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1656,6 +1630,8 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void expgfx_ownerFree3(u32 sourceId)
 {
   expgfx_free(sourceId);
@@ -1769,8 +1745,6 @@ void expgfx_renderSourcePools(int sourceId,int sourceMode)
     poolIndex++;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1799,8 +1773,6 @@ extern f32 lbl_803967C0[3][4];
 extern f32 lbl_803DF414;
 extern f32 lbl_803DB790;
 
-#pragma scheduling off
-#pragma peephole off
 void drawGlow(uint slotPoolBase,int poolIndex)
 {
   void *dstBuf;
@@ -2112,8 +2084,6 @@ void drawGlow(uint slotPoolBase,int poolIndex)
     gExpgfxRenderResetPending = 0;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2128,8 +2098,6 @@ void drawGlow(uint slotPoolBase,int poolIndex)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void renderParticles(void)
 {
   ExpgfxRuntimeDataLayout *runtime;
@@ -2197,8 +2165,6 @@ void renderParticles(void)
   } while (poolIndex < EXPGFX_POOL_COUNT);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2213,6 +2179,8 @@ void renderParticles(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void expgfx_free2(u32 sourceId)
 {
   expgfx_free(sourceId);
@@ -2288,8 +2256,6 @@ void expgfx_free(u32 sourceId)
     poolIndex++;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2304,8 +2270,6 @@ void expgfx_free(u32 sourceId)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void expgfx_resetAllPools(void)
 {
   ExpgfxRuntimeDataLayout *runtime;
@@ -2396,8 +2360,6 @@ void expgfx_resetAllPools(void)
     resourceEntry++;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2412,8 +2374,6 @@ void expgfx_resetAllPools(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void expgfx_updateFrameState(int sourceMode,int sourceId)
 {
   int renderMode;
@@ -2451,8 +2411,6 @@ void expgfx_updateFrameState(int sourceMode,int sourceId)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2476,8 +2434,6 @@ extern int lbl_803DD270;
 extern int lbl_803DD274;
 extern int lbl_803DD278;
 
-#pragma scheduling off
-#pragma peephole off
 int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short slotType,
                      u8 boundsTemplateId)
 {
@@ -2765,8 +2721,6 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
   return slot->sequenceId;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2781,8 +2735,6 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void expgfx_onMapSetup(void)
 {
   ExpgfxRuntimeDataLayout *runtime;
@@ -2843,8 +2795,6 @@ void expgfx_onMapSetup(void)
   }
   gExpgfxTextureFreeInProgress = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2859,8 +2809,6 @@ void expgfx_onMapSetup(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void expgfx_release(void)
 {
   u32 *slotPoolBases;
@@ -2876,8 +2824,6 @@ void expgfx_release(void)
   } while (poolIndex < EXPGFX_POOL_COUNT);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2892,8 +2838,6 @@ void expgfx_release(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void expgfx_initialise(void)
 {
   ExpgfxRuntimeDataLayout *runtime;
@@ -2953,5 +2897,3 @@ void expgfx_initialise(void)
   memset(runtime->expTab, 0, EXPGFX_EXPTAB_BYTES);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset

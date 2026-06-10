@@ -40,6 +40,5 @@ void mcupgrade_update(int obj)
         objRenderFn_80041018(obj);
     }
 }
-#pragma peephole reset
 
 void mcupgrade_init(int obj) { ((GameObject *)obj)->animEventCallback = (void *)mcupgrade_SeqFn; }

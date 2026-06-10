@@ -172,7 +172,6 @@ void CameraModeBike_update(CameraObject *camera)
   }
   return;
 }
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -187,6 +186,7 @@ void CameraModeBike_update(CameraObject *camera)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
 void CameraModeBike_init(CameraObject *camera)
 {
   if (lbl_803DD540 == 0) {

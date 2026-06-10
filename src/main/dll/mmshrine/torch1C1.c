@@ -128,8 +128,6 @@ void FUN_801c5f28(ushort *param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -144,8 +142,6 @@ void FUN_801c5f28(ushort *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801c61f4(undefined4 param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate)
 {
   char eventId;
@@ -192,8 +188,6 @@ void FUN_801c61f4(undefined4 param_1,undefined4 param_2,ObjAnimUpdateState *anim
   FUN_80286888();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -208,6 +202,8 @@ void FUN_801c61f4(undefined4 param_1,undefined4 param_2,ObjAnimUpdateState *anim
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int ecsh_shrine_getExtraSize(void)
 {
   return 0x38;

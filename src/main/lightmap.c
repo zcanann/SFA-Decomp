@@ -8,8 +8,6 @@
 #include "main/objlib.h"
 
 
-#pragma peephole off
-#pragma scheduling off
 extern undefined4 FUN_800033a8();
 extern uint FUN_80006914();
 extern undefined4 FUN_80006934();
@@ -307,6 +305,8 @@ extern f32 floor(f32 v);
 extern f32 fn_802943F4(f32 v);
 
 
+#pragma scheduling off
+#pragma peephole off
 void updateVisibleGeometry(void)
 {
     u8 *cam;
@@ -4071,7 +4071,6 @@ void drawFn_8005cf8c(int verts, u8 *indices, int count) {
         indices = indices + 0x10;
     }
 }
-#pragma peephole reset
 
 extern void envFxFn_80088884(void);
 extern void *gMinimapInterface;
@@ -4082,6 +4081,7 @@ extern f32 timeDelta;
 extern s32 lbl_803DCE00;
 
 #pragma fp_contract off
+#pragma peephole off
 void updateEnvironment(int mode) {
     if (mode == 0) {
         char *e;

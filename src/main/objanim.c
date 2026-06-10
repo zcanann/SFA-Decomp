@@ -38,9 +38,9 @@ static inline s16 ObjAnim_ReadRootAxisSample(s16 *axis,int sampleIndex)
  *
  * Retail string evidence labels this source-side path as objanim.c/setBlendMove.
  */
+#pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
-#pragma dont_inline on
 void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimState *state,
                           u32 moveId,s16 eventState)
 {
@@ -99,8 +99,6 @@ void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimS
   return;
 }
 #pragma dont_inline reset
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -115,7 +113,7 @@ void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimS
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
+#pragma peephole on
 void Object_ObjAnimSetPrimaryBlendMove(ObjAnimComponent *objAnim,u32 moveId,int eventState)
 {
   ObjAnimBank *bank;
@@ -150,7 +148,6 @@ void Object_ObjAnimSetSecondaryBlendMove(ObjAnimComponent *objAnim,u32 moveId,in
   }
   return;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -165,7 +162,6 @@ void Object_ObjAnimSetSecondaryBlendMove(ObjAnimComponent *objAnim,u32 moveId,in
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 #pragma peephole off
 int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimHandle,
                               ObjAnimEventList *events)
@@ -327,8 +323,6 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimHandle,
 
   return wrapped;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -343,6 +337,8 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimHandle,
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 int Object_ObjAnimSetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim)
 {
   if (moveProgress > gObjAnimSetMoveProgressMax) {
@@ -368,9 +364,9 @@ int Object_ObjAnimSetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+int
 #pragma scheduling off
 #pragma peephole off
-int
 Object_ObjAnimSetMove(f32 moveProgress,int objAnimHandle,int moveId,int moveControlFlags)
 {
   ObjAnimComponent *objAnim;
@@ -448,8 +444,6 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimHandle,int moveId,int moveCont
   state->framePhase = moveProgress * state->frameLength;
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -464,7 +458,7 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimHandle,int moveId,int moveCont
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
+#pragma peephole on
 u16 ObjAnim_GetCurrentEventCountdown(ObjAnimComponent *objAnim)
 {
   return ObjAnim_GetCurrentState(objAnim)->eventCountdown;
@@ -529,7 +523,6 @@ void ObjAnim_SetCurrentEventStepFrames(ObjAnimComponent *objAnim,u32 frameCount)
     bank->currentState->eventStep = eventCountdownStep;
   }
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -544,7 +537,6 @@ void ObjAnim_SetCurrentEventStepFrames(ObjAnimComponent *objAnim,u32 frameCount)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 #pragma peephole off
 int ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,float *phaseOut)
 {
@@ -699,8 +691,6 @@ int ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,float *p
   }
   return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -715,8 +705,6 @@ int ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,float *p
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimHandle,
                                ObjAnimEventList *events)
 {
@@ -1014,8 +1002,6 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimHandle
 
   return wrapped;
 }
-#pragma peephole reset
-#pragma scheduling reset
 /*
  * --INFO--
  *
@@ -1029,6 +1015,8 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimHandle
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 int ObjAnim_SetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim)
 {
   if (moveProgress > gObjAnimSetMoveProgressMax) {
@@ -1153,5 +1141,3 @@ int ObjAnim_SetCurrentMove(int objAnimHandle,int moveId,f32 moveProgress,int mov
   state->framePhase = moveProgress * state->frameLength;
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset

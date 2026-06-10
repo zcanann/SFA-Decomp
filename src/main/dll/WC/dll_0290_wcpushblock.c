@@ -156,8 +156,8 @@ void wcpushblock_init(int obj, int setup)
     state->initialTile = (u8)setupData->initialTile;
     state->baseY = lbl_803E6DA0 + setupData->base.posY;
 }
-#pragma peephole reset
 
+#pragma peephole off
 void wcpushblock_release(void) {}
 
 void wcpushblock_initialise(void) {}

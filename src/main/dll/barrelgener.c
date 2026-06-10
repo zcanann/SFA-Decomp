@@ -347,8 +347,8 @@ void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e)
         *(s16 *)(a + 2) = *(s16 *)(a + 2) + (int)(delta * rate);
     }
 }
-#pragma peephole reset
 
+#pragma peephole off
 int fn_80221C18(int obj, f32 dt, int p3, int p4)
 {
     f32 vel[3];

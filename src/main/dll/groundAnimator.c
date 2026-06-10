@@ -704,8 +704,6 @@ LAB_8017de10:
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -720,8 +718,6 @@ LAB_8017de10:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_8017de58(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9)
@@ -772,8 +768,6 @@ void FUN_8017de58(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* appleontree_handleCollectableHit: ground-animator collectable hit handler. When player is in
  * range, either send a trigger event (first contact) or apply healing +
@@ -786,6 +780,8 @@ extern void Obj_FreeObject(int obj);
 extern f32 lbl_803E37C8;
 extern f32 lbl_803E37EC;
 extern f32 lbl_803E37F0;
+#pragma scheduling off
+#pragma peephole off
 void appleontree_handleCollectableHit(int obj)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -859,8 +855,6 @@ void FUN_8017e12c(int param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -875,8 +869,6 @@ void FUN_8017e12c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 undefined4 FUN_8017e15c(double param_1,undefined2 *param_2,int param_3)
 {
   float fVar1;
@@ -965,8 +957,6 @@ undefined4 FUN_8017e15c(double param_1,undefined2 *param_2,int param_3)
   }
   return uVar4;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -981,8 +971,6 @@ undefined4 FUN_8017e15c(double param_1,undefined2 *param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 undefined4 FUN_8017e3c0(double param_1,undefined2 *param_2,int param_3)
 {
   float fVar1;
@@ -1065,11 +1053,11 @@ undefined4 FUN_8017e3c0(double param_1,undefined2 *param_2,int param_3)
   }
   return uVar4;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
+#pragma scheduling off
+#pragma peephole off
 void appleontree_setScale(void) {}
 
 /* 8b "li r3, N; blr" returners. */

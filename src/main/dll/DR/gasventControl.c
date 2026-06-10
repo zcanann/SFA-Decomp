@@ -627,15 +627,11 @@ void explodable_free(int obj, int flag) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void objSetSlot(int* obj, int slot);
 extern void Obj_SetActiveModelIndex(int* obj, int idx);
 extern int fn_801A27B8(int* obj, int v);
 
-#pragma scheduling off
-#pragma peephole off
 void blasted_init(int param_1, int param_2)
 {
     int* state = ((GameObject *)param_1)->extra;
@@ -662,12 +658,8 @@ void blasted_init(int param_1, int param_2)
         state[0xc / 4] = fn_801A27B8((int*)param_1, (int)*(s16*)(param_2 + 0x1c));
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void fn_801A2E80(int obj, int def, int p3, int state);
-#pragma scheduling off
-#pragma peephole off
 void explodable_update(int obj)
 {
     int p;
@@ -718,8 +710,6 @@ void explodable_update(int obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 typedef struct {
     int key;
@@ -733,8 +723,6 @@ typedef struct {
 extern GasVentTableEntry lbl_80322DA0[];
 extern f32 lbl_803E435C;
 
-#pragma scheduling off
-#pragma peephole off
 void explodable_init(int obj, int setup)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -787,8 +775,6 @@ void explodable_init(int obj, int setup)
         ((GameObject *)obj)->objectFlags |= 0x4000;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int a, int b);
@@ -796,8 +782,6 @@ extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 extern f32 lbl_803E4350;
 extern f32 lbl_803E4354;
 extern f32 lbl_803E4358;
-#pragma scheduling off
-#pragma peephole off
 int fn_801A2BDC(int p1, int p2, int p3, int p4)
 {
     int s;
@@ -840,16 +824,12 @@ int fn_801A2BDC(int p1, int p2, int p3, int p4)
     *(u16 *)(s + 0x3a) = (int)c->unk58;
     return Obj_SetupObject(s, 5, ((GameObject *)p1)->anim.mapEventSlot, -1, 0);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void fn_801A30C0(int obj, int slot, int def);
 extern void Model_GetVertexPosition(int model, int i, f32 *out);
 extern f32 lbl_803E4368;
 extern f32 lbl_803E436C;
 
-#pragma scheduling off
-#pragma peephole off
 void fn_801A2E80(int obj, int def, int p3, int state)
 {
     int i15;
@@ -912,8 +892,6 @@ void fn_801A2E80(int obj, int def, int p3, int state)
         *(u8 *)(state + 0x6e4) = ((u32)GameBit_Get(*(s16 *)(def + 0x3e)) != 0) ? 1 : 0;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void vecRotateZXY(s16 *rot, f32 *vec);
 extern f32 sqrtf(f32 x);
@@ -924,8 +902,6 @@ extern f32 lbl_803E4378;
 extern f32 lbl_803E437C;
 extern f32 lbl_803E4380;
 
-#pragma scheduling off
-#pragma peephole off
 void fn_801A30C0(int obj, int slot, int def)
 {
     f32 dx;
@@ -997,5 +973,3 @@ void fn_801A30C0(int obj, int slot, int def)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

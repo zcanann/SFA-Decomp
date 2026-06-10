@@ -17,8 +17,8 @@ void __init_cpp(void) {
         (*constructor)();
     }
 }
-#pragma peephole reset
 
+#pragma peephole on
 void _ExitProcess(void) {
     PPCHalt();
 }

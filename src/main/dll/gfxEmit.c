@@ -628,8 +628,6 @@ int collectible_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void fn_8003B608(s16 a, s16 b, s16 c);
 extern void objRenderFn_8003b8f4(int obj, int a, int b, int c, int d, f32 e);
@@ -641,8 +639,6 @@ extern void fn_80171E5C(int obj);
 extern void GameBit_Set(int bit, int value);
 extern f32 lbl_803E3490;
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80172824(int obj, u8 *state)
 {
     u8 *player;
@@ -719,8 +715,6 @@ void fn_80172824(int obj, u8 *state)
     }
     *(f32 *)state = dist;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void Sfx_PlayFromObject(int obj, int sfx);
 extern void itemPickupDoParticleFx(int obj, f32 scale, int a, int b);
@@ -739,8 +733,6 @@ extern int ObjMsg_Pop(int obj, int *outMessage, int *outParam, int *outSender);
 extern void fn_80172144(int obj);
 extern f32 lbl_803E3450;
 
-#pragma scheduling off
-#pragma peephole off
 void collectible_update(int obj)
 {
     u8 *state = ((GameObject *)obj)->extra;
@@ -837,11 +829,7 @@ void collectible_update(int obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void collectible_render(int obj, int a, int b, int c, int d, s8 visible)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -856,11 +844,7 @@ void collectible_render(int obj, int a, int b, int c, int d, s8 visible)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_801723DC(int obj)
 {
     u8 *state = ((GameObject *)obj)->extra;
@@ -904,5 +888,3 @@ void fn_801723DC(int obj)
         break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

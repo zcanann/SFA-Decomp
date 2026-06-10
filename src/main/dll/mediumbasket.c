@@ -1070,11 +1070,7 @@ int mediumbasket_updateOpenState(int obj, int p)
   (*(int (**)(int, int, f32, int))(*gPlayerInterface + 0x30))(obj, p, timeDelta, 4);
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int mediumbasket_updateOpenHitState(int obj, int p)
 {
   extern int *gPlayerInterface;
@@ -1125,8 +1121,6 @@ int mediumbasket_updateOpenHitState(int obj, int p)
   (*(int (**)(int, int, f32, int))(*gPlayerInterface + 0x30))(obj, p, timeDelta, 4);
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1142,6 +1136,8 @@ int mediumbasket_updateOpenHitState(int obj, int p)
  * PAL Size: TODO
  */
 undefined4
+#pragma scheduling on
+#pragma peephole on
 FUN_8015c7a0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,int param_10,
             undefined4 param_11,undefined4 param_12,undefined4 param_13,undefined4 param_14,
@@ -2014,9 +2010,7 @@ void dll_CA_func0B(int obj, int message)
         break;
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 int mediumbasket_stateHandlerB04(int obj, int state)
 {
@@ -2025,11 +2019,7 @@ int mediumbasket_stateHandlerB04(int obj, int state)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int mediumbasket_stateHandlerB03(int obj, int state)
 {
     GroundBaddieState *sub;
@@ -2042,11 +2032,7 @@ int mediumbasket_stateHandlerB03(int obj, int state)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int mediumbasket_stateHandlerB02(int obj, int state)
 {
     if ((s8)((GroundBaddieState *)state)->baddie.moveJustStartedB != 0) {
@@ -2066,11 +2052,7 @@ int mediumbasket_stateHandlerB02(int obj, int state)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int mediumbasket_updateLandingState(int obj, int state)
 {
     GroundBaddieState *sub = ((GameObject *)obj)->extra;
@@ -2106,11 +2088,7 @@ playLandingExtras:
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int mediumbasket_updateContactHitState(int obj, int state)
 {
     GroundBaddieState *sub = ((GameObject *)obj)->extra;
@@ -2141,11 +2119,7 @@ int mediumbasket_updateContactHitState(int obj, int state)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int mediumbasket_stateHandlerA0B(int obj, int state)
 {
     GroundBaddieState *sub = ((GameObject *)obj)->extra;
@@ -2173,11 +2147,7 @@ int mediumbasket_stateHandlerA0B(int obj, int state)
     ((GroundBaddieState *)state)->baddie.animSpeedA = ((GameObject *)obj)->anim.currentMoveProgress;
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int mediumbasket_updateDropState(int obj, int state)
 {
     int control = *(int *)(*(int *)&((GameObject *)obj)->extra + 0x40c);
@@ -2204,11 +2174,7 @@ playDropExtras:
     ((GroundBaddieState *)state)->baddie.animSpeedA = lbl_803E2D14;
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int mediumbasket_updateCommDownState(int obj, int state)
 {
     GroundBaddieState *sub = ((GameObject *)obj)->extra;
@@ -2230,11 +2196,7 @@ int mediumbasket_updateCommDownState(int obj, int state)
     ((void (*)(int, int, f32, int))((void **)*gPlayerInterface)[12])(obj, state, timeDelta, 4);
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int mediumbasket_updateHeightBlendState(int obj, int state)
 {
     int control = *(int *)(*(int *)&((GameObject *)obj)->extra + 0x40c);
@@ -2263,11 +2225,7 @@ int mediumbasket_updateHeightBlendState(int obj, int state)
     ((void (*)(int, int, f32, int))((void **)*gPlayerInterface)[12])(obj, state, timeDelta, 4);
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int mediumbasket_stateHandlerA06(int obj, int state)
 {
     GroundBaddieState *sub = ((GameObject *)obj)->extra;
@@ -2306,11 +2264,7 @@ int mediumbasket_stateHandlerA06(int obj, int state)
     ((void (*)(int, int, f32, int))((void **)*gPlayerInterface)[12])(obj, state, timeDelta, 4);
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int mediumbasket_stateHandlerA05(int obj, int state)
 {
     GroundBaddieState *sub = ((GameObject *)obj)->extra;
@@ -2350,11 +2304,7 @@ int mediumbasket_stateHandlerA05(int obj, int state)
     ((void (*)(int, int, f32, int))((void **)*gPlayerInterface)[12])(obj, state, timeDelta, 4);
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int mediumbasket_updateSpinState(int obj, int state)
 {
     GroundBaddieState *sub = ((GameObject *)obj)->extra;
@@ -2377,11 +2327,7 @@ int mediumbasket_updateSpinState(int obj, int state)
     ((GroundBaddieState *)state)->baddie.animSpeedA = lbl_803E2D48;
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int mediumbasket_updateImpactHitState(int obj, int state)
 {
     GroundBaddieState *sub = ((GameObject *)obj)->extra;
@@ -2406,11 +2352,7 @@ int mediumbasket_updateImpactHitState(int obj, int state)
     *(u8 *)(control + 0x44) |= 0xc;
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int mediumbasket_updateHideResetState(int obj, int state)
 {
     GroundBaddieState *sub = ((GameObject *)obj)->extra;
@@ -2438,11 +2380,7 @@ int mediumbasket_updateHideResetState(int obj, int state)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int mediumbasket_stateHandlerB06(int obj, int state)
 {
     GroundBaddieState *sub = ((GameObject *)obj)->extra;
@@ -2492,11 +2430,7 @@ int mediumbasket_stateHandlerB06(int obj, int state)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int mediumbasket_stateHandlerB07(int obj, int state)
 {
     GroundBaddieState *sub = ((GameObject *)obj)->extra;
@@ -2574,11 +2508,7 @@ int mediumbasket_stateHandlerB07(int obj, int state)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_8015CE68(int obj, int state)
 {
     int control = *(int *)(state + 0x40c);
@@ -2633,11 +2563,7 @@ void fn_8015CE68(int obj, int state)
         *(u8 *)(control + 0x44) |= 1;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void mediumbasket_updateControlEffects(int obj, int state)
 {
     int control = *(int *)(state + 0x40c);
@@ -2694,11 +2620,7 @@ void mediumbasket_updateControlEffects(int obj, int state)
     }
     *(u8 *)(control + 0x44) = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void mediumbasket_updateTargetMotion(int obj, int sub, int state)
 {
     int control = *(int *)(sub + 0x40c);
@@ -2723,11 +2645,7 @@ void mediumbasket_updateTargetMotion(int obj, int sub, int state)
         obj, state, timeDelta, timeDelta, gMediumBasketStateHandlersA, gMediumBasketStateHandlersB);
     *(int *)&((GameObject *)obj)->unkC0 = *(int *)(sub + 0x3e0);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma fp_contract off
 void fn_8015D3C0(int obj, int sub, int state)
 {
@@ -2774,8 +2692,6 @@ void fn_8015D3C0(int obj, int sub, int state)
     }
 }
 #pragma fp_contract reset
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Pattern wrappers. */
 s16 dll_CA_setScale(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x274); }
@@ -2784,8 +2700,6 @@ s16 dll_CA_setScale(int *obj) { return *(s16*)((char*)((int**)obj)[0xb8/4] + 0x2
 int dll_CA_getExtraSize_ret_1112(void) { return 0x458; }
 int dll_CA_getObjectTypeId(void) { return 0x49; }
 
-#pragma scheduling off
-#pragma peephole off
 void dll_CA_free(int obj)
 {
     GroundBaddieState *state = ((GameObject *)obj)->extra;
@@ -2798,11 +2712,7 @@ void dll_CA_free(int obj)
     }
     ((void (*)(int, int, int))((void **)*gBaddieControlInterface)[16])(obj, (int)state, 0x20);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void dll_CA_render(int obj, int arg1, int arg2, int arg3, int arg4, s8 visible)
 {
     GroundBaddieState *state = ((GameObject *)obj)->extra;
@@ -2826,18 +2736,14 @@ render:
     fn_8015CE68(obj, (int)state);
 done:;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
+#pragma peephole on
 void dll_CA_hitDetect(int obj)
 {
     ((void (*)(int, int, u8 *))((void **)*gPlayerInterface)[3])(obj, *(int *)&((GameObject *)obj)->extra,
                                                                gMediumBasketStateHandlersA);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void mediumbasket_initWhirlpoolState(int* obj, GroundBaddieState *state) {
     f32 fz;
     state->baddie.unk2AC = lbl_803E2CE8;
@@ -2858,14 +2764,12 @@ void mediumbasket_initWhirlpoolState(int* obj, GroundBaddieState *state) {
     state->baddie.inWhirlpoolGroup = 0;
     ObjModel_SetRenderCallback(Obj_GetActiveModel(obj), (void*)renderWhirlpool);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int type);
 extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
 
+#pragma peephole off
 void mediumbasket_spawnContactObject(int* obj, int* state) {
     void* alloc;
     int* new_obj;

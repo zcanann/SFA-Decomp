@@ -372,8 +372,6 @@ int fn_801244B0(short *param_1,char param_2)
   }
   return iVar2;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -388,6 +386,8 @@ int fn_801244B0(short *param_1,char param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void FUN_801244a4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
@@ -427,8 +427,6 @@ undefined4 fn_80124A78(int param_1,int *param_2,int param_3)
   FUN_8025c754(7,0,0,7,0);
   return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -443,8 +441,6 @@ undefined4 fn_80124A78(int param_1,int *param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 undefined4 fn_80124B38(int param_1,int *param_2,int param_3)
 {
   int iVar1;
@@ -486,8 +482,6 @@ undefined4 fn_80124B38(int param_1,int *param_2,int param_3)
   FUN_8025c754(7,0,0,7,0);
   return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -502,6 +496,8 @@ undefined4 fn_80124B38(int param_1,int *param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void FUN_801246cc(undefined4 param_1,undefined4 param_2,undefined4 param_3)
 {
 }
@@ -636,8 +632,6 @@ void FUN_801246d0(void)
   DAT_803de554 = (char)sVar2;
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -652,8 +646,6 @@ void FUN_801246d0(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801249bc(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9)
@@ -714,8 +706,6 @@ void FUN_801249bc(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern u32 lbl_803E1E14;
 extern int ObjModel_GetRenderOp(int model, int p);
@@ -728,6 +718,8 @@ extern void gxSetZMode_(int a, int b, int c);
 extern void gxSetPeControl_ZCompLoc_(int a);
 extern void GXSetAlphaCompare(int a, int b, int c, int d, int e);
 
+#pragma scheduling off
+#pragma peephole off
 int modelFn_80124794(int obj, int param2, int param3)
 {
     int renderOp;
@@ -842,7 +834,6 @@ int cMenuRenderFn_80124854(int obj, int param2, int param3)
     GXSetAlphaCompare(7, 0, 0, 7, 0);
     return 1;
 }
-#pragma peephole reset
 
 extern int Camera_GetCurrentViewSlot(void);
 extern void Camera_SetCurrentViewIndex(int idx);
@@ -891,6 +882,7 @@ extern f32 lbl_803E2024;
 extern f64 lbl_803E2028;
 extern f64 lbl_803E2030;
 
+#pragma peephole off
 void hudDrawCMenu(int p1, int p2, int p3) {
     u8 slot;
     int sel;

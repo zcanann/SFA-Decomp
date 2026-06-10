@@ -111,4 +111,3 @@ void FUN_802081e0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   FUN_80006b4c();
   return;
 }
-#pragma scheduling reset

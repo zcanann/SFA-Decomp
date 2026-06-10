@@ -232,8 +232,6 @@ void FUN_8018f158(undefined4 param_1)
   (*gModgfxInterface)->freeSourceEffects((void *)param_1);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -248,8 +246,6 @@ void FUN_8018f158(undefined4 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_8018f1b4(short *param_1)
 {
   short sVar1;
@@ -343,8 +339,6 @@ void FUN_8018f1b4(short *param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -359,6 +353,8 @@ void FUN_8018f1b4(short *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void FUN_8018f4fc(undefined2 *param_1,int param_2)
 {
 }
@@ -431,8 +427,6 @@ void FUN_8018f500(void)
   FUN_80286888();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -447,8 +441,6 @@ void FUN_8018f500(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_8018f650(void)
 {
   byte bVar1;
@@ -638,8 +630,6 @@ void FUN_8018f650(void)
   FUN_80286888();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -654,8 +644,6 @@ void FUN_8018f650(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 int FUN_8018fca4(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
   byte bVar1;
@@ -667,8 +655,6 @@ int FUN_8018fca4(int obj, int unused, ObjAnimUpdateState *animUpdate)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -683,6 +669,8 @@ int FUN_8018fca4(int obj, int unused, ObjAnimUpdateState *animUpdate)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void FUN_8018fd14(int obj)
 {
   (*gExpgfxInterface)->freeSource2((u32)obj);
@@ -752,8 +740,6 @@ void FUN_8018fd48(int param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -768,6 +754,8 @@ void FUN_8018fd48(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void FUN_8018fec4(undefined2 *param_1,int param_2)
 {
 }
@@ -846,8 +834,6 @@ void FUN_8018ffbc(int param_1)
   ObjGroup_RemoveObject(param_1,0x1c);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -862,6 +848,8 @@ void FUN_8018ffbc(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void FUN_80190004(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9)
@@ -920,8 +908,6 @@ void FUN_80190008(int param_1,int param_2)
   ObjGroup_AddObject(param_1,0x1c);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -936,6 +922,8 @@ void FUN_80190008(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void warpPadFn_8019042c(int param_1)
 {
     WarpPadState *state;

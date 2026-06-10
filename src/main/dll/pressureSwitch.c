@@ -181,8 +181,6 @@ void FUN_8014e248(int param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -197,8 +195,6 @@ void FUN_8014e248(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_8014e2a8(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   int iVar1;
@@ -219,8 +215,6 @@ void FUN_8014e2a8(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -235,6 +229,8 @@ void FUN_8014e2a8(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void FUN_8014e374(uint param_1)
 {
   if ((*(ObjHitsPriorityState **)&((GameObject *)param_1)->anim.hitReactState)->lastHitObject != 0) {
@@ -386,8 +382,6 @@ void FUN_8014e3a8(ushort *param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -402,8 +396,6 @@ void FUN_8014e3a8(ushort *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_8014e898(int param_1,int param_2,int param_3)
 {
   double dVar1;
@@ -438,8 +430,6 @@ void FUN_8014e898(int param_1,int param_2,int param_3)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -454,8 +444,6 @@ void FUN_8014e898(int param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_8014ea20(short *param_1,undefined4 *param_2)
 {
   float fVar1;
@@ -528,8 +516,6 @@ void FUN_8014ea20(short *param_1,undefined4 *param_2)
   param_1[2] = param_1[2] + (short)(int)(lbl_803E3330 * (float)((double)lbl_803E3334 * dVar5));
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -544,8 +530,6 @@ void FUN_8014ea20(short *param_1,undefined4 *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_8014ed98(int param_1)
 {
   uint uVar1;
@@ -560,8 +544,6 @@ void FUN_8014ed98(int param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -576,6 +558,8 @@ void FUN_8014ed98(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void FUN_8014ede0(short *param_1)
 {
 }
@@ -626,11 +610,11 @@ void FUN_8014ede4(uint param_1,int param_2,int param_3)
   ((GameObject *)param_1)->objectFlags = ((GameObject *)param_1)->objectFlags | 0x2000;
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
+#pragma scheduling off
+#pragma peephole off
 void hagabon_release(void) {}
 void hagabon_initialise(void) {}
 void swarmbaddie_hitDetect(void) {}

@@ -177,8 +177,6 @@ void FUN_801633b0(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -193,8 +191,6 @@ void FUN_801633b0(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801633e4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
@@ -220,8 +216,6 @@ void FUN_801633e4(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -236,8 +230,6 @@ void FUN_801633e4(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_80163544(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
@@ -346,8 +338,6 @@ LAB_80163950:
   FUN_8028688c();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -362,8 +352,6 @@ LAB_80163950:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801638bc(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   if (visible != 0) {
@@ -371,8 +359,6 @@ void FUN_801638bc(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -387,6 +373,8 @@ void FUN_801638bc(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void FUN_801638e4(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
@@ -468,8 +456,6 @@ LAB_80163cb0:
   FUN_80286888();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -484,8 +470,6 @@ LAB_80163cb0:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 int FUN_80163ac8(float *param_1)
 {
   int *piVar1;
@@ -510,8 +494,6 @@ int FUN_80163ac8(float *param_1)
   }
   return iVar3;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -526,18 +508,16 @@ int FUN_80163ac8(float *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_80163b8c(int param_1)
 {
   *(undefined *)(*(int *)&((GameObject *)param_1)->extra + 0x278) = 7;
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
+#pragma scheduling off
+#pragma peephole off
 void cannonclaw_release(void) {}
 void cannonclaw_initialise(void) {}
 void tumbleweedbush_free(void) {}

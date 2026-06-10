@@ -76,10 +76,8 @@ void wmsun_free(int obj) {
     }
     state->glareParams = NULL;
 }
-#pragma scheduling reset
 
 #pragma peephole off
-#pragma scheduling off
 void wmsun_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
     WmSunState *state = ((GameObject *)p1)->extra;
     if (vis != 0 && state->renderEnabled != 0) {
@@ -88,8 +86,6 @@ void wmsun_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
         doNothing_8005D14C(p2, 0x10000);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern int mmAlloc(int size, int tag, int p3);
 extern f32 lbl_803E5F8C;
@@ -98,8 +94,6 @@ extern s16 lbl_803DDCAA;
 extern s16 lbl_803DDCAC;
 extern s16 lbl_803DDCAE;
 extern s16 lbl_803DDCB0;
-#pragma scheduling off
-#pragma peephole off
 void wmsun_init(int obj, int params)
 {
     ObjAnimComponent *objAnim;
@@ -171,8 +165,6 @@ void wmsun_init(int obj, int params)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern int objFindTexture(int obj, int idx, int p3);
 extern void CameraShake_SetAllMagnitudes(f32 mag);
@@ -183,8 +175,6 @@ extern f32 lbl_803E5F7C;
 extern f32 lbl_803E5F80;
 extern f32 lbl_803E5F84;
 extern f32 lbl_803E5F88;
-#pragma scheduling off
-#pragma peephole off
 void wmsun_update(int obj)
 {
     ObjAnimComponent *objAnim;
@@ -348,8 +338,6 @@ void wmsun_update(int obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 typedef struct { f32 x, y, z; } WmSunVec3;
 typedef struct {
@@ -383,8 +371,6 @@ extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
 extern int Camera_GetCurrentViewSlot(void);
 extern void vecRotateZXY(s16 *ang, WmSunVec3 *vec);
-#pragma scheduling off
-#pragma peephole off
 void fn_801F6EA4(int obj)
 {
     WmSunVec3 dir;
@@ -497,5 +483,3 @@ void fn_801F6EA4(int obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

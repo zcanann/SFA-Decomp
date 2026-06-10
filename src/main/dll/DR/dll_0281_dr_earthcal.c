@@ -18,8 +18,8 @@ void drearthcal_render(void) {}
 
 void drearthcal_hitDetect(void) {}
 
-#pragma peephole off
 #pragma scheduling off
+#pragma peephole off
 void drearthcal_update(int obj)
 {
     int player;
@@ -67,9 +67,9 @@ void drearthcal_update(int obj)
                                lbl_803E6C1C, &part, 0);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
+#pragma scheduling on
+#pragma peephole on
 void drearthcal_init(int obj, int setup)
 {
     *(s16 *)obj = (s16)((s8)*(u8 *)(setup + DREARTHCAL_SETUP_YAW) << 8);

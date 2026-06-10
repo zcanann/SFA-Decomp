@@ -200,8 +200,8 @@ void arwingandrossstuff_init(int obj, u8 *setup)
     }
     ObjGroup_AddObject(obj, 2);
 }
-#pragma peephole reset
 
+#pragma peephole off
 void arwingandrossstuff_update(int obj)
 {
     ArwProjectileState *state = ((GameObject *)obj)->extra;

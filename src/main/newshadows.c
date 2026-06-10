@@ -527,8 +527,6 @@ void newshadows_captureProjectedShadow(ushort *object)
   pfVar3[6] = -(fVar1 * *pfVar3 - pfVar3[6]);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -543,8 +541,6 @@ void newshadows_captureProjectedShadow(ushort *object)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void newshadows_sortQueuedShadowCasters(int queueBase,int casterCount)
 {
   int iVar1;
@@ -598,8 +594,6 @@ void newshadows_sortQueuedShadowCasters(int queueBase,int casterCount)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -614,8 +608,6 @@ void newshadows_sortQueuedShadowCasters(int queueBase,int casterCount)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void newshadows_renderQueuedShadowCasters(void)
 {
   undefined2 uVar1;
@@ -1012,8 +1004,6 @@ void newshadows_renderQueuedShadowCasters(void)
   FUN_80286858();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1028,8 +1018,6 @@ void newshadows_renderQueuedShadowCasters(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void newshadows_queueShadowCaster(int object)
 {
   ObjAnimComponent *objAnim;
@@ -1072,8 +1060,6 @@ void newshadows_queueShadowCaster(int object)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1088,8 +1074,6 @@ void newshadows_queueShadowCaster(int object)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void newshadows_getShadowTextureTable4x8(int *tableOut,int *columnsOut,int *rowsOut)
 {
   *tableOut = (int)&DAT_8038ee48;
@@ -1097,8 +1081,6 @@ void newshadows_getShadowTextureTable4x8(int *tableOut,int *columnsOut,int *rows
   *rowsOut = 8;
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1113,16 +1095,12 @@ void newshadows_getShadowTextureTable4x8(int *tableOut,int *columnsOut,int *rows
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void newshadows_getShadowTextureTable16(int *tableOut,int *countOut)
 {
   *tableOut = (int)&DAT_8038eec8;
   *countOut = 0x10;
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1137,6 +1115,8 @@ void newshadows_getShadowTextureTable16(int *tableOut,int *countOut)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void FUN_8006af44(undefined4 *param_1)
 {
   *param_1 = DAT_803ddc44;
@@ -1281,8 +1261,6 @@ int FUN_8006af98(void)
   FUN_802420e0(iVar1 + 0x60,*(int *)(iVar1 + 0x44));
   return iVar1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1297,6 +1275,8 @@ int FUN_8006af98(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void newshadows_getShadowRampTexture(int *textureOut)
 {
   *textureOut = DAT_803ddc1c;
@@ -1402,8 +1382,6 @@ void FUN_8006b03c(int param_1,undefined4 *param_2,undefined4 *param_3,int *param
   *param_5 = (int)modelState->shadowOffsetY;
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1418,6 +1396,8 @@ void FUN_8006b03c(int param_1,undefined4 *param_2,undefined4 *param_3,int *param
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 double newshadows_getShadowNoiseScale(void)
 {
   return (double)lbl_803DDC24;
@@ -1443,8 +1423,6 @@ void FUN_8006b0bc(int param_1)
   FUN_8025b054((uint *)(DAT_803ddc50 + 0x20),param_1);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1459,8 +1437,6 @@ void FUN_8006b0bc(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_8006b0e8(int param_1)
 {
   if (*(char *)(DAT_803ddc4c + 0x48) == '\0') {
@@ -1471,8 +1447,6 @@ void FUN_8006b0e8(int param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1487,8 +1461,6 @@ void FUN_8006b0e8(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void newshadows_bindShadowRenderTexture(int textureSlot)
 {
   if (*(char *)(DAT_803ddbfc + 0x48) == '\0') {
@@ -1499,8 +1471,6 @@ void newshadows_bindShadowRenderTexture(int textureSlot)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1515,6 +1485,8 @@ void newshadows_bindShadowRenderTexture(int textureSlot)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int newshadows_getShadowRenderTexture(void)
 {
   return DAT_803ddbfc;
@@ -1599,8 +1571,6 @@ void newshadows_bindShadowCaptureTexture(int textureSlot)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1615,8 +1585,6 @@ void newshadows_bindShadowCaptureTexture(int textureSlot)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void newshadows_refreshShadowCaptureTexture(void)
 {
   FUN_800709e8((double)lbl_803DF9A8,(double)lbl_803DF9A8,DAT_803ddbfc,0xff,0x40);
@@ -1628,8 +1596,6 @@ void newshadows_refreshShadowCaptureTexture(void)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1644,8 +1610,6 @@ void newshadows_refreshShadowCaptureTexture(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void newshadows_flushShadowRenderTargets(void)
 {
   FUN_80259400(0,0,0x280,0x1e0);
@@ -1666,8 +1630,6 @@ void newshadows_flushShadowRenderTargets(void)
   FUN_80258c24();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1682,8 +1644,6 @@ void newshadows_flushShadowRenderTargets(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void newshadows_updateFrameState(void)
 {
   uint uVar1;
@@ -1745,8 +1705,6 @@ void newshadows_updateFrameState(void)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1761,6 +1719,8 @@ void newshadows_updateFrameState(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void newshadows_getShadowNoiseScroll(float *xOffsetOut,float *yOffsetOut)
 {
   *xOffsetOut = lbl_803DDC2C;
@@ -1803,8 +1763,6 @@ void FUN_8006b4f8(undefined *param_1)
   (&DAT_8038ebb8)[iVar2 * 0x14] = 0;
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1819,6 +1777,8 @@ void FUN_8006b4f8(undefined *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void newshadows_freeShadowDirectionTexture(void)
 {
   FUN_80017814(DAT_803ddc3c);
@@ -1901,8 +1861,6 @@ void newshadows_buildShadowDirectionTexture(void)
   FUN_802420e0(DAT_803ddc3c + 0x60,*(int *)(DAT_803ddc3c + 0x44));
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1917,8 +1875,6 @@ void newshadows_buildShadowDirectionTexture(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_8006b824(double param_1,double param_2,double param_3,float *param_4,int param_5,
                  float *param_6,float *param_7)
 {
@@ -2025,8 +1981,6 @@ void FUN_8006b824(double param_1,double param_2,double param_3,float *param_4,in
   *param_7 = (float)dVar5;
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2041,8 +1995,6 @@ void FUN_8006b824(double param_1,double param_2,double param_3,float *param_4,in
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_8006bce4(void)
 {
   float fVar1;
@@ -2260,8 +2212,6 @@ void FUN_8006bce4(void)
   FUN_8028686c();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2276,8 +2226,6 @@ void FUN_8006bce4(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_8006c2d8(void)
 {
   int iVar1;
@@ -2890,8 +2838,6 @@ void FUN_8006c2d8(void)
   FUN_80286880();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2906,8 +2852,6 @@ void FUN_8006c2d8(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 ushort FUN_8006dc08(uint param_1,undefined param_2)
 {
   uint uVar1;
@@ -2952,8 +2896,6 @@ ushort FUN_8006dc08(uint param_1,undefined param_2)
   }
   return puVar2[uVar1];
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2968,8 +2910,6 @@ ushort FUN_8006dc08(uint param_1,undefined param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_8006dca8(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
                  uint param_5,int param_6,int param_7)
 {
@@ -3013,8 +2953,6 @@ void FUN_8006dca8(undefined8 param_1,double param_2,undefined4 param_3,undefined
   FUN_8028688c();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* sda21 accessors. */
 extern u32 lbl_803DCFD4;
@@ -3067,6 +3005,8 @@ void fn_8006CB24(void) { mm_free(lbl_803DCFBC); lbl_803DCFBC = 0; }
 
 /* Three-out info getter:  *p1 = &lbl; *p2 = 4; *p3 = 8; */
 extern u8 lbl_8038E1E8[0x80];
+#pragma scheduling off
+#pragma peephole off
 void fn_8006C4C0(int *p1, int *p2, int *p3)
 {
     *p1 = (int)lbl_8038E1E8;
@@ -3853,7 +3793,6 @@ void maybeHudFn_8006c91c(void) {
         if ((u8)v != lbl_803DCF80) fn_80069EB8();
     }
 }
-#pragma peephole reset
 
 extern void Obj_BuildWorldTransformMatrix(int *obj, f32 *mtx, int x);
 extern f32 playerMapOffsetX, playerMapOffsetZ;
@@ -3866,6 +3805,7 @@ extern void set_shadowFlag_803dcc29(int x);
 extern void objRender(int a, int b, int c, int d, int *obj, int e);
 extern int *Obj_GetActiveModel(int *obj);
 extern void Camera_ApplyFullViewport(void);
+#pragma peephole off
 void shadowRenderFn_8006b558(int *obj) {
     f32 mtx[12];
     f32 vF, vE, vD, vC, vB, vA;

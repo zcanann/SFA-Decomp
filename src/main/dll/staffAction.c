@@ -587,9 +587,9 @@ void fn_80165C8C(short *param_1,LandedArwingState *param_2)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
+#pragma scheduling on
+#pragma peephole on
 void FUN_801661ec(short *param_1,int param_2)
 {
   fn_80165C8C(param_1,(LandedArwingState *)param_2);
@@ -999,8 +999,6 @@ void dll_D3_free(int obj) {
     }
     (*(void (*)(int, int *, int))(*(int *)(*gBaddieControlInterface + 0x40)))(obj, inner, 0);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void Vec3_Normalize(f32 *v);
 extern void Vec3_Cross(f32 *a, f32 *b, f32 *out);
@@ -1012,7 +1010,7 @@ typedef struct StaffBits {
     u8 lo : 2;
 } StaffBits;
 #pragma dont_inline on
-#pragma scheduling off
+#pragma peephole on
 void fn_80166E38(f32 *out, f32 *forward, f32 *up) {
     f32 rt[3];
     f32 upRecomputed[3];
@@ -1030,10 +1028,8 @@ void fn_80166E38(f32 *out, f32 *forward, f32 *up) {
         mat[2][0] = -fwd[0]; mat[2][1] = -fwd[1]; mat[2][2] = -fwd[2];
     }
 }
-#pragma scheduling reset
 #pragma dont_inline reset
 
-#pragma scheduling off
 #pragma peephole off
 void dll_D3_render(int obj,int p2,int p3,int p4,int p5,s8 visible)
 {
@@ -1063,11 +1059,7 @@ void dll_D3_render(int obj,int p2,int p3,int p4,int p5,s8 visible)
     }
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 undefined4 fn_801659B8(s16 *obj,u32 *params)
 {
   LandedArwingState *state;
@@ -1102,11 +1094,7 @@ undefined4 fn_801659B8(s16 *obj,u32 *params)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80165B3C(int obj,int state)
 {
   f32 radius;
@@ -1156,11 +1144,7 @@ void fn_80165B3C(int obj,int state)
     ((GameObject *)obj)->anim.localPosZ = end[2];
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80166840(int obj,int state,f32 *hit,f32 *end)
 {
   f32 fVar1;
@@ -1221,11 +1205,7 @@ void fn_80166840(int obj,int state,f32 *hit,f32 *end)
   ((GameObject *)obj)->anim.localPosY = end[1] + ((LandedArwingState *)state)->surfaceNormalY;
   ((GameObject *)obj)->anim.localPosZ = end[2] + ((LandedArwingState *)state)->surfaceNormalZ;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void updateConstrainedChaseVelocity(int obj,f32 targetX,f32 targetY,f32 targetZ,f32 blend)
 {
   LandedArwingState *state;
@@ -1304,11 +1284,7 @@ void updateConstrainedChaseVelocity(int obj,f32 targetX,f32 targetY,f32 targetZ,
     ((GameObject *)obj)->anim.velocityZ = vz;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80166444(int obj,int state)
 {
   f32 one;
@@ -1419,5 +1395,3 @@ void fn_80166444(int obj,int state)
   }
   ((StaffBits *)&((LandedArwingState *)state)->flags92)->b3 = 1;
 }
-#pragma peephole reset
-#pragma scheduling reset

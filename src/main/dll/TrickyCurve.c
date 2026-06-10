@@ -271,8 +271,6 @@ void TrickyCurve_updateBoundsTrigger(int param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -287,8 +285,6 @@ void TrickyCurve_updateBoundsTrigger(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void TrickyCurve_updateEffectRingTrigger(undefined8 param_1,undefined8 param_2,undefined8 param_3,
                                          undefined8 param_4,undefined8 param_5,undefined8 param_6,
                                          undefined8 param_7,undefined8 param_8)
@@ -452,8 +448,6 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1,undefined8 param_2,u
   FUN_80286884();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -468,6 +462,8 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1,undefined8 param_2,u
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void FUN_80207c10(int obj)
 {
   (*gExpgfxInterface)->freeSource2((u32)obj);
@@ -511,8 +507,6 @@ void TrickyCurve_updateState(undefined8 param_1,undefined8 param_2,undefined8 pa
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -527,8 +521,6 @@ void TrickyCurve_updateState(undefined8 param_1,undefined8 param_2,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void sfxplayer_updateEffectHandlePositions(short *param_1)
 {
   int iVar1;
@@ -606,8 +598,6 @@ void sfxplayer_updateEffectHandlePositions(short *param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 #define SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handle, obj, rot, angleStep) \
     do { \
@@ -623,6 +613,8 @@ void sfxplayer_updateEffectHandlePositions(short *param_1)
         } \
     } while (0)
 
+#pragma scheduling off
+#pragma peephole off
 void TrickyCurve_updateEffectHandleRing(int obj)
 {
     SfxplayerState *state = *(SfxplayerState **)(obj + SFXPLAYER_OBJECT_STATE_OFFSET);

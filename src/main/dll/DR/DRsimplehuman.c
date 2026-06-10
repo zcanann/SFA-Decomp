@@ -246,8 +246,6 @@ void FUN_801e9368(int *param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -262,8 +260,6 @@ void FUN_801e9368(int *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801e9690(short *param_1,int param_2)
 {
   ObjAnimComponent *objAnim;
@@ -325,8 +321,6 @@ void FUN_801e9690(short *param_1,int param_2)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -341,6 +335,8 @@ void FUN_801e9690(short *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void FUN_801e983c(undefined8 param_1,double param_2,double param_3,double param_4,undefined8 param_5
                  ,undefined8 param_6,undefined8 param_7,undefined8 param_8,uint param_9,
                  undefined4 param_10,undefined4 param_11,undefined4 param_12,undefined4 param_13,

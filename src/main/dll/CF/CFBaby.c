@@ -193,8 +193,6 @@ void FireFlyLantern_init(int obj, int def)
     }
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -209,6 +207,8 @@ void FireFlyLantern_init(int obj, int def)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 int FUN_80187664(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                 int param_9)
@@ -1801,8 +1801,6 @@ void carryable_break_respawn_update(int obj) {
             break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E3AF8;
@@ -1829,19 +1827,13 @@ extern int cMenuGetSelectedItem(void);
 extern void *getTrickyObject(void);
 extern f32 lbl_803E3B70;
 extern f32 lbl_803E3B78;
-#pragma peephole off
 void flammablevine_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3AF8); }
 void infopoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3B70); }
 void decoration11a_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E3B78); }
-#pragma peephole reset
 
 /* ObjGroup_RemoveObject(x, N) wrappers. */
-#pragma scheduling off
 void flammablevine_free(int x) { ObjGroup_RemoveObject(x, 0x31); }
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void flammablevine_hitDetect(int obj)
 {
     u8 *state;
@@ -1861,11 +1853,7 @@ void flammablevine_hitDetect(int obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void flammablevine_init(int obj, int def)
 {
     u8 *state;
@@ -1901,11 +1889,7 @@ void flammablevine_init(int obj, int def)
         ObjHits_MarkObjectPositionDirty(obj);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void flammablevine_update(int obj)
 {
     u8 *state;
@@ -2015,10 +1999,10 @@ checked_vine_use:
         Sfx_KeepAliveLoopedObjectSound(obj, SFXmv_liftloop);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* Fall_Ladders_free: expgfx interface freeObject callback. */
+#pragma scheduling on
+#pragma peephole on
 void Fall_Ladders_free(int obj) {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
@@ -2059,21 +2043,17 @@ void coldwatercontrol_update(int obj) {
         *(int *)(state + 4) = (int)Obj_GetPlayerObject();
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma peephole off
+#pragma scheduling on
 void coldwatercontrol_init(int obj) {
     int *p = ((int**)obj)[0xb8/4];
     *(f32*)p = lbl_803E3B68;
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x6000);
 }
-#pragma peephole reset
 
 /* landed_arwing_free: free child object + detach link. */
 extern void Obj_FreeObject(int obj);
 #pragma scheduling off
-#pragma peephole off
 void landed_arwing_free(int obj) {
     int o = obj;
     int *p = ((int**)o)[0xb8/4];
@@ -2082,14 +2062,10 @@ void landed_arwing_free(int obj) {
         ObjLink_DetachChild(o, p[0x10/4]);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* landed_arwing_render: visible-guarded render with extra call. */
 extern f32 lbl_803E3BA4;
 extern void landed_arwing_renderPathEffects(int obj);
-#pragma peephole off
-#pragma scheduling off
 void landed_arwing_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
     s32 v = visible;
     if (v != 0) {
@@ -2097,8 +2073,6 @@ void landed_arwing_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
         landed_arwing_renderPathEffects(obj);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 typedef struct LandedArwingFxPoint {
     f32 scale;
@@ -2149,8 +2123,6 @@ extern f32 lbl_803E3B9C;
 extern void objfx_spawnMaskedHitEffect(int obj, int arg4, int arg5, int arg6, void *pos, f32 scale);
 extern void objfx_spawnLightPulse(int obj, int arg4, int arg5, int arg6, void *pos, f32 scale, f32 value);
 
-#pragma scheduling off
-#pragma peephole off
 void landed_arwing_renderPathEffects(int obj) {
     CFLandedArwingState *state;
     u8 i;
@@ -2202,8 +2174,6 @@ void landed_arwing_renderPathEffects(int obj) {
         objfx_spawnLightPulse(obj, 4, 0, 0, scratch.effectPos, lbl_803E3B9C, state->path7Fx);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void loadMapAndParent(int mapId);
 extern int mapGetDirIdx(int mapId);
@@ -2221,8 +2191,6 @@ extern f32 lbl_803E3BB0;
 #define MAP_EVENT_SET(mapId, value) (*gMapEventInterface)->setMode((mapId), (value))
 #define MAP_EVENT_OP(mapId, arg, value) (*gMapEventInterface)->setAnimEvent((mapId), (arg), (value))
 
-#pragma scheduling off
-#pragma peephole off
 int Landed_Arwing_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate) {
     int i;
     int def;
@@ -2399,8 +2367,6 @@ int Landed_Arwing_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void fn_8022F270(int obj, int arg);
 extern void fn_8022F27C(int obj);
@@ -2409,8 +2375,6 @@ extern u8 fn_8012DDA4(void);
 extern void cutSceneFn_8011dd30(void);
 extern f32 lbl_803E3BA0;
 
-#pragma scheduling off
-#pragma peephole off
 void landed_arwing_update(int obj) {
     CFLandedArwingState *state;
     int player;
@@ -2480,25 +2444,17 @@ void landed_arwing_update(int obj) {
             break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* infopoint_update: if low bit on 0xaf, disable button + vtable[0x48]. */
 extern void buttonDisable(int p1, int mask);
-#pragma scheduling off
-#pragma peephole off
 void infopoint_update(int obj) {
     if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) {
         buttonDisable(0, 0x100);
         (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* landed_arwing_init: flag bits, counter, conditional unlock, set callback. */
-#pragma scheduling off
-#pragma peephole off
 void landed_arwing_init(int obj, int param) {
     int *p = ((int**)obj)[0xb8/4];
     ((GameObject *)obj)->objectFlags = ((GameObject *)obj)->objectFlags | 0x2000;
@@ -2508,8 +2464,6 @@ void landed_arwing_init(int obj, int param) {
     }
     ((GameObject *)obj)->animEventCallback = (void *)Landed_Arwing_SeqFn;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E3BB8;
 extern f32 lbl_803E3BBC;
@@ -2518,8 +2472,6 @@ extern f32 lbl_803E3BC4;
 extern int *objFindTexture(int obj, int textureIndex, int materialIndex);
 
 /* landed arwing hit/animation step: handles impact reactions and spawned debris. */
-#pragma scheduling off
-#pragma peephole off
 void landed_arwing_updateHitReaction(int obj, CFLandedArwingState *state) {
     int def;
     int i;
@@ -2587,12 +2539,8 @@ void landed_arwing_updateHitReaction(int obj, CFLandedArwingState *state) {
                                    (ObjAnimEventList *)animScratch);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* landed arwing material flags: mirrors game bits into the damaged texture state. */
-#pragma scheduling off
-#pragma peephole off
 void landed_arwing_updateDamageTexture(int obj, CFLandedArwingState *state) {
     int def;
     int *texture;
@@ -2635,33 +2583,25 @@ void landed_arwing_updateDamageTexture(int obj, CFLandedArwingState *state) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 #define gCarryableInterface lbl_803DCAC0
-#pragma scheduling off
-#pragma peephole off
 void dll_109_init(int obj, u8 *p) {
     *(s16 *)obj = (s16)((s32)p[0x1a] << 8);
     ((GameObject *)obj)->objectFlags |= 0x2000;
     (*(void (*)(int, int *, int))(*(int *)(*gCarryableInterface + 0x4)))(obj, ((GameObject *)obj)->extra, 0x21);
     (*(void (*)(int *, int))(*(int *)(*gCarryableInterface + 0x2c)))(((GameObject *)obj)->extra, 1);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 #pragma dont_inline on
-#pragma scheduling off
+#pragma peephole on
 void decoration11a_expandBoundsWithVertex(f32 *vertex, f32 *maxOut, f32 *minOut) {
     f32 v;
     v = vertex[0]; if (v > maxOut[0]) maxOut[0] = v; else if (v < minOut[0]) minOut[0] = v;
     v = vertex[1]; if (v > maxOut[1]) maxOut[1] = v; else if (v < minOut[1]) minOut[1] = v;
     v = vertex[2]; if (v > maxOut[2]) maxOut[2] = v; else if (v < minOut[2]) minOut[2] = v;
 }
-#pragma scheduling reset
 #pragma dont_inline reset
 
-#pragma scheduling off
 int InfoPoint_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate) {
     s16 *inner = ((GameObject *)obj)->extra;
     int i;
@@ -2674,8 +2614,8 @@ int InfoPoint_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate) {
     }
     return 0;
 }
-#pragma scheduling reset
 
+#pragma scheduling on
 void dll_109_free(int obj) {
     (*(void (*)(int))(*(int *)(*gCarryableInterface + 0x10)))(obj);
 }
@@ -2691,8 +2631,6 @@ void dll_109_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void Obj_SetActiveModelIndex(int *obj, int idx);
 extern f64 lbl_803E3B60;
@@ -2701,8 +2639,6 @@ extern f32 lbl_803E3B54;
 extern f32 lbl_803E3B58;
 extern f32 lbl_803E3B5C;
 
-#pragma scheduling off
-#pragma peephole off
 void Fall_Ladders_update(int obj) {
     int def;
     FallLaddersState *state;
@@ -2748,11 +2684,7 @@ void Fall_Ladders_update(int obj) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void Fall_Ladders_init(int *obj, s8 *def) {
     s16 *state = ((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)((s32)*(s8 *)((char *)def + 0x18) << 8);
@@ -2768,15 +2700,11 @@ void Fall_Ladders_init(int *obj, s8 *def) {
         *(u8 *)((char *)state + 9) = 1;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int textureLoadAsset(int id);
 extern int *gameTextGet(int id);
 extern int lbl_803219A0[];
 extern int lbl_80321990[];
-#pragma scheduling off
-#pragma peephole off
 void infopoint_init(int *obj, u8 *def) {
     u8 *state = ((GameObject *)obj)->extra;
     int *txt;
@@ -2795,8 +2723,6 @@ void infopoint_init(int *obj, u8 *def) {
     *(s16 *)(state + 0x16) = 0;
     ((GameObject *)obj)->objectFlags |= 0x2000;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E3B7C;
 extern f64 lbl_803E3B80;
@@ -2808,8 +2734,6 @@ extern void Model_GetVertexPosition(int *model, int idx, f32 *out);
 extern void PSVECScale(f32 *dst, f32 *src, f32 s);
 extern f32 PSVECMag(f32 *v);
 
-#pragma scheduling off
-#pragma peephole off
 void decoration11a_hitDetect(int obj) {
     s16 modelId;
     f32 *state;
@@ -2888,11 +2812,7 @@ check_decor_objects:
         objects++;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void decoration11a_init(int *obj, u8 *def) {
     ((GameObject *)obj)->anim.rotZ = (s16)((s32)def[24] << 8);
     ((GameObject *)obj)->anim.rotY = (s16)((s32)def[25] << 8);
@@ -2943,5 +2863,3 @@ calc_decor_bounds:
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

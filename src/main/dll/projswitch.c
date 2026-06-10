@@ -518,15 +518,11 @@ void enemy_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int modelLightStruct_getActiveState(int light);
 extern void ModelLightStruct_free(int light);
 extern void fn_80026C54(int p);
 
-#pragma scheduling off
-#pragma peephole off
 void enemy_hitDetect(int obj)
 {
     u8 *state = ((GameObject *)obj)->extra;
@@ -547,16 +543,12 @@ void enemy_hitDetect(int obj)
         fn_80026C54(((EnemyState *)state)->unk36C);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void fn_80026C88(int p);
 extern void mm_free(int p);
 extern void smallbasket_stopLoopSfx(int obj, u8 *state);
 extern void Obj_FreeObject(int obj);
 
-#pragma scheduling off
-#pragma peephole off
 void enemy_free(int obj, int flag)
 {
     u8 *child;
@@ -600,8 +592,6 @@ void enemy_free(int obj, int flag)
     (*gExpgfxInterface)->freeSource(obj);
     ObjGroup_RemoveObject(obj, 3);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern u8 *getTrickyObject(void);
 extern u8 *Obj_GetPlayerObject(void);
@@ -623,8 +613,6 @@ extern f32 lbl_803E2574;
 extern f32 lbl_803E2600;
 
 
-#pragma scheduling off
-#pragma peephole off
 void enemy_update(int obj)
 {
     u8 *player;
@@ -787,8 +775,6 @@ void enemy_update(int obj)
     }
     objAnimFn_8014a9f0(obj, state);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void fn_80151954(int obj, u8 *state);
 extern void fn_801522E0(int obj, u8 *state);
@@ -815,8 +801,6 @@ extern u8 lbl_8031DBE4[];
 extern f32 lbl_803E257C;
 extern f32 lbl_803E25B0;
 
-#pragma scheduling off
-#pragma peephole off
 void enemy_init(int obj, u8 *setup, int flag)
 {
     u8 *state = ((GameObject *)obj)->extra;
@@ -1019,5 +1003,3 @@ void enemy_init(int obj, u8 *setup, int flag)
         ((EnemyState *)state)->unk2AC = lbl_803E25B0;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

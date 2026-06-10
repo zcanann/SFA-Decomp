@@ -1175,8 +1175,6 @@ void pushable_free(int *obj) {
     }
     ObjGroup_RemoveObject(obj, 5);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* 8b "li r3, N; blr" returners. */
 int pushable_getExtraSize(void) { return 0x148; }
@@ -1194,7 +1192,7 @@ extern f32 lbl_803E3618;
 extern f32 lbl_803E3620;
 extern f32 lbl_803E3628;
 extern f32 lbl_803E362C;
-#pragma scheduling off
+#pragma peephole on
 void flameblast_render(int *obj) {
     f32 vec[3];
     f32 f = lbl_803E362C * *(f32 *)((GameObject *)obj)->extra + lbl_803E3628;
@@ -1203,12 +1201,9 @@ void flameblast_render(int *obj) {
     vec[2] = lbl_803E3618;
     fn_80098B18((int)obj, f, 2, 0, 0, (int)vec);
 }
-#pragma scheduling reset
 
 /* 16b chained patterns. */
-#pragma scheduling off
 void objSetAnimSpeedTo1(int *obj) { u8 v = 0x1; *((u8*)((int**)obj)[0xb8/4] + 0x10) = v; }
-#pragma scheduling reset
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E35E8;
@@ -1217,7 +1212,6 @@ extern f32 lbl_803E3600;
 void invhit_render(int *obj, int a, int b, int c, int d) { objRenderFn_8003b8f4(obj, a, b, c, d, lbl_803E35E8); }
 void iceblast_render(int *obj, int a, int b, int c, int d) { objRenderFn_8003b8f4(obj, a, b, c, d, lbl_803E3600); }
 
-#pragma scheduling off
 #pragma peephole off
 void WarpPoint_render(int *obj, int p1, int p2, int p3, int p4, s8 visible) {
     int *p = *(int **)&((GameObject *)obj)->anim.placementData;
@@ -1232,19 +1226,15 @@ void invhit_free(int obj) {
             break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
+#pragma peephole on
 void iceblast_init(int obj, s16 *p) {
     *(f32 *)((GameObject *)obj)->extra = (f32)*(s16 *)((char *)p + 0x1a);
     ObjHits_SetTargetMask(obj, 1);
 }
-#pragma scheduling reset
 
 extern void warpToMap(int mapId, int flag);
 
-#pragma scheduling off
 #pragma peephole off
 int WarpPoint_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate) {
     int *p = *(int **)&((GameObject *)obj)->anim.placementData;
@@ -1259,16 +1249,12 @@ int WarpPoint_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 timeDelta;
 extern f32 lbl_803E3630;
 extern f32 lbl_803E3634;
 extern int fn_8017805C(int *obj, f32 *state);
 
-#pragma scheduling off
-#pragma peephole off
 void flameblast_update(int *obj) {
     f32 *state = ((GameObject *)obj)->extra;
     state[0] = state[0] + timeDelta;
@@ -1288,8 +1274,6 @@ void flameblast_update(int *obj) {
     ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.velocityY * state[0] + state[2];
     ((GameObject *)obj)->anim.localPosZ = ((GameObject *)obj)->anim.velocityZ * state[0] + state[3];
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E3604;
 extern f32 lbl_803E3608;
@@ -1298,8 +1282,6 @@ extern void *Obj_GetPlayerObject(void);
 extern void vecRotateZXY(void *in, void *out);
 extern f32 lbl_803E3638;
 
-#pragma scheduling off
-#pragma peephole off
 void flameblast_init(int *obj, u8 *def) {
     f32 *state = ((GameObject *)obj)->extra;
     fn_8017805C(obj, state);
@@ -1373,8 +1355,6 @@ void iceblast_update(int *obj) {
     ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.velocityY * timeDelta + ((GameObject *)obj)->anim.localPosY;
     ((GameObject *)obj)->anim.localPosZ = ((GameObject *)obj)->anim.velocityZ * timeDelta + ((GameObject *)obj)->anim.localPosZ;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern s16 *getTrickyObject(void);
 extern int fn_80138F90(void);
@@ -1382,8 +1362,6 @@ extern f32 *trickyGetQueuedPathParticlePos(s16 *tricky);
 extern f32 lbl_803E361C;
 extern f32 lbl_803E3624;
 
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_common_subs off
 int fn_8017805C(int *obj, f32 *state) {
     s16 *tricky;
@@ -1427,11 +1405,7 @@ int fn_8017805C(int *obj, f32 *state) {
     return 1;
 }
 #pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_common_subs off
 typedef struct InvHitState {
     f32 anchorX;
@@ -1526,8 +1500,6 @@ void invhit_init(int *obj, u8 *def) {
     ((GameObject *)obj)->objectFlags = ((GameObject *)obj)->objectFlags | 0x6000;
 }
 #pragma opt_common_subs reset
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void *Obj_GetPlayerObject2(void);
 extern int playerIsDisguised(void *player);
@@ -1542,8 +1514,6 @@ extern f32 lbl_803E3528;
 extern f64 lbl_803E3530;
 extern f64 lbl_803E3538;
 
-#pragma scheduling off
-#pragma peephole off
 void pushable_update(int *obj) {
     PushableState *state;
     u8 *def;
@@ -1614,8 +1584,6 @@ void pushable_update(int *obj) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 sqrtf(f32 x);
 extern u32 fn_80296118(void);
@@ -1627,8 +1595,6 @@ extern f32 lbl_803E35EC;
 extern f32 lbl_803E35F0;
 extern f32 lbl_803E35F4;
 
-#pragma scheduling off
-#pragma peephole off
 void invhit_update(int *obj) {
     InvHitState *state;
     int i;
@@ -1757,8 +1723,6 @@ void invhit_update(int *obj) {
     }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int getCurMapLayer(void);
 extern MapEventInterface **gMapEventInterface;
@@ -1768,8 +1732,6 @@ extern u8 lbl_803DCDE0;
 extern f32 lbl_803E35D8;
 extern f32 lbl_803E35DC;
 
-#pragma scheduling off
-#pragma peephole off
 void WarpPoint_update(int *obj) {
     char *def;
     s16 *state;
@@ -1892,8 +1854,6 @@ void WarpPoint_update(int *obj) {
         break;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void objSetSlot(s16 *obj, int slot);
 extern int modelFileHeaderGetCullDistance(int hdr);
@@ -1909,8 +1869,6 @@ extern f32 lbl_803E3558;
 extern f32 lbl_803E3540;
 extern f32 lbl_803E3588;
 
-#pragma scheduling off
-#pragma peephole off
 void pushable_init(s16 *obj, char *def) {
     PushableState *state;
     int *model;
@@ -2076,8 +2034,6 @@ void pushable_init(s16 *obj, char *def) {
         fn_8007FE04(lbl_803AC6E0, &lbl_803DDAB8, ((ObjPlacement *)def)->mapId);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 extern int lbl_802C2270[];
@@ -2101,8 +2057,6 @@ extern f32 lbl_803E35C8;
 typedef struct { int a, b, c, d; } PushableBox16;
 typedef struct { u8 pad[0x24]; f32 vx; u8 pad2[4]; f32 vz; } PushableObjPos;
 
-#pragma scheduling off
-#pragma peephole off
 void pushable_hitDetect(int *obj) {
     PushableState *state;
     f32 *w;
@@ -2277,8 +2231,6 @@ void pushable_hitDetect(int *obj) {
         e += 0xc;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
@@ -2300,8 +2252,6 @@ typedef struct {
     s16 pad3;
 } SetScaleParams;
 
-#pragma scheduling off
-#pragma peephole off
 int pushable_setScale(int *obj, s16 *tgt, int flag, f32 dx, f32 dz) {
     SetScaleParams *pp;
     PushableState *state;
@@ -2520,13 +2470,9 @@ int pushable_setScale(int *obj, s16 *tgt, int flag, f32 dx, f32 dz) {
     }
     return ret;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void fn_8003B5E0(int a, int b, int c, int d);
 
-#pragma scheduling off
-#pragma peephole off
 void pushable_render(int *obj, int p1, int p2, int p3, int p4, s8 visible) {
     if (visible != 0) {
         PushableState *state = ((GameObject *)obj)->extra;
@@ -2562,5 +2508,3 @@ void pushable_render(int *obj, int p1, int p2, int p3, int p4, s8 visible) {
         objRenderFn_8003b8f4(obj, p1, p2, p3, p4, lbl_803E3588);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

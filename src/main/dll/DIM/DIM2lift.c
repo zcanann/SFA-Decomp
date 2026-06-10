@@ -633,8 +633,6 @@ void DIM2icicle_createStateLight(int obj, u8 isGreen)
   modelLightStruct_setAffectsAabbLightSelection(lightSlot[0], 1);
   modelLightStruct_setGlowProjectionRadius(lightSlot[0], lbl_803E4BBC);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -650,6 +648,8 @@ void DIM2icicle_createStateLight(int obj, u8 isGreen)
  * PAL Size: TODO
  */
 undefined4
+#pragma scheduling on
+#pragma peephole on
 FUN_801bb450(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,int param_10,
             undefined4 param_11,undefined4 param_12,undefined4 param_13,undefined4 param_14,
@@ -1020,11 +1020,7 @@ int fn_801BB1EC(int* obj, u8* state, f32 weight) {
     ((void(*)(int*, u8*, f32, int))((void**)*gPlayerInterface)[12])(obj, state, weight, 4);
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void DIM2icicle_spawnBlueWhiteEffect(int* sourceObj, f32* velocity) {
     int* spawnedObj;
     void* setup;
@@ -1062,9 +1058,9 @@ int fn_801BB2B0(int* obj, u8* state) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
+#pragma scheduling on
+#pragma peephole on
 int fn_801BA5F0(int* obj) {
     int* state = *(int**)((char*)obj + 0xb8);
     switch (((GroundBaddieState *)state)->targetState) {
@@ -1106,11 +1102,7 @@ int fn_801BA4B8(int obj, int p2)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int fn_801BA880(int obj, int p2)
 {
   f32 zeroProgress;
@@ -1147,12 +1139,8 @@ int fn_801BA880(int obj, int p2)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
-#pragma peephole off
-#pragma scheduling off
 int fn_801BA5A8(int obj, int param2)
 {
     if (*(s8 *)&((BaddieState *)param2)->moveDone != 0) {
@@ -1160,14 +1148,10 @@ int fn_801BA5A8(int obj, int param2)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E4C00;
 extern int lbl_80325AA0[6];
 
-#pragma peephole off
-#pragma scheduling off
 int fn_801BA958(int obj, int param2)
 {
     if (*(s8 *)&((BaddieState *)param2)->moveJustStartedA != 0) {
@@ -1193,15 +1177,11 @@ int fn_801BA958(int obj, int param2)
     (*(int (**)(int, int, int, int, void *))(*(int *)gPlayerInterface + 0x34))(obj, param2, 7, 1, lbl_80325AA0);
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int *gBaddieControlInterface;
 extern int lbl_80325960[16];
 extern f32 lbl_803259A0[16];
 
-#pragma peephole off
-#pragma scheduling off
 int fn_801BB0D8(int obj, int param2, f32 fParam)
 {
     u16 local_c;
@@ -1217,13 +1197,9 @@ int fn_801BB0D8(int obj, int param2, f32 fParam)
     (*(int (**)(int, int, int, f32))(*(int *)gPlayerInterface + 0x20))(obj, param2, 8, fParam);
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E4C04;
 
-#pragma peephole off
-#pragma scheduling off
 int fn_801BAA84(int obj, int param2, f32 fParam)
 {
     ObjHits_SetHitVolumeSlot(obj, 9, 1, -1);
@@ -1243,8 +1219,6 @@ int fn_801BAA84(int obj, int param2, f32 fParam)
     (*(int (**)(int, int, int, f32))(*(int *)gPlayerInterface + 0x30))(obj, param2, 0xf0, fParam);
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern u32 gDIMbossSequenceFlags;
 extern int lbl_803DBF30;
@@ -1255,8 +1229,6 @@ extern f32 lbl_803E4BD0;
 extern f32 lbl_803E4BE8;
 extern f32 lbl_803E4BEC;
 
-#pragma peephole off
-#pragma scheduling off
 int fn_801BA780(int obj, int param2)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -1282,14 +1254,10 @@ int fn_801BA780(int obj, int param2)
     (*(int (**)(int, int, int, int, void *))(*(int *)gPlayerInterface + 0x34))(obj, param2, 0, 1, &lbl_803DBF30);
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E4BC0;
 extern f32 lbl_803E4BD4;
 
-#pragma peephole off
-#pragma scheduling off
 int fn_801BA654(int obj, int param2)
 {
     f32 v;
@@ -1314,15 +1282,11 @@ int fn_801BA654(int obj, int param2)
     (*(int (**)(int, int, int, int, void *))(*(int *)gPlayerInterface + 0x34))(obj, param2, 0, 0, &lbl_803DBF30);
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E4C08;
 extern f32 lbl_803E4C0C;
 extern f32 lbl_803E4C10;
 
-#pragma peephole off
-#pragma scheduling off
 int fn_801BAB88(int obj, int param2, f32 arg)
 {
     f32 h;
@@ -1349,15 +1313,11 @@ int fn_801BAB88(int obj, int param2, f32 arg)
     (*(int (**)(int, int, f32, int))(*(int *)gPlayerInterface + 0x30))(obj, param2, arg, 0xf0);
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E4C14;
 extern f32 lbl_803E4C18;
 extern f32 lbl_803E4C1C;
 
-#pragma peephole off
-#pragma scheduling off
 int fn_801BACB8(int obj, int param2, f32 arg)
 {
     f32 h;
@@ -1386,13 +1346,9 @@ int fn_801BACB8(int obj, int param2, f32 arg)
     (*(int (**)(int, int, f32, int))(*(int *)gPlayerInterface + 0x30))(obj, param2, arg, 0xf0);
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E4C20;
 
-#pragma peephole off
-#pragma scheduling off
 int fn_801BAE00(int obj, int param2, f32 arg)
 {
     f32 h;
@@ -1422,11 +1378,7 @@ int fn_801BAE00(int obj, int param2, f32 arg)
     (*(int (**)(int, int, f32, int))(*(int *)gPlayerInterface + 0x30))(obj, param2, arg, 0xf0);
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 int fn_801BAF58(int obj, int param2, f32 arg)
 {
     int t;
@@ -1460,16 +1412,12 @@ int fn_801BAF58(int obj, int param2, f32 arg)
     (*(int (**)(int, int, f32, int))(*(int *)gPlayerInterface + 0x30))(obj, param2, arg, 0xf0);
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E4BBC;
 extern s16 lbl_80325AC8[30];
 extern s16 lbl_803DBF38[4];
 extern u8 gDIMbossAnimController[];
 
-#pragma peephole off
-#pragma scheduling off
 int fn_801BA224(int obj, int param2)
 {
     u16 local_c;
@@ -1511,5 +1459,3 @@ int fn_801BA224(int obj, int param2)
     fn_801BC2D8(obj, param2);
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset

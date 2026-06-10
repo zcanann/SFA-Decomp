@@ -193,4 +193,3 @@ void GXReadXfRasMetric(u32* xf_wait_in, u32* xf_wait_out, u32* ras_busy, u32* cl
     *xf_wait_in = __GXReadCPCounterU32(36, 37);
     *xf_wait_out = __GXReadCPCounterU32(38, 39);
 }
-#pragma scheduling reset

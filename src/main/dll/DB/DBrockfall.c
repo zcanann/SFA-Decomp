@@ -80,11 +80,7 @@ static void FEseqobject_spawnEffect(int obj, FEseqobjectEffectParams *params)
 {
   (*gPartfxInterface)->spawnObject((void *)obj, 0x85, params, 1, -1, NULL);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling on
-#pragma peephole on
 static int FEseqobject_findControlObject(void)
 {
   int count;
@@ -103,9 +99,9 @@ static int FEseqobject_findControlObject(void)
   }
   return found;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
   FEseqobjectEffectParams effect;
@@ -274,8 +270,6 @@ void FUN_801df45c(undefined2 *param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -290,8 +284,6 @@ void FUN_801df45c(undefined2 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 uint FUN_801df69c(int param_1,undefined4 param_2,int param_3)
 {
   bool bVar1;
@@ -332,8 +324,6 @@ uint FUN_801df69c(int param_1,undefined4 param_2,int param_3)
   }
   return uVar3;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -348,6 +338,8 @@ uint FUN_801df69c(int param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void FUN_801df784(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11)
@@ -401,11 +393,11 @@ void FUN_801df788(int param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
+#pragma scheduling off
+#pragma peephole off
 void paymentkiosk_release(void) {}
 void paymentkiosk_initialise(void) {}
 void FEseqobject_free(void) {}

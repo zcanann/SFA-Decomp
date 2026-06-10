@@ -75,9 +75,7 @@ void fn_802315EC(int obj, ARWGeneratorState *state, ARWGeneratorSetup *setup)
         fn_8023134C(newObj, setup->projectileSpeed);
     }
 }
-#pragma peephole reset
 
-#pragma peephole on
 void fn_802317A8(int obj, ARWGeneratorState *state, ARWGeneratorSetup *setup)
 {
     int newObj;
@@ -101,4 +99,3 @@ void fn_802317A8(int obj, ARWGeneratorState *state, ARWGeneratorSetup *setup)
         fn_80231028(newObj, setup->projectileSpeed);
     }
 }
-#pragma peephole reset

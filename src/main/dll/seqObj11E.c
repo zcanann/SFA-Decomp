@@ -210,8 +210,6 @@ void fn_80152440(int obj, int p, int p3, int msg)
   ((GameObject *)obj)->anim.velocityY = fz;
   ((GameObject *)obj)->anim.velocityX = fz;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* EN v1.0 0x80152514  size: 1408b  main update: child-zap timer, curve
  * follow, heading steps, landing sfx, light-pulse fx, child spark spawn. */
@@ -256,8 +254,6 @@ typedef struct {
     f32 d;
 } SeqFxParams;
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80152514(int *obj, u8 *state)
 {
     int *def;
@@ -405,8 +401,6 @@ void fn_80152514(int *obj, u8 *state)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* EN v1.0 0x80152B90  size: 816b  firefly hover update: circle drift, bob
  * between heights, periodically drop a spawned object, ambient sfx timers. */
@@ -428,8 +422,6 @@ extern f32 lbl_803E288C;
 extern f32 lbl_803E2890;
 extern f32 lbl_803E2894;
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80152B90(int *obj, u8 *state)
 {
     f32 y;
@@ -500,11 +492,7 @@ void fn_80152B90(int *obj, u8 *state)
         Sfx_PlayFromObject(obj, 0x24a);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int fn_80152370(int obj, int p2)
 {
   extern void *Obj_GetPlayerObject(void);
@@ -530,8 +518,6 @@ int fn_80152370(int obj, int p2)
   *(s16 *)(no + 0x20) = 149;
   return (int)Obj_SetupObject(no, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -546,6 +532,8 @@ int fn_80152370(int obj, int p2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801523bc(uint param_1,int param_2)
 {
   FUN_80006824(param_1,SFXen_cavedirt22);
@@ -767,9 +755,7 @@ void fn_80152A94(int obj, int p)
   ((GameObject *)obj)->anim.hitboxScale = lbl_803E2860;
   Sfx_AddLoopedObjectSound(obj, SFXsp_literun115);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void fn_80152B2C(int obj, int p, int param3, int msg)
 {
   extern void Sfx_PlayFromObject(int obj, int sfx);
@@ -782,7 +768,6 @@ void fn_80152B2C(int obj, int p, int param3, int msg)
   *(u32 *)&((BaddieState *)p)->unk2E4 |= 0x20;
   ((BaddieState *)p)->reactionFlags |= 0x8;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -797,6 +782,7 @@ void fn_80152B2C(int obj, int p, int param3, int msg)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
 void FUN_80152b8c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9,int param_10,undefined4 param_11,int param_12,undefined4 param_13,
@@ -1053,8 +1039,6 @@ void fn_801522E0(int* obj, u8* state) {
     }
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* EN v1.0 0x80152040  size: 672b  state-table driver: walks the 12-byte
  * lbl_8031F290 state rows, advancing on GameBit + sequence flags and kicking
@@ -1073,8 +1057,6 @@ extern Seq11ERow lbl_8031F290[];
 extern void fn_80151C68(int *obj, u8 *state);
 extern void fn_80151DB8(int *obj, u8 *state);
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80152040(int *obj, u8 *state)
 {
     int *def = *(int **)&((GameObject *)obj)->anim.placementData;
@@ -1136,5 +1118,3 @@ void fn_80152040(int *obj, u8 *state)
         fn_80151DB8(obj, state);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

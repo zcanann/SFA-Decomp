@@ -95,8 +95,8 @@ void wctemplebri_updateModelWarp(int obj, int p2)
     if (v > WCTEMPLEBRI_WAVE_WRAP) v -= WCTEMPLEBRI_WAVE_WRAP;
     state->wavePhaseB = (u16)v;
 }
-#pragma peephole reset
 
+#pragma peephole off
 int wctemplebri_interactCallback(int obj, int p2, ObjAnimUpdateState *animUpdate)
 {
     ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;

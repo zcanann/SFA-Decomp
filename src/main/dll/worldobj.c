@@ -445,11 +445,7 @@ void fn_801CEE0C(int p1, int p2)
       break;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_801CED2C(int p1, int p2)
 {
   extern int ObjTrigger_IsSetById(int, int);
@@ -480,8 +476,6 @@ void fn_801CED2C(int p1, int p2)
       break;
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 timeDelta;
 extern f32 lbl_803E520C;
@@ -493,8 +487,6 @@ typedef struct {
     f32 pos[3];
 } WoPartfxBlock;
 
-#pragma scheduling off
-#pragma peephole off
 int fn_801CE078(int *obj, u8 *st) {
     u8 cv;
     int snd;
@@ -561,8 +553,6 @@ int fn_801CE078(int *obj, u8 *st) {
     }
     return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 oneOverTimeDelta;
 extern f32 lbl_803E523C;
@@ -585,8 +575,6 @@ extern int Curve_AdvanceAlongPath(u8 *cv, f32 t);
 extern int getAngle(f32 a, f32 b);
 extern f32 sqrtf(f32 x);
 
-#pragma scheduling off
-#pragma peephole off
 void fn_801CEA14(short *obj, u8 *st, u8 *p3) {
     switch (fn_801CE078((int *)obj, st)) {
     case -1:
@@ -664,8 +652,6 @@ void fn_801CEA14(short *obj, u8 *st, u8 *p3) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E5228;
 extern f32 lbl_803E522C;
@@ -689,8 +675,6 @@ extern void fn_80163980(int o);
 extern void Obj_FreeObject(int o);
 extern ScreenTransitionInterface **gScreenTransitionInterface;
 
-#pragma scheduling off
-#pragma peephole off
 void fn_801CE2BC(int *obj, u8 *st, short *p3) {
     int near_ = ObjGroup_FindNearestObject(0xf, obj, 0);
     switch (st[0x408]) {
@@ -870,5 +854,3 @@ void fn_801CE2BC(int *obj, u8 *st, short *p3) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

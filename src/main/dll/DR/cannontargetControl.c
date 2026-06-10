@@ -249,8 +249,6 @@ void FUN_801a1df8(int param_1,int param_2)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -265,8 +263,6 @@ void FUN_801a1df8(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801a1ec4(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
                  undefined4 param_5,undefined4 param_6)
 {
@@ -296,8 +292,6 @@ void FUN_801a1ec4(undefined4 param_1,undefined4 param_2,undefined4 param_3,undef
   FUN_80286884();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -312,6 +306,8 @@ void FUN_801a1ec4(undefined4 param_1,undefined4 param_2,undefined4 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int blasted_getExtraSize(void)
 {
   return 0x14;
@@ -482,8 +478,6 @@ void FUN_801a1fb8(int *param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -498,8 +492,6 @@ void FUN_801a1fb8(int *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801a2350(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
@@ -773,8 +765,6 @@ void FUN_801a2350(undefined8 param_1,double param_2,double param_3,undefined8 pa
   FUN_80286884();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int *lbl_803DCAC0; /* carryable-object interface singleton */
 extern void ObjMsg_AllocQueue(int obj, int capacity);
@@ -795,6 +785,8 @@ typedef struct {
  * carryable interface and obj groups, zeroes the roll/contact state, seeds
  * the hit radius from the model's bound halfword, and latches the
  * indestructible bit for the cannon-range variant (type 0x754). */
+#pragma scheduling off
+#pragma peephole off
 void gunpowderbarrel_init(int obj, u8 *def)
 {
     GunpowderBarrelState *state = ((GameObject *)obj)->extra;

@@ -602,8 +602,8 @@ int dim2prisonmammoth_stateHandler00(int* obj) {
             return 0;
     }
 }
-#pragma peephole reset
 
+#pragma peephole on
 void dim2prisonmammoth_release(void) {}
 
 #pragma scheduling off
@@ -611,9 +611,7 @@ void fn_802BC788(int a, int b)
 {
     playerTailFn_80026b3c((int *)b, *(int *)b, *(int *)(*(int *)((char *)a + 0xb8) + 0x14f8), 0);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void dim2prisonmammoth_initialise(void)
 {
     ((void **)gDim2PrisonMammothStateHandlers)[0] = (void *)dim2prisonmammoth_stateHandler00;
@@ -622,9 +620,7 @@ void dim2prisonmammoth_initialise(void)
     ((void **)gDim2PrisonMammothStateHandlers)[3] = (void *)dim2prisonmammoth_stateHandler03;
     gDim2PrisonMammothDefaultStateHandler = (void *)dim2prisonmammoth_defaultStateHandler;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 int dim2prisonmammoth_stateHandler03(int obj, int p2)
 {
@@ -646,11 +642,7 @@ int dim2prisonmammoth_stateHandler03(int obj, int p2)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int dim2prisonmammoth_stateHandler02(int obj, int p2)
 {
     int inner = *(int *)&((GameObject *)obj)->extra;
@@ -674,11 +666,7 @@ int dim2prisonmammoth_stateHandler02(int obj, int p2)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int dim2prisonmammoth_stateHandler01(int obj, int p2)
 {
     int inner = *(int *)&((GameObject *)obj)->extra;
@@ -706,11 +694,7 @@ int dim2prisonmammoth_stateHandler01(int obj, int p2)
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void dim2prisonmammoth_init(int obj, int p2)
 {
     int inner;
@@ -725,11 +709,7 @@ void dim2prisonmammoth_init(int obj, int p2)
     *(u8 *)((char *)inner + 0x25f) = 0;
     ((GameObject *)obj)->objectFlags |= 0x2000;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int fn_802BC3F0(int obj, int p2, ObjAnimUpdateState *animUpdate)
 {
     struct {
@@ -759,11 +739,7 @@ int fn_802BC3F0(int obj, int p2, ObjAnimUpdateState *animUpdate)
                           &((GameObject *)obj)->anim.modelState->overrideWorldPosZ);
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void dim2prisonmammoth_update(int obj)
 {
     struct {
@@ -805,5 +781,3 @@ void dim2prisonmammoth_update(int obj)
     (*(void (*)(int, int, f32, f32, int, void *))(*(int *)(*gPlayerInterface + 0x8)))(obj, inner, timeDelta, timeDelta, (int)gDim2PrisonMammothStateHandlers, &gDim2PrisonMammothDefaultStateHandler);
     saveGame_saveObjectPos(obj);
 }
-#pragma peephole reset
-#pragma scheduling reset

@@ -362,8 +362,6 @@ void player_setScale(f32 dt, short *moveState, uint *obj, uint flags)
 
   lbl_803DD440 = 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -378,6 +376,8 @@ void player_setScale(f32 dt, short *moveState, uint *obj, uint flags)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_800d9090(double param_1,double param_2,short *param_3,int param_4)
 {
   float fVar1;
@@ -3444,7 +3444,6 @@ int curves_findNearObj(int obj,int *curveTypes,int typeCount,int action,char bbo
   }
   return -1;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -3459,6 +3458,7 @@ int curves_findNearObj(int obj,int *curveTypes,int typeCount,int action,char bbo
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
 void FUN_800dece0(void)
 {
   float fVar1;
@@ -4137,8 +4137,6 @@ f32 curves_lengthFn24(u32 a, u32 b, f32 *posA, f32 *posB, f32 t1, f32 t2)
     }
     return total;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -4167,8 +4165,6 @@ f32 curves_lengthFn24(u32 a, u32 b, f32 *posA, f32 *posB, f32 t1, f32 t2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 int walkGroupFn_800db3e4(float *prevPoint,float *nextPoint,uint currentWalkGroupIndex)
 {
   u8 k;
@@ -4283,8 +4279,6 @@ int walkGroupFn_800db3e4(float *prevPoint,float *nextPoint,uint currentWalkGroup
 
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -4299,8 +4293,6 @@ int walkGroupFn_800db3e4(float *prevPoint,float *nextPoint,uint currentWalkGroup
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 uint isPointWithinPatchGroup(float *point,uint patchGroupIndex,int groupId)
 {
   u8 k;
@@ -4334,8 +4326,6 @@ uint isPointWithinPatchGroup(float *point,uint patchGroupIndex,int groupId)
   OSReport(sObjfsaIsPointWithinPatchGroupError);
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -4350,8 +4340,6 @@ uint isPointWithinPatchGroup(float *point,uint patchGroupIndex,int groupId)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 u16 getPatchGroup(float *point,int patchGroupIndex,undefined4 param_3,undefined4 param_4,
                   u8 startPatchIndex)
 {
@@ -4397,8 +4385,6 @@ u16 getPatchGroup(float *point,int patchGroupIndex,undefined4 param_3,undefined4
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -4413,7 +4399,7 @@ u16 getPatchGroup(float *point,int patchGroupIndex,undefined4 param_3,undefined4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
+#pragma peephole on
 uint isInWalkGroupOrPatch(float *point)
 {
   s16 idx;
@@ -4453,7 +4439,6 @@ uint isInWalkGroupOrPatch(float *point)
   }
   return 0;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -4468,7 +4453,6 @@ uint isInWalkGroupOrPatch(float *point)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 #pragma peephole off
 int Objfsa_GetWalkGroupIndexAtPoint(float *point,ObjfsaWalkGroupPatchInfo *patchInfo)
 {
@@ -4517,8 +4501,6 @@ int Objfsa_GetWalkGroupIndexAtPoint(float *point,ObjfsaWalkGroupPatchInfo *patch
   }
   return wgi;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -4533,8 +4515,6 @@ int Objfsa_GetWalkGroupIndexAtPoint(float *point,ObjfsaWalkGroupPatchInfo *patch
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 u16 Objfsa_GetPatchGroupIdAtPoint(float *point)
 {
   int n;
@@ -4565,8 +4545,6 @@ u16 Objfsa_GetPatchGroupIdAtPoint(float *point)
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -4604,8 +4582,6 @@ u16 Objfsa_GetPatchGroupIdAtPoint(float *point)
         }                                                                          \
     }
 
-#pragma scheduling off
-#pragma peephole off
 int mathFn_800dbff0(float *point)
 {
     s16 down;
@@ -4641,8 +4617,6 @@ int mathFn_800dbff0(float *point)
     WALKGROUP_TRY_RETURN(down);
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -4660,6 +4634,8 @@ int mathFn_800dbff0(float *point)
 
 
 /* Trivial 4b 0-arg blr leaves. */
+#pragma scheduling on
+#pragma peephole on
 void player_release(void) {}
 void player_initialise(void) {}
 void UIController_release(void) {}
@@ -4706,7 +4682,6 @@ void player_init(int unused, void *obj, int a, int b) {
     *(s32 *)((char *)obj + 0x340) = -1;
     *(u8 *)((char *)obj + 0x358) = 0;
 }
-#pragma scheduling on
 
 /* fn_800D9F38 ? large init updating multiple float fields based on b's bytes */
 extern float mathSinf(double angle);
@@ -4714,8 +4689,6 @@ extern float mathCosf(double x);
 extern f32 lbl_803E05D0;
 extern f32 lbl_803E05D4;
 extern f32 lbl_803E05D8;
-#pragma peephole off
-#pragma scheduling off
 int fn_800D9F38(void *a, void *b) {
     char *A = (char *)a;
     char *B = (char *)b;
@@ -4754,7 +4727,6 @@ int fn_800D9F38(void *a, void *b) {
     }
     return 0;
 }
-#pragma scheduling on
 
 /* player_updateVel */
 extern f32 lbl_803E05A4;
@@ -4778,7 +4750,6 @@ extern void setMatrixFromObjectPos(f32 *matrix, void *objpos);
 extern void Matrix_TransformPoint(f32 *matrix, f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ);
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 
-#pragma scheduling off
 void playerRunStateMachine(char *pos, char *state, float dt, int stateFns) {
     int changed;
     int done;
@@ -4880,9 +4851,7 @@ void playerRunStateMachine(char *pos, char *state, float dt, int stateFns) {
         *(s16 *)(pos + 4) = *(s16 *)(pos + 4) - (s16)decay;
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void player_update(char *pos, char *state, float dt, float pathDt, int stateFns, int auxStateFns) {
     struct {
         s16 rotX;
@@ -5023,10 +4992,7 @@ void player_update(char *pos, char *state, float dt, float pathDt, int stateFns,
         }
     }
 }
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void player_updateVel(char *p, char *obj, int unused) {
     float fcos, fsin;
     if (((s32)(s8)*(obj + 0x34c) & 1) != 0) {
@@ -5051,15 +5017,12 @@ void player_updateVel(char *p, char *obj, int unused) {
         playerRunStateMachine(p, obj, timeDelta, unused);
     }
 }
-#pragma scheduling on
 
 
 /* RomCurve_setA4: similar to fn_800D9F38 branch2 with different consts */
 extern f32 lbl_803E0610;
 extern f32 lbl_803E0614;
 extern f32 lbl_803E0618;
-#pragma peephole off
-#pragma scheduling off
 void RomCurve_setA4(void *a, void *b) {
     char *A = (char *)a;
     f32 t;
@@ -5079,7 +5042,6 @@ void RomCurve_setA4(void *a, void *b) {
         *(f32 *)(A + 0x104) = lbl_803E0610 * t;
     }
 }
-#pragma scheduling on
 
 extern void Curve_BuildHermiteCoeffs(void);
 extern void Curve_EvalHermite(void);
@@ -5089,8 +5051,6 @@ extern f32 gFloatZero;
 extern f32 gFloatNegOne;
 extern void *memcpy(void *dst, const void *src, u32 n);
 
-#pragma peephole off
-#pragma scheduling off
 int RomCurve_setClosed(float *state, int closed) {
     float savedPhase;
     float t;
@@ -5160,7 +5120,6 @@ int RomCurve_setClosed(float *state, int closed) {
     state[0] = savedPhase;
     return 0;
 }
-#pragma scheduling on
 
 #define ROMCURVE_ADD_LINK(off, mask, wantSet)                                     \
     neighborId = *(s32 *)(curve + (off));                                         \
@@ -5206,8 +5165,6 @@ int RomCurve_setClosed(float *state, int closed) {
             lbl_803E0618);                                                        \
     *(f32 *)(stateBytes + 0x104) = lbl_803E0610 * t
 
-#pragma peephole off
-#pragma scheduling off
 u8 RomCurve_goNextPoint(float *state) {
     char *stateBytes;
     int candidateIds[4];
@@ -5301,10 +5258,10 @@ u8 RomCurve_goNextPoint(float *state) {
     }
     return 0;
 }
+
+
 #pragma scheduling on
 #pragma peephole on
-
-
 static inline f32 RomCurveNode_GetHermiteTangent(void *node, int angleOffset, int useSin)
 {
     f32 angle;
@@ -5387,11 +5344,7 @@ failClear:
 fail:
     return 1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int RomCurve_getControlPointId_2A(int curve, int exclude, int pickIdx) {
     int candidates[4];
     int neighbor;
@@ -5437,16 +5390,12 @@ int RomCurve_getControlPointId_2B(int curve, int exclude, int pickIdx) {
     }
     return -1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E0648;
 extern f32 lbl_803E064C;
 extern f32 lbl_803E0650;
 extern f32 lbl_803E0654;
 
-#pragma scheduling off
-#pragma peephole off
 int RomCurve_findProjectedCurveFromStart(f32 x,f32 y,f32 z,int curve,float *outPhase)
 {
   int projected;
@@ -5494,11 +5443,7 @@ int RomCurve_findProjectedCurveFromStart(f32 x,f32 y,f32 z,int curve,float *outP
   *outPhase = gFloatZero;
   return curve;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void curves_getPos(f32 phase,int curve,float *outX,float *outY,float *outZ)
 {
   f32 dy;
@@ -5539,13 +5484,9 @@ void curves_getPos(f32 phase,int curve,float *outX,float *outY,float *outZ)
     *outZ = dz * phase + *(f32 *)(curve + 0x10);
   }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 
-#pragma scheduling off
-#pragma peephole off
 int RomCurve_func2C(float *state, int unused, int startCurveId)
 {
     char *stateBytes;
@@ -5609,11 +5550,7 @@ int RomCurve_func2C(float *state, int unused, int startCurveId)
     curvesMove(state);
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int RomCurve_get(float *state, int obj, int *curveTypes, int curveType, f32 maxDistance)
 {
     char *stateBytes;
@@ -5700,11 +5637,7 @@ int RomCurve_get(float *state, int obj, int *curveTypes, int curveType, f32 maxD
     curvesMove(state);
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int *previousCurveId)
 {
     int startIndex;
@@ -5846,11 +5779,9 @@ int RomCurve_func1C(u32 startCurve, int unused1, int unused2, int *previousCurve
     }
     return candidateIds[selectedIndex];
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* RomCurve_stepClamped: keep the curve phase just inside the endpoints, then advance it. */
-#pragma scheduling off
+#pragma peephole on
 void RomCurve_stepClamped(float *state, f32 dt) {
     if (*state <= lbl_803E05F0) {
         *state = lbl_803E05F4;
@@ -5859,12 +5790,10 @@ void RomCurve_stepClamped(float *state, f32 dt) {
     }
     Curve_AdvanceAlongPath(state, dt);
 }
-#pragma scheduling reset
 
 
 extern int curveFn_800da23c(float *state, void *targetCurve);
 
-#pragma scheduling off
 #pragma peephole off
 int curveFn_800da23c(float *state,void *targetCurve)
 {
@@ -5949,10 +5878,8 @@ int curveFn_800da23c(float *state,void *targetCurve)
 
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
+#pragma peephole on
 int fn_800DA980(float *state,void *fromCurve,void *toCurve,void *targetCurve)
 {
     char *stateBytes;
@@ -6006,11 +5933,9 @@ int fn_800DA980(float *state,void *fromCurve,void *toCurve,void *targetCurve)
     curvesMove(state);
     return 0;
 }
-#pragma scheduling reset
 
 extern f32 lbl_803E05F8;
 
-#pragma scheduling off
 #pragma peephole off
 void *Objfsa_FindNearestCurveType24(int pos, int p4_filter, int p5_filter) {
     int count;
@@ -6042,11 +5967,7 @@ void *Objfsa_FindNearestCurveType24(int pos, int p4_filter, int p5_filter) {
     }
     return bestHit;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void *Objfsa_FindNearestEnabledCurveType24(int pos, int p4_filter, int p5_filter) {
     int count;
     int **list;
@@ -6088,8 +6009,6 @@ void *Objfsa_FindNearestEnabledCurveType24(int pos, int p4_filter, int p5_filter
     }
     return bestHit;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 
@@ -6136,8 +6055,6 @@ extern char sObjfsaMissingPatchExitPoint1[];
 
 #define OBJFSA_NEWPATCH (patchBase[lbl_803DD468])
 
-#pragma scheduling off
-#pragma peephole off
 void walkgroupFindExitPointFn_800dc398(void)
 {
     ObjfsaPatch *patchBase = lbl_8039CAE8;
@@ -6423,11 +6340,7 @@ exit1Done:
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int RomCurve_func1B(double x, double y, double z, int curve, int preferredNeighborId) {
     float bestDistances[2];
     int bestNeighborIds[2];
@@ -6481,11 +6394,7 @@ int RomCurve_func1B(double x, double y, double z, int curve, int preferredNeighb
     }
     return -1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int RomCurve_func16(double x, double y, double z) {
     u32 candidateIds[24];
     int candidateCount;
@@ -6535,21 +6444,21 @@ int RomCurve_func16(double x, double y, double z) {
 
     return -1;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* UIController dispatch through the shared GameUI interface. */
 extern u8 gameTimerIsRunning(void *p, int a, int b);
 extern void hudNumberFn_80014060(void *p);
 extern void gameTimerRun(void *p);
+#pragma scheduling on
+#pragma peephole on
 void UIController_frameStart(void) {
     (*gGameUIInterface)->frameStart();
 }
 void UIController_frameEnd(void) {
     (*gGameUIInterface)->frameEnd();
 }
-#pragma peephole off
 #pragma scheduling off
+#pragma peephole off
 void UIController_render(void *p, int a, int b) {
     if (gameTimerIsRunning(p, a, b) != 0) {
         gameTimerRun(p);
@@ -6557,11 +6466,8 @@ void UIController_render(void *p, int a, int b) {
     hudNumberFn_80014060(p);
     (*gGameUIInterface)->render(p, a, b);
 }
-#pragma scheduling on
 
 /* player_setState */
-#pragma peephole off
-#pragma scheduling off
 void player_setState(void *ctx, void *p, int new_state) {
     void *q;
     if (*(s16 *)((char *)p + 0x274) == new_state) goto end;
@@ -6585,19 +6491,16 @@ end:
     q = *(void **)((char *)ctx + 0x54);
     if (q != 0) *(u8 *)((char *)q + 0x70) = 0;
 }
-#pragma scheduling on
 
 /* walkPath_writeU16LE: split a path id into two little-endian bytes. */
-#pragma peephole off
-#pragma scheduling off
 void walkPath_writeU16LE(u32 v, u8 *dst) {
     v = v & 0xffff;
     dst[0] = (u8)v;
     dst[1] = (u8)((s32)v >> 8);
 }
-#pragma scheduling on
 
 /* fn_800D9EE8: triple xor swap of 0x9c/0xa4, clamp *p */
+#pragma scheduling on
 void fn_800D9EE8(float *p) {
     u32 *a = (u32 *)((char *)p + 0x9c);
     u32 *b = (u32 *)((char *)p + 0xa4);
@@ -6640,9 +6543,7 @@ int fn_800DB240(int p1, f32 *outVec, u16 id)
   outVec[2] = (f32)(s32)*(s16 *)(entry + 40);
   return 1;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void fn_800D915C(int p1, int *obj, void *fnTable, f32 fval)
 {
     int flag30 = 0;
@@ -6691,4 +6592,3 @@ void fn_800D915C(int p1, int *obj, void *fnTable, f32 fval)
         }
     }
 }
-#pragma scheduling reset

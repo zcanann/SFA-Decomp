@@ -34,9 +34,7 @@ int mcstaffeffe_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
     }
     return 0;
 }
-#pragma peephole reset
 
-#pragma peephole on
 void mcupgradema_update(int obj)
 {
     GameObject *gameObj = (GameObject *)obj;
@@ -51,6 +49,5 @@ void mcupgradema_update(int obj)
         objRenderFn_80041018(obj);
     }
 }
-#pragma peephole reset
 
 void mcupgradema_init(int obj) { ((GameObject *)obj)->animEventCallback = (void *)mcupgradema_SeqFn; }

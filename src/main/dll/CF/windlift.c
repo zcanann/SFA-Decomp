@@ -1090,8 +1090,6 @@ LAB_80185bfc:
   FUN_80286888();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1107,6 +1105,8 @@ LAB_80185bfc:
  * PAL Size: TODO
  */
 #pragma dont_inline on
+#pragma scheduling off
+#pragma peephole off
 void fn_80185868(int obj, f32 arg)
 {
   extern void *lbl_803DDAD0;

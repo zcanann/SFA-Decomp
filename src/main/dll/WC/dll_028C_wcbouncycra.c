@@ -171,6 +171,5 @@ int wcblock_isPlayerAwayFromStoredCell(int obj, int state, int player)
 
     return 0;
 }
-#pragma scheduling reset
 
 #undef WCBLOCK_GRID_IFACE

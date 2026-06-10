@@ -447,8 +447,8 @@ void RollingBarrel_update(int obj)
         ObjHits_SetHitVolumeSlot(obj, state->hitVolumeSlot, 0, 0);
     }
 }
-#pragma peephole reset
 
+#pragma peephole off
 int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     int player;

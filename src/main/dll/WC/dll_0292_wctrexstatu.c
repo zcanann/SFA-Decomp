@@ -125,8 +125,8 @@ void wctrexstatu_init(int obj, int setup, int fromLoad)
         ((GameObject *)obj)->unkF4 = 1;
     }
 }
-#pragma peephole reset
 
+#pragma peephole off
 void wctrexstatu_release(void) {}
 
 void wctrexstatu_initialise(void) {}

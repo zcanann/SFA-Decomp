@@ -28,10 +28,7 @@ extern f64 lbl_803E2F90;
 extern f32 lbl_803E2F98;
 extern f32 lbl_803E2F9C;
 
-#pragma peephole off
-#pragma scheduling off
 
-#pragma peephole on
 /*
  * --INFO--
  *
@@ -39,6 +36,7 @@ extern f32 lbl_803E2F9C;
  * EN v1.0 Address: 0x80163BBC
  * EN v1.0 Size: 976b
  */
+#pragma scheduling off
 void tumbleweed_updateRollingMotion(short *param_1, int param_2)
 {
   int iVar1;
@@ -127,7 +125,6 @@ void tumbleweed_updateRollingMotion(short *param_1, int param_2)
   }
   return;
 }
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -136,6 +133,7 @@ void tumbleweed_updateRollingMotion(short *param_1, int param_2)
  * EN v1.0 Address: 0x80163F8C
  * EN v1.0 Size: 12b
  */
+#pragma peephole off
 void tumbleweed_func0F(int obj, int value)
 {
   *(int *)(*(int *)&((GameObject *)obj)->extra + 0x284) = value;

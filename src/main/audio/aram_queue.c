@@ -59,7 +59,6 @@ void aramQueueCallback(void *req)
     }
     queue->count = queue->count - 1;
 }
-#pragma scheduling reset
 
 /*
  * Submit an ARQ DMA request: locks interrupts, finds the next free
@@ -72,6 +71,7 @@ void aramQueueCallback(void *req)
  * EN v1.1 Address: 0x80284038
  * EN v1.1 Size: 464b
  */
+#pragma scheduling on
 void aramUploadData(u32 src, u32 dst, u32 size, u32 mode, u32 callback, u32 callbackArg)
 {
     AramTransferQueue *queue;

@@ -1163,7 +1163,6 @@ void gxSetPeControl_ZCompLoc_(u32 param_1)
         lbl_803DD019 = 1;
     }
 }
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -1178,7 +1177,6 @@ void gxSetPeControl_ZCompLoc_(u32 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole on
 void gxSetZMode_(u32 param_1, int param_2, u32 param_3)
 {
     extern void GXSetZMode();
@@ -1198,7 +1196,6 @@ void gxSetZMode_(u32 param_1, int param_2, u32 param_3)
         lbl_803DD01A = 1;
     }
 }
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -1213,6 +1210,7 @@ void gxSetZMode_(u32 param_1, int param_2, u32 param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
 void resetSomeGxFlags(void)
 {
     lbl_803DD01A = 0;

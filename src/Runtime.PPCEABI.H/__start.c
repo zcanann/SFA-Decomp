@@ -164,7 +164,6 @@ static inline void __init_bss_section(void* dst, unsigned long size)
     }
 }
 
-#pragma scheduling off
 __declspec(section ".init") void __init_data(void)
 {
     __rom_copy_info* dci;
@@ -202,6 +201,7 @@ __declspec(section ".init") asm void __init_hardware(void)
     blr
 }
 
+#pragma scheduling off
 __declspec(section ".init") asm void __flush_cache(void* address, unsigned int size)
 {
     nofralloc

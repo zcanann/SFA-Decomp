@@ -585,4 +585,3 @@ BOOL CreateVideoDecodeThread(OSPriority param_1, u32 param_2)
     lbl_803DD694 = 1;
     return 1;
 }
-#pragma peephole reset

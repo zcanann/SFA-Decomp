@@ -51,4 +51,3 @@ void worldplanet_updateMapLighting(void)
     lbl_803DDD18 = (u8)(s32)(lbl_803DDD14 * lbl_803E6600 + lbl_803E65FC);
     skyFn_800894a8(7, lbl_803E6604, lbl_803E65F8, lbl_803E6608);
 }
-#pragma peephole reset

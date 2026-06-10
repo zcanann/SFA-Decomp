@@ -104,7 +104,6 @@ void vfpblock1_update(int obj)
         }
     }
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -119,6 +118,7 @@ void vfpblock1_update(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
 void FUN_801fbcd0(int obj)
 {
   (*gExpgfxInterface)->freeSource2((u32)obj);
@@ -1063,15 +1063,11 @@ void vfpplatform_init(int obj, int data) {
     *(u8 *)(state + 3) = *(u8 *)(data + 0x19);
     ((GameObject *)obj)->objectFlags |= 0x2000;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E6144;
 extern f32 lbl_803E6148;
 extern u32 GameBit_Get(int);
 
-#pragma scheduling off
-#pragma peephole off
 void vfpcoreplat_init(int obj, int data) {
     int state = *(int *)&((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)(((s32)*(s8 *)(data + 0x18)) << 8);
@@ -1118,12 +1114,10 @@ void spellStoneUseFn_801fd270(int obj) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern ModgfxInterface **gModgfxInterface;
 extern void *lbl_803DDCC0;
-#pragma scheduling off
+#pragma peephole on
 void vfpdraghead_free(int obj) {
     (*gExpgfxInterface)->freeSource2((u32)obj);
     (*gModgfxInterface)->freeSourceEffects((void *)obj);
@@ -1132,7 +1126,6 @@ void vfpdraghead_free(int obj) {
     }
     lbl_803DDCC0 = NULL;
 }
-#pragma scheduling reset
 
 extern f32 lbl_803E6138;
 
@@ -1148,7 +1141,6 @@ typedef struct VfpDragHeadState {
 
 STATIC_ASSERT(sizeof(VfpDragHeadState) == 0xC);
 
-#pragma scheduling off
 #pragma peephole off
 void vfpdraghead_init(int obj, int data) {
     VfpDragHeadState *state = ((GameObject *)obj)->extra;
@@ -1169,12 +1161,8 @@ void vfpdraghead_init(int obj, int data) {
     ((GameObject *)obj)->objectFlags |= 0x6000;
     lbl_803DDCC0 = Resource_Acquire(0xA5, 1);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void fn_801FC6F4(int, int, ObjAnimUpdateState *);
-#pragma scheduling off
-#pragma peephole off
 void seqpoint_init(int obj, int data) {
     SeqPointState *state = ((GameObject *)obj)->extra;
     *(void (**)(int))(obj + 0xBC) = (void (*)(int))fn_801FC6F4;
@@ -1186,19 +1174,13 @@ void seqpoint_init(int obj, int data) {
     state->disableBit = *(s16 *)(data + 0x20);
     ((GameObject *)obj)->objectFlags |= 0x2000;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E6128;
 extern void objRenderFn_8003b8f4(f32);
-#pragma peephole off
 void seqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E6128); }
-#pragma peephole reset
 
 extern f32 lbl_803E610C;
-#pragma scheduling off
-#pragma peephole off
 void vfpplatform_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
     int state = *(int *)&((GameObject *)obj)->extra;
     s32 v = visible;
@@ -1206,8 +1188,6 @@ void vfpplatform_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
         ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E610C);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E611C;
@@ -1225,8 +1205,6 @@ typedef struct {
     u8 _state2_lo:6;
 } VfpDoorSwitchState;
 
-#pragma scheduling off
-#pragma peephole off
 void vfpdoorswitch_update(int obj)
 {
     VfpDoorSwitchState *state;
@@ -1307,11 +1285,9 @@ void vfpdoorswitch_updateExplodingVariant(int obj)
 }
 
 void dll_224_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
-#pragma peephole reset
-#pragma scheduling reset
 
 
-#pragma scheduling off
+#pragma peephole on
 void seqpoint_update(int *obj)
 {
     void *player = Obj_GetPlayerObject();
@@ -1372,7 +1348,6 @@ void seqpoint_update(int *obj)
         break;
     }
 }
-#pragma scheduling reset
 
 extern EffectInterface **gPartfxInterface;
 extern void Obj_FreeObject(int *obj);
@@ -1380,7 +1355,6 @@ extern u32 randomGetRange(int min, int max);
 extern s16 lbl_803DDCC4;
 extern u8 lbl_803DDCC6;
 
-#pragma scheduling off
 #pragma peephole off
 void vfpdraghead_update(int *obj)
 {
@@ -1425,8 +1399,6 @@ void vfpdraghead_update(int *obj)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern void unlockLevel(int, int, int);
 extern undefined4 lockLevel(undefined4, int);
@@ -1434,8 +1406,6 @@ extern int mapGetDirIdx(int);
 extern undefined4 loadMapAndParent(int);
 extern void warpToMap(int, int);
 
-#pragma scheduling off
-#pragma peephole off
 void fn_801FC6F4(int obj, int param2, ObjAnimUpdateState *ctx)
 {
     SeqPointState *state = ((GameObject *)obj)->extra;
@@ -1477,13 +1447,9 @@ void fn_801FC6F4(int obj, int param2, ObjAnimUpdateState *ctx)
         ctx->eventIds[i] = 0;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E6108;
 
-#pragma scheduling off
-#pragma peephole off
 void fn_801FBAC8(int obj)
 {
     int params = *(int *)&((GameObject *)obj)->anim.placementData;
@@ -1564,12 +1530,8 @@ void fn_801FBAC8(int obj)
     }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
-#pragma scheduling off
-#pragma peephole off
 void vfpplatform_update(int obj)
 {
     int params = *(int *)&((GameObject *)obj)->anim.placementData;
@@ -1716,5 +1678,3 @@ void vfpplatform_update(int obj)
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

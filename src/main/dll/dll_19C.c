@@ -377,8 +377,6 @@ void FUN_801c3134(undefined4 param_1,undefined4 param_2,ObjAnimUpdateState *anim
   FUN_80286888();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -393,8 +391,6 @@ void FUN_801c3134(undefined4 param_1,undefined4 param_2,ObjAnimUpdateState *anim
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801c3288(int param_1)
 {
   uint uVar1;
@@ -417,8 +413,6 @@ void FUN_801c3288(int param_1)
   FUN_80017698(0xcbb,1);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -433,8 +427,6 @@ void FUN_801c3288(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801c331c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   int iVar1;
@@ -457,8 +449,6 @@ void FUN_801c331c(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   FUN_80286888();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -473,8 +463,6 @@ void FUN_801c331c(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801c33b4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  ushort *param_9)
@@ -656,8 +644,6 @@ void FUN_801c33b4(undefined8 param_1,double param_2,double param_3,undefined8 pa
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -672,6 +658,8 @@ void FUN_801c33b4(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void FUN_801c3a9c(undefined2 *param_1,int param_2)
 {
 }
@@ -704,8 +692,6 @@ void FUN_801c3aa0(int param_1)
   (*gObjectTriggerInterface)->freeState((u8 *)iVar1);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -720,8 +706,6 @@ void FUN_801c3aa0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801c3b00(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   int iVar1;
@@ -739,11 +723,11 @@ void FUN_801c3b00(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
+#pragma scheduling off
+#pragma peephole off
 void dfsh_shrine_hitDetect(void) {}
 void dfsh_shrine_release(void) {}
 void dfsh_shrine_initialise(void) {}

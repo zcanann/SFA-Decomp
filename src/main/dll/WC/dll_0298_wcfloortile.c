@@ -322,8 +322,8 @@ void arwarwing_updateBombFire(int obj, int state) {
         arwing->bombCooldown = (f32)(u32) *(u16 *)&arwing->bombFireDelay;
     }
 }
-#pragma peephole reset
 
+#pragma peephole off
 void arwarwing_spawnBomb(int obj, int state, int side) {
     ArwingState *arwing = (ArwingState *)state;
     f32 pz, py, px;
@@ -457,8 +457,8 @@ void arwarwing_readControls(int obj, int state)
         }
     }
 }
-#pragma peephole reset
 
+#pragma peephole off
 void arwarwing_updateBarrelRoll(int obj, int state)
 {
     int tgt;

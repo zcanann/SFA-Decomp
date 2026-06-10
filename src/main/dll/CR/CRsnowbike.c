@@ -157,8 +157,6 @@ void FUN_801db580(undefined4 param_1)
   ObjHits_PollPriorityHitEffectWithCooldown(param_1,8,0xff,0xff,0x78,0x280,(float *)&DAT_803de880);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -173,8 +171,6 @@ void FUN_801db580(undefined4 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801db5b8(short *param_1,int param_2)
 {
   float fVar1;
@@ -189,8 +185,6 @@ void FUN_801db5b8(short *param_1,int param_2)
   param_1[0x58] = param_1[0x58] | 0x4000;
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -205,8 +199,6 @@ void FUN_801db5b8(short *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 undefined4 sc_levelcontrol_processAnimEvents(int param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate)
 {
   byte bVar2;
@@ -251,8 +243,6 @@ undefined4 sc_levelcontrol_processAnimEvents(int param_1,undefined4 param_2,ObjA
   }
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -267,8 +257,6 @@ undefined4 sc_levelcontrol_processAnimEvents(int param_1,undefined4 param_2,ObjA
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void sc_levelcontrol_setAnimEventState(int param_1,undefined param_2)
 {
   char cVar1;
@@ -307,8 +295,6 @@ void sc_levelcontrol_setAnimEventState(int param_1,undefined param_2)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -323,6 +309,8 @@ void sc_levelcontrol_setAnimEventState(int param_1,undefined param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void FUN_801db8c4(void)
 {
   FUN_80006b4c();
@@ -357,8 +345,6 @@ void FUN_801db924(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -373,8 +359,6 @@ void FUN_801db924(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801db94c(undefined8 param_1,double param_2,double param_3,double param_4,double param_5,
                  undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9)
 {
@@ -695,11 +679,11 @@ void FUN_801db94c(undefined8 param_1,double param_2,double param_3,double param_
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
+#pragma scheduling off
+#pragma peephole off
 void sc_levelcontrol_hitDetect(void) {}
 void sc_levelcontrol_release(void) {}
 void sc_levelcontrol_initialise(void) {}

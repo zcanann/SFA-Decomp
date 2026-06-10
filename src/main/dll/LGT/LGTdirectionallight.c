@@ -180,8 +180,8 @@ void wmworm_update(GameObject *obj)
   }
   return;
 }
-#pragma peephole reset
 
+#pragma peephole off
 void wmworm_init(GameObject *obj, WmWormSetup *setup)
 {
     WmWormState *state;
@@ -305,12 +305,12 @@ void fn_801F3F18(int obj)
                                  lbl_803E5E84);
     skyFn_800894a8(1, L.fog.x, L.fog.y, L.fog.z);
 }
-#pragma peephole reset
 
 /* 8b "li r3, N; blr" returners. */
 int wmlevelcontrol_getExtraSize(void) { return 0x1c; }
 int wmlevelcontrol_getObjectTypeId(void) { return 0x0; }
 
+#pragma peephole off
 void wmlevelcontrol_free(int obj)
 {
     ObjGroup_RemoveObject(obj, 9);

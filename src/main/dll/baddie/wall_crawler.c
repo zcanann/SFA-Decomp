@@ -192,8 +192,6 @@ void FUN_8012eb7c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -208,8 +206,6 @@ void FUN_8012eb7c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_8012ed00(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
@@ -264,8 +260,6 @@ void FUN_8012ed00(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -280,6 +274,8 @@ void FUN_8012ed00(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int FUN_8012ef0c(void)
 {
   return (int)DAT_803de428;
@@ -321,8 +317,6 @@ void FUN_8012ef14(int param_1,undefined4 param_2,undefined4 param_3,int param_4)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -337,6 +331,8 @@ void FUN_8012ef14(int param_1,undefined4 param_2,undefined4 param_3,int param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int FUN_8012efc4(void)
 {
   return (int)DAT_803de540;
@@ -444,8 +440,6 @@ void fn_8012F04C(undefined8 param_1,double param_2,double param_3,undefined8 par
   FUN_8028688c();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -460,16 +454,12 @@ void fn_8012F04C(undefined8 param_1,double param_2,double param_3,undefined8 par
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_8012f744(undefined2 param_1)
 {
   DAT_803de439 = 1;
   DAT_803de50c = param_1;
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -484,8 +474,6 @@ void FUN_8012f744(undefined2 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_8012f758(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,uint param_11,undefined4 param_12,
@@ -884,8 +872,6 @@ LAB_8012fca8:
   FUN_80286884();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /* ===== EN v1.0 retargeted leaves ==========================================
  * Hand-ported helpers below pair by name in objdiff against the live v1.0
@@ -898,6 +884,8 @@ extern s16 lbl_803DD8C0;
 extern s16 lbl_803DD8C2;
 
 /* EN v1.0 0x8012EBC8  size: 8b   s16 getter for lbl_803DD8C0. */
+#pragma scheduling off
+#pragma peephole off
 s16 cMenuGetSelectedItem(void)
 {
     return lbl_803DD8C0;

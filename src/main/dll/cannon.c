@@ -446,8 +446,8 @@ static int trickyGuardIsBaddieTargetValid(TrickyRuntime *trickyState) {
     }
     return 0;
 }
-#pragma scheduling reset
 
+#pragma scheduling off
 void trickyGuard(ObjAnimComponent *obj, TrickyRuntime *trickyState) {
     int p1 = (int)obj;
     int p2 = (int)trickyState;

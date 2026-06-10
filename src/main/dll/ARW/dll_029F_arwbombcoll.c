@@ -115,8 +115,8 @@ void arwbombcoll_handleArwingHit(int obj, RingState *state, int arwing) {
     }
     state->phase = 2;
 }
-#pragma peephole reset
 
+#pragma peephole off
 int arwbombcoll_checkArwingCollision(int obj, RingState *state, int arwing) {
     RingFlags *f = &state->flags;
     if (f->bit10) {

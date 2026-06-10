@@ -10,9 +10,9 @@ typedef struct ProcessInfo {
 static ProcessInfo fragmentinfo[MAXFRAGMENTS];
 
 #if __MWERKS__
-#pragma peephole off
 #endif
 
+#pragma peephole off
 void __unregister_fragment(int fragmentID)
 {
     ProcessInfo* f;

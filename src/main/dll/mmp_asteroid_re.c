@@ -154,8 +154,6 @@ void FUN_801916e8(int param_1)
   warpPadFn_8019042c(param_1);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -170,6 +168,8 @@ void FUN_801916e8(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void FUN_80191730(short *param_1,int param_2)
 {
 }

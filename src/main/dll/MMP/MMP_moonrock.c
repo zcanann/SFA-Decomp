@@ -728,8 +728,6 @@ void FUN_80197960(int param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -744,8 +742,6 @@ void FUN_80197960(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_80197990(int param_1)
 {
   bool bVar1;
@@ -822,8 +818,6 @@ void FUN_80197990(int param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -838,8 +832,6 @@ void FUN_80197990(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_80197c38(int param_1,int param_2)
 {
   uint uVar1;
@@ -887,8 +879,6 @@ void FUN_80197c38(int param_1,int param_2)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -903,8 +893,6 @@ void FUN_80197c38(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_80197e14(int param_1)
 {
   uint *puVar1;
@@ -916,8 +904,6 @@ void FUN_80197e14(int param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -932,6 +918,8 @@ void FUN_80197e14(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void FUN_80197e54(int param_1)
 {
   if ((float *)**(undefined4 **)&((GameObject *)param_1)->extra != (float *)0x0) {
@@ -1049,8 +1037,6 @@ LAB_801981b8:
   FUN_8028688c();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1065,8 +1051,6 @@ LAB_801981b8:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_80198230(int param_1,int param_2)
 {
   float fVar1;
@@ -1098,8 +1082,6 @@ void FUN_80198230(int param_1,int param_2)
               DOUBLE_803e4d30);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1114,15 +1096,11 @@ void FUN_80198230(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 undefined4 FUN_80198348(uint param_1)
 {
   FUN_801983a0(param_1);
   return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1137,6 +1115,8 @@ undefined4 FUN_80198348(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void FUN_8019836c(int obj)
 {
   (*gExpgfxInterface)->freeSource2((u32)obj);
@@ -1240,8 +1220,6 @@ void FUN_801983a0(uint param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1256,8 +1234,6 @@ void FUN_801983a0(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_80198634(int param_1)
 {
   byte bVar1;
@@ -1286,8 +1262,6 @@ void FUN_80198634(int param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1302,8 +1276,6 @@ void FUN_80198634(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801986d4(uint param_1)
 {
   byte bVar1;
@@ -1563,8 +1535,6 @@ void FUN_801986d4(uint param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1579,8 +1549,6 @@ void FUN_801986d4(uint param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_80198d58(int param_1,int param_2)
 {
   byte bVar1;
@@ -1606,8 +1574,6 @@ void FUN_80198d58(int param_1,int param_2)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1622,8 +1588,6 @@ void FUN_80198d58(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_80198e08(void)
 {
   int iVar1;
@@ -1688,11 +1652,11 @@ void FUN_80198e08(void)
   FUN_8028688c();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
+#pragma scheduling off
+#pragma peephole off
 void WaterFallSpray_render(void) {}
 
 /* 8b "li r3, N; blr" returners. */

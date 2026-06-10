@@ -2373,7 +2373,6 @@ void fn_80053EBC(u32 bits) {
     u32 nb = bits ^ 0xffffffff;
     lbl_803DCDA8 = v & nb;
 }
-#pragma scheduling reset
 void fn_800542F4(void) { lbl_803DCDA8 = 0; lbl_803DCDB4 = 0; lbl_803DCDB0 = 0; }
 
 extern f32 lbl_803DCE50;
@@ -2381,7 +2380,6 @@ extern f32 lbl_803DCE4C;
 extern f32 blurFilterArea;
 extern u8 bBlurFilterUseArea;
 extern u8 bBiggerBlurFilter;
-#pragma scheduling off
 void turnOnBlurFilter(u8 useArea, u8 bigger, f32 a, f32 b, f32 area) {
     bEnableBlurFilter = 1;
     lbl_803DCE50 = a;
@@ -2418,16 +2416,15 @@ void timeOfDayFn_80055038(void) {
     lbl_803DCE00 = 1;
     p[0x40] = (u8)(p[0x40] | 0x20);
 }
-#pragma peephole reset
 
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
+#pragma peephole on
 void fn_80054F74(int *p, f32 *vec) {
     if (*(void**)((char*)p + 0x30) != NULL) return;
     vec[0] = vec[0] + playerMapOffsetX;
     vec[2] = vec[2] + playerMapOffsetZ;
 }
-#pragma scheduling reset
 
 extern u8 lbl_803879A0[];
 extern u8 *lbl_803DCE78;
@@ -2437,7 +2434,6 @@ extern u8 lbl_803DCEBD;
 extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern void Pause_SetDisabled(int);
 
-#pragma scheduling off
 #pragma peephole off
 void warpToMap(int idx, s8 transType) {
     u8 *p = lbl_803DCE78;
@@ -2455,12 +2451,10 @@ void warpToMap(int idx, s8 transType) {
     }
     Pause_SetDisabled(1);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern u8 lbl_8037E000[];
 
-#pragma scheduling off
+#pragma peephole on
 void ShaderDef_free(int *def) {
     void *s;
     void *p1 = (void *)def[0];
@@ -2486,7 +2480,6 @@ void ShaderDef_free(int *def) {
         }
     }
 }
-#pragma scheduling reset
 
 typedef struct LoadedTextureEntry {
     int key;
@@ -2501,7 +2494,6 @@ extern LoadedTextureEntry *lbl_803DCDC4;
 #define gLoadedTextureCount lbl_803DCDBC
 #define gLoadedTextures lbl_803DCDC4
 #pragma peephole off
-#pragma scheduling off
 void* textureIdxToPtr(int idx) {
     int i;
     if ((u32)idx & 0x80000000) return (void*)idx;
@@ -2853,8 +2845,8 @@ void textureFree(u8 *tex) {
     }
 }
 
-#pragma peephole reset
-#pragma scheduling reset
+#pragma scheduling on
+#pragma peephole on
 int textureCrazyPointerFollowFn_80054c30(int *p, int n) {
     int limit = *(u16 *)((char *)p + 16);
     int q;
@@ -2908,13 +2900,9 @@ void shaderInit(u8 *def, void **out, u8 *obj)
     (*(u16 *)((char *)s + 0xE))++;
     out[1] = *slot;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern void selectTexture(int handle, int slot);
 
-#pragma scheduling off
-#pragma peephole off
 void textureFn_800541ac(int p1, int *tex, void *forceTex, int flags, int packed)
 {
     int i;
@@ -2973,13 +2961,9 @@ void textureFn_800541ac(int p1, int *tex, void *forceTex, int flags, int packed)
     selectTexture((int)cur, 0);
     selectTexture((int)result, 1);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern u8 framesThisStep;
 
-#pragma scheduling off
-#pragma peephole off
 void textureAnimFn_80053f2c(u8 *def, u32 *node, int *cnt)
 {
     u32 a, b, c;
@@ -3044,15 +3028,11 @@ void textureAnimFn_80053f2c(u8 *def, u32 *node, int *cnt)
             *cnt += *(u16 *)(def + 0x10);
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern char lbl_803822C8[];
 extern void *gLoadedRomListPages[];
 extern int *Obj_SetupObject(int *obj, int p1, int p2, int p3, int p4);
 
-#pragma scheduling off
-#pragma peephole off
 void mapInstantiateObjects(int *p1, int mapId, int index, int p4)
 {
     int *seg = (int *)(lbl_803822C8 + mapId * 0x8c);
@@ -3128,11 +3108,7 @@ void mapInstantiateObjects(int *p1, int mapId, int index, int p4)
         obj += *(u8 *)(obj + 2) * 4;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 extern void GXLoadTexMtxImm(f32 *mtx, int id, int type);
 extern void GXSetTexCoordGen2(int dst, int fn, int src, int mtx, int normalize, int pt);
 extern void GXLoadTexObjPreLoaded(u8 *obj, u32 *region, int map);
@@ -4351,5 +4327,3 @@ resolved:
     return first;
 }
 
-#pragma scheduling reset
-#pragma peephole reset

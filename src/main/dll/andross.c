@@ -52,9 +52,7 @@ int andross_updateModelAlpha(int obj)
     }
     return 0;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 #pragma peephole off
 void andross_init(int obj, u8 *setup)
 {
@@ -89,11 +87,7 @@ void andross_init(int obj, u8 *setup)
     GameBit_Set(0xd, 0);
     unlockLevel(0, 0, 1);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 void fn_8023A87C(int p1, int p2)
 {
     void *spawned;
@@ -120,11 +114,7 @@ void fn_8023A87C(int p1, int p2)
         }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma peephole off
-#pragma scheduling off
 int fn_8023A6A4(int p1, f32 a, f32 b, f32 c)
 {
     f32 val, ang;
@@ -155,8 +145,6 @@ int fn_8023A6A4(int p1, f32 a, f32 b, f32 c)
     *(f32 *)(p1 + 0xe0) = c;
     return result;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern f32 lbl_8032C098[];
 extern f32 lbl_803DC440;
@@ -268,8 +256,6 @@ typedef struct {
     u8 f20 : 1;
 } AndrossFlagByte;
 
-#pragma peephole off
-#pragma scheduling off
 void andross_update(int obj)
 
 {
@@ -1958,5 +1944,3 @@ LAB_8023ef14:
 }
 
 
-#pragma scheduling reset
-#pragma peephole reset

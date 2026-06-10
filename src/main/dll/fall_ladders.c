@@ -318,11 +318,7 @@ void fn_801540A0(int obj, int p)
         *(u8 *)(p + 0x33b) -= 1;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80154584(int obj, int p)
 {
     int curve;
@@ -377,11 +373,7 @@ void fn_80154584(int obj, int p)
     }
     fn_80154328(obj, p);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 void fn_80154328(int obj, int p)
 {
     extern u32 randomGetRange(int min, int max);
@@ -421,8 +413,6 @@ void fn_80154328(int obj, int p)
     }
 }
 
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -437,6 +427,8 @@ void fn_80154328(int obj, int p)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_80154724(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9,int param_10)
@@ -652,9 +644,7 @@ void fn_801544E8(int* obj, u8* state, int p3, int p4) {
         *(int*)((char*)state + 744) |= 16;
     }
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void fn_801542AC(int unused, u8* state) {
     f32 fz;
     f32 fc;
@@ -679,4 +669,3 @@ void fn_801542AC(int unused, u8* state) {
     *(f32*)((char*)state + 816) = lbl_803E298C;
     *(f32*)((char*)state + 764) = lbl_803E2958;
 }
-#pragma scheduling reset

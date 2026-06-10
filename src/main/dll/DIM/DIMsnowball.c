@@ -135,16 +135,14 @@ extern f32 lbl_803E5368;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma peephole off
 #pragma scheduling off
+#pragma peephole off
 void ccqueen_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
   void *state = ((GameObject *)obj)->extra;
   objRenderFn_8003b8f4(lbl_803E4660);
   dll_2E_func06(obj, state, 0);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -159,6 +157,8 @@ void ccqueen_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void FUN_801aa684(int param_1)
 {
   if ((**(char **)&((GameObject *)param_1)->extra == '\x03') || (**(char **)&((GameObject *)param_1)->extra == '\x04')) {
@@ -1199,9 +1199,9 @@ extern void Music_Trigger(int a, int b);
 extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 extern f32 lbl_803E46C8;
 
+
 #pragma scheduling off
 #pragma peephole off
-
 void ccsharpclawpad_init(int* obj, int* def)
 {
     *(s16*)obj = (s16)((u32)*(u8*)((char*)def + 24) << 8);
@@ -1296,15 +1296,13 @@ void cclevcontrol_init(int *obj) {
     state[3] = (u32)(u8)(*gMapEventInterface)->getMode(((GameObject *)obj)->anim.mapEventSlot);
 }
 
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E4674;
 extern f32 lbl_803E4678;
 extern f32 lbl_803E467C;
 
-#pragma peephole off
 #pragma dont_inline on
+#pragma scheduling on
 void fn_801AA878(u8* p1, int* p2, f32 v) {
     s16 t;
     if (lbl_803E4674 == v) {
@@ -1331,7 +1329,6 @@ void fn_801AA878(u8* p1, int* p2, f32 v) {
     p1[16] = 2;
 }
 #pragma dont_inline reset
-#pragma peephole reset
 
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void gameBitDecrement(int id);
@@ -1343,7 +1340,6 @@ extern void gameBitDecrement(int id);
  * decrements the gamebit, and flags state2[0x6] bit 0. If gbit 0xa9 is
  * clear, sets the obj[0xaf] 0x10 flag instead. */
 #pragma scheduling off
-#pragma peephole off
 void ccpedstal_updateGameBitGate(int obj, u8* state2) {
     if (GameBit_Get(*(s16*)(state2 + 0x4)) != 0) {
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
@@ -1369,8 +1365,6 @@ void ccpedstal_updateGameBitGate(int obj, u8* state2) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern int ObjTrigger_IsSet(int obj);
 extern void gameBitIncrement(int id);
@@ -1382,8 +1376,6 @@ extern void gameBitIncrement(int id);
  * id=1, increments gbit 0xa9, and latches state2[0x6] bit 0. Mirrors
  * the no-mark branches into a shared r0=0/cmpwi end-check via goto to
  * match target's layout. */
-#pragma scheduling off
-#pragma peephole off
 void ccpedstal_updateAltVariant(int obj, u8* state2) {
     if (GameBit_Get(0xdc5) != 0) {
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
@@ -1409,8 +1401,6 @@ void ccpedstal_updateAltVariant(int obj, u8* state2) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern WaterfxInterface **gWaterfxInterface;
 extern f32 lbl_803E4670;
@@ -1423,8 +1413,6 @@ typedef struct { s16 v[3]; } _S16x3;
 extern _S16x3 lbl_803E4650;
 extern _S16x3 lbl_803E4658;
 
-#pragma scheduling off
-#pragma peephole off
 void ccqueen_init(int *obj, u8 *init) {
     u8 *sub;
     _S16x3 buf2;
@@ -1438,8 +1426,6 @@ void ccqueen_init(int *obj, u8 *init) {
     dll_2E_func09(sub, &buf1, &buf2, 3);
     sub[0x611] = (u8)(sub[0x611] | 0xa);
 }
-#pragma peephole reset
-#pragma scheduling reset
 extern f32 lbl_803E4664;
 extern f32 lbl_803E4668;
 extern f32 timeDelta;
@@ -1448,8 +1434,6 @@ extern void characterDoEyeAnims(int obj, void* p);
 extern void *Obj_GetPlayerObject(void);
 extern void ObjHits_DisableObject_xx(int *obj);
 
-#pragma scheduling off
-#pragma peephole off
 void ccqueen_update(int *obj) {
     u8 *sub;
     int *player;
@@ -1471,11 +1455,7 @@ void ccqueen_update(int *obj) {
         characterDoEyeAnims((int)obj, sub + 0x624);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma scheduling off
-#pragma peephole off
 int ccqueen_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate) {
     int* state = ((GameObject *)obj)->extra;
     if (animUpdate->eventCount != 0) {
@@ -1499,11 +1479,7 @@ int ccqueen_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate) {
     }
     return 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
-#pragma peephole off
-#pragma scheduling off
 void ccpedstal_update(int obj)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -1520,14 +1496,12 @@ void ccpedstal_update(int obj)
     }
     (*(void (*)(int, int))*(int *)state)(obj, state);
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern void *fn_802972A8(void *obj);
 extern int mapGetDirIdx(int a);
 extern void lockLevel(int idx, int flag);
 
-#pragma scheduling off
+#pragma peephole on
 void fn_801AC01C(int obj)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -1553,9 +1527,7 @@ void fn_801AC01C(int obj)
     GameBit_Set(0x378, 0);
     GameBit_Set(0x3b9, 0);
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void fn_801AC108(int obj, int param2)
 {
     int r;
@@ -1584,7 +1556,6 @@ void fn_801AC108(int obj, int param2)
         }
     }
 }
-#pragma scheduling reset
 
 extern f32 lbl_803E46A8;
 extern f32 lbl_803E46AC;
@@ -1608,7 +1579,6 @@ typedef struct SharpClawPadParticleArgs {
 } SharpClawPadParticleArgs;
 
 #pragma peephole off
-#pragma scheduling off
 void ccsharpclawpad_update(int obj)
 {
     SharpClawPadParticleArgs particleArgs;
@@ -1661,8 +1631,6 @@ void ccsharpclawpad_update(int obj)
                               *(f32 *)&lbl_803E46B8, lbl_803E46BC, &particleArgs, 0);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 #include "main/dll/SC/SCtotemlogpuz.h"
 extern f32 lbl_803E46D0;
@@ -1670,8 +1638,6 @@ extern void gameTextShow(int textId);
 extern void *getTrickyObject(void);
 extern int *gSHthorntailAnimationInterface;
 
-#pragma peephole off
-#pragma scheduling off
 void cclevcontrol_update(int obj)
 {
     int *state = ((GameObject *)obj)->extra;
@@ -1743,8 +1709,6 @@ void cclevcontrol_update(int obj)
         GameBit_Set(0xf26, 1);
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 extern f32 lbl_803E4680;
 extern f32 lbl_803E4684;
@@ -1774,8 +1738,6 @@ typedef struct LightfootAnimTable {
     f32 animSpeeds[15];
 } LightfootAnimTable;
 
-#pragma peephole off
-#pragma scheduling off
 void cclightfoot_update(int obj)
 {
     LightfootAnimTable *tbl = (LightfootAnimTable *)lbl_80323408;
@@ -2095,5 +2057,3 @@ void cclightfoot_update(int obj)
         *((u8 *)state + 0x11) &= ~1;
     }
 }
-#pragma peephole reset
-#pragma scheduling reset

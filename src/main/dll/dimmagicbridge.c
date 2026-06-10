@@ -244,7 +244,6 @@ void dll_199_update(int obj)
         }
     }
 }
-#pragma peephole reset
 
 extern void ObjMsg_AllocQueue(int obj, int n);
 
@@ -255,6 +254,7 @@ extern void ObjMsg_AllocQueue(int obj, int n);
  * EN v1.0 Address: 0x801CB634
  * EN v1.0 Size: 364b
  */
+#pragma peephole off
 void dll_199_init(int obj, int def)
 {
     short *state;

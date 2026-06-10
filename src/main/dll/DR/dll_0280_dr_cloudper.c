@@ -106,4 +106,3 @@ void drcloudper_init(int obj, int setup)
         (*gMapEventInterface)->setAnimEvent(cloud->mapDir, DRCLOUDPER_MAP_ANIM_EVENT, 1);
     }
 }
-#pragma peephole reset

@@ -675,8 +675,6 @@ switchD_80199a5c_caseD_0:
     pbVar21 = pbVar21 + 4;
   } while( true );
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -691,8 +689,6 @@ switchD_80199a5c_caseD_0:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_8019ada4(int param_1)
 {
   byte *pbVar1;
@@ -707,8 +703,6 @@ void FUN_8019ada4(int param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -723,8 +717,6 @@ void FUN_8019ada4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_8019ae30(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,float *param_11,undefined4 param_12,
@@ -934,8 +926,6 @@ void FUN_8019ae30(undefined8 param_1,double param_2,double param_3,undefined8 pa
   FUN_80286888();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -950,8 +940,6 @@ void FUN_8019ae30(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_8019b6ac(ushort *param_1,short *param_2)
 {
   float fVar1;
@@ -1006,8 +994,6 @@ void FUN_8019b6ac(ushort *param_1,short *param_2)
   *pbVar4 = *pbVar4 | 0x40;
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1022,8 +1008,6 @@ void FUN_8019b6ac(ushort *param_1,short *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_8019b844(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   if (visible != 0) {
@@ -1031,8 +1015,6 @@ void FUN_8019b844(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1047,8 +1029,6 @@ void FUN_8019b844(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_8019b86c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9)
@@ -1173,8 +1153,6 @@ LAB_8019b31c:
   } while (uVar2 != 0);
   goto LAB_8019b350;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1189,18 +1167,16 @@ LAB_8019b31c:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_8019bc2c(int param_1)
 {
   ObjMsg_AllocQueue(param_1,10);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
+#pragma scheduling off
+#pragma peephole off
 void Trigger_render(void) {}
 void Trigger_update(void) {}
 void Trigger_release(void) {}

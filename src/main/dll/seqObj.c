@@ -261,8 +261,6 @@ void FUN_8014fd38(int param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -277,6 +275,8 @@ void FUN_8014fd38(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void FUN_8014fd80(uint param_1)
 {
 }
@@ -330,8 +330,6 @@ void FUN_8014fd84(uint param_1,int param_2,int param_3)
   ((GameObject *)param_1)->objectFlags = ((GameObject *)param_1)->objectFlags | 0x2000;
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -346,6 +344,8 @@ void FUN_8014fd84(uint param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void FUN_8014fef8(undefined4 param_1,int param_2,undefined4 param_3,int param_4)
 {
   if (param_4 == 0x10) {
@@ -394,8 +394,6 @@ void FUN_8014ff24(short *param_1,undefined4 param_2)
   FUN_8014d3d0(param_1,param_2,0xf,0);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -410,8 +408,6 @@ void FUN_8014ff24(short *param_1,undefined4 param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_8014ff4c(undefined4 param_1,int param_2)
 {
   float fVar1;
@@ -431,8 +427,6 @@ void FUN_8014ff4c(undefined4 param_1,int param_2)
   *(float *)(param_2 + 0x31c) = fVar1;
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -447,8 +441,6 @@ void FUN_8014ff4c(undefined4 param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_8014ffa8(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,uint param_11,undefined4 param_12,
@@ -562,8 +554,6 @@ LAB_80150818:
   FUN_8028688c();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -578,6 +568,8 @@ LAB_80150818:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void wispbaddie_release(void)
 {
 }
@@ -818,4 +810,3 @@ void fn_801504BC(int obj, int delta) {
     inner[0x33d] = (u8)(delta + (u32)ptr[8] + 1);
     inner[0x33e] = 1;
 }
-#pragma scheduling reset

@@ -179,8 +179,6 @@ void FUN_801c9018(ushort *param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -195,6 +193,8 @@ void FUN_801c9018(ushort *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int dbsh_shrine_getExtraSize(void)
 {
   return 0x18;

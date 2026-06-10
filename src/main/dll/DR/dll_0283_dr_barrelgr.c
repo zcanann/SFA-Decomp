@@ -234,4 +234,3 @@ void drbarrelgr_render(int obj, int p2, int p3, int p4, int p5)
         }
     }
 }
-#pragma peephole reset

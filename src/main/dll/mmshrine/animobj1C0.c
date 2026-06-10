@@ -151,8 +151,6 @@ void FUN_801c5990(undefined8 param_1,undefined8 param_2,double param_3,undefined
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -167,8 +165,6 @@ void FUN_801c5990(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801c5c2c(int param_1)
 {
   float fVar1;
@@ -223,9 +219,9 @@ void FUN_801c5c2c(int param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 void fn_801C5990(MmShrineAnimObj *obj)
 {
     u8 *config;

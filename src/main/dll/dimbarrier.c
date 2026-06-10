@@ -189,7 +189,6 @@ void ecsh_cup_update(short *obj)
         }
     }
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -204,6 +203,7 @@ void ecsh_cup_update(short *obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
 void FUN_801c83d4(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
 {
   if (visible != 0) {
@@ -236,8 +236,8 @@ void ecsh_cup_release(void)
  * EN v1.0 Address: 0x801C8A34
  * EN v1.0 Size: 300b
  */
-#pragma peephole off
 #pragma scheduling off
+#pragma peephole off
 void ecsh_cup_init(int obj, int p2)
 {
     int t;
@@ -271,8 +271,6 @@ void ecsh_cup_init(int obj, int p2)
     ObjHits_SetHitVolumeSlot(obj, 0, 0, 0);
     ObjHits_SyncObjectPositionIfDirty(obj);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 /*
  * --INFO--
@@ -287,6 +285,8 @@ void ecsh_cup_init(int obj, int p2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling on
+#pragma peephole on
 void ecsh_cup_initialise(void)
 {
 }
@@ -394,8 +394,8 @@ extern f64 lbl_803E50D0;
  * EN v1.0 Address: 0x801C8B68
  * EN v1.0 Size: 852b
  */
-#pragma peephole off
 #pragma scheduling off
+#pragma peephole off
 void fn_801C8B68(int obj)
 {
     register int self = obj;
@@ -454,5 +454,3 @@ void fn_801C8B68(int obj)
         ((GameObject *)self)->anim.alpha = 0xff;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset

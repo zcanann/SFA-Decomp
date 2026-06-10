@@ -420,8 +420,6 @@ void FUN_8017b3bc(int obj, int unused, ObjAnimUpdateState *animUpdate)
   FUN_80286888();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -436,6 +434,8 @@ void FUN_8017b3bc(int obj, int unused, ObjAnimUpdateState *animUpdate)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void FUN_8017b6bc(int param_1)
 {
   FUN_8003b818(param_1);
@@ -480,8 +480,6 @@ void FUN_8017b6dc(int param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -496,6 +494,8 @@ void FUN_8017b6dc(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void FUN_8017b7a8(short *param_1,int param_2)
 {
 }
@@ -534,8 +534,6 @@ void FUN_8017b7ac(int param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -550,8 +548,6 @@ void FUN_8017b7ac(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_8017b858(undefined2 *param_1)
 {
   int iVar1;
@@ -572,11 +568,11 @@ void FUN_8017b858(undefined2 *param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
+#pragma scheduling off
+#pragma peephole off
 void mmp_bridge_free(void) {}
 void mmp_bridge_render(void) {}
 void mmp_bridge_hitDetect(void) {}

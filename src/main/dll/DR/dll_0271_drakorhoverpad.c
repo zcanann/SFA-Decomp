@@ -297,8 +297,8 @@ int drakorhoverpad_update(void *curve, int arg) {
     }
     return 0;
 }
-#pragma peephole reset
 
+#pragma peephole off
 void drakorhoverpad_updateMain(int obj) {
     u8 *p = ((GameObject *)obj)->extra;
     int q = *(int *)&((GameObject *)obj)->anim.placementData;

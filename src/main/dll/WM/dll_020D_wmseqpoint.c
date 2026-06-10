@@ -257,8 +257,8 @@ void wmseqpoint_update(int obj)
             break;
     }
 }
-#pragma peephole reset
 
+#pragma peephole off
 void wmseqpoint_init(int obj, int setup)
 {
     WmSeqPointState *state;

@@ -96,12 +96,12 @@ int gf_levelcon_handleScriptEvents(int obj, int eventId, ObjAnimUpdateState *ani
     }
     return 0;
 }
-#pragma peephole reset
 
 int gf_levelcon_getExtraSize(void) { return 0x10; }
 
 int gf_levelcon_getObjectTypeId(void) { return 0; }
 
+#pragma peephole off
 void gf_levelcon_hitDetect(void) {}
 
 void gf_levelcon_initialise(void) {}
@@ -212,8 +212,8 @@ void fn_80239EAC(int p1, int p2)
         objs++;
     }
 }
-#pragma peephole reset
 
+#pragma peephole off
 void fn_8023A168(int p1, int p2)
 {
     int yawRnd;

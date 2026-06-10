@@ -443,8 +443,6 @@ void grimble_init(int obj, int p2, int p3)
   *(f32 *)(state + 0x280) = lbl_803E2EB8;
   *(int *)(*(int *)(state + 0x40c) + 0x34) = 0;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -460,6 +458,8 @@ void grimble_init(int obj, int p2, int p3)
  * PAL Size: TODO
  */
 undefined4
+#pragma scheduling on
+#pragma peephole on
 FUN_801620c0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,int param_10,
             undefined4 param_11,undefined4 param_12,undefined4 param_13,undefined4 param_14,
@@ -1035,8 +1035,8 @@ int grimble_getObjectTypeId(void) { return 0x59; }
 int cannonclaw_getExtraSize(void) { return 0x0; }
 int cannonclaw_getObjectTypeId(void) { return 0x0; }
 
-#pragma scheduling off
 #pragma dont_inline on
+#pragma scheduling off
 void grimble_initialiseStateHandlerTables(void) {
     gGrimbleStateHandlersA[0] = (void *)grimble_stateHandlerA00;
     gGrimbleStateHandlersA[1] = (void *)grimble_stateHandlerA01;
@@ -1055,13 +1055,11 @@ void grimble_initialiseStateHandlerTables(void) {
     gGrimbleStateHandlersB[4] = (void *)grimble_stateHandlerB04;
     gGrimbleStateHandlersB[5] = (void *)grimble_stateHandlerB05;
 }
-#pragma scheduling reset
 #pragma dont_inline reset
 void grimble_initialise(void) { grimble_initialiseStateHandlerTables(); }
 
 extern f32 lbl_803E2F30;
 
-#pragma scheduling off
 #pragma peephole off
 void grimble_free(int obj) {
     int *state = ((GameObject *)obj)->extra;
@@ -1081,8 +1079,6 @@ void cannonclaw_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
         }
     }
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 ObjectDescriptor gGrimbleObjDescriptor = {
     0,

@@ -254,8 +254,6 @@ void FUN_801b2550(undefined8 param_1,undefined8 param_2,double param_3,undefined
   FUN_80286884();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -270,8 +268,6 @@ void FUN_801b2550(undefined8 param_1,undefined8 param_2,double param_3,undefined
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801b2bd8(int param_1)
 {
   if (*(short *)(param_1 + 0x46) != 0x1d6) {
@@ -282,8 +278,6 @@ void FUN_801b2bd8(int param_1)
   ObjGroup_RemoveObject(param_1,3);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -298,8 +292,6 @@ void FUN_801b2bd8(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801b2c40(undefined2 *param_1)
 {
   undefined2 uVar1;
@@ -319,8 +311,6 @@ void FUN_801b2c40(undefined2 *param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -335,8 +325,6 @@ void FUN_801b2c40(undefined2 *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801b2ccc(double param_1,double param_2,double param_3,double param_4,undefined8 param_5,
                  undefined8 param_6,undefined8 param_7,undefined8 param_8,short *param_9)
 {
@@ -483,11 +471,11 @@ void FUN_801b2ccc(double param_1,double param_2,double param_3,double param_4,un
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
+#pragma scheduling off
+#pragma peephole off
 void dimcannon_hitDetect(void) {}
 void dimcannon_release(void) {}
 void dimcannon_initialise(void) {}

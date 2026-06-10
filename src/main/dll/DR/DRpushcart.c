@@ -186,8 +186,6 @@ undefined4 FUN_801e76a0(int param_1)
   }
   return uVar2;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -202,8 +200,6 @@ undefined4 FUN_801e76a0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 uint FUN_801e7724(int param_1,undefined4 param_2,int param_3)
 {
   int iVar1;
@@ -340,8 +336,6 @@ uint FUN_801e7724(int param_1,undefined4 param_2,int param_3)
   }
   return uVar5;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -356,8 +350,6 @@ uint FUN_801e7724(int param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801e7b2c(int param_1)
 {
   int iVar1;
@@ -379,8 +371,6 @@ void FUN_801e7b2c(int param_1)
   *(undefined *)(iVar1 + 0x9d4) = 0;
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -395,6 +385,8 @@ void FUN_801e7b2c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void FUN_801e7be4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11,char param_12,
@@ -459,9 +451,9 @@ double FUN_801e7be8(ushort *param_1,int param_2,int param_3)
   }
   return dVar5;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 void fn_801E7DC8(int p1, int p2, int count)
 {
   extern u8 Obj_IsLoadingLocked(void);
@@ -599,8 +591,6 @@ void FUN_801e7d3c(undefined4 param_1,undefined4 param_2,int param_3,undefined4 p
   FUN_8028688c();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -617,6 +607,8 @@ void FUN_801e7d3c(undefined4 param_1,undefined4 param_2,int param_3,undefined4 p
  */
 extern void Stack_Free();
 
+#pragma scheduling off
+#pragma peephole off
 void shopkeeper_free(int param_1)
 {
   Stack_Free(*(undefined4 *)(*(int *)&((GameObject *)param_1)->extra + 0x9b0));
@@ -706,8 +698,6 @@ void FUN_801e80b0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   *(undefined *)(param_9 + 0x1b) = *(undefined *)(iVar4 + 0x9d6);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -722,6 +712,8 @@ void FUN_801e80b0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void FUN_801e8274(int param_1)
 {
 }
@@ -858,8 +850,6 @@ void FUN_801e8300(void)
   FUN_80286884();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -874,8 +864,6 @@ void FUN_801e8300(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801e8514(int param_1)
 {
   int iVar1;
@@ -893,8 +881,6 @@ void FUN_801e8514(int param_1)
   ;
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -909,6 +895,8 @@ void FUN_801e8514(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 undefined4 FUN_801e85b0(undefined2 *param_1,undefined4 param_2,int param_3)
 {
     return 0;
@@ -948,8 +936,6 @@ void FUN_801e85b8(int param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -964,8 +950,6 @@ void FUN_801e85b8(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801e8658(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   if (visible != 0) {
@@ -978,9 +962,9 @@ void FUN_801e8658(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 int fn_801E86F4(int obj, int p2, ObjSeqState *seq)
 {
   extern void fn_801E8660(int obj);

@@ -238,8 +238,8 @@ void androsshand_update(int obj)
     }
     ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, state->animSpeed, timeDelta, 0);
 }
-#pragma peephole reset
 
+#pragma peephole off
 void androsshand_hitDetect(void) {}
 
 void androsshand_setState(int obj, int newState, u8 force)

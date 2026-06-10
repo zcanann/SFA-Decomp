@@ -524,9 +524,9 @@ void FUN_80128260(void)
   FUN_8028688c();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 void FUN_8012845c()
 {
 }
@@ -609,9 +609,9 @@ void FUN_80129a98(void)
   FUN_80286880();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 void FUN_80129d10()
 {
 }
@@ -726,9 +726,9 @@ void FUN_8012c1c0(void)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 void FUN_8012c33c()
 {
 }
@@ -793,9 +793,9 @@ void FUN_8012c9e8(undefined4 param_1,undefined4 param_2,short param_3,short para
   FUN_80286864();
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 void FUN_8012cd38()
 {
 }

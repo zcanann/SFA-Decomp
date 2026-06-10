@@ -301,8 +301,6 @@ void FUN_80189cc4(int obj, StaffActivatedState *state)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -317,8 +315,6 @@ void FUN_80189cc4(int obj, StaffActivatedState *state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_80189e0c(uint obj, StaffActivatedState *state)
 {
   double dVar1;
@@ -373,8 +369,6 @@ void FUN_80189e0c(uint obj, StaffActivatedState *state)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -389,8 +383,6 @@ void FUN_80189e0c(uint obj, StaffActivatedState *state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_8018a060(int obj,char enabled)
 {
   StaffActivatedSetup *setup;
@@ -408,8 +400,6 @@ void FUN_8018a060(int obj,char enabled)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -424,6 +414,8 @@ void FUN_8018a060(int obj,char enabled)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 byte FUN_8018a0d0(int obj)
 {
   return ((StaffActivatedState *)((GameObject *)obj)->extra)->flags >> 5 & 1;

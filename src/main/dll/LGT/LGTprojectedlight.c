@@ -123,8 +123,6 @@ void wmlevelcontrol_readParams(undefined2 *param_1,int param_2)
   pfVar1[6] = *(float *)(param_1 + 10);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -139,8 +137,6 @@ void wmlevelcontrol_readParams(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801f456c(int param_1)
 {
   float fVar1;
@@ -257,8 +253,6 @@ void FUN_801f456c(int param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -273,8 +267,6 @@ void FUN_801f456c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801f4b64(int param_1)
 {
   ObjGroup_RemoveObject(param_1,9);
@@ -284,8 +276,6 @@ void FUN_801f4b64(int param_1)
   GameBit_Set(0x390,1);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -300,8 +290,6 @@ void FUN_801f4b64(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801f4bb8(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   if (visible != 0) {
@@ -309,8 +297,6 @@ void FUN_801f4bb8(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -325,6 +311,8 @@ void FUN_801f4bb8(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void wmlevelcontrol_update(int obj)
 {
   uint areaId;

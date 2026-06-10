@@ -340,8 +340,6 @@ void FUN_801cf0b4(int param_1)
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -356,6 +354,8 @@ void FUN_801cf0b4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int nw_tricky_getExtraSize(void)
 {
   return 8;
@@ -409,8 +409,6 @@ void FUN_801cf108(int param_1)
                ,0);
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -425,8 +423,6 @@ void FUN_801cf108(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling on
-#pragma peephole on
 void FUN_801cf1a0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9)
@@ -563,9 +559,9 @@ LAB_801cf840:
   }
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 void nw_tricky_free(int obj) {
     (void)obj;
     GameBit_Set(0x4e4, 1);

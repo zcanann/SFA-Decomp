@@ -50,8 +50,8 @@ void arwblocker_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7218);
 }
 
-#pragma peephole off
 #pragma scheduling off
+#pragma peephole off
 void arwblocker_init(int obj, int setup)
 {
     ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
@@ -66,9 +66,9 @@ void arwblocker_init(int obj, int setup)
     objAnim->alpha = 0;
     ObjHits_DisableObject(obj);
 }
-#pragma scheduling reset
-#pragma peephole reset
 
+#pragma scheduling on
+#pragma peephole on
 void arwblocker_release(void) {}
 
 void arwblocker_initialise(void) {}
@@ -102,4 +102,3 @@ void arwblocker_update(int obj) {
         }
     }
 }
-#pragma scheduling reset

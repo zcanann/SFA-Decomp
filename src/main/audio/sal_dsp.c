@@ -139,7 +139,6 @@ void hwInitIrq(void)
     oldState = OSDisableInterrupts();
     hwIrqLevel = 1;
 }
-#pragma scheduling reset
 
 /*
  * --INFO--
@@ -148,6 +147,7 @@ void hwInitIrq(void)
  * EN v1.0 Address: 0x80284AF4
  * EN v1.0 Size: 56b
  */
+#pragma scheduling on
 void sndBegin(void)
 {
     u16 count = hwIrqLevel;

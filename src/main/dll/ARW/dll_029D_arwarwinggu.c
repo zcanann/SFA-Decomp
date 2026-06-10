@@ -50,8 +50,8 @@ void arwarwinggu_init(int obj)
     objAnim->alpha = 0;
 }
 
-#pragma peephole off
 #pragma scheduling off
+#pragma peephole off
 void arwarwinggu_setActiveVisible(int obj, u8 active, u8 visible)
 {
     ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
@@ -67,15 +67,15 @@ void arwarwinggu_setActiveVisible(int obj, u8 active, u8 visible)
         objAnim->alpha = 0;
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
+#pragma scheduling on
+#pragma peephole on
 void arwarwinggu_release(void) {}
 
 void arwarwinggu_initialise(void) {}
 
-#pragma peephole off
 #pragma scheduling off
+#pragma peephole off
 void arwarwinggu_update(int obj)
 {
     ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
@@ -120,9 +120,9 @@ void arwarwinggu_update(int obj)
     }
     }
 }
-#pragma scheduling reset
-#pragma peephole reset
 
+#pragma scheduling on
+#pragma peephole on
 void fn_8022F270(int obj, int p2)
 {
     ArwingGuState *state = ((GameObject *)obj)->extra;
@@ -140,5 +140,3 @@ void fn_8022F27C(int obj)
     fn_800541A4(anim, (u16)state->texture.textureFrame);
     textureAnimFn_80053f2c(anim, (int)state, (int)texture);
 }
-#pragma peephole reset
-#pragma scheduling reset
