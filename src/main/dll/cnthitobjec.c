@@ -70,7 +70,7 @@ void cnthitobjec_hitDetect(int obj)
             } else {
                 amount = s->explosionSize;
             }
-            model = s->base.mapId;
+            model = ((CntHitObjectSetup *)((GameObject *)obj)->anim.placementData)->base.mapId;
             if (model != CNTHIT_MODEL_NO_EXPLOSION_A && model != CNTHIT_MODEL_NO_EXPLOSION_B && model != CNTHIT_MODEL_NO_EXPLOSION_C &&
                 model != CNTHIT_MODEL_NO_EXPLOSION_D) {
                 spawnExplosion(obj, (f32)amount, 1, 1, 1, 1, 0, 1, 0);
