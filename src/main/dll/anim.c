@@ -2787,7 +2787,7 @@ void FUN_8020335c(void)
  */
 void FUN_80203360(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,int param_11,undefined4 param_12,
+                 undefined4 param_9,undefined4 param_10,ObjAnimUpdateState *animUpdate,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
 {
   bool bVar1;
@@ -2804,8 +2804,8 @@ void FUN_80203360(undefined8 param_1,double param_2,double param_3,undefined8 pa
   uVar2 = FUN_8028683c();
   iVar7 = *(int *)(uVar2 + 0x4c);
   uVar8 = extraout_f1;
-  for (iVar6 = 0; iVar6 < (int)(uint)*(byte *)(param_11 + 0x8b); iVar6 = iVar6 + 1) {
-    if ((((*(char *)(param_11 + iVar6 + 0x81) == '\x01') &&
+  for (iVar6 = 0; iVar6 < (int)(uint)animUpdate->eventCount; iVar6 = iVar6 + 1) {
+    if ((((animUpdate->eventIds[iVar6] == 1) &&
          (uVar4 = FUN_80017690((int)*(char *)(iVar7 + 0x19) + 0xa29), uVar4 == 0)) &&
         (uVar4 = FUN_80017ae8(), (uVar4 & 0xff) != 0)) &&
        (uVar4 = FUN_8005b54c(0x4658a,(int *)0x0,(int *)0x0,(int *)0x0,(uint *)0x0), uVar4 != 0)) {
@@ -3652,7 +3652,7 @@ void FUN_80204814(void)
  */
 void FUN_80204834(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,int param_11,int param_12,
+                 undefined4 param_9,undefined4 param_10,ObjAnimUpdateState *animUpdate,int param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
 {
   short sVar1;
@@ -3668,12 +3668,12 @@ void FUN_80204834(undefined8 param_1,double param_2,double param_3,undefined8 pa
   iVar2 = FUN_80286840();
   iVar8 = *(int *)(iVar2 + 0xb8);
   iVar7 = *(int *)(iVar2 + 0x4c);
-  *(undefined2 *)(param_11 + 0x70) = 0xffff;
-  *(undefined *)(param_11 + 0x56) = 0;
-  for (iVar6 = 0; iVar6 < (int)(uint)*(byte *)(param_11 + 0x8b); iVar6 = iVar6 + 1) {
+  animUpdate->activeHitVolumePair = -1;
+  animUpdate->sequenceEventActive = 0;
+  for (iVar6 = 0; iVar6 < (int)(uint)animUpdate->eventCount; iVar6 = iVar6 + 1) {
     sVar1 = *(short *)(iVar8 + 8);
     if (sVar1 == 10) {
-      if (*(char *)(param_11 + iVar6 + 0x81) == '\x14') {
+      if (animUpdate->eventIds[iVar6] == 0x14) {
         if (*(int *)(iVar7 + 0x14) == 0x49de8) {
           *(byte *)(iVar8 + 0xf) = *(byte *)(iVar8 + 0xf) & 0x7f | 0x80;
         }
@@ -3693,7 +3693,7 @@ void FUN_80204834(undefined8 param_1,double param_2,double param_3,undefined8 pa
         }
       }
     }
-    else if (((sVar1 < 10) && (sVar1 == 1)) && (*(char *)(param_11 + iVar6 + 0x81) == '\x01')) {
+    else if (((sVar1 < 10) && (sVar1 == 1)) && (animUpdate->eventIds[iVar6] == 1)) {
       cVar4 = (*gMapEventInterface)->getMode((int)((GameObject *)iVar2)->anim.mapEventSlot);
       if (cVar4 == '\x01') {
         (*gMapEventInterface)->setAnimEvent((int)((GameObject *)iVar2)->anim.mapEventSlot,5,0);
@@ -3709,7 +3709,7 @@ void FUN_80204834(undefined8 param_1,double param_2,double param_3,undefined8 pa
         }
       }
     }
-    *(undefined *)(param_11 + iVar6 + 0x81) = 0;
+    animUpdate->eventIds[iVar6] = 0;
   }
   FUN_8028688c();
   return;

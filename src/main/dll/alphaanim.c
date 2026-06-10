@@ -338,7 +338,7 @@ void FUN_8017c5c4(int param_1)
 undefined4
 FUN_8017c608(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,undefined4 param_10
-            ,int param_11,undefined4 param_12,int param_13,undefined4 param_14,undefined4 param_15,
+            ,ObjAnimUpdateState *animUpdate,undefined4 param_12,int param_13,undefined4 param_14,undefined4 param_15,
             undefined4 param_16)
 {
   byte bVar1;
@@ -350,10 +350,10 @@ FUN_8017c608(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   if (((GameObject *)param_9)->unkB4 != -1) {
     iVar5 = *(int *)&((GameObject *)param_9)->anim.placementData;
     pbVar4 = ((GameObject *)param_9)->extra;
-    *(undefined *)(param_11 + 0x56) = 0;
-    iVar2 = param_11;
-    for (iVar3 = 0; iVar3 < (int)(uint)*(byte *)(param_11 + 0x8b); iVar3 = iVar3 + 1) {
-      bVar1 = *(byte *)(param_11 + iVar3 + 0x81);
+    animUpdate->sequenceEventActive = 0;
+    iVar2 = (int)animUpdate;
+    for (iVar3 = 0; iVar3 < (int)(uint)animUpdate->eventCount; iVar3 = iVar3 + 1) {
+      bVar1 = animUpdate->eventIds[iVar3];
       if (bVar1 == 2) {
         if (*(byte *)(iVar5 + 0x24) != 0) {
           param_1 = FUN_80053c98(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,

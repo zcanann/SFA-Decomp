@@ -1506,7 +1506,7 @@ void FUN_801f23c0(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_801f25b4(int param_1,undefined4 param_2,int param_3)
+undefined4 FUN_801f25b4(int param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate)
 {
   char cVar1;
   int iVar2;
@@ -1516,15 +1516,15 @@ undefined4 FUN_801f25b4(int param_1,undefined4 param_2,int param_3)
   iVar2 = FUN_80017a98();
   iVar4 = *(int *)&((GameObject *)param_1)->extra;
   *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode | 8;
-  for (iVar3 = 0; iVar3 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar3 = iVar3 + 1) {
+  for (iVar3 = 0; iVar3 < (int)(uint)animUpdate->eventCount; iVar3 = iVar3 + 1) {
     cVar1 = *(char *)(iVar4 + 0x25);
     if (cVar1 == '\x01') {
-      if (*(char *)(param_3 + iVar3 + 0x81) == '\x04') {
+      if (animUpdate->eventIds[iVar3] == 4) {
         FUN_80294d40(iVar2,5);
       }
     }
     else if (cVar1 != '\x02') {
-      cVar1 = *(char *)(param_3 + iVar3 + 0x81);
+      cVar1 = animUpdate->eventIds[iVar3];
       if (cVar1 == '\x01') {
         FUN_80017698(0xd0,1);
         *(undefined *)(iVar4 + 0x24) = 1;
@@ -1551,7 +1551,7 @@ undefined4 FUN_801f25b4(int param_1,undefined4 param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_801f26a8(int param_1,undefined4 param_2,int param_3)
+undefined4 FUN_801f26a8(int param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate)
 {
   undefined uVar1;
   int iVar2;
@@ -1560,7 +1560,7 @@ undefined4 FUN_801f26a8(int param_1,undefined4 param_2,int param_3)
   uVar1 = (*gMapEventInterface)->getMode((int)((GameObject *)param_1)->anim.mapEventSlot);
   switch(uVar1) {
   case 1:
-    FUN_801f25b4(param_1,param_2,param_3);
+    FUN_801f25b4(param_1,param_2,animUpdate);
     break;
   case 4:
     *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode | 8;
@@ -1568,8 +1568,8 @@ undefined4 FUN_801f26a8(int param_1,undefined4 param_2,int param_3)
   case 6:
     iVar2 = *(int *)&((GameObject *)param_1)->extra;
     *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode | 8;
-    for (iVar3 = 0; iVar3 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar3 = iVar3 + 1) {
-      if ((*(char *)(param_3 + iVar3 + 0x81) == '\x01') && (1 < *(byte *)(iVar2 + 0x27))) {
+    for (iVar3 = 0; iVar3 < (int)(uint)animUpdate->eventCount; iVar3 = iVar3 + 1) {
+      if ((animUpdate->eventIds[iVar3] == 1) && (1 < *(byte *)(iVar2 + 0x27))) {
         FUN_80017698(0x314,1);
       }
     }

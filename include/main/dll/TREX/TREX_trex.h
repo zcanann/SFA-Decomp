@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
+#include "main/objanim_update.h"
 
 extern ObjectDescriptor24 gShopObjDescriptor;
 
@@ -39,7 +40,7 @@ void FUN_801e4d6c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined2 *param_9);
 void FUN_801e50a4(int param_1);
-undefined4 FUN_801e514c(uint param_1,undefined4 param_2,int param_3);
+undefined4 FUN_801e514c(uint param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate);
 void FUN_801e521c(int param_1);
 void FUN_801e524c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
@@ -63,7 +64,7 @@ void FUN_801e5bd4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 void FUN_801e5dd0(int param_1,int param_2);
 void FUN_801e5f78(int param_1);
 void FUN_801e5fc4(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
-undefined4 FUN_801e5fec(int param_1,undefined4 param_2,int param_3);
+undefined4 FUN_801e5fec(int param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate);
 void FUN_801e60cc(uint param_1);
 void FUN_801e62b8(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible);
 void FUN_801e62e0(int param_1);

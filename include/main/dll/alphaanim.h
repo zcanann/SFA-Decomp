@@ -61,7 +61,7 @@ void FUN_8017c5c4(int param_1);
 undefined4
 FUN_8017c608(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,undefined4 param_10
-            ,int param_11,undefined4 param_12,int param_13,undefined4 param_14,undefined4 param_15,
+            ,ObjAnimUpdateState *animUpdate,undefined4 param_12,int param_13,undefined4 param_14,undefined4 param_15,
             undefined4 param_16);
 void seqObject_free(int param_1);
 void seqObject_render(int param_1,int p1,int p2,int p3,int p4,s8 visible);

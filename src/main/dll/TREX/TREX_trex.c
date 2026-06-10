@@ -810,15 +810,15 @@ void FUN_801e50a4(int param_1)
  */
 #pragma scheduling on
 #pragma peephole on
-undefined4 FUN_801e514c(uint param_1,undefined4 param_2,int param_3)
+undefined4 FUN_801e514c(uint param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate)
 {
   char cVar1;
   int iVar2;
   int iVar3;
   
   iVar2 = *(int *)&((GameObject *)param_1)->extra;
-  for (iVar3 = 0; iVar3 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar3 = iVar3 + 1) {
-    cVar1 = *(char *)(param_3 + iVar3 + 0x81);
+  for (iVar3 = 0; iVar3 < (int)(uint)animUpdate->eventCount; iVar3 = iVar3 + 1) {
+    cVar1 = animUpdate->eventIds[iVar3];
     if (cVar1 == '\x01') {
       *(undefined *)(iVar2 + 4) = 1;
     }
@@ -826,15 +826,15 @@ undefined4 FUN_801e514c(uint param_1,undefined4 param_2,int param_3)
       *(undefined *)(iVar2 + 4) = 2;
     }
   }
-  *(undefined2 *)(param_3 + 0x6e) = 0xfffc;
+  animUpdate->hitVolumePair = -4;
   if (((GameObject *)param_1)->unkB4 != -1) {
-    *(ushort *)(param_3 + 0x6e) = *(ushort *)(param_3 + 0x6e) & ~0x4;
+    animUpdate->hitVolumePair &= ~4;
     iVar2 = FUN_8002fc3c((double)lbl_803E65B0,(double)lbl_803DC074);
     if (iVar2 != 0) {
       FUN_80006824(param_1,SFXfend_rob_beep2);
     }
   }
-  *(undefined *)(param_3 + 0x56) = 0;
+  animUpdate->sequenceEventActive = 0;
   return 0;
 }
 #pragma peephole reset
@@ -1485,7 +1485,7 @@ void FUN_801e5fc4(int param_1, int param_2, int param_3, int param_4, int param_
  */
 #pragma scheduling on
 #pragma peephole on
-undefined4 FUN_801e5fec(int param_1,undefined4 param_2,int param_3)
+undefined4 FUN_801e5fec(int param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate)
 {
   uint uVar1;
   int iVar2;
@@ -1498,14 +1498,14 @@ undefined4 FUN_801e5fec(int param_1,undefined4 param_2,int param_3)
   
   uVar1 = randomGetRange(0,1);
   if (uVar1 == 0) {
-    *(undefined *)(param_3 + 0x90) = 8;
+    animUpdate->sequenceControlFlags = 8;
   }
   else {
-    *(undefined *)(param_3 + 0x90) = 4;
+    animUpdate->sequenceControlFlags = 4;
   }
-  *(undefined *)(param_3 + 0x56) = 0;
-  *(undefined2 *)(param_3 + 0x6e) = 0xffff;
-  *(ushort *)(param_3 + 0x6e) = *(ushort *)(param_3 + 0x6e) & ~0x20;
+  animUpdate->sequenceEventActive = 0;
+  animUpdate->hitVolumePair = -1;
+  animUpdate->hitVolumePair &= ~0x20;
   iVar2 = FUN_80017a98();
   if ((iVar2 != 0) && ((((GameObject *)param_1)->objectFlags & 0x800) != 0)) {
     local_20 = lbl_803E6614;
