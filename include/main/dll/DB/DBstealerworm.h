@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
+#include "main/objanim_update.h"
 
 extern ObjectDescriptor15 gSB_GalleonObjDescriptor;
 extern ObjectDescriptor gSB_PropellerObjDescriptor;
@@ -10,7 +11,7 @@ extern ObjectDescriptor gSB_ShipHeadObjDescriptor;
 extern ObjectDescriptor gSB_ShipMastObjDescriptor;
 
 void fn_801E1588(int param_1,int param_2);
-int fn_801E1AAC(int obj, int p2, int msgSrc);
+int SB_Galleon_animEventCallback(int obj, int unused, ObjAnimUpdateState *animUpdate);
 undefined4 FUN_801e1ee4(void);
 undefined4 FUN_801e2184(void);
 int SB_Galleon_func0E(int *obj);

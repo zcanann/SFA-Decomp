@@ -208,7 +208,7 @@ extern f32 lbl_803E57F4;
 extern f32 lbl_803E57F8;
 extern f32 lbl_803E5790;
 extern f32 timeDelta;
-int SB_Galleon_animEventCallback(int obj, int p2, int msgSrc) {
+int SB_Galleon_animEventCallback(int obj, int unused, ObjAnimUpdateState *animUpdate) {
     int state = *(int *)&((GameObject *)obj)->extra;
     int i;
     ((GameObject *)obj)->anim.mapEventSlot = -1;
@@ -220,9 +220,9 @@ int SB_Galleon_animEventCallback(int obj, int p2, int msgSrc) {
         ((SBGalleonState *)state)->swayY = z;
         ((SBGalleonState *)state)->swayZ = z;
     }
-    *(void **)(msgSrc + 0xe8) = (void *)DBprotection_storeHomePosition;
-    for (i = 0; i < *(u8 *)(msgSrc + 0x8b); i++) {
-        switch (*(u8 *)(msgSrc + i + 0x81)) {
+    animUpdate->sequenceCallback = (void *)DBprotection_storeHomePosition;
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        switch (animUpdate->eventIds[i]) {
         case 2:
             if (((SBGalleonState *)state)->unk79 == 1) {
                 ((SBGalleonState *)state)->unk79 = 0;
@@ -324,8 +324,8 @@ int SB_Galleon_animEventCallback(int obj, int p2, int msgSrc) {
     ((SBGalleonState *)state)->posX = ((GameObject *)obj)->anim.localPosX;
     ((SBGalleonState *)state)->posY = ((GameObject *)obj)->anim.localPosY;
     ((SBGalleonState *)state)->posZ = ((GameObject *)obj)->anim.localPosZ;
-    *(s16 *)(msgSrc + 0x6e) = *(s16 *)(msgSrc + 0x70);
-    *(u8 *)(msgSrc + 0x56) = 0;
+    animUpdate->hitVolumePair = animUpdate->activeHitVolumePair;
+    animUpdate->sequenceEventActive = 0;
     return 0;
 }
 

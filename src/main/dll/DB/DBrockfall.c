@@ -106,11 +106,10 @@ static int FEseqobject_findControlObject(void)
 #pragma peephole reset
 #pragma scheduling reset
 
-int FEseqobject_SeqFn(int obj, undefined4 unused, u8 *setup)
+int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
   FEseqobjectEffectParams effect;
   register int self = obj;
-  register u8 *setupData = setup;
   int i;
   int msg;
   uint sender;
@@ -122,7 +121,7 @@ int FEseqobject_SeqFn(int obj, undefined4 unused, u8 *setup)
   zero = lbl_803E56B0;
   one = lbl_803E56B4;
   controlObj = 0;
-  for (i = 0; i < setupData[0x8b]; i++) {
+  for (i = 0; i < animUpdate->eventCount; i++) {
     effect.x = zero;
     effect.y = zero;
     effect.z = zero;
@@ -131,7 +130,7 @@ int FEseqobject_SeqFn(int obj, undefined4 unused, u8 *setup)
     effect.xRot = 0;
     effect.variant = 0;
 
-    switch (setupData[i + 0x81]) {
+    switch (animUpdate->eventIds[i]) {
       case 1:
         GameBit_Set(0x75, 1);
         break;
@@ -159,7 +158,7 @@ int FEseqobject_SeqFn(int obj, undefined4 unused, u8 *setup)
   }
 
   while (ObjMsg_Pop((void *)self, (uint *)&msg, &sender, &param) != 0) {
-    if ((setupData[0x90] & 0x80) == 0) {
+    if ((((u8 *)animUpdate)[0x90] & 0x80) == 0) {
       if (msg == 0xf000b) {
         controlObj = FEseqobject_findControlObject();
         if (controlObj != 0) {
@@ -178,7 +177,7 @@ int FEseqobject_SeqFn(int obj, undefined4 unused, u8 *setup)
       }
     }
   }
-  setupData[0x56] = 0;
+  animUpdate->sequenceEventActive = 0;
   return 0;
 }
 
@@ -474,9 +473,9 @@ void FEseqobject_update(int obj)
  * EN v1.0 Address: 0x801DF9AC
  * EN v1.0 Size: 16b
  */
-int dll_144_SeqFn(void *p1, void *p2, u8 *p3)
+int dll_144_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
-    p3[0x56] = 0;
+    animUpdate->sequenceEventActive = 0;
     return 0;
 }
 

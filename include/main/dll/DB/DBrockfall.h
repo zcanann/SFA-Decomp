@@ -4,6 +4,7 @@
 #include "ghidra_import.h"
 #include "main/dll/paymentkiosk.h"
 #include "main/object_descriptor.h"
+#include "main/objanim_update.h"
 
 typedef struct FEseqobjectState {
   u8 state;
@@ -12,10 +13,10 @@ typedef struct FEseqobjectState {
 } FEseqobjectState;
 
 void paymentkiosk_init(int obj, PaymentKioskMapData *initData);
-int FEseqobject_SeqFn(int obj, undefined4 unused, u8 *setup);
+int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 void FEseqobject_init(int obj);
 void FEseqobject_update(int obj);
-int dll_144_SeqFn(void *p1, void *p2, u8 *p3);
+int dll_144_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 void dll_144_init(int obj);
 void paymentkiosk_release(void);
 void paymentkiosk_initialise(void);

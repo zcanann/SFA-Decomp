@@ -289,24 +289,20 @@ typedef struct LanternFlagBits {
     u8 rest : 7;
 } LanternFlagBits;
 
-int dfsh_shrine_SeqFn(int obj,int unused,void *seq)
+int dfsh_shrine_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
   int objLocal;
-  u8 *seqBytes;
   DFlanternShrineState *state;
   u8 *player;
   int i;
-  int cmdOffset;
   u8 cmd;
 
   objLocal = obj;
-  seqBytes = seq;
   state = *(DFlanternShrineState **)(objLocal + 0xb8);
   player = Obj_GetPlayerObject();
-  seqBytes[0x56] = 0;
-  for (i = 0; i < seqBytes[0x8b]; i++) {
-    cmdOffset = i + 0x81;
-    cmd = seqBytes[cmdOffset];
+  animUpdate->sequenceEventActive = 0;
+  for (i = 0; i < animUpdate->eventCount; i++) {
+    cmd = animUpdate->eventIds[i];
     if (cmd != 0) {
       switch (cmd) {
       case 3:
@@ -332,7 +328,7 @@ int dfsh_shrine_SeqFn(int obj,int unused,void *seq)
         break;
       }
     }
-    seqBytes[cmdOffset] = 0;
+    animUpdate->eventIds[i] = 0;
   }
   return 0;
 }
