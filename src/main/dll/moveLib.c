@@ -32,7 +32,7 @@ typedef struct Dll19State {
     u8 pad336[0x3F4 - 0x336];
     s16 unk3F4;
     u8 pad3F6[0x400 - 0x3F6];
-    u16 flags400;
+    u16 unk400;
     u8 pad402[0x405 - 0x402];
     u8 unk405;
     u8 pad406[0x5F8 - 0x406];
@@ -858,9 +858,9 @@ void dll_19_func07(int obj, int target, int div, u16 *outYaw, u16 *outDelta, u16
         }
         *outDelta = (u16)delta;
         if ((u16)delta < 0x31c4 || (u16)delta > 0xce3b) {
-            ((Dll19State *)st)->flags400 &= ~0x10;
+            ((Dll19State *)st)->unk400 &= ~0x10;
         } else {
-            ((Dll19State *)st)->flags400 |= 0x10;
+            ((Dll19State *)st)->unk400 |= 0x10;
         }
         *outYaw = (u16)delta / (0x10000 / (u8)div);
         *outDist = sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1]));

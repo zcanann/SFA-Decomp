@@ -22,7 +22,7 @@ typedef struct DREarthWarriorPlacement {
 typedef struct DREarthWarriorState {
     s32 unk0;
     u8 pad4[0x9FD - 0x4];
-    u8 flags9FD;
+    u8 unk9FD;
     u8 pad9FE[0xB54 - 0x9FE];
     s32 unkB54;
     u8 padB58[0xF50 - 0xB58];
@@ -79,7 +79,7 @@ typedef struct EarthWarriorSub {
     u8 pad000[0x264];
     u8 unk264;
     u8 pad265[0xfb];
-    int flags360;
+    int unk360;
     u8 pad364[0x8c];
     u8 flags3F0;     /* ByteFlags: b40 leap, b80 airborne */
     u8 flags3F1;
@@ -181,7 +181,7 @@ STATIC_ASSERT(sizeof(EarthWarriorSub) == 0x9a4);
 typedef struct EarthWarriorState {
     BaddieState baddie;
     u8 pad35C[0x9fd - 0x35c];
-    u8 flags9FD;
+    u8 unk9FD;
     u8 pad9FE[0xb54 - 0x9fe];
     int unkB54;
     EarthWarriorSub sub; /* 0xb58 */
@@ -438,7 +438,7 @@ void DR_EarthWarrior_func17(int obj, int param)
     if (param == 0) {
         GameBit_Set(0x7bc, 0);
         GameBit_Set(0x7d4, 1);
-        inner->flags9FD &= ~1;
+        inner->unk9FD &= ~1;
         ((ByteFlags *)&inner->sub.flags994)->b02 = 0;
         (*gGameUIInterface)->airMeterSetShutdown();
     } else {
@@ -490,16 +490,16 @@ int fn_802BDBE8(int obj, int unused, ObjAnimUpdateState *animUpdate)
             break;
         case 0xe:
         case 0xf:
-            inner->flags9FD |= 1;
+            inner->unk9FD |= 1;
             (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->shapeFlags &= ~0x20;
             break;
         case 0x10:
-            inner->flags9FD &= ~1;
+            inner->unk9FD &= ~1;
             (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->shapeFlags |= 0x20;
             break;
         }
     }
-    inner->sub.flags360 |= 0x800000;
+    inner->sub.unk360 |= 0x800000;
     (*gPathControlInterface)->attachObject((void *)obj, pathState);
     fz = lbl_803E8304;
     inner->baddie.unk294 = fz;
@@ -553,7 +553,7 @@ void fn_802BE6E8(int obj, int t, int p3)
 
 int fn_802BC830(int obj, int p2, int p3)
 {
-    ((EarthWarriorSub *)p2)->flags360 |= 0x1000000;
+    ((EarthWarriorSub *)p2)->unk360 |= 0x1000000;
     ((BaddieState *)p3)->moveSpeed = lbl_803E82EC;
     if (((GameObject *)obj)->anim.currentMoveProgress > GXInit_ClearColor &&
         ((GameObject *)obj)->anim.currentMoveProgress < GXInit_BlackColor &&
@@ -712,7 +712,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
     }
     if (((ByteFlags *)&((EarthWarriorSub *)q)->flags3F0)->b40) {
         s16 sv;
-        ((EarthWarriorSub *)q)->flags360 |= 0x1000000;
+        ((EarthWarriorSub *)q)->unk360 |= 0x1000000;
         ((EarthWarriorState *)p2)->baddie.moveSpeed = lbl_803E8300;
         sv = (s16)(int)(lbl_803E8320 * ((GameObject *)obj)->anim.currentMoveProgress + (f32)(s32)((EarthWarriorSub *)q)->unk858);
         ((EarthWarriorSub *)q)->unk478 = sv;
@@ -767,7 +767,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
         ((EarthWarriorState *)p2)->baddie.unk294 > lbl_803E8340 + *(f32 *)(((EarthWarriorSub *)q)->unk400 + 0x14) &&
         (((EarthWarriorSub *)q)->unk470 < lbl_803E8344 || ((EarthWarriorSub *)q)->unk488 >= 0x96)) {
         ((ByteFlags *)&((EarthWarriorSub *)q)->flags3F0)->b80 = 1;
-        ((EarthWarriorSub *)q)->flags360 |= 0x1000000;
+        ((EarthWarriorSub *)q)->unk360 |= 0x1000000;
         ((EarthWarriorSub *)q)->unk844 = ((EarthWarriorState *)p2)->baddie.animSpeedA;
         ObjAnim_SetCurrentMove(obj, *(s16 *)(((EarthWarriorSub *)q)->unk3F8 + 0x3c), lbl_803E8304, 0);
         ((EarthWarriorState *)p2)->baddie.moveSpeed = lbl_803E82EC;
@@ -1220,7 +1220,7 @@ void DR_EarthWarrior_init(int obj, int p2)
     dll_2E_func05(obj, inner + 0x3ec, -0x2000, 0x31c7, 2);
     dll_2E_func09(inner + 0x3ec, &r1, &r2, 2);
     fn_80113F94(inner + 0x3ec, lbl_803E8388);
-    ((DREarthWarriorState *)inner)->flags9FD |= 2;
+    ((DREarthWarriorState *)inner)->unk9FD |= 2;
     ((DREarthWarriorState *)inner)->unk1444 = lbl_803E82E8;
     ((DREarthWarriorState *)inner)->unk14E2 = *(s16 *)((char *)p2 + 0x1a);
     ((DREarthWarriorState *)inner)->unkF50 = (int)(base + 0xd8);

@@ -129,7 +129,7 @@ void smallbasket_init(int obj, int def)
     ((GameObject *)obj)->anim.previousLocalPosX = ((GameObject *)obj)->anim.localPosZ;
 
     if ((u32)GameBit_Get(((CfperchState *)state)->enableGameBit) != 0) {
-        ((CfperchState *)state)->timer14 = 1;
+        ((CfperchState *)state)->unk14 = 1;
         ObjHits_DisableObject(obj);
     }
 
@@ -282,19 +282,19 @@ void smallbasket_update(int obj)
         ((GameObject *)obj)->anim.velocityX = zf;
         ((GameObject *)obj)->anim.velocityZ = zf;
     }
-    if (((CfperchState *)state)->timer14 != 0) {
+    if (((CfperchState *)state)->unk14 != 0) {
         flag = 0;
         ((GameObject *)obj)->anim.alpha = flag;
-        ((CfperchState *)state)->timer14 -= (s16)(int)(timeDelta * animSpeed);
-        if (((CfperchState *)state)->timer14 <= 0) {
+        ((CfperchState *)state)->unk14 -= (s16)(int)(timeDelta * animSpeed);
+        if (((CfperchState *)state)->unk14 <= 0) {
             if ((Vec_distance(&((GameObject *)obj)->anim.worldPosX, (f32 *)((int)Obj_GetPlayerObject() + 0x18)) > lbl_803E3930) &&
                 (((CfperchState *)state)->enableGameBit == -1)) {
                 flag = 1;
             }
             if (flag == 0) {
-                ((CfperchState *)state)->timer14 = 1;
+                ((CfperchState *)state)->unk14 = 1;
             } else {
-                ((CfperchState *)state)->timer14 = 0;
+                ((CfperchState *)state)->unk14 = 0;
                 ((CfperchState *)state)->unkA = 0;
                 ObjHits_EnableObject(obj);
                 ObjHits_SyncObjectPositionIfDirty(obj);
@@ -315,9 +315,9 @@ void smallbasket_update(int obj)
             ((CfperchState *)state)->unkA -= framesThisStep;
             if (((CfperchState *)state)->unkA <= 0) {
                 if (((CfperchState *)state)->unk18 != 0) {
-                    ((CfperchState *)state)->timer14 = ((CfperchState *)state)->unk18;
+                    ((CfperchState *)state)->unk14 = ((CfperchState *)state)->unk18;
                 } else {
-                    ((CfperchState *)state)->timer14 = 1;
+                    ((CfperchState *)state)->unk14 = 1;
                 }
                 (*gMapEventInterface)->startTimedEvent(((ObjPlacement *)def)->mapId, (f32)((CfperchState *)state)->unk18);
                 ((GameObject *)obj)->anim.localPosX = ((ObjPlacement *)def)->posX;
@@ -428,7 +428,7 @@ void smallbasket_update(int obj)
                 }
                 if (*(s8 *)&((CfperchState *)state)->unk6 != 0) {
                     ((CfperchState *)state)->unkA = 0;
-                    ((CfperchState *)state)->timer14 = 0;
+                    ((CfperchState *)state)->unk14 = 0;
                     ObjMsg_SendToObject(player, 0x100010, obj,
                                         (((CfperchState *)state)->unk2 << 16) | ((u16)((CfperchState *)state)->unk0));
                 }

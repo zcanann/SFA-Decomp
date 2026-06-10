@@ -13,7 +13,7 @@
 typedef struct DIMSnowHorn1State {
     BaddieState baddie;
     u8 lookController[0x96D - 0x35C]; /* dll_2E look-controller block at 0x35C (start evidenced; true extent unknown) */
-    u8 flags96D;
+    u8 unk96D;
     u8 pad96E[0x980 - 0x96E];
     u8 unk980;
     u8 pad981[3];
@@ -27,12 +27,12 @@ typedef struct DIMSnowHorn1State {
     u8 pad9F4[0xA84 - 0x9F4];
     s16 unkA84;
     s16 unkA86;
-    s16 timerA88;
+    s16 unkA88;
     u8 unkA8A;
     u8 padA8B;
     u8 unkA8C;
     u8 unkA8D;
-    u8 flagsA8E;
+    u8 unkA8E;
     u8 padA8F[2];
     u8 unkA91;
     u8 padA92[0xD00 - 0xA92];
@@ -85,7 +85,7 @@ int DIMSnowHorn1_stateHandler00(int obj)
     switch (inner->unkA8C) {
     case 0:
         if (GameBit_Get(0xf3)) {
-            inner->flagsA8E |= 0x20;
+            inner->unkA8E |= 0x20;
         }
         return 2;
     case 5:
@@ -161,7 +161,7 @@ int DIMSnowHorn1_stateHandler03(int obj, int state)
         return -1;
     }
     if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) {
-        if (inner->flagsA8E & 0x20) {
+        if (inner->unkA8E & 0x20) {
             (*gObjectTriggerInterface)->runSequence(
                 randomGetRange(0, 2) + 6, (void *)obj, -1);
         } else {
@@ -201,7 +201,7 @@ int DIMSnowHorn1_stateHandler01(int obj, int state, f32 fv)
         return -3;
     }
     if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) {
-        if (inner->flagsA8E & 0x20) {
+        if (inner->unkA8E & 0x20) {
             (*gObjectTriggerInterface)->runSequence(
                 randomGetRange(0, 2) + 6, (void *)obj, -1);
         } else {
@@ -231,16 +231,16 @@ int DIMSnowHorn1_stateHandler0B(int obj, int state)
     ((GameObject *)obj)->anim.velocityZ = k;
 
     if (*(s8 *)&((DIMSnowHorn1State *)state)->baddie.moveJustStartedA != 0) {
-        inner->flagsA8E &= ~0x8;
+        inner->unkA8E &= ~0x8;
         ((ObjHitsPriorityState *)sub)->flags |= 0x200;
         ObjAnim_SetCurrentMove(obj, 0x204, k, 0);
         ((DIMSnowHorn1State *)state)->baddie.moveSpeed = lbl_803E8238;
         Sfx_PlayFromObject(obj, 0x3b3);
     }
     if ((((ObjHitsPriorityState *)sub)->flags & 0x200) && (((ObjHitsPriorityState *)sub)->contactFlags & 2)) {
-        inner->flagsA8E |= 0x8;
+        inner->unkA8E |= 0x8;
     }
-    if (inner->flagsA8E & 0x8) {
+    if (inner->unkA8E & 0x8) {
         *(u8 *)&((ObjHitsPriorityState *)sub)->hitVolumePriority = 0;
         *(u8 *)&((ObjHitsPriorityState *)sub)->hitVolumeId = 0;
         ((ObjHitsPriorityState *)sub)->flags &= ~0x200;
@@ -311,7 +311,7 @@ int DIMSnowHorn1_stateHandler08(int obj, int state)
                 return 8;
             }
         }
-        if (inner->timerA88 != 0 &&
+        if (inner->unkA88 != 0 &&
             ((DIMSnowHorn1State *)state)->baddie.moveSpeed > lbl_803E8234) {
             if (*(int *)&((DIMSnowHorn1State *)state)->baddie.unk31C != 0 ||
                 lbl_803E8234 != ((DIMSnowHorn1State *)state)->baddie.unk290 ||
@@ -321,7 +321,7 @@ int DIMSnowHorn1_stateHandler08(int obj, int state)
         }
         break;
     case 0x205:
-        if (inner->timerA88 != 0) {
+        if (inner->unkA88 != 0) {
             if (*(int *)&((DIMSnowHorn1State *)state)->baddie.unk31C != 0 ||
                 lbl_803E8234 != ((DIMSnowHorn1State *)state)->baddie.unk290 ||
                 lbl_803E8234 != ((DIMSnowHorn1State *)state)->baddie.unk28C) {
@@ -422,7 +422,7 @@ int DIMSnowHorn1_stateHandler06(int obj, int state)
     *(u32 *)((char *)state) |= 0x200000;
     inner = ((GameObject *)obj)->extra;
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
-    ((GameObject *)obj)->gameBitE4 = GameBit_Get(0x170) != 0;
+    ((GameObject *)obj)->unkE4 = GameBit_Get(0x170) != 0;
     if (*(s8 *)&((DIMSnowHorn1State *)state)->baddie.moveJustStartedA != 0) {
         ((DIMSnowHorn1State *)state)->baddie.moveSpeed = lbl_803E827C;
         if (((GameObject *)obj)->anim.currentMove != 0x13) {
@@ -610,7 +610,7 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
     if (v > lbl_803E8258) {
         v = lbl_803E8258;
     }
-    if (inner->timerA88 == 0) {
+    if (inner->unkA88 == 0) {
         v = lbl_803E8234;
     }
     target = lbl_803E825C * v;
@@ -784,9 +784,9 @@ int DIMSnowHorn1_func14(int obj)
 int DIMSnowHorn1_render2(int obj)
 {
     DIMSnowHorn1State *state = ((GameObject *)obj)->extra;
-    if ((state->flagsA8E & 0x2) != 0) {
+    if ((state->unkA8E & 0x2) != 0) {
         GameBit_Set(0x3e3, 0);
-        state->flagsA8E = (u8)(state->flagsA8E & ~0x2);
+        state->unkA8E = (u8)(state->unkA8E & ~0x2);
         return 1;
     }
     return 0;
@@ -831,7 +831,7 @@ int DIMSnowHorn1_animEventCallback(int obj, int unused, ObjAnimUpdateState *anim
             if (((GameObject *)obj)->unkB4 == -1) {
                 for (i = 0; i < (int)(u32)animUpdate->eventCount; i++) {
                     GameBit_Set(0x17b, 1);
-                    state->flagsA8E |= 0x20;
+                    state->unkA8E |= 0x20;
                 }
             }
             (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, (int)state, 1);
@@ -1055,17 +1055,17 @@ void fn_802BB4B4(int obj, int a, int slot)
 
     if (state->unkA8A == 2) {
         if (GameBit_Get(0x3e2) != 0) {
-            state->timerA88 -= 1;
+            state->unkA88 -= 1;
         } else {
-            state->timerA88 = 0x3e8;
+            state->unkA88 = 0x3e8;
         }
-        (*gGameUIInterface)->runAirMeter(state->timerA88);
+        (*gGameUIInterface)->runAirMeter(state->unkA88);
         if (GameBit_Get(0x3e9) != 0) {
             GameBit_Set(0x3e9, 0);
-            state->timerA88 = 0x3e8;
+            state->unkA88 = 0x3e8;
         }
-        if (state->timerA88 < 0) {
-            state->timerA88 = 0;
+        if (state->unkA88 < 0) {
+            state->unkA88 = 0;
             ((MapEventInterface *)*(int *)gMapEventInterface)
                 ->finishCurrentEvent((MapEventInterface *)*(int *)gMapEventInterface);
         }
@@ -1328,7 +1328,7 @@ void DIMSnowHorn1_init(int obj, int p2, int p3)
     inner = ((GameObject *)obj)->extra;
     inner->unkA8C = *(u8 *)((char *)p2 + 0x19);
     inner->unkA86 = 5;
-    inner->timerA88 = 0x3e8;
+    inner->unkA88 = 0x3e8;
     if (((GameObject *)obj)->anim.modelState != NULL) {
         ((GameObject *)obj)->anim.modelState->flags |= 0xa10;
     }
@@ -1353,7 +1353,7 @@ void DIMSnowHorn1_init(int obj, int p2, int p3)
         break;
     }
     dll_2E_func05(obj, (int)inner->lookController, -0x2000, 0x2aaa, 3);
-    inner->flags96D |= 8;
+    inner->unk96D |= 8;
     if (p3 == 0) {
         idx = -1;
         switch (inner->unkA8C) {

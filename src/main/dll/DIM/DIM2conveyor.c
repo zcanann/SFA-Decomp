@@ -109,10 +109,10 @@ void dimdismountpoint_update(int *obj) {
     nearest = ObjGroup_FindNearestObject(0xa, obj, &d);
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~8);
     if (GameBit_Get(0x3e3) != 0) {
-        ((GameObject *)obj)->gameBitE4 = 1;
+        ((GameObject *)obj)->unkE4 = 1;
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x10);
     } else {
-        ((GameObject *)obj)->gameBitE4 = 0;
+        ((GameObject *)obj)->unkE4 = 0;
         if (nearest != NULL &&
             ((int (*)(int*, int*))(*(int *)(*(int *)*(int **)&((GameObject *)nearest)->anim.dll + 0x20)))(nearest, obj) != 0) {
             *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x10);

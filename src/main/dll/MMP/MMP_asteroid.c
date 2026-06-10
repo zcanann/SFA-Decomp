@@ -203,7 +203,7 @@ void xyzanimator_update(int obj)
     block = (int)mapGetBlock(objPosToMapBlockIdx(((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY,
                                                  ((GameObject *)obj)->anim.localPosZ));
     if ((u32)block == 0) {
-        ((XyzAnimatorState *)state)->counter4D = 0;
+        ((XyzAnimatorState *)state)->unk4D = 0;
         goto done_lbl;
     }
     if ((*(u16 *)(block + 4) & 8) == 0) {
@@ -224,9 +224,9 @@ void xyzanimator_update(int obj)
         }
         ((XyzAnimatorState *)state)->unk4 = ((XyzAnimatorState *)state)->unk4 * 3;
         if (((XyzAnimatorPlacement *)setup)->unk18 == -1) {
-            ((XyzAnimatorState *)state)->gameBit4C = 1;
+            ((XyzAnimatorState *)state)->unk4C = 1;
         } else {
-            ((XyzAnimatorState *)state)->gameBit4C = (s8)GameBit_Get(((XyzAnimatorPlacement *)setup)->unk18);
+            ((XyzAnimatorState *)state)->unk4C = (s8)GameBit_Get(((XyzAnimatorPlacement *)setup)->unk18);
         }
         ((XyzAnimatorState *)state)->unk8 = *(u8 *)(block + 0xa1);
         ((XyzAnimatorState *)state)->unk40 = (f32)((XyzAnimatorPlacement *)setup)->unk1C;
@@ -236,7 +236,7 @@ void xyzanimator_update(int obj)
             ((XyzAnimatorState *)state)->unk40 = (f32)((XyzAnimatorPlacement *)setup)->unk22;
             ((XyzAnimatorState *)state)->unk44 = (f32)((XyzAnimatorPlacement *)setup)->unk24;
             ((XyzAnimatorState *)state)->unk48 = (f32)((XyzAnimatorPlacement *)setup)->unk26;
-            ((XyzAnimatorState *)state)->gameBit4C = 1;
+            ((XyzAnimatorState *)state)->unk4C = 1;
         }
         t = ((XyzAnimatorState *)state)->unk4 * 6 + ((XyzAnimatorState *)state)->unk0 * 0xc;
         alloc = mmAlloc(t + ((XyzAnimatorState *)state)->unk8 * 0xc, 5, 0);
@@ -276,30 +276,30 @@ void xyzanimator_update(int obj)
     }
     if (((XyzAnimatorPlacement *)setup)->unk2C == 2) {
         t = GameBit_Get(((XyzAnimatorPlacement *)setup)->unk18);
-        if (((XyzAnimatorState *)state)->gameBit4C != t) {
-            ((XyzAnimatorState *)state)->gameBit4C = (s8)t;
+        if (((XyzAnimatorState *)state)->unk4C != t) {
+            ((XyzAnimatorState *)state)->unk4C = (s8)t;
             if (t == 0) {
                 if (((XyzAnimatorPlacement *)setup)->unk1A > -1) {
                     GameBit_Set(((XyzAnimatorPlacement *)setup)->unk1A, 0);
                 }
             }
-            if (((XyzAnimatorState *)state)->counter4D > 2) {
-                ((XyzAnimatorState *)state)->counter4D = 0;
+            if (((XyzAnimatorState *)state)->unk4D > 2) {
+                ((XyzAnimatorState *)state)->unk4D = 0;
             }
         }
-        if (((XyzAnimatorState *)state)->counter4D > 2) {
+        if (((XyzAnimatorState *)state)->unk4D > 2) {
             goto done_lbl;
         }
         if (((XyzAnimatorState *)state)->unk4E != 0) {
             Sfx_KeepAliveLoopedObjectSound(obj);
         }
     } else {
-        if (((XyzAnimatorState *)state)->counter4D > 2) {
+        if (((XyzAnimatorState *)state)->unk4D > 2) {
             goto done_lbl;
         }
-        if (((XyzAnimatorState *)state)->gameBit4C == 0) {
-            ((XyzAnimatorState *)state)->gameBit4C = (s8)GameBit_Get(((XyzAnimatorPlacement *)setup)->unk18);
-            if (((XyzAnimatorState *)state)->gameBit4C == 0) {
+        if (((XyzAnimatorState *)state)->unk4C == 0) {
+            ((XyzAnimatorState *)state)->unk4C = (s8)GameBit_Get(((XyzAnimatorPlacement *)setup)->unk18);
+            if (((XyzAnimatorState *)state)->unk4C == 0) {
                 goto done_lbl;
             }
         }
@@ -357,7 +357,7 @@ void xyzanimator_update(int obj)
             if (((XyzAnimatorPlacement *)setup)->unk1A != -1) {
                 GameBit_Set(((XyzAnimatorPlacement *)setup)->unk1A, 1);
             }
-            ((XyzAnimatorState *)state)->counter4D += 1;
+            ((XyzAnimatorState *)state)->unk4D += 1;
         }
         break;
     case 1:
@@ -416,7 +416,7 @@ void xyzanimator_update(int obj)
         break;
     case 2:
         done = 0;
-        if (((XyzAnimatorState *)state)->gameBit4C != 0) {
+        if (((XyzAnimatorState *)state)->unk4C != 0) {
             if (((XyzAnimatorPlacement *)setup)->unk1C > ((XyzAnimatorPlacement *)setup)->unk22) {
                 ((XyzAnimatorState *)state)->unk40 =
                     -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk29 * timeDelta) -
@@ -469,7 +469,7 @@ void xyzanimator_update(int obj)
                 if (((XyzAnimatorPlacement *)setup)->unk1A != -1) {
                     GameBit_Set(((XyzAnimatorPlacement *)setup)->unk1A, 1);
                 }
-                ((XyzAnimatorState *)state)->counter4D += 1;
+                ((XyzAnimatorState *)state)->unk4D += 1;
             }
         } else {
             if (((XyzAnimatorPlacement *)setup)->unk1C > ((XyzAnimatorPlacement *)setup)->unk22) {
@@ -521,7 +521,7 @@ void xyzanimator_update(int obj)
                 }
             }
             if (done == 3) {
-                ((XyzAnimatorState *)state)->counter4D += 1;
+                ((XyzAnimatorState *)state)->unk4D += 1;
             }
         }
         break;

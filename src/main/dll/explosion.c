@@ -11,7 +11,7 @@ typedef struct Dll197State {
     s16 unk2;
     s16 unk4;
     u8 pad6[0x8 - 0x6];
-    s16 flags8;
+    s16 unk8;
     s16 unkA;
     u8 unkC;
     u8 unkD;
@@ -113,7 +113,7 @@ void dll_197_init(int obj, int data)
     case 1:
         ((Dll197State *)st)->unkF = *(s16 *)(data + 0x1c);
         ((Dll197State *)st)->unkD = 0;
-        ((Dll197State *)st)->flags8 = ((Dll197State *)st)->unkF * 0x28 + 0x398;
+        ((Dll197State *)st)->unk8 = ((Dll197State *)st)->unkF * 0x28 + 0x398;
         ((Dll197State *)st)->unkE = 0;
         break;
     }
@@ -300,15 +300,15 @@ int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState *animUpdate)
     animUpdate->activeHitVolumePair = -1;
     animUpdate->sequenceEventActive = 0;
     if (((Dll197State *)st)->unkA != 0) {
-        ((Dll197State *)st)->flags8 += ((Dll197State *)st)->unkA;
-        if (((Dll197State *)st)->flags8 <= 1 && ((Dll197State *)st)->unkA <= 0) {
-            ((Dll197State *)st)->flags8 = 1;
+        ((Dll197State *)st)->unk8 += ((Dll197State *)st)->unkA;
+        if (((Dll197State *)st)->unk8 <= 1 && ((Dll197State *)st)->unkA <= 0) {
+            ((Dll197State *)st)->unk8 = 1;
             ((Dll197State *)st)->unkA = 0;
-        } else if (((Dll197State *)st)->flags8 >= 0x46 && ((Dll197State *)st)->unkA >= 0) {
-            ((Dll197State *)st)->flags8 = 0x46;
+        } else if (((Dll197State *)st)->unk8 >= 0x46 && ((Dll197State *)st)->unkA >= 0) {
+            ((Dll197State *)st)->unk8 = 0x46;
             ((Dll197State *)st)->unkA = 0;
         }
-        (**(void (**)(int, int))(*(int *)gTitleMenuControlInterface + 0x38))(3, ((Dll197State *)st)->flags8 & 0xff);
+        (**(void (**)(int, int))(*(int *)gTitleMenuControlInterface + 0x38))(3, ((Dll197State *)st)->unk8 & 0xff);
     }
     for (i = 0; i < animUpdate->eventCount; i++) {
         eventId = animUpdate->eventIds[i];
@@ -359,8 +359,8 @@ int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState *animUpdate)
             GameBit_Set(0x127, 1);
             break;
         case 10:
-            ((Dll197State *)st)->flags8 = 100;
-            (**(void (**)(int, int, int, int, int))(*(int *)gTitleMenuControlInterface + 0x18))(3, 0x2d, 0x50, ((Dll197State *)st)->flags8 & 0xff, 0);
+            ((Dll197State *)st)->unk8 = 100;
+            (**(void (**)(int, int, int, int, int))(*(int *)gTitleMenuControlInterface + 0x18))(3, 0x2d, 0x50, ((Dll197State *)st)->unk8 & 0xff, 0);
             break;
         }
         animUpdate->eventIds[i] = 0;

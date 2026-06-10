@@ -25,7 +25,7 @@ typedef struct DRCloudRunnerPlacement {
 
 typedef struct DRCloudRunnerState {
     u8 pad0[0xAD5 - 0x0];
-    u8 flagsAD5;
+    u8 unkAD5;
     u8 padAD6[0xB50 - 0xAD6];
     f32 unkB50;
     u8 padB54[0xBAE - 0xB54];
@@ -100,7 +100,7 @@ int DR_CloudRunner_stateHandler07(int obj)
 {
     CloudRunnerState *inner = ((GameObject *)obj)->extra;
     u8 v;
-    if (inner->timerBB0 == 0) {
+    if (inner->unkBB0 == 0) {
         v = ((GameObject *)obj)->anim.alpha;
         ((GameObject *)obj)->anim.alpha = v - framesThisStep;
     }
@@ -187,7 +187,7 @@ int DR_CloudRunner_stateHandler01(int obj, int p2)
         ((GameObject *)obj)->unkF4 = 0;
         ObjHits_EnableObject(obj);
         ObjHits_SyncObjectPositionIfDirty(obj);
-        ((ByteFlags *)&inner->flagsBC0)->b10 = inner->timerBB0 > 0;
+        ((ByteFlags *)&inner->flagsBC0)->b10 = inner->unkBB0 > 0;
         ((GameObject *)obj)->anim.rotX = lbl_803DC79A;
         return 3;
     }
@@ -214,14 +214,14 @@ int DR_CloudRunner_stateHandler03(int obj, int p2)
         break;
     case 0x20c:
         if (*(s8 *)&((CloudRunnerState *)p2)->baddie.moveDone != 0) {
-            ((DRCloudRunnerState *)inner)->flagsAD5 &= ~2;
+            ((DRCloudRunnerState *)inner)->unkAD5 &= ~2;
             return 3;
         }
         break;
     default: {
         f32 fz;
         ObjAnim_SetCurrentMove(obj, 0x203, lbl_803E83A4, 0);
-        ((DRCloudRunnerState *)inner)->flagsAD5 |= 2;
+        ((DRCloudRunnerState *)inner)->unkAD5 |= 2;
         fz = lbl_803E83A4;
         ((CloudRunnerState *)p2)->baddie.unk294 = fz;
         ((CloudRunnerState *)p2)->baddie.animSpeedB = fz;
@@ -259,7 +259,7 @@ int DR_CloudRunner_stateHandler00(int obj)
     }
     ObjHits_EnableObject(obj);
     ObjHits_SyncObjectPositionIfDirty(obj);
-    ((ByteFlags *)&inner->flagsBC0)->b10 = inner->timerBB0 > 0;
+    ((ByteFlags *)&inner->flagsBC0)->b10 = inner->unkBB0 > 0;
     return 3;
 }
 
@@ -769,7 +769,7 @@ int DR_CloudRunner_stateHandler06(int obj, int p2)
         } s1;
         void *newObj;
         int setup;
-        inner->flagsBB6 &= ~8;
+        inner->unkBB6 &= ~8;
         ((ObjHitsPriorityState *)q)->flags = ((ObjHitsPriorityState *)q)->flags | 0x200;
         ObjAnim_SetCurrentMove(obj, 0xd, lbl_803E83A4, 0);
         ((CloudRunnerState *)p2)->baddie.moveSpeed = lbl_803E83B8;
@@ -818,7 +818,7 @@ void DR_CloudRunner_hitDetect(int obj)
     int r;
     s16 *hits[4];
     s16 diff;
-    if (inner->timerBB0 != 0 && ((GameObject *)obj)->anim.currentMove != 0xf &&
+    if (inner->unkBB0 != 0 && ((GameObject *)obj)->anim.currentMove != 0xf &&
         (r = ObjHits_GetPriorityHit(obj, hits, 0, 0)) != 0 && r != 0xf &&
         inner->unkBB2 == 2) {
         diff = ((GameObject *)obj)->anim.rotX - (u16)*hits[0];
@@ -833,11 +833,11 @@ void DR_CloudRunner_hitDetect(int obj)
         } else {
             ((ByteFlags *)&inner->flagsBC0)->b40 = 1;
         }
-        inner->timerBB0 -= 1;
-        if (inner->timerBB0 <= 0) {
+        inner->unkBB0 -= 1;
+        if (inner->unkBB0 <= 0) {
             (*gGameUIInterface)->airMeterSetShutdown();
             (*gObjectTriggerInterface)->runSequence(5, (void *)obj, -1);
-            inner->timerBB0 = 1;
+            inner->unkBB0 = 1;
             (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, (int)inner, 7);
         }
         Sfx_PlayFromObject(obj, 0x11f);
@@ -885,7 +885,7 @@ void fn_802C11BC(int obj, int p2, f32 f)
         fn_802BF4D8(obj);
     }
     if (((ByteFlags *)&inner->flagsBC0)->b02 != 0) {
-        (*gGameUIInterface)->runAirMeter(inner->timerBB0 - lbl_803DE4D8);
+        (*gGameUIInterface)->runAirMeter(inner->unkBB0 - lbl_803DE4D8);
     }
 }
 
@@ -915,9 +915,9 @@ void DR_CloudRunner_update(int obj)
     }
     if (inner->unkBB2 == 2) {
         ObjHits_MarkObjectPositionDirty(obj);
-        inner->flagsAD5 |= 1;
+        inner->unkAD5 |= 1;
     } else {
-        inner->flagsAD5 &= ~1;
+        inner->unkAD5 &= ~1;
     }
     dll_2E_func03(obj, (int)((char *)inner + 0x4c4));
     objAnimFn_80038f38(obj, (int)((char *)inner + 0x494));
@@ -936,8 +936,8 @@ void DR_CloudRunner_update(int obj)
                 }
                 (*gObjectTriggerInterface)->runSequence(4, (void *)obj, -1);
                 inner->unkB04 = 0;
-                inner->flagsBB6 |= 4;
-                inner->flagsAD5 |= 1;
+                inner->unkBB6 |= 4;
+                inner->unkAD5 |= 1;
                 (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, (int)inner, 4);
             } else {
                 buttonDisable(0, 0x100);
@@ -1044,7 +1044,7 @@ int DR_CloudRunner_stateHandler04(int obj, int p2)
         q = *(int *)&((GameObject *)obj)->anim.placementData;
         ((ByteFlags *)&inner2->flagsBC0)->b02 = 1;
         (*gGameUIInterface)->initAirMeter(((DRCloudRunnerPlacement *)q)->unk1A, 0x5de);
-        (*gGameUIInterface)->runAirMeter(inner2->timerBB0);
+        (*gGameUIInterface)->runAirMeter(inner2->unkBB0);
         *(s16 *)((char *)p2 + 0x338) = 0;
         ((CloudRunnerState *)p2)->baddie.moveSpeed = lbl_803E83F4;
         ((CloudRunnerState *)p2)->baddie.unk2B8 = lbl_803E83F8;

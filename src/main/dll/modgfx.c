@@ -30,7 +30,7 @@ typedef struct ModgfxEffectSlot {
     f32 unkBC;
     f32 unkC0;
     u8 padC4[0xFC - 0xC4];
-    s16 counterFC;
+    s16 unkFC;
     s16 unkFE;
     u8 pad100[0x106 - 0x100];
     s16 unk106;
@@ -13677,23 +13677,23 @@ void dll_0B_func05(void)
             if (((ModgfxEffectSlot *)eff)->unk10C == -1) break;
             active = 0;
             ((ModgfxEffectSlot *)eff)->unk13E = 0;
-            if (((ModgfxEffectSlot *)eff)->unkFE < 0 || ((ModgfxEffectSlot *)eff)->counterFC == -1) {
-                ((ModgfxEffectSlot *)eff)->counterFC += 1;
-                if (((ModgfxEffectSlot *)eff)->counterFC > 6) {
+            if (((ModgfxEffectSlot *)eff)->unkFE < 0 || ((ModgfxEffectSlot *)eff)->unkFC == -1) {
+                ((ModgfxEffectSlot *)eff)->unkFC += 1;
+                if (((ModgfxEffectSlot *)eff)->unkFC > 6) {
                     fn_800A1040(((ModgfxEffectSlot *)eff)->unk10C, 0);
                     goto slot_done;
                 }
-                ((ModgfxEffectSlot *)eff)->unkFE = *(s16 *)((char *)eff + ((ModgfxEffectSlot *)eff)->counterFC * 2 + 0xee);
+                ((ModgfxEffectSlot *)eff)->unkFE = *(s16 *)((char *)eff + ((ModgfxEffectSlot *)eff)->unkFC * 2 + 0xee);
                 active = 1;
                 ((ExpFn2)fn_800A0478)(eff, 0);
             } else if (((ModgfxEffectSlot *)eff)->unk13C != 0) {
-                ((ModgfxEffectSlot *)eff)->counterFC = ((ModgfxEffectSlot *)eff)->unk13C;
+                ((ModgfxEffectSlot *)eff)->unkFC = ((ModgfxEffectSlot *)eff)->unk13C;
                 ((ModgfxEffectSlot *)eff)->unk13C = 0;
-                if (((ModgfxEffectSlot *)eff)->counterFC > 6) {
+                if (((ModgfxEffectSlot *)eff)->unkFC > 6) {
                     fn_800A1040(((ModgfxEffectSlot *)eff)->unk10C, 0);
                     goto slot_done;
                 }
-                ((ModgfxEffectSlot *)eff)->unkFE = *(s16 *)((char *)eff + ((ModgfxEffectSlot *)eff)->counterFC * 2 + 0xee);
+                ((ModgfxEffectSlot *)eff)->unkFE = *(s16 *)((char *)eff + ((ModgfxEffectSlot *)eff)->unkFC * 2 + 0xee);
                 active = 1;
                 ((ExpFn2)fn_800A0478)(eff, 0);
             }
@@ -13707,8 +13707,8 @@ void dll_0B_func05(void)
                 int flags;
                 if (*(s16 *)((char *)eff + 0xfc) != *(u8 *)(E9 + emOff + 0x16)) continue;
                 flags = *(int *)(E9 + emOff);
-                if ((flags & 0x1000) && *(f32 *)(E9 + emOff + 0x4) > lbl_803DF430 && ((ModgfxEffectSlot *)eff)->counterFC > 0) {
-                    ((ModgfxEffectSlot *)eff)->counterFC = *(s16 *)(E9 + emIdx * 0x18 + 0x14);
+                if ((flags & 0x1000) && *(f32 *)(E9 + emOff + 0x4) > lbl_803DF430 && ((ModgfxEffectSlot *)eff)->unkFC > 0) {
+                    ((ModgfxEffectSlot *)eff)->unkFC = *(s16 *)(E9 + emIdx * 0x18 + 0x14);
                     *(f32 *)(E9 + emIdx * 0x18 + 0x4) = *(f32 *)(E9 + emIdx * 0x18 + 0x4) - lbl_803DF434;
                     ((ModgfxEffectSlot *)eff)->unkFE = -1;
                     break;
@@ -13725,7 +13725,7 @@ void dll_0B_func05(void)
                     }
                     if (*(s16 *)((char *)eff + 0xfc) > 0) {
                         feFlag = 1;
-                        ((ModgfxEffectSlot *)eff)->counterFC = *(s16 *)(E9 + emIdx * 0x18 + 0x14);
+                        ((ModgfxEffectSlot *)eff)->unkFC = *(s16 *)(E9 + emIdx * 0x18 + 0x14);
                         ((ModgfxEffectSlot *)eff)->unkFE = -1;
                         reprocess = 1;
                         break;

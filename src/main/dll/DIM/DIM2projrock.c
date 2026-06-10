@@ -316,7 +316,7 @@ void dim2icefloe_update(int obj)
 {
     int sub = *(int *)&((GameObject *)obj)->extra;
     if (*(void **)&((Dim2IceFloeState *)sub)->unk9C != NULL && (*(u16 *)(((Dim2IceFloeState *)sub)->unk9C + 0xb0) & 0x40) != 0) {
-        ((Dim2IceFloeState *)sub)->flagsB6 &= ~1;
+        ((Dim2IceFloeState *)sub)->unkB6 &= ~1;
         ((Dim2IceFloeState *)sub)->unk9C = 0;
     } else {
         int v;
@@ -329,7 +329,7 @@ void dim2icefloe_update(int obj)
             v = 0xff;
         }
         ((GameObject *)obj)->anim.alpha = v;
-        if ((((Dim2IceFloeState *)sub)->flagsB6 & 1) == 0) {
+        if ((((Dim2IceFloeState *)sub)->unkB6 & 1) == 0) {
             ((Dim2IceFloeState *)sub)->unk9C = ObjList_FindObjectById(((Dim2IceFloeState *)sub)->unkA0);
             ((Dim2IceFloeState *)sub)->unk90 = (*(code *)(**(int **)(((Dim2IceFloeState *)sub)->unk9C + 0x68) + 0x20))(
                 ((Dim2IceFloeState *)sub)->unk9C, sub + 0x84, sub + 0x88, sub + 0x8c, 0);
@@ -337,7 +337,7 @@ void dim2icefloe_update(int obj)
             ((Dim2IceFloeState *)sub)->unk94 = (void *)Curve_EvalHermite;
             ((Dim2IceFloeState *)sub)->unk98 = (void *)Curve_BuildHermiteCoeffs;
             curvesMove(sub);
-            ((Dim2IceFloeState *)sub)->flagsB6 |= 1;
+            ((Dim2IceFloeState *)sub)->unkB6 |= 1;
         }
         Curve_AdvanceAlongPath(sub, ((Dim2IceFloeState *)sub)->unkA4);
         reached = ((Dim2IceFloeState *)sub)->unk10 >= ((Dim2IceFloeState *)sub)->unk90 - 4;

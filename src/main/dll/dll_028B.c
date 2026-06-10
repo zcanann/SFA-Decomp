@@ -3,7 +3,7 @@
 
 typedef struct Dll28BState {
     u8 pad0[0x96D - 0x0];
-    u8 flags96D;
+    u8 unk96D;
     u8 pad96E[0xAB8 - 0x96E];
     f32 unkAB8;
     u8 padABC[0xAC0 - 0xABC];
@@ -44,9 +44,9 @@ void dll_28B_update(int obj)
     (*(void (**)(int, int, f32, f32, void *, void *))(*gPlayerInterface + 0x8))(
         obj, state, timeDelta, timeDelta, lbl_803AD288, lbl_803AD278);
     if ((((Dll28BState *)state)->unkAC0 & 1) != 0) {
-        ((Dll28BState *)state)->flags96D &= ~1;
+        ((Dll28BState *)state)->unk96D &= ~1;
     } else {
-        ((Dll28BState *)state)->flags96D |= 1;
+        ((Dll28BState *)state)->unk96D |= 1;
     }
     dll_2E_func03(obj, state + 0x35c);
     characterDoEyeAnims(obj, state + 0x980);
@@ -74,7 +74,7 @@ void dll_28B_init(int obj)
     two = 2;
     dll_2E_func05(obj, state + 0x35c, -0x2aaa, 0x638e, 8);
     dll_2E_func09(state + 0x35c, &blockB, &blockA, 8);
-    ((Dll28BState *)state)->flags96D |= 0x22;
+    ((Dll28BState *)state)->unk96D |= 0x22;
     (*gRomCurveInterface)->initCurve((void *)(state + 0x9b0), (void *)obj, lbl_803E6D1C, &two, -1);
     (*(void (**)(int, int, int, int))(*gPlayerInterface + 0x4))(obj, state, 4, 4);
     ObjGroup_AddObject(obj, 3);

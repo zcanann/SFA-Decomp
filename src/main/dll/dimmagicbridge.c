@@ -39,7 +39,7 @@ typedef struct Dll199State {
     u8 pad0[0x2 - 0x0];
     s16 unk2;
     u8 pad4[0xE - 0x4];
-    u8 counterE;
+    u8 unkE;
     u8 unkF;
     u8 unk10;
     u8 pad11[0x12 - 0x11];
@@ -203,13 +203,13 @@ void dll_199_update(int obj)
             }
             break;
         case 2:
-            if ((((Dll199State *)state)->counterE == 0) && (GameBit_Get(0x1cd) == 0)) {
+            if ((((Dll199State *)state)->unkE == 0) && (GameBit_Get(0x1cd) == 0)) {
                 GameBit_Set(0x1cd, 1);
             }
             if (GameBit_Get(0x5b2) != 0) {
-                ((Dll199State *)state)->counterE += 1;
+                ((Dll199State *)state)->unkE += 1;
                 state[1] = 100;
-                if (((Dll199State *)state)->counterE == 1) {
+                if (((Dll199State *)state)->unkE == 1) {
                     (*gObjectTriggerInterface)->runSequence(3, (void *)obj, 0xffffffff);
                 }
             }
@@ -248,7 +248,7 @@ void dll_199_update(int obj)
                 Resource_Release(res);
             }
             GameBit_Set(0x1cd, 0);
-            ((Dll199State *)state)->counterE = 0;
+            ((Dll199State *)state)->unkE = 0;
             ((Dll199State *)state)->unk10 = 0;
             break;
         case 3:

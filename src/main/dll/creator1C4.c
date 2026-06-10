@@ -28,10 +28,10 @@ typedef struct GpshObjcreatorObjectDef {
 
 typedef struct GpshShrineState {
     u8 pad0[0x4 - 0x0];
-    f32 timer4;
+    f32 unk4;
     f32 unk8;
     u8 padC[0x12 - 0xC];
-    u8 counter12;
+    u8 unk12;
     u8 pad13[0x14 - 0x13];
     u8 unk14;
     u8 pad15[0x18 - 0x15];
@@ -176,10 +176,10 @@ void gpsh_shrine_update(int obj)
         SCGameBitLatch_Update(data + 0x13, 2, -1, -1, 0xdd2, 0xb);
         SCGameBitLatch_UpdateInverted(data + 0x13, 1, -1, -1, 0xcbb, 8);
         SCGameBitLatch_Update(data + 0x13, 4, -1, -1, 0xcbb, 0xc4);
-        if (((GpshShrineState *)data)->timer4 > (k = lbl_803E503C)) {
-            ((GpshShrineState *)data)->timer4 -= timeDelta;
-            if (((GpshShrineState *)data)->timer4 <= k) {
-                ((GpshShrineState *)data)->timer4 = k;
+        if (((GpshShrineState *)data)->unk4 > (k = lbl_803E503C)) {
+            ((GpshShrineState *)data)->unk4 -= timeDelta;
+            if (((GpshShrineState *)data)->unk4 <= k) {
+                ((GpshShrineState *)data)->unk4 = k;
             }
         } else {
             switch (((GpshShrineState *)data)->unk14) {
@@ -201,7 +201,7 @@ void gpsh_shrine_update(int obj)
                 }
                 break;
             case 5:
-                ((GpshShrineState *)data)->timer4 = lbl_803E5040;
+                ((GpshShrineState *)data)->unk4 = lbl_803E5040;
                 (*gScreenTransitionInterface)->step(0x1e, 1);
                 ((GpshShrineState *)data)->unk14 = 1;
                 ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
@@ -215,30 +215,30 @@ void gpsh_shrine_update(int obj)
                 }
                 break;
             case 2:
-                ((GpshShrineState *)data)->counter12 = 0;
+                ((GpshShrineState *)data)->unk12 = 0;
                 if (GameBit_Get(0x149)) {
-                    ((GpshShrineState *)data)->counter12 += 1;
+                    ((GpshShrineState *)data)->unk12 += 1;
                 }
                 if (GameBit_Get(0x14b)) {
-                    ((GpshShrineState *)data)->counter12 += 1;
+                    ((GpshShrineState *)data)->unk12 += 1;
                 }
                 if (GameBit_Get(0x14e)) {
-                    ((GpshShrineState *)data)->counter12 += 1;
+                    ((GpshShrineState *)data)->unk12 += 1;
                 }
                 if (GameBit_Get(0x14d)) {
-                    ((GpshShrineState *)data)->counter12 += 1;
+                    ((GpshShrineState *)data)->unk12 += 1;
                 }
                 if (GameBit_Get(0x14c)) {
-                    ((GpshShrineState *)data)->counter12 += 1;
+                    ((GpshShrineState *)data)->unk12 += 1;
                 }
                 if (GameBit_Get(0x14a)) {
-                    ((GpshShrineState *)data)->counter12 += 1;
+                    ((GpshShrineState *)data)->unk12 += 1;
                 }
-                if (((GpshShrineState *)data)->counter12 == 6) {
+                if (((GpshShrineState *)data)->unk12 == 6) {
                     ((GpshShrineState *)data)->unk14 = 6;
                     gameTimerStop();
                     GameBit_Set(0xdd2, 0);
-                    ((GpshShrineState *)data)->timer4 = lbl_803E5040;
+                    ((GpshShrineState *)data)->unk4 = lbl_803E5040;
                     (*gScreenTransitionInterface)->start(0x1e, 1);
                     Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
                 } else if (isGameTimerDisabled()) {
@@ -247,10 +247,10 @@ void gpsh_shrine_update(int obj)
                     for (; count != 0; count--) {
                         Obj_FreeObject(objs[count - 1]);
                     }
-                    ((GpshShrineState *)data)->timer4 = lbl_803E5040;
+                    ((GpshShrineState *)data)->unk4 = lbl_803E5040;
                     (*gScreenTransitionInterface)->start(0x1e, 1);
                 } else {
-                    ((GpshShrineState *)data)->counter12 = 0;
+                    ((GpshShrineState *)data)->unk12 = 0;
                 }
                 break;
             case 7:

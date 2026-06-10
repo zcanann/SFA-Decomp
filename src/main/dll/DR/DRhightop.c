@@ -339,7 +339,7 @@ void fn_801EB334(int *obj) {
         ((HightopFlags *)&state->flags428)->resetLatch = 0;
         state->unk424 = fz;
         sv = *(s16 *)obj;
-        state->flags40E = sv;
+        state->unk40E = sv;
         state->unk40C = sv;
         state->unk430 = lbl_803E5B74;
     }
@@ -499,20 +499,20 @@ void fn_801EB634(int param_1,int param_2)
       }
       break;
     case 0x15:
-      if (st->timer3E4 == lbl_803E5AE8) {
+      if (st->unk3E4 == lbl_803E5AE8) {
         PSVECNormalize((float *)(param_1 + 0x24),afStack_2c);
         dot = PSVECDotProduct(afStack_2c,(float *)(local_38 + 0x24));
         PSVECScale(&st->unk494,&st->unk494,
                    dot * st->unk4AC + lbl_803E5AEC);
         st->unk498 = st->unk498 * lbl_803E5BA8;
-        st->timer3E4 = lbl_803E5AF4;
+        st->unk3E4 = lbl_803E5AF4;
         st->unk3E0 = lbl_803E5AEC;
       }
       break;
     case 0x1d:
       if ((u32)(st->flags428 >> 1 & 1) == 0) {
         setMotionBlur(lbl_803E5BAC,1);
-        st->timer3E4 = (f32)(s32)lbl_803DC0D0;
+        st->unk3E4 = (f32)(s32)lbl_803DC0D0;
         st->unk3E0 = lbl_803DC0C8;
         st->unk4C4 = (f32)(s32)lbl_803DC0CC;
       }
@@ -520,7 +520,7 @@ void fn_801EB634(int param_1,int param_2)
     }
     hit = *(uint *)(iVar3 + 0x50);
     if (((hit != 0) &&
-        (local_38 = hit, *(u32 *)&st->unk42C = hit, st->timer3E4 == lbl_803E5AE8)) &&
+        (local_38 = hit, *(u32 *)&st->unk42C = hit, st->unk3E4 == lbl_803E5AE8)) &&
        (iVar2 = arrayIndexOf(lbl_8032852C,0xc,(int)*(short *)(local_38 + 0x46)), iVar2 != -1)) {
       fn_8009A8C8((double)lbl_803E5BB0,param_1);
       (*gPartfxInterface)->spawnObject((void *)param_1, 0x551, NULL, 4, -1, NULL);
@@ -530,10 +530,10 @@ void fn_801EB634(int param_1,int param_2)
       while (uVar4-- != 0) {
         (*gPartfxInterface)->spawnObject((void *)param_1, 0x553, NULL, 2, -1, NULL);
       }
-      st->timer3E4 = lbl_803E5AF4;
+      st->unk3E4 = lbl_803E5AF4;
       st->unk3E0 = lbl_803E5AEC;
       if ((u32)(st->flags428 >> 1 & 1) == 0) {
-        st->timer3E4 = (f32)(s32)lbl_803DC0D4;
+        st->unk3E4 = (f32)(s32)lbl_803DC0D4;
       }
     }
   }
@@ -635,14 +635,14 @@ void fn_801EB940(short *param_1,int param_2)
   st->unk598 =
        st->unk590 *
        mathSinf((lbl_803E5BD0 * (f32)(s32)st->unk58A) / lbl_803E5BD4);
-  iVar4 = (int)*param_1 - ((int)st->flags40E & 0xffffU);
+  iVar4 = (int)*param_1 - ((int)st->unk40E & 0xffffU);
   if (0x8000 < iVar4) {
     iVar4 = iVar4 + -0xffff;
   }
   if (iVar4 < -0x8000) {
     iVar4 = iVar4 + 0xffff;
   }
-  st->flags40E = st->flags40E + (short)iVar4;
+  st->unk40E = st->unk40E + (short)iVar4;
   st->unk40C = st->unk40C + (short)iVar4;
   param_1[1] = param_1[1] + (short)((int)st->unk310 >> iVar5);
   param_1[2] = param_1[2] + (short)((int)st->unk312 >> iVar5);

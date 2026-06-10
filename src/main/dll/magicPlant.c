@@ -494,7 +494,7 @@ void fn_801534D8(int obj, int state)
     f32 lblD0;
 
     ((BaddieState *)state)->unk2AC = lbl_803E28DC;
-    *(u32 *)&((BaddieState *)state)->flags2E4 = 0x1009;
+    *(u32 *)&((BaddieState *)state)->unk2E4 = 0x1009;
     ((BaddieState *)state)->unk308 = lbl_803E28E0;
     ((BaddieState *)state)->unk300 = lbl_803E28E4;
     ((BaddieState *)state)->unk304 = lbl_803E28E8;
@@ -565,7 +565,7 @@ void fn_80153040(int obj, int state)
 
     *(f32*)(state + 0x324) = *(f32*)(state + 0x324) + timeDelta;
     if (*(f32*)(state + 0x324) > lbl_803E28C8) {
-        *(u32 *)&((BaddieState *)state)->flags2E4 = *(u32 *)&((BaddieState *)state)->flags2E4 & 0xfffeffff;
+        *(u32 *)&((BaddieState *)state)->unk2E4 = *(u32 *)&((BaddieState *)state)->unk2E4 & 0xfffeffff;
         *(f32*)(state + 0x324) = lbl_803E28B0;
     }
 
@@ -599,7 +599,7 @@ void fn_80152EC0(int obj, int state)
 
     zero = lbl_803E286C;
     ((BaddieState *)state)->unk2AC = zero;
-    ((BaddieState *)state)->flags2E4 = 1;
+    ((BaddieState *)state)->unk2E4 = 1;
     ((BaddieState *)state)->unk308 = lbl_803E28A0;
     ((BaddieState *)state)->unk300 = lbl_803E28A4;
     lblA = lbl_803E2894;
@@ -676,7 +676,7 @@ void fn_80153C90(int unused, int p2)
     f32 ten;
     f32 oc;
     ((BaddieState *)p2)->unk2AC = lbl_803E2924;
-    ((BaddieState *)p2)->flags2E4 = 1;
+    ((BaddieState *)p2)->unk2E4 = 1;
     ((BaddieState *)p2)->unk308 = lbl_803E28F4;
     ((BaddieState *)p2)->unk300 = lbl_803E2928;
     ((BaddieState *)p2)->unk304 = lbl_803E292C;
@@ -776,7 +776,7 @@ void fn_80153248(int obj, int state)
     PSVECMag(vec);
     *(f32*)(state + 0x32c) = *(f32*)(state + 0x32c) + timeDelta;
     if (*(u32*)(state + 0x340) != 0 || *(f32*)(state + 0x32c) > lbl_803E28C8) {
-        *(u32 *)&((BaddieState *)state)->flags2E4 = *(u32 *)&((BaddieState *)state)->flags2E4 | 0x10000;
+        *(u32 *)&((BaddieState *)state)->unk2E4 = *(u32 *)&((BaddieState *)state)->unk2E4 | 0x10000;
         *(f32*)(state + 0x324) = lbl_803E28B0;
         *(f32*)(state + 0x32c) = lbl_803E28B0;
     } else {
@@ -790,7 +790,7 @@ void fn_80153248(int obj, int state)
         voxmaps_worldToGrid(worldPos, gridB);
         if (((countLeadingZeros(((BaddieState *)state)->controlFlags) >> 5) & 0x01000000) != 0) {
             if (voxmaps_traceLine(gridB, gridA, 0, &hitOut, 0) == 0) {
-                *(u32 *)&((BaddieState *)state)->flags2E4 = *(u32 *)&((BaddieState *)state)->flags2E4 | 0x10000;
+                *(u32 *)&((BaddieState *)state)->unk2E4 = *(u32 *)&((BaddieState *)state)->unk2E4 | 0x10000;
                 *(f32*)(state + 0x324) = lbl_803E28B0;
                 *(f32*)(state + 0x32c) = lbl_803E28B0;
             }
@@ -965,7 +965,7 @@ checkedKind:
         *(f32*)(state + 0x32c) = lbl_803E2940;
         *(f32*)(state + 0x324) = lbl_803E2944;
         ((void(*)(int, int, int, f32, int, int))fn_8014D08C)(obj, state, 4, lbl_803E2948, 0, 3);
-        *(u32 *)&((BaddieState *)state)->flags2E4 = *(u32 *)&((BaddieState *)state)->flags2E4 | 0x10000;
+        *(u32 *)&((BaddieState *)state)->unk2E4 = *(u32 *)&((BaddieState *)state)->unk2E4 | 0x10000;
         ((BaddieState *)state)->inWhirlpoolGroup = 0x3c;
     } else {
         ((BaddieState *)state)->reactionFlags = ((BaddieState *)state)->reactionFlags | 0x10;
@@ -997,7 +997,7 @@ void fn_80153E0C(int obj, int state)
             if (*(f32*)(state + 0x324) > lbl_803E294C) {
                 *(f32*)(state + 0x324) = *(f32*)(state + 0x324) - timeDelta;
                 if (*(f32*)(state + 0x324) <= lbl_803E294C) {
-                    *(u32 *)&((BaddieState *)state)->flags2E4 = *(u32 *)&((BaddieState *)state)->flags2E4 & 0xfffeffff;
+                    *(u32 *)&((BaddieState *)state)->unk2E4 = *(u32 *)&((BaddieState *)state)->unk2E4 & 0xfffeffff;
                     *(f32*)(state + 0x324) = lbl_803E294C;
                 }
             }

@@ -36,7 +36,7 @@ void andross_setPartSignal(int obj, int signal)
         return;
     }
     state = *(int *)&((GameObject *)obj)->extra;
-    ((AndrossState *)state)->flagsAD |= signal;
+    ((AndrossState *)state)->unkAD |= signal;
 }
 
 #pragma scheduling off
@@ -799,7 +799,7 @@ LAB_8023bb18:
     ((AndrossState *)piVar14)->unkD4 = ((AndrossState *)piVar14)->unk60;
     bVar15 = 0;
     iVar5 = *(int *)&((GameObject *)obj)->extra;
-    bVar13 = ((AndrossState *)iVar5)->flagsAD;
+    bVar13 = ((AndrossState *)iVar5)->unkAD;
     if ((bVar13 & 1) != 0) {
       *(u8 *)(iVar5 + 0xad) = bVar13 & ~1;
       bVar15 = 1;
@@ -829,7 +829,7 @@ LAB_8023bb18:
     ((AndrossState *)piVar14)->unkD4 = ((AndrossState *)piVar14)->unk60;
     bVar15 = 0;
     iVar5 = *(int *)&((GameObject *)obj)->extra;
-    bVar13 = ((AndrossState *)iVar5)->flagsAD;
+    bVar13 = ((AndrossState *)iVar5)->unkAD;
     if ((bVar13 & 1) != 0) {
       *(u8 *)(iVar5 + 0xad) = bVar13 & ~1;
       bVar15 = 1;
@@ -859,7 +859,7 @@ LAB_8023bb18:
     ((AndrossState *)piVar14)->unkD4 = ((AndrossState *)piVar14)->unk60;
     bVar15 = 0;
     iVar5 = *(int *)&((GameObject *)obj)->extra;
-    bVar13 = ((AndrossState *)iVar5)->flagsAD;
+    bVar13 = ((AndrossState *)iVar5)->unkAD;
     if ((bVar13 & 1) != 0) {
       *(u8 *)(iVar5 + 0xad) = bVar13 & ~1;
       bVar15 = 1;
@@ -889,7 +889,7 @@ LAB_8023bb18:
     ((AndrossState *)piVar14)->unkD4 = ((AndrossState *)piVar14)->unk60;
     bVar15 = 0;
     iVar5 = *(int *)&((GameObject *)obj)->extra;
-    bVar13 = ((AndrossState *)iVar5)->flagsAD;
+    bVar13 = ((AndrossState *)iVar5)->unkAD;
     if ((bVar13 & 1) != 0) {
       *(u8 *)(iVar5 + 0xad) = bVar13 & ~1;
       bVar15 = 1;
@@ -938,7 +938,7 @@ LAB_8023bb18:
       iVar5 = *(int *)&((GameObject *)obj)->extra;
       bVar13 = *(u8 *)(iVar5 + 0xad);
       if ((bVar13 & 1) != 0) {
-        ((AndrossState *)iVar5)->flagsAD = bVar13 & ~1;
+        ((AndrossState *)iVar5)->unkAD = bVar13 & ~1;
         bVar15 = 1;
       }
       if (bVar15 != 0) {

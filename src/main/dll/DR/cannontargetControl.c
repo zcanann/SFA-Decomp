@@ -362,7 +362,7 @@ void gunpowderbarrel_init(int obj, u8 *def)
 {
     GunpowderBarrelState *state = ((GameObject *)obj)->extra;
 
-    state->flags07 |= 2;
+    state->unk07 |= 2;
     (*(void (**)(int, GunpowderBarrelState *, int))((char *)*lbl_803DCAC0 + 0x4))(obj, state, 5);
     ObjGroup_AddObject(obj, 0x19);
     ObjGroup_AddObject(obj, 0x16);

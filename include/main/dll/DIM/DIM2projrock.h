@@ -105,7 +105,7 @@ typedef struct Dim2IceFloeState {
     f32 unkAC;
     f32 unkB0;
     s16 unkB4;
-    u8 flagsB6;
+    u8 unkB6;
     u8 padB7;
     u8 unkB8;
     u8 padB9[3];

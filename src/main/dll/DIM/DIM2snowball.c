@@ -264,7 +264,7 @@ typedef struct DimLevelControlState {
     u8 saveState;
     u8 unk9;
     s16 musicTrack;
-    u8 gameBitC;
+    u8 unkC;
     u8 unkD;
     u8 b7 : 1;
     u8 b6 : 1;
@@ -346,11 +346,11 @@ void dim_levelcontrol_update(int obj)
             st->timer = lbl_803E4A24;
         }
     }
-    if (st->gameBitC == 0) {
+    if (st->unkC == 0) {
         t = GameBit_Get(0x3e2);
         t2 = GameBit_Get(0x3e3);
-        st->gameBitC = (u8)(t2 & t);
-        if (st->gameBitC != 0) {
+        st->unkC = (u8)(t2 & t);
+        if (st->unkC != 0) {
             (*gGameUIInterface)->showNpcDialogue(0x4ba, 0x14, 0x8c, 1);
         }
     }
@@ -781,7 +781,7 @@ void dim_levelcontrol_init(int obj)
     for (i = 1; i <= 38; i++) {
         gameBitFn_800ea2e0(i);
     }
-    st->gameBitC = (u8)GameBit_Get(0xdc);
+    st->unkC = (u8)GameBit_Get(0xdc);
     GameBit_Set(0xf0a, 0);
     if ((u32)GameBit_Get(0x89d) != 0 && (u32)GameBit_Get(0x8a5) == 0) {
         GameBit_Set(0x89d, 0);

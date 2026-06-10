@@ -16,7 +16,7 @@ typedef struct CloudRunnerState {
     u8 pad3DC[0x464 - 0x3dc];
     u8 unk464;
     u8 pad465[0xad5 - 0x465];
-    u8 flagsAD5;
+    u8 unkAD5;
     u8 padAD6[0xae8 - 0xad6];
     f32 unkAE8;
     f32 unkAEC;
@@ -30,12 +30,12 @@ typedef struct CloudRunnerState {
     f32 unkB50;
     u8 padB54[0xbae - 0xb54];
     s16 unkBAE;
-    s16 timerBB0;
+    s16 unkBB0;
     u8 unkBB2;
     u8 padBB3;
     u8 unkBB4;
     u8 padBB5;
-    u8 flagsBB6;
+    u8 unkBB6;
     u8 unkBB7;
     u8 unkBB8;
     u8 padBB9;

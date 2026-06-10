@@ -7,7 +7,7 @@
 /* Per-object extra state for the gunpowder barrel (carryable). */
 typedef struct GunpowderBarrelState {
     u8 pad00[7];
-    u8 flags07;
+    u8 unk07;
     u8 pad08[4];
     int queuedHitObject;
     int linkedTimerObject;  /* 0x10 */

@@ -13,7 +13,7 @@ typedef struct Dim2prisonmammothPlacement {
 
 
 typedef struct Dim2prisonmammothState {
-    s32 flags0;
+    s32 unk0;
     u8 pad4[0x25F - 0x4];
     u8 unk25F;
     u8 pad260[0x274 - 0x260];
@@ -803,13 +803,13 @@ void dim2prisonmammoth_update(int obj)
                           &((GameObject *)obj)->anim.modelState->overrideWorldPosY,
                           &((GameObject *)obj)->anim.modelState->overrideWorldPosZ);
     ((Dim2prisonmammothState *)inner)->unk354 = 0;
-    ((Dim2prisonmammothState *)inner)->flags0 &= ~0x8000;
+    ((Dim2prisonmammothState *)inner)->unk0 &= ~0x8000;
     ((Dim2prisonmammothState *)inner)->unk290 = lbl_803E82C0;
     ((Dim2prisonmammothState *)inner)->unk28C = lbl_803E82C0;
     ((Dim2prisonmammothState *)inner)->unk31C = 0;
     ((Dim2prisonmammothState *)inner)->unk318 = 0;
     ((Dim2prisonmammothState *)inner)->unk330 = 0;
-    ((Dim2prisonmammothState *)inner)->flags0 |= 0x400000;
+    ((Dim2prisonmammothState *)inner)->unk0 |= 0x400000;
     (*(void (*)(int, int, f32, f32, int, void *))(*(int *)(*gPlayerInterface + 0x8)))(obj, inner, timeDelta, timeDelta, (int)gDim2PrisonMammothStateHandlers, &gDim2PrisonMammothDefaultStateHandler);
     saveGame_saveObjectPos(obj);
 }

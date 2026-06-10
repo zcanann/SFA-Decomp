@@ -103,7 +103,7 @@ void collectible_init(int obj,int setup)
   ((CollectibleState *)state)->unk36 = *(u8 *)(setup + 0x27);
   ((CollectibleState *)state)->unk3E = 0;
   if (((CollectibleState *)state)->unk14 != -1) {
-    ((CollectibleState *)state)->gameBit1E = (u8)((u32)__cntlzw(GameBit_Get(((CollectibleState *)state)->unk14)) >> 5);
+    ((CollectibleState *)state)->unk1E = (u8)((u32)__cntlzw(GameBit_Get(((CollectibleState *)state)->unk14)) >> 5);
   }
   ((CollectibleState *)state)->hideGameBit = *(s16 *)(setup + 0x1c);
   if (((CollectibleState *)state)->hideGameBit != -1) {

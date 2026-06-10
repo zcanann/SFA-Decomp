@@ -48,7 +48,7 @@ typedef struct CcgasventcontrolState {
 
 typedef struct MoonSeedPlantingSpotState {
     u8 pad0[0x1 - 0x0];
-    u8 flags1;
+    u8 unk1;
     u8 pad2[0x4 - 0x2];
     f32 unk4;
     f32 unk8;
@@ -583,10 +583,10 @@ void MoonSeedPlantingSpot_update(int obj)
 {
     int ex = *(int *)&((GameObject *)obj)->extra;
     int setup = *(int *)&((GameObject *)obj)->anim.placementData;
-    if (((MoonSeedPlantingSpotState *)ex)->flags1 & 1) {
+    if (((MoonSeedPlantingSpotState *)ex)->unk1 & 1) {
         *(u8 *)ex = 2;
         GameBit_Set(*(s16 *)((char *)ex + 8), 1);
-        ((MoonSeedPlantingSpotState *)ex)->flags1 = ((MoonSeedPlantingSpotState *)ex)->flags1 & ~1;
+        ((MoonSeedPlantingSpotState *)ex)->unk1 = ((MoonSeedPlantingSpotState *)ex)->unk1 & ~1;
         ((GameObject *)obj)->anim.alpha = 0xff;
     }
     if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) && !(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 8)) {
@@ -596,7 +596,7 @@ void MoonSeedPlantingSpot_update(int obj)
             *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x10;
         }
     }
-    ((MoonSeedPlantingSpotState *)ex)->flags1 |= 2;
+    ((MoonSeedPlantingSpotState *)ex)->unk1 |= 2;
     switch (*(u8 *)ex) {
     case 0:
         *(u8 *)ex = 1;
@@ -635,9 +635,9 @@ void MoonSeedPlantingSpot_update(int obj)
     case 2: {
         int tricky = getTrickyObject();
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
-        if (((MoonSeedPlantingSpotState *)ex)->flags1 & 2) {
+        if (((MoonSeedPlantingSpotState *)ex)->unk1 & 2) {
             void *player;
-            if (((MoonSeedPlantingSpotState *)ex)->flags1 & 4) {
+            if (((MoonSeedPlantingSpotState *)ex)->unk1 & 4) {
                 ((GameObject *)obj)->anim.localPosY =
                     ((ObjPlacement *)setup)->posY + (f32)(int)randomGetRange(-1, 1);
                 (*gPartfxInterface)->spawnObject((void *)obj, 0x70f, NULL, 2, -1, NULL);
@@ -646,11 +646,11 @@ void MoonSeedPlantingSpot_update(int obj)
             if (((MoonSeedPlantingSpotState *)ex)->unk14 <= lbl_803E45F4) {
                 if ((int)randomGetRange(0, 1) != 0) {
                     ((MoonSeedPlantingSpotState *)ex)->unk14 = lbl_803E45F8;
-                    ((MoonSeedPlantingSpotState *)ex)->flags1 |= 4;
+                    ((MoonSeedPlantingSpotState *)ex)->unk1 |= 4;
                     Sfx_PlayFromObject(obj, 0x438);
                 } else {
                     ((MoonSeedPlantingSpotState *)ex)->unk14 = (f32)(int)randomGetRange(0x32, 200);
-                    ((MoonSeedPlantingSpotState *)ex)->flags1 &= ~4;
+                    ((MoonSeedPlantingSpotState *)ex)->unk1 &= ~4;
                 }
             }
             player = (void *)Obj_GetPlayerObject();

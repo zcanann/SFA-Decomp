@@ -51,7 +51,7 @@ typedef struct AndrossState {
     s16 unkA6;
     f32 unkA8;
     u8 unkAC;
-    u8 flagsAD;
+    u8 unkAD;
     u8 unkAE;
     u8 unkAF;
     u8 unkB0;

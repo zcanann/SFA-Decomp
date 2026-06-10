@@ -74,7 +74,7 @@ typedef struct EdibleMushroomState {
     s16 unk130;
     u8 pad132[4];
     u8 unk136;
-    u8 flags137;
+    u8 unk137;
     u8 pad138[4];
     s16 unk13C;
     s16 unk13E;
@@ -118,7 +118,7 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
 
     player = Obj_GetPlayerObject();
 
-    if (((EdibleMushroomState *)state)->flags137 & 4) {
+    if (((EdibleMushroomState *)state)->unk137 & 4) {
         ((EdibleMushroomState *)state)->unk136 = 6;
     }
 
@@ -127,11 +127,11 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
     sval = ((EdibleMushroomState *)state)->unk136;
     switch (sval) {
     case 0:
-        if (((EdibleMushroomState *)state)->flags137 & 0x10) {
+        if (((EdibleMushroomState *)state)->unk137 & 0x10) {
             ((EdibleMushroomState *)state)->unk136 = 9;
         } else if ((*gSHthorntailAnimationInterface)->isTailSwingQueued(&thorntailOut) == 0) {
             if (((EdibleMushroomState *)state)->unk108 < (f32)other[0x19]) {
-                if (((EdibleMushroomState *)state)->flags137 & 2) {
+                if (((EdibleMushroomState *)state)->unk137 & 2) {
                     rangeSq = ((EdibleMushroomState *)state)->unk118 * ((EdibleMushroomState *)state)->unk118;
                     while (1) {
                         dx = ((RomCurveWalker *)state)->posX - ((GameObject *)obj)->anim.localPosX;
@@ -173,17 +173,17 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
         }
         break;
     case 1:
-        if (((EdibleMushroomState *)state)->flags137 & 0x10) {
+        if (((EdibleMushroomState *)state)->unk137 & 0x10) {
             ((EdibleMushroomState *)state)->unk136 = 9;
-        } else if (((EdibleMushroomState *)state)->flags137 & 1) {
+        } else if (((EdibleMushroomState *)state)->unk137 & 1) {
             ((EdibleMushroomState *)state)->unk136 = 0;
         }
         break;
     case 3:
     case 7:
-        if (((EdibleMushroomState *)state)->flags137 & 0x10) {
+        if (((EdibleMushroomState *)state)->unk137 & 0x10) {
             ((EdibleMushroomState *)state)->unk136 = 9;
-        } else if (((EdibleMushroomState *)state)->flags137 & 1) {
+        } else if (((EdibleMushroomState *)state)->unk137 & 1) {
             if (sval == 3) {
                 ((EdibleMushroomState *)state)->unk136 = 4;
             } else {
@@ -192,7 +192,7 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
         }
         break;
     case 4:
-        if (((EdibleMushroomState *)state)->flags137 & 0x10) {
+        if (((EdibleMushroomState *)state)->unk137 & 0x10) {
             ((EdibleMushroomState *)state)->unk136 = 9;
         } else {
             ang = getAngle(-(((GameObject *)obj)->anim.localPosX - ((GameObject *)player)->anim.localPosX),
@@ -203,7 +203,7 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
             } else if (((EdibleMushroomState *)state)->unk108 < (f32)other[0x19]) {
                 Sfx_PlayFromObject(obj, 0xa0);
                 if (speed >= lbl_803E5298) {
-                    if (((EdibleMushroomState *)state)->flags137 & 2) {
+                    if (((EdibleMushroomState *)state)->unk137 & 2) {
                         rangeSq = ((EdibleMushroomState *)state)->unk118 * ((EdibleMushroomState *)state)->unk118;
                         while (1) {
                             dx = ((RomCurveWalker *)state)->posX - ((GameObject *)obj)->anim.localPosX;
@@ -226,7 +226,7 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
                     ((EdibleMushroomState *)state)->unk136 = 1;
                     *(s16 *)obj = (s16)(((EdibleMushroomState *)state)->unk130 - 0x4000);
                 } else {
-                    if (((EdibleMushroomState *)state)->flags137 & 2) {
+                    if (((EdibleMushroomState *)state)->unk137 & 2) {
                         rangeSq = ((EdibleMushroomState *)state)->unk11C * ((EdibleMushroomState *)state)->unk11C;
                         while (1) {
                             dx = ((RomCurveWalker *)state)->posX - ((GameObject *)obj)->anim.localPosX;
@@ -253,13 +253,13 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
         }
         break;
     case 5:
-        if ((((EdibleMushroomState *)state)->flags137 & 0x11) == 0x11) {
+        if ((((EdibleMushroomState *)state)->unk137 & 0x11) == 0x11) {
             ((EdibleMushroomState *)state)->unk136 = 9;
         }
-        if (((EdibleMushroomState *)state)->unk108 > lbl_803E5294 + (f32)other[0x19] && (((EdibleMushroomState *)state)->flags137 & 1)) {
+        if (((EdibleMushroomState *)state)->unk108 > lbl_803E5294 + (f32)other[0x19] && (((EdibleMushroomState *)state)->unk137 & 1)) {
             ((EdibleMushroomState *)state)->unk136 = 4;
         } else if (speed >= lbl_803E5298) {
-            if (((EdibleMushroomState *)state)->flags137 & 2) {
+            if (((EdibleMushroomState *)state)->unk137 & 2) {
                 rangeSq = ((EdibleMushroomState *)state)->unk118 * ((EdibleMushroomState *)state)->unk118;
                 while (1) {
                     dx = ((RomCurveWalker *)state)->posX - ((GameObject *)obj)->anim.localPosX;
@@ -295,7 +295,7 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
             ObjHits_SetSourceMask(obj, 1);
             (*gExpgfxInterface)->freeSource((u32)obj);
             ((EdibleMushroomState *)state)->unk136 = 0;
-            ((EdibleMushroomState *)state)->flags137 &= ~0x10;
+            ((EdibleMushroomState *)state)->unk137 &= ~0x10;
         } else {
             t = ((EdibleMushroomState *)state)->unk128 - timeDelta;
             ((EdibleMushroomState *)state)->unk128 = t;
@@ -335,7 +335,7 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
         }
         break;
     case 6:
-        if (((EdibleMushroomState *)state)->flags137 & 0x10) {
+        if (((EdibleMushroomState *)state)->unk137 & 0x10) {
             ((EdibleMushroomState *)state)->unk136 = 9;
         }
         break;
@@ -353,9 +353,9 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
 
     if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(
             (int)obj, lbl_80326BE8[((EdibleMushroomState *)state)->unk136], timeDelta, (ObjAnimEventList *)animOut) != 0) {
-        ((EdibleMushroomState *)state)->flags137 |= 1;
+        ((EdibleMushroomState *)state)->unk137 |= 1;
     } else {
-        ((EdibleMushroomState *)state)->flags137 &= ~1;
+        ((EdibleMushroomState *)state)->unk137 &= ~1;
     }
 
     if (((EdibleMushroomState *)state)->unk136 == 1) {
@@ -367,9 +367,9 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
     }
 
     if (lbl_803E5288 != speed) {
-        ((EdibleMushroomState *)state)->flags137 |= 8;
+        ((EdibleMushroomState *)state)->unk137 |= 8;
     } else {
-        ((EdibleMushroomState *)state)->flags137 &= ~8;
+        ((EdibleMushroomState *)state)->unk137 &= ~8;
     }
 
     ((GameObject *)obj)->anim.velocityX =
@@ -492,7 +492,7 @@ void ediblemushroom_hitDetect(u8 *obj) {
     mapObj = *(u8 **)&((GameObject *)obj)->anim.placementData;
 
     if (((((GameObject *)obj)->objectFlags & 0x1000) == 0) &&
-        (((((EdibleMushroomState *)state)->flags137 & 8) != 0) || (((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags & 8) != 0))) {
+        (((((EdibleMushroomState *)state)->unk137 & 8) != 0) || (((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags & 8) != 0))) {
         hitCount = hitDetectFn_80065e50(obj, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY,
                                         ((GameObject *)obj)->anim.localPosZ, &hits, 0, 0);
         i = 0;
@@ -508,7 +508,7 @@ void ediblemushroom_hitDetect(u8 *obj) {
         hitCount = objBboxFn_800640cc(obj + 0x80, obj + 0xc, lbl_803E52DC, 2, bboxHit, obj, 8,
                                       -1, 0xff, 0x14);
         if ((mapObj[0x18] == 4) && (hitCount != 0) && ((s8)bboxHit[0x50] == 13)) {
-            ((EdibleMushroomState *)state)->flags137 |= 4;
+            ((EdibleMushroomState *)state)->unk137 |= 4;
         }
     }
 }

@@ -330,10 +330,10 @@ typedef struct ShieldState {
     u8 pad30[0x50 - 0x30];
     f32 unk50;
     u8 pad54[0x5C - 0x54];
-    u8 flags5C;
-    u8 flags5D;
-    u8 flags5E;
-    u8 flags5F;
+    u8 unk5C;
+    u8 unk5D;
+    u8 unk5E;
+    u8 unk5F;
     u8 pad60[0x6A - 0x60];
     s16 unk6A;
     u8 pad6C[0x6E - 0x6C];
@@ -368,8 +368,8 @@ typedef struct FireballState {
     f32 unk2C;
     f32 unk30;
     f32 unk34;
-    f32 timer38;
-    f32 timer3C;
+    f32 unk38;
+    f32 unk3C;
     s16 unk40;
     s16 unk42;
     u8 pad44[0x46 - 0x44];
@@ -385,7 +385,7 @@ typedef struct FireballState {
     s16 unk6A;
     u8 pad6C[0x6E - 0x6C];
     s16 unk6E;
-    u8 flags70;
+    u8 unk70;
     u8 unk71;
     u8 pad72[0x94 - 0x72];
     s32 unk94;
@@ -2825,7 +2825,7 @@ int Fireball_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     int i;
     int *state = ((GameObject *)obj)->extra;
-    if (((FireballState *)state)->flags70 & 8) {
+    if (((FireballState *)state)->unk70 & 8) {
         return 0;
     }
     for (i = 0; i < animUpdate->eventCount; i++) {
@@ -2855,7 +2855,7 @@ void fireball_hitDetect(int *obj)
     int *state = ((GameObject *)obj)->extra;
     int *target;
     if (((GameObject *)obj)->anim.seqId == 0x83e) return;
-    if (((FireballState *)state)->flags70 & 8) return;
+    if (((FireballState *)state)->unk70 & 8) return;
     target = (int *)(*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject;
     if (target == NULL) return;
     if (*(s16 *)((char *)target + 0x46) == 0x6e8) {
@@ -2871,7 +2871,7 @@ void fireball_hitDetect(int *obj)
         ObjHits_EnableObject(obj);
     } else {
         u8 v;
-        ((FireballState *)state)->timer38 = lbl_803E3358;
+        ((FireballState *)state)->unk38 = lbl_803E3358;
         v = ((FireballState *)state)->unk71;
         if (v == 0) {
             projectileParticleFxFn_80099660(obj, lbl_803E3354, 3);
@@ -3608,7 +3608,7 @@ void fireball_init(int *obj)
     int *params = *(int **)&((GameObject *)obj)->anim.placementData;
 
     if (((FireballPlacement *)params)->unk1C != 0) {
-        ((FireballState *)state)->flags70 |= 8;
+        ((FireballState *)state)->unk70 |= 8;
     } else {
         u8 *p;
         int i;
@@ -3651,7 +3651,7 @@ void fireball_init(int *obj)
         ((GameObject *)obj)->animEventCallback = (void *)Fireball_SeqFn;
         ObjGroup_AddObject((int)obj, 2);
         if (((GameObject *)obj)->anim.seqId != 2110 && ((FireballPlacement *)params)->unk1A != 0) {
-            ((FireballState *)state)->timer3C = lbl_803E3380;
+            ((FireballState *)state)->unk3C = lbl_803E3380;
         }
     }
 }
@@ -3677,12 +3677,12 @@ void fireball_update(int *obj)
     int *other = *(int **)&((GameObject *)obj)->unkF8;
     int *params = *(int **)&((GameObject *)obj)->anim.placementData;
 
-    if ((((FireballState *)state)->flags70 & 8) != 0) {
+    if ((((FireballState *)state)->unk70 & 8) != 0) {
         return;
     }
-    ((FireballState *)state)->timer3C -= timeDelta;
-    if (((FireballState *)state)->timer3C < *(f32 *)&lbl_803E3330) {
-        ((FireballState *)state)->timer3C = lbl_803E3330;
+    ((FireballState *)state)->unk3C -= timeDelta;
+    if (((FireballState *)state)->unk3C < *(f32 *)&lbl_803E3330) {
+        ((FireballState *)state)->unk3C = lbl_803E3330;
     }
     if (((GameObject *)obj)->anim.seqId == 2110) {
         if (*(void **)state != NULL) {
@@ -3698,11 +3698,11 @@ void fireball_update(int *obj)
     if (((FireballState *)state)->unk34 > ((FireballState *)state)->unk30) {
         ObjHits_SetHitVolumeSlot(obj, 14, *(s8 *)((char *)params + 0x19) != 0 ? 3 : 1, 0);
     }
-    if ((((FireballState *)state)->flags70 & 1) == 0) {
+    if ((((FireballState *)state)->unk70 & 1) == 0) {
         ((FireballState *)state)->unk24 = ((GameObject *)obj)->anim.localPosX;
         *(f32 *)&((FireballState *)state)->unk28 = ((GameObject *)obj)->anim.localPosY;
         ((FireballState *)state)->unk2C = ((GameObject *)obj)->anim.localPosZ;
-        ((FireballState *)state)->flags70 |= 1;
+        ((FireballState *)state)->unk70 |= 1;
     }
     {
         int *r54 = *(int **)&((GameObject *)obj)->anim.hitReactState;
@@ -3730,7 +3730,7 @@ void fireball_update(int *obj)
                     projectileParticleFxFn_80099660(obj, lbl_803E3354, 6);
                 }
             }
-            ((FireballState *)state)->timer38 = lbl_803E3358;
+            ((FireballState *)state)->unk38 = lbl_803E3358;
             ((GameObject *)obj)->anim.alpha = 0;
             if (*(void **)state != NULL) {
                 ModelLightStruct_free(*(void **)state);
@@ -3740,13 +3740,13 @@ void fireball_update(int *obj)
             ObjHits_DisableObject(obj);
         }
     }
-    if (((FireballState *)state)->timer38 != lbl_803E3330) {
+    if (((FireballState *)state)->unk38 != lbl_803E3330) {
         ((GameObject *)obj)->anim.velocityX = lbl_803E3330;
         ((GameObject *)obj)->anim.velocityY = lbl_803E3330;
         ((GameObject *)obj)->anim.velocityZ = lbl_803E3330;
         ObjHits_ClearHitVolumes(obj);
-        ((FireballState *)state)->timer38 -= timeDelta;
-        if (((FireballState *)state)->timer38 <= lbl_803E3330) {
+        ((FireballState *)state)->unk38 -= timeDelta;
+        if (((FireballState *)state)->unk38 <= lbl_803E3330) {
             Obj_FreeObject(obj);
         }
     } else {
@@ -3764,7 +3764,7 @@ void fireball_update(int *obj)
         *(f32 *)&((FireballState *)state)->unk28 += ((GameObject *)obj)->anim.velocityY * timeDelta;
         ((FireballState *)state)->unk2C += ((GameObject *)obj)->anim.velocityZ * timeDelta;
         ((FireballState *)state)->unk46 += framesThisStep * 1500;
-        if ((((FireballState *)state)->flags70 & 4) != 0) {
+        if ((((FireballState *)state)->unk70 & 4) != 0) {
             f32 ground;
             *(f32 *)&((FireballState *)state)->unk28 -= lbl_803E3364 * timeDelta;
             if (hitDetectFn_800658a4(obj, ((FireballState *)state)->unk24, *(f32 *)&((FireballState *)state)->unk28,
@@ -3806,10 +3806,10 @@ void fireball_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
     if (v == 0) {
         return;
     }
-    if ((((FireballState *)state)->flags70 & 8) != 0) {
+    if ((((FireballState *)state)->unk70 & 8) != 0) {
         return;
     }
-    if (((FireballState *)state)->timer3C == lbl_803E3330) {
+    if (((FireballState *)state)->unk3C == lbl_803E3330) {
         ((ObjAnimComponent *)obj)->bankIndex = 1;
         model = Obj_GetActiveModel((int)obj);
         *(u8 *)((char *)*(int **)((char *)model + 0x34) + 8) = lbl_803DBD58[((FireballState *)state)->unk71];
@@ -3858,7 +3858,7 @@ extern f32 lbl_803E3340;
 
 void fn_8016F260(int *obj, int *state, int *other)
 {
-    f32 *pt = (f32 *)(*(int *)((char *)other + 0x74) + ((GameObject *)other)->gameBitE4 * 24);
+    f32 *pt = (f32 *)(*(int *)((char *)other + 0x74) + ((GameObject *)other)->unkE4 * 24);
     if (pt != NULL) {
         f32 dx = pt[0] - ((FireballState *)state)->unk24;
         f32 dy = pt[1] - lbl_803E3334 - *(f32 *)&((FireballState *)state)->unk28;
@@ -3951,17 +3951,17 @@ void shield_update(int *obj)
             if (state[1] >= state[2]) {
                 state[1] = state[2];
             }
-            ((ShieldState *)state)->flags5C &= ~1;
-            ((ShieldState *)state)->flags5D &= ~1;
-            ((ShieldState *)state)->flags5E &= ~1;
-            ((ShieldState *)state)->flags5F &= ~1;
+            ((ShieldState *)state)->unk5C &= ~1;
+            ((ShieldState *)state)->unk5D &= ~1;
+            ((ShieldState *)state)->unk5E &= ~1;
+            ((ShieldState *)state)->unk5F &= ~1;
         } else {
             if (state[1] <= state[2]) {
                 state[1] = state[2];
-                ((ShieldState *)state)->flags5C |= 1;
-                ((ShieldState *)state)->flags5D |= 1;
-                ((ShieldState *)state)->flags5E |= 1;
-                ((ShieldState *)state)->flags5F |= 1;
+                ((ShieldState *)state)->unk5C |= 1;
+                ((ShieldState *)state)->unk5D |= 1;
+                ((ShieldState *)state)->unk5E |= 1;
+                ((ShieldState *)state)->unk5F |= 1;
             }
         }
     }

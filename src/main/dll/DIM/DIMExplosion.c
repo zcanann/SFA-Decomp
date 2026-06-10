@@ -57,7 +57,7 @@ typedef struct Dimsnowball1c2Placement {
 
 typedef struct DimicewallState {
     u8 pad0[0x1 - 0x0];
-    u8 gameBit1;
+    u8 unk1;
     s16 unk2;
     u8 pad4[0x8 - 0x4];
 } DimicewallState;
@@ -168,7 +168,7 @@ void dimicewall_init(int obj, s8 *p) {
     char *inner = ((GameObject *)obj)->extra;
     *(s8 *)(inner + 0) = (s8)*(s16 *)(p + 0x1a);
     if (*(s16 *)(p + 0x1e) != -1) {
-        ((DimicewallState *)inner)->gameBit1 = (u8)GameBit_Get(*(s16 *)(p + 0x1e));
+        ((DimicewallState *)inner)->unk1 = (u8)GameBit_Get(*(s16 *)(p + 0x1e));
     }
     *(s16 *)obj = (s16)((s32)p[0x18] << 8);
     ((GameObject *)obj)->objectFlags |= 0x4000;
@@ -422,7 +422,7 @@ void dimicewall_update(int *obj)
     int *extra = ((GameObject *)obj)->extra;
     int *def = *(int **)&((GameObject *)obj)->anim.placementData;
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
-    if (((DimicewallState *)extra)->gameBit1 == 0) {
+    if (((DimicewallState *)extra)->unk1 == 0) {
         if (*(s8 *)extra <= 0) {
             f32 desc[6];
             int i;
@@ -441,7 +441,7 @@ void dimicewall_update(int *obj)
             if (((DimicewallPlacement *)def)->unk14 != 7433) {
                 Sfx_PlayFromObject((int)obj, 1147);
             }
-            ((DimicewallState *)extra)->gameBit1 = 1;
+            ((DimicewallState *)extra)->unk1 = 1;
             if (((DimicewallPlacement *)def)->unk1E != -1) {
                 GameBit_Set(((DimicewallPlacement *)def)->unk1E, 1);
             }

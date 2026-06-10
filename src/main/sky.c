@@ -1600,17 +1600,17 @@ void sky2_update(int a, int b, u8 *cfg)
     if (cfg != NULL) {
         (&lbl_803DB610)[1] = lbl_803DB610 = (s16)((Sky2Config *)cfg)->unk24 - 1;
         *(s16 *)(env + 0xc) = (s16)((Sky2Config *)cfg)->unk24 - 1;
-        flags58 = ((Sky2Config *)cfg)->flags58;
+        flags58 = ((Sky2Config *)cfg)->unk58;
         b1 = (flags58 & 0x80) ? 1 : 0;
         if (*(s8 *)((&lbl_803DD184)[b1] + 0x317) == 0) {
             if ((flags58 & 0x40) != 0) {
                 flags |= 0x40;
             }
             fn_8008C9F4(cfg, flags);
-            if ((((Sky2Config *)cfg)->flags58 & 0x40) != 0) {
+            if ((((Sky2Config *)cfg)->unk58 & 0x40) != 0) {
                 (&lbl_803DD184)[b1][0x316] = 1;
             }
-            *(u16 *)((&lbl_803DD184)[b1] + 4) = ((Sky2Config *)cfg)->flags58 | 0x100;
+            *(u16 *)((&lbl_803DD184)[b1] + 4) = ((Sky2Config *)cfg)->unk58 | 0x100;
             (&lbl_803DD184)[b1][0x315] = 1;
             *(f32 *)((&lbl_803DD184)[b1] + 0x304) = lbl_803DF108;
         } else if ((flags58 & 0x20) != 0) {
@@ -1634,21 +1634,21 @@ void sky2_update(int a, int b, u8 *cfg)
             *(int *)((&lbl_803DD184)[b1] + 0x3c) = ((Sky2Config *)cfg)->unk2A;
             *(int *)((&lbl_803DD184)[b1] + 0x40) = ((Sky2Config *)cfg)->unk2C;
             *(s8 *)((&lbl_803DD184)[b1] + 0x314) = -1;
-            if ((((Sky2Config *)cfg)->flags59 & 0x20) != 0) {
+            if ((((Sky2Config *)cfg)->unk59 & 0x20) != 0) {
                 st = (&lbl_803DD184)[b1];
                 bits = *(u16 *)(st + 6);
                 if ((bits & 0x20) == 0) {
                     *(u16 *)(st + 6) = bits | 0x20;
                 }
             }
-            if ((((Sky2Config *)cfg)->flags59 & 0x20) == 0) {
+            if ((((Sky2Config *)cfg)->unk59 & 0x20) == 0) {
                 st = (&lbl_803DD184)[b1];
                 bits = *(u16 *)(st + 6);
                 if ((bits & 0x20) != 0) {
                     *(u16 *)(st + 6) = bits ^ 0x20;
                 }
             }
-            if ((((Sky2Config *)cfg)->flags58 & 0x40) != 0) {
+            if ((((Sky2Config *)cfg)->unk58 & 0x40) != 0) {
                 *(u16 *)((&lbl_803DD184)[b1] + 6) |= 0x40;
                 (&lbl_803DD184)[b1][0x316] = 1;
             } else {
@@ -1658,7 +1658,7 @@ void sky2_update(int a, int b, u8 *cfg)
                     *(u16 *)(st + 6) = bits ^ 0x40;
                 }
             }
-            m40 = ((Sky2Config *)cfg)->flags59 & 0x40;
+            m40 = ((Sky2Config *)cfg)->unk59 & 0x40;
             if (m40 != 0) {
                 st = (&lbl_803DD184)[b1];
                 bits = *(u16 *)(st + 6);
@@ -1684,7 +1684,7 @@ void fn_8008C9F4(u8 *cfg, u8 flags)
     int i;
     u8 *p2;
 
-    b1 = (((Sky2Config *)cfg)->flags58 & 0x80) ? 1 : 0;
+    b1 = (((Sky2Config *)cfg)->unk58 & 0x80) ? 1 : 0;
     *(int *)((&lbl_803DD184)[b1]) = 0;
     (&lbl_803DD184)[b1][0x317] = 1;
     for (i = 0; i < 0x21; i++) {
@@ -1709,8 +1709,8 @@ void fn_8008C9F4(u8 *cfg, u8 flags)
         *(f32 *)((&lbl_803DD184)[b1] + i * 4 + 0x280) = (f32)(u32)*(u16 *)(cfg + *p2 * 2 + 0x2e);
         p2++;
     }
-    *(u16 *)((&lbl_803DD184)[b1] + 4) = ((Sky2Config *)cfg)->flags58;
-    *(u16 *)((&lbl_803DD184)[b1] + 6) = ((Sky2Config *)cfg)->flags59;
+    *(u16 *)((&lbl_803DD184)[b1] + 4) = ((Sky2Config *)cfg)->unk58;
+    *(u16 *)((&lbl_803DD184)[b1] + 6) = ((Sky2Config *)cfg)->unk59;
     *(f32 *)((&lbl_803DD184)[b1] + 0x64) = lbl_803DF108;
     *(f32 *)((&lbl_803DD184)[b1] + 0x68) = lbl_803DF108;
     *(s8 *)((&lbl_803DD184)[b1] + 0x314) = -1;
@@ -2518,7 +2518,7 @@ void Sky_func03(int a, int b, u8 *cfg)
     int tmp;
 
     envp = (s16 *)saveGameGetEnvState();
-    if (cfg != NULL && (((Sky2Config *)cfg)->flags58 & 2) != 0) {
+    if (cfg != NULL && (((Sky2Config *)cfg)->unk58 & 2) != 0) {
         switch (((Sky2Config *)cfg)->unk54) {
         case 0:
         default:
@@ -2606,7 +2606,7 @@ void Sky_func03(int a, int b, u8 *cfg)
         }
         ((SkyBlendStateFlags *)(lbl_803DD12C + 0x209))->bit20 =
             ((SkyBlendStateFlags *)(lbl_803DD12C + ((SkyState *)lbl_803DD12C)->unk24C * 0xa4 + 0xc1))->bit20;
-        if ((((Sky2Config *)cfg)->flags58 & 1) == 0) {
+        if ((((Sky2Config *)cfg)->unk58 & 1) == 0) {
             ((SkyState *)lbl_803DD12C)->unk21C = ((Sky2Config *)cfg)->unk2E + 0xc38;
             ((SkyState *)lbl_803DD12C)->unk220 = ((Sky2Config *)cfg)->unk30 + 0xc38;
             ((SkyState *)lbl_803DD12C)->unk224 = ((Sky2Config *)cfg)->unk32 + 0xc38;

@@ -733,10 +733,10 @@ void fn_801BC7E4(int obj, int param_2, int param_3, int param_4)
   }
   if (*(s16 *)(param_3 + 0x402) == 1) {
     ((void (*)(u8 *, int, int, int))*(code **)(*(int *)(*(int *)(tricky + 0x68)) + 0x28))(tricky, obj, 1, 2);
-    ((GameObject *)obj)->gameBitE4 = 1;
+    ((GameObject *)obj)->unkE4 = 1;
   }
   else {
-    ((GameObject *)obj)->gameBitE4 = 2;
+    ((GameObject *)obj)->unkE4 = 2;
   }
   *(int *)(param_3 + 0x3e0) = *(int *)&((GameObject *)obj)->unkC0;
   *(int *)&((GameObject *)obj)->unkC0 = 0;

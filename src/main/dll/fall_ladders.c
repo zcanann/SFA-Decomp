@@ -363,7 +363,7 @@ void fn_801544E8(int* obj, u8* state, int p3, int p4) {
         Sfx_PlayFromObject(obj, SFXdoor_unlocked);
         Sfx_PlayFromObject(obj, SFXdoor_creak);
         *(s16 *)&((BaddieState *)state)->hitCounter = 0;
-        ((BaddieState *)state)->flags2E4 |= 32;
+        ((BaddieState *)state)->unk2E4 |= 32;
     } else {
         *(int *)&((BaddieState *)state)->reactionFlags |= 16;
     }
@@ -373,7 +373,7 @@ void fn_801542AC(int unused, u8* state) {
     f32 fz;
     f32 fc;
     ((BaddieState *)state)->unk2AC = lbl_803E2978;
-    ((BaddieState *)state)->flags2E4 = 173;
+    ((BaddieState *)state)->unk2E4 = 173;
     ((BaddieState *)state)->unk308 = lbl_803E297C;
     ((BaddieState *)state)->unk300 = lbl_803E2954;
     ((BaddieState *)state)->unk304 = lbl_803E2980;

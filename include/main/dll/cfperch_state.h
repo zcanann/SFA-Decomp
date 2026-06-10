@@ -23,7 +23,7 @@ typedef struct CfperchState {
     s16 randomTimer;
     s16 unk10;
     s16 unk12;
-    int timer14;
+    int unk14;
     int unk18;
     s16 enableGameBit;
     u8 unk1E;
@@ -32,6 +32,6 @@ typedef struct CfperchState {
     u8 unk21[0x28 - 0x21];
 } CfperchState;
 
-STATIC_ASSERT(offsetof(CfperchState, timer14) == 0x14);
+STATIC_ASSERT(offsetof(CfperchState, unk14) == 0x14);
 
 #endif /* MAIN_DLL_CFPERCH_STATE_H_ */
