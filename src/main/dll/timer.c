@@ -116,11 +116,14 @@ void timer_init(int obj, int setup)
 
 void timer_update(int obj)
 {
-    int v;
-    TimerState *state = ((GameObject *)obj)->extra;
-    TimerSetup *setup = (TimerSetup *)((GameObject *)obj)->anim.placementData;
-    TimerFlags *f = &state->flags;
     int flag;
+    TimerFlags *f;
+    TimerSetup *setup;
+    TimerState *state;
+    int v;
+    state = ((GameObject *)obj)->extra;
+    setup = (TimerSetup *)((GameObject *)obj)->anim.placementData;
+    f = &state->flags;
 
     if (fn_80080150((int)state) != 0) {
         flag = 0;
