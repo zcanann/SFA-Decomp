@@ -10,6 +10,8 @@
  * objseq.c). Only fields with read/write evidence in objseq.c are named;
  * everything else is padded.
  */
+typedef struct ObjSeqState ObjSeqState;
+
 typedef struct ObjectTriggerInterface {
     void *unusedSlot02;
     void (*onMapSetup)(void);
@@ -33,7 +35,7 @@ typedef struct ObjectTriggerInterface {
     void (*endSequence)(int seqIndex);
     void (*setCamVars)(int camA, int camB, int camC, int camD);
     void (*preempt)(int obj, int triggerId);
-    void (*yield)(u8 *seq, int value);
+    void (*yield)(ObjSeqState *seq, int value);
     u8 (*getGlobal3)(void);
     void (*setGlobal3)(u8 value);
     s16 (*getGlobal1)(void);
@@ -82,7 +84,7 @@ STATIC_ASSERT(offsetof(ObjectTriggerInterface, setObjects) == 0x7C);
 STATIC_ASSERT(offsetof(ObjectTriggerInterface, setOverridePos) == 0x80);
 STATIC_ASSERT(offsetof(ObjectTriggerInterface, setRunSequenceWorldSpace) == 0x84);
 
-typedef struct ObjSeqState {
+struct ObjSeqState {
     void *targetObj;
     u8 unk04[8];
     f32 unk0C;
@@ -153,7 +155,7 @@ typedef struct ObjSeqState {
     s16 conditionFrames[10];
     u8 conditionOpcodes[10];
     u8 unk136[2];
-} ObjSeqState;
+};
 
 STATIC_ASSERT(sizeof(ObjSeqState) == 0x138);
 STATIC_ASSERT(offsetof(ObjSeqState, curFrame) == 0x58);

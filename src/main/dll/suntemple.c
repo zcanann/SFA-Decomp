@@ -110,7 +110,7 @@ int suntemple_interactCallback(int obj, int p2, int p3)
             break;
         case 2:
             if (setup->preemptSequenceId != 0)
-                (*gObjectTriggerInterface)->yield((u8 *)p3, setup->preemptSequenceId);
+                (*gObjectTriggerInterface)->yield((ObjSeqState *)p3, setup->preemptSequenceId);
             break;
         case 3:
             if (((ObjAnimComponent *)obj)->bankIndex == 1)

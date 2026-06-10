@@ -2616,7 +2616,7 @@ void fn_801606F0(int obj, void *p2, int sub, GroundBaddieState *p)
     *(s8 *)&p->baddie.unk349 = 0;
     if (*(char *)(setup + 0x2e) != -1) {
       if (p2 != NULL) {
-        (*gObjectTriggerInterface)->yield((u8 *)p2, *(s16 *)(setup + 0x24));
+        (*gObjectTriggerInterface)->yield((ObjSeqState *)p2, *(s16 *)(setup + 0x24));
       }
       *(s8 *)(sub + 0x405) = 1;
     } else {
@@ -2706,7 +2706,7 @@ int dll_CB_seqFn(short *obj, int p2, u8 *e)
     }
     fn_8016083C((int *)obj, (GroundBaddieState *)sub, (GroundBaddieState *)sub);
     if (*(s16 *)(sub + 0x3f6) != -1 && GameBit_Get(*(s16 *)(sub + 0x3f6)) != 0) {
-      (*gObjectTriggerInterface)->yield(e, *(s16 *)(setup + 0x2c));
+      (*gObjectTriggerInterface)->yield((ObjSeqState *)e, *(s16 *)(setup + 0x2c));
       *(s16 *)(sub + 0x3f6) = -1;
     }
     switch (*(u8 *)(sub + 0x405)) {
@@ -3326,7 +3326,7 @@ void FUN_80160e58(undefined4 param_1,undefined4 param_2,int param_3,int param_4)
     }
     else {
       if ((int)uVar4 != 0) {
-        (*gObjectTriggerInterface)->yield((u8 *)uVar4, (int)*(short *)(iVar3 + 0x24));
+        (*gObjectTriggerInterface)->yield((ObjSeqState *)uVar4, (int)*(short *)(iVar3 + 0x24));
       }
       *(undefined *)(param_3 + 0x405) = 1;
     }

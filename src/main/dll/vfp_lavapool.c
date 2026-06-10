@@ -136,7 +136,7 @@ int dll_DIM_BossGutSpik_update(void *obj,undefined4 param_2,ObjAnimUpdateState *
     }
     if ((state->eventGameBit != -1) &&
         (GameBit_Get(state->eventGameBit) != 0)) {
-      (*gObjectTriggerInterface)->yield((u8 *)animUpdate,(int)config->eventId);
+      (*gObjectTriggerInterface)->yield((ObjSeqState *)animUpdate,(int)config->eventId);
       state->eventGameBit = -1;
     }
 

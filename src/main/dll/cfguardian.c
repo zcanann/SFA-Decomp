@@ -922,7 +922,7 @@ int Lock_DoorLock_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
       GameBit_Set(*(s16 *)(def + 0x1c), 1);
     }
     if ((animUpdate->triggerCommand == 2) && (*(s16 *)(def + 0x24) != 0)) {
-      (*gObjectTriggerInterface)->yield((u8 *)animUpdate, *(s16 *)(def + 0x24));
+      (*gObjectTriggerInterface)->yield((ObjSeqState *)animUpdate, *(s16 *)(def + 0x24));
     }
     animUpdate->triggerCommand = 0;
   }

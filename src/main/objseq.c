@@ -747,7 +747,7 @@ int seqDoSubCmd0B(u8 *obj, u8 *sourceObj, u8 *seq, u8 *cmdsArg, s16 xrot, int co
                     n = ((ObjSeqState *)seq)->eventCount;
                     if ((u32)n < 10) {
                         ((ObjSeqState *)seq)->eventCount = n + 1;
-                        seq[n + 0x81] = (u8)top16;
+                        ((ObjSeqState *)seq)->eventIds[n] = (u8)top16;
                     }
                     break;
                 case 1:

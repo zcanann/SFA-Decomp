@@ -3,6 +3,7 @@
 #include "main/maketex.h"
 #include "main/objanim.h"
 #include "main/objlib.h"
+#include "main/objseq.h"
 
 
 #pragma peephole off
@@ -1259,10 +1260,10 @@ int animatedObjGetSeqId(int obj)
     return lbl_8039A3B0[(s8)*(u8 *)(obj + 0x57)] - 1;
 }
 
-void ObjSeq_yield(u8 *seq, int value)
+void ObjSeq_yield(ObjSeqState *seq, int value)
 {
-    *(int *)(seq + 0x74) = value;
-    *(u8 *)(seq + 0x90) = (u8)(*(u8 *)(seq + 0x90) | 0x40);
+    seq->unk74 = value;
+    seq->sequenceControlFlags |= 0x40;
 }
 
 extern int lbl_803DB72C;
