@@ -8,12 +8,12 @@
 
 typedef struct Dll197State {
     u8 pad0[0x2 - 0x0];
-    s16 unk2;
+    s16 bool2;
     s16 unk4;
     u8 pad6[0x8 - 0x6];
     s16 flags8;
     s16 unkA;
-    u8 unkC;
+    u8 boolC;
     u8 unkD;
     u8 unkE;
     u8 unkF;
@@ -98,13 +98,13 @@ void dll_197_init(int obj, int data)
         ((GameObject *)obj)->anim.rootMotionScale = lbl_803E5144;
     }
     *(u8 *)(st + 0xb) = *(u8 *)(data + 0x19);
-    ((Dll197State *)st)->unkC = 0;
+    ((Dll197State *)st)->boolC = 0;
     ((Dll197State *)st)->unkF = 0;
     *(int *)st = *(s16 *)(data + 0x1e);
     stk.f = lbl_803E513C;
     switch (*(u8 *)(st + 0xb)) {
     case 0:
-        ((Dll197State *)st)->unkC = 1;
+        ((Dll197State *)st)->boolC = 1;
         res = Resource_Acquire(0x69, 1);
         if (*(s16 *)(data + 0x1c) == 0) {
             (*(void (**)(int, int, void *, int, int, int))(*(int *)res + 4))(obj, 0, stk.buf, 0x10004, -1, 0);
@@ -231,9 +231,9 @@ extern void skyFn_80088c94(int a, int b);
 extern void getEnvfxAct(int a, int b, int c, int d);
 
 void nwsh_levcon_update(int *obj) {
-    if (((GameObject *)obj)->unkF4 != 0) {
-        ((GameObject *)obj)->unkF4 = ((GameObject *)obj)->unkF4 - 1;
-        if (((GameObject *)obj)->unkF4 == 0) {
+    if (((GameObject *)obj)->countF4 != 0) {
+        ((GameObject *)obj)->countF4 = ((GameObject *)obj)->countF4 - 1;
+        if (((GameObject *)obj)->countF4 == 0) {
             skyFn_80088c94(7, 1);
             getEnvfxAct(0, 0, 0xd1, 0);
             getEnvfxAct(0, 0, 0xd6, 0);
@@ -246,7 +246,7 @@ void nwsh_levcon_init(int *obj) {
     ((GameObject *)obj)->animEventCallback = (void *)NWSH_levcon_SeqFn;
     unlockLevel(mapGetDirIdx(0x28), 1, 0);
     Music_Trigger(6, 1);
-    ((GameObject *)obj)->unkF4 = 1;
+    ((GameObject *)obj)->countF4 = 1;
     GameBit_Set(0xea2, 1);
     GameBit_Set(0xefd, 1);
 }
@@ -370,11 +370,11 @@ int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState *animUpdate)
         if ((getButtonsHeld(0) & 0x100) != 0) {
             (*gObjectTriggerInterface)->endSequence(animUpdate->sequenceSlot);
             ((Dll197State *)st)->unkF = 8;
-            ((Dll197State *)st)->unk2 = 0;
+            ((Dll197State *)st)->bool2 = 0;
         } else if ((getButtonsHeld(0) & 0x200) != 0) {
             (*gObjectTriggerInterface)->endSequence(animUpdate->sequenceSlot);
             ((Dll197State *)st)->unkF = 7;
-            ((Dll197State *)st)->unk2 = 0;
+            ((Dll197State *)st)->bool2 = 0;
         }
     }
     return 0;

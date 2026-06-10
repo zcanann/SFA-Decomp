@@ -142,7 +142,7 @@ void dimdismountpoint_init(u8* obj, u8* params) {
     sub[1] = lbl_803E4908;
     sub[2] = mathCosf(lbl_803E4914 * (f32)(s32)*(s16*)obj / lbl_803E4918);
     sub[3] = -(sub[0] * ((GameObject *)obj)->anim.localPosX + sub[1] * ((GameObject *)obj)->anim.localPosY + sub[2] * ((GameObject *)obj)->anim.localPosZ);
-    ((GameObject *)obj)->unkF8 = 1;
+    ((GameObject *)obj)->moveF8 = 1;
 }
 
 /* 8b "li r3, N; blr" returners. */
@@ -175,8 +175,8 @@ void dimbridgecogmai_init(int *obj, int *def) {
 
 extern f32 lbl_803E490C;
 void dimdismountpoint_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
-    if (visible == 0 || ((GameObject *)obj)->unkF8 != 0) {
-        if (((GameObject *)obj)->unkF8 != 0) {
+    if (visible == 0 || ((GameObject *)obj)->moveF8 != 0) {
+        if (((GameObject *)obj)->moveF8 != 0) {
             objRenderFn_80041018(obj);
         }
     } else {

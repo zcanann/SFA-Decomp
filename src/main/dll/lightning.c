@@ -531,15 +531,15 @@ extern void fn_8002B860(int obj);
 void effectbox_init(int obj, int *def) {
     s16 bit;
     u32 v;
-    if (((GameObject *)obj)->unkF4 == 0) {
+    if (((GameObject *)obj)->countF4 == 0) {
         fn_8002B860(obj);
     }
-    ((GameObject *)obj)->unkF4 = 1;
+    ((GameObject *)obj)->countF4 = 1;
     bit = *(s16 *)((char *)def + 0x20);
     if (bit > -1) {
-        ((GameObject *)obj)->unkF8 = (int)bit;
+        ((GameObject *)obj)->moveF8 = (int)bit;
     } else {
-        ((GameObject *)obj)->unkF8 = -1;
+        ((GameObject *)obj)->moveF8 = -1;
     }
     v = (u32)((GameObject *)obj)->objectFlags | 0x6000;
     ((GameObject *)obj)->objectFlags = (u16)v;
@@ -642,7 +642,7 @@ void effectbox_update(int obj)
   int gb;
 
   def = *(int *)&((GameObject *)obj)->anim.placementData;
-  gb = ((GameObject *)obj)->unkF8;
+  gb = ((GameObject *)obj)->moveF8;
   if ((gb <= -1) || (((EffectboxPlacement *)def)->unk1F != GameBit_Get(gb))) {
     sinY = mathCosf((lbl_803E350C * (f32)-(((EffectboxPlacement *)def)->unk18 << 8)) / lbl_803E3510);
     cosY = mathSinf((lbl_803E350C * (f32)-(((EffectboxPlacement *)def)->unk18 << 8)) / lbl_803E3510);

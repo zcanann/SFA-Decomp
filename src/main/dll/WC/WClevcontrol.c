@@ -592,7 +592,7 @@ void SB_CloudRunner_update(int obj)
             }
         }
     }
-    ((GameObject *)obj)->unkF4 = 0;
+    ((GameObject *)obj)->countF4 = 0;
     prevKey = *(s8 *)(state + 0x65);
     *(s8 *)&((SBCloudRunnerState *)state)->unk64 = (s8)(*(s8 *)&((SBCloudRunnerState *)state)->unk64 - framesThisStep);
     if (*(s8 *)&((SBCloudRunnerState *)state)->unk64 < 0) {
@@ -608,7 +608,7 @@ void SB_CloudRunner_update(int obj)
         break;
     case 2:
     case 3:
-        ((GameObject *)obj)->unkF4 = 1;
+        ((GameObject *)obj)->countF4 = 1;
         break;
     }
     *(f32 *)(state + 0x5c) = *(f32 *)(state + 0x5c) + (f32)(int)((GameObject *)obj)->anim.rotZ * timeDelta / lbl_803E5CBC;

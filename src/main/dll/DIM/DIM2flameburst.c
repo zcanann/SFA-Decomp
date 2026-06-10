@@ -1124,8 +1124,8 @@ void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z)
     int off;
     int e;
     int p;
-    idx = ((ExplosionState *)state)->unkA58;
-    ((ExplosionState *)state)->unkA58 = idx + 1;
+    idx = ((ExplosionState *)state)->countA58;
+    ((ExplosionState *)state)->countA58 = idx + 1;
     off = idx * 0x30;
     *(f32 *)((char *)state + off) = x;
     e = state + off;
@@ -1271,7 +1271,7 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         GXSetVtxDesc(0xd, 1);
         GXSetCurrentMtx(0);
         p = state;
-        for (i = 0; i < ((ExplosionState *)state)->unkA58; i++) {
+        for (i = 0; i < ((ExplosionState *)state)->countA58; i++) {
             if (*(s8 *)&((ExplosionDebris *)p)->unk2F != 0) {
                 void **tex;
                 int k;
@@ -1351,7 +1351,7 @@ void explosion_update(int obj)
     int p;
     lbl_803DDB58 += 1;
     ((ExplosionState *)state)->frameCounter += framesThisStep;
-    for (i = 0, p = state; i < ((ExplosionState *)state)->unkA58; i++) {
+    for (i = 0, p = state; i < ((ExplosionState *)state)->countA58; i++) {
         ((ExplosionDebris *)p)->unk10 += framesThisStep;
         if (((ExplosionDebris *)p)->unk2F != 0) {
             f32 sp = ((ExplosionDebris *)p)->unk1C;
@@ -1385,7 +1385,7 @@ void explosion_update(int obj)
                         vpos[1] += ((ExplosionDebris *)p)->unk4;
                         vpos[2] += ((ExplosionDebris *)p)->unk8;
                         sv = sp2 * (f32)(int)randomGetRange(0xc0, 0x100);
-                        if (((ExplosionState *)st2)->unkA58 < 0x32) {
+                        if (((ExplosionState *)st2)->countA58 < 0x32) {
                             fn_801B3DE4(obj, (u8)(c + 1), sv * lbl_803E4974, vpos[0], vpos[1], vpos[2]);
                         }
                         ((ExplosionDebris *)p)->unk20 = ((ExplosionDebris *)p)->unk24;
@@ -1523,7 +1523,7 @@ void explosion_init(int obj, int p2)
     int p;
     int i;
     int n;
-    ((ExplosionState *)state)->unkA58 = 0;
+    ((ExplosionState *)state)->countA58 = 0;
     if (*(s16 *)((char *)p2 + 0x1a) == 0) {
         scale = lbl_803E49A8;
     } else {

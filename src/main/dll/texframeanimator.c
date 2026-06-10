@@ -107,11 +107,11 @@ void collectible_init(int obj,int setup)
   }
   ((CollectibleState *)state)->hideGameBit = *(s16 *)(setup + 0x1c);
   if (((CollectibleState *)state)->hideGameBit != -1) {
-    *(u32 *)&((GameObject *)obj)->unkF4 = GameBit_Get(((CollectibleState *)state)->hideGameBit);
+    *(u32 *)&((GameObject *)obj)->countF4 = GameBit_Get(((CollectibleState *)state)->hideGameBit);
   } else {
-    *(u32 *)&((GameObject *)obj)->unkF4 = 0;
+    *(u32 *)&((GameObject *)obj)->countF4 = 0;
   }
-  if (((GameObject *)obj)->unkF4 == 0) {
+  if (((GameObject *)obj)->countF4 == 0) {
     data = *(u8 **)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x18);
     if (data != 0) {
       ((CollectibleState *)state)->unk4 = (f32)*(s8 *)(data + 8);

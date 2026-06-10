@@ -47,7 +47,7 @@ int wctrexstatu_interactCallback(int obj, int unused, ObjAnimUpdateState *animUp
             if (texture != NULL) {
                 *texture = WCTREXSTATU_TEXTURE_TRIGGERED;
             }
-            ((GameObject *)obj)->unkF4 = 1;
+            ((GameObject *)obj)->countF4 = 1;
         }
     }
 
@@ -83,7 +83,7 @@ void wctrexstatu_hitDetect(u8 *obj)
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
     GameObject *gameObj = (GameObject *)obj;
 
-    if (gameObj->unkF4 != 0 && randomGetRange(0, WCTREXSTATU_PARTFX_CHANCE) == 0) {
+    if (gameObj->countF4 != 0 && randomGetRange(0, WCTREXSTATU_PARTFX_CHANCE) == 0) {
         if (objAnim->bankIndex == 0) {
             (*gPartfxInterface)->spawnObject(obj, WCTREXSTATU_PARTFX_VARIANT_0, NULL,
                                              WCTREXSTATU_PARTFX_KIND,
@@ -124,7 +124,7 @@ void wctrexstatu_init(int obj, int setup, int fromLoad)
         if (texture != NULL) {
             *texture = WCTREXSTATU_TEXTURE_TRIGGERED;
         }
-        ((GameObject *)obj)->unkF4 = 1;
+        ((GameObject *)obj)->countF4 = 1;
     }
 }
 

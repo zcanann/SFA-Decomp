@@ -459,7 +459,7 @@ void kaldachom_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
   KaldaChomControl *control;
   
   state = *(int *)&((GameObject *)obj)->extra;
-  if ((visible != 0) && (((GameObject *)obj)->unkF4 == 0)) {
+  if ((visible != 0) && (((GameObject *)obj)->countF4 == 0)) {
     if (((KaldachomState *)state)->unk3E8 != lbl_803E3060) {
       fn_8003B5E0(200,0,0,(int)((KaldachomState *)state)->unk3E8);
     }
@@ -504,7 +504,7 @@ void kaldachom_update(int param_1)
   
   iVar9 = *(int *)&((GameObject *)param_1)->extra;
   iVar8 = *(int *)&((GameObject *)param_1)->anim.placementData;
-  if (((GameObject *)param_1)->unkF4 != 0) {
+  if (((GameObject *)param_1)->countF4 != 0) {
     if ((((CampfireState *)iVar9)->unk270 != 3) &&
         (iVar1 = (*gMapEventInterface)->isTimedEventActive(((KaldachomPlacement *)iVar8)->unk14), iVar1 != 0))
     {

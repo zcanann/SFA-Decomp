@@ -305,11 +305,11 @@ void dimlavasmash_update(int *obj) {
     if (sub[2] == 1) {
         p = *(int**)&((GameObject *)obj)->anim.hitReactState;
         ((ObjHitsPriorityState *)p)->flags = (s16)(((ObjHitsPriorityState *)p)->flags & ~1);
-    } else if (((GameObject *)obj)->unkF4 == 0) {
+    } else if (((GameObject *)obj)->countF4 == 0) {
         if ((s8)sub[0] != -1) {
             (*gObjectTriggerInterface)->runSequence((s8)sub[0], obj, -1);
         }
-        ((GameObject *)obj)->unkF4 = 1;
+        ((GameObject *)obj)->countF4 = 1;
     }
 }
 
@@ -475,7 +475,7 @@ void dimcannon_init(int *obj, int *arg)
     if (((GameObject *)obj)->anim.seqId == 0x1d6) {
         void *state;
         int *p;
-        ((GameObject *)obj)->unkF4 = 0;
+        ((GameObject *)obj)->countF4 = 0;
         p = *(int **)&((GameObject *)obj)->anim.modelState;
         if (p != 0) {
             *(int *)&((ObjHitsPriorityState *)p)->secondaryRadiusY |= 0xc10;
@@ -595,7 +595,7 @@ void dimcannon_update(int *obj)
         } else if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 0x1) {
             int *focusObj;
             ((DimCannonState *)state)->unkAE = 0;
-            ((DimCannonState *)state)->unkB1 = 0;
+            ((DimCannonState *)state)->boolB1 = 0;
             focusObj = obj;
             (*gCameraInterface)->setMode(0x51, 1, 0, 4, &focusObj, 0x32, 0xff);
             buttonDisable(0, 0x100);
@@ -604,7 +604,7 @@ void dimcannon_update(int *obj)
             *(u8 *)&((DimCannonState *)state)->unkB0 = 0x3c;
             *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x8;
         }
-        ((DimCannonState *)state)->unkAD = 0;
+        ((DimCannonState *)state)->boolAD = 0;
         ((DimCannonState *)state)->aimYaw = 0;
         ((DimCannonState *)state)->aimPitch = 0;
         break;
@@ -622,7 +622,7 @@ void dimcannon_update(int *obj)
                 ((DimCannonState *)state)->fireState = 1;
             }
         }
-        ((DimCannonState *)state)->unkAD = 0;
+        ((DimCannonState *)state)->boolAD = 0;
         ((DimCannonState *)state)->aimYaw = 0;
         ((DimCannonState *)state)->aimPitch = 0;
         break;
@@ -804,7 +804,7 @@ int fn_801B2550(int *obj, int p2, ObjAnimUpdateState *animUpdate)
                 if (((DimCannonState *)state)->aimYaw <= 0 && fn_80296A14(player) >= 1) {
                     buttonDisable(0, 0x100);
                     playerAddRemoveMagic(player, -1);
-                    ((DimCannonState *)state)->unkAD = 1;
+                    ((DimCannonState *)state)->boolAD = 1;
                     ((DimCannonState *)state)->unkAE = 0;
                 }
             }
@@ -812,13 +812,13 @@ int fn_801B2550(int *obj, int p2, ObjAnimUpdateState *animUpdate)
             if (((GameObject *)obj)->anim.mapEventSlot == 0x13 && ((DimCannonState *)state)->unkB2 == 0 &&
                 GameBit_Get(0xc17) && GameBit_Get(0xa21)) {
                 ((DimCannonState *)state)->unkB2 = 1;
-                ((DimCannonState *)state)->unkB1 = 1;
+                ((DimCannonState *)state)->boolB1 = 1;
             }
             {
-                u8 b1 = ((DimCannonState *)state)->unkB1;
+                u8 b1 = ((DimCannonState *)state)->boolB1;
                 if (b1 != 0) {
-                    ((DimCannonState *)state)->unkB1 += framesThisStep;
-                    if (((DimCannonState *)state)->unkB1 > 0x3c) {
+                    ((DimCannonState *)state)->boolB1 += framesThisStep;
+                    if (((DimCannonState *)state)->boolB1 > 0x3c) {
                         done = 1;
                     }
                 }

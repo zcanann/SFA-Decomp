@@ -372,7 +372,7 @@ void wm_column_update(int obj)
   state = *(int *)&((GameObject *)obj)->extra;
   nearest = lbl_803E37BC;
   if ((*(GroundAnimatorAnimStateFn *)(*gCarryableInterface + 8))(obj, *(int *)&((GameObject *)obj)->extra) != 0) {
-    if ((((GameObject *)obj)->unkF4 & 2) != 0) {
+    if ((((GameObject *)obj)->countF4 & 2) != 0) {
       objects = ObjList_GetObjects(&i, &count);
       for (; i < count; i++) {
         other = objects[i];
@@ -391,13 +391,13 @@ void wm_column_update(int obj)
     if (((playerFlags & 0x4000) != 0) && (nearest > lbl_803E37C4)) {
       (*(GroundAnimatorSetVisibleFn *)(*gCarryableInterface + 0x24))(state, 0);
       setAButtonIcon(5);
-      *(u32 *)&((GameObject *)obj)->unkF4 |= 1;
+      *(u32 *)&((GameObject *)obj)->countF4 |= 1;
     } else {
       (*(GroundAnimatorSetVisibleFn *)(*gCarryableInterface + 0x24))(state, 1);
     }
-    *(u32 *)&((GameObject *)obj)->unkF4 &= ~2;
+    *(u32 *)&((GameObject *)obj)->countF4 &= ~2;
   } else {
-    if ((((GameObject *)obj)->unkF4 & 1) != 0) {
+    if ((((GameObject *)obj)->countF4 & 1) != 0) {
       objects = ObjList_GetObjects(&i, &count);
       for (; i < count; i++) {
         other = objects[i];
@@ -420,12 +420,12 @@ void wm_column_update(int obj)
     playerFlags = playerGetStateFlag310(Obj_GetPlayerObject());
     if ((playerFlags & 0x4000) != 0) {
       (*(GroundAnimatorSetVisibleFn *)(*gCarryableInterface + 0x24))(state, 0);
-      *(u32 *)&((GameObject *)obj)->unkF4 |= 2;
+      *(u32 *)&((GameObject *)obj)->countF4 |= 2;
     } else {
       (*(GroundAnimatorSetVisibleFn *)(*gCarryableInterface + 0x24))(state, 1);
-      *(u32 *)&((GameObject *)obj)->unkF4 &= ~2;
+      *(u32 *)&((GameObject *)obj)->countF4 &= ~2;
     }
-    *(u32 *)&((GameObject *)obj)->unkF4 &= ~1;
+    *(u32 *)&((GameObject *)obj)->countF4 &= ~1;
   }
 }
 
@@ -448,7 +448,7 @@ void wm_column_init(short *obj, int mapData)
   undefined4 state = *(undefined4 *)&((GameObject *)(int)obj)->extra;
   *obj = (s16)(*(u8 *)(mapData + 0x18) << 8);
   ((GameObject *)(int)obj)->objectFlags |= 0x2000;
-  ((GameObject *)(int)obj)->unkF4 = 0;
+  ((GameObject *)(int)obj)->countF4 = 0;
   objAnim->bankIndex = (s8)(int)*(s8 *)(mapData + 0x19);
   if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
     objAnim->bankIndex = 0;

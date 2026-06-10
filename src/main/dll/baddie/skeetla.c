@@ -361,15 +361,15 @@ static void skeetla_updateFacingFromMoveVector(u8 *obj, s16 *turnDeltaOut)
     f32 zz;
     s16 yaw;
 
-    dx = ((TrickyState *)state)->unk2C;
+    dx = ((TrickyState *)state)->speed2C;
     xx = dx * dx;
-    dz = ((TrickyState *)state)->unk30;
+    dz = ((TrickyState *)state)->speed30;
     zz = dz * dz;
     if ((xx + zz) > lbl_803E23EC) {
         yaw = getAngle(-dx, -dz);
         *turnDeltaOut = trickyTurnTowardYaw(obj, yaw);
-        ((TrickyState *)state)->unk2C = -mathSinf((lbl_803E2454 * (f32)(int)*(s16 *)obj) / lbl_803E2458);
-        ((TrickyState *)state)->unk30 = -mathCosf((lbl_803E2454 * (f32)(int)*(s16 *)obj) / lbl_803E2458);
+        ((TrickyState *)state)->speed2C = -mathSinf((lbl_803E2454 * (f32)(int)*(s16 *)obj) / lbl_803E2458);
+        ((TrickyState *)state)->speed30 = -mathCosf((lbl_803E2454 * (f32)(int)*(s16 *)obj) / lbl_803E2458);
     }
 }
 
@@ -402,32 +402,32 @@ int trickyMove(u8 *obj, f32 *targetPos) {
 
   debugStrings = lbl_8031D2E8;
   state = ((GameObject *)obj)->extra;
-  moveSpeed = ((TrickyState *)state)->unk14;
+  moveSpeed = ((TrickyState *)state)->speed14;
   trickyDebugPrint(&lbl_803DBC4C, moveSpeed);
 
-  ((TrickyState *)state)->unk2C = targetPos[0] - ((GameObject *)obj)->anim.worldPosX;
-  ((TrickyState *)state)->unk30 = targetPos[2] - ((GameObject *)obj)->anim.worldPosZ;
+  ((TrickyState *)state)->speed2C = targetPos[0] - ((GameObject *)obj)->anim.worldPosX;
+  ((TrickyState *)state)->speed30 = targetPos[2] - ((GameObject *)obj)->anim.worldPosZ;
   length =
-      sqrtf((((TrickyState *)state)->unk2C * ((TrickyState *)state)->unk2C) +
-            (((TrickyState *)state)->unk30 * ((TrickyState *)state)->unk30));
+      sqrtf((((TrickyState *)state)->speed2C * ((TrickyState *)state)->speed2C) +
+            (((TrickyState *)state)->speed30 * ((TrickyState *)state)->speed30));
   if (lbl_803E23DC != length) {
-    ((TrickyState *)state)->unk2C /= length;
-    ((TrickyState *)state)->unk30 /= length;
+    ((TrickyState *)state)->speed2C /= length;
+    ((TrickyState *)state)->speed30 /= length;
   }
 
   if (moveSpeed < lbl_803E2420) {
     prospectivePos[0] =
-        lbl_803E2420 * ((TrickyState *)state)->unk2C * timeDelta + ((GameObject *)obj)->anim.worldPosX;
+        lbl_803E2420 * ((TrickyState *)state)->speed2C * timeDelta + ((GameObject *)obj)->anim.worldPosX;
     prospectivePos[1] = ((GameObject *)obj)->anim.worldPosY;
     prospectivePos[2] =
-        lbl_803E2420 * ((TrickyState *)state)->unk30 * timeDelta + ((GameObject *)obj)->anim.worldPosZ;
+        lbl_803E2420 * ((TrickyState *)state)->speed30 * timeDelta + ((GameObject *)obj)->anim.worldPosZ;
   }
   else {
     prospectivePos[0] =
-        timeDelta * (((TrickyState *)state)->unk2C * moveSpeed) + ((GameObject *)obj)->anim.worldPosX;
+        timeDelta * (((TrickyState *)state)->speed2C * moveSpeed) + ((GameObject *)obj)->anim.worldPosX;
     prospectivePos[1] = ((GameObject *)obj)->anim.worldPosY;
     prospectivePos[2] =
-        timeDelta * (((TrickyState *)state)->unk30 * moveSpeed) + ((GameObject *)obj)->anim.worldPosZ;
+        timeDelta * (((TrickyState *)state)->speed30 * moveSpeed) + ((GameObject *)obj)->anim.worldPosZ;
   }
 
   adjustedPos[0] = prospectivePos[0];
@@ -435,14 +435,14 @@ int trickyMove(u8 *obj, f32 *targetPos) {
   adjustedPos[2] = prospectivePos[2];
   trickyApplyObjectAvoidanceToStep((f32 *)(obj + 0x18), adjustedPos, targetPos);
   if (vec3f_distanceSquared(prospectivePos, adjustedPos) > lbl_803E2468) {
-    ((TrickyState *)state)->unk2C = adjustedPos[0] - ((GameObject *)obj)->anim.worldPosX;
-    ((TrickyState *)state)->unk30 = adjustedPos[2] - ((GameObject *)obj)->anim.worldPosZ;
+    ((TrickyState *)state)->speed2C = adjustedPos[0] - ((GameObject *)obj)->anim.worldPosX;
+    ((TrickyState *)state)->speed30 = adjustedPos[2] - ((GameObject *)obj)->anim.worldPosZ;
     length =
-        sqrtf((((TrickyState *)state)->unk2C * ((TrickyState *)state)->unk2C) +
-              (((TrickyState *)state)->unk30 * ((TrickyState *)state)->unk30));
+        sqrtf((((TrickyState *)state)->speed2C * ((TrickyState *)state)->speed2C) +
+              (((TrickyState *)state)->speed30 * ((TrickyState *)state)->speed30));
     if (lbl_803E23DC != length) {
-      ((TrickyState *)state)->unk2C /= length;
-      ((TrickyState *)state)->unk30 /= length;
+      ((TrickyState *)state)->speed2C /= length;
+      ((TrickyState *)state)->speed30 /= length;
     }
   }
 
@@ -547,7 +547,7 @@ int trickyMove(u8 *obj, f32 *targetPos) {
     }
   }
 
-  ((TrickyState *)state)->unk14 = lbl_803E2420;
+  ((TrickyState *)state)->speed14 = lbl_803E2420;
   {
     u32 f = ((TrickyState *)state)->flags54;
     if (((f & 0x100000) == 0) && ((f & 0x200000) == 0)) {

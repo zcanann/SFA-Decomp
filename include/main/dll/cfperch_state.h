@@ -15,7 +15,7 @@ typedef struct CfperchState {
     s16 unk2;
     u8 unk4[0x5 - 0x4];
     s8 unk5;
-    u8 unk6;
+    u8 bool6;
     u8 unk7[0x9 - 0x7];
     u8 unk9;
     s16 unkA;

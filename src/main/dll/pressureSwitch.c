@@ -556,7 +556,7 @@ void hagabon_init(int obj, int data, int skip_alloc) {
     }
     if (*(s16 *)(data + 0x20) != -1) {
         if (GameBit_Get(*(s16 *)(data + 0x20)) != 0) {
-            ((GameObject *)obj)->unkF4 = 1;
+            ((GameObject *)obj)->countF4 = 1;
         }
     }
 }
@@ -564,7 +564,7 @@ void hagabon_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
     HagabonState *state = *(HagabonState **)&((GameObject *)obj)->extra;
     s32 v = visible;
     if (v != 0) {
-        if (((GameObject *)obj)->unkF4 == 0) {
+        if (((GameObject *)obj)->countF4 == 0) {
             ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)
                 (obj, p2, p3, p4, p5, lbl_803E2650);
             if ((state->flags & 0x10) != 0) {
@@ -833,14 +833,14 @@ void hagabon_update(int obj)
     oldCurve = state->curve;
     data = *(int *)&((GameObject *)obj)->anim.placementData;
 
-    if (((GameObject *)obj)->unkF4 != 0) {
+    if (((GameObject *)obj)->countF4 != 0) {
         if ((((HagabonPlacement *)data)->unk20 != -1) && (GameBit_Get(((HagabonPlacement *)data)->unk20) != 0)) {
             return;
         }
         if (((u8 (*)(int))(*gMapEventInterface)->isTimedEventActive)(((HagabonPlacement *)data)->unk14) == 0) {
             return;
         }
-        ((GameObject *)obj)->unkF4 = 0;
+        ((GameObject *)obj)->countF4 = 0;
         ((GameObject *)obj)->anim.alpha = 1;
         state->flags |= 8;
         Sfx_PlayFromObject(obj, SFXfox_treadwater122);
@@ -861,7 +861,7 @@ void hagabon_update(int obj)
             fade = (int)((f32)(fadeAsDouble.value - lbl_803E2640) - timeDelta);
             ((GameObject *)obj)->anim.alpha = (u8)fade;
             if (((GameObject *)obj)->anim.alpha < 7) {
-                ((GameObject *)obj)->unkF4 = 1;
+                ((GameObject *)obj)->countF4 = 1;
                 ((GameObject *)obj)->anim.alpha = 0;
                 state->flags &= 0xef;
                 Sfx_StopFromObject(obj, SFXstaff_proj_outofmagic);

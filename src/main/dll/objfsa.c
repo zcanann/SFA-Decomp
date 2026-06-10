@@ -4155,7 +4155,7 @@ void player_setState(void *ctx, void *p, int new_state) {
             *(void **)&((BaddieState *)p)->unk304 = 0;
         }
     }
-    *(void **)&((BaddieState *)p)->unk304 = *(void **)&((BaddieState *)p)->unk308;
+    *(void **)&((BaddieState *)p)->unk304 = *(void **)&((BaddieState *)p)->speed308;
 end:
     *(s16 *)((char *)p + 0x338) = 0;
     ((BaddieState *)p)->moveJustStartedA = 1;
@@ -4228,7 +4228,7 @@ void fn_800D915C(int p1, int *obj, void *fnTable, f32 fval)
     int result;
     if (((BaddieState *)obj)->unk270 != ((BaddieState *)obj)->unk272) {
         ((BaddieState *)obj)->moveJustStartedB = 1;
-        ((BaddieState *)obj)->unk32E = 0;
+        ((BaddieState *)obj)->bool32E = 0;
     }
     do {
         done = 0;
@@ -4238,7 +4238,7 @@ void fn_800D915C(int p1, int *obj, void *fnTable, f32 fval)
             ((BaddieState *)obj)->unk272 = ((BaddieState *)obj)->unk270;
             ((BaddieState *)obj)->unk270 = result - 1;
             ((BaddieState *)obj)->moveJustStartedB = 1;
-            ((BaddieState *)obj)->unk32E = 0;
+            ((BaddieState *)obj)->bool32E = 0;
         } else if (result < 0) {
             result = -result;
             if (result == startState) {
@@ -4246,7 +4246,7 @@ void fn_800D915C(int p1, int *obj, void *fnTable, f32 fval)
             } else {
                 ((BaddieState *)obj)->unk272 = startState;
                 ((BaddieState *)obj)->moveJustStartedB = 1;
-                ((BaddieState *)obj)->unk32E = 0;
+                ((BaddieState *)obj)->bool32E = 0;
             }
             ((BaddieState *)obj)->unk270 = result;
             done = 1;

@@ -379,19 +379,19 @@ void DIMwooddoor_updateFallingDebris(int *obj)
             if (vol != NULL && vol != *(int **)extra) {
                 ObjHitbox_SetSphereRadius(obj, ((DIMwooddoorUpdateFallingDebrisState *)extra)->unk5);
                 spawnExplosion(obj, lbl_803E48A0, 2, 1, 0, 1, 1, 1, 0);
-                ((GameObject *)obj)->unkF4 = 1180;
+                ((GameObject *)obj)->countF4 = 1180;
                 *(s8 *)&((DIMwooddoorUpdateFallingDebrisState *)extra)->unk8 = 1;
                 ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             }
         }
         if ((GameBit_Get(2142) != 0 && GameBit_Get(3117) == 0) ||
             (GameBit_Get(2164) != 0 && GameBit_Get(3118) == 0)) {
-            ((GameObject *)obj)->unkF4 = 1200;
+            ((GameObject *)obj)->countF4 = 1200;
         }
         if (hitState->contactFlags != 0) {
             ObjHitbox_SetSphereRadius(obj, ((DIMwooddoorUpdateFallingDebrisState *)extra)->unk5);
             spawnExplosion(obj, lbl_803E48A0, 2, 1, 0, 1, 1, 1, 0);
-            ((GameObject *)obj)->unkF4 = 1180;
+            ((GameObject *)obj)->countF4 = 1180;
             *(s8 *)&((DIMwooddoorUpdateFallingDebrisState *)extra)->unk8 = 1;
             ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
@@ -400,8 +400,8 @@ void DIMwooddoor_updateFallingDebris(int *obj)
     case 1:
         break;
     }
-    ((GameObject *)obj)->unkF4 = ((GameObject *)obj)->unkF4 + framesThisStep;
-    if (((GameObject *)obj)->unkF4 > 1200) {
+    ((GameObject *)obj)->countF4 = ((GameObject *)obj)->countF4 + framesThisStep;
+    if (((GameObject *)obj)->countF4 > 1200) {
         Obj_FreeObject(obj);
     } else if (((DIMwooddoorUpdateFallingDebrisState *)extra)->unk7 != 0) {
         *(s8 *)&((DIMwooddoorUpdateFallingDebrisState *)extra)->unk7 = 0;

@@ -562,7 +562,7 @@ int SB_KyteCage_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
     }
 
     animUpdate->hitVolumePair = -4;
-    if (((GameObject *)obj)->unkB4 != -1) {
+    if (((GameObject *)obj)->classIdB4 != -1) {
         animUpdate->hitVolumePair &= ~4;
         if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E5918,
                                                                          timeDelta, NULL) != 0) {
@@ -577,9 +577,9 @@ int SB_KyteCage_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
  * of obj->_af, latch state->_6e = -2 and state->_56 = 0; return 0. */
 int SB_CageKyte_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate)
 {
-    int v = ((GameObject *)obj)->unkF4;
+    int v = ((GameObject *)obj)->countF4;
     if (v > 0) {
-        ((GameObject *)obj)->unkF4 = v - 1;
+        ((GameObject *)obj)->countF4 = v - 1;
     }
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x8;
     animUpdate->hitVolumePair = -2;
@@ -674,7 +674,7 @@ void Lamp_init(int* obj, int* def)
     }
     ((GameObject *)obj)->anim.rotY = 0;
     ((GameObject *)obj)->anim.rotZ = 0;
-    ((GameObject *)obj)->unkF8 = 0;
+    ((GameObject *)obj)->moveF8 = 0;
     *(s8*)state = 1;
     ((GameObject *)obj)->animEventCallback = (void *)Lamp_SeqFn;
 }
@@ -694,8 +694,8 @@ void Lamp_update(int obj)
     }
 
     if (((GameObject *)obj)->anim.seqId != 0x3e4) {
-        if (((GameObject *)obj)->unkF8 == 0) {
-            ((GameObject *)obj)->unkF8 = 1;
+        if (((GameObject *)obj)->moveF8 == 0) {
+            ((GameObject *)obj)->moveF8 = 1;
             ObjAnim_SetMoveProgress((f32)(s32)randomGetRange(0, 90) / lbl_803E5980,
                                     (ObjAnimComponent *)obj);
         }
@@ -737,8 +737,8 @@ void SB_CageKyte_update(int obj)
     int player;
 
     state = ((GameObject *)obj)->extra;
-    if (((GameObject *)obj)->unkF4 > 0) {
-        ((GameObject *)obj)->unkF4 = ((GameObject *)obj)->unkF4 - 1;
+    if (((GameObject *)obj)->countF4 > 0) {
+        ((GameObject *)obj)->countF4 = ((GameObject *)obj)->countF4 - 1;
     }
 
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8;
@@ -858,8 +858,8 @@ void SB_CloudBall_update(int obj)
         ((GameObject *)obj)->anim.localPosX = state->posX;
         ((GameObject *)obj)->anim.localPosY = state->posY;
         ((GameObject *)obj)->anim.localPosZ = state->posZ;
-        ((GameObject *)obj)->unkF4 = ((GameObject *)obj)->unkF4 - framesThisStep;
-        if (((GameObject *)obj)->unkF4 < 0 || (player != NULL && (((GameObject *)player)->objectFlags & 0x1000) != 0)) {
+        ((GameObject *)obj)->countF4 = ((GameObject *)obj)->countF4 - framesThisStep;
+        if (((GameObject *)obj)->countF4 < 0 || (player != NULL && (((GameObject *)player)->objectFlags & 0x1000) != 0)) {
             if (state->fadeTimer == lbl_803E58EC) {
                 ((GameObject *)obj)->anim.alpha = 0;
                 state->fadeTimer = lbl_803E58F0;
@@ -889,7 +889,7 @@ void SB_CloudBall_update(int obj)
 void SB_FireBall_init(int p)
 {
     SBFireBallState *state = ((GameObject *)p)->extra;
-    ((GameObject *)p)->unkF4 = 0x4b0;
+    ((GameObject *)p)->countF4 = 0x4b0;
     state->launched = 0;
 }
 void SB_FireBall_update(int obj)
@@ -899,14 +899,14 @@ void SB_FireBall_update(int obj)
 
     state = ((GameObject *)obj)->extra;
     if (state->owner == NULL) {
-        state->owner = *(void **)&((GameObject *)obj)->unkF8;
+        state->owner = *(void **)&((GameObject *)obj)->moveF8;
     }
 
     if (state->owner != NULL) {
         *(s16 *)obj = 0;
         ((GameObject *)obj)->anim.rotZ = (s16)(((GameObject *)obj)->anim.rotZ + framesThisStep * SB_FIREBALL_SPIN_STEP);
-        ((GameObject *)obj)->unkF4 -= framesThisStep;
-        if (((GameObject *)obj)->unkF4 < 0) {
+        ((GameObject *)obj)->countF4 -= framesThisStep;
+        if (((GameObject *)obj)->countF4 < 0) {
             Obj_FreeObject(obj);
             return;
         }
@@ -1035,7 +1035,7 @@ void SB_MiniFire_init(int obj)
 {
     void *resource;
 
-    ((GameObject *)obj)->unkF4 = 180;
+    ((GameObject *)obj)->countF4 = 180;
     ((GameObject *)obj)->anim.velocityX = -(lbl_803E594C * (f32)(s32)randomGetRange(20, 40)) + lbl_803E5948;
     ((GameObject *)obj)->anim.velocityY = lbl_803E592C;
     ((GameObject *)obj)->anim.velocityZ = lbl_803E5950;
@@ -1084,10 +1084,10 @@ void SB_MiniFire_update(int obj)
     buf[4] = lbl_803E592C;
     buf[5] = lbl_803E592C;
     buf[2] = lbl_803E5928;
-    if (((GameObject *)obj)->unkF4 <= 0x3c) {
-        buf[2] = (f32)((GameObject *)obj)->unkF4 / lbl_803E5930;
+    if (((GameObject *)obj)->countF4 <= 0x3c) {
+        buf[2] = (f32)((GameObject *)obj)->countF4 / lbl_803E5930;
         ((GameObject *)obj)->anim.alpha =
-            (u8)(int)(lbl_803E5934 * ((f32)((GameObject *)obj)->unkF4 / *(f32 *)&lbl_803E5930));
+            (u8)(int)(lbl_803E5934 * ((f32)((GameObject *)obj)->countF4 / *(f32 *)&lbl_803E5930));
     }
     *(s16 *)((char *)buf + 4) = 0;
     *(s16 *)((char *)buf + 2) = 0;
@@ -1106,8 +1106,8 @@ void SB_MiniFire_update(int obj)
     (*gPartfxInterface)->spawnObject((void *)obj, 0xa0, buf, 1, -1, NULL);
     *(s16 *)obj = *(s16 *)obj + framesThisStep * 0x374;
     ((GameObject *)obj)->anim.rotY = ((GameObject *)obj)->anim.rotY + framesThisStep * 0x12c;
-    ((GameObject *)obj)->unkF4 = ((GameObject *)obj)->unkF4 - framesThisStep;
-    if (((GameObject *)obj)->unkF4 < 0) {
+    ((GameObject *)obj)->countF4 = ((GameObject *)obj)->countF4 - framesThisStep;
+    if (((GameObject *)obj)->countF4 < 0) {
         Obj_FreeObject(obj);
     }
 }
@@ -1123,10 +1123,10 @@ void SB_SeqDoor_init(int* obj, int* def)
 void SB_SeqDoor_update(int *obj)
 {
     if (((GameObject *)obj)->anim.seqId == 371) {
-        if (((GameObject *)obj)->unkF4 == 0) {
+        if (((GameObject *)obj)->countF4 == 0) {
             if ((u32)GameBit_Get(2635) != 0u) {
                 (*gObjectTriggerInterface)->runSequence(0, obj, -1);
-                ((GameObject *)obj)->unkF4 = 1;
+                ((GameObject *)obj)->countF4 = 1;
             }
         }
     }
@@ -1155,7 +1155,7 @@ void ShipBattle_free(int* obj)
     (*gObjectTriggerInterface)->freeState((u8 *)state);
     ((void(*)(int*, int, int, int, int))((void**)*gTitleMenuControlInterface)[2])(obj, 0xffff, 0, 0, 0);
     {
-        int light = ((GameObject *)obj)->unkF8;
+        int light = ((GameObject *)obj)->moveF8;
         if (light != 0) {
             ModelLightStruct_free((int*)light);
         }
@@ -1174,11 +1174,11 @@ void ShipBattle_init(int obj, int def)
         lbl_803E595C / (lbl_803E595C + (f32)((ShipBattleObjectDef *)def)->unk24);
     state->unk28 = -1;
 
-    chainIndex = ((GameObject *)obj)->unkF4;
+    chainIndex = ((GameObject *)obj)->countF4;
     if (chainIndex == 0) {
         if (((ShipBattleObjectDef *)def)->unk18 != 1) {
             (*gObjectTriggerInterface)->loadAnimData((u8 *)state, (u8 *)def);
-            ((GameObject *)obj)->unkF4 = ((ShipBattleObjectDef *)def)->unk18 + 1;
+            ((GameObject *)obj)->countF4 = ((ShipBattleObjectDef *)def)->unk18 + 1;
             goto light_setup;
         }
     }
@@ -1189,7 +1189,7 @@ void ShipBattle_init(int obj, int def)
             if (((ShipBattleObjectDef *)def)->unk18 != -1) {
                 (*gObjectTriggerInterface)->loadAnimData((u8 *)state, (u8 *)def);
             }
-            ((GameObject *)obj)->unkF4 = ((ShipBattleObjectDef *)def)->unk18 + 1;
+            ((GameObject *)obj)->countF4 = ((ShipBattleObjectDef *)def)->unk18 + 1;
         }
     }
 
@@ -1201,7 +1201,7 @@ light_setup:
             modelLightStruct_setDiffuseColor(light, 200, 60, 0, 0);
             modelLightStruct_setDistanceAttenuation(light, lbl_803E5970, lbl_803E5974);
         }
-        ((GameObject *)obj)->unkF8 = light;
+        ((GameObject *)obj)->moveF8 = light;
     }
 
     lbl_803DDC50 = lbl_803E5958;
@@ -1229,7 +1229,7 @@ void ShipBattle_update(int obj)
     }
 
     triggerResult = (*gObjectTriggerInterface)->update((u8 *)obj, (f32)lbl_803DB411);
-    if (triggerResult == 0 || ((GameObject *)obj)->unkB4 != -2) {
+    if (triggerResult == 0 || ((GameObject *)obj)->classIdB4 != -2) {
         return;
     }
 
@@ -1254,7 +1254,7 @@ void ShipBattle_update(int obj)
         *(s16 *)(linkedObject + 0xb4) = -1;
         (*gObjectTriggerInterface)->endSequence(groupId);
     }
-    ((GameObject *)obj)->unkB4 = -1;
+    ((GameObject *)obj)->classIdB4 = -1;
     Obj_FreeObject(obj);
 }
 void shop_buyItem(int obj, int price)
@@ -1396,7 +1396,7 @@ void shop_init(int obj, int objDef)
         i++;
     }
     Music_Trigger(0x90, 1);
-    ((GameObject *)obj)->unkF8 = 0;
+    ((GameObject *)obj)->moveF8 = 0;
     GameBit_Set(0xefe, 1);
 }
 /* EN v1.0 0x801E6358  size: 104b  Returns 1 unless the item's
@@ -1442,24 +1442,24 @@ void shop_update(int obj)
         fn_80295CF4(player, 0);
     }
 
-    if (((GameObject *)obj)->unkF4 == 0) {
+    if (((GameObject *)obj)->countF4 == 0) {
         (*gMapEventInterface)->setAnimEvent(((GameObject *)obj)->anim.mapEventSlot, 0, 1);
         (*gMapEventInterface)->setAnimEvent(((GameObject *)obj)->anim.mapEventSlot, 5, 1);
         (*gMapEventInterface)->setAnimEvent(((GameObject *)obj)->anim.mapEventSlot, 6, 1);
         GameBit_Set(0x617, 1);
         skyFn_80088c94(7, 1);
-        ((GameObject *)obj)->unkF4 = 1;
+        ((GameObject *)obj)->countF4 = 1;
     }
 
-    if ((u32)GameBit_Get(0xd21) != 0u && ((GameObject *)obj)->unkF8 == 0) {
+    if ((u32)GameBit_Get(0xd21) != 0u && ((GameObject *)obj)->moveF8 == 0) {
         envFxActFn_800887f8(0);
         getEnvfxAct(obj, obj, 0x1c8, 0);
         getEnvfxAct(obj, obj, 0x1cb, 0);
-        ((GameObject *)obj)->unkF8 = 1;
+        ((GameObject *)obj)->moveF8 = 1;
         return;
     }
 
-    if ((u32)GameBit_Get(0xd21) == 0u && ((GameObject *)obj)->unkF8 != 0) {
-        ((GameObject *)obj)->unkF8 = 0;
+    if ((u32)GameBit_Get(0xd21) == 0u && ((GameObject *)obj)->moveF8 != 0) {
+        ((GameObject *)obj)->moveF8 = 0;
     }
 }

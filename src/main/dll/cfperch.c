@@ -338,7 +338,7 @@ void smallbasket_update(int obj)
         if (*(s8 *)&((CfperchState *)state)->unk9 != 1) {
             if (((CfperchState *)state)->unk5 == 0) {
                 flag = 0;
-                if (((buttonGetDisabled(0) & 0x100) == 0) && (((GameObject *)obj)->unkF8 == 0) &&
+                if (((buttonGetDisabled(0) & 0x100) == 0) && (((GameObject *)obj)->moveF8 == 0) &&
                     (ObjTrigger_IsSet(obj) != 0)) {
                     ((CfperchState *)state)->unk0 = -0x8000;
                     ((CfperchState *)state)->unk2 = 0;
@@ -347,9 +347,9 @@ void smallbasket_update(int obj)
                 }
                 ((CfperchState *)state)->unk5 = flag;
                 if (((CfperchState *)state)->unk5 != 0) {
-                    ((CfperchState *)state)->unk6 = 1;
+                    ((CfperchState *)state)->bool6 = 1;
                 }
-                if (((GameObject *)obj)->unkF8 == 0) {
+                if (((GameObject *)obj)->moveF8 == 0) {
                     ObjHits_EnableObject(obj);
                     if ((((CfperchState *)state)->unk20 != 0) && (playerIsDisguised(player) == 0)) {
                         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x10;
@@ -370,16 +370,16 @@ void smallbasket_update(int obj)
                 }
                 if ((getButtonsJustPressed(0) & 0x100) != 0) {
                     if (fn_80295BF0(player) != 0) {
-                        ((CfperchState *)state)->unk6 = 0;
+                        ((CfperchState *)state)->bool6 = 0;
                         buttonDisable(0, 0x100);
                     } else {
                         Sfx_PlayFromObject(0, 0x10a);
                     }
                 }
-                if (((GameObject *)obj)->unkF8 == 1) {
+                if (((GameObject *)obj)->moveF8 == 1) {
                     *(u8 *)&((CfperchState *)state)->unk5 = 2;
                 }
-                if (((((CfperchState *)state)->unk5 == 2) && (((GameObject *)obj)->unkF8 == 0)) ||
+                if (((((CfperchState *)state)->unk5 == 2) && (((GameObject *)obj)->moveF8 == 0)) ||
                     ((((CfperchState *)state)->unk20 != 0) && (playerIsDisguised(player) == 0))) {
                     if (fn_8029669C(player) != 0) {
                         *(u8 *)&((CfperchState *)state)->unk5 = 0;
@@ -422,11 +422,11 @@ void smallbasket_update(int obj)
                         blk.h0 = *(s16 *)player;
                         vecRotateZXY(&blk, (void *)&((GameObject *)obj)->anim.velocityX);
                         Sfx_PlayFromObject(obj, 0x6b);
-                        ((CfperchState *)state)->unk6 = 0;
+                        ((CfperchState *)state)->bool6 = 0;
                         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
                     }
                 }
-                if (*(s8 *)&((CfperchState *)state)->unk6 != 0) {
+                if (*(s8 *)&((CfperchState *)state)->bool6 != 0) {
                     ((CfperchState *)state)->unkA = 0;
                     ((CfperchState *)state)->timer14 = 0;
                     ObjMsg_SendToObject(player, 0x100010, obj,
@@ -469,7 +469,7 @@ void smallbasket_update(int obj)
                 ((GameObject *)obj)->anim.velocityZ = zf;
                 ((CfperchState *)state)->unkA = 500;
                 ((CfperchState *)state)->unk9 = 0;
-                ((GameObject *)obj)->unkF8 = 0;
+                ((GameObject *)obj)->moveF8 = 0;
                 ObjHits_EnableObject(obj);
                 *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x8;
                 ObjHits_ClearHitVolumes(obj);
@@ -484,7 +484,7 @@ void smallbasket_update(int obj)
                 ((GameObject *)obj)->anim.velocityZ = zf;
                 ((CfperchState *)state)->unkA = 500;
                 ((CfperchState *)state)->unk9 = 0;
-                ((GameObject *)obj)->unkF8 = 0;
+                ((GameObject *)obj)->moveF8 = 0;
                 ObjHits_EnableObject(obj);
                 *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x8;
                 ObjHits_ClearHitVolumes(obj);
@@ -502,7 +502,7 @@ void smallbasket_update(int obj)
                 ((CfperchState *)state)->randomTimer = (s16)(randomGetRange(0, 100) + 0x12c);
             }
         }
-        if (((GameObject *)obj)->unkF8 == 0) {
+        if (((GameObject *)obj)->moveF8 == 0) {
             ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         }
     }

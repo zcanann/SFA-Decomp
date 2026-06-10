@@ -1571,7 +1571,7 @@ void FUN_800406cc(int param_1)
     }
     if (((GameObject *)param_1)->anim.classId == 1) {
       iVar2 = param_1;
-      for (iVar3 = 0; iVar3 < (int)(uint)((GameObject *)param_1)->unkEB; iVar3 = iVar3 + 1) {
+      for (iVar3 = 0; iVar3 < (int)(uint)((GameObject *)param_1)->seqIdEB; iVar3 = iVar3 + 1) {
         if (*(int *)(iVar2 + 200) != 0) {
           FUN_80040784(*(int *)(iVar2 + 200),param_1,1);
         }
@@ -1774,7 +1774,7 @@ void FUN_80040a88(int param_1)
       fn_8003F8EC(param_1, iVar4, iVar3);
     }
     iVar3 = param_1;
-    for (iVar4 = 0; iVar4 < (int)(uint)((GameObject *)param_1)->unkEB; iVar4 = iVar4 + 1) {
+    for (iVar4 = 0; iVar4 < (int)(uint)((GameObject *)param_1)->seqIdEB; iVar4 = iVar4 + 1) {
       if (*(int *)(iVar3 + 200) != 0) {
         FUN_80040784(*(int *)(iVar3 + 200), param_1, 0);
       }
@@ -2656,7 +2656,7 @@ void objRenderShadow(int *obj) {
         u8 *iter;
         int i = 0;
         iter = (u8 *)obj;
-        for (; i < ((GameObject *)obj)->unkEB; i++) {
+        for (; i < ((GameObject *)obj)->seqIdEB; i++) {
             int *child = *(int **)(iter + 200);
             if (child != NULL) {
                 objRenderChild(child, obj, 1);
@@ -2908,7 +2908,7 @@ void objRenderModel(int *obj) {
         u8 *iter;
         int i = 0;
         iter = (u8 *)obj;
-        for (; i < ((GameObject *)obj)->unkEB; i++) {
+        for (; i < ((GameObject *)obj)->seqIdEB; i++) {
             int *child = *(int **)(iter + 0xc8);
             if (child != NULL) {
                 objRenderChild(child, obj, 0);
@@ -3777,7 +3777,7 @@ void modelDoAltRenderInstrs(int *obj, int *obj2, u8 *m, int p4) {
     PSMTXConcat(Camera_GetViewMatrix(), wm, cm);
     if (!(*(u16 *)((char *)am + 0x18) & 8)) {
         ((ObjDef *)am)->hitboxStateIndex = 0;
-        if (((ModelFileHeader *)m)->unkEC != 0 && !(((ModelFileHeader *)m)->flags & 2) && ((ModelFileHeader *)m)->jointCount != 0) {
+        if (((ModelFileHeader *)m)->countEC != 0 && !(((ModelFileHeader *)m)->flags & 2) && ((ModelFileHeader *)m)->jointCount != 0) {
             if (lbl_803DCC30 != (u32)m) {
                 ObjModel_UpdateAnimMatrices(am, m, obj, lbl_802CAEE8);
                 modelInitMtxs(m, am);
@@ -3928,7 +3928,7 @@ void objRenderShadow2(int *obj, int *obj2, u8 *m, int p4) {
         did = 0;
         *(u8 *)((char *)am + 0x60) = 0;
         ObjModel_ToggleVertexBuffer(am);
-        if (((ModelFileHeader *)m)->unkEC != 0 && !(((ModelFileHeader *)m)->flags & 2) && ((ModelFileHeader *)m)->jointCount != 0) {
+        if (((ModelFileHeader *)m)->countEC != 0 && !(((ModelFileHeader *)m)->flags & 2) && ((ModelFileHeader *)m)->jointCount != 0) {
             if (*(u32 *)&((ModelFileHeader *)m)->unkA4 != 0) {
                 PSMTXIdentity(im);
                 ObjModel_UpdateAnimMatrices(am, m, obj, im);
@@ -4201,7 +4201,7 @@ void modelDoRenderInstrs(int *obj, int *obj2, u8 *m, u8 mode) {
     if (!(*(u16 *)((char *)am + 0x18) & 8)) {
         *(u8 *)((char *)am + 0x60) = 0;
         ObjModel_ToggleVertexBuffer(am);
-        if (((ModelFileHeader *)m)->unkEC != 0 && !(((ModelFileHeader *)m)->flags & 2) && ((ModelFileHeader *)m)->jointCount != 0) {
+        if (((ModelFileHeader *)m)->countEC != 0 && !(((ModelFileHeader *)m)->flags & 2) && ((ModelFileHeader *)m)->jointCount != 0) {
             if (*(u32 *)&((ModelFileHeader *)m)->unkA4 != 0) {
                 PSMTXIdentity(im);
                 ObjModel_UpdateAnimMatrices(am, m, obj, im);

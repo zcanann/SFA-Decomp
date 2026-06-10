@@ -98,7 +98,7 @@ typedef struct EarthWarriorSub {
     f32 unk428;
     f32 unk42C;
     f32 unk430;
-    f32 unk434;
+    f32 speed434;
     f32 unk438;
     u8 pad43C[0x14];
     int unk450;
@@ -115,8 +115,8 @@ typedef struct EarthWarriorSub {
     int unk480;
     s16 angle484;      /* current yaw */
     u8 pad486[2];
-    int unk488;
-    int unk48C;
+    int bool488;
+    int bool48C;
     u8 pad490[4];
     int unk494;
     u8 pad498[0x3a];
@@ -131,7 +131,7 @@ typedef struct EarthWarriorSub {
     f32 unk834;
     u8 pad838[8];
     f32 unk840;
-    f32 unk844;
+    f32 speed844;
     u8 pad848[0x10];
     int unk858;
     u8 pad85C[0x4a];
@@ -140,7 +140,7 @@ typedef struct EarthWarriorSub {
     u8 pad8A8[8];
     u8 unk8B0;
     u8 pad8B1[0x1b];
-    s8 unk8CC;       /* attack phase */
+    s8 move8CC;       /* attack phase */
     u8 pad8CD[3];
     u8 unk8D0;
     u8 unk8D1;
@@ -559,7 +559,7 @@ int fn_802BC830(int obj, int p2, int p3)
         ((GameObject *)obj)->anim.currentMoveProgress < GXInit_BlackColor &&
         ((BaddieState *)p3)->unk294 > *(f32 *)((char *)((EarthWarriorSub *)p2)->unk400 + 0x1c) - GXInit_WhiteColor &&
         *(f32 *)((char *)p3 + 0x298) > lbl_803E82FC &&
-        ((EarthWarriorSub *)p2)->unk488 >= 0x96) {
+        ((EarthWarriorSub *)p2)->bool488 >= 0x96) {
         ((ByteFlags *)&((EarthWarriorSub *)p2)->flags3F0)->b40 = 1;
         ((ByteFlags *)&((EarthWarriorSub *)p2)->flags3F0)->b80 = 0;
         ((EarthWarriorSub *)p2)->unk8A6 = ((EarthWarriorSub *)p2)->unk8A7;
@@ -567,7 +567,7 @@ int fn_802BC830(int obj, int p2, int p3)
         ObjAnim_SetCurrentMove(obj, *(s16 *)((char *)((EarthWarriorSub *)p2)->unk3F8 + 0x3a), lbl_803E8304, 0);
         ObjAnim_SetCurrentEventStepFrames((struct ObjAnimComponent *)obj, 0x10);
         ((EarthWarriorSub *)p2)->unk858 = ((EarthWarriorSub *)p2)->angle484;
-        ((EarthWarriorSub *)p2)->unk844 = (lbl_803E8308 + (*(f32 *)((char *)((EarthWarriorSub *)p2)->unk400 + 0x14) + ((BaddieState *)p3)->unk294)) / lbl_803E830C;
+        ((EarthWarriorSub *)p2)->speed844 = (lbl_803E8308 + (*(f32 *)((char *)((EarthWarriorSub *)p2)->unk400 + 0x14) + ((BaddieState *)p3)->unk294)) / lbl_803E830C;
         ((EarthWarriorSub *)p2)->unk478 = ((EarthWarriorSub *)p2)->angle484;
         ((EarthWarriorSub *)p2)->angle484 += 0x8000;
         ((BaddieState *)p3)->unk294 = -((BaddieState *)p3)->unk294;
@@ -684,7 +684,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
     if (*(s8 *)&((EarthWarriorState *)p2)->baddie.moveJustStartedA != 0) {
         ((ByteFlags *)&((EarthWarriorSub *)q)->flags3F0)->b80 = 0;
         ((ByteFlags *)&((EarthWarriorSub *)q)->flags3F0)->b40 = 0;
-        *(u8 *)&((EarthWarriorSub *)q)->unk8CC = 0;
+        *(u8 *)&((EarthWarriorSub *)q)->move8CC = 0;
         ((ByteFlags *)&((EarthWarriorSub *)q)->flags3F2)->b10 = 1;
     }
     if (!((ByteFlags *)&((EarthWarriorSub *)q)->flags3F0)->b80 && !((ByteFlags *)&((EarthWarriorSub *)q)->flags3F0)->b40 &&
@@ -700,9 +700,9 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
     *(s16 *)((char *)p2 + 0x278) = 0;
     ((EarthWarriorSub *)q)->unk404 = lbl_803E82E8;
     if (*(s8 *)&((EarthWarriorState *)p2)->baddie.moveJustStartedA != 0) {
-        ((EarthWarriorSub *)q)->angle484 += ((EarthWarriorSub *)q)->unk48C * 0xb6;
-        ((EarthWarriorSub *)q)->unk488 = 0;
-        ((EarthWarriorSub *)q)->unk48C = 0;
+        ((EarthWarriorSub *)q)->angle484 += ((EarthWarriorSub *)q)->bool48C * 0xb6;
+        ((EarthWarriorSub *)q)->bool488 = 0;
+        ((EarthWarriorSub *)q)->bool48C = 0;
     }
     {
         f32 ph = (((BaddieState *)p2)->unk298 - lbl_803E8308) / lbl_803E82FC;
@@ -723,11 +723,11 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
             sw = ((EarthWarriorSub *)q)->angle484;
             ((EarthWarriorSub *)q)->unk478 = sw;
             ((EarthWarriorSub *)q)->unk494 = sw;
-            *(u8 *)&((EarthWarriorSub *)q)->unk8CC = 0xc;
+            *(u8 *)&((EarthWarriorSub *)q)->move8CC = 0xc;
             ((ByteFlags *)&((EarthWarriorSub *)q)->flags3F1)->b04 = 1;
             ((ByteFlags *)&((EarthWarriorSub *)q)->flags3F1)->b08 = 1;
         }
-        ((EarthWarriorState *)p2)->baddie.unk294 = ((EarthWarriorSub *)q)->unk844 * timeDelta + ((EarthWarriorState *)p2)->baddie.unk294;
+        ((EarthWarriorState *)p2)->baddie.unk294 = ((EarthWarriorSub *)q)->speed844 * timeDelta + ((EarthWarriorState *)p2)->baddie.unk294;
         ((EarthWarriorSub *)q)->unk408 = lbl_803E8304;
         if (((GameObject *)obj)->anim.currentMoveProgress > GXInit_ClearColor && ((GameObject *)obj)->anim.currentMoveProgress < lbl_803E8318) {
             ((EarthWarriorSub *)q)->flags8D8 |= 8;
@@ -750,7 +750,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
             m2 = lbl_803E8318;
             ((EarthWarriorSub *)q)->unk42C *= m2;
             ((EarthWarriorSub *)q)->unk430 *= m1;
-            ((EarthWarriorSub *)q)->unk434 *= m2;
+            ((EarthWarriorSub *)q)->speed434 *= m2;
         }
         ((EarthWarriorSub *)q)->unk408 *= lbl_803E831C;
         {
@@ -765,15 +765,15 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
     if (!((ByteFlags *)((char *)inner + 0x14ec))->b01 && !((ByteFlags *)&((EarthWarriorSub *)q)->flags3F0)->b40 &&
         !((ByteFlags *)&((EarthWarriorSub *)q)->flags3F0)->b80 &&
         ((EarthWarriorState *)p2)->baddie.unk294 > lbl_803E8340 + *(f32 *)(((EarthWarriorSub *)q)->unk400 + 0x14) &&
-        (((EarthWarriorSub *)q)->unk470 < lbl_803E8344 || ((EarthWarriorSub *)q)->unk488 >= 0x96)) {
+        (((EarthWarriorSub *)q)->unk470 < lbl_803E8344 || ((EarthWarriorSub *)q)->bool488 >= 0x96)) {
         ((ByteFlags *)&((EarthWarriorSub *)q)->flags3F0)->b80 = 1;
         ((EarthWarriorSub *)q)->flags360 |= 0x1000000;
-        ((EarthWarriorSub *)q)->unk844 = ((EarthWarriorState *)p2)->baddie.animSpeedA;
+        ((EarthWarriorSub *)q)->speed844 = ((EarthWarriorState *)p2)->baddie.animSpeedA;
         ObjAnim_SetCurrentMove(obj, *(s16 *)(((EarthWarriorSub *)q)->unk3F8 + 0x3c), lbl_803E8304, 0);
         ((EarthWarriorState *)p2)->baddie.moveSpeed = lbl_803E82EC;
     }
     if (!((ByteFlags *)&((EarthWarriorSub *)q)->flags3F0)->b80 && !((ByteFlags *)&((EarthWarriorSub *)q)->flags3F0)->b40) {
-        if (((EarthWarriorSub *)q)->unk488 < 0x96) {
+        if (((EarthWarriorSub *)q)->bool488 < 0x96) {
             f32 v = interpolate((f32)(s32)((EarthWarriorSub *)q)->unk47C, lbl_803E8338 / ((EarthWarriorSub *)q)->unk428, timeDelta);
             f32 cap = timeDelta * (((EarthWarriorSub *)q)->unk42C * ((EarthWarriorSub *)q)->unk420);
             if (v > cap) {
@@ -784,26 +784,26 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
             }
             ((EarthWarriorSub *)q)->unk478 = (s16)(int)(lbl_803E8348 * v + (f32)(s32)((EarthWarriorSub *)q)->unk478);
         }
-        if (((EarthWarriorSub *)q)->unk488 < 0x96) {
-            f32 v = interpolate((f32)(s32)((EarthWarriorSub *)q)->unk488, lbl_803E8338 / ((EarthWarriorSub *)q)->unk430, timeDelta);
-            f32 cap = ((EarthWarriorSub *)q)->unk434 * timeDelta;
+        if (((EarthWarriorSub *)q)->bool488 < 0x96) {
+            f32 v = interpolate((f32)(s32)((EarthWarriorSub *)q)->bool488, lbl_803E8338 / ((EarthWarriorSub *)q)->unk430, timeDelta);
+            f32 cap = ((EarthWarriorSub *)q)->speed434 * timeDelta;
             if (v > cap) {
                 v = cap;
             }
-            if (((EarthWarriorSub *)q)->unk48C < 0) {
+            if (((EarthWarriorSub *)q)->bool48C < 0) {
                 v = -v;
             }
             ((EarthWarriorSub *)q)->angle484 = (s16)(int)(lbl_803E8348 * v + (f32)(s32)((EarthWarriorSub *)q)->angle484);
         } else if (((EarthWarriorState *)p2)->baddie.unk294 <= *(f32 *)(((EarthWarriorSub *)q)->unk400 + 0x4) &&
                    ((EarthWarriorState *)p2)->baddie.animSpeedA <= *(f32 *)(((EarthWarriorSub *)q)->unk400 + 0xc)) {
-            ((EarthWarriorSub *)q)->angle484 += ((EarthWarriorSub *)q)->unk48C * 0xb6;
+            ((EarthWarriorSub *)q)->angle484 += ((EarthWarriorSub *)q)->bool48C * 0xb6;
         }
     }
     if (!((ByteFlags *)&((EarthWarriorSub *)q)->flags3F0)->b40 && !((ByteFlags *)&((EarthWarriorSub *)q)->flags3F1)->b04) {
         f32 v = interpolate(((EarthWarriorSub *)q)->unk408 - ((EarthWarriorState *)p2)->baddie.unk294, ((EarthWarriorSub *)q)->unk438, timeDelta);
         f32 r = lbl_803E834C * timeDelta;
         r = (v < r) ? r : ((v > GXInit_ClearColor * timeDelta) ? GXInit_ClearColor * timeDelta : v);
-        if (((EarthWarriorSub *)q)->unk488 >= 0x96 && r > lbl_803E8304) {
+        if (((EarthWarriorSub *)q)->bool488 >= 0x96 && r > lbl_803E8304) {
             r = lbl_803E8314 * -r;
         }
         ((EarthWarriorState *)p2)->baddie.unk294 += r;
@@ -833,7 +833,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
         } else {
             blend = ((GameObject *)obj)->anim.currentMoveProgress;
         }
-        i2 = (((EarthWarriorSub *)q)->unk8CC / 4) << 1;
+        i2 = (((EarthWarriorSub *)q)->move8CC / 4) << 1;
         ((EarthWarriorSub *)q)->unk8B0 = (i2 >> 1) + 1;
         if (((EarthWarriorSub *)q)->unk8B0 > 4) {
             ((EarthWarriorSub *)q)->unk8B0 = 4;
@@ -847,31 +847,31 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
             f32 v294 = ((EarthWarriorState *)p2)->baddie.unk294;
             int tbl = ((EarthWarriorSub *)q)->unk400;
             if (v294 < *(f32 *)(tbl + i2 * 4)) {
-                if (((EarthWarriorSub *)q)->unk8CC == 4) {
+                if (((EarthWarriorSub *)q)->move8CC == 4) {
                     if (((EarthWarriorState *)p2)->baddie.animSpeedA < *(f32 *)(tbl + 0x10) && ((BaddieState *)p2)->unk298 < lbl_803E8308) {
                         return 2;
                     }
                 } else {
-                    ((EarthWarriorSub *)q)->unk8CC -= 4;
+                    ((EarthWarriorSub *)q)->move8CC -= 4;
                 }
             } else if (v294 >= *(f32 *)(tbl + i2 * 4 + 4)) {
-                if (((EarthWarriorSub *)q)->unk8CC < 0x14) {
-                    if (((EarthWarriorSub *)q)->unk8CC == 0) {
+                if (((EarthWarriorSub *)q)->move8CC < 0x14) {
+                    if (((EarthWarriorSub *)q)->move8CC == 0) {
                         blend = lbl_803E8350;
                     }
                     if (v294 < ((EarthWarriorSub *)q)->unk404) {
-                        *(u8 *)&((EarthWarriorSub *)q)->unk8CC += 4;
+                        *(u8 *)&((EarthWarriorSub *)q)->move8CC += 4;
                     }
                 }
             }
         }
         if ((skip != 0 || ((EarthWarriorSub *)q)->unk3FC != ((EarthWarriorSub *)q)->unk3F8 ||
-             ((GameObject *)obj)->anim.currentMove != *(s16 *)(((EarthWarriorSub *)q)->unk3F8 + ((EarthWarriorSub *)q)->unk8CC * 2)) &&
+             ((GameObject *)obj)->anim.currentMove != *(s16 *)(((EarthWarriorSub *)q)->unk3F8 + ((EarthWarriorSub *)q)->move8CC * 2)) &&
             (ObjAnim_GetCurrentEventCountdown((ObjAnimComponent *)obj) == 0 || ((ByteFlags *)&((EarthWarriorSub *)q)->flags3F2)->b10 != 0)) {
             if (((GameObject *)obj)->anim.currentMove == 0x14) {
                 blend = lbl_803E8350;
             }
-            ObjAnim_SetCurrentMove(obj, *(s16 *)(((EarthWarriorSub *)q)->unk3F8 + ((EarthWarriorSub *)q)->unk8CC * 2), blend, 0);
+            ObjAnim_SetCurrentMove(obj, *(s16 *)(((EarthWarriorSub *)q)->unk3F8 + ((EarthWarriorSub *)q)->move8CC * 2), blend, 0);
         }
     }
     if (!((ByteFlags *)&((EarthWarriorSub *)q)->flags3F0)->b80 && !((ByteFlags *)&((EarthWarriorSub *)q)->flags3F0)->b40 &&
@@ -928,8 +928,8 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
     if (*(s8 *)&((BaddieState *)p2)->moveJustStartedA != 0) {
         q->unk47C = 0;
         q->unk480 = 0;
-        q->unk488 = 0;
-        q->unk48C = 0;
+        q->bool488 = 0;
+        q->bool48C = 0;
         q->unk8A6 = 8;
         q->unk8B0 = 0;
         ((BaddieState *)p2)->unk2B8 = lbl_803E835C;
@@ -958,12 +958,12 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
         q->unk478 = (s16)(int)(lbl_803E8348 * v + (f32)(s32)q->unk478);
     }
     {
-        f32 v = interpolate((f32)(s32)q->unk488, lbl_803E8338 / q->unk430, timeDelta);
-        f32 cap = q->unk434 * timeDelta;
+        f32 v = interpolate((f32)(s32)q->bool488, lbl_803E8338 / q->unk430, timeDelta);
+        f32 cap = q->speed434 * timeDelta;
         if (v >= cap) {
             v = cap;
         }
-        if (q->unk48C < 0) {
+        if (q->bool48C < 0) {
             v = -v;
         }
         q->angle484 = (s16)(int)(lbl_803E8348 * v + (f32)(s32)q->angle484);

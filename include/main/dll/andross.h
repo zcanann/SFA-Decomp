@@ -37,7 +37,7 @@ typedef struct AndrossState {
     f32 unk78;
     int unk7C;
     int unk80;
-    int unk84;
+    int bool84;
     int unk88;
     int unk8C;
     int unk90;
@@ -45,7 +45,7 @@ typedef struct AndrossState {
     s16 unk98;
     u8 unk9A[0x9C - 0x9A];
     f32 unk9C;
-    s16 unkA0;
+    s16 countA0;
     s16 unkA2;
     s16 angleA4;
     s16 unkA6;
@@ -60,7 +60,7 @@ typedef struct AndrossState {
     u8 unkB6;
     u8 unkB7;
     int unkB8;
-    u8 unkBC;
+    u8 boolBC;
     u8 unkBD[0xC0 - 0xBD];
     f32 posXC0;
     f32 posYC0;

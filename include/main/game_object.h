@@ -33,14 +33,14 @@ typedef struct GameObject {
     u16 objectFlags; /* obj+0xB0 flag word; 9 object families STATIC_ASSERT
         this name (Checkpoint4/CmbSrc/EnemyMushroom/Laser/MagicPlant/...) */
     u8 unkB2[2];
-    s16 unkB4;
+    s16 classIdB4;
     u8 unkB6[2];
     void *extra; /* per-class state block */
     void *animEventCallback; /* obj+0xBC anim-event callback slot;
         LinkALevelControlObject/EarthWalkerObject STATIC_ASSERT this at 0xBC */
     void *unkC0;
     void *unkC4;
-    void *unkC8;
+    void *seqIdC8;
     u8 unkCC[0x10];
     void *unkDC;
     u8 unkE0[4];
@@ -50,13 +50,13 @@ typedef struct GameObject {
     u8 unkE8;
     s8 unkE9;
     u8 unkEA;
-    u8 unkEB;
+    u8 seqIdEB;
     u8 unkEC[3];
     s8 unkEF;
     u8 counterF0;
     u8 unkF1[3];
-    s32 unkF4;
-    s32 unkF8;
+    s32 countF4;
+    s32 moveF8;
     f32 velXFC;
     f32 velYFC;
     f32 velZFC;
@@ -66,7 +66,7 @@ STATIC_ASSERT(offsetof(GameObject, objectFlags) == 0xB0);
 STATIC_ASSERT(offsetof(GameObject, extra) == 0xB8);
 STATIC_ASSERT(offsetof(GameObject, gameBitE4) == 0xE4);
 STATIC_ASSERT(offsetof(GameObject, unkEF) == 0xEF);
-STATIC_ASSERT(offsetof(GameObject, unkF4) == 0xF4);
+STATIC_ASSERT(offsetof(GameObject, countF4) == 0xF4);
 STATIC_ASSERT(offsetof(GameObject, velZFC) == 0x104);
 
 #endif

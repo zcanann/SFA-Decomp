@@ -396,12 +396,12 @@ void kaldachompspit_update(int obj)
 
     objAnim = &((GameObject *)obj)->anim;
     state = ((GameObject *)obj)->extra;
-    ((GameObject *)obj)->unkF4 = (int)((f32)((GameObject *)obj)->unkF4 - timeDelta);
-    if (((GameObject *)obj)->unkF4 < 0) {
+    ((GameObject *)obj)->countF4 = (int)((f32)((GameObject *)obj)->countF4 - timeDelta);
+    if (((GameObject *)obj)->countF4 < 0) {
         Sfx_StopObjectChannel(obj, 0x7f);
         Obj_FreeObject(obj);
     } else if (objAnim->alpha != 0) {
-        if (((GameObject *)obj)->unkF4 < 0x11b) {
+        if (((GameObject *)obj)->countF4 < 0x11b) {
             ((GameObject *)obj)->anim.velocityY = -(lbl_803E30F0 * timeDelta - ((GameObject *)obj)->anim.velocityY);
             if ((f32)(u32)objAnim->alpha - (t = lbl_803E30F4 * timeDelta) > lbl_803E30F8) {
                 objAnim->alpha = (f32)(u32)objAnim->alpha - t;
@@ -426,7 +426,7 @@ void kaldachompspit_update(int obj)
         }
         ObjHits_EnableObject(obj);
         if ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject != 0) {
-            if (((GameObject *)obj)->unkF4 < 0x17c) {
+            if (((GameObject *)obj)->countF4 < 0x17c) {
                 kaldachompspit_burst(obj);
                 return;
             }
@@ -480,7 +480,7 @@ void kaldachompspit_burst(int obj)
 
     state = ((GameObject *)obj)->extra;
     ((GameObject *)obj)->anim.alpha = 0;
-    ((GameObject *)obj)->unkF4 = 0xdc;
+    ((GameObject *)obj)->countF4 = 0xdc;
     (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
     if (*state != 0) {
         modelLightStruct_setEnabled(*state, 0, lbl_803E30E0);

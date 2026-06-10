@@ -61,19 +61,19 @@ void ktrexlevel_init(int obj) {
     GameBit_Set(0x54e, 2);
     GameBit_Set(0x552, 1);
     GameBit_Set(0x556, 1);
-    ((GameObject *)obj)->unkF4 = 0;
+    ((GameObject *)obj)->countF4 = 0;
     GameBit_Set(0xefd, 1);
 }
 
 void ktrexlevel_update(int obj) {
-    if (((GameObject *)obj)->unkF4 == 0) {
+    if (((GameObject *)obj)->countF4 == 0) {
         skyFn_80088c94(7, 1);
         getEnvfxAct(obj, obj, 0x18f, 0);
         getEnvfxAct(obj, obj, 0x18e, 0);
         getEnvfxAct(obj, obj, 0x190, 0);
         skyFn_80088e54(1, lbl_803E67A4);
         GameBit_Set(0x55e, 1);
-        ((GameObject *)obj)->unkF4 = 1;
+        ((GameObject *)obj)->countF4 = 1;
     }
     lbl_803DDD40 = GameBit_Get(0x572);
 }

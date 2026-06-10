@@ -193,8 +193,8 @@ void cfccrate_init(int obj, int aux)
         ((GameObject *)obj)->anim.rotY = 0;
         ((GameObject *)obj)->anim.rotZ = 0;
         ((GameObject *)obj)->anim.rootMotionScale = zeroF;
-        ((GameObject *)obj)->unkF4 = 0;
-        ((GameObject *)obj)->unkF8 = 0;
+        ((GameObject *)obj)->countF4 = 0;
+        ((GameObject *)obj)->moveF8 = 0;
         state->oscVelB = lbl_803E3E40;
         state->oscVelA = lbl_803E3DEC;
         state->unk32 = 0;

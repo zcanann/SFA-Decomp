@@ -364,7 +364,7 @@ void fn_801DFA28(u8 *obj)
     camShake = lbl_803E56C8;
     Sfx_StopObjectChannel((int)obj, 1);
     DBPROT_CAMERA_SHAKE(&camShake, 0);
-    ((GameObject *)obj)->unkF4 = 1;
+    ((GameObject *)obj)->countF4 = 1;
     tx = ((SBGalleonState *)state)->homeX - lbl_803E56DC;
     tz = lbl_803E56E0 * mathCosf((lbl_803E56E4 * (f32)((SBGalleonState *)state)->bobPhase) / lbl_803E56E8) +
          ((SBGalleonState *)state)->homeZ;
@@ -452,7 +452,7 @@ void fn_801DFA28(u8 *obj)
     }
     break;
   case 1:
-    ((GameObject *)obj)->unkF4 = 2;
+    ((GameObject *)obj)->countF4 = 2;
     camShake = lbl_803E56C8;
     DBPROT_CAMERA_SHAKE(&camShake, 0);
     if (((SBGalleonState *)state)->headingLatch != 0) {
@@ -484,23 +484,23 @@ void fn_801DFA28(u8 *obj)
       tz = lbl_803E5720 + ((SBGalleonState *)state)->homeZ;
       ty = lbl_803E5718 + *(f32 *)(tricky + 0x10);
       tz = tz + (*(f32 *)(tricky + 0x14) - ((SBGalleonState *)state)->posZ);
-      ((SBGalleonState *)state)->unk7B = 0;
+      ((SBGalleonState *)state)->bool7B = 0;
       break;
     case 4:
       tx = *(f32 *)(tricky + 0xC) - lbl_803E571C;
       tz = lbl_803E5724 + ((SBGalleonState *)state)->homeZ;
       ty = lbl_803E5718 + *(f32 *)(tricky + 0x10);
-      ((SBGalleonState *)state)->unk7B = 0;
+      ((SBGalleonState *)state)->bool7B = 0;
       break;
     case 5:
       tx = *(f32 *)(tricky + 0xC) - lbl_803E571C;
       tz = ((SBGalleonState *)state)->homeZ - lbl_803E5720;
       ty = lbl_803E5718 + *(f32 *)(tricky + 0x10);
       tz = tz + (*(f32 *)(tricky + 0x14) - ((SBGalleonState *)state)->posZ);
-      ((SBGalleonState *)state)->unk7B = 0;
+      ((SBGalleonState *)state)->bool7B = 0;
       break;
     default:
-      ((SBGalleonState *)state)->unk7B = 0;
+      ((SBGalleonState *)state)->bool7B = 0;
       tx = ((SBGalleonState *)state)->homeX - lbl_803E5728;
       tz = ((SBGalleonState *)state)->homeZ;
       ty = lbl_803E572C + *(f32 *)(tricky + 0x10);
@@ -621,7 +621,7 @@ void fn_801DFA28(u8 *obj)
     camShake = lbl_803E56C8;
     Sfx_StopObjectChannel((int)obj, 2);
     DBPROT_CAMERA_SHAKE(&camShake, 0);
-    ((GameObject *)obj)->unkF4 = 3;
+    ((GameObject *)obj)->countF4 = 3;
     if (((SBGalleonState *)state)->headingLatch != 0) {
       ((SBGalleonState *)state)->headingLatch -= 1;
     }
@@ -652,7 +652,7 @@ void fn_801DFA28(u8 *obj)
       break;
     case 5:
       speedTarget = lbl_803E5708;
-      ((GameObject *)obj)->unkF4 = 4;
+      ((GameObject *)obj)->countF4 = 4;
       tx = ((SBGalleonState *)state)->homeX - lbl_803E5780;
       tz = ((SBGalleonState *)state)->homeZ;
       ty = ((SBGalleonState *)state)->homeY - lbl_803E5724;
@@ -694,7 +694,7 @@ void fn_801DFA28(u8 *obj)
         ((SBGalleonState *)state)->speed + (speedTarget - ((SBGalleonState *)state)->speed) / lbl_803E5798;
     dist = sqrtf(dx * dx + dz * dz);
     if ((((SBGalleonState *)state)->phase == 5) && (dist < lbl_803E579C)) {
-      ((GameObject *)obj)->unkF4 = 5;
+      ((GameObject *)obj)->countF4 = 5;
     }
     if (dist < threshold) {
       if (((SBGalleonState *)state)->phase == 5) {
@@ -800,7 +800,7 @@ void fn_801DFA28(u8 *obj)
     }
     break;
   default:
-    ((GameObject *)obj)->unkF4 = 7;
+    ((GameObject *)obj)->countF4 = 7;
     break;
   }
   if (((SBGalleonState *)state)->phase < 2) {
@@ -817,14 +817,14 @@ void fn_801DFA28(u8 *obj)
     blendK = lbl_803E57B4;
     ((SBGalleonState *)state)->unk5C += blendK * (timeDelta * (ambA - ((SBGalleonState *)state)->unk5C));
     ((SBGalleonState *)state)->unk60 += blendK * (timeDelta * (ambC - ((SBGalleonState *)state)->unk60));
-    ((SBGalleonState *)state)->unk64 += blendK * (timeDelta * (ambB - ((SBGalleonState *)state)->unk64));
+    ((SBGalleonState *)state)->speed64 += blendK * (timeDelta * (ambB - ((SBGalleonState *)state)->speed64));
     if (((SBGalleonState *)state)->phase == 0) {
       zRatio = (f32)*(s16 *)(int)(tricky + 0x2) / ((SBGalleonState *)state)->unk5C;
       ((SBGalleonState *)state)->swayZ +=
-          timeDelta * (((SBGalleonState *)state)->unk64 *
+          timeDelta * (((SBGalleonState *)state)->speed64 *
                        ((f32)-*(s16 *)(int)(tricky + 0x4) / ((SBGalleonState *)state)->unk5C - ((SBGalleonState *)state)->swayZ));
       ((SBGalleonState *)state)->swayY +=
-          timeDelta * (((SBGalleonState *)state)->unk64 * (zRatio - ((SBGalleonState *)state)->swayY));
+          timeDelta * (((SBGalleonState *)state)->speed64 * (zRatio - ((SBGalleonState *)state)->swayY));
       zero = lbl_803E56CC;
       ((SBGalleonState *)state)->swayX = zero;
       ((SBGalleonState *)state)->swayY = zero;
@@ -832,8 +832,8 @@ void fn_801DFA28(u8 *obj)
       rollB = (s16)(lbl_803E57B8 * (-((SBGalleonState *)state)->swayY * ((SBGalleonState *)state)->unk60));
     }
     else {
-      ((SBGalleonState *)state)->swayZ -= timeDelta * (((SBGalleonState *)state)->swayZ * ((SBGalleonState *)state)->unk64);
-      ((SBGalleonState *)state)->swayY -= timeDelta * (((SBGalleonState *)state)->swayY * ((SBGalleonState *)state)->unk64);
+      ((SBGalleonState *)state)->swayZ -= timeDelta * (((SBGalleonState *)state)->swayZ * ((SBGalleonState *)state)->speed64);
+      ((SBGalleonState *)state)->swayY -= timeDelta * (((SBGalleonState *)state)->swayY * ((SBGalleonState *)state)->speed64);
       rollA = 0;
       rollB = rollA;
     }
@@ -907,7 +907,7 @@ void DBprotection_updateShield(int *obj)
   f32 angleCos;
 
   state = ((GameObject *)obj)->extra;
-  ((GameObject *)obj)->unkF4 = 7;
+  ((GameObject *)obj)->countF4 = 7;
 
   if (GameBit_Get(DBPROTECTION_GAMEBIT_TRANSITION_ARMED) != 0 &&
       GameBit_Get(DBPROTECTION_GAMEBIT_TRANSITION_USED) == 0 &&

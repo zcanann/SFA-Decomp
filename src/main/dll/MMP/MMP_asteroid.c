@@ -229,13 +229,13 @@ void xyzanimator_update(int obj)
             ((XyzAnimatorState *)state)->gameBit4C = (s8)GameBit_Get(((XyzAnimatorPlacement *)setup)->unk18);
         }
         ((XyzAnimatorState *)state)->unk8 = *(u8 *)(block + 0xa1);
-        ((XyzAnimatorState *)state)->unk40 = (f32)((XyzAnimatorPlacement *)setup)->unk1C;
-        ((XyzAnimatorState *)state)->unk44 = (f32)((XyzAnimatorPlacement *)setup)->unk1E;
-        ((XyzAnimatorState *)state)->unk48 = (f32)((XyzAnimatorPlacement *)setup)->unk20;
+        ((XyzAnimatorState *)state)->speed40 = (f32)((XyzAnimatorPlacement *)setup)->unk1C;
+        ((XyzAnimatorState *)state)->speed44 = (f32)((XyzAnimatorPlacement *)setup)->unk1E;
+        ((XyzAnimatorState *)state)->speed48 = (f32)((XyzAnimatorPlacement *)setup)->unk20;
         if (((XyzAnimatorPlacement *)setup)->unk1A != -1 && GameBit_Get(((XyzAnimatorPlacement *)setup)->unk1A) != 0) {
-            ((XyzAnimatorState *)state)->unk40 = (f32)((XyzAnimatorPlacement *)setup)->unk22;
-            ((XyzAnimatorState *)state)->unk44 = (f32)((XyzAnimatorPlacement *)setup)->unk24;
-            ((XyzAnimatorState *)state)->unk48 = (f32)((XyzAnimatorPlacement *)setup)->unk26;
+            ((XyzAnimatorState *)state)->speed40 = (f32)((XyzAnimatorPlacement *)setup)->unk22;
+            ((XyzAnimatorState *)state)->speed44 = (f32)((XyzAnimatorPlacement *)setup)->unk24;
+            ((XyzAnimatorState *)state)->speed48 = (f32)((XyzAnimatorPlacement *)setup)->unk26;
             ((XyzAnimatorState *)state)->gameBit4C = 1;
         }
         t = ((XyzAnimatorState *)state)->unk4 * 6 + ((XyzAnimatorState *)state)->unk0 * 0xc;
@@ -309,47 +309,47 @@ void xyzanimator_update(int obj)
     case 4:
         done = 0;
         if (((XyzAnimatorPlacement *)setup)->unk1C > ((XyzAnimatorPlacement *)setup)->unk22) {
-            ((XyzAnimatorState *)state)->unk40 =
-                -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk29 * timeDelta) - ((XyzAnimatorState *)state)->unk40);
-            if (((XyzAnimatorState *)state)->unk40 <= (f32)((XyzAnimatorPlacement *)setup)->unk22) {
-                ((XyzAnimatorState *)state)->unk40 = (f32)((XyzAnimatorPlacement *)setup)->unk22;
+            ((XyzAnimatorState *)state)->speed40 =
+                -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk29 * timeDelta) - ((XyzAnimatorState *)state)->speed40);
+            if (((XyzAnimatorState *)state)->speed40 <= (f32)((XyzAnimatorPlacement *)setup)->unk22) {
+                ((XyzAnimatorState *)state)->speed40 = (f32)((XyzAnimatorPlacement *)setup)->unk22;
                 done = 1;
             }
         } else {
-            ((XyzAnimatorState *)state)->unk40 =
-                lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk29 * timeDelta) + ((XyzAnimatorState *)state)->unk40;
-            if (((XyzAnimatorState *)state)->unk40 >= (f32)((XyzAnimatorPlacement *)setup)->unk22) {
-                ((XyzAnimatorState *)state)->unk40 = (f32)((XyzAnimatorPlacement *)setup)->unk22;
+            ((XyzAnimatorState *)state)->speed40 =
+                lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk29 * timeDelta) + ((XyzAnimatorState *)state)->speed40;
+            if (((XyzAnimatorState *)state)->speed40 >= (f32)((XyzAnimatorPlacement *)setup)->unk22) {
+                ((XyzAnimatorState *)state)->speed40 = (f32)((XyzAnimatorPlacement *)setup)->unk22;
                 done = 1;
             }
         }
         if (((XyzAnimatorPlacement *)setup)->unk1E > ((XyzAnimatorPlacement *)setup)->unk24) {
-            ((XyzAnimatorState *)state)->unk44 =
-                -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk2A * timeDelta) - ((XyzAnimatorState *)state)->unk44);
-            if (((XyzAnimatorState *)state)->unk44 <= (f32)((XyzAnimatorPlacement *)setup)->unk24) {
-                ((XyzAnimatorState *)state)->unk44 = (f32)((XyzAnimatorPlacement *)setup)->unk24;
+            ((XyzAnimatorState *)state)->speed44 =
+                -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk2A * timeDelta) - ((XyzAnimatorState *)state)->speed44);
+            if (((XyzAnimatorState *)state)->speed44 <= (f32)((XyzAnimatorPlacement *)setup)->unk24) {
+                ((XyzAnimatorState *)state)->speed44 = (f32)((XyzAnimatorPlacement *)setup)->unk24;
                 done += 1;
             }
         } else {
-            ((XyzAnimatorState *)state)->unk44 =
-                lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk2A * timeDelta) + ((XyzAnimatorState *)state)->unk44;
-            if (((XyzAnimatorState *)state)->unk44 >= (f32)((XyzAnimatorPlacement *)setup)->unk24) {
-                ((XyzAnimatorState *)state)->unk44 = (f32)((XyzAnimatorPlacement *)setup)->unk24;
+            ((XyzAnimatorState *)state)->speed44 =
+                lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk2A * timeDelta) + ((XyzAnimatorState *)state)->speed44;
+            if (((XyzAnimatorState *)state)->speed44 >= (f32)((XyzAnimatorPlacement *)setup)->unk24) {
+                ((XyzAnimatorState *)state)->speed44 = (f32)((XyzAnimatorPlacement *)setup)->unk24;
                 done += 1;
             }
         }
         if (((XyzAnimatorPlacement *)setup)->unk20 > ((XyzAnimatorPlacement *)setup)->unk26) {
-            ((XyzAnimatorState *)state)->unk48 =
-                -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk2B * timeDelta) - ((XyzAnimatorState *)state)->unk48);
-            if (((XyzAnimatorState *)state)->unk48 <= (f32)((XyzAnimatorPlacement *)setup)->unk26) {
-                ((XyzAnimatorState *)state)->unk48 = (f32)((XyzAnimatorPlacement *)setup)->unk26;
+            ((XyzAnimatorState *)state)->speed48 =
+                -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk2B * timeDelta) - ((XyzAnimatorState *)state)->speed48);
+            if (((XyzAnimatorState *)state)->speed48 <= (f32)((XyzAnimatorPlacement *)setup)->unk26) {
+                ((XyzAnimatorState *)state)->speed48 = (f32)((XyzAnimatorPlacement *)setup)->unk26;
                 done += 1;
             }
         } else {
-            ((XyzAnimatorState *)state)->unk48 =
-                lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk2B * timeDelta) + ((XyzAnimatorState *)state)->unk48;
-            if (((XyzAnimatorState *)state)->unk48 >= (f32)((XyzAnimatorPlacement *)setup)->unk26) {
-                ((XyzAnimatorState *)state)->unk48 = (f32)((XyzAnimatorPlacement *)setup)->unk26;
+            ((XyzAnimatorState *)state)->speed48 =
+                lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk2B * timeDelta) + ((XyzAnimatorState *)state)->speed48;
+            if (((XyzAnimatorState *)state)->speed48 >= (f32)((XyzAnimatorPlacement *)setup)->unk26) {
+                ((XyzAnimatorState *)state)->speed48 = (f32)((XyzAnimatorPlacement *)setup)->unk26;
                 done += 1;
             }
         }
@@ -362,55 +362,55 @@ void xyzanimator_update(int obj)
         break;
     case 1:
         if (((XyzAnimatorPlacement *)setup)->unk1C > ((XyzAnimatorPlacement *)setup)->unk22) {
-            ((XyzAnimatorState *)state)->unk40 =
-                -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk29 * timeDelta) - ((XyzAnimatorState *)state)->unk40);
-            if (((XyzAnimatorState *)state)->unk40 < (f32)((XyzAnimatorPlacement *)setup)->unk22) {
-                ((XyzAnimatorState *)state)->unk40 =
+            ((XyzAnimatorState *)state)->speed40 =
+                -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk29 * timeDelta) - ((XyzAnimatorState *)state)->speed40);
+            if (((XyzAnimatorState *)state)->speed40 < (f32)((XyzAnimatorPlacement *)setup)->unk22) {
+                ((XyzAnimatorState *)state)->speed40 =
                     (f32)(((XyzAnimatorPlacement *)setup)->unk1C -
-                          (int)((f32)((XyzAnimatorPlacement *)setup)->unk22 - ((XyzAnimatorState *)state)->unk40));
+                          (int)((f32)((XyzAnimatorPlacement *)setup)->unk22 - ((XyzAnimatorState *)state)->speed40));
             }
         } else {
-            ((XyzAnimatorState *)state)->unk40 =
-                lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk29 * timeDelta) + ((XyzAnimatorState *)state)->unk40;
-            if (((XyzAnimatorState *)state)->unk40 > (f32)((XyzAnimatorPlacement *)setup)->unk1C) {
-                ((XyzAnimatorState *)state)->unk40 =
+            ((XyzAnimatorState *)state)->speed40 =
+                lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk29 * timeDelta) + ((XyzAnimatorState *)state)->speed40;
+            if (((XyzAnimatorState *)state)->speed40 > (f32)((XyzAnimatorPlacement *)setup)->unk1C) {
+                ((XyzAnimatorState *)state)->speed40 =
                     (f32)(((XyzAnimatorPlacement *)setup)->unk22 +
-                          (int)(((XyzAnimatorState *)state)->unk40 - (f32)((XyzAnimatorPlacement *)setup)->unk22));
+                          (int)(((XyzAnimatorState *)state)->speed40 - (f32)((XyzAnimatorPlacement *)setup)->unk22));
             }
         }
         if (((XyzAnimatorPlacement *)setup)->unk1E > ((XyzAnimatorPlacement *)setup)->unk24) {
-            ((XyzAnimatorState *)state)->unk44 =
-                -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk2A * timeDelta) - ((XyzAnimatorState *)state)->unk44);
-            if (((XyzAnimatorState *)state)->unk44 < (f32)((XyzAnimatorPlacement *)setup)->unk24) {
-                ((XyzAnimatorState *)state)->unk44 =
+            ((XyzAnimatorState *)state)->speed44 =
+                -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk2A * timeDelta) - ((XyzAnimatorState *)state)->speed44);
+            if (((XyzAnimatorState *)state)->speed44 < (f32)((XyzAnimatorPlacement *)setup)->unk24) {
+                ((XyzAnimatorState *)state)->speed44 =
                     -(lbl_803E4018 *
-                          (f32)(int)((f32)((XyzAnimatorPlacement *)setup)->unk24 - ((XyzAnimatorState *)state)->unk44) -
+                          (f32)(int)((f32)((XyzAnimatorPlacement *)setup)->unk24 - ((XyzAnimatorState *)state)->speed44) -
                       (f32)((XyzAnimatorPlacement *)setup)->unk1E);
             }
         } else {
-            ((XyzAnimatorState *)state)->unk44 =
-                lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk2A * timeDelta) + ((XyzAnimatorState *)state)->unk44;
-            if (((XyzAnimatorState *)state)->unk44 > (f32)((XyzAnimatorPlacement *)setup)->unk1E) {
-                ((XyzAnimatorState *)state)->unk44 =
+            ((XyzAnimatorState *)state)->speed44 =
+                lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk2A * timeDelta) + ((XyzAnimatorState *)state)->speed44;
+            if (((XyzAnimatorState *)state)->speed44 > (f32)((XyzAnimatorPlacement *)setup)->unk1E) {
+                ((XyzAnimatorState *)state)->speed44 =
                     (f32)(((XyzAnimatorPlacement *)setup)->unk24 +
-                          (int)(((XyzAnimatorState *)state)->unk44 - (f32)((XyzAnimatorPlacement *)setup)->unk24));
+                          (int)(((XyzAnimatorState *)state)->speed44 - (f32)((XyzAnimatorPlacement *)setup)->unk24));
             }
         }
         if (((XyzAnimatorPlacement *)setup)->unk20 > ((XyzAnimatorPlacement *)setup)->unk26) {
-            ((XyzAnimatorState *)state)->unk48 =
-                -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk2B * timeDelta) - ((XyzAnimatorState *)state)->unk48);
-            if (((XyzAnimatorState *)state)->unk48 < (f32)((XyzAnimatorPlacement *)setup)->unk26) {
-                ((XyzAnimatorState *)state)->unk48 =
+            ((XyzAnimatorState *)state)->speed48 =
+                -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk2B * timeDelta) - ((XyzAnimatorState *)state)->speed48);
+            if (((XyzAnimatorState *)state)->speed48 < (f32)((XyzAnimatorPlacement *)setup)->unk26) {
+                ((XyzAnimatorState *)state)->speed48 =
                     (f32)(((XyzAnimatorPlacement *)setup)->unk20 -
-                          (int)((f32)((XyzAnimatorPlacement *)setup)->unk26 - ((XyzAnimatorState *)state)->unk48));
+                          (int)((f32)((XyzAnimatorPlacement *)setup)->unk26 - ((XyzAnimatorState *)state)->speed48));
             }
         } else {
-            ((XyzAnimatorState *)state)->unk48 =
-                lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk2B * timeDelta) + ((XyzAnimatorState *)state)->unk48;
-            if (((XyzAnimatorState *)state)->unk48 > (f32)((XyzAnimatorPlacement *)setup)->unk20) {
-                ((XyzAnimatorState *)state)->unk48 =
+            ((XyzAnimatorState *)state)->speed48 =
+                lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk2B * timeDelta) + ((XyzAnimatorState *)state)->speed48;
+            if (((XyzAnimatorState *)state)->speed48 > (f32)((XyzAnimatorPlacement *)setup)->unk20) {
+                ((XyzAnimatorState *)state)->speed48 =
                     (f32)(((XyzAnimatorPlacement *)setup)->unk26 +
-                          (int)(((XyzAnimatorState *)state)->unk48 - (f32)((XyzAnimatorPlacement *)setup)->unk26));
+                          (int)(((XyzAnimatorState *)state)->speed48 - (f32)((XyzAnimatorPlacement *)setup)->unk26));
             }
         }
         break;
@@ -418,50 +418,50 @@ void xyzanimator_update(int obj)
         done = 0;
         if (((XyzAnimatorState *)state)->gameBit4C != 0) {
             if (((XyzAnimatorPlacement *)setup)->unk1C > ((XyzAnimatorPlacement *)setup)->unk22) {
-                ((XyzAnimatorState *)state)->unk40 =
+                ((XyzAnimatorState *)state)->speed40 =
                     -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk29 * timeDelta) -
-                      ((XyzAnimatorState *)state)->unk40);
-                if (((XyzAnimatorState *)state)->unk40 <= (f32)((XyzAnimatorPlacement *)setup)->unk22) {
-                    ((XyzAnimatorState *)state)->unk40 = (f32)((XyzAnimatorPlacement *)setup)->unk22;
+                      ((XyzAnimatorState *)state)->speed40);
+                if (((XyzAnimatorState *)state)->speed40 <= (f32)((XyzAnimatorPlacement *)setup)->unk22) {
+                    ((XyzAnimatorState *)state)->speed40 = (f32)((XyzAnimatorPlacement *)setup)->unk22;
                     done = 1;
                 }
             } else {
-                ((XyzAnimatorState *)state)->unk40 =
-                    lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk29 * timeDelta) + ((XyzAnimatorState *)state)->unk40;
-                if (((XyzAnimatorState *)state)->unk40 >= (f32)((XyzAnimatorPlacement *)setup)->unk22) {
-                    ((XyzAnimatorState *)state)->unk40 = (f32)((XyzAnimatorPlacement *)setup)->unk22;
+                ((XyzAnimatorState *)state)->speed40 =
+                    lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk29 * timeDelta) + ((XyzAnimatorState *)state)->speed40;
+                if (((XyzAnimatorState *)state)->speed40 >= (f32)((XyzAnimatorPlacement *)setup)->unk22) {
+                    ((XyzAnimatorState *)state)->speed40 = (f32)((XyzAnimatorPlacement *)setup)->unk22;
                     done = 1;
                 }
             }
             if (((XyzAnimatorPlacement *)setup)->unk1E > ((XyzAnimatorPlacement *)setup)->unk24) {
-                ((XyzAnimatorState *)state)->unk44 =
+                ((XyzAnimatorState *)state)->speed44 =
                     -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk2A * timeDelta) -
-                      ((XyzAnimatorState *)state)->unk44);
-                if (((XyzAnimatorState *)state)->unk44 <= (f32)((XyzAnimatorPlacement *)setup)->unk24) {
-                    ((XyzAnimatorState *)state)->unk44 = (f32)((XyzAnimatorPlacement *)setup)->unk24;
+                      ((XyzAnimatorState *)state)->speed44);
+                if (((XyzAnimatorState *)state)->speed44 <= (f32)((XyzAnimatorPlacement *)setup)->unk24) {
+                    ((XyzAnimatorState *)state)->speed44 = (f32)((XyzAnimatorPlacement *)setup)->unk24;
                     done += 1;
                 }
             } else {
-                ((XyzAnimatorState *)state)->unk44 =
-                    lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk2A * timeDelta) + ((XyzAnimatorState *)state)->unk44;
-                if (((XyzAnimatorState *)state)->unk44 >= (f32)((XyzAnimatorPlacement *)setup)->unk24) {
-                    ((XyzAnimatorState *)state)->unk44 = (f32)((XyzAnimatorPlacement *)setup)->unk24;
+                ((XyzAnimatorState *)state)->speed44 =
+                    lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk2A * timeDelta) + ((XyzAnimatorState *)state)->speed44;
+                if (((XyzAnimatorState *)state)->speed44 >= (f32)((XyzAnimatorPlacement *)setup)->unk24) {
+                    ((XyzAnimatorState *)state)->speed44 = (f32)((XyzAnimatorPlacement *)setup)->unk24;
                     done += 1;
                 }
             }
             if (((XyzAnimatorPlacement *)setup)->unk20 > ((XyzAnimatorPlacement *)setup)->unk26) {
-                ((XyzAnimatorState *)state)->unk48 =
+                ((XyzAnimatorState *)state)->speed48 =
                     -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk2B * timeDelta) -
-                      ((XyzAnimatorState *)state)->unk48);
-                if (((XyzAnimatorState *)state)->unk48 <= (f32)((XyzAnimatorPlacement *)setup)->unk26) {
-                    ((XyzAnimatorState *)state)->unk48 = (f32)((XyzAnimatorPlacement *)setup)->unk26;
+                      ((XyzAnimatorState *)state)->speed48);
+                if (((XyzAnimatorState *)state)->speed48 <= (f32)((XyzAnimatorPlacement *)setup)->unk26) {
+                    ((XyzAnimatorState *)state)->speed48 = (f32)((XyzAnimatorPlacement *)setup)->unk26;
                     done += 1;
                 }
             } else {
-                ((XyzAnimatorState *)state)->unk48 =
-                    lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk2B * timeDelta) + ((XyzAnimatorState *)state)->unk48;
-                if (((XyzAnimatorState *)state)->unk48 >= (f32)((XyzAnimatorPlacement *)setup)->unk26) {
-                    ((XyzAnimatorState *)state)->unk48 = (f32)((XyzAnimatorPlacement *)setup)->unk26;
+                ((XyzAnimatorState *)state)->speed48 =
+                    lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk2B * timeDelta) + ((XyzAnimatorState *)state)->speed48;
+                if (((XyzAnimatorState *)state)->speed48 >= (f32)((XyzAnimatorPlacement *)setup)->unk26) {
+                    ((XyzAnimatorState *)state)->speed48 = (f32)((XyzAnimatorPlacement *)setup)->unk26;
                     done += 1;
                 }
             }
@@ -473,50 +473,50 @@ void xyzanimator_update(int obj)
             }
         } else {
             if (((XyzAnimatorPlacement *)setup)->unk1C > ((XyzAnimatorPlacement *)setup)->unk22) {
-                ((XyzAnimatorState *)state)->unk40 =
-                    lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk29 * timeDelta) + ((XyzAnimatorState *)state)->unk40;
-                if (((XyzAnimatorState *)state)->unk40 >= (f32)((XyzAnimatorPlacement *)setup)->unk1C) {
-                    ((XyzAnimatorState *)state)->unk40 = (f32)((XyzAnimatorPlacement *)setup)->unk1C;
+                ((XyzAnimatorState *)state)->speed40 =
+                    lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk29 * timeDelta) + ((XyzAnimatorState *)state)->speed40;
+                if (((XyzAnimatorState *)state)->speed40 >= (f32)((XyzAnimatorPlacement *)setup)->unk1C) {
+                    ((XyzAnimatorState *)state)->speed40 = (f32)((XyzAnimatorPlacement *)setup)->unk1C;
                     done = 1;
                 }
             } else {
-                ((XyzAnimatorState *)state)->unk40 =
+                ((XyzAnimatorState *)state)->speed40 =
                     -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk29 * timeDelta) -
-                      ((XyzAnimatorState *)state)->unk40);
-                if (((XyzAnimatorState *)state)->unk40 <= (f32)((XyzAnimatorPlacement *)setup)->unk1C) {
-                    ((XyzAnimatorState *)state)->unk40 = (f32)((XyzAnimatorPlacement *)setup)->unk1C;
+                      ((XyzAnimatorState *)state)->speed40);
+                if (((XyzAnimatorState *)state)->speed40 <= (f32)((XyzAnimatorPlacement *)setup)->unk1C) {
+                    ((XyzAnimatorState *)state)->speed40 = (f32)((XyzAnimatorPlacement *)setup)->unk1C;
                     done = 1;
                 }
             }
             if (((XyzAnimatorPlacement *)setup)->unk1E > ((XyzAnimatorPlacement *)setup)->unk24) {
-                ((XyzAnimatorState *)state)->unk44 =
-                    lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk2A * timeDelta) + ((XyzAnimatorState *)state)->unk44;
-                if (((XyzAnimatorState *)state)->unk44 >= (f32)((XyzAnimatorPlacement *)setup)->unk1E) {
-                    ((XyzAnimatorState *)state)->unk44 = (f32)((XyzAnimatorPlacement *)setup)->unk1E;
+                ((XyzAnimatorState *)state)->speed44 =
+                    lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk2A * timeDelta) + ((XyzAnimatorState *)state)->speed44;
+                if (((XyzAnimatorState *)state)->speed44 >= (f32)((XyzAnimatorPlacement *)setup)->unk1E) {
+                    ((XyzAnimatorState *)state)->speed44 = (f32)((XyzAnimatorPlacement *)setup)->unk1E;
                     done += 1;
                 }
             } else {
-                ((XyzAnimatorState *)state)->unk44 =
+                ((XyzAnimatorState *)state)->speed44 =
                     -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk2A * timeDelta) -
-                      ((XyzAnimatorState *)state)->unk44);
-                if (((XyzAnimatorState *)state)->unk44 <= (f32)((XyzAnimatorPlacement *)setup)->unk1E) {
-                    ((XyzAnimatorState *)state)->unk44 = (f32)((XyzAnimatorPlacement *)setup)->unk1E;
+                      ((XyzAnimatorState *)state)->speed44);
+                if (((XyzAnimatorState *)state)->speed44 <= (f32)((XyzAnimatorPlacement *)setup)->unk1E) {
+                    ((XyzAnimatorState *)state)->speed44 = (f32)((XyzAnimatorPlacement *)setup)->unk1E;
                     done += 1;
                 }
             }
             if (((XyzAnimatorPlacement *)setup)->unk20 > ((XyzAnimatorPlacement *)setup)->unk26) {
-                ((XyzAnimatorState *)state)->unk48 =
-                    lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk2B * timeDelta) + ((XyzAnimatorState *)state)->unk48;
-                if (((XyzAnimatorState *)state)->unk48 >= (f32)((XyzAnimatorPlacement *)setup)->unk20) {
-                    ((XyzAnimatorState *)state)->unk48 = (f32)((XyzAnimatorPlacement *)setup)->unk20;
+                ((XyzAnimatorState *)state)->speed48 =
+                    lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk2B * timeDelta) + ((XyzAnimatorState *)state)->speed48;
+                if (((XyzAnimatorState *)state)->speed48 >= (f32)((XyzAnimatorPlacement *)setup)->unk20) {
+                    ((XyzAnimatorState *)state)->speed48 = (f32)((XyzAnimatorPlacement *)setup)->unk20;
                     done += 1;
                 }
             } else {
-                ((XyzAnimatorState *)state)->unk48 =
+                ((XyzAnimatorState *)state)->speed48 =
                     -(lbl_803E4018 * ((f32)(int)((XyzAnimatorPlacement *)setup)->unk2B * timeDelta) -
-                      ((XyzAnimatorState *)state)->unk48);
-                if (((XyzAnimatorState *)state)->unk48 <= (f32)((XyzAnimatorPlacement *)setup)->unk20) {
-                    ((XyzAnimatorState *)state)->unk48 = (f32)((XyzAnimatorPlacement *)setup)->unk20;
+                      ((XyzAnimatorState *)state)->speed48);
+                if (((XyzAnimatorState *)state)->speed48 <= (f32)((XyzAnimatorPlacement *)setup)->unk20) {
+                    ((XyzAnimatorState *)state)->speed48 = (f32)((XyzAnimatorPlacement *)setup)->unk20;
                     done += 1;
                 }
             }
@@ -932,12 +932,12 @@ void dimbossicesmash_update(u8 *obj)
             ((GameObject *)obj)->anim.velocityX = timeDelta * ((DimBossIceSmashState *)state)->velX290 + ((GameObject *)obj)->anim.velocityX;
             ((GameObject *)obj)->anim.velocityY = timeDelta * ((DimBossIceSmashState *)state)->velY290 + ((GameObject *)obj)->anim.velocityY;
             ((GameObject *)obj)->anim.velocityZ = timeDelta * ((DimBossIceSmashState *)state)->velZ290 + ((GameObject *)obj)->anim.velocityZ;
-            ((DimBossIceSmashState *)state)->unk278 =
-                timeDelta * ((DimBossIceSmashState *)state)->unk284 + ((DimBossIceSmashState *)state)->unk278;
-            ((DimBossIceSmashState *)state)->unk27C =
-                timeDelta * ((DimBossIceSmashState *)state)->unk288 + ((DimBossIceSmashState *)state)->unk27C;
-            ((DimBossIceSmashState *)state)->unk280 =
-                timeDelta * ((DimBossIceSmashState *)state)->unk28C + ((DimBossIceSmashState *)state)->unk280;
+            ((DimBossIceSmashState *)state)->speed278 =
+                timeDelta * ((DimBossIceSmashState *)state)->unk284 + ((DimBossIceSmashState *)state)->speed278;
+            ((DimBossIceSmashState *)state)->speed27C =
+                timeDelta * ((DimBossIceSmashState *)state)->unk288 + ((DimBossIceSmashState *)state)->speed27C;
+            ((DimBossIceSmashState *)state)->speed280 =
+                timeDelta * ((DimBossIceSmashState *)state)->unk28C + ((DimBossIceSmashState *)state)->speed280;
             if ((state[0x29f] & 1) != 0) {
                 if (((GameObject *)obj)->anim.velocityX < *(f32 *)&lbl_803E4034) {
                     ((GameObject *)obj)->anim.velocityX = lbl_803E4034;
@@ -953,32 +953,32 @@ void dimbossicesmash_update(u8 *obj)
                 ((GameObject *)obj)->anim.velocityZ = lbl_803E4034;
             }
             if ((state[0x29f] & 4) != 0) {
-                if (((DimBossIceSmashState *)state)->unk278 < *(f32 *)&lbl_803E4034) {
-                    ((DimBossIceSmashState *)state)->unk278 = lbl_803E4034;
+                if (((DimBossIceSmashState *)state)->speed278 < *(f32 *)&lbl_803E4034) {
+                    ((DimBossIceSmashState *)state)->speed278 = lbl_803E4034;
                 }
-            } else if (((DimBossIceSmashState *)state)->unk278 > *(f32 *)&lbl_803E4034) {
-                ((DimBossIceSmashState *)state)->unk278 = lbl_803E4034;
+            } else if (((DimBossIceSmashState *)state)->speed278 > *(f32 *)&lbl_803E4034) {
+                ((DimBossIceSmashState *)state)->speed278 = lbl_803E4034;
             }
             if ((state[0x29f] & 8) != 0) {
-                if (((DimBossIceSmashState *)state)->unk27C < *(f32 *)&lbl_803E4034) {
-                    ((DimBossIceSmashState *)state)->unk27C = lbl_803E4034;
+                if (((DimBossIceSmashState *)state)->speed27C < *(f32 *)&lbl_803E4034) {
+                    ((DimBossIceSmashState *)state)->speed27C = lbl_803E4034;
                 }
-            } else if (((DimBossIceSmashState *)state)->unk27C > *(f32 *)&lbl_803E4034) {
-                ((DimBossIceSmashState *)state)->unk27C = lbl_803E4034;
+            } else if (((DimBossIceSmashState *)state)->speed27C > *(f32 *)&lbl_803E4034) {
+                ((DimBossIceSmashState *)state)->speed27C = lbl_803E4034;
             }
             if ((state[0x29f] & 0x10) != 0) {
-                if (((DimBossIceSmashState *)state)->unk280 < *(f32 *)&lbl_803E4034) {
-                    ((DimBossIceSmashState *)state)->unk280 = lbl_803E4034;
+                if (((DimBossIceSmashState *)state)->speed280 < *(f32 *)&lbl_803E4034) {
+                    ((DimBossIceSmashState *)state)->speed280 = lbl_803E4034;
                 }
-            } else if (((DimBossIceSmashState *)state)->unk280 > *(f32 *)&lbl_803E4034) {
-                ((DimBossIceSmashState *)state)->unk280 = lbl_803E4034;
+            } else if (((DimBossIceSmashState *)state)->speed280 > *(f32 *)&lbl_803E4034) {
+                ((DimBossIceSmashState *)state)->speed280 = lbl_803E4034;
             }
             ((GameObject *)obj)->anim.localPosX = ((GameObject *)obj)->anim.velocityX * timeDelta + ((GameObject *)obj)->anim.localPosX;
             ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.velocityY * timeDelta + ((GameObject *)obj)->anim.localPosY;
             ((GameObject *)obj)->anim.localPosZ = ((GameObject *)obj)->anim.velocityZ * timeDelta + ((GameObject *)obj)->anim.localPosZ;
-            ((GameObject *)obj)->anim.rotX = ((DimBossIceSmashState *)state)->unk278 * timeDelta + (f32)((GameObject *)obj)->anim.rotX;
-            ((GameObject *)obj)->anim.rotY = ((DimBossIceSmashState *)state)->unk27C * timeDelta + (f32)((GameObject *)obj)->anim.rotY;
-            ((GameObject *)obj)->anim.rotZ = ((DimBossIceSmashState *)state)->unk280 * timeDelta + (f32)((GameObject *)obj)->anim.rotZ;
+            ((GameObject *)obj)->anim.rotX = ((DimBossIceSmashState *)state)->speed278 * timeDelta + (f32)((GameObject *)obj)->anim.rotX;
+            ((GameObject *)obj)->anim.rotY = ((DimBossIceSmashState *)state)->speed27C * timeDelta + (f32)((GameObject *)obj)->anim.rotY;
+            ((GameObject *)obj)->anim.rotZ = ((DimBossIceSmashState *)state)->speed280 * timeDelta + (f32)((GameObject *)obj)->anim.rotZ;
             if ((((DimbossicesmashPlacement *)setup)->unk3C & 2) != 0) {
                 (*gPathControlInterface)->update(obj, state, timeDelta);
                 (*gPathControlInterface)->apply(obj, state);
@@ -1071,22 +1071,22 @@ void fn_80196520(u8 *obj, u8 *state, u8 *setup)
         ((GameObject *)obj)->anim.velocityY = (f32)*(s16 *)(setup + 0x22) / spd;
         ((GameObject *)obj)->anim.velocityZ = (f32)*(s16 *)(setup + 0x24) / spd;
     }
-    ((DimBossIceSmashState *)state)->unk278 = (f32)*(s16 *)(setup + 0x2c);
-    ((DimBossIceSmashState *)state)->unk27C = (f32)*(s16 *)(setup + 0x2e);
-    ((DimBossIceSmashState *)state)->unk280 = (f32)*(s16 *)(setup + 0x30);
+    ((DimBossIceSmashState *)state)->speed278 = (f32)*(s16 *)(setup + 0x2c);
+    ((DimBossIceSmashState *)state)->speed27C = (f32)*(s16 *)(setup + 0x2e);
+    ((DimBossIceSmashState *)state)->speed280 = (f32)*(s16 *)(setup + 0x30);
     if (((GameObject *)obj)->anim.velocityX > lbl_803E4034) {
         state[0x29f] = state[0x29f] | 1;
     }
     if (((GameObject *)obj)->anim.velocityZ > lbl_803E4034) {
         state[0x29f] = state[0x29f] | 2;
     }
-    if (((DimBossIceSmashState *)state)->unk278 > lbl_803E4034) {
+    if (((DimBossIceSmashState *)state)->speed278 > lbl_803E4034) {
         state[0x29f] = state[0x29f] | 4;
     }
-    if (((DimBossIceSmashState *)state)->unk27C > lbl_803E4034) {
+    if (((DimBossIceSmashState *)state)->speed27C > lbl_803E4034) {
         state[0x29f] = state[0x29f] | 8;
     }
-    if (((DimBossIceSmashState *)state)->unk280 > lbl_803E4034) {
+    if (((DimBossIceSmashState *)state)->speed280 > lbl_803E4034) {
         state[0x29f] = state[0x29f] | 0x10;
     }
     ((DimBossIceSmashState *)state)->unk284 = (f32)*(s16 *)(setup + 0x32) / (spd = lbl_803E4038);

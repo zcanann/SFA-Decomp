@@ -575,7 +575,7 @@ void hightop_update(int obj) {
     char *p = ((GameObject *)obj)->extra;
     *(s16 *)(p + 0xc16) = 5;
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
-    *(s8 *)&((BaddieState *)p)->unk25F = !((BitFlags8 *)(p + 0xc49))->b4;
+    *(s8 *)&((BaddieState *)p)->bool25F = !((BitFlags8 *)(p + 0xc49))->b4;
     ((BaddieState *)p)->hitPoints = 0;
     *(int *)p &= ~0x8000;
     if ((*(u16 *)(p + 0xc40) & 0x40) != 0) {
@@ -596,7 +596,7 @@ void hightop_update(int obj) {
     }
     *(int *)&((BaddieState *)p)->unk31C = 0;
     *(int *)&((BaddieState *)p)->unk318 = 0;
-    ((BaddieState *)p)->unk330 = 0;
+    ((BaddieState *)p)->bool330 = 0;
     *(int *)p &= ~0x400000;
     (*(void (**)(int, char *, f32, f32, void **, void *))((char *)*gPlayerInterface + 0x8))(
         obj, (char *)p, (f32)(u32)framesThisStep, timeDelta, gHighTopStateHandlers, &gHighTopDefaultStateHandler);

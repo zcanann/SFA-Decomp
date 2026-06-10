@@ -241,13 +241,13 @@ void fn_80150EDC(void *p1, void *p2) {
     }
 
     if ((s32)((GameObject *)p1)->anim.currentMove == *(u8 *)((u8 *)r30 + 0x2c)) {
-        ((BaddieState *)p2)->unk308 =
+        ((BaddieState *)p2)->speed308 =
             ((BaddieState *)p2)->pathStep *
             (((f32)(u32)*(u16 *)((u8 *)p2 + 0x2a4) /
               ((BaddieState *)p2)->unk2A8 / lbl_803E274C) *
              *(f32 *)(table + (((BaddieState *)p2)->inWhirlpoolGroup << 2) + 0x1538));
-        if (((BaddieState *)p2)->unk308 < lbl_803E27A0) {
-            ((BaddieState *)p2)->unk308 = lbl_803E27A0;
+        if (((BaddieState *)p2)->speed308 < lbl_803E27A0) {
+            ((BaddieState *)p2)->speed308 = lbl_803E27A0;
         }
     }
 

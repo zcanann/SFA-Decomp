@@ -391,7 +391,7 @@ void dbegg_setupFromDef(int obj, u8 *state) {
         ((GameObject *)obj)->anim.velocityX = fz;
         ((GameObject *)obj)->anim.velocityY = fz;
         ((GameObject *)obj)->anim.velocityZ = fz;
-        ((GameObject *)obj)->unkF8 = 0;
+        ((GameObject *)obj)->moveF8 = 0;
         *(f32 *)state = fz;
     }
 }

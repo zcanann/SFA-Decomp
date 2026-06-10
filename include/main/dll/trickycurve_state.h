@@ -11,8 +11,8 @@
  */
 typedef struct TrickyCurveObjState {
     u8 unk0[0x2 - 0x0];
-    s16 unk2;
-    s16 unk4;
+    s16 count2;
+    s16 count4;
     s16 unk6;
     s16 unk8;
     s16 unkA;

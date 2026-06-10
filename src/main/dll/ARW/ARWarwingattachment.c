@@ -586,7 +586,7 @@ void FUN_801f1634(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   iVar5 = FUN_80017a98();
   if (*(char *)((int)puVar12 + 5) == '\0') {
     uVar8 = 0;
-    if (((*(byte *)&((GameObject *)param_9)->anim.resetHitboxMode & 1) != 0) && (((GameObject *)param_9)->unkF8 == 0)) {
+    if (((*(byte *)&((GameObject *)param_9)->anim.resetHitboxMode & 1) != 0) && (((GameObject *)param_9)->moveF8 == 0)) {
       *puVar12 = 0;
       puVar12[1] = 0x28;
       FUN_80006ba8(0,0x100);
@@ -596,7 +596,7 @@ void FUN_801f1634(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     if (*(char *)((int)puVar12 + 5) != '\0') {
       *(undefined *)(puVar12 + 3) = 1;
     }
-    if (((GameObject *)param_9)->unkF8 == 0) {
+    if (((GameObject *)param_9)->moveF8 == 0) {
       ObjHits_EnableObject(param_9);
       *(byte *)&((GameObject *)param_9)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_9)->anim.resetHitboxMode & 0xf7;
       ((GameObject *)param_9)->anim.velocityY = -(lbl_803E6A1C * lbl_803DC074 - ((GameObject *)param_9)->anim.velocityY);
@@ -642,10 +642,10 @@ void FUN_801f1634(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       *(undefined *)(puVar12 + 3) = 0;
       uVar13 = FUN_80006ba8(0,0x100);
     }
-    if (((GameObject *)param_9)->unkF8 == 1) {
+    if (((GameObject *)param_9)->moveF8 == 1) {
       *(undefined *)((int)puVar12 + 5) = 2;
     }
-    if ((*(char *)((int)puVar12 + 5) == '\x02') && (((GameObject *)param_9)->unkF8 == 0)) {
+    if ((*(char *)((int)puVar12 + 5) == '\x02') && (((GameObject *)param_9)->moveF8 == 0)) {
       *(undefined *)((int)puVar12 + 5) = 0;
       *(undefined *)(puVar12 + 3) = 0;
     }
@@ -1109,7 +1109,7 @@ void dll_1FF_render(int *obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     extern void objRenderFn_8003b8f4(void* obj, int p1, int p2, int p3, int p4, f32 scale);
     s32 v;
-    if (((GameObject *)obj)->unkF8 != 0) {
+    if (((GameObject *)obj)->moveF8 != 0) {
         v = visible;
         if (v != -1) return;
     } else {
@@ -1117,7 +1117,7 @@ void dll_1FF_render(int *obj, int p1, int p2, int p3, int p4, s8 visible)
         if (v == 0) return;
     }
     if (((ObjAnimComponent *)obj)->modelInstance->shadowType == 2) {
-        if (((GameObject *)obj)->unkB4 == -1) {
+        if (((GameObject *)obj)->classIdB4 == -1) {
             ((GameObject *)obj)->anim.modelState->flags &= ~(long long)OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         } else {
             ((GameObject *)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
@@ -1153,7 +1153,7 @@ extern f32 lbl_803E5D98;
 void dll_200_init(int* obj, int* arg)
 {
     Dll200State* b;
-    ((GameObject *)obj)->unkF4 = 0;
+    ((GameObject *)obj)->countF4 = 0;
     *(s16*)obj = (s16)((s32)*(s8*)((char*)arg + 0x18) << 8);
     ((GameObject *)obj)->animEventCallback = (void *)dll_200_SeqFn;
     b = ((GameObject *)obj)->extra;
@@ -1482,7 +1482,7 @@ void dll_1FF_update(int obj)
     player = Obj_GetPlayerObject();
     if (b->grabPhase == 0) {
         flag = 0;
-        if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0 && ((GameObject *)obj)->unkF8 == 0) {
+        if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0 && ((GameObject *)obj)->moveF8 == 0) {
             b->msgLo = (s16)flag;
             b->msgHi = 0x28;
             buttonDisable(0, 0x100);
@@ -1492,7 +1492,7 @@ void dll_1FF_update(int obj)
         if (b->grabPhase != 0) {
             b->sendFlag = 1;
         }
-        if (((GameObject *)obj)->unkF8 == 0) {
+        if (((GameObject *)obj)->moveF8 == 0) {
             ObjHits_EnableObject(obj);
             *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~8);
             ((GameObject *)obj)->anim.velocityY = -(lbl_803E5D84 * timeDelta - ((GameObject *)obj)->anim.velocityY);
@@ -1526,10 +1526,10 @@ void dll_1FF_update(int obj)
             b->sendFlag = 0;
             buttonDisable(0, 0x100);
         }
-        if (((GameObject *)obj)->unkF8 == 1) {
+        if (((GameObject *)obj)->moveF8 == 1) {
             b->grabPhase = 2;
         }
-        if (b->grabPhase == 2 && ((GameObject *)obj)->unkF8 == 0) {
+        if (b->grabPhase == 2 && ((GameObject *)obj)->moveF8 == 0) {
             b->grabPhase = 0;
             b->sendFlag = 0;
         }

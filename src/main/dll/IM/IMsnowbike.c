@@ -252,10 +252,10 @@ void sh_levelcontrol_update(int param_1)
   }
   iVar1 = GameBit_Get(0xd36);
   if (iVar1 != 0) {
-    if (((GameObject *)param_1)->unkF8 != 2) {
-      ((GameObject *)param_1)->unkF8 = 2;
+    if (((GameObject *)param_1)->moveF8 != 2) {
+      ((GameObject *)param_1)->moveF8 = 2;
       envFxActFn_800887f8(0);
-      if (((GameObject *)param_1)->unkF4 == 2) {
+      if (((GameObject *)param_1)->countF4 == 2) {
         getEnvfxActImmediately(0, 0, 0x1bf, 0);
         getEnvfxActImmediately(0, 0, 0x231, 0);
         getEnvfxActImmediately(0, 0, 0x232, 0);
@@ -272,9 +272,9 @@ void sh_levelcontrol_update(int param_1)
   else {
     iVar1 = GameBit_Get(0xd35);
     if (iVar1 != 0) {
-      if (((GameObject *)param_1)->unkF8 != 1) {
-        ((GameObject *)param_1)->unkF8 = 1;
-        if (((GameObject *)param_1)->unkF4 == 2) {
+      if (((GameObject *)param_1)->moveF8 != 1) {
+        ((GameObject *)param_1)->moveF8 = 1;
+        if (((GameObject *)param_1)->countF4 == 2) {
           envFxActFn_800887f8(0);
           getEnvfxActImmediately(0, 0, 0x1bf, 0);
           getEnvfxActImmediately(0, 0, 0x1be, 0);
@@ -290,9 +290,9 @@ void sh_levelcontrol_update(int param_1)
         }
       }
     }
-    else if (((GameObject *)param_1)->unkF8 != 0) {
-      ((GameObject *)param_1)->unkF8 = 0;
-      if (((GameObject *)param_1)->unkF4 == 2) {
+    else if (((GameObject *)param_1)->moveF8 != 0) {
+      ((GameObject *)param_1)->moveF8 = 0;
+      if (((GameObject *)param_1)->countF4 == 2) {
         fn_80088870(&base[0x5c], &base[0x24], &base[0x94], &base[0xcc]);
         envFxActFn_800887f8(0x3f);
         getEnvfxActImmediately(0, 0, 0x244, 0);
@@ -338,12 +338,12 @@ void sh_levelcontrol_init(int obj) {
     ((GameObject *)obj)->animEventCallback = (void *)SH_LevelControl_SeqFn;
     v = (u32)((GameObject *)obj)->objectFlags | 0x4000;
     ((GameObject *)obj)->objectFlags = (u16)v;
-    ((GameObject *)obj)->unkF8 = 3;
+    ((GameObject *)obj)->moveF8 = 3;
 
     if (getSaveGameLoadStatus() != 0) {
-        ((GameObject *)obj)->unkF4 = 2;
+        ((GameObject *)obj)->countF4 = 2;
     } else {
-        ((GameObject *)obj)->unkF4 = 1;
+        ((GameObject *)obj)->countF4 = 1;
     }
 
     ((ShLevelcontrolState *)state)->unk10 = -1;
@@ -378,7 +378,7 @@ void warpstonelift_init(int obj, s8 *def) {
     int *state = ((GameObject *)obj)->extra;
     int i;
     *(s16 *)obj = (s16)((s32)def[0x18] << 8);
-    ((GameObject *)obj)->unkF4 = 0;
+    ((GameObject *)obj)->countF4 = 0;
     for (i = 0; i < 2; i++) {
         if (GameBit_Get(lbl_803DC058[i]) != 0) {
             *(u8 *)state = (u8)(i + 1);

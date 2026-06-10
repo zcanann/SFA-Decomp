@@ -767,7 +767,7 @@ searched:
         return;
     }
 
-    if (n->unk6 > state->unk24) {
+    if (n->unk6 > state->count24) {
         key = (u16)(n->unk6 + n->unk8);
         q = state->queue;
         state->queueCount++;
@@ -775,8 +775,8 @@ searched:
         q[state->queueCount].priority = 0xFFFF - key;
         heapSiftUp(q, state->queueCount);
     } else {
-        if (n->unk6 < state->unk24) {
-            state->unk24 = n->unk6;
+        if (n->unk6 < state->count24) {
+            state->count24 = n->unk6;
         }
         key = (u16)(n->unk6 + n->unk8);
         q = state->queue;
@@ -854,7 +854,7 @@ int voxmaps_updateRoutePath(RouteNav *nav, RouteState *state) {
             pathDirect = 1;
         } else {
             int count;
-            state->unk24 = 0x2710;
+            state->count24 = 0x2710;
             count = state->timer1C;
             if (count == 0xc8) {
                 debugPrintf(sVoxmapsRouteNodesListOverflow);

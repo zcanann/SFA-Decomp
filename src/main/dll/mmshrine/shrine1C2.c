@@ -19,7 +19,7 @@ typedef struct EcshShrineState {
     s16 unk1A;
     s16 unk1C;
     s16 unk1E;
-    s16 unk20;
+    s16 bool20;
     s16 timer22;
     s16 unk24;
     s16 unk26;
@@ -216,9 +216,9 @@ void ecsh_shrine_update(s16 *obj)
             (*gGameUIInterface)->showNpcDialogue(0x285, 0x14, 0x8c, 1);
         }
     }
-    if (((GameObject *)obj)->unkF4 != 0) {
-        ((GameObject *)obj)->unkF4 = ((GameObject *)obj)->unkF4 - 1;
-        if (((GameObject *)obj)->unkF4 == 0) {
+    if (((GameObject *)obj)->countF4 != 0) {
+        ((GameObject *)obj)->countF4 = ((GameObject *)obj)->countF4 - 1;
+        if (((GameObject *)obj)->countF4 == 0) {
             skyFn_80088c94(7, 1);
             getEnvfxAct(obj, player, 0x221, 0);
             getEnvfxAct(obj, player, 0x220, 0);
@@ -506,7 +506,7 @@ void ecsh_shrine_update(s16 *obj)
         case 8:
             sub[0x2f] = 0;
             ((EcshShrineState *)sub)->unk4 = z;
-            ((EcshShrineState *)sub)->unk20 = 0;
+            ((EcshShrineState *)sub)->bool20 = 0;
             ((EcshShrineState *)sub)->timer22 = 0;
             ((EcshShrineState *)sub)->unk24 = 0;
             ((EcshShrineState *)sub)->unk26 = -1;
@@ -679,7 +679,7 @@ void ecsh_creator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s
 void ecsh_creator_init(s16 *obj, s8 *def) {
     s16 *inner = ((GameObject *)obj)->extra;
     ((GameObject *)obj)->anim.rotX = (s16)((s32)def[0x1e] << 8);
-    ((GameObject *)obj)->unkF8 = 0;
+    ((GameObject *)obj)->moveF8 = 0;
     inner[0] = 100;
     inner[1] = 0;
     *(u8 *)((char *)obj + 0x37) = 0xff;
@@ -754,7 +754,7 @@ void ecsh_shrine_init(s16 *obj, s8 *def) {
     ((EcshShrineState *)sub)->unk2F = 0;
     ((EcshShrineState *)sub)->unk30 = 0;
     ((EcshShrineState *)sub)->unk4 = lbl_803E4FCC;
-    ((EcshShrineState *)sub)->unk20 = 0;
+    ((EcshShrineState *)sub)->bool20 = 0;
     ((EcshShrineState *)sub)->timer22 = 0;
     ((EcshShrineState *)sub)->unk24 = 0;
     ((EcshShrineState *)sub)->unk26 = -1;
@@ -774,7 +774,7 @@ void ecsh_shrine_init(s16 *obj, s8 *def) {
     ((EcshShrineState *)sub)->unk32 = gv;
     lbl_803DDBC4 = obj;
     ObjGroup_AddObject(obj, 0xb);
-    ((GameObject *)obj)->unkF4 = 1;
+    ((GameObject *)obj)->countF4 = 1;
     if (*(void **)sub == NULL) {
         *(int *)sub = objCreateLight(0, 1);
     }
@@ -795,14 +795,14 @@ void ecsh_creator_update(s16 *obj) {
 
     def = *(u8 **)&((GameObject *)obj)->anim.placementData;
     sub = ((GameObject *)obj)->extra;
-    if (((GameObject *)obj)->unkF8 == 0 && (u32)GameBit_Get(sub[2]) != 0) {
+    if (((GameObject *)obj)->moveF8 == 0 && (u32)GameBit_Get(sub[2]) != 0) {
         res = Resource_Acquire(0x82, 1);
         (*(void (**)(s16 *, int, int, int, int, int))(*(int *)res + 4))(obj, 0, 0, 1, -1, 0);
         (*(void (**)(s16 *, int, int, int, int, int))(*(int *)res + 4))(obj, 1, 0, 1, -1, 0);
         Sfx_PlayFromObject(obj, 0x16d);
         Resource_Release(res);
         sub[1] = 1;
-        ((GameObject *)obj)->unkF8 = 1;
+        ((GameObject *)obj)->moveF8 = 1;
     }
     if (sub[1] != 0) {
         *sub = *sub - sub[1] * framesThisStep;

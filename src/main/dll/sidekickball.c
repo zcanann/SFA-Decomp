@@ -82,7 +82,7 @@ void sidekickball_update(u8 *self)
     self[0xAF] = (u8)(self[0xAF] & ~0x8);
     gotHit = 0;
     if ((buttonGetDisabled(0) & 0x100) == 0u
-        && ((GameObject *)self)->unkF8 == 0
+        && ((GameObject *)self)->moveF8 == 0
         && ObjTrigger_IsSet(self) != 0) {
       ObjHits_DisableObject(self);
       gotHit = 1;

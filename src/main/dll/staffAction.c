@@ -818,9 +818,9 @@ extern int *gBaddieControlInterface;
 void dll_D3_free(int obj) {
     int *inner = ((GameObject *)obj)->extra;
     ObjGroup_RemoveObject(obj, 3);
-    if (((GameObject *)obj)->unkC8 != NULL) {
-        Obj_FreeObject(((GameObject *)obj)->unkC8);
-        *(int *)&((GameObject *)obj)->unkC8 = 0;
+    if (((GameObject *)obj)->seqIdC8 != NULL) {
+        Obj_FreeObject(((GameObject *)obj)->seqIdC8);
+        *(int *)&((GameObject *)obj)->seqIdC8 = 0;
     }
     (*(void (*)(int, int *, int))(*(int *)(*gBaddieControlInterface + 0x40)))(obj, inner, 0);
 }
@@ -865,7 +865,7 @@ void dll_D3_render(int obj,int p2,int p3,int p4,int p5,s8 visible)
 
   state = (int)((GroundBaddieState *)*(int *)&((GameObject *)obj)->extra)->control;
   slideMtx = (f32 *)(state + 4);
-  if ((visible != 0) && (((GameObject *)obj)->unkF4 == 0)) {
+  if ((visible != 0) && (((GameObject *)obj)->countF4 == 0)) {
     if ((((LandedArwingState *)state)->surfaceMode == 6) && (((((LandedArwingState *)state)->flags92 >> 3) & 1) != 0)) {
       if (((((LandedArwingState *)state)->flags92 >> 2) & 1) == 0) {
         fn_80166E38(slideMtx,&((GameObject *)obj)->anim.velocityX,(f32 *)(state + 0x7c));

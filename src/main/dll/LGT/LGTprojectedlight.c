@@ -335,7 +335,7 @@ int wmgeneralscales_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
             *((u8 *)state + 4) = 0;
             break;
         case 5:
-            if (((GameObject *)obj)->unkC8 == NULL && Obj_IsLoadingLocked() != 0) {
+            if (((GameObject *)obj)->seqIdC8 == NULL && Obj_IsLoadingLocked() != 0) {
                 int setup = Obj_AllocObjectSetup(0x24, 0x1b8);
                 ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.localPosX;
                 ((ObjPlacement *)setup)->posY = ((GameObject *)obj)->anim.localPosY;
@@ -344,11 +344,11 @@ int wmgeneralscales_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
                 *(u8 *)(setup + 5) = 4;
                 *(u8 *)(setup + 7) = 0xff;
                 ObjLink_AttachChild(obj, Obj_SetupObject(setup, 5, -1, -1, 0), 0);
-                *(f32 *)(*(int *)&((GameObject *)obj)->unkC8 + 8) *= lbl_803E5EA0;
+                *(f32 *)(*(int *)&((GameObject *)obj)->seqIdC8 + 8) *= lbl_803E5EA0;
             }
             break;
         case 6: {
-            int *child = ((GameObject *)obj)->unkC8;
+            int *child = ((GameObject *)obj)->seqIdC8;
             if (child != NULL) {
                 ObjLink_DetachChild((int *)obj, child);
             }
@@ -398,7 +398,7 @@ void wmgeneralscales_init(int *obj) {
     ((GameObject *)obj)->animEventCallback = (void *)wmgeneralscales_SeqFn;
     *(f32 *)state = lbl_803E5E98;
     *(u8 *)((char *)state + 4) = 1;
-    *(int *)&((GameObject *)obj)->unkC8 = 0;
+    *(int *)&((GameObject *)obj)->seqIdC8 = 0;
 }
 void wmgeneralscales_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
     int *state = ((GameObject *)obj)->extra;

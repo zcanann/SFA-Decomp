@@ -23,7 +23,7 @@ typedef struct DrshackleState {
     f32 unk8;
     f32 unkC;
     f32 unk10;
-    s32 unk14;
+    s32 count14;
     u8 pad18[0x19 - 0x18];
     s8 unk19;
     u8 pad1A[0x1B - 0x1A];
@@ -95,7 +95,7 @@ int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f) {
     objRenderFn_8003b8f4((void *)obj, c, d, e, f, (double)lbl_803E6A2C);
 
     ptr = (int *)p;
-    for (i = 0; i < ((DrshackleState *)p)->unk14; i++) {
+    for (i = 0; i < ((DrshackleState *)p)->count14; i++) {
         int entry = *ptr;
         if (entry != 0) {
             ObjPath_GetPointWorldPosition(obj, p[i + 0x1b], (f32 *)(entry + 0xc),
@@ -122,10 +122,10 @@ void drshackle_init(int obj, char *arg) {
     ((DrshackleState *)p)->unk1B = (s8)arg[0x18] % 2;
     ((GameObject *)obj)->animEventCallback = (void *)drshackle_toggleEventCallback;
     if (*(s16 *)(arg + 0x1c) == 1) {
-        ((DrshackleState *)p)->unk14 = 2;
+        ((DrshackleState *)p)->count14 = 2;
         ((DrshackleState *)p)->unk1C = 1 - ((DrshackleState *)p)->unk1B;
     } else {
-        ((DrshackleState *)p)->unk14 = 1;
+        ((DrshackleState *)p)->count14 = 1;
     }
 }
 
@@ -158,7 +158,7 @@ void drshackle_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, un
     if (((BitFlags8 *)(p + 0x1a))->b0 == 0 && visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6A2C);
         ptr = (int *)p;
-        for (i = 0; i < ((DrshackleState *)p)->unk14; i++) {
+        for (i = 0; i < ((DrshackleState *)p)->count14; i++) {
             int *entry = *(int **)ptr;
             if (entry != 0) {
                 ObjPath_GetPointWorldPosition((int)obj, p[i + 0x1b], (f32 *)((char *)entry + 0xc), (f32 *)((char *)entry + 0x10), (f32 *)((char *)entry + 0x14), 0);
@@ -178,7 +178,7 @@ void drshackle_update(int obj) {
         list = ObjGroup_GetObjects(0x17, &count);
         while (count-- != 0) {
             int sub = *(int *)(*list + 0x4c);
-            for (j = 0; j < ((DrshackleState *)p)->unk14; j++) {
+            for (j = 0; j < ((DrshackleState *)p)->count14; j++) {
                 if (*(u8 *)(sub + 0x18) == ((DrshacklePlacement *)q)->unk1A + j * 4) {
                     *(int *)(p + j * 4) = *list;
                     (*gObjectTriggerInterface)

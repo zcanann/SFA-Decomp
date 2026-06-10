@@ -22,15 +22,15 @@ typedef struct TrickyState {
     s8 unkD;
     u8 padE[0x10 - 0xE];
     f32 unk10;
-    f32 unk14;
+    f32 speed14;
     f32 unk18;
     u8 pad1C[0x20 - 0x1C];
     int unk20;
     u8 *unk24;
     u8 *unk28;
-    f32 unk2C;
-    f32 unk30;
-    f32 unk34;
+    f32 speed2C;
+    f32 speed30;
+    f32 seqId34;
     f32 unk38;
     f32 unk3C;
     f32 unk40;
@@ -52,7 +52,7 @@ typedef struct TrickyState {
                      indexed s16 copy loop stays raw */
     u8 padA0[0xD0 - 0xA0]; /* 0xA0: f32 triples at stride 0xC (walker, raw) */
     u16 flagsD0;
-    u16 unkD2;
+    u16 boolD2;
     u8 padD4[0xE0 - 0xD4];
     f32 homePosX; /* home position, init from obj world pos */
     f32 homePosY;
@@ -62,7 +62,7 @@ typedef struct TrickyState {
     u8 pathControlData[0x1B8 - 0xFC]; /* embedded gPathControlInterface record (0xF8..0x1B8) */
     f32 unk1B8;
     u8 pad1BC[0x25F - 0x1BC];
-    u8 unk25F;
+    u8 bool25F;
     u8 unk260;
     u8 unk261;
     u8 pad262[0x264 - 0x262];
@@ -100,7 +100,7 @@ typedef struct TrickyState {
     u8 pad2F6[0x2F8 - 0x2F6];
     u16 flags2F8;
     u8 pad2FA[0x300 - 0x2FA];
-    f32 unk300;
+    f32 speed300;
     f32 unk304;
     f32 unk308;
     f32 unk30C;
@@ -111,7 +111,7 @@ typedef struct TrickyState {
     u8 unk320;
     u8 unk321;
     u8 unk322;
-    u8 unk323;
+    u8 bool323;
     u8 pad324[0x353 - 0x324];
     u8 unk353;
     u8 pad354[0x358 - 0x354];
@@ -124,7 +124,7 @@ typedef struct TrickyState {
     f32 hitCooldown;
     u8 timer374;
     u8 pad375[0x378 - 0x375];
-    u8 unk378;
+    u8 bool378;
     u8 pad379[0x37C - 0x379];
     f32 unk37C;
     f32 unk380;
@@ -202,7 +202,7 @@ typedef struct TrickyState {
     s16 unk81A;
     u8 pad81C[0x82C - 0x81C];
     u8 modelVariant; /* progress/10; indexes model bank color */
-    u8 unk82D;
+    u8 count82D;
     u8 flags82E; /* bit flags 5/6/7 (collectable.c overlays) */
     u8 pad82F[0x838 - 0x82F];
     f32 unk838;

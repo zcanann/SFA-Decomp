@@ -9,9 +9,9 @@ typedef struct EcshCupState {
     f32 posX0;
     f32 posY0;
     f32 posZ0;
-    f32 unkC;
+    f32 speedC;
     f32 unk10;
-    f32 unk14;
+    f32 speed14;
     f32 unk18;
     f32 timer1C;
     f32 unk20;
@@ -121,8 +121,8 @@ void ecsh_cup_update(short *obj)
         }
         ((GameObject *)obj)->anim.localPosY = lbl_803E5074 * (f32)((EcshCupState *)state)->unk2E + ((GameObject *)obj)->anim.localPosY;
         if (mode == 1 && ((EcshCupState *)state)->unk24 == 1) {
-            ((GameObject *)obj)->anim.localPosX = ((EcshCupState *)state)->unkC * timeDelta + ((GameObject *)obj)->anim.localPosX;
-            ((GameObject *)obj)->anim.localPosZ = ((EcshCupState *)state)->unk14 * timeDelta + ((GameObject *)obj)->anim.localPosZ;
+            ((GameObject *)obj)->anim.localPosX = ((EcshCupState *)state)->speedC * timeDelta + ((GameObject *)obj)->anim.localPosX;
+            ((GameObject *)obj)->anim.localPosZ = ((EcshCupState *)state)->speed14 * timeDelta + ((GameObject *)obj)->anim.localPosZ;
             ObjHits_EnableObject((int)obj);
             ObjHits_SetHitVolumeSlot((int)obj, 10, 1, 0);
             ObjHits_SyncObjectPositionIfDirty((int)obj);
@@ -174,18 +174,18 @@ void ecsh_cup_update(short *obj)
             ((EcshCupState *)state)->unk24 = mode;
         } else if (mode == 1 && mode != *(int *)(state + 0x24)) {
             (*(void (*)(int, f32 *, f32 *))*(int *)(*(int *)(*(int *)(lbl_803DDBC8 + 0x68)) + 0x24))((u8)((EcshCupState *)state)->unk28, &v.x, &v.z);
-            ((EcshCupState *)state)->unkC = (v.x - ((GameObject *)obj)->anim.localPosX) / lbl_803E5070;
-            ((EcshCupState *)state)->unk14 = (v.z - ((GameObject *)obj)->anim.localPosZ) / lbl_803E5070;
+            ((EcshCupState *)state)->speedC = (v.x - ((GameObject *)obj)->anim.localPosX) / lbl_803E5070;
+            ((EcshCupState *)state)->speed14 = (v.z - ((GameObject *)obj)->anim.localPosZ) / lbl_803E5070;
             ((EcshCupState *)state)->posX0 = ((GameObject *)obj)->anim.localPosX;
             ((EcshCupState *)state)->posZ0 = ((GameObject *)obj)->anim.localPosZ;
             ((EcshCupState *)state)->unk24 = mode;
         } else if (mode == 0 && mode != *(int *)(state + 0x24)) {
-            ((EcshCupState *)state)->unkC = lbl_803E5068;
-            ((EcshCupState *)state)->unk14 = lbl_803E5068;
+            ((EcshCupState *)state)->speedC = lbl_803E5068;
+            ((EcshCupState *)state)->speed14 = lbl_803E5068;
             ((EcshCupState *)state)->unk24 = mode;
         } else if (mode == 2 && mode != *(int *)(state + 0x24)) {
-            ((EcshCupState *)state)->unkC = lbl_803E5068;
-            ((EcshCupState *)state)->unk14 = lbl_803E5068;
+            ((EcshCupState *)state)->speedC = lbl_803E5068;
+            ((EcshCupState *)state)->speed14 = lbl_803E5068;
             (*(void (*)(int, f32, f32))*(int *)(*(int *)(*(int *)(lbl_803DDBC8 + 0x68)) + 0x2c))((u8)((EcshCupState *)state)->unk28, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosZ);
             ((EcshCupState *)state)->unk24 = mode;
         } else if (mode == 3 && mode != *(int *)(state + 0x24)) {
@@ -265,9 +265,9 @@ void ecsh_cup_init(int obj, int p2)
     ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY - lbl_803E5084;
     {
         f32 fz = lbl_803E5068;
-        ((EcshCupState *)t)->unkC = fz;
+        ((EcshCupState *)t)->speedC = fz;
         ((EcshCupState *)t)->unk10 = fz;
-        ((EcshCupState *)t)->unk14 = fz;
+        ((EcshCupState *)t)->speed14 = fz;
     }
     ((EcshCupState *)t)->unk24 = 0;
     ((EcshCupState *)t)->unk28 = *(s16 *)(p2 + 0x1a);

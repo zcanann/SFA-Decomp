@@ -66,7 +66,7 @@ typedef struct SnowBikeState {
     u8 pad414[0x8];
     s16 angle41C;             /* 0x41c */
     s16 angle41E;             /* 0x41e */
-    u8 unk420;              /* 0x420 */
+    u8 bool420;              /* 0x420 */
     s8 unk421;              /* 0x421: rider mode */
     s8 unk422;              /* 0x422 */
     u8 pad423;
@@ -75,7 +75,7 @@ typedef struct SnowBikeState {
     u8 pad429[0x3];
     int unk42C;             /* 0x42c: linked object */
     f32 unk430;             /* 0x430 */
-    u8 unk434;              /* 0x434: bike kind */
+    u8 bool434;              /* 0x434: bike kind */
     u8 unk435;              /* 0x435: variant */
     u8 pad436[0x2];
     f32 unk438;             /* 0x438 */
@@ -107,13 +107,13 @@ typedef struct SnowBikeState {
     f32 velZ494;             /* 0x49c */
     u8 pad4A0[0xC];
     f32 unk4AC;             /* 0x4ac */
-    f32 unk4B0;             /* 0x4b0 */
+    f32 speed4B0;             /* 0x4b0 */
     u8 mode4B4;              /* 0x4b4 */
     u8 pad4B5[0x3];
     f32 unk4B8;             /* 0x4b8 */
-    f32 unk4BC;             /* 0x4bc */
+    f32 speed4BC;             /* 0x4bc */
     f32 unk4C0;             /* 0x4c0 */
-    f32 unk4C4;             /* 0x4c4 */
+    f32 speed4C4;             /* 0x4c4 */
     u8 pad4C8[0x54];        /* 0x4c8: 9 path allocation slots (stride 8) */
     f32 posX51C;             /* 0x51c: home X */
     f32 posY51C;             /* 0x520: home Y */

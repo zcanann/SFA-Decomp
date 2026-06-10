@@ -314,7 +314,7 @@ void dimbossgut2_free(int param_9)
     ModelLightStruct_free((void *)uVar1);
   }
   ObjGroup_RemoveObject(obj,3);
-  childObj = ((GameObject *)obj)->unkC8;
+  childObj = ((GameObject *)obj)->seqIdC8;
   if (childObj != 0) {
     Obj_FreeObject((int)childObj);
     *(undefined4 *)(obj + 200) = 0;
@@ -387,7 +387,7 @@ void dimbossgut2_update(int obj)
   } stk;
 
   state = *(int *)&((GameObject *)obj)->extra;
-  if ((((GameObject *)obj)->unkF4 == 0) &&
+  if ((((GameObject *)obj)->countF4 == 0) &&
      ((((GameObject *)obj)->anim.parent != NULL ||
       (iVar = objPosToMapBlockIdx(((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ),
       iVar >= 0)))) {
@@ -671,8 +671,8 @@ void DIMbossspit_update(int obj)
 
   state = *(int *)&((GameObject *)obj)->extra;
   if (*(s16 *)state == 0) {
-    ((GameObject *)obj)->unkF4 -= (u8)framesThisStep;
-    if (((GameObject *)obj)->unkF4 < 0) {
+    ((GameObject *)obj)->countF4 -= (u8)framesThisStep;
+    if (((GameObject *)obj)->countF4 < 0) {
       Obj_FreeObject(obj);
       return;
     }
@@ -761,7 +761,7 @@ void DIMbossspit_init(int obj)
     modelLightStruct_setupGlow(((DIMbossspitState *)state)->unk4, 0, 0, 255, 0, 127, lbl_803E4D7C);
     modelLightStruct_setGlowProjectionRadius(((DIMbossspitState *)state)->unk4, lbl_803E4D80);
   }
-  ((GameObject *)obj)->unkF4 = 0xb4;
+  ((GameObject *)obj)->countF4 = 0xb4;
   ObjHits_SetHitVolumeSlot(obj, 0, 0, 0);
   ObjHitbox_SetSphereRadius(obj, 0);
   ((DIMbossspitState *)state)->unk0 = 0;

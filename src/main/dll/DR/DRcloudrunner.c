@@ -144,7 +144,7 @@ void sc_musictree_update(int obj)
     if (((ScMusictreeState *)inner)->unk34 > lbl_803E5594) {
         ((ScMusictreeState *)inner)->unk34 = ((ScMusictreeState *)inner)->unk34 - lbl_803E5598;
     }
-    if ((((ScMusictreeState *)inner)->flags4C & 0x80) && ((GameObject *)obj)->unkF8 != 0) {
+    if ((((ScMusictreeState *)inner)->flags4C & 0x80) && ((GameObject *)obj)->moveF8 != 0) {
         p = (int *)inner;
         q = (int *)inner;
         for (i = 0; i < 3; i++) {
@@ -255,7 +255,7 @@ void sc_musictree_init(int obj, SCMusicTreeSetup *setup)
     ((GameObject *)obj)->anim.rotY = (s16)((setup->rotZByte - 0x7f) << 7);
     ((GameObject *)obj)->anim.rotX = (s16)((u32)setup->yawByte << 8);
     ((GameObject *)obj)->anim.rootMotionScale = lbl_803E55B8 * setup->scale;
-    ((GameObject *)obj)->unkF8 = 0;
+    ((GameObject *)obj)->moveF8 = 0;
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x2000);
     ratio = (f32)(s32)randomGetRange(1, 99) / lbl_803E55BC;
     ObjAnim_SetCurrentMove(obj, 0, ratio, 0);
@@ -417,7 +417,7 @@ void sc_cloudrunnera_update(int obj)
     if (sub == NULL) return;
     if (((ScCloudrunneraPlacement *)sub)->unk18 == -1) return;
     idx = (*gObjectTriggerInterface)->update((u8 *)obj, (f32)(u32)lbl_803DB411);
-    if (idx != 0 && ((GameObject *)obj)->unkB4 == -2) {
+    if (idx != 0 && ((GameObject *)obj)->classIdB4 == -2) {
         int found;
         register s32 mark = *(s8 *)&seq->slot;
         int *arr;
@@ -433,7 +433,7 @@ void sc_cloudrunnera_update(int obj)
         n = count;
         for (; idx < n; idx++) {
             int o = *arr;
-            s16 t = ((GameObject *)o)->unkB4;
+            s16 t = ((GameObject *)o)->classIdB4;
             if (t == mark) {
                 found = o;
             }
@@ -449,7 +449,7 @@ void sc_cloudrunnera_update(int obj)
             *(s16 *)(found + 0xb4) = -1;
             (*gObjectTriggerInterface)->endSequence(markCopy);
         }
-        ((GameObject *)obj)->unkB4 = -1;
+        ((GameObject *)obj)->classIdB4 = -1;
     }
 
     for (i = 0; i < seq->eventCount; i++) {
@@ -457,7 +457,7 @@ void sc_cloudrunnera_update(int obj)
         case 0: {
             int setup;
             int newObj;
-            if (*(void **)&((GameObject *)obj)->unkC8 != NULL) {
+            if (*(void **)&((GameObject *)obj)->seqIdC8 != NULL) {
                 break;
             }
             if (Obj_IsLoadingLocked() == 0) {
@@ -485,13 +485,13 @@ void sc_cloudrunnera_update(int obj)
             break;
         }
         case 1: {
-            if (*(void **)&((GameObject *)obj)->unkC8 != NULL) {
-                cmbsrc_setExternalActive(*(int *)&((GameObject *)obj)->unkC8, 0);
+            if (*(void **)&((GameObject *)obj)->seqIdC8 != NULL) {
+                cmbsrc_setExternalActive(*(int *)&((GameObject *)obj)->seqIdC8, 0);
             }
             break;
         }
         case 2: {
-            int innerSlot = *(int *)&((GameObject *)obj)->unkC8;
+            int innerSlot = *(int *)&((GameObject *)obj)->seqIdC8;
             if ((u32)innerSlot != 0) {
                 ObjLink_DetachChild(obj, innerSlot);
                 Obj_FreeObject(innerSlot);
@@ -501,11 +501,11 @@ void sc_cloudrunnera_update(int obj)
         }
     }
     {
-        int t = *(int *)&((GameObject *)obj)->unkC8;
+        int t = *(int *)&((GameObject *)obj)->seqIdC8;
         if ((u32)t != 0) {
             *(s16 *)(t + 4) = ((GameObject *)obj)->anim.rotZ;
-            *(s16 *)(*(int *)&((GameObject *)obj)->unkC8 + 2) = (s16)(((GameObject *)obj)->anim.rotY + 0xe38);
-            *(s16 *)(*(int *)&((GameObject *)obj)->unkC8 + 0) = (s16)(((GameObject *)obj)->anim.rotX + -0x8000);
+            *(s16 *)(*(int *)&((GameObject *)obj)->seqIdC8 + 2) = (s16)(((GameObject *)obj)->anim.rotY + 0xe38);
+            *(s16 *)(*(int *)&((GameObject *)obj)->seqIdC8 + 0) = (s16)(((GameObject *)obj)->anim.rotX + -0x8000);
         }
     }
 }
@@ -522,19 +522,19 @@ void sc_cloudrunnera_init(int obj, int p2)
     base = lbl_803E55E0;
     seq->posOffsetDecay = base / (base + (f32)(u32)*(u8 *)(p2 + 0x24));
     seq->curveId = -1;
-    ((GameObject *)obj)->unkF8 = 0;
+    ((GameObject *)obj)->moveF8 = 0;
 
     if (*(int *)(obj + 0xf4) == 0 && *(s16 *)(p2 + 0x18) != 1) {
         (*gObjectTriggerInterface)
             ->loadAnimData((u8 *)seq, (u8 *)p2);
-        ((GameObject *)obj)->unkF4 = *(s16 *)(p2 + 0x18) + 1;
+        ((GameObject *)obj)->countF4 = *(s16 *)(p2 + 0x18) + 1;
     } else if (*(int *)(obj + 0xf4) != 0 && *(s16 *)(p2 + 0x18) != *(int *)(obj + 0xf4) - 1) {
         (*gObjectTriggerInterface)->freeState((u8 *)seq);
         if (*(s16 *)(p2 + 0x18) != -1) {
             (*gObjectTriggerInterface)
                 ->loadAnimData((u8 *)seq, (u8 *)p2);
         }
-        ((GameObject *)obj)->unkF4 = *(s16 *)(p2 + 0x18) + 1;
+        ((GameObject *)obj)->countF4 = *(s16 *)(p2 + 0x18) + 1;
     }
     if (((GameObject *)obj)->anim.modelState != NULL) {
         ((GameObject *)obj)->anim.modelState->shadowTintA = 0x64;

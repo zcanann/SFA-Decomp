@@ -135,7 +135,7 @@ void mmsh_scales_free(int param_1,int param_2)
   void *child;
   (*gObjectTriggerInterface)->freeState(((GameObject *)param_1)->extra);
   (*(code *)(*gTitleMenuControlInterface + 8))(param_1,0xffff,0,0,0);
-  child = ((GameObject *)param_1)->unkC8;
+  child = ((GameObject *)param_1)->seqIdC8;
   if ((child != NULL) && (param_2 == 0)) {
     Obj_FreeObject(child);
   }
@@ -164,17 +164,17 @@ void mmsh_scales_update(int param_1)
 
   if ((((GameObject *)param_1)->anim.placementData != NULL) && (*(short *)(*(int *)&((GameObject *)param_1)->anim.placementData + 0x18) != -1)) {
     i = (*gObjectTriggerInterface)->update((u8 *)param_1, (f32)(u32)lbl_803DB411);
-    if ((i != 0) && (((GameObject *)param_1)->unkB4 == -2)) {
+    if ((i != 0) && (((GameObject *)param_1)->classIdB4 == -2)) {
       typeId = *(s8 *)(*(int *)&((GameObject *)param_1)->extra + 0x57);
       found = 0;
       list = (int *)ObjList_GetObjects(&i, &count);
       n = 0;
       for (i = 0, id = typeId; i < count; i++) {
         obj = *list;
-        if (((GameObject *)obj)->unkB4 == typeId) {
+        if (((GameObject *)obj)->classIdB4 == typeId) {
           found = obj;
         }
-        if (((((GameObject *)obj)->unkB4 == -2) && (((GameObject *)obj)->anim.classId == 0x10)) &&
+        if (((((GameObject *)obj)->classIdB4 == -2) && (((GameObject *)obj)->anim.classId == 0x10)) &&
            (id == *(char *)(*(int *)&((GameObject *)obj)->extra + 0x57))) {
           n = n + 1;
         }
@@ -184,7 +184,7 @@ void mmsh_scales_update(int param_1)
         *(s16 *)(found + 0xb4) = -1;
         (*gObjectTriggerInterface)->endSequence(id);
       }
-      ((GameObject *)param_1)->unkB4 = -1;
+      ((GameObject *)param_1)->classIdB4 = -1;
       Obj_FreeObject((void *)param_1);
     }
   }
@@ -250,7 +250,7 @@ void mmsh_waterspike_update(int param_1)
 
   state = *(int *)&((GameObject *)param_1)->anim.placementData;
   ObjHits_SetHitVolumeSlot(param_1, 9, 1, 0);
-  o = ObjList_FindObjectById(((GameObject *)param_1)->unkF8);
+  o = ObjList_FindObjectById(((GameObject *)param_1)->moveF8);
   if (o != NULL) {
     dist = objFn_801948c0(o, 3) - ((GameObject *)param_1)->anim.localPosY;
   }
@@ -280,9 +280,9 @@ void mmsh_waterspike_update(int param_1)
   }
   else {
     ((GameObject *)param_1)->anim.localPosY = newY;
-    ((GameObject *)param_1)->unkF4 = ((GameObject *)param_1)->unkF4 - framesThisStep;
-    if (((GameObject *)param_1)->unkF4 <= 0) {
-      ((GameObject *)param_1)->unkF4 = randomGetRange(0x3c, 0xf0);
+    ((GameObject *)param_1)->countF4 = ((GameObject *)param_1)->countF4 - framesThisStep;
+    if (((GameObject *)param_1)->countF4 <= 0) {
+      ((GameObject *)param_1)->countF4 = randomGetRange(0x3c, 0xf0);
       if (lbl_803E4F84 == dist) {
         ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(
             ((GameObject *)param_1)->anim.localPosX,
@@ -298,11 +298,11 @@ void mmsh_waterspike_init(int obj, s16 *def) {
     register u32 packedEventIds;
     register u32 lowEventId;
     ObjHits_EnableObject(obj);
-    ((GameObject *)obj)->unkF4 = 0;
+    ((GameObject *)obj)->countF4 = 0;
     packedEventIds = (u32)(u16)((MmshWaterspikeObjectDef *)def)->unk1C << 16;
     lowEventId = (u32)(u16)((MmshWaterspikeObjectDef *)def)->unk1A;
     packedEventIds |= lowEventId;
-    *(u32 *)&((GameObject *)obj)->unkF8 = packedEventIds;
+    *(u32 *)&((GameObject *)obj)->moveF8 = packedEventIds;
 }
 
 extern f32 lbl_803E4F78;
@@ -317,16 +317,16 @@ void mmsh_scales_init(int *obj, s16 *def) {
     ((MmshScalesState *)state)->unk6E = -1;
     ((MmshScalesState *)state)->unk24 = lbl_803E4F68 / (lbl_803E4F68 + (f32)(u32)*(u8 *)((char *)def + 36));
     ((MmshScalesState *)state)->unk28 = -1;
-    active = ((GameObject *)obj)->unkF4;
+    active = ((GameObject *)obj)->countF4;
     if (active == 0 && def[12] != 1) {
         (*gObjectTriggerInterface)->loadAnimData(state, (u8 *)def);
-        ((GameObject *)obj)->unkF4 = (int)def[12] + 1;
+        ((GameObject *)obj)->countF4 = (int)def[12] + 1;
     } else if (active != 0 && def[12] != active - 1) {
         (*gObjectTriggerInterface)->freeState(state);
         if (def[12] != -1) {
             (*gObjectTriggerInterface)->loadAnimData(state, (u8 *)def);
         }
-        ((GameObject *)obj)->unkF4 = (int)def[12] + 1;
+        ((GameObject *)obj)->countF4 = (int)def[12] + 1;
     }
     if (Obj_IsLoadingLocked() == 0) return;
     no = Obj_AllocObjectSetup(0x24, 0x1b8);
@@ -337,6 +337,6 @@ void mmsh_scales_init(int *obj, s16 *def) {
     no[5] = 4;
     no[7] = 0xff;
     no = Obj_SetupObject(no, 5, -1, -1, 0);
-    ((GameObject *)obj)->unkC8 = no;
-    *(f32 *)(*(u8 **)&((GameObject *)obj)->unkC8 + 8) = *(f32 *)(*(u8 **)&((GameObject *)obj)->unkC8 + 8) * lbl_803E4F78;
+    ((GameObject *)obj)->seqIdC8 = no;
+    *(f32 *)(*(u8 **)&((GameObject *)obj)->seqIdC8 + 8) = *(f32 *)(*(u8 **)&((GameObject *)obj)->seqIdC8 + 8) * lbl_803E4F78;
 }

@@ -218,7 +218,7 @@ void kaldachompspit_init(int obj)
     int *extra;
 
     extra = *(int **)&((GameObject *)obj)->extra;
-    ((GameObject *)obj)->unkF4 = 400;
+    ((GameObject *)obj)->countF4 = 400;
     ObjHits_DisableObject(obj);
     ((GameObject *)obj)->anim.alpha = 0xff;
     Sfx_PlayFromObject(obj, 0x278);
@@ -438,7 +438,7 @@ void pollen_free(int obj) {
     (*gExpgfxInterface)->freeSource2((u32)obj);
 }
 void pinponspike_init(int obj) {
-    ((GameObject *)obj)->unkF4 = 0;
+    ((GameObject *)obj)->countF4 = 0;
     ObjHits_DisableObject(obj);
     ((GameObject *)obj)->anim.alpha = 0xff;
     Sfx_PlayFromObject(obj, SFXsc_attack02);
@@ -749,9 +749,9 @@ void pinponspike_update(int obj) {
     f32 vy;
     f32 vz;
 
-    if (((GameObject *)obj)->unkF4 > 0) {
-        ((GameObject *)obj)->unkF4 = (int)((f32)((GameObject *)obj)->unkF4 - timeDelta);
-        if (((GameObject *)obj)->unkF4 <= 0) {
+    if (((GameObject *)obj)->countF4 > 0) {
+        ((GameObject *)obj)->countF4 = (int)((f32)((GameObject *)obj)->countF4 - timeDelta);
+        if (((GameObject *)obj)->countF4 <= 0) {
             Obj_FreeObject(obj);
             return;
         }
@@ -774,7 +774,7 @@ void pinponspike_update(int obj) {
              (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject == (int)getTrickyObject())) {
             int i;
             ((GameObject *)obj)->anim.alpha = 0;
-            ((GameObject *)obj)->unkF4 = 0x78;
+            ((GameObject *)obj)->countF4 = 0x78;
             (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
             for (i = 0; i < 0x19; i++) {
                 (*gPartfxInterface)->spawnObject((void *)obj, 0x715, NULL, 1, -1, &i);
@@ -783,7 +783,7 @@ void pinponspike_update(int obj) {
         } else if ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->contactFlags != 0) {
             int i;
             ((GameObject *)obj)->anim.alpha = 0;
-            ((GameObject *)obj)->unkF4 = 0x78;
+            ((GameObject *)obj)->countF4 = 0x78;
             (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
             for (i = 0; i < 0x19; i++) {
                 (*gPartfxInterface)->spawnObject((void *)obj, 0x715, NULL, 1, -1, &i);

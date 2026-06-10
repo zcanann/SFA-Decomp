@@ -8,7 +8,7 @@
 
 typedef struct WarpstoneUpdateMenuAnimObjState {
     u8 pad0[0x8 - 0x0];
-    u8 unk8;
+    u8 bool8;
     u8 pad9[0x10 - 0x9];
 } WarpstoneUpdateMenuAnimObjState;
 
@@ -160,7 +160,7 @@ void warpstone_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         if (player != NULL && fn_80296464() != 0) {
             model = Obj_GetActiveModel((int)player);
             *(u16 *)((char *)model + 24) = (u16)(*(u16 *)((char *)model + 24) & ~0x8);
-            ObjPath_GetPointWorldPosition(obj, ((WarpstoneUpdateMenuAnimObjState *)state)->unk8, &x, &y, &z, 0);
+            ObjPath_GetPointWorldPosition(obj, ((WarpstoneUpdateMenuAnimObjState *)state)->bool8, &x, &y, &z, 0);
             fn_80295B2C((int)player, x, y, z);
             playerRender((int)player, p2, p3, p4, p5, -1);
         }
@@ -330,11 +330,11 @@ int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
             break;
 
         case 3:
-            ((WarpstoneUpdateMenuAnimObjState *)state)->unk8 = 0;
+            ((WarpstoneUpdateMenuAnimObjState *)state)->bool8 = 0;
             break;
 
         case 4:
-            ((WarpstoneUpdateMenuAnimObjState *)state)->unk8 = 1;
+            ((WarpstoneUpdateMenuAnimObjState *)state)->bool8 = 1;
             break;
 
         case 6:

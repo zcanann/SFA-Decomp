@@ -455,18 +455,18 @@ void collectible_update(int obj)
                 ((GfxEmitState *)state)->hideFrames = 0;
                 state[0x37] &= ~1;
                 ((GameObject *)obj)->anim.alpha = 255;
-                ((GameObject *)obj)->unkF4 = 0;
+                ((GameObject *)obj)->countF4 = 0;
             }
         }
         break;
     }
-    if (((GameObject *)obj)->unkF4 != 0) {
+    if (((GameObject *)obj)->countF4 != 0) {
         if (((GameObject *)obj)->anim.hitReactState != NULL) {
             (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags |= 0x100;
         }
         ObjHits_DisableObject(obj);
         if (((GfxEmitState *)state)->hideGameBit != -1 && GameBit_Get((s32)((GfxEmitState *)state)->hideGameBit) == 0) {
-            ((GameObject *)obj)->unkF4 = 0;
+            ((GameObject *)obj)->countF4 = 0;
         }
     } else {
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
@@ -489,7 +489,7 @@ void collectible_update(int obj)
 void collectible_render(int obj, int a, int b, int c, int d, s8 visible)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
-    if (visible != 0 && ((GfxEmitState *)state)->delayTimer == lbl_803E345C && ((GameObject *)obj)->unkF4 == 0
+    if (visible != 0 && ((GfxEmitState *)state)->delayTimer == lbl_803E345C && ((GameObject *)obj)->countF4 == 0
         && (((GameObject *)obj)->anim.seqId == 0x156 || ((GfxEmitState *)state)->enableGameBitClear == 0)) {
         if ((((ObjAnimComponent *)obj)->modelInstance->flags & 0x10000) != 0 && ((GfxEmitState *)state)->useColor != 0) {
             fn_8003B608(((GfxEmitState *)state)->colorR, ((GfxEmitState *)state)->colorG, ((GfxEmitState *)state)->colorB);

@@ -33,7 +33,7 @@ typedef struct Dim2iciclePlacement {
 
 typedef struct Dll1DAState {
     u8 pad0[0x4 - 0x0];
-    u8 unk4;
+    u8 bool4;
     u8 unk5;
     u8 unk6;
     u8 pad7[0x8 - 0x7];
@@ -664,7 +664,7 @@ void dll_1DA_update(int obj)
     RockHitInfo out;
 
     sub = *(int *)&((GameObject *)obj)->extra;
-    if (((Dll1DAState *)sub)->unk4 != 0) {
+    if (((Dll1DAState *)sub)->bool4 != 0) {
         ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX * (k = lbl_803E4AE0);
         ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ * k;
     } else {
@@ -703,14 +703,14 @@ void dll_1DA_update(int obj)
     ((GameObject *)obj)->anim.localPosY = -(lbl_803E4B00 * timeDelta - ((GameObject *)obj)->anim.localPosY);
     n = hitDetectFn_80065e50(((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ, obj,
                              &list, 0, 0x11);
-    ((Dll1DAState *)sub)->unk4 = 0;
+    ((Dll1DAState *)sub)->bool4 = 0;
     i = 0;
     p = list;
     for (; n > 0; n--) {
         if (((GameObject *)obj)->anim.localPosY < lbl_803E4B04 + **(f32 **)p) {
             ((GameObject *)obj)->anim.localPosY = **(f32 **)(list + i * 4);
             ObjHits_AddContactObject(*(int *)(*(int *)(list + i * 4) + 0x10), obj);
-            ((Dll1DAState *)sub)->unk4 = 1;
+            ((Dll1DAState *)sub)->bool4 = 1;
             break;
         }
         p += 4;
@@ -972,9 +972,9 @@ void dim2lavacontrol_init(int obj, int param2)
     int i;
     int g;
     if (getSaveGameLoadStatus() != 0) {
-        ((GameObject *)obj)->unkF4 = 2;
+        ((GameObject *)obj)->countF4 = 2;
     } else {
-        ((GameObject *)obj)->unkF4 = 1;
+        ((GameObject *)obj)->countF4 = 1;
     }
     for (i = 1; (u8)i <= 0x2d; i++) {
         gameBitFn_800ea2e0(i);
@@ -1013,8 +1013,8 @@ void dim2lavacontrol_update(int obj)
 {
     int diff;
     f32 local[3];
-    if (((GameObject *)obj)->unkF4 != 0) {
-        if (((GameObject *)obj)->unkF4 == 2) {
+    if (((GameObject *)obj)->countF4 != 0) {
+        if (((GameObject *)obj)->countF4 == 2) {
             getEnvfxActImmediately(0, 0, 0x163, 0);
             getEnvfxActImmediately(0, 0, 0x166, 0);
             getEnvfxActImmediately(0, 0, 0x165, 0);
@@ -1025,7 +1025,7 @@ void dim2lavacontrol_update(int obj)
             getEnvfxAct(0, 0, 0x165, 0);
             getEnvfxAct(0, 0, 0x164, 0);
         }
-        ((GameObject *)obj)->unkF4 = 0;
+        ((GameObject *)obj)->countF4 = 0;
     }
     obj = *(int *)&((GameObject *)obj)->extra;
     if (*(s8 *)(obj + 4) == 0) {

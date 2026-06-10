@@ -290,7 +290,7 @@ void FUN_801a4520(int param_1)
 {
   int iVar1;
   
-  if (((GameObject *)param_1)->unkF4 == 0) {
+  if (((GameObject *)param_1)->countF4 == 0) {
     iVar1 = *(int *)&((GameObject *)param_1)->anim.placementData;
     if ((*(short *)(iVar1 + 0x1c) != 0) && (**(byte **)&((GameObject *)param_1)->extra >> 5 != 0)) {
       (*gObjectTriggerInterface)->preempt(param_1, *(s16 *)(iVar1 + 0x1c));
@@ -299,7 +299,7 @@ void FUN_801a4520(int param_1)
     if (iVar1 != -1) {
       (*gObjectTriggerInterface)->runSequence(iVar1, (void *)param_1, -1);
     }
-    ((GameObject *)param_1)->unkF4 = 1;
+    ((GameObject *)param_1)->countF4 = 1;
   }
   return;
 }
@@ -575,7 +575,7 @@ void cflevelcontrol_update(int obj) {
     state[0xc] = (u8)((state[0xc] & ~0x20) | ((bit974 & 1) << 5));
     state[0xc] = (u8)((state[0xc] & ~0x10) | ((bit975 & 1) << 4));
 
-    if (((GameObject *)obj)->unkF4 == 0) {
+    if (((GameObject *)obj)->countF4 == 0) {
         getEnvfxActImmediately((void *)obj, (void *)obj, 0x56, 0);
         if (GameBit_Get(0xd73) == 0) {
             getEnvfxActImmediately((void *)obj, (void *)obj, 0xd, 0);
@@ -594,7 +594,7 @@ void cflevelcontrol_update(int obj) {
             unlockLevel(0, 0, 1);
         }
 
-        ((GameObject *)obj)->unkF4 = 1;
+        ((GameObject *)obj)->countF4 = 1;
     }
 
     if (GameBit_Get(0x94f) != 0 && (((GameObject *)player)->objectFlags & 0x1000) == 0) {
@@ -812,7 +812,7 @@ int slidingdoor_SeqFn(u8* obj, int unused, ObjAnimUpdateState *animUpdate) {
 void slidingdoor_update(u8* obj) {
     u8* sub;
     u8* data;
-    if (((GameObject *)obj)->unkF4 != 0) return;
+    if (((GameObject *)obj)->countF4 != 0) return;
     sub = ((GameObject *)obj)->extra;
     data = *(u8**)&((GameObject *)obj)->anim.placementData;
     if (((SlidingdoorPlacement *)data)->unk1C != 0) {
@@ -827,7 +827,7 @@ void slidingdoor_update(u8* obj) {
             (*gObjectTriggerInterface)->runSequence(id, obj, -1);
         }
     }
-    *(u32 *)&((GameObject *)obj)->unkF4 = 1;
+    *(u32 *)&((GameObject *)obj)->countF4 = 1;
 }
 
 /* exploded_init: store the map object tag, scale the model using the map
@@ -888,7 +888,7 @@ void slidingdoor_init(u8* obj, u8* data) {
     u8* sub;
     f32 v;
     u32 doorState = 0;
-    *(u32 *)&((GameObject *)obj)->unkF4 = doorState;
+    *(u32 *)&((GameObject *)obj)->countF4 = doorState;
     ((GameObject *)obj)->anim.rotX = (s16)(data[0x1f] << 8);
     ((GameObject *)obj)->animEventCallback = (void *)slidingdoor_SeqFn;
     v = (f32)(u32)data[0x21] * lbl_803E43C0;

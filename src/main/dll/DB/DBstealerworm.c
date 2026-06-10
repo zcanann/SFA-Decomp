@@ -550,16 +550,16 @@ void SB_Propeller_update(int obj) {
                 ((SBPropellerState *)pf)->spinBlend = lbl_803E5820;
             }
         }
-        ((GameObject *)obj)->unkF4 = ((GameObject *)obj)->unkF4 - framesThisStep;
-        if (((GameObject *)obj)->unkF4 < 0) {
-            ((GameObject *)obj)->unkF4 = 0;
+        ((GameObject *)obj)->countF4 = ((GameObject *)obj)->countF4 - framesThisStep;
+        if (((GameObject *)obj)->countF4 < 0) {
+            ((GameObject *)obj)->countF4 = 0;
         }
         if (((((((camB == 1) && (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0))
-               && (((GameObject *)obj)->unkF4 == 0))
+               && (((GameObject *)obj)->countF4 == 0))
               && ((hit != 0 && (hit != Obj_GetPlayerObject()))))
              && ((*(s16 *)(hit + 0x46) != 0x69c
                   && ((*(s16 *)(hit + 0x46) != 0x9a
-                       && ((((GameObject *)obj)->unkF4 = 0x14, *(int *)&((GameObject *)obj)->anim.parent != 0)))))))
+                       && ((((GameObject *)obj)->countF4 = 0x14, *(int *)&((GameObject *)obj)->anim.parent != 0)))))))
             && ((camA == 2 || (camA == 5)))) && (((GameObject *)obj)->anim.seqId == 0x69c)) {
             Obj_SetModelColorFadeRecursive(obj, 0xf, 200, 0, 0, 1);
             Sfx_PlayFromObject(obj, 0x2c7);
@@ -573,7 +573,7 @@ void SB_Propeller_update(int obj) {
                 Sfx_PlayFromObject(obj, 0x2c8);
             }
         }
-        if (((GameObject *)obj)->unkF4 == 0) {
+        if (((GameObject *)obj)->countF4 == 0) {
             ObjHitsPriorityState *hitState = *(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState;
             hitState->hitVolumePriority = 6;
             hitState->hitVolumeId = 1;
@@ -741,7 +741,7 @@ void SB_ShipHead_update(int obj) {
                 Sfx_StopObjectChannel(obj, 0x40);
             }
         }
-        state = ((GameObject *)galleon)->unkF4;
+        state = ((GameObject *)galleon)->countF4;
         hs = ((GameObject *)obj)->extra;
         if (*(void **)&hs->target == 0) {
             int *arr = (int *)ObjList_GetObjects(&start, &end);
@@ -764,7 +764,7 @@ void SB_ShipHead_update(int obj) {
             }
         }
         if (((**(int (**)(u8 *))(**(int **)&((GameObject *)galleon)->anim.dll + 0x28))(galleon) >= 2)
-            && (((GameObject *)obj)->unkF8 <= 0) && (((uint)(state - 3) <= 1 || (state == 5)))
+            && (((GameObject *)obj)->moveF8 <= 0) && (((uint)(state - 3) <= 1 || (state == 5)))
             && (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0)
             && (*(s16 *)(hit + 0x46) != 0x114)) {
             Obj_SetModelColorFadeRecursive(obj, 0xf, 200, 0, 0, 1);
@@ -772,17 +772,17 @@ void SB_ShipHead_update(int obj) {
             hs->health -= 1;
             if (hs->health <= 0) {
                 (**(void (**)(u8 *))(**(int **)&((GameObject *)galleon)->anim.dll + 0x20))(galleon);
-                ((GameObject *)obj)->unkF8 = 300;
+                ((GameObject *)obj)->moveF8 = 300;
                 ObjHits_DisableObject(obj);
             }
         }
-        if (0 < ((GameObject *)obj)->unkF8) {
-            ((GameObject *)obj)->unkF8 = ((GameObject *)obj)->unkF8 - framesThisStep;
+        if (0 < ((GameObject *)obj)->moveF8) {
+            ((GameObject *)obj)->moveF8 = ((GameObject *)obj)->moveF8 - framesThisStep;
         }
         if (state == 8) {
-            ((GameObject *)obj)->unkF4 = ((GameObject *)obj)->unkF4 + 1;
-            if (10 < ((GameObject *)obj)->unkF4) {
-                ((GameObject *)obj)->unkF4 = 0;
+            ((GameObject *)obj)->countF4 = ((GameObject *)obj)->countF4 + 1;
+            if (10 < ((GameObject *)obj)->countF4) {
+                ((GameObject *)obj)->countF4 = 0;
             }
         }
         if ((state == 5) && (lbl_803DDC48 != 5)) {
@@ -792,7 +792,7 @@ void SB_ShipHead_update(int obj) {
         if ((((((GameObject *)obj)->anim.currentMove == 1) && (lbl_803E5844 <= ((GameObject *)obj)->anim.currentMoveProgress))
              && (lbl_803DC090 == 0)) && (Obj_IsLoadingLocked() != 0)) {
             lbl_803DC090 = 1;
-            ((GameObject *)obj)->unkF4 = ((GameObject *)obj)->unkF4 + framesThisStep;
+            ((GameObject *)obj)->countF4 = ((GameObject *)obj)->countF4 + framesThisStep;
             Sfx_PlayFromObject(obj, 0x38);
             ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY + lbl_803E5848;
             ((GameObject *)obj)->anim.localPosZ = ((GameObject *)obj)->anim.localPosZ - lbl_803E584C;
@@ -862,7 +862,7 @@ void SB_ShipMast_update(int *obj) {
 
     parent = *(int**)&((GameObject *)obj)->anim.parent;
     if (parent == NULL) return;
-    pf4 = ((GameObject *)parent)->unkF4;
+    pf4 = ((GameObject *)parent)->countF4;
     ((GameObject *)obj)->anim.localPosX = lbl_803E586C;
     ((GameObject *)obj)->anim.localPosY = lbl_803E586C;
     ((GameObject *)obj)->anim.localPosZ = lbl_803E586C;
@@ -1039,7 +1039,7 @@ void SB_Galleon_update(int obj) {
         if ((*gMapEventInterface)->getAnimEvent(*(u8 *)(obj + 0x34), 1) == 0) {
             (*gMapEventInterface)->setAnimEvent(*(u8 *)(obj + 0x34), 1, 1);
         }
-        ((GameObject *)obj)->unkF4 = 0;
+        ((GameObject *)obj)->countF4 = 0;
     }
     else {
         if ((((SBGalleonState *)p)->unk80 == 0) && (*(s8 *)&((SBGalleonState *)p)->cameraState > 0)) {

@@ -102,14 +102,14 @@ void dll_D3_update(int *obj)
         }
     }
 
-    if (((GameObject *)obj)->unkF4 != 0) return;
+    if (((GameObject *)obj)->countF4 != 0) return;
 
-    if (((GameObject *)obj)->unkF8 == 0) {
+    if (((GameObject *)obj)->moveF8 == 0) {
         ((GameObject *)obj)->anim.localPosX  = ((DllD3Placement *)trans)->posX8;
         ((GameObject *)obj)->anim.localPosY = ((DllD3Placement *)trans)->posY8;
         ((GameObject *)obj)->anim.localPosZ = ((DllD3Placement *)trans)->posZ8;
         (*gObjectTriggerInterface)->runSequence((s8)((DllD3Placement *)trans)->unk2E, obj, -1);
-        ((GameObject *)obj)->unkF8 = 1;
+        ((GameObject *)obj)->moveF8 = 1;
         return;
     }
 
@@ -175,7 +175,7 @@ void dll_D3_update(int *obj)
             (int)((TreasureChestState *)state)->gameBitB,
             lbl_803202E8, lbl_80320360, 0, lbl_803AC638);
         if ((int)((TreasureChestState *)state)->hitPoints < hits) {
-            (*(void (**)(void))(*(int **)(*(int *)&((GameObject *)player)->unkC8 + 0x68) + 0x50 / 4))();
+            (*(void (**)(void))(*(int **)(*(int *)&((GameObject *)player)->seqIdC8 + 0x68) + 0x50 / 4))();
             *(f32 *)((char *)lbl_803AC638 + 0xc)  = ((GameObject *)obj)->anim.localPosX;
             *(f32 *)((char *)lbl_803AC638 + 0x10) = ((GameObject *)obj)->anim.localPosY;
             *(f32 *)((char *)lbl_803AC638 + 0x14) = ((GameObject *)obj)->anim.localPosZ;
@@ -301,7 +301,7 @@ typedef struct SkeetlaWallState {
 
 void skeetlawall_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
     if (visible != 0) {
-        switch (((GameObject *)obj)->unkF4) {
+        switch (((GameObject *)obj)->countF4) {
         case 0:
             ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3058);
             break;

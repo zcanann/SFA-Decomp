@@ -1057,7 +1057,7 @@ void sky2_run(void)
             if ((*(u16 *)&((GameObject *)p)->anim.rotZ & 0x10) != 0) {
                 r = *(f32 *)(p + 0x70);
                 g = ((GameObject *)p)->anim.activeMoveProgress;
-                b = *(f32 *)&((GameObject *)p)->unkC8;
+                b = *(f32 *)&((GameObject *)p)->seqIdC8;
                 sa = *(f32 *)(p + 0x1fc);
                 sb = *(f32 *)(p + 0x228);
             } else if ((*(u16 *)&((GameObject *)p)->anim.flags & 0x20) != 0) {
@@ -1133,7 +1133,7 @@ void sky2_run(void)
                     p = *pp + idx.best * 4;
                     r = *(f32 *)(p + 0x70) * best.x + r;
                     g = ((GameObject *)p)->anim.activeMoveProgress * best.x + g;
-                    b = *(f32 *)&((GameObject *)p)->unkC8 * best.x + b;
+                    b = *(f32 *)&((GameObject *)p)->seqIdC8 * best.x + b;
                     sa = *(f32 *)(*pp + idx.best * 4 + 0x1fc) * best.x + sa;
                     sb = *(f32 *)(p + 0x228) * best.x + sb;
                 }
@@ -1141,7 +1141,7 @@ void sky2_run(void)
                     p = *pp + idx.second * 4;
                     r = *(f32 *)(p + 0x70) * best.y + r;
                     g = ((GameObject *)p)->anim.activeMoveProgress * best.y + g;
-                    b = *(f32 *)&((GameObject *)p)->unkC8 * best.y + b;
+                    b = *(f32 *)&((GameObject *)p)->seqIdC8 * best.y + b;
                     sa = *(f32 *)(*pp + idx.second * 4 + 0x1fc) * best.y + sa;
                     sb = *(f32 *)(p + 0x228) * best.y + sb;
                 }
@@ -1339,12 +1339,12 @@ void skyFn_80088e54(int mode, f32 brightness)
         ((SkyState *)lbl_803DD12C)->unk24C = (u8)mode;
         unset = pEXIInputFlag;
         if (brightness != unset) {
-            ((SkyState *)lbl_803DD12C)->unk248 = EXIInputFlag / (lbl_803DF060 * brightness);
-            ((SkyState *)lbl_803DD12C)->unk244 = unset;
+            ((SkyState *)lbl_803DD12C)->speed248 = EXIInputFlag / (lbl_803DF060 * brightness);
+            ((SkyState *)lbl_803DD12C)->speed244 = unset;
         } else {
             fullBlend = EXIInputFlag;
-            ((SkyState *)lbl_803DD12C)->unk248 = fullBlend;
-            ((SkyState *)lbl_803DD12C)->unk244 = fullBlend;
+            ((SkyState *)lbl_803DD12C)->speed248 = fullBlend;
+            ((SkyState *)lbl_803DD12C)->speed244 = fullBlend;
         }
         cloudMode = ((SkyBlendStateFlags *)(lbl_803DD12C + mode * 0xa4 + 0xc1))->cloud;
         if (cloudMode != 0) {
@@ -1392,7 +1392,7 @@ void timeOfDayFn_8008b964(void)
         return;
     } else {
         {
-            ((SkyState *)lbl_803DD12C)->timeOfDay += ((SkyState *)lbl_803DD12C)->unk214 * timeDelta;
+            ((SkyState *)lbl_803DD12C)->timeOfDay += ((SkyState *)lbl_803DD12C)->speed214 * timeDelta;
             if (((SkyState *)lbl_803DD12C)->timeOfDay >= lbl_803DF078) {
                 ((SkyState *)lbl_803DD12C)->timeOfDay = ((SkyState *)lbl_803DD12C)->timeOfDay - lbl_803DF078;
             } else if (((SkyState *)lbl_803DD12C)->timeOfDay < pEXIInputFlag) {
@@ -1428,13 +1428,13 @@ void timeOfDayFn_8008b964(void)
                     (val < pEXIInputFlag) ? pEXIInputFlag : ((val > EXIInputFlag) ? EXIInputFlag : val);
                 i += 0xa4;
             }
-            ((SkyState *)lbl_803DD12C)->unk23C -= ((SkyState *)lbl_803DD12C)->unk240 * timeDelta;
-            val = ((SkyState *)lbl_803DD12C)->unk23C;
-            ((SkyState *)lbl_803DD12C)->unk23C =
+            ((SkyState *)lbl_803DD12C)->speed23C -= ((SkyState *)lbl_803DD12C)->speed240 * timeDelta;
+            val = ((SkyState *)lbl_803DD12C)->speed23C;
+            ((SkyState *)lbl_803DD12C)->speed23C =
                 (val < pEXIInputFlag) ? pEXIInputFlag : ((val > EXIInputFlag) ? EXIInputFlag : val);
-            ((SkyState *)lbl_803DD12C)->unk244 += ((SkyState *)lbl_803DD12C)->unk248 * timeDelta;
-            val = ((SkyState *)lbl_803DD12C)->unk244;
-            ((SkyState *)lbl_803DD12C)->unk244 =
+            ((SkyState *)lbl_803DD12C)->speed244 += ((SkyState *)lbl_803DD12C)->speed248 * timeDelta;
+            val = ((SkyState *)lbl_803DD12C)->speed244;
+            ((SkyState *)lbl_803DD12C)->speed244 =
                 (val < pEXIInputFlag) ? pEXIInputFlag : ((val > EXIInputFlag) ? EXIInputFlag : val);
         }
     }
@@ -1864,7 +1864,7 @@ void fn_8008BDA8(void)
     ((SkyState *)lbl_803DD12C)->timeOfDay = lbl_803DF0F4;
     ((SkyState *)lbl_803DD12C)->clockTime = 0xb4;
     ((SkyState *)lbl_803DD12C)->unk1C = lbl_803DF0F8;
-    ((SkyState *)lbl_803DD12C)->unk214 = (f32)((SkyState *)lbl_803DD12C)->clockTime / lbl_803DF060;
+    ((SkyState *)lbl_803DD12C)->speed214 = (f32)((SkyState *)lbl_803DD12C)->clockTime / lbl_803DF060;
     ((SkyState *)lbl_803DD12C)->unk21C = 0xc38;
     ((SkyState *)lbl_803DD12C)->unk220 = 0xc38;
     ((SkyState *)lbl_803DD12C)->unk224 = 0xc38;
@@ -2075,13 +2075,13 @@ void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int
     if (slot == 2) {
         prev = lbl_803DD12C + ((SkyState *)lbl_803DD12C)->unk24D * 0xa4 + 0x20;
         cur2 = lbl_803DD12C + ((SkyState *)lbl_803DD12C)->unk24C * 0xa4 + 0x20;
-        dir[0] = *(f32 *)(prev + 0x70) + ((SkyState *)lbl_803DD12C)->unk244 *
+        dir[0] = *(f32 *)(prev + 0x70) + ((SkyState *)lbl_803DD12C)->speed244 *
                                              (*(f32 *)(cur2 + 0x70) - *(f32 *)(prev + 0x70));
-        dir[1] = *(f32 *)(prev + 0x74) + ((SkyState *)lbl_803DD12C)->unk244 *
+        dir[1] = *(f32 *)(prev + 0x74) + ((SkyState *)lbl_803DD12C)->speed244 *
                                              (*(f32 *)(cur2 + 0x74) - *(f32 *)(prev + 0x74));
-        dir[2] = *(f32 *)(prev + 0x78) + ((SkyState *)lbl_803DD12C)->unk244 *
+        dir[2] = *(f32 *)(prev + 0x78) + ((SkyState *)lbl_803DD12C)->speed244 *
                                              (*(f32 *)(cur2 + 0x78) - *(f32 *)(prev + 0x78));
-        bl = ((SkyState *)lbl_803DD12C)->unk244;
+        bl = ((SkyState *)lbl_803DD12C)->speed244;
         pb = prev[0x58];
         cb = cur2[0x58];
         r = (int)(bl * ((f32)(u32)cb - (f32)(u32)pb) + (f32)(u32)pb);
@@ -2621,15 +2621,15 @@ void Sky_func03(int a, int b, u8 *cfg)
             *(int *)(lbl_803DD12C + ((SkyState *)lbl_803DD12C)->unk251 * 4 + 8) = tmp;
             ((SkyState *)lbl_803DD12C)->unk250 = -1;
             if (((SkyState *)lbl_803DD12C)->unk255 < 0) {
-                ((SkyState *)lbl_803DD12C)->unk23C = EXIInputFlag;
+                ((SkyState *)lbl_803DD12C)->speed23C = EXIInputFlag;
                 if (((Sky2Config *)cfg)->unk2A == 0) {
-                    ((SkyState *)lbl_803DD12C)->unk240 = EXIInputFlag;
+                    ((SkyState *)lbl_803DD12C)->speed240 = EXIInputFlag;
                 } else {
-                    ((SkyState *)lbl_803DD12C)->unk240 =
+                    ((SkyState *)lbl_803DD12C)->speed240 =
                         EXIInputFlag / (lbl_803DF104 * (f32)(u32)((Sky2Config *)cfg)->unk2A);
                 }
             } else {
-                ((SkyState *)lbl_803DD12C)->unk23C = pEXIInputFlag;
+                ((SkyState *)lbl_803DD12C)->speed23C = pEXIInputFlag;
             }
         }
         cloudMode = ((SkyBlendStateFlags *)(lbl_803DD12C + ((SkyState *)lbl_803DD12C)->unk24C * 0xa4 + 0xc1))->cloud;

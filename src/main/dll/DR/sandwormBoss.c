@@ -461,7 +461,7 @@ FUN_8019b658(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   local_24 = DAT_802c2a5c;
   local_20 = DAT_802c2a60;
   local_1c = DAT_802c2a64;
-  if (((GameObject *)param_9)->unkB4 < 0) {
+  if (((GameObject *)param_9)->classIdB4 < 0) {
     FUN_800e8630(param_9);
     uVar1 = 0;
   }
@@ -903,7 +903,7 @@ void cfguardian_init(int *obj, u8 *params) {
     if (sub == NULL) return;
     ObjMsg_AllocQueue(obj, 4);
     sub->questState = (u8)GameBit_Get(0x4b);
-    ((GameObject *)obj)->unkF4 = 1;
+    ((GameObject *)obj)->countF4 = 1;
     ((GameObject *)obj)->animEventCallback = (void *)cfguardian_SeqFn;
     *(s16*)obj = (s16)((s8)params[0x18] << 8);
     sub->landingPhase = 0;
@@ -954,7 +954,7 @@ int cfguardian_SeqFn(int* obj, int unused, ObjAnimUpdateState *animUpdate)
     GuardianMsg stk;
     CfGuardianState* sub = ((GameObject *)obj)->extra;
     stk = lbl_802C22D8;
-    if (((GameObject *)obj)->unkB4 < 0) {
+    if (((GameObject *)obj)->classIdB4 < 0) {
         saveGame_saveObjectPos((int)obj);
         return 0;
     }
@@ -1097,14 +1097,14 @@ int babycloudrunner_func0B(void* p)
     }
     if (flag != 0) {
         s16toFloat((int)sub, 0x3c);
-        ((GameObject *)obj)->unkF4 = 1;
+        ((GameObject *)obj)->countF4 = 1;
         *(s16*)obj = sub->roostYaw;
         (*gObjectTriggerInterface)->runSequence(4, obj, -1);
         sub->unk00 = lbl_803E4244;
         gameBitIncrement(0x901);
         sub->behaviourState = 0xc;
         GameBit_Set(*(s16*)(q + 0x1e), 1);
-        ((GameObject *)obj)->unkF4 = 0;
+        ((GameObject *)obj)->countF4 = 0;
         return 1;
     }
     objAudioFn_800393f8((int)obj, (char*)sub + 0x6c, 0x296, 0x1000, -1, 1);
@@ -1384,7 +1384,7 @@ void cfpowerbase_init(int* obj, u8* params) {
     }
     if (GameBit_Get(sub->typeBit) != 0) {
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x8);
-        ((GameObject *)obj)->unkF4 = 1;
+        ((GameObject *)obj)->countF4 = 1;
     }
 }
 #pragma peephole reset
@@ -1403,10 +1403,10 @@ void cfpowerbase_update(int* obj) {
     } else {
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x10);
     }
-    if (((GameObject *)obj)->unkF4 != 0) {
+    if (((GameObject *)obj)->countF4 != 0) {
         (*gObjectTriggerInterface)->preempt((int)obj, 0xfa);
         (*gObjectTriggerInterface)->runSequence(sub->typeIndex, obj, 3);
-        ((GameObject *)obj)->unkF4 = 0;
+        ((GameObject *)obj)->countF4 = 0;
     }
     if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) {
         if ((*gGameUIInterface)->isEventReady(sub->litBit) != 0) {
@@ -1554,7 +1554,7 @@ void cfprisonuncle_update(int* obj)
         }
     } else {
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x8);
-        if (((GameObject *)obj)->unkB4 == -1) {
+        if (((GameObject *)obj)->classIdB4 == -1) {
             (*gObjectTriggerInterface)->runSequence(0, obj, -1);
         }
     }
@@ -1591,7 +1591,7 @@ void gcrobotlightbea_hitDetect(int* obj)
     vec[1] = lbl_803E4298 + ((ObjHitsPriorityState *)hit)->localPosX;
     vec[2] = ((ObjHitsPriorityState *)hit)->localPosY;
     if (voxmaps_traceWorldLine((void *)((int)obj + 0xc), vec) == 0) return;
-    if (((GameObject *)obj)->unkF4 != 0 ||
+    if (((GameObject *)obj)->countF4 != 0 ||
         objBboxFn_800640cc((int)obj + 0xc, vec, 0, &out, (int)obj, 4, -1, 0, 0) == 0) {
         ((Bit80*)&sub->hitFlags)->top = 1;
     }
@@ -1611,14 +1611,14 @@ void cfprisoncage_initialise(void) {}
 void cfprisoncage_update(int *obj) {
     extern ObjectTriggerInterface **gObjectTriggerInterface;
     int v;
-    if (((GameObject *)obj)->unkF4 != 0) {
+    if (((GameObject *)obj)->countF4 != 0) {
         switch (((GameObject *)obj)->anim.seqId) {
         case 0x127: v = 0; break;
         case 0x128:
         default:    v = 1; break;
         }
         (*gObjectTriggerInterface)->runSequence(v, obj, -1);
-        ((GameObject *)obj)->unkF4 = 0;
+        ((GameObject *)obj)->countF4 = 0;
     }
 }
 #pragma peephole reset
@@ -1851,7 +1851,7 @@ int babycloudrunner_setScale(int* obj)
 
 void cfperch_init(int* obj)
 {
-    ((GameObject *)obj)->unkF4 = 1;
+    ((GameObject *)obj)->countF4 = 1;
     ((GameObject *)obj)->animEventCallback = (void*)fn_801A04F4;
 }
 
@@ -1977,7 +1977,7 @@ extern f32 lbl_803E42B4;
 void cfprisoncage_init(int *obj, u8 *def) {
     ObjMsg_AllocQueue(obj, 1);
     *(s16 *)obj = (s16)((s32)def[0x1a] << 8);
-    ((GameObject *)obj)->unkF4 = 1;
+    ((GameObject *)obj)->countF4 = 1;
     ((GameObject *)obj)->animEventCallback = (void *)cfprisoncage_SeqFn;
     if (((GameObject *)obj)->anim.seqId == 296) {
         if (GameBit_Get(((CfprisoncageObjectDef *)def)->unk18) != 0) {
@@ -2177,12 +2177,12 @@ int cfpowerbase_SeqFn(int p1, int unused, ObjAnimUpdateState *animUpdate)
 #pragma scheduling off
 #pragma peephole off
 void cfperch_update(int *obj) {
-    if (((GameObject *)obj)->unkF4 != 0) {
+    if (((GameObject *)obj)->countF4 != 0) {
         if (GameBit_Get(0x50) == 0) {
             (*gObjectTriggerInterface)->runSequence(0, obj, -1);
         }
     }
-    ((GameObject *)obj)->unkF4 = 0;
+    ((GameObject *)obj)->countF4 = 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2631,7 +2631,7 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState *animUpdate)
     f32 distSq;
     u8* def = *(u8**)&((GameObject *)obj)->anim.placementData;
     BabyCloudRunnerState* sub = ((GameObject *)obj)->extra;
-    if (((GameObject *)obj)->unkB4 == 4) {
+    if (((GameObject *)obj)->classIdB4 == 4) {
         return 0;
     }
     animUpdate->sequenceEventActive = 0;
@@ -2743,7 +2743,7 @@ int cfprisonguard_SeqFn(int* obj, int unused, ObjAnimUpdateState *animUpdate)
         sub->alarmRamp = lbl_803E4264 * (f32)framesThisStep + sub->alarmRamp;
         break;
     }
-    if (((GameObject *)obj)->unkB4 < 0) {
+    if (((GameObject *)obj)->classIdB4 < 0) {
         return 0;
     }
     ObjHits_EnableObject(obj);
@@ -3204,7 +3204,7 @@ void babycloudrunner_update(int* obj)
     } else if (fn_80080150(sub) != 0) {
         sub->flags22C |= 1;
         sub->behaviourState = 0;
-        if (((GameObject *)obj)->unkF4 < 0) {
+        if (((GameObject *)obj)->countF4 < 0) {
             if (*(s16*)(def + 0x22) != -1) {
                 GameBit_Set(*(s16*)(def + 0x22), 1);
             }
@@ -3216,7 +3216,7 @@ void babycloudrunner_update(int* obj)
             ObjGroup_RemoveObject(obj, 3);
             ((GameObject *)obj)->anim.flags |= 0x4000;
         } else {
-            ((GameObject *)obj)->unkF4 = ((GameObject *)obj)->unkF4 - 1;
+            ((GameObject *)obj)->countF4 = ((GameObject *)obj)->countF4 - 1;
         }
     } else {
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
@@ -3650,7 +3650,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
         if (GameBit_Get(0x4e) != 0) {
             sub->questState = 3;
             ObjAnim_SetCurrentMove((int)obj, 0x1a, lbl_803E4110, 0);
-            ((GameObject *)obj)->unkF4 = 0;
+            ((GameObject *)obj)->countF4 = 0;
             GameBit_Set(0x48, 1);
             sub->flagsA9B |= 1;
         }
@@ -3701,7 +3701,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
                     sub->landingPhase = 2;
                     ((GameObject *)obj)->anim.localPosY -= ground;
                     sub->chatterState = 1;
-                    ((GameObject *)obj)->unkF4 = 0;
+                    ((GameObject *)obj)->countF4 = 0;
                     ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E4110, 0);
                     {
                         char* pt = (char*)findRomCurvePointNearObject(obj, 0, 0, 2);
@@ -3835,7 +3835,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
         if (GameBit_Get(0x4be) != 0) {
             sub->questState = 0xa;
             ObjAnim_SetCurrentMove((int)obj, 0x1a, lbl_803E4110, 0);
-            ((GameObject *)obj)->unkF4 = 0;
+            ((GameObject *)obj)->countF4 = 0;
         }
         break;
     case 10:

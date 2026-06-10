@@ -2233,8 +2233,8 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
         }
     }
     doNothing_afterRenderObject();
-    for (i = 0, walk = obj; i < (s32)(u32)((GameObject *)obj)->unkEB; i++) {
-        int staff = *(int *)&((GameObject *)walk)->unkC8;
+    for (i = 0, walk = obj; i < (s32)(u32)((GameObject *)obj)->seqIdEB; i++) {
+        int staff = *(int *)&((GameObject *)walk)->seqIdC8;
         if (*(s16*)((char*)staff + 0x44) == 0x2d) {
             staffMtxFn_8003b620(staff, obj, (int)OBJPRINT_ACTIVE_BANK(staff), a, b, c);
         }

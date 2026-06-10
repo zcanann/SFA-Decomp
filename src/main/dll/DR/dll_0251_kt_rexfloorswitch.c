@@ -60,8 +60,8 @@ void ktrexfloorswitch_init(int obj, char *arg) {
     int r;
     *(s16 *)obj = (s16)(((u8 *)arg)[0x18] << 8);
     ((KtrexfloorswitchState *)p)->timer8 = (f32)(u32)((u8 *)arg)[0x19];
-    ((GameObject *)obj)->unkF4 = 1;
-    ((GameObject *)obj)->unkF8 = 1;
+    ((GameObject *)obj)->countF4 = 1;
+    ((GameObject *)obj)->moveF8 = 1;
     q = *(int *)&((GameObject *)obj)->anim.placementData;
     r = (*gRomCurveInterface)->find(&lbl_803DC2A0, 1, 0, ((KtrexfloorswitchPlacement *)q)->unk8, ((KtrexfloorswitchPlacement *)q)->unkC, ((KtrexfloorswitchPlacement *)q)->unk10);
     if (r != -1) {
@@ -118,16 +118,16 @@ void ktrexfloorswitch_update(int obj) {
     vecB[0] = lbl_802C256C[0];
     vecB[1] = lbl_802C256C[1];
     vecB[2] = lbl_802C256C[2];
-    ((GameObject *)obj)->unkF8 = ((GameObject *)obj)->unkF4;
-    ((GameObject *)obj)->unkF4 = GameBit_Get(((KtrexfloorswitchPlacement *)sub)->unk1C);
+    ((GameObject *)obj)->moveF8 = ((GameObject *)obj)->countF4;
+    ((GameObject *)obj)->countF4 = GameBit_Get(((KtrexfloorswitchPlacement *)sub)->unk1C);
     tex = objFindTexture(obj, 0, 0);
     anim = 0;
-    if (((GameObject *)obj)->unkF4 <= 1) {
+    if (((GameObject *)obj)->countF4 <= 1) {
         *tex = 0;
-        if (((GameObject *)obj)->unkF4 == 0 && ((GameObject *)obj)->unkF8 != 0) {
+        if (((GameObject *)obj)->countF4 == 0 && ((GameObject *)obj)->moveF8 != 0) {
             ((KtrexfloorswitchState *)state)->flags10 |= 0x4;
         }
-        if (((GameObject *)obj)->unkF4 != 0 && ((GameObject *)obj)->unkF8 == 0) {
+        if (((GameObject *)obj)->countF4 != 0 && ((GameObject *)obj)->moveF8 == 0) {
             int cp;
             ((KtrexfloorswitchState *)state)->flags10 |= 0x2;
             ((GameObject *)obj)->anim.localPosY = ((KtrexfloorswitchPlacement *)sub)->unkC - (f32)(u32)((KtrexfloorswitchPlacement *)sub)->unk1F;
@@ -146,7 +146,7 @@ void ktrexfloorswitch_update(int obj) {
             return;
         }
     } else {
-        if (((GameObject *)obj)->unkF8 == 0) {
+        if (((GameObject *)obj)->moveF8 == 0) {
             *tex = 0x100;
             ((KtrexfloorswitchState *)state)->flags10 &= ~1;
         } else {
@@ -169,7 +169,7 @@ void ktrexfloorswitch_update(int obj) {
     if ((s8)((KtrexfloorswitchState *)state)->timer4 < 0) {
         ((KtrexfloorswitchState *)state)->timer4 = 0;
     }
-    if ((s8)*(s8 *)(*(int *)((char *)obj + 0x58) + 0x10f) > 0 && ((GameObject *)obj)->unkF4 == 2) {
+    if ((s8)*(s8 *)(*(int *)((char *)obj + 0x58) + 0x10f) > 0 && ((GameObject *)obj)->countF4 == 2) {
         player = (int *)Obj_GetPlayerObject();
         if (player != 0) {
             PSMTXRotRad(mtx, 0x79, (f32)(lbl_803E6860 * (f64)*(s16 *)obj / lbl_803E6868));
@@ -292,7 +292,7 @@ void ktrexfloorswitch_update(int obj) {
         Sfx_PlayFromObject(obj, SFXmv_bodyf2_c);
     }
     lbl_803DDD60 = (s8)anim;
-    if (((GameObject *)obj)->unkF4 == 2) {
+    if (((GameObject *)obj)->countF4 == 2) {
         if ((s8)((KtrexfloorswitchState *)state)->timer4 != 0) {
             if (lbl_803E687C == ((KtrexfloorswitchState *)state)->unkC) {
                 ((KtrexfloorswitchState *)state)->unkC = lbl_803E6880;

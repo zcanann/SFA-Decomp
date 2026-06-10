@@ -369,7 +369,7 @@ void sc_musictree_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
             state = (SCMusicTreeState *)&((ScLevelControlState *)state)->fog0C;
         }
     }
-    ((GameObject *)obj)->unkF8 = 1;
+    ((GameObject *)obj)->moveF8 = 1;
 }
 
 extern void gameTimerStop(void);
@@ -506,11 +506,11 @@ void sc_levelcontrol_init(int obj)
     }
     unlockLevel(mapGetDirIdx(0xe), 0, 0);
     if (getSaveGameLoadStatus() != 0) {
-        ((GameObject *)obj)->unkF4 = 2;
+        ((GameObject *)obj)->countF4 = 2;
     } else {
-        ((GameObject *)obj)->unkF4 = 1;
+        ((GameObject *)obj)->countF4 = 1;
     }
-    ((GameObject *)obj)->unkF8 = 1;
+    ((GameObject *)obj)->moveF8 = 1;
 }
 
 extern u8 Obj_IsLoadingLocked(void);
@@ -613,10 +613,10 @@ void sc_levelcontrol_update(int obj)
     int state = *(int *)&((GameObject *)obj)->extra;
     u8 *player = Obj_GetPlayerObject();
 
-    if (((GameObject *)obj)->unkF4 != 0) {
+    if (((GameObject *)obj)->countF4 != 0) {
         skyFn_80088c94(7, 0);
         envFxActFn_800887f8(0);
-        if (((GameObject *)obj)->unkF4 == 2) {
+        if (((GameObject *)obj)->countF4 == 2) {
             getEnvfxActImmediately(0, 0, 0x4f, 0);
             getEnvfxActImmediately(0, 0, 0x50, 0);
             getEnvfxActImmediately(0, 0, 0x245, 0);
@@ -635,7 +635,7 @@ void sc_levelcontrol_update(int obj)
                 getEnvfxAct(0, 0, 0x51, 0);
             }
         }
-        ((GameObject *)obj)->unkF4 = 0;
+        ((GameObject *)obj)->countF4 = 0;
     }
     if (((SnowFlags22 *)&((ScLevelControlState *)state)->flags22)->bit7 == 0 && (u32)GameBit_Get(0xc53) != 0) {
         (*gMapEventInterface)->setAnimEvent(0xe, 0xa, 1);
@@ -717,9 +717,9 @@ void sc_levelcontrol_update(int obj)
         } else if ((*gMapEventInterface)->getAnimEvent(0xe, 5) != 0) {
             ((ScLevelControlState *)state)->fog04 = lbl_803E5564;
             ((ScLevelControlState *)state)->fog08 = lbl_803E5568;
-            if (((GameObject *)obj)->unkF8 != 0) {
+            if (((GameObject *)obj)->moveF8 != 0) {
                 skyFn_80088e54(1, lbl_803E5554);
-                ((GameObject *)obj)->unkF8 = 0;
+                ((GameObject *)obj)->moveF8 = 0;
             }
         } else {
             ((ScLevelControlState *)state)->fog04 = lbl_803E555C;

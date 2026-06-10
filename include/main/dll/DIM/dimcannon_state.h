@@ -25,11 +25,11 @@ typedef struct DimCannonState {
     s16 aimPitch;   /* 0xa6 */
     int unkA8;
     u8 fireState;   /* 0xac */
-    u8 unkAD;
+    u8 boolAD;
     u8 unkAE;
     u8 unkAF;
     s8 unkB0;
-    u8 unkB1;
+    u8 boolB1;
     u8 unkB2;
     u8 padB3;
 } DimCannonState;

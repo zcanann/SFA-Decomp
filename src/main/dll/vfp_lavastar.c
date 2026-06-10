@@ -41,7 +41,7 @@ void DIMbosstonsil_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4
     f32 *outZPtr;
 
     if (visible != 0) {
-        switch (((GameObject *)obj)->unkF4) {
+        switch (((GameObject *)obj)->countF4) {
         case 0: {
             objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E4CB8);
 
@@ -93,14 +93,14 @@ void DIMbosstonsil_update(void *obj)
     state = ((GameObject *)obj)->extra;
     config = *(DIMbosstonsilConfig **)&((GameObject *)obj)->anim.placementData;
 
-    if (((GameObject *)obj)->unkF4 != 0) return;
+    if (((GameObject *)obj)->countF4 != 0) return;
 
-    if (((GameObject *)obj)->unkF8 == 0) {
+    if (((GameObject *)obj)->moveF8 == 0) {
         ((GameObject *)obj)->anim.localPosX = config->spawnX;
         ((GameObject *)obj)->anim.localPosY = config->spawnY;
         ((GameObject *)obj)->anim.localPosZ = config->spawnZ;
         (*gObjectTriggerInterface)->runSequence((int)config->animObjId, obj, -1);
-        ((GameObject *)obj)->unkF8 = 1;
+        ((GameObject *)obj)->moveF8 = 1;
         return;
     }
 

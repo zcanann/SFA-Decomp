@@ -73,7 +73,7 @@ void transporter_init(int obj, u8 *params)
   state->activateDelay = 400;
   state->flags = 0;
   ((GameObject *)obj)->anim.rotX = (s16)((u16)(placement->rotXHigh << 8));
-  ((GameObject *)obj)->unkF4 = 0;
+  ((GameObject *)obj)->countF4 = 0;
   ((GameObject *)obj)->animEventCallback = (void *)Transporter_SeqFn;
   *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
 

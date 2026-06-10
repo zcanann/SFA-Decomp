@@ -16,7 +16,7 @@ typedef struct ExplosionState {
     int frameCounter;
     int lifeFrames; /* scale-derived, clamped 0..60 */
     f32 scale;
-    u8 unkA58;
+    u8 countA58;
     u8 rayMode; /* 0 none, 1 grounded pair, 2 random pair */
     u8 debrisCount;
     s8 unkA5B;

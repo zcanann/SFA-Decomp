@@ -39,7 +39,7 @@ typedef struct SBGalleonState {
     f32 homeZ;       /* 0x58 */
     f32 unk5C;       /* 0x5c */
     f32 unk60;       /* 0x60 */
-    f32 unk64;       /* 0x64 */
+    f32 speed64;       /* 0x64 */
     u16 shieldAngle; /* 0x68 */
     u8 pad6A[2];
     s16 fadeTimer;   /* 0x6c */
@@ -51,7 +51,7 @@ typedef struct SBGalleonState {
     u8 textRising;   /* 0x78 */
     u8 unk79;        /* 0x79 */
     u8 flightPattern;/* 0x7a */
-    u8 unk7B;        /* 0x7b */
+    u8 bool7B;        /* 0x7b */
     s8 unk7C;        /* 0x7c */
     u8 pad7D[3];
     u8 unk80;        /* 0x80 */

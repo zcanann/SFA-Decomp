@@ -211,13 +211,13 @@ void suntemple_update(int obj)
                     GameBit_Set(cfg->gateGameBit, 0);
                 } else {
                     state->activationLatched = 1;
-                    gameObj->unkF4 = 1;
+                    gameObj->countF4 = 1;
                 }
                 buttonDisable(0, SUNTEMPLE_BUTTON_DISABLE_MASK);
             }
         }
     } else {
-        if (gameObj->unkF4 == 0 && cfg->triggerSlot != -1 &&
+        if (gameObj->countF4 == 0 && cfg->triggerSlot != -1 &&
             cfg->preemptSequenceId != 0) {
             (*gObjectTriggerInterface)->preempt(obj, cfg->preemptSequenceId);
             flags = 1;
@@ -234,7 +234,7 @@ void suntemple_update(int obj)
         }
         *(u8 *)&gameObj->anim.resetHitboxMode |= SUNTEMPLE_RESET_HITBOX_FLAG;
     }
-    gameObj->unkF4 = 1;
+    gameObj->countF4 = 1;
 }
 
 void suntemple_release(void) {}

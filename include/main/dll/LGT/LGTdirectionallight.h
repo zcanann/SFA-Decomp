@@ -19,7 +19,7 @@ typedef struct WmWormState {
     u8 pad06[2];
     s16 burstCount;
     u8 pad0A[2];
-    s16 unk0C;
+    s16 bool0C;
     u8 pad0E[2];
     f32 homeX;
     f32 homeY;
@@ -32,7 +32,7 @@ STATIC_ASSERT(offsetof(WmWormSetup, burstCount) == 0x1c);
 STATIC_ASSERT(sizeof(WmWormState) == 0x1c);
 STATIC_ASSERT(offsetof(WmWormState, particleEffectId) == 0x04);
 STATIC_ASSERT(offsetof(WmWormState, burstCount) == 0x08);
-STATIC_ASSERT(offsetof(WmWormState, unk0C) == 0x0c);
+STATIC_ASSERT(offsetof(WmWormState, bool0C) == 0x0c);
 STATIC_ASSERT(offsetof(WmWormState, homeX) == 0x10);
 
 void wmworm_update(GameObject *obj);

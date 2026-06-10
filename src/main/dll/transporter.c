@@ -584,7 +584,7 @@ void iceblast_update(int *obj) {
     player = (int *)Obj_GetPlayerObject();
     state = ((GameObject *)obj)->extra;
     def = *(int **)&((GameObject *)obj)->anim.placementData;
-    if (player != NULL && (path = ((GameObject *)player)->unkC8) != NULL) {
+    if (player != NULL && (path = ((GameObject *)player)->seqIdC8) != NULL) {
         ((GameObject *)obj)->anim.rotZ = *(s16 *)((char *)path + 4);
         ((GameObject *)obj)->anim.rotY = *(s16 *)((char *)path + 2);
         *(s16 *)obj = *(s16 *)path;
@@ -685,7 +685,7 @@ void invhit_init(int *obj, u8 *def) {
     ((ObjHitsPriorityState *)sub)->flags = ((ObjHitsPriorityState *)sub)->flags & ~1;
     switch (state->mode) {
     case 0:
-        ((GameObject *)obj)->unkF8 = def[0x18];
+        ((GameObject *)obj)->moveF8 = def[0x18];
         break;
     case 6:
         sub[0x62] = 1;
@@ -701,12 +701,12 @@ void invhit_init(int *obj, u8 *def) {
         sub[0x6b] = 0;
         break;
     case 3:
-        ((GameObject *)obj)->unkF8 = def[0x18];
-        ((GameObject *)obj)->unkF4 = 0;
+        ((GameObject *)obj)->moveF8 = def[0x18];
+        ((GameObject *)obj)->countF4 = 0;
         break;
     case 5:
-        ((GameObject *)obj)->unkF8 = def[0x18];
-        ((GameObject *)obj)->unkF4 = 0;
+        ((GameObject *)obj)->moveF8 = def[0x18];
+        ((GameObject *)obj)->countF4 = 0;
         break;
     case 7:
         sub[0x62] = 1;
@@ -750,7 +750,7 @@ void invhit_init(int *obj, u8 *def) {
         ((ObjHitsPriorityState *)sub)->primaryRadius = 0xa;
         ((ObjHitsPriorityState *)sub)->flags = 3;
         *(int *)&((ObjHitsPriorityState *)sub)->objectHitMask = 0x10;
-        ((GameObject *)obj)->unkF8 = 0x78;
+        ((GameObject *)obj)->moveF8 = 0x78;
         {
             char *anchorObj = *(char **)&((InvhitObjectDef *)def)->unk1C;
             if (anchorObj != NULL) {
@@ -874,7 +874,7 @@ void invhit_update(int *obj) {
             f32 dy = ((GameObject *)obj)->anim.localPosY - ((PushableState *)victim)->scale;
             f32 dz = ((GameObject *)obj)->anim.localPosZ - ((PushableState *)victim)->timer_0x14;
             f32 dist = sqrtf(dx * dx + dy * dy + dz * dz);
-            if (dist < (f32)((GameObject *)obj)->unkF8) {
+            if (dist < (f32)((GameObject *)obj)->moveF8) {
                 u8 *victimHits = *(u8 **)&((GameObject *)victim)->anim.hitReactState;
                 victimHits[0x71] += 1;
                 ((ObjHitsPriorityState *)victimHits)->flags = ((ObjHitsPriorityState *)victimHits)->flags & ~1;
@@ -906,11 +906,11 @@ void invhit_update(int *obj) {
         break;
     }
     case 1:
-        ObjList_ContainsObject(((GameObject *)obj)->unkF4);
+        ObjList_ContainsObject(((GameObject *)obj)->countF4);
         break;
     case 7: {
         char *hitState = *(char **)&((GameObject *)obj)->anim.hitReactState;
-        char *ownerHitState = *(char **)(((GameObject *)obj)->unkF4 + 0x54);
+        char *ownerHitState = *(char **)(((GameObject *)obj)->countF4 + 0x54);
         char *ownerHitSlot = ownerHitState;
 
         i = 0;
@@ -933,11 +933,11 @@ void invhit_update(int *obj) {
         s8 cnt;
         f32 thr;
 
-        ((GameObject *)obj)->unkF8 -= framesThisStep;
+        ((GameObject *)obj)->moveF8 -= framesThisStep;
         if (*(void **)&((ObjHitsPriorityState *)hitState)->lastHitObject != NULL) {
             ((ObjHitsPriorityState *)hitState)->flags = 0;
         }
-        targetObj = *(char **)&((GameObject *)obj)->unkF4;
+        targetObj = *(char **)&((GameObject *)obj)->countF4;
         if (targetObj != NULL) {
             f32 dx;
             f32 dz;

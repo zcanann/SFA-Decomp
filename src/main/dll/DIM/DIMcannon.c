@@ -236,9 +236,9 @@ void FUN_801ae0_dropped_old_imicepillar_render(undefined8 param_1,undefined8 par
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
 {
-  if (*(int *)&((GameObject *)param_9)->unkC8 != 0) {
+  if (*(int *)&((GameObject *)param_9)->seqIdC8 != 0) {
     FUN_80017ac8(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                 *(int *)&((GameObject *)param_9)->unkC8);
+                 *(int *)&((GameObject *)param_9)->seqIdC8);
   }
   return;
 }
@@ -483,14 +483,14 @@ void imspaceringgen_free(void) { lbl_803DDB48 = 0x0; }
 
 /* Init: clear obj->_F4 and record obj globally in lbl_803DDB48. */
 void imspaceringgen_init(int *obj) {
-    ((GameObject *)obj)->unkF4 = 0;
+    ((GameObject *)obj)->countF4 = 0;
     lbl_803DDB48 = (u32)obj;
 }
 
 /* If obj->_F4 == 0, set it to 1; else early-return. */
 void imanimspacecraft_update(int *obj) {
-    if (((GameObject *)obj)->unkF4 != 0) return;
-    ((GameObject *)obj)->unkF4 = 1;
+    if (((GameObject *)obj)->countF4 != 0) return;
+    ((GameObject *)obj)->countF4 = 1;
 }
 
 /* Free: call vtable[6] on obj through global dll-services pointer. */
@@ -651,7 +651,7 @@ void link_levcontrol_applyEnterAreaEffects(int *obj) {
     switch (((GameObject *)obj)->anim.mapEventSlot) {
     case 0x47:
         fn_80088870(tbl + 0x38, tbl, tbl + 0x70, tbl + 0xa8);
-        if (((GameObject *)obj)->unkF4 == 2) {
+        if (((GameObject *)obj)->countF4 == 2) {
             envFxActFn_800887f8(0x3f);
         } else {
             envFxActFn_800887f8(0x1f);
@@ -733,9 +733,9 @@ void link_levcontrol_init(int *obj) {
     inner->musicTrack = -1;
     ((GameObject *)obj)->objectFlags |= 0x4000;
     if (getSaveGameLoadStatus() != 0) {
-        ((GameObject *)obj)->unkF4 = 2;
+        ((GameObject *)obj)->countF4 = 2;
     } else {
-        ((GameObject *)obj)->unkF4 = 1;
+        ((GameObject *)obj)->countF4 = 1;
     }
 }
 
@@ -928,11 +928,11 @@ typedef struct {
 
 void imspacering_init(s16 *obj, s8 *p) {
     ((GameObject *)obj)->anim.rotX = (s16)((s32)p[0x18] << 8);
-    ((GameObject *)obj)->unkF4 = randomGetRange(0, 1);
+    ((GameObject *)obj)->countF4 = randomGetRange(0, 1);
 }
 void imspacering_update(s16 *obj) {
     s16 *inner = *(s16 **)&((GameObject *)obj)->anim.placementData;
-    if (((GameObject *)obj)->unkF4 != 0) {
+    if (((GameObject *)obj)->countF4 != 0) {
         ((GameObject *)obj)->anim.rotX = (s16)(((GameObject *)obj)->anim.rotX + inner[0xd] * framesThisStep);
     } else {
         ((GameObject *)obj)->anim.rotY = (s16)(((GameObject *)obj)->anim.rotY + inner[0xd] * framesThisStep);
@@ -988,7 +988,7 @@ void imspaceringgen_update(s16 *obj) {
             }
         }
         ((GameObject *)obj)->anim.alpha = v;
-        if (((GameObject *)obj)->unkF4 == 0 && Obj_IsLoadingLocked() != 0) {
+        if (((GameObject *)obj)->countF4 == 0 && Obj_IsLoadingLocked() != 0) {
             for (i = 0; i < 10; i++) {
                 ring = Obj_AllocObjectSetup(0x24, 0x301);
                 *(f32 *)(ring + 8) = ((GameObject *)obj)->anim.localPosX;
@@ -1009,7 +1009,7 @@ void imspaceringgen_update(s16 *obj) {
                 *(u8 *)(ring + 7) = 0xff;
                 Obj_SetupObject(ring, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
             }
-            ((GameObject *)obj)->unkF4 = 1;
+            ((GameObject *)obj)->countF4 = 1;
         }
         objMove((int)obj,
             *(f32 *)((char *)state->ringA + 0xc) - ((GameObject *)obj)->anim.localPosX,
@@ -1175,7 +1175,7 @@ void lavaball1be_init(s16 *obj, u8 *p) {
         s.rot[1] = (s16)randomGetRange(-0x2ee0, 0x2ee0);
         s.rot[0] = (s16)randomGetRange(0, 0xfffe);
         vecRotateZXY((u8 *)&s + 12, &s.vec);
-        ((GameObject *)obj)->unkF4 = 0x4b;
+        ((GameObject *)obj)->countF4 = 0x4b;
         ((GameObject *)obj)->anim.velocityX = s.vec.x;
         ((GameObject *)obj)->anim.velocityY = s.vec.y;
         ((GameObject *)obj)->anim.velocityZ = s.vec.z;
@@ -1231,8 +1231,8 @@ void lavaball1be_update(s16 *obj) {
         ((GameObject *)obj)->anim.rotX = ((GameObject *)obj)->anim.rotX + framesThisStep * 0x374;
         ((GameObject *)obj)->anim.rotY = ((GameObject *)obj)->anim.rotY + framesThisStep * 0x12c;
         ((GameObject *)obj)->anim.velocityY = -(lbl_803E47D0 * timeDelta - ((GameObject *)obj)->anim.velocityY);
-        ((GameObject *)obj)->unkF4 = ((GameObject *)obj)->unkF4 - framesThisStep;
-        if (((GameObject *)obj)->unkF4 < 0) {
+        ((GameObject *)obj)->countF4 = ((GameObject *)obj)->countF4 - framesThisStep;
+        if (((GameObject *)obj)->countF4 < 0) {
             Obj_FreeObject(obj);
         }
     } else {

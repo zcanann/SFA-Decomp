@@ -156,9 +156,9 @@ void wmworm_update(GameObject *obj)
         obj->anim.localPosZ = lbl_803E5E60 * fVar3 * timeDelta + obj->anim.localPosZ;
       }
       burstCount = state->burstCount;
-      if ((-1 < burstCount) || ((-1 >= burstCount && (obj->unkF4 < 1)))) {
+      if ((-1 < burstCount) || ((-1 >= burstCount && (obj->countF4 < 1)))) {
         if (burstCount == 0) {
-          state->unk0C = 1;
+          state->bool0C = 1;
         }
         obj->anim.rotY += 300;
         if (0 < state->burstCount) {
@@ -171,10 +171,10 @@ void wmworm_update(GameObject *obj)
           (*gPartfxInterface)->spawnObject(obj, state->particleEffectId, NULL, 4,
                                            -1, NULL);
         }
-        obj->unkF4 = -state->burstCount;
+        obj->countF4 = -state->burstCount;
       }
-      else if ((burstCount < 0) && (0 < obj->unkF4)) {
-        obj->unkF4 = obj->unkF4 - (u32)framesThisStep;
+      else if ((burstCount < 0) && (0 < obj->countF4)) {
+        obj->countF4 = obj->countF4 - (u32)framesThisStep;
       }
     }
   }
@@ -191,11 +191,11 @@ void wmworm_init(GameObject *obj, WmWormSetup *setup)
     state->effectScale = (f32)((s32)setup->effectScale << 2);
     state->particleEffectId = setup->particleEffectId;
     state->burstCount = setup->burstCount;
-    state->unk0C = 0;
+    state->bool0C = 0;
     if (state->burstCount < 1) {
-        obj->unkF4 = state->burstCount;
+        obj->countF4 = state->burstCount;
     } else {
-        obj->unkF4 = 0;
+        obj->countF4 = 0;
     }
     state->homeX = obj->anim.localPosX;
     state->homeY = obj->anim.localPosY;
@@ -238,9 +238,9 @@ void fn_801F3F18(int obj)
 
     skySetOverrideLightColorEnabled(1);
     skySetOverrideLightColor(0x88, 0xb7, 0xba);
-    if ((((GameObject *)obj)->unkF4 & 4) == 0) {
+    if ((((GameObject *)obj)->countF4 & 4) == 0) {
         skyFn_80089710(1, 1, 0);
-        ((GameObject *)obj)->unkF4 |= 4;
+        ((GameObject *)obj)->countF4 |= 4;
     } else {
         skyFn_80089710(1, 1, 1);
     }

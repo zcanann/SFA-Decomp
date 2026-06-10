@@ -234,7 +234,7 @@ void fn_8013F100(int obj, register int state)
             if (((TrickyState *)state)->unk28 != pTgt) {
                 ((TrickyState *)state)->unk28 = pTgt;
                 TRICKY_CLEAR_TARGET_DIRTY(state);
-                *(short *)&((TrickyState *)state)->unkD2 = 0;
+                *(short *)&((TrickyState *)state)->boolD2 = 0;
             }
         }
         break;
@@ -277,7 +277,7 @@ void fn_8013F100(int obj, register int state)
             if (((TrickyState *)state)->unk28 != pTgt) {
                 ((TrickyState *)state)->unk28 = pTgt;
                 TRICKY_CLEAR_TARGET_DIRTY(state);
-                *(short *)&((TrickyState *)state)->unkD2 = 0;
+                *(short *)&((TrickyState *)state)->boolD2 = 0;
             }
             ((TrickyState *)state)->unkA = 5;
             if (trickyFn_8013b368(obj, lbl_803E24C8, state) == 0) {
@@ -404,7 +404,7 @@ void fn_8013FBE4(int obj, register int state)
                 ((TrickyState *)state)->unk28 != (u8 *)(state + 0x704)) {
                 ((TrickyState *)state)->unk28 = (u8 *)(state + 0x704);
                 TRICKY_CLEAR_TARGET_DIRTY(state);
-                *(short *)&((TrickyState *)state)->unkD2 = 0;
+                *(short *)&((TrickyState *)state)->boolD2 = 0;
             }
             dx = *targetPos - ((GameObject *)obj)->anim.worldPosX;
             dz = targetPos[2] - ((GameObject *)obj)->anim.worldPosZ;

@@ -74,9 +74,9 @@ void lightfoot_free(int obj, int p2)
     int count;
     int inner = *(int *)&((GameObject *)obj)->extra;
     ObjGroup_RemoveObject(obj, 3);
-    count = ((GameObject *)obj)->unkEB;
+    count = ((GameObject *)obj)->seqIdEB;
     for (i = 0; i < count; i++) {
-        void *child = ((GameObject *)obj)->unkC8;
+        void *child = ((GameObject *)obj)->seqIdC8;
         if (child != NULL) {
             ObjLink_DetachChild(obj, child);
             if (p2 == 0) {
@@ -109,9 +109,9 @@ void lightfoot_update(int obj)
         case 0x49940:
         case 0x49941:
             if (GameBit_Get(0xc44)) {
-                ((GameObject *)obj)->unkF4 = GameBit_Get(((GroundBaddieState *)inner)->gameBitA);
+                ((GameObject *)obj)->countF4 = GameBit_Get(((GroundBaddieState *)inner)->gameBitA);
             } else {
-                ((GameObject *)obj)->unkF4 = 1;
+                ((GameObject *)obj)->countF4 = 1;
             }
             break;
         case 0x499AC:
@@ -134,9 +134,9 @@ void lightfoot_update(int obj)
                         Sfx_PlayFromObject(0, 0x409);
                     }
                 }
-                ((GameObject *)obj)->unkF4 = GameBit_Get(((GroundBaddieState *)inner)->gameBitA);
+                ((GameObject *)obj)->countF4 = GameBit_Get(((GroundBaddieState *)inner)->gameBitA);
             } else {
-                ((GameObject *)obj)->unkF4 = 1;
+                ((GameObject *)obj)->countF4 = 1;
             }
             break;
         case 0x499B0:
@@ -159,17 +159,17 @@ void lightfoot_update(int obj)
                         Sfx_PlayFromObject(0, 0x409);
                     }
                 }
-                ((GameObject *)obj)->unkF4 = GameBit_Get(((GroundBaddieState *)inner)->gameBitA);
+                ((GameObject *)obj)->countF4 = GameBit_Get(((GroundBaddieState *)inner)->gameBitA);
             } else {
-                ((GameObject *)obj)->unkF4 = 1;
+                ((GameObject *)obj)->countF4 = 1;
             }
             break;
         default:
-            ((GameObject *)obj)->unkF4 = GameBit_Get(((GroundBaddieState *)inner)->gameBitA) == 0;
+            ((GameObject *)obj)->countF4 = GameBit_Get(((GroundBaddieState *)inner)->gameBitA) == 0;
             break;
         }
 
-        if (((GameObject *)obj)->unkF4 != 0) {
+        if (((GameObject *)obj)->countF4 != 0) {
             ObjHits_DisableObject(obj);
             ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         } else {
@@ -178,7 +178,7 @@ void lightfoot_update(int obj)
         }
     }
 
-    if (((GameObject *)obj)->unkF4 != 0) {
+    if (((GameObject *)obj)->countF4 != 0) {
         if ((((ObjPlacement *)p30)->mapId == 0x499B5 && GameBit_Get(0xc42) &&
              (GameBit_Get(0xc3b) == 0 || GameBit_Get(0xc3c) == 0 || GameBit_Get(0xc3d) == 0)) ||
             (((ObjPlacement *)p30)->mapId == 0x499B6 && GameBit_Get(0xc46) &&
@@ -194,7 +194,7 @@ void lightfoot_update(int obj)
         if (((GroundBaddieState *)inner)->flags400 & 0x2) {
             Lightfoot_RecordCompletedChallengeTargetHit(obj, inner, anim);
             Lightfoot_ResetScriptedPosition(obj);
-            ((GameObject *)obj)->unkF8 = 0;
+            ((GameObject *)obj)->moveF8 = 0;
             ((GroundBaddieState *)inner)->flags400 &= ~0x4;
         }
         Lightfoot_UpdatePlayerInteraction(obj, inner, inner);
@@ -247,7 +247,7 @@ void lightfoot_init(int obj, int p2, int p3)
         ((LightfootSub *)sub)->unk0 = (int)&lbl_803DC6F0;
         ((LightfootSub *)sub)->unk4 = (int)&lbl_803DC6F4;
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
-        ((GameObject *)obj)->unkF8 = 0;
+        ((GameObject *)obj)->moveF8 = 0;
     } else {
         switch (*(int *)((char *)p2 + 0x14)) {
         case 0x34316:
@@ -327,7 +327,7 @@ void lightfoot_init(int obj, int p2, int p3)
             break;
         case 0x499b5:
         case 0x499b6:
-            ((GameObject *)obj)->unkF4 = 1;
+            ((GameObject *)obj)->countF4 = 1;
             ((LightfootSub *)sub)->unk0 = (int)((char *)lbl_80334EE8 + 0x30);
             ((LightfootSub *)sub)->unk4 = (int)((char *)lbl_80334EE8 + 0x40);
             break;
@@ -346,7 +346,7 @@ void lightfoot_init(int obj, int p2, int p3)
         ((LightfootSub *)sub)->unk2A = 0x134;
     }
     ((LightfootSub *)sub)->unkC = lbl_803E81C0;
-    if (((GameObject *)obj)->unkF4 != 0) {
+    if (((GameObject *)obj)->countF4 != 0) {
         ObjHits_DisableObject(obj);
     }
 }

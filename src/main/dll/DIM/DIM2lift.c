@@ -1021,8 +1021,8 @@ int fn_801BA4B8(int obj, int p2)
 
   if ((s32)(s8)((BaddieState *)p2)->moveJustStartedB != 0) {
     *(int *)&((BaddieState *)p2)->targetObj = 0;
-    ((BaddieState *)p2)->unk25F = 0;
-    ((BaddieState *)p2)->unk349 = 0;
+    ((BaddieState *)p2)->bool25F = 0;
+    ((BaddieState *)p2)->bool349 = 0;
     ObjHits_DisableObject(obj);
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x8);
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x80);

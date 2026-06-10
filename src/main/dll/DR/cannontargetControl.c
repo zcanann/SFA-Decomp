@@ -367,7 +367,7 @@ void gunpowderbarrel_init(int obj, u8 *def)
     ObjGroup_AddObject(obj, 0x19);
     ObjGroup_AddObject(obj, 0x16);
     ObjMsg_AllocQueue(obj, 8);
-    ((GameObject *)obj)->unkF8 = 0;
+    ((GameObject *)obj)->moveF8 = 0;
     state->unk44 = 0;
     state->unk46 = 0;
     state->heldByCarryInterface = 0;
@@ -635,7 +635,7 @@ void gunpowderbarrel_update(int obj)
             *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x10;
         }
     }
-    if (((GameObject *)obj)->unkC8 == NULL) {
+    if (((GameObject *)obj)->seqIdC8 == NULL) {
         f32 range = lbl_803E4338;
         if ((u32)(state->linkedTimerObject = ObjGroup_FindNearestObject(0x4c, obj, &range)) != 0 &&
             timer_isEffectMode(state->linkedTimerObject) != 0 &&

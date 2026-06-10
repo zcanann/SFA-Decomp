@@ -354,8 +354,8 @@ void worldplanet_update(int obj) {
                 done = 1;
             }
             pauseMenuSetupTitle(0x2a7, lbl_803DC1D0[state->selectedPlanet], 0x19, 0);
-            if (prevPlanet != state->selectedPlanet || ((GameObject *)obj)->unkF4 == 0) {
-                    if (((GameObject *)obj)->unkF4 != 0) {
+            if (prevPlanet != state->selectedPlanet || ((GameObject *)obj)->countF4 == 0) {
+                    if (((GameObject *)obj)->countF4 != 0) {
                         objId = tbl[lbl_803DC1C8[state->selectedPlanet]];
                     (*gCameraInterface)->releaseAction(&objId, 1);
                     Sfx_PlayFromObject(0, 0x97);
@@ -367,7 +367,7 @@ void worldplanet_update(int obj) {
                     p = ObjList_FindObjectById(tbl[lbl_803DC1C8[state->selectedPlanet]]);
                     ((WorldObjState *)((GameObject *)p)->extra)->effectState = 1;
                 }
-                ((GameObject *)obj)->unkF4 = 1;
+                ((GameObject *)obj)->countF4 = 1;
             }
         }
         lbl_803DDD2C = lbl_803DDD2C + lbl_803E6628;

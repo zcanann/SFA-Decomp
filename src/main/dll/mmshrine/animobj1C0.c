@@ -132,17 +132,17 @@ void FUN_801c5990(undefined8 param_1,undefined8 param_2,double param_3,undefined
                                                                                 (uint)*(byte *)(
                                                   param_10 + 0x24)) - DOUBLE_803e5c08)));
   *(undefined4 *)(iVar5 + 0x28) = 0xffffffff;
-  iVar4 = ((GameObject *)param_9)->unkF4;
+  iVar4 = ((GameObject *)param_9)->countF4;
   if ((iVar4 == 0) && (*(short *)(param_10 + 0x18) != 1)) {
     (*gObjectTriggerInterface)->loadAnimData((u8 *)iVar5, (u8 *)param_10);
-    ((GameObject *)param_9)->unkF4 = *(short *)(param_10 + 0x18) + 1;
+    ((GameObject *)param_9)->countF4 = *(short *)(param_10 + 0x18) + 1;
   }
   else if ((iVar4 != 0) && ((int)*(short *)(param_10 + 0x18) != iVar4 + -1)) {
     (*gObjectTriggerInterface)->freeState((u8 *)iVar5);
     if (*(short *)(param_10 + 0x18) != -1) {
       (*gObjectTriggerInterface)->loadAnimData((u8 *)iVar5, (u8 *)param_10);
     }
-    ((GameObject *)param_9)->unkF4 = *(short *)(param_10 + 0x18) + 1;
+    ((GameObject *)param_9)->countF4 = *(short *)(param_10 + 0x18) + 1;
   }
   uVar1 = FUN_80017ae8();
   if ((uVar1 & 0xff) != 0) {
@@ -155,9 +155,9 @@ void FUN_801c5990(undefined8 param_1,undefined8 param_2,double param_3,undefined
     *(undefined *)((int)puVar2 + 7) = 0xff;
     uVar3 = FUN_80017ae4(dVar6,dVar7,param_3,param_4,param_5,param_6,param_7,param_8,puVar2,5,0xff,
                          0xffffffff,(uint *)0x0,in_r8,in_r9,in_r10);
-    *(undefined4 *)&((GameObject *)param_9)->unkC8 = uVar3;
-    *(float *)(*(int *)&((GameObject *)param_9)->unkC8 + 8) =
-         *(float *)(*(int *)&((GameObject *)param_9)->unkC8 + 8) * lbl_803E5C10;
+    *(undefined4 *)&((GameObject *)param_9)->seqIdC8 = uVar3;
+    *(float *)(*(int *)&((GameObject *)param_9)->seqIdC8 + 8) =
+         *(float *)(*(int *)&((GameObject *)param_9)->seqIdC8 + 8) * lbl_803E5C10;
   }
   return;
 }

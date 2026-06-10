@@ -145,13 +145,13 @@ void wcbeacon_update(int obj)
             (*gPartfxInterface)->spawnObject((void *)obj, WCBEACON_PARTFX_ACTIVE, NULL,
                                              WCBEACON_PARTFX_KIND, WCBEACON_TRIGGER_NO_ARG, NULL);
         }
-        if (((GameObject *)obj)->unkF4 == 0) {
+        if (((GameObject *)obj)->countF4 == 0) {
             (*gObjectTriggerInterface)->preempt(obj, WCBEACON_FINAL_TRIGGER_ID);
             (*gObjectTriggerInterface)
                 ->runSequence(WCBEACON_TRIGGER_ARM_SLOT, (void *)obj, WCBEACON_TRIGGER_ACCEPT_ARG);
         }
     }
-    ((GameObject *)obj)->unkF4 = 1;
+    ((GameObject *)obj)->countF4 = 1;
 }
 
 void wcbeacon_init(u8 *obj, u8 *setup)

@@ -174,7 +174,7 @@ void scarab_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
   }
 
   if (*(s16 *)(state + 0x10) == 0) {
-    if (((GameObject *)obj)->unkF8 != 0) {
+    if (((GameObject *)obj)->moveF8 != 0) {
       if (visible != -1) {
         return;
       }

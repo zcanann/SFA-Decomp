@@ -18,7 +18,7 @@ typedef struct CfGuardianState {
     s32 unk28;
     u8 pad2C[0x7C - 0x2C];
     f32 unk7C;
-    f32 unk80;
+    f32 speed80;
     u8 pad84[0x611 - 0x84];
     u8 flags611;
     u8 pad612[0x12];

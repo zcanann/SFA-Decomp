@@ -37,7 +37,7 @@ typedef struct DbStealerwormControl {
     int unk28;
     int unk2C;
     int unk30; /* ObjGroup id */
-    u8 unk34;
+    u8 bool34;
     u8 unk35[3];
     f32 unk38;
     int unk3C;
@@ -997,7 +997,7 @@ int dbstealerworm_stateHandlerA09(int obj, int p)
   {
     void *p2d0 = *(void **)&bs->targetObj;
     if (p2d0 == NULL || (**(int (**)(void *))(*(int *)(*(int *)((char *)p2d0 + 0x68)) + 0x20))(p2d0) == 0) {
-      sub_40c->unk34 = 1;
+      sub_40c->bool34 = 1;
     }
   }
   if (*(void **)&sub_40c->linkedObj == NULL) {
@@ -1018,7 +1018,7 @@ int dbstealerworm_stateHandlerA09(int obj, int p)
       frame2[1] = 0;
       frame2[2] = r26;
       if (Stack_IsFull(sp_handle) == 0) Stack_Push(sp_handle, frame2);
-      sub_40c->unk34 = 1;
+      sub_40c->bool34 = 1;
       sub_40c->unk1C = -1;
     }
   }
@@ -1035,7 +1035,7 @@ int dbstealerworm_stateHandlerA09(int obj, int p)
     *(s8 *)&bs->moveDone = 0;
   }
   if (*(s8 *)&bs->moveDone != 0) {
-    sub_40c->unk34 = 1;
+    sub_40c->bool34 = 1;
   }
   return 0;
 }
@@ -1221,8 +1221,8 @@ int dbstealerworm_stateHandlerA06(int obj, int p2)
     bs->animSpeedB = fz;
     bs->animSpeedA = fz;
     *(int *)&bs->targetObj = 0;
-    bs->unk25F = 1;
-    bs->unk349 = 0;
+    bs->bool25F = 1;
+    bs->bool349 = 0;
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x8);
     ObjHits_DisableObject(obj);
     ObjGroup_RemoveObject(obj, 3);
@@ -1360,7 +1360,7 @@ int dbstealerworm_stateHandlerA05(int obj, int p)
   bs->moveSpeed = lbl_803E6340;
   bs->animSpeedA = lbl_803E62A8;
   if (*(s8 *)&bs->moveDone != 0) {
-    sub_40c->unk34 = 1;
+    sub_40c->bool34 = 1;
   }
   return 0;
 }
@@ -1421,8 +1421,8 @@ int dbstealerworm_stateHandlerA01(int obj, int p)
     sub_40c->unk04 = lbl_803E62C8;
     ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E62A8, 0);
     *(u32 *)&bs->targetObj = 0;
-    bs->unk25F = 0;
-    bs->unk349 = 0;
+    bs->bool25F = 0;
+    bs->bool349 = 0;
     sub->targetState = 0;
     sub->configFlags |= ((DbstealerwormPlacement *)p4c)->unk2B;
     if (*(void **)&sub_40c->linkedObj != NULL) {
@@ -1433,7 +1433,7 @@ int dbstealerworm_stateHandlerA01(int obj, int p)
     if ((sub_40c->flags15 & 0x2) == 0) {
       *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x8;
     }
-    sub_40c->unk34 = 1;
+    sub_40c->bool34 = 1;
   }
   (**(int (**)(int, int, int, int, int *))(*gPlayerInterface + 0x34))(obj, p, 7, 0, lbl_80329640);
   return 0;
@@ -1638,9 +1638,9 @@ void dbstealerworm_free(int *obj) {
     int *p40c = *(int**)&((GroundBaddieState *)sub)->control;
     ObjGroup_RemoveObject(obj, 3);
     Stack_Free((int*)((DbStealerwormControl *)p40c)->msgStack);
-    if (((GameObject *)obj)->unkC8 != NULL) {
-        Obj_FreeObject(*(int *)&((GameObject *)obj)->unkC8);
-        *(int *)&((GameObject *)obj)->unkC8 = 0;
+    if (((GameObject *)obj)->seqIdC8 != NULL) {
+        Obj_FreeObject(*(int *)&((GameObject *)obj)->seqIdC8);
+        *(int *)&((GameObject *)obj)->seqIdC8 = 0;
     }
     ((void(*)(int*, u8*, int))((void**)*gBaddieControlInterface)[16])(obj, sub, 3);
 }
@@ -1918,7 +1918,7 @@ int dbstealerworm_stateHandlerA00(int obj, int p2)
   BaddieState *bs = (BaddieState *)p2;
 
   if ((s32)(s8)bs->moveJustStartedA != 0) {
-    bs->unk25F = 1;
+    bs->bool25F = 1;
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x8);
     ((GameObject *)obj)->anim.alpha = 255;
     bs->unk34D = 1;
@@ -1932,7 +1932,7 @@ int dbstealerworm_stateHandlerA00(int obj, int p2)
 
   if ((s32)(s8)bs->moveDone != 0) {
     sub->targetState = 1;
-    sub_40c->unk34 = 1;
+    sub_40c->bool34 = 1;
   }
 
   if ((*(int *)&bs->eventFlags & 0x200) != 0) {
@@ -2374,7 +2374,7 @@ void dfpobjcreator_update(int obj)
                 *(s16 *)(setup + 0x20) = -1;
                 *(s16 *)(setup + 0x1a) = 0xdc;
                 newObj = Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
-                ((GameObject *)newObj)->unkF4 = *(s8 *)(data + 0x1e);
+                ((GameObject *)newObj)->countF4 = *(s8 *)(data + 0x1e);
             }
             break;
         }
@@ -2440,7 +2440,7 @@ void dbstealerworm_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         *(f32 *)(sub->linkedObj + 0x14) = ((GameObject *)obj)->anim.localPosZ;
         *(f32 *)(sub->linkedObj + 0x10) += lbl_803E62D0;
     }
-    if (visible != 0 && ((GameObject *)obj)->unkF4 == 0 && state->targetState != 0) {
+    if (visible != 0 && ((GameObject *)obj)->countF4 == 0 && state->targetState != 0) {
         {
             if (state->unk3E8 != lbl_803E62A8) {
                 fn_8003B5E0(0xc8, 0, 0, (int)state->unk3E8);
@@ -2657,7 +2657,7 @@ void fn_80203144(int obj, int p2, int p3)
     if (near != 0 && (st->configFlags & 2) == 0) {
         (**(void (**)(int, int, int, int, int, int, int, int, int))((char *)*gBaddieControlInterface + 0x28))(obj, p3, p2 + 0x35c, st->gameBitB, 0, 0, 0, 8, -1);
         *(int *)&((BaddieState *)p3)->targetObj = near;
-        ((BaddieState *)p3)->unk349 = 0;
+        ((BaddieState *)p3)->bool349 = 0;
         ObjGroup_AddObject(obj, 3);
         *(u16 *)&st->targetState = 1;
     } else {
@@ -3588,11 +3588,11 @@ void dbstealerworm_update(u8 *objp)
         for (; n != 0; n--) {
             Stack_Push(((DbStealerwormControl *)sub)->msgStack, (int *)(*(int *)entry + (off -= 12)));
         }
-        ((DbStealerwormControl *)sub)->unk34 = 1;
+        ((DbStealerwormControl *)sub)->bool34 = 1;
         ((AnimFlags44 *)&((DbStealerwormControl *)sub)->flags44)->flag10 = 0;
     }
     if (GameBit_Get(((GroundBaddieState *)blob)->gameBitC) != 0) {
-        if (((GameObject *)obj)->unkF4 != 0) {
+        if (((GameObject *)obj)->countF4 != 0) {
             if ((((GroundBaddieState *)blob)->configFlags & 4) == 0 &&
                 (*gMapEventInterface)->isTimedEventActive(*(int *)(data + 0x14)) != 0) {
                 ((void (*)(int, int, int, int, int, int, int, f32))((void **)*gBaddieControlInterface)[22])(obj, data, blob, 0x10, 7, 0x10a, 0x26, lbl_803E62FC);
@@ -3603,12 +3603,12 @@ void dbstealerworm_update(u8 *objp)
                 ((GameObject *)obj)->anim.alpha = 0xff;
                 *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
             }
-        } else if (((GameObject *)obj)->unkF8 == 0) {
+        } else if (((GameObject *)obj)->moveF8 == 0) {
             ((GameObject *)obj)->anim.localPosX = *(f32 *)(data + 8);
             ((GameObject *)obj)->anim.localPosY = *(f32 *)(data + 0xc);
             ((GameObject *)obj)->anim.localPosZ = *(f32 *)(data + 0x10);
             (*gObjectTriggerInterface)->runSequence(*(s8 *)(data + 0x2e), (void *)obj, -1);
-            ((GameObject *)obj)->unkF8 = 1;
+            ((GameObject *)obj)->moveF8 = 1;
         } else {
             if (((int (*)(int, int, int))((void **)*gBaddieControlInterface)[12])(obj, blob, 0) == 0) {
                 ((GroundBaddieState *)blob)->targetState = 0;
@@ -4750,7 +4750,7 @@ void dbegg_update(int obj)
         (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~0x400;
         switch (((DbEggState *)blob)->mode) {
         case 5:
-            if (((GameObject *)obj)->unkF8 == 0) {
+            if (((GameObject *)obj)->moveF8 == 0) {
                 (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags |= 1;
             }
             if (fn_801FE560(obj, &h, lbl_803E61C8, *(f32 *)&lbl_803E61C8, 1) == 0) {
@@ -4787,7 +4787,7 @@ void dbegg_update(int obj)
             }
             break;
         case 1:
-            if (((GameObject *)obj)->unkF8 == 0) {
+            if (((GameObject *)obj)->moveF8 == 0) {
                 (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags |= 1;
             }
             *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
@@ -4869,7 +4869,7 @@ void dbegg_update(int obj)
                 ((DbEggState *)b2)->msg11E = 0;
                 ((DbEggState *)b2)->msg120 = lbl_803E61CC;
                 ObjMsg_SendToObject(p2, 0x7000a, obj, b2 + 0x11c);
-                ((GameObject *)obj)->unkF8 = 0;
+                ((GameObject *)obj)->moveF8 = 0;
             } else if (getButtonsJustPressed(0) & 0x100) {
                 ((DbEggState *)blob)->mode = 5;
                 *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;

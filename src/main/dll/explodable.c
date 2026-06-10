@@ -305,7 +305,7 @@ void largecrate_render(int obj, int p2, int p3, int p4, int p5, s8 renderState)
       (((ExplodableState *)state)->animTimer > lbl_803E39B8)) {
     ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
   } else {
-    if (((GameObject *)obj)->unkF8 != 0) {
+    if (((GameObject *)obj)->moveF8 != 0) {
       if (renderState != -1) {
         ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN;
         return;
@@ -469,7 +469,7 @@ void largecrate_free(int obj) {
 }
 
 int LargeCrate_SeqFn(int *obj) {
-    if (((GameObject *)obj)->unkB4 != -1) {
+    if (((GameObject *)obj)->classIdB4 != -1) {
         (*gCameraInterface)->setTargetReticleOverride((int)obj);
     }
     return 0;

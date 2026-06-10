@@ -391,7 +391,7 @@ typedef struct RouteState {
     s16 queueCount;
     s16 unk20;
     s16 pad22;
-    s16 unk24;
+    s16 count24;
     u8 mode26;
     u8 pad27;
 } RouteState;

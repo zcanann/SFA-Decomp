@@ -44,9 +44,9 @@ typedef struct XyzAnimatorState {
     int unk34;
     int unk38;
     int unk3C;
-    f32 unk40;
-    f32 unk44;
-    f32 unk48;
+    f32 speed40;
+    f32 speed44;
+    f32 speed48;
     s8 gameBit4C;
     s8 counter4D;
     u16 unk4E;
@@ -89,9 +89,9 @@ typedef struct DimBossIceSmashState {
     f32 posX26C;
     f32 posY26C;
     f32 posZ26C;
-    f32 unk278;
-    f32 unk27C;
-    f32 unk280;
+    f32 speed278;
+    f32 speed27C;
+    f32 speed280;
     f32 unk284;
     f32 unk288;
     f32 unk28C;

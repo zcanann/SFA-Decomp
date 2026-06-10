@@ -764,7 +764,7 @@ void fn_800D8414(int *obj, int *ctx) {
     }
     ((BaddieState *)ctx)->unk298 = ((BaddieState *)ctx)->unk298 / lbl_803E0578;
     lbl_803DD44C = (s16)getAngle(((BaddieState *)ctx)->unk290, -((BaddieState *)ctx)->unk28C);
-    lbl_803DD44C = (s16)(lbl_803DD44C - ((BaddieState *)ctx)->unk330);
+    lbl_803DD44C = (s16)(lbl_803DD44C - ((BaddieState *)ctx)->bool330);
     diff = lbl_803DD44C - (u16)((GameObject *)obj)->anim.rotX;
     if (diff > 0x8000) {
         diff -= 0xffff;
