@@ -115,7 +115,7 @@ void fn_8010DB7C(GameObject *target, f32 *outX, f32 *outY, f32 *outZ) {
 
     dx = target->anim.worldPosX - state->anchorX;
     dz = target->anim.worldPosZ - state->anchorZ;
-    dist = sqrtf(dz * dz + dx * dx);
+    dist = sqrtf(dx * dx + dz * dz);
     angle = (u16)getAngle(dx, dz);
 
     {
