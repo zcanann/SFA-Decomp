@@ -13372,10 +13372,10 @@ void fn_802AAF80(int obj, int inner, int a, int b, int c)
                 (((GameObject *)obj)->anim.localPosY + ((PlayerState *)inner)->unk838) -
                     lbl_803E7F10,
                 ((GameObject *)obj)->anim.localPosZ, lbl_803E7FFC);
-            (*gWaterfxInterface)->spawnRipple(
-                0, 2, ((GameObject *)obj)->anim.localPosX,
+            ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(
+                ((GameObject *)obj)->anim.localPosX,
                 ((GameObject *)obj)->anim.localPosY + ((PlayerState *)inner)->unk838,
-                ((GameObject *)obj)->anim.localPosZ, lbl_803E80E4);
+                ((GameObject *)obj)->anim.localPosZ, 0, lbl_803E80E4, 2);
             *(u32 *)((char *)inner + 0x360) &= ~0x20000LL;
         }
     }
@@ -14255,8 +14255,8 @@ void fn_802ADE80(int obj, int inner, int state)
         v.mat[0] = lbl_803E7EE0;
         setMatrixFromObjectPos(mtx, v.angles);
         Matrix_TransformPoint(mtx, tx, lbl_803E7EA4, tz, &tx, &ty, &tz);
-        (*gWaterfxInterface)->spawnRipple(0, 5, tx, *(f32 *)((char *)inner + 0x83c),
-                                          tz, lbl_803E7EA4);
+        ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(
+            tx, *(f32 *)((char *)inner + 0x83c), tz, 0, lbl_803E7EA4, 5);
         if (*(f32 *)((char *)inner + 0x838) > lbl_803E8128 &&
             ((PlayerState *)state)->baddie.unk294 > lbl_803E7E9C) {
             s16 ang = (s16)(*(s16 *)((char *)inner + 0x478) -
