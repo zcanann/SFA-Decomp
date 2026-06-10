@@ -1,7 +1,7 @@
 #ifndef MAIN_OBJECT_DESCRIPTOR_H_
 #define MAIN_OBJECT_DESCRIPTOR_H_
 
-#include "ghidra_import.h"
+#include "global.h"
 
 typedef void (*ObjectDescriptorCallback)(void);
 typedef int (*ObjectDescriptorExtraSizeCallback)(void);

@@ -1,7 +1,6 @@
 #ifndef MAIN_TEXTBLOCK_H_
 #define MAIN_TEXTBLOCK_H_
 
-#include "ghidra_import.h"
 #include "main/object_descriptor.h"
 
 #define TEXTBLOCK_DLL_ID 0x0239
