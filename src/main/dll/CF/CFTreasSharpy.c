@@ -511,7 +511,7 @@ void fxemit_update(FxEmitObject *obj)
     state = obj->state;
     def = (FxEmitPlacement *)obj->objAnim.placementData;
     if (state->startDelay != 0) {
-        state->startDelay -= (int)timeDelta;
+        state->startDelay -= (s16)timeDelta;
         if (state->startDelay < 0) {
             state->startDelay = 0;
         }
