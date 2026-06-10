@@ -1055,7 +1055,7 @@ extern f32 lbl_803E4B3C;
 
 void dim2icefloe_update(int obj)
 {
-    int sub = *(int *)(obj + 0xb8);
+    int sub = *(int *)&((GameObject *)obj)->extra;
     if (*(void **)(sub + 0x9c) != NULL && (*(u16 *)(((Dim2IceFloeState *)sub)->unk9C + 0xb0) & 0x40) != 0) {
         ((Dim2IceFloeState *)sub)->unkB6 &= ~1;
         ((Dim2IceFloeState *)sub)->unk9C = 0;
@@ -1114,7 +1114,7 @@ extern f32 lbl_803E4B58;
 void dim2icefloe_init(int obj, int p)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
-    int sub = *(int *)(obj + 0xb8);
+    int sub = *(int *)&((GameObject *)obj)->extra;
     ((Dim2IceFloeState *)sub)->unkA0 = *(int *)(p + 0x14);
     ((Dim2IceFloeState *)sub)->unkA4 = (f32)*(s16 *)(p + 0x1c) / lbl_803E4B48;
     ((Dim2IceFloeState *)sub)->unkA8 = (f32)(s32)randomGetRange(-0x1e, 0x1e);
@@ -1155,8 +1155,8 @@ void dim2icicle_update(int obj)
 {
     int sub;
     int state;
-    state = *(int *)(obj + 0x4c);
-    sub = *(int *)(obj + 0xb8);
+    state = *(int *)&((GameObject *)obj)->anim.placementData;
+    sub = *(int *)&((GameObject *)obj)->extra;
     switch (((Dim2IcicleState *)sub)->mode) {
     case 0:
         if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0xe) {
@@ -1164,7 +1164,7 @@ void dim2icicle_update(int obj)
         }
         ((Dim2IcicleState *)sub)->unk4 = (s16)randomGetRange(0x320, 0x4b0);
         ((Dim2IcicleState *)sub)->mode = 3;
-        (*(ObjHitsPriorityState **)(obj + 0x54))->flags &= ~1;
+        (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
         Sfx_PlayFromObject(obj, SFXmv_cflap2_c);
         break;
     case 3:
@@ -1263,9 +1263,9 @@ void dll_1DB_update(int obj)
     int n;
     int base;
 
-    sub = *(int *)(obj + 0xb8);
+    sub = *(int *)&((GameObject *)obj)->extra;
     player = (u32)Obj_GetPlayerObject();
-    state = *(int *)(obj + 0x4c);
+    state = *(int *)&((GameObject *)obj)->anim.placementData;
     found = 0;
     i = 0;
     base = *(int *)(obj + 0x58);
@@ -1404,7 +1404,7 @@ void dll_1DA_update(int obj)
     int i;
     RockHitInfo out;
 
-    sub = *(int *)(obj + 0xb8);
+    sub = *(int *)&((GameObject *)obj)->extra;
     if (*(u8 *)(sub + 4) != 0) {
         ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX * (k = lbl_803E4AE0);
         ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ * k;
@@ -1442,7 +1442,7 @@ void dll_1DA_update(int obj)
         ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ * e;
     }
     ((GameObject *)obj)->anim.localPosY = -(lbl_803E4B00 * timeDelta - ((GameObject *)obj)->anim.localPosY);
-    n = hitDetectFn_80065e50(*(f32 *)(obj + 0xc), ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ, obj,
+    n = hitDetectFn_80065e50(((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ, obj,
                              &list, 0, 0x11);
     *(u8 *)(sub + 4) = 0;
     i = 0;
@@ -1718,7 +1718,7 @@ void dim2lavacontrol_init(int obj, int param2)
     for (i = 1; (u8)i <= 0x2d; i++) {
         gameBitFn_800ea2e0(i);
     }
-    state = *(int *)(obj + 0xb8);
+    state = *(int *)&((GameObject *)obj)->extra;
     *(s8 *)(state + 0) = (s8)*(s16 *)(param2 + 0x1a);
     *(u8 *)(state + 1) = *(u8 *)(state + 0);
     if (GameBit_Get(*(s16 *)(param2 + 0x1e)) != 0) {
@@ -1766,7 +1766,7 @@ void dim2lavacontrol_update(int obj)
         }
         ((GameObject *)obj)->unkF4 = 0;
     }
-    obj = *(int *)(obj + 0xb8);
+    obj = *(int *)&((GameObject *)obj)->extra;
     if (*(s8 *)(obj + 4) == 0) {
         if (GameBit_Get(0xacd) != 0) {
             GameBit_Set(0xcc3, 1);
@@ -1783,20 +1783,20 @@ void dim2lavacontrol_update(int obj)
         fn_8004C1E4(*(u8 *)(obj + 3), lbl_803E4B90);
     }
     if (fn_802966D4(Obj_GetPlayerObject(), local) != 0) {
-        if ((*(int *)(obj + 8) & 2) && *(int *)(obj + 0xc) != 0xe0) {
-            Music_Trigger(*(int *)(obj + 0xc), 0);
-            *(int *)(obj + 0xc) = 0xe0;
+        if ((*(int *)&((GameObject *)obj)->anim.rootMotionScale & 2) && *(int *)&((GameObject *)obj)->anim.localPosX != 0xe0) {
+            Music_Trigger(*(int *)&((GameObject *)obj)->anim.localPosX, 0);
+            *(int *)&((GameObject *)obj)->anim.localPosX = 0xe0;
             Music_Trigger(0xe0, 1);
         }
     } else {
-        if ((*(int *)(obj + 8) & 2) && *(int *)(obj + 0xc) != 0xd7) {
-            Music_Trigger(*(int *)(obj + 0xc), 0);
-            *(int *)(obj + 0xc) = 0xd7;
+        if ((*(int *)&((GameObject *)obj)->anim.rootMotionScale & 2) && *(int *)&((GameObject *)obj)->anim.localPosX != 0xd7) {
+            Music_Trigger(*(int *)&((GameObject *)obj)->anim.localPosX, 0);
+            *(int *)&((GameObject *)obj)->anim.localPosX = 0xd7;
             Music_Trigger(0xd7, 1);
         }
     }
     SCGameBitLatch_Update((char *)obj + 8, 1, -1, -1, 0xd99, 0xde);
-    SCGameBitLatch_Update((char *)obj + 8, 2, -1, -1, 0xda5, *(int *)(obj + 0xc));
+    SCGameBitLatch_Update((char *)obj + 8, 2, -1, -1, 0xda5, *(int *)&((GameObject *)obj)->anim.localPosX);
     SCGameBitLatch_Update((char *)obj + 8, 8, -1, -1, 0xf04, 0x96);
     SCGameBitLatch_UpdateInverted((char *)obj + 8, 0x10, -1, -1, 0xf04, 0x2c);
     SCGameBitLatch_Update((char *)obj + 8, 4, -1, -1, 0xcbb, 0xc4);

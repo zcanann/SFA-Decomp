@@ -3401,9 +3401,9 @@ int curves_findNearObj(int obj,int *curveTypes,int typeCount,int action,char bbo
     typeIndex = 0;
     do {
       if ((curve->type == curveTypes[typeIndex]) || (typeCount < 1)) {
-        dx = curve->x - *(f32 *)(obj + 0xc);
-        dy = curve->y - *(f32 *)(obj + 0x10);
-        dz = curve->z - *(f32 *)(obj + 0x14);
+        dx = curve->x - ((GameObject *)obj)->anim.localPosX;
+        dy = curve->y - ((GameObject *)obj)->anim.localPosY;
+        dz = curve->z - ((GameObject *)obj)->anim.localPosZ;
         distance = sqrtf(dz * dz + (dx * dx + dy * dy));
         if (distance < bestDistance) {
           curvePos[0] = curve->x;

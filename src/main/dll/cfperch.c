@@ -434,7 +434,7 @@ void smallbasket_update(int obj)
             ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.velocityY * timeDelta + ((GameObject *)obj)->anim.localPosY;
             ((GameObject *)obj)->anim.localPosZ = ((GameObject *)obj)->anim.velocityZ * timeDelta + ((GameObject *)obj)->anim.localPosZ;
             fn_801821FC(obj);
-            c = (*(ObjHitsPriorityState **)(obj + 0x54))->contactFlags;
+            c = (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->contactFlags;
             if ((c != 0) && (*(s8 *)(state + 0x9) == 1)) {
                 blk.fy = ((GameObject *)obj)->anim.localPosX;
                 blk.fz = ((GameObject *)obj)->anim.localPosY;

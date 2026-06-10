@@ -2077,7 +2077,7 @@ void curves_countRandomPoints(int obj,uint *curve)
     walk = curve;
     for (i = 0; i < (int)(uint)collision->pointCounts >> CURVES_POINT_COUNT_SEGMENT_SHIFT; i++) {
       *pf = *(f32 *)(walk + 3);
-      hits = hitDetectFn_80065e50(obj, *(f32 *)(walk + 2), *(f32 *)(obj + 0x1c),
+      hits = hitDetectFn_80065e50(obj, *(f32 *)(walk + 2), ((GameObject *)obj)->anim.worldPosY,
                                   *(f32 *)(walk + 4), &hitOut, -1, 0);
       found1 = 0;
       if ((hits != 0) && (list = hitOut, 0 < hits)) {
@@ -2103,7 +2103,7 @@ void curves_countRandomPoints(int obj,uint *curve)
       pf = pf + 1;
     }
     if (count != 0) {
-      *(f32 *)(obj + 0x1c) = sum0 / (f32)(s32)count;
+      ((GameObject *)obj)->anim.worldPosY = sum0 / (f32)(s32)count;
       *(f32 *)(curve + 0x68) = sum1 / (f32)(s32)count;
       *(f32 *)(curve + 0x69) = sum2 / (f32)(s32)count;
       *(f32 *)(curve + 0x6a) = sum3 / (f32)(s32)count;
@@ -2116,9 +2116,9 @@ void curves_countRandomPoints(int obj,uint *curve)
     dx = heights[3] - heights[0];
     getAngle(dx, dz);
     ang = getAngle(dx, dz);
-    *(s16 *)(obj + 2) = -ang;
+    ((GameObject *)obj)->anim.rotY = -ang;
     if ((*curve & 0x400) != 0) {
-      *(s16 *)(obj + 4) = getAngle(heights[1] - heights[0],
+      ((GameObject *)obj)->anim.rotZ = getAngle(heights[1] - heights[0],
                                    collision->segmentLocalPoints[3] -
                                        collision->segmentLocalPoints[0]);
     }

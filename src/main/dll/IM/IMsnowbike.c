@@ -411,7 +411,7 @@ void warpstonelift_update(u8 *obj) {
         }
     }
     if (found) {
-        *(u8 *)(obj + 0xAF) &= ~0x8;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x8;
         switch (*state) {
         case 0:
         case 1:
@@ -437,7 +437,7 @@ void warpstonelift_update(u8 *obj) {
             break;
         }
     } else {
-        *(u8 *)(obj + 0xAF) |= 0x8;
+        *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x8;
     }
 }
 
