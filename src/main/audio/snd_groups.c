@@ -82,6 +82,54 @@ extern u8 gSynthInitialized;
 extern s16 synthLoadedGroupCount;
 extern GSTACK synthLoadedGroupTable[];
 
+static MEM_DATA *GetMacroAddr(u16 id, POOL_DATA *pool)
+{
+    MEM_DATA *m;
+    if (pool == NULL) return NULL;
+    m = (MEM_DATA *)((u8 *)pool + pool->macroOff);
+    while (m->nextOff != 0xFFFFFFFF) {
+        if (m->id == id) return m;
+        m = (MEM_DATA *)((u8 *)m + m->nextOff);
+    }
+    return NULL;
+}
+
+static MEM_DATA *GetCurveAddr(u16 id, POOL_DATA *pool)
+{
+    MEM_DATA *m;
+    if (pool == NULL) return NULL;
+    m = (MEM_DATA *)((u8 *)pool + pool->curveOff);
+    while (m->nextOff != 0xFFFFFFFF) {
+        if (m->id == id) return m;
+        m = (MEM_DATA *)((u8 *)m + m->nextOff);
+    }
+    return NULL;
+}
+
+static MEM_DATA *GetKeymapAddr(u16 id, POOL_DATA *pool)
+{
+    MEM_DATA *m;
+    if (pool == NULL) return NULL;
+    m = (MEM_DATA *)((u8 *)pool + pool->keymapOff);
+    while (m->nextOff != 0xFFFFFFFF) {
+        if (m->id == id) return m;
+        m = (MEM_DATA *)((u8 *)m + m->nextOff);
+    }
+    return NULL;
+}
+
+static MEM_DATA *GetLayerAddr(u16 id, POOL_DATA *pool)
+{
+    MEM_DATA *m;
+    if (pool == NULL) return NULL;
+    m = (MEM_DATA *)((u8 *)pool + pool->layerOff);
+    while (m->nextOff != 0xFFFFFFFF) {
+        if (m->id == id) return m;
+        m = (MEM_DATA *)((u8 *)m + m->nextOff);
+    }
+    return NULL;
+}
+
 void InsertData(u16 id, void *data, u8 dataType, u32 remove)
 {
     MEM_DATA *m;
@@ -89,20 +137,7 @@ void InsertData(u16 id, void *data, u8 dataType, u32 remove)
     switch (dataType) {
     case 0:
         if (!remove) {
-            if (data == NULL) {
-                m = NULL;
-            } else {
-                m = (MEM_DATA *)((u8 *)data + ((POOL_DATA *)data)->macroOff);
-                while (m->nextOff != 0xFFFFFFFF) {
-                    if (m->id == id) {
-                        goto macro_check;
-                    }
-                    m = (MEM_DATA *)((u8 *)m + m->nextOff);
-                }
-                m = NULL;
-            }
-        macro_check:
-            if (m != NULL) {
+            if ((m = GetMacroAddr(id, data)) != NULL) {
                 dataInsertMacro(id, &m->data.cmd);
             } else {
                 dataInsertMacro(id, NULL);
@@ -114,20 +149,7 @@ void InsertData(u16 id, void *data, u8 dataType, u32 remove)
     case 2: {
         id |= 0x4000;
         if (!remove) {
-            if (data == NULL) {
-                m = NULL;
-            } else {
-                m = (MEM_DATA *)((u8 *)data + ((POOL_DATA *)data)->keymapOff);
-                while (m->nextOff != 0xFFFFFFFF) {
-                    if (m->id == id) {
-                        goto keymap_check;
-                    }
-                    m = (MEM_DATA *)((u8 *)m + m->nextOff);
-                }
-                m = NULL;
-            }
-        keymap_check:
-            if (m != NULL) {
+            if ((m = GetKeymapAddr(id, data)) != NULL) {
                 dataInsertKeymap(id, &m->data.map);
             } else {
                 dataInsertKeymap(id, NULL);
@@ -135,24 +157,12 @@ void InsertData(u16 id, void *data, u8 dataType, u32 remove)
         } else {
             dataRemoveKeymap(id);
         }
-    } break;
+        break;
+    }
     case 3: {
         id |= 0x8000;
         if (!remove) {
-            if (data == NULL) {
-                m = NULL;
-            } else {
-                m = (MEM_DATA *)((u8 *)data + ((POOL_DATA *)data)->layerOff);
-                while (m->nextOff != 0xFFFFFFFF) {
-                    if (m->id == id) {
-                        goto layer_check;
-                    }
-                    m = (MEM_DATA *)((u8 *)m + m->nextOff);
-                }
-                m = NULL;
-            }
-        layer_check:
-            if (m != NULL) {
+            if ((m = GetLayerAddr(id, data)) != NULL) {
                 dataInsertLayer(id, &m->data.layer.entry, m->data.layer.num);
             } else {
                 dataInsertLayer(id, NULL, 0);
@@ -160,23 +170,11 @@ void InsertData(u16 id, void *data, u8 dataType, u32 remove)
         } else {
             dataRemoveLayer(id);
         }
-    } break;
+        break;
+    }
     case 4:
         if (!remove) {
-            if (data == NULL) {
-                m = NULL;
-            } else {
-                m = (MEM_DATA *)((u8 *)data + ((POOL_DATA *)data)->curveOff);
-                while (m->nextOff != 0xFFFFFFFF) {
-                    if (m->id == id) {
-                        goto curve_check;
-                    }
-                    m = (MEM_DATA *)((u8 *)m + m->nextOff);
-                }
-                m = NULL;
-            }
-        curve_check:
-            if (m != NULL) {
+            if ((m = GetCurveAddr(id, data)) != NULL) {
                 dataInsertCurve(id, &m->data.tab);
             } else {
                 dataInsertCurve(id, NULL);
