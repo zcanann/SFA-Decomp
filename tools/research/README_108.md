@@ -75,3 +75,14 @@ within-pool order divergence is fn-/TU-context-bound and NOT reproducible
 in minimal probes (the #113 probe-trap, order-law edition). All further
 order-law experiments must be IN-TREE A/B on the real fns; the harness is
 only valid for the dose mechanism (rounds 1-2).
+
+
+## Round-5: in-tree order-law experiments on n_rareware (initLoadingScreenTextures)
+
+- `#pragma optimization_level 2` wrap: 86.69 -> 82.41 NET-NEGATIVE (the isel
+  damage exceeds the coloring gain, as predicted; O2-as-the-fix is dead).
+- TU position (fn moved to file top): byte-identical 86.69 — TU position is
+  INERT on the order law (matches the probe-battery's no-cross-fn-leakage).
+Remaining queued: per-arm block-scope decls; preceding-fn content variations
+in-tree; the construct-census bisection (stub bodies one at a time as the
+#115 method prescribes — header-decl bisection found that class's perturber).
