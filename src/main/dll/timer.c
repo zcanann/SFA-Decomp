@@ -124,10 +124,10 @@ void timer_update(int obj)
 
     if (fn_80080150((int)state) != 0) {
         flag = 0;
-        if (f->manual == 0 && (u32)GameBit_Get(setup->startGameBit) == 0) {
+        if (f->manual == 0 && (void *)GameBit_Get(setup->startGameBit) == NULL) {
             storeZeroToFloatParam((void *)state);
             if (state->mode == TIMER_MODE_GLOBAL) {
-                switch (setup->base.mapId) {
+                switch (((TimerSetup *)((GameObject *)obj)->anim.placementData)->base.mapId) {
                 case 0x466ED:
                     break;
                 default:
@@ -158,7 +158,7 @@ void timer_update(int obj)
             f->manual = 0;
         }
     } else {
-        if ((u32)GameBit_Get(setup->startGameBit) != 0 || f->manual != 0) {
+        if ((void *)GameBit_Get(setup->startGameBit) != NULL || f->manual != 0) {
             storeZeroToFloatParam((void *)state);
             if (setup->durationMinutes != 0) {
                 s16toFloat((void *)state, (s16)(setup->durationMinutes * 60));
@@ -170,7 +170,7 @@ void timer_update(int obj)
                 break;
             case TIMER_MODE_EFFECT:
                 state->lightSlot = modelLightStruct_createPointLight(obj, 255, 0, 0, 0);
-                if (state->lightSlot != 0) {
+                if ((void *)state->lightSlot != NULL) {
                     modelLightStruct_setupGlow((void *)state->lightSlot, 0, 255, 0, 0, 100, lbl_803DC418);
                     modelLightStruct_setPosition((void *)state->lightSlot, lbl_803E741C, lbl_803E7420,
                                         *(f32 *)&lbl_803E741C);
@@ -196,7 +196,7 @@ void timer_update(int obj)
             } else {
                 tv = 0;
             }
-            if (state->lightSlot != 0) {
+            if ((void *)state->lightSlot != NULL) {
                 if (tv == 1 && tv != f->flag20) {
                     Sfx_PlayFromObject(obj, 986);
                 }
@@ -204,7 +204,7 @@ void timer_update(int obj)
             }
             f->flag20 = (u8)tv;
         }
-        if (state->lightSlot != 0) {
+        if ((void *)state->lightSlot != NULL) {
             modelLightStruct_updateGlowAlpha((void *)state->lightSlot);
         }
     }
