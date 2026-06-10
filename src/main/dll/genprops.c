@@ -6662,10 +6662,10 @@ void fireball_update(int *obj)
                     obj, ((GameObject *)obj)->anim.localPosX,
                     ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ,
                     lbl_803E3360);
-                (*gWaterfxInterface)->spawnRipple(
-                    *(s16 *)obj, 2, ((GameObject *)obj)->anim.localPosX,
+                ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(
+                    ((GameObject *)obj)->anim.localPosX,
                     ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ,
-                    lbl_803E3330);
+                    *(s16 *)obj, lbl_803E3330, 2);
             }
             {
                 u8 v = ((FireballState *)state)->unk71;
