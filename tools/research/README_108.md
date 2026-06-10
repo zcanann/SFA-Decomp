@@ -86,3 +86,21 @@ only valid for the dose mechanism (rounds 1-2).
 Remaining queued: per-arm block-scope decls; preceding-fn content variations
 in-tree; the construct-census bisection (stub bodies one at a time as the
 #115 method prescribes — header-decl bisection found that class's perturber).
+
+
+## Round-6: decl-width bisection + prefix-stub (n_rareware)
+
+- TRUE SDK widths for GXGetTexBufferSize (u16,u16,...): 81.47 — WORSE than
+  the import's all-uint decl (86.69). The all-int/uint flat decl outscores
+  SDK truth here (either the original used a local prototype, or the u16
+  promotions cost more than the coloring gains).
+- GXGetTexObjFmt int-return: identical; Width u16-return: worse (85.9).
+- PREFIX-STUB (runLoadingScreens emptied): byte-identical 86.69 — no
+  cross-fn leakage in-tree either.
+CONCLUSION after 6 rounds: the order-law discriminator lives in the fn's
+OWN text at the IR level (web-creation order), unreachable by decl widths,
+TU position, neighbors, pragmas, or O-levels. The remaining axes: per-arm
+block-scope re-decls (#108's shrine1CE lever, untested on this specimen)
+and accumulating more 100%-matched specimens whose C is known (MP4-oracle
+the GX-result shape: find a matched fn with 3 sequential call results
+feeding a consume call and read its locals' declaration pattern).
