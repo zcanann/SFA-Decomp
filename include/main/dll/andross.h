@@ -13,7 +13,7 @@ typedef struct AndrossState {
     int unk0;
     int handObjA; /* ObjList_FindObjectById(0x47b78); driven via androsshand_setState */
     int handObjB; /* ObjList_FindObjectById(0x47b6a); driven via androsshand_setState */
-    int unkC;
+    int lightAnchorObj;
     int unk10;
     int unk14;
     u8 unk18[0x20 - 0x18];
@@ -31,7 +31,7 @@ typedef struct AndrossState {
     f32 homePosZ;
     f32 animSpeed; /* passed with ObjAnim_SetCurrentMove */
     f32 fadeAlpha; /* mesh alpha source (alpha = K * fadeAlpha) */
-    f32 unk6C;
+    f32 spawnCooldown;
     f32 unk70;
     f32 springStiffness; /* vel += stiffness * (targetPos - pos) */
     f32 springDamping; /* vel *= damping each tick */
@@ -40,8 +40,8 @@ typedef struct AndrossState {
     int actionPending; /* set when timers expire; drives the actionState switch */
     int actionState; /* main action state machine (switch 0..0xd) */
     int prevActionState; /* change-detect latch for actionState */
-    int unk90;
-    int unk94;
+    int effectLifetime;
+    int spawnedObjLifetime;
     s16 actionTimer; /* frames; -= framesThisStep, re-armed from config on expiry */
     u8 unk9A[0x9C - 0x9A];
     f32 durationTimer; /* seconds; -= timeDelta, compared to thresholds */
@@ -50,7 +50,7 @@ typedef struct AndrossState {
     s16 unkA4;
     s16 unkA6;
     f32 unkA8;
-    u8 unkAC;
+    u8 actionToggle;
     u8 signalFlags; /* |= signal (the setter param name) */
     u8 unkAE;
     u8 unkAF;
@@ -62,9 +62,9 @@ typedef struct AndrossState {
     int unkB8;
     u8 unkBC;
     u8 unkBD[0xC0 - 0xBD];
-    f32 unkC0;
-    f32 unkC4;
-    f32 unkC8;
+    f32 cachedPosX;
+    f32 cachedPosY;
+    f32 cachedPosZ;
     f32 targetPosX; /* tracked target: K*sin(t) + homePos + clamped arwing delta */
     f32 targetPosY;
     f32 targetPosZ;
@@ -72,7 +72,7 @@ typedef struct AndrossState {
     f32 unkDC;
     f32 unkE0;
     f32 unkE4;
-    u8 unkE8;
+    u8 soundEventFlags;
     u8 unkE9[0xEC - 0xE9];
 } AndrossState;
 

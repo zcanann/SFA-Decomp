@@ -79,7 +79,7 @@ void andross_init(int obj, u8 *setup)
     ((AndrossState *)state)->prevFightPhase = -1;
     ((AndrossState *)state)->unkA0 = -0x8000;
     *(s16 *)obj = -0x8000;
-    ((AndrossState *)state)->unk6C = lbl_803E7594;
+    ((AndrossState *)state)->spawnCooldown = lbl_803E7594;
     ((AndrossState *)state)->unkA8 = lbl_803E74D4;
     ((AndrossState *)state)->springStiffness = lbl_803E7598;
     ((AndrossState *)state)->springDamping = lbl_803E7530;
@@ -102,21 +102,21 @@ void fn_8023A87C(int p1, int p2)
     spawned = *(void **)(p2 + 0x10);
     if (spawned != NULL) {
         *(f32 *)((char *)spawned + 0x14) -= lbl_803E74D8;
-        ((AndrossState *)p2)->unk90 -= framesThisStep;
-        if (((AndrossState *)p2)->unk90 < 0) {
+        ((AndrossState *)p2)->effectLifetime -= framesThisStep;
+        if (((AndrossState *)p2)->effectLifetime < 0) {
             fn_8022F558(((AndrossState *)p2)->unk10, 5);
-            ((AndrossState *)p2)->unk90 = 0;
+            ((AndrossState *)p2)->effectLifetime = 0;
             ((AndrossState *)p2)->unk10 = 0;
         }
     } else {
-        f32 v = ((AndrossState *)p2)->unk6C;
+        f32 v = ((AndrossState *)p2)->spawnCooldown;
         f32 zero = lbl_803E74D4;
         if (v >= zero) {
-            ((AndrossState *)p2)->unk6C = v - timeDelta;
-            if (((AndrossState *)p2)->unk6C < zero)
+            ((AndrossState *)p2)->spawnCooldown = v - timeDelta;
+            if (((AndrossState *)p2)->spawnCooldown < zero)
                 fn_80239DD8(p1, p2);
         } else if ((u32)GameBit_Get(0x12) != 0) {
-            ((AndrossState *)p2)->unk6C = (f32)(int)randomGetRange(1, 0x14);
+            ((AndrossState *)p2)->spawnCooldown = (f32)(int)randomGetRange(1, 0x14);
             GameBit_Set(0x12, 0);
         }
     }
@@ -328,9 +328,9 @@ void andross_update(int obj)
     iVar5 = ObjList_FindObjectById(0x47b6a);
     ((AndrossState *)piVar14)->handObjB = iVar5;
   }
-  if (*(void * *)&((AndrossState *)piVar14)->unkC == NULL) {
+  if (*(void * *)&((AndrossState *)piVar14)->lightAnchorObj == NULL) {
     iVar5 = ObjList_FindObjectById(0x47dd9);
-    ((AndrossState *)piVar14)->unkC = iVar5;
+    ((AndrossState *)piVar14)->lightAnchorObj = iVar5;
   }
   if (*(void **)piVar14 == NULL) {
     iVar5 = getArwing();
@@ -373,8 +373,8 @@ void andross_update(int obj)
   ObjPath_GetPointWorldPosition(obj,pathFlag,(f32 *)(piVar14 + 0x30),(f32 *)(piVar14 + 0x31),(f32 *)(piVar14 + 0x32),0);
   fVar2 = lbl_803E74E0;
   if (pathFlag == 1) {
-    ((AndrossState *)piVar14)->unkC4 = ((AndrossState *)piVar14)->unkC4 + lbl_803E74E0;
-    ((AndrossState *)piVar14)->unkC8 = ((AndrossState *)piVar14)->unkC8 + fVar2;
+    ((AndrossState *)piVar14)->cachedPosY = ((AndrossState *)piVar14)->cachedPosY + lbl_803E74E0;
+    ((AndrossState *)piVar14)->cachedPosZ = ((AndrossState *)piVar14)->cachedPosZ + fVar2;
   }
   switch (((AndrossState *)piVar14)->fightPhase) {
   case 1:
@@ -509,7 +509,7 @@ void andross_update(int obj)
   case 5:
     if (stateChanged) {
       ((AndrossState *)piVar14)->actionState = 0xd;
-      ((AndrossState *)piVar14)->unkAC = 0;
+      ((AndrossState *)piVar14)->actionToggle = 0;
     }
     if (((AndrossState *)piVar14)->actionPending != 0) {
       switch(((AndrossState *)piVar14)->actionState) {
@@ -517,10 +517,10 @@ void andross_update(int obj)
         *(undefined *)((int)piVar14 + 0xb1) = 3;
       case 0xf:
         ((AndrossState *)piVar14)->actionState = 0x12;
-        ((AndrossState *)piVar14)->unkAC = 0;
+        ((AndrossState *)piVar14)->actionToggle = 0;
         break;
       case 0x14:
-        switch (((AndrossState *)piVar14)->unkAC) {
+        switch (((AndrossState *)piVar14)->actionToggle) {
         case 0:
           ((AndrossState *)piVar14)->actionState = 0x15;
           break;
@@ -528,7 +528,7 @@ void andross_update(int obj)
           ((AndrossState *)piVar14)->actionState = 0xb;
           break;
         }
-        ((AndrossState *)piVar14)->unkAC = ((AndrossState *)piVar14)->unkAC ^ 1;
+        ((AndrossState *)piVar14)->actionToggle = ((AndrossState *)piVar14)->actionToggle ^ 1;
         break;
       case 0x15:
         ((AndrossState *)piVar14)->actionState = 0x12;
@@ -548,7 +548,7 @@ void andross_update(int obj)
   case 6:
     if (stateChanged) {
       ((AndrossState *)piVar14)->actionState = 0x1c;
-      ((AndrossState *)piVar14)->unkAC = 0;
+      ((AndrossState *)piVar14)->actionToggle = 0;
     }
     break;
   }
@@ -1176,10 +1176,10 @@ LAB_8023cbdc:
       Rcp_DisableDistortionFilter();
     }
     else {
-      if (*(float *)(*piVar14 + 0x14) > ((AndrossState *)piVar14)->unkC8) {
+      if (*(float *)(*piVar14 + 0x14) > ((AndrossState *)piVar14)->cachedPosZ) {
         ((AndrossState *)piVar14)->actionState = 0x10;
         *(undefined *)(piVar14 + 0x2e) = 1;
-        *(f32 *)(*piVar14 + 0x14) = ((AndrossState *)piVar14)->unkC8;
+        *(f32 *)(*piVar14 + 0x14) = ((AndrossState *)piVar14)->cachedPosZ;
         ((AndrossState *)piVar14)->unkE0 = lbl_803E74D4;
         lbl_803DDDB8 = lbl_803DC4D4;
         lbl_803DDDB8 += lbl_803DC4D0;
@@ -1252,9 +1252,9 @@ LAB_8023cbdc:
                      (float)(((AndrossState *)piVar14)->homePosY + dVar17));
     ((AndrossState *)piVar14)->targetPosZ = ((AndrossState *)piVar14)->homePosZ;
     iVar12 = *piVar14;
-    local_e4.x = (((AndrossState *)piVar14)->unkC0 - *(float *)&((AndrossState *)iVar12)->unkC) * lbl_803DC468;
-    local_e4.y = (((AndrossState *)piVar14)->unkC4 - *(float *)&((AndrossState *)iVar12)->unk10) * lbl_803DC468;
-    local_e4.z = (((AndrossState *)piVar14)->unkC8 - *(float *)&((AndrossState *)iVar12)->unk14) * lbl_803DC468;
+    local_e4.x = (((AndrossState *)piVar14)->cachedPosX - *(float *)&((AndrossState *)iVar12)->lightAnchorObj) * lbl_803DC468;
+    local_e4.y = (((AndrossState *)piVar14)->cachedPosY - *(float *)&((AndrossState *)iVar12)->unk10) * lbl_803DC468;
+    local_e4.z = (((AndrossState *)piVar14)->cachedPosZ - *(float *)&((AndrossState *)iVar12)->unk14) * lbl_803DC468;
     local_d8 = local_e4;
     arwarwing_setVelocity(iVar12,(int)&local_d8);
     fVar2 = -(lbl_803E74B0 * timeDelta - ((AndrossState *)piVar14)->unkA8);
@@ -1308,7 +1308,7 @@ LAB_8023cbdc:
       ((AndrossState *)iVar12)->animSpeed = lbl_8032C0E0[0];
       androsshand_setState(((AndrossState *)piVar14)->handObjA,0,0);
       androsshand_setState(((AndrossState *)piVar14)->handObjB,0,0);
-      if ((((AndrossState *)piVar14)->fightPhase == 5) && (((AndrossState *)piVar14)->unkAC != 0)) {
+      if ((((AndrossState *)piVar14)->fightPhase == 5) && (((AndrossState *)piVar14)->actionToggle != 0)) {
         GameBit_Set(0xe,1);
       }
     }
@@ -1323,7 +1323,7 @@ LAB_8023cbdc:
       iVar5 = ObjModel_GetRenderOp(iVar8,iVar12);
       ((AndrossState *)iVar5)->unk43 = fVar2;
     }
-    if ((((AndrossState *)piVar14)->fightPhase == 5) && (((AndrossState *)piVar14)->unkAC == 0)) {
+    if ((((AndrossState *)piVar14)->fightPhase == 5) && (((AndrossState *)piVar14)->actionToggle == 0)) {
       for (iVar12 = 0; (u8)iVar12 < 6; iVar12 = iVar12 + 1) {
         if ((u32)GameBit_Get((u8)iVar12 + 0x108) != 0) {
           *(s16 *)((int)piVar14 + 0xa6) = 0x3c;
@@ -1371,7 +1371,7 @@ LAB_8023d59c:
       ((AndrossState *)piVar14)->actionTimer = 0xffff;
     }
     Sfx_KeepAliveLoopedObjectSound(obj,0x469);
-    if ((((AndrossState *)piVar14)->fightPhase == 5) && (((AndrossState *)piVar14)->unkAC == 0)) {
+    if ((((AndrossState *)piVar14)->fightPhase == 5) && (((AndrossState *)piVar14)->actionToggle == 0)) {
       for (iVar12 = 0; (u8)iVar12 < 6; iVar12 = iVar12 + 1) {
         if ((u32)GameBit_Get((u8)iVar12 + 0x108) != 0) {
           *(s16 *)((int)piVar14 + 0xa6) = 0x3c;
@@ -1416,9 +1416,9 @@ LAB_8023d7cc:
       if ((((((AndrossState *)piVar14)->unk14 == 0) && (((AndrossState *)piVar14)->actionTimer <= local_130[(u8)iVar8])) &&
           (local_130[(u8)iVar8] < (short)iVar12)) && (cVar11 = Obj_IsLoadingLocked(), cVar11 != '\0')) {
         iVar5 = Obj_AllocObjectSetup(0x24,0x819);
-        *(f32 *)&((AndrossState *)iVar5)->handObjB = ((AndrossState *)piVar14)->unkC0;
-        *(f32 *)&((AndrossState *)iVar5)->unkC = ((AndrossState *)piVar14)->unkC4;
-        *(f32 *)&((AndrossState *)iVar5)->unk10 = ((AndrossState *)piVar14)->unkC8;
+        *(f32 *)&((AndrossState *)iVar5)->handObjB = ((AndrossState *)piVar14)->cachedPosX;
+        *(f32 *)&((AndrossState *)iVar5)->lightAnchorObj = ((AndrossState *)piVar14)->cachedPosY;
+        *(f32 *)&((AndrossState *)iVar5)->unk10 = ((AndrossState *)piVar14)->cachedPosZ;
         *(undefined *)(iVar5 + 4) = 1;
         *(undefined *)(iVar5 + 5) = 1;
         ((AndrossState *)iVar5)->unk20 = 0xffff;
@@ -1427,7 +1427,7 @@ LAB_8023d7cc:
         if (((AndrossState *)piVar14)->unk14 != 0) {
           ((GameObject *)((AndrossState *)piVar14)->unk14)->anim.alpha = 0xff;
           *(undefined *)(((AndrossState *)piVar14)->unk14 + 0x37) = 0xff;
-          ((AndrossState *)piVar14)->unk94 = lbl_803DC4EC;
+          ((AndrossState *)piVar14)->spawnedObjLifetime = lbl_803DC4EC;
         }
       }
     }
@@ -1445,7 +1445,7 @@ LAB_8023d7cc:
       ObjAnim_SetCurrentMove(obj,0x14,lbl_803E74D4,0);
       ((AndrossState *)iVar12)->animSpeed = lbl_8032C0E8[0];
     }
-    if ((((AndrossState *)piVar14)->fightPhase == 5) && (((AndrossState *)piVar14)->unkAC == 0)) {
+    if ((((AndrossState *)piVar14)->fightPhase == 5) && (((AndrossState *)piVar14)->actionToggle == 0)) {
       for (iVar12 = 0; (u8)iVar12 < 6; iVar12 = iVar12 + 1) {
         if ((u32)GameBit_Get((u8)iVar12 + 0x108) != 0) {
           *(s16 *)((int)piVar14 + 0xa6) = 0x3c;
@@ -1510,7 +1510,7 @@ LAB_8023db24:
     break;
   case 0x1c:
     if (moveChanged) {
-      androssbrain_setState(((AndrossState *)piVar14)->unkC,1,0);
+      androssbrain_setState(((AndrossState *)piVar14)->lightAnchorObj,1,0);
       ObjHits_DisableObject(obj);
       ((AndrossState *)piVar14)->actionTimer = 0x3c;
       ((AndrossState *)piVar14)->durationTimer = lbl_803E74D8;
@@ -1545,13 +1545,13 @@ LAB_8023de5c:
     if (((AndrossState *)piVar14)->actionTimer < 0) {
       ((AndrossState *)piVar14)->durationTimer = ((AndrossState *)piVar14)->durationTimer - lbl_803E74DC;
       if (((AndrossState *)piVar14)->durationTimer < lbl_803E74D4) {
-        *(char *)&((AndrossState *)piVar14)->unkAC = *(char *)&((AndrossState *)piVar14)->unkAC + '\x01';
-        if (((AndrossState *)piVar14)->unkAC > 3) {
+        *(char *)&((AndrossState *)piVar14)->actionToggle = *(char *)&((AndrossState *)piVar14)->actionToggle + '\x01';
+        if (((AndrossState *)piVar14)->actionToggle > 3) {
           ((AndrossState *)piVar14)->fightPhase = 5;
           ((AndrossState *)piVar14)->prevFightPhase = 5;
-          ((AndrossState *)piVar14)->unkAC = 0;
+          ((AndrossState *)piVar14)->actionToggle = 0;
           ((AndrossState *)piVar14)->actionState = 0x12;
-          androssbrain_setState(((AndrossState *)piVar14)->unkC,0,0);
+          androssbrain_setState(((AndrossState *)piVar14)->lightAnchorObj,0,0);
           ObjHits_EnableObject(obj);
         }
         else {
@@ -1589,7 +1589,7 @@ LAB_8023de5c:
     break;
   case 0x1d:
     if (moveChanged) {
-      androssbrain_setState(((AndrossState *)piVar14)->unkC,1,0);
+      androssbrain_setState(((AndrossState *)piVar14)->lightAnchorObj,1,0);
       ObjHits_DisableObject(obj);
       ((AndrossState *)piVar14)->actionTimer = (short)lbl_803DC484;
       ((AndrossState *)piVar14)->targetPosX = *(f32 *)(*piVar14 + 0xc);
@@ -1629,9 +1629,9 @@ LAB_8023de5c:
     }
     if (*(u8 *)(piVar14 + 0x2e) != 0) {
       iVar12 = *piVar14;
-      local_fc.x = (((AndrossState *)piVar14)->unkC0 - *(float *)&((AndrossState *)iVar12)->unkC) * lbl_803DC488;
-      local_fc.y = (((AndrossState *)piVar14)->unkC4 - *(float *)&((AndrossState *)iVar12)->unk10) * lbl_803DC488;
-      local_fc.z = (((AndrossState *)piVar14)->unkC8 - *(float *)&((AndrossState *)iVar12)->unk14) * lbl_803DC488;
+      local_fc.x = (((AndrossState *)piVar14)->cachedPosX - *(float *)&((AndrossState *)iVar12)->lightAnchorObj) * lbl_803DC488;
+      local_fc.y = (((AndrossState *)piVar14)->cachedPosY - *(float *)&((AndrossState *)iVar12)->unk10) * lbl_803DC488;
+      local_fc.z = (((AndrossState *)piVar14)->cachedPosZ - *(float *)&((AndrossState *)iVar12)->unk14) * lbl_803DC488;
       local_f0 = local_fc;
       arwarwing_setVelocity(iVar12,(int)&local_f0);
       fVar2 = -(lbl_803E753C * timeDelta - ((AndrossState *)piVar14)->unkA8);
@@ -1668,8 +1668,8 @@ LAB_8023de5c:
       iVar8 = *(int *)&((GameObject *)obj)->extra;
       ObjAnim_SetCurrentMove(obj,0x16,lbl_803E74D4,0);
       *(f32 *)(iVar8 + 100) = lbl_8032C0F0[0];
-      ((AndrossFlagByte *)&((AndrossState *)piVar14)->unkE8)->f80 = 0;
-      ((AndrossFlagByte *)&((AndrossState *)piVar14)->unkE8)->f40 = 0;
+      ((AndrossFlagByte *)&((AndrossState *)piVar14)->soundEventFlags)->f80 = 0;
+      ((AndrossFlagByte *)&((AndrossState *)piVar14)->soundEventFlags)->f40 = 0;
     }
     dVar19 = ((GameObject *)obj)->anim.currentMoveProgress;
     if (dVar19 < lbl_803E7540) {
@@ -1689,7 +1689,7 @@ LAB_8023de5c:
                        ((AndrossState *)piVar14)->homePosZ);
     }
     if ((((GameObject *)obj)->anim.currentMoveProgress > lbl_803E7568) &&
-       ((((AndrossState *)piVar14)->unkE8 >> 6 & 1) == 0)) {
+       ((((AndrossState *)piVar14)->soundEventFlags >> 6 & 1) == 0)) {
       iVar8 = randomGetRange(0,1);
       if (iVar8 == 0) {
         uVar9 = 0x472;
@@ -1698,11 +1698,11 @@ LAB_8023de5c:
         uVar9 = 0x471;
       }
       Sfx_PlayFromObject(obj,uVar9);
-      ((AndrossFlagByte *)&((AndrossState *)piVar14)->unkE8)->f40 = 1;
+      ((AndrossFlagByte *)&((AndrossState *)piVar14)->soundEventFlags)->f40 = 1;
     }
-    if ((((GameObject *)obj)->anim.currentMoveProgress > lbl_803E7570) && (((AndrossFlagByte *)&((AndrossState *)piVar14)->unkE8)->f80 == 0)) {
+    if ((((GameObject *)obj)->anim.currentMoveProgress > lbl_803E7570) && (((AndrossFlagByte *)&((AndrossState *)piVar14)->soundEventFlags)->f80 == 0)) {
       Sfx_PlayFromObject(obj,0x46d);
-      ((AndrossFlagByte *)&((AndrossState *)piVar14)->unkE8)->f80 = 1;
+      ((AndrossFlagByte *)&((AndrossState *)piVar14)->soundEventFlags)->f80 = 1;
     }
     cVar11 = *(char *)&((AndrossState *)iVar12)->unk23;
     if ((((cVar11 != '\x02') && (cVar11 != '\x01')) &&
@@ -1724,21 +1724,21 @@ LAB_8023de5c:
       ObjAnim_SetCurrentMove(obj,3,lbl_803E74D4,0);
       ((AndrossState *)iVar12)->animSpeed = lbl_8032C0A4[0];
       ((AndrossState *)piVar14)->unkE4 = lbl_803E74D4;
-      ((AndrossFlagByte *)&((AndrossState *)piVar14)->unkE8)->f20 = 0;
+      ((AndrossFlagByte *)&((AndrossState *)piVar14)->soundEventFlags)->f20 = 0;
     }
     ((AndrossState *)piVar14)->unkE4 = ((AndrossState *)piVar14)->unkE4 + timeDelta;
-    if ((lbl_803E7578 < ((AndrossState *)piVar14)->unkE4) && ((((AndrossState *)piVar14)->unkE8 >> 5 & 1) == 0)) {
+    if ((lbl_803E7578 < ((AndrossState *)piVar14)->unkE4) && ((((AndrossState *)piVar14)->soundEventFlags >> 5 & 1) == 0)) {
       Sfx_PlayFromObject(obj,0x46f);
-      ((AndrossFlagByte *)&((AndrossState *)piVar14)->unkE8)->f20 = 1;
+      ((AndrossFlagByte *)&((AndrossState *)piVar14)->soundEventFlags)->f20 = 1;
     }
     if (((GameObject *)obj)->anim.currentMoveProgress <= lbl_803DC490) {
-      ((AndrossState *)piVar14)->unkC0 = ((GameObject *)obj)->anim.localPosX;
-      ((AndrossState *)piVar14)->unkC4 = ((GameObject *)obj)->anim.localPosY - lbl_803E757C;
-      ((AndrossState *)piVar14)->unkC8 = ((GameObject *)obj)->anim.localPosZ - lbl_803E7580;
+      ((AndrossState *)piVar14)->cachedPosX = ((GameObject *)obj)->anim.localPosX;
+      ((AndrossState *)piVar14)->cachedPosY = ((GameObject *)obj)->anim.localPosY - lbl_803E757C;
+      ((AndrossState *)piVar14)->cachedPosZ = ((GameObject *)obj)->anim.localPosZ - lbl_803E7580;
       iVar12 = *piVar14;
-      local_114.x = (((AndrossState *)piVar14)->unkC0 - *(float *)&((AndrossState *)iVar12)->unkC) * lbl_803DC494;
-      local_114.y = (((AndrossState *)piVar14)->unkC4 - *(float *)&((AndrossState *)iVar12)->unk10) * lbl_803DC494;
-      local_114.z = (((AndrossState *)piVar14)->unkC8 - *(float *)&((AndrossState *)iVar12)->unk14) * lbl_803DC494;
+      local_114.x = (((AndrossState *)piVar14)->cachedPosX - *(float *)&((AndrossState *)iVar12)->lightAnchorObj) * lbl_803DC494;
+      local_114.y = (((AndrossState *)piVar14)->cachedPosY - *(float *)&((AndrossState *)iVar12)->unk10) * lbl_803DC494;
+      local_114.z = (((AndrossState *)piVar14)->cachedPosZ - *(float *)&((AndrossState *)iVar12)->unk14) * lbl_803DC494;
       local_108 = local_114;
       arwarwing_setVelocity(iVar12,(int)&local_108);
 
@@ -1770,13 +1770,13 @@ LAB_8023de5c:
       iVar12 = *(int *)&((GameObject *)obj)->extra;
       ObjAnim_SetCurrentMove(obj,0x11,lbl_803E74D4,0);
       ((AndrossState *)iVar12)->animSpeed = lbl_8032C0DC[0];
-      ((AndrossFlagByte *)&((AndrossState *)piVar14)->unkE8)->f20 = 0;
+      ((AndrossFlagByte *)&((AndrossState *)piVar14)->soundEventFlags)->f20 = 0;
     }
     if (((GameObject *)obj)->anim.currentMoveProgress <= lbl_803DC4A0) {
       iVar12 = *piVar14;
-      local_12c.x = (((AndrossState *)piVar14)->unkC0 - *(float *)&((AndrossState *)iVar12)->unkC) * lbl_803DC4A4;
-      local_12c.y = (((AndrossState *)piVar14)->unkC4 - *(float *)&((AndrossState *)iVar12)->unk10) * lbl_803DC4A4;
-      local_12c.z = (((AndrossState *)piVar14)->unkC8 - *(float *)&((AndrossState *)iVar12)->unk14) * lbl_803DC4A4;
+      local_12c.x = (((AndrossState *)piVar14)->cachedPosX - *(float *)&((AndrossState *)iVar12)->lightAnchorObj) * lbl_803DC4A4;
+      local_12c.y = (((AndrossState *)piVar14)->cachedPosY - *(float *)&((AndrossState *)iVar12)->unk10) * lbl_803DC4A4;
+      local_12c.z = (((AndrossState *)piVar14)->cachedPosZ - *(float *)&((AndrossState *)iVar12)->unk14) * lbl_803DC4A4;
       local_120 = local_12c;
       arwarwing_setVelocity(iVar12,(int)&local_120);
 
@@ -1798,9 +1798,9 @@ LAB_8023de5c:
       local_a8.z = (float)(dVar19 * lbl_803DC4A8);
       local_c0 = local_a8;
       arwarwing_setVelocity(*piVar14,(int)&local_c0);
-      if ((((AndrossState *)piVar14)->unkE8 >> 5 & 1) == 0) {
+      if ((((AndrossState *)piVar14)->soundEventFlags >> 5 & 1) == 0) {
         Sfx_PlayFromObject(obj,0x46f);
-        ((AndrossFlagByte *)&((AndrossState *)piVar14)->unkE8)->f20 = 1;
+        ((AndrossFlagByte *)&((AndrossState *)piVar14)->soundEventFlags)->f20 = 1;
       }
     }
     if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E74DC) {
@@ -1872,10 +1872,10 @@ LAB_8023de5c:
   iVar12 = ((AndrossState *)piVar14)->unk14;
   if (iVar12 != 0) {
     *(float *)&((AndrossState *)iVar12)->unk14 = *(float *)&((AndrossState *)iVar12)->unk14 - lbl_803E74D8;
-    ((AndrossState *)piVar14)->unk94 = ((AndrossState *)piVar14)->unk94 - (u32)framesThisStep;
-    if (((AndrossState *)piVar14)->unk94 < 0) {
+    ((AndrossState *)piVar14)->spawnedObjLifetime = ((AndrossState *)piVar14)->spawnedObjLifetime - (u32)framesThisStep;
+    if (((AndrossState *)piVar14)->spawnedObjLifetime < 0) {
       Obj_FreeObject(((AndrossState *)piVar14)->unk14);
-      ((AndrossState *)piVar14)->unk94 = 0;
+      ((AndrossState *)piVar14)->spawnedObjLifetime = 0;
       ((AndrossState *)piVar14)->unk14 = 0;
     }
   }
@@ -1883,8 +1883,8 @@ LAB_8023de5c:
     local_138 = lbl_803E7490;
     iVar12 = ObjList_FindNearestObjectByDefNo(obj,0x7e5,&local_138);
     if ((u32)iVar12 != 0) {
-      if (*(void **)&((AndrossState *)iVar12)->unkC0 != NULL) {
-        iVar12 = *(int *)&((AndrossState *)iVar12)->unkC0;
+      if (*(void **)&((AndrossState *)iVar12)->cachedPosX != NULL) {
+        iVar12 = *(int *)&((AndrossState *)iVar12)->cachedPosX;
       }
       if ((((AndrossState *)iVar12)->unk44 != 0x10) ||
          (iVar5 = animatedObjGetSeqId(((AndrossState *)iVar12)->unkB8), iVar5 != 0x598)) {
@@ -1896,8 +1896,8 @@ LAB_8023de5c:
     local_13c = lbl_803E7490;
     iVar12 = ObjList_FindNearestObjectByDefNo(obj,0x1e,&local_13c);
     if ((u32)iVar12 != 0) {
-      if (*(void **)&((AndrossState *)iVar12)->unkC0 != NULL) {
-        iVar12 = *(int *)&((AndrossState *)iVar12)->unkC0;
+      if (*(void **)&((AndrossState *)iVar12)->cachedPosX != NULL) {
+        iVar12 = *(int *)&((AndrossState *)iVar12)->cachedPosX;
       }
       if ((((AndrossState *)iVar12)->unk44 != 0x10) ||
          (iVar5 = animatedObjGetSeqId(((AndrossState *)iVar12)->unkB8), iVar5 != 0x598)) {
@@ -1909,8 +1909,8 @@ LAB_8023de5c:
     local_140 = lbl_803E7490;
     iVar12 = ObjList_FindNearestObjectByDefNo(obj,0x76f,&local_140);
     if ((u32)iVar12 != 0) {
-      if (*(void **)&((AndrossState *)iVar12)->unkC0 != NULL) {
-        iVar12 = *(int *)&((AndrossState *)iVar12)->unkC0;
+      if (*(void **)&((AndrossState *)iVar12)->cachedPosX != NULL) {
+        iVar12 = *(int *)&((AndrossState *)iVar12)->cachedPosX;
       }
       if ((((AndrossState *)iVar12)->unk44 != 0x10) ||
          (iVar5 = animatedObjGetSeqId(((AndrossState *)iVar12)->unkB8), iVar5 != 0x598)) {
@@ -1922,8 +1922,8 @@ LAB_8023de5c:
     local_144 = lbl_803E7490;
     iVar12 = ObjList_FindNearestObjectByDefNo(obj,0x814,&local_144);
     if ((u32)iVar12 != 0) {
-      if (*(void **)&((AndrossState *)iVar12)->unkC0 != NULL) {
-        iVar12 = *(int *)&((AndrossState *)iVar12)->unkC0;
+      if (*(void **)&((AndrossState *)iVar12)->cachedPosX != NULL) {
+        iVar12 = *(int *)&((AndrossState *)iVar12)->cachedPosX;
       }
       if ((((AndrossState *)iVar12)->unk44 != 0x10) ||
          (iVar5 = animatedObjGetSeqId(((AndrossState *)iVar12)->unkB8), iVar5 != 0x598)) {
@@ -1935,8 +1935,8 @@ LAB_8023de5c:
     local_148 = lbl_803E7490;
     iVar12 = ObjList_FindNearestObjectByDefNo(obj,0x6cf,&local_148);
     if ((u32)iVar12 != 0) {
-      if (*(void **)&((AndrossState *)iVar12)->unkC0 != NULL) {
-        iVar12 = *(int *)&((AndrossState *)iVar12)->unkC0;
+      if (*(void **)&((AndrossState *)iVar12)->cachedPosX != NULL) {
+        iVar12 = *(int *)&((AndrossState *)iVar12)->cachedPosX;
       }
       if ((((AndrossState *)iVar12)->unk44 != 0x10) ||
          (iVar5 = animatedObjGetSeqId(((AndrossState *)iVar12)->unkB8), iVar5 != 0x598)) {
