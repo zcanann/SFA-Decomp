@@ -894,7 +894,7 @@ void ecsh_creator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s
 
 void ecsh_creator_init(s16 *obj, s8 *def) {
     s16 *inner = ((GameObject *)obj)->extra;
-    obj[0] = (s16)((s32)def[0x1e] << 8);
+    ((GameObject *)obj)->anim.rotX = (s16)((s32)def[0x1e] << 8);
     ((GameObject *)obj)->unkF8 = 0;
     inner[0] = 100;
     inner[1] = 0;
@@ -1100,11 +1100,11 @@ void fn_801C70F0(s16 *obj) {
         c1 = mathSinf((lbl_803E5010 * (f32)*(s16 *)(sub + 0xe)) / lbl_803E5014);
         c2 = mathSinf((lbl_803E5010 * (f32)*(s16 *)(sub + 0xc)) / lbl_803E5014);
         c2 = c2 + c1;
-        obj[2] = lbl_803E5018 * c2;
+        ((GameObject *)obj)->anim.rotZ = lbl_803E5018 * c2;
         c1 = mathSinf((lbl_803E5010 * (f32)*(s16 *)(sub + 0x10)) / lbl_803E5014);
         c2 = mathSinf((lbl_803E5010 * (f32)*(s16 *)(sub + 0xc)) / lbl_803E5014);
         c2 = c2 + c1;
-        obj[1] = lbl_803E5018 * c2;
+        ((GameObject *)obj)->anim.rotY = lbl_803E5018 * c2;
         ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E501C, timeDelta, (ObjAnimEventList *)buf);
         if (player != NULL) {
             diff = (getAngle(((f32 *)obj)[6] - ((f32 *)player)[6],

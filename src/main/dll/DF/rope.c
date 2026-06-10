@@ -837,12 +837,12 @@ void dimbosscrackpar_free(int *obj) {
 }
 void dimbosscrackpar_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 void dimbosscrackpar_init(s16 *obj, s8 *def) {
-    obj[0] = 0;
+    ((GameObject *)obj)->anim.rotX = 0;
     ((GameObject *)obj)->anim.rootMotionScale = lbl_803E4D98;
     ((GameObject *)obj)->animEventCallback = (void *)dimbosscrackpar_SeqFn;
-    obj[0] = (s16)((s32)def[0x24] << 8);
-    obj[1] = (s16)((s32)def[0x23] << 8);
-    obj[2] = (s16)((s32)def[0x22] << 8);
+    ((GameObject *)obj)->anim.rotX = (s16)((s32)def[0x24] << 8);
+    ((GameObject *)obj)->anim.rotY = (s16)((s32)def[0x23] << 8);
+    ((GameObject *)obj)->anim.rotZ = (s16)((s32)def[0x22] << 8);
 }
 void dimbossfire_hitDetect(void) {}
 

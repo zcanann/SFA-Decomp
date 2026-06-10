@@ -31,7 +31,7 @@ void dimlavasmash_init(s16 *obj, s8 *def) {
     char *inner;
 
     objAnim = (ObjAnimComponent *)obj;
-    obj[0] = (s16)((s32)def[0x18] << 8);
+    ((GameObject *)obj)->anim.rotX = (s16)((s32)def[0x18] << 8);
     ((GameObject *)obj)->animEventCallback = (void *)dimlavasmash_SeqFn;
     inner = ((GameObject *)obj)->extra;
     *(u8 *)(inner + 1) = (u8)*(s16 *)(def + 0x1a);

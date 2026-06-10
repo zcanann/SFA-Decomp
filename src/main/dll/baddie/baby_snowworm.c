@@ -1356,7 +1356,7 @@ void viewFn_80129cbc(f32 fov, f32 x, f32 y)
     {
         u16* obj = (u16*)lbl_803DCCF0;
         GXSetViewport(x - lbl_803E1F34, y - lbl_803E2024,
-                      (f32)obj[2], (f32)obj[4],
+                      (f32)*(u16 *)&((GameObject *)obj)->anim.rotZ, (f32)obj[4],
                       lbl_803E1E3C, lbl_803E1E68);
     }
 }
@@ -1526,7 +1526,7 @@ void perspectiveFn_80129db4(void)
     {
         u16* obj = (u16*)lbl_803DCCF0;
         GXSetViewport(lbl_803E1E3C, lbl_803E1E3C,
-                      (f32)obj[2], (f32)obj[4],
+                      (f32)*(u16 *)&((GameObject *)obj)->anim.rotZ, (f32)obj[4],
                       lbl_803E1E3C, lbl_803E1E68);
     }
     shadowRenderFn_8006b558(((void**)lbl_803A9410)[(s32)lbl_803DBA64]);
@@ -3734,7 +3734,7 @@ void pauseMenuDoSave(void)
     Camera_RebuildProjectionMatrix();
     {
         u16 *obj = (u16 *)lbl_803DCCF0;
-        GXSetViewport(lbl_803E1E3C, lbl_803E1E3C, (f32)obj[2], (f32)obj[4],
+        GXSetViewport(lbl_803E1E3C, lbl_803E1E3C, (f32)*(u16 *)&((GameObject *)obj)->anim.rotZ, (f32)obj[4],
                       lbl_803E1E3C, lbl_803E1E68);
     }
     for (i = 1; i < 6; i++) {

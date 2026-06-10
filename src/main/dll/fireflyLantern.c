@@ -307,7 +307,7 @@ uint fn_80154FB4(short *obj, int state, uint turnTime, f32 maxDistance)
     dxDiff = dxA - d;
     dy = objY - targetY;
     angle = getAngle(-dy, dxDiff) & 0xffff;
-    rot = obj[1];
+    rot = ((GameObject *)obj)->anim.rotY;
     delta = angle - (rot & 0xffff);
     if (delta > 0x8000) {
         delta = delta - 0xffff;
@@ -321,8 +321,8 @@ uint fn_80154FB4(short *obj, int state, uint turnTime, f32 maxDistance)
     }
     angleStep = (int)((f32)delta * fVar1);
     *obj = (s16)(rot + angleStep);
-    obj[2] = 0x4000;
-    obj[1] = *obj;
+    ((GameObject *)obj)->anim.rotZ = 0x4000;
+    ((GameObject *)obj)->anim.rotY = *obj;
     *obj = (s16)getAngle(*(f32 *)(state + 0x34c), -*(f32 *)(state + 0x344));
     fVar1 = sqrtf(dxDiff * dxDiff + dy * dy);
     if (fVar1 > maxDistance) {

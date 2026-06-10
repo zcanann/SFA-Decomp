@@ -1,3 +1,4 @@
+#include "main/game_object.h"
 #include "main/dll/modelfx.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
@@ -1383,7 +1384,7 @@ int Effect12_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
       local.w = lbl_803DFFB0;
       local.rot2 = 0;
       local.rot1 = 0;
-      local.rot0 = obj[0];
+      local.rot0 = ((GameObject *)obj)->anim.rotX;
       vecRotateZXY(&local, &p.velX);
       p.scale = lbl_803DFFB4;
       p.count = 100;
@@ -1831,9 +1832,9 @@ int Effect14_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     local.y = lbl_803E0000;
     local.z = lbl_803E0000;
     local.w = lbl_803E006C;
-    local.rot2 = obj[2];
-    local.rot1 = obj[1];
-    local.rot0 = obj[0];
+    local.rot2 = ((GameObject *)obj)->anim.rotZ;
+    local.rot1 = ((GameObject *)obj)->anim.rotY;
+    local.rot0 = ((GameObject *)obj)->anim.rotX;
     vecRotateZXY(&local, &p.velX);
     p.flagsA = 0x3000000;
     p.flagsB = 0x200000;
@@ -1852,9 +1853,9 @@ int Effect14_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.srcY = lbl_803E0000;
     p.srcZ = lbl_803E0000;
     p.srcW = lbl_803E006C;
-    p.rot2 = obj[2];
-    p.rot1 = obj[1];
-    p.rot0 = obj[0];
+    p.rot2 = ((GameObject *)obj)->anim.rotZ;
+    p.rot1 = ((GameObject *)obj)->anim.rotY;
+    p.rot0 = ((GameObject *)obj)->anim.rotX;
     break;
   case 0x4c7:
     p.alpha = 0x40;
@@ -1866,9 +1867,9 @@ int Effect14_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.srcY = lbl_803E0000;
     p.srcZ = lbl_803E0000;
     p.srcW = lbl_803E006C;
-    p.rot2 = obj[2];
-    p.rot1 = obj[1];
-    p.rot0 = obj[0];
+    p.rot2 = ((GameObject *)obj)->anim.rotZ;
+    p.rot1 = ((GameObject *)obj)->anim.rotY;
+    p.rot0 = ((GameObject *)obj)->anim.rotX;
     break;
   case 0x4c8:
     p.posX = lbl_803E0078 * (f32)(int)randomGetRange(-10, 10);

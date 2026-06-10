@@ -835,14 +835,14 @@ void fn_801EE668(s16 *obj, u8 *state) {
     }
     *(s16 *)(state + 0x2c) -= (*(s16 *)(state + 0x2c) * framesThisStep) >> 5;
 
-    d = yaw - (u16)obj[1];
+    d = yaw - (u16)((GameObject *)obj)->anim.rotY;
     if (d > 0x8000) {
         d -= 0xFFFF;
     }
     if (d < -0x8000) {
         d += 0xFFFF;
     }
-    obj[1] = lbl_803E5CA8 * ((f32)d * timeDelta) + (f32)*(s16 *)(int)(obj + 1);
+    ((GameObject *)obj)->anim.rotY = lbl_803E5CA8 * ((f32)d * timeDelta) + (f32)*(s16 *)(int)(obj + 1);
 
     d = pitch - (u16)*(s16 *)(state + 0x2e);
     if (d > 0x8000) {
@@ -853,26 +853,26 @@ void fn_801EE668(s16 *obj, u8 *state) {
     }
     *(s16 *)(state + 0x2e) = lbl_803E5CA8 * ((f32)d * timeDelta) + (f32)*(s16 *)(int)(state + 0x2e);
 
-    v = obj[1];
+    v = ((GameObject *)obj)->anim.rotY;
     v = (v < -8000) ? -8000 : ((v > 8000) ? 8000 : v);
-    obj[1] = v;
+    ((GameObject *)obj)->anim.rotY = v;
 
     v = *(s16 *)(state + 0x2e);
     v = (v < -13000) ? -13000 : ((v > 13000) ? 13000 : v);
     *(s16 *)(state + 0x2e) = v;
 
-    obj[0] = *(s16 *)(state + 0x2c) + 0x4000;
-    obj[2] = *(s16 *)(state + 0x2e);
+    ((GameObject *)obj)->anim.rotX = *(s16 *)(state + 0x2c) + 0x4000;
+    ((GameObject *)obj)->anim.rotZ = *(s16 *)(state + 0x2e);
 
     events.sfxFlag = 0;
-    spd = lbl_803E5CB0 * (f32)obj[1] + lbl_803E5CAC;
+    spd = lbl_803E5CB0 * (f32)((GameObject *)obj)->anim.rotY + lbl_803E5CAC;
     if (spd > lbl_803E5CB4) {
-        if (obj[0x50] != 5) {
+        if (((GameObject *)obj)->anim.currentMove != 5) {
             ObjAnim_SetCurrentMove((int)obj, 5, lbl_803E5C70, 0);
         }
     } else {
         spd = lbl_803E5CAC;
-        if (obj[0x50] != 256) {
+        if (((GameObject *)obj)->anim.currentMove != 256) {
             ObjAnim_SetCurrentMove((int)obj, 256, lbl_803E5C70, 0);
         }
     }

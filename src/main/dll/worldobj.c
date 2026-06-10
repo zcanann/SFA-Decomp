@@ -612,7 +612,7 @@ void fn_801CEA14(short *obj, u8 *st, u8 *p3) {
             ObjAnim_SampleRootCurvePhase(oneOverTimeDelta * sqrtf(dx * dx + dz * dz),
                                          (ObjAnimComponent *)obj, (float *)(st + 0x4c));
         }
-        obj[0] = (s16)(getAngle(*(f32 *)(cv + 0x74), *(f32 *)(cv + 0x7c)) + 0x8000);
+        ((GameObject *)obj)->anim.rotX = (s16)(getAngle(*(f32 *)(cv + 0x74), *(f32 *)(cv + 0x7c)) + 0x8000);
         ((GameObject *)obj)->anim.localPosX = *(f32 *)(cv + 0x68);
         ((GameObject *)obj)->anim.localPosZ = *(f32 *)(cv + 0x70);
         if (*(f32 *)(st + 0x54) <= lbl_803E520C) {

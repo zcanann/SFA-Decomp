@@ -2114,7 +2114,7 @@ void Checkpoint_remove(int *obj) {
 
     count = lbl_803DD410;
 
-    while (i < count && (u32)obj[5] != p[i].key) {
+    while (i < count && (u32)*(int *)&((GameObject *)obj)->anim.localPosZ != p[i].key) {
         i++;
     }
     if (i >= count) return;

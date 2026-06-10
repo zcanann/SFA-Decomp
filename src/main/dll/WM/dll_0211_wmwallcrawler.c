@@ -87,7 +87,7 @@ void wmwallcrawler_update(s16 *obj)
         lbl_803DC130 = lbl_803E5FC0 * sq + lbl_803E5FC0;
         if (*(s8 *)(st + 0x296) == 6) {
             *((u8 *)obj + 0xaf) |= 8;
-            if (obj[0x50] != 1) {
+            if (((GameObject *)obj)->anim.currentMove != 1) {
                 ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E5FB0, 0);
                 Sfx_PlayFromObject((int)obj, 0x73);
             }
@@ -105,7 +105,7 @@ void wmwallcrawler_update(s16 *obj)
                     Obj_RemoveFromUpdateList((int)obj);
                     ObjHits_DisableObject((int)obj);
                     ObjGroup_RemoveObject((int)obj, 3);
-                    obj[3] |= 0x4000;
+                    ((GameObject *)obj)->anim.flags |= 0x4000;
                 }
             }
         } else {
@@ -126,7 +126,7 @@ void wmwallcrawler_update(s16 *obj)
                         Obj_RemoveFromUpdateList((int)obj);
                         ObjHits_DisableObject((int)obj);
                         ObjGroup_RemoveObject((int)obj, 3);
-                        obj[3] |= 0x4000;
+                        ((GameObject *)obj)->anim.flags |= 0x4000;
                     }
                     return;
                 }
@@ -159,7 +159,7 @@ void wmwallcrawler_update(s16 *obj)
                                         Obj_RemoveFromUpdateList((int)obj);
                                         ObjHits_DisableObject((int)obj);
                                         ObjGroup_RemoveObject((int)obj, 3);
-                                        obj[3] |= 0x4000;
+                                        ((GameObject *)obj)->anim.flags |= 0x4000;
                                     }
                                 } else {
                                     *(u8 *)(st + 0x296) = 6;
@@ -248,7 +248,7 @@ void wmwallcrawler_update(s16 *obj)
                             if (mode == 0) {
                                 *(u8 *)(st + 0x296) = 1;
                                 s16toFloat(st + 0x288, 2);
-                                obj[2] = 0;
+                                ((GameObject *)obj)->anim.rotZ = 0;
                             } else if (mode == 1) {
                                 if (*(f32 *)(obj + 0x14) > lbl_803E5FE4) {
                                     *(f32 *)(obj + 0x14) = lbl_803E5FE8 * timeDelta + *(f32 *)(obj + 0x14);
@@ -309,7 +309,7 @@ void wmwallcrawler_update(s16 *obj)
                                     *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x14) * timeDelta * lbl_803DC130;
                                     *(f32 *)(obj + 0x16) = *(f32 *)(obj + 0x16) * timeDelta * lbl_803DC130;
                                 }
-                                if (obj[0x50] == 0 && (*(u16 *)(st + 0x294) & 0x400) != 0 && dist < lbl_803E5FF4) {
+                                if (((GameObject *)obj)->anim.currentMove == 0 && (*(u16 *)(st + 0x294) & 0x400) != 0 && dist < lbl_803E5FF4) {
                                     ObjAnim_SetCurrentMove((int)obj, 2, lbl_803E5FB0, 0);
                                 }
                                 if (dist < lbl_803E5FF8 ||
@@ -317,7 +317,7 @@ void wmwallcrawler_update(s16 *obj)
                                      (*(u16 *)&(*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags & 8) != 0 &&
                                      dist < lbl_803E5FFC)) {
                                     lbl_803DDCB8 += 1;
-                                    if (obj[0x50] == 2 && *(f32 *)(obj + 0x4c) > lbl_803E6000 && *(f32 *)(obj + 0x4c) < lbl_803E6004) {
+                                    if (((GameObject *)obj)->anim.currentMove == 2 && *(f32 *)(obj + 0x4c) > lbl_803E6000 && *(f32 *)(obj + 0x4c) < lbl_803E6004) {
                                         ObjMsg_SendToObject(player, 0x60004, (int)obj, 1);
                                         lbl_803DDCB8 = 0;
                                     }
@@ -342,12 +342,12 @@ void wmwallcrawler_update(s16 *obj)
                                     s16toFloat(st + 0x288, (s16)(randomGetRange(0, 0x14) + 100));
                                 }
                                 ang = getAngle(*(f32 *)(player + 0xc) - *(f32 *)(obj + 6), *(f32 *)(player + 0x14) - *(f32 *)(obj + 10));
-                                obj[0] = ang + 0x7fff;
+                                ((GameObject *)obj)->anim.rotX = ang + 0x7fff;
                                 sq = *(f32 *)(obj + 0x12) * *(f32 *)(obj + 0x12) + *(f32 *)(obj + 0x16) * *(f32 *)(obj + 0x16);
                                 if (lbl_803E5FB0 != sq) {
                                     speed = sqrtf(sq);
                                 }
-                                switch (obj[0x50]) {
+                                switch (((GameObject *)obj)->anim.currentMove) {
                                 case 0:
                                     *(f32 *)(st + 0x284) = lbl_803E6010 * speed;
                                     break;
@@ -359,7 +359,7 @@ void wmwallcrawler_update(s16 *obj)
                                     break;
                                 }
                                 if (((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)((int)obj, *(f32 *)(st + 0x284), (f32)framesThisStep,
-                                                               NULL) != 0 && obj[0x50] != 0) {
+                                                               NULL) != 0 && ((GameObject *)obj)->anim.currentMove != 0) {
                                     ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E5FB0, 0);
                                 }
                                 *(f32 *)(obj + 6) = *(f32 *)(obj + 0x12) * timeDelta + *(f32 *)(obj + 6);
@@ -394,7 +394,7 @@ void wmwallcrawler_update(s16 *obj)
                 Obj_RemoveFromUpdateList((int)obj);
                 ObjHits_DisableObject((int)obj);
                 ObjGroup_RemoveObject((int)obj, 3);
-                obj[3] |= 0x4000;
+                ((GameObject *)obj)->anim.flags |= 0x4000;
             }
         }
     }

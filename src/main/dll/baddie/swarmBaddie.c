@@ -638,8 +638,8 @@ void fn_80125D04(void) {
     for (; i < 6; i++) {
         int* obj = (int*)ptr[0];
         if (obj != NULL) {
-            if ((u32)obj[19] > 0x90000000u) {
-                obj[19] = 0;
+            if ((u32)*(int *)&((GameObject *)obj)->anim.placementData > 0x90000000u) {
+                *(int *)&((GameObject *)obj)->anim.placementData = 0;
             }
             Obj_FreeObject((int*)ptr[0]);
             ptr[0] = 0;

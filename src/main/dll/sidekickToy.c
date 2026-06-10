@@ -225,7 +225,7 @@ void objAnimFn_8014a9f0(short *obj, int state)
   else if ((flags & 0x20000000) != 0) {
     if ((flags & 0x400) != 0) {
       ((TrickyState *)state)->unk2EF = 3;
-      switch (obj[0x23]) {
+      switch (((GameObject *)obj)->anim.seqId) {
       case 0x11: case 0x13a: case 0x5b7: case 0x5b8: case 0x5b9: case 0x5e1: case 0x7a6:
         fn_8015165C(obj, state);
         break;
@@ -288,7 +288,7 @@ void objAnimFn_8014a9f0(short *obj, int state)
     }
     else {
       ((TrickyState *)state)->unk2EF = 4;
-      switch (obj[0x23]) {
+      switch (((GameObject *)obj)->anim.seqId) {
       case 0x11: case 0x13a: case 0x5b7: case 0x5b8: case 0x5b9: case 0x5e1: case 0x7a6:
         fn_80150EDC(obj, state);
         break;
@@ -373,12 +373,12 @@ void objAnimFn_8014a9f0(short *obj, int state)
     }
     else {
       *(u8 *)(obj + 0x1b) = (u8)(int)(lbl_803E257C * *(f32 *)(obj + 0x4c));
-      obj[3] = obj[3] & ~0x4000;
+      ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags & ~0x4000;
     }
   }
   else {
     ((TrickyState *)state)->unk2EF = 5;
-    switch (obj[0x23]) {
+    switch (((GameObject *)obj)->anim.seqId) {
     case 0x11: case 0x13a: case 0x5b7: case 0x5b8: case 0x5b9: case 0x5e1: case 0x7a6:
       fn_80150910(obj, state);
       break;
@@ -495,11 +495,11 @@ void objAnimFn_8014a9f0(short *obj, int state)
       dz = -res.dz * oneOverTimeDelta;
     }
     if ((((TrickyState *)state)->unk323 & 8) != 0) {
-      obj[0] += res.dAngle;
+      ((GameObject *)obj)->anim.rotX += res.dAngle;
     }
-    rec.rx = obj[0];
-    rec.ry = obj[1];
-    rec.rz = obj[2];
+    rec.rx = ((GameObject *)obj)->anim.rotX;
+    rec.ry = ((GameObject *)obj)->anim.rotY;
+    rec.rz = ((GameObject *)obj)->anim.rotZ;
     rec.scale = lbl_803E256C;
     zero = lbl_803E2574;
     rec.x = zero;
@@ -2274,10 +2274,10 @@ int fn_8014C11C(short *obj, f32 radius, u8 flags, int max, TrickyTargetRec *out)
         }
         diff = (u16)getAngle(-d.x, -d.z);
         if (*(short **)(obj + 0x18) != 0) {
-          ang = (s16)(obj[0] + **(short **)(obj + 0x18));
+          ang = (s16)(((GameObject *)obj)->anim.rotX + **(short **)(obj + 0x18));
         }
         else {
-          ang = obj[0];
+          ang = ((GameObject *)obj)->anim.rotX;
         }
         diff = diff - ((int)ang & 0xffffU);
         if (0x8000 < (int)diff) {
@@ -2321,10 +2321,10 @@ int fn_8014C11C(short *obj, f32 radius, u8 flags, int max, TrickyTargetRec *out)
             }
             diff = (u16)getAngle(-d.x, -d.z);
             if (*(short **)(obj + 0x18) != 0) {
-              ang = (s16)(obj[0] + **(short **)(obj + 0x18));
+              ang = (s16)(((GameObject *)obj)->anim.rotX + **(short **)(obj + 0x18));
             }
             else {
-              ang = obj[0];
+              ang = ((GameObject *)obj)->anim.rotX;
             }
             diff = diff - ((int)ang & 0xffffU);
             if (0x8000 < (int)diff) {

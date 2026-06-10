@@ -70,7 +70,7 @@ void dimBossTonsil_newState_hitFightMain(u8 *obj,ObjAnimUpdateState *animUpdate,
       lbl_803DDBA4 = lbl_803E4C90;
       updateState->animFinished = 0;
       (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~DIMBOSSSPIT_MODEL_ACTIVE_FLAG;
-      obj[0xAF] = (u8)(obj[0xAF] | DIMBOSSSPIT_OBJECT_DISABLED_FLAG);
+      *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | DIMBOSSSPIT_OBJECT_DISABLED_FLAG);
       GameBit_Set(DIMBOSSSPIT_GAMEBIT_ACTIVE, 0);
       if (gDIMbosstonsilRoutePhase >= DIMBOSSSPIT_ROUTE_HIGH_THRESHOLD) {
         GameBit_Set(DIMBOSSSPIT_GAMEBIT_ROUTE_HIGH, 1);
@@ -99,7 +99,7 @@ void dimBossTonsil_newState_hitFightMain(u8 *obj,ObjAnimUpdateState *animUpdate,
       lbl_803DDB98 = lbl_803E4C90;
       updateState->animFinished = 0;
       (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~DIMBOSSSPIT_MODEL_ACTIVE_FLAG;
-      obj[0xAF] = (u8)(obj[0xAF] | DIMBOSSSPIT_OBJECT_DISABLED_FLAG);
+      *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | DIMBOSSSPIT_OBJECT_DISABLED_FLAG);
       GameBit_Set(DIMBOSSSPIT_GAMEBIT_ACTIVE, 0);
       if (gDIMbosstonsilRoutePhase == DIMBOSSSPIT_ROUTE_SPLIT_THRESHOLD) {
         GameBit_Set(DIMBOSSSPIT_GAMEBIT_ROUTE_LOW, 1);

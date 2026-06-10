@@ -1624,7 +1624,7 @@ void waveanimator_hitDetect(int *obj) {
     if (lbl_803DDAF8 != 0) {
         return;
     }
-    w = (WaveAnimatorState *)obj[46];
+    w = (WaveAnimatorState *)*(int *)&((GameObject *)obj)->extra;
     off = 0;
     for (i = 0; i < w->gridN; i++) {
         for (j = 0; j < w->gridN; j++) {
@@ -1662,8 +1662,8 @@ void groundanimator_free(int *obj, int flag) {
     int innoff;
     int *cell;
     f32 local[2];
-    w = (GroundAnimatorState *)obj[46];
-    r21 = (int *)obj[19];
+    w = (GroundAnimatorState *)*(int *)&((GameObject *)obj)->extra;
+    r21 = (int *)*(int *)&((GameObject *)obj)->anim.placementData;
     if (flag == 0) {
         block = mapGetBlock(objPosToMapBlockIdx((double)((GameObject *)obj)->anim.localPosX,
                                                 (double)((GameObject *)obj)->anim.localPosY,
@@ -1716,8 +1716,8 @@ f32 groundanimator_setScale(int *obj, int *target) {
     f32 dx;
     f32 dz;
     f32 r;
-    g = (GroundAnimatorState *)obj[46];
-    r31 = (int *)obj[19];
+    g = (GroundAnimatorState *)*(int *)&((GameObject *)obj)->extra;
+    r31 = (int *)*(int *)&((GameObject *)obj)->anim.placementData;
     dy = *(f32 *)((char *)target + 0x10) - ((GameObject *)obj)->anim.localPosY;
     if (dy < lbl_803E3FA8 || dy > lbl_803E3FAC) {
         return lbl_803E3FB0;
@@ -1841,8 +1841,8 @@ void groundanimator_update(int *obj) {
     f32 nd;
     f32 vbuf[2];
     Obj_GetPlayerObject();
-    g = (GroundAnimatorState *)obj[46];
-    r20 = (int *)obj[19];
+    g = (GroundAnimatorState *)*(int *)&((GameObject *)obj)->extra;
+    r20 = (int *)*(int *)&((GameObject *)obj)->anim.placementData;
     if (*(u8 *)((char *)r20 + 0x25) == 0) {
         return;
     }
@@ -1995,8 +1995,8 @@ void alphaanimator_update(int *obj) {
     int mode;
     void *block;
     f32 sp;
-    d = (int *)obj[19];
-    s = (AlphaAnimatorState *)obj[46];
+    d = (int *)*(int *)&((GameObject *)obj)->anim.placementData;
+    s = (AlphaAnimatorState *)*(int *)&((GameObject *)obj)->extra;
     mode = *(u8 *)((char *)d + 0x20) & 3;
     block = mapGetBlock(objPosToMapBlockIdx((double)((GameObject *)obj)->anim.localPosX,
                                             (double)((GameObject *)obj)->anim.localPosY,

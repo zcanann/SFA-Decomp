@@ -103,8 +103,8 @@ void doorlock_init(short *obj, DoorLockPlacement *config)
   
   objAnim = (ObjAnimComponent *)obj;
   *obj = (short)((byte)config->rotXByte << 8);
-  obj[1] = (short)((byte)config->rotYByte << 8);
-  obj[2] = (short)((byte)config->rotZByte << 8);
+  ((GameObject *)obj)->anim.rotY = (short)((byte)config->rotYByte << 8);
+  ((GameObject *)obj)->anim.rotZ = (short)((byte)config->rotZByte << 8);
   ((GameObject *)obj)->animEventCallback = (void *)Lock_DoorLock_SeqFn;
   *(u8 *)&objAnim->bankIndex = config->modelBankIndex;
   if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {

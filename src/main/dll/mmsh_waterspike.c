@@ -37,10 +37,10 @@ void fn_801BEEA0(s16 *obj, u8 *state)
 
   {
     f32 pitch = lbl_803E4D08 * *(f32 *)(motion + 0x0);
-    obj[1] = pitch;
+    ((GameObject *)obj)->anim.rotY = pitch;
   }
 
-  turnDelta = (s16)-(u16)obj[2];
+  turnDelta = (s16)-(u16)((GameObject *)obj)->anim.rotZ;
   if (turnDelta > 0x8000) {
     turnDelta = (s16)((turnDelta - 0x10000) + 1);
   }
@@ -51,7 +51,7 @@ void fn_801BEEA0(s16 *obj, u8 *state)
   {
     f32 turnVel = *(f32 *)(motion + 0x4) + (f32)((int)((s16)turnDelta / 16) * (int)framesThisStep);
     *(f32 *)(motion + 0x4) = turnVel;
-    obj[2] = turnVel + (f32)(int)obj[2];
+    ((GameObject *)obj)->anim.rotZ = turnVel + (f32)(int)((GameObject *)obj)->anim.rotZ;
   }
 
   *(f32 *)(motion + 0x0) = *(f32 *)(motion + 0x0) / lbl_803E4D0C;

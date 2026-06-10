@@ -218,14 +218,14 @@ void barrelpad_render(void) { objRenderFn_8003b8f4(lbl_803E3F00); }
 void barrelpad_update(s16 *obj) {
     BarrelPadParticleArgs particleArgs;
 
-    if (obj[0x23] == 0x79) {
+    if (((GameObject *)obj)->anim.seqId == 0x79) {
         particleArgs.offset[0] = lbl_803E3F04;
         particleArgs.offset[1] = lbl_803E3F08;
         particleArgs.offset[2] = lbl_803E3F04;
         objfx_spawnArcedBurst((int)obj,5,lbl_803E3F0C,5,2,0x19,lbl_803E3F10,
                                lbl_803E3F10,lbl_803E3F14,&particleArgs,0);
     }
-    else if (obj[0x23] == 0x748) {
+    else if (((GameObject *)obj)->anim.seqId == 0x748) {
         particleArgs.offset[0] = lbl_803E3F04;
         particleArgs.offset[1] = lbl_803E3F18;
         particleArgs.offset[2] = lbl_803E3F04;
@@ -235,9 +235,9 @@ void barrelpad_update(s16 *obj) {
 }
 
 void barrelpad_init(s16 *obj, u8 *def) {
-    obj[2] = (s16)((s32)def[0x18] << 8);
-    obj[1] = (s16)((s32)def[0x19] << 8);
-    obj[0] = (s16)((s32)def[0x1a] << 8);
+    ((GameObject *)obj)->anim.rotZ = (s16)((s32)def[0x18] << 8);
+    ((GameObject *)obj)->anim.rotY = (s16)((s32)def[0x19] << 8);
+    ((GameObject *)obj)->anim.rotX = (s16)((s32)def[0x1a] << 8);
     if (def[0x1b] != 0) {
         ((GameObject *)obj)->anim.rootMotionScale = (f32)(u32)def[0x1b] / lbl_803E3F24;
         if (((GameObject *)obj)->anim.rootMotionScale == lbl_803E3F04) {
@@ -251,9 +251,9 @@ void barrelpad_init(s16 *obj, u8 *def) {
 extern f32 lbl_803E3EEC;
 extern f32 lbl_803E3EF0;
 void cflightwall_init(s16 *obj, u8 *def) {
-    obj[2] = (s16)((s32)def[0x18] << 8);
-    obj[1] = (s16)((s32)def[0x19] << 8);
-    obj[0] = (s16)((s32)def[0x1a] << 8);
+    ((GameObject *)obj)->anim.rotZ = (s16)((s32)def[0x18] << 8);
+    ((GameObject *)obj)->anim.rotY = (s16)((s32)def[0x19] << 8);
+    ((GameObject *)obj)->anim.rotX = (s16)((s32)def[0x1a] << 8);
     if (def[0x1b] != 0) {
         ((GameObject *)obj)->anim.rootMotionScale = (f32)(u32)def[0x1b] / lbl_803E3EEC;
         if (((GameObject *)obj)->anim.rootMotionScale == lbl_803E3EF0) {

@@ -72,7 +72,7 @@ void dfpfloorbar_free(int *obj)
 {
   DfpFloorbarState *state;
 
-  state = (DfpFloorbarState *)obj[0x2e];
+  state = (DfpFloorbarState *)*(int *)&((GameObject *)obj)->extra;
   (*gExpgfxInterface)->freeSource2((u32)obj);
   state->linkedObject = NULL;
   return;
@@ -156,7 +156,7 @@ void dfpfloorbar_hitDetect(int *obj)
     int *x;
     int **b;
     s32 v;
-    b = (int **)obj[0x2e];
+    b = (int **)*(int *)&((GameObject *)obj)->extra;
     x = b[2];
     if (x == NULL) return;
     v = *(s16 *)((char *)x + 6) & 0x40;

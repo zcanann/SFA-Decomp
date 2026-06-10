@@ -2695,7 +2695,7 @@ int dll_CB_seqFn(short *obj, int p2, u8 *e)
   if (((GameObject *)obj)->unkF4 != 0) {
     return 0;
   }
-  if (obj[0x5a] != -1) {
+  if (((GameObject *)obj)->unkB4 != -1) {
     if ((*(int (**)(short *, int, int))(*(int *)gBaddieControlInterface + 0x30))(obj, sub, 1) ==
         0) {
       return 1;
@@ -2734,9 +2734,9 @@ int dll_CB_seqFn(short *obj, int p2, u8 *e)
           *(u16 *)(sub + 0x400) &= ~8;
         }
         ((GroundBaddieState *)sub)->baddie.animSpeedA = lbl_803E2E98;
-        obj[0] = getAngle(*(f32 *)((char *)path + 0x74), *(f32 *)((char *)path + 0x7c)) + 0x8000;
-        obj[1] = getAngle(*(f32 *)((char *)path + 0x7c), *(f32 *)((char *)path + 0x78)) + 0x4000;
-        obj[2] = getAngle(*(f32 *)((char *)path + 0x78), *(f32 *)((char *)path + 0x74)) + 0x4000;
+        ((GameObject *)obj)->anim.rotX = getAngle(*(f32 *)((char *)path + 0x74), *(f32 *)((char *)path + 0x7c)) + 0x8000;
+        ((GameObject *)obj)->anim.rotY = getAngle(*(f32 *)((char *)path + 0x7c), *(f32 *)((char *)path + 0x78)) + 0x4000;
+        ((GameObject *)obj)->anim.rotZ = getAngle(*(f32 *)((char *)path + 0x78), *(f32 *)((char *)path + 0x74)) + 0x4000;
         ((GameObject *)obj)->anim.localPosX = *(f32 *)((char *)path + 0x68);
         ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)path + 0x6c);
         ((GameObject *)obj)->anim.localPosZ = *(f32 *)((char *)path + 0x70);
@@ -2744,7 +2744,7 @@ int dll_CB_seqFn(short *obj, int p2, u8 *e)
       break;
     }
   }
-  if (obj[0x5a] == -1) {
+  if (((GameObject *)obj)->unkB4 == -1) {
     *(u16 *)(sub + 0x400) |= 2;
     return 0;
   }
@@ -4016,7 +4016,7 @@ STATIC_ASSERT(offsetof(ChukChukState, flags) == 0x12);
 #pragma peephole off
 void chukchuk_init(u8* obj, u8* params) {
     ChukChukState* sub = ((GameObject *)obj)->extra;
-    obj[0xaf] = (u8)(obj[0xaf] | 0x8);
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x8);
     sub->gameBit = *(s16*)(params + 0x18);
     if (sub->gameBit != -1 && GameBit_Get(sub->gameBit) != 0) {
         ObjHits_DisableObject(obj);
@@ -4278,7 +4278,7 @@ void chukchuk_update(short *obj)
       v->hitsLeft -= 1;
       if (v->hitsLeft < 1) {
         ObjHits_DisableObject(obj);
-        obj[3] |= 0x4000;
+        ((GameObject *)obj)->anim.flags |= 0x4000;
         v->flags |= 2;
         Sfx_PlayFromObject(obj, SFXkr_impact3);
         GameBit_Set(v->gameBit, 1);
@@ -4744,7 +4744,7 @@ int grimble_stateHandlerA06(short *obj, GroundBaddieState *p, f32 spd)
   a.x = r;
   {
     int ang = (s16)getAngle(a.y, (f32)d);
-    obj[1] = ang * ((*(s8 *)(hit + 0x45) << 1) - 1);
+    ((GameObject *)obj)->anim.rotY = ang * ((*(s8 *)(hit + 0x45) << 1) - 1);
   }
   if (*(char *)&p->baddie.moveDone != '\0') {
     return 5;
@@ -4828,7 +4828,7 @@ int grimble_stateHandlerA05(short *obj, GroundBaddieState *p)
   a.x = r;
   {
     int ang = (s16)getAngle(a.y, (f32)d);
-    obj[1] = ang * ((*(s8 *)(hit + 0x45) << 1) - 1);
+    ((GameObject *)obj)->anim.rotY = ang * ((*(s8 *)(hit + 0x45) << 1) - 1);
   }
   return 0;
 }
@@ -4870,7 +4870,7 @@ int grimble_stateHandlerA04(short *obj, GroundBaddieState *p)
   a.x = r;
   {
     int ang = (s16)getAngle(a.y, (f32)d);
-    obj[1] = ang * ((*(s8 *)(hit + 0x45) << 1) - 1);
+    ((GameObject *)obj)->anim.rotY = ang * ((*(s8 *)(hit + 0x45) << 1) - 1);
   }
   if (*(char *)&p->baddie.moveDone != '\0') {
     return 6;
@@ -4915,7 +4915,7 @@ int grimble_stateHandlerA03(short *obj, GroundBaddieState *p)
   a.x = r;
   {
     int ang = (s16)getAngle(a.y, (f32)d);
-    obj[1] = ang * ((*(s8 *)(hit + 0x45) << 1) - 1);
+    ((GameObject *)obj)->anim.rotY = ang * ((*(s8 *)(hit + 0x45) << 1) - 1);
   }
   if (*(char *)&p->baddie.moveDone != '\0') {
     return 1;
