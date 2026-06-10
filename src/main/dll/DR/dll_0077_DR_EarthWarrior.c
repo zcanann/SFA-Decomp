@@ -456,24 +456,24 @@ void fn_802BE6E8(int obj, int t, int p3)
     ((EarthWarriorState *)inner)->baddie.hitPoints = 0;
     *(int *)((char *)inner + 0) &= ~0x8000;
     if (*(u8 *)((char *)inner + 0x14e6) == 2) {
-        *(f32 *)((char *)inner + 0x290) = (f32)(s8)padGetStickX(0);
-        *(f32 *)((char *)inner + 0x28c) = (f32)(s8)padGetStickY(0);
-        *(int *)((char *)inner + 0x31c) = getButtonsJustPressed(0);
-        *(int *)((char *)inner + 0x318) = getButtonsHeld(0);
-        *(s16 *)((char *)inner + 0x330) = *(s16 *)slot;
+        ((EarthWarriorState *)inner)->baddie.unk290 = (f32)(s8)padGetStickX(0);
+        ((EarthWarriorState *)inner)->baddie.unk28C = (f32)(s8)padGetStickY(0);
+        *(int *)&((EarthWarriorState *)inner)->baddie.unk31C = getButtonsJustPressed(0);
+        *(int *)&((EarthWarriorState *)inner)->baddie.unk318 = getButtonsHeld(0);
+        ((EarthWarriorState *)inner)->baddie.unk330 = *(s16 *)slot;
     } else {
         f32 v = lbl_803E8304;
-        *(f32 *)((char *)inner + 0x290) = v;
-        *(f32 *)((char *)inner + 0x28c) = v;
-        *(int *)((char *)inner + 0x31c) = 0;
-        *(int *)((char *)inner + 0x318) = 0;
-        *(s16 *)((char *)inner + 0x330) = 0;
+        ((EarthWarriorState *)inner)->baddie.unk290 = v;
+        ((EarthWarriorState *)inner)->baddie.unk28C = v;
+        *(int *)&((EarthWarriorState *)inner)->baddie.unk31C = 0;
+        *(int *)&((EarthWarriorState *)inner)->baddie.unk318 = 0;
+        ((EarthWarriorState *)inner)->baddie.unk330 = 0;
     }
     *(int *)((char *)inner + 0) |= 0x1000000;
     fn_802B0EA4(obj, q, inner);
     (*(void (*)(int, int, f32, f32, int, void *))(*(int *)(*gPlayerInterface + 0x8)))(obj, inner, timeDelta, timeDelta, (int)gDREarthWarriorStateHandlers, &gDREarthWarriorDefaultStateHandler);
-    ((GameObject *)obj)->anim.rotY = (s16)(((GameObject *)obj)->anim.rotY + (*(s16 *)((char *)inner + 0x19c) >> 2));
-    ((GameObject *)obj)->anim.rotZ = (s16)(((GameObject *)obj)->anim.rotZ + (*(s16 *)((char *)inner + 0x19e) >> 2));
+    ((GameObject *)obj)->anim.rotY = (s16)(((GameObject *)obj)->anim.rotY + (((EarthWarriorState *)inner)->baddie.unk19C >> 2));
+    ((GameObject *)obj)->anim.rotZ = (s16)(((GameObject *)obj)->anim.rotZ + (((EarthWarriorState *)inner)->baddie.unk19E >> 2));
     if (((ByteFlags *)((char *)inner + 0x14ec))->b02) {
         (*gGameUIInterface)->runAirMeter(*(s16 *)((char *)inner + 0x14e2));
     }
@@ -1142,7 +1142,7 @@ void DR_EarthWarrior_init(int obj, int p2)
     *(s8 *)((char *)inner + 0x14f4) = -1;
     (*(void (*)(int, int, int, int))(*(int *)(*gPlayerInterface + 0x4)))(obj, inner, 4, 1);
     *(int *)inner |= 0x4000;
-    *(f32 *)((char *)inner + 0x2a4) = lbl_803E8384;
+    ((EarthWarriorState *)inner)->baddie.unk2A4 = lbl_803E8384;
     pathState = (u8 *)&((EarthWarriorState *)inner)->baddie + 4;
     (*gPathControlInterface)->init(pathState, 0, 0x48683, 1);
     (*gPathControlInterface)->setup(pathState, 4, base + 0xc, base + 0x3c, &stk);

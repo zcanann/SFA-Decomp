@@ -1056,7 +1056,7 @@ extern f32 lbl_803E4B3C;
 void dim2icefloe_update(int obj)
 {
     int sub = *(int *)&((GameObject *)obj)->extra;
-    if (*(void **)(sub + 0x9c) != NULL && (*(u16 *)(((Dim2IceFloeState *)sub)->unk9C + 0xb0) & 0x40) != 0) {
+    if (*(void **)&((Dim2IceFloeState *)sub)->unk9C != NULL && (*(u16 *)(((Dim2IceFloeState *)sub)->unk9C + 0xb0) & 0x40) != 0) {
         ((Dim2IceFloeState *)sub)->unkB6 &= ~1;
         ((Dim2IceFloeState *)sub)->unk9C = 0;
     } else {
@@ -1090,7 +1090,7 @@ void dim2icefloe_update(int obj)
         if (reached) {
             ((IceFloeFlags *)(sub + 0xb9))->finished = 1;
         }
-        ((Dim2IceFloeState *)sub)->unkB4 = timeDelta * ((Dim2IceFloeState *)sub)->unkAC + (f32)*(u16 *)(sub + 0xb4);
+        ((Dim2IceFloeState *)sub)->unkB4 = timeDelta * ((Dim2IceFloeState *)sub)->unkAC + (f32)*(u16 *)&((Dim2IceFloeState *)sub)->unkB4;
         if (((IceFloeFlags *)(sub + 0xb9))->finished) {
             ((GameObject *)obj)->anim.localPosY = -(lbl_803E4B38 * timeDelta - ((GameObject *)obj)->anim.localPosY);
             if (((GameObject *)obj)->anim.localPosY < ((Dim2IceFloeState *)sub)->unk6C) {

@@ -458,9 +458,9 @@ int trickyMove(u8 *obj, f32 *targetPos) {
     if (((TrickyState *)state)->unk08 == 1) {
       if ((skeetla_pathSpeedDelta(obj) >= lbl_803E23DC ? skeetla_pathSpeedDelta(obj)
                                                        : -skeetla_pathSpeedDelta(obj)) > lbl_803E23DC) {
-        *(f32 *)(state + 0x7a4) -= timeDelta;
-        if (*(f32 *)(state + 0x7a4) <= lbl_803E23DC) {
-          *(f32 *)(state + 0x7a4) = (f32)(int)randomGetRange(600, 1200);
+        ((TrickyState *)state)->unk7A4 -= timeDelta;
+        if (((TrickyState *)state)->unk7A4 <= lbl_803E23DC) {
+          ((TrickyState *)state)->unk7A4 = (f32)(int)randomGetRange(600, 1200);
           if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0) {
             if (moveSpeed > lbl_803E23E8) {
               sfxId = (u16)randomGetRange(0x34d, 0x34e);
@@ -696,9 +696,9 @@ void *trickyFindPathRouteEntry(u8 *state, u32 route, int pathId)
         return NULL;
     }
 
-    if ((*(int *)(state + 0x6ec) == pathId) && (*(u32 *)(state + 0x6e8) == route)) {
+    if ((((TrickyState *)state)->unk6EC == pathId) && (*(u32 *)&((TrickyState *)state)->unk6E8 == route)) {
         entry = fn_8004B118(state + 0x6b8);
-        *(void **)(state + 0x6e8) = entry;
+        ((TrickyState *)state)->unk6E8 = entry;
         if (entry == NULL) {
             return NULL;
         }
@@ -709,21 +709,21 @@ void *trickyFindPathRouteEntry(u8 *state, u32 route, int pathId)
                    (GameBit_Get(*(s16 *)((u8 *)entry + 0x32)) != 0)) {
             entry = NULL;
         }
-        *(void **)(state + 0x6e8) = entry;
+        ((TrickyState *)state)->unk6E8 = entry;
         if (entry != NULL) {
             return entry;
         }
     }
 
-    fn_8004B31C(state + 0x6b8, route, *(int *)(state + 0x28), pathId, *(int *)(state + 0x4a0));
+    fn_8004B31C(state + 0x6b8, route, *(int *)&((TrickyState *)state)->unk28, pathId, ((TrickyState *)state)->unk4A0);
     if (fn_8004B218(state + 0x6b8, 0x1f4) != 1) {
         return NULL;
     }
 
     fn_8004B148(state + 0x6b8);
     entry = fn_8004B118(state + 0x6b8);
-    *(void **)(state + 0x6e8) = entry;
-    *(int *)(state + 0x6ec) = pathId;
+    ((TrickyState *)state)->unk6E8 = entry;
+    ((TrickyState *)state)->unk6EC = pathId;
     return entry;
 }
 #pragma dont_inline reset
@@ -740,7 +740,7 @@ int trickyFindReachableRouteIndex(u8 *state, u32 *routes, u8 *routeFlags, int pa
     search = state;
     for (i = 0; i < 8; i++) {
         if (routes[i] != 0) {
-            fn_8004B31C(search + 0x538, routes[i], *(int *)(state + 0x28), pathId, routeFlags[i]);
+            fn_8004B31C(search + 0x538, routes[i], *(int *)&((TrickyState *)state)->unk28, pathId, routeFlags[i]);
         }
         search += 0x30;
     }
@@ -795,10 +795,10 @@ void *trickySelectRouteEntry(u8 *state, u8 *routeDef, u32 routeFlagValue)
 
     entry = NULL;
 
-    if ((*(u8 **)(state + 0x528) == routeDef) &&
-        (*(u16 *)(state + 0x530) == ((TrickyState *)state)->unk532) &&
-        (*(u8 *)(state + 0x536) == (routeFlagValue & 0xff))) {
-        entry = skeetla_validateRouteEntry(*(void **)(state + 0x52c));
+    if ((*(u8 **)&((TrickyState *)state)->unk528 == routeDef) &&
+        (((TrickyState *)state)->unk530 == ((TrickyState *)state)->unk532) &&
+        (((TrickyState *)state)->unk536 == (routeFlagValue & 0xff))) {
+        entry = skeetla_validateRouteEntry(((TrickyState *)state)->unk52C);
     }
 
     if (entry == NULL) {
@@ -808,13 +808,13 @@ void *trickySelectRouteEntry(u8 *state, u8 *routeDef, u32 routeFlagValue)
         }
 
         if (entry == NULL) {
-            if (*(u16 *)(state + 0x534) != 0) {
-                entry = trickyFindNearestLinkedRouteEntry(state, routeDef, *(u16 *)(state + 0x534), routeFlagValue & 0xff);
+            if (((TrickyState *)state)->unk534 != 0) {
+                entry = trickyFindNearestLinkedRouteEntry(state, routeDef, ((TrickyState *)state)->unk534, routeFlagValue & 0xff);
                 if (entry == NULL) {
-                    entry = trickyFindPathRouteEntry(state, (u32)routeDef, *(u16 *)(state + 0x534));
+                    entry = trickyFindPathRouteEntry(state, (u32)routeDef, ((TrickyState *)state)->unk534);
                 }
                 if (entry != NULL) {
-                    ((TrickyState *)state)->unk532 = *(u16 *)(state + 0x534);
+                    ((TrickyState *)state)->unk532 = ((TrickyState *)state)->unk534;
                 }
             }
         }
@@ -825,10 +825,10 @@ void *trickySelectRouteEntry(u8 *state, u8 *routeDef, u32 routeFlagValue)
         }
     }
 
-    *(u8 **)(state + 0x528) = routeDef;
-    *(void **)(state + 0x52c) = entry;
-    *(u16 *)(state + 0x530) = ((TrickyState *)state)->unk532;
-    *(u8 *)(state + 0x536) = routeFlagValue;
+    *(u8 **)&((TrickyState *)state)->unk528 = routeDef;
+    ((TrickyState *)state)->unk52C = entry;
+    ((TrickyState *)state)->unk530 = ((TrickyState *)state)->unk532;
+    ((TrickyState *)state)->unk536 = routeFlagValue;
     return entry;
 }
 
@@ -887,7 +887,7 @@ void trickyRankLinkedRouteCandidates(u8 *obj, u8 *outRouteFlags, s16 linkSelecto
         }
 
         cz = *(f32 *)((u8 *)curve + 0x10);
-        p = *(f32 **)(state + 0x28);
+        p = *(f32 **)&((TrickyState *)state)->unk28;
         dz = p[2] - cz;
         zz = dz * dz;
         cx = *(f32 *)((u8 *)curve + 8);
@@ -964,11 +964,11 @@ void skeetla_spawnLinkedSparks(u8 *obj)
     SkeetlaParticleSpawnArgs args;
 
     state = ((GameObject *)obj)->extra;
-    linkedObj = *(u8 **)(state + 0x24);
+    linkedObj = *(u8 **)&((TrickyState *)state)->unk24;
 
-    args.x = *(f32 *)(state + 0x3d8);
-    args.y = *(f32 *)(state + 0x3dc);
-    args.z = *(f32 *)(state + 0x3e0);
+    args.x = ((TrickyState *)state)->unk3D8;
+    args.y = ((TrickyState *)state)->unk3DC;
+    args.z = ((TrickyState *)state)->unk3E0;
     args.objectId = *(s16 *)obj;
     if (*(s16 *)(linkedObj + 0x46) == SKEETLA_LINKED_SOURCE_ID_OBJ_A) {
         args.sourceId =
@@ -989,9 +989,9 @@ void skeetla_spawnLinkedSparks(u8 *obj)
                                          SKEETLA_PARTICLE_SPAWN_FLAGS, -1, NULL);
     }
 
-    args.x = *(f32 *)(state + 0x3e4);
-    args.y = *(f32 *)(state + 0x3e8);
-    args.z = *(f32 *)(state + 0x3ec);
+    args.x = ((TrickyState *)state)->unk3E4;
+    args.y = ((TrickyState *)state)->unk3E8;
+    args.z = ((TrickyState *)state)->unk3EC;
     args.objectId = *(s16 *)obj;
 
     if ((int)randomGetRange(0, SKEETLA_PARTICLE_RANDOM_RATE) == 0) {

@@ -108,8 +108,8 @@ int dll_19_func0F(int obj, char *state, char *st, int p4, int p5, s16 p6)
     f32 nz;
     char *t;
 
-    *(int *)(st + 0x318) = 0;
-    *(int *)(st + 0x31c) = 0;
+    *(int *)&((BaddieState *)st)->unk318 = 0;
+    *(int *)&((BaddieState *)st)->unk31C = 0;
     ((BaddieState *)st)->unk330 = 0;
     {
         f32 rest = lbl_803E1C2C;
@@ -130,7 +130,7 @@ int dll_19_func0F(int obj, char *state, char *st, int p4, int p5, s16 p6)
         f32 ez = *(f32 *)(state + 0x48) - ((GameObject *)obj)->anim.localPosZ;
         dist = sqrtf(ex * ex + ez * ez);
     }
-    t = *(char **)(st + 0x2d0);
+    t = *(char **)&((BaddieState *)st)->targetObj;
     if (t == NULL) {
         return 0;
     }
@@ -149,7 +149,7 @@ int dll_19_func0F(int obj, char *state, char *st, int p4, int p5, s16 p6)
             lbl_803DD5DC = lbl_803DD5DC + 1;
         }
         if (dist >= total || (s8)lbl_803DD5DC > 9) {
-            char *t2 = *(char **)(st + 0x2d0);
+            char *t2 = *(char **)&((BaddieState *)st)->targetObj;
             int delta = ((GameObject *)obj)->anim.rotX - (u16)*(s16 *)t2;
             if (delta > 0x8000) {
                 delta -= 0xffff;
@@ -191,7 +191,7 @@ int dll_19_func0F(int obj, char *state, char *st, int p4, int p5, s16 p6)
     if ((s8)*(u8 *)(state + 0x56) == 0) {
         *(u8 *)(st + 0x405) = 0;
         ((BaddieState *)st)->controlMode = p6;
-        *(int *)(st + 0x2d0) = 0;
+        *(int *)&((BaddieState *)st)->targetObj = 0;
         *(s16 *)(state + 0x6e) = -1;
         *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) & ~0x60;
         ((BaddieState *)st)->unk25F = 0;

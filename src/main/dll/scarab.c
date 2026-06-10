@@ -2710,7 +2710,7 @@ int dll_CB_seqFn(short *obj, int p2, u8 *e)
       *(s16 *)(e + 0x6e) = 0;
       fn_801606F0((int)obj, e, sub, (GroundBaddieState *)sub);
       if (*(u8 *)(sub + 0x405) == 1) {
-        *(s16 *)(sub + 0x270) = 5;
+        ((GroundBaddieState *)sub)->baddie.unk270 = 5;
         (*(void (**)(short *, int, f32, f32, void *, void *))(*(int *)gPlayerInterface + 8))(
             obj, sub, lbl_803E2E8C, *(f32 *)&lbl_803E2E8C, lbl_803AC5E8, lbl_803AC5D0);
         *(s8 *)(e + 0x56) = 0;
@@ -2729,11 +2729,11 @@ int dll_CB_seqFn(short *obj, int p2, u8 *e)
       *(s16 *)(e + 0x6e) &= ~0x40;
       path = *(int **)(sub + 0x3dc);
       if ((*(u16 *)(sub + 0x400) & 8) != 0) {
-        if ((Curve_AdvanceAlongPath(path, *(f32 *)(sub + 0x280)) != 0 || path[4] != 0) &&
+        if ((Curve_AdvanceAlongPath(path, ((GroundBaddieState *)sub)->baddie.animSpeedA) != 0 || path[4] != 0) &&
             (*gRomCurveInterface)->goNextPoint(path) != 0) {
           *(u16 *)(sub + 0x400) &= ~8;
         }
-        *(f32 *)(sub + 0x280) = lbl_803E2E98;
+        ((GroundBaddieState *)sub)->baddie.animSpeedA = lbl_803E2E98;
         obj[0] = getAngle(*(f32 *)((char *)path + 0x74), *(f32 *)((char *)path + 0x7c)) + 0x8000;
         obj[1] = getAngle(*(f32 *)((char *)path + 0x7c), *(f32 *)((char *)path + 0x78)) + 0x4000;
         obj[2] = getAngle(*(f32 *)((char *)path + 0x78), *(f32 *)((char *)path + 0x74)) + 0x4000;

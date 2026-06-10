@@ -83,8 +83,12 @@ def parse_struct(body, structs):
 
 
 def main():
-    path, header, sname = sys.argv[1], sys.argv[2], sys.argv[3]
-    varnames = sys.argv[4:]
+    # --include-unk: also map unkNNN-named fields (pads stay excluded), the
+    # same policy deref_convert_gameobject.py uses for the GameObject tail.
+    include_unk = '--include-unk' in sys.argv
+    argv = [a for a in sys.argv if a != '--include-unk']
+    path, header, sname = argv[1], argv[2], argv[3]
+    varnames = argv[4:]
     htxt = open(header, errors='ignore').read()
     structs = {}
     for _ in range(2):
@@ -103,7 +107,7 @@ def main():
             if cls is None and not ty.endswith('*') and base_ty in structs and structs[base_ty]:
                 flatten(base_ty, base + off, prefix + fname + '.', out)
             else:
-                if 'pad' in low or 'unk' in low or cls is None:
+                if 'pad' in low or cls is None or ('unk' in low and not include_unk):
                     continue
                 out[base + off] = (prefix + fname, cls, ty)
     M = {}
@@ -124,7 +128,11 @@ def main():
             if cls == 'PTR' and ty != fty and ty != 'void *':
                 after = m.string[m.end():m.end()+4].lstrip(') ')
                 chained = after[:2] == '->' or after[:1] in ('[', '+', '-')
-                if chained:
+                # a concrete-typed field mismatching the deref's pointer type
+                # is an illegal implicit conversion in EVERY context (MWCC
+                # C89), not just chained ones - always launder; a void* field
+                # only needs the launder when the result is chained/offset.
+                if chained or fty != 'void *':
                     stats['launder'] += 1
                     return '*(%s*)&%s' % (ty, mem)
             if cls == fcls:

@@ -489,8 +489,8 @@ void fn_801511E8(int obj, u8 *state)
     u32 idx;
 
     entry = *(u8 **)(state[0x33b] * 40 + lbl_8031F16C + 12);
-    if ((f32)*(u16 *)(state + 0x2a4) > lbl_803E27A4 * *(f32 *)(state + 0x2ac)) {
-        if ((f32)*(u16 *)(state + 0x2a4) > lbl_803E27A8 * *(f32 *)(state + 0x2ac)) {
+    if ((f32)*(u16 *)(state + 0x2a4) > lbl_803E27A4 * ((GroundBaddieState *)state)->baddie.unk2AC) {
+        if ((f32)*(u16 *)(state + 0x2a4) > lbl_803E27A8 * ((GroundBaddieState *)state)->baddie.unk2AC) {
             state[0x33a] = (u8)(entry[8] + 2);
         } else {
             state[0x33a] = (u8)(entry[8] + 3);
@@ -498,7 +498,7 @@ void fn_801511E8(int obj, u8 *state)
     }
     while (*(u32 *)(entry + (idx = state[0x33a]) * 16 + 4) != 0
            && (((GroundBaddieState *)state)->baddie.controlFlags & *(u32 *)(entry + idx * 16 + 4)) == 0) {
-        (*(u8 *)(state + 0x33a))++;
+        (((GroundBaddieState *)state)->baddie.unk33A)++;
         if (state[0x33a] > entry[8]) {
             state[0x33a] = 1;
         }
@@ -510,7 +510,7 @@ void fn_801511E8(int obj, u8 *state)
     ObjAnim_SetMoveProgress(
         *(f32 *)(lbl_8031DD30 + ((SeqEntry *)(entry + state[0x33a] * 16))->anim * 4),
         (ObjAnimComponent *)obj);
-    (*(u8 *)(state + 0x33a))++;
+    (((GroundBaddieState *)state)->baddie.unk33A)++;
     if (state[0x33a] > entry[8]) {
         state[0x33a] = 1;
     }
@@ -546,19 +546,19 @@ void fn_801513AC(int obj, u8 *state)
             state[0x33a] = (u8)(entry[8] + lbl_803DBC88[(s16)((u32)(u16)d >> 13)]);
         } else if (*(u16 *)(lbl_803AC428 + 4) <= 70) {
             while ((*(u8 *)(entry + state[0x33a] * 16 + 10) & 1) != 0) {
-                (*(u8 *)(state + 0x33a))++;
+                (((GroundBaddieState *)state)->baddie.unk33A)++;
                 if (state[0x33a] > entry[8]) {
                     state[0x33a] = 1;
                 }
             }
         }
     }
-    if ((f32)*(u16 *)(state + 0x2a4) < lbl_803E27A8 * *(f32 *)(state + 0x2ac)) {
+    if ((f32)*(u16 *)(state + 0x2a4) < lbl_803E27A8 * ((GroundBaddieState *)state)->baddie.unk2AC) {
         state[0x33a] = (u8)(entry[8] + 1);
     }
     while (*(u32 *)(entry + (idx = state[0x33a]) * 16 + 4) != 0
            && (((GroundBaddieState *)state)->baddie.controlFlags & *(u32 *)(entry + idx * 16 + 4)) == 0) {
-        (*(u8 *)(state + 0x33a))++;
+        (((GroundBaddieState *)state)->baddie.unk33A)++;
         if (state[0x33a] > entry[8]) {
             state[0x33a] = 1;
         }
@@ -570,7 +570,7 @@ void fn_801513AC(int obj, u8 *state)
     ObjAnim_SetMoveProgress(
         *(f32 *)(lbl_8031DD30 + ((SeqEntry *)(entry + state[0x33a] * 16))->anim * 4),
         (ObjAnimComponent *)obj);
-    (*(u8 *)(state + 0x33a))++;
+    (((GroundBaddieState *)state)->baddie.unk33A)++;
     if (state[0x33a] > entry[8]) {
         state[0x33a] = 1;
     }
@@ -680,16 +680,16 @@ void fn_80151954(int obj, u8 *state)
     int z;
 
     ((GroundBaddieState *)state)->baddie.unk2E4 = 11;
-    *(u32 *)(state + 0x2e4) |= 0x402B0;
-    *(u32 *)(state + 0x2e4) |= 0x3040;
-    *(u32 *)(state + 0x2e4) |= 0x40300000;
-    *(u32 *)(state + 0x2e4) |= 0xC00;
+    *(u32 *)&((GroundBaddieState *)state)->baddie.unk2E4 |= 0x402B0;
+    *(u32 *)&((GroundBaddieState *)state)->baddie.unk2E4 |= 0x3040;
+    *(u32 *)&((GroundBaddieState *)state)->baddie.unk2E4 |= 0x40300000;
+    *(u32 *)&((GroundBaddieState *)state)->baddie.unk2E4 |= 0xC00;
     ((GroundBaddieState *)state)->baddie.unk308 = lbl_803E2754;
     ((GroundBaddieState *)state)->baddie.unk300 = lbl_803E27B0;
     ((GroundBaddieState *)state)->baddie.unk304 = lbl_803E27B4;
     state[0x320] = 35;
     fz = lbl_803E2748;
-    *(f32 *)(state + 0x314) = fz;
+    *(f32 *)&((GroundBaddieState *)state)->baddie.eventFlags = fz;
     state[0x321] = 34;
     ((GroundBaddieState *)state)->baddie.unk318 = lbl_803E27B8;
     state[0x322] = 6;
@@ -753,7 +753,7 @@ void fn_80151954(int obj, u8 *state)
         state[0x33b] = 5;
         z = 0;
         state[0x320] = z;
-        *(f32 *)(state + 0x314) = fz;
+        *(f32 *)&((GroundBaddieState *)state)->baddie.eventFlags = fz;
         state[0x321] = 21;
         ((GroundBaddieState *)state)->baddie.unk318 = lbl_803E27B8;
         state[0x322] = z;
