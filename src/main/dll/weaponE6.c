@@ -10,14 +10,14 @@
 #define TRICKY_STATE_RESET_FLAG_40000 0x00040000
 
 #define TRICKY_CLEAR_TARGET_DIRTY(st) \
-    (*(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_TARGET_DIRTY_FLAG)
+    (*(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~(u64)TRICKY_STATE_TARGET_DIRTY_FLAG)
 
 #define TRICKY_CLEAR_RESET_FLAGS(st) \
     { \
-        *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_RESET_FLAG_10; \
-        *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_RESET_FLAG_10000; \
-        *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_RESET_FLAG_20000; \
-        *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_RESET_FLAG_40000; \
+        *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~(u64)TRICKY_STATE_RESET_FLAG_10; \
+        *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~(u64)TRICKY_STATE_RESET_FLAG_10000; \
+        *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~(u64)TRICKY_STATE_RESET_FLAG_20000; \
+        *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~(u64)TRICKY_STATE_RESET_FLAG_40000; \
         *(s8 *)((st) + 0xd) = -1; \
     }
 
@@ -228,7 +228,7 @@ void fn_8013F100(int obj, register int state)
             } else {
                 *(u8 *)(iVar2 + 2) += 1;
             }
-            *(u32 *)(state + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_RESET_FLAG_10;
+            *(u32 *)(state + TRICKY_STATE_FLAGS_OFFSET) &= ~(u64)TRICKY_STATE_RESET_FLAG_10;
             ((TrickyState *)state)->unkA = 7;
             pTgt = ((TrickyState *)state)->unk24 + 24;
             if (((TrickyState *)state)->unk28 != pTgt) {
