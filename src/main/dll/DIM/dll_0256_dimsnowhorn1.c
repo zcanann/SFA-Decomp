@@ -814,7 +814,7 @@ int DIMSnowHorn1_func11(int obj)
     return 2;
 }
 
-int DIMSnowHorn1_animEventCallback(int obj, undefined4 unused, int setup)
+int DIMSnowHorn1_animEventCallback(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     DIMSnowHorn1State *state;
     int animState;
@@ -827,9 +827,9 @@ int DIMSnowHorn1_animEventCallback(int obj, undefined4 unused, int setup)
 
     switch (state->unkA8C) {
         case 0:
-            *(u8 *)(setup + 0x56) = 0;
+            animUpdate->sequenceEventActive = 0;
             if (((GameObject *)obj)->unkB4 == -1) {
-                for (i = 0; i < (int)(u32)*(u8 *)(setup + 0x8b); i++) {
+                for (i = 0; i < (int)(u32)animUpdate->eventCount; i++) {
                     GameBit_Set(0x17b, 1);
                     state->unkA8E |= 0x20;
                 }
@@ -837,15 +837,15 @@ int DIMSnowHorn1_animEventCallback(int obj, undefined4 unused, int setup)
             (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, (int)state, 1);
             break;
         case 5:
-            *(u8 *)(setup + 0x56) = 0;
+            animUpdate->sequenceEventActive = 0;
             (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, (int)state, 2);
             break;
         case 4:
-            *(u8 *)(setup + 0x56) = 0;
+            animUpdate->sequenceEventActive = 0;
             (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, (int)state, 7);
             break;
         case 1:
-            *(u8 *)(setup + 0x56) = 0;
+            animUpdate->sequenceEventActive = 0;
             if (((GameObject *)obj)->unkB4 != -1) {
                 switch (state->unkA8D) {
                     case 0:
@@ -865,7 +865,7 @@ int DIMSnowHorn1_animEventCallback(int obj, undefined4 unused, int setup)
             (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, (int)state, animState);
             break;
         case 3:
-            *(u8 *)(setup + 0x56) = 0;
+            animUpdate->sequenceEventActive = 0;
             state->baddie.moveJustStartedA = 1;
             (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, (int)state, 7);
             break;
@@ -881,7 +881,7 @@ int DIMSnowHorn1_animEventCallback(int obj, undefined4 unused, int setup)
     ((GameObject *)obj)->anim.velocityX = fz;
     ((GameObject *)obj)->anim.velocityY = fz;
     ((GameObject *)obj)->anim.velocityZ = fz;
-    return (u32)(-(s8)((u8 *)setup)[0x56] | (s8)((u8 *)setup)[0x56]) >> 0x1f;
+    return (u32)(-(s8)animUpdate->sequenceEventActive | (s8)animUpdate->sequenceEventActive) >> 0x1f;
 }
 
 void DIMSnowHorn1_func22(int obj, f32 scale)

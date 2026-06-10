@@ -7,6 +7,7 @@
 #include "main/mapEventTypes.h"
 #include "main/objHitReact.h"
 #include "main/objanim.h"
+#include "main/objanim_update.h"
 #include "main/objseq.h"
 #include "main/resource.h"
 #include "main/dll/path_control_interface.h"
@@ -464,7 +465,7 @@ extern void *gDIMSnowHorn1DefaultStateHandler;
 extern s16 gDIMSnowHorn1TextureId;
 extern int textureLoad(int id, int p2);
 extern u8 lbl_80335030[];
-extern void DIMSnowHorn1_animEventCallback();
+extern int DIMSnowHorn1_animEventCallback(int obj, int unused, ObjAnimUpdateState *animUpdate);
 extern int lbl_803E8230;
 extern int lbl_803DC734;
 extern f32 lbl_803E82B8;
@@ -548,7 +549,7 @@ extern f32 lbl_803E830C;
 extern int getAngle(f32 deltaX, f32 deltaZ);
 extern f32 interpolate(f32 cur, f32 target, f32 t);
 extern f32 lbl_803E83FC;
-int fn_802BC3F0(int obj, int p2, int p3);
+int fn_802BC3F0(int obj, int p2, ObjAnimUpdateState *animUpdate);
 void fn_802BF0C8(int obj, int inner, int bit);
 void fn_802BF4D8(int obj);
 

@@ -370,7 +370,7 @@ extern void *gDIMSnowHorn1Texture;
 
 extern f32 lbl_803E8410;
 
-int fn_802BC3F0(int obj, int p2, int p3);
+int fn_802BC3F0(int obj, int p2, ObjAnimUpdateState *animUpdate);
 
 extern f32 lbl_803DC78C;
 extern f32 lbl_803DC790;
@@ -380,7 +380,7 @@ extern f32 lbl_803DB170[];
 extern s16 gDIMSnowHorn1TextureId;
 extern int textureLoad(int id, int p2);
 
-extern int DIMSnowHorn1_animEventCallback(int obj, undefined4 unused, int setup);
+extern int DIMSnowHorn1_animEventCallback(int obj, int unused, ObjAnimUpdateState *animUpdate);
 extern int lbl_803E8230;
 extern int lbl_803DC734;
 extern f32 lbl_803E82B8;

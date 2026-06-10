@@ -1,5 +1,6 @@
 #include "main/objHitReact.h"
 #include "main/game_object.h"
+#include "main/objanim_update.h"
 #include "main/objseq.h"
 #include "main/resource.h"
 
@@ -470,7 +471,7 @@ extern void *gDIMSnowHorn1Texture;
 extern f32 lbl_803E8410;
 
 extern int *gPlayerInterface;
-int fn_802BC3F0(int obj, int p2, int p3);
+int fn_802BC3F0(int obj, int p2, ObjAnimUpdateState *animUpdate);
 
 
 extern f32 lbl_803DC78C;
@@ -497,7 +498,7 @@ extern void *gDIMSnowHorn1DefaultStateHandler;
 extern s16 gDIMSnowHorn1TextureId;
 extern int textureLoad(int id, int p2);
 
-extern void DIMSnowHorn1_animEventCallback();
+extern int DIMSnowHorn1_animEventCallback(int obj, int unused, ObjAnimUpdateState *animUpdate);
 extern int lbl_803E8230;
 extern int lbl_803DC734;
 extern f32 lbl_803E82B8;
@@ -729,7 +730,7 @@ void dim2prisonmammoth_init(int obj, int p2)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802BC3F0(int obj, int p2, int p3)
+int fn_802BC3F0(int obj, int p2, ObjAnimUpdateState *animUpdate)
 {
     struct {
         s16 angles[4];
@@ -738,8 +739,8 @@ int fn_802BC3F0(int obj, int p2, int p3)
     f32 matrix[16];
     int inner;
 
-    *(u8 *)((char *)p3 + 0x56) = 0;
-    *(s16 *)((char *)p3 + 0x6e) = *(s16 *)((char *)p3 + 0x70);
+    animUpdate->sequenceEventActive = 0;
+    animUpdate->hitVolumePair = animUpdate->activeHitVolumePair;
     inner = *(int *)&((GameObject *)obj)->extra;
     (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, inner, 2);
 
