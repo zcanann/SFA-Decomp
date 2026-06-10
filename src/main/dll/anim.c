@@ -6194,7 +6194,7 @@ void dbstealerworm_update(u8 *objp)
                 if (((int (*)(int, int, int, int, char *, char *, int, char *))((void **)*gBaddieControlInterface)[20])(obj, blob, blob + 0x35c, ((GroundBaddieState *)blob)->gameBitB, tbl + 0x2ac, tbl + 0x324, 1, st) != 0) {
                     *(f32 *)(st + 0xc) = ((GameObject *)obj)->anim.localPosX;
                     *(f32 *)(st + 0x10) = ((GameObject *)obj)->anim.localPosY;
-                    *(f32 *)(st + 0x14) = ((GameObject *)obj)->anim.localPosZ;
+                    ((GroundBaddieState *)st)->baddie.posX = ((GameObject *)obj)->anim.localPosZ;
                     objLightFn_8009a1dc((void *)obj, lbl_803E638C, st, 1, 0);
                 }
                 if (((GroundBaddieState *)blob)->targetState == 0) {

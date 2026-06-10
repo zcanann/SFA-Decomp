@@ -586,10 +586,10 @@ int collectible_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
     f32 c_val;
     f32 vy;
 
-    if (*(s16*)((char*)state + 0x14) != -1) {
-        *(u8*)((char*)state + 0x1e) = (u8)(GameBit_Get((s32)*(s16*)((char*)state + 0x14)) == 0);
+    if (((GfxEmitState *)state)->enableGameBit != -1) {
+        ((GfxEmitState *)state)->enableGameBitClear = (u8)(GameBit_Get((s32)((GfxEmitState *)state)->enableGameBit) == 0);
     }
-    if (*(u8*)((char*)state + 0x1e) == 0) {
+    if (((GfxEmitState *)state)->enableGameBitClear == 0) {
         switch (((GameObject *)obj)->anim.seqId) {
         case 0x6a6:
             objfx_spawnDirectionalBurst(obj, 5, lbl_803E3454, 6, 1, 0x14, lbl_803E3458, 0, 0);
@@ -851,7 +851,7 @@ void fn_801723DC(int obj)
 
     switch (((GameObject *)obj)->anim.seqId) {
     case 0xb:
-        if ((*(s16 *)(state + 0x34) -= framesThisStep) <= 0) {
+        if ((((GfxEmitState *)state)->spinTimer -= framesThisStep) <= 0) {
             ((GfxEmitState *)state)->spinSpeed = (f32)(int)randomGetRange(600, 800);
             ((GfxEmitState *)state)->spinTimer = (s16)randomGetRange(180, 240);
             Sfx_PlayFromObject(obj, SFXwp_whiz3_c);

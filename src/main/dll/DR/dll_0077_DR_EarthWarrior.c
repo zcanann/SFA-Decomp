@@ -453,7 +453,7 @@ void fn_802BE6E8(int obj, int t, int p3)
     Obj_GetPlayerObject();
     q = inner + 0xb58;
     slot = (int)Camera_GetCurrentViewSlot();
-    *(u8 *)((char *)inner + 0x354) = 0;
+    ((EarthWarriorState *)inner)->baddie.hitPoints = 0;
     *(int *)((char *)inner + 0) &= ~0x8000;
     if (*(u8 *)((char *)inner + 0x14e6) == 2) {
         *(f32 *)((char *)inner + 0x290) = (f32)(s8)padGetStickX(0);

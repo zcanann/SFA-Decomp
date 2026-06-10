@@ -62,12 +62,12 @@ int DIMSnowHorn1_stateHandler04(int obj, int state)
     ((GameObject *)obj)->anim.velocityZ = k;
     *(u32 *)((char *)state) |= 0x200000;
 
-    if (*(s8 *)((char *)state + 0x27a) != 0) {
+    if (*(s8 *)&((DIMSnowHorn1State *)state)->baddie.moveJustStartedA != 0) {
         idx = randomGetRange(0, 1);
         ((DIMSnowHorn1State *)state)->baddie.moveSpeed = lbl_803DC740[idx];
         ObjAnim_SetCurrentMove(obj, lbl_803DC73C[idx], lbl_803E8234, 0);
     }
-    if (*(s8 *)((char *)state + 0x346) != 0) {
+    if (*(s8 *)&((DIMSnowHorn1State *)state)->baddie.moveDone != 0) {
         return -2;
     }
     if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) {
@@ -152,12 +152,12 @@ int DIMSnowHorn1_stateHandler03(int obj, int state)
     ((GameObject *)obj)->anim.velocityZ = k;
     *(u32 *)((char *)state) |= 0x200000;
 
-    if (*(s8 *)((char *)state + 0x27a) != 0) {
+    if (*(s8 *)&((DIMSnowHorn1State *)state)->baddie.moveJustStartedA != 0) {
         idx = randomGetRange(0, 1);
         ((DIMSnowHorn1State *)state)->baddie.moveSpeed = lbl_803DC740[idx];
         ObjAnim_SetCurrentMove(obj, lbl_803DC73C[idx], lbl_803E8234, 0);
     }
-    if (*(s8 *)((char *)state + 0x346) != 0) {
+    if (*(s8 *)&((DIMSnowHorn1State *)state)->baddie.moveDone != 0) {
         return -1;
     }
     if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) {
@@ -187,7 +187,7 @@ int DIMSnowHorn1_stateHandler01(int obj, int state, f32 fv)
     ((GameObject *)obj)->anim.velocityZ = k;
     *(u32 *)((char *)state) |= 0x200000;
 
-    if (*(s8 *)((char *)state + 0x27a) != 0) {
+    if (*(s8 *)&((DIMSnowHorn1State *)state)->baddie.moveJustStartedA != 0) {
         ((DIMSnowHorn1State *)state)->baddie.moveSpeed = lbl_803E827C;
         if (((GameObject *)obj)->anim.currentMove != lbl_803DC748) {
             ObjAnim_SetCurrentMove(obj, lbl_803DC748, lbl_803E8234, 0);
@@ -230,7 +230,7 @@ int DIMSnowHorn1_stateHandler0B(int obj, int state)
     ((GameObject *)obj)->anim.velocityY = k;
     ((GameObject *)obj)->anim.velocityZ = k;
 
-    if (*(s8 *)((char *)state + 0x27a) != 0) {
+    if (*(s8 *)&((DIMSnowHorn1State *)state)->baddie.moveJustStartedA != 0) {
         inner->unkA8E &= ~0x8;
         *(s16 *)((char *)sub + 0x60) |= 0x200;
         ObjAnim_SetCurrentMove(obj, 0x204, k, 0);
@@ -303,7 +303,7 @@ int DIMSnowHorn1_stateHandler08(int obj, int state)
 
     switch (((GameObject *)obj)->anim.currentMove) {
     case 0x206:
-        if (*(s8 *)((char *)state + 0x346) != 0) {
+        if (*(s8 *)&((DIMSnowHorn1State *)state)->baddie.moveDone != 0) {
             if (((DIMSnowHorn1State *)state)->baddie.moveSpeed > lbl_803E8234) {
                 ObjAnim_SetCurrentMove(obj, 0x205, lbl_803E8234, 0);
                 ((DIMSnowHorn1State *)state)->baddie.moveSpeed = lbl_803E827C;
@@ -331,7 +331,7 @@ int DIMSnowHorn1_stateHandler08(int obj, int state)
         }
         break;
     case 0x207:
-        if (*(s8 *)((char *)state + 0x346) != 0) {
+        if (*(s8 *)&((DIMSnowHorn1State *)state)->baddie.moveDone != 0) {
             return 8;
         }
         break;
@@ -361,7 +361,7 @@ int DIMSnowHorn1_stateHandler07(int obj, int state)
     ((GameObject *)obj)->anim.velocityY = fz;
     ((GameObject *)obj)->anim.velocityZ = fz;
     *(u32 *)((char *)state) |= 0x200000;
-    if (*(s8 *)((char *)state + 0x27a) != 0) {
+    if (*(s8 *)&((DIMSnowHorn1State *)state)->baddie.moveJustStartedA != 0) {
         *(s16 *)((char *)state + 0x338) = 0;
         ((DIMSnowHorn1State *)state)->baddie.moveSpeed = lbl_803E827C;
         *(f32 *)((char *)state + 0x2b8) = lbl_803E8284;
@@ -372,7 +372,7 @@ int DIMSnowHorn1_stateHandler07(int obj, int state)
     switch (((GameObject *)obj)->anim.currentMove) {
     case 0x209:
     case 0x20a:
-        if (*(s8 *)((char *)state + 0x346) != 0) {
+        if (*(s8 *)&((DIMSnowHorn1State *)state)->baddie.moveDone != 0) {
             ObjAnim_SetCurrentMove(obj, lbl_803DC748, lbl_803E8234, 0);
             ((DIMSnowHorn1State *)state)->baddie.moveSpeed = lbl_803E827C;
         }
@@ -384,7 +384,7 @@ int DIMSnowHorn1_stateHandler07(int obj, int state)
         *(f32 *)((char *)state + 0x298) = lbl_803E8234;
     }
     {
-        f32 v = *(f32 *)((char *)state + 0x29c);
+        f32 v = *(f32 *)&((DIMSnowHorn1State *)state)->baddie.trackedObj;
         if (v > lbl_803E8234 && *(f32 *)((char *)state + 0x298) > lbl_803E8234 &&
             *(s16 *)((char *)state + 0x334) >= inner->unkA86) {
             return 0xa;
@@ -423,7 +423,7 @@ int DIMSnowHorn1_stateHandler06(int obj, int state)
     inner = ((GameObject *)obj)->extra;
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
     ((GameObject *)obj)->unkE4 = GameBit_Get(0x170) != 0;
-    if (*(s8 *)((char *)state + 0x27a) != 0) {
+    if (*(s8 *)&((DIMSnowHorn1State *)state)->baddie.moveJustStartedA != 0) {
         ((DIMSnowHorn1State *)state)->baddie.moveSpeed = lbl_803E827C;
         if (((GameObject *)obj)->anim.currentMove != 0x13) {
             ObjAnim_SetCurrentMove(obj, 0x13, lbl_803E8234, 0);
@@ -508,7 +508,7 @@ int DIMSnowHorn1_stateHandler05(int obj, int state)
         break;
     }
 
-    if (*(s8 *)((char *)state + 0x27a) != 0) {
+    if (*(s8 *)&((DIMSnowHorn1State *)state)->baddie.moveJustStartedA != 0) {
         ((DIMSnowHorn1State *)state)->baddie.moveSpeed = lbl_803E827C;
         if (((GameObject *)obj)->anim.currentMove != 0x13) {
             ObjAnim_SetCurrentMove(obj, 0x13, lbl_803E8234, 0);
@@ -667,7 +667,7 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
     }
 
     useNormal = 1;
-    if (*(s8 *)((char *)state + 0x346) != 0 && moveId == 0x208) {
+    if (*(s8 *)&((DIMSnowHorn1State *)state)->baddie.moveDone != 0 && moveId == 0x208) {
         changed = 1;
         useNormal = 0;
     }
