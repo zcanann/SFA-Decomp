@@ -2228,8 +2228,8 @@ void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z)
     int off;
     int e;
     int p;
-    idx = *(u8 *)((char *)state + 0xa58);
-    *(u8 *)((char *)state + 0xa58) = idx + 1;
+    idx = ((ExplosionState *)state)->unkA58;
+    ((ExplosionState *)state)->unkA58 = idx + 1;
     off = idx * 0x30;
     *(f32 *)((char *)state + off) = x;
     e = state + off;
@@ -2375,7 +2375,7 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         GXSetVtxDesc(0xd, 1);
         GXSetCurrentMtx(0);
         p = state;
-        for (i = 0; i < *(u8 *)((char *)state + 0xa58); i++) {
+        for (i = 0; i < ((ExplosionState *)state)->unkA58; i++) {
             if (*(s8 *)((char *)p + 0x2f) != 0) {
                 void **tex;
                 int k;
@@ -2395,8 +2395,8 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 colA = (colA & 0xffffff00) | *(u8 *)((char *)p + 0x2e);
                 cv = (int)(lbl_803DDB68 * (lbl_803E4938 * expf((lbl_803E4958 * ((f32)(int)*(int *)((char *)p + 0x14) - (f32)(int)*(int *)((char *)p + 0x10))) / (f32)(int)*(int *)((char *)p + 0x14))));
                 colB = (cv & 0xff) | ((u8)cv << 8) | ((u8)cv << 16) | ((u8)cv << 24);
-                fn_801B40B8(*(u8 *)((char *)state + 0xa5d), (u8 *)&colA, (f32)(int)*(int *)((char *)p + 0x10), (f32)(int)*(int *)((char *)p + 0x14));
-                tex = (void **)((int *)lbl_803AC960)[*(u8 *)((char *)state + 0xa5d)];
+                fn_801B40B8(((ExplosionState *)state)->modelKind, (u8 *)&colA, (f32)(int)*(int *)((char *)p + 0x10), (f32)(int)*(int *)((char *)p + 0x14));
+                tex = (void **)((int *)lbl_803AC960)[((ExplosionState *)state)->modelKind];
                 for (k = 0; k < *(u8 *)((char *)p + 0x2c); k++) {
                     tex = (void **)*tex;
                 }
@@ -2427,13 +2427,13 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             }
             p += 0x30;
         }
-        if (*(int *)((char *)state + 0xa4c) < *(int *)((char *)state + 0xa50) && *(s8 *)((char *)state + 0xa59) != 0) {
+        if (((ExplosionState *)state)->frameCounter < ((ExplosionState *)state)->lifeFrames && *(s8 *)&((ExplosionState *)state)->rayMode != 0) {
             p = state;
-            for (i = 0; i < *(u8 *)((char *)state + 0xa59); i++) {
-                ((GameObject *)obj)->anim.rotY = *(s16 *)((char *)p + 0xa44);
-                ((GameObject *)obj)->anim.rotX = *(s16 *)((char *)p + 0xa46);
+            for (i = 0; i < ((ExplosionState *)state)->rayMode; i++) {
+                ((GameObject *)obj)->anim.rotY = ((ExplosionState *)p)->rayYawA;
+                ((GameObject *)obj)->anim.rotX = ((ExplosionState *)p)->rayPitchA;
                 objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (f32)visible);
-                if (i < *(u8 *)((char *)state + 0xa59) - 1) {
+                if (i < ((ExplosionState *)state)->rayMode - 1) {
                     *(u16 *)((char *)model + 0x18) &= ~8;
                 }
                 p += 4;
@@ -2454,8 +2454,8 @@ void explosion_update(int obj)
     int i;
     int p;
     lbl_803DDB58 += 1;
-    *(int *)((char *)state + 0xa4c) += framesThisStep;
-    for (i = 0, p = state; i < *(u8 *)((char *)state + 0xa58); i++) {
+    ((ExplosionState *)state)->frameCounter += framesThisStep;
+    for (i = 0, p = state; i < ((ExplosionState *)state)->unkA58; i++) {
         *(int *)((char *)p + 0x10) += framesThisStep;
         if (*(u8 *)((char *)p + 0x2f) != 0) {
             f32 sp = *(f32 *)((char *)p + 0x1c);
@@ -2504,20 +2504,20 @@ void explosion_update(int obj)
     fake.velocityX = lbl_803E4960;
     fake.velocityY = lbl_803E4960;
     fake.velocityZ = lbl_803E4960;
-    for (i = 0, p = state; i < *(u8 *)((char *)state + 0xa5a); i++) {
+    for (i = 0, p = state; i < ((ExplosionState *)state)->debrisCount; i++) {
         if (*(u8 *)((char *)p + 0x984) != 0) {
             *(int *)((char *)p + 0x97c) += framesThisStep;
             if (*(int *)((char *)p + 0x97c) >= *(int *)((char *)p + 0x980)) {
                 *(u8 *)((char *)p + 0x984) = 0;
             } else {
-                f32 grav = *(f32 *)((char *)state + 0xa3c);
+                f32 grav = ((ExplosionState *)state)->driftYSpeed;
                 u32 ft = framesThisStep;
                 f32 n974 = -(grav * (f32)(u32)ft - *(f32 *)((char *)p + 0x974));
                 *(f32 *)((char *)p + 0x968) = -(lbl_803E499C * (grav * (f32)(int)(ft * ft)) - (*(f32 *)((char *)p + 0x974) * (f32)(u32)ft + *(f32 *)((char *)p + 0x968)));
                 *(f32 *)((char *)p + 0x974) = n974;
                 *(f32 *)((char *)p + 0x964) += *(f32 *)((char *)p + 0x970) * (f32)(u32)framesThisStep;
                 *(f32 *)((char *)p + 0x96c) += *(f32 *)((char *)p + 0x978) * (f32)(u32)framesThisStep;
-                if (*(s8 *)((char *)state + 0xa5c) != 0 && *(f32 *)((char *)p + 0x968) < *(f32 *)((char *)state + 0x960) &&
+                if (((ExplosionState *)state)->nearGround != 0 && *(f32 *)((char *)p + 0x968) < ((ExplosionState *)state)->groundY &&
                     *(f32 *)((char *)p + 0x974) < lbl_803E4960) {
                     *(f32 *)((char *)p + 0x974) = lbl_803E49A0 * -*(f32 *)((char *)p + 0x974);
                 }
@@ -2554,7 +2554,7 @@ void explosion_update(int obj)
                         s16 sv = ang[2];
                         u8 md;
                         ang[5] = 0;
-                        md = *(u8 *)((char *)state + 0xa5d);
+                        md = ((ExplosionState *)state)->modelKind;
                         if (md == 2) {
                             ang[1] = ang[0];
                             ang[4] = ang[3];
@@ -2581,35 +2581,35 @@ void explosion_update(int obj)
         p += 0x24;
     }
     {
-        int e = *(int *)((char *)state + 0xa4c);
-        int d = *(int *)((char *)state + 0xa50);
+        int e = ((ExplosionState *)state)->frameCounter;
+        int d = ((ExplosionState *)state)->lifeFrames;
         if (d << 1 < e) {
             Obj_FreeObject(obj);
         } else {
             if (d < e) {
-                if (*(int *)((char *)state + 0xa40) != 0) {
-                    modelLightStruct_setEnabled(*(int *)((char *)state + 0xa40), 0, lbl_803E4960);
+                if (((ExplosionState *)state)->light != 0) {
+                    modelLightStruct_setEnabled(((ExplosionState *)state)->light, 0, lbl_803E4960);
                 }
             } else {
-                fn_801B40B8(*(u8 *)((char *)state + 0xa5d), rgb, (f32)(int)e, (f32)(int)d);
-                if (*(int *)((char *)state + 0xa40) != 0) {
-                    modelLightStruct_setDiffuseColor(*(int *)((char *)state + 0xa40), rgb[0], rgb[1], rgb[2], 0xff);
+                fn_801B40B8(((ExplosionState *)state)->modelKind, rgb, (f32)(int)e, (f32)(int)d);
+                if (((ExplosionState *)state)->light != 0) {
+                    modelLightStruct_setDiffuseColor(((ExplosionState *)state)->light, rgb[0], rgb[1], rgb[2], 0xff);
                 }
             }
             {
-                f32 frac = (f32)(int)*(int *)((char *)state + 0xa4c) / (f32)(int)*(int *)((char *)state + 0xa50);
-                ((GameObject *)obj)->anim.rootMotionScale = lbl_803E49A4 * frac * *(f32 *)((char *)state + 0xa54);
+                f32 frac = (f32)(int)((ExplosionState *)state)->frameCounter / (f32)(int)((ExplosionState *)state)->lifeFrames;
+                ((GameObject *)obj)->anim.rootMotionScale = lbl_803E49A4 * frac * ((ExplosionState *)state)->scale;
                 ((GameObject *)obj)->anim.alpha = (s8)(int)-(lbl_803E4938 * frac - lbl_803E4938);
             }
-            if (*(s8 *)((char *)state + 0xa5b) == 0 && (*(int *)((char *)state + 0xa50) >> 1) <= *(int *)((char *)state + 0xa4c)) {
+            if (((ExplosionState *)state)->unkA5B == 0 && (((ExplosionState *)state)->lifeFrames >> 1) <= ((ExplosionState *)state)->frameCounter) {
                 u32 k;
                 ang[0] = randomGetRange(0x1000, 0x6000);
                 ang[3] = *(s16 *)((char *)state + 0x14);
                 k = 0;
-                while ((f32)(int)k < *(f32 *)((char *)state + 0xa54)) {
+                while ((f32)(int)k < ((ExplosionState *)state)->scale) {
                     k++;
                 }
-                *(u8 *)((char *)state + 0xa5b) = 1;
+                *(u8 *)&((ExplosionState *)state)->unkA5B = 1;
                 ang[1] = ang[0];
                 ang[2] = ang[0];
             }
@@ -2627,7 +2627,7 @@ void explosion_init(int obj, int p2)
     int p;
     int i;
     int n;
-    *(u8 *)((char *)state + 0xa58) = 0;
+    ((ExplosionState *)state)->unkA58 = 0;
     if (*(s16 *)((char *)p2 + 0x1a) == 0) {
         scale = lbl_803E49A8;
     } else {
@@ -2638,26 +2638,26 @@ void explosion_init(int obj, int p2)
     }
     fn_801B3DE4(obj, 0, lbl_803E49AC * scale, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ);
     ((GameObject *)obj)->objectFlags |= 0x2000;
-    *(u8 *)((char *)state + 0xa5d) = *(s16 *)((char *)p2 + 0x1c) & 3;
-    Obj_SetActiveModelIndex(obj, *(u8 *)((char *)state + 0xa5d));
+    ((ExplosionState *)state)->modelKind = *(s16 *)((char *)p2 + 0x1c) & 3;
+    Obj_SetActiveModelIndex(obj, ((ExplosionState *)state)->modelKind);
     if (*(s16 *)((char *)p2 + 0x1c) & 4) {
-        *(f32 *)((char *)state + 0xa3c) = lbl_803E49A4;
+        ((ExplosionState *)state)->driftYSpeed = lbl_803E49A4;
     } else {
-        *(f32 *)((char *)state + 0xa3c) = lbl_803E4960;
+        ((ExplosionState *)state)->driftYSpeed = lbl_803E4960;
     }
-    *(u8 *)((char *)state + 0xa5c) = 0;
+    *(u8 *)&((ExplosionState *)state)->nearGround = 0;
     if (hitDetectFn_800658a4(obj, state + 0x960, 0, ((GameObject *)obj)->anim.localPosX, lbl_803E49B0 + ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ) == 0) {
-        if (*(f32 *)((char *)state + 0x960) < lbl_803E49B4) {
-            *(u8 *)((char *)state + 0xa5c) = 1;
+        if (((ExplosionState *)state)->groundY < lbl_803E49B4) {
+            *(u8 *)&((ExplosionState *)state)->nearGround = 1;
         }
-        *(f32 *)((char *)state + 0x960) = ((GameObject *)obj)->anim.localPosY - *(f32 *)((char *)state + 0x960);
+        ((ExplosionState *)state)->groundY = ((GameObject *)obj)->anim.localPosY - ((ExplosionState *)state)->groundY;
     } else {
-        *(f32 *)((char *)state + 0x960) = ((GameObject *)obj)->anim.localPosY;
+        ((ExplosionState *)state)->groundY = ((GameObject *)obj)->anim.localPosY;
     }
     if (*(s16 *)((char *)p2 + 0x1c) & 0x10) {
         n = (int)((f32)(lbl_803E49B8 * scale) / lbl_803E49A8);
         for (i = 0, p = state; i < n; i++) {
-            if (*(u8 *)((char *)state + 0xa5c) != 0) {
+            if (*(u8 *)&((ExplosionState *)state)->nearGround != 0) {
                 f32 mag = (f32)(int)randomGetRange(0x14, 0x28) * lbl_803E49C0;
                 mag = lbl_803E49BC * mag + lbl_803E49BC;
                 vsp[0] = mag;
@@ -2690,51 +2690,51 @@ void explosion_init(int obj, int p2)
             *(u8 *)((char *)p + 0x984) = 1;
             p += 0x24;
         }
-        *(u8 *)((char *)state + 0xa5a) = i;
+        ((ExplosionState *)state)->debrisCount = i;
     } else {
-        *(u8 *)((char *)state + 0xa5a) = 0;
+        ((ExplosionState *)state)->debrisCount = 0;
     }
-    *(int *)((char *)state + 0xa40) = 0;
+    ((ExplosionState *)state)->light = 0;
     if (*(s16 *)((char *)p2 + 0x1c) & 0x20) {
-        *(int *)((char *)state + 0xa40) = objCreateLight(0, 1);
-        if (*(void **)((char *)state + 0xa40) != NULL) {
-            modelLightStruct_setLightKind(*(int *)((char *)state + 0xa40), 2);
-            modelLightStruct_setPosition(*(int *)((char *)state + 0xa40), ((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY, ((GameObject *)obj)->anim.worldPosZ);
-            modelLightStruct_setAffectsAabbLightSelection(*(int *)((char *)state + 0xa40), 1);
-            modelLightStruct_setEnabled(*(int *)((char *)state + 0xa40), 1, lbl_803E4960);
-            modelLightStruct_setDistanceAttenuation(*(int *)((char *)state + 0xa40), (f32)(lbl_803E49CC * scale), (f32)(lbl_803E4958 * scale));
-            modelLightStruct_setDiffuseColor(*(int *)((char *)state + 0xa40), 0xff, 0xeb, 0xa0, 0xff);
+        ((ExplosionState *)state)->light = objCreateLight(0, 1);
+        if (*(void **)&((ExplosionState *)state)->light != NULL) {
+            modelLightStruct_setLightKind(((ExplosionState *)state)->light, 2);
+            modelLightStruct_setPosition(((ExplosionState *)state)->light, ((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY, ((GameObject *)obj)->anim.worldPosZ);
+            modelLightStruct_setAffectsAabbLightSelection(((ExplosionState *)state)->light, 1);
+            modelLightStruct_setEnabled(((ExplosionState *)state)->light, 1, lbl_803E4960);
+            modelLightStruct_setDistanceAttenuation(((ExplosionState *)state)->light, (f32)(lbl_803E49CC * scale), (f32)(lbl_803E4958 * scale));
+            modelLightStruct_setDiffuseColor(((ExplosionState *)state)->light, 0xff, 0xeb, 0xa0, 0xff);
         }
     }
     ((GameObject *)obj)->anim.alpha = 0xff;
     if (*(s16 *)((char *)p2 + 0x1c) & 8) {
-        if (*(u8 *)((char *)state + 0xa5c) == 0) {
-        *(u8 *)((char *)state + 0xa59) = 2;
-        *(u16 *)((char *)state + 0xa44) = randomGetRange(0, 0x4000);
-        *(u16 *)((char *)state + 0xa46) = randomGetRange(0, 0x8000);
-        *(u16 *)((char *)state + 0xa48) = *(u16 *)((char *)state + 0xa44) + 0x4000;
-        *(u16 *)((char *)state + 0xa4a) = *(u16 *)((char *)state + 0xa46);
+        if (*(u8 *)&((ExplosionState *)state)->nearGround == 0) {
+        ((ExplosionState *)state)->rayMode = 2;
+        *(u16 *)&((ExplosionState *)state)->rayYawA = randomGetRange(0, 0x4000);
+        *(u16 *)&((ExplosionState *)state)->rayPitchA = randomGetRange(0, 0x8000);
+        *(u16 *)&((ExplosionState *)state)->rayYawB = *(u16 *)&((ExplosionState *)state)->rayYawA + 0x4000;
+        *(u16 *)&((ExplosionState *)state)->rayPitchB = *(u16 *)&((ExplosionState *)state)->rayPitchA;
         } else {
-            *(u8 *)((char *)state + 0xa59) = 1;
-            *(s16 *)((char *)state + 0xa44) = 0;
-            *(s16 *)((char *)state + 0xa46) = 0;
+            ((ExplosionState *)state)->rayMode = 1;
+            ((ExplosionState *)state)->rayYawA = 0;
+            ((ExplosionState *)state)->rayPitchA = 0;
         }
     } else {
-        *(u8 *)((char *)state + 0xa59) = 0;
+        ((ExplosionState *)state)->rayMode = 0;
     }
-    *(u8 *)((char *)state + 0xa5b) = 0;
-    *(int *)((char *)state + 0xa4c) = 0;
-    *(int *)((char *)state + 0xa50) = (int)(lbl_803E4930 * sqrtf(scale));
+    *(u8 *)&((ExplosionState *)state)->unkA5B = 0;
+    ((ExplosionState *)state)->frameCounter = 0;
+    ((ExplosionState *)state)->lifeFrames = (int)(lbl_803E4930 * sqrtf(scale));
     {
-        int v = *(int *)((char *)state + 0xa50);
+        int v = ((ExplosionState *)state)->lifeFrames;
         if (v < 0) {
             v = 0;
         } else if (v > 0x3c) {
             v = 0x3c;
         }
-        *(int *)((char *)state + 0xa50) = v;
+        ((ExplosionState *)state)->lifeFrames = v;
     }
-    *(f32 *)((char *)state + 0xa54) = scale;
+    ((ExplosionState *)state)->scale = scale;
     ((GameObject *)obj)->anim.rootMotionScale = lbl_803E4960;
 }
 
