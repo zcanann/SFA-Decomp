@@ -24,18 +24,18 @@ extern void GameBit_Set(int eventId,int value);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 sfxplayer_updateState(int obj,undefined4 param_2,int hitState)
+undefined4 sfxplayer_updateState(int obj, undefined4 unused, ObjAnimUpdateState *animUpdate)
 {
   int event;
   SfxplayerState *state;
   int i;
 
   state = ((GameObject *)obj)->extra;
-  *(s16 *)(hitState + 0x6e) = -1;
-  *(u8 *)(hitState + 0x56) = 0;
+  animUpdate->hitVolumePair = -1;
+  animUpdate->sequenceEventActive = 0;
   i = 0;
-  while (i < (int)*(u8 *)(hitState + 0x8b)) {
-    event = *(u8 *)(hitState + i + 0x81);
+  while (i < (int)animUpdate->eventCount) {
+    event = animUpdate->eventIds[i];
     switch (event) {
     case SFXPLAYER_EVENT_ACTIVATE:
       GameBit_Set(state->effectSfxBaseId + 5,1);
@@ -65,7 +65,7 @@ undefined4 sfxplayer_updateState(int obj,undefined4 param_2,int hitState)
       }
       break;
     }
-    *(u8 *)(hitState + i + 0x81) = 0;
+    animUpdate->eventIds[i] = 0;
     i++;
   }
   return 0;

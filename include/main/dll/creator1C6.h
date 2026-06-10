@@ -3,8 +3,9 @@
 
 #include "ghidra_import.h"
 #include "main/dll/scene1C7.h"
+#include "main/objanim_update.h"
 
-int fn_801C8EBC(int obj,undefined4 unused,int animEvents);
+int fn_801C8EBC(int obj, undefined4 unused, ObjAnimUpdateState *animUpdate);
 void FUN_801c9018(ushort *param_1);
 int dbsh_shrine_getExtraSize(void);
 int dbsh_shrine_getObjectTypeId(void);

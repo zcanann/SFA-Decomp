@@ -4,6 +4,7 @@
 #include "ghidra_import.h"
 #include "global.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
+#include "main/objanim_update.h"
 
 /* Dbsh shrine carve twins converged (flybaddie.c + scene1C7.c censuses,
  * zero width conflicts: flybaddie's latch[8] pad = scene1C7's observed
@@ -51,7 +52,7 @@ typedef struct DbshShrineObject {
     u8 mapFlags;
     u8 padB0[8];
     DbshShrineRuntime *runtime;
-    int (*messageFn)(int obj, undefined4 unused, int animEvents);
+    int (*messageFn)(int obj, undefined4 unused, ObjAnimUpdateState *animUpdate);
     u8 padC0[0x34];
     s32 introDelay;
 } DbshShrineObject;

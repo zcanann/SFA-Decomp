@@ -58,7 +58,7 @@ extern f32 lbl_803E5D60;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int fn_801C8EBC(int obj,undefined4 unused,int animEvents)
+int fn_801C8EBC(int obj, undefined4 unused, ObjAnimUpdateState *animUpdate)
 {
   struct Creator1C6Flag15 { u8 b80:1; u8 rest:7; };
   void **state;
@@ -68,11 +68,11 @@ int fn_801C8EBC(int obj,undefined4 unused,int animEvents)
 
   state = ((GameObject *)obj)->extra;
   player = Obj_GetPlayerObject();
-  *(s16 *)(animEvents + 0x70) = -1;
-  *(u8 *)(animEvents + 0x56) = 0;
+  animUpdate->activeHitVolumePair = -1;
+  animUpdate->sequenceEventActive = 0;
 
-  for (i = 0; i < (s32)*(u8 *)(animEvents + 0x8b); i++) {
-    event = (u8)*(u8 *)(animEvents + i + 0x81);
+  for (i = 0; i < (s32)animUpdate->eventCount; i++) {
+    event = animUpdate->eventIds[i];
     if (event != 0) {
       switch (event) {
       case 3:
@@ -100,7 +100,7 @@ int fn_801C8EBC(int obj,undefined4 unused,int animEvents)
         break;
       }
     }
-    *(u8 *)(animEvents + i + 0x81) = 0;
+    animUpdate->eventIds[i] = 0;
   }
 
   return 0;
