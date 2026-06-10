@@ -155,12 +155,14 @@ void FUN_801723dc(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void collectible_free(int obj)
 {
   (*gExpgfxInterface)->freeSource2((u32)obj);
   ObjGroup_RemoveObject(obj,4);
   return;
 }
+#pragma scheduling reset
 
 
 /*
