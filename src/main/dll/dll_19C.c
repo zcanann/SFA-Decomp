@@ -333,7 +333,7 @@ void dfsh_shrine_update(int obj)
  */
 #pragma scheduling on
 #pragma peephole on
-void FUN_801c3134(undefined4 param_1,undefined4 param_2,int param_3)
+void FUN_801c3134(undefined4 param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate)
 {
   byte bVar1;
   int iVar2;
@@ -344,9 +344,9 @@ void FUN_801c3134(undefined4 param_1,undefined4 param_2,int param_3)
   iVar2 = FUN_8028683c();
   piVar5 = *(int **)(iVar2 + 0xb8);
   iVar3 = FUN_80017a98();
-  *(undefined *)(param_3 + 0x56) = 0;
-  for (iVar4 = 0; iVar4 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar4 = iVar4 + 1) {
-    bVar1 = *(byte *)(param_3 + iVar4 + 0x81);
+  animUpdate->sequenceEventActive = 0;
+  for (iVar4 = 0; iVar4 < (int)(uint)animUpdate->eventCount; iVar4 = iVar4 + 1) {
+    bVar1 = animUpdate->eventIds[iVar4];
     if (bVar1 != 0) {
       if (bVar1 == 7) {
         FUN_80294ccc(iVar3,1,1);
@@ -372,7 +372,7 @@ void FUN_801c3134(undefined4 param_1,undefined4 param_2,int param_3)
         }
       }
     }
-    *(undefined *)(param_3 + iVar4 + 0x81) = 0;
+    animUpdate->eventIds[iVar4] = 0;
   }
   FUN_80286888();
   return;

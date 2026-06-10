@@ -259,7 +259,7 @@ void FUN_801726ac(short *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80172974(undefined4 param_1,undefined4 param_2,int param_3)
+void FUN_80172974(undefined4 param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate)
 {
   char cVar1;
   float fVar2;
@@ -292,9 +292,9 @@ void FUN_80172974(undefined4 param_1,undefined4 param_2,int param_3)
   if ((*(char *)(iVar7 + 0x1e) == '\0') && (*(short *)(iVar3 + 0x46) == 0x6a6)) {
     FUN_800810f4((double)lbl_803E40EC,(double)lbl_803E40F0,iVar3,5,6,1,0x14,0,0);
   }
-  *(undefined *)(param_3 + 0x56) = 0;
-  for (iVar5 = 0; iVar5 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar5 = iVar5 + 1) {
-    cVar1 = *(char *)(param_3 + iVar5 + 0x81);
+  animUpdate->sequenceEventActive = 0;
+  for (iVar5 = 0; iVar5 < (int)(uint)animUpdate->eventCount; iVar5 = iVar5 + 1) {
+    cVar1 = animUpdate->eventIds[iVar5];
     if (cVar1 == '\x01') {
       dVar8 = (double)FUN_80294964();
       dVar10 = (double)(float)((double)lbl_803E411C * dVar8);

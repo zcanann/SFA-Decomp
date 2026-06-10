@@ -7,6 +7,7 @@
  * verified). File rename parked as a repo-owner proposal. */
 #include "main/game_object.h"
 #include "main/dll/collectible_state.h"
+#include "main/dll/gfxEmit.h"
 #include "main/dll/path_control_interface.h"
 #include "main/objanim_internal.h"
 
@@ -23,10 +24,6 @@ extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800810f4();
 extern undefined4 FUN_80081118();
 extern undefined4 FUN_801713ac();
-extern undefined8 FUN_801723dc();
-extern undefined8 FUN_801726ac();
-extern undefined4 FUN_80172974();
-extern undefined4 FUN_80172b40();
 extern uint countLeadingZeros();
 
 extern undefined4 DAT_803218a8;
