@@ -352,8 +352,8 @@ extern void disableHeavyFog(void);
 void animsharpclaw_free(int obj) {
     char *inner;
     int *child;
-    inner = ((GameObject *)obj)->extra;
     child = ((GameObject *)obj)->unkC8;
+    inner = ((GameObject *)obj)->extra;
     if (child != NULL) {
         ObjLink_DetachChild(obj, (int)child);
         Obj_FreeObject((int)child);
