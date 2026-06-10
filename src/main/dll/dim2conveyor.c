@@ -288,10 +288,11 @@ void nw_mammoth_init(NwMammothObject *obj, NwMammothMapData *mapData, int isRelo
       break;
   }
   if ((state->runtimeFlags & NW_MAMMOTH_RUNTIME_PATH_CONTROL) != 0) {
-    (*gPathControlInterface)->init(state->pathState, 3, 2, 1);
-    (*gPathControlInterface)->setup(state->pathState, NW_MAMMOTH_PATH_SETUP_POINT_COUNT,
+    u8 *path = state->pathState;
+    (*gPathControlInterface)->init(path, 3, 2, 1);
+    (*gPathControlInterface)->setup(path, NW_MAMMOTH_PATH_SETUP_POINT_COUNT,
                                     lbl_803267E8, lbl_80326818, &pathParam);
-    (*gPathControlInterface)->attachObject(obj, state->pathState);
+    (*gPathControlInterface)->attachObject(obj, path);
   }
   ObjGroup_AddObject(obj, NW_MAMMOTH_GROUP_ID);
 }
