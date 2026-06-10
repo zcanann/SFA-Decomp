@@ -301,9 +301,10 @@ void curvesMove(Curve *curve)
         curve->segmentDistance = curve->segLen[19];
         curve->pathDistance = curve->pathLength;
     } else {
-        curve->t = lbl_803DE658;
-        curve->segmentDistance = lbl_803DE658;
-        curve->pathDistance = lbl_803DE658;
+        f32 z = lbl_803DE658;
+        curve->t = z;
+        curve->segmentDistance = z;
+        curve->pathDistance = z;
     }
 
     if (curve->px != NULL) {
