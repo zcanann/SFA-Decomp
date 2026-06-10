@@ -886,10 +886,12 @@ void animsharpclaw_update(int *obj) {
     if (*(s16 *)((char *)child + 0x18) == -1) {
         return;
     }
-    result = (*gObjectTriggerInterface)->update((u8 *)obj, (f32)(u32)framesThisStep);
-    fn_801A8F88((int)obj, (ObjAnimUpdateState *)inner);
-    if (result == 0) {
-        return;
+    {
+        volatile int vres = (*gObjectTriggerInterface)->update((u8 *)obj, (f32)(u32)framesThisStep);
+        fn_801A8F88((int)obj, (ObjAnimUpdateState *)inner);
+        if (vres == 0) {
+            return;
+        }
     }
     if (((GameObject *)obj)->unkB4 != -2) {
         return;
