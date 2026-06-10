@@ -866,7 +866,7 @@ void dll_1DF_init(void* obj, void* p)
     *(f32*)((char*)*(void**)&((GameObject *)obj)->extra + 0x10) = lbl_803E4BAC;
     p64 = *(void**)&((GameObject *)obj)->anim.modelState;
     if (p64 != 0) {
-        *(u32*)((char*)p64 + 0x30) |= 0x810;
+        ((ObjModelState *)p64)->flags |= 0x810;
     }
     ((GameObject *)obj)->objectFlags |= 0x2000;
 }

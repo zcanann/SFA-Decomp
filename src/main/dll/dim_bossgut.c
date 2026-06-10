@@ -289,7 +289,7 @@ void fn_801D29E4(int *obj, int *p2)
         bd.v[2] = lbl_803E5374 * tz;
         *(f32 *)((char *)spore + 0x8)  = ((GameObject *)obj)->anim.localPosX + sx;
         *(f32 *)((char *)spore + 0xc)  = ((GameObject *)obj)->anim.localPosY + bd.v[1];
-        *(f32 *)((char *)spore + 0x10) = ((GameObject *)obj)->anim.localPosZ + bd.v[2];
+        *(f32 *)&((ObjDef *)spore)->jointData = ((GameObject *)obj)->anim.localPosZ + bd.v[2];
         *(u8 *)((char *)spore + 0x5) = 1;
         *(u8 *)((char *)spore + 0x4) = 2;
         *(s16 *)((char *)spore + 0x1a) = (s16)((s8)*(s8 *)((char *)base + 0x1e) << 8);

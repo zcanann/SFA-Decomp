@@ -659,7 +659,7 @@ void pollen_init(int *obj) {
     {
         int *p = *(int **)&((GameObject *)obj)->anim.modelState;
         if (p != NULL) {
-            *(int *)((char *)p + 0x30) = *(int *)((char *)p + 0x30) | 0x810;
+            *(int *)&((ObjModelState *)p)->flags = *(int *)&((ObjModelState *)p)->flags | 0x810;
         }
     }
 }

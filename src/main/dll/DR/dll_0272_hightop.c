@@ -388,7 +388,7 @@ void hightop_init(void *obj, u8 *arg) {
     *(s8 *)&runtime->unkC4B = -1;
     node = *(int **)&((GameObject *)obj)->anim.modelState;
     if (node != 0) {
-        *(int *)((char *)node + 0x30) |= 0xa10;
+        *(int *)&((ObjModelState *)node)->flags |= 0xa10;
     }
     ObjGroup_AddObject((int)obj, 38);
     ObjGroup_AddObject((int)obj, 10);

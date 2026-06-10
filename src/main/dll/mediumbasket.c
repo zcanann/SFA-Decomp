@@ -2071,7 +2071,7 @@ void mediumbasket_spawnContactObject(int* obj, int* state) {
         alloc = Obj_AllocObjectSetup(36, 100);
         *(f32*)((char*)alloc + 8) = ((GroundBaddieState *)state)->baddie.posX;
         *(f32*)((char*)alloc + 12) = ((GroundBaddieState *)state)->baddie.posY;
-        *(f32*)((char*)alloc + 16) = ((GroundBaddieState *)state)->baddie.posZ;
+        *(f32 *)&((ObjDef *)alloc)->jointData = ((GroundBaddieState *)state)->baddie.posZ;
         *(u8*)((char*)alloc + 4) = 1;
         *(u8*)((char*)alloc + 5) = 1;
         *(u8*)((char*)alloc + 6) = 255;

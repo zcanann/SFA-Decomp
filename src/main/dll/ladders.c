@@ -450,7 +450,7 @@ s8 fn_801631C8(int *obj) {
     off = state + freeSlot * 12;
     *(f32 *)((char*)newObj + 0x8) = ((GameObject *)obj)->anim.localPosX + *(f32 *)(off + 0x1c);
     *(f32 *)((char*)newObj + 0xc) = ((GameObject *)obj)->anim.localPosY + *(f32 *)(off + 0x20);
-    *(f32 *)((char*)newObj + 0x10) = ((GameObject *)obj)->anim.localPosZ + *(f32 *)(off + 0x24);
+    *(f32 *)&((ObjDef *)newObj)->jointData = ((GameObject *)obj)->anim.localPosZ + *(f32 *)(off + 0x24);
     *((u8 *)newObj + 4) = p4c[4];
     *((u8 *)newObj + 5) = p4c[5];
     *((u8 *)newObj + 6) = p4c[6];
@@ -467,7 +467,7 @@ s8 fn_801631C8(int *obj) {
             if (((GameObject *)child)->anim.seqId == 0x27f) {
                 *(f32 *)((char*)newObj + 0x8) = ((GameObject *)child)->anim.localPosX;
                 *(f32 *)((char*)newObj + 0xc) = *(f32 *)((char*)list[idx] + 0x10);
-                *(f32 *)((char*)newObj + 0x10) = *(f32 *)((char*)list[idx] + 0x14);
+                *(f32 *)&((ObjDef *)newObj)->jointData = *(f32 *)((char*)list[idx] + 0x14);
                 idx = outCount;
             }
             idx++;

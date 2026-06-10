@@ -2512,7 +2512,7 @@ int* fn_801702D4(int* obj, f32 fv) {
     alloc = Obj_AllocObjectSetup(36, 2102);
     *(f32*)((char*)alloc + 8) = ((GameObject *)obj)->anim.worldPosX;
     *(f32*)((char*)alloc + 12) = ((GameObject *)obj)->anim.worldPosY;
-    *(f32*)((char*)alloc + 16) = ((GameObject *)obj)->anim.worldPosZ;
+    *(f32 *)&((ObjDef *)alloc)->jointData = ((GameObject *)obj)->anim.worldPosZ;
     *(u8*)((char*)alloc + 4) = 1;
     *(u8*)((char*)alloc + 5) = 1;
     *(u8*)((char*)alloc + 7) = 255;
@@ -3124,7 +3124,7 @@ void mikabomb_init(int *obj)
         alloc = Obj_AllocObjectSetup(0x20, 0xc);
         *(f32 *)((char *)alloc + 8) = ((GameObject *)obj)->anim.localPosX;
         *(f32 *)((char *)alloc + 0xc) = ((GameObject *)obj)->anim.localPosY;
-        *(f32 *)((char *)alloc + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+        *(f32 *)&((ObjDef *)alloc)->jointData = ((GameObject *)obj)->anim.localPosZ;
         *(u8 *)((char *)alloc + 4) = 1;
         *(u8 *)((char *)alloc + 5) = 1;
         *(u8 *)((char *)alloc + 6) = 0xff;
@@ -4086,7 +4086,7 @@ void dll_F7_update(int *obj)
                 alloc[0xe] = -1;
                 *(f32 *)((char *)alloc + 8) = ((GameObject *)obj)->anim.localPosX;
                 *(f32 *)((char *)alloc + 0xc) = lbl_803E3410 + ((GameObject *)obj)->anim.localPosY;
-                *(f32 *)((char *)alloc + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+                *(f32 *)&((ObjDef *)alloc)->jointData = ((GameObject *)obj)->anim.localPosZ;
                 *(u8 *)((char *)alloc + 0x1a) = 3;
                 alloc[0x16] = -1;
                 alloc[0x12] = -1;

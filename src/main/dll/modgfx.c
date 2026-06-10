@@ -13762,7 +13762,7 @@ void dll_0B_func05(void)
                             o = Obj_AllocObjectSetup(0x20, 0x66);
                             *(f32 *)((char *)o + 0x8) = tmpl.x;
                             *(f32 *)((char *)o + 0xc) = tmpl.y;
-                            *(f32 *)((char *)o + 0x10) = tmpl.z;
+                            *(f32 *)&((ObjDef *)o)->jointData = tmpl.z;
                             *(int *)eff = (int)Obj_SetupObject(o, 5, -1, -1, 0);
                             *(int *)(*(int *)eff + 0xf8) = 1;
                         }
