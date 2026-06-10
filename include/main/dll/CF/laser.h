@@ -2,7 +2,6 @@
 #define MAIN_DLL_CF_LASER_H_
 
 #include "global.h"
-#include "ghidra_import.h"
 #include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/object_descriptor.h"
@@ -42,7 +41,7 @@ typedef GameUIInterface LaserTriggerInterface;
 
 typedef struct LaserReleaseInterface {
   u8 pad00[0x48];
-  void (*releaseObject)(int parent,undefined4 object,int flags);
+  void (*releaseObject)(int parent, void *object, int flags);
 } LaserReleaseInterface;
 
 STATIC_ASSERT(sizeof(LaserState) == 0x06);
