@@ -47,7 +47,6 @@ typedef struct SClanternAnimObject {
 undefined4 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
 {
   undefined4 advanceResult;
-  register s8 *event;
   SClanternAnimObject *lantern;
   int pointIndex;
   int i;
@@ -64,9 +63,8 @@ undefined4 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
     lantern->facingAngle += gSClanternObjAnimEvents.rootPitch;
   }
   i = 0;
-  event = (s8 *)&gSClanternObjAnimEvents;
   while (i < (s8)gSClanternObjAnimEvents.triggerCount) {
-    switch(event[0x13]) {
+    switch(((s8 *)&gSClanternObjAnimEvents)[i + 0x13]) {
     case SCLANTERN_EVENT_LEFT_SPARK_A:
       pointIndex = 1;
       break;
@@ -90,7 +88,6 @@ undefined4 SClantern_advanceAnimEvents(f32 moveStepScale, int obj)
     default:
       break;
     }
-    event++;
     i++;
   }
   if (pointIndex != 0) {
