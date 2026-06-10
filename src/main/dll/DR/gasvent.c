@@ -532,13 +532,12 @@ void gunpowderbarrel_triggerExplosion(int *obj)
             int **p;
             if (*(s16 *)((char *)def + 0x1a) != 0) {
                 objs = (int **)ObjGroup_GetObjects(0x3a, &count);
-                for (i = 0, p = objs; i < count; i++) {
-                    int id = barrelgener_getLinkId(*p);
+                for (i = 0; i < count; i++) {
+                    int id = barrelgener_getLinkId(objs[i]);
                     if (*(s16 *)((char *)def + 0x1a) == id) {
                         best = objs[i];
                         break;
                     }
-                    p++;
                 }
             } else {
                 best = (int *)ObjGroup_FindNearestObject(0x3a, obj, 0);
