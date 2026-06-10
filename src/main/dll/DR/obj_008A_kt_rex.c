@@ -6,6 +6,18 @@
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 
+typedef struct KTRexWork {
+    s16 unk0;
+    s16 unk2;
+    s16 unk4;
+    u8 pad6[0x8 - 0x6];
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    f32 unk14;
+} KTRexWork;
+
+
 typedef struct KtrexPlacement {
     u8 pad0[0x38 - 0x0];
     f32 unk38;
@@ -1005,9 +1017,9 @@ void ktrex_updateContactEffects(int obj, void *runtime) {
     if ((s8)((KTRexRuntime *)runtime)->unk354 != 0 && (hitType == 3 || hitType == 2) &&
         (((KTRexArenaState *)gKTRexState)->timerFA & 0x10) != 0 && hit == 5) {
         pt = contactPoints + hitType * 4;
-        *(f32 *)((char *)lbl_803AD158 + 0xc) = playerMapOffsetX + pt[1];
-        *(f32 *)((char *)lbl_803AD158 + 0x10) = pt[2];
-        *(f32 *)((char *)lbl_803AD158 + 0x14) = playerMapOffsetZ + pt[3];
+        ((KTRexWork *)lbl_803AD158)->unkC = playerMapOffsetX + pt[1];
+        ((KTRexWork *)lbl_803AD158)->unk10 = pt[2];
+        ((KTRexWork *)lbl_803AD158)->unk14 = playerMapOffsetZ + pt[3];
         Sfx_PlayFromObject(obj, SFXmv_deaththud16);
         Sfx_PlayFromObject(obj, SFXmv_roothack16);
         (*gPartfxInterface)->spawnObject((void *)obj, 0x4b2, lbl_803AD158, 0x200001, -1,
@@ -1029,18 +1041,18 @@ void ktrex_updateContactEffects(int obj, void *runtime) {
         Sfx_PlayFromObject(obj, SFXmv_ropecreak22);
         contactPoints = KTRex_GetActiveContactPointTable(obj);
         pt = contactPoints + hitType * 4;
-        *(f32 *)((char *)lbl_803AD158 + 0xc) = playerMapOffsetX + pt[1];
-        *(f32 *)((char *)lbl_803AD158 + 0x10) = pt[2];
-        *(f32 *)((char *)lbl_803AD158 + 0x14) = playerMapOffsetZ + pt[3];
+        ((KTRexWork *)lbl_803AD158)->unkC = playerMapOffsetX + pt[1];
+        ((KTRexWork *)lbl_803AD158)->unk10 = pt[2];
+        ((KTRexWork *)lbl_803AD158)->unk14 = playerMapOffsetZ + pt[3];
         (*gPartfxInterface)->spawnObject((void *)obj, 0x328, lbl_803AD158, 0x200001, -1,
                                          NULL);
-        *(f32 *)((char *)lbl_803AD158 + 0xc) -= ((GameObject *)obj)->anim.worldPosX;
-        *(f32 *)((char *)lbl_803AD158 + 0x10) -= ((GameObject *)obj)->anim.worldPosY;
-        *(f32 *)((char *)lbl_803AD158 + 0x14) -= ((GameObject *)obj)->anim.worldPosZ;
-        *(f32 *)((char *)lbl_803AD158 + 0x8) = lbl_803E6818;
-        *(s16 *)((char *)lbl_803AD158 + 0x0) = 0;
-        *(s16 *)((char *)lbl_803AD158 + 0x2) = 0;
-        *(s16 *)((char *)lbl_803AD158 + 0x4) = 0;
+        ((KTRexWork *)lbl_803AD158)->unkC -= ((GameObject *)obj)->anim.worldPosX;
+        ((KTRexWork *)lbl_803AD158)->unk10 -= ((GameObject *)obj)->anim.worldPosY;
+        ((KTRexWork *)lbl_803AD158)->unk14 -= ((GameObject *)obj)->anim.worldPosZ;
+        ((KTRexWork *)lbl_803AD158)->unk8 = lbl_803E6818;
+        ((KTRexWork *)lbl_803AD158)->unk0 = 0;
+        ((KTRexWork *)lbl_803AD158)->unk2 = 0;
+        ((KTRexWork *)lbl_803AD158)->unk4 = 0;
         msg[1] += randomGetRange(0, 0x9b);
         msg[2] += randomGetRange(0, 0x9b);
         (*(void (**)(int, int, void *, int, int, int *))(*(int *)lbl_803DDD48 + 0x4))(
