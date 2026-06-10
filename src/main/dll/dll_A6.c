@@ -65,7 +65,7 @@ void camcontrol_updateTargetReticle(CamcontrolTargetObject *fallbackTarget, int 
       break;
     }
 
-    paletteIdx = (int)((GameObject *)target)->unkE8;
+    paletteIdx = (int)((GameObject *)target)->paletteIndex;
     if (paletteIdx >= 4) paletteIdx = 0;
     paletteBase = (u8 *)*(u32 *)&((GameObject *)target)->anim.modelInstance;
     paletteBase = paletteBase + paletteIdx * 2;

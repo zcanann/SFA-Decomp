@@ -353,7 +353,7 @@ void Obj_SetModelColorOverrideRecursive(u8 *obj, u8 red, u8 green, u8 blue, u8 a
 void Obj_ResetModelColorState(u8 *obj) {
     ((GameObject *)obj)->colorFadeFrames = 0;
     ((GameObject *)obj)->colorFadeFlags &= ~1;
-    ((GameObject *)obj)->unkF0 = 0;
+    ((GameObject *)obj)->fadeCounter = 0;
     ObjModel_ClearRenderAttachment((u8 *)Obj_GetActiveModel(obj));
     (*(void (*)(int, int, int, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))((int)obj, 0x7fb, 0, 0x50, 0);
     (*(void (*)(int, int, int, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))((int)obj, 0x7fc, 0, 0x32, 0);
@@ -372,11 +372,11 @@ void Obj_StartModelFadeIn(u8 *obj, int frames) {
         fadeLimit = 40;
     }
     if ((*(u8 *)((u8 *)((GameObject *)obj)->anim.modelInstance + 0x76) & 1) != 0) {
-        if (((GameObject *)obj)->unkF0 < fadeLimit) {
-            ((GameObject *)obj)->unkF0++;
+        if (((GameObject *)obj)->fadeCounter < fadeLimit) {
+            ((GameObject *)obj)->fadeCounter++;
             Obj_SetModelColorFadeRecursive(obj, 0x1e, 0xa0, 0xff, 0xff, 0);
         }
-        if (((GameObject *)obj)->unkF0 == fadeLimit) {
+        if (((GameObject *)obj)->fadeCounter == fadeLimit) {
             if ((((GameObject *)obj)->colorFadeFlags & 2) != 0) {
                 Obj_ClearModelColorFadeRecursive(obj);
             }
@@ -446,7 +446,7 @@ void objSetHintTextIdx(u8 *obj, u16 idx) {
     if (idx > 4) {
         idx = 0;
     }
-    ((GameObject *)obj)->unkE8 = (u8)idx;
+    ((GameObject *)obj)->paletteIndex = (u8)idx;
 }
 
 extern int getLoadedFileFlags(int);
@@ -768,9 +768,9 @@ extern f32 lbl_803DE8B8;
 
 
 int objApplyVelocity(u8 *obj) {
-    ((GameObject *)obj)->anim.localPosX += timeDelta * (lbl_803DE8B8 * (((GameObject *)obj)->unkFC + ((GameObject *)obj)->anim.velocityX));
-    ((GameObject *)obj)->anim.localPosY += timeDelta * (lbl_803DE8B8 * (((GameObject *)obj)->unk100 + ((GameObject *)obj)->anim.velocityY));
-    ((GameObject *)obj)->anim.localPosZ += timeDelta * (lbl_803DE8B8 * (((GameObject *)obj)->unk104 + ((GameObject *)obj)->anim.velocityZ));
+    ((GameObject *)obj)->anim.localPosX += timeDelta * (lbl_803DE8B8 * (((GameObject *)obj)->externalVelX + ((GameObject *)obj)->anim.velocityX));
+    ((GameObject *)obj)->anim.localPosY += timeDelta * (lbl_803DE8B8 * (((GameObject *)obj)->externalVelY + ((GameObject *)obj)->anim.velocityY));
+    ((GameObject *)obj)->anim.localPosZ += timeDelta * (lbl_803DE8B8 * (((GameObject *)obj)->externalVelZ + ((GameObject *)obj)->anim.velocityZ));
     return 1;
 }
 
@@ -921,9 +921,9 @@ void Obj_RunInitCallback(u8 *obj, int cb, int unused) {
         ((GameObject *)obj)->anim.previousWorldPosY = ((GameObject *)obj)->anim.localPosY;
         ((GameObject *)obj)->anim.previousWorldPosZ = ((GameObject *)obj)->anim.localPosZ;
         v = lbl_803DE88C;
-        ((GameObject *)obj)->unkFC = v;
-        ((GameObject *)obj)->unk100 = v;
-        ((GameObject *)obj)->unk104 = v;
+        ((GameObject *)obj)->externalVelX = v;
+        ((GameObject *)obj)->externalVelY = v;
+        ((GameObject *)obj)->externalVelZ = v;
     }
 }
 
@@ -1589,7 +1589,7 @@ void objFreeObjDef(void *objp, int flag) {
     if (((GameObject *)obj)->colorFadeFlags & 1) {
         *(u16 *)&((GameObject *)obj)->colorFadeFrames = 0;
         ((GameObject *)obj)->colorFadeFlags = ((GameObject *)obj)->colorFadeFlags & ~1;
-        ((GameObject *)obj)->unkF0 = 0;
+        ((GameObject *)obj)->fadeCounter = 0;
         ObjModel_ClearRenderAttachment((u8 *)objAnim->banks[objAnim->bankIndex]);
         cb2 = (void (*)(u8 *, int, int, int, int))*(int *)(*(int *)lbl_803DCAB4 + 0xc);
         cb2(obj, 0x7fb, 0, 0x50, 0);
@@ -1703,15 +1703,15 @@ void Obj_UpdateObject(u8 *obj)
         object->previousWorldPosY = object->worldPosY;
         object->previousWorldPosZ = object->worldPosZ;
     }
-    ((GameObject *)obj)->unkFC = object->velocityX;
-    ((GameObject *)obj)->unk100 = object->velocityY;
-    ((GameObject *)obj)->unk104 = object->velocityZ;
+    ((GameObject *)obj)->externalVelX = object->velocityX;
+    ((GameObject *)obj)->externalVelY = object->velocityY;
+    ((GameObject *)obj)->externalVelZ = object->velocityZ;
     if (((GameObject *)obj)->colorFadeFlags != 0 && *(int *)&((GameObject *)obj)->ownerObj == 0 && (((GameObject *)obj)->colorFadeFlags & 1)) {
         ((GameObject *)obj)->colorFadeFrames = (s16)(int)((f32)((GameObject *)obj)->colorFadeFrames - timeDelta);
         if (((GameObject *)obj)->colorFadeFrames <= 0) {
             ((GameObject *)obj)->colorFadeFrames = 0;
             ((GameObject *)obj)->colorFadeFlags &= ~1;
-            ((GameObject *)obj)->unkF0 = 0;
+            ((GameObject *)obj)->fadeCounter = 0;
             ObjModel_ClearRenderAttachment((u8 *)object->banks[object->bankIndex]);
             cb = (void (*)(u8 *, int, int, int, int))*(int *)(*lbl_803DCAB4 + 0xc);
             cb(obj, 0x7fb, 0, 0x50, 0);

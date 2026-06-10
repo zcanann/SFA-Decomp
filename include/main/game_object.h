@@ -53,19 +53,21 @@ typedef struct GameObject {
         suppresses the fade tick (Obj_*ModelColorFade* family) */
     s16 colorFadeFrames; /* obj+0xE6 frames left; -= framesThisStep, <=0 with
         no ownerObj -> Obj_ClearModelColorFadeRecursive */
-    u8 unkE8;
+    u8 paletteIndex; /* obj+0xE8 (objprint: paletteIdx = target->...) */
     s8 unkE9;
     u8 unkEA;
     u8 childCount;
     u8 unkEC[3];
     s8 colorFadeAlpha; /* obj+0xEF written from the fade alpha each tick */
-    u8 unkF0;
+    u8 fadeCounter; /* obj+0xF0 ++ toward the fade limit each tick */
     u8 unkF1[3];
     s32 unkF4;
     s32 unkF8;
-    f32 unkFC;
-    f32 unk100;
-    f32 unk104;
+    f32 externalVelX; /* obj+0xFC..0x104: velocity imparted externally
+        (carrier object's velocity / move-data velocity), added to
+        anim.velocity in the localPos integration */
+    f32 externalVelY;
+    f32 externalVelZ;
 } GameObject;
 
 STATIC_ASSERT(offsetof(GameObject, objectFlags) == 0xB0);
@@ -73,6 +75,6 @@ STATIC_ASSERT(offsetof(GameObject, extra) == 0xB8);
 STATIC_ASSERT(offsetof(GameObject, unkE4) == 0xE4);
 STATIC_ASSERT(offsetof(GameObject, colorFadeAlpha) == 0xEF);
 STATIC_ASSERT(offsetof(GameObject, unkF4) == 0xF4);
-STATIC_ASSERT(offsetof(GameObject, unk104) == 0x104);
+STATIC_ASSERT(offsetof(GameObject, externalVelZ) == 0x104);
 
 #endif
