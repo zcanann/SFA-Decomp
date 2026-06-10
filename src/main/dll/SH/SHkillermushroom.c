@@ -5,6 +5,7 @@
 #include "main/dll/dim_bossgut.h"
 #include "main/dll/SH/SHkillermushroom.h"
 #include "main/objanim.h"
+#include "main/objfx.h"
 #include "main/objseq.h"
 
 #pragma peephole off
@@ -41,7 +42,6 @@ extern f32 vec3f_distanceSquared(f32 *p1, f32 *p2);
 extern void Sfx_PlayFromObject(void *obj, int sndId);
 extern void Sfx_KeepAliveLoopedObjectSound(void *obj, int sndId);
 extern void Obj_StartModelFadeIn(void *obj, int duration);
-extern void objLightFn_8009a1dc(void *obj, f32 *pos, int a, int b, f32 intensity);
 extern void Obj_SetModelColorFadeRecursive(void *obj, int a, int b, int c, int d, int e);
 extern f32 mathSinf(f32 x);
 extern f32 mathCosf(f32 x);
@@ -442,7 +442,7 @@ void bombplant_update(void *obj)
         Sfx_PlayFromObject(obj, SFXmv_curtainloop16);
         hitX = hitX + playerMapOffsetX;
         hitZ = hitZ + playerMapOffsetZ;
-        objLightFn_8009a1dc(obj, lightVec, 1, 0, lbl_803E5380);
+        objLightFn_8009a1dc(obj, lbl_803E5380, lightVec, 1, 0);
         Obj_SetModelColorFadeRecursive(obj, 0xf, 0xc8, 0, 0, 1);
         ((BombPlantState *)state)->stateIndex = 4;
         ((BombPlantState *)state)->flags |= 0x2;

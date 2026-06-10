@@ -3,6 +3,7 @@
 #include "main/dll/treasurechest_state.h"
 #include "main/objanim.h"
 #include "main/objseq.h"
+#include "main/objfx.h"
 #include "main/object_descriptor.h"
 
 extern u32 randomGetRange(int min, int max);
@@ -10,7 +11,6 @@ extern void *Obj_GetPlayerObject(void);
 extern int ObjContact_AddCallback(int *obj, int p2, void *cb);
 extern int ObjList_FindNearestObjectByDefNo(int *obj, int defNo, f32 *radius);
 extern int objBboxFn_800640cc(int a, f32 *pos, f32 b, int c, int *out, int *obj, int e, int g, int h, int i);
-extern void objLightFn_8009a1dc(int *obj, f32 a, int b, int c);
 extern void objRenderFn_8003b8f4(f32);
 extern void ObjHits_DisableObject(int obj);
 extern f32 sqrtf(f32);
@@ -168,7 +168,7 @@ void dll_D3_update(int *obj)
             *(f32 *)((char *)lbl_803AC638 + 0xc)  = ((GameObject *)obj)->anim.localPosX;
             *(f32 *)((char *)lbl_803AC638 + 0x10) = ((GameObject *)obj)->anim.localPosY;
             *(f32 *)((char *)lbl_803AC638 + 0x14) = ((GameObject *)obj)->anim.localPosZ;
-            objLightFn_8009a1dc(obj, lbl_803E3038, 1, 0);
+            objLightFn_8009a1dc(obj, lbl_803E3038, lbl_803AC638, 1, 0);
         }
     }
 
