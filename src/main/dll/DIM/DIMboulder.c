@@ -1472,7 +1472,7 @@ int magiclight_SeqFn(int *obj) {
 
     state = ((GameObject *)obj)->extra;
     player = (int *)Obj_GetPlayerObject();
-    dist = Vec_distance((f32 *)((char *)player + 0x18), &((GameObject *)obj)->anim.worldPosX);
+    dist = Vec_distance(&((GameObject *)player)->anim.worldPosX, &((GameObject *)obj)->anim.worldPosX);
 
     if (dist < state->triggerRadius && state->inRange == 0) {
         state->inRange = 1;
@@ -1845,7 +1845,7 @@ void dll_16C_update(int *obj)
         if (extra->linkedObj != NULL) {
             f32 t;
             int *player = (int *)Obj_GetPlayerObject();
-            t = Vec_distance((f32 *)((char *)extra->linkedObj + 0x18), (f32 *)((char *)player + 0x18));
+            t = Vec_distance((f32 *)((char *)extra->linkedObj + 0x18), &((GameObject *)player)->anim.worldPosX);
             t = (t - lbl_803E475C) / lbl_803E4760;
             if (t < lbl_803E4748) {
                 t = lbl_803E4748;
@@ -1968,7 +1968,7 @@ void crrockfall_update(int *obj)
             height = lbl_803E4708 - frac;
             player = (int *)Obj_GetPlayerObject();
             if (player != NULL) {
-                dist = Vec_distance(&((GameObject *)obj)->anim.worldPosX, (f32 *)((char *)player + 0x18));
+                dist = Vec_distance(&((GameObject *)obj)->anim.worldPosX, &((GameObject *)player)->anim.worldPosX);
                 if (dist > lbl_803E470C) {
                     dist = lbl_803E470C;
                 } else if (dist < lbl_803E4710) {
@@ -1995,7 +1995,7 @@ void crrockfall_update(int *obj)
                 } else {
                     int *def = *(int **)&((GameObject *)obj)->anim.placementData;
                     f32 xz = Vec_xzDistance(&((GameObject *)obj)->anim.worldPosX,
-                                            (f32 *)((char *)player + 0x18));
+                                            &((GameObject *)player)->anim.worldPosX);
                     f32 dy = ((GameObject *)obj)->anim.localPosY - ((GameObject *)player)->anim.localPosY;
                     if (dy < lbl_803E46E8) {
                         dy = lbl_803E46E8;

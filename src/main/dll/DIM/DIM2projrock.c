@@ -1674,7 +1674,7 @@ void dll_1DF_update(void* obj)
         }
     }
     player = Obj_GetPlayerObject();
-    dist = vec3f_distanceSquared((f32*)((char*)player + 0x18), &((GameObject *)obj)->anim.worldPosX);
+    dist = vec3f_distanceSquared(&((GameObject *)player)->anim.worldPosX, &((GameObject *)obj)->anim.worldPosX);
     if (dist < lbl_803E4BA0) {
         t = *(f32*)((char*)sub + 0x24) - timeDelta;
         *(f32*)((char*)sub + 0x24) = t;

@@ -1197,7 +1197,7 @@ void MoonSeedPlantingSpot_update(int obj)
                 }
             }
             player = (void *)Obj_GetPlayerObject();
-            if (player != NULL && getXZDistance((f32 *)((char *)player + 0x18), &((GameObject *)obj)->anim.worldPosX) <= lbl_803E45FC) {
+            if (player != NULL && getXZDistance(&((GameObject *)player)->anim.worldPosX, &((GameObject *)obj)->anim.worldPosX) <= lbl_803E45FC) {
                 objfx_spawnDirectionalBurst(obj, 5, lbl_803E45DC, 5, 1, 0x28, lbl_803E4600, 0, 0);
                 (*(void (*)(int, int, int, int))(*(int *)(*(int *)(*(int *)((char *)tricky + 0x68)) + 0x28)))(tricky, obj, 1, 4);
             } else {

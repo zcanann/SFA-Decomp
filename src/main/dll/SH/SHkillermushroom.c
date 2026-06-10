@@ -352,7 +352,7 @@ void bombplant_update(void *obj)
       if (GameBit_Get(bitId) != 0) {
         plr = Obj_GetPlayerObject();
         dist =
-            vec3f_distanceSquared((f32 *)((u8 *)obj + 0x18), (f32 *)((u8 *)plr + 0x18));
+            vec3f_distanceSquared(&((GameObject *)obj)->anim.worldPosX, (f32 *)((u8 *)plr + 0x18));
         if (dist > lbl_803E5368) {
           ((BombPlantState *)state)->stateIndex = 2;
           ((BombPlantState *)state)->flags |= 0x2;
@@ -364,7 +364,7 @@ void bombplant_update(void *obj)
       if (t <= lbl_803E536C) {
         plr = Obj_GetPlayerObject();
         dist =
-            vec3f_distanceSquared((f32 *)((u8 *)obj + 0x18), (f32 *)((u8 *)plr + 0x18));
+            vec3f_distanceSquared(&((GameObject *)obj)->anim.worldPosX, (f32 *)((u8 *)plr + 0x18));
         if (dist > lbl_803E5368) {
           ((BombPlantState *)state)->stateIndex = 2;
           ((BombPlantState *)state)->flags |= 0x2;

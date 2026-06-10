@@ -91,7 +91,7 @@ void levelname_update(int *obj) {
     switch (sub[0x14]) {
     case 0:
         player = Obj_GetPlayerObject();
-        if (Vec_distance((f32*)((char*)obj + 0x18), (f32*)((char*)player + 0x18)) < (f32)(u32)sub[0xc]) {
+        if (Vec_distance(&((GameObject *)obj)->anim.worldPosX, &((GameObject *)player)->anim.worldPosX) < (f32)(u32)sub[0xc]) {
             if (*(s16*)(sub + 0xe) != -1) {
                 GameBit_Set(*(s16*)(sub + 0xe), 1);
             }

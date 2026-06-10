@@ -196,7 +196,7 @@ void drakormissile_update(int obj) {
             mag = PSVECMag((f32 *)((int)player + 0x24));
         }
         mag = lbl_803DC2B8 + mag;
-        fn_80221C18(player, mag, (f32 *)((char *)obj + 0xc), toTarget);
+        fn_80221C18(player, mag, &((GameObject *)obj)->anim.localPosX, toTarget);
         PSVECSubtract(toTarget, (f32 *)((int)obj + 0xc), dir);
         PSVECNormalize(dir, dir);
         PSVECScale(dir, dir, mag * lbl_803DC2B4);
@@ -245,7 +245,7 @@ void drakormissile_update(int obj) {
         result |= (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->contactFlags;
         if (*(u8 *)(p + DRAKORMISSILE_FIELD_STATE) == DRAKORMISSILE_STATE_HOMING) {
             player = (int)Obj_GetPlayerObject();
-            if (Vec_distance((f32 *)((char *)obj + 0x18), (f32 *)((char *)player + 0x18)) <
+            if (Vec_distance(&((GameObject *)obj)->anim.worldPosX, &((GameObject *)player)->anim.worldPosX) <
                 lbl_803DC2BC) {
                 result |= 1;
             }

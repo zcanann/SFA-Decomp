@@ -1740,7 +1740,7 @@ int slidingdoor_SeqFn(u8* obj, int unused, ObjAnimUpdateState *animUpdate) {
     tricky = getTrickyObject();
 
     if (player != NULL) {
-        playerNear = Vec_xzDistance(&((GameObject *)obj)->anim.worldPosX, (f32*)((u8*)player + 0x18)) < lbl_803E43B8;
+        playerNear = Vec_xzDistance(&((GameObject *)obj)->anim.worldPosX, &((GameObject *)player)->anim.worldPosX) < lbl_803E43B8;
     } else {
         playerNear = 0;
     }

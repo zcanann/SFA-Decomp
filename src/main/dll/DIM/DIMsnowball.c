@@ -1441,7 +1441,7 @@ void ccqueen_update(int *obj) {
     sub = ((GameObject *)obj)->extra;
     if (GameBit_Get(0x1c2) == 0 && GameBit_Get(0xa3) != 0) {
         player = (int*)Obj_GetPlayerObject();
-        if (vec3f_distanceSquared(&((GameObject *)obj)->anim.worldPosX, (f32*)((char*)player + 0x18)) < lbl_803E4664) {
+        if (vec3f_distanceSquared(&((GameObject *)obj)->anim.worldPosX, &((GameObject *)player)->anim.worldPosX) < lbl_803E4664) {
             GameBit_Set(0x1c2, 1);
         }
     }
@@ -1615,7 +1615,7 @@ void ccsharpclawpad_update(int obj)
             }
         }
         player = (int *)Obj_GetPlayerObject();
-        if (vec3f_distanceSquared(&((GameObject *)obj)->anim.worldPosX, (f32 *)((char *)player + 0x18)) < lbl_803E46C4
+        if (vec3f_distanceSquared(&((GameObject *)obj)->anim.worldPosX, &((GameObject *)player)->anim.worldPosX) < lbl_803E46C4
             && playerIsDisguised((int)player) != 0) {
             Sfx_PlayFromObject(obj, 0x109);
             GameBit_Set(*(s16 *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x1a), 1);

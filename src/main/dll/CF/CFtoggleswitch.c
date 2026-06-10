@@ -906,7 +906,7 @@ void magiccavetop_update(int *obj) {
             return;
         }
         dirIdx = mapGetDirIdx(def[0x1f]);
-        dist = vec3f_distanceSquared((f32 *)((char *)player + 0x18), &((GameObject *)obj)->anim.worldPosX);
+        dist = vec3f_distanceSquared(&((GameObject *)player)->anim.worldPosX, &((GameObject *)obj)->anim.worldPosX);
         gb = GameBit_Get(*(s16 *)(def + 0x1c));
         switch (*sub) {
         case 0:

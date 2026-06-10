@@ -268,7 +268,7 @@ void queenFeedFn_801d44a4(void *obj, void *state)
         if (getYButtonItem(&triggerId) == 0 || triggerId != 0x66d) {
           tricky = getTrickyObject();
           if (tricky != NULL &&
-              getXZDistance((f32 *)((u8 *)tricky + 0x18), (f32 *)((u8 *)obj + 0x18)) <
+              getXZDistance((f32 *)((u8 *)tricky + 0x18), &((GameObject *)obj)->anim.worldPosX) <
                   lbl_803E5400) {
             fn_8002B6D8(obj, 0, 0, 0, 0, 2);
           } else {
@@ -332,7 +332,7 @@ void openPortalFn_801d4364(void *obj, void *state)
   } else if (GameBit_Get(0x5bd) != 0) {
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x8;
     if (playerHasSpell(player, 3) != 0 &&
-        getXZDistance((f32 *)((u8 *)player + 0x18), (f32 *)((u8 *)obj + 0x18)) < lbl_803E53FC) {
+        getXZDistance(&((GameObject *)player)->anim.worldPosX, &((GameObject *)obj)->anim.worldPosX) < lbl_803E53FC) {
       GameBit_Set(0x23b, 1);
     }
   } else if (GameBit_Get(0xa31) != 0) {

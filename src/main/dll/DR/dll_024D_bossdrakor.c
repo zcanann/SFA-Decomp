@@ -260,7 +260,7 @@ void bossdrakor_update(int obj)
         vec = objModelGetVecFn_800395d8(obj, 0xe);
         if (vec != NULL) {
             ObjPath_GetPointWorldPosition(obj, 4, &hx, &hy, &hz, 0);
-            PSVECSubtract((f32 *)((char *)player + 0xc), &hx, &hx);
+            PSVECSubtract(&((GameObject *)player)->anim.localPosX, &hx, &hx);
             d = (s16)getAngle(hy, sqrtf(hx * hx + hz * hz)) - (u16)vec[0];
             if (d > 0x8000) {
                 d = (s16)((int)d - 0xffff);
@@ -411,16 +411,16 @@ void bossdrakor_spawnAttackObjects(int obj, int state, int action)
                     if ((void *)player != NULL) {
                         missile = loadObjectAtObject(obj, setup);
                         if ((void *)missile != NULL) {
-                            prod = lbl_803DC188 * Vec_distance((int *)&((GameObject *)obj)->anim.worldPosX, (int *)((char *)player + 0x18));
+                            prod = lbl_803DC188 * Vec_distance((int *)&((GameObject *)obj)->anim.worldPosX, (int *)&((GameObject *)player)->anim.worldPosX);
                             lo = (int)-prod;
                             hi = (int)prod;
                             target[0] = ((GameObject *)player)->anim.localPosX + (f32)(s32)randomGetRange(lo, hi);
                             target[1] = ((GameObject *)player)->anim.localPosY + (f32)(s32)randomGetRange(lo, hi);
                             target[2] = ((GameObject *)player)->anim.localPosZ + (f32)(s32)randomGetRange(lo, hi);
-                            PSVECSubtract((f32 *)((char *)player + 0xc), (f32 *)((char *)state + 0x1c), vecA);
+                            PSVECSubtract(&((GameObject *)player)->anim.localPosX, (f32 *)((char *)state + 0x1c), vecA);
                             PSVECSubtract(target, (f32 *)((char *)state + 0x1c), vecB);
                             PSVECNormalize(vecA, vecA);
-                            spd = ((BossDrakorState *)state)->unk188 * PSVECDotProduct((f32 *)((char *)player + 0x24), vecA) + ((BossDrakorState *)state)->unk184;
+                            spd = ((BossDrakorState *)state)->unk188 * PSVECDotProduct(&((GameObject *)player)->anim.velocityX, vecA) + ((BossDrakorState *)state)->unk184;
                             PSVECScale(vecA, (f32 *)((char *)missile + 0x24), spd);
                             mstate = *(f32 **)((char *)missile + 0xb8);
                             PSVECScale(vecA, vecC, PSVECDotProduct(vecA, vecB));

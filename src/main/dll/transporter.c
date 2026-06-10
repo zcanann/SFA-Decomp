@@ -1345,7 +1345,7 @@ void iceblast_update(int *obj) {
         vec.dir[1] = *(s16 *)((char *)path + 2);
         vec.dir[0] = *(s16 *)path;
         vecRotateZXY(&vec, (f32 *)((char *)obj + 0x24));
-        ObjPath_GetPointWorldPosition((int)path, 0, (f32 *)((char *)obj + 0xc), (f32 *)((char *)obj + 0x10), (f32 *)((char *)obj + 0x14), 0);
+        ObjPath_GetPointWorldPosition((int)path, 0, &((GameObject *)obj)->anim.localPosX, &((GameObject *)obj)->anim.localPosY, &((GameObject *)obj)->anim.localPosZ, 0);
         ObjHits_EnableObject((u32)obj);
     }
     ((GameObject *)obj)->anim.previousLocalPosX = ((GameObject *)obj)->anim.localPosX;
