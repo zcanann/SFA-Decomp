@@ -4919,7 +4919,7 @@ void dfpobjcreator_update(int obj)
     if (Obj_IsLoadingLocked() != 0) {
         switch (*(s16 *)(data + 0x1a)) {
         case 7:
-            state->spawnTimer -= (int)timeDelta;
+            state->spawnTimer -= (s16)timeDelta;
             if (state->spawnTimer <= 0 && GameBit_Get(state->gameBit) != 0) {
                 state->spawnTimer = state->spawnPeriod;
                 setup = Obj_AllocObjectSetup(0x24, 0x71b);
@@ -5277,7 +5277,7 @@ void dfplevelcontrol_update(int obj)
     switch (mode) {
     case 1:
         if (lbl_803DC180 != 0) {
-            lbl_803DC180 -= (int)timeDelta;
+            lbl_803DC180 -= (s16)timeDelta;
             if (lbl_803DC180 <= 0) {
                 lbl_803DC180 = 0;
             }
@@ -5441,7 +5441,7 @@ void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                 }
             }
             if (state->flickerTimer > 0) {
-                state->flickerTimer -= (int)timeDelta;
+                state->flickerTimer -= (s16)timeDelta;
             } else {
                 if (state->visibleLatch != 0) {
                     fx.col[0] = lbl_803E63D8;

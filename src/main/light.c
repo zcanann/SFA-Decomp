@@ -1363,7 +1363,7 @@ void vfpdraghead_update(int *obj)
 
     if (state == 2) {
         self2 = ((GameObject *)obj)->extra;
-        lbl_803DDCC4 -= (int)timeDelta;
+        lbl_803DDCC4 -= (s16)timeDelta;
         if (GameBit_Get(self2->gameBitB) != 0) return;
         if (lbl_803DDCC4 > 0xc8) return;
         if (self2->headIndex != lbl_803DDCC6) return;
@@ -1371,7 +1371,7 @@ void vfpdraghead_update(int *obj)
         (*gPartfxInterface)->spawnObject(obj, 0x391, NULL, 4, -1, NULL);
     } else if (((GameObject *)obj)->anim.seqId == 0x3c5) {
         self2 = ((GameObject *)obj)->extra;
-        self2->despawnTimer -= (int)timeDelta;
+        self2->despawnTimer -= (s16)timeDelta;
         ((GameObject *)obj)->anim.localPosX = ((GameObject *)obj)->anim.velocityX * timeDelta + ((GameObject *)obj)->anim.localPosX;
         ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.velocityY * timeDelta + ((GameObject *)obj)->anim.localPosY;
         ((GameObject *)obj)->anim.localPosZ = ((GameObject *)obj)->anim.velocityZ * timeDelta + ((GameObject *)obj)->anim.localPosZ;
@@ -1379,7 +1379,7 @@ void vfpdraghead_update(int *obj)
         Obj_FreeObject(obj);
     } else if (state == 0) {
         self2 = ((GameObject *)obj)->extra;
-        lbl_803DDCC4 -= (int)timeDelta;
+        lbl_803DDCC4 -= (s16)timeDelta;
         if (GameBit_Get(0x522) != 0) return;
         if (lbl_803DDCC4 > 0xc8) return;
         if (self2->headIndex != lbl_803DDCC6) return;
