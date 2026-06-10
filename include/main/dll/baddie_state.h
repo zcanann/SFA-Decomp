@@ -67,7 +67,7 @@ typedef struct BaddieState {
     f32 unk28C;
     f32 unk290;
     f32 unk294; /* scaled together with animSpeedA and obj+0x28 */
-    u8 pad298[4];
+    f32 unk298;
     void *trackedObj; /* current target/player object (5-family census: lwz 668) */
     /* 0x2A0-0x2A7 is a PER-FAMILY UNION (lead-arbitrated): scarab and
      * mediumbasket targets store f32 here (stfs f0,672(rN) at 4+ sites
@@ -82,7 +82,9 @@ typedef struct BaddieState {
     f32 unk2A8; /* mediumbasket whirlpool block 0x2A8..0x33B */
     f32 unk2AC;
     u16 hitCounter; /* hit/impact counter (lhz-only reads in all families; sth stores) */
-    u8 pad2B2[0x2C0 - 0x2B2];
+    u8 pad2B2[0x2B8 - 0x2B2];
+    f32 unk2B8;
+    u8 pad2BC[0x2C0 - 0x2BC];
     f32 targetDistance; /* sqrtf dist to targetObj (scarab/campfire/anim/mediumbasket); also (s32)-compared */
     u8 unk2C4[0x2D0 - 0x2C4];
     void *targetObj; /* current attack/aggro target */

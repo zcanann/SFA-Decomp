@@ -720,14 +720,14 @@ void player_applyVelocityStep(int *p, int *ctx, f32 t) {
         return;
     }
     if ((flags & 0x200000) == 0) {
-        *(f32 *)((char *)p + 0x28) = *(f32 *)((char *)p + 0x28) * lbl_803E058C;
-        *(f32 *)((char *)p + 0x28) =
-            -(((BaddieState *)ctx)->unk2A4 * t) + *(f32 *)((char *)p + 0x28);
+        ((GameObject *)p)->anim.velocityY = ((GameObject *)p)->anim.velocityY * lbl_803E058C;
+        ((GameObject *)p)->anim.velocityY =
+            -(((BaddieState *)ctx)->unk2A4 * t) + ((GameObject *)p)->anim.velocityY;
     }
     b = *(s8 *)((char *)ctx + 0x34c);
     if ((b & 1) == 0 || (b & 4) != 0) {
-        desc.ang[0] = *(s16 *)((char *)p + 0);
-        desc.ang[1] = *(s16 *)((char *)p + 2);
+        desc.ang[0] = ((GameObject *)p)->anim.rotX;
+        desc.ang[1] = ((GameObject *)p)->anim.rotY;
         desc.ang[2] = 0;
         desc.sc[0] = lbl_803E0588;
         desc.sc[1] = lbl_803E0570;
@@ -742,11 +742,11 @@ void player_applyVelocityStep(int *p, int *ctx, f32 t) {
             Matrix_TransformPoint(mtx, ((BaddieState *)ctx)->animSpeedB, lbl_803E0570,
                                   -((BaddieState *)ctx)->animSpeedA, &outX, &outY, &outZ);
         }
-        *(f32 *)((char *)p + 0x24) = outX;
-        *(f32 *)((char *)p + 0x2c) = outZ;
+        ((GameObject *)p)->anim.velocityX = outX;
+        ((GameObject *)p)->anim.velocityZ = outZ;
     }
-    objMove(p, *(f32 *)((char *)p + 0x24) * t, *(f32 *)((char *)p + 0x28) * t,
-            *(f32 *)((char *)p + 0x2c) * t);
+    objMove(p, ((GameObject *)p)->anim.velocityX * t, ((GameObject *)p)->anim.velocityY * t,
+            ((GameObject *)p)->anim.velocityZ * t);
 }
 extern f32 lbl_803E0590;
 extern f32 lbl_803E0594;

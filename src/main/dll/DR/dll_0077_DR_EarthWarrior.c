@@ -705,7 +705,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
         ((EarthWarriorSub *)q)->unk48C = 0;
     }
     {
-        f32 ph = (*(f32 *)((char *)p2 + 0x298) - lbl_803E8308) / lbl_803E82FC;
+        f32 ph = (((BaddieState *)p2)->unk298 - lbl_803E8308) / lbl_803E82FC;
         f32 a = ((EarthWarriorSub *)q)->unk404 - lbl_803E833C;
         f32 t = (ph < lbl_803E8304) ? lbl_803E8304 : ((ph > lbl_803E8338) ? lbl_803E8338 : ph);
         ((EarthWarriorSub *)q)->unk408 = a * (t * ((EarthWarriorSub *)q)->unk840);
@@ -848,7 +848,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
             int tbl = ((EarthWarriorSub *)q)->unk400;
             if (v294 < *(f32 *)(tbl + i2 * 4)) {
                 if (((EarthWarriorSub *)q)->unk8CC == 4) {
-                    if (((EarthWarriorState *)p2)->baddie.animSpeedA < *(f32 *)(tbl + 0x10) && *(f32 *)((char *)p2 + 0x298) < lbl_803E8308) {
+                    if (((EarthWarriorState *)p2)->baddie.animSpeedA < *(f32 *)(tbl + 0x10) && ((BaddieState *)p2)->unk298 < lbl_803E8308) {
                         return 2;
                     }
                 } else {
@@ -911,7 +911,7 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
         ((BaddieState *)p2)->moveDone = 0;
         return 3;
     }
-    if (*(f32 *)&((EarthWarriorState *)p2)->baddie.trackedObj >= lbl_803E8358 && *(f32 *)((char *)p2 + 0x298) >= lbl_803E8358 &&
+    if (*(f32 *)&((EarthWarriorState *)p2)->baddie.trackedObj >= lbl_803E8358 && ((BaddieState *)p2)->unk298 >= lbl_803E8358 &&
         ((BaddieState *)p2)->unk294 >= *(f32 *)(q->unk400 + 0x4)) {
         return 3;
     }
@@ -919,7 +919,7 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
     *(s16 *)((char *)p2 + 0x278) = 0;
     q->unk404 = lbl_803E82E8;
     {
-        f32 ph = (*(f32 *)((char *)p2 + 0x298) - lbl_803E8308) / lbl_803E82FC;
+        f32 ph = (((BaddieState *)p2)->unk298 - lbl_803E8308) / lbl_803E82FC;
         f32 a = q->unk404 - lbl_803E833C;
         f32 t = (ph < lbl_803E8304) ? lbl_803E8304 : ((ph > lbl_803E8338) ? lbl_803E8338 : ph);
         q->unk408 = a * (t * q->unk840);
@@ -932,7 +932,7 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
         q->unk48C = 0;
         q->unk8A6 = 8;
         q->unk8B0 = 0;
-        *(f32 *)((char *)p2 + 0x2b8) = lbl_803E835C;
+        ((BaddieState *)p2)->unk2B8 = lbl_803E835C;
         ((BaddieState *)p2)->moveSpeed = lbl_803E8354;
     }
     if (((GameObject *)obj)->anim.currentMove == *(s16 *)(q->unk3F8 + 0x30) ||

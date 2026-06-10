@@ -2766,13 +2766,13 @@ void objRenderFuzz(int *obj) {
     {
         u32 m = curObjMtx;
         if (m != 0) {
-            dx = *(f32 *)&((ModelFileHeader *)m)->dataSize - (*(f32 *)((char *)cam + 0xc) - playerMapOffsetX);
-            dy = *(f32 *)&((ModelFileHeader *)m)->unk1C - *(f32 *)((char *)cam + 0x10);
-            dz = *(f32 *)&((ModelFileHeader *)m)->normals - (*(f32 *)((char *)cam + 0x14) - playerMapOffsetZ);
+            dx = *(f32 *)&((ModelFileHeader *)m)->dataSize - (((GameObject *)cam)->anim.localPosX - playerMapOffsetX);
+            dy = *(f32 *)&((ModelFileHeader *)m)->unk1C - ((GameObject *)cam)->anim.localPosY;
+            dz = *(f32 *)&((ModelFileHeader *)m)->normals - (((GameObject *)cam)->anim.localPosZ - playerMapOffsetZ);
         } else {
-            dx = ((GameObject *)obj)->anim.worldPosX - *(f32 *)((char *)cam + 0xc);
-            dy = ((GameObject *)obj)->anim.worldPosY - *(f32 *)((char *)cam + 0x10);
-            dz = ((GameObject *)obj)->anim.worldPosZ - *(f32 *)((char *)cam + 0x14);
+            dx = ((GameObject *)obj)->anim.worldPosX - ((GameObject *)cam)->anim.localPosX;
+            dy = ((GameObject *)obj)->anim.worldPosY - ((GameObject *)cam)->anim.localPosY;
+            dz = ((GameObject *)obj)->anim.worldPosZ - ((GameObject *)cam)->anim.localPosZ;
         }
     }
     dist = sqrtf(dx * dx + dy * dy + dz * dz);
@@ -3005,10 +3005,10 @@ void objRenderChild(int *child, int *parent, u8 p3) {
     if (OBJPRINT_MODEL_DEF(child)->renderFlags & 8) {
         int *cam = Camera_GetCurrentViewSlot();
         blk.scale = ((GameObject *)child)->anim.rootMotionScale;
-        dx = ((GameObject *)child)->anim.localPosX - *(f32 *)((char *)cam + 0xc);
-        dz = ((GameObject *)child)->anim.localPosZ - *(f32 *)((char *)cam + 0x14);
+        dx = ((GameObject *)child)->anim.localPosX - ((GameObject *)cam)->anim.localPosX;
+        dz = ((GameObject *)child)->anim.localPosZ - ((GameObject *)cam)->anim.localPosZ;
         blk.rot[0] = getAngle(dx, dz) + 0x8000;
-        blk.rot[1] = getAngle(((GameObject *)child)->anim.localPosY - *(f32 *)((char *)cam + 0x10), sqrtf(dx * dx + dz * dz));
+        blk.rot[1] = getAngle(((GameObject *)child)->anim.localPosY - ((GameObject *)cam)->anim.localPosY, sqrtf(dx * dx + dz * dz));
         blk.rot[2] = ((s16 *)cam)[2];
         setMatrixFromObjectTransposed(&blk, m2);
         res[0] = m2[3];
