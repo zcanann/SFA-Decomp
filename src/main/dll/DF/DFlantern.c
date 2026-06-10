@@ -259,7 +259,7 @@ void fn_801C2914(int obj)
       angleDelta += 0xffff;
     }
     turnStep = (s32)(((f32)angleDelta * timeDelta) / lbl_803E4E70);
-    *(s16 *)obj += (s16)turnStep;
+    *(s16 *)obj += turnStep;
 
     distance = Vec_xzDistance((void *)(obj + 0x18),player + 0x18);
     if (distance <= lbl_803E4E74) {
