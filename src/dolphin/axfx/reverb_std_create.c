@@ -39,7 +39,7 @@ int ReverbSTDCreate(AXFX_REVSTD_WORK *rv, f32 coloration, f32 time, f32 mix, f32
     f32 zero;
     f32 timeFactor;
 
-    if ((coloration < axfx_reverb_std_f32_0) || (coloration > axfx_reverb_std_f32_1) ||
+    if ((coloration < axfx_reverb_std_f32_0) || (coloration > *(f32 *)&axfx_reverb_std_f32_1) ||
         (time < axfx_reverb_std_f32_0p01) || (time > axfx_reverb_std_f32_10) ||
         (mix < axfx_reverb_std_f32_0) || (mix > axfx_reverb_std_f32_1) ||
         (damping < axfx_reverb_std_f32_0) || (damping > axfx_reverb_std_f32_1) ||
