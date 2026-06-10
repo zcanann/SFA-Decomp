@@ -3146,6 +3146,17 @@ today's #100. Same resolution pattern as the #70-72/#93-95 collision.)*
       has to change the construct census without changing the instruction
       stream, or change the priority function's inputs some other way (an
       open research direction, not a closed door).
+    RESEARCH NOTE 2 (specimen census): the within-pool ORDER law VARIES
+    per fn in TARGET — timer=decl-order, n_rareware initLoadingScreenTextures
+    =E1-creation (same savegpr_25 both sides, pure permutation, decl+cast
+    immune), foodbag=E1, Music_Update=init-order. Census correlation:
+    n_rareware (E1) has 0 conversions/0 bigconsts; timer (decl-order) has 2
+    conversions — consistent with ONE law (E1) + dose shifts, BUT the first
+    falsification test failed: removing timer-probe's conversions did NOT
+    shift OUR coloring (ours is dose-INSENSITIVE on this fn, contradicting
+    the E14-harness one-div-inverts observation — web-pressure-dependent).
+    The discriminating fn-input remains open; next probes should test the
+    dose sensitivity ON the E14 harness with timer's web structure grafted.
     RESEARCH NOTE (timer probe, this window): a CONDITIONAL REDUNDANT
     RE-DEF (`if (obj == 0) { state = EXTRA(obj); setup = PDATA(obj); }` —
     the #94-addendum phi trick) MOVES webs between pools — the FIRST
