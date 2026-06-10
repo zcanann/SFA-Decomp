@@ -13,6 +13,20 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 
+typedef struct FireballPlacement {
+    u8 pad0[0x14 - 0x0];
+    s32 unk14;
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    u8 pad22[0x2C - 0x22];
+    s16 unk2C;
+    u8 pad2E[0x30 - 0x2E];
+} FireballPlacement;
+
+
 typedef struct AnimatedobjPlacement {
     u8 pad0[0x8 - 0x0];
     f32 unk8;
@@ -3525,7 +3539,7 @@ void fireball_init(int *obj)
     int *state = ((GameObject *)obj)->extra;
     int *params = *(int **)&((GameObject *)obj)->anim.placementData;
 
-    if (*(s16 *)((char *)params + 0x1c) != 0) {
+    if (((FireballPlacement *)params)->unk1C != 0) {
         ((FireballState *)state)->unk70 |= 8;
     } else {
         u8 *p;
@@ -3568,7 +3582,7 @@ void fireball_init(int *obj)
         }
         ((GameObject *)obj)->animEventCallback = (void *)Fireball_SeqFn;
         ObjGroup_AddObject((int)obj, 2);
-        if (((GameObject *)obj)->anim.seqId != 2110 && *(s16 *)((char *)params + 0x1a) != 0) {
+        if (((GameObject *)obj)->anim.seqId != 2110 && ((FireballPlacement *)params)->unk1A != 0) {
             ((FireballState *)state)->unk3C = lbl_803E3380;
         }
     }
