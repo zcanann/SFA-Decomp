@@ -5,6 +5,7 @@
 #include "main/objanim.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/mmshrine/shrine1C2.h"
+#include "main/dll/mmshrine/torch1C1.h"
 #include "main/objseq.h"
 #include "main/resource.h"
 #include "main/screen_transition.h"
@@ -39,8 +40,6 @@ extern undefined4 ObjMsg_AllocQueue();
 extern undefined4 FUN_8003b818();
 extern undefined8 FUN_80080f28();
 extern undefined4 FUN_8008111c();
-extern undefined4 FUN_801c5f28();
-extern undefined4 FUN_801c61f4();
 extern undefined4 SH_LevelControl_runBloopEvent();
 extern undefined4 FUN_801d8480();
 extern int FUN_8028683c();
@@ -711,47 +710,47 @@ void FUN_801c70c4(ushort *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801c7390(undefined4 param_1,undefined4 param_2,int param_3)
+void FUN_801c7390(undefined4 param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate)
 {
-  byte bVar1;
+  byte eventId;
   int iVar2;
   int iVar3;
-  int iVar4;
+  int eventIndex;
   int *piVar5;
   
   iVar2 = FUN_8028683c();
   piVar5 = *(int **)(iVar2 + 0xb8);
   iVar3 = FUN_80017a98();
-  *(undefined2 *)(param_3 + 0x70) = 0xffff;
-  *(undefined *)(param_3 + 0x56) = 0;
-  for (iVar4 = 0; iVar4 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar4 = iVar4 + 1) {
-    bVar1 = *(byte *)(param_3 + iVar4 + 0x81);
-    if (bVar1 != 0) {
-      if (bVar1 == 7) {
+  animUpdate->activeHitVolumePair = -1;
+  animUpdate->sequenceEventActive = 0;
+  for (eventIndex = 0; eventIndex < (int)(uint)animUpdate->eventCount; eventIndex = eventIndex + 1) {
+    eventId = animUpdate->eventIds[eventIndex];
+    if (eventId != 0) {
+      if (eventId == 7) {
         FUN_80294ccc(iVar3,0x80,1);
         FUN_80017698(299,1);
         FUN_80017698(0xc85,1);
         (*gMapEventInterface)->setMode(0xb,5);
       }
-      else if (bVar1 < 7) {
-        if (bVar1 == 3) {
+      else if (eventId < 7) {
+        if (eventId == 3) {
           *(byte *)((int)piVar5 + 0x15) = *(byte *)((int)piVar5 + 0x15) & 0x7f | 0x80;
         }
       }
-      else if (bVar1 == 0xf) {
+      else if (eventId == 0xf) {
         *(ushort *)(iVar2 + 6) = *(ushort *)(iVar2 + 6) & 0xbfff;
         if (*piVar5 != 0) {
           FUN_800175cc((double)lbl_803E5CD0,*piVar5,'\0');
         }
       }
-      else if ((bVar1 < 0xf) && (0xd < bVar1)) {
+      else if ((eventId < 0xf) && (0xd < eventId)) {
         *(ushort *)(iVar2 + 6) = *(ushort *)(iVar2 + 6) | 0x4000;
         if (*piVar5 != 0) {
           FUN_800175cc((double)lbl_803E5CD0,*piVar5,'\0');
         }
       }
     }
-    *(undefined *)(param_3 + iVar4 + 0x81) = 0;
+    animUpdate->eventIds[eventIndex] = 0;
   }
   FUN_80286888();
   return;
@@ -919,7 +918,7 @@ typedef struct EcshShrineByte15 {
     u8 rest : 7;
 } EcshShrineByte15;
 
-int gpsh_shrine_SeqFn(int *obj, int arg1, u8 *seq) {
+int gpsh_shrine_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate) {
     u8 *sub;
     int *player;
     int i;
@@ -928,10 +927,10 @@ int gpsh_shrine_SeqFn(int *obj, int arg1, u8 *seq) {
 
     sub = ((GameObject *)obj)->extra;
     player = Obj_GetPlayerObject();
-    *(s16 *)((char *)seq + 0x70) = -1;
-    seq[0x56] = 0;
-    for (i = 0; i < seq[0x8b]; i++) {
-        ev = seq[i + 0x81];
+    animUpdate->activeHitVolumePair = -1;
+    animUpdate->sequenceEventActive = 0;
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        ev = animUpdate->eventIds[i];
         if (ev != 0) {
             switch (ev) {
             case 3:
@@ -959,7 +958,7 @@ int gpsh_shrine_SeqFn(int *obj, int arg1, u8 *seq) {
                 break;
             }
         }
-        seq[i + 0x81] = 0;
+        animUpdate->eventIds[i] = 0;
     }
     return 0;
 }

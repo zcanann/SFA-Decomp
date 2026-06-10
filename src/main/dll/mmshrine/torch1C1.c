@@ -146,23 +146,23 @@ void FUN_801c5f28(ushort *param_1)
  */
 #pragma scheduling on
 #pragma peephole on
-void FUN_801c61f4(undefined4 param_1,undefined4 param_2,int param_3)
+void FUN_801c61f4(undefined4 param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate)
 {
-  char cVar1;
+  char eventId;
   int iVar2;
   int iVar3;
-  int iVar4;
+  int eventIndex;
   int *piVar5;
   
   iVar2 = FUN_8028683c();
   piVar5 = *(int **)(iVar2 + 0xb8);
   iVar3 = FUN_80017a98();
-  *(undefined2 *)(param_3 + 0x70) = 0xffff;
-  *(undefined *)(param_3 + 0x56) = 0;
-  for (iVar4 = 0; iVar4 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar4 = iVar4 + 1) {
-    cVar1 = *(char *)(param_3 + iVar4 + 0x81);
-    if (cVar1 != '\0') {
-      switch(cVar1) {
+  animUpdate->activeHitVolumePair = -1;
+  animUpdate->sequenceEventActive = 0;
+  for (eventIndex = 0; eventIndex < (int)(uint)animUpdate->eventCount; eventIndex = eventIndex + 1) {
+    eventId = animUpdate->eventIds[eventIndex];
+    if (eventId != '\0') {
+      switch(eventId) {
       case '\x03':
         *(undefined *)(piVar5 + 0xc) = 1;
         break;
@@ -187,7 +187,7 @@ void FUN_801c61f4(undefined4 param_1,undefined4 param_2,int param_3)
         }
       }
     }
-    *(undefined *)(param_3 + iVar4 + 0x81) = 0;
+    animUpdate->eventIds[eventIndex] = 0;
   }
   FUN_80286888();
   return;
