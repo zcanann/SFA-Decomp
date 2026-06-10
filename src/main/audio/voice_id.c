@@ -174,20 +174,24 @@ u32 vidMakeNew(int state, int returnNewId)
  * EN v1.1 Address: 0x8027949C
  * EN v1.1 Size: 80b
  */
+static int *get_vidlist(u32 id)
+{
+    int *node;
+    node = vidRoot;
+    while (node != NULL) {
+        if (*(u32 *)(node + 2) == id) return node;
+        if (*(u32 *)(node + 2) > id) break;
+        node = *(int **)node;
+    }
+    return NULL;
+}
+
 int vidGetInternalId(u32 id)
 {
     int *node;
 
     if (id != 0xffffffffU) {
-        node = vidRoot;
-        while (node != NULL) {
-            if (*(u32 *)(node + 2) == id) goto found;
-            if (*(u32 *)(node + 2) > id) break;
-            node = *(int **)node;
-        }
-        node = NULL;
-found:
-        if (node != NULL) {
+        if ((node = get_vidlist(id)) != NULL) {
             return *(int *)(node + 3);
         }
     }
