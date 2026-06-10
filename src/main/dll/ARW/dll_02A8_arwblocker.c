@@ -74,6 +74,7 @@ void arwblocker_release(void) {}
 void arwblocker_initialise(void) {}
 
 #pragma scheduling off
+#pragma peephole off
 void arwblocker_update(int obj) {
     ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
     ARWBlockerState *state = ((GameObject *)obj)->extra;
