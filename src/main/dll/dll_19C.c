@@ -572,7 +572,7 @@ void SpiritPrize_update(int obj)
         int prizeId;
         int duplicateCount;
 
-        prizeId = *(s8 *)((u8 *)state + 0x57);
+        prizeId = *(s8 *)&((SpiritPrizeState *)state)->prizeId;
         matchingObj = 0;
         objects = ObjList_GetObjects(&objectIndex, &objectCount);
         duplicateCount = 0;

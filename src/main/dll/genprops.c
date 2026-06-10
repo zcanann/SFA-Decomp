@@ -2825,7 +2825,7 @@ int Fireball_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     int i;
     int *state = ((GameObject *)obj)->extra;
-    if (*(u8 *)((char *)state + 0x70) & 8) {
+    if (((FireballState *)state)->unk70 & 8) {
         return 0;
     }
     for (i = 0; i < animUpdate->eventCount; i++) {
@@ -3165,7 +3165,7 @@ void baddieinterestp_update(int *obj)
                 int *otherParams = *(int **)&((GameObject *)other)->anim.placementData;
                 if (otherParams != NULL) {
                     found = 0;
-                    if (id == *(u32 *)((char *)otherParams + 0x14) || id == 0) {
+                    if (id == *(u32 *)&((BaddieinterestpPlacement *)otherParams)->unk14 || id == 0) {
                         found = 1;
                     }
                 } else {

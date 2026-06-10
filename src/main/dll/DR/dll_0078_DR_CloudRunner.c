@@ -207,21 +207,21 @@ int DR_CloudRunner_stateHandler03(int obj, int p2)
     }
     switch (((GameObject *)obj)->anim.currentMove) {
     case 0x203:
-        if (*(s16 *)((char *)inner + 0xbb0) != 0) {
+        if (((DRCloudRunnerState *)inner)->unkBB0 != 0) {
             ObjAnim_SetCurrentMove(obj, 0x20c, lbl_803E83A4, 0);
             ((CloudRunnerState *)p2)->baddie.moveSpeed = lbl_803E8408;
         }
         break;
     case 0x20c:
         if (*(s8 *)&((CloudRunnerState *)p2)->baddie.moveDone != 0) {
-            *(u8 *)((char *)inner + 0xad5) &= ~2;
+            ((DRCloudRunnerState *)inner)->unkAD5 &= ~2;
             return 3;
         }
         break;
     default: {
         f32 fz;
         ObjAnim_SetCurrentMove(obj, 0x203, lbl_803E83A4, 0);
-        *(u8 *)((char *)inner + 0xad5) |= 2;
+        ((DRCloudRunnerState *)inner)->unkAD5 |= 2;
         fz = lbl_803E83A4;
         ((CloudRunnerState *)p2)->baddie.unk294 = fz;
         ((CloudRunnerState *)p2)->baddie.animSpeedB = fz;

@@ -233,7 +233,7 @@ void lightfoot_init(int obj, int p2, int p3)
     ((GroundBaddieState *)inner)->baddie.controlMode = 0;
     ((GroundBaddieState *)inner)->baddie.unk270 = 0;
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x2000);
-    sub = *(int *)((char *)inner + 0x40c);
+    sub = ((LightfootState *)inner)->unk40C;
     ((LightfootSub *)sub)->unk26 = -1;
     ((LightfootSub *)sub)->unk28 = ((LightfootSub *)sub)->unk26;
     ((GameObject *)obj)->objectFlags =

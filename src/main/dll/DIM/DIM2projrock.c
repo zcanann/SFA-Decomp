@@ -1034,7 +1034,7 @@ void dim2lavacontrol_update(int obj)
             *(u8 *)(obj + 4) = 1;
         }
     }
-    diff = *(u8 *)(obj + 3) - lbl_803DBF28[*(s8 *)(obj + 0)];
+    diff = *(u8 *)(obj + 3) - lbl_803DBF28[((Dim2lavacontrolState *)obj)->unk0];
     if (diff != 0) {
         if (diff > 0) {
             *(u8 *)(obj + 3) = *(u8 *)(obj + 3) - 1;

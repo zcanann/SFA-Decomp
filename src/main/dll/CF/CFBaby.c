@@ -1614,9 +1614,9 @@ void Fall_Ladders_init(int *obj, s8 *def) {
     ((GameObject *)obj)->animEventCallback = (void *)Fall_Ladders_SeqFn;
     ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)def)->posY + *(f32 *)state;
     Obj_SetActiveModelIndex(obj, (s32)*(s8 *)((char *)def + 0x19));
-    *(u8 *)((char *)state + 8) = 0;
+    ((FallLaddersState *)state)->motionState = 0;
     if (GameBit_Get(state[3]) == 0) {
-        *(u8 *)((char *)state + 9) = 1;
+        ((FallLaddersState *)state)->playStartSound = 1;
     }
 }
 
