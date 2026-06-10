@@ -792,7 +792,7 @@ LAB_8023bb18:
     ((AndrossState *)piVar14)->unkD4 = ((AndrossState *)piVar14)->unk60;
     bVar15 = 0;
     iVar5 = *(int *)&((GameObject *)obj)->extra;
-    bVar13 = *(u8 *)(iVar5 + 0xad);
+    bVar13 = ((AndrossState *)iVar5)->unkAD;
     if ((bVar13 & 1) != 0) {
       *(u8 *)(iVar5 + 0xad) = bVar13 & ~1;
       bVar15 = 1;
@@ -822,7 +822,7 @@ LAB_8023bb18:
     ((AndrossState *)piVar14)->unkD4 = ((AndrossState *)piVar14)->unk60;
     bVar15 = 0;
     iVar5 = *(int *)&((GameObject *)obj)->extra;
-    bVar13 = *(u8 *)(iVar5 + 0xad);
+    bVar13 = ((AndrossState *)iVar5)->unkAD;
     if ((bVar13 & 1) != 0) {
       *(u8 *)(iVar5 + 0xad) = bVar13 & ~1;
       bVar15 = 1;
@@ -852,7 +852,7 @@ LAB_8023bb18:
     ((AndrossState *)piVar14)->unkD4 = ((AndrossState *)piVar14)->unk60;
     bVar15 = 0;
     iVar5 = *(int *)&((GameObject *)obj)->extra;
-    bVar13 = *(u8 *)(iVar5 + 0xad);
+    bVar13 = ((AndrossState *)iVar5)->unkAD;
     if ((bVar13 & 1) != 0) {
       *(u8 *)(iVar5 + 0xad) = bVar13 & ~1;
       bVar15 = 1;
@@ -882,7 +882,7 @@ LAB_8023bb18:
     ((AndrossState *)piVar14)->unkD4 = ((AndrossState *)piVar14)->unk60;
     bVar15 = 0;
     iVar5 = *(int *)&((GameObject *)obj)->extra;
-    bVar13 = *(u8 *)(iVar5 + 0xad);
+    bVar13 = ((AndrossState *)iVar5)->unkAD;
     if ((bVar13 & 1) != 0) {
       *(u8 *)(iVar5 + 0xad) = bVar13 & ~1;
       bVar15 = 1;
@@ -931,7 +931,7 @@ LAB_8023bb18:
       iVar5 = *(int *)&((GameObject *)obj)->extra;
       bVar13 = *(u8 *)(iVar5 + 0xad);
       if ((bVar13 & 1) != 0) {
-        *(u8 *)(iVar5 + 0xad) = bVar13 & ~1;
+        ((AndrossState *)iVar5)->unkAD = bVar13 & ~1;
         bVar15 = 1;
       }
       if (bVar15 != 0) {
@@ -1314,7 +1314,7 @@ LAB_8023cbdc:
     fVar2 = lbl_803E74B4 * dVar19;
     for (iVar12 = 0; iVar12 < (int)(u32)*(u8 *)(iVar8 + 0xf8); iVar12 = iVar12 + 1) {
       iVar5 = ObjModel_GetRenderOp(iVar8,iVar12);
-      *(s8 *)(iVar5 + 0x43) = fVar2;
+      ((AndrossState *)iVar5)->unk43 = fVar2;
     }
     if ((((AndrossState *)piVar14)->unk7C == 5) && (((AndrossState *)piVar14)->unkAC == 0)) {
       for (iVar12 = 0; (u8)iVar12 < 6; iVar12 = iVar12 + 1) {
@@ -1409,12 +1409,12 @@ LAB_8023d7cc:
       if ((((((AndrossState *)piVar14)->unk14 == 0) && (((AndrossState *)piVar14)->unk98 <= local_130[(u8)iVar8])) &&
           (local_130[(u8)iVar8] < (short)iVar12)) && (cVar11 = Obj_IsLoadingLocked(), cVar11 != '\0')) {
         iVar5 = Obj_AllocObjectSetup(0x24,0x819);
-        *(f32 *)(iVar5 + 8) = ((AndrossState *)piVar14)->unkC0;
-        *(f32 *)(iVar5 + 0xc) = ((AndrossState *)piVar14)->unkC4;
-        *(f32 *)(iVar5 + 0x10) = ((AndrossState *)piVar14)->unkC8;
+        *(f32 *)&((AndrossState *)iVar5)->unk8 = ((AndrossState *)piVar14)->unkC0;
+        *(f32 *)&((AndrossState *)iVar5)->unkC = ((AndrossState *)piVar14)->unkC4;
+        *(f32 *)&((AndrossState *)iVar5)->unk10 = ((AndrossState *)piVar14)->unkC8;
         *(undefined *)(iVar5 + 4) = 1;
         *(undefined *)(iVar5 + 5) = 1;
-        *(s16 *)(iVar5 + 0x20) = 0xffff;
+        ((AndrossState *)iVar5)->unk20 = 0xffff;
         iVar5 = loadObjectAtObject(obj);
         ((AndrossState *)piVar14)->unk14 = iVar5;
         if (((AndrossState *)piVar14)->unk14 != 0) {
@@ -1577,7 +1577,7 @@ LAB_8023de5c:
     fVar2 = lbl_803E74B4 * dVar19;
     for (iVar12 = 0; iVar12 < (int)(u32)*(u8 *)(iVar8 + 0xf8); iVar12 = iVar12 + 1) {
       iVar5 = ObjModel_GetRenderOp(iVar8,iVar12);
-      *(s8 *)(iVar5 + 0x43) = fVar2;
+      ((AndrossState *)iVar5)->unk43 = fVar2;
     }
     break;
   case 0x1d:
@@ -1699,7 +1699,7 @@ LAB_8023de5c:
     }
     cVar11 = *(char *)&((AndrossState *)iVar12)->unk23;
     if ((((cVar11 != '\x02') && (cVar11 != '\x01')) &&
-        (cVar11 = *(char *)(iVar5 + 0x23), cVar11 != '\x02')) && (cVar11 != '\x01')) {
+        (cVar11 = *(char *)&((AndrossState *)iVar5)->unk23, cVar11 != '\x02')) && (cVar11 != '\x01')) {
       if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E74DC) {
         ((AndrossState *)piVar14)->unk84 = 1;
       }

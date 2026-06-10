@@ -2733,7 +2733,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState *seq, int endFlag)
                 seq->posOffsetScale = lbl_803E7EE0;
                 seq->posOffsetX = ((GameObject *)obj)->anim.localPosX - *(f32 *)((char *)obj2 + 0xc);
                 seq->posOffsetY = ((GameObject *)obj)->anim.localPosY - *(f32 *)((char *)obj2 + 0x10);
-                seq->posOffsetZ = ((GameObject *)obj)->anim.localPosZ - *(f32 *)((char *)obj2 + 0x14);
+                seq->posOffsetZ = ((GameObject *)obj)->anim.localPosZ - ((PlayerState *)obj2)->baddie.posX;
                 seq->rotOffsetX = *(s16 *)((char *)inner + 0x478) - (u16)*(s16 *)obj2;
                 if (seq->rotOffsetX > 0x8000) {
                     seq->rotOffsetX = seq->rotOffsetX - 0xffff;
@@ -2779,8 +2779,8 @@ int player_SeqFn(int obj, int obj2, ObjSeqState *seq, int endFlag)
             } else {
                 f32 *pv = *(f32 **)(obj2 + 0x74);
                 if (pv == NULL) {
-                    npos[0] = *(f32 *)(obj2 + 0x18);
-                    npos[1] = *(f32 *)(obj2 + 0x1c);
+                    npos[0] = ((PlayerState *)obj2)->baddie.posY;
+                    npos[1] = ((PlayerState *)obj2)->baddie.posZ;
                     npos[2] = *(f32 *)(obj2 + 0x20);
                 } else {
                     npos[0] = pv[0];
@@ -2941,7 +2941,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState *seq, int endFlag)
                 dist = sqrtf(ax * ax + az * az);
             }
             dx2 = *(f32 *)((char *)obj2 + 0xc) - seq->posOffsetX;
-            dz2 = *(f32 *)((char *)obj2 + 0x14) - seq->posOffsetZ;
+            dz2 = ((PlayerState *)obj2)->baddie.posX - seq->posOffsetZ;
             d2 = sqrtf(dx2 * dx2 + dz2 * dz2);
             if (dist <= lbl_803DE468) {
                 lbl_803DE46C += 1;
@@ -3169,7 +3169,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState *seq, int endFlag)
                 obj2 = *(int *)&((GameObject *)obj)->extra;
                 (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, obj2,
                                                                                    0x3e);
-                *(int *)(obj2 + 0x304) = 0;
+                *(int *)&((PlayerState *)obj2)->baddie.unk304 = 0;
                 *(u32 *)(obj2 + 0x360) |= 1LL;
                 ((GameObject *)obj)->anim.flags |= 8;
                 break;
@@ -7456,7 +7456,7 @@ void fn_802B249C(int obj, int inner, int state)
             break;
         case 0x60003: {
             f32 dx = *(f32 *)(p + 0xc) - ((GameObject *)obj)->anim.localPosX;
-            f32 dz = *(f32 *)(p + 0x14) - ((GameObject *)obj)->anim.localPosZ;
+            f32 dz = ((PlayerState *)p)->baddie.posX - ((GameObject *)obj)->anim.localPosZ;
             f32 d = sqrtf(dx * dx + dz * dz);
             if (d > lbl_803E7EE0) {
                 dx = dx / d;
@@ -7498,7 +7498,7 @@ void fn_802B249C(int obj, int inner, int state)
         }
         case 0x60004: {
             f32 dx = *(f32 *)(p + 0xc) - ((GameObject *)obj)->anim.localPosX;
-            f32 dz = *(f32 *)(p + 0x14) - ((GameObject *)obj)->anim.localPosZ;
+            f32 dz = ((PlayerState *)p)->baddie.posX - ((GameObject *)obj)->anim.localPosZ;
             f32 d = sqrtf(dx * dx + dz * dz);
             if (d > lbl_803E7EE0) {
                 dx = dx / d;
@@ -7542,7 +7542,7 @@ void fn_802B249C(int obj, int inner, int state)
         }
         case 0x60005: {
             f32 dx = *(f32 *)(p + 0xc) - ((GameObject *)obj)->anim.localPosX;
-            f32 dz = *(f32 *)(p + 0x14) - ((GameObject *)obj)->anim.localPosZ;
+            f32 dz = ((PlayerState *)p)->baddie.posX - ((GameObject *)obj)->anim.localPosZ;
             f32 d = sqrtf(dx * dx + dz * dz);
             if (d > lbl_803E7EE0) {
                 dx = dx / d;
