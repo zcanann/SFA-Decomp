@@ -1236,13 +1236,13 @@ void FUN_8013939c(uint param_1)
     *(undefined4 *)(param_1 + 0x14) = *(undefined4 *)(param_1 + 0x88);
   }
   ((TrickyState *)iVar3)->unk54 = ((TrickyState *)iVar3)->unk54 & 0xfff7ffff;
-  if (*(char *)(iVar3 + 0x374) == '\0') {
+  if (*(char *)&((TrickyState *)iVar3)->unk374 == '\0') {
     if ((((TrickyState *)iVar3)->unk54 & 0x2000) != 0) {
       bVar1 = true;
     }
   }
   else {
-    *(char *)(iVar3 + 0x374) = *(char *)(iVar3 + 0x374) + -1;
+    *(char *)&((TrickyState *)iVar3)->unk374 = *(char *)&((TrickyState *)iVar3)->unk374 + -1;
     bVar1 = true;
   }
   if (bVar1) {
@@ -1251,7 +1251,7 @@ void FUN_8013939c(uint param_1)
     ((GameObject *)param_1)->anim.localPosY = ((GameObject *)param_1)->anim.localPosY - local_30;
     ((TrickyState *)iVar3)->unk353 = 0;
   }
-  if ((*(char *)(iVar3 + 0x353) == '\0') || ((((TrickyState *)iVar3)->unk58 >> 5 & 1) != 0)) {
+  if ((*(char *)&((TrickyState *)iVar3)->unk353 == '\0') || ((((TrickyState *)iVar3)->unk58 >> 5 & 1) != 0)) {
     ((GameObject *)param_1)->anim.velocityY = FLOAT_803e306c;
   }
   else {
@@ -1336,7 +1336,7 @@ void FUN_8013939c(uint param_1)
   case 0x1f:
     ((TrickyState *)iVar3)->unk838 = FLOAT_803e30c8;
   }
-  if (*(char *)(iVar3 + 0x353) == '\0') {
+  if (*(char *)&((TrickyState *)iVar3)->unk353 == '\0') {
     (*gPathControlInterface)->attachObject(param_1, &((TrickyState *)iVar3)->pathControlFlags);
   }
   iVar2 = FUN_8005b024();

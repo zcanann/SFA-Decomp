@@ -2767,9 +2767,9 @@ void ObjModel_SampleJointTransform(u8 *model, int b, int idx, f32 t, f32 s, f32 
         outRot[2] = 0;
     }
     if (b != 0) {
-        ch = *(u8 **)(model + 0x30);
+        ch = *(u8 **)&((ObjModel *)model)->animStateB;
     } else {
-        ch = *(u8 **)(model + 0x2c);
+        ch = *(u8 **)&((ObjModel *)model)->animStateA;
     }
     saved = *(int *)(ch + 0x34);
     *(int *)(ch + 0x34) = ((int *)(ch + idx * 4))[0xd];

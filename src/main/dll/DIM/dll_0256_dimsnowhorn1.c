@@ -1129,7 +1129,7 @@ void DIMSnowHorn1_update(int obj)
     *(s16 *)((char *)data + 0xa86) = 5;
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
     ((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)->trackContactMask = 9;
-    flags = ((SnowHornFlags *)(base + *(s16 *)((char *)data + 0x274)))->flag;
+    flags = ((SnowHornFlags *)(base + ((DIMSnowHorn1State *)data)->baddie.controlMode))->flag;
     if (!(flags & 8)) {
         ObjHitReactEntry *arm;
         if (flags & 2) {
@@ -1145,15 +1145,15 @@ void DIMSnowHorn1_update(int obj)
         }
     }
     if (*(u8 *)((char *)data + 0xa8a) == 2) {
-        *(u8 *)((char *)data + 0x25f) = 1;
+        ((DIMSnowHorn1State *)data)->baddie.unk25F = 1;
         fn_802BB4B4(obj, framesThisStep, -1);
     } else {
         f32 fz;
-        *(u8 *)((char *)data + 0x25f) = 0;
+        ((DIMSnowHorn1State *)data)->baddie.unk25F = 0;
         fz = lbl_803E8234;
-        *(f32 *)((char *)data + 0x294) = fz;
-        *(f32 *)((char *)data + 0x284) = fz;
-        *(f32 *)((char *)data + 0x280) = fz;
+        ((DIMSnowHorn1State *)data)->baddie.unk294 = fz;
+        ((DIMSnowHorn1State *)data)->baddie.animSpeedB = fz;
+        ((DIMSnowHorn1State *)data)->baddie.animSpeedA = fz;
         ((GameObject *)obj)->anim.velocityX = fz;
         ((GameObject *)obj)->anim.velocityY = fz;
         ((GameObject *)obj)->anim.velocityZ = fz;
@@ -1259,7 +1259,7 @@ void DIMSnowHorn1_update(int obj)
                     } else {
                         GameBit_Set(0x5bb, 1);
                     }
-                    *(int *)((char *)data + 0x31c) = 0;
+                    *(int *)&((DIMSnowHorn1State *)data)->baddie.unk31C = 0;
                     (*gGameUIInterface)->airMeterSetShutdown();
                     (*(void (*)(void))(*(int *)((u8 *)*gMapEventInterface + 0x2c)))();
                 }

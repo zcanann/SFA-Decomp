@@ -323,7 +323,7 @@ void smallbasket_update(int obj)
                 return;
             }
         }
-        if (*(s8 *)(state + 0x9) != 1) {
+        if (*(s8 *)&((CfperchState *)state)->unk9 != 1) {
             if (((CfperchState *)state)->unk5 == 0) {
                 flag = 0;
                 if (((buttonGetDisabled(0) & 0x100) == 0) && (((GameObject *)obj)->unkF8 == 0) &&
@@ -365,12 +365,12 @@ void smallbasket_update(int obj)
                     }
                 }
                 if (((GameObject *)obj)->unkF8 == 1) {
-                    *(u8 *)(state + 0x5) = 2;
+                    *(u8 *)&((CfperchState *)state)->unk5 = 2;
                 }
                 if (((((CfperchState *)state)->unk5 == 2) && (((GameObject *)obj)->unkF8 == 0)) ||
                     ((((CfperchState *)state)->unk20 != 0) && (playerIsDisguised(player) == 0))) {
                     if (fn_8029669C(player) != 0) {
-                        *(u8 *)(state + 0x5) = 0;
+                        *(u8 *)&((CfperchState *)state)->unk5 = 0;
                         ((CfperchState *)state)->unk9 = 1;
                         ((GameObject *)obj)->anim.velocityY = lbl_803E397C * *(f32 *)(playerState + 0x298) + lbl_803E3958;
                         ((GameObject *)obj)->anim.velocityZ = lbl_803E3980 * *(f32 *)(playerState + 0x298) + lbl_803E3974;
@@ -387,7 +387,7 @@ void smallbasket_update(int obj)
                         vecRotateZXY(&blk, (void *)&((GameObject *)obj)->anim.velocityX);
                         Sfx_PlayFromObject(obj, 0x6b);
                     } else if (fn_802966B4(player) != 0) {
-                        *(u8 *)(state + 0x5) = 0;
+                        *(u8 *)&((CfperchState *)state)->unk5 = 0;
                         ((CfperchState *)state)->unk9 = 2;
                         zf = lbl_803E3938;
                         ((GameObject *)obj)->anim.velocityX = zf;
@@ -397,7 +397,7 @@ void smallbasket_update(int obj)
                         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x8;
                         ObjHits_ClearHitVolumes(obj);
                     } else {
-                        *(u8 *)(state + 0x5) = 0;
+                        *(u8 *)&((CfperchState *)state)->unk5 = 0;
                         ((CfperchState *)state)->unk9 = 1;
                         ((GameObject *)obj)->anim.velocityY = lbl_803E3988 * *(f32 *)(playerState + 0x298) + lbl_803E3984;
                         ((GameObject *)obj)->anim.velocityZ = lbl_803E3990 * *(f32 *)(playerState + 0x298) + lbl_803E398C;
@@ -414,16 +414,16 @@ void smallbasket_update(int obj)
                         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
                     }
                 }
-                if (*(s8 *)(state + 0x6) != 0) {
+                if (*(s8 *)&((CfperchState *)state)->unk6 != 0) {
                     ((CfperchState *)state)->unkA = 0;
                     ((CfperchState *)state)->unk14 = 0;
                     ObjMsg_SendToObject(player, 0x100010, obj,
                                         (((CfperchState *)state)->unk2 << 16) | ((u16)((CfperchState *)state)->unk0));
                 }
             }
-        } else if (*(s8 *)(state + 0x9) != 0) {
+        } else if (*(s8 *)&((CfperchState *)state)->unk9 != 0) {
             ((CfperchState *)state)->unk12 -= framesThisStep;
-            if (*(s8 *)(state + 0x9) == 1) {
+            if (*(s8 *)&((CfperchState *)state)->unk9 == 1) {
                 ObjHits_SetHitVolumeSlot(obj, 0xe, 1, 0);
                 if (((GameObject *)obj)->anim.velocityY > lbl_803E3994) {
                     ((GameObject *)obj)->anim.velocityY = lbl_803E3998 * timeDelta + ((GameObject *)obj)->anim.velocityY;
@@ -435,7 +435,7 @@ void smallbasket_update(int obj)
             ((GameObject *)obj)->anim.localPosZ = ((GameObject *)obj)->anim.velocityZ * timeDelta + ((GameObject *)obj)->anim.localPosZ;
             fn_801821FC(obj);
             c = (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->contactFlags;
-            if ((c != 0) && (*(s8 *)(state + 0x9) == 1)) {
+            if ((c != 0) && (*(s8 *)&((CfperchState *)state)->unk9 == 1)) {
                 blk.fy = ((GameObject *)obj)->anim.localPosX;
                 blk.fz = ((GameObject *)obj)->anim.localPosY;
                 blk.fw = ((GameObject *)obj)->anim.localPosZ;
@@ -451,7 +451,7 @@ void smallbasket_update(int obj)
                 ((GameObject *)obj)->anim.velocityX = zf;
                 ((GameObject *)obj)->anim.velocityZ = zf;
                 ObjHits_ClearHitVolumes(obj);
-            } else if ((c != 0) && (*(s8 *)(state + 0x9) == 2)) {
+            } else if ((c != 0) && (*(s8 *)&((CfperchState *)state)->unk9 == 2)) {
                 zf = lbl_803E3938;
                 ((GameObject *)obj)->anim.velocityX = zf;
                 ((GameObject *)obj)->anim.velocityZ = zf;

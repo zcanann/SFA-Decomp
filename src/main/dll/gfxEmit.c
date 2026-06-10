@@ -96,7 +96,7 @@ void FUN_801723dc(int param_1)
   (*gPathControlInterface)->update((void *)param_1, state->pathState, lbl_803DC074);
   (*gPathControlInterface)->apply((void *)param_1, state->pathState);
   (*gPathControlInterface)->advance((void *)param_1, state->pathState, lbl_803DC074);
-  if (*(char *)(iVar4 + 0x2b1) == '\0') {
+  if (*(char *)&((GfxEmitState *)iVar4)->unk2B1 == '\0') {
     ((GameObject *)param_1)->anim.velocityY = ((GameObject *)param_1)->anim.velocityY * lbl_803E4100;
     ((GameObject *)param_1)->anim.velocityY = -(lbl_803E4104 * lbl_803DC074 - ((GameObject *)param_1)->anim.velocityY);
   }
@@ -129,8 +129,8 @@ void FUN_801723dc(int param_1)
     ((GameObject *)param_1)->anim.velocityY = ((GameObject *)param_1)->anim.velocityY * lbl_803E40FC;
     ((GameObject *)param_1)->anim.velocityX = (float)((double)((GameObject *)param_1)->anim.velocityX * dVar6);
     ((GameObject *)param_1)->anim.velocityZ = (float)((double)((GameObject *)param_1)->anim.velocityZ * dVar6);
-    *(char *)(iVar4 + 0x1d) = *(char *)(iVar4 + 0x1d) + -1;
-    if (*(char *)(iVar4 + 0x1d) == '\0') {
+    *(char *)&((GfxEmitState *)iVar4)->unk1D = *(char *)&((GfxEmitState *)iVar4)->unk1D + -1;
+    if (*(char *)&((GfxEmitState *)iVar4)->unk1D == '\0') {
       ((GfxEmitState *)iVar4)->unk1D = 0;
       fVar1 = lbl_803E40F4;
       ((GameObject *)param_1)->anim.velocityX = lbl_803E40F4;
@@ -821,7 +821,7 @@ void collectible_update(int obj)
         if (state[0x3e] != 0) {
             state[0x3e]--;
             if (state[0x3e] == 0) {
-                *(s16 *)(state + 0x48) = -1;
+                ((GfxEmitState *)state)->unk48 = -1;
                 ObjMsg_SendToObject(Obj_GetPlayerObject(), 0x7000a, obj, state + 0x48);
             }
         } else {

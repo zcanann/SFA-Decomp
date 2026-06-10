@@ -259,15 +259,15 @@ void FUN_8015b218(int param_1,int param_2)
   uint uVar2;
   
   ((GroundBaddieState *)param_2)->baddie.unk2AC = lbl_803E3958;
-  *(char *)(param_2 + 0x33b) = (char)(int)((GroundBaddieState *)param_2)->baddie.unk2A8;
+  *(char *)&((GroundBaddieState *)param_2)->baddie.inWhirlpoolGroup = (char)(int)((GroundBaddieState *)param_2)->baddie.unk2A8;
   ((GroundBaddieState *)param_2)->baddie.unk2A8 = lbl_803E395C;
-  *(undefined4 *)(param_2 + 0x2e4) = 0x42003;
+  ((GroundBaddieState *)param_2)->baddie.unk2E4 = 0x42003;
   ((GroundBaddieState *)param_2)->baddie.unk308 = lbl_803E3960;
   ((GroundBaddieState *)param_2)->baddie.unk300 = lbl_803E3964;
   ((GroundBaddieState *)param_2)->baddie.unk304 = lbl_803E3968;
   ((GroundBaddieState *)param_2)->baddie.unk320 = 0;
   fVar1 = lbl_803E396C;
-  *(float *)(param_2 + 0x314) = lbl_803E396C;
+  *(float *)&((GroundBaddieState *)param_2)->baddie.eventFlags = lbl_803E396C;
   ((GroundBaddieState *)param_2)->baddie.unk321 = 10;
   ((GroundBaddieState *)param_2)->baddie.unk318 = fVar1;
   ((GroundBaddieState *)param_2)->baddie.unk322 = 7;
@@ -365,15 +365,15 @@ void FUN_8015b3d4(int param_1,int param_2)
   int iVar2;
   
   ((GroundBaddieState *)param_2)->baddie.unk2AC = lbl_803E3980;
-  *(char *)(param_2 + 0x33b) = (char)(int)((GroundBaddieState *)param_2)->baddie.unk2A8;
+  *(char *)&((GroundBaddieState *)param_2)->baddie.inWhirlpoolGroup = (char)(int)((GroundBaddieState *)param_2)->baddie.unk2A8;
   ((GroundBaddieState *)param_2)->baddie.unk2A8 = lbl_803E3984;
-  *(undefined4 *)(param_2 + 0x2e4) = 0x42001;
+  ((GroundBaddieState *)param_2)->baddie.unk2E4 = 0x42001;
   ((GroundBaddieState *)param_2)->baddie.unk308 = lbl_803E3988;
   ((GroundBaddieState *)param_2)->baddie.unk300 = lbl_803E398C;
   ((GroundBaddieState *)param_2)->baddie.unk304 = lbl_803E3990;
   ((GroundBaddieState *)param_2)->baddie.unk320 = 0;
   fVar1 = lbl_803E3994;
-  *(float *)(param_2 + 0x314) = lbl_803E3994;
+  *(float *)&((GroundBaddieState *)param_2)->baddie.eventFlags = lbl_803E3994;
   ((GroundBaddieState *)param_2)->baddie.unk321 = 5;
   ((GroundBaddieState *)param_2)->baddie.unk318 = fVar1;
   ((GroundBaddieState *)param_2)->baddie.unk322 = 7;
@@ -407,9 +407,9 @@ undefined4 FUN_8015b47c(int param_1,int param_2)
   undefined8 local_18;
   
   iVar3 = *(int *)&((GameObject *)param_1)->extra;
-  if (*(char *)(param_2 + 0x27b) == '\0') {
-    if (*(char *)(param_2 + 0x346) == '\0') {
-      if ((*(short *)(param_2 + 0x274) == 7) && ((int)*(float *)(param_2 + 0x2c0) < 0x37)) {
+  if (*(char *)&((GroundBaddieState *)param_2)->baddie.moveJustStartedB == '\0') {
+    if (*(char *)&((GroundBaddieState *)param_2)->baddie.moveDone == '\0') {
+      if ((((GroundBaddieState *)param_2)->baddie.controlMode == 7) && ((int)((GroundBaddieState *)param_2)->baddie.targetDistance < 0x37)) {
         (**(code **)(*DAT_803dd70c + 0x14))(param_1,param_2,6);
       }
     }
@@ -424,8 +424,8 @@ undefined4 FUN_8015b47c(int param_1,int param_2)
       if (iVar4 != 0) {
         return 5;
       }
-      if ((int)*(float *)(param_2 + 0x2c0) < 0x38) {
-        if (*(short *)(param_2 + 0x274) == 6) {
+      if ((int)((GroundBaddieState *)param_2)->baddie.targetDistance < 0x38) {
+        if (((GroundBaddieState *)param_2)->baddie.controlMode == 6) {
           (**(code **)(*DAT_803dd70c + 0x14))(param_1,param_2,5);
         }
         else {
@@ -455,8 +455,8 @@ undefined4 FUN_8015b47c(int param_1,int param_2)
       }
     }
   }
-  else if ((int)*(float *)(param_2 + 0x2c0) < 0x38) {
-    if (*(short *)(param_2 + 0x274) == 6) {
+  else if ((int)((GroundBaddieState *)param_2)->baddie.targetDistance < 0x38) {
+    if (((GroundBaddieState *)param_2)->baddie.controlMode == 6) {
       (**(code **)(*DAT_803dd70c + 0x14))(param_1,param_2,5);
     }
     else {
@@ -635,7 +635,7 @@ undefined4 FUN_8015bbc8(int param_1,int param_2)
 {
   int iVar1;
   
-  if (*(char *)(param_2 + 0x27b) != '\0') {
+  if (*(char *)&((GroundBaddieState *)param_2)->baddie.moveJustStartedB != '\0') {
     iVar1 = *(int *)&((GameObject *)param_1)->extra;
     ((GroundBaddieState *)iVar1)->unk405 = 0;
     GameBit_Set((int)((GroundBaddieState *)iVar1)->gameBitB,0);
@@ -747,8 +747,8 @@ undefined4 FUN_8015be40(int param_1,int param_2)
   
   fVar1 = lbl_803E39AC;
   iVar3 = *(int *)&((GameObject *)param_1)->extra;
-  if (*(int *)(param_2 + 0x2d0) != 0) {
-    if (*(char *)(param_2 + 0x27b) != '\0') {
+  if (*(int *)&((GroundBaddieState *)param_2)->baddie.targetObj != 0) {
+    if (*(char *)&((GroundBaddieState *)param_2)->baddie.moveJustStartedB != '\0') {
       ((GroundBaddieState *)param_2)->baddie.animSpeedB = lbl_803E39AC;
       ((GroundBaddieState *)param_2)->baddie.animSpeedA = fVar1;
       if (((GroundBaddieState *)iVar3)->aggression < 0x33) {
@@ -764,7 +764,7 @@ undefined4 FUN_8015be40(int param_1,int param_2)
         (**(code **)(*DAT_803dd70c + 0x14))(param_1,param_2,1);
       }
     }
-    if (*(char *)(param_2 + 0x346) != '\0') {
+    if (*(char *)&((GroundBaddieState *)param_2)->baddie.moveDone != '\0') {
       (**(code **)(*DAT_803dd70c + 0x30))((double)lbl_803DC074,param_1,param_2,4);
       uVar2 = (**(code **)(*DAT_803dd738 + 0x18))((double)lbl_803E3998,param_1,param_2);
       if ((uVar2 & 1) == 0) {
@@ -1042,22 +1042,22 @@ int mediumbasket_updateOpenState(int obj, int p)
   p54 = *(int *)&((GameObject *)obj)->anim.hitReactState;
   *(s16 *)(p54 + 0x60) |= 1;
   ((GroundBaddieState *)p)->baddie.unk25F = 1;
-  if (*(char *)(p + 0x27a) != '\0') {
+  if (*(char *)&((GroundBaddieState *)p)->baddie.moveJustStartedA != '\0') {
     ObjAnim_SetCurrentMove(obj, 11, lbl_803E2D14, 0);
-    *(s8 *)(p + 0x346) = 0;
+    *(s8 *)&((GroundBaddieState *)p)->baddie.moveDone = 0;
   }
-  if (*(char *)(p + 0x27a) != '\0') {
+  if (*(char *)&((GroundBaddieState *)p)->baddie.moveJustStartedA != '\0') {
     GameBit_Set(sub->gameBitB, 1);
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x8;
     ((GameObject *)obj)->anim.alpha = 0xff;
-    *(s8 *)(p + 0x34d) = 1;
+    *(s8 *)&((GroundBaddieState *)p)->baddie.unk34D = 1;
     ((GroundBaddieState *)p)->baddie.moveSpeed = lbl_803E2D70 + (f32)(u32)sub->aggression / lbl_803E2D74;
   }
-  if (*(s8 *)(p + 0x346) != 0) {
+  if (*(s8 *)&((GroundBaddieState *)p)->baddie.moveDone != 0) {
     sub->targetState = 1;
   }
   {
-    int v = *(int *)(p + 0x314);
+    int v = *(int *)&((GroundBaddieState *)p)->baddie.eventFlags;
     if ((v & 0x200) != 0) {
       ((GroundBaddieState *)p)->baddie.eventFlags = v & ~0x200;
       *(u8 *)(sub_40c + 0x44) |= 0x20;
@@ -1093,22 +1093,22 @@ int mediumbasket_updateOpenHitState(int obj, int p)
   p54 = *(int *)&((GameObject *)obj)->anim.hitReactState;
   *(u8 *)(p54 + 0x6f) = 1;
   ObjHits_RegisterActiveHitVolumeObject(obj);
-  if (*(char *)(p + 0x27a) != '\0') {
+  if (*(char *)&((GroundBaddieState *)p)->baddie.moveJustStartedA != '\0') {
     ObjAnim_SetCurrentMove(obj, 8, lbl_803E2D14, 0);
-    *(s8 *)(p + 0x346) = 0;
+    *(s8 *)&((GroundBaddieState *)p)->baddie.moveDone = 0;
   }
-  if (*(char *)(p + 0x27a) != '\0') {
+  if (*(char *)&((GroundBaddieState *)p)->baddie.moveJustStartedA != '\0') {
     GameBit_Set(sub->gameBitB, 1);
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x8;
     ((GameObject *)obj)->anim.alpha = 0xff;
-    *(s8 *)(p + 0x34d) = 1;
+    *(s8 *)&((GroundBaddieState *)p)->baddie.unk34D = 1;
     ((GroundBaddieState *)p)->baddie.moveSpeed = lbl_803E2D7C + (f32)(u32)sub->aggression / lbl_803E2D80;
   }
-  if (*(s8 *)(p + 0x346) != 0) {
+  if (*(s8 *)&((GroundBaddieState *)p)->baddie.moveDone != 0) {
     sub->targetState = 1;
   }
   {
-    int v = *(int *)(p + 0x314);
+    int v = *(int *)&((GroundBaddieState *)p)->baddie.eventFlags;
     if ((v & 0x200) != 0) {
       ((GroundBaddieState *)p)->baddie.eventFlags = v & ~0x200;
       *(u8 *)(sub_40c + 0x44) |= 0x20;

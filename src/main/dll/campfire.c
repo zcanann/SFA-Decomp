@@ -316,7 +316,7 @@ void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state)
   st.p = *(KaldaCombatParams *)lbl_802C2210;
   playerObj = Obj_GetPlayerObject();
   if (((GroundBaddieState *)state)->baddie.targetObj != NULL) {
-    int target = *(int *)(state + 0x2d0);
+    int target = *(int *)&((GroundBaddieState *)state)->baddie.targetObj;
     st.dx = ((GameObject *)target)->anim.worldPosX - ((GameObject *)obj)->anim.worldPosX;
     st.dy = ((GameObject *)target)->anim.worldPosY - ((GameObject *)obj)->anim.worldPosY;
     st.dz = ((GameObject *)target)->anim.worldPosZ - ((GameObject *)obj)->anim.worldPosZ;
@@ -338,7 +338,7 @@ void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state)
         Obj_SetModelColorFadeRecursive(obj, 0xf, 200, 0, 0, 1);
         Sfx_PlayFromObject(obj, SFXen_blkscrp6);
       }
-      if (*(s8 *)(state + 0x354) < 1) {
+      if (*(s8 *)&((GroundBaddieState *)state)->baddie.hitPoints < 1) {
         ((GroundBaddieState *)state)->baddie.unk270 = 2;
       }
     }
@@ -375,7 +375,7 @@ void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state)
         }
       }
     }
-    if (*(s8 *)(state + 0x354) < 1) {
+    if (*(s8 *)&((GroundBaddieState *)state)->baddie.hitPoints < 1) {
       ((GroundBaddieState *)state)->baddie.unk270 = 2;
     }
   }
@@ -589,7 +589,7 @@ void kaldachom_init(int obj, int data, int skip_alloc)
   ((GameObject *)obj)->anim.currentMoveProgress = lbl_803E307C;
   *(byte *)&((GameObject *)obj)->anim.resetHitboxMode = *(byte *)&((GameObject *)obj)->anim.resetHitboxMode | 8;
   (**(code **)(*gPlayerInterface + 0x14))(obj,state,0);
-  *(undefined2 *)(state + 0x270) = 0;
+  *(undefined2 *)&((GroundBaddieState *)state)->baddie.unk270 = 0;
   ((GroundBaddieState *)state)->baddie.moveSpeed = lbl_803E307C;
   ((GroundBaddieState *)state)->baddie.animSpeedA = lbl_803E3060;
   player = Obj_GetPlayerObject();

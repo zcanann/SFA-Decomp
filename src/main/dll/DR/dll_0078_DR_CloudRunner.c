@@ -370,7 +370,7 @@ void DR_CloudRunner_init(int obj, int p2)
         ((GameObject *)obj)->anim.rotX = stk.angles[0];
     }
     (*(void (*)(int, int, int, int))(*(int *)(*gPlayerInterface + 0x4)))(obj, inner, 8, 1);
-    *(f32 *)((char *)inner + 0x2a4) = lbl_803E8424;
+    ((CloudRunnerState *)inner)->baddie.unk2A4 = lbl_803E8424;
     fn_802BF0C8(obj, inner, ((ByteFlags *)((char *)inner + 0xbc0))->b20);
     dll_2E_func05(obj, inner + 0x4c4, -0x11c7, 0x1555, 1);
     dll_2E_func08(inner + 0x4c4, 0x12c, 0x78);

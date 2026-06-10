@@ -894,7 +894,7 @@ int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
   if ((void *)p2 != NULL) {
     s16 tmp[3];
     f32 vb;
-    *(f32 *)(p3 + 0x18) = lbl_803E1CA0;
+    ((BaddieState *)p3)->posY = lbl_803E1CA0;
     vb = lbl_803E1C90;
     ((BaddieState *)p3)->posZ = vb;
     *(f32 *)(p3 + 0x20) = vb;
@@ -920,7 +920,7 @@ int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
     f32 buf[4];
     buf[0] = *(f32 *)(p3 + 0x00);
     buf[1] = *(f32 *)(p3 + 0x0c);
-    buf[2] = *(f32 *)(p3 + 0x18);
+    buf[2] = ((BaddieState *)p3)->posY;
     buf[3] = *(f32 *)(p3 + 0x24);
     *(f32 *)(p1 + 0x0c) = Curve_EvalHermite(buf, *(f32 *)p4, 0);
     buf[0] = *(f32 *)(p3 + 0x04);

@@ -354,37 +354,37 @@ void FUN_8014d7b8(uint param_1,int param_2,int param_3,int param_4,int param_5,s
   iVar3 = *(int *)&((GameObject *)param_1)->extra;
   if ((visible != 0) && (((GameObject *)param_1)->unkF4 == 0)) {
     FUN_8003b818(param_1);
-    uVar1 = *(uint *)(iVar3 + 0x2e8);
+    uVar1 = *(uint *)&((EnemyState *)iVar3)->unk2E8;
     if ((uVar1 & 3) != 0) {
       if ((uVar1 & 1) != 0) {
-        *(uint *)(iVar3 + 0x2e8) = uVar1 & ~1;
-        *(uint *)(iVar3 + 0x2e8) = *(uint *)(iVar3 + 0x2e8) | 2;
+        *(uint *)&((EnemyState *)iVar3)->unk2E8 = uVar1 & ~1;
+        *(uint *)&((EnemyState *)iVar3)->unk2E8 = *(uint *)&((EnemyState *)iVar3)->unk2E8 | 2;
       }
       if (((EnemyState *)iVar3)->modelLight == 0) {
         piVar2 = FUN_80017624(0,'\x01');
         *(int **)&((EnemyState *)iVar3)->modelLight = piVar2;
       }
-      FUN_8008111c((double)lbl_803E3200,(double)*(float *)(iVar3 + 0x30c),param_1,3,
+      FUN_8008111c((double)lbl_803E3200,(double)((EnemyState *)iVar3)->unk30C,param_1,3,
                    *(int **)&((EnemyState *)iVar3)->modelLight);
     }
-    if ((*(uint *)(iVar3 + 0x2e8) & 4) != 0) {
+    if ((*(uint *)&((EnemyState *)iVar3)->unk2E8 & 4) != 0) {
       if (((EnemyState *)iVar3)->modelLight == 0) {
         piVar2 = FUN_80017624(0,'\x01');
         *(int **)&((EnemyState *)iVar3)->modelLight = piVar2;
       }
-      FUN_8008111c((double)lbl_803E3200,(double)*(float *)(iVar3 + 0x30c),param_1,4,
+      FUN_8008111c((double)lbl_803E3200,(double)((EnemyState *)iVar3)->unk30C,param_1,4,
                    *(int **)&((EnemyState *)iVar3)->modelLight);
     }
-    if ((*(uint *)(iVar3 + 0x2e8) & 0x40) != 0) {
+    if ((*(uint *)&((EnemyState *)iVar3)->unk2E8 & 0x40) != 0) {
       FUN_800068c4(param_1,0x9e);
-      FUN_8008111c((double)lbl_803E3200,(double)*(float *)(iVar3 + 0x30c),param_1,5,(int *)0x0);
+      FUN_8008111c((double)lbl_803E3200,(double)((EnemyState *)iVar3)->unk30C,param_1,5,(int *)0x0);
     }
-    if ((*(uint *)(iVar3 + 0x2e8) & 0x80) != 0) {
+    if ((*(uint *)&((EnemyState *)iVar3)->unk2E8 & 0x80) != 0) {
       FUN_800068c4(param_1,0x9e);
-      FUN_8008111c((double)lbl_803E3290,(double)*(float *)(iVar3 + 0x30c),param_1,6,(int *)0x0);
+      FUN_8008111c((double)lbl_803E3290,(double)((EnemyState *)iVar3)->unk30C,param_1,6,(int *)0x0);
     }
-    if ((*(uint *)(iVar3 + 0x2e8) & 0x100) != 0) {
-      FUN_8008111c((double)lbl_803E3294,(double)*(float *)(iVar3 + 0x30c),param_1,7,(int *)0x0);
+    if ((*(uint *)&((EnemyState *)iVar3)->unk2E8 & 0x100) != 0) {
+      FUN_8008111c((double)lbl_803E3294,(double)((EnemyState *)iVar3)->unk30C,param_1,7,(int *)0x0);
     }
   }
   return;
@@ -409,10 +409,10 @@ void FUN_8014d924(int param_1)
   int iVar2;
   
   iVar2 = *(int *)&((GameObject *)param_1)->extra;
-  if ((*(int *)(iVar2 + 0x368) != 0) && (iVar1 = FUN_800175c4(*(int *)(iVar2 + 0x368)), iVar1 == 0))
+  if ((((EnemyState *)iVar2)->modelLight != 0) && (iVar1 = FUN_800175c4(((EnemyState *)iVar2)->modelLight), iVar1 == 0))
   {
-    FUN_80017620(*(uint *)(iVar2 + 0x368));
-    *(undefined4 *)(iVar2 + 0x368) = 0;
+    FUN_80017620(*(uint *)&((EnemyState *)iVar2)->modelLight);
+    ((EnemyState *)iVar2)->modelLight = 0;
   }
   ((EnemyState *)iVar2)->lastHitObject = (*(ObjHitsPriorityState **)&((GameObject *)param_1)->anim.hitReactState)->lastHitObject;
   if ((*(ObjHitsPriorityState **)&((GameObject *)param_1)->anim.hitReactState)->lastHitObject != 0) {
@@ -484,36 +484,36 @@ void enemy_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
         if (((GameObject *)obj)->unkF4 == 0) {
             ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E256C);
             {
-                u32 flags = *(u32 *)((char *)state + 0x2e8);
+                u32 flags = *(u32 *)&((EnemyState *)state)->unk2E8;
                 if ((flags & 3) != 0) {
                     if ((flags & 1) != 0) {
-                        *(u32 *)((char *)state + 0x2e8) = flags & ~1;
-                        *(u32 *)((char *)state + 0x2e8) = *(u32 *)((char *)state + 0x2e8) | 2;
+                        *(u32 *)&((EnemyState *)state)->unk2E8 = flags & ~1;
+                        *(u32 *)&((EnemyState *)state)->unk2E8 = *(u32 *)&((EnemyState *)state)->unk2E8 | 2;
                     }
-                    if (*(void **)((char *)state + 0x368) == NULL) {
-                        *(int *)((char *)state + 0x368) = objCreateLight(0, 1);
+                    if (*(void **)&((EnemyState *)state)->modelLight == NULL) {
+                        ((EnemyState *)state)->modelLight = objCreateLight(0, 1);
                     }
-                    objParticleFn_80099d84(obj, lbl_803E256C, 3, *(f32 *)((char *)state + 0x30c),
-                                           *(int *)((char *)state + 0x368));
+                    objParticleFn_80099d84(obj, lbl_803E256C, 3, ((EnemyState *)state)->unk30C,
+                                           ((EnemyState *)state)->modelLight);
                 }
             }
-            if ((*(u32 *)((char *)state + 0x2e8) & 4) != 0) {
-                if (*(void **)((char *)state + 0x368) == NULL) {
-                    *(int *)((char *)state + 0x368) = objCreateLight(0, 1);
+            if ((*(u32 *)&((EnemyState *)state)->unk2E8 & 4) != 0) {
+                if (*(void **)&((EnemyState *)state)->modelLight == NULL) {
+                    ((EnemyState *)state)->modelLight = objCreateLight(0, 1);
                 }
-                objParticleFn_80099d84(obj, lbl_803E256C, 4, *(f32 *)((char *)state + 0x30c),
-                                       *(int *)((char *)state + 0x368));
+                objParticleFn_80099d84(obj, lbl_803E256C, 4, ((EnemyState *)state)->unk30C,
+                                       ((EnemyState *)state)->modelLight);
             }
-    if ((*(u32 *)((char *)state + 0x2e8) & 0x40) != 0) {
+    if ((*(u32 *)&((EnemyState *)state)->unk2E8 & 0x40) != 0) {
         Sfx_KeepAliveLoopedObjectSound(obj, SFXmv_liftloop);
-        objParticleFn_80099d84(obj, lbl_803E256C, 5, *(f32 *)((char *)state + 0x30c), 0);
+        objParticleFn_80099d84(obj, lbl_803E256C, 5, ((EnemyState *)state)->unk30C, 0);
     }
-    if ((*(u32 *)((char *)state + 0x2e8) & 0x80) != 0) {
+    if ((*(u32 *)&((EnemyState *)state)->unk2E8 & 0x80) != 0) {
         Sfx_KeepAliveLoopedObjectSound(obj, SFXmv_liftloop);
-        objParticleFn_80099d84(obj, lbl_803E25F8, 6, *(f32 *)((char *)state + 0x30c), 0);
+        objParticleFn_80099d84(obj, lbl_803E25F8, 6, ((EnemyState *)state)->unk30C, 0);
     }
-    if ((*(u32 *)((char *)state + 0x2e8) & 0x100) != 0) {
-        objParticleFn_80099d84(obj, lbl_803E25FC, 7, *(f32 *)((char *)state + 0x30c), 0);
+    if ((*(u32 *)&((EnemyState *)state)->unk2E8 & 0x100) != 0) {
+        objParticleFn_80099d84(obj, lbl_803E25FC, 7, ((EnemyState *)state)->unk30C, 0);
     }
         }
     }

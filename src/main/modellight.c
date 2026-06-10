@@ -396,22 +396,22 @@ void *objAllocLight(void *owner) {
 
     if (*(void **)light != NULL) {
         zero = lbl_803DE75C;
-        *(f32 *)(light + 4) = zero;
-        *(f32 *)(light + 8) = zero;
-        *(f32 *)(light + 0xc) = zero;
+        ((ModelLightStruct *)light)->localX = zero;
+        ((ModelLightStruct *)light)->localY = zero;
+        ((ModelLightStruct *)light)->localZ = zero;
         Obj_TransformLocalPointByWorldMatrix(*(u8 **)light, (f32 *)(light + 4), (f32 *)(light + 0x10), 1);
     } else {
         zero = lbl_803DE75C;
-        *(f32 *)(light + 0x10) = zero;
-        *(f32 *)(light + 0x14) = zero;
-        *(f32 *)(light + 0x18) = zero;
+        ((ModelLightStruct *)light)->worldX = zero;
+        ((ModelLightStruct *)light)->worldY = zero;
+        ((ModelLightStruct *)light)->worldZ = zero;
     }
 
     view = Camera_GetViewMatrix();
-    if (*(int *)(light + 0x60) == 0) {
-        tmp[0] = *(f32 *)(light + 0x10) - playerMapOffsetX;
-        tmp[1] = *(f32 *)(light + 0x14);
-        tmp[2] = *(f32 *)(light + 0x18) - playerMapOffsetZ;
+    if (((ModelLightStruct *)light)->transformMode == 0) {
+        tmp[0] = ((ModelLightStruct *)light)->worldX - playerMapOffsetX;
+        tmp[1] = ((ModelLightStruct *)light)->worldY;
+        tmp[2] = ((ModelLightStruct *)light)->worldZ - playerMapOffsetZ;
         PSMTXMultVec(view, tmp, (f32 *)(light + 0x1c));
     } else {
         *(IVec3 *)(light + 0x1c) = *(IVec3 *)(light + 0x10);
@@ -419,39 +419,39 @@ void *objAllocLight(void *owner) {
 
     if (*(void **)light != NULL) {
         zero = lbl_803DE75C;
-        *(f32 *)(light + 0x28) = zero;
-        *(f32 *)(light + 0x2c) = zero;
-        *(f32 *)(light + 0x30) = lbl_803DE760;
+        ((ModelLightStruct *)light)->localDirX = zero;
+        ((ModelLightStruct *)light)->localDirY = zero;
+        ((ModelLightStruct *)light)->localDirZ = lbl_803DE760;
         Vec_normalize((f32 *)(light + 0x28), (f32 *)(light + 0x28));
         Obj_TransformLocalVectorByWorldMatrix(*(void **)light, (f32 *)(light + 0x28), (f32 *)(light + 0x34));
     } else {
         zero = lbl_803DE75C;
-        *(f32 *)(light + 0x34) = zero;
-        *(f32 *)(light + 0x38) = zero;
-        *(f32 *)(light + 0x3c) = lbl_803DE760;
+        ((ModelLightStruct *)light)->worldDirX = zero;
+        ((ModelLightStruct *)light)->worldDirY = zero;
+        ((ModelLightStruct *)light)->worldDirZ = lbl_803DE760;
         Vec_normalize((f32 *)(light + 0x34), (f32 *)(light + 0x34));
     }
 
     view = Camera_GetViewMatrix();
-    if (*(int *)(light + 0x60) == 0) {
+    if (((ModelLightStruct *)light)->transformMode == 0) {
         PSMTXMultVecSR(view, (f32 *)(light + 0x34), (f32 *)(light + 0x40));
     } else {
         *(IVec3 *)(light + 0x40) = *(IVec3 *)(light + 0x34);
     }
 
     modelLightStruct_setEnabled((ModelLightStruct *)light, 1, lbl_803DE75C);
-    *(int *)(light + 0x50) = 4;
-    *(int *)(light + 0x54) = 1;
-    *(f32 *)(light + 0x140) = lbl_803DE750;
-    *(f32 *)(light + 0x144) = lbl_803DE754;
-    GXInitLightDistAttn(light + 0x68, *(f32 *)(light + 0x140), lbl_803DE758, 2);
+    ((ModelLightStruct *)light)->lightKind = 4;
+    ((ModelLightStruct *)light)->projectedLightChannelPreference = 1;
+    ((ModelLightStruct *)light)->attenuationNear = lbl_803DE750;
+    ((ModelLightStruct *)light)->attenuationFar = lbl_803DE754;
+    GXInitLightDistAttn(light + 0x68, ((ModelLightStruct *)light)->attenuationNear, lbl_803DE758, 2);
     GXGetLightAttnK(light + 0x68, (f32 *)(light + 0x124), (f32 *)(light + 0x128), (f32 *)(light + 0x12c));
     zero = lbl_803DE75C;
-    *(f32 *)(light + 0x144) = zero;
+    ((ModelLightStruct *)light)->attenuationFar = zero;
     light[0x2fc] = 0x7f;
-    *(int *)(light + 0x5c) = 0;
+    ((ModelLightStruct *)light)->objectLightMaskIndex = 0;
     light[0x64] = 1;
-    *(int *)(light + 0x60) = 0;
+    ((ModelLightStruct *)light)->transformMode = 0;
     light[0x4d] = 0;
     light[0xbc] = 0;
     light[0xac] = 0xff;
@@ -462,8 +462,8 @@ void *objAllocLight(void *owner) {
     light[0xaa] = 0xff;
     light[0xaf] = 0xff;
     light[0xab] = 0xff;
-    *(f32 *)(light + 0xb4) = lbl_803DE79C;
-    *(int *)(light + 0xb8) = 0;
+    ((ModelLightStruct *)light)->spotCutoff = lbl_803DE79C;
+    ((ModelLightStruct *)light)->spotFunction = 0;
     GXInitLightAttnA(light + 0x68, lbl_803DE760, zero, zero);
     light[0x114] = 0;
     light[0x104] = 0xff;
@@ -474,9 +474,9 @@ void *objAllocLight(void *owner) {
     light[0x102] = 0xff;
     light[0x107] = 0xff;
     light[0x103] = 0xff;
-    *(f32 *)(light + 0x10c) = lbl_803DE7A0;
-    *(f32 *)(light + 0x110) = lbl_803DE76C;
-    atten = *(f32 *)(light + 0x10c) * lbl_803DE790;
+    ((ModelLightStruct *)light)->specularAttenuationScale = lbl_803DE7A0;
+    ((ModelLightStruct *)light)->specularBrightness = lbl_803DE76C;
+    atten = ((ModelLightStruct *)light)->specularAttenuationScale * lbl_803DE790;
     zero = lbl_803DE75C;
     GXInitLightAttn(light + 0xc0, zero, zero, lbl_803DE760, atten, zero,
                     lbl_803DE760 - atten);
@@ -493,11 +493,11 @@ void *objAllocLight(void *owner) {
         Obj_BuildInverseWorldTransformMatrix(*(u8 **)light, (f32 *)(light + 0x170));
     }
     atten = lbl_803DE760;
-    *(f32 *)(light + 0x134) = atten;
-    *(f32 *)(light + 0x124) = atten;
+    ((ModelLightStruct *)light)->lightAmount = atten;
+    ((ModelLightStruct *)light)->attenuationK0 = atten;
     zero = lbl_803DE75C;
-    *(f32 *)(light + 0x128) = zero;
-    *(f32 *)(light + 0x12c) = zero;
+    ((ModelLightStruct *)light)->attenuationK1 = zero;
+    ((ModelLightStruct *)light)->attenuationK2 = zero;
     return light;
 }
 
@@ -1085,32 +1085,32 @@ void updateLights(void) {
     view = Camera_GetViewMatrix();
     for (i = 0; i < gModelLightCount; i++) {
         light = gModelLightList[i];
-        fadeState = *(int *)(light + 0x58);
+        fadeState = ((ModelLightStruct *)light)->activeState;
         if (fadeState == 1) {
-            *(f32 *)(light + 0x138) += *(f32 *)(light + 0x13c);
-            if (*(f32 *)(light + 0x138) >= lbl_803DE760) {
-                *(f32 *)(light + 0x138) = *(f32 *)&lbl_803DE760;
-                *(int *)(light + 0x58) = 2;
+            ((ModelLightStruct *)light)->activeIntensity += ((ModelLightStruct *)light)->activeIntensityStep;
+            if (((ModelLightStruct *)light)->activeIntensity >= lbl_803DE760) {
+                ((ModelLightStruct *)light)->activeIntensity = *(f32 *)&lbl_803DE760;
+                ((ModelLightStruct *)light)->activeState = 2;
             }
         } else if (fadeState == 3) {
-            *(f32 *)(light + 0x138) += *(f32 *)(light + 0x13c);
-            if (*(f32 *)(light + 0x138) <= lbl_803DE788) {
-                *(f32 *)(light + 0x138) = *(f32 *)&lbl_803DE788;
-                *(int *)(light + 0x58) = 0;
+            ((ModelLightStruct *)light)->activeIntensity += ((ModelLightStruct *)light)->activeIntensityStep;
+            if (((ModelLightStruct *)light)->activeIntensity <= lbl_803DE788) {
+                ((ModelLightStruct *)light)->activeIntensity = *(f32 *)&lbl_803DE788;
+                ((ModelLightStruct *)light)->activeState = 0;
                 light[0x4c] = 0;
             }
         }
 
         if (light[0x4c] != 0) {
-            if (*(int *)(light + 0x50) != 4) {
+            if (((ModelLightStruct *)light)->lightKind != 4) {
                 if (*(void **)light != NULL) {
                     Obj_TransformLocalPointByWorldMatrix(*(u8 **)light, (f32 *)(light + 4), (f32 *)(light + 0x10),
                                                          1);
                 }
-                if (*(int *)(light + 0x60) == 0) {
-                    viewPos[0] = *(f32 *)(light + 0x10) - playerMapOffsetX;
-                    viewPos[1] = *(f32 *)(light + 0x14);
-                    viewPos[2] = *(f32 *)(light + 0x18) - playerMapOffsetZ;
+                if (((ModelLightStruct *)light)->transformMode == 0) {
+                    viewPos[0] = ((ModelLightStruct *)light)->worldX - playerMapOffsetX;
+                    viewPos[1] = ((ModelLightStruct *)light)->worldY;
+                    viewPos[2] = ((ModelLightStruct *)light)->worldZ - playerMapOffsetZ;
                     PSMTXMultVec(view, viewPos, (f32 *)(light + 0x1c));
                 } else {
                     *(IVec3 *)(light + 0x1c) = *(IVec3 *)(light + 0x10);
@@ -1121,26 +1121,26 @@ void updateLights(void) {
                 Obj_TransformLocalVectorByWorldMatrix(*(void **)light, (f32 *)(light + 0x28),
                                                        (f32 *)(light + 0x34));
             }
-            if (*(int *)(light + 0x60) == 0) {
+            if (((ModelLightStruct *)light)->transformMode == 0) {
                 PSMTXMultVecSR(view, (f32 *)(light + 0x34), (f32 *)(light + 0x40));
             } else {
                 *(IVec3 *)(light + 0x40) = *(IVec3 *)(light + 0x34);
             }
 
-            if (*(int *)(light + 0x2d8) != 0) {
+            if (((ModelLightStruct *)light)->colorFadeMode != 0) {
                 modelLightStruct_updateColorFade((ModelLightStruct *)light);
             } else {
-                light[0xa8] = ((f32)light[0xac] * *(f32 *)(light + 0x138));
-                light[0xa9] = ((f32)light[0xad] * *(f32 *)(light + 0x138));
-                light[0xaa] = ((f32)light[0xae] * *(f32 *)(light + 0x138));
-                light[0xab] = ((f32)light[0xaf] * *(f32 *)(light + 0x138));
-                light[0x100] = ((f32)light[0x104] * *(f32 *)(light + 0x138));
-                light[0x101] = ((f32)light[0x105] * *(f32 *)(light + 0x138));
-                light[0x102] = ((f32)light[0x106] * *(f32 *)(light + 0x138));
-                light[0x103] = ((f32)light[0x107] * *(f32 *)(light + 0x138));
+                light[0xa8] = ((f32)light[0xac] * ((ModelLightStruct *)light)->activeIntensity);
+                light[0xa9] = ((f32)light[0xad] * ((ModelLightStruct *)light)->activeIntensity);
+                light[0xaa] = ((f32)light[0xae] * ((ModelLightStruct *)light)->activeIntensity);
+                light[0xab] = ((f32)light[0xaf] * ((ModelLightStruct *)light)->activeIntensity);
+                light[0x100] = ((f32)light[0x104] * ((ModelLightStruct *)light)->activeIntensity);
+                light[0x101] = ((f32)light[0x105] * ((ModelLightStruct *)light)->activeIntensity);
+                light[0x102] = ((f32)light[0x106] * ((ModelLightStruct *)light)->activeIntensity);
+                light[0x103] = ((f32)light[0x107] * ((ModelLightStruct *)light)->activeIntensity);
             }
 
-            if (*(int *)(light + 0x50) == 8) {
+            if (((ModelLightStruct *)light)->lightKind == 8) {
                 Obj_BuildInverseWorldTransformMatrix(*(u8 **)light, (f32 *)(light + 0x170));
         PSMTXConcat((f32 *)(light + 0x170), Camera_GetInverseViewMatrix(), concatMtx);
         PSMTXConcat((f32 *)(light + 0x1b0), concatMtx, (f32 *)(light + 0x230));

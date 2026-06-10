@@ -1343,7 +1343,7 @@ void FUN_800d8240(ushort *param_1,int param_2)
   uint uVar3;
   double dVar4;
   
-  *(undefined4 *)(param_2 + 0x29c) = *(undefined4 *)(param_2 + 0x298);
+  *(undefined4 *)&((BaddieState *)param_2)->trackedObj = *(undefined4 *)(param_2 + 0x298);
   dVar4 = FUN_80293900((double)(((BaddieState *)param_2)->unk290 * ((BaddieState *)param_2)->unk290 +
                                ((BaddieState *)param_2)->unk28C * ((BaddieState *)param_2)->unk28C));
   *(float *)(param_2 + 0x298) = (float)dVar4;
@@ -1367,7 +1367,7 @@ void FUN_800d8240(ushort *param_1,int param_2)
     *(short *)(param_2 + 0x334) = -((BaddieState *)param_2)->unk336;
   }
   else {
-    *(undefined2 *)(param_2 + 0x334) = *(undefined2 *)(param_2 + 0x336);
+    *(undefined2 *)(param_2 + 0x334) = *(undefined2 *)&((BaddieState *)param_2)->unk336;
   }
   if (lbl_803E1214 <= *(float *)(param_2 + 0x298)) {
     uVar3 = uVar2 + 0xa000;
@@ -2218,7 +2218,7 @@ extern s16 lbl_803DD44C;
 #pragma peephole off
 void fn_800D8414(int *obj, int *ctx) {
     int diff;
-    *(f32 *)((char *)ctx + 0x29c) = *(f32 *)((char *)ctx + 0x298);
+    *(f32 *)&((BaddieState *)ctx)->trackedObj = *(f32 *)((char *)ctx + 0x298);
     *(f32 *)((char *)ctx + 0x298) =
         sqrtf(((BaddieState *)ctx)->unk290 * ((BaddieState *)ctx)->unk290 +
               ((BaddieState *)ctx)->unk28C * ((BaddieState *)ctx)->unk28C);

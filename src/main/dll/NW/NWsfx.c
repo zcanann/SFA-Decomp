@@ -314,10 +314,10 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
                         lbl_803E52A4) {
                         (*gExpgfxInterface)->freeSource((u32)obj);
                         if (((GameObject *)obj)->anim.seqId == 0x658) {
-                            *(s16 *)(state + 0x13c) = 0x18a;
+                            ((EdibleMushroomState *)state)->unk13C = 0x18a;
                             itemPickupDoParticleFx(obj, lbl_803E52A8, 0xff, 0x28);
                         } else {
-                            *(s16 *)(state + 0x13c) = 0x119;
+                            ((EdibleMushroomState *)state)->unk13C = 0x119;
                             itemPickupDoParticleFx(obj, lbl_803E52A8, 6, 0x28);
                         }
                         ((EdibleMushroomState *)state)->unk13E = 0;

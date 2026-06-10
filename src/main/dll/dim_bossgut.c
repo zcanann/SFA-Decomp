@@ -284,7 +284,7 @@ int bombplant_SeqFn(int *obj)
 {
     float *state = ((GameObject *)obj)->extra;
 
-    if (*(u8 *)((char *)state + 0x14) != 0) {
+    if (((EnemyMushroomState *)state)->resetToSpawn != 0) {
         int *src;
         ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags & ~OBJANIM_FLAG_HIDDEN);
         src = *(int **)&((GameObject *)obj)->anim.placementData;
@@ -294,24 +294,24 @@ int bombplant_SeqFn(int *obj)
         ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)src + 0xc);
         ((GameObject *)obj)->anim.localPosZ = *(f32 *)((char *)src + 0x10);
         ((GameObject *)obj)->anim.rootMotionScale = lbl_803E5358;
-        *(f32 *)((char *)state + 0x8) = lbl_803E535C;
-        *(f32 *)((char *)state + 0x4) = *(f32 *)((char *)state + 0xc);
-        *(f32 *)((char *)state + 0x10) = *(f32 *)((char *)state + 0x4) / *(f32 *)((char *)state + 0x8);
-        *(f32 *)((char *)state + 0x0) = *(f32 *)((char *)state + 0x8);
+        ((EnemyMushroomState *)state)->riseDuration = lbl_803E535C;
+        ((EnemyMushroomState *)state)->heightTarget = ((EnemyMushroomState *)state)->baseScale;
+        ((EnemyMushroomState *)state)->riseStep = ((EnemyMushroomState *)state)->heightTarget / ((EnemyMushroomState *)state)->riseDuration;
+        ((EnemyMushroomState *)state)->timer = ((EnemyMushroomState *)state)->riseDuration;
         ObjHits_RefreshObjectState(obj);
-        *(u8 *)((char *)state + 0x14) = 0;
-        *(u8 *)((char *)state + 0x15) = (u8)(*(u8 *)((char *)state + 0x15) | 2);
+        ((EnemyMushroomState *)state)->resetToSpawn = 0;
+        ((EnemyMushroomState *)state)->flags = (u8)(((EnemyMushroomState *)state)->flags | 2);
     } else {
         int *base;
         u8 flags;
         Sfx_KeepAliveLoopedObjectSound(obj, 0x3fd);
         base = *(int **)&((GameObject *)obj)->anim.placementData;
-        flags = *(u8 *)((char *)state + 0x15);
+        flags = ((EnemyMushroomState *)state)->flags;
         if (flags & 0x2) {
             int v;
-            *(u8 *)((char *)state + 0x15) = (u8)(flags & ~0x2);
+            ((EnemyMushroomState *)state)->flags = (u8)(flags & ~0x2);
             v = *(s16 *)((char *)base + 0x1a) + randomGetRange(-0x32, 0x32);
-            *(f32 *)((char *)state + 0x0) = (f32)v;
+            ((EnemyMushroomState *)state)->timer = (f32)v;
         }
         if (((GameObject *)obj)->objectFlags & 0x800) {
             (*gPartfxInterface)->spawnObject(obj, 0x7f1, NULL, 2, -1, NULL);

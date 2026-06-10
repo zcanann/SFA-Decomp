@@ -93,10 +93,10 @@ void collectible_init(int obj,int setup)
   ((CollectibleState *)state)->unkC = *(u8 *)(setup + 0x19);
   ((CollectibleState *)state)->unkD = *(u8 *)(setup + 0x1a);
   ((CollectibleState *)state)->unkF = 0;
-  *(s32 *)(state + 0x18) = -2;
+  ((CollectibleState *)state)->unk18 = -2;
   ((CollectibleState *)state)->unk1D = 0;
   ((CollectibleState *)state)->unk14 = *(s16 *)(setup + 0x24);
-  *(s32 *)(state + 0x20) = ((ObjPlacement *)setup)->mapId;
+  ((CollectibleState *)state)->unk20 = ((ObjPlacement *)setup)->mapId;
   ((CollectibleState *)state)->basePosX = ((GameObject *)obj)->anim.localPosX;
   ((CollectibleState *)state)->basePosY = ((GameObject *)obj)->anim.localPosY;
   ((CollectibleState *)state)->basePosZ = ((GameObject *)obj)->anim.localPosZ;

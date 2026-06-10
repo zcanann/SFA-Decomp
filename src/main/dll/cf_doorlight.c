@@ -78,21 +78,21 @@ int kaldachom_stateHandlerA07(int obj, int p)
   KaldaChomControl *control;
 
   b8 = *(int *)&((GameObject *)obj)->extra;
-  *(s8 *)(p + 0x34d) = 3;
+  *(s8 *)&((GroundBaddieState *)p)->baddie.unk34D = 3;
   ((GroundBaddieState *)p)->baddie.moveSpeed = lbl_803E3084;
   {
     f32 fz = lbl_803E3060;
     ((GroundBaddieState *)p)->baddie.animSpeedA = fz;
     ((GroundBaddieState *)p)->baddie.animSpeedB = fz;
-    if (*(char *)(p + 0x27a) != '\0') {
+    if (*(char *)&((GroundBaddieState *)p)->baddie.moveJustStartedA != '\0') {
       ObjAnim_SetCurrentMove(obj, 5, fz, 0);
-      *(s8 *)(p + 0x346) = 0;
+      *(s8 *)&((GroundBaddieState *)p)->baddie.moveDone = 0;
     }
   }
   {
-    int v = *(int *)(p + 0x314);
+    int v = *(int *)&((GroundBaddieState *)p)->baddie.eventFlags;
     if ((v & 0x1000) != 0) {
-      *(int *)(p + 0x314) = v & ~0x1000;
+      *(int *)&((GroundBaddieState *)p)->baddie.eventFlags = v & ~0x1000;
       kaldachompme_setLinkedMouthMode((u8 *)obj, 2);
     }
   }

@@ -44,7 +44,7 @@ undefined4 sidekickball_init(int obj)
   ((TFrameAnimatorState *)state)->unk26C = lbl_803E369C;
   ((GameObject *)obj)->objectFlags |= 0x2000;
   objDef = *(int *)&((GameObject *)obj)->anim.hitReactState;
-  *(f32 *)(state + 0x268) = (f32)*(s16 *)(objDef + 0x5a);
+  ((TFrameAnimatorState *)state)->unk268 = (f32)*(s16 *)(objDef + 0x5a);
   (*gPathControlInterface)->init(state, 0, 0x40007, 1);
   (*gPathControlInterface)->setLocalPointCollision(state, 1, lbl_80320F30, state + 0x268, 1);
   (*gPathControlInterface)->setup(state, 1, lbl_80320F30, state + 0x268, &pathFlag);
@@ -172,10 +172,10 @@ int levelname_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate) {
     int i;
     for (i = 0; i < animUpdate->eventCount; i++) {
         if (animUpdate->eventIds[i] == 1) {
-            if (*(s16 *)((char *)state + 0xE) != -1) {
-                GameBit_Set(*(s16 *)((char *)state + 0xE), 1);
+            if (((TFrameAnimatorState *)state)->enableGameBit != -1) {
+                GameBit_Set(((TFrameAnimatorState *)state)->enableGameBit, 1);
             }
-            *(u8 *)((char *)state + 0x14) = 1;
+            ((TFrameAnimatorState *)state)->phase = 1;
             return 4;
         }
     }

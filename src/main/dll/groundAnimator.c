@@ -792,7 +792,7 @@ void appleontree_handleCollectableHit(int obj)
 
     if (GameBit_Get(0x90f) == 0) {
         (*gObjectTriggerInterface)->setObjects(0x444, 0, 0);
-        *(s16 *)(state + 0x5c) = -1;
+        ((AppleOnTreeState *)state)->unk5C = -1;
         ((AppleOnTreeState *)state)->unk5E = 0;
         ((AppleOnTreeState *)state)->unk60 = lbl_803E37C8;
         ObjMsg_SendToObject(player, 0x7000a, obj, (int *)(state + 0x5c));
@@ -1133,7 +1133,7 @@ void fn_8017D854(int obj, int msg)
     } else {
         f32 m = ((AppleOnTreeState *)state)->unk40;
         f32 g = lbl_803E37D8 * m;
-        f32 q = sqrtf(-(g * *(f32 *)(state + 0x30) - lbl_803E37D4));
+        f32 q = sqrtf(-(g * ((AppleOnTreeState *)state)->unk30 - lbl_803E37D4));
         f32 t = lbl_803E37DC * m;
         f32 a;
         f32 r;
@@ -1153,12 +1153,12 @@ void fn_8017D854(int obj, int msg)
         ((AppleOnTreeState *)state)->unk50 = r;
 
         if (((AppleOnTreeState *)state)->unk28 < lbl_803E37D4) {
-            *(f32 *)(state + 0x30) = -(lbl_803E37D8 * ((AppleOnTreeState *)state)->unk24 - *(f32 *)(state + 0x30));
+            ((AppleOnTreeState *)state)->unk30 = -(lbl_803E37D8 * ((AppleOnTreeState *)state)->unk24 - ((AppleOnTreeState *)state)->unk30);
         } else {
-            *(f32 *)(state + 0x30) = lbl_803E37E8 * (lbl_803E37D8 * ((AppleOnTreeState *)state)->unk24) + *(f32 *)(state + 0x30);
+            ((AppleOnTreeState *)state)->unk30 = lbl_803E37E8 * (lbl_803E37D8 * ((AppleOnTreeState *)state)->unk24) + ((AppleOnTreeState *)state)->unk30;
         }
 
-        if (*(f32 *)(state + 0x30) <= lbl_803E37D4) {
+        if (((AppleOnTreeState *)state)->unk30 <= lbl_803E37D4) {
             state = *(int *)&((GameObject *)obj)->extra;
             if ((((GameObject *)obj)->anim.flags & 0x2000) != 0) {
                 Obj_FreeObject(obj);
@@ -1170,7 +1170,7 @@ void fn_8017D854(int obj, int msg)
             }
         } else {
             ((AppleOnTreeState *)state)->unk2C = ((GameObject *)obj)->anim.localPosY;
-            ((AppleOnTreeState *)state)->unk34 = ((GameObject *)obj)->anim.localPosY - *(f32 *)(state + 0x30);
+            ((AppleOnTreeState *)state)->unk34 = ((GameObject *)obj)->anim.localPosY - ((AppleOnTreeState *)state)->unk30;
             if (((GameObject *)obj)->anim.hitReactState != NULL) {
                 ObjHits_DisableObject(obj);
             }

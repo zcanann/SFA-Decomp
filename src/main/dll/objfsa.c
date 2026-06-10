@@ -5410,10 +5410,10 @@ int RomCurve_findProjectedCurveFromStart(f32 x,f32 y,f32 z,int curve,float *outP
   int n;
   int k;
 
-  while (!((((ObjfsaRomCurveDef *)curve)->linkIds[0] == -1 || (*(u8 *)(curve + 0x1b) & 1) != 0) &&
-           (((ObjfsaRomCurveDef *)curve)->linkIds[1] == -1 || (*(u8 *)(curve + 0x1b) & 2) != 0) &&
-           (((ObjfsaRomCurveDef *)curve)->linkIds[2] == -1 || (*(u8 *)(curve + 0x1b) & 4) != 0) &&
-           (((ObjfsaRomCurveDef *)curve)->linkIds[3] == -1 || (*(u8 *)(curve + 0x1b) & 8) != 0))) {
+  while (!((((ObjfsaRomCurveDef *)curve)->linkIds[0] == -1 || (*(u8 *)&((ObjfsaRomCurveDef *)curve)->blockedLinkMask & 1) != 0) &&
+           (((ObjfsaRomCurveDef *)curve)->linkIds[1] == -1 || (*(u8 *)&((ObjfsaRomCurveDef *)curve)->blockedLinkMask & 2) != 0) &&
+           (((ObjfsaRomCurveDef *)curve)->linkIds[2] == -1 || (*(u8 *)&((ObjfsaRomCurveDef *)curve)->blockedLinkMask & 4) != 0) &&
+           (((ObjfsaRomCurveDef *)curve)->linkIds[3] == -1 || (*(u8 *)&((ObjfsaRomCurveDef *)curve)->blockedLinkMask & 8) != 0))) {
     RomCurve_getAdjacentWindow(curve, adjacentWindow);
     projected = RomCurve_projectPointToAdjacentWindow(x, y, z, adjacentWindow,
                                                       &lateralOffset, &verticalOffset, &phase);

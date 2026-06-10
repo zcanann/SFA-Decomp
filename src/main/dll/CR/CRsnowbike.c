@@ -264,7 +264,7 @@ void sc_levelcontrol_setAnimEventState(int param_1,undefined param_2)
   
   iVar2 = *(int *)&((GameObject *)param_1)->extra;
   ((ScLevelControlState *)iVar2)->mode = param_2;
-  cVar1 = *(char *)(iVar2 + 0x1d);
+  cVar1 = *(char *)&((ScLevelControlState *)iVar2)->mode;
   if (cVar1 == '\x02') {
     ((ScLevelControlState *)iVar2)->mode = 0;
   }
@@ -626,7 +626,7 @@ void FUN_801db94c(undefined8 param_1,double param_2,double param_3,double param_
   }
   iVar2 = *(int *)&((GameObject *)param_9)->extra;
   FUN_80017a98();
-  if (*(char *)(iVar2 + 0x1d) == '\x05') {
+  if (*(char *)&((ScLevelControlState *)iVar2)->mode == '\x05') {
     FUN_80017698(0x60f,1);
     bVar6 = FUN_80006b44();
     if (bVar6 != 0) {
