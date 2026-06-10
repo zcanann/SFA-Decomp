@@ -393,7 +393,7 @@ void hightop_init(void *obj, u8 *arg) {
     ObjGroup_AddObject((int)obj, 38);
     ObjGroup_AddObject((int)obj, 10);
     (*(void (**)(void *, char *, int, int))((char *)*gPlayerInterface + 4))(obj, (char *)runtime, 11, 1);
-    runtime->baddie.unk2A4 = lbl_803E6B4C;
+    runtime->baddie.gravity = lbl_803E6B4C;
     pathState = (u8 *)&runtime->baddie + 4;
     pathState[0x25b] = 1;
     (*gPathControlInterface)->init(pathState, 3, 1024, 0);
@@ -591,12 +591,12 @@ void hightop_update(int obj) {
             }
         }
     } else {
-        ((BaddieState *)p)->unk290 = lbl_803E6AA8;
-        ((BaddieState *)p)->unk28C = lbl_803E6AA8;
+        ((BaddieState *)p)->moveInputX = lbl_803E6AA8;
+        ((BaddieState *)p)->moveInputZ = lbl_803E6AA8;
     }
     *(int *)&((BaddieState *)p)->unk31C = 0;
     *(int *)&((BaddieState *)p)->unk318 = 0;
-    ((BaddieState *)p)->unk330 = 0;
+    ((BaddieState *)p)->cameraYaw = 0;
     *(int *)p &= ~0x400000;
     (*(void (**)(int, char *, f32, f32, void **, void *))((char *)*gPlayerInterface + 0x8))(
         obj, (char *)p, (f32)(u32)framesThisStep, timeDelta, gHighTopStateHandlers, &gHighTopDefaultStateHandler);
@@ -648,12 +648,12 @@ int hightop_stateHandler01(int obj, int p) {
             ObjAnim_SetCurrentMove(obj, lbl_803DC32C, lbl_803E6AA8, 0);
         }
     }
-    if (((BaddieState *)p)->unk298 < lbl_803E6B2C) {
+    if (((BaddieState *)p)->inputMagnitude < lbl_803E6B2C) {
         *(s16 *)((char *)p + 0x334) = 0;
         ((BaddieState *)p)->turnRate = 0;
-        ((BaddieState *)p)->unk298 = lbl_803E6AA8;
+        ((BaddieState *)p)->inputMagnitude = lbl_803E6AA8;
     }
-    if (*(f32 *)&((BaddieState *)p)->trackedObj > lbl_803E6AA8 && ((BaddieState *)p)->unk298 > lbl_803E6AA8) {
+    if (*(f32 *)&((BaddieState *)p)->trackedObj > lbl_803E6AA8 && ((BaddieState *)p)->inputMagnitude > lbl_803E6AA8) {
         return 3;
     }
     return 0;

@@ -406,7 +406,7 @@ void rachnopInit(undefined4 param_1,int param_2)
   float fVar1;
   float fVar2;
   
-  ((BaddieState *)param_2)->unk2AC = lbl_803E2A34;
+  ((BaddieState *)param_2)->speedScale = lbl_803E2A34;
   *(undefined4 *)&((BaddieState *)param_2)->unk2E4 = 1;
   fVar1 = lbl_803E2A38;
   ((BaddieState *)param_2)->unk308 = lbl_803E2A38;
@@ -687,7 +687,7 @@ void baddieInit_80156188(undefined4 param_1,int param_2)
   float fVar1;
   float fVar2;
   
-  ((BaddieState *)param_2)->unk2AC = lbl_803E2A84;
+  ((BaddieState *)param_2)->speedScale = lbl_803E2A84;
   *(undefined4 *)&((BaddieState *)param_2)->unk2E4 = 1;
   ((BaddieState *)param_2)->unk308 = lbl_803E2A58;
   ((BaddieState *)param_2)->unk300 = lbl_803E2A88;
@@ -943,7 +943,7 @@ void wbInit(undefined4 param_1,int param_2)
   float fVar1;
   uint uVar2;
   
-  ((BaddieState *)param_2)->unk2AC = lbl_803E2AE8;
+  ((BaddieState *)param_2)->speedScale = lbl_803E2AE8;
   *(undefined4 *)&((BaddieState *)param_2)->unk2E4 = 0x2002b029;
   ((BaddieState *)param_2)->unk308 = lbl_803E2ACC;
   ((BaddieState *)param_2)->unk300 = lbl_803E2AEC;
@@ -1132,7 +1132,7 @@ void mutatedEbaInit(undefined4 param_1,int param_2)
 {
   float fVar1;
   
-  ((BaddieState *)param_2)->unk2AC = lbl_803E2A84;
+  ((BaddieState *)param_2)->speedScale = lbl_803E2A84;
   *(undefined4 *)&((BaddieState *)param_2)->unk2E4 = 0x46001;
   ((BaddieState *)param_2)->unk308 = lbl_803E2A58;
   ((BaddieState *)param_2)->unk300 = lbl_803E2A88;

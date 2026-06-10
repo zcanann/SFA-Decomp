@@ -522,18 +522,18 @@ void fn_802BE6E8(int obj, int t, int p3)
     ((EarthWarriorState *)inner)->baddie.hitPoints = 0;
     *(int *)((char *)inner + 0) &= ~0x8000;
     if (*(u8 *)((char *)inner + 0x14e6) == 2) {
-        ((EarthWarriorState *)inner)->baddie.unk290 = (f32)(s8)padGetStickX(0);
-        ((EarthWarriorState *)inner)->baddie.unk28C = (f32)(s8)padGetStickY(0);
+        ((EarthWarriorState *)inner)->baddie.moveInputX = (f32)(s8)padGetStickX(0);
+        ((EarthWarriorState *)inner)->baddie.moveInputZ = (f32)(s8)padGetStickY(0);
         *(int *)&((EarthWarriorState *)inner)->baddie.unk31C = getButtonsJustPressed(0);
         *(int *)&((EarthWarriorState *)inner)->baddie.unk318 = getButtonsHeld(0);
-        ((EarthWarriorState *)inner)->baddie.unk330 = *(s16 *)slot;
+        ((EarthWarriorState *)inner)->baddie.cameraYaw = *(s16 *)slot;
     } else {
         f32 v = lbl_803E8304;
-        ((EarthWarriorState *)inner)->baddie.unk290 = v;
-        ((EarthWarriorState *)inner)->baddie.unk28C = v;
+        ((EarthWarriorState *)inner)->baddie.moveInputX = v;
+        ((EarthWarriorState *)inner)->baddie.moveInputZ = v;
         *(int *)&((EarthWarriorState *)inner)->baddie.unk31C = 0;
         *(int *)&((EarthWarriorState *)inner)->baddie.unk318 = 0;
-        ((EarthWarriorState *)inner)->baddie.unk330 = 0;
+        ((EarthWarriorState *)inner)->baddie.cameraYaw = 0;
     }
     *(int *)((char *)inner + 0) |= 0x1000000;
     fn_802B0EA4(obj, q, inner);
@@ -705,7 +705,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
         ((EarthWarriorSub *)q)->unk48C = 0;
     }
     {
-        f32 ph = (((BaddieState *)p2)->unk298 - lbl_803E8308) / lbl_803E82FC;
+        f32 ph = (((BaddieState *)p2)->inputMagnitude - lbl_803E8308) / lbl_803E82FC;
         f32 a = ((EarthWarriorSub *)q)->unk404 - lbl_803E833C;
         f32 t = (ph < lbl_803E8304) ? lbl_803E8304 : ((ph > lbl_803E8338) ? lbl_803E8338 : ph);
         ((EarthWarriorSub *)q)->unk408 = a * (t * ((EarthWarriorSub *)q)->unk840);
@@ -848,7 +848,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
             int tbl = ((EarthWarriorSub *)q)->configRow;
             if (v294 < *(f32 *)(tbl + i2 * 4)) {
                 if (((EarthWarriorSub *)q)->attackPhase == 4) {
-                    if (((EarthWarriorState *)p2)->baddie.animSpeedA < *(f32 *)(tbl + 0x10) && ((BaddieState *)p2)->unk298 < lbl_803E8308) {
+                    if (((EarthWarriorState *)p2)->baddie.animSpeedA < *(f32 *)(tbl + 0x10) && ((BaddieState *)p2)->inputMagnitude < lbl_803E8308) {
                         return 2;
                     }
                 } else {
@@ -911,7 +911,7 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
         ((BaddieState *)p2)->moveDone = 0;
         return 3;
     }
-    if (*(f32 *)&((EarthWarriorState *)p2)->baddie.trackedObj >= lbl_803E8358 && ((BaddieState *)p2)->unk298 >= lbl_803E8358 &&
+    if (*(f32 *)&((EarthWarriorState *)p2)->baddie.trackedObj >= lbl_803E8358 && ((BaddieState *)p2)->inputMagnitude >= lbl_803E8358 &&
         ((BaddieState *)p2)->animSpeedC >= *(f32 *)(q->configRow + 0x4)) {
         return 3;
     }
@@ -919,7 +919,7 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
     *(s16 *)((char *)p2 + 0x278) = 0;
     q->unk404 = lbl_803E82E8;
     {
-        f32 ph = (((BaddieState *)p2)->unk298 - lbl_803E8308) / lbl_803E82FC;
+        f32 ph = (((BaddieState *)p2)->inputMagnitude - lbl_803E8308) / lbl_803E82FC;
         f32 a = q->unk404 - lbl_803E833C;
         f32 t = (ph < lbl_803E8304) ? lbl_803E8304 : ((ph > lbl_803E8338) ? lbl_803E8338 : ph);
         q->unk408 = a * (t * q->unk840);
@@ -1208,7 +1208,7 @@ void DR_EarthWarrior_init(int obj, int p2)
     ((DREarthWarriorState *)inner)->unk14F4 = -1;
     (*(void (*)(int, int, int, int))(*(int *)(*gPlayerInterface + 0x4)))(obj, inner, 4, 1);
     *(int *)inner |= 0x4000;
-    ((EarthWarriorState *)inner)->baddie.unk2A4 = lbl_803E8384;
+    ((EarthWarriorState *)inner)->baddie.gravity = lbl_803E8384;
     pathState = (u8 *)&((EarthWarriorState *)inner)->baddie + 4;
     (*gPathControlInterface)->init(pathState, 0, 0x48683, 1);
     (*gPathControlInterface)->setup(pathState, 4, base + 0xc, base + 0x3c, &stk);

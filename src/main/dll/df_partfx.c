@@ -373,7 +373,7 @@ void player_render2(s16* obj, int* state, f32 f1, f32 f2)
 
 void player_modelMtxFn(f32* mtx, int* state, f32 f1, f32 f2)
 {
-    f32 cur = ((BaddieState *)state)->unk2AC;
+    f32 cur = ((BaddieState *)state)->speedScale;
     f32 new_ = f2 * f1 + cur;
     if (new_ > lbl_803E0588) {
         new_ = lbl_803E0588;
@@ -384,7 +384,7 @@ void player_modelMtxFn(f32* mtx, int* state, f32 f1, f32 f2)
             *(f32*)((char*)mtx + 12) = *(f32*)((char*)state + 756) * delta + *(f32*)((char*)mtx + 12);
             *(f32*)((char*)mtx + 16) = *(f32*)((char*)state + 760) * delta + *(f32*)((char*)mtx + 16);
             *(f32*)((char*)mtx + 20) = ((BaddieState *)state)->pathStep * delta + *(f32*)((char*)mtx + 20);
-            ((BaddieState *)state)->unk2AC = new_;
+            ((BaddieState *)state)->speedScale = new_;
         }
     }
 }
@@ -495,21 +495,21 @@ void player_followCurve(int* obj, int* state, f32 cx, f32 cz, f32 t, int p5)
         dx = dx / q;
         dz = dz / q;
     }
-    ((BaddieState *)state)->unk290 = dx;
-    ((BaddieState *)state)->unk28C = -dz;
-    ((BaddieState *)state)->unk290 = ((BaddieState *)state)->unk290 * t;
-    ((BaddieState *)state)->unk28C = ((BaddieState *)state)->unk28C * t;
-    if (((BaddieState *)state)->unk290 > lbl_803E0578) {
-        ((BaddieState *)state)->unk290 = lbl_803E0578;
+    ((BaddieState *)state)->moveInputX = dx;
+    ((BaddieState *)state)->moveInputZ = -dz;
+    ((BaddieState *)state)->moveInputX = ((BaddieState *)state)->moveInputX * t;
+    ((BaddieState *)state)->moveInputZ = ((BaddieState *)state)->moveInputZ * t;
+    if (((BaddieState *)state)->moveInputX > lbl_803E0578) {
+        ((BaddieState *)state)->moveInputX = lbl_803E0578;
     }
-    if (((BaddieState *)state)->unk290 < lbl_803E057C) {
-        ((BaddieState *)state)->unk290 = lbl_803E057C;
+    if (((BaddieState *)state)->moveInputX < lbl_803E057C) {
+        ((BaddieState *)state)->moveInputX = lbl_803E057C;
     }
-    if (((BaddieState *)state)->unk28C > lbl_803E0578) {
-        ((BaddieState *)state)->unk28C = lbl_803E0578;
+    if (((BaddieState *)state)->moveInputZ > lbl_803E0578) {
+        ((BaddieState *)state)->moveInputZ = lbl_803E0578;
     }
-    if (((BaddieState *)state)->unk28C < lbl_803E057C) {
-        ((BaddieState *)state)->unk28C = lbl_803E057C;
+    if (((BaddieState *)state)->moveInputZ < lbl_803E057C) {
+        ((BaddieState *)state)->moveInputZ = lbl_803E057C;
     }
 }
 #pragma opt_common_subs reset
@@ -532,9 +532,9 @@ void dll_0F_func13(s16* obj, int* state, int angle, f32 t, f32 scale)
     *(s8*)((char*)state + 0x34c) |= 1;
     if ((s8)lbl_803DD434 == 0) {
         ang = (lbl_803E05A4 * (f32)angle) / lbl_803E05A8;
-        vx = scale * (((BaddieState *)state)->unk298 * -mathSinf(ang));
-        vz = scale * (((BaddieState *)state)->unk298 * -mathCosf(ang));
-        if (((BaddieState *)state)->unk298 < lbl_803E05AC) {
+        vx = scale * (((BaddieState *)state)->inputMagnitude * -mathSinf(ang));
+        vz = scale * (((BaddieState *)state)->inputMagnitude * -mathCosf(ang));
+        if (((BaddieState *)state)->inputMagnitude < lbl_803E05AC) {
             vx = lbl_803E0570;
             vz = vx;
         }
@@ -722,7 +722,7 @@ void player_applyVelocityStep(int *p, int *ctx, f32 t) {
     if ((flags & 0x200000) == 0) {
         ((GameObject *)p)->anim.velocityY = ((GameObject *)p)->anim.velocityY * lbl_803E058C;
         ((GameObject *)p)->anim.velocityY =
-            -(((BaddieState *)ctx)->unk2A4 * t) + ((GameObject *)p)->anim.velocityY;
+            -(((BaddieState *)ctx)->gravity * t) + ((GameObject *)p)->anim.velocityY;
     }
     b = *(s8 *)((char *)ctx + 0x34c);
     if ((b & 1) == 0 || (b & 4) != 0) {
@@ -755,16 +755,16 @@ extern s16 lbl_803DD44C;
 #pragma peephole off
 void fn_800D8414(int *obj, int *ctx) {
     int diff;
-    *(f32 *)&((BaddieState *)ctx)->trackedObj = ((BaddieState *)ctx)->unk298;
-    ((BaddieState *)ctx)->unk298 =
-        sqrtf(((BaddieState *)ctx)->unk290 * ((BaddieState *)ctx)->unk290 +
-              ((BaddieState *)ctx)->unk28C * ((BaddieState *)ctx)->unk28C);
-    if (((BaddieState *)ctx)->unk298 > lbl_803E0578) {
-        ((BaddieState *)ctx)->unk298 = lbl_803E0578;
+    *(f32 *)&((BaddieState *)ctx)->trackedObj = ((BaddieState *)ctx)->inputMagnitude;
+    ((BaddieState *)ctx)->inputMagnitude =
+        sqrtf(((BaddieState *)ctx)->moveInputX * ((BaddieState *)ctx)->moveInputX +
+              ((BaddieState *)ctx)->moveInputZ * ((BaddieState *)ctx)->moveInputZ);
+    if (((BaddieState *)ctx)->inputMagnitude > lbl_803E0578) {
+        ((BaddieState *)ctx)->inputMagnitude = lbl_803E0578;
     }
-    ((BaddieState *)ctx)->unk298 = ((BaddieState *)ctx)->unk298 / lbl_803E0578;
-    lbl_803DD44C = (s16)getAngle(((BaddieState *)ctx)->unk290, -((BaddieState *)ctx)->unk28C);
-    lbl_803DD44C = (s16)(lbl_803DD44C - ((BaddieState *)ctx)->unk330);
+    ((BaddieState *)ctx)->inputMagnitude = ((BaddieState *)ctx)->inputMagnitude / lbl_803E0578;
+    lbl_803DD44C = (s16)getAngle(((BaddieState *)ctx)->moveInputX, -((BaddieState *)ctx)->moveInputZ);
+    lbl_803DD44C = (s16)(lbl_803DD44C - ((BaddieState *)ctx)->cameraYaw);
     diff = lbl_803DD44C - (u16)((GameObject *)obj)->anim.rotX;
     if (diff > 0x8000) {
         diff -= 0xffff;
@@ -779,7 +779,7 @@ void fn_800D8414(int *obj, int *ctx) {
         *(s16 *)((char *)ctx + 0x334) = ((BaddieState *)ctx)->turnRate;
     }
     diff += 0x10000;
-    if (((BaddieState *)ctx)->unk298 < lbl_803E0594) {
+    if (((BaddieState *)ctx)->inputMagnitude < lbl_803E0594) {
         *(u8 *)((char *)ctx + 0x34b) = 0;
     } else {
         diff -= 0x6000;
@@ -808,24 +808,24 @@ void player_getExtraSize(int *a, int *ctx, f32 px, f32 pz, f32 lo, f32 hi, f32 s
         dz = dz / mag;
     }
     if (*(f32 *)((char *)ctx + 0x2bc) > lo + hi) {
-        ((BaddieState *)ctx)->unk290 = dx * spd;
-        ((BaddieState *)ctx)->unk28C = -dz * spd;
+        ((BaddieState *)ctx)->moveInputX = dx * spd;
+        ((BaddieState *)ctx)->moveInputZ = -dz * spd;
     } else {
         ((BaddieState *)ctx)->animSpeedC = ((BaddieState *)ctx)->animSpeedC * lbl_803E0574;
-        ((BaddieState *)ctx)->unk290 = lbl_803E0570;
-        ((BaddieState *)ctx)->unk28C = lbl_803E0570;
+        ((BaddieState *)ctx)->moveInputX = lbl_803E0570;
+        ((BaddieState *)ctx)->moveInputZ = lbl_803E0570;
     }
-    if (((BaddieState *)ctx)->unk290 > lbl_803E0578) {
-        ((BaddieState *)ctx)->unk290 = lbl_803E0578;
+    if (((BaddieState *)ctx)->moveInputX > lbl_803E0578) {
+        ((BaddieState *)ctx)->moveInputX = lbl_803E0578;
     }
-    if (((BaddieState *)ctx)->unk290 < lbl_803E057C) {
-        ((BaddieState *)ctx)->unk290 = lbl_803E057C;
+    if (((BaddieState *)ctx)->moveInputX < lbl_803E057C) {
+        ((BaddieState *)ctx)->moveInputX = lbl_803E057C;
     }
-    if (((BaddieState *)ctx)->unk28C > lbl_803E0578) {
-        ((BaddieState *)ctx)->unk28C = lbl_803E0578;
+    if (((BaddieState *)ctx)->moveInputZ > lbl_803E0578) {
+        ((BaddieState *)ctx)->moveInputZ = lbl_803E0578;
     }
-    if (((BaddieState *)ctx)->unk28C < lbl_803E057C) {
-        ((BaddieState *)ctx)->unk28C = lbl_803E057C;
+    if (((BaddieState *)ctx)->moveInputZ < lbl_803E057C) {
+        ((BaddieState *)ctx)->moveInputZ = lbl_803E057C;
     }
 }
 #pragma opt_common_subs reset

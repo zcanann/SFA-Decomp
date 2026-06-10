@@ -64,10 +64,10 @@ typedef struct BaddieState {
     f32 animSpeedA; /* anim blend speed pair */
     f32 animSpeedB;
     u8 unk288[4];
-    f32 unk28C;
-    f32 unk290;
+    f32 moveInputZ;
+    f32 moveInputX;
     f32 animSpeedC; /* third of the animSpeed family - stored in lockstep with animSpeedB (z = K; animSpeedC = z; animSpeedB = z), scaled with animSpeedA and obj+0x28 */
-    f32 unk298;
+    f32 inputMagnitude;
     void *trackedObj; /* current target/player object (5-family census: lwz 668) */
     /* 0x2A0-0x2A7 is a PER-FAMILY UNION (lead-arbitrated): scarab and
      * mediumbasket targets store f32 here (stfs f0,672(rN) at 4+ sites
@@ -78,9 +78,9 @@ typedef struct BaddieState {
      * these offsets -- do NOT launder through these names there (a u16
      * index read through "moveSpeed" would be semantically false). */
     f32 moveSpeed; /* per-mode movement speed */
-    f32 unk2A4;
+    f32 gravity;
     f32 unk2A8; /* mediumbasket whirlpool block 0x2A8..0x33B */
-    f32 unk2AC;
+    f32 speedScale;
     u16 hitCounter; /* hit/impact counter (lhz-only reads in all families; sth stores) */
     u8 pad2B2[0x2B8 - 0x2B2];
     f32 velSmoothTime; /* first-order velocity smoothing divisor: vel += t * (target - vel) / velSmoothTime */
@@ -111,7 +111,7 @@ typedef struct BaddieState {
      * evidence) overlap them; those families keep RAW spellings here. */
     u8 unk323[0x32E - 0x323];
     s16 unk32E; /* compared > 0x78 */
-    s16 unk330;
+    s16 cameraYaw;
     u8 unk332[4];
     s16 turnRate; /* s16 angle units/sec: *yaw += k * (turnRate * timeDelta / speed) */
     u8 unk338[2];
@@ -120,7 +120,7 @@ typedef struct BaddieState {
     u8 unk33C[0x346 - 0x33C]; /* incl. 0x340: ptr in smallbasket, u32-tested in magicPlant - thin/conflicting, left raw */
     u8 moveDone; /* set when the current move completes; SeqFns chain the next mode off it */
     u8 unk347[2];
-    u8 unk349; /* cleared with death/reset */
+    u8 hasTarget; /* cleared with death/reset */
     u8 unk34A[3];
     u8 unk34D; /* 0/1/3 */
     u8 unk34E[6];

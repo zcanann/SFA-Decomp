@@ -634,7 +634,7 @@ void fn_80152A94(int obj, int p)
   extern f32 lbl_803E2860;
   f32 fz;
 
-  ((BaddieState *)p)->unk2AC = lbl_803E2850;
+  ((BaddieState *)p)->speedScale = lbl_803E2850;
   *(u32 *)&((BaddieState *)p)->unk2E4 = 41;
   *(u32 *)&((BaddieState *)p)->unk2E4 |= 0x7000;
   *(u32 *)&((BaddieState *)p)->unk2E4 |= 0x20000;
@@ -893,7 +893,7 @@ extern f32 lbl_803E280C;
 void fn_801522E0(int* obj, u8* state) {
     int* sub = *(int**)&((GameObject *)obj)->anim.placementData;
     f32 fz;
-    ((BaddieState *)state)->unk2AC = lbl_803E27F8;
+    ((BaddieState *)state)->speedScale = lbl_803E27F8;
     ((BaddieState *)state)->unk2A8 = lbl_803E27FC;
     ((BaddieState *)state)->unk2E4 = 1;
     ((BaddieState *)state)->unk2E4 |= 0xC80;

@@ -159,11 +159,11 @@ int dll_19_func0F(int obj, char *state, char *st, int p4, int p5, s16 p6)
 
     *(int *)&((BaddieState *)st)->unk318 = 0;
     *(int *)&((BaddieState *)st)->unk31C = 0;
-    ((BaddieState *)st)->unk330 = 0;
+    ((BaddieState *)st)->cameraYaw = 0;
     {
         f32 rest = lbl_803E1C2C;
-        ((BaddieState *)st)->unk290 = rest;
-        ((BaddieState *)st)->unk28C = rest;
+        ((BaddieState *)st)->moveInputX = rest;
+        ((BaddieState *)st)->moveInputZ = rest;
     }
     if ((s8)*(u8 *)(state + 0x56) != 1) {
         *(f32 *)(state + 0x40) = ((GameObject *)obj)->anim.localPosX;
@@ -227,8 +227,8 @@ int dll_19_func0F(int obj, char *state, char *st, int p4, int p5, s16 p6)
         } else {
             nx = nx / total;
             nz = nz / total;
-            ((BaddieState *)st)->unk290 = -nx * step;
-            ((BaddieState *)st)->unk28C = nz * step;
+            ((BaddieState *)st)->moveInputX = -nx * step;
+            ((BaddieState *)st)->moveInputZ = nz * step;
             ((GameObject *)obj)->anim.localPosX = dist * nx + *(f32 *)(state + 0x40);
             ((GameObject *)obj)->anim.localPosZ = dist * nz + *(f32 *)(state + 0x48);
             td = timeDelta;

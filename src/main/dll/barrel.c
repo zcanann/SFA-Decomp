@@ -444,7 +444,7 @@ void grimble_update(int obj)
               obj, state, (f32)((GroundBaddieState *)state)->aggroRange, 0x8000);
           if (target != NULL) {
             ((GroundBaddieState *)state)->baddie.targetObj = target;
-            ((GroundBaddieState *)state)->baddie.unk349 = 0;
+            ((GroundBaddieState *)state)->baddie.hasTarget = 0;
           }
         }
       }

@@ -1222,7 +1222,7 @@ int dbstealerworm_stateHandlerA06(int obj, int p2)
     bs->animSpeedA = fz;
     *(int *)&bs->targetObj = 0;
     bs->physicsActive = 1;
-    bs->unk349 = 0;
+    bs->hasTarget = 0;
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x8);
     ObjHits_DisableObject(obj);
     ObjGroup_RemoveObject(obj, 3);
@@ -1422,7 +1422,7 @@ int dbstealerworm_stateHandlerA01(int obj, int p)
     ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E62A8, 0);
     *(u32 *)&bs->targetObj = 0;
     bs->physicsActive = 0;
-    bs->unk349 = 0;
+    bs->hasTarget = 0;
     sub->targetState = 0;
     sub->configFlags |= ((DbstealerwormPlacement *)p4c)->unk2B;
     if (*(void **)&sub_40c->linkedObj != NULL) {
@@ -2657,7 +2657,7 @@ void fn_80203144(int obj, int p2, int p3)
     if (near != 0 && (st->configFlags & 2) == 0) {
         (**(void (**)(int, int, int, int, int, int, int, int, int))((char *)*gBaddieControlInterface + 0x28))(obj, p3, p2 + 0x35c, st->gameBitB, 0, 0, 0, 8, -1);
         *(int *)&((BaddieState *)p3)->targetObj = near;
-        ((BaddieState *)p3)->unk349 = 0;
+        ((BaddieState *)p3)->hasTarget = 0;
         ObjGroup_AddObject(obj, 3);
         *(u16 *)&st->targetState = 1;
     } else {

@@ -1333,7 +1333,7 @@ int mediumbasket_stateHandlerB02(int obj, int state)
         ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 0xd);
         *(int *)&((GroundBaddieState *)state)->baddie.targetObj = 0;
         ((GroundBaddieState *)state)->baddie.physicsActive = 0;
-        ((GroundBaddieState *)state)->baddie.unk349 = 0;
+        ((GroundBaddieState *)state)->baddie.hasTarget = 0;
         ObjHits_DisableObject(obj);
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     } else if ((s8)((GroundBaddieState *)state)->baddie.moveDone != 0) {
@@ -1668,7 +1668,7 @@ int mediumbasket_updateHideResetState(int obj, int state)
         ObjAnim_SetCurrentMove(obj, 8, lbl_803E2D14, 0);
         *(int *)&((GroundBaddieState *)state)->baddie.targetObj = 0;
         ((GroundBaddieState *)state)->baddie.physicsActive = 0;
-        ((GroundBaddieState *)state)->baddie.unk349 = 0;
+        ((GroundBaddieState *)state)->baddie.hasTarget = 0;
         sub->targetState = 0;
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     }
@@ -1703,8 +1703,8 @@ int mediumbasket_stateHandlerB06(int obj, int state)
     }
     route = (int)sub->route35C;
     neutralBlend = lbl_803E2D14;
-    ((GroundBaddieState *)state)->baddie.unk290 = neutralBlend;
-    ((GroundBaddieState *)state)->baddie.unk28C = neutralBlend;
+    ((GroundBaddieState *)state)->baddie.moveInputX = neutralBlend;
+    ((GroundBaddieState *)state)->baddie.moveInputZ = neutralBlend;
     memcpy((void *)route, (void *)&((GameObject *)obj)->anim.localPosX, 0xc);
     memcpy((void *)(sub->route35C + 0xc), (void *)(*(int *)&((GroundBaddieState *)state)->baddie.targetObj + 0xc), 0xc);
     voxmaps_updateRoutePath((void *)route, (void *)(sub->route35C + 0x28));
@@ -2040,7 +2040,7 @@ void dll_CA_hitDetect(int obj)
 
 void mediumbasket_initWhirlpoolState(int* obj, GroundBaddieState *state) {
     f32 fz;
-    state->baddie.unk2AC = lbl_803E2CE8;
+    state->baddie.speedScale = lbl_803E2CE8;
     *(char *)&state->baddie.inWhirlpoolGroup = (int)state->baddie.unk2A8;
     state->baddie.unk2A8 = lbl_803E2CEC;
     state->baddie.unk2E4 = 0x42001;

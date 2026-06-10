@@ -314,8 +314,8 @@ int DIMSnowHorn1_stateHandler08(int obj, int state)
         if (inner->unkA88 != 0 &&
             ((DIMSnowHorn1State *)state)->baddie.moveSpeed > lbl_803E8234) {
             if (*(int *)&((DIMSnowHorn1State *)state)->baddie.unk31C != 0 ||
-                lbl_803E8234 != ((DIMSnowHorn1State *)state)->baddie.unk290 ||
-                lbl_803E8234 != ((DIMSnowHorn1State *)state)->baddie.unk28C) {
+                lbl_803E8234 != ((DIMSnowHorn1State *)state)->baddie.moveInputX ||
+                lbl_803E8234 != ((DIMSnowHorn1State *)state)->baddie.moveInputZ) {
                 ((DIMSnowHorn1State *)state)->baddie.moveSpeed = -((DIMSnowHorn1State *)state)->baddie.moveSpeed;
             }
         }
@@ -323,8 +323,8 @@ int DIMSnowHorn1_stateHandler08(int obj, int state)
     case 0x205:
         if (inner->unkA88 != 0) {
             if (*(int *)&((DIMSnowHorn1State *)state)->baddie.unk31C != 0 ||
-                lbl_803E8234 != ((DIMSnowHorn1State *)state)->baddie.unk290 ||
-                lbl_803E8234 != ((DIMSnowHorn1State *)state)->baddie.unk28C) {
+                lbl_803E8234 != ((DIMSnowHorn1State *)state)->baddie.moveInputX ||
+                lbl_803E8234 != ((DIMSnowHorn1State *)state)->baddie.moveInputZ) {
                 ObjAnim_SetCurrentMove(obj, 0x207, lbl_803E8234, 0);
                 ((DIMSnowHorn1State *)state)->baddie.moveSpeed = lbl_803E8280;
             }
@@ -1069,17 +1069,17 @@ void fn_802BB4B4(int obj, int a, int slot)
             ((MapEventInterface *)*(int *)gMapEventInterface)
                 ->finishCurrentEvent((MapEventInterface *)*(int *)gMapEventInterface);
         }
-        state->baddie.unk290 = (f32)(s8)padGetStickX(0);
-        state->baddie.unk28C = (f32)(s8)padGetStickY(0);
+        state->baddie.moveInputX = (f32)(s8)padGetStickX(0);
+        state->baddie.moveInputZ = (f32)(s8)padGetStickY(0);
         *(u32 *)&state->baddie.unk31C = getButtonsJustPressed(0);
         *(u32 *)&state->baddie.unk318 = getButtonsHeld(0);
-        state->baddie.unk330 = *(s16 *)viewSlot;
+        state->baddie.cameraYaw = *(s16 *)viewSlot;
     } else {
-        state->baddie.unk290 = lbl_803E8234;
-        state->baddie.unk28C = lbl_803E8234;
+        state->baddie.moveInputX = lbl_803E8234;
+        state->baddie.moveInputZ = lbl_803E8234;
         *(u32 *)&state->baddie.unk31C = 0;
         *(u32 *)&state->baddie.unk318 = 0;
-        *(u16 *)&state->baddie.unk330 = 0;
+        *(u16 *)&state->baddie.cameraYaw = 0;
     }
 
     *(u32 *)state |= 0x00400000;
@@ -1336,7 +1336,7 @@ void DIMSnowHorn1_init(int obj, int p2, int p3)
         ((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)->trackContactMask = 9;
     }
     (*(void (*)(int, int, int, int))(*(int *)(*gPlayerInterface + 0x4)))(obj, (int)inner, 0xc, 1);
-    inner->baddie.unk2A4 = lbl_803E82B8;
+    inner->baddie.gravity = lbl_803E82B8;
     pathState = (u8 *)&inner->baddie + 4;
     pathState[0x25b] = 0;
     switch (inner->unkA8C) {

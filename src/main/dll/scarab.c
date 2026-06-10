@@ -835,7 +835,7 @@ int fn_8015DF20(int obj, GroundBaddieState *p)
     (*(void (**)(int, u8 *, int))(*(int *)gPlayerInterface + 0x14))(obj, (u8 *)p, 6);
     *(int *)&p->baddie.targetObj = 0;
     *(s8 *)&p->baddie.physicsActive = 0;
-    *(s8 *)&p->baddie.unk349 = 0;
+    *(s8 *)&p->baddie.hasTarget = 0;
     ObjHits_DisableObject(obj);
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
   } else if (*(char *)&p->baddie.moveDone != '\0') {
@@ -917,7 +917,7 @@ int fn_8015E798(int obj, GroundBaddieState *p)
     ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2DC8, 0);
     *(int *)&p->baddie.targetObj = 0;
     *(s8 *)&p->baddie.physicsActive = 0;
-    *(s8 *)&p->baddie.unk349 = 0;
+    *(s8 *)&p->baddie.hasTarget = 0;
     sub->targetState = 0;
     if ((hit[9] & 2) == 0) {
       *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
@@ -1696,8 +1696,8 @@ int fn_801601C4(int obj, GroundBaddieState *p)
     (*(void (**)(int, u8 *, int))(*(int *)gPlayerInterface + 0x14))(obj, (u8 *)p, 1);
     wp = (char *)sub->route35C;
     z = lbl_803E2E68;
-    p->baddie.unk290 = z;
-    p->baddie.unk28C = z;
+    p->baddie.moveInputX = z;
+    p->baddie.moveInputZ = z;
     memcpy(wp, (void *)&((GameObject *)obj)->anim.localPosX, 12);
     memcpy((void *)(sub->route35C + 0xc), (void *)(*(int *)&p->baddie.targetObj + 0xc), 12);
     voxmaps_updateRoutePath(wp, (char *)(sub->route35C + 0x28));
@@ -1731,7 +1731,7 @@ int fn_8016043C(int obj, GroundBaddieState *p)
     (*(void (**)(int, u8 *, int))(*(int *)gPlayerInterface + 0x14))(obj, (u8 *)p, 3);
     *(int *)&p->baddie.targetObj = 0;
     *(s8 *)&p->baddie.physicsActive = 0;
-    *(s8 *)&p->baddie.unk349 = 0;
+    *(s8 *)&p->baddie.hasTarget = 0;
     (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
   } else {
@@ -1763,7 +1763,7 @@ void fn_801606F0(int obj, void *p2, int sub, GroundBaddieState *p)
   if ((*(int (**)(int, u8 *, f32, int))(*(int *)gBaddieControlInterface + 0x44))(
           obj, (u8 *)p, (f32)(u32)*(u16 *)(sub + 0x3fe), 1) != 0) {
     *(int *)&p->baddie.targetObj = *(int *)(sub + 0x3e0);
-    *(s8 *)&p->baddie.unk349 = 0;
+    *(s8 *)&p->baddie.hasTarget = 0;
     if (*(char *)(setup + 0x2e) != -1) {
       if (p2 != NULL) {
         (*gObjectTriggerInterface)->yield((ObjSeqState *)p2, *(s16 *)(setup + 0x24));
@@ -2835,7 +2835,7 @@ int grimble_stateHandlerB04(int* obj, GroundBaddieState *state)
         ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8 *)state, 8);
         *(int *)&state->baddie.targetObj = 0;
         state->baddie.physicsActive = 0;
-        state->baddie.unk349 = 0;
+        state->baddie.hasTarget = 0;
         ObjHits_DisableObject((int)obj);
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     }

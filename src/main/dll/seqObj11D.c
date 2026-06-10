@@ -313,8 +313,8 @@ void fn_801511E8(int obj, u8 *state)
     u32 idx;
 
     entry = *(u8 **)(state[0x33b] * 40 + lbl_8031F16C + 12);
-    if ((f32)*(u16 *)(state + 0x2a4) > lbl_803E27A4 * ((GroundBaddieState *)state)->baddie.unk2AC) {
-        if ((f32)*(u16 *)(state + 0x2a4) > lbl_803E27A8 * ((GroundBaddieState *)state)->baddie.unk2AC) {
+    if ((f32)*(u16 *)(state + 0x2a4) > lbl_803E27A4 * ((GroundBaddieState *)state)->baddie.speedScale) {
+        if ((f32)*(u16 *)(state + 0x2a4) > lbl_803E27A8 * ((GroundBaddieState *)state)->baddie.speedScale) {
             state[0x33a] = (u8)(entry[8] + 2);
         } else {
             state[0x33a] = (u8)(entry[8] + 3);
@@ -377,7 +377,7 @@ void fn_801513AC(int obj, u8 *state)
             }
         }
     }
-    if ((f32)*(u16 *)(state + 0x2a4) < lbl_803E27A8 * ((GroundBaddieState *)state)->baddie.unk2AC) {
+    if ((f32)*(u16 *)(state + 0x2a4) < lbl_803E27A8 * ((GroundBaddieState *)state)->baddie.speedScale) {
         state[0x33a] = (u8)(entry[8] + 1);
     }
     while (*(u32 *)(entry + (idx = state[0x33a]) * 16 + 4) != 0
@@ -524,7 +524,7 @@ void fn_80151954(int obj, u8 *state)
         if (*(s8 *)(setup + 0x27) != 0) {
             *(s16 *)(state + 0x2b6) = 51;
         }
-        ((GroundBaddieState *)state)->baddie.unk2AC = lbl_803E27C0;
+        ((GroundBaddieState *)state)->baddie.speedScale = lbl_803E27C0;
         *(s16 *)&((GroundBaddieState *)state)->baddie.hitCounter = 40;
         state[0x33b] = 0;
         break;
@@ -532,7 +532,7 @@ void fn_80151954(int obj, u8 *state)
         if (*(s8 *)(setup + 0x27) != 0) {
             *(s16 *)(state + 0x2b6) = 51;
         }
-        ((GroundBaddieState *)state)->baddie.unk2AC = lbl_803E27C0;
+        ((GroundBaddieState *)state)->baddie.speedScale = lbl_803E27C0;
         *(s16 *)&((GroundBaddieState *)state)->baddie.hitCounter = 40;
         state[0x33b] = 1;
         break;
@@ -540,7 +540,7 @@ void fn_80151954(int obj, u8 *state)
         if (*(s8 *)(setup + 0x27) != 0) {
             *(s16 *)(state + 0x2b6) = 1529;
         }
-        ((GroundBaddieState *)state)->baddie.unk2AC = lbl_803E27C0;
+        ((GroundBaddieState *)state)->baddie.speedScale = lbl_803E27C0;
         *(s16 *)&((GroundBaddieState *)state)->baddie.hitCounter = 50;
         state[0x33b] = 2;
         break;
@@ -548,7 +548,7 @@ void fn_80151954(int obj, u8 *state)
         if (*(s8 *)(setup + 0x27) != 0) {
             *(s16 *)(state + 0x2b6) = 1530;
         }
-        ((GroundBaddieState *)state)->baddie.unk2AC = lbl_803E27C4;
+        ((GroundBaddieState *)state)->baddie.speedScale = lbl_803E27C4;
         *(s16 *)&((GroundBaddieState *)state)->baddie.hitCounter = 50;
         state[0x33b] = 3;
         break;
@@ -556,7 +556,7 @@ void fn_80151954(int obj, u8 *state)
         if (*(s8 *)(setup + 0x27) != 0) {
             *(s16 *)(state + 0x2b6) = 1534;
         }
-        ((GroundBaddieState *)state)->baddie.unk2AC = lbl_803E27C0;
+        ((GroundBaddieState *)state)->baddie.speedScale = lbl_803E27C0;
         *(s16 *)&((GroundBaddieState *)state)->baddie.hitCounter = 60;
         state[0x33b] = 4;
         break;
@@ -564,7 +564,7 @@ void fn_80151954(int obj, u8 *state)
         if (*(s8 *)(setup + 0x27) != 0) {
             *(s16 *)(state + 0x2b6) = 51;
         }
-        ((GroundBaddieState *)state)->baddie.unk2AC = lbl_803E27C0;
+        ((GroundBaddieState *)state)->baddie.speedScale = lbl_803E27C0;
         *(s16 *)&((GroundBaddieState *)state)->baddie.hitCounter = 1;
         state[0x33b] = 1;
         break;
@@ -572,7 +572,7 @@ void fn_80151954(int obj, u8 *state)
         if (*(s8 *)(setup + 0x27) != 0) {
             *(s16 *)(state + 0x2b6) = 1957;
         }
-        ((GroundBaddieState *)state)->baddie.unk2AC = lbl_803E27C0;
+        ((GroundBaddieState *)state)->baddie.speedScale = lbl_803E27C0;
         *(s16 *)&((GroundBaddieState *)state)->baddie.hitCounter = 160;
         state[0x33b] = 5;
         z = 0;

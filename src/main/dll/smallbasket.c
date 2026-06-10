@@ -666,7 +666,7 @@ void smallbasket_playReactionEffects(int *obj, int *st) {
 /* Initializes the tail-model variant state. */
 void smallbasket_initTailModelState(int *obj, int *st) {
     u8 *tab;
-    ((BaddieState *)st)->unk2AC = lbl_803E2C7C;
+    ((BaddieState *)st)->speedScale = lbl_803E2C7C;
     *(u32 *)&((BaddieState *)st)->unk2E4 = 0x405009;
     ((BaddieState *)st)->unk304 = lbl_803E2C80;
     *((u8*)st + 0x320) = 0;
@@ -707,7 +707,7 @@ void smallbasket_initScaledVariantState(int *obj, int *st) {
         ratio = lbl_803E2B38;
     }
     ratio = ratio / lbl_803E2B38;
-    ((BaddieState *)st)->unk2AC = lbl_803E2B64;
+    ((BaddieState *)st)->speedScale = lbl_803E2B64;
     *(u32 *)&((BaddieState *)st)->unk2E4 = 0x8b;
     v = *(u32 *)&((BaddieState *)st)->unk2E4;
     *(u32 *)&((BaddieState *)st)->unk2E4 = v | 0x20;
@@ -768,7 +768,7 @@ void smallbasket_handleHitStateEvent(int obj, int *st, int p3, int cmd) {
 
 /* Initializes the state used by the alternate smallbasket variant. */
 void smallbasket_initVariantState(int *obj, int *st) {
-    ((BaddieState *)st)->unk2AC = lbl_803E2CC0;
+    ((BaddieState *)st)->speedScale = lbl_803E2CC0;
     *((u8*)st + 0x33b) = ((BaddieState *)st)->unk2A8;
     ((BaddieState *)st)->unk2A8 = lbl_803E2CC4;
     *(u32 *)&((BaddieState *)st)->unk2E4 = 0x42003;
@@ -878,7 +878,7 @@ void smallbasket_initModelVariantState(s16* obj, u8* state) {
     *(u32 *)&((BaddieState *)state)->unk2E4 |= 0x40001040;
     switch ((s16)obj[0x46/2]) {
     case 0x6a3:
-        ((BaddieState *)state)->unk2AC = lbl_803E2BE4;
+        ((BaddieState *)state)->speedScale = lbl_803E2BE4;
         ((BaddieState *)state)->unk2A8 = lbl_803E2BB8;
         ((BaddieState *)state)->hitCounter = 0x1e;
         state[0x33b] = 0;
@@ -891,7 +891,7 @@ void smallbasket_initModelVariantState(s16* obj, u8* state) {
         *(u32 *)&((BaddieState *)state)->unk2E4 |= 0x400;
         break;
     case 0x6a2:
-        ((BaddieState *)state)->unk2AC = lbl_803E2BF0;
+        ((BaddieState *)state)->speedScale = lbl_803E2BF0;
         ((BaddieState *)state)->unk2A8 = lbl_803E2BB8;
         ((BaddieState *)state)->hitCounter = 0x32;
         state[0x33b] = 1;
@@ -904,7 +904,7 @@ void smallbasket_initModelVariantState(s16* obj, u8* state) {
         *(u32 *)&((BaddieState *)state)->unk2E4 |= 0xc00;
         break;
     case 0x6a4:
-        ((BaddieState *)state)->unk2AC = lbl_803E2BF4;
+        ((BaddieState *)state)->speedScale = lbl_803E2BF4;
         ((BaddieState *)state)->unk2A8 = lbl_803E2BF8;
         ((BaddieState *)state)->hitCounter = 0xf;
         state[0x33b] = 2;
@@ -1151,7 +1151,7 @@ void fn_80157558(s16* obj, u8* state)
                     && ((GameObject *)obj)->anim.currentMove != 4
                     && ((GameObject *)obj)->anim.currentMove != 6)) {
                 if (mag < 1000) {
-                    if (((BaddieState *)state)->unk2AC < lbl_803E2B60) {
+                    if (((BaddieState *)state)->speedScale < lbl_803E2B60) {
                         fn_8014D08C((int*)obj, (int*)state, 2, lbl_803E2B44, 0, 0);
                     } else {
                         fn_8014D08C((int*)obj, (int*)state, 6, lbl_803DBCE4, 0, 0);
@@ -1557,7 +1557,7 @@ void fn_80157004(s16* obj, u8* state)
             }
         }
         if (((BaddieState *)state)->trackedObj != NULL && *(f32*)(*(int *)&((BaddieState *)state)->trackedObj + 0xa8) > lbl_803E2B50) {
-            ((BaddieState *)state)->unk2AC = lbl_803DBCE8;
+            ((BaddieState *)state)->speedScale = lbl_803DBCE8;
         }
         if ((((BaddieState *)state)->controlFlags & 0x40000000) != 0 || noHit == 0
             || (mag < 3000 && noHit != 0 && ((GameObject *)obj)->anim.currentMove != 0)) {

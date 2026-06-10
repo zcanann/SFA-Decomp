@@ -493,7 +493,7 @@ void fn_801534D8(int obj, int state)
     f32 lblB0;
     f32 lblD0;
 
-    ((BaddieState *)state)->unk2AC = lbl_803E28DC;
+    ((BaddieState *)state)->speedScale = lbl_803E28DC;
     *(u32 *)&((BaddieState *)state)->unk2E4 = 0x1009;
     ((BaddieState *)state)->unk308 = lbl_803E28E0;
     ((BaddieState *)state)->unk300 = lbl_803E28E4;
@@ -598,7 +598,7 @@ void fn_80152EC0(int obj, int state)
     f32 a, b;
 
     zero = lbl_803E286C;
-    ((BaddieState *)state)->unk2AC = zero;
+    ((BaddieState *)state)->speedScale = zero;
     ((BaddieState *)state)->unk2E4 = 1;
     ((BaddieState *)state)->unk308 = lbl_803E28A0;
     ((BaddieState *)state)->unk300 = lbl_803E28A4;
@@ -675,7 +675,7 @@ void fn_80153C90(int unused, int p2)
 {
     f32 ten;
     f32 oc;
-    ((BaddieState *)p2)->unk2AC = lbl_803E2924;
+    ((BaddieState *)p2)->speedScale = lbl_803E2924;
     ((BaddieState *)p2)->unk2E4 = 1;
     ((BaddieState *)p2)->unk308 = lbl_803E28F4;
     ((BaddieState *)p2)->unk300 = lbl_803E2928;
