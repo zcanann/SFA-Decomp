@@ -207,14 +207,15 @@ void FUN_801784ac(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 #pragma peephole on
 void FUN_80178560(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,int param_11,undefined4 param_12,
+                 undefined4 param_9,undefined4 param_10,ObjAnimUpdateState *animUpdate,
+                 undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
 {
-  byte bVar1;
+  byte eventId;
   short sVar2;
   float fVar3;
   uint uVar4;
-  int iVar5;
+  int eventIndex;
   int iVar6;
   uint uVar7;
   int iVar8;
@@ -242,6 +243,7 @@ void FUN_80178560(undefined8 param_1,undefined8 param_2,double param_3,undefined
   uint local_70 [2];
   undefined4 local_68;
   uint uStack_64;
+  u8 *animUpdateBytes;
   float local_28;
   float fStack_24;
   float local_18;
@@ -255,12 +257,13 @@ void FUN_80178560(undefined8 param_1,undefined8 param_2,double param_3,undefined
   fStack_14 = (float)in_ps30_1;
   local_28 = (float)in_f29;
   fStack_24 = (float)in_ps29_1;
+  animUpdateBytes = (u8 *)animUpdate;
   uVar4 = FUN_80286830();
   iVar14 = *(int *)(uVar4 + 0x4c);
   pfVar13 = *(float **)(uVar4 + 0xb8);
   dVar20 = (double)lbl_803E42E0;
-  iVar5 = FUN_80017b00(&local_78,&local_74);
-  *(undefined *)(param_11 + 0x56) = 0;
+  eventIndex = FUN_80017b00(&local_78,&local_74);
+  animUpdate->sequenceEventActive = 0;
   iVar6 = FUN_80017a98();
   dVar16 = (double)(*(float *)(iVar6 + 0xc) - *(float *)(iVar14 + 8));
   fVar3 = *(float *)(iVar6 + 0x14) - *(float *)(iVar14 + 0x10);
@@ -376,9 +379,9 @@ void FUN_80178560(undefined8 param_1,undefined8 param_2,double param_3,undefined
   case 4:
     *(byte *)(uVar4 + 0xaf) = *(byte *)(uVar4 + 0xaf) & 0xf7;
     if (uVar7 != 0) {
-      piVar12 = (int *)(iVar5 + local_78 * 4);
-      iVar5 = local_78;
-      while ((iVar5 < local_74 && (iVar8 == 0))) {
+      piVar12 = (int *)(eventIndex + local_78 * 4);
+      eventIndex = local_78;
+      while ((eventIndex < local_74 && (iVar8 == 0))) {
         unaff_r25 = *piVar12;
         if (*(short *)(unaff_r25 + 0x46) == 0x7c) {
           dVar16 = (double)(*(float *)(unaff_r25 + 0xc) - *(float *)(iVar14 + 8));
@@ -402,21 +405,21 @@ void FUN_80178560(undefined8 param_1,undefined8 param_2,double param_3,undefined
           }
         }
         piVar12 = piVar12 + 1;
-        iVar5 = iVar5 + 1;
+        eventIndex = eventIndex + 1;
       }
       if (iVar8 == 0) {
         if (*(int *)(uVar4 + 0xf8) == 1) {
-          *(byte *)(param_11 + 0x90) = *(byte *)(param_11 + 0x90) | 8;
+          animUpdateBytes[0x90] = animUpdateBytes[0x90] | 8;
         }
       }
       else {
-        iVar5 = ObjMsg_Pop(uVar4,local_70,(uint *)0x0,(uint *)0x0);
-        if (((iVar5 != 0) && ((int)local_70[0] < 10)) && (7 < (int)local_70[0])) {
+        eventIndex = ObjMsg_Pop(uVar4,local_70,(uint *)0x0,(uint *)0x0);
+        if (((eventIndex != 0) && ((int)local_70[0] < 10)) && (7 < (int)local_70[0])) {
           ObjMsg_SendToObject(dVar15,dVar16,param_3,param_4,param_5,param_6,param_7,param_8,unaff_r25,
                        local_70[0],uVar4,0,param_13,param_14,param_15,param_16);
         }
         if ((dVar20 < (double)lbl_803E42E0) && (*(int *)(uVar4 + 0xf8) == 0)) {
-          *(byte *)(param_11 + 0x90) = *(byte *)(param_11 + 0x90) | 0x14;
+          animUpdateBytes[0x90] = animUpdateBytes[0x90] | 0x14;
         }
       }
     }
@@ -444,39 +447,39 @@ void FUN_80178560(undefined8 param_1,undefined8 param_2,double param_3,undefined
   }
   if (*(int *)(uVar4 + 0xf8) == 0) {
     if (iVar8 != 0) {
-      *(byte *)(param_11 + 0x90) = *(byte *)(param_11 + 0x90) | 1;
+      animUpdateBytes[0x90] = animUpdateBytes[0x90] | 1;
     }
   }
   else if (iVar8 == 0) {
-    *(byte *)(param_11 + 0x90) = *(byte *)(param_11 + 0x90) | 2;
+    animUpdateBytes[0x90] = animUpdateBytes[0x90] | 2;
   }
   *(int *)(uVar4 + 0xf8) = iVar8;
   if (((*(short *)(uVar4 + 0x46) == 0x13e) || (*(short *)(uVar4 + 0x46) == 0x151)) &&
      (*(char *)((int)pfVar13 + 0x21) != '\0')) {
-    *(byte *)(param_11 + 0x90) = *(byte *)(param_11 + 0x90) | 1;
+    animUpdateBytes[0x90] = animUpdateBytes[0x90] | 1;
   }
   do {
-    iVar5 = ObjMsg_Pop(uVar4,local_70,(uint *)0x0,(uint *)0x0);
-  } while (iVar5 != 0);
-  iVar5 = 0;
+    eventIndex = ObjMsg_Pop(uVar4,local_70,(uint *)0x0,(uint *)0x0);
+  } while (eventIndex != 0);
+  eventIndex = 0;
   do {
-    if ((int)(uint)*(byte *)(param_11 + 0x8b) <= iVar5) {
+    if ((int)(uint)animUpdate->eventCount <= eventIndex) {
       if (*(int *)(uVar4 + 0xf4) != 0) {
         *(undefined4 *)(uVar4 + 0xf4) = 0;
       }
       FUN_8028687c();
       return;
     }
-    bVar1 = *(byte *)(param_11 + iVar5 + 0x81);
-    if (bVar1 != 0) {
-      if (bVar1 == 3) {
+    eventId = animUpdate->eventIds[eventIndex];
+    if (eventId != 0) {
+      if (eventId == 3) {
 LAB_80179188:
         if (*(ushort *)(pfVar13 + 7) != 0) {
           FUN_80006824(uVar4,*(ushort *)(pfVar13 + 7));
         }
       }
-      else if (bVar1 < 3) {
-        if (bVar1 == 1) {
+      else if (eventId < 3) {
+        if (eventId == 1) {
           puVar10 = FUN_800069a8();
           dVar16 = (double)pfVar13[2];
           dVar15 = (double)*pfVar13;
@@ -538,7 +541,7 @@ LAB_80179188:
           }
           goto LAB_80179188;
         }
-        if (bVar1 != 0) {
+        if (eventId != 0) {
           puVar10 = FUN_800069a8();
           dVar16 = (double)pfVar13[2];
           dVar15 = (double)*pfVar13;
@@ -598,18 +601,18 @@ LAB_80179188:
           }
         }
       }
-      else if (bVar1 == 5) {
+      else if (eventId == 5) {
         if ((*(short *)((int)pfVar13 + 0x1e) != 0) && (uVar7 = FUN_80017690(0xcbb), uVar7 == 0)) {
           FUN_80006824(uVar4,*(ushort *)((int)pfVar13 + 0x1e));
         }
       }
-      else if (((bVar1 < 5) && (*(short *)(pfVar13 + 7) != 0)) &&
+      else if (((eventId < 5) && (*(short *)(pfVar13 + 7) != 0)) &&
               (bVar11 = FUN_800067f8(uVar4,*(short *)(pfVar13 + 7)), bVar11)) {
         FUN_80006810(uVar4,*(short *)(pfVar13 + 7));
       }
-      *(undefined *)(param_11 + iVar5 + 0x81) = 0;
+      animUpdate->eventIds[eventIndex] = 0;
     }
-    iVar5 = iVar5 + 1;
+    eventIndex = eventIndex + 1;
   } while( true );
 }
 #pragma peephole reset
