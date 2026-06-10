@@ -75,6 +75,7 @@ typedef struct WCPushBlockState {
 typedef struct WCPushBlockCloudActionInterface {
     u8 pad0[0x20];
     void (*setRotorAngle)(s16 angle);
+    void (*pad24)(void);
     void (*moveRelative)(f32 x, f32 z);
 } WCPushBlockCloudActionInterface;
 
