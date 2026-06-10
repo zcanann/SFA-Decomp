@@ -78,21 +78,22 @@ void arwarwingbo_update(int obj)
 {
     ArwingBombState *state = ((GameObject *)obj)->extra;
     int arwing = getArwing();
+    f32 zero = lbl_803E7044;
 
     if (*(u16 *)(arwing + 0xb0) & 0x1000) {
         arwarwing_clearActiveBomb(arwing);
         Obj_FreeObject(obj);
         return;
     }
-    if (state->explosionTimer > lbl_803E7044) {
+    if (state->explosionTimer > zero) {
         state->explosionTimer -= timeDelta;
-        if (state->explosionTimer <= lbl_803E7044)
+        if (state->explosionTimer <= zero)
             Obj_FreeObject(obj);
         return;
     }
-    if (state->control.fuseTimer > lbl_803E7044) {
+    if (state->control.fuseTimer > zero) {
         state->control.fuseTimer -= timeDelta;
-        if (state->control.fuseTimer <= lbl_803E7044) {
+        if (state->control.fuseTimer <= zero) {
             state = ((GameObject *)obj)->extra;
             arwarwing_clearActiveBomb(getArwing());
             Sfx_PlayFromObject(obj, SFXbaddie_eba_death);
