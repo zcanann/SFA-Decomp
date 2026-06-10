@@ -153,7 +153,7 @@ void staffactivated_init(int obj, int setup)
         break;
       case 2:
         break;
-      case 6:
+      case 5:
         break;
       }
     }
