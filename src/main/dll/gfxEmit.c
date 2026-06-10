@@ -576,7 +576,7 @@ extern f32 lbl_803E348C;
 
 #pragma scheduling off
 #pragma peephole off
-int collectible_SeqFn(int obj, int unused, u8* data)
+int collectible_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     int* state = ((GameObject *)obj)->extra;
     f32 buf[6];
@@ -597,9 +597,9 @@ int collectible_SeqFn(int obj, int unused, u8* data)
         }
     }
 
-    data[0x56] = 0;
-    for (i = 0; i < (s32)data[0x8b]; i++) {
-        u8 cmd = data[0x81 + i];
+    animUpdate->sequenceEventActive = 0;
+    for (i = 0; i < (s32)animUpdate->eventCount; i++) {
+        u8 cmd = animUpdate->eventIds[i];
         if (cmd == 1) {
             s_val = lbl_803E3484 * mathCosf(lbl_803E3488);
             c_val = lbl_803E3484 * mathSinf(lbl_803E3488);
