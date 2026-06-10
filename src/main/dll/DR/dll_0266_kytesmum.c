@@ -82,10 +82,10 @@ void kytesmum_update(int obj) {
     }
     diff = (s16)((setup->yaw << 8) - (u16)kytesMum->yaw);
     if (diff > 0x8000) {
-        diff -= 0xFFFF;
+        diff = (s16)((diff - 0x10000) + 1);
     }
     if (diff < -0x8000) {
-        diff += 0xFFFF;
+        diff = (s16)((diff + 0x10000) - 1);
     }
     if (diff != 0) {
         fn_80137948(sKytesMumYawDiffMessage);
