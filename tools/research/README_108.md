@@ -51,3 +51,15 @@ expansion, modulo->div+mul-sub rewrites) that move OUR interleave to
 target's — the next session should pick a real banked fn with a division
 (cnthitobjec_init's /3 mulhwu!) and battery the respells against its
 target coloring.
+
+
+## Round-3 scoping result (decisive negative)
+
+A scan of 15 banked rotation fns found ~ZERO magic-div carriers in their
+streams (one variable divw = zero-dose). THE BANKED ROTATION INVENTORY IS
+NOT DIV-DOSE-DRIVEN — the dose mechanism explains E14-class inversions but
+the real fns' rotations are pure within-pool ORDER divergences in dose-free
+functions. The research must attack the order law directly: why does target
+color n_rareware by E1-creation but timer by decl-order when both are
+dose-free? Candidate next probes: graft each specimen's exact web list onto
+the minimal harness and binary-search the construct that flips the law.
