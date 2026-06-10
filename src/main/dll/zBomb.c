@@ -1,3 +1,4 @@
+#include "main/game_object.h"
 #include "main/dll/fruit.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/zBomb.h"
@@ -116,7 +117,7 @@ void dfptargetblock_init(DfpTargetBlockObject *obj,int param_2)
 
   state = (DfpTargetBlockState *)obj->state;
   iVar7 = *ZBomb_GetActiveModel(obj);
-  *(ushort *)((u8 *)obj + 0xb0) = *(ushort *)((u8 *)obj + 0xb0) | 0x4000;
+  ((GameObject *)obj)->objectFlags = ((GameObject *)obj)->objectFlags | 0x4000;
   if (obj->objectType == DFPTARGETBLOCK_HOME_OBJECT_TYPE) {
     lbl_80329B78[0] = (int)obj->x;
     lbl_80329B78[1] = (int)obj->y;

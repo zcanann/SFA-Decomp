@@ -634,7 +634,7 @@ extern f32 lbl_803E298C;
 #pragma scheduling off
 void fn_801544E8(int* obj, u8* state, int p3, int p4) {
     if (p4 == 17 || p4 == 16) return;
-    if (*(f32*)((char*)obj + 152) > lbl_803E29A4) {
+    if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E29A4) {
         *(int*)((char*)state + 744) |= 8;
         Sfx_PlayFromObject(obj, SFXdoor_unlocked);
         Sfx_PlayFromObject(obj, SFXdoor_creak);

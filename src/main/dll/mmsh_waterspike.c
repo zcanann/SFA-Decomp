@@ -1,3 +1,4 @@
+#include "main/game_object.h"
 #include "main/dll/mmsh_waterspike.h"
 
 extern u8 framesThisStep;
@@ -24,7 +25,7 @@ void fn_801BEEA0(s16 *obj, u8 *state)
   s16 turnDelta;
 
   motion = (u8 *)*(int *)(state + 0x40C);
-  heightDelta = *(f32 *)(motion + 0xC) - *(f32 *)((u8 *)obj + 0x10);
+  heightDelta = *(f32 *)(motion + 0xC) - ((GameObject *)obj)->anim.localPosY;
 
   *(s16 *)(motion + 0x14) += 0x400;
   heightDelta = heightDelta + (f32)(int)cos16(*(s16 *)(motion + 0x14)) / lbl_803E4D00;
@@ -32,7 +33,7 @@ void fn_801BEEA0(s16 *obj, u8 *state)
   *(f32 *)(motion + 0x0) = timeDelta * (heightDelta / lbl_803E4D04 - *(f32 *)(motion + 0x8))
                        + *(f32 *)(motion + 0x0);
 
-  *(f32 *)((u8 *)obj + 0x10) = *(f32 *)((u8 *)obj + 0x10) + *(f32 *)(motion + 0x0);
+  ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY + *(f32 *)(motion + 0x0);
 
   {
     f32 pitch = lbl_803E4D08 * *(f32 *)(motion + 0x0);

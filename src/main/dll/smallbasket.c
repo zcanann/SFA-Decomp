@@ -2859,8 +2859,8 @@ void fn_80159284(int* obj, u8* state)
         if (*(u8*)(state + 0x33b) == 0) {
             (*gCameraInterface)->loadTriggeredCamAction(0, 0x6c, 0);
         }
-        if (*(s16*)((char*)obj + 0x46) == 0x6a2 && *(void**)((char*)obj + 0xc8) != NULL) {
-            firepipe_clearLinkedUpdateFlag(*(int*)((char*)obj + 0xc8));
+        if (((GameObject *)obj)->anim.seqId == 0x6a2 && ((GameObject *)obj)->unkC8 != NULL) {
+            firepipe_clearLinkedUpdateFlag(*(int *)&((GameObject *)obj)->unkC8);
         }
         *(u8*)(state + 0x33d) = *(u8*)(state + 0x33d) | 0x10;
     }
@@ -2872,22 +2872,22 @@ void fn_80159284(int* obj, u8* state)
             *(f32*)(state + 0x328) = cap;
             *(u32*)(state + 0x2dc) |= 0x40000000LL;
             *(u8*)(state + 0x33c) = t6[*(u8*)(state + 0x33f)].flagC;
-            *(u8*)((char*)obj + 0xe4) = *(u8*)(state + 0x33c) & 1;
+            ((GameObject *)obj)->unkE4 = *(u8*)(state + 0x33c) & 1;
             *(u8*)(state + 0x33f) = t6[*(u8*)(state + 0x33f)].nextA;
         }
     }
 
     if ((*(u32*)(state + 0x2dc) & 0x40000000) != 0) {
         *(u8*)(state + 0x33d) = *(u8*)(state + 0x33d) & ~0x30;
-        if (*(s16*)((char*)obj + 0x46) == 0x6a2 && *(void**)((char*)obj + 0xc8) != NULL) {
-            firepipe_clearLinkedUpdateFlag(*(int*)((char*)obj + 0xc8));
+        if (((GameObject *)obj)->anim.seqId == 0x6a2 && ((GameObject *)obj)->unkC8 != NULL) {
+            firepipe_clearLinkedUpdateFlag(*(int *)&((GameObject *)obj)->unkC8);
         }
         if (*(u8*)(state + 0x33f) != 0) {
             i = *(u8*)(state + 0x33f) * 0x10;
             fn_8014D08C(obj, (int*)state, *(u8*)((char*)t6 + i + 8), *(f32*)((int)t6 + i), 0,
                         *(int*)((char*)t6 + i + 4) & 0xff);
             *(u8*)(state + 0x33c) = t6[*(u8*)(state + 0x33f)].flagC;
-            *(u8*)((char*)obj + 0xe4) = *(u8*)(state + 0x33c) & 1;
+            ((GameObject *)obj)->unkE4 = *(u8*)(state + 0x33c) & 1;
             *(u8*)(state + 0x33f) = t6[*(u8*)(state + 0x33f)].next9;
         } else {
             i = *(u16*)(state + 0x2a0) * 0xc;
@@ -2913,18 +2913,18 @@ void fn_80159284(int* obj, u8* state)
         }
     }
 
-    ((ObjHitsPriorityState*)*(int*)((char*)obj + 0x54))->hitVolumePriority = 0;
-    ((ObjHitsPriorityState*)*(int*)((char*)obj + 0x54))->hitVolumeId = 0;
+    ((ObjHitsPriorityState*)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumePriority = 0;
+    ((ObjHitsPriorityState*)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumeId = 0;
     j = 1;
     p = t8 + 0xc;
     n = *(u8*)(t8 + 8);
     for (; j <= n; j++) {
-        if (*(s16*)((char*)obj + 0xa0) == *(u8*)(p + 8)) {
-            ((ObjHitsPriorityState*)*(int*)((char*)obj + 0x54))->hitVolumePriority =
+        if (((GameObject *)obj)->anim.currentMove == *(u8*)(p + 8)) {
+            ((ObjHitsPriorityState*)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumePriority =
                 (s8)*(int*)(t8 + j * 0xc + 4);
-            ((ObjHitsPriorityState*)*(int*)((char*)obj + 0x54))->hitVolumeId =
+            ((ObjHitsPriorityState*)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumeId =
                 (s8)*(u8*)(t8 + j * 0xc + 9);
-            if (((ObjHitsPriorityState*)*(int*)((char*)obj + 0x54))->hitVolumePriority == 0x1f) {
+            if (((ObjHitsPriorityState*)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumePriority == 0x1f) {
                 *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) | 0x40;
             } else {
                 *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) & -65;
@@ -3451,8 +3451,8 @@ void fn_80158494(s16* obj, u8* state)
     f32 dv[3];
 
     *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) & ~0x40;
-    if (*(void**)((char*)obj + 0xc8) != NULL) {
-        firepipe_clearLinkedUpdateFlag(*(int*)((char*)obj + 0xc8));
+    if (((GameObject *)obj)->unkC8 != NULL) {
+        firepipe_clearLinkedUpdateFlag(*(int *)&((GameObject *)obj)->unkC8);
     }
 
     if ((*(u32*)(state + 0x2dc) & 0x80000000) != 0) {
@@ -3473,7 +3473,7 @@ void fn_80158494(s16* obj, u8* state)
             *(f32*)(state + 0x328) = cap;
             *(u32*)(state + 0x2dc) |= 0x40000000LL;
             *(u8*)(state + 0x33c) = seq[*(u8*)(state + 0x33f)].flagC;
-            *(u8*)((char*)obj + 0xe4) = *(u8*)(state + 0x33c) & 1;
+            ((GameObject *)obj)->unkE4 = *(u8*)(state + 0x33c) & 1;
             *(u8*)(state + 0x33f) = seq[*(u8*)(state + 0x33f)].nextA;
         }
         if ((*(u32*)(state + 0x2dc) & 0xc0000000) == 0) {
@@ -3489,9 +3489,9 @@ void fn_80158494(s16* obj, u8* state)
                 f32* dp = dv;
                 int rel;
                 u16 oct;
-                dp[0] = *(f32*)((char*)obj + 0x18) - *(f32*)(lbl_803AC4A8[0] + 0x18);
-                dp[1] = *(f32*)((char*)obj + 0x1c) - *(f32*)(lbl_803AC4A8[0] + 0x1c);
-                dp[2] = *(f32*)((char*)obj + 0x20) - *(f32*)(lbl_803AC4A8[0] + 0x20);
+                dp[0] = ((GameObject *)obj)->anim.worldPosX - *(f32*)(lbl_803AC4A8[0] + 0x18);
+                dp[1] = ((GameObject *)obj)->anim.worldPosY - *(f32*)(lbl_803AC4A8[0] + 0x1c);
+                dp[2] = ((GameObject *)obj)->anim.worldPosZ - *(f32*)(lbl_803AC4A8[0] + 0x20);
                 rel = (getAngle(-dp[0], -dp[2]) & 0xffff) - ((int)*(s16*)obj & 0xffffu);
                 if (rel > 0x8000) {
                     rel = rel - 0xffff;
@@ -3507,8 +3507,8 @@ void fn_80158494(s16* obj, u8* state)
                 }
             }
             {
-                f32 dx = *(f32*)(base + 0x68) - *(f32*)((char*)obj + 0xc);
-                f32 dz = *(f32*)(base + 0x70) - *(f32*)((char*)obj + 0x14);
+                f32 dx = *(f32*)(base + 0x68) - ((GameObject *)obj)->anim.localPosX;
+                f32 dz = *(f32*)(base + 0x70) - ((GameObject *)obj)->anim.localPosZ;
                 f32 dist = sqrtf(dx * dx + dz * dz);
                 if (dist > lbl_803E2BA0) {
                     dist = lbl_803E2BA0;
@@ -3552,16 +3552,16 @@ void fn_80158494(s16* obj, u8* state)
                     fn_8014D08C((int*)obj, (int*)state, *(u8*)((char*)seq + i + 8), *(f32*)((int)seq + i), 0,
                                 *(int*)((char*)seq + i + 4) & 0xff);
                     *(u8*)(state + 0x33c) = seq[*(u8*)(state + 0x33f)].flagC;
-                    *(u8*)((char*)obj + 0xe4) = *(u8*)(state + 0x33c) & 1;
+                    ((GameObject *)obj)->unkE4 = *(u8*)(state + 0x33c) & 1;
                     *(u8*)(state + 0x33f) = seq[*(u8*)(state + 0x33f)].next9;
                 } else {
                     f32* dp2 = dv;
                     int rel2;
                     u16 oct2;
                     u8 mv;
-                    dp2[0] = *(f32*)((char*)obj + 0x18) - *(f32*)(base + 0x68);
-                    dp2[1] = *(f32*)((char*)obj + 0x1c) - *(f32*)(base + 0x6c);
-                    dp2[2] = *(f32*)((char*)obj + 0x20) - *(f32*)(base + 0x70);
+                    dp2[0] = ((GameObject *)obj)->anim.worldPosX - *(f32*)(base + 0x68);
+                    dp2[1] = ((GameObject *)obj)->anim.worldPosY - *(f32*)(base + 0x6c);
+                    dp2[2] = ((GameObject *)obj)->anim.worldPosZ - *(f32*)(base + 0x70);
                     rel2 = (getAngle(-dp2[0], -dp2[2]) & 0xffff) - ((int)*(s16*)obj & 0xffffu);
                     if (rel2 > 0x8000) {
                         rel2 = rel2 - 0xffff;

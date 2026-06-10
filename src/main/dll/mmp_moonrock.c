@@ -1,3 +1,4 @@
+#include "main/game_object.h"
 #include "main/dll/mmp_moonrock.h"
 #include "global.h"
 
@@ -50,9 +51,9 @@ void texscroll2_applyMapTextureScroll(int obj, TexScroll2State* state)
 
     placement = *(int**)(obj + 0x4c);
     block = mapGetBlock(objPosToMapBlockIdx(
-        *(f32*)((char*)obj + 0xc),
-        *(f32*)((char*)obj + 0x10),
-        *(f32*)((char*)obj + 0x14)));
+        ((GameObject *)obj)->anim.localPosX,
+        ((GameObject *)obj)->anim.localPosY,
+        ((GameObject *)obj)->anim.localPosZ));
     if (block == NULL) {
         state->needsApply = 1;
         return;
@@ -69,7 +70,7 @@ void texscroll2_applyMapTextureScroll(int obj, TexScroll2State* state)
                 t1 = (s32)(u32)*(u16*)((char*)tex + 0xa) << 6;
                 t2 = (s32)(u32)*(u16*)((char*)tex + 0xc) << 6;
                 if (*(u8*)((char*)material + 0x2a) != TEXSCROLL_SLOT_UNALLOCATED) {
-                    int v = *(int*)((char*)*(int**)((char*)obj + 0x4c) + 0x14);
+                    int v = *(int*)((char*)*(int**)&((GameObject *)obj)->anim.placementData + 0x14);
                     if (v == TEXSCROLL_GAMEBIT_GATED_MAP_A || v == TEXSCROLL_GAMEBIT_GATED_MAP_B) {
                         if (GameBit_Get(state->gameBit) != 0) {
                             mapTextureScrollSetStep(
@@ -152,7 +153,7 @@ int texscroll_getExtraSize(void) { return 0x1c; }
 int texscroll_getObjectTypeId(void) { return 0x0; }
 
 void waveanimator_modelMtxFn(int obj, int a, int b, int c) {
-    int *state = *(int **)((char *)obj + 0xB8);
+    int *state = ((GameObject *)obj)->extra;
     u32 v;
     v = (u32)*(u8 *)((char *)state + 0x34) | 4;
     *(u8 *)((char *)state + 0x34) = (u8)v;

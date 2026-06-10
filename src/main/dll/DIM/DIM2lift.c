@@ -1054,7 +1054,7 @@ int fn_801BB2B0(int* obj, u8* state) {
         fz = lbl_803E4BD8;
         ((BaddieState *)state)->animSpeedA = fz;
         ((BaddieState *)state)->animSpeedB = fz;
-        *(s16*)((char*)obj + 0xa2) = -1;
+        ((GameObject *)obj)->anim.activeMove = -1;
     }
     return 0;
 }
@@ -1062,7 +1062,7 @@ int fn_801BB2B0(int* obj, u8* state) {
 #pragma scheduling on
 #pragma peephole on
 int fn_801BA5F0(int* obj) {
-    int* state = *(int**)((char*)obj + 0xb8);
+    int* state = ((GameObject *)obj)->extra;
     switch (((GroundBaddieState *)state)->targetState) {
         case 1: return 5;
         case 2: return 6;

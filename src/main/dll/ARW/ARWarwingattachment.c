@@ -2293,8 +2293,8 @@ int fn_801F2974(int *obj, int unused, ObjAnimUpdateState *animUpdate, int arg3)
     int i;
 
     player = Obj_GetPlayerObject();
-    state = *(int*)((char*)obj + 0xb8);
-    *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) | 8);
+    state = *(int *)&((GameObject *)obj)->extra;
+    *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
 
     for (i = 0; i < (int)animUpdate->eventCount; i++) {
         u8 mode = ((Dll200State *)state)->mode25;

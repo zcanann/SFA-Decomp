@@ -1,3 +1,4 @@
+#include "main/game_object.h"
 #include "main/dll/DIM/dll_223.h"
 #include "main/effect_interfaces.h"
 #include "main/objanim.h"
@@ -252,7 +253,7 @@ void DIMbosstonsil_checkHit(void *obj,DIMbosstonsilState *state)
   if (hit != 0) {
     pos = (f32 *)((char *)effect + 0xc);
     {
-      f32 *modelPos = (f32 *)(*(int *)(*(int *)(*(int *)((u8 *)obj + 0x7c) +
+      f32 *modelPos = (f32 *)(*(int *)(*(int *)(*(int *)&((GameObject *)obj)->anim.banks +
                                 ((s8)((u8 *)obj)[0xad] << 2)) + 0x50) + modelPart * 0x10);
       pos[0] = playerMapOffsetX + modelPos[1];
       pos[1] = modelPos[2];
