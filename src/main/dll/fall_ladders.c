@@ -132,8 +132,9 @@ extern f64 lbl_803E29D8;
 
 #pragma scheduling off
 #pragma peephole off
-void fn_801540A0(int obj, int p)
+void fn_801540A0(int obj, void *pp)
 {
+    int p = (int)pp;
     u8 done;
 
     *(f32 *)(p + 0x32c) = lbl_803E294C;
@@ -159,7 +160,7 @@ void fn_801540A0(int obj, int p)
         }
     }
     if (done != 0) {
-        *(u32 *)(p + 0x2e4) |= 0x10000;
+        *(u32 *)(p + 0x2e4) |= (u64)0x10000;
     } else if (*(u8 *)(p + 0x33a) == 0) {
         *(u8 *)(p + 0x33a) = 1;
         fn_8014D08C(obj, p, 1, lbl_803E296C, 0, 3);
