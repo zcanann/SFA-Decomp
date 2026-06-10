@@ -880,21 +880,14 @@ extern undefined uRam803dddf9;
 extern undefined2 uRam803dddfa;
 extern undefined4 uRam803dde08;
 
-#pragma push
 
-#pragma pop
 
-#pragma push
 
-#pragma pop
 
-#pragma push
 
 extern u8 lbl_803DD16C;
 extern void getEnvfxActImmediately(void *obj, void *target, int effectId, int flags);
 
-#pragma push
-#pragma pop
 
 void lightningRenderActive(void)
 {
@@ -940,8 +933,8 @@ void snowCloudBuildBoxVerts(f32 *out, f32 height, f32 scale)
     out[22] = zero;
     out[23] = edge;
 }
-#pragma dont_inline reset
 
+#pragma dont_inline off
 void mm_free_(void *ptr)
 {
     mm_free(ptr);
@@ -963,7 +956,6 @@ void newclouds_initialise(void)
     lbl_803DD1C0 = 0;
 }
 
-#pragma pop
 
 /* Pattern wrappers. */
 void dll_07_func0A_nop(void) {}
@@ -977,14 +969,12 @@ void cloudClearOverridePosition(void) {
     lbl_803DD1EC = 0;
 }
 
-#pragma push
 void cloudSetOverridePosition(f32 a, f32 b, f32 c) {
     lbl_803DD1EC = 1;
     lbl_803DD1E8 = a;
     lbl_803DD1E4 = b;
     lbl_803DD1E0 = c;
 }
-#pragma pop
 
 extern void padUpdate(void);
 extern void checkReset(void);
@@ -1006,8 +996,6 @@ extern f32 lbl_8030F2D4[];
 void skyFn_80088e54(int mode, f32 brightness);
 void fn_8008BDA8(void);
 
-#pragma push
-#pragma pop
 
 extern void textureFree(void *handle);
 extern void ModelLightStruct_free(void *p);
@@ -1032,7 +1020,6 @@ extern u8 lbl_803DD19A;
 extern u8 lbl_803DD1CC;
 void snowFreeSnowCloud(int index);
 
-#pragma push
 void newclouds_release(void) {
     int i;
 
@@ -1055,9 +1042,7 @@ void newclouds_release(void) {
     }
     lbl_803DD1C0 = 0;
 }
-#pragma pop
 
-#pragma push
 void newclouds_onMapSetup(void) {
     int i;
     f32 a;
@@ -1085,7 +1070,6 @@ void newclouds_onMapSetup(void) {
     lbl_803DD1CC = 0;
     Music_Trigger(235, 0);
 }
-#pragma pop
 
 extern void fn_8005D0BC(int unused, int a, int b, int c, int d);
 extern void fogFn_80070404(f32 a, f32 b);
@@ -1094,13 +1078,10 @@ extern f32 lbl_803DF14C;
 extern f32 lbl_803DF148;
 extern s8 lbl_803DB750;
 
-#pragma push
 
 extern void Obj_SetModelColorOverrideRecursive(int obj, int r, int g, int b, int a, int flag);
 
-#pragma pop
 
-#pragma push
 #pragma dont_inline on
 void *lightningCreate(f32 *a, f32 *b, f32 c, f32 d, int e, int f, int g) {
     u8 *p = mmAlloc(40, 23, 0);
@@ -1123,8 +1104,6 @@ void *lightningCreate(f32 *a, f32 *b, f32 c, f32 d, int e, int f, int g) {
     *(u8 *)(p + 0x27) = g;
     return p;
 }
-#pragma dont_inline reset
-#pragma pop
 
 typedef struct RomCurveNode {
     u8 pad00[0x08];
@@ -1172,23 +1151,11 @@ extern f32 lbl_803DF000;
 extern f32 lbl_803DF01C;
 extern f32 lbl_803DF020;
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
 typedef struct ObjCurveKey {
     f32 value;
@@ -1197,12 +1164,8 @@ typedef struct ObjCurveKey {
     s16 frame;
 } ObjCurveKey;
 
-#pragma push
-#pragma pop
 
 
-#pragma push
-#pragma pop
 
 typedef struct Dll06InterpState {
     u8 pad00[0x24];
@@ -1215,8 +1178,6 @@ typedef struct Dll06InterpState {
     s8 active;
 } Dll06InterpState;
 
-#pragma push
-#pragma pop
 
 typedef struct FogColor {
     u8 r;
@@ -1231,7 +1192,7 @@ extern void drawFn_80079e64(double s1, double s2, double s3, u8 mtxIdx, void *ve
 extern f32 lbl_8039A8F0[];
 extern int lbl_803DF198;
 
-#pragma push
+#pragma dont_inline off
 void dll_07_func07(int arg) {
     int i;
     int total;
@@ -1251,12 +1212,10 @@ void dll_07_func07(int arg) {
                         lbl_8039A8F0, lbl_803DD199, lbl_803DD19A);
     }
 }
-#pragma pop
 
 extern char sSnowKillSnowCloudInvalidCloudId[];
 extern void debugPrintf(char *fmt, ...);
 
-#pragma push
 #pragma dont_inline on
 void newclouds_snowKillSnowCloud(int cloudId, int flag)
 {
@@ -1295,7 +1254,6 @@ void newclouds_snowKillSnowCloud(int cloudId, int flag)
     *(f32 *)((char *)p + 0x1430) =
         -((f32)flag / (f32)*(int *)((char *)p + 0x13fc));
 }
-#pragma pop
 
 extern int ObjModel_GetRenderOp(int model, int x);
 extern int Shader_getLayer(int renderOp, int x);
@@ -1305,7 +1263,7 @@ extern void *lbl_8039AB28[];
 extern f32 lbl_803DF2B0;
 extern f32 lbl_803DF2B4;
 
-#pragma push
+#pragma dont_inline off
 void *cloudGetLayerTextureSize(f32 *out1, f32 *out2) {
     int *tex;
     int *layer;
@@ -1332,21 +1290,16 @@ void *cloudGetLayerTextureSize(f32 *out1, f32 *out2) {
     }
     return NULL;
 }
-#pragma pop
 
 extern void *memset(void *dst, int c, int n);
 extern int lbl_803DB754;
 extern f32 lbl_803DF190;
 extern f32 lbl_803DF194;
 
-#pragma push
-#pragma pop
 
 extern u8 *saveGameGetEnvState(void);
 extern int getSaveGameLoadStatus(void);
 
-#pragma push
-#pragma pop
 
 extern char sSnowFreeSnowCloudInvalidCloudId[];
 
@@ -1357,7 +1310,6 @@ extern char sSnowFreeSnowCloudInvalidCloudId[];
  * EN v1.0 Address: 0x80090098
  * EN v1.0 Size: 504b
  */
-#pragma push
 #pragma dont_inline on
 void snowFreeSnowCloud(int cloudId) {
     u8 *env;
@@ -1395,8 +1347,6 @@ void snowFreeSnowCloud(int cloudId) {
         lbl_8039A828[i] = NULL;
     }
 }
-#pragma dont_inline reset
-#pragma pop
 
 extern inline float sqrtf__inline(float x) {
     static const double _half = .5;
@@ -1435,7 +1385,7 @@ extern void normalize(f32 *x, f32 *y, f32 *z);
  * EN v1.0 Address: 0x800916C0
  * EN v1.0 Size: 776b
  */
-#pragma push
+#pragma dont_inline off
 void snowCloudComputeDrift(f32 *out, f32 *pos, f32 scale) {
     f32 accX;
     f32 accZ;
@@ -1479,7 +1429,6 @@ void snowCloudComputeDrift(f32 *out, f32 *pos, f32 scale) {
     out[1] = 0.0f;
     out[2] = out[2] * scale;
 }
-#pragma pop
 
 extern void GXSetCullMode(int mode);
 extern void Camera_RebuildProjectionMatrix(void);
@@ -1513,7 +1462,6 @@ void lightningDrawBolt(f32 *start, f32 *end, int width, f32 c, f32 d, int *seed,
  * EN v1.0 Address: 0x8008F904
  * EN v1.0 Size: 496b
  */
-#pragma push
 void lightningRender(void *state) {
     u8 *p = state;
     f32 start[3];
@@ -1568,7 +1516,6 @@ void lightningRender(void *state) {
                 p[0x27]);
     srand(savedSeed);
 }
-#pragma pop
 
 extern s16 lbl_803DD1A8;
 extern f32 lbl_803DD1AC;
@@ -1588,7 +1535,6 @@ extern const f32 lbl_803DF1F8;
  * EN v1.0 Address: 0x8008FC9C
  * EN v1.0 Size: 988b
  */
-#pragma push
 void snowCloudInitFlakes(f32 *buf, int cloudId, f32 a, f32 b) {
     u8 *p;
     u8 *e;
@@ -1672,7 +1618,6 @@ void snowCloudInitFlakes(f32 *buf, int cloudId, f32 a, f32 b) {
     }
     *(int *)((u8 *)lbl_8039A828[i] + 0x1408) = *(int *)((u8 *)lbl_8039A828[i] + 0x1408) + 0xfa0;
 }
-#pragma pop
 
 extern u8 isOvercast(void);
 extern void fn_800790AC(void);
@@ -1700,7 +1645,6 @@ extern f32 lbl_803DF28C;
  * EN v1.0 Address: 0x80093AF8
  * EN v1.0 Size: 724b
  */
-#pragma push
 void drawSkyStars(void) {
     int timeOk;
     int start;
@@ -1784,7 +1728,6 @@ void drawSkyStars(void) {
         GXCallDisplayList(lbl_8039A9B8[i], lbl_8039A900[i]);
     }
 }
-#pragma pop
 
 typedef union PPCWGPipe2 {
     u8 u8;
@@ -1820,7 +1763,6 @@ extern f32 lbl_803DF1CC;
  * EN v1.0 Address: 0x8008EE18
  * EN v1.0 Size: 1200b
  */
-#pragma push
 void lightningDrawStrand(f32 *from, f32 *to, int width, f32 segScale, int *seed) {
     int savedRand;
     int segs;
@@ -1913,7 +1855,6 @@ void lightningDrawStrand(f32 *from, f32 *to, int width, f32 segScale, int *seed)
         srand(savedRand);
     }
 }
-#pragma pop
 
 /*
  * --INFO--
@@ -1922,7 +1863,6 @@ void lightningDrawStrand(f32 *from, f32 *to, int width, f32 segScale, int *seed)
  * EN v1.0 Address: 0x80090C0C
  * EN v1.0 Size: 892b
  */
-#pragma push
 void snowCloudUpdateFlakes(u8 *snow) {
     s16 *cam;
     u8 *e;
@@ -1987,7 +1927,6 @@ void snowCloudUpdateFlakes(u8 *snow) {
         }
     }
 }
-#pragma pop
 
 extern void PSVECAdd(f32 *a, f32 *b, f32 *ab);
 extern f32 lbl_803DF1D0;
@@ -1999,7 +1938,6 @@ extern f32 lbl_803DF1D0;
  * EN v1.0 Address: 0x8008F2C8
  * EN v1.0 Size: 1596b
  */
-#pragma push
 void lightningDrawBolt(f32 *start, f32 *end, int width, f32 segScale, f32 d, int *seed, int depth,
                  int flags) {
     f32 len;
@@ -2117,7 +2055,6 @@ void lightningDrawBolt(f32 *start, f32 *end, int width, f32 segScale, f32 d, int
         cur[2] = next[2];
     }
 }
-#pragma pop
 
 extern void GXSetMisc(int token, u32 val);
 extern void DCInvalidateRange(void *addr, u32 nBytes);
@@ -2140,7 +2077,6 @@ extern f32 lbl_803DF2A4;
  * EN v1.0 Address: 0x80093DB4
  * EN v1.0 Size: 1464b
  */
-#pragma push
 void titleScreenDrawFn_80093db4(void) {
     f32 *constellation;
     f32 *cp;
@@ -2250,7 +2186,6 @@ void titleScreenDrawFn_80093db4(void) {
     mm_free(constellation);
     GXSetMisc(1, 8);
 }
-#pragma pop
 
 extern void Sfx_PlayAtPositionFromObject(int obj, int sfx, f32 x, f32 y, f32 z);
 extern char lbl_8030F670[];
@@ -2265,7 +2200,6 @@ extern f32 lbl_803DF230;
  * EN v1.0 Address: 0x80090F58
  * EN v1.0 Size: 1848b
  */
-#pragma push
 void snowReposSnowCloud(int cloudId) {
     u8 *p;
     u8 *part;
@@ -2393,7 +2327,6 @@ void snowReposSnowCloud(int cloudId) {
         part += 0x18;
     }
 }
-#pragma pop
 
 extern char lbl_8030F500[];
 extern int lbl_803DB76C;
@@ -2415,7 +2348,6 @@ extern f32 lbl_803DF244;
  * EN v1.0 Address: 0x800919DC
  * EN v1.0 Size: 2632b
  */
-#pragma push
 void newClouds(u8 *params, void *owner, f32 x, f32 y, f32 z) {
     char *strs;
     int ok;
@@ -2639,7 +2571,6 @@ void newClouds(u8 *params, void *owner, f32 x, f32 y, f32 z) {
         lbl_803DB76C = 0;
     }
 }
-#pragma pop
 
 extern int lbl_8030F5A0[];
 extern f32 lbl_803DF27C;
@@ -2651,7 +2582,6 @@ extern f32 lbl_803DF27C;
  * EN v1.0 Address: 0x80093124
  * EN v1.0 Size: 2324b
  */
-#pragma push
 void newclouds_update(u8 *objA, u8 *objB, u8 *params) {
     u8 *env;
     u8 *p;
@@ -2824,7 +2754,6 @@ void newclouds_update(u8 *objA, u8 *objB, u8 *params) {
         }
     }
 }
-#pragma pop
 
 extern void PSMTXIdentity(f32 *m);
 extern void PSMTXMultVec(f32 *matrix, f32 *in, f32 *out);
@@ -2855,7 +2784,6 @@ extern f32 lbl_803DF278;
  * EN v1.0 Address: 0x80092548
  * EN v1.0 Size: 2376b
  */
-#pragma push
 void dll_07_func06(void) {
     s16 *cam;
     u8 *p;
@@ -3111,7 +3039,6 @@ void dll_07_func06(void) {
         Music_Trigger(0xeb, 0);
     }
 }
-#pragma pop
 
 extern char sSnowPrintSnowCloudInvalidCloudId[];
 extern void initRotationMtx(f32 *mtx, f32 xScale, f32 yScale, f32 zScale);
@@ -3129,7 +3056,6 @@ extern f32 lbl_803DF204;
  * EN v1.0 Address: 0x80090250
  * EN v1.0 Size: 2456b
  */
-#pragma push
 int snowPrintSnowCloud(int arg, int cloudId) {
     u8 *p;
     u8 *part;
@@ -3311,4 +3237,3 @@ int snowPrintSnowCloud(int arg, int cloudId) {
     }
     return 0;
 }
-#pragma pop

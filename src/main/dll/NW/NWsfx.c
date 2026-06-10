@@ -95,7 +95,6 @@ s16 fn_801D129C(u8 *obj, u8 *player, u8 *state, f32 dist);
  * EN v1.0 Address: 0x801D083C
  * EN v1.0 Size: 2656b
  */
-#pragma push
 void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
     u8 sval;
     int curMove;
@@ -381,7 +380,6 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
     objMove(obj, ((GameObject *)obj)->anim.velocityX * timeDelta, lbl_803E5288,
             ((GameObject *)obj)->anim.velocityZ * timeDelta);
 }
-#pragma pop
 
 /*
  * --INFO--
@@ -390,7 +388,6 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
  * EN v1.0 Address: 0x801D129C
  * EN v1.0 Size: 704b
  */
-#pragma push
 s16 fn_801D129C(u8 *obj, u8 *player, u8 *state, f32 dist) {
     s16 angle;
     int anglePlus;
@@ -451,7 +448,6 @@ s16 fn_801D129C(u8 *obj, u8 *player, u8 *state, f32 dist) {
     }
     return angle;
 }
-#pragma pop
 
 /*
  * --INFO--
@@ -460,12 +456,10 @@ s16 fn_801D129C(u8 *obj, u8 *player, u8 *state, f32 dist) {
  * EN v1.0 Address: 0x801D1564
  * EN v1.0 Size: 60b
  */
-#pragma push
 void ediblemushroom_free(int obj) {
     ObjGroup_RemoveObject(obj, 0x47);
     ObjGroup_RemoveObject(obj, 0x31);
 }
-#pragma pop
 
 /*
  * --INFO--
@@ -485,7 +479,6 @@ int ediblemushroom_getExtraSize(void) {
  * EN v1.0 Address: 0x801D15A0
  * EN v1.0 Size: 332b
  */
-#pragma push
 void ediblemushroom_hitDetect(u8 *obj) {
     u8 *state;
     u8 *mapObj;
@@ -519,4 +512,3 @@ void ediblemushroom_hitDetect(u8 *obj) {
         }
     }
 }
-#pragma pop

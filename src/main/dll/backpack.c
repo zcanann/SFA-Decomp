@@ -76,7 +76,6 @@ extern f32 sqrtf(f32 x);
  * EN v1.0 Address: 0x80164EE4
  * EN v1.0 Size: 72b
  */
-#pragma push
 void tumbleweed_update(int obj) {
     if (((GameObject *)obj)->anim.seqId == TUMBLEWEED_TYPE_1) {
         tumbleweed_updateTargetedStateMachine(obj);
@@ -85,7 +84,6 @@ void tumbleweed_update(int obj) {
     }
     tumbleweed_updateEffects(obj);
 }
-#pragma pop
 
 /* 8b "li r3, N; blr" returners. */
 int LandedArwing_ReturnZero(void) { return 0x0; }
@@ -97,7 +95,6 @@ int LandedArwing_ReturnZero(void) { return 0x0; }
  * EN v1.0 Address: 0x801641B0
  * EN v1.0 Size: 1936b
  */
-#pragma push
 void tumbleweed_updateStateMachine(int obj) {
     int aux;
     int sphereIndex;
@@ -267,7 +264,6 @@ void tumbleweed_updateStateMachine(int obj) {
     }
     }
 }
-#pragma pop
 
 /*
  * --INFO--
@@ -276,7 +272,6 @@ void tumbleweed_updateStateMachine(int obj) {
  * EN v1.0 Address: 0x80164F2C
  * EN v1.0 Size: 420b
  */
-#pragma push
 void tumbleweed_init(int obj, int defData) {
     int aux = *(int *)&((GameObject *)obj)->extra;
 
@@ -301,7 +296,6 @@ void tumbleweed_init(int obj, int defData) {
         ((BackpackState *)aux)->unk27A = (u8)(((BackpackState *)aux)->unk27A | 0x10);
     }
 }
-#pragma pop
 
 /*
  * --INFO--
@@ -310,7 +304,6 @@ void tumbleweed_init(int obj, int defData) {
  * EN v1.0 Address: 0x80164C44
  * EN v1.0 Size: 672b
  */
-#pragma push
 void tumbleweed_updateEffects(int obj) {
     TumbleweedState *state = ((GameObject *)obj)->extra;
     int i;
@@ -385,7 +378,6 @@ void tumbleweed_updateEffects(int obj) {
         Sfx_KeepAliveLoopedObjectSound(obj, TUMBLEWEED_SFX_HIT_LOOP);
     }
 }
-#pragma pop
 
 /*
  * --INFO--
@@ -394,7 +386,6 @@ void tumbleweed_updateEffects(int obj) {
  * EN v1.0 Address: 0x801650D8
  * EN v1.0 Size: 176b
  */
-#pragma push
 int LandedArwing_TriggerLaunchTarget(int obj, int target) {
     int *aux = ((GameObject *)obj)->extra;
     if ((s8)*(u8*)(target + 0x27a) != 0) {
@@ -405,7 +396,6 @@ int LandedArwing_TriggerLaunchTarget(int obj, int target) {
     }
     return 0;
 }
-#pragma pop
 
 /*
  * --INFO--
@@ -414,7 +404,6 @@ int LandedArwing_TriggerLaunchTarget(int obj, int target) {
  * EN v1.0 Address: 0x80165188
  * EN v1.0 Size: 592b
  */
-#pragma push
 int LandedArwing_UpdateBounceFade(int obj, u32 *stateWord) {
     f32 horizontalDamping;
     LandedArwingState *state;
@@ -471,7 +460,6 @@ int LandedArwing_UpdateBounceFade(int obj, u32 *stateWord) {
     }
     return 0;
 }
-#pragma pop
 
 /*
  * --INFO--
@@ -480,7 +468,6 @@ int LandedArwing_UpdateBounceFade(int obj, u32 *stateWord) {
  * EN v1.0 Address: 0x801653D8
  * EN v1.0 Size: 436b
  */
-#pragma push
 int LandedArwing_UpdateRetreatChase(int obj, int stateWord) {
     f32 scale;
     int player;
@@ -552,7 +539,6 @@ update_action:
     state->scriptTimer -= framesThisStep;
     return 0;
 }
-#pragma pop
 
 /*
  * --INFO--
@@ -561,7 +547,6 @@ update_action:
  * EN v1.0 Address: 0x80164940
  * EN v1.0 Size: 772b
  */
-#pragma push
 void tumbleweed_updateTargetedStateMachine(int obj)
 {
     int sphereIndex;
@@ -633,4 +618,3 @@ void tumbleweed_updateTargetedStateMachine(int obj)
         }
     }
 }
-#pragma pop

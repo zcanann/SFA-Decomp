@@ -86,36 +86,14 @@ FUN_80017468(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
  * PAL Size: TODO
  */
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
 extern f32 timeDelta;
 
-#pragma push
-#pragma scheduling off
 
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma pop
 
 /*
  * --INFO--
@@ -207,7 +185,6 @@ typedef struct ObjModelInstanceLite {
     u16 bufferFlags;
 } ObjModelInstanceLite;
 
-#pragma push
 #pragma scheduling off
 #pragma peephole off
 void *fn_80028354(u8 *modelFile, int index) {
@@ -329,7 +306,6 @@ int ObjModel_GetUnpackedResourceSize(u8 *resource, int baseSize) {
 
 
 
-#pragma pop
 
 /* Global game-state / text accessors. */
 
@@ -339,6 +315,8 @@ int ObjModel_GetUnpackedResourceSize(u8 *resource, int baseSize) {
 int getHudHiddenFrameCount(void);
 
 
+#pragma scheduling on
+#pragma peephole on
 void __set_debug_bba(u8 *p) {
     p[0x19] = 0;
 }
@@ -368,16 +346,8 @@ extern f32 playerMapOffsetZ;
 extern void textureFree(void *tex);
 
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
 void tailFn_80026c38(u8 *p, f32 a, f32 b, f32 c) {
     *(f32 *)(p + 8) = a;
@@ -386,9 +356,6 @@ void tailFn_80026c38(u8 *p, f32 a, f32 b, f32 c) {
 }
 
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 
@@ -396,28 +363,22 @@ void tailFn_80026c38(u8 *p, f32 a, f32 b, f32 c) {
 
 int alignUp2(int x);
 
-#pragma pop
 
 extern int getLoadedFileFlags(int);
 extern int randomGetRange(int lo, int hi);
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
 void *getCache(void);
 
 
-#pragma pop
 
 extern f32 lbl_803DE854;
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
 void cacheQueueWait(int sync);
 
+#pragma scheduling off
+#pragma peephole off
 void fn_80026C54(u8 *p) {
     p[0x18] = 0;
     *(f32 *)(p + 0x14) += timeDelta;
@@ -428,16 +389,12 @@ void fn_80026C54(u8 *p) {
 
 void mm_free(void *p);
 
-#pragma pop
 
 extern void setGQR7(u32 v);
 
 extern int textureLoad(int id, int flag);
 extern void *loadAnimation(int hdr, s16 id, int b, u8 *bufout);
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
 asm void setGQR6(register u32 v) {
     nofralloc
@@ -455,19 +412,15 @@ asm void setGQR7(register u32 v) {
 void setGQR7Packed(int a, int b, int c, int d) {
     setGQR7((((a << 8) + b) << 16) | ((c << 8) + d));
 }
-#pragma dont_inline reset
-
-
-
-#pragma pop
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 
 
+
+
+
+
+#pragma dont_inline off
 int ObjModel_HasActiveBlendChannels(u8 *model) {
     ObjModelBlendChannel *ch;
 
@@ -502,15 +455,11 @@ void ObjModel_SetBlendChannelWeight(u8 *model, int channel, f32 weight) {
     }
     ch[0].flags0E |= 4;
 }
-#pragma pop
 
 typedef f32 Mtx[3][4];
 extern void PSVECSubtract(f32 *a, f32 *b, f32 *out);
 extern void PSVECNormalize(f32 *src, f32 *dst);
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 
@@ -520,10 +469,6 @@ extern void PSVECNormalize(f32 *src, f32 *dst);
 extern void PSVECAdd(f32 *a, f32 *b, f32 *out);
 extern void PSMTXConcat(f32 *a, f32 *b, f32 *ab);
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
 extern int *lbl_803DCB60;
 
@@ -652,8 +597,8 @@ void *ObjModel_LoadModelData(int id) {
     }
     return model;
 }
-#pragma dont_inline reset
 
+#pragma dont_inline off
 void ObjModel_ResolveRenderOpTextures(u8 *m) {
     int j, k;
     u8 *op;
@@ -721,8 +666,8 @@ void ObjModel_RelocateAnimData(u8 *m, u8 *dst) {
         }
     }
 }
-#pragma dont_inline reset
 
+#pragma dont_inline off
 void ObjModel_LoadRenderOpTextures(u8 *model, int arg) {
     int i;
     u8 *hdr = *(u8 **)model;
@@ -759,7 +704,6 @@ int loadModelAndAnimTabs(void) {
 
 extern void DCFlushRange(void *addr, u32 nBytes);
 
-#pragma pop
 
 extern void *memcpy(void *dst, const void *src, int n);
 extern u32 PPCMfhid2(void);
@@ -769,9 +713,6 @@ extern void ObjModel_InitScratchBuffers(void);
 extern void setGQR6_2(int a, int b, int c, int d);
 extern f32 PSVECDotProduct(f32 *a, f32 *b);
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
 void copyToCache(void *dst, void *src, u32 count);
 
@@ -816,11 +757,7 @@ void *animationLoad(int id, int a, int b, int e, int f);
 
 
 
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 void model_multMtxs(u8 *model, f32 *out) {
@@ -847,12 +784,8 @@ void model_multMtxs(u8 *model, f32 *out) {
 
 
 
-#pragma pop
 
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 
@@ -913,12 +846,8 @@ void Model_GetVertexPosition(u8 *model, int vertexIndex, f32 *out) {
     }
 }
 
-#pragma pop
 
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
 int randomGetRange(int lo, int hi);
 
@@ -929,14 +858,10 @@ void *ObjAnim_LoadCachedMove(int animId, int moveIndex, u8 *cache, ObjAnimDef *a
     animationLoad((int)&out, animId, moveIndex, (int)cache, (int)animDef);
     return out;
 }
-#pragma pop
 
 extern u8 *lbl_80340898[];
 extern u8 *lbl_80340880[];
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
 #pragma dont_inline on
 void ObjModel_InitScratchBuffers(void) {
@@ -953,20 +878,12 @@ void ObjModel_InitScratchBuffers(void) {
     lbl_80340880[4] = c + 0x3000;
     lbl_80340880[5] = c + 0x3800;
 }
-#pragma dont_inline reset
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
-#pragma pop
 
 extern void ObjModel_SetBlendChannelTargets(u8 *model, int ch, int a, int b, f32 w, int c);
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
+#pragma dont_inline off
 void ObjModel_ClearBlendChannels(u8 *model) {
     if (((ObjModel *)model)->file->unkDC != NULL) {
         ObjModel_SetBlendChannelTargets(model, 0, -1, -1, lbl_803DE828, 7);
@@ -974,12 +891,9 @@ void ObjModel_ClearBlendChannels(u8 *model) {
         ObjModel_SetBlendChannelTargets(model, 2, -1, -1, lbl_803DE828, 7);
     }
 }
-#pragma pop
 
 extern f32 lbl_803DE840;
 
-#pragma scheduling off
-#pragma peephole off
 void ObjModel_SetBlendChannelTargets(u8 *model, int channel, int a, int b, f32 weight, int flags) {
     ObjModelBlendChannel *ch;
     u8 *hdr;
@@ -1021,8 +935,6 @@ void ObjModel_SetBlendChannelTargets(u8 *model, int channel, int a, int b, f32 w
     ch[0].unk08 = weight;
     ch[0].flags0E = flags | 4;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
 extern void modelApplyBoneTransforms(int a, int b, u16 c, void *d, void *e, int f);
 extern f32 lbl_803DE818;
@@ -1030,9 +942,6 @@ extern f32 lbl_803DE868;
 extern f32 lbl_803DE86C;
 extern f32 lbl_803DE870;
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void ObjModel_ApplyBlendChannels(u8 *model) {
     u8 *hdr;
     ObjModelBlendChannel *ch;
@@ -1146,13 +1055,12 @@ void ObjModel_ApplyBlendChannels(u8 *model) {
         }
     }
 }
-#pragma pop
 
 extern f32 lbl_803DE874;
 extern f32 lbl_803DE878;
 extern f32 lbl_803DE87C;
 
-#pragma peephole off
+#pragma scheduling on
 void ObjModel_AdvanceBlendChannels(u8 *model, f32 dt) {
     int i;
     ObjModelBlendChannel *ch;
@@ -1179,15 +1087,12 @@ void ObjModel_AdvanceBlendChannels(u8 *model, f32 dt) {
         }
     }
 }
-#pragma peephole reset
 
 extern void *modelLoad_layoutBuffers(u8 *p, int b, int isType1, int c);
 extern void modelAnimResetState(void *m, void *data);
 extern void DCStoreRange(void *p, int size);
 
-#pragma push
 #pragma scheduling off
-#pragma peephole off
 void *ObjModel_LoadAnimData(u8 *p, int b, int c) {
     void *m = modelLoad_layoutBuffers(p, b, p[0] == 1, c);
     modelAnimResetState(m, *(void **)((u8 *)m + 0x2c));
@@ -1199,7 +1104,6 @@ void *ObjModel_LoadAnimData(u8 *p, int b, int c) {
     DCStoreRange(p, *(int *)(p + 0xc));
     return m;
 }
-#pragma pop
 
 extern int modelLoadAnimations(void *model, int id, void *animBase);
 extern int modelLoad_calcSizes(void *model, int arg, int *out, int flag);
@@ -1207,9 +1111,6 @@ extern int ModelList_getHeader(void *list, int index, void *out);
 extern void modelInitModelList(void *list, s16 index, void *out);
 extern s16 *lbl_803DCB64;
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void *ObjModel_Load(int id, int arg2, int *outSize) {
     int sizes[7];
     u8 *header;
@@ -1246,7 +1147,6 @@ void *ObjModel_Load(int id, int arg2, int *outSize) {
     *outSize = modelLoad_calcSizes(header, arg2, sizes, 0);
     return header;
 }
-#pragma pop
 
 
 
@@ -1257,8 +1157,7 @@ extern void *lbl_803DCB50;
 extern void *allocModelStruct(int size, int align);
 extern int *lbl_803DCB5C;
 
-#pragma push
-#pragma scheduling off
+#pragma peephole on
 void ObjModel_InitResourceCaches(void) {
     void *m;
     lbl_803DCB54 = allocModelStruct(0x8c, 4);
@@ -1269,10 +1168,7 @@ void ObjModel_InitResourceCaches(void) {
     lbl_803DCB5C = (int *)((u8 *)m + 0x810);
     loadModelAndAnimTabs();
 }
-#pragma pop
 
-#pragma push
-#pragma scheduling off
 #pragma peephole off
 void ObjModel_Release(u8 *model) {
     u8 *header;
@@ -1306,85 +1202,32 @@ void ObjModel_Release(u8 *model) {
         mm_free(header);
     }
 }
-#pragma pop
 
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void setGQR6_2(int a, int b, int c, int d) {
     setGQR6((((a << 8) + b) << 16) | ((c << 8) + d));
 }
 
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma fp_contract off
-#pragma pop
 
 extern void debugPrintf(char *fmt, ...);
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
-
-#pragma push
-#pragma scheduling off
-#pragma pop
 
 
-#pragma push
-#pragma scheduling off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
+
 
 extern void lbl_80006C6C(int *out, u8 *a, void *buf, int c, int d, u8 *e, int f, int g);
 extern u8 lbl_80340740[];
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void modelAnimUpdateChannels(u8 *hdr, u8 *stk, int n)
 {
     u8 *p2;
@@ -1439,7 +1282,6 @@ void modelAnimUpdateChannels(u8 *hdr, u8 *stk, int n)
     }
 }
 
-#pragma peephole off
 #pragma ppc_unroll_factor_limit 8
 #pragma ppc_unroll_instructions_limit 256
 void modelWalkAnimFn_800248b8(u8 *a, u8 *b, u8 *c, int d, f32 e)
@@ -1570,7 +1412,6 @@ void modelWalkAnimFn_800248b8(u8 *a, u8 *b, u8 *c, int d, f32 e)
 }
 #pragma ppc_unroll_factor_limit 4
 #pragma ppc_unroll_instructions_limit 96
-#pragma pop
 
 extern void *animLoadFromTable(u8 *hdr, int idx, int a, u8 *b);
 
@@ -1604,9 +1445,6 @@ extern void *animLoadFromTable(u8 *hdr, int idx, int a, u8 *b);
         }                                                                             \
     }
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void modelAnimResetState(void *m, void *data)
 {
     u8 *p2 = (u8 *)data;
@@ -1654,7 +1492,6 @@ void modelAnimResetState(void *m, void *data)
         *(u16 *)(p2 + 0x4a) = *(u16 *)(p2 + 0x44);
     }
 }
-#pragma pop
 
 #define BLENDTBL_ENTRY(K, OFF)                              \
     if (p[K] != 0) {                                        \
@@ -1664,9 +1501,6 @@ void modelAnimResetState(void *m, void *data)
         ((s16 *)lbl_80340740)[w++] = p[K];                  \
     }
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void ObjModel_BuildAnimBlendTable(u8 *obj, u8 *p2, u8 *hdr)
 {
     ObjAnimComponent *objAnim;
@@ -1717,11 +1551,7 @@ void ObjModel_BuildAnimBlendTable(u8 *obj, u8 *p2, u8 *hdr)
     ((s16 *)lbl_80340740)[w++] = 0x1000;
     ((s16 *)lbl_80340740)[w] = 0x1000;
 }
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void *modelLoad_layoutBuffers(u8 *p, int b, int isType1, int c)
 {
     u8 *out;
@@ -1886,13 +1716,9 @@ void *modelLoad_layoutBuffers(u8 *p, int b, int isType1, int c)
     ((ObjModel *)out)->unk60 = 0;
     return out;
 }
-#pragma pop
 
 extern char sModelAnimationBufferOverflowWarning[];
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_loop_invariants off
 int modelLoadAnimations(void *model, int id, void *animBase)
 {
@@ -2023,93 +1849,26 @@ int modelLoadAnimations(void *model, int id, void *animBase)
     }
     return 0;
 }
-#pragma pop
 
 extern void Obj_GetWorldPosition(u8 *obj, void *x, void *y, void *z);
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void *mmAlloc(int size, int type, int flag);
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma dont_inline on
-#pragma opt_strength_reduction off
-#pragma opt_strength_reduction reset
-#pragma dont_inline reset
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
+#pragma opt_loop_invariants on
 int modelLoad_calcSizes(void *model, int flags, int *sizes, int a4)
 {
     u8 *hdr = (u8 *)model;
@@ -2185,13 +1944,9 @@ int modelLoad_calcSizes(void *model, int flags, int *sizes, int a4)
     }
     return roundUpTo32(((total + 0x2f) & ~0xf) + 0x10);
 }
-#pragma pop
 
 extern f32 lbl_803DE850;
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void fn_80026928(int *obj, int b, int *p3)
 {
@@ -2285,28 +2040,10 @@ void fn_80026928(int *obj, int b, int *p3)
         PSMTXMultVec((f32 *)(obj[(*(u16 *)((u8 *)obj + 0x18) & 1) + 3] + e2 * 0x40), (f32 *)(out + 0x18), (f32 *)out);
     }
 }
-#pragma dont_inline reset
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma dont_inline on
 #pragma opt_common_subs off
 void *animLoadFromTable(u8 *hdr, int id, int idx, u8 *out)
 {
@@ -2334,13 +2071,9 @@ void *animLoadFromTable(u8 *hdr, int id, int idx, u8 *out)
     }
     return buf;
 }
-#pragma opt_common_subs reset
-#pragma dont_inline reset
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
+#pragma dont_inline off
+#pragma opt_common_subs on
 void *loadAnimation(int hdr, s16 id, int b, u8 *bufout)
 {
     int tmp;
@@ -2367,44 +2100,21 @@ void *loadAnimation(int hdr, s16 id, int b, u8 *bufout)
     }
     return animLoadFromTable((u8 *)hdr, id, (s16)b, bufout);
 }
-#pragma pop
 
 typedef struct {
     u8 pad[0xc];
     u8 *buf;
 } AnimBufSel;
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma pop
 
 extern void PSVECCrossProduct(f32 *a, f32 *b, f32 *out);
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma dont_inline on
-#pragma pop
 
 extern f32 lbl_802CABB8[];
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void modelAnimFn_80026790(u8 *model, int idx, u8 *m, u8 *anim)
 {
@@ -2456,19 +2166,10 @@ void modelAnimFn_80026790(u8 *model, int idx, u8 *m, u8 *anim)
         i++;
     }
 }
-#pragma dont_inline reset
-#pragma pop
 
 extern void PSMTXRotAxisRad(f32 *m, f32 *axis, f32 angle);
 
-#pragma push
-#pragma scheduling off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma opt_strength_reduction off
-#pragma pop
 
 typedef struct ObjHitBufs {
     u8 pad00[0x48];
@@ -2476,9 +2177,7 @@ typedef struct ObjHitBufs {
     u8 *cur;
 } ObjHitBufs;
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
+#pragma dont_inline off
 void objUpdateHitSpheres(u8 *a, u8 *b, u8 *c, u8 *d, u8 *e) {
     extern f32 lbl_803DE828;
     extern f32 lbl_803DCED0;
@@ -2575,16 +2274,13 @@ void objUpdateHitSpheres(u8 *a, u8 *b, u8 *c, u8 *d, u8 *e) {
         prev += 0x10;
     }
 }
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
 extern void PSMTXTrans(f32 *m, f32 x, f32 y, f32 z);
 extern void PSMTXReorder(f32 *src, f32 *dst);
 
+#pragma scheduling on
+#pragma peephole on
 static u8 *modelGetBoneMtx(u8 *m, int idx) {
     u32 cnt;
     int lim;
@@ -2601,7 +2297,6 @@ static u8 *modelGetBoneMtx(u8 *m, int idx) {
     return (u8 *)((int *)m)[(*(u16 *)(m + 0x18) & 1) + 3] + idx * 0x40;
 }
 
-#pragma push
 #pragma scheduling off
 #pragma peephole off
 void modelInitBoneMtxs(u8 *m, u8 *out) {
@@ -2627,11 +2322,7 @@ void modelInitBoneMtxs(u8 *m, u8 *out) {
         dst += 0x30;
     }
 }
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void modelInitBoneMtxs2(u8 *m, u8 *out2, u8 *out) {
     u8 *hdr;
     u32 i;
@@ -2661,11 +2352,7 @@ void modelInitBoneMtxs2(u8 *m, u8 *out2, u8 *out) {
         }
     }
 }
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void modelApplyBoneTransforms(int a, int b, u16 c, void *d, void *e, int f) {
     extern u16 lbl_803DB440;
     extern void modelApplyBoneTransform(void *p, void *out, u16 n, void **pd, void **pe, int f, u16 pos);
@@ -2718,18 +2405,12 @@ void modelApplyBoneTransforms(int a, int b, u16 c, void *d, void *e, int f) {
     }
     cacheQueueWait(0);
 }
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma fp_contract off
-#pragma pop
 
 extern void fn_80026308(int *a, int b, u8 *p, u8 *q, int d, int i);
 extern void fn_80025F38(int *a, int b, u8 *p, u8 *q);
 
-#pragma push
-#pragma scheduling off
+#pragma peephole on
 void playerTailFn_80026b3c(int *a, int b, u8 *p, int d) {
     int i;
     int off;
@@ -2753,41 +2434,13 @@ void playerTailFn_80026b3c(int *a, int b, u8 *p, int d) {
         *(u8 *)(p + 0x19) = 1;
     }
 }
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma optimization_level 1
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
 typedef struct {
     int f0, f4, f8, fc, f10;
@@ -2796,8 +2449,6 @@ extern void modelRenderInstrsState_init(MRIState *state, u8 *data, int bits, int
 extern u8 *modelRenderFn_80006744(u8 *p, int count, MRIState *state, int stride);
 extern u8 *fn_80006B1C(MRIState *src, MRIState *dst, int count, int gap);
 
-#pragma push
-#pragma scheduling off
 #pragma peephole off
 void ObjModel_UnpackResourcePayload(u8 *src, int srcSize, u8 *dst, int dstSize) {
     MRIState dstState;
@@ -2841,7 +2492,6 @@ void ObjModel_UnpackResourcePayload(u8 *src, int srcSize, u8 *dst, int dstSize) 
         memcpy(dst + *(u16 *)(dst + 4), src + *(u16 *)(src + 4), srcSize - oldOff);
     }
 }
-#pragma pop
 
 extern s16 lbl_803DC7A4;
 extern s16 lbl_803DC7A6;
@@ -2849,9 +2499,6 @@ extern s16 lbl_803DC7A8;
 extern void ObjModel_SampleJointTransform(u8 *model, int a, int b, f32 t, f32 s, f32 *outPos, s16 *outRot);
 extern void modelAnimFn_800246a0(u8 *dst, u8 *model, u8 *ch, f32 t, int max, int b, int c, int d, int e, s16 f);
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void ObjModel_UpdateAnimMatrices(u8 *model, u8 *blend, u8 *obj, u8 *dst) {
     u8 *ch;
     u8 *ch2;
@@ -2888,11 +2535,7 @@ void ObjModel_UpdateAnimMatrices(u8 *model, u8 *blend, u8 *obj, u8 *dst) {
         }
     }
 }
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 typedef struct {
     u8 _0[0xc];
     int bufs[2];
@@ -2972,13 +2615,9 @@ void modelAnimFn_800246a0(u8 *a, u8 *b, u8 *c, f32 t, int d, int e, int f, int g
     }
     lbl_80006C6C(&px, a, stk, *(int *)(hdr + 0x3c), *(u8 *)(hdr + 0xf3), lbl_80340740, d, (u8)h);
 }
-#pragma pop
 
 extern void ObjModel_TransformVerticesWithTranslation(u8 *m1, u8 *m2, u8 *src, int d1, int d2, int count);
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void ObjModel_BlendPrimaryVertexStream(u8 *mtxs, u8 *hdr, u8 *data, int *offs, u8 *out) {
     u16 sizes[2];
 
@@ -3032,14 +2671,10 @@ void ObjModel_BlendPrimaryVertexStream(u8 *mtxs, u8 *hdr, u8 *data, int *offs, u
         cacheQueueWait(0);
     }
 }
-#pragma pop
 
 extern void ObjModel_TransformVerticesLinear(u8 *m1, u8 *m2, u8 *src, int d1, int d2, int count);
 extern void ObjModel_TransformQuadVerticesLinear(u8 *m1, u8 *m2, u8 *src, int d1, int d2, int count);
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void ObjModel_BlendSecondaryVertexStream(u8 *mtxs, u8 *hdr, u8 *data, u8 **outs, int quad) {
     u16 sizes[2];
 
@@ -3111,19 +2746,11 @@ void ObjModel_BlendSecondaryVertexStream(u8 *mtxs, u8 *hdr, u8 *data, u8 **outs,
         cacheQueueWait(0);
     }
 }
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
 extern f32 lbl_803DE880;
 extern void fn_80007F78(u8 *ch, s16 *outRot, s16 *outRot2);
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void ObjModel_SampleJointTransform(u8 *model, int b, int idx, f32 t, f32 s, f32 *outPos, s16 *outRot) {
     u8 *ch;
     int saved;
@@ -3186,17 +2813,8 @@ void ObjModel_SampleJointTransform(u8 *model, int b, int idx, f32 t, f32 s, f32 
     outPos[1] *= s;
     outPos[2] *= s;
 }
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
 extern void PSMTXCopy(f32 *src, f32 *dst);
 extern void PSMTXTranspose(f32 *src, f32 *dst);
@@ -3207,7 +2825,8 @@ extern f32 lbl_803DE83C;
 extern f32 lbl_803DCED0;
 extern f32 lbl_803DCECC;
 
-#pragma dont_inline off
+#pragma scheduling on
+#pragma peephole on
 static int boneBlendSlotLimit(u8 *model) {
     u8 *p = *(u8 **)model;
     if (p[0xf3] != 0) {
@@ -3216,7 +2835,6 @@ static int boneBlendSlotLimit(u8 *model) {
     return 1;
 }
 
-#pragma push
 #pragma scheduling off
 #pragma peephole off
 void fn_80025F38(int *a, int b, u8 *blend, u8 *chain) {
@@ -3302,11 +2920,7 @@ void fn_80025F38(int *a, int b, u8 *blend, u8 *chain) {
         }
     }
 }
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void fn_80026308(int *a, int b, u8 *blend, u8 *chain, int cb, int cbArg) {
     u8 *model = (u8 *)a;
     f32 tmp[12];
@@ -3394,4 +3008,3 @@ void fn_80026308(int *a, int b, u8 *blend, u8 *chain, int cb, int cbArg) {
         *(f32 *)(*(u8 **)chain + i * 0x54 + 8) = work[2];
     }
 }
-#pragma pop

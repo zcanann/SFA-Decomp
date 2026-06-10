@@ -772,8 +772,6 @@ void FUN_800c2924(void)
   lbl_803DE038 = (float)dVar1;
   return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 
 extern EffectSrcParams lbl_8039C3C8;
@@ -804,6 +802,8 @@ extern f32 lbl_803DFF94;
 extern f32 lbl_803DFF98;
 extern f32 lbl_803DFF9C;
 
+#pragma scheduling off
+#pragma peephole off
 int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcByte)
 {
   EffectSpawnParams p;
@@ -1991,7 +1991,6 @@ extern u8 framesThisStep;
 extern f32 mathSinf(f32 x);
 
 /* Advance two periodic counters; compute sin of phase. */
-#pragma push
 void Effect10_func05(void)
 {
     f32 sum;
@@ -2017,7 +2016,6 @@ void Effect10_func05(void)
     }
     lbl_803DD3B8 = mathSinf(lbl_803DFF30 * (f32)(s16)lbl_803DD3B4 / lbl_803DFF34);
 }
-#pragma pop
 
 /* Trivial 4b 0-arg blr leaves. */
 void Effect10_func03_nop(void) {}

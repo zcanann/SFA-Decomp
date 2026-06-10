@@ -81,26 +81,14 @@ FUN_80017468(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
  * PAL Size: TODO
  */
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
 extern f32 timeDelta;
 
-#pragma push
 
-#pragma pop
 
-#pragma push
-#pragma pop
 
 /*
  * --INFO--
@@ -168,14 +156,12 @@ FUN_80017998(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 
 /* ObjModel/model-file accessors. */
 
-#pragma push
 
 
 
 
 
 
-#pragma pop
 
 /* Global game-state / text accessors. */
 
@@ -299,7 +285,6 @@ void *objCreateLight(int arg, u8 addToList) {
     return NULL;
 }
 
-#pragma push
 void modelLightStruct_freeSlot(void **lightSlot) {
     int count;
     int i;
@@ -393,9 +378,7 @@ void *modelLightStruct_createPointLight(int unused, u8 red, u8 green, u8 blue, u
 
     return light;
 }
-#pragma pop
 
-#pragma push
 void *objAllocLight(void *owner) {
     u8 *light;
     f32 tmp[3];
@@ -517,7 +500,6 @@ void *objAllocLight(void *owner) {
     *(f32 *)(light + 0x12c) = zero;
     return light;
 }
-#pragma pop
 
 void modelLightStruct_setProjectionTevModes(ModelLightStruct *p, void *a, void *b) {
     p->projectionTevColorMode = (int)a;
@@ -527,7 +509,6 @@ void modelLightStruct_setProjectionTevModes(ModelLightStruct *p, void *a, void *
 
 extern u8 lbl_803DB408;
 
-#pragma push
 void modelLightStruct_setGlowColor(ModelLightStruct *light, u8 red, u8 green, u8 blue, u8 alpha) {
     light->glowColor[0] = red;
     light->glowColor[1] = green;
@@ -582,7 +563,6 @@ void modelLightStruct_setObjectLightMaskIndex(ModelLightStruct *p, int n) {
     p->objectLightMask = (u8)(1 << n);
 }
 
-#pragma pop
 
 extern f32 lbl_803DE764;
 extern f32 lbl_803DE778;
@@ -593,7 +573,6 @@ extern f32 lbl_803DE798;
 extern void *textureLoadAsset(int assetId);
 extern int randomGetRange(int lo, int hi);
 
-#pragma push
 void modelLightStruct_getSpecularColor(ModelLightStruct *p, u8 *a, u8 *b, u8 *c, u8 *d) {
     *a = p->specularColor[0];
     *b = p->specularColor[1];
@@ -782,7 +761,6 @@ void modelLightStruct_setProjectionNearZ(ModelLightStruct *p, f32 v) {
 }
 
 
-#pragma pop
 
 extern u8 gModelLightUseModelRelativePositions;
 extern int gModelLightNextGXLightId;
@@ -796,7 +774,6 @@ typedef struct {
 } ModelLightChannelState;
 extern ModelLightChannelState gModelLightChannelStates[];
 
-#pragma push
 
 
 void mm_free(void *p);
@@ -818,27 +795,21 @@ void modelLightChannels_reset(u8 v) {
     gModelLightChannelStates[4].active = 0;
     gModelLightChannelStates[5].active = 0;
 }
-#pragma pop
-
-#pragma push
 
 
 
 
-#pragma pop
-
-#pragma push
 
 
 
 
-#pragma pop
+
+
 
 typedef f32 Mtx[3][4];
 extern void PSVECSubtract(f32 *a, f32 *b, f32 *out);
 extern void PSVECNormalize(f32 *src, f32 *dst);
 
-#pragma push
 
 
 
@@ -915,7 +886,6 @@ extern f32 lbl_803DE7A4;
 extern f32 *Camera_GetInverseViewMatrix(void);
 extern void PSMTXConcat(f32 *a, f32 *b, f32 *ab);
 
-#pragma push
 void modelLightStruct_loadDiffuseGXLight(u8 *light, u8 *obj, int lightId) {
     f32 viewPos[3];
     f32 *view;
@@ -990,7 +960,6 @@ void modelLightStruct_loadDiffuseGXLight(u8 *light, u8 *obj, int lightId) {
     }
     GXLoadLightObjImm(light + 0x68, lightId);
 }
-#pragma pop
 
 void modelLightStruct_loadChannelLight(int channel, u8 *light, u8 *obj) {
     f32 viewDir[3];
@@ -1186,7 +1155,6 @@ void updateLights(void) {
 
 
 
-#pragma pop
 
 extern void GXInitLightSpot(u8 *lt_obj, f32 cutoff, int spot_func);
 extern f32 PSVECMag(f32 *v);
@@ -1194,7 +1162,6 @@ extern f32 PSVECDotProduct(f32 *a, f32 *b);
 extern f32 lbl_803DE768;
 extern f32 lbl_802C1A88[];
 
-#pragma push
 
 
 
@@ -1335,8 +1302,8 @@ f32 modelLightStruct_getObjectIntensity(u8 *light, u8 *obj) {
 
     return amount;
 }
-#pragma dont_inline reset
 
+#pragma dont_inline off
 void modelLightStruct_selectBrightestAabbLights(f32 minX, f32 minY, f32 minZ, f32 maxX, f32 maxY, f32 maxZ,
                  u8 **outLights, int maxLights, int *outCount) {
     int i;
@@ -1503,9 +1470,7 @@ void modelLightStruct_selectObjectLights(u8 *obj, u8 **outLights, int maxLights,
         *(f32 *)(light + 0x130) = -*(f32 *)(light + 0x130);
     }
 }
-#pragma pop
 
-#pragma push
 
 
 
@@ -1530,25 +1495,19 @@ void modelLightStruct_updateGlowAlpha(ModelLightStruct *light) {
 }
 
 
-#pragma pop
-
-
-#pragma push
 
 
 
-#pragma pop
 
-#pragma push
+
+
 
 int randomGetRange(int lo, int hi);
 
 
-#pragma pop
 
 extern void C_MTXLightPerspective(f32 *m, f32 fovY, f32 aspect, f32 scaleS, f32 scaleT, f32 transS, f32 transT);
 
-#pragma push
 void modelLightStruct_setupPerspectiveProjection(ModelLightStruct *obj, f32 a, f32 b) {
     obj->projectionFovY = a;
     obj->projectionAspect = b;
@@ -1581,10 +1540,8 @@ void modelLightStruct_setupOrthoProjection(ModelLightStruct *obj, f32 a, f32 b, 
                     lbl_803DE790, lbl_803DE790);
 }
 
-#pragma pop
 
 
-#pragma push
 
 void modelLightStruct_setSpecularAttenuation(ModelLightStruct *obj, f32 a, f32 b) {
     u8 *lightObj;
@@ -1600,266 +1557,94 @@ void modelLightStruct_setSpecularAttenuation(ModelLightStruct *obj, f32 a, f32 b
     one = lbl_803DE760;
     GXInitLightAttn(lightObj, zero, zero, one, atten, zero, one - atten);
 }
-#pragma pop
-
-#pragma push
-#pragma pop
-
-
-#pragma push
-#pragma pop
-
-
-#pragma push
-#pragma pop
 
 
 
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma pop
 
 
-#pragma push
 
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
 
-#pragma pop
 
-#pragma push
+
+
+
+
+
+
 void Obj_BuildInverseWorldTransformMatrix(u8 *obj, f32 *out);
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma fp_contract off
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
 
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma opt_loop_invariants off
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
 void *mmAlloc(int size, int type, int flag);
-#pragma pop
-
-#pragma push
-#pragma dont_inline on
-#pragma opt_strength_reduction off
-#pragma opt_strength_reduction reset
-#pragma dont_inline reset
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma dont_inline on
-#pragma dont_inline reset
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma dont_inline on
-#pragma dont_inline reset
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma dont_inline on
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma opt_strength_reduction off
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma fp_contract off
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma optimization_level 1
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma pop
 
 
-#pragma dont_inline off
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

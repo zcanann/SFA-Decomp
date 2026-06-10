@@ -2329,7 +2329,6 @@ typedef struct PartFxNode {
 
 /* Binary search for key in lbl_8039C458 (count = lbl_803DD410). */
 #pragma dont_inline on
-#pragma push
 u32 Checkpoint_find(s32 key, s32 *idx_out)
 {
     s32 high;
@@ -2353,8 +2352,6 @@ u32 Checkpoint_find(s32 key, s32 *idx_out)
     *idx_out = -1;
     return 0;
 }
-#pragma pop
-#pragma dont_inline off
 
 extern f32 lbl_803E04D8;
 extern f32 lbl_803E04DC;
@@ -2368,7 +2365,7 @@ typedef struct CheckpointPair {
 } CheckpointPair;
 
 /* Build particle quad positions from a checkpoint pair. */
-#pragma push
+#pragma dont_inline off
 s32 fn_800D55BC(u8 *p, s32 idx, f32 *out1, f32 *out2, f32 *out3, u8 mode, f32 fa, f32 fb)
 {
     s32 local_idx;
@@ -2490,7 +2487,6 @@ s32 fn_800D55BC(u8 *p, s32 idx, f32 *out1, f32 *out2, f32 *out3, u8 mode, f32 fa
     }
     return ret;
 }
-#pragma pop
 
 /* Set *p to lbl_803DD414 (sign-extended) and return lbl_803DD418. */
 u32 Checkpoint_func0E(s32 *p)
@@ -2500,7 +2496,6 @@ u32 Checkpoint_func0E(s32 *p)
 }
 
 /* Swap lbl_803DD418 with lbl_803DD41C; copy 416 into 414 then clear 416. */
-#pragma push
 void fn_800D6584(void)
 {
     u32 tmp = lbl_803DD418;
@@ -2509,7 +2504,6 @@ void fn_800D6584(void)
     lbl_803DD414 = lbl_803DD416;
     lbl_803DD416 = 0;
 }
-#pragma pop
 
 /* Rank object r3 against array at lbl_803DD418 by (int@0x1c, float@0xc) descending. */
 typedef struct PartFxItem {
@@ -2520,7 +2514,6 @@ typedef struct PartFxItem {
 } PartFxItem;
 
 /* NOTE: 96.8% ? register choice differs (r5 vs r7 for rank). */
-#pragma push
 s32 Checkpoint_func0F(PartFxItem *p)
 {
     PartFxItem *q;
@@ -2541,7 +2534,6 @@ s32 Checkpoint_func0F(PartFxItem *p)
     }
     return rank;
 }
-#pragma pop
 
 /* Find item in lbl_803DD418 array whose rank equals target_rank. */
 PartFxItem *Checkpoint_func10(s32 target_rank)
@@ -2577,7 +2569,6 @@ PartFxItem *Checkpoint_func10(s32 target_rank)
 }
 
 /* Init random offsets / chain advance with lookup. */
-#pragma push
 void Checkpoint_func0A(s32 key, f32 *out_vec, u8 *flag_byte)
 {
     s32 local_idx;
@@ -2618,10 +2609,8 @@ void Checkpoint_func0A(s32 key, f32 *out_vec, u8 *flag_byte)
         }
     }
 }
-#pragma pop
 
 /* Walk a chain via Checkpoint_find lookups starting from o->_0x10. */
-#pragma push
 void Checkpoint_func0C(PartFxNode *o)
 {
     s32 local_idx;
@@ -2640,7 +2629,6 @@ void Checkpoint_func0C(PartFxNode *o)
         o->_0xc = lbl_803E04E8;
     }
 }
-#pragma pop
 
 /* Append v to array pointed to by lbl_803DD41C, capped at 10 entries.
  * NOTE: stuck at ~78% ? instruction scheduling differs. */
@@ -2651,7 +2639,6 @@ void Checkpoint_func0D(u32 v)
 }
 
 /* Tick: counter1, counter2 + rate*timeDelta; clamp; periodic sin. */
-#pragma push
 void Effect16_func05(void)
 {
     f32 sum;
@@ -6535,7 +6522,6 @@ void Effect20_func05(void)
     if (lbl_803DD404 > 0x7fff) lbl_803DD404 = 0;
     lbl_803DD408 = mathSinf(lbl_803E0344 * (f32)(s16)lbl_803DD404 / lbl_803E0348);
 }
-#pragma pop
 
 /* Trivial 4b 0-arg blr leaves. */
 void Effect16_func03_nop(void) {}
@@ -6571,7 +6557,6 @@ extern f32 Curve_EvalHermite(f32 *values, f32 t, f32 *outTangent);
 extern u16 getAngle(f32 a, f32 b);
 
 /* Advance along the checkpoint curve by dist; write position/angles to out. */
-#pragma push
 s32 Checkpoint_func08(u8 *out, u8 *o, f32 dist, s32 p3, u8 flag)
 {
     f32 v1[4];
@@ -6682,7 +6667,6 @@ s32 Checkpoint_func08(u8 *out, u8 *o, f32 dist, s32 p3, u8 flag)
     }
     return 0;
 }
-#pragma pop
 
 void Checkpoint_onGameLoop(void)
 {

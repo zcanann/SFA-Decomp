@@ -158,7 +158,6 @@ void kaldaChomFn_8016821c(int obj, KaldaChomControl *control)
   }
   return;
 }
-#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -173,7 +172,6 @@ void kaldaChomFn_8016821c(int obj, KaldaChomControl *control)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma dont_inline on
 void kaldaChomFn_80168374(int obj, int state, u8 useUpperMouthPoint)
 {
   KaldaChomControl *control;
@@ -215,7 +213,6 @@ void kaldaChomFn_80168374(int obj, int state, u8 useUpperMouthPoint)
     }
   }
 }
-#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -230,6 +227,7 @@ void kaldaChomFn_80168374(int obj, int state, u8 useUpperMouthPoint)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma dont_inline off
 void kaldachom_handleAnimEvents(int obj, int p2, int p3)
 {
   KaldaChomControl *control = ((CampfireState *)p2)->control;
@@ -303,7 +301,6 @@ typedef struct KaldaCombatStack {
 
 extern u8 lbl_803AC668[0x18];
 
-#pragma push
 void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state)
 {
   KaldaChomControl *control;
@@ -398,7 +395,6 @@ void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state)
     }
   }
 }
-#pragma pop
 
 /* Trivial 4b 0-arg blr leaves. */
 void kaldachom_func0B(void) {}

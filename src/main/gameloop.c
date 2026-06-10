@@ -87,37 +87,15 @@ FUN_80017468(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
  * PAL Size: TODO
  */
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
 extern f32 timeDelta;
 
-#pragma push
-#pragma scheduling off
 
 void *gameTextGetStr(int textId);
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma pop
 
 /*
  * --INFO--
@@ -185,16 +163,13 @@ FUN_80017998(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 void doNothing_8001F678(void) {}
 #pragma dont_inline on
 void doNothing_startOfFrame(void) {}
-#pragma dont_inline reset
+#pragma dont_inline off
 void doNothing_onSaveSelectScreenExit(void) {}
 int return1_800202BC(void) { return 0x1; }
 int return0_8002969C(void);
 
 /* ObjModel/model-file accessors. */
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 
@@ -204,7 +179,6 @@ extern u8 framesThisStep;
 
 
 
-#pragma pop
 
 /* Global game-state / text accessors. */
 extern u8 lbl_803DCA3D;
@@ -247,8 +221,8 @@ void setTimeStop(int v) {
 void setShouldResetNextFrame(int v) {
     lbl_803DCA3E = (u8)v;
 }
-#pragma peephole reset
 
+#pragma peephole on
 void setFrameCountdown_800202c4(u8 v) {
     lbl_803DCA3B = v;
 }
@@ -279,16 +253,8 @@ void gameTextSetDrawFunc(void *fn);
 extern void *memset(void *dst, int val, int n);
 
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
 u8 getButtonObjects(void **p) {
     *p = lbl_803DCAE8;
@@ -299,10 +265,9 @@ u8 getButtonObjects(void **p) {
 extern u16 lbl_803DCA42;
 extern u8 lbl_803DCAF0;
 
-#pragma push
+
 #pragma scheduling off
 #pragma peephole off
-
 void fn_8001FE90(void) {
     lbl_803DCA42++;
     lbl_803DCAF0 = 0xd0;
@@ -330,29 +295,21 @@ void addButtonObject(void *v) {
     lbl_803DCA48 = i + 1;
     lbl_803DCAE8[i] = (int)v;
 }
-#pragma peephole reset
 
 int mmSetFreeDelay(int v);
 
 int testAndSet_onlyUseHeap3(int v);
 
 
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
 void *getCache(void);
 
 
-#pragma pop
 
 extern void Sfx_SetObjectSoundsPaused(s32 paused);
 extern void gameTextLoadDir(int dirId);
 
-#pragma push
-#pragma scheduling off
 #pragma peephole off
 void cutsceneExit(void) {
     lbl_803DCA3A = 0;
@@ -366,7 +323,6 @@ void gameTextInit(void);
 
 void *Obj_GetPlayerObject(void);
 
-#pragma pop
 
 extern void mapReloadWithFadeout(void);
 extern void *loadAsset(void *req);
@@ -391,6 +347,8 @@ extern void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *paren
 extern int textureLoad(int id, int flag);
 extern void *loadAnimation(int hdr, s16 id, int b, u8 *bufout);
 
+#pragma scheduling on
+#pragma peephole on
 void *loadAsset(void *reqVoid) {
     u8 tmp[0x14];
     AssetReq *req;
@@ -429,10 +387,9 @@ void *loadAsset(void *reqVoid) {
     }
 }
 
-#pragma push
+
 #pragma scheduling off
 #pragma peephole off
-
 void mapReload(void) {
     mapReloadWithFadeout();
     lbl_803DCA39 = 1;
@@ -455,19 +412,13 @@ void *loadTextureFile(int id, int arg) {
     lbl_8033BF88.f8 = id;
     return loadAsset(&lbl_8033BF88);
 }
-#pragma dont_inline reset
 
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 
 void gameTextLoadDir(int dirId);
 
-#pragma dont_inline on
 void *getTabEntry(void *dst, int fileId, int offset, int size) {
     lbl_8033BF88.f0 = 1;
     lbl_8033BF88.f1 = 2;
@@ -477,18 +428,14 @@ void *getTabEntry(void *dst, int fileId, int offset, int size) {
     lbl_8033BF88.fc = size;
     return loadAsset(&lbl_8033BF88);
 }
-#pragma dont_inline reset
 
-#pragma pop
 
 typedef f32 Mtx[3][4];
 extern void cutsceneEnterExit(int a, int b);
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
+#pragma dont_inline off
 void cutsceneFadeInOut(int a) {
     cutsceneEnterExit(a, 1);
 }
@@ -497,10 +444,6 @@ void cutsceneFadeInOut(int a) {
 
 
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
 
 
@@ -528,14 +471,10 @@ extern void *lbl_803DCAFC;
 
 void mmInit(void);
 
-#pragma pop
 
 extern void *memcpy(void *dst, const void *src, int n);
 extern void LCEnable(void);
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
 void copyToCache(void *dst, void *src, u32 count);
 
@@ -594,38 +533,25 @@ void *animationLoad(int id, s16 a, s16 b, int e, int f) {
     lbl_8033BF88.f24 = f;
     return loadAsset(&lbl_8033BF88);
 }
-#pragma dont_inline reset
 
 
 
 
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void gameTextInitFn_8001bd14(void);
 
 
 
 void Obj_ApplyPendingParentLinks(void);
-#pragma pop
 
 extern u8 *lbl_803DCADC;
 #define gGameBitTable lbl_803DCADC
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 extern s16 lbl_803DCAD8;
@@ -633,6 +559,7 @@ extern u8 *lbl_803DCAE0;
 #define gGameBitCount lbl_803DCAD8
 #define gGameBitSaveData lbl_803DCAE0
 
+#pragma dont_inline off
 u32 GameBit_Get(int eventId) {
     s16 id = (s16)eventId & 0xfff;
     u8 flags;
@@ -778,50 +705,22 @@ int gameBitIncrement(int bit) {
 
 void Obj_FlushDeferredFreeList(void);
 
-#pragma pop
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-
-#pragma pop
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-
-#pragma pop
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
-
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
-
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
 
 
 
 
-#pragma push
-#pragma scheduling off
+
+
+
+
+
+
+
+
+
 void ObjModel_InitResourceCaches(void);
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
 extern void mapSetup();
 extern void Music_Trigger(int triggerId, int mode);
@@ -836,9 +735,6 @@ extern u8 lbl_803DCA44;
 extern f32 lbl_803DE7B4;
 extern f32 lbl_803DB420;
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
 void mapLoadByCoords(int arg) {
     lbl_803DCA38 = 0;
@@ -854,56 +750,20 @@ void mapLoadByCoords(int arg) {
     lbl_803DB420 = lbl_803DE7B4;
 }
 
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void gameTextInitFn_8001a234(void);
 
 void gameTextRun(void);
 
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma fp_contract off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int unused);
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma pop
 
 extern void OSInit(void);
 extern void DVDInit(void);
@@ -994,8 +854,7 @@ extern void *lbl_803DCAC0;
 extern void *gTitleMenuItemInterface;
 extern u8 lbl_803DCA3F;
 
-#pragma push
-#pragma scheduling off
+#pragma peephole on
 #pragma dont_inline on
 void init(void) {
     u8 audioDone;
@@ -1157,140 +1016,35 @@ void init(void) {
     tvInit();
     OSReport(sMainFinishedInitMessage);
 }
-#pragma dont_inline reset
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_loop_invariants off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void Obj_UpdateAllObjects(u8 flags);
-#pragma pop
 
 extern void playerUpdateFn_8005649c(void);
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void Obj_InitObjectSystem(void);
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma dont_inline on
-#pragma opt_strength_reduction off
-#pragma opt_strength_reduction reset
-#pragma dont_inline reset
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
-#pragma pop
 
 extern void uiDll_runFrameStartAndLoadNext(void);
 extern u32 getButtonsJustPressed(int pad);
@@ -1307,9 +1061,8 @@ extern int lbl_803DCAD0;
 extern f32 lbl_803DE7B0;
 extern f32 lbl_803DE7B8;
 
-#pragma push
-#pragma scheduling off
 #pragma peephole off
+#pragma dont_inline off
 void gameUpdate(void)
 {
     Obj_GetPlayerObject();
@@ -1404,7 +1157,6 @@ void gameUpdate(void)
         }
     }
 }
-#pragma pop
 
 extern void voxmaps_updateTimers(void);
 extern void viewportEffectFn_8000e380(void);
@@ -1419,9 +1171,6 @@ extern void subtitleUpdateAndDraw(int a);
 extern void doNothing_endOfFrame(void);
 extern f32 lbl_803DE7A8;
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void gameLoop(void)
 {
     waitNextFrame();
@@ -1467,7 +1216,6 @@ void gameLoop(void)
     mmFreeTick(1);
     doQueuedLoads();
 }
-#pragma pop
 
 extern u8 lbl_803DCAC4;
 extern int lbl_803DB41C;
@@ -1481,9 +1229,6 @@ extern void mapLoadDataFiles(int map);
 extern void clearForceLoadImmediately(void);
 extern void beginLoadingMap(void);
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void doQueuedLoads(void)
 {
     if ((s8)lbl_803DCA39 != 0) {
@@ -1531,32 +1276,14 @@ void doQueuedLoads(void)
         lbl_803DCAC4 = 1;
     }
 }
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma dont_inline on
-#pragma dont_inline reset
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void *loadAnimation(int hdr, s16 id, int b, u8 *bufout);
-#pragma pop
 
 extern void gameTextShowStr(int str, int a, int b, int c);
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void subtitleUpdateAndDraw(int a);
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma pop
 
 extern int saveGameGetStatus(void);
 extern void gameTextShow(int id);
@@ -1567,9 +1294,6 @@ extern void cardDeleteFn_8007d99c(void);
 extern int lbl_803DCACC;
 extern u8 lbl_803DB424;
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void cardShowMessage(void)
 {
     u32 held;
@@ -1638,75 +1362,22 @@ void cardShowMessage(void)
         }
     }
 }
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma dont_inline on
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma opt_strength_reduction off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma fp_contract off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma pop
 
 extern void stopRumble2(void);
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void cutsceneEnterExit(int entering, int affectSounds) {
     if (entering != 0) {
         stopRumble2();
@@ -1726,26 +1397,11 @@ void cutsceneEnterExit(int entering, int affectSounds) {
         }
     }
 }
-#pragma pop
 
-#pragma push
-#pragma optimization_level 1
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
+#pragma peephole on
 void removeButtonObject(u32 h) {
     int *p;
     int n;
@@ -1768,48 +1424,15 @@ void removeButtonObject(u32 h) {
     }
     lbl_803DCA48--;
 }
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
 extern u8 *gameTextGetBox(int boxId);
 extern int padGetStickX(int pad);
@@ -1820,8 +1443,6 @@ extern int lbl_803DB428;
 extern int lbl_803DB42C;
 extern void *gameTextGetStr(int textId);
 
-#pragma push
-#pragma scheduling off
 #pragma peephole off
 void askProgressiveScanMode(void) {
     u32 counter;
@@ -1922,7 +1543,6 @@ void askProgressiveScanMode(void) {
         GXFlush_(0, 0);
     } while (counter < 0xf0);
 }
-#pragma pop
 
 extern u32 getNewInputs(int pad);
 extern int DVDGetDriveStatus(void);
@@ -1947,9 +1567,6 @@ extern u8 lbl_803DCAC5;
 extern char lbl_802CA460[];
 extern f32 lbl_803DE7AC;
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void checkReset(void) {
     char *msg;
     u8 pressed;
@@ -2064,16 +1681,6 @@ void checkReset(void) {
         break;
     }
 }
-#pragma pop
 
-#pragma dont_inline off
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop

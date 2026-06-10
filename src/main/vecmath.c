@@ -75,36 +75,14 @@ FUN_80017468(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
  * PAL Size: TODO
  */
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
 extern f32 timeDelta;
 
-#pragma push
-#pragma scheduling off
 
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma pop
 
 /*
  * --INFO--
@@ -172,16 +150,12 @@ FUN_80017998(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 
 /* ObjModel/model-file accessors. */
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 
 
 
 
-#pragma pop
 
 /* Global game-state / text accessors. */
 
@@ -198,35 +172,22 @@ FUN_80017998(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 
 
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-
-#pragma pop
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
-
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 
 
 
-#pragma pop
+
+
+
+
 
 extern int randomGetRange(int lo, int hi);
 
-#pragma push
+
+
 #pragma scheduling off
 #pragma peephole off
-
-
 f32 getXZDistance(f32 *a, f32 *b) {
     f32 dx = a[0] - b[0];
     f32 dz = a[2] - b[2];
@@ -247,14 +208,10 @@ void Vec3_ScaleAdd(f32 *a, f32 s, f32 *b, f32 *out) {
 }
 
 
-#pragma pop
 
 extern float fn_802924B4(float y, float x);
 extern double lbl_803DE7D8;
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
 int getAngle(float y, float x) {
     return (int)(lbl_803DE7D8 * fn_802924B4(y, x));
@@ -266,15 +223,11 @@ int atan2_8002178c(float y, float x) {
 
 
 
-#pragma pop
 
 extern f32 fcos16(int angle);
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803DE7D0;
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void mtx44ScaleRow1(u8 *p, f32 s) {
     *(f32 *)(p + 0x10) *= s;
     *(f32 *)(p + 0x14) *= s;
@@ -335,24 +288,16 @@ void Vec3_ReflectAgainstNormal(f32 *a, f32 *n, f32 *out) {
 
 
 
-#pragma pop
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 
 
-#pragma pop
+
 
 typedef f32 Mtx[3][4];
 extern f32 lbl_803DE7C0;
 extern f32 lbl_803DE7C4;
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 
@@ -361,10 +306,6 @@ extern f32 lbl_803DE7C4;
 extern void mtxRotateByVec3s(f32 *mtx, void *transform);
 extern void mtx44Transpose(f32 *src, f32 *dst);
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
 
 
@@ -404,11 +345,6 @@ f32 interpolate(f32 a, f32 t, f32 exp) {
 int atan2i(int y, int x) {
     return (int)(lbl_803DE7D8 * fn_802924B4((f32)y, (f32)x));
 }
-#pragma pop
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 
@@ -416,11 +352,8 @@ int atan2i(int y, int x) {
 
 
 
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
+
 void mtx44Transpose(f32 *src, f32 *dst) {
     dst[0] = src[0];
     dst[1] = src[4];
@@ -462,21 +395,13 @@ void Matrix_TransformPoint(f32 *m, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *o
 }
 
 
-#pragma pop
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 
-#pragma pop
+
 
 extern f32 lbl_803DE810;
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void Matrix_TransformVector(f32 *m, f32 *v, f32 *out) {
     f32 vx, vy, vz;
     f32 m0, m1, m2;
@@ -561,92 +486,33 @@ void Vec3_Normalize(f32 *v) {
 }
 
 
-#pragma pop
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-
-#pragma pop
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-
-#pragma pop
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
-
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
-
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
 
 
-#pragma push
-#pragma scheduling off
-#pragma pop
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-
-#pragma pop
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 extern f32 fsin16(int angle);
 extern f32 lbl_803DE7F0;
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma fp_contract off
 void mtxRotateByVec3s(f32 *mtx, void *transform) {
     f32 cx;
@@ -720,131 +586,37 @@ void mtxRotateByVec3s(f32 *mtx, void *transform) {
     mtx[15] = lbl_803DE7C4;
 }
 
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_loop_invariants off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
 extern f32 mathSinf(f32);
 extern f32 mathCosf(f32);
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 /* Tail residual: a1/a2/b0 FP volatile rotation (f1/f2/f3) resists decl-order
    and fresh-web restructures -- recipe #82 named-local cap. */
+#pragma fp_contract on
 void mtx44_mult(f32 *a, f32 *b, f32 *out)
 {
     f32 *end = a + 12;
@@ -922,13 +694,7 @@ void mtx44_mult(f32 *a, f32 *b, f32 *out)
     t = b2 + b3;
     out[2] = t;
 }
-#pragma peephole reset
-#pragma scheduling reset
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma opt_strength_reduction off
 void mtx44_multSafe(int a, int b, f32 *out)
 {
@@ -968,15 +734,11 @@ void mtx44_multSafe(int a, int b, f32 *out)
         *(f32 *)((int)out + ((i + 3) << 2)) = *(f32 *)((int)tmp + ((i + 3) << 2));
     }
 }
-#pragma opt_strength_reduction reset
-#pragma pop
 
 extern f32 lbl_803DE7E8;
 extern f32 lbl_803DE7EC;
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
+#pragma opt_strength_reduction on
 void vecRotateYXZ(s16 *a, f32 *v)
 {
     f32 x, y, z;
@@ -1018,61 +780,20 @@ void vecRotateYXZ(s16 *a, f32 *v)
     v[1] = y;
     v[2] = z;
 }
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
 extern void angleToVec2(int angle, f32 *cosOut, f32 *sinOut);
 
-#pragma push
-#pragma scheduling off
+#pragma peephole on
 void setMatrixFromObjectPos(f32 *m, u8 *p)
 {
     f32 scale;
@@ -1106,12 +827,9 @@ void setMatrixFromObjectPos(f32 *m, u8 *p)
     m[14] = *(f32 *)(p + 0x14);
     m[15] = lbl_803DE7C4;
 }
-#pragma pop
 
 extern void PSVECCrossProduct(f32 *a, f32 *b, f32 *out);
 
-#pragma push
-#pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
 void fn_800213D0(f32 *a, f32 *b, s16 *out0, s16 *out1, s16 *out2)
@@ -1160,51 +878,17 @@ void fn_800213D0(f32 *a, f32 *b, s16 *out0, s16 *out1, s16 *out2)
         *out2 = s * roll / d;
     }
 }
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma opt_strength_reduction off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma fp_contract off
+#pragma dont_inline off
 int RandomTimer_UpdateRangeTrigger(f32 lo, f32 hi, void *timerp) {
     extern f32 oneOverTimeDelta;
     extern f32 lbl_803DE7F4;
@@ -1243,14 +927,10 @@ int RandomTimer_UpdateRangeTrigger(f32 lo, f32 hi, void *timerp) {
     }
     return 0;
 }
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
+#pragma peephole on
+#pragma fp_contract on
 void vecRotateZXY(u8 *p, f32 *v) {
     f32 s2;
     f32 c2;
@@ -1272,92 +952,22 @@ void vecRotateZXY(u8 *p, f32 *v) {
     v[0] = t5 * c0 + t2 * s0;
     v[2] = t2 * c0 - t5 * s0;
 }
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma optimization_level 1
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma dont_inline off
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop

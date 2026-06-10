@@ -75,24 +75,12 @@ FUN_80017468(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
  * PAL Size: TODO
  */
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
 
-#pragma pop
 
-#pragma push
-#pragma pop
 
 /*
  * --INFO--
@@ -160,14 +148,12 @@ FUN_80017998(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 
 /* ObjModel/model-file accessors. */
 
-#pragma push
 
 
 
 
 
 
-#pragma pop
 
 /* Global game-state / text accessors. */
 
@@ -216,12 +202,8 @@ extern u8 lbl_803DCB10;
 extern void *mmAlloc(int size, int type, int flag);
 
 
-#pragma push
 
-#pragma pop
 
-#pragma push
-#pragma pop
 
 void texFlagFn_80023cbc(int v) {
     lbl_803DCB10 = (u8)v;
@@ -232,7 +214,6 @@ extern int lbl_803DCB14;
 extern int lbl_803DCB08;
 extern int lbl_803DB434;
 
-#pragma push
 
 
 
@@ -261,8 +242,8 @@ int testAndSet_onlyUseHeaps1and2(int v) {
         return old;
     }
 }
-#pragma dont_inline reset
 
+#pragma dont_inline off
 int alignUp2(int x) {
     int r = x & 1;
     if (r > 0) {
@@ -271,12 +252,10 @@ int alignUp2(int x) {
     return x;
 }
 
-#pragma pop
 
 extern int lbl_803DD610;
 extern void *lbl_803DD61C;
 
-#pragma push
 
 void *getCache(void) {
     if (lbl_803DD610 != 4 && lbl_803DD610 != 0) {
@@ -286,13 +265,11 @@ void *getCache(void) {
 }
 
 
-#pragma pop
 
 extern void LCQueueWait();
 extern void mmFree(void *p);
 extern void mmFreeDeferred(void *p);
 
-#pragma push
 
 void cacheQueueWait(int sync) {
     if (lbl_803DD610 == 4 || lbl_803DD610 == 0) {
@@ -308,19 +285,15 @@ void mm_free(void *p) {
     }
 }
 
-#pragma pop
-
-#pragma push
 
 
 
 
-#pragma pop
+
 
 extern int OSDisableInterrupts(void);
 extern int OSRestoreInterrupts(int level);
 
-#pragma push
 
 void AtomicSList_Push(void **list, void *node) {
     int intr = OSDisableInterrupts();
@@ -332,7 +305,6 @@ void AtomicSList_Push(void **list, void *node) {
 
 
 
-#pragma pop
 
 typedef f32 Mtx[3][4];
 extern u8 lbl_803DCB42;
@@ -346,14 +318,11 @@ typedef struct {
 } MmRegion;
 extern MmRegion gMmRegionTable[];
 
-#pragma push
 
 
 
 
 
-#pragma push
-#pragma pop
 
 
 
@@ -401,7 +370,6 @@ void *mmInitRegion(u8 *buf, int size, int numSlots) {
     gMmRegionTable[regIdx].f4++;
     return gMmRegionTable[regIdx].start;
 }
-#pragma dont_inline reset
 
 extern u32 OSGetTick(void);
 extern void heapFree(int region, int slotIdx);
@@ -433,6 +401,7 @@ typedef struct {
     int handle;
 } MmStore;
 
+#pragma dont_inline off
 int mmCreateMemoryStore(int size) {
     char *msg = sMmShowInfoFBMemoryStoreMessageBlock;
     MmStore *store;
@@ -633,8 +602,8 @@ void mmFreeTick(int arg) {
             g->regions[3].f4, g->regions[3].numSlots);
     }
 }
-#pragma peephole reset
 
+#pragma peephole off
 void mmFree(void *p) {
     int region;
     int i;
@@ -1021,12 +990,10 @@ void *AtomicSList_Pop(void **list) {
     return head;
 }
 
-#pragma pop
 
 extern void *memcpy(void *dst, const void *src, int n);
 extern void LCLoadBlocks(void *destTag, void *srcAddr, u32 numBlocks);
 
-#pragma push
 
 void copyToCache(void *dst, void *src, u32 count) {
     if (lbl_803DD610 != 4 && lbl_803DD610 != 0) {
@@ -1047,23 +1014,17 @@ void copyToCache(void *dst, void *src, u32 count) {
 
 
 
-#pragma pop
-
-#pragma push
 
 
 
-#pragma pop
-
-#pragma push
 
 
 
-#pragma pop
+
+
 
 extern void LCStoreBlocks(void *destAddr, void *srcTag, u32 numBlocks);
 
-#pragma push
 
 
 
@@ -1082,130 +1043,54 @@ void memcpyToCache(void *dst, void *src, u32 count) {
     }
 }
 
-#pragma pop
-
-#pragma push
-
-#pragma pop
-
-#pragma push
-
-#pragma pop
-
-#pragma push
-#pragma pop
-
-
-#pragma push
-#pragma pop
-
-
-#pragma push
-#pragma pop
 
 
 
 
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma fp_contract off
-#pragma pop
-
-#pragma push
-#pragma pop
-
-#pragma push
-#pragma pop
 
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
 
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma opt_loop_invariants off
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 void *stackCreate(int count, int size)
 {
     u8 *s;
@@ -1246,9 +1131,7 @@ void *stackCreate(int count, int size)
     }
     return s;
 }
-#pragma pop
 
-#pragma push
 void *mmAlloc(int size, int type, int flag)
 {
     void *result;
@@ -1299,145 +1182,47 @@ void *mmAlloc(int size, int type, int flag)
     }
     return result;
 }
-#pragma pop
 
-#pragma push
-#pragma dont_inline on
-#pragma opt_strength_reduction off
-#pragma opt_strength_reduction reset
-#pragma dont_inline reset
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma dont_inline on
-#pragma dont_inline reset
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma dont_inline on
-#pragma dont_inline reset
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma dont_inline on
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma opt_strength_reduction off
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma fp_contract off
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma optimization_level 1
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
 
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop
 
-#pragma dont_inline off
 
-#pragma push
-#pragma pop
 
-#pragma push
-#pragma pop

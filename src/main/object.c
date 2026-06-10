@@ -88,36 +88,14 @@ FUN_80017468(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
  * PAL Size: TODO
  */
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
 extern f32 timeDelta;
 
-#pragma push
-#pragma scheduling off
 
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma pop
 
 /*
  * --INFO--
@@ -210,9 +188,6 @@ typedef struct ObjModelInstanceLite {
     u16 bufferFlags;
 } ObjModelInstanceLite;
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
 void *ObjModel_GetRenderOp(u8 *model, int renderOpIndex);
 
@@ -224,6 +199,8 @@ void ObjModel_EnableDefaultRenderCallback(void *obj, u8 *model, f32 *mtx, int en
 
 void ObjModel_SetRenderCallback(u8 *model, void *callback);
 
+#pragma scheduling off
+#pragma peephole off
 void Obj_SetModelRenderOpAlpha(u8 *obj, int alpha) {
     ObjAnimComponent *objAnim;
     int renderOpAlpha;
@@ -348,8 +325,8 @@ void Obj_SetModelColorFadeRecursive(u8 *obj, int frames, u8 red, u8 green, u8 bl
         i++;
     }
 }
-#pragma dont_inline reset
 
+#pragma dont_inline off
 void Obj_SetModelColorOverrideRecursive(u8 *obj, u8 red, u8 green, u8 blue, u8 alpha, u8 enabled) {
     int i;
     u8 *childScan;
@@ -414,7 +391,6 @@ void Obj_StartModelFadeIn(u8 *obj, int frames) {
     }
 }
 
-#pragma pop
 
 /* Global game-state / text accessors. */
 
@@ -423,6 +399,8 @@ void Obj_StartModelFadeIn(u8 *obj, int frames) {
 
 
 
+#pragma scheduling on
+#pragma peephole on
 int objIsFrozen(u8 *obj) {
     return ((GameObject *)obj)->unkE5 & 1;
 }
@@ -453,41 +431,28 @@ extern f32 playerMapOffsetZ;
 extern void textureFree(void *tex);
 
 
-#pragma push
+
+
+
+
+
+
+
+
+
 #pragma scheduling off
 #pragma peephole off
-
-#pragma pop
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
-
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-
-
-
-
-
 void objSetHintTextIdx(u8 *obj, u16 idx) {
     if (idx > 4) {
         idx = 0;
     }
     ((GameObject *)obj)->unkE8 = (u8)idx;
 }
-#pragma pop
 
 extern int getLoadedFileFlags(int);
 extern s8 lbl_803DCB74;
 extern int lbl_803408A8[];
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 int Obj_IsLoadingLocked(void) {
@@ -528,8 +493,6 @@ void fn_8002B860(void *v) {
     lbl_803DCB74 = i + 1;
     lbl_803408A8[i] = (int)v;
 }
-#pragma peephole reset
-#pragma pop
 
 extern void objList_remove(void *list, void *item);
 extern int lbl_803DCBAC;
@@ -537,13 +500,11 @@ extern int *lbl_803DCBB0;
 extern u8 *lbl_803DCBB4;
 extern int lbl_803DCB7C;
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 void mm_free(void *p);
 
+#pragma peephole off
 void *getTablesBinEntry(int i) {
     if (i < 0 || i >= lbl_803DCBAC) {
         return lbl_803DCBB4;
@@ -580,7 +541,6 @@ void *Obj_GetPlayerObject(void) {
     return NULL;
 }
 
-#pragma pop
 
 extern f32 sqrtf(f32 x);
 extern int lbl_803DCB84;
@@ -588,9 +548,6 @@ extern void *lbl_803DCB88;
 
 extern void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int unused);
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
 void *ObjList_GetObjects(int *outA, int *outB) {
     if (outA != NULL) {
@@ -623,7 +580,6 @@ void Obj_SetActiveModelIndex(u8 *obj, int idx) {
     }
     objAnim->bankIndex = idx;
 }
-#pragma pop
 
 typedef struct ObjListObjectDef {
     u8 pad00[0x14];
@@ -635,9 +591,6 @@ typedef struct ObjListObject {
     ObjListObjectDef *def;
 } ObjListObject;
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
 void *getTrickyObject(void) {
     int count;
@@ -666,13 +619,9 @@ ObjListObject *ObjList_FindObjectById(u32 objectId) {
 
 
 
-#pragma pop
 
 typedef f32 Mtx[3][4];
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 
@@ -738,10 +687,6 @@ void objWorldToLocalPos(f32 *out, u8 *transform, f32 *in) {
 
 extern void PSMTXConcat(f32 *a, f32 *b, f32 *ab);
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
 
 
@@ -767,13 +712,9 @@ void ObjModel_LoadRenderOpTextures(u8 *model, int arg);
 extern void OSReport(char *fmt, ...);
 
 
-#pragma pop
 
 extern void *memcpy(void *dst, const void *src, int n);
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 int objMove(u8 *obj, f32 dx, f32 dy, f32 dz) {
     int n;
     ((GameObject *)obj)->anim.localPosX += dx;
@@ -790,11 +731,7 @@ int objMove(u8 *obj, f32 dx, f32 dy, f32 dz) {
 
 
 
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void mtx44Transpose(f32 *src, f32 *dst);
 
 
@@ -824,13 +761,9 @@ void objFn_8002b67c(u8 *obj) {
 }
 
 
-#pragma pop
 
 extern f32 lbl_803DE8B8;
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 
@@ -855,15 +788,11 @@ void Obj_ApplyPendingParentLinks(void) {
         }
     }
 }
-#pragma pop
 
 extern void objFreeObjDef(void *def, int flags);
 extern int lbl_803DCB94;
 extern void **lbl_803DCB98;
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
 
 
@@ -880,17 +809,9 @@ void Obj_FlushDeferredFreeList(void) {
     lbl_803DCB94 = 0;
 }
 
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void fn_8002B6D8(u8 *obj, int a, int b, int c, u8 d, u8 e) {
     u8 *p;
     if (obj == NULL) {
@@ -918,26 +839,13 @@ void fn_8002B6D8(u8 *obj, int a, int b, int c, u8 d, u8 e) {
     }
 }
 
-#pragma pop
-
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
+
 
 void ObjModel_AdvanceBlendChannels(u8 *model, f32 dt);
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void *ObjModel_LoadAnimData(u8 *p, int b, int c);
-#pragma pop
 
 void *ObjModel_Load(int id, int arg2, int *outSize);
 
@@ -945,8 +853,6 @@ extern void Obj_RegisterObject(u8 *obj, int b);
 extern char sObjSetupObjectLoadingLockedWarning[];
 extern char lbl_802CAC54[];
 
-#pragma peephole off
-#pragma scheduling off
 void *Obj_SetupObject(int a, int b, int c, int d, int e) {
     void *obj;
     if (getLoadedFileFlags(0) & 0x100000) {
@@ -960,9 +866,7 @@ void *Obj_SetupObject(int a, int b, int c, int d, int e) {
     }
     return obj;
 }
-#pragma scheduling reset
 
-#pragma scheduling off
 void *loadObjectAtObject(u8 *src, int arg1) {
     void *obj;
     int type;
@@ -981,23 +885,11 @@ void *loadObjectAtObject(u8 *src, int arg1) {
     }
     return obj;
 }
-#pragma scheduling reset
-#pragma peephole reset
 
-#pragma push
-#pragma scheduling off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void ObjModel_Release(u8 *model);
-#pragma pop
 
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
 extern void objLoadPlayerFromSave(u8 *obj);
 
@@ -1034,11 +926,7 @@ void Obj_RunInitCallback(u8 *obj, int cb, int unused) {
         ((GameObject *)obj)->unk104 = v;
     }
 }
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void objGetWeaponDa(u8 *obj, int objType, ObjWeaponDaTable *weaponDaTable, int key, u8 load) {
     int i;
     s16 *tbl;
@@ -1068,11 +956,7 @@ void objGetWeaponDa(u8 *obj, int objType, ObjWeaponDaTable *weaponDaTable, int k
         i += 3;
     }
 }
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void ObjAnim_LoadMoveEvents(u8 *obj, int dummy, ObjAnimEventTable *eventTable, u32 moveId, u8 load) {
     int i;
     s16 *tbl;
@@ -1101,7 +985,6 @@ void ObjAnim_LoadMoveEvents(u8 *obj, int dummy, ObjAnimEventTable *eventTable, u
         i += 3;
     }
 }
-#pragma pop
 
 typedef struct ObjPathTransform {
     s16 rotX;
@@ -1115,15 +998,8 @@ typedef struct ObjPathTransform {
 } ObjPathTransform;
 
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void Obj_BuildInverseWorldTransformMatrix(u8 *obj, f32 *out) {
     ObjPathTransform transform;
     f32 rotMtx[16];
@@ -1146,13 +1022,9 @@ void Obj_BuildInverseWorldTransformMatrix(u8 *obj, f32 *out) {
         ((GameObject *)obj)->anim.localPosZ += playerMapOffsetZ;
     }
 }
-#pragma pop
 
 extern s16 lbl_803DCBC4;
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void ObjList_PartitionForRender(int *out) {
     void **arr;
     void *tmp;
@@ -1196,11 +1068,7 @@ void ObjList_PartitionForRender(int *out) {
     }
     lbl_803DCBC4 = i;
 }
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void Obj_BuildWorldTransformMatrix(u8 *obj, f32 *mtx, int flags) {
     f32 savedZ;
@@ -1230,14 +1098,8 @@ void Obj_BuildWorldTransformMatrix(u8 *obj, f32 *mtx, int flags) {
         PSMTXConcat((f32 *)parentMtx, mtx, mtx);
     }
 }
-#pragma dont_inline reset
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma fp_contract off
 void mtxRotateByVec3s(f32 *mtx, void *transform);
-#pragma pop
 
 extern int lbl_803DCB9C;
 extern s16 *lbl_803DCBA0;
@@ -1304,10 +1166,6 @@ typedef struct LoadedObj {
     int f108;
 } LoadedObj;
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma dont_inline on
 void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int unused) {
     int size;
     int offsets[20];
@@ -1592,12 +1450,7 @@ void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int 
     obj->parent = parent;
     return obj;
 }
-#pragma dont_inline reset
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma pop
 
 extern void Obj_InitObjectSystem(void);
 extern int getDataFileSize(int id);
@@ -1607,13 +1460,7 @@ extern void *gModgfxInterface;
 extern WaterfxInterface **gWaterfxInterface;
 extern MapEventInterface **gMapEventInterface;
 
-#pragma push
-#pragma scheduling off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma pop
 
 extern void fn_802B4DE0(u8 *obj, int flag);
 extern void Obj_FreeObject(u8 *obj);
@@ -1624,9 +1471,7 @@ extern u8 *lbl_803DCBA4;
 extern u8 *lbl_803DCBA8;
 extern char sObjFreeObjdefError[];
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
+#pragma dont_inline off
 void objFreeObjDef(void *objp, int flag) {
     u8 *obj = (u8 *)objp;
     ObjAnimComponent *objAnim = (ObjAnimComponent *)objp;
@@ -1785,35 +1630,12 @@ void objFreeObjDef(void *objp, int flag) {
     }
     mm_free(obj);
 }
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma opt_loop_invariants off
-#pragma pop
 
 extern void playerUpdateWhileTimeStopped(u8 *obj);
 extern void playerRenderQuakeSpell(void);
@@ -1822,9 +1644,6 @@ extern void Sfx_PlayFromObject(u8 *obj, int sfx);
 extern void Obj_GetWorldPosition(u8 *obj, void *x, void *y, void *z);
 extern u32 lbl_803DCB78;
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void Obj_UpdateObject(u8 *obj)
 {
     ObjAnimComponent *object;
@@ -1937,16 +1756,12 @@ skip:
         *(u8 *)(*(u8 **)(obj + 0x58) + 0x10f) = 0;
     }
 }
-#pragma pop
 
 extern void objFn_80065604(void);
 extern void Obj_UpdateModelBlendStates(void);
 extern int Obj_BuildTransformMatrixSlot(int obj);
 extern void playerDoHitDetection(int obj);
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void Obj_UpdateAllObjects(u8 flags)
 {
     int f;
@@ -2071,7 +1886,6 @@ void Obj_UpdateAllObjects(u8 flags)
         (*gCameraInterface)->update(framesThisStep);
     }
 }
-#pragma pop
 
 extern int getCurMapType(void);
 extern void Obj_ResetObjectSystem(void);
@@ -2102,9 +1916,6 @@ typedef struct CharSpawn {
     int unk14;
 } CharSpawn;
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void mapSetupPlayer(void)
 {
     u8 *base;
@@ -2179,21 +1990,13 @@ void mapSetupPlayer(void)
         playerUpdateFn_8005649c();
     }
 }
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
 extern void fn_80013B6C(int *p, int n);
 extern void AudioStream_StopAll(void);
 extern int lbl_803DB448;
 extern int lbl_803DCB8C;
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void Obj_ResetObjectSystem(void)
 {
     int off;
@@ -2244,11 +2047,7 @@ void Obj_ResetObjectSystem(void)
     (*gCameraInterface)->setFocus(NULL, 0);
     AudioStream_StopAll();
 }
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void Obj_UpdateModelBlendStates(void)
 {
     ObjAnimComponent *objAnim;
@@ -2316,14 +2115,10 @@ void Obj_UpdateModelBlendStates(void)
         ioff += 4;
     }
 }
-#pragma pop
 
 extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, void *ox, void *oy, void *oz);
 extern void mapLoadForObject(int id, void *obj);
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void Obj_RegisterObject(u8 *obj, int flags)
 {
@@ -2395,17 +2190,13 @@ void Obj_RegisterObject(u8 *obj, int flags)
         lbl_803DCBC4 = 0;
     }
 }
-#pragma dont_inline reset
-#pragma pop
 
 extern void Sfx_RemoveLoopedObjectSoundForObject(u8 *obj);
 extern void Sfx_StopObjectChannel(u8 *obj, int ch);
 extern char sObjFreeNonExistentObjectWarning[];
 extern void *lbl_803DCB90;
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
+#pragma dont_inline off
 void Obj_FreeObject(u8 *obj)
 {
     u8 **p;
@@ -2493,15 +2284,11 @@ void Obj_FreeObject(u8 *obj)
         objFreeObjDef(obj, !lbl_803DB448);
     }
 }
-#pragma pop
 
 extern void *lbl_803DCBC0;
 extern int *lbl_803DCBBC;
 extern int lbl_803DCBB8;
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void Obj_InitObjectSystem(void)
 {
     s16 *p;
@@ -2547,14 +2334,10 @@ void Obj_InitObjectSystem(void)
     ObjGroup_ClearAll();
     ObjHits_ResetWorkBuffers();
 }
-#pragma pop
 
 extern int loadModLines(int n, s16 *out);
 extern void intersectModLineBuild(u8 *buf);
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 u8 *loadObjectFile(int id)
 {
     int size;
@@ -2616,11 +2399,7 @@ u8 *loadObjectFile(int id)
     }
     return 0;
 }
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 int objGetTotalDataSize(void *tmpl, u8 *def, s16 *data, int flags)
 {
     ObjModelInstance *modelDef;
@@ -2687,100 +2466,31 @@ int objGetTotalDataSize(void *tmpl, u8 *def, s16 *data, int flags)
     }
     return roundUpTo32(size);
 }
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 void *mmAlloc(int size, int type, int flag);
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma pop
 
 extern void PSVECCrossProduct(f32 *a, f32 *b, f32 *out);
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma dont_inline on
 void fn_800213D0(f32 *a, f32 *b, s16 *out0, s16 *out1, s16 *out2);
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
 extern void PSMTXRotAxisRad(f32 *m, f32 *axis, f32 angle);
 
-#pragma push
-#pragma scheduling off
+#pragma peephole on
 void fn_8002A5DC(u8 *obj)
 {
     extern f32 lbl_803DCECC;
@@ -2828,20 +2538,9 @@ void fn_8002A5DC(u8 *obj)
         fn_800213D0(vecA, vecB, &((GameObject *)obj)->anim.rotZ, &((GameObject *)obj)->anim.rotY, (s16 *)obj);
     }
 }
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma opt_strength_reduction off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
 #pragma peephole off
 void modelInitBones(f32 scale, void *model) {
     extern f32 lbl_803DE88C;
@@ -2922,55 +2621,16 @@ void modelInitBones(f32 scale, void *model) {
     }
 }
 }
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma fp_contract off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma optimization_level 1
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 int loadModLines(int idx, s16 *outCount) {
     int result;
     int *hdr;
@@ -2993,74 +2653,21 @@ int loadModLines(int idx, s16 *outCount) {
     *outCount = (u32)size / 20;
     return result;
 }
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
 
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
 extern f32 lbl_803DCED0;
 extern f32 lbl_803DCECC;
 
-#pragma dont_inline off
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
 
-#pragma push
-#pragma scheduling off
-#pragma peephole off
-#pragma pop
