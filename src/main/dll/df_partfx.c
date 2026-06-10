@@ -532,16 +532,16 @@ void dll_0F_func13(s16* obj, int* state, int angle, f32 t, f32 scale)
     *(s8*)((char*)state + 0x34c) |= 1;
     if ((s8)lbl_803DD434 == 0) {
         ang = (lbl_803E05A4 * (f32)angle) / lbl_803E05A8;
-        vx = scale * (*(f32*)((char*)state + 0x298) * -mathSinf(ang));
-        vz = scale * (*(f32*)((char*)state + 0x298) * -mathCosf(ang));
-        if (*(f32*)((char*)state + 0x298) < lbl_803E05AC) {
+        vx = scale * (((BaddieState *)state)->unk298 * -mathSinf(ang));
+        vz = scale * (((BaddieState *)state)->unk298 * -mathCosf(ang));
+        if (((BaddieState *)state)->unk298 < lbl_803E05AC) {
             vx = lbl_803E0570;
             vz = vx;
         }
         ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX
-            + (t * (vx - ((GameObject *)obj)->anim.velocityX)) / *(f32*)((char*)state + 0x2b8);
+            + (t * (vx - ((GameObject *)obj)->anim.velocityX)) / ((BaddieState *)state)->unk2B8;
         ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ
-            + (t * (vz - ((GameObject *)obj)->anim.velocityZ)) / *(f32*)((char*)state + 0x2b8);
+            + (t * (vz - ((GameObject *)obj)->anim.velocityZ)) / ((BaddieState *)state)->unk2B8;
     } else {
         *(s8*)((char*)state + 0x34c) &= ~1;
     }
@@ -755,14 +755,14 @@ extern s16 lbl_803DD44C;
 #pragma peephole off
 void fn_800D8414(int *obj, int *ctx) {
     int diff;
-    *(f32 *)&((BaddieState *)ctx)->trackedObj = *(f32 *)((char *)ctx + 0x298);
-    *(f32 *)((char *)ctx + 0x298) =
+    *(f32 *)&((BaddieState *)ctx)->trackedObj = ((BaddieState *)ctx)->unk298;
+    ((BaddieState *)ctx)->unk298 =
         sqrtf(((BaddieState *)ctx)->unk290 * ((BaddieState *)ctx)->unk290 +
               ((BaddieState *)ctx)->unk28C * ((BaddieState *)ctx)->unk28C);
-    if (*(f32 *)((char *)ctx + 0x298) > lbl_803E0578) {
-        *(f32 *)((char *)ctx + 0x298) = lbl_803E0578;
+    if (((BaddieState *)ctx)->unk298 > lbl_803E0578) {
+        ((BaddieState *)ctx)->unk298 = lbl_803E0578;
     }
-    *(f32 *)((char *)ctx + 0x298) = *(f32 *)((char *)ctx + 0x298) / lbl_803E0578;
+    ((BaddieState *)ctx)->unk298 = ((BaddieState *)ctx)->unk298 / lbl_803E0578;
     lbl_803DD44C = (s16)getAngle(((BaddieState *)ctx)->unk290, -((BaddieState *)ctx)->unk28C);
     lbl_803DD44C = (s16)(lbl_803DD44C - ((BaddieState *)ctx)->unk330);
     diff = lbl_803DD44C - (u16)((GameObject *)obj)->anim.rotX;
@@ -779,7 +779,7 @@ void fn_800D8414(int *obj, int *ctx) {
         *(s16 *)((char *)ctx + 0x334) = ((BaddieState *)ctx)->unk336;
     }
     diff += 0x10000;
-    if (*(f32 *)((char *)ctx + 0x298) < lbl_803E0594) {
+    if (((BaddieState *)ctx)->unk298 < lbl_803E0594) {
         *(u8 *)((char *)ctx + 0x34b) = 0;
     } else {
         diff -= 0x6000;

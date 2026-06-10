@@ -544,9 +544,9 @@ void objThrowFn_80182504(int param_1)
   short* player;
   extra = *(int *)&((GameObject *)param_1)->extra;
   player = (short*)Obj_GetPlayerObject();
-  *(char*)(extra + 6) = 0;
-  *(char*)(extra + 5) = 0;
-  *(char*)(extra + 9) = 1;
+  ((SmallbasketState *)extra)->unk6 = 0;
+  ((SmallbasketState *)extra)->unk5 = 0;
+  ((SmallbasketState *)extra)->unk9 = 1;
   ((GameObject *)param_1)->anim.velocityY = lbl_803E3958;
   ((GameObject *)param_1)->anim.velocityZ = lbl_803E3974;
   local.f14 = lbl_803E3938;

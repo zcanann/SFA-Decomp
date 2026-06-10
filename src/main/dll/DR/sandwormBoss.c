@@ -2877,7 +2877,7 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
     u8 fl;
     int fe;
     player = (char*)Obj_GetPlayerObject();
-    dy = *(f32*)((char*)rider + 0x10) - ((GameObject *)obj)->anim.localPosY;
+    dy = ((GameObject *)rider)->anim.localPosY - ((GameObject *)obj)->anim.localPosY;
     if (dy < lbl_803E416C) {
         return;
     }
@@ -3001,8 +3001,8 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
         if (pm != 0) {
             fn_80296220(rider, slot->fc);
         } else {
-            *(f32*)((char*)rider + 0x10) = slot->fc * timeDelta + *(f32*)((char*)rider + 0x10);
-            *(f32*)((char*)rider + 0x28) = slot->fc * timeDelta;
+            ((GameObject *)rider)->anim.localPosY = slot->fc * timeDelta + ((GameObject *)rider)->anim.localPosY;
+            ((GameObject *)rider)->anim.velocityY = slot->fc * timeDelta;
         }
     } else {
         if (pm != 0) {

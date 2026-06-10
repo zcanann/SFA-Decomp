@@ -433,12 +433,12 @@ void sc_cloudrunnera_update(int obj)
         n = count;
         for (; idx < n; idx++) {
             int o = *arr;
-            s16 t = *(s16 *)(o + 0xb4);
+            s16 t = ((GameObject *)o)->unkB4;
             if (t == mark) {
                 found = o;
             }
-            if (t == -2 && *(s16 *)(o + 0x44) == 0x10) {
-                seq = *(ObjSeqState **)(o + 0xb8);
+            if (t == -2 && ((GameObject *)o)->anim.classId == 0x10) {
+                seq = *(ObjSeqState **)&((GameObject *)o)->extra;
                 if (markCopy == (s8)seq->slot) {
                     matchCount++;
                 }

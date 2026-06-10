@@ -3754,7 +3754,7 @@ void fireball_update(int *obj)
         ((GameObject *)obj)->anim.previousLocalPosY = ((GameObject *)obj)->anim.localPosY;
         ((GameObject *)obj)->anim.previousLocalPosZ = ((GameObject *)obj)->anim.localPosZ;
         if (other != NULL) {
-            if ((*(u16 *)((char *)other + 0xb0) & 0x40) != 0) {
+            if ((((GameObject *)other)->objectFlags & 0x40) != 0) {
                 ((GameObject *)obj)->unkF8 = 0;
             } else {
                 fn_8016F260(obj, state, other);
@@ -3858,7 +3858,7 @@ extern f32 lbl_803E3340;
 
 void fn_8016F260(int *obj, int *state, int *other)
 {
-    f32 *pt = (f32 *)(*(int *)((char *)other + 0x74) + *(u8 *)((char *)other + 0xe4) * 24);
+    f32 *pt = (f32 *)(*(int *)((char *)other + 0x74) + ((GameObject *)other)->unkE4 * 24);
     if (pt != NULL) {
         f32 dx = pt[0] - ((FireballState *)state)->unk24;
         f32 dy = pt[1] - lbl_803E3334 - *(f32 *)&((FireballState *)state)->unk28;

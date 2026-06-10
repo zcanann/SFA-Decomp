@@ -355,8 +355,8 @@ int fn_8015E3A0(int obj, int p2)
     int *objs = ObjList_GetObjects(&idx, &count);
     while (idx < count) {
       int o = objs[idx];
-      if ((void *)o != (void *)obj && *(s16 *)(o + 0x46) == 774) {
-        (*(int (**)(int, int, int))(**(int **)(o + 0x68) + 0x24))(o, 129, 0);
+      if ((void *)o != (void *)obj && ((GameObject *)o)->anim.seqId == 774) {
+        (*(int (**)(int, int, int))(**(int **)&((GameObject *)o)->anim.dll + 0x24))(o, 129, 0);
       }
       idx++;
     }
@@ -999,13 +999,13 @@ void fn_8015EA48(int obj, GroundBaddieState *p)
     if (o != NULL) {
       t = p->baddie.targetDistance / (f32)(u32)p->aggroRange;
       dur = lbl_803E2DF8 * t;
-      *(f32 *)(o + 0x24) =
+      ((GameObject *)o)->anim.velocityX =
           (*(f32 *)(*(int *)&p->baddie.targetObj + 0xc) - ((GameObject *)obj)->anim.localPosX) / dur;
-      *(f32 *)(o + 0x28) =
+      ((GameObject *)o)->anim.velocityY =
           ((lbl_803E2DFC * t + *(f32 *)(*(int *)&p->baddie.targetObj + 0x10)) - ((GameObject *)obj)->anim.localPosY) / dur;
-      *(f32 *)(o + 0x2c) =
+      ((GameObject *)o)->anim.velocityZ =
           (*(f32 *)(*(int *)&p->baddie.targetObj + 0x14) - ((GameObject *)obj)->anim.localPosZ) / dur;
-      *(int *)(o + 0xc4) = obj;
+      *(int *)&((GameObject *)o)->unkC4 = obj;
     }
   }
 }
@@ -1804,9 +1804,9 @@ void fn_8016083C(int *obj, GroundBaddieState *sub, GroundBaddieState *p)
   }
   o = *(char **)&p->baddie.targetObj;
   if (o != NULL) {
-    d.x = *(f32 *)(o + 0x18) - ((GameObject *)obj)->anim.worldPosX;
-    d.y = *(f32 *)(o + 0x1c) - ((GameObject *)obj)->anim.worldPosY;
-    d.z = *(f32 *)(o + 0x20) - ((GameObject *)obj)->anim.worldPosZ;
+    d.x = ((GameObject *)o)->anim.worldPosX - ((GameObject *)obj)->anim.worldPosX;
+    d.y = ((GameObject *)o)->anim.worldPosY - ((GameObject *)obj)->anim.worldPosY;
+    d.z = ((GameObject *)o)->anim.worldPosZ - ((GameObject *)obj)->anim.worldPosZ;
     p->baddie.targetDistance = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
   }
   characterDoEyeAnims(obj, sub->route35C + 0x50);
@@ -2467,11 +2467,11 @@ void fn_8015F5B0(short *obj)
     o = Obj_SetupObject(setup, 5, -1, -1, 0);
     if (o != NULL) {
       pl = Obj_GetPlayerObject();
-      *(f32 *)(o + 0x24) = (*(f32 *)(pl + 0xc) - ((GameObject *)obj)->anim.localPosX) / (sc = lbl_803E2E24);
-      *(f32 *)(o + 0x28) =
+      ((GameObject *)o)->anim.velocityX = (*(f32 *)(pl + 0xc) - ((GameObject *)obj)->anim.localPosX) / (sc = lbl_803E2E24);
+      ((GameObject *)o)->anim.velocityY =
           ((*(f32 *)(pl + 0x10) + (f32)(u32)sub->aimHeightY) - ((GameObject *)obj)->anim.localPosY) /
           sc;
-      *(f32 *)(o + 0x2c) = (*(f32 *)(pl + 0x14) - ((GameObject *)obj)->anim.localPosZ) / sc;
+      ((GameObject *)o)->anim.velocityZ = (*(f32 *)(pl + 0x14) - ((GameObject *)obj)->anim.localPosZ) / sc;
     }
   }
 }

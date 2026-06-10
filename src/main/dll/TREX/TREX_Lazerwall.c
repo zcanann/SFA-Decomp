@@ -68,7 +68,7 @@ int TREX_Lazerwall_popQueuedState(int arg1, int arg2)
     state = *(int *)(arg1 + 0xb8);
 
     if (*(s8 *)(arg2 + 0x27a) != 0) {
-        if (Stack_IsEmpty(*(int *)(state + 0x9b0)) != 0) {
+        if (Stack_IsEmpty(((TREXLazerwallUpdateTimedChallengeState *)state)->unk9B0) != 0) {
             int found = (*gRomCurveInterface)->find((int *)head, 2, -1,
                                                     *(f32 *)(playerObj + 0xc),
                                                     *(f32 *)(playerObj + 0x10),
@@ -80,33 +80,33 @@ int TREX_Lazerwall_popQueuedState(int arg1, int arg2)
                 *(f32 *)(arg1 + 0x10) = lbl_803E59E0 + *(f32 *)(hit + 0xc);
                 *(f32 *)(arg1 + 0x14) = *(f32 *)(hit + 0x10);
                 *(s16 *)arg1 = (s16)((s32)*(s8 *)(hit + 0x2c) << 8);
-                *(f32 *)(state + 0x9bc) = lbl_803E59E0 + *(f32 *)(hit + 0xc);
-                *(s16 *)(state + 0x9ca) = 0;
-                *(u8 *)(state + 0x9d3) = *(u8 *)(hit + 0x19);
+                ((TREXLazerwallUpdateTimedChallengeState *)state)->unk9BC = lbl_803E59E0 + *(f32 *)(hit + 0xc);
+                ((TREXLazerwallUpdateTimedChallengeState *)state)->unk9CA = 0;
+                ((TREXLazerwallUpdateTimedChallengeState *)state)->unk9D3 = *(u8 *)(hit + 0x19);
             }
 
             if ((s8)*(u8 *)(hit + 0x19) == 0xc) {
                 pushKindA = 1;
-                if (Stack_IsFull(*(int *)(state + 0x9b0)) == 0) {
-                    Stack_Push(*(int *)(state + 0x9b0), &pushKindA);
+                if (Stack_IsFull(((TREXLazerwallUpdateTimedChallengeState *)state)->unk9B0) == 0) {
+                    Stack_Push(((TREXLazerwallUpdateTimedChallengeState *)state)->unk9B0, &pushKindA);
                 }
             } else {
                 pushKindB = 2;
-                if (Stack_IsFull(*(int *)(state + 0x9b0)) == 0) {
-                    Stack_Push(*(int *)(state + 0x9b0), &pushKindB);
+                if (Stack_IsFull(((TREXLazerwallUpdateTimedChallengeState *)state)->unk9B0) == 0) {
+                    Stack_Push(((TREXLazerwallUpdateTimedChallengeState *)state)->unk9B0, &pushKindB);
                 }
             }
 
             *(f32 *)(arg2 + 0x280) = lbl_803E59DC;
-            *(u8 *)(state + 0x9d4) = (u8)(*(u8 *)(state + 0x9d4) | 0x20);
+            ((TREXLazerwallUpdateTimedChallengeState *)state)->unk9D4 = (u8)(((TREXLazerwallUpdateTimedChallengeState *)state)->unk9D4 | 0x20);
         }
     }
 
-    *(u8 *)(state + 0x9d6) = 0xff;
-    if (*(u8 *)(state + 0x9d6) == 0xff) {
+    ((TREXLazerwallUpdateTimedChallengeState *)state)->unk9D6 = 0xff;
+    if (((TREXLazerwallUpdateTimedChallengeState *)state)->unk9D6 == 0xff) {
         popOut = 0;
-        if (Stack_IsEmpty(*(int *)(state + 0x9b0)) == 0) {
-            Stack_Pop(*(int *)(state + 0x9b0), &popOut);
+        if (Stack_IsEmpty(((TREXLazerwallUpdateTimedChallengeState *)state)->unk9B0) == 0) {
+            Stack_Pop(((TREXLazerwallUpdateTimedChallengeState *)state)->unk9B0, &popOut);
         }
         return popOut + 1;
     }

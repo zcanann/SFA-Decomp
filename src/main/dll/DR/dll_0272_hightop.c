@@ -575,8 +575,8 @@ void hightop_update(int obj) {
     char *p = ((GameObject *)obj)->extra;
     *(s16 *)(p + 0xc16) = 5;
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
-    *(s8 *)(p + 0x25f) = !((BitFlags8 *)(p + 0xc49))->b4;
-    *(u8 *)(p + 0x354) = 0;
+    *(s8 *)&((BaddieState *)p)->unk25F = !((BitFlags8 *)(p + 0xc49))->b4;
+    ((BaddieState *)p)->hitPoints = 0;
     *(int *)p &= ~0x8000;
     if ((*(u16 *)(p + 0xc40) & 0x40) != 0) {
         int ev = Obj_UpdateRomCurveFollowVelocity(obj, (f32 *)(p + 0xa10),
@@ -591,12 +591,12 @@ void hightop_update(int obj) {
             }
         }
     } else {
-        *(f32 *)(p + 0x290) = lbl_803E6AA8;
-        *(f32 *)(p + 0x28c) = lbl_803E6AA8;
+        ((BaddieState *)p)->unk290 = lbl_803E6AA8;
+        ((BaddieState *)p)->unk28C = lbl_803E6AA8;
     }
-    *(int *)(p + 0x31c) = 0;
-    *(int *)(p + 0x318) = 0;
-    *(s16 *)(p + 0x330) = 0;
+    *(int *)&((BaddieState *)p)->unk31C = 0;
+    *(int *)&((BaddieState *)p)->unk318 = 0;
+    ((BaddieState *)p)->unk330 = 0;
     *(int *)p &= ~0x400000;
     (*(void (**)(int, char *, f32, f32, void **, void *))((char *)*gPlayerInterface + 0x8))(
         obj, (char *)p, (f32)(u32)framesThisStep, timeDelta, gHighTopStateHandlers, &gHighTopDefaultStateHandler);
@@ -643,17 +643,17 @@ int hightop_stateHandler01(int obj, int p) {
     if ((s8)((BaddieState *)p)->moveJustStartedA != 0) {
         *(s16 *)((char *)p + 0x338) = 0;
         ((BaddieState *)p)->moveSpeed = lbl_803E6B24;
-        *(f32 *)((char *)p + 0x2b8) = lbl_803E6B28;
+        ((BaddieState *)p)->unk2B8 = lbl_803E6B28;
         if (((GameObject *)obj)->anim.currentMove != lbl_803DC32C) {
             ObjAnim_SetCurrentMove(obj, lbl_803DC32C, lbl_803E6AA8, 0);
         }
     }
-    if (*(f32 *)((char *)p + 0x298) < lbl_803E6B2C) {
+    if (((BaddieState *)p)->unk298 < lbl_803E6B2C) {
         *(s16 *)((char *)p + 0x334) = 0;
         ((BaddieState *)p)->unk336 = 0;
-        *(f32 *)((char *)p + 0x298) = lbl_803E6AA8;
+        ((BaddieState *)p)->unk298 = lbl_803E6AA8;
     }
-    if (*(f32 *)&((BaddieState *)p)->trackedObj > lbl_803E6AA8 && *(f32 *)((char *)p + 0x298) > lbl_803E6AA8) {
+    if (*(f32 *)&((BaddieState *)p)->trackedObj > lbl_803E6AA8 && ((BaddieState *)p)->unk298 > lbl_803E6AA8) {
         return 3;
     }
     return 0;

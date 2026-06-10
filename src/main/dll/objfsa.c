@@ -2352,7 +2352,7 @@ void player_init(int unused, void *obj, int a, int b) {
     *(s16 *)((char *)obj + 0x26e) = (s16)b;
     ((BaddieState *)obj)->moveJustStartedA = 1;
     ((BaddieState *)obj)->moveJustStartedB = 1;
-    *(f32 *)((char *)obj + 0x2b8) = lbl_803E05BC;
+    ((BaddieState *)obj)->unk2B8 = lbl_803E05BC;
     *(s32 *)((char *)obj + 0x33c) = -1;
     *(s32 *)((char *)obj + 0x340) = -1;
     *(u8 *)((char *)obj + 0x358) = 0;
