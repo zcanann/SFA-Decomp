@@ -191,7 +191,10 @@ void SB_ShipGun_update(int obj)
           *(short *)(piVar10 + 1) = (short)(((uint)(u16)getAngle(-fdz,fdx) & 0xffff) << 1);
           fdy = *(float *)(player + 0x1c) - ((GameObject *)obj)->anim.worldPosY;
           dist = sqrtf(fdx * fdx + fdz * fdz);
-          *(short *)((int)piVar10 + 6) = getAngle(-fdy,dist);
+          {
+            extern int getAngle(f32 dx, f32 dz);
+            *(short *)((int)piVar10 + 6) = (s16)getAngle(-fdy,dist);
+          }
           if (*(short *)((int)piVar10 + 6) <= 8000) {
             if (*(short *)((int)piVar10 + 6) < -8000) {
               *(short *)((int)piVar10 + 6) = -8000;
@@ -242,8 +245,8 @@ void SB_ShipGun_update(int obj)
             Camera_EnableViewYOffset();
             CameraShake_SetAllMagnitudes(lbl_803E58A4);
             Sfx_PlayFromObject(obj,SB_SHIPGUN_FIRE_ANIM);
-            *(s8 *)((int)piVar10 + 0xe) += 1;
-            if (*(char *)((int)piVar10 + 0xe) == SB_SHIPGUN_VOLLEY_SIZE) {
+            *(u8 *)((int)piVar10 + 0xe) += 1;
+            if (*(u8 *)((int)piVar10 + 0xe) == SB_SHIPGUN_VOLLEY_SIZE) {
               if (iVar6 < SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE) {
                 uVar8 = randomGetRange(0,SB_SHIPGUN_FIRE_DELAY_VARIANCE);
                 *(short *)(piVar10 + 2) = (short)uVar8 + SB_SHIPGUN_SLOW_FIRE_DELAY;
