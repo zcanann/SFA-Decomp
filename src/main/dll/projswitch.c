@@ -682,14 +682,14 @@ void enemy_init(int obj, u8 *setup, int flag)
         ((EnemyState *)state)->unk2F8 = 0;
         state[0x33a] = 0;
         state[0x33b] = 0;
-        ((EnemyState *)state)->unk338 = 0;
+        ((EnemyState *)state)->phaseAngle = 0;
         state[0x33c] = 0;
         state[0x33d] = 0;
         ((EnemyState *)state)->unk324 = fz;
         ((EnemyState *)state)->unk328 = fz;
         ((EnemyState *)state)->unk32C = fz;
         ((EnemyState *)state)->unk330 = fz;
-        ((EnemyState *)state)->unk334 = fz;
+        ((EnemyState *)state)->intervalTimer = fz;
         ((EnemyState *)state)->unk2B4 = -1;
         ((EnemyState *)state)->unk2B6 = ((EnemyState *)state)->unk2B4;
         ((GameObject *)obj)->objectFlags |= *(s8 *)(setup + 0x28) & 7;

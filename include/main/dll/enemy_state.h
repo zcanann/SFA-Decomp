@@ -43,8 +43,8 @@ typedef struct EnemyState {
     f32 unk328;
     f32 unk32C;
     f32 unk330;
-    f32 unk334;
-    s16 unk338;
+    f32 intervalTimer;
+    s16 phaseAngle;
     u8 unk33A[0x340 - 0x33A];
     int lastHitObject;
     u8 unk344[0x368 - 0x344];

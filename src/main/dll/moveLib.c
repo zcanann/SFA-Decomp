@@ -38,14 +38,14 @@ typedef struct Dll19State {
     u8 pad406[0x5F8 - 0x406];
     s32 unk5F8;
     s32 unk5FC;
-    u8 unk600;
-    u8 unk601;
+    u8 movePhase;
+    u8 pathInitialized;
     u8 pad602[0x604 - 0x602];
     s32 unk604;
     s32 unk608;
     s16 unk60C;
     s16 unk60E;
-    u8 unk610;
+    u8 animChannelCount;
     u8 unk611;
     u8 pad612[0x614 - 0x612];
     f32 unk614;
