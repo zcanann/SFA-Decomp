@@ -4,6 +4,7 @@
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 #include "main/dll/anim_internal.h"
+#include "main/objanim_update.h"
 
 extern ObjectDescriptor12 gDB_eggObjDescriptor;
 extern ObjectDescriptor12 gDrakorEnergyObjDescriptor;
@@ -16,7 +17,7 @@ extern ObjectDescriptor gDFP_TorchObjDescriptor;
 
 void FUN_801feb30(void);
 void FUN_801ff8b8(short *param_1);
-undefined4 FUN_801ff90c(int param_1,undefined4 param_2,int param_3);
+undefined4 FUN_801ff90c(int obj, undefined4 unused, ObjAnimUpdateState *animUpdate);
 void FUN_801ff9e0(int param_1);
 void drakorenergy_update(int obj);
 void FUN_801ffe30(int param_1,int param_2);
@@ -167,7 +168,7 @@ void dbegg_initialise(void);
 
 int GCRobotBlast_getExtraSize(void);
 int GCRobotBlast_func08_ret_0(void);
-int GCRobotBlast_SeqFn(int obj, int unused, int events);
+int GCRobotBlast_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 void GCRobotBlast_free(void);
 void GCRobotBlast_render(void);
 void GCRobotBlast_hitDetect(void);
@@ -205,7 +206,7 @@ void dbholecontrol1_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dbholecontrol1_hitDetect(void);
 void dbholecontrol1_update(int *obj);
 void dbholecontrol1_init(int *obj, u8 *params);
-int dbholecontrol1_SeqFn(int obj, int unused, int events);
+int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 void dbholecontrol1_release(void);
 void dbholecontrol1_initialise(void);
 
@@ -237,7 +238,7 @@ void dfpseqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dfpseqpoint_hitDetect(void);
 void dfpseqpoint_update(int obj);
 void dfpseqpoint_init(int *obj, u8 *init);
-int dfpseqpoint_SeqFn(int obj, int unused, int events);
+int dfpseqpoint_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 void dfpseqpoint_release(void);
 void dfpseqpoint_initialise(void);
 

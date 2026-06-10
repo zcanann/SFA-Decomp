@@ -457,7 +457,7 @@ extern f32 lbl_803E7078;
 extern undefined4 PTR_DAT_8032a154;
 
 
-int GCRobotBlast_SeqFn(int obj, int unused, int p3)
+int GCRobotBlast_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
   extern void objfx_spawnDirectionalBurst(int, int, f32, int, int, int, f32, int, int);
   extern f32 lbl_803E6270;
@@ -468,8 +468,8 @@ int GCRobotBlast_SeqFn(int obj, int unused, int p3)
   int sub = *(int *)&((GameObject *)obj)->extra;
   int i;
 
-  for (i = 0; i < *(u8 *)(p3 + 0x8b); i++) {
-    ((BlastFlags4 *)&((GCRobotBlastState *)sub)->flags04)->b80 = *(u8 *)(p3 + i + 0x81);
+  for (i = 0; i < animUpdate->eventCount; i++) {
+    ((BlastFlags4 *)&((GCRobotBlastState *)sub)->flags04)->b80 = animUpdate->eventIds[i];
   }
   if (((u32)((GCRobotBlastState *)sub)->flags04 >> 7 & 1) != 0) {
     switch (((GCRobotBlastState *)sub)->mode) {
@@ -522,18 +522,18 @@ void FUN_801ff8b8(short *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_801ff90c(int param_1,undefined4 param_2,int param_3)
+undefined4 FUN_801ff90c(int obj, undefined4 unused, ObjAnimUpdateState *animUpdate)
 {
   int *piVar1;
   int iVar2;
   
-  piVar1 = ((GameObject *)param_1)->extra;
-  for (iVar2 = 0; iVar2 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar2 = iVar2 + 1) {
-    *(byte *)(piVar1 + 1) = *(char *)(param_3 + iVar2 + 0x81) << 7 | *(byte *)(piVar1 + 1) & 0x7f;
+  piVar1 = ((GameObject *)obj)->extra;
+  for (iVar2 = 0; iVar2 < (int)(uint)animUpdate->eventCount; iVar2 = iVar2 + 1) {
+    *(byte *)(piVar1 + 1) = animUpdate->eventIds[iVar2] << 7 | *(byte *)(piVar1 + 1) & 0x7f;
   }
   if (((*(char *)(piVar1 + 1) < '\0') && (*piVar1 < 2)) && (-1 < *piVar1)) {
-    FUN_800810f4((double)lbl_803E6F08,(double)lbl_803E6F0C,param_1,7,5,6,100,0,0x200000);
-    FUN_800810f4((double)lbl_803E6F08,(double)lbl_803E6F0C,param_1,6,1,6,100,0,0x200000);
+    FUN_800810f4((double)lbl_803E6F08,(double)lbl_803E6F0C,obj,7,5,6,100,0,0x200000);
+    FUN_800810f4((double)lbl_803E6F08,(double)lbl_803E6F0C,obj,6,1,6,100,0,0x200000);
   }
   return 0;
 }
@@ -4510,7 +4510,7 @@ int dbstealerworm_stateHandlerA00(int obj, int p2)
   return 0;
 }
 
-int dbholecontrol1_SeqFn(int obj, int unused, int p3)
+int dbholecontrol1_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
   extern u8 Obj_IsLoadingLocked(void);
   extern void *mapRomListFindItem(int, int, int, int, int);
@@ -4524,10 +4524,10 @@ int dbholecontrol1_SeqFn(int obj, int unused, int p3)
   int data = *(int *)&((GameObject *)obj)->anim.placementData;
   int i;
 
-  for (i = 0; i < *(u8 *)(p3 + 0x8b); i++) {
+  for (i = 0; i < animUpdate->eventCount; i++) {
     void *res;
     int newObj;
-    if (*(u8 *)(p3 + 0x81 + i) != 1) continue;
+    if (animUpdate->eventIds[i] != 1) continue;
     if (GameBit_Get((s32)(s8)*(u8 *)(data + 0x19) + 2601) != 0) continue;
     if (Obj_IsLoadingLocked() == 0) continue;
     res = mapRomListFindItem(0x4658A, 0, 0, 0, 0);
@@ -6995,7 +6995,7 @@ void drakorenergy_update(int obj)
     ((DrakorEnergyState *)blob)->phase += framesThisStep * 0x500;
 }
 
-int dfpseqpoint_SeqFn(int obj, int p2, int p3)
+int dfpseqpoint_SeqFn(int obj, int p2, ObjAnimUpdateState *animUpdate)
 {
     extern void unlockLevel(int a, int b, int c);
     extern int mapGetDirIdx(int);
@@ -7006,12 +7006,12 @@ int dfpseqpoint_SeqFn(int obj, int p2, int p3)
     int data = *(int *)&((GameObject *)obj)->anim.placementData;
     int i;
 
-    *(s16 *)(p3 + 0x70) = -1;
-    *(u8 *)(p3 + 0x56) = 0;
-    for (i = 0; i < *(u8 *)(p3 + 0x8b); i++) {
+    animUpdate->hitVolumePair = -1;
+    animUpdate->sequenceEventActive = 0;
+    for (i = 0; i < animUpdate->eventCount; i++) {
         switch (((DfpSeqPointState *)blob)->triggerId) {
         case 1:
-            if (*(u8 *)(p3 + i + 0x81) == 1) {
+            if (animUpdate->eventIds[i] == 1) {
                 if ((*gMapEventInterface)->getMode(((GameObject *)obj)->anim.mapEventSlot) == 1) {
                     (*gMapEventInterface)->setAnimEvent(((GameObject *)obj)->anim.mapEventSlot, 5, 0);
                     (*gMapEventInterface)->setAnimEvent(((GameObject *)obj)->anim.mapEventSlot, 6, 0);
@@ -7024,7 +7024,7 @@ int dfpseqpoint_SeqFn(int obj, int p2, int p3)
             }
             break;
         case 0xa:
-            if (*(u8 *)(p3 + i + 0x81) == 0x14) {
+            if (animUpdate->eventIds[i] == 0x14) {
                 if (*(u32 *)(data + 0x14) == 0x49de8) {
                     ((DfpFlags7 *)&((DfpSeqPointState *)blob)->flags0F)->b80 = 1;
                 } else {
@@ -7039,7 +7039,7 @@ int dfpseqpoint_SeqFn(int obj, int p2, int p3)
             }
             break;
         }
-        *(u8 *)(p3 + i + 0x81) = 0;
+        animUpdate->eventIds[i] = 0;
     }
     return 0;
 }
