@@ -47,7 +47,7 @@ typedef struct CameraObject {
     u8 padF8[0x11C - 0xF8];
     void *targetObj; /* GameObject*: current focus/track target */
     u8 pad120[4];
-    void *unk124;
+    void *secondaryTargetObj;
     u8 pad128[4];
     f32 unk12C;
     f32 unk130;

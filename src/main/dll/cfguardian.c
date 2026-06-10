@@ -295,10 +295,10 @@ skip_insert: ;
         }
       }
       if ((((SwitchFlags *)(state + 0x84))->released) == 0) {
-        target = ((CfGuardianState *)state)->unk7C - (f32)(u32)*(u8 *)(def + 0x1c);
+        target = ((CfGuardianState *)state)->targetPosY - (f32)(u32)*(u8 *)(def + 0x1c);
         cur = ((GameObject *)obj)->anim.localPosY;
         if (cur < target) {
-          ((GameObject *)obj)->anim.localPosY = ((CfGuardianState *)state)->unk80 * timeDelta + cur;
+          ((GameObject *)obj)->anim.localPosY = ((CfGuardianState *)state)->velocityY * timeDelta + cur;
           if (((GameObject *)obj)->anim.localPosY > target) {
             ((GameObject *)obj)->anim.localPosY = target;
           }
@@ -311,7 +311,7 @@ skip_insert: ;
             ((SwitchFlags *)(state + 0x84))->latched = 1;
           }
         } else {
-          ((GameObject *)obj)->anim.localPosY = -(((CfGuardianState *)state)->unk80 * timeDelta - cur);
+          ((GameObject *)obj)->anim.localPosY = -(((CfGuardianState *)state)->velocityY * timeDelta - cur);
           if (((GameObject *)obj)->anim.localPosY < target) {
             ((GameObject *)obj)->anim.localPosY = target;
             GameBit_Set(((PressureswitchfbPlacement *)def)->unk1A, 1);
@@ -327,9 +327,9 @@ skip_insert: ;
           }
         }
       } else {
-        ((GameObject *)obj)->anim.localPosY = ((CfGuardianState *)state)->unk80 * timeDelta + ((GameObject *)obj)->anim.localPosY;
-        if (((GameObject *)obj)->anim.localPosY > ((CfGuardianState *)state)->unk7C) {
-          ((GameObject *)obj)->anim.localPosY = ((CfGuardianState *)state)->unk7C;
+        ((GameObject *)obj)->anim.localPosY = ((CfGuardianState *)state)->velocityY * timeDelta + ((GameObject *)obj)->anim.localPosY;
+        if (((GameObject *)obj)->anim.localPosY > ((CfGuardianState *)state)->targetPosY) {
+          ((GameObject *)obj)->anim.localPosY = ((CfGuardianState *)state)->targetPosY;
         } else {
           i = 1;
         }
@@ -337,10 +337,10 @@ skip_insert: ;
     } else {
       if ((((SwitchFlags *)(state + 0x84))->latched) == 0) {
         cur = ((GameObject *)obj)->anim.localPosY;
-        if (cur < ((CfGuardianState *)state)->unk7C) {
-          ((GameObject *)obj)->anim.localPosY = ((CfGuardianState *)state)->unk80 * timeDelta + cur;
-          if (((GameObject *)obj)->anim.localPosY > ((CfGuardianState *)state)->unk7C) {
-            ((GameObject *)obj)->anim.localPosY = ((CfGuardianState *)state)->unk7C;
+        if (cur < ((CfGuardianState *)state)->targetPosY) {
+          ((GameObject *)obj)->anim.localPosY = ((CfGuardianState *)state)->velocityY * timeDelta + cur;
+          if (((GameObject *)obj)->anim.localPosY > ((CfGuardianState *)state)->targetPosY) {
+            ((GameObject *)obj)->anim.localPosY = ((CfGuardianState *)state)->targetPosY;
             GameBit_Set(((PressureswitchfbPlacement *)def)->unk1A, 0);
           } else {
             i = 1;
@@ -518,17 +518,17 @@ void pressureswitchfb_init(u8* obj, u8* params) {
         objAnim->bankIndex = 0;
     }
     defaultOffset = lbl_803E3778;
-    ((CfGuardianState *)sub)->unk80 = defaultOffset;
+    ((CfGuardianState *)sub)->velocityY = defaultOffset;
     if (((GameObject *)obj)->anim.seqId == 0x77b) {
         flags->usePressedTexture = 1;
         flags->startPressed = 1;
         flags->canRelease = 1;
-        ((CfGuardianState *)sub)->unk80 = defaultOffset;
+        ((CfGuardianState *)sub)->velocityY = defaultOffset;
     }
-    ((CfGuardianState *)sub)->unk7C = *(f32*)(params + 0xc);
+    ((CfGuardianState *)sub)->targetPosY = *(f32*)(params + 0xc);
     if (GameBit_Get(*(s16*)(params + 0x1a)) != 0) {
         s16 model;
-        ((GameObject *)obj)->anim.localPosY = ((CfGuardianState *)sub)->unk7C - (f32)(u32)params[0x1c];
+        ((GameObject *)obj)->anim.localPosY = ((CfGuardianState *)sub)->targetPosY - (f32)(u32)params[0x1c];
         sub[0] = 0x1e;
         flags->canRelease = 0;
         model = ((GameObject *)obj)->anim.seqId;

@@ -318,13 +318,13 @@ typedef struct DrExplodableChunk {
     f32 posX;        /* 0x4c */
     f32 posY;        /* 0x50 */
     f32 posZ;        /* 0x54 */
-    f32 unk58;
+    f32 height;
     int unk5C;
-    int unk60;       /* 0x60: per-fragment delay roll, -1 = none */
+    int launchDelay;       /* 0x60: per-fragment delay roll, -1 = none */
     s16 unk64;       /* 0x64: from def+0x1e */
     s16 unk66;       /* 0x66: from def+0x1c */
     s16 unk68;       /* 0x68: from def+0x1a */
-    u8 unk6A;        /* 0x6a: gamebit-gated mode */
+    u8 gameBitMode;        /* 0x6a: gamebit-gated mode */
     u8 unk6B;        /* 0x6b: init 0xff */
     u8 launchFlags;  /* 0x6c: axis sign bits */
     u8 spinScale;    /* 0x6d */
@@ -565,7 +565,7 @@ int fn_801A2BDC(int p1, int p2, int p3, int p4)
     *(u8 *)(s + 0x18) = p4;
     *(s8 *)(s + 0x3d) = (s8)(int)(lbl_803E435C * (((GameObject *)p1)->anim.rootMotionScale / *(f32 *)(*(int *)&((GameObject *)p1)->anim.modelInstance + 4)));
     *(u16 *)(s + 0x38) = c->unk5C;
-    *(u16 *)(s + 0x3a) = (int)c->unk58;
+    *(u16 *)(s + 0x3a) = (int)c->height;
     return Obj_SetupObject(s, 5, ((GameObject *)p1)->anim.mapEventSlot, -1, 0);
 }
 
@@ -706,14 +706,14 @@ void fn_801A30C0(int obj, int slot, int def)
         {
             int height = *(s16 *)(def + 0x2e);
             if (height != 0) {
-                c->unk58 = (f32)height;
+                c->height = (f32)height;
             }
         }
         *(u32 *)&c->unk5C = *(u16 *)(def + 0x38);
         if (*(u16 *)(def + 0x38) != 0) {
-            c->unk60 = (int)(*(u16 *)(def + 0x38) * (randomGetRange(0, 100) + 100)) / 200;
+            c->launchDelay = (int)(*(u16 *)(def + 0x38) * (randomGetRange(0, 100) + 100)) / 200;
         } else {
-            c->unk60 = -1;
+            c->launchDelay = -1;
         }
     }
 }

@@ -17,8 +17,8 @@ typedef struct CfGuardianState {
     s32 unk24;
     s32 unk28;
     u8 pad2C[0x7C - 0x2C];
-    f32 unk7C;
-    f32 unk80;
+    f32 targetPosY;
+    f32 velocityY;
     u8 pad84[0x611 - 0x84];
     u8 flags611;
     u8 pad612[0x12];
@@ -29,7 +29,7 @@ typedef struct CfGuardianState {
     u8 pathBlock[0x140];  /* 0x6bc: fn_8019AF64 path-flight block */
     f32 moveSpeed;        /* 0x7fc */
     u8 pad800[0x25e];
-    u8 unkA5E;            /* bounce-velocity latch while landing */
+    u8 bounceLatch;            /* bounce-velocity latch while landing */
     u8 padA5F[9];
     s16 homeYaw;          /* 0xa68: embedded steer-target header (fn_8019B1D8) */
     u8 padA6A[0xa];

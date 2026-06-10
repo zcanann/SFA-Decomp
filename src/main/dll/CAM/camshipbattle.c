@@ -37,7 +37,7 @@ void camcontrol_updatePathTargetAction(CameraObject *camera,GameObject *target)
   
   if (*(u32 *)&target->pendingParentObj == 0) {
     buttons = getButtonsJustPressed(0);
-    targetObj = (GameObject *)camera->unk124;
+    targetObj = (GameObject *)camera->secondaryTargetObj;
     if (targetObj != NULL) {
       sVar1 = targetObj->anim.classId;
       if (sVar1 == 0x1c) {
@@ -57,7 +57,7 @@ checkActiveTarget:
 checkOverrideFlag:
     if ((camera->unk141 & 2) != 0) {
 sendFollowAction:
-      (*gCameraInterface)->setMode(0x49,1,0,4,&camera->unk124,0x3c,0xff);
+      (*gCameraInterface)->setMode(0x49,1,0,4,&camera->secondaryTargetObj,0x3c,0xff);
       goto done;
     }
     if ((((buttons & 0x10) != 0) && (target->anim.classId == 1)) &&

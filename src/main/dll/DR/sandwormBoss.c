@@ -3741,7 +3741,7 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
             if (sub->landingPhase < 2) {
                 ((GameObject *)obj)->anim.localPosX = timeDelta * ((GameObject *)obj)->anim.velocityX + ((GameObject *)obj)->anim.localPosX;
                 ((GameObject *)obj)->anim.localPosZ = timeDelta * ((GameObject *)obj)->anim.velocityZ + ((GameObject *)obj)->anim.localPosZ;
-                if (sub->unkA5E != 0) {
+                if (sub->bounceLatch != 0) {
                     ((GameObject *)obj)->anim.velocityX = lbl_803E4150 * -((GameObject *)obj)->anim.velocityX;
                     ((GameObject *)obj)->anim.velocityZ = lbl_803E4150 * -((GameObject *)obj)->anim.velocityZ;
                 }

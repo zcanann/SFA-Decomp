@@ -61,11 +61,11 @@ extern f32 lbl_80326BE8[];
  * the shared RomCurveWalker/curves.h lift. */
 typedef struct EdibleMushroomState {
     u8 curve00[0x108];
-    f32 unk108;
-    f32 unk10C;
+    f32 distanceToTarget;
+    f32 prevDistance;
     f32 unk110;
     u8 pad114[4];
-    f32 unk118;
+    f32 detectRadius;
     f32 unk11C;
     f32 unk120;
     f32 unk124;
@@ -76,12 +76,12 @@ typedef struct EdibleMushroomState {
     u8 unk136;
     u8 unk137;
     u8 pad138[4];
-    s16 unk13C;
+    s16 itemId;
     s16 unk13E;
     f32 unk140;
 } EdibleMushroomState;
 
-STATIC_ASSERT(offsetof(EdibleMushroomState, unk108) == 0x108);
+STATIC_ASSERT(offsetof(EdibleMushroomState, distanceToTarget) == 0x108);
 STATIC_ASSERT(offsetof(EdibleMushroomState, unk136) == 0x136);
 STATIC_ASSERT(offsetof(EdibleMushroomState, unk140) == 0x140);
 STATIC_ASSERT(sizeof(EdibleMushroomState) == 0x144);
@@ -122,7 +122,7 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
         ((EdibleMushroomState *)state)->unk136 = 6;
     }
 
-    speed = oneOverTimeDelta * (((EdibleMushroomState *)state)->unk10C - ((EdibleMushroomState *)state)->unk108);
+    speed = oneOverTimeDelta * (((EdibleMushroomState *)state)->prevDistance - ((EdibleMushroomState *)state)->distanceToTarget);
 
     sval = ((EdibleMushroomState *)state)->unk136;
     switch (sval) {
@@ -130,9 +130,9 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
         if (((EdibleMushroomState *)state)->unk137 & 0x10) {
             ((EdibleMushroomState *)state)->unk136 = 9;
         } else if ((*gSHthorntailAnimationInterface)->isTailSwingQueued(&thorntailOut) == 0) {
-            if (((EdibleMushroomState *)state)->unk108 < (f32)other[0x19]) {
+            if (((EdibleMushroomState *)state)->distanceToTarget < (f32)other[0x19]) {
                 if (((EdibleMushroomState *)state)->unk137 & 2) {
-                    rangeSq = ((EdibleMushroomState *)state)->unk118 * ((EdibleMushroomState *)state)->unk118;
+                    rangeSq = ((EdibleMushroomState *)state)->detectRadius * ((EdibleMushroomState *)state)->detectRadius;
                     while (1) {
                         dx = ((RomCurveWalker *)state)->posX - ((GameObject *)obj)->anim.localPosX;
                         dz = ((RomCurveWalker *)state)->posZ - ((GameObject *)obj)->anim.localPosZ;
@@ -149,12 +149,12 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
                     ((EdibleMushroomState *)state)->unk130 = ang;
                 } else {
                     ((EdibleMushroomState *)state)->unk130 =
-                        fn_801D129C(obj, player, state, ((EdibleMushroomState *)state)->unk118);
+                        fn_801D129C(obj, player, state, ((EdibleMushroomState *)state)->detectRadius);
                 }
                 ((EdibleMushroomState *)state)->unk136 = 1;
                 Sfx_PlayFromObject(obj, 0xa0);
                 *(s16 *)obj = (s16)(((EdibleMushroomState *)state)->unk130 - 0x4000);
-            } else if (((EdibleMushroomState *)state)->unk108 < (f32)other[0x1f]) {
+            } else if (((EdibleMushroomState *)state)->distanceToTarget < (f32)other[0x1f]) {
                 ((EdibleMushroomState *)state)->unk136 = 3;
             }
         } else {
@@ -198,13 +198,13 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
             ang = getAngle(-(((GameObject *)obj)->anim.localPosX - ((GameObject *)player)->anim.localPosX),
                            -(((GameObject *)obj)->anim.localPosZ - ((GameObject *)player)->anim.localPosZ));
             *(s16 *)obj = ang;
-            if (((EdibleMushroomState *)state)->unk108 > lbl_803E5294 + (f32)other[0x1f]) {
+            if (((EdibleMushroomState *)state)->distanceToTarget > lbl_803E5294 + (f32)other[0x1f]) {
                 ((EdibleMushroomState *)state)->unk136 = 7;
-            } else if (((EdibleMushroomState *)state)->unk108 < (f32)other[0x19]) {
+            } else if (((EdibleMushroomState *)state)->distanceToTarget < (f32)other[0x19]) {
                 Sfx_PlayFromObject(obj, 0xa0);
                 if (speed >= lbl_803E5298) {
                     if (((EdibleMushroomState *)state)->unk137 & 2) {
-                        rangeSq = ((EdibleMushroomState *)state)->unk118 * ((EdibleMushroomState *)state)->unk118;
+                        rangeSq = ((EdibleMushroomState *)state)->detectRadius * ((EdibleMushroomState *)state)->detectRadius;
                         while (1) {
                             dx = ((RomCurveWalker *)state)->posX - ((GameObject *)obj)->anim.localPosX;
                             dz = ((RomCurveWalker *)state)->posZ - ((GameObject *)obj)->anim.localPosZ;
@@ -221,7 +221,7 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
                         ((EdibleMushroomState *)state)->unk130 = ang;
                     } else {
                         ((EdibleMushroomState *)state)->unk130 =
-                            fn_801D129C(obj, player, state, ((EdibleMushroomState *)state)->unk118);
+                            fn_801D129C(obj, player, state, ((EdibleMushroomState *)state)->detectRadius);
                     }
                     ((EdibleMushroomState *)state)->unk136 = 1;
                     *(s16 *)obj = (s16)(((EdibleMushroomState *)state)->unk130 - 0x4000);
@@ -256,11 +256,11 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
         if ((((EdibleMushroomState *)state)->unk137 & 0x11) == 0x11) {
             ((EdibleMushroomState *)state)->unk136 = 9;
         }
-        if (((EdibleMushroomState *)state)->unk108 > lbl_803E5294 + (f32)other[0x19] && (((EdibleMushroomState *)state)->unk137 & 1)) {
+        if (((EdibleMushroomState *)state)->distanceToTarget > lbl_803E5294 + (f32)other[0x19] && (((EdibleMushroomState *)state)->unk137 & 1)) {
             ((EdibleMushroomState *)state)->unk136 = 4;
         } else if (speed >= lbl_803E5298) {
             if (((EdibleMushroomState *)state)->unk137 & 2) {
-                rangeSq = ((EdibleMushroomState *)state)->unk118 * ((EdibleMushroomState *)state)->unk118;
+                rangeSq = ((EdibleMushroomState *)state)->detectRadius * ((EdibleMushroomState *)state)->detectRadius;
                 while (1) {
                     dx = ((RomCurveWalker *)state)->posX - ((GameObject *)obj)->anim.localPosX;
                     dz = ((RomCurveWalker *)state)->posZ - ((GameObject *)obj)->anim.localPosZ;
@@ -276,7 +276,7 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
                 ang = getAngle(-dx, -dz);
                 ((EdibleMushroomState *)state)->unk130 = ang;
             } else {
-                ((EdibleMushroomState *)state)->unk130 = fn_801D129C(obj, player, state, ((EdibleMushroomState *)state)->unk118);
+                ((EdibleMushroomState *)state)->unk130 = fn_801D129C(obj, player, state, ((EdibleMushroomState *)state)->detectRadius);
             }
             ((EdibleMushroomState *)state)->unk136 = 1;
             Sfx_PlayFromObject(obj, 0xa0);
@@ -314,10 +314,10 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
                         lbl_803E52A4) {
                         (*gExpgfxInterface)->freeSource((u32)obj);
                         if (((GameObject *)obj)->anim.seqId == 0x658) {
-                            ((EdibleMushroomState *)state)->unk13C = 0x18a;
+                            ((EdibleMushroomState *)state)->itemId = 0x18a;
                             itemPickupDoParticleFx(obj, lbl_803E52A8, 0xff, 0x28);
                         } else {
-                            ((EdibleMushroomState *)state)->unk13C = 0x119;
+                            ((EdibleMushroomState *)state)->itemId = 0x119;
                             itemPickupDoParticleFx(obj, lbl_803E52A8, 6, 0x28);
                         }
                         ((EdibleMushroomState *)state)->unk13E = 0;
