@@ -2106,8 +2106,8 @@ void lightsource_render(void *obj, int p1, int p2, int p3, int p4, s8 visible)
 int dll_1FF_getObjectTypeId(int *obj) { if (((GameObject *)obj)->anim.seqId == 0x146) return 0x2; return 0x0; }
 
 /* init pattern: short=-1; byte=0; return 0; */
-int PressureSwitch_SeqFn(int p1, int p2, void* p3) { *(s16*)((char*)p3 + 0x6e) = -1; *(u8*)((char*)p3 + 0x56) = 0; return 0; }
-int WM_colrise_SeqFn(int p1, int p2, void* p3) { *(s16*)((char*)p3 + 0x6e) = -1; *(u8*)((char*)p3 + 0x56) = 0; return 0; }
+int PressureSwitch_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate) { animUpdate->hitVolumePair = -1; animUpdate->sequenceEventActive = 0; return 0; }
+int WM_colrise_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate) { animUpdate->hitVolumePair = -1; animUpdate->sequenceEventActive = 0; return 0; }
 
 /* fn_X(lbl); lbl = 0; */
 void LaserBeam_release(void) { Resource_Release(lbl_803DDC80); lbl_803DDC80 = NULL; }

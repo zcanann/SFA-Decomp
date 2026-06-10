@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
+#include "main/objanim_update.h"
 
 extern ObjectDescriptor gPressureSwitchObjDescriptor;
 extern ObjectDescriptor gWM_LaserTargetObjDescriptor;
@@ -60,7 +61,7 @@ void FUN_801f2b94(short *param_1);
 
 int pressureswitch_getExtraSize(void);
 int pressureswitch_getObjectTypeId(void);
-int PressureSwitch_SeqFn(int obj, int unused, void *events);
+int PressureSwitch_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 void pressureswitch_free(void);
 void pressureswitch_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void pressureswitch_hitDetect(void);
@@ -79,7 +80,7 @@ void wmlasertarget_update(int *obj);
 void wmlasertarget_init(char *obj, s8 *p);
 void wmlasertarget_release(void);
 void wmlasertarget_initialise(void);
-int WM_colrise_SeqFn(int obj, int unused, void *events);
+int WM_colrise_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 void lightsource_render(void *obj, int p1, int p2, int p3, int p4, s8 visible);
 
 #endif /* MAIN_DLL_ARW_ARWARWINGATTACHMENT_H_ */
