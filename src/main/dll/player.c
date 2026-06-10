@@ -5020,7 +5020,7 @@ int fn_8029EBCC(int obj, int state)
 
 int fn_8029F108(int obj, int state)
 {
-    PlayerState *inner = *(PlayerState **)((char *)obj + 0xb8);
+    PlayerState *inner = ((GameObject *)obj)->extra;
     int sub = inner->unk7F0;
     void *vec;
     int kind;
@@ -5038,7 +5038,7 @@ int fn_8029F108(int obj, int state)
         inner->unk898 = 0;
     }
     {
-        int inner2 = *(int *)((char *)obj + 0xb8);
+        int inner2 = *(int *)&((GameObject *)obj)->extra;
         *(int *)((char *)inner2 + 0x360) &= ~0x2;
         *(int *)((char *)inner2 + 0x360) |= 0x2000;
     }
@@ -5048,12 +5048,12 @@ int fn_8029F108(int obj, int state)
         ((PlayerState *)state)->baddie.animSpeedA = z;
         ((PlayerState *)state)->baddie.animSpeedB = z;
         *(int *)((char *)state + 0x0) |= 0x200000;
-        *(f32 *)((char *)obj + 0x24) = z;
-        *(f32 *)((char *)obj + 0x2c) = z;
+        ((GameObject *)obj)->anim.velocityX = z;
+        ((GameObject *)obj)->anim.velocityZ = z;
     }
     ((PlayerState *)state)->baddie.unk25F = 0;
     ObjHits_DisableObject(obj);
-    *(f32 *)((char *)obj + 0x28) = lbl_803E7EA4;
+    ((GameObject *)obj)->anim.velocityY = lbl_803E7EA4;
     if (*(s8 *)((char *)state + 0x27a) != 0) {
         (*(void (*)(int, void *, void *, void *))(*(int *)(*(int *)*(int *)((char *)sub + 0x68) + 0x28)))(
             sub, (char *)obj + 0xc, (char *)obj + 0x10, (char *)obj + 0x14);
@@ -5074,8 +5074,8 @@ int fn_8029F108(int obj, int state)
         }
         inner->targetYaw = *(s16 *)((char *)sub + 0x0);
         inner->yaw = inner->targetYaw;
-        *(s16 *)((char *)obj + 0x2) = 0;
-        *(s16 *)((char *)obj + 0x4) = 0;
+        ((GameObject *)obj)->anim.rotY = 0;
+        ((GameObject *)obj)->anim.rotZ = 0;
         ObjAnim_SetCurrentMove(obj, ((s16 *)inner->unk6E8)[n], lbl_803E7EA4, 1);
         joint = (int)Player_GetActiveModel(obj);
         ObjModel_SampleJointTransform(joint, 0, 0, lbl_803E7EA4,

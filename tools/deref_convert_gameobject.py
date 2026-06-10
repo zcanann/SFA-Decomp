@@ -90,9 +90,13 @@ for var in varnames:
             # chained deref/index OR pointer arithmetic on the result both need
             # the concrete type (void* can't be dereffed or offset in MWCC).
             chained = after[:2] in ('->',) or after[:1] in ('[', '+', '-')
-            # also: outer deref `**(T***)(obj+N)` — char immediately before the
-            # match is `*` (unary deref of the loaded pointer).
-            before_star = m.start() > 0 and m.string[m.start()-1] == '*'
+            # also: outer deref `**(T***)(obj+N)` or `*( *(T**)(obj+N) )` —
+            # nearest non-space/non-paren char before the match is `*`
+            # (unary deref of the loaded pointer).
+            i = m.start()
+            while i > 0 and m.string[i-1] in ' \t(':
+                i -= 1
+            before_star = i > 0 and m.string[i-1] == '*'
             if off < 0xb0 or chained or before_star:
                 stats['launder'] += 1
                 return '*(%s*)&%s' % (ty,mem)

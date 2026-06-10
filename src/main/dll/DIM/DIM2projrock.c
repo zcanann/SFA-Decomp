@@ -1580,8 +1580,8 @@ void dll_1DF_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v 
 /* dll_1DA_init: stash obj->f10 into *(obj->p_B8), then bump obj->f10 by a constant step. */
 void dll_1DA_init(void* obj)
 {
-    *(*(f32**)((char*)obj + 0xB8)) = *(f32*)((char*)obj + 0x10);
-    *(f32*)((char*)obj + 0x10) = *(f32*)((char*)obj + 0x10) + lbl_803E4AD8;
+    *(*(f32**)&((GameObject *)obj)->extra) = ((GameObject *)obj)->anim.localPosY;
+    ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY + lbl_803E4AD8;
 }
 
 /* dll_1DF_init: similar romlist param init, but reads three u8 fields, packs to s16
@@ -1596,20 +1596,20 @@ void dll_1DF_init(void* obj, void* p)
     u32 flag;
     void* p50;
     void* p64;
-    *(s16*)((char*)obj + 0x4) = (s16)((u32)*(u8*)((char*)p + 0x18) << 8);
-    *(s16*)((char*)obj + 0x2) = (s16)((u32)*(u8*)((char*)p + 0x19) << 8);
-    *(s16*)((char*)obj + 0x0) = (s16)((u32)*(u8*)((char*)p + 0x1A) << 8);
+    ((GameObject *)obj)->anim.rotZ = (s16)((u32)*(u8*)((char*)p + 0x18) << 8);
+    ((GameObject *)obj)->anim.rotY = (s16)((u32)*(u8*)((char*)p + 0x19) << 8);
+    ((GameObject *)obj)->anim.rotX = (s16)((u32)*(u8*)((char*)p + 0x1A) << 8);
     flag = *(u8*)((char*)p + 0x1B);
     if (flag != 0) {
-        p50 = *(void**)((char*)obj + 0x50);
-        *(f32*)((char*)obj + 0x8) = *(f32*)((char*)p50 + 4) * ((f32)flag / lbl_803E4BA8);
+        p50 = *(void**)&((GameObject *)obj)->anim.modelInstance;
+        ((GameObject *)obj)->anim.rootMotionScale = *(f32*)((char*)p50 + 4) * ((f32)flag / lbl_803E4BA8);
     }
-    *(f32*)((char*)*(void**)((char*)obj + 0xB8) + 0x10) = lbl_803E4BAC;
+    *(f32*)((char*)*(void**)&((GameObject *)obj)->extra + 0x10) = lbl_803E4BAC;
     p64 = *(void**)((char*)obj + 0x64);
     if (p64 != 0) {
         *(u32*)((char*)p64 + 0x30) |= 0x810;
     }
-    *(u16*)((char*)obj + 0xB0) |= 0x2000;
+    ((GameObject *)obj)->objectFlags |= 0x2000;
 }
 
 /* dim2lavacontrol_setScale: every-frame tick -- if not already "armed" (bit 0 of
@@ -1617,9 +1617,9 @@ void dll_1DF_init(void* obj, void* p)
  *   and tell the game-event tracker (via param.s16_1E) that this trigger fired. */
 void dim2lavacontrol_setScale(void* obj)
 {
-    void* sub = *(void**)((char*)obj + 0xB8);
+    void* sub = ((GameObject *)obj)->extra;
     if (((s32)*(s8*)((char*)sub + 0x2) & 1) == 0) {
-        void* p = *(void**)((char*)obj + 0x4C);
+        void* p = *(void**)&((GameObject *)obj)->anim.placementData;
         s8 cnt = *(s8*)((char*)sub + 0x0);
         if ((s32)cnt > 0) {
             *(s8*)((char*)sub + 0x0) = cnt - 1;
@@ -1655,7 +1655,7 @@ extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern f32 lbl_803E4B9C, lbl_803E4BA0, lbl_803E4BA4;
 void dll_1DF_update(void* obj)
 {
-    void* sub = *(void**)((char*)obj + 0xB8);
+    void* sub = ((GameObject *)obj)->extra;
     void* tex;
     void* player;
     f32 dist;
@@ -1663,7 +1663,7 @@ void dll_1DF_update(void* obj)
 
     tex = objFindTexture(obj, 0, 0);
     if (tex != 0) {
-        if (*(s16*)((char*)obj + 0x46) == 209) {
+        if (((GameObject *)obj)->anim.seqId == 209) {
             *(u8*)((char*)tex + 0xC) = lbl_803E4B9C;
             *(u8*)((char*)tex + 0xD) = lbl_803E4B9C;
             *(u8*)((char*)tex + 0xE) = lbl_803E4B9C;
@@ -1689,15 +1689,15 @@ void dll_1DF_update(void* obj)
  *              from a GameBit, and OR-set bit 0x2000 in obj->flags_B0. */
 void dll_1DB_init(void* obj, void* p)
 {
-    void* sub = *(void**)((char*)obj + 0xB8);
+    void* sub = ((GameObject *)obj)->extra;
     s16 t = (s16)((s32)*(s8*)((char*)p + 0x18) << 8);
-    *(s16*)((char*)obj + 0x0) = t;
+    ((GameObject *)obj)->anim.rotX = t;
     if (GameBit_Get(*(s16*)((char*)p + 0x1E)) != 0) {
         *(u8*)((char*)sub + 0x4) = 2;
     } else {
         *(u8*)((char*)sub + 0x4) = 1;
     }
-    *(u16*)((char*)obj + 0xB0) |= 0x2000;
+    ((GameObject *)obj)->objectFlags |= 0x2000;
 }
 
 extern int getSaveGameLoadStatus(void);
