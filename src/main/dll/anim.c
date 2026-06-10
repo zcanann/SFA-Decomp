@@ -1221,7 +1221,7 @@ int dbstealerworm_stateHandlerA06(int obj, int p2)
     bs->animSpeedB = fz;
     bs->animSpeedA = fz;
     *(int *)&bs->targetObj = 0;
-    bs->unk25F = 1;
+    bs->physicsActive = 1;
     bs->unk349 = 0;
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x8);
     ObjHits_DisableObject(obj);
@@ -1421,7 +1421,7 @@ int dbstealerworm_stateHandlerA01(int obj, int p)
     sub_40c->unk04 = lbl_803E62C8;
     ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E62A8, 0);
     *(u32 *)&bs->targetObj = 0;
-    bs->unk25F = 0;
+    bs->physicsActive = 0;
     bs->unk349 = 0;
     sub->targetState = 0;
     sub->configFlags |= ((DbstealerwormPlacement *)p4c)->unk2B;
@@ -1625,7 +1625,7 @@ void dbstealerworm_init(int *obj, u8 *def, int param3) {
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x8);
     ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, sub, 3);
     ((GroundBaddieState *)sub)->baddie.substate = 0;
-    ((GroundBaddieState *)sub)->baddie.unk25F = 1;
+    ((GroundBaddieState *)sub)->baddie.physicsActive = 1;
     ObjHits_EnableObject(obj);
     ObjMsg_AllocQueue(obj, 4);
     if (((GameObject *)obj)->anim.modelState != NULL) {
@@ -1918,7 +1918,7 @@ int dbstealerworm_stateHandlerA00(int obj, int p2)
   BaddieState *bs = (BaddieState *)p2;
 
   if ((s32)(s8)bs->moveJustStartedA != 0) {
-    bs->unk25F = 1;
+    bs->physicsActive = 1;
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x8);
     ((GameObject *)obj)->anim.alpha = 255;
     bs->unk34D = 1;

@@ -243,7 +243,7 @@ int dll_19_func0F(int obj, char *state, char *st, int p4, int p5, s16 p6)
         *(int *)&((BaddieState *)st)->targetObj = 0;
         *(s16 *)(state + 0x6e) = -1;
         *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) & ~0x60;
-        ((BaddieState *)st)->unk25F = 0;
+        ((BaddieState *)st)->physicsActive = 0;
         GameBit_Set(*(s16 *)(st + 0x3f4), 0);
     }
     return 1;

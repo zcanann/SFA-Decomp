@@ -2980,7 +2980,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState *seq, int endFlag)
                     *(int *)&((PlayerState *)inner)->baddie.unk318 = 0;
                     ((GameObject *)obj)->unkF4 = 0;
                     ((PlayerState *)inner)->baddie.unk330 = 0;
-                    ((PlayerState *)inner)->baddie.unk25F = 1;
+                    ((PlayerState *)inner)->baddie.physicsActive = 1;
                     *(u32 *)((char *)inner + 4) = *(u32 *)((char *)inner + 4) & ~0x100000;
                     *(u8 *)((char *)inner + 0x8c5) = 0;
                     fn_802B0EA4(obj, (int)inner, (int)inner);
@@ -3003,7 +3003,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState *seq, int endFlag)
                 *(int *)&((PlayerState *)inner)->baddie.unk318 = 0;
                 ((GameObject *)obj)->unkF4 = 0;
                 ((PlayerState *)inner)->baddie.unk330 = 0;
-                ((PlayerState *)inner)->baddie.unk25F = 1;
+                ((PlayerState *)inner)->baddie.physicsActive = 1;
                 *(u32 *)((char *)inner + 4) = *(u32 *)((char *)inner + 4) & ~0x100000;
                 *(u8 *)((char *)inner + 0x8c5) = 0;
                 fn_802B0EA4(obj, (int)inner, (int)inner);
@@ -3032,7 +3032,7 @@ int player_SeqFn(int obj, int obj2, ObjSeqState *seq, int endFlag)
         *(int *)&((PlayerState *)inner)->baddie.unk318 = 0;
         if (seq->flags & 1) {
             *(u32 *)((char *)inner + 4) |= 0x100000;
-            ((PlayerState *)inner)->baddie.unk25F = 0;
+            ((PlayerState *)inner)->baddie.physicsActive = 0;
         }
         for (vb = 0; vb < seq->eventCount; vb++) {
             switch (seq->eventIds[vb]) {
@@ -5051,7 +5051,7 @@ int fn_8029F108(int obj, int state)
         ((GameObject *)obj)->anim.velocityX = z;
         ((GameObject *)obj)->anim.velocityZ = z;
     }
-    ((PlayerState *)state)->baddie.unk25F = 0;
+    ((PlayerState *)state)->baddie.physicsActive = 0;
     ObjHits_DisableObject(obj);
     ((GameObject *)obj)->anim.velocityY = lbl_803E7EA4;
     if (*(s8 *)&((PlayerState *)state)->baddie.moveJustStartedA != 0) {
@@ -6843,7 +6843,7 @@ void playerDoHitDetection(int obj)
     *(u32 *)((char *)inner + 0x360) &= 0xf7ffffff;
     if (((ByteFlags *)((char *)inner + 0x3f2))->b20 != 0 &&
         (((GameObject *)obj)->objectFlags & 0x1000) != 0) {
-        ((PlayerState *)inner)->baddie.unk25F = 0;
+        ((PlayerState *)inner)->baddie.physicsActive = 0;
     }
     (*gPathControlInterface)->update((void *)obj, (void *)(inner + 4), timeDelta);
     (*gPathControlInterface)->apply((void *)obj, (void *)(inner + 4));
@@ -6958,7 +6958,7 @@ void playerDoHitDetection(int obj)
             (*gCameraInterface)->overridePos(x, y, z);
             fn_802A9D0C(obj, inner, ((PlayerState *)inner)->unk7F0, 0, 0, 0, 0, 0);
         }
-        if (*(s8 *)&((PlayerState *)inner)->baddie.unk25F == 1 &&
+        if (*(s8 *)&((PlayerState *)inner)->baddie.physicsActive == 1 &&
             (*(int *)((char *)inner + 4) & 0x100000) == 0) {
             if ((*(u32 *)((char *)inner + 0x360) & 0x2000) == 0 &&
                 (*(s8 *)((char *)inner + 0x264) & 0x33) != 0) {
@@ -8021,7 +8021,7 @@ int fn_8029F6E4(int obj, int state)
     f32 ret;
     int blend;
     (*(void (*)(int))(*(int *)((char *)*gCameraInterface + 0x68)))(2);
-    ((PlayerState *)state)->baddie.unk25F = 0;
+    ((PlayerState *)state)->baddie.physicsActive = 0;
     *(int *)((char *)state + 0x4) |= 0x100000;
     *(u32 *)((char *)inner + 0x360) &= ~2LL;
     ObjHits_DisableObject(obj);
@@ -8140,7 +8140,7 @@ void fn_802A93F4(int obj, int p2, int p3)
     inner->unk838 = lbl_803E7EA4;
     inner->unk83C = lbl_803E80D0;
     inner->unk880 = lbl_803E7FA4;
-    inner->baddie.unk25F = 1;
+    inner->baddie.physicsActive = 1;
     *(int *)((char *)inner + 0x4) &= ~0x100000;
     *(int *)((char *)inner + 0x4) |= 0x8000000;
     if (*(s8 *)(*(int *)((char *)*(int *)&((GameObject *)obj)->extra + 0x35c)) <= 0) {
@@ -10447,7 +10447,7 @@ void fn_802B4C18(int obj, int state, f32 fv)
     ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumeId = 0;
     (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->objectPairPriority = 0;
     (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->objectPairHitVolume = 0;
-    ((PlayerState *)state)->baddie.unk25F = 1;
+    ((PlayerState *)state)->baddie.physicsActive = 1;
     *(u32 *)((char *)state + 0x4) &= ~0x8100000;
     playerShadowFn_80062a30(obj);
     ((PlayerState *)state)->unk8C5 = 0;
@@ -12944,7 +12944,7 @@ int fn_8029FA24(int obj, int state, f32 fv)
         ((GameObject *)obj)->anim.velocityX = z;
         ((GameObject *)obj)->anim.velocityZ = z;
     }
-    *(s8 *)&((PlayerState *)state)->baddie.unk25F = 0;
+    *(s8 *)&((PlayerState *)state)->baddie.physicsActive = 0;
     if (*(s8 *)&((PlayerState *)state)->baddie.moveJustStartedA != 0) {
         *(s16 *)((char *)state + 0x278) = 0x16;
         inner->unk898 = 0;
@@ -14810,7 +14810,7 @@ int fn_8029E568(int obj, int state, f32 fv)
         *(int *)((char *)state + 0) |= 0x200000;
         ((GameObject *)obj)->anim.velocityX = zero;
         ((GameObject *)obj)->anim.velocityZ = zero;
-        ((PlayerState *)state)->baddie.unk25F = 0;
+        ((PlayerState *)state)->baddie.physicsActive = 0;
         ((GameObject *)obj)->anim.velocityY = zero;
     }
     switch (((GameObject *)obj)->anim.currentMove) {

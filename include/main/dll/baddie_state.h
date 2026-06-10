@@ -50,7 +50,7 @@ typedef struct BaddieState {
     u8 unk1B8[0x25B - 0x1B8];
     s8 contactSfxMuted; /* nonzero suppresses contact sfx unless contactSfxFlags bit 0x10 (intersect.c) */
     u8 unk25C[0x25F - 0x25C];
-    u8 unk25F;
+    u8 physicsActive; /* enables the free-fall physics path: gravity integration (velY -= g*dt), floor bounce response; set when thrown/spat */
     s8 contactSfxFlags; /* bit 0x10 allows contact sfx while contactSfxMuted is set (intersect.c) */
     u8 unk261[0x270 - 0x261];
     s16 substate; /* CA-family substate 0..5; gates the map-event re-register when != 3 */

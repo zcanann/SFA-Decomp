@@ -561,7 +561,7 @@ void hightop_hitDetect(int obj) {
             }
             ((GameObject *)obj)->anim.rotY = 0;
             ((GameObject *)obj)->anim.rotZ = 0;
-            p->baddie.unk25F = 0;
+            p->baddie.physicsActive = 0;
             *(int *)p |= 0x1000000;
             GameBit_Set(0xb48, 1);
             (*gGameUIInterface)->airMeterSetShutdown();
@@ -575,7 +575,7 @@ void hightop_update(int obj) {
     char *p = ((GameObject *)obj)->extra;
     *(s16 *)(p + 0xc16) = 5;
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
-    *(s8 *)&((BaddieState *)p)->unk25F = !((BitFlags8 *)(p + 0xc49))->b4;
+    *(s8 *)&((BaddieState *)p)->physicsActive = !((BitFlags8 *)(p + 0xc49))->b4;
     ((BaddieState *)p)->hitPoints = 0;
     *(int *)p &= ~0x8000;
     if ((*(u16 *)(p + 0xc40) & 0x40) != 0) {

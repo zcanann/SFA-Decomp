@@ -2386,15 +2386,15 @@ void Tricky_applyFloorResponse(int obj,int state)
       }
     }
     if ((((TrickyState *)state)->unk2E4 & TRICKY_CONTROL_FLAG_BBOX_BLOCKS_SIGHT) == 0) {
-      ((TrickyState *)state)->unk25F = 0;
+      ((TrickyState *)state)->physicsActive = 0;
     }
   }
   else {
     if ((flags & 0xc) != 0) {
-      ((TrickyState *)state)->unk25F = 1;
+      ((TrickyState *)state)->physicsActive = 1;
     }
     else {
-      ((TrickyState *)state)->unk25F = 0;
+      ((TrickyState *)state)->physicsActive = 0;
     }
   }
 
@@ -2404,7 +2404,7 @@ void Tricky_applyFloorResponse(int obj,int state)
   }
   (*gPathControlInterface)->advance((void *)obj, (void *)(state + 4), timeDelta);
 
-  if (((*(s8 *)&((TrickyState *)state)->unk25F != 0) &&
+  if (((*(s8 *)&((TrickyState *)state)->physicsActive != 0) &&
        ((((TrickyState *)state)->unk2E4 & TRICKY_CONTROL_FLAG_FLOOR_RESPONSE_MASK) == 0)) &&
       ((((TrickyState *)state)->unk264 & TRICKY_SURFACE_FLAG_HAS_NEARBY_FLOOR) != 0)) {
     ((GameObject *)obj)->anim.velocityY = lbl_803E2574;

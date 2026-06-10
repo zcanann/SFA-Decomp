@@ -148,7 +148,7 @@ int DR_CloudRunner_stateHandler02(int obj, int p2)
         }
         if (((ByteFlags *)&inner->flagsBC0)->b20) {
             ((ByteFlags *)&inner->flagsBC0)->b20 = 0;
-            ((CloudRunnerState *)p2)->baddie.unk25F = 0;
+            ((CloudRunnerState *)p2)->baddie.physicsActive = 0;
         }
     }
     if (((CloudRunnerState *)p2)->baddie.unk298 < lbl_803E83BC) {
@@ -167,7 +167,7 @@ int DR_CloudRunner_stateHandler01(int obj, int p2)
     if (*(s8 *)&((CloudRunnerState *)p2)->baddie.moveJustStartedA != 0) {
         f32 fz;
         ObjHits_DisableObject(obj);
-        ((CloudRunnerState *)p2)->baddie.unk25F = 0;
+        ((CloudRunnerState *)p2)->baddie.physicsActive = 0;
         ((CloudRunnerState *)p2)->baddie.moveSpeed = lbl_803E8408;
         fz = lbl_803E83A4;
         ((CloudRunnerState *)p2)->baddie.animSpeedC = fz;
@@ -399,7 +399,7 @@ int DR_CloudRunner_stateHandler05(int obj, int p2, f32 f)
     moveId = -1;
     inner = ((GameObject *)obj)->extra;
     *(int *)((char *)p2 + 0) |= 0x200000;
-    ((CloudRunnerState *)p2)->baddie.unk25F = 0;
+    ((CloudRunnerState *)p2)->baddie.physicsActive = 0;
     if (*(s8 *)&((CloudRunnerState *)p2)->baddie.moveDone != 0) {
         ((ByteFlags *)&inner->flagsBC0)->b80 = 0;
         ((ByteFlags *)&inner->flagsBC0)->b08 = 0;
@@ -902,7 +902,7 @@ void DR_CloudRunner_update(int obj)
         fn_802C11BC(obj, -1, timeDelta);
         ((ObjAnimComponent *)obj)->modelInstance->flags |= 0x200000;
     } else {
-        inner->baddie.unk25F = 0;
+        inner->baddie.physicsActive = 0;
         fn_802C11BC(obj, -1, timeDelta);
         ((ObjAnimComponent *)obj)->modelInstance->flags &= ~0x200000;
     }
@@ -1029,7 +1029,7 @@ int DR_CloudRunner_stateHandler04(int obj, int p2)
     int a0;
     int a1;
     *(int *)((char *)p2 + 0) |= 0x1204000;
-    ((CloudRunnerState *)p2)->baddie.unk25F = 0;
+    ((CloudRunnerState *)p2)->baddie.physicsActive = 0;
     if (*(s8 *)&((CloudRunnerState *)p2)->baddie.moveJustStartedA != 0) {
         f32 fz = lbl_803E83A4;
         CloudRunnerState *inner2;

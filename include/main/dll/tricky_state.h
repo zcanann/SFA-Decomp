@@ -62,7 +62,7 @@ typedef struct TrickyState {
     u8 pathControlData[0x1B8 - 0xFC]; /* embedded gPathControlInterface record (0xF8..0x1B8) */
     f32 unk1B8;
     u8 pad1BC[0x25F - 0x1BC];
-    u8 unk25F;
+    u8 physicsActive; /* same actor-record slot as BaddieState.physicsActive (free-fall physics enable) */
     u8 unk260;
     u8 unk261;
     u8 pad262[0x264 - 0x262];

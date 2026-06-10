@@ -1087,7 +1087,7 @@ void fn_802BB4B4(int obj, int a, int slot)
         *(u32 *)state &= ~0x00400000;
     }
 
-    if (*(s8 *)&state->baddie.unk25F != 0) {
+    if (*(s8 *)&state->baddie.physicsActive != 0) {
         ((GameObject *)obj)->anim.velocityY = ((GameObject *)obj)->anim.velocityY - lbl_803E82A4 * (f32)a;
     }
 
@@ -1145,11 +1145,11 @@ void DIMSnowHorn1_update(int obj)
         }
     }
     if (*(u8 *)((char *)data + 0xa8a) == 2) {
-        ((DIMSnowHorn1State *)data)->baddie.unk25F = 1;
+        ((DIMSnowHorn1State *)data)->baddie.physicsActive = 1;
         fn_802BB4B4(obj, framesThisStep, -1);
     } else {
         f32 fz;
-        ((DIMSnowHorn1State *)data)->baddie.unk25F = 0;
+        ((DIMSnowHorn1State *)data)->baddie.physicsActive = 0;
         fz = lbl_803E8234;
         ((DIMSnowHorn1State *)data)->baddie.animSpeedC = fz;
         ((DIMSnowHorn1State *)data)->baddie.animSpeedB = fz;

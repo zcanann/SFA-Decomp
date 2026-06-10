@@ -659,7 +659,7 @@ int mediumbasket_updateOpenState(int obj, int p)
   sub_40c = *(int *)&sub->control;
   p54 = *(int *)&((GameObject *)obj)->anim.hitReactState;
   ((ObjHitsPriorityState *)p54)->flags |= 1;
-  ((GroundBaddieState *)p)->baddie.unk25F = 1;
+  ((GroundBaddieState *)p)->baddie.physicsActive = 1;
   if (*(char *)&((GroundBaddieState *)p)->baddie.moveJustStartedA != '\0') {
     ObjAnim_SetCurrentMove(obj, 11, lbl_803E2D14, 0);
     *(s8 *)&((GroundBaddieState *)p)->baddie.moveDone = 0;
@@ -705,7 +705,7 @@ int mediumbasket_updateOpenHitState(int obj, int p)
   sub_40c = *(int *)&sub->control;
   p54 = *(int *)&((GameObject *)obj)->anim.hitReactState;
   ((ObjHitsPriorityState *)p54)->flags |= 1;
-  ((GroundBaddieState *)p)->baddie.unk25F = 1;
+  ((GroundBaddieState *)p)->baddie.physicsActive = 1;
   p54 = *(int *)&((GameObject *)obj)->anim.hitReactState;
   *(u8 *)&((ObjHitsPriorityState *)p54)->hitVolumePriority = 9;
   p54 = *(int *)&((GameObject *)obj)->anim.hitReactState;
@@ -1332,7 +1332,7 @@ int mediumbasket_stateHandlerB02(int obj, int state)
     if ((s8)((GroundBaddieState *)state)->baddie.moveJustStartedB != 0) {
         ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 0xd);
         *(int *)&((GroundBaddieState *)state)->baddie.targetObj = 0;
-        ((GroundBaddieState *)state)->baddie.unk25F = 0;
+        ((GroundBaddieState *)state)->baddie.physicsActive = 0;
         ((GroundBaddieState *)state)->baddie.unk349 = 0;
         ObjHits_DisableObject(obj);
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
@@ -1667,7 +1667,7 @@ int mediumbasket_updateHideResetState(int obj, int state)
         GameBit_Set((s32)sub->gameBitB, 0);
         ObjAnim_SetCurrentMove(obj, 8, lbl_803E2D14, 0);
         *(int *)&((GroundBaddieState *)state)->baddie.targetObj = 0;
-        ((GroundBaddieState *)state)->baddie.unk25F = 0;
+        ((GroundBaddieState *)state)->baddie.physicsActive = 0;
         ((GroundBaddieState *)state)->baddie.unk349 = 0;
         sub->targetState = 0;
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
@@ -1876,7 +1876,7 @@ void mediumbasket_updateControlEffects(int obj, int state)
         shakeScale = contactScale;
     }
     paletteIndex = 0;
-    if ((s8)((GroundBaddieState *)state)->baddie.unk25F != 0) {
+    if ((s8)((GroundBaddieState *)state)->baddie.physicsActive != 0) {
         paletteIndex = lbl_8031FE48[(s8)((GroundBaddieState *)state)->baddie.paletteSlot];
         if (paletteIndex > 0x1e) {
             paletteIndex = 0;

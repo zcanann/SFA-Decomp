@@ -768,7 +768,7 @@ void dll_CA_init(int obj, u8 *p, int flags)
   *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
   (*(void (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, (int)sub, 0);
   sub->baddie.substate = 0;
-  *(s8 *)&sub->baddie.unk25F = 0;
+  *(s8 *)&sub->baddie.physicsActive = 0;
 }
 
 int fn_8015E5DC(short *obj, GroundBaddieState *p)
@@ -834,7 +834,7 @@ int fn_8015DF20(int obj, GroundBaddieState *p)
     v[1] = z;
     (*(void (**)(int, u8 *, int))(*(int *)gPlayerInterface + 0x14))(obj, (u8 *)p, 6);
     *(int *)&p->baddie.targetObj = 0;
-    *(s8 *)&p->baddie.unk25F = 0;
+    *(s8 *)&p->baddie.physicsActive = 0;
     *(s8 *)&p->baddie.unk349 = 0;
     ObjHits_DisableObject(obj);
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
@@ -916,7 +916,7 @@ int fn_8015E798(int obj, GroundBaddieState *p)
     GameBit_Set(sub->gameBitB, 0);
     ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2DC8, 0);
     *(int *)&p->baddie.targetObj = 0;
-    *(s8 *)&p->baddie.unk25F = 0;
+    *(s8 *)&p->baddie.physicsActive = 0;
     *(s8 *)&p->baddie.unk349 = 0;
     sub->targetState = 0;
     if ((hit[9] & 2) == 0) {
@@ -944,7 +944,7 @@ int fn_8015E8BC(int obj, GroundBaddieState *p)
     *(s8 *)&p->baddie.moveDone = 0;
   }
   if (*(char *)&p->baddie.moveJustStartedA != '\0') {
-    *(s8 *)&p->baddie.unk25F = 1;
+    *(s8 *)&p->baddie.physicsActive = 1;
     GameBit_Set(sub->gameBitB, 1);
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
     ((GameObject *)obj)->anim.alpha = 0xff;
@@ -1408,7 +1408,7 @@ void dll_CE_init(int obj, u8 *p, int flags)
   *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
   (*(void (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, (int)sub, 0);
   sub->baddie.substate = 0;
-  *(s8 *)&sub->baddie.unk25F = 0;
+  *(s8 *)&sub->baddie.physicsActive = 0;
   ObjHits_DisableObject(obj);
 }
 
@@ -1730,7 +1730,7 @@ int fn_8016043C(int obj, GroundBaddieState *p)
   if (*(char *)&p->baddie.moveJustStartedB != '\0') {
     (*(void (**)(int, u8 *, int))(*(int *)gPlayerInterface + 0x14))(obj, (u8 *)p, 3);
     *(int *)&p->baddie.targetObj = 0;
-    *(s8 *)&p->baddie.unk25F = 0;
+    *(s8 *)&p->baddie.physicsActive = 0;
     *(s8 *)&p->baddie.unk349 = 0;
     (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
@@ -2834,7 +2834,7 @@ int grimble_stateHandlerB04(int* obj, GroundBaddieState *state)
     if ((s8)state->baddie.moveJustStartedB != 0) {
         ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, (u8 *)state, 8);
         *(int *)&state->baddie.targetObj = 0;
-        state->baddie.unk25F = 0;
+        state->baddie.physicsActive = 0;
         state->baddie.unk349 = 0;
         ObjHits_DisableObject((int)obj);
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
@@ -2883,7 +2883,7 @@ int fn_801605D4(int* obj, GroundBaddieState *def)
         ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2E68, 0);
         *(s8 *)&def->baddie.moveDone = 0;
     }
-    *(s8 *)&def->baddie.unk25F = 1;
+    *(s8 *)&def->baddie.physicsActive = 1;
     ((GameObject *)obj)->anim.rotZ = def->baddie.spawnRotZ;
     ((GameObject *)obj)->anim.rotY = def->baddie.spawnRotY;
     ((void(*)(int*, u8*, int*, f32, f32))((void**)*gBaddieControlInterface)[4])(obj, (u8 *)def, (int *)state, lbl_803E2E8C, lbl_803E2E90);
