@@ -277,7 +277,7 @@ int fn_80223A1C(int obj, int ai)
     if (dist > lbl_803E6CF0) {
         return 2;
     }
-    if (dist >= lbl_803E6CF4) {
+    if (!(dist < lbl_803E6CF4)) {
         return 0;
     }
     if (((EarthwalkerState *)state)->randomTimer <= lbl_803E6CF8) {
