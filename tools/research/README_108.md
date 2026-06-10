@@ -125,3 +125,17 @@ ordering pattern onto the SFA fn. This is the inp_value precedent
 general procedure. Scanner one-liner in commit message; candidates with
 the n_rareware shape: SetMtx (E1-descending), THPSimpleDecode (mixed),
 HuAudSndGrpSetSet (30,31,26,27 — another readable mix).
+
+
+## Round-8: shape_match.py + the 2-web rosetta
+
+tools/shape_match.py finds EXACT prologue-skeleton matches instantly
+(infotext's (mr r30, lwz r31, lwz r31, lwz r30) -> 7 perfect SDK hits).
+The rosetta (VISetPreRetraceCallback): TWO named locals — `int interrupt;
+T oldCallback;` decl'd in that order, the r31 local SECOND with SPLIT init,
+the param never copied. Transplant test on infotext: split-init alone inert
+— the missing piece is the EXTRA LIVE named local (the rosetta's
+`interrupt` is a call result used later; infotext's import names no second
+value). Next: identify which of infotext's values the original named
+(candidates: the lbl compare bound per #71-inverse, a GameBit result) and
+A/B each as a live named local + split-init combination.
