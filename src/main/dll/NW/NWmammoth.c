@@ -142,13 +142,14 @@ void ediblemushroom_init(int obj, int aux)
 
     {
         int v = *(u8 *)(aux + 0x18);
-        if (v < 6) {
-            if (v >= 4) {
-                ((EdiblemushroomState *)state)->unk137 |= 2;
-                (*gRomCurveInterface)->initCurve((void *)state, (void *)obj, lbl_803E52EC, &local_x, -1);
-                ((GameObject *)obj)->anim.localPosX = ((EdiblemushroomState *)state)->unk68;
-                ((GameObject *)obj)->anim.localPosZ = ((EdiblemushroomState *)state)->unk70;
-            }
+        switch (v) {
+        case 4:
+        case 5:
+            ((EdiblemushroomState *)state)->unk137 |= 2;
+            (*gRomCurveInterface)->initCurve((void *)state, (void *)obj, lbl_803E52EC, &local_x, -1);
+            ((GameObject *)obj)->anim.localPosX = ((EdiblemushroomState *)state)->unk68;
+            ((GameObject *)obj)->anim.localPosZ = ((EdiblemushroomState *)state)->unk70;
+            break;
         }
     }
 
@@ -159,8 +160,11 @@ void ediblemushroom_init(int obj, int aux)
         ((EdiblemushroomState *)state)->unk108 = dist;
         ((EdiblemushroomState *)state)->unk10C = dist;
     } else {
-        ((EdiblemushroomState *)state)->unk108 = lbl_803E52F4;
-        ((EdiblemushroomState *)state)->unk10C = lbl_803E52F4;
+        {
+            f32 z = lbl_803E52F4;
+            ((EdiblemushroomState *)state)->unk108 = z;
+            ((EdiblemushroomState *)state)->unk10C = z;
+        }
     }
 
     ObjGroup_AddObject(obj, 0x31);
