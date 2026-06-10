@@ -113,9 +113,9 @@ typedef struct BaddieState {
     s16 unk32E; /* compared > 0x78 */
     s16 unk330;
     u8 unk332[4];
-    s16 unk336; /* (f32)-scaled by timeDelta */
+    s16 turnRate; /* s16 angle units/sec: *yaw += k * (turnRate * timeDelta / speed) */
     u8 unk338[2];
-    u8 unk33A;
+    u8 seqEntryIndex; /* indexes the 16B SeqEntry anim table (entry + i*16), wraps to 1 past the count */
     u8 inWhirlpoolGroup; /* ObjGroup 80 membership latch */
     u8 unk33C[0x346 - 0x33C]; /* incl. 0x340: ptr in smallbasket, u32-tested in magicPlant - thin/conflicting, left raw */
     u8 moveDone; /* set when the current move completes; SeqFns chain the next mode off it */
@@ -126,7 +126,7 @@ typedef struct BaddieState {
     u8 unk34E[6];
     u8 hitPoints; /* decremented on hit, (s8) < 1 = dead (anim.c/kt_rex pattern) */
     u8 unk355;
-    u8 unk356; /* bit flags 1|2 */
+    u8 moveEventFlags; /* one-shot move-progress event latches (bit1/bit2: SFX fired once past a progress threshold) */
     u8 unk357[0x35C - 0x357];
 } BaddieState;
 

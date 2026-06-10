@@ -194,28 +194,28 @@ void FUN_8015ad60(undefined8 param_1,double param_2,double param_3,undefined8 pa
     *(byte *)((int)param_9 + 0xaf) = *(byte *)((int)param_9 + 0xaf) & 0xf7;
     ObjHits_EnableObject((int)param_9);
   }
-  if (((((GroundBaddieState *)param_10)->baddie.controlFlags & 0x80000000) != 0) && (((GroundBaddieState *)param_10)->baddie.unk33A < 2)) {
+  if (((((GroundBaddieState *)param_10)->baddie.controlFlags & 0x80000000) != 0) && (((GroundBaddieState *)param_10)->baddie.seqEntryIndex < 2)) {
     if ((*(short *)(param_10 + 0x338) == 0) && (uVar2 = randomGetRange(0,0x14), 9 < (int)uVar2)) {
-      ((GroundBaddieState *)param_10)->baddie.unk33A = 7;
+      ((GroundBaddieState *)param_10)->baddie.seqEntryIndex = 7;
     }
     else {
-      ((GroundBaddieState *)param_10)->baddie.unk33A = 1;
+      ((GroundBaddieState *)param_10)->baddie.seqEntryIndex = 1;
     }
     ((GroundBaddieState *)param_10)->baddie.controlFlags = ((GroundBaddieState *)param_10)->baddie.controlFlags | 0x40000000;
   }
   if ((((GroundBaddieState *)param_10)->baddie.controlFlags & 0x40000000) != 0) {
-    *(char *)&((GroundBaddieState *)param_10)->baddie.unk33A = *(char *)&((GroundBaddieState *)param_10)->baddie.unk33A + '\x01';
-    if ((byte)(&DAT_803dc994)[*(ushort *)(param_10 + 0x338)] < ((GroundBaddieState *)param_10)->baddie.unk33A) {
-      ((GroundBaddieState *)param_10)->baddie.unk33A = (&DAT_803dc990)[*(ushort *)(param_10 + 0x338)];
+    *(char *)&((GroundBaddieState *)param_10)->baddie.seqEntryIndex = *(char *)&((GroundBaddieState *)param_10)->baddie.seqEntryIndex + '\x01';
+    if ((byte)(&DAT_803dc994)[*(ushort *)(param_10 + 0x338)] < ((GroundBaddieState *)param_10)->baddie.seqEntryIndex) {
+      ((GroundBaddieState *)param_10)->baddie.seqEntryIndex = (&DAT_803dc990)[*(ushort *)(param_10 + 0x338)];
     }
     if (*(ushort *)(param_10 + 0x2a0) < 4) {
-      iVar1 = (uint)((GroundBaddieState *)param_10)->baddie.unk33A * 0xc;
+      iVar1 = (uint)((GroundBaddieState *)param_10)->baddie.seqEntryIndex * 0xc;
       uVar4 = FUN_8014d4c8((double)*(float *)(puVar3 + iVar1),param_2,param_3,param_4,param_5,
                            param_6,param_7,param_8,(int)param_9,param_10,
                            (uint)(byte)puVar3[iVar1 + 8],0,0,in_r8,in_r9,in_r10);
     }
     else {
-      iVar1 = (uint)((GroundBaddieState *)param_10)->baddie.unk33A * 0xc;
+      iVar1 = (uint)((GroundBaddieState *)param_10)->baddie.seqEntryIndex * 0xc;
       uVar4 = FUN_8014d4c8((double)*(float *)(puVar3 + iVar1),param_2,param_3,param_4,param_5,
                            param_6,param_7,param_8,(int)param_9,param_10,
                            (uint)(byte)puVar3[iVar1 + 9],0,0,in_r8,in_r9,in_r10);
@@ -1362,7 +1362,7 @@ int mediumbasket_updateLandingState(int obj, int state)
         ObjAnim_SetCurrentMove(obj, 1, noBlend, 0);
         ((GroundBaddieState *)state)->baddie.moveDone = 0;
     }
-    if ((((GroundBaddieState *)state)->baddie.unk356 & 1) == 0) {
+    if ((((GroundBaddieState *)state)->baddie.moveEventFlags & 1) == 0) {
         player = Obj_GetPlayerObject();
         if (*(s16 *)(player + 0x46) == 0) goto playGroundLandSound;
         Sfx_PlayFromObject(obj, SFXfoot_metal_run_2);
@@ -1372,11 +1372,11 @@ playGroundLandSound:
 playLandingExtras:
         Sfx_PlayFromObject(obj, SFXdoor_unlocked);
         Sfx_PlayFromObject(obj, SFXkr_panting2);
-        ((GroundBaddieState *)state)->baddie.unk356 |= 1;
+        ((GroundBaddieState *)state)->baddie.moveEventFlags |= 1;
     }
-    if ((((GroundBaddieState *)state)->baddie.unk356 & 2) == 0 && ((GameObject *)obj)->anim.currentMoveProgress > lbl_803E2D2C) {
+    if ((((GroundBaddieState *)state)->baddie.moveEventFlags & 2) == 0 && ((GameObject *)obj)->anim.currentMoveProgress > lbl_803E2D2C) {
         Sfx_PlayFromObject(obj, SFXdoor_creak);
-        ((GroundBaddieState *)state)->baddie.unk356 |= 2;
+        ((GroundBaddieState *)state)->baddie.moveEventFlags |= 2;
         ((void (*)(int, int, int, int))((void **)*gBaddieControlInterface)[19])(
             obj, (s32)sub->unk3F0, -1, 0);
     }
@@ -1615,7 +1615,7 @@ int mediumbasket_updateSpinState(int obj, int state)
         sub->targetState = 4;
     }
     *(s16 *)obj = (s16)(lbl_803E2D5C *
-                        (((f32)((GroundBaddieState *)state)->baddie.unk336 * timeDelta) / lbl_803E2D60) +
+                        (((f32)((GroundBaddieState *)state)->baddie.turnRate * timeDelta) / lbl_803E2D60) +
                         (f32)*(s16 *)obj);
     ((GroundBaddieState *)state)->baddie.moveSpeed = lbl_803E2D38;
     ((GroundBaddieState *)state)->baddie.animSpeedA = lbl_803E2D48;
@@ -2054,7 +2054,7 @@ void mediumbasket_initWhirlpoolState(int* obj, GroundBaddieState *state) {
     state->baddie.unk318 = fz;
     state->baddie.unk322 = 7;
     state->baddie.unk31C = fz;
-    state->baddie.unk33A = 1;
+    state->baddie.seqEntryIndex = 1;
     state->baddie.inWhirlpoolGroup = 0;
     ObjModel_SetRenderCallback(Obj_GetActiveModel(obj), (void*)renderWhirlpool);
 }

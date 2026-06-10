@@ -270,10 +270,10 @@ int DIMSnowHorn1_stateHandler09(int obj, int state, f32 fv)
         return 8;
     }
 
-    if (((DIMSnowHorn1State *)state)->baddie.unk336 < -0xaf) {
-        ((DIMSnowHorn1State *)state)->baddie.unk336 = -((DIMSnowHorn1State *)state)->baddie.unk336;
+    if (((DIMSnowHorn1State *)state)->baddie.turnRate < -0xaf) {
+        ((DIMSnowHorn1State *)state)->baddie.turnRate = -((DIMSnowHorn1State *)state)->baddie.turnRate;
     }
-    d = ((DIMSnowHorn1State *)state)->baddie.unk336;
+    d = ((DIMSnowHorn1State *)state)->baddie.turnRate;
     if (d > 0) {
         if (((GameObject *)obj)->anim.currentMove != 0x201) {
             ObjAnim_SetCurrentMove(obj, 0x201, lbl_803E8234, 0);
@@ -380,7 +380,7 @@ int DIMSnowHorn1_stateHandler07(int obj, int state)
     }
     if (*(f32 *)((char *)state + 0x298) < lbl_803E824C) {
         *(s16 *)((char *)state + 0x334) = 0;
-        ((DIMSnowHorn1State *)state)->baddie.unk336 = 0;
+        ((DIMSnowHorn1State *)state)->baddie.turnRate = 0;
         *(f32 *)((char *)state + 0x298) = lbl_803E8234;
     }
     {
@@ -592,7 +592,7 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
     *(int *)((char *)state + 0) |= 0x200000;
     if (*(f32 *)((char *)state + 0x298) < lbl_803E824C) {
         *(s16 *)((char *)state + 0x334) = 0;
-        ((DIMSnowHorn1State *)state)->baddie.unk336 = 0;
+        ((DIMSnowHorn1State *)state)->baddie.turnRate = 0;
         *(f32 *)((char *)state + 0x298) = lbl_803E8234;
     }
     if (*(s16 *)((char *)state + 0x334) >= 0x5a) {
@@ -600,7 +600,7 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
     }
 
     ((GameObject *)obj)->anim.rotX = (s16)(s32)(
-        lbl_803E8250 * ((f32)(s16) * &((DIMSnowHorn1State *)state)->baddie.unk336 * t / lbl_803E8254) +
+        lbl_803E8250 * ((f32)(s16) * &((DIMSnowHorn1State *)state)->baddie.turnRate * t / lbl_803E8254) +
         (f32)(s16) * &((GameObject *)obj)->anim.rotX);
 
     v = *(f32 *)((char *)state + 0x298);

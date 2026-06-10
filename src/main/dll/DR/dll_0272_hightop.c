@@ -650,7 +650,7 @@ int hightop_stateHandler01(int obj, int p) {
     }
     if (((BaddieState *)p)->unk298 < lbl_803E6B2C) {
         *(s16 *)((char *)p + 0x334) = 0;
-        ((BaddieState *)p)->unk336 = 0;
+        ((BaddieState *)p)->turnRate = 0;
         ((BaddieState *)p)->unk298 = lbl_803E6AA8;
     }
     if (*(f32 *)&((BaddieState *)p)->trackedObj > lbl_803E6AA8 && ((BaddieState *)p)->unk298 > lbl_803E6AA8) {

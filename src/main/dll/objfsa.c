@@ -4161,7 +4161,7 @@ end:
     ((BaddieState *)p)->moveJustStartedA = 1;
     ((BaddieState *)p)->unk34D = 0;
     *(u8 *)((char *)p + 0x34c) = 0;
-    ((BaddieState *)p)->unk356 = 0;
+    ((BaddieState *)p)->moveEventFlags = 0;
     *(s16 *)((char *)p + 0x278) = 0;
     q = *(void **)((char *)ctx + 0x54);
     if (q != 0) *(u8 *)((char *)q + 0x70) = 0;

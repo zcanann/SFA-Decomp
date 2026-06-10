@@ -870,7 +870,7 @@ int fn_8015E0C8(int obj, GroundBaddieState *p)
     ObjAnim_SetCurrentMove((int)obj, 1, spd, 0);
     *(s8 *)&p->baddie.moveDone = 0;
   }
-  if ((p->baddie.unk356 & 1) == 0) {
+  if ((p->baddie.moveEventFlags & 1) == 0) {
     if (*(s16 *)(Obj_GetPlayerObject() + 0x46) != 0) {
       Sfx_PlayFromObject(obj, SFXfoot_metal_run_2);
     } else {
@@ -878,11 +878,11 @@ int fn_8015E0C8(int obj, GroundBaddieState *p)
     }
     Sfx_PlayFromObject(obj, SFXdoor_unlocked);
     Sfx_PlayFromObject(obj, SFXfoxcom_find);
-    p->baddie.unk356 |= 1;
+    p->baddie.moveEventFlags |= 1;
   }
-  if ((p->baddie.unk356 & 2) == 0 && ((GameObject *)obj)->anim.currentMoveProgress > lbl_803E2DD0) {
+  if ((p->baddie.moveEventFlags & 2) == 0 && ((GameObject *)obj)->anim.currentMoveProgress > lbl_803E2DD0) {
     Sfx_PlayFromObject(obj, SFXdoor_creak);
-    p->baddie.unk356 |= 2;
+    p->baddie.moveEventFlags |= 2;
     (*(void (**)(int, int, int, int))(*(int *)gBaddieControlInterface + 0x4c))(
         obj, sub->unk3F0, -1, 0);
   }

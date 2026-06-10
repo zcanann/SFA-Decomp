@@ -613,7 +613,7 @@ void fn_80152EC0(int obj, int state)
     *(f32*)(state + 0x324) = ((GameObject *)obj)->anim.localPosX;
     *(f32*)(state + 0x328) = ((GameObject *)obj)->anim.localPosY;
     *(f32*)(state + 0x32c) = ((GameObject *)obj)->anim.localPosZ;
-    ((BaddieState *)state)->unk33A = 0;
+    ((BaddieState *)state)->seqEntryIndex = 0;
     ((BaddieState *)state)->inWhirlpoolGroup = 0;
     *(s16*)(state + 0x338) = 0;
     *(f32*)(state + 0x330) = zero;
@@ -688,7 +688,7 @@ void fn_80153C90(int unused, int p2)
     ((BaddieState *)p2)->unk318 = oc;
     ((BaddieState *)p2)->unk322 = 0;
     ((BaddieState *)p2)->unk31C = ten;
-    ((BaddieState *)p2)->unk33A = 0;
+    ((BaddieState *)p2)->seqEntryIndex = 0;
     ((BaddieState *)p2)->inWhirlpoolGroup = 0;
     *(f32*)(p2 + 0x324) = lbl_803E2930;
     ((BaddieState *)p2)->pathStep = oc;
@@ -886,21 +886,21 @@ void fn_8015383C(int obj, int state)
         Sfx_PlayFromObjectLimited(obj, 0x49b, 2);
         ((void(*)(int, int, int, f32, int, int))fn_8014D08C)(obj, state, 2, lbl_803E290C, 0, 0);
         ((BaddieState *)state)->inWhirlpoolGroup = (u8)((((BaddieState *)state)->inWhirlpoolGroup) | 0x40);
-        ((BaddieState *)state)->unk33A = 0;
+        ((BaddieState *)state)->seqEntryIndex = 0;
     } else if ((((BaddieState *)state)->controlFlags & 0x40000000) != 0) {
         u8 mode;
         if ((u8)hit != 0) {
-            if (((BaddieState *)state)->unk33A != 0) {
-                ((BaddieState *)state)->unk33A = ((BaddieState *)state)->unk33A - 1;
+            if (((BaddieState *)state)->seqEntryIndex != 0) {
+                ((BaddieState *)state)->seqEntryIndex = ((BaddieState *)state)->seqEntryIndex - 1;
                 mode = (u8)((GameObject *)obj)->anim.currentMove;
             } else if (((GameObject *)obj)->anim.currentMove != 5 && losDetected) {
                 mode = 5;
-                ((BaddieState *)state)->unk33A = lbl_803DBCC0[((BaddieState *)state)->inWhirlpoolGroup & 3];
+                ((BaddieState *)state)->seqEntryIndex = lbl_803DBCC0[((BaddieState *)state)->inWhirlpoolGroup & 3];
                 ((BaddieState *)state)->inWhirlpoolGroup = (u8)((*(s8 *)&((BaddieState *)state)->inWhirlpoolGroup + 1) & 0xc3);
             } else {
                 mode = 4;
                 rnd = randomGetRange(1, 2);
-                ((BaddieState *)state)->unk33A = (u8)rnd;
+                ((BaddieState *)state)->seqEntryIndex = (u8)rnd;
             }
         } else {
             rnd = randomGetRange(2, 4);
@@ -979,7 +979,7 @@ void fn_80153E0C(int obj, int state)
     u8 ctr;
 
     curve = *(int **)state;
-    ((BaddieState *)state)->unk33A = 0;
+    ((BaddieState *)state)->seqEntryIndex = 0;
     *(f32*)(state + 0x328) = lbl_803E294C;
     if ((((BaddieState *)state)->controlFlags & 0x2000) != 0) {
         if (Curve_AdvanceAlongPath(curve, ((BaddieState *)state)->pathStep) != 0 || ((RomCurveWalker *)curve)->atSegmentEnd != 0) {

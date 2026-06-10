@@ -772,11 +772,11 @@ void fn_800D8414(int *obj, int *ctx) {
     if (diff < -0x8000) {
         diff += 0xffff;
     }
-    ((BaddieState *)ctx)->unk336 = (s16)(int)((f32)diff / lbl_803E0590);
+    ((BaddieState *)ctx)->turnRate = (s16)(int)((f32)diff / lbl_803E0590);
     if (diff < 0) {
-        *(s16 *)((char *)ctx + 0x334) = -((BaddieState *)ctx)->unk336;
+        *(s16 *)((char *)ctx + 0x334) = -((BaddieState *)ctx)->turnRate;
     } else {
-        *(s16 *)((char *)ctx + 0x334) = ((BaddieState *)ctx)->unk336;
+        *(s16 *)((char *)ctx + 0x334) = ((BaddieState *)ctx)->turnRate;
     }
     diff += 0x10000;
     if (((BaddieState *)ctx)->unk298 < lbl_803E0594) {

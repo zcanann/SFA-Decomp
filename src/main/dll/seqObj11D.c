@@ -322,7 +322,7 @@ void fn_801511E8(int obj, u8 *state)
     }
     while (*(u32 *)(entry + (idx = state[0x33a]) * 16 + 4) != 0
            && (((GroundBaddieState *)state)->baddie.controlFlags & *(u32 *)(entry + idx * 16 + 4)) == 0) {
-        (((GroundBaddieState *)state)->baddie.unk33A)++;
+        (((GroundBaddieState *)state)->baddie.seqEntryIndex)++;
         if (state[0x33a] > entry[8]) {
             state[0x33a] = 1;
         }
@@ -334,7 +334,7 @@ void fn_801511E8(int obj, u8 *state)
     ObjAnim_SetMoveProgress(
         *(f32 *)(lbl_8031DD30 + ((SeqEntry *)(entry + state[0x33a] * 16))->anim * 4),
         (ObjAnimComponent *)obj);
-    (((GroundBaddieState *)state)->baddie.unk33A)++;
+    (((GroundBaddieState *)state)->baddie.seqEntryIndex)++;
     if (state[0x33a] > entry[8]) {
         state[0x33a] = 1;
     }
@@ -370,7 +370,7 @@ void fn_801513AC(int obj, u8 *state)
             state[0x33a] = (u8)(entry[8] + lbl_803DBC88[(s16)((u32)(u16)d >> 13)]);
         } else if (*(u16 *)(lbl_803AC428 + 4) <= 70) {
             while ((*(u8 *)(entry + state[0x33a] * 16 + 10) & 1) != 0) {
-                (((GroundBaddieState *)state)->baddie.unk33A)++;
+                (((GroundBaddieState *)state)->baddie.seqEntryIndex)++;
                 if (state[0x33a] > entry[8]) {
                     state[0x33a] = 1;
                 }
@@ -382,7 +382,7 @@ void fn_801513AC(int obj, u8 *state)
     }
     while (*(u32 *)(entry + (idx = state[0x33a]) * 16 + 4) != 0
            && (((GroundBaddieState *)state)->baddie.controlFlags & *(u32 *)(entry + idx * 16 + 4)) == 0) {
-        (((GroundBaddieState *)state)->baddie.unk33A)++;
+        (((GroundBaddieState *)state)->baddie.seqEntryIndex)++;
         if (state[0x33a] > entry[8]) {
             state[0x33a] = 1;
         }
@@ -394,7 +394,7 @@ void fn_801513AC(int obj, u8 *state)
     ObjAnim_SetMoveProgress(
         *(f32 *)(lbl_8031DD30 + ((SeqEntry *)(entry + state[0x33a] * 16))->anim * 4),
         (ObjAnimComponent *)obj);
-    (((GroundBaddieState *)state)->baddie.unk33A)++;
+    (((GroundBaddieState *)state)->baddie.seqEntryIndex)++;
     if (state[0x33a] > entry[8]) {
         state[0x33a] = 1;
     }

@@ -1039,25 +1039,25 @@ void fn_8015A924(int* obj, u8* state)
         ObjHits_EnableObject(obj);
     }
 
-    if ((((BaddieState *)state)->controlFlags & 0x80000000) != 0 && ((BaddieState *)state)->unk33A <= 1) {
+    if ((((BaddieState *)state)->controlFlags & 0x80000000) != 0 && ((BaddieState *)state)->seqEntryIndex <= 1) {
         if (*(u16*)(state + 0x338) != 0 || (int)randomGetRange(0, 0x14) < 10) {
-            ((BaddieState *)state)->unk33A = 1;
+            ((BaddieState *)state)->seqEntryIndex = 1;
         } else {
-            ((BaddieState *)state)->unk33A = 7;
+            ((BaddieState *)state)->seqEntryIndex = 7;
         }
         ((BaddieState *)state)->controlFlags |= 0x40000000LL;
     }
 
     if ((((BaddieState *)state)->controlFlags & 0x40000000) != 0) {
-        *(char *)&((BaddieState *)state)->unk33A += 1;
-        if (((BaddieState *)state)->unk33A > lbl_803DBD2C[*(u16*)(state + 0x338)]) {
-            ((BaddieState *)state)->unk33A = lbl_803DBD28[*(u16*)(state + 0x338)];
+        *(char *)&((BaddieState *)state)->seqEntryIndex += 1;
+        if (((BaddieState *)state)->seqEntryIndex > lbl_803DBD2C[*(u16*)(state + 0x338)]) {
+            ((BaddieState *)state)->seqEntryIndex = lbl_803DBD28[*(u16*)(state + 0x338)];
         }
         if (*(u16*)(state + 0x2a0) < 4) {
-            i = ((BaddieState *)state)->unk33A * 0xc;
+            i = ((BaddieState *)state)->seqEntryIndex * 0xc;
             fn_8014D08C(obj, (int*)state, *(u8*)(tbl + i + 8), *(f32*)((int)tbl + i), 0, 0);
         } else {
-            i = ((BaddieState *)state)->unk33A * 0xc;
+            i = ((BaddieState *)state)->seqEntryIndex * 0xc;
             fn_8014D08C(obj, (int*)state, *(u8*)(tbl + i + 9), *(f32*)((int)tbl + i), 0, 0);
         }
         if (((GameObject *)obj)->anim.currentMove == 9) {
@@ -1384,7 +1384,7 @@ void fn_80159FCC(s16* obj, u8* state)
         }
     }
     if ((((BaddieState *)state)->controlFlags & 0x80000000) != 0) {
-        ((BaddieState *)state)->unk33A = 3;
+        ((BaddieState *)state)->seqEntryIndex = 3;
         ((BaddieState *)state)->controlFlags |= 0x40000000LL;
     }
     sidekickToy_accelerateTowardTarget3D(obj, *(f32*)(*(int *)&((BaddieState *)state)->trackedObj + 0x18),
@@ -1392,11 +1392,11 @@ void fn_80159FCC(s16* obj, u8* state)
         *(f32*)(*(int *)&((BaddieState *)state)->trackedObj + 0x20),
         lbl_803E2C48, lbl_803E2C78, lbl_803E2C50, ((BaddieState *)state)->unk304);
     if ((((BaddieState *)state)->controlFlags & 0x40000000) != 0) {
-        i = ((BaddieState *)state)->unk33A * 0xc;
+        i = ((BaddieState *)state)->seqEntryIndex * 0xc;
         fn_8014D08C((int*)obj, (int*)state, *(u8*)(lbl_8031FB70 + i + 8), *(f32*)((int)lbl_8031FB70 + i), 0, 0);
         {
             BasketSeq12* sq = (BasketSeq12*)lbl_8031FB70;
-            ((BaddieState *)state)->unk33A = sq[((BaddieState *)state)->unk33A].next;
+            ((BaddieState *)state)->seqEntryIndex = sq[((BaddieState *)state)->seqEntryIndex].next;
         }
     }
     pw = powfBitEstimate(((BaddieState *)state)->unk304, timeDelta);
@@ -1998,7 +1998,7 @@ void fn_80158C2C(s16* obj, u8* state)
             (*gCameraInterface)->loadTriggeredCamAction(0, 0x6c, 0);
         }
         *(u8*)(state + 0x33d) = *(u8*)(state + 0x33d) | 0x10;
-        ((BaddieState *)state)->unk33A = 0;
+        ((BaddieState *)state)->seqEntryIndex = 0;
         if (((GameObject *)obj)->anim.seqId == 0x6a2) {
             Sfx_PlayFromObject((int)obj, 0x4a9);
             if (((GameObject *)obj)->childObjs[0] != NULL) {
@@ -2198,7 +2198,7 @@ void fn_80159958(s16* obj, u8* state)
 
     if ((((BaddieState *)state)->controlFlags & 0x80000000) != 0) {
         BasketSeq12* sq = (BasketSeq12*)lbl_8031FB70;
-        ((BaddieState *)state)->unk33A = sq[((BaddieState *)state)->unk33A].mode;
+        ((BaddieState *)state)->seqEntryIndex = sq[((BaddieState *)state)->seqEntryIndex].mode;
         *(f32*)(state + 0x328) = lbl_803E2C38;
         Sfx_StopFromObject((int)obj, 1000);
     }
@@ -2231,9 +2231,9 @@ void fn_80159958(s16* obj, u8* state)
 
     if ((((BaddieState *)state)->controlFlags & 0x40000000) != 0) {
         BasketSeq12* sq = (BasketSeq12*)lbl_8031FB70;
-        i = ((BaddieState *)state)->unk33A * 0xc;
+        i = ((BaddieState *)state)->seqEntryIndex * 0xc;
         fn_8014D08C((int*)obj, (int*)state, *(u8*)(lbl_8031FB70 + i + 8), *(f32*)((int)lbl_8031FB70 + i), 0, 0);
-        ((BaddieState *)state)->unk33A = sq[((BaddieState *)state)->unk33A].next;
+        ((BaddieState *)state)->seqEntryIndex = sq[((BaddieState *)state)->seqEntryIndex].next;
     }
 
     if (*(f32*)(state + 0x324) > lbl_803E2C30) {

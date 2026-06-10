@@ -4566,7 +4566,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
                 Sfx_PlayFromObject(obj, 0x3cd);
                 inner->unk8D8 = inner->unk8D8 | 4;
             }
-            if ((((PlayerState *)state)->baddie.unk356 & 1) == 0 &&
+            if ((((PlayerState *)state)->baddie.moveEventFlags & 1) == 0 &&
                 ((GameObject *)obj)->anim.currentMoveProgress >
                     ((f32 *)(inner->unk3DC + (u32)inner->unk8A9 * 0xb0))[0x14]) {
                 u16 sfx;
@@ -4576,13 +4576,13 @@ int fn_8029BDB4(int obj, int state, f32 fv)
                     sfx = 0x1c;
                 }
                 Sfx_PlayFromObject(obj, sfx);
-                ((PlayerState *)state)->baddie.unk356 = ((PlayerState *)state)->baddie.unk356 | 1;
+                ((PlayerState *)state)->baddie.moveEventFlags = ((PlayerState *)state)->baddie.moveEventFlags | 1;
             }
-            if ((((PlayerState *)state)->baddie.unk356 & 2) == 0 &&
+            if ((((PlayerState *)state)->baddie.moveEventFlags & 2) == 0 &&
                 ((GameObject *)obj)->anim.currentMoveProgress >
                     ((f32 *)(inner->unk3DC + (u32)inner->unk8A9 * 0xb0))[0x15]) {
                 Sfx_PlayFromObject(obj, 0x1a);
-                ((PlayerState *)state)->baddie.unk356 = ((PlayerState *)state)->baddie.unk356 | 2;
+                ((PlayerState *)state)->baddie.moveEventFlags = ((PlayerState *)state)->baddie.moveEventFlags | 2;
             }
         }
         {
@@ -4680,7 +4680,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
         inner->unk824 = ((PlayerState *)state)->baddie.moveSpeed;
         inner->unk8CF = 0;
         ((PlayerState *)state)->baddie.animSpeedB = lbl_803E7EA4;
-        ((PlayerState *)state)->baddie.unk356 = 0;
+        ((PlayerState *)state)->baddie.moveEventFlags = 0;
         if (((PlayerState *)state)->baddie.targetObj != NULL) {
             if (inner->unk8A9 >= 5 && inner->unk8A9 <= 9) {
                 (*(void (*)(int, int, f32, int))(*(int *)(*gPlayerInterface + 0x30)))(obj, state, fv, 1);
@@ -9806,9 +9806,9 @@ int fn_80298CCC(int obj, int state)
             cfPrisonGuard_setLiftHeight(lbl_803DE434, 0);
         }
         if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E7F48 &&
-            (((PlayerState *)state)->baddie.unk356 & 1) == 0) {
+            (((PlayerState *)state)->baddie.moveEventFlags & 1) == 0) {
             Sfx_PlayFromObject(obj, SFXbaddie_eggsnatch_sniff3);
-            ((PlayerState *)state)->baddie.unk356 |= 1;
+            ((PlayerState *)state)->baddie.moveEventFlags |= 1;
         }
         if (*(s8 *)&((PlayerState *)state)->baddie.moveDone != 0) {
             *(u32 *)((char *)inner + 0x360) |= 0x800000LL;
@@ -9820,7 +9820,7 @@ int fn_80298CCC(int obj, int state)
         ObjAnim_SetCurrentMove(obj, 0xdd, k, 0);
         staffactivated_calcInteractionTargetXZ(lbl_803DE434, (char *)obj + 0xc, (char *)obj + 0x14);
         ((PlayerState *)state)->baddie.moveSpeed = lbl_803E7EF8;
-        ((PlayerState *)state)->baddie.unk356 = 0;
+        ((PlayerState *)state)->baddie.moveEventFlags = 0;
         inner->targetYaw = *(s16 *)((char *)lbl_803DE434);
         inner->yaw = inner->targetYaw;
         if ((void *)lbl_803DE44C != NULL && ((ByteFlags *)((char *)inner + 0x3f4))->b40) {
@@ -10134,15 +10134,15 @@ int fn_80297AD0(int obj, int state, f32 fv)
     inner->yaw = hdr;
     inner->targetYaw = hdr;
     (*(void (*)(int, int, f32, int))(*(int *)(*gPlayerInterface + 0x20)))(obj, state, fv, 1);
-    if ((((PlayerState *)state)->baddie.unk356 & 1) == 0 &&
+    if ((((PlayerState *)state)->baddie.moveEventFlags & 1) == 0 &&
         ((GameObject *)obj)->anim.currentMoveProgress > lbl_803E7F14) {
         Sfx_PlayFromObject(obj, SFXdn_hightop_hurt1);
-        ((PlayerState *)state)->baddie.unk356 |= 1;
+        ((PlayerState *)state)->baddie.moveEventFlags |= 1;
     }
-    if ((((PlayerState *)state)->baddie.unk356 & 2) == 0 &&
+    if ((((PlayerState *)state)->baddie.moveEventFlags & 2) == 0 &&
         ((GameObject *)obj)->anim.currentMoveProgress > lbl_803E7F18) {
         Sfx_PlayFromObject(obj, SFXen_liftstpc);
-        ((PlayerState *)state)->baddie.unk356 |= 2;
+        ((PlayerState *)state)->baddie.moveEventFlags |= 2;
     }
     if (*(s8 *)&((PlayerState *)state)->baddie.moveDone != 0) {
         *(int *)&((PlayerState *)state)->baddie.unk308 = (int)fn_8029C8C8;
@@ -10176,7 +10176,7 @@ int fn_80297D0C(int obj, int state, f32 fv)
         ObjAnim_SetCurrentMove(obj, lbl_803336BC[*(s16 *)((char *)lbl_80333714 + 0x632)],
                                lbl_803E7EA4, 0);
         ((PlayerState *)state)->baddie.moveSpeed = lbl_803E7F24;
-        ((PlayerState *)state)->baddie.unk356 = 0;
+        ((PlayerState *)state)->baddie.moveEventFlags = 0;
         k = lbl_803E7EA4;
         ((PlayerState *)state)->baddie.animSpeedC = k;
         ((PlayerState *)state)->baddie.animSpeedB = k;
@@ -10199,10 +10199,10 @@ int fn_80297D0C(int obj, int state, f32 fv)
         Sfx_PlayFromObject(obj, 0x3cd);
         inner->unk8D8 |= 4;
     }
-    if ((((PlayerState *)state)->baddie.unk356 & 1) == 0 &&
+    if ((((PlayerState *)state)->baddie.moveEventFlags & 1) == 0 &&
         ((GameObject *)obj)->anim.currentMoveProgress > lbl_803E7F14) {
         Sfx_PlayFromObject(obj, SFXen_liftstpc);
-        ((PlayerState *)state)->baddie.unk356 |= 1;
+        ((PlayerState *)state)->baddie.moveEventFlags |= 1;
     }
     if (*(s8 *)&((PlayerState *)state)->baddie.moveDone != 0) {
         *(int *)&((PlayerState *)state)->baddie.unk308 = (int)fn_8029C8C8;
@@ -10236,7 +10236,7 @@ int fn_80297F48(int obj, int state, f32 fv)
         ObjAnim_SetCurrentMove(obj, lbl_803336BC[*(s16 *)((char *)lbl_80333714 + 0x582)],
                                lbl_803E7EA4, 0);
         ((PlayerState *)state)->baddie.moveSpeed = lbl_803E7F24;
-        ((PlayerState *)state)->baddie.unk356 = 0;
+        ((PlayerState *)state)->baddie.moveEventFlags = 0;
         k = lbl_803E7EA4;
         ((PlayerState *)state)->baddie.animSpeedC = k;
         ((PlayerState *)state)->baddie.animSpeedB = k;
@@ -10259,10 +10259,10 @@ int fn_80297F48(int obj, int state, f32 fv)
         Sfx_PlayFromObject(obj, 0x3cd);
         inner->unk8D8 |= 4;
     }
-    if ((((PlayerState *)state)->baddie.unk356 & 1) == 0 &&
+    if ((((PlayerState *)state)->baddie.moveEventFlags & 1) == 0 &&
         ((GameObject *)obj)->anim.currentMoveProgress > lbl_803E7F14) {
         Sfx_PlayFromObject(obj, SFXen_liftstpc);
-        ((PlayerState *)state)->baddie.unk356 |= 1;
+        ((PlayerState *)state)->baddie.moveEventFlags |= 1;
     }
     if (*(s8 *)&((PlayerState *)state)->baddie.moveDone != 0) {
         *(int *)&((PlayerState *)state)->baddie.unk308 = (int)fn_8029C8C8;
@@ -10365,16 +10365,16 @@ int fn_80297854(int obj, int state, f32 fv)
         Sfx_PlayFromObject(obj, 0x3cd);
         inner->unk8D8 |= 4;
     }
-    if ((((PlayerState *)state)->baddie.unk356 & 1) == 0 &&
+    if ((((PlayerState *)state)->baddie.moveEventFlags & 1) == 0 &&
         ((GameObject *)obj)->anim.currentMoveProgress > lbl_803E7F14) {
         Sfx_PlayFromObject(obj, SFXdn_hightop_hurt1);
-        ((PlayerState *)state)->baddie.unk356 |= 1;
+        ((PlayerState *)state)->baddie.moveEventFlags |= 1;
     }
-    if ((((PlayerState *)state)->baddie.unk356 & 2) == 0 &&
+    if ((((PlayerState *)state)->baddie.moveEventFlags & 2) == 0 &&
         ((GameObject *)obj)->anim.currentMoveProgress > lbl_803E7F18) {
         Sfx_PlayFromObject(obj, audioPickSoundEffect_8006ed24(inner->unk86C,
                                                               inner->unk8A5));
-        ((PlayerState *)state)->baddie.unk356 |= 2;
+        ((PlayerState *)state)->baddie.moveEventFlags |= 2;
     }
     if (*(s8 *)&((PlayerState *)state)->baddie.moveDone != 0) {
         *(int *)&((PlayerState *)state)->baddie.unk308 = (int)fn_8029C8C8;
@@ -15051,20 +15051,20 @@ int fn_80298944(int obj, int state)
     switch (((GameObject *)obj)->anim.currentMove) {
     case 0xe0:
         if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E7E98 &&
-            (((PlayerState *)state)->baddie.unk356 & 1) == 0) {
-            ((PlayerState *)state)->baddie.unk356 |= 1;
+            (((PlayerState *)state)->baddie.moveEventFlags & 1) == 0) {
+            ((PlayerState *)state)->baddie.moveEventFlags |= 1;
             Sfx_PlayFromObject(obj, 0x376);
         }
         if (*(s8 *)&((PlayerState *)state)->baddie.moveDone != 0) {
             ObjAnim_SetCurrentMove(obj, 0xdf, lbl_803E7EA4, 0);
             ((PlayerState *)state)->baddie.moveSpeed = lbl_803E7F40;
-            ((PlayerState *)state)->baddie.unk356 = 0;
+            ((PlayerState *)state)->baddie.moveEventFlags = 0;
         }
         break;
     case 0xde:
         if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E7E9C &&
-            (((PlayerState *)state)->baddie.unk356 & 1) == 0) {
-            ((PlayerState *)state)->baddie.unk356 |= 1;
+            (((PlayerState *)state)->baddie.moveEventFlags & 1) == 0) {
+            ((PlayerState *)state)->baddie.moveEventFlags |= 1;
             doRumble(lbl_803E7F10);
             Sfx_PlayFromObject(obj, 0x377);
             cfPrisonGuard_setGameBitMirror(lbl_803DE434, 0);
@@ -15077,20 +15077,20 @@ int fn_80298944(int obj, int state)
         break;
     case 0xe1:
         if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E7E98 &&
-            (((PlayerState *)state)->baddie.unk356 & 1) == 0) {
-            ((PlayerState *)state)->baddie.unk356 |= 1;
+            (((PlayerState *)state)->baddie.moveEventFlags & 1) == 0) {
+            ((PlayerState *)state)->baddie.moveEventFlags |= 1;
             Sfx_PlayFromObject(obj, 0x376);
         }
         if (*(s8 *)&((PlayerState *)state)->baddie.moveDone != 0) {
             ObjAnim_SetCurrentMove(obj, 0xde, lbl_803E7EA4, 0);
             ((PlayerState *)state)->baddie.moveSpeed = lbl_803E7F40;
-            ((PlayerState *)state)->baddie.unk356 = 0;
+            ((PlayerState *)state)->baddie.moveEventFlags = 0;
         }
         break;
     case 0xdf:
         if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E7E9C &&
-            (((PlayerState *)state)->baddie.unk356 & 1) == 0) {
-            ((PlayerState *)state)->baddie.unk356 |= 1;
+            (((PlayerState *)state)->baddie.moveEventFlags & 1) == 0) {
+            ((PlayerState *)state)->baddie.moveEventFlags |= 1;
             doRumble(lbl_803E7F10);
             Sfx_PlayFromObject(obj, 0x377);
             cfPrisonGuard_setGameBitMirror(lbl_803DE434, 1);
@@ -15117,7 +15117,7 @@ int fn_80298944(int obj, int state)
         }
         staffactivated_calcInteractionTargetXZ(lbl_803DE434, (char *)obj + 0xc, (char *)obj + 0x14);
         ((PlayerState *)state)->baddie.moveSpeed = lbl_803E7F40;
-        ((PlayerState *)state)->baddie.unk356 = 0;
+        ((PlayerState *)state)->baddie.moveEventFlags = 0;
         inner->targetYaw = *(s16 *)lbl_803DE434;
         inner->yaw = inner->targetYaw;
         if (lbl_803DE44C != NULL && ((ByteFlags *)((char *)inner + 0x3f4))->b40) {

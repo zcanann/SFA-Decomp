@@ -153,7 +153,7 @@ int DR_CloudRunner_stateHandler02(int obj, int p2)
     }
     if (((CloudRunnerState *)p2)->baddie.unk298 < lbl_803E83BC) {
         *(s16 *)((char *)p2 + 0x334) = 0;
-        ((CloudRunnerState *)p2)->baddie.unk336 = 0;
+        ((CloudRunnerState *)p2)->baddie.turnRate = 0;
         ((CloudRunnerState *)p2)->baddie.unk298 = lbl_803E83A4;
     }
     return 0;
@@ -433,7 +433,7 @@ int DR_CloudRunner_stateHandler05(int obj, int p2, f32 f)
     *(int *)((char *)p2 + 0) |= 0x1000000;
     if (((CloudRunnerState *)p2)->baddie.unk298 < lbl_803E83BC) {
         *(s16 *)((char *)p2 + 0x334) = 0;
-        ((CloudRunnerState *)p2)->baddie.unk336 = 0;
+        ((CloudRunnerState *)p2)->baddie.turnRate = 0;
         {
             f32 fz = lbl_803E83A4;
             ((CloudRunnerState *)p2)->baddie.unk290 = fz;
