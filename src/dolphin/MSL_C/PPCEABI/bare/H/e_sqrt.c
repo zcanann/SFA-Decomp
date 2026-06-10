@@ -93,9 +93,8 @@ float powfCoreHighPrecision(float x, float y) {
 }
 
 float powfCoreFast(float x, register float y) {
-    register float yv;
-    register float scalef;
     register float expf;
+    register float scalef;
     register u32 ix;
     register int ysign;
     float result;
@@ -103,7 +102,6 @@ float powfCoreFast(float x, register float y) {
     s16 exponent;
     s16 scale;
 
-    yv = y;
     if (x != lbl_803E7AB8) {
         ix = *(u32 *)&x;
         exponent = ((ix >> 23) & 0xFF) - 127;
@@ -111,13 +109,13 @@ float powfCoreFast(float x, register float y) {
         value = value - lbl_803E7BC8;
         value = value * (value * (lbl_803E7BE4 * value + lbl_803E7BE0) + lbl_803E7BDC) + lbl_803E7BD8;
         expf = fastCastS16ToFloat(&exponent);
-        value = yv * (value + expf);
+        value = y * (value + expf);
         fastCastFloatToS16(&scale, value);
         scalef = fastCastS16ToFloat(&scale);
         value = value - scalef;
         result = (value != lbl_803E7AB8) ? (value * (lbl_803E7BF0 * value + lbl_803E7BEC) + lbl_803E7BE8) : lbl_803E7BC8;
         if ((int)(ix & 0x80000000)) {
-            ysign = (int)yv;
+            ysign = (int)y;
             if (ysign & 1) {
                 result = -result;
             }
@@ -125,7 +123,7 @@ float powfCoreFast(float x, register float y) {
         *(u32 *)&result += (u32)scale << 23;
         return result;
     }
-    if (yv != lbl_803E7AB8) {
+    if (y != lbl_803E7AB8) {
         return lbl_803E7AB8;
     }
     return lbl_803E7BC8;
