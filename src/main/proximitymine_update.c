@@ -103,7 +103,7 @@ void proximitymine_update(ProximityMineObject *obj)
         modelLightStruct_setupGlow(state->effectHandle, 0, 0xff, 0, 0, lbl_803DC238, lbl_803DC234);
         {
           ProximityMineEffect *fx = state->effectHandle;
-          modelLightStruct_setPosition(fx, lbl_803E6768, obj->unkA8, lbl_803E6768);
+          modelLightStruct_setPosition(fx, lbl_803E6768, obj->unkA8, *(f32 *)&lbl_803E6768);
         }
       }
     }
@@ -116,7 +116,7 @@ void proximitymine_update(ProximityMineObject *obj)
           modelLightStruct_setupGlow(state->effectHandle, 0, 0xff, 0, 0, lbl_803DC240, lbl_803DC23C);
           {
             ProximityMineEffect *fx = state->effectHandle;
-            modelLightStruct_setPosition(fx, lbl_803E6768, obj->unkA8, lbl_803E6768);
+            modelLightStruct_setPosition(fx, lbl_803E6768, obj->unkA8, *(f32 *)&lbl_803E6768);
           }
         }
       }
