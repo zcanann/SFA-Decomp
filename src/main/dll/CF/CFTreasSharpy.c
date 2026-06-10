@@ -232,6 +232,7 @@ void fxemit_emitEffect(FxEmitObject *obj)
     FxEmitState *state;
     FxEmitPlacement *def;
     int spawnFlags;
+    s16 i;
 
     state = obj->state;
     def = (FxEmitPlacement *)obj->objAnim.placementData;
@@ -290,7 +291,6 @@ void fxemit_emitEffect(FxEmitObject *obj)
 
     if ((spawnFlags & 1) != 0) {
         CFTreasSharpyFxSpawnArgs args;
-        s16 i;
 
         args.x = obj->objAnim.localPosX;
         args.y = obj->objAnim.localPosY;
@@ -307,7 +307,6 @@ void fxemit_emitEffect(FxEmitObject *obj)
             CFTREAS_PARTFX_SPAWN(obj, state->altEffectId, &args, spawnFlags, -1, 0);
         }
     } else {
-        s16 i;
         void *resource;
         s16 mode = state->effectMode;
 
