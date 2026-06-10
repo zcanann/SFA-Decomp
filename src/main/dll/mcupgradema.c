@@ -11,11 +11,11 @@ int mcstaffeffe_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
     int staff;
     int i;
 
-    if (Obj_GetPlayerObject() == 0) {
+    if ((void *)Obj_GetPlayerObject() == NULL) {
         return 0;
     }
     staff = fn_802966CC();
-    if (staff == 0) {
+    if ((void *)staff == NULL) {
         return 0;
     }
     for (i = 0; i < animUpdate->eventCount; i++) {
