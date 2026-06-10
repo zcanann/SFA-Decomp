@@ -146,9 +146,9 @@ void SnowBike_init(int obj, u8 *params, int flag)
     if (params[0x19] != 0) {
         ((SnowBikeFlags *)(state + 0x428))->b02 = 1;
     }
-    ((SnowBikeState *)state)->unk038 = -1;
-    ((SnowBikeState *)state)->unk03C = -1;
-    ((SnowBikeState *)state)->unk040 = -1;
+    ((SnowBikeState *)state)->checkpointIndexA = -1;
+    ((SnowBikeState *)state)->checkpointIndexB = -1;
+    ((SnowBikeState *)state)->checkpointIndexC = -1;
     ((SnowBikeState *)state)->unk05C = params[0x1c];
     ((SnowBikeState *)state)->unk05D = params[0x1d];
     ((SnowBikeState *)state)->unk00C = ((GameObject *)obj)->anim.localPosX;
@@ -166,7 +166,7 @@ void SnowBike_init(int obj, u8 *params, int flag)
     ((SnowBikeState *)state)->homePosX = ((GameObject *)obj)->anim.worldPosX;
     ((SnowBikeState *)state)->homePosY = ((GameObject *)obj)->anim.worldPosY;
     ((SnowBikeState *)state)->homePosZ = ((GameObject *)obj)->anim.worldPosZ;
-    ((SnowBikeState *)state)->unk068 = lbl_803E5AE8;
+    ((SnowBikeState *)state)->pathProgress = lbl_803E5AE8;
     ((SnowBikeState *)state)->unk448 = *(s16 *)(params + 0x1a);
     ((SnowBikeState *)state)->gameBitId = *(s16 *)(params + 0x1e);
     if (GameBit_Get(((SnowBikeState *)state)->gameBitId) != 0) {
@@ -356,15 +356,15 @@ void SnowBike_update(int obj)
                 if (drshackle_updateAttachedPosition(obj, state) != 0) {
                     fn_801EBD60(obj, state);
                     fn_801EC7A0(obj, state);
-                    if (((SnowBikeState *)state)->unk3E4 != lbl_803E5AE8) {
-                        PSVECScale((f32 *)(state + 0x464), (f32 *)(state + 0x47c), ((SnowBikeState *)state)->unk3E0);
-                        PSVECScale((f32 *)(state + 0x494), (f32 *)(state + 0x494), ((SnowBikeState *)state)->unk3E0);
-                        ((SnowBikeState *)state)->unk3E4 -= timeDelta;
-                        if (((SnowBikeState *)state)->unk3E4 <= lbl_803E5AE8) {
+                    if (((SnowBikeState *)state)->collisionFxTimer != lbl_803E5AE8) {
+                        PSVECScale((f32 *)(state + 0x464), (f32 *)(state + 0x47c), ((SnowBikeState *)state)->collisionFxDamping);
+                        PSVECScale((f32 *)(state + 0x494), (f32 *)(state + 0x494), ((SnowBikeState *)state)->collisionFxDamping);
+                        ((SnowBikeState *)state)->collisionFxTimer -= timeDelta;
+                        if (((SnowBikeState *)state)->collisionFxTimer <= lbl_803E5AE8) {
                             if (Rcp_GetMotionBlurEnabled() != 0) {
                                 setMotionBlur(0, lbl_803E5AE8);
                             }
-                            ((SnowBikeState *)state)->unk3E4 = lbl_803E5AE8;
+                            ((SnowBikeState *)state)->collisionFxTimer = lbl_803E5AE8;
                         }
                     } else {
                         ((SnowBikeState *)state)->unk47C = ((SnowBikeState *)state)->unk464;
@@ -415,15 +415,15 @@ void SnowBike_update(int obj)
                 ((SnowBikeState *)state)->stickX = c;
                 fn_801EBD60(obj, state);
                 fn_801EC7A0(obj, state);
-                if (((SnowBikeState *)state)->unk3E4 != lbl_803E5AE8) {
-                    PSVECScale((f32 *)(state + 0x464), (f32 *)(state + 0x47c), ((SnowBikeState *)state)->unk3E0);
-                    PSVECScale((f32 *)(state + 0x494), (f32 *)(state + 0x494), ((SnowBikeState *)state)->unk3E0);
-                    ((SnowBikeState *)state)->unk3E4 -= timeDelta;
-                    if (((SnowBikeState *)state)->unk3E4 <= lbl_803E5AE8) {
+                if (((SnowBikeState *)state)->collisionFxTimer != lbl_803E5AE8) {
+                    PSVECScale((f32 *)(state + 0x464), (f32 *)(state + 0x47c), ((SnowBikeState *)state)->collisionFxDamping);
+                    PSVECScale((f32 *)(state + 0x494), (f32 *)(state + 0x494), ((SnowBikeState *)state)->collisionFxDamping);
+                    ((SnowBikeState *)state)->collisionFxTimer -= timeDelta;
+                    if (((SnowBikeState *)state)->collisionFxTimer <= lbl_803E5AE8) {
                         if (Rcp_GetMotionBlurEnabled() != 0) {
                             setMotionBlur(0, lbl_803E5AE8);
                         }
-                        ((SnowBikeState *)state)->unk3E4 = lbl_803E5AE8;
+                        ((SnowBikeState *)state)->collisionFxTimer = lbl_803E5AE8;
                     }
                 } else {
                     ((SnowBikeState *)state)->unk47C = ((SnowBikeState *)state)->unk464;

@@ -22,9 +22,9 @@ typedef struct SnowBikeState {
     s16 riderPitchOnFree;             /* 0x02e: rider pitch on free */
     u8 pad030[0x4];
     f32 unk034;             /* 0x034 */
-    int unk038;             /* 0x038 */
-    int unk03C;             /* 0x03c */
-    int unk040;             /* 0x040 */
+    int checkpointIndexA;             /* 0x038 */
+    int checkpointIndexB;             /* 0x03c */
+    int checkpointIndexC;             /* 0x040 */
     int unk044;             /* 0x044 */
     u8 pad048[0x4];
     f32 riderPosX;             /* 0x04c: rider pos X on free */
@@ -39,7 +39,7 @@ typedef struct SnowBikeState {
     u8 pad064[0x1];
     s8 unk065;              /* 0x065: collision channel (-1 none) */
     u8 pad066[0x2];
-    f32 unk068;             /* 0x068 */
+    f32 pathProgress;             /* 0x068 */
     u8 pad06C[0x100];       /* 0x178: path-control block lives in here */
     f32 unk16C;             /* 0x16c */
     f32 unk170;             /* 0x170 */
@@ -54,8 +54,8 @@ typedef struct SnowBikeState {
     u8 pad3D7[0x2];
     s8 unk3D9;              /* 0x3d9 */
     u8 pad3DA[0x6];
-    f32 unk3E0;             /* 0x3e0 */
-    f32 unk3E4;             /* 0x3e4 */
+    f32 collisionFxDamping;             /* 0x3e0 */
+    f32 collisionFxTimer;             /* 0x3e4 */
     u8 pad3E8[0xc];
     f32 unk3F4;             /* 0x3f4 */
     f32 unk3F8;             /* 0x3f8 */
@@ -146,7 +146,7 @@ typedef struct SnowBikeState {
 } SnowBikeState; /* extends to at least 0x59C (DRhightop/DRhalolight tail) */
 STATIC_ASSERT(offsetof(SnowBikeState, unk16C) == 0x16C);
 STATIC_ASSERT(offsetof(SnowBikeState, unk3D6) == 0x3D6);
-STATIC_ASSERT(offsetof(SnowBikeState, unk3E0) == 0x3E0);
+STATIC_ASSERT(offsetof(SnowBikeState, collisionFxDamping) == 0x3E0);
 STATIC_ASSERT(offsetof(SnowBikeState, unk424) == 0x424);
 STATIC_ASSERT(offsetof(SnowBikeState, flags428) == 0x428);
 STATIC_ASSERT(offsetof(SnowBikeState, unk4AC) == 0x4AC);

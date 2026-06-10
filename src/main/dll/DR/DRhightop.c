@@ -177,9 +177,9 @@ void fn_801EAE4C(short *param_9,int param_10)
   s8 ch;
 
   if ((u32)(st->flags428 >> 3 & 1) == 0) {
-    st->unk038 = 0xffffffff;
-    st->unk03C = 0xffffffff;
-    st->unk040 = 0xffffffff;
+    st->checkpointIndexA = 0xffffffff;
+    st->checkpointIndexB = 0xffffffff;
+    st->checkpointIndexC = 0xffffffff;
     st->unk044 = 0;
     lbl_803DC0BC = -1;
     uVar3 = GameBit_Get((int)*(short *)st->unk060);
@@ -217,12 +217,12 @@ void fn_801EAE4C(short *param_9,int param_10)
       else {
         fVar1 = -timeDelta;
       }
-      st->unk068 = st->unk068 + fVar1;
-      fVar1 = st->unk068;
-      st->unk068 =
+      st->pathProgress = st->pathProgress + fVar1;
+      fVar1 = st->pathProgress;
+      st->pathProgress =
           (fVar1 < lbl_803E5AE8) ? lbl_803E5AE8
                                  : ((fVar1 > lbl_803E5B68) ? lbl_803E5B68 : fVar1);
-      if (st->unk068 > lbl_803E5B7C) {
+      if (st->pathProgress > lbl_803E5B7C) {
         gameTextShow(0x475);
       }
       (*(code *)(*gCheckpointInterface + 0x2c))(param_10 + 0x28);
@@ -495,32 +495,32 @@ void fn_801EB634(int param_1,int param_2)
     case 0xd:
       if ((u32)(st->flags428 >> 1 & 1) == 0) {
         st->unk42C = local_38;
-        st->unk3E0 = lbl_803E5AEC;
+        st->collisionFxDamping = lbl_803E5AEC;
       }
       break;
     case 0x15:
-      if (st->unk3E4 == lbl_803E5AE8) {
+      if (st->collisionFxTimer == lbl_803E5AE8) {
         PSVECNormalize((float *)(param_1 + 0x24),afStack_2c);
         dot = PSVECDotProduct(afStack_2c,(float *)(local_38 + 0x24));
         PSVECScale(&st->unk494,&st->unk494,
                    dot * st->unk4AC + lbl_803E5AEC);
         st->unk498 = st->unk498 * lbl_803E5BA8;
-        st->unk3E4 = lbl_803E5AF4;
-        st->unk3E0 = lbl_803E5AEC;
+        st->collisionFxTimer = lbl_803E5AF4;
+        st->collisionFxDamping = lbl_803E5AEC;
       }
       break;
     case 0x1d:
       if ((u32)(st->flags428 >> 1 & 1) == 0) {
         setMotionBlur(lbl_803E5BAC,1);
-        st->unk3E4 = (f32)(s32)lbl_803DC0D0;
-        st->unk3E0 = lbl_803DC0C8;
+        st->collisionFxTimer = (f32)(s32)lbl_803DC0D0;
+        st->collisionFxDamping = lbl_803DC0C8;
         st->unk4C4 = (f32)(s32)lbl_803DC0CC;
       }
       break;
     }
     hit = *(uint *)(iVar3 + 0x50);
     if (((hit != 0) &&
-        (local_38 = hit, *(u32 *)&st->unk42C = hit, st->unk3E4 == lbl_803E5AE8)) &&
+        (local_38 = hit, *(u32 *)&st->unk42C = hit, st->collisionFxTimer == lbl_803E5AE8)) &&
        (iVar2 = arrayIndexOf(lbl_8032852C,0xc,(int)*(short *)(local_38 + 0x46)), iVar2 != -1)) {
       fn_8009A8C8((double)lbl_803E5BB0,param_1);
       (*gPartfxInterface)->spawnObject((void *)param_1, 0x551, NULL, 4, -1, NULL);
@@ -530,10 +530,10 @@ void fn_801EB634(int param_1,int param_2)
       while (uVar4-- != 0) {
         (*gPartfxInterface)->spawnObject((void *)param_1, 0x553, NULL, 2, -1, NULL);
       }
-      st->unk3E4 = lbl_803E5AF4;
-      st->unk3E0 = lbl_803E5AEC;
+      st->collisionFxTimer = lbl_803E5AF4;
+      st->collisionFxDamping = lbl_803E5AEC;
       if ((u32)(st->flags428 >> 1 & 1) == 0) {
-        st->unk3E4 = (f32)(s32)lbl_803DC0D4;
+        st->collisionFxTimer = (f32)(s32)lbl_803DC0D4;
       }
     }
   }

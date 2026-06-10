@@ -87,7 +87,7 @@ void SnowBike_hitDetect(int obj)
             if (*(void **)&state->unk42C == NULL) {
                 goto clamp;
             }
-            if (!(state->unk3E0 <= lbl_803E5AEC)) {
+            if (!(state->collisionFxDamping <= lbl_803E5AEC)) {
                 goto clamp;
             }
         }
