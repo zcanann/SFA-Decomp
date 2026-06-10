@@ -946,7 +946,7 @@ void DBprotection_updateShield(int *obj)
     state->shieldSfxLatch = 0;
   }
 
-  *(u16 *)&((GameObject *)obj)->anim.rotZ = (s32)(lbl_803E57DC * angleCos);
+  *(u16 *)&((GameObject *)obj)->anim.rotZ = lbl_803E57DC * angleCos;
   state->shieldAngle = (u16)(s32)(lbl_803E57E0 * timeDelta + (f32)state->shieldAngle);
 }
 
