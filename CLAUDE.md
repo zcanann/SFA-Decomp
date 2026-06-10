@@ -33,6 +33,47 @@ every partial when a new recipe lands):
   flag the function so it gets revisited with the next playbook recipe (this
   exact framing is how the cracked caps got cracked). Never asm.
 
+## Pragma states: what they are and where they come from (read before #1)
+
+**Our per-fn `#pragma peephole/scheduling` wrappers are a MATCHING
+INSTRUMENT, not a claim about the original source.** Retail game code almost
+certainly did not carry per-function pragma forests; what we are reproducing
+with them is per-function OPTIMIZER STATE whose original mechanism was
+something else. Empirical findings (asm-bug investigation, byte-verified
+probes on the bundled compilers):
+
+- **The MWCC asm-function bug is REAL but version-bound**: on GC/1.2.5 and
+  1.2.5n, an `asm void fn(void) {...}` definition DISABLES THE PEEPHOLE PASS
+  for every subsequent function in the TU (scheduling unaffected;
+  `#pragma peephole on` re-enables — same internal flag). FIXED in GC/1.3+.
+  So in a 1.2.5-family unit, a mixed peephole map can mean the ORIGINAL had
+  an asm function at the ON→OFF boundary — check that reading before adding
+  per-fn wrappers in 1.2.5n units (MSL/audio lanes).
+- **The main game lib is GC/2.0, which is IMMUNE** (probed: asm fn with
+  nofralloc, with fralloc+body, and statement-level `asm {}` blocks — no
+  effect). The bug therefore canNOT explain mixed peephole in the main lib.
+- **Version tell — the PROLOGUE CONVENTION**: 1.2.5-family emits
+  `mflr r0; stw r0,4(r1); stwu r1,...` (LR stored above the frame, stwu
+  last); 1.3+/2.0 emits `stwu; mflr; stw r0,frame+4(r1)`. One glance at any
+  fn's prologue identifies the compiler family. SFA main-lib targets are
+  uniformly stwu-first = 2.0-class (also confirmed by codegen: shrine1CE's
+  tail fns mismatch 1.2.5n under every off-arrangement, 8/24 fns).
+- **What the original mechanism for main-lib state mixes most plausibly
+  was**: per-FILE makefile flags for the uniform-state files (a file-global
+  `-opt nopeephole`/schedule choice — most of our 178 uniform-state pragma
+  files should become unit cflags, not pragmas), and for the genuinely
+  mixed files an UNKNOWN mechanism — candidates: finer original TU splits
+  than we model (our "file" = several original files each with uniform
+  flags), original-source pragmas (possible but unusual), or an undiscovered
+  GC/2.0 state trigger. The macro-pattern in our maps is ON-region→OFF-tail
+  with holes; many holes are INERT wrappers (the #173 sweep found ~60), so
+  the true mixes may be cleaner than our source suggests.
+- **Cleanup gate**: any pragma simplification must be byte-verified
+  (`md5sum` the .o before/after). The off/reset pairs are NOT always dead
+  weight even inside a global-off — an un-reset `on` earlier in the file
+  makes the gaps BETWEEN pairs ON (shrine1CE: deleting the "redundant"
+  pairs changed the .o).
+
 ## High-impact one-liners (try first when a function is already 80-95%)
 
 1. **`#pragma peephole off` + `#pragma scheduling off`** around the function
@@ -40,7 +81,10 @@ every partial when a new recipe lands):
    This alone routinely takes 80-95% fuzzy functions to 100% by disabling the
    peephole pass that fuses `extsb + cmpwi → extsb.`, `rlwinm + cmpwi →
    rlwinm.`, and similar dot-form merges. Single most useful change on this
-   project. See `b7eda753` (dll_198 — 3 functions to 100%).
+   project. See `b7eda753` (dll_198 — 3 functions to 100%). The wrapper
+   reproduces the optimizer STATE; see "Pragma states" above for what the
+   original mechanism likely was — the pragma is our reconstruction tool,
+   not an assertion the original carried it.
    **Caveat — peephole-off suppresses jump tables.** `peephole off` also turns a
    `switch` MWCC would lower to a jump table into a compare-chain. If a function
    is *all-switch with no bit-ops*, keep it OUTSIDE the peephole-off region so
