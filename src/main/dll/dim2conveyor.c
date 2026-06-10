@@ -140,7 +140,7 @@ void nw_mammoth_update(NwMammothObject *obj,int param_2)
   stateFlags = table->stateFlags[stateIndex];
   if ((stateFlags & NW_MAMMOTH_STATE_FLAG_SOLID) != 0) {
     obj->objectFlags = (u16)(obj->objectFlags | NW_MAMMOTH_SOLID_OBJECT_FLAG);
-    obj->modelState->flags = obj->modelState->flags & ~NW_MAMMOTH_MODEL_COLLISION_FLAG;
+    obj->modelState->flags = obj->modelState->flags & ~(u64)NW_MAMMOTH_MODEL_COLLISION_FLAG;
   } else {
     obj->objectFlags = (u16)(obj->objectFlags & ~NW_MAMMOTH_SOLID_OBJECT_FLAG);
     obj->modelState->flags = obj->modelState->flags | NW_MAMMOTH_MODEL_COLLISION_FLAG;
