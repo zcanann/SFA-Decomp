@@ -8,6 +8,7 @@
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 #include "main/objseq.h"
+#include "main/objfx.h"
 #include "main/resource.h"
 #include "main/screen_transition.h"
 #include "main/unknown/autos/placeholder_80295318.h"
@@ -7083,7 +7084,6 @@ typedef struct {
 } VecXYZ;
 
 extern int objGetFlagsE5_2(int obj);
-extern void objLightFn_8009a1dc(int obj, f32 fv, void *buf, int n, int m);
 extern void fn_8009A8C8(int obj, f32 fv);
 extern int lbl_803DE470;
 extern int lbl_803DE474;
@@ -7373,13 +7373,13 @@ void fn_802AFB0C(int obj, int inner, int state)
                     Sfx_PlayFromObject(obj, 0x394);
                 }
                 if (**(s8 **)((char *)inner + 0x35c) > 0) {
-                    objLightFn_8009a1dc(obj, lbl_803E8024, buf, 6, 0);
+                    objLightFn_8009a1dc((void *)obj, lbl_803E8024, buf, 6, 0);
                 }
                 break;
             case 0x1c:
                 Sfx_PlayFromObject(obj, 0x318);
                 if (**(s8 **)((char *)inner + 0x35c) > 0) {
-                    objLightFn_8009a1dc(obj, lbl_803E8024, buf, 8, 0);
+                    objLightFn_8009a1dc((void *)obj, lbl_803E8024, buf, 8, 0);
                 }
                 break;
             default:
@@ -7389,23 +7389,23 @@ void fn_802AFB0C(int obj, int inner, int state)
                     case 0x33:
                         Sfx_PlayFromObject(obj, 0x36e);
                         if (**(s8 **)((char *)inner + 0x35c) > 0) {
-                            objLightFn_8009a1dc(obj, lbl_803E8024, buf, 5, 0);
+                            objLightFn_8009a1dc((void *)obj, lbl_803E8024, buf, 5, 0);
                         }
                         break;
                     case 0x7c8:
                         if (**(s8 **)((char *)inner + 0x35c) > 0) {
-                            objLightFn_8009a1dc(obj, lbl_803E8024, buf, 8, 0);
+                            objLightFn_8009a1dc((void *)obj, lbl_803E8024, buf, 8, 0);
                         }
                         break;
                     default:
                         if (**(s8 **)((char *)inner + 0x35c) > 0) {
-                            objLightFn_8009a1dc(obj, lbl_803E8024, buf, 5, 0);
+                            objLightFn_8009a1dc((void *)obj, lbl_803E8024, buf, 5, 0);
                         }
                         break;
                     }
                 } else {
                     if (**(s8 **)((char *)inner + 0x35c) > 0) {
-                        objLightFn_8009a1dc(obj, lbl_803E8024, buf, 5, 0);
+                        objLightFn_8009a1dc((void *)obj, lbl_803E8024, buf, 5, 0);
                     }
                 }
                 break;

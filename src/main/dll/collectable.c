@@ -10,6 +10,7 @@
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
+#include "main/objfx.h"
 #include "main/objseq.h"
 #include "main/objhits_types.h"
 
@@ -2212,7 +2213,6 @@ extern f32 lbl_803E259C;
 extern void fn_802972B4(int player, uint *outEffects, f32 *outA, f32 *outB, f32 *outC, u16 *outSfx);
 extern void vecRotateZXY(int obj, void *vel);
 extern int objCreateLight(int a, int b);
-extern void objLightFn_8009a1dc(int obj, f32 intensity, void *params, int mode, int light);
 extern void Obj_SetModelColorFadeRecursive(int obj, int a, int b, int c, int d, int e);
 extern void Obj_ResetModelColorState(int obj);
 extern void Obj_StartModelFadeIn(int obj, int duration);
@@ -2416,13 +2416,13 @@ void baddie_updateWhileFrozen(int obj, u8 *state, u8 fromHit)
         ((TrickyState *)state)->unk368 = objCreateLight(0,1);
       }
       if ((((TrickyState *)state)->unk2E8 & 0x200) != 0) {
-        objLightFn_8009a1dc(obj,lbl_803E259C,&params,1,((TrickyState *)state)->unk368);
+        objLightFn_8009a1dc((void *)obj,lbl_803E259C,&params,1,(void *)((TrickyState *)state)->unk368);
       } else if ((((TrickyState *)state)->unk2F1 & 0x10) != 0) {
-        objLightFn_8009a1dc(obj,lbl_803E259C,&params,3,((TrickyState *)state)->unk368);
+        objLightFn_8009a1dc((void *)obj,lbl_803E259C,&params,3,(void *)((TrickyState *)state)->unk368);
       } else if ((((TrickyState *)state)->unk2F1 & 8) != 0) {
-        objLightFn_8009a1dc(obj,lbl_803E259C,&params,2,((TrickyState *)state)->unk368);
+        objLightFn_8009a1dc((void *)obj,lbl_803E259C,&params,2,(void *)((TrickyState *)state)->unk368);
       } else {
-        objLightFn_8009a1dc(obj,lbl_803E259C,&params,1,((TrickyState *)state)->unk368);
+        objLightFn_8009a1dc((void *)obj,lbl_803E259C,&params,1,(void *)((TrickyState *)state)->unk368);
       }
       Obj_SetModelColorFadeRecursive(obj,0xf,0xc8,0,0,1);
     }
@@ -2446,7 +2446,7 @@ void baddie_updateWhileFrozen(int obj, u8 *state, u8 fromHit)
         if (*(void **)&((TrickyState *)state)->unk368 == NULL) {
           ((TrickyState *)state)->unk368 = objCreateLight(0,1);
         }
-        objLightFn_8009a1dc(obj,lbl_803E259C,&params,4,((TrickyState *)state)->unk368);
+        objLightFn_8009a1dc((void *)obj,lbl_803E259C,&params,4,(void *)((TrickyState *)state)->unk368);
       }
       proj = *(u8 **)&((TrickyState *)state)->unk29C;
       if (proj != NULL && *(s16 *)(proj + 0x44) == 1) {

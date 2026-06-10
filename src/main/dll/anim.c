@@ -11,6 +11,7 @@
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 #include "main/objseq.h"
+#include "main/objfx.h"
 #include "main/resource.h"
 
 /*
@@ -6110,7 +6111,6 @@ void dbstealerworm_update(u8 *objp)
     extern void ObjGroup_AddObject(int, int);
     extern int ObjMsg_Pop(int, u32 *, int *, int *);
     extern void ObjMsg_SendToObject(int, int, int, int);
-    extern void objLightFn_8009a1dc(int, f32, int, int, int);
     extern f32 sqrtf(f32);
     extern MapEventInterface **gMapEventInterface;
     extern void **gBaddieControlInterface;
@@ -6197,7 +6197,7 @@ void dbstealerworm_update(u8 *objp)
                     *(f32 *)(st + 0xc) = ((GameObject *)obj)->anim.localPosX;
                     *(f32 *)(st + 0x10) = ((GameObject *)obj)->anim.localPosY;
                     *(f32 *)(st + 0x14) = ((GameObject *)obj)->anim.localPosZ;
-                    objLightFn_8009a1dc(obj, lbl_803E638C, (int)st, 1, 0);
+                    objLightFn_8009a1dc((void *)obj, lbl_803E638C, st, 1, 0);
                 }
                 if (((GroundBaddieState *)blob)->targetState == 0) {
                     fn_80203144(obj, blob, blob);
