@@ -167,7 +167,7 @@ void staffactivated_init(int obj, int setup)
  * EN v1.0 Address: 0x8018A8BC
  * EN v1.0 Size: 248b
  */
-int treasurechest_SeqFn(int obj, int unused, u8 *events)
+int treasurechest_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
   int i;
   TreasureChestSetup *setup;
@@ -177,8 +177,8 @@ int treasurechest_SeqFn(int obj, int unused, u8 *events)
   setup = (TreasureChestSetup *)((GameObject *)obj)->anim.placementData;
   state = ((GameObject *)obj)->extra;
   i = 0;
-  while (i < events[0x8b]) {
-    eventId = events[i + 0x81];
+  while (i < animUpdate->eventCount) {
+    eventId = animUpdate->eventIds[i];
     switch (eventId) {
     case 1:
       if (setup->dialogueId != 0) {

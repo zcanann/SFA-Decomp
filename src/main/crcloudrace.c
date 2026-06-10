@@ -9,7 +9,6 @@ extern void objRenderFn_8003b8f4(double scale);
 extern void unlockLevel(int param_1,int param_2,int param_3);
 extern void storeZeroToFloatParam(void *timer);
 void crcloudrace_updateRaceState(int obj);
-int crcloudrace_completionCallback(int obj, int arg2, u8 *data);
 
 extern f32 lbl_803E6748;
 extern void loadMapAndParent(int mapId);
@@ -85,7 +84,7 @@ void crcloudrace_init(CrCloudRaceObject *obj)
   CrCloudRaceState *state;
 
   state = obj->state;
-  obj->callback = (undefined4 (*)(void *, undefined4, void *))crcloudrace_completionCallback;
+  obj->callback = crcloudrace_completionCallback;
   state->phase = 2;
   storeZeroToFloatParam(state->timer);
   GameBit_Set(0xe24,1);
@@ -121,13 +120,13 @@ ObjectDescriptor gCrCloudRaceObjDescriptor = {
     crcloudrace_getExtraSize,
 };
 
-int crcloudrace_completionCallback(int obj, int arg2, u8 *data) {
+int crcloudrace_completionCallback(int obj, int unused, ObjAnimUpdateState *animUpdate) {
     CrCloudRaceState *state = ((CrCloudRaceObject *)obj)->state;
     int i;
 
     state->flags |= CRCLOUDRACE_STATE_FLAG_COMPLETION_CALLBACK;
-    for (i = 0; i < *(u8 *)((char *)data + 0x8b); i++) {
-        switch (data[i + 0x81]) {
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        switch (animUpdate->eventIds[i]) {
         case 1:
             GameBit_Set(0xdca, 1);
             GameBit_Set(0x458, 0);

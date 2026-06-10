@@ -4,6 +4,7 @@
 #include "ghidra_import.h"
 #include "main/game_object.h"
 #include "main/object_descriptor.h"
+#include "main/objanim_update.h"
 
 #define CRCLOUDRACE_STATE_FLAG_COMPLETION_CALLBACK 0x01
 
@@ -21,7 +22,7 @@ typedef struct CrCloudRaceObject {
   u16 objectFlags;
   u8 unkB2[0xB8 - 0xB2];
   CrCloudRaceState *state;
-  undefined4 (*callback)(void *obj,undefined4 param_2,void *param_3);
+  int (*callback)(int obj, int unused, ObjAnimUpdateState *animUpdate);
   u8 unkC0[0x34];
   int unkF4;
   int unkF8;
@@ -50,6 +51,7 @@ void crcloudrace_render(undefined4 param_1,undefined4 param_2,undefined4 param_3
 void crcloudrace_hitDetect(void);
 void crcloudrace_update(CrCloudRaceObject *obj);
 void crcloudrace_init(CrCloudRaceObject *obj);
+int crcloudrace_completionCallback(int obj, int unused, ObjAnimUpdateState *animUpdate);
 void crcloudrace_release(void);
 void crcloudrace_initialise(void);
 

@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "main/obj_placement.h"
+#include "main/objanim_update.h"
 
 typedef struct TreasureChestSetup {
     ObjPlacement base;
@@ -15,7 +16,7 @@ typedef struct TreasureChestSetup {
 } TreasureChestSetup;
 
 void staffactivated_init(int obj, int setup);
-int treasurechest_SeqFn(int obj, int unused, u8 *events);
+int treasurechest_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 int treasurechest_getExtraSize(void);
 int treasurechest_getObjectTypeId(void);
 void treasurechest_free(void);
