@@ -98,18 +98,20 @@ void wctrexstatu_hitDetect(u8 *obj)
 
 void wctrexstatu_update(void) {}
 
-#pragma peephole on
 void wctrexstatu_init(int obj, int setup, int fromLoad)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
     WCTrexStatueSetup *setupData = (WCTrexStatueSetup *)setup;
     ((GameObject *)obj)->animEventCallback = wctrexstatu_interactCallback;
-    objAnim->bankIndex = setupData->modelIndex;
+    *(u8 *)&objAnim->bankIndex = setupData->modelIndex;
     if (objAnim->bankIndex >= objAnim->modelInstance->modelCount) {
         objAnim->bankIndex = 0;
     }
 
-    *(s16 *)obj = (s16)(setupData->type << 8);
+    {
+        int yawTmp = setupData->type << 8;
+        *(s16 *)obj = (s16)yawTmp;
+    }
     if (fromLoad == 0) {
         if ((*gMapEventInterface)->getMode(((GameObject *)obj)->anim.mapEventSlot) == WCTREXSTATU_MAPEVENT_RAISED) {
             ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY + lbl_803E6E14;
@@ -126,7 +128,6 @@ void wctrexstatu_init(int obj, int setup, int fromLoad)
     }
 }
 
-#pragma peephole off
 void wctrexstatu_release(void) {}
 
 void wctrexstatu_initialise(void) {}
