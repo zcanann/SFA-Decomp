@@ -399,15 +399,15 @@ void WM_ObjCreator_init(int *obj, s8 *def) {
     state->spawnJitter = (s16)(s32)placement->spawnJitter;
 }
 
-int WM_Galleon_SeqFn(int obj, int unused, u8 *script)
+int WM_Galleon_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     int i;
 
     lbl_803DC0F0 = framesThisStep;
-    *(s16 *)(script + 0x6e) = -1;
-    script[0x56] = 0;
-    for (i = 0; i < (int)script[0x8b]; i++) {
-        switch (script[0x81 + i]) {
+    animUpdate->hitVolumePair = -1;
+    animUpdate->sequenceEventActive = 0;
+    for (i = 0; i < (int)animUpdate->eventCount; i++) {
+        switch (animUpdate->eventIds[i]) {
         case WM_GALLEON_COMMAND_OPENED:
             OBJ_S32(obj, 0xf4) = WM_GALLEON_ACTION_OPENED;
             break;

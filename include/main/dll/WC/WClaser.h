@@ -2,6 +2,7 @@
 #define MAIN_DLL_WC_WCLASER_H_
 
 #include "ghidra_import.h"
+#include "main/objanim_update.h"
 
 typedef struct WMGalleonSetup WMGalleonSetup;
 
@@ -10,7 +11,7 @@ void WM_Galleon_init(int *obj, WMGalleonSetup *setup);
 void WM_Galleon_release(void);
 void WM_Galleon_initialise(void);
 
-int WM_seqobject_SeqFn(int p1, int p2, u8 *arg3);
+int WM_seqobject_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 
 int WM_seqobject_getExtraSize(void);
 int WM_seqobject_getObjectTypeId(void);
@@ -22,7 +23,7 @@ void WM_seqobject_init(int *obj, s8 *def);
 void WM_seqobject_release(void);
 void WM_seqobject_initialise(void);
 
-int dll_1FB_SeqFn(int *obj, int unused, s16 *p);
+int dll_1FB_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate);
 int dll_1FB_getExtraSize_ret_12(void);
 int dll_1FB_getObjectTypeId(void);
 void dll_1FB_free_nop(void);

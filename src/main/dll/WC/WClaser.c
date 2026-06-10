@@ -200,17 +200,17 @@ void WM_Galleon_init(int *obj, WMGalleonSetup *setup)
 void WM_Galleon_release(void) {}
 void WM_Galleon_initialise(void) {}
 
-int WM_seqobject_SeqFn(int p1, int p2, u8 *arg3)
+int WM_seqobject_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     int i;
 
-    for (i = 0; i < (int)arg3[0x8b]; i++) {
-        if (arg3[0x81 + i] == 1) {
+    for (i = 0; i < (int)animUpdate->eventCount; i++) {
+        if (animUpdate->eventIds[i] == 1) {
             lbl_803DDC78 = (u8)(1 - lbl_803DDC78);
         }
     }
-    arg3[0x80] = 0;
-    arg3[0x56] = 0;
+    ((u8 *)animUpdate)[0x80] = 0;
+    animUpdate->sequenceEventActive = 0;
     return 0;
 }
 
@@ -299,7 +299,7 @@ void WM_seqobject_init(int *obj, s8 *def)
 void WM_seqobject_release(void) {}
 void WM_seqobject_initialise(void) {}
 
-int dll_1FB_SeqFn(int *obj, int unused, s16 *p)
+int dll_1FB_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     Dll1FBState *state = (Dll1FBState *)OBJ_PTR(obj, 0xb8);
     s16 mode = state->triggerMode;
@@ -309,8 +309,8 @@ int dll_1FB_SeqFn(int *obj, int unused, s16 *p)
         flags = (u8)(OBJ_U8(obj, 0xaf) | 8);
         OBJ_U8(obj, 0xaf) = flags;
     }
-    *(s16 *)((u8 *)p + 0x70) = -1;
-    *(u8 *)((u8 *)p + 0x56) = 0;
+    animUpdate->activeHitVolumePair = -1;
+    animUpdate->sequenceEventActive = 0;
     return 0;
 }
 
