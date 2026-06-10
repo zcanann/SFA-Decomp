@@ -3261,8 +3261,8 @@ void FUN_80147314(undefined8 param_1,double param_2,double param_3,undefined8 pa
   *(undefined *)((int)unaff_r30 + 5) = *(undefined *)(iVar6 + 5);
   *(undefined *)((int)unaff_r30 + 7) = *(undefined *)(iVar6 + 7);
   DAT_803de6d4 = FUN_80017ae4(dVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                              unaff_r30,5,*(undefined *)(iVar4 + 0xac),0xffffffff,
-                              *(uint **)(iVar4 + 0x30),param_14,param_15,param_16);
+                              unaff_r30,5,((GameObject *)iVar4)->anim.mapEventSlot,
+                              0xffffffff,*(uint **)(iVar4 + 0x30),param_14,param_15,param_16);
   if ((*(short *)(DAT_803de6d4 + 0x46) == 0x3cd) || (*(short *)(DAT_803de6d4 + 0x46) == 0xb)) {
     (**(code **)(**(int **)(DAT_803de6d4 + 0x68) + 0x2c))
               ((double)lbl_803E31FC,(double)lbl_803E3200,(double)lbl_803E31FC);
@@ -3314,8 +3314,8 @@ void FUN_801476cc(undefined8 param_1,double param_2,double param_3,undefined8 pa
       puVar2 = FUN_80017aa4(0x20,*(short *)(param_10 + 0x2b6));
       *(byte *)((int)puVar2 + 5) = *(byte *)((int)puVar2 + 5) | *(byte *)(iVar3 + 5) & 0x18;
       iVar3 = FUN_80017ae4(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar2,4,
-                           *(undefined *)(param_9 + 0xac),0xffffffff,*(uint **)&((GameObject *)param_9)->anim.parent,
-                           in_r8,in_r9,in_r10);
+                           ((GameObject *)param_9)->anim.mapEventSlot,0xffffffff,
+                           *(uint **)&((GameObject *)param_9)->anim.parent,in_r8,in_r9,in_r10);
       ObjLink_AttachChild(param_9,iVar3,0);
       *(undefined2 *)(param_10 + 0x2b4) = *(undefined2 *)(param_10 + 0x2b6);
     }

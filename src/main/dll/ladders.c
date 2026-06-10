@@ -333,7 +333,7 @@ void FUN_80163544(undefined8 param_1,double param_2,double param_3,undefined8 pa
         }
       }
       uVar8 = FUN_80017ae4(dVar13,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar7,5,
-                           *(undefined *)(iVar4 + 0xac),0xffffffff,*(uint **)(iVar4 + 0x30),in_r8,
+                           ((GameObject *)iVar4)->anim.mapEventSlot,0xffffffff,*(uint **)(iVar4 + 0x30),in_r8,
                            in_r9,in_r10);
       iVar11 = iVar12 + iVar10 * 4;
       *(undefined4 *)(iVar11 + 0xc) = uVar8;

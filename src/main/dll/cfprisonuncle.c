@@ -594,7 +594,7 @@ void FUN_8017fa14(undefined8 param_1,double param_2,double param_3,undefined8 pa
     *(undefined *)((int)puVar2 + 5) = *(undefined *)(iVar4 + 5);
     *(char *)((int)puVar2 + 7) = *(char *)(iVar4 + 7) + -0xf;
     iVar4 = FUN_80017ae4(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar2,5,
-                         *(undefined *)(param_9 + 0xac),0xffffffff,*(uint **)&((GameObject *)param_9)->anim.parent,in_r8,
+                         ((GameObject *)param_9)->anim.mapEventSlot,0xffffffff,*(uint **)&((GameObject *)param_9)->anim.parent,in_r8,
                          in_r9,in_r10);
     if (iVar4 == 0) {
       FUN_80017814((uint)puVar2);

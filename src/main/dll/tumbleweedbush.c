@@ -92,7 +92,7 @@ void trickyGrowl(void *param_1, void *param_2)
                     *(u8 *)((char *)setup + 0x5) = 1;
                     *(s16 *)((char *)setup + 0x1a) = (s16)i;
                     slot[0x700 / 4] = (void *)Obj_SetupObject(
-                        setup, 5, *(s8 *)((char *)param_1 + 0xac), -1,
+                        setup, 5, ((GameObject *)param_1)->anim.mapEventSlot, -1,
                         ((GameObject *)param_1)->anim.parent);
                 }
                 Sfx_PlayFromObject(param_1, 0x3db);

@@ -2839,8 +2839,8 @@ void FUN_80111e84(undefined8 param_1,double param_2,double param_3,undefined8 pa
     *(undefined *)((int)unaff_r30 + 5) = *(undefined *)(iVar7 + 5);
     *(undefined *)((int)unaff_r30 + 7) = *(undefined *)(iVar7 + 7);
     DAT_803de25c = FUN_80017ae4(uVar11,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                                unaff_r30,5,*(undefined *)(iVar4 + 0xac),0xffffffff,
-                                *(uint **)(iVar4 + 0x30),in_r8,in_r9,in_r10);
+                                unaff_r30,5,((GameObject *)iVar4)->anim.mapEventSlot,
+                                0xffffffff,*(uint **)(iVar4 + 0x30),in_r8,in_r9,in_r10);
   }
 LAB_80112fec:
   FUN_8028688c();

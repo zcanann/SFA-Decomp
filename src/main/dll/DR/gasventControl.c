@@ -383,7 +383,7 @@ FUN_801a32d4(undefined8 param_1,undefined8 param_2,double param_3,undefined8 par
     puVar4[0x1c] = (short)*(undefined4 *)(param_11 + 0x5c);
     puVar4[0x1d] = (short)(int)*(float *)(param_11 + 0x58);
     uVar3 = FUN_80017ae4((double)fVar1,dVar5,param_3,param_4,param_5,param_6,param_7,param_8,puVar4,
-                         5,*(undefined *)(param_9 + 0xac),0xffffffff,(uint *)0x0,param_14,param_15,
+                         5,((GameObject *)param_9)->anim.mapEventSlot,0xffffffff,(uint *)0x0,param_14,param_15,
                          param_16);
   }
   return uVar3;

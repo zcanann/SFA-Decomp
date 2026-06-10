@@ -242,7 +242,7 @@ FUN_801a9408(undefined8 param_1,double param_2,double param_3,undefined8 param_4
       }
       puVar2 = FUN_80017aa4(0x20,(short)*(undefined4 *)(param_9 + 0xf8));
       iVar4 = FUN_80017ae4(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar2,4,
-                           *(undefined *)(param_9 + 0xac),0xffffffff,*(uint **)&((GameObject *)param_9)->anim.parent,
+                           ((GameObject *)param_9)->anim.mapEventSlot,0xffffffff,*(uint **)&((GameObject *)param_9)->anim.parent,
                            in_r8,in_r9,in_r10);
       param_1 = ObjLink_AttachChild(param_9,iVar4,0);
     }

@@ -725,7 +725,7 @@ void FUN_801880e0(undefined8 param_1,double param_2,double param_3,undefined8 pa
         *(undefined4 *)(puVar3 + 6) = *(undefined4 *)(param_9 + 0x10);
         *(undefined4 *)(puVar3 + 8) = *(undefined4 *)(param_9 + 0x14);
         FUN_80017ae4(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar3,5,
-                     *(undefined *)(param_9 + 0xac),0xffffffff,*(uint **)&((GameObject *)param_9)->anim.parent,in_r8,
+                     ((GameObject *)param_9)->anim.mapEventSlot,0xffffffff,*(uint **)&((GameObject *)param_9)->anim.parent,in_r8,
                      in_r9,in_r10);
       }
       (*gPartfxInterface)->spawnObject((void *)param_9, 0x355, NULL, 0, -1, NULL);
@@ -1640,7 +1640,8 @@ void FUN_80189a90(undefined8 param_1,double param_2,double param_3,undefined8 pa
     if (iVar2 != 0) {
       iVar8 = *(int *)&((GameObject *)param_9)->anim.placementData;
       iVar2 = ObjGroup_FindNearestObject(0xf,param_9,(float *)0x0);
-      if ((*(char *)(param_9 + 0xac) == '\r') && (uVar3 = GameBit_Get(0xc92), uVar3 != 0)) {
+      if ((((GameObject *)param_9)->anim.mapEventSlot == '\r') &&
+         (uVar3 = GameBit_Get(0xc92), uVar3 != 0)) {
         *(float *)(iVar2 + 0x10) = *(float *)(iVar2 + 0x10) + FLOAT_803e4838;
         (*gObjectTriggerInterface)->runSequence(2, (void *)iVar2, -1);
       }
@@ -1658,7 +1659,8 @@ void FUN_80189a90(undefined8 param_1,double param_2,double param_3,undefined8 pa
     else {
       iVar8 = *(int *)&((GameObject *)param_9)->anim.placementData;
       iVar2 = ObjGroup_FindNearestObject(0xf,param_9,(float *)0x0);
-      if ((*(char *)(param_9 + 0xac) == '\r') && (uVar3 = GameBit_Get(0xc92), uVar3 != 0)) {
+      if ((((GameObject *)param_9)->anim.mapEventSlot == '\r') &&
+         (uVar3 = GameBit_Get(0xc92), uVar3 != 0)) {
         *(float *)(iVar2 + 0x10) = *(float *)(iVar2 + 0x10) + FLOAT_803e4838;
         (*gObjectTriggerInterface)->runSequence(2, (void *)iVar2, -1);
       }
@@ -2445,7 +2447,7 @@ void landed_arwing_update(int obj) {
             if (ObjTrigger_IsSet(obj) != 0) {
                 def = *(int *)&((GameObject *)obj)->anim.placementData;
                 nearest = ObjGroup_FindNearestObject(0xf, obj, NULL);
-                if (*(s8 *)(obj + 0xac) == 0xd && GameBit_Get(0xc92) != 0) {
+                if (((GameObject *)obj)->anim.mapEventSlot == 0xd && GameBit_Get(0xc92) != 0) {
                     *(f32 *)(nearest + 0x10) += lbl_803E3BA0;
                     (*gObjectTriggerInterface)->runSequence(2, (void *)nearest, -1);
                 } else {
@@ -2465,7 +2467,7 @@ void landed_arwing_update(int obj) {
             if (fn_8012DDA4() != 0) {
                 def = *(int *)&((GameObject *)obj)->anim.placementData;
                 nearest = ObjGroup_FindNearestObject(0xf, obj, NULL);
-                if (*(s8 *)(obj + 0xac) == 0xd && GameBit_Get(0xc92) != 0) {
+                if (((GameObject *)obj)->anim.mapEventSlot == 0xd && GameBit_Get(0xc92) != 0) {
                     *(f32 *)(nearest + 0x10) += lbl_803E3BA0;
                     (*gObjectTriggerInterface)->runSequence(2, (void *)nearest, -1);
                 } else {
