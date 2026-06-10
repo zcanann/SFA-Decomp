@@ -433,9 +433,9 @@ void gunpowderbarrel_triggerExplosion(int *obj)
                 x = ((GameObject *)obj)->anim.localPosX;
                 y = ((GameObject *)obj)->anim.localPosY;
                 z = ((GameObject *)obj)->anim.localPosZ;
-                ((GameObject *)obj)->anim.localPosX = *(f32 *)((char *)best + 0xc);
-                ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)best + 0x10);
-                ((GameObject *)obj)->anim.localPosZ = *(f32 *)((char *)best + 0x14);
+                ((GameObject *)obj)->anim.localPosX = ((GameObject *)best)->anim.localPosX;
+                ((GameObject *)obj)->anim.localPosY = ((GameObject *)best)->anim.localPosY;
+                ((GameObject *)obj)->anim.localPosZ = ((GameObject *)best)->anim.localPosZ;
                 saveGame_saveObjectPos(obj);
                 ((GameObject *)obj)->anim.localPosX = x;
                 ((GameObject *)obj)->anim.localPosY = y;

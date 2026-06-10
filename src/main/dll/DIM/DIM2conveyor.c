@@ -114,7 +114,7 @@ void dimdismountpoint_update(int *obj) {
     } else {
         ((GameObject *)obj)->unkE4 = 0;
         if (nearest != NULL &&
-            ((int (*)(int*, int*))(*(int *)(*(int *)*(int **)((char*)nearest + 0x68) + 0x20)))(nearest, obj) != 0) {
+            ((int (*)(int*, int*))(*(int *)(*(int *)*(int **)&((GameObject *)nearest)->anim.dll + 0x20)))(nearest, obj) != 0) {
             *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x10);
         } else {
             *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x10);

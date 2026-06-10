@@ -657,7 +657,7 @@ void pollen_init(int *obj) {
     ((GameObject *)obj)->anim.alpha = 0xff;
     ObjHits_DisableObject(obj);
     {
-        int *p = *(int **)((char *)obj + 0x64);
+        int *p = *(int **)&((GameObject *)obj)->anim.modelState;
         if (p != NULL) {
             *(int *)((char *)p + 0x30) = *(int *)((char *)p + 0x30) | 0x810;
         }

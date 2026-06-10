@@ -1682,7 +1682,7 @@ void fn_80133F70(void *obj)
     player = (void *)Obj_GetPlayerObject();
     nearest = (void *)ObjGroup_FindNearestObject(9, player, &threshold);
     if (nearest != NULL) {
-        ((void (*)(void *, int *, int *, int *))(*(void ***)*(void **)((char *)nearest + 0x68))[21])(nearest, &a, &b, &c);
+        ((void (*)(void *, int *, int *, int *))(*(void ***)((GameObject *)nearest)->anim.dll)[21])(nearest, &a, &b, &c);
     }
     b = c - (b - a);
     if (b < 0) {
@@ -2554,7 +2554,7 @@ void titlescreen_update(u8 *obj)
         model = Obj_GetActiveModel(obj);
         if (*(u8 *)(*model + 0xf9) != 0 && ObjModel_HasActiveBlendChannels(model) == 0 &&
             randomGetRange(0xf0, 0x168) == 0xf0) {
-            tmp = *(int *)((u8 *)model + 0x28);
+            tmp = *(int *)&((ObjDef *)model)->weaponDaTable;
             n = randomGetRange(0, *(u8 *)(*model + 0xf9));
             ObjModel_SetBlendChannelTargets((int)model, 0, *(s8 *)(tmp + 0xd), n - 1, lbl_803E2360, 0);
         }

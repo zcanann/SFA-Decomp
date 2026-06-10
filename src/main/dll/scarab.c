@@ -462,7 +462,7 @@ int fn_8015E210(int *obj, GroundBaddieState *p)
     }
     player_b8 = *(int **)((char *)Obj_GetPlayerObject() + 0xc8);
     player = (int *)Obj_GetPlayerObject();
-    r = (**(int (**)(int *))(*(int *)(*(int *)((char *)player_b8 + 0x68)) + 0x44))(player_b8);
+    r = (**(int (**)(int *))(*(int *)(*(int *)&((GameObject *)player_b8)->anim.dll) + 0x44))(player_b8);
     if (r != 0) {
       if (((GameObject *)player)->anim.seqId != 0) {
         Sfx_PlayFromObject(obj, SFXfoot_metal_run_2);

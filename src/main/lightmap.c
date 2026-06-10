@@ -2134,7 +2134,7 @@ void sceneDraw(void)
     if (player != NULL) {
         i = 0;
         cursor = (u8 *)player;
-        for (; i < *(u8 *)((u8 *)player + 0xeb); i++) {
+        for (; i < ((GameObject *)player)->unkEB; i++) {
             u8 *m = *(u8 **)(cursor + 200);
             if (*(s16 *)(m + 0x44) == 45) {
                 (*(void (***)(void))*(int *)(m + 0x68))[11]();

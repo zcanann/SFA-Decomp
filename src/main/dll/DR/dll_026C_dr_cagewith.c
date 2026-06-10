@@ -84,8 +84,8 @@ void drcagewith_hitDetect(int obj) {
             ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             bf31->b0 = 1;
             nearest = (int *)ObjGroup_FindNearestObject(10, obj, &maxDist);
-            if (nearest != NULL && *(s16 *)((char *)nearest + 0x46) == 1049) {
-                *(int *)((char *)nearest + 0xf4) = 0;
+            if (nearest != NULL && ((GameObject *)nearest)->anim.seqId == 1049) {
+                ((GameObject *)nearest)->unkF4 = 0;
                 ((DrcagewithState *)p)->unk4 = 0;
             }
             return;
@@ -100,16 +100,16 @@ void drcagewith_hitDetect(int obj) {
         for (i = 0; i < 9; i++) {
             nearest = objModelGetVecFn_800395d8(obj, i);
             if (nearest != NULL) {
-                *(s16 *)((char *)nearest + 4) = ((DrcagewithState *)p)->unk24 / div;
+                ((GameObject *)nearest)->anim.rotZ = ((DrcagewithState *)p)->unk24 / div;
             }
         }
         if (*(void **)p != NULL) {
             *(s16 *)(*(int *)p + 4) = (int)((DrcagewithState *)p)->unk24;
             nearest = (int *)ObjGroup_FindNearestObject(10, obj, &maxDist);
-            if (nearest != NULL && *(s16 *)((char *)nearest + 0x46) == 1049) {
-                *(int *)((char *)nearest + 0xf4) = 1;
+            if (nearest != NULL && ((GameObject *)nearest)->anim.seqId == 1049) {
+                ((GameObject *)nearest)->unkF4 = 1;
                 ((DrcagewithState *)p)->unk4 = (int)nearest;
-                *(s16 *)((char *)nearest + 4) = *(s16 *)(*(int *)p + 4);
+                ((GameObject *)nearest)->anim.rotZ = *(s16 *)(*(int *)p + 4);
                 *(int *)(*(int *)p + 0xf4) = 1;
             }
             if (*(void **)&((DrcagewithState *)p)->unk4 != NULL && (*(u16 *)(((DrcagewithState *)p)->unk4 + 0xb0) & 0x40) != 0) {

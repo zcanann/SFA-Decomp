@@ -131,7 +131,7 @@ void kytesmum_update(int obj) {
     objAnimFn_80038f38(obj, runtime->modelSoundState);
     nearest = ObjGroup_FindNearestObject(1, obj, &nearDist);
     if (nearest != 0) {
-        (*(void (**)(int, int, int, int))(*(int *)(*(int *)((char *)nearest + 0x68)) + 0x28))(
+        (*(void (**)(int, int, int, int))(*(int *)(*(int *)&((GameObject *)nearest)->anim.dll) + 0x28))(
             nearest, obj, 1, 2);
     }
 }

@@ -2636,8 +2636,8 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState *animUpdate)
     }
     animUpdate->sequenceEventActive = 0;
     player = (char*)Obj_GetPlayerObject();
-    dx = *(f32*)(player + 0xc) - *(f32*)(def + 8);
-    dz = *(f32*)(player + 0x14) - *(f32*)(def + 0x10);
+    dx = ((GameObject *)player)->anim.localPosX - *(f32*)(def + 8);
+    dz = ((GameObject *)player)->anim.localPosZ - *(f32*)(def + 0x10);
     distSq = dx * dx + dz * dz;
     if (distSq < (f32)((*(s16*)(def + 0x1a) / 2) * (*(s16*)(def + 0x1a) / 2))) {
         inRange = 1;
@@ -2995,7 +2995,7 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
             ObjMsg_SendToObject(rider, 0x10, obj, gb);
             slot->b10 |= 0x80;
             if (pm != 0) {
-                *(f32*)(player + 0x28) = lbl_803E416C;
+                ((GameObject *)player)->anim.velocityY = lbl_803E416C;
             }
         }
         if (pm != 0) {

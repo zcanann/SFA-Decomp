@@ -287,7 +287,7 @@ int DIMSnowHorn1_stateHandler09(int obj, int state, f32 fv)
     (*(void (*)(int, int, f32, int))(*(int *)(*gPlayerInterface + 0x20)))(obj, state, fv, 8);
 
     if (*(int *)&((DIMSnowHorn1State *)state)->baddie.unk31C & 0x100) {
-        if (near == 0 || (*(u8 *)((char *)near + 0xaf) & 4) == 0) {
+        if (near == 0 || (*(u8 *)&((GameObject *)near)->anim.resetHitboxMode & 4) == 0) {
             return 0xc;
         }
     }
@@ -395,7 +395,7 @@ int DIMSnowHorn1_stateHandler07(int obj, int state)
         }
     }
     if (*(int *)&((DIMSnowHorn1State *)state)->baddie.unk31C & 0x100) {
-        if (near == NULL || (*(u8 *)((char *)near + 0xaf) & 4) == 0) {
+        if (near == NULL || (*(u8 *)&((GameObject *)near)->anim.resetHitboxMode & 4) == 0) {
             return 0xc;
         }
     }
@@ -684,7 +684,7 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
     if ((*(int *)&((DIMSnowHorn1State *)state)->baddie.unk31C & 0x100) == 0) {
         return 0;
     }
-    if (near != 0 && (*(u8 *)((char *)near + 0xaf) & 0x4)) {
+    if (near != 0 && (*(u8 *)&((GameObject *)near)->anim.resetHitboxMode & 0x4)) {
         return 0;
     }
     return 0xc;

@@ -3763,7 +3763,7 @@ void modelDoAltRenderInstrs(int *obj, int *obj2, u8 *m, int p4) {
     }
     PSMTXConcat(Camera_GetViewMatrix(), wm, cm);
     if (!(*(u16 *)((char *)am + 0x18) & 8)) {
-        *(u8 *)((char *)am + 0x60) = 0;
+        ((ObjDef *)am)->hitboxStateIndex = 0;
         if (((ModelFileHeader *)m)->unkEC != 0 && !(((ModelFileHeader *)m)->flags & 2) && ((ModelFileHeader *)m)->jointCount != 0) {
             if (lbl_803DCC30 != (u32)m) {
                 ObjModel_UpdateAnimMatrices(am, m, obj, lbl_802CAEE8);

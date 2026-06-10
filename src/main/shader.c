@@ -381,9 +381,9 @@ test:
     if ((*(u8*)(param_1 + 4) & 4) && (s8)param_2 == 0) {
         player = Obj_GetPlayerObject();
         if (player != NULL) {
-            x = *(f32*)((char*)player + 0x18);
-            y = *(f32*)((char*)player + 0x1c);
-            z = *(f32*)((char*)player + 0x20);
+            x = ((GameObject *)player)->anim.worldPosX;
+            y = ((GameObject *)player)->anim.worldPosY;
+            z = ((GameObject *)player)->anim.worldPosZ;
         } else {
             useObj = 1;
         }
@@ -1193,9 +1193,9 @@ void playerVecFn_8005a9b0(void)
     invRotMtx = Camera_GetInverseViewRotationMatrix();
     if (player != NULL) {
         clipDist = -Camera_DistanceToCurrentViewPosition(
-            *(f32*)((char*)player + 0x18),
-            *(f32*)((char*)player + 0x1c),
-            *(f32*)((char*)player + 0x20));
+            ((GameObject *)player)->anim.worldPosX,
+            ((GameObject *)player)->anim.worldPosY,
+            ((GameObject *)player)->anim.worldPosZ);
     } else {
         clipDist = PostCB_803DEBF4;
     }

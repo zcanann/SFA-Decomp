@@ -861,7 +861,7 @@ void dll_1DF_init(void* obj, void* p)
     flag = *(u8*)((char*)p + 0x1B);
     if (flag != 0) {
         p50 = *(void**)&((GameObject *)obj)->anim.modelInstance;
-        ((GameObject *)obj)->anim.rootMotionScale = *(f32*)((char*)p50 + 4) * ((f32)flag / lbl_803E4BA8);
+        ((GameObject *)obj)->anim.rootMotionScale = ((ObjDef *)p50)->rootMotionScaleBase * ((f32)flag / lbl_803E4BA8);
     }
     *(f32*)((char*)*(void**)&((GameObject *)obj)->extra + 0x10) = lbl_803E4BAC;
     p64 = *(void**)&((GameObject *)obj)->anim.modelState;

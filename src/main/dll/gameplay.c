@@ -2704,7 +2704,7 @@ void Carryable_stopCarrying(int *obj, u8 *param2) {
 }
 int Carryable_updateRenderState(int *obj, int flag) {
     int *p50 = *(int **)&((GameObject *)obj)->anim.modelInstance;
-    if (*(s16 *)((char *)p50 + 0x48) == 2) {
+    if (((ObjDef *)p50)->shadowType == 2) {
         if (((GameObject *)obj)->unkB4 == -1) {
             ((GameObject *)obj)->anim.modelState->flags &= ~OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         } else {

@@ -386,7 +386,7 @@ void hightop_init(void *obj, u8 *arg) {
     runtime->unkC45 = arg[0x19];
     runtime->unkC16 = 5;
     *(s8 *)&runtime->unkC4B = -1;
-    node = *(int **)((char *)obj + 0x64);
+    node = *(int **)&((GameObject *)obj)->anim.modelState;
     if (node != 0) {
         *(int *)((char *)node + 0x30) |= 0xa10;
     }

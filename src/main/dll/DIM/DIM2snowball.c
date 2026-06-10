@@ -740,7 +740,7 @@ void dim2snowball_init(int* obj, int* def)
     state->flagsAC = (u8)(state->flagsAC | 4);
     ((Dim2snowballObjectDef *)def)->unk14 = -1;
     *(s16*)obj = (s16)((s32)((Dim2snowballObjectDef *)def)->unk18 << 8);
-    *(s8*)((char*)obj + 54) = 0;
+    *(s8 *)&((GameObject *)obj)->anim.alpha = 0;
     {
         ObjModelState* p = ((GameObject *)obj)->anim.modelState;
         if (p != NULL) {
@@ -1342,7 +1342,7 @@ checkHit:
             Obj_FreeObject(obj);
             return;
         }
-        if (*(u8 *)((char *)*(int **)((char *)extra + 0xa8) + (((Dim2SnowballState *)extra)->curveCursor >> 2)) == 32) {
+        if (*(u8 *)((char *)*(int **)&((Dim2SnowballState *)extra)->curveData + (((Dim2SnowballState *)extra)->curveCursor >> 2)) == 32) {
             if (GameBit_Get(648) != 0) {
                 int n;
                 ((Dim2SnowballState *)extra)->flagsAC |= 2;

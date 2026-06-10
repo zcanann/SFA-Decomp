@@ -971,9 +971,9 @@ void DIM2icicle_spawnBlueWhiteEffect(int* sourceObj, f32* velocity) {
         *(s16*)((char*)setup + 0x20) = -1;
         spawnedObj = Obj_SetupObject(setup, 5, -1, -1, (void*)0);
         if (spawnedObj != NULL) {
-            *(f32*)((char*)spawnedObj + 0x24) = velocity[0];
-            *(f32*)((char*)spawnedObj + 0x28) = velocity[1];
-            *(f32*)((char*)spawnedObj + 0x2c) = velocity[2];
+            ((GameObject *)spawnedObj)->anim.velocityX = velocity[0];
+            ((GameObject *)spawnedObj)->anim.velocityY = velocity[1];
+            ((GameObject *)spawnedObj)->anim.velocityZ = velocity[2];
         }
     }
 }

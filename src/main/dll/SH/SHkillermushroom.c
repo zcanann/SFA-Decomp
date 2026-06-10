@@ -474,9 +474,9 @@ void bombplant_update(void *obj)
         ((BombPlantState *)state)->stateIndex = 4;
         ((BombPlantState *)state)->flags |= 0x2;
         p50 = ((GameObject *)obj)->anim.modelInstance;
-        ObjHitbox_SetCapsuleBounds(obj, (s16)(*(u8 *)((u8 *)p50 + 0x62) + 0x50),
-                                   (s16)(*(s16 *)((u8 *)p50 + 0x68) - 0x50),
-                                   (s16)(*(s16 *)((u8 *)p50 + 0x6a) + 0x50));
+        ObjHitbox_SetCapsuleBounds(obj, (s16)(((ObjDef *)p50)->primaryHitboxRadius + 0x50),
+                                   (s16)(((ObjDef *)p50)->primaryCapsuleOffsetA - 0x50),
+                                   (s16)(((ObjDef *)p50)->primaryCapsuleOffsetB + 0x50));
         ObjHits_MarkObjectPositionDirty(obj);
       }
     }

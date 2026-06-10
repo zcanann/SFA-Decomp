@@ -359,8 +359,8 @@ void snowclaw_render(int obj, int p2, int p3, int p4, int p5, int vis) {
             ((SnowclawAaFlags *)((char *)inner + 0xaa))->b0 != 0) {
             near = ObjGroup_FindNearestObject(0x1e, obj, &dist);
             if ((u32)near != 0 &&
-                (*(int (*)(int))(*(int *)(*(int *)(*(int *)(near + 0x68)) + 0x24)))(near) != 0 &&
-                (*(int (*)(int, int))(*(int *)(*(int *)(*(int *)(near + 0x68)) + 0x20)))(near, 0) != 0) {
+                (*(int (*)(int))(*(int *)(*(int *)(*(int *)&((GameObject *)near)->anim.dll) + 0x24)))(near) != 0 &&
+                (*(int (*)(int, int))(*(int *)(*(int *)(*(int *)&((GameObject *)near)->anim.dll) + 0x20)))(near, 0) != 0) {
                 ObjLink_AttachChild(obj, near, 0);
             }
         }
@@ -414,7 +414,7 @@ void snowclaw_hitDetect(int obj) {
                     near = (int *)ObjGroup_FindNearestObject(0x1e, obj, &dist);
                     if (near != 0) {
                         ObjLink_DetachChild(obj, near);
-                        (*(void (*)(int *, int))(*(int *)(*(int *)(*(int *)((char *)near + 0x68)) + 0x20)))(near, 2);
+                        (*(void (*)(int *, int))(*(int *)(*(int *)(*(int *)&((GameObject *)near)->anim.dll) + 0x20)))(near, 2);
                     }
                 }
                 if (((GameObject *)obj)->anim.seqId == 0x16d || ((GameObject *)obj)->anim.seqId == 0x170) {
@@ -654,7 +654,7 @@ int snowclaw_animEventCallback(int obj, int a2, ObjSeqState *seq) {
         case 6: {
             int *found = (int *)ObjGroup_FindNearestObject(0x1e, obj, &dist);
             if (found != 0) {
-                (*(void (*)(int *, int))(*(int *)(*(int *)(*(int *)((char *)found + 0x68)) + 0x20)))(found, 2);
+                (*(void (*)(int *, int))(*(int *)(*(int *)(*(int *)&((GameObject *)found)->anim.dll) + 0x20)))(found, 2);
                 ((SnowclawAaFlags *)((char *)inner + 0xaa))->b0 = 0;
             }
             break;
@@ -662,7 +662,7 @@ int snowclaw_animEventCallback(int obj, int a2, ObjSeqState *seq) {
         case 7: {
             int *found = (int *)ObjGroup_FindNearestObject(0x1e, obj, &dist);
             if (found != 0) {
-                (*(void (*)(int *, int))(*(int *)(*(int *)(*(int *)((char *)found + 0x68)) + 0x20)))(found, 0);
+                (*(void (*)(int *, int))(*(int *)(*(int *)(*(int *)&((GameObject *)found)->anim.dll) + 0x20)))(found, 0);
                 ((SnowclawAaFlags *)((char *)inner + 0xaa))->b0 = 1;
             }
             break;

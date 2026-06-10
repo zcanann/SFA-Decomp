@@ -1041,11 +1041,11 @@ int pauseMenuIsFox(void)
     if (s == NULL) return 0;
     is_zero = objIsCurModelNotZero() == 0;
     if (is_zero) return 0;
-    inner = *(void**)((char*)s + 0x30);
+    inner = ((GameObject *)s)->anim.parent;
     if (inner != NULL) {
         lookup = *((u8*)inner + 0xac);
     } else {
-        lookup = (u8)coordsToMapCell(*(f32*)((char*)s + 0xc), *(f32*)((char*)s + 0x14));
+        lookup = (u8)coordsToMapCell(((GameObject *)s)->anim.localPosX, ((GameObject *)s)->anim.localPosZ);
     }
     for (i = 0; i < 9; i++) {
         if (lookup == lbl_8031B050[i]) {

@@ -1582,7 +1582,7 @@ void* objFindTexture(void* obj, int target) {
         u8* entries = *(u8**)((char*)p50 + 0xC);
         if (entries == NULL) return NULL;
         {
-            u8 count = *(u8*)((char*)p50 + 0x59);
+            u8 count = ((ObjDef *)p50)->unk59;
             int offset = 0;
             int i;
             for (i = 0; i < count; i++) {

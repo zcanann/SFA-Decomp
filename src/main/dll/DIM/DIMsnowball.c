@@ -555,7 +555,7 @@ void fn_801AC01C(int obj)
     GameBit_Set(0x3a2, 0);
     res = fn_802972A8(Obj_GetPlayerObject());
     if (res != 0) {
-        r = (*(int (**)(int))(*(int *)(*(int *)((char *)res + 0x68)) + 0x48))((int)res);
+        r = (*(int (**)(int))(*(int *)(*(int *)&((GameObject *)res)->anim.dll) + 0x48))((int)res);
     } else {
         r = 0;
     }
@@ -584,7 +584,7 @@ void fn_801AC108(int obj, int param2)
         GameBit_Set(0x3b9, 0);
         res = fn_802972A8(Obj_GetPlayerObject());
         if (res != 0) {
-            r = (*(int (**)(int))(*(int *)(*(int *)((char *)res + 0x68)) + 0x48))((int)res);
+            r = (*(int (**)(int))(*(int *)(*(int *)&((GameObject *)res)->anim.dll) + 0x48))((int)res);
         } else {
             r = 0;
         }

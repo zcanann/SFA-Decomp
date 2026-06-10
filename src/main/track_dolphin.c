@@ -2501,7 +2501,7 @@ int objShadowFn_80062378(void *obj, u8 param)
   void *p;
 
   p = ((GameObject *)obj)->anim.modelInstance;
-  if (*(u8 *)((char *)p + 0x5f) & 0x4) {
+  if (((ObjDef *)p)->renderFlags & 0x4) {
     lo = 1000;
     hi = 2000;
   } else {
@@ -2655,7 +2655,7 @@ void *shadowInit(int *obj, int size)
   s16 texId;
 
   rounded = roundUpTo4(size);
-  *(int *)((char *)obj + 0x64) = rounded;
+  *(int *)&((ObjAnimComponent *)obj)->modelState = rounded;
   modelState = ((ObjAnimComponent *)obj)->modelState;
   modelDef = ((ObjAnimComponent *)obj)->modelInstance;
   texId = modelDef->shadowTextureId;
@@ -4551,12 +4551,12 @@ void objBboxFn_800640cc(f32 *p0, f32 *p1, int p5, int *out, int *self, int p8, i
         if ((s8)*(u8 *)((char *)o + 0x35) <= -1) continue;
         if (*(u32 *)(*(int *)&((GameObject *)o)->anim.modelInstance + 0x34) == 0) continue;
         p54 = *(int **)&((GameObject *)o)->anim.hitReactState;
-        if (p54 != NULL && (*(s16 *)((char *)p54 + 0x60) & 1) == 0) continue;
+        if (p54 != NULL && (((ObjHitsPriorityState *)p54)->flags & 1) == 0) continue;
         dx = ((GameObject *)o)->anim.localPosX - w0[0];
         dy = ((GameObject *)o)->anim.localPosY - w0[1];
         dz = ((GameObject *)o)->anim.localPosZ - w0[2];
         hdr = *(int *)(*(int *)(*(int *)&((GameObject *)o)->anim.banks
-                       + (s8)*(u8 *)((char *)p54 + 0xb0) * 4));
+                       + (s8)((ObjHitsPriorityState *)p54)->stateIndex * 4));
         rad = (f32)((u16)modelFileHeaderGetCullDistance((void *)hdr) + 0x32);
         rad = rad * rad;
         hit = 0;

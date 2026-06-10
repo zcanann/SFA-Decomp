@@ -2518,7 +2518,7 @@ int* fn_801702D4(int* obj, f32 fv) {
     *(u8*)((char*)alloc + 7) = 255;
     new_obj = Obj_SetupObject(alloc, 5, -1, -1, (void*)0);
     if (new_obj != NULL) {
-        *(f32*)((char*)new_obj + 8) = fv;
+        ((GameObject *)new_obj)->anim.rootMotionScale = fv;
     }
     return new_obj;
 }
@@ -4097,9 +4097,9 @@ void dll_F7_update(int *obj)
             radius = lbl_803E3414;
             near = (int *)ObjGroup_FindNearestObject(4, (int)obj, &radius);
             if (near != NULL) {
-                *(f32 *)((char *)near + 0x18) = *(f32 *)((char *)near + 0xc) = ((GameObject *)obj)->anim.localPosX;
-                *(f32 *)((char *)near + 0x1c) = *(f32 *)((char *)near + 0x10) = lbl_803E3410 + ((GameObject *)obj)->anim.localPosY;
-                *(f32 *)((char *)near + 0x20) = *(f32 *)((char *)near + 0x14) = ((GameObject *)obj)->anim.localPosZ;
+                ((GameObject *)near)->anim.worldPosX = ((GameObject *)near)->anim.localPosX = ((GameObject *)obj)->anim.localPosX;
+                ((GameObject *)near)->anim.worldPosY = ((GameObject *)near)->anim.localPosY = lbl_803E3410 + ((GameObject *)obj)->anim.localPosY;
+                ((GameObject *)near)->anim.worldPosZ = ((GameObject *)near)->anim.localPosZ = ((GameObject *)obj)->anim.localPosZ;
                 *(s16 *)near = *(s16 *)obj;
             }
         }

@@ -2080,10 +2080,10 @@ void mediumbasket_spawnContactObject(int* obj, int* state) {
         *(s16*)((char*)alloc + 32) = -1;
         new_obj = Obj_SetupObject(alloc, 5, -1, -1, (void*)0);
         if (new_obj != NULL) {
-            *(f32*)((char*)new_obj + 0x24) = ((GroundBaddieState *)state)->baddie.velX;
-            *(f32*)((char*)new_obj + 0x28) = ((GroundBaddieState *)state)->baddie.velY;
-            *(f32*)((char*)new_obj + 0x2c) = ((GroundBaddieState *)state)->baddie.velZ;
-            *(int**)((char*)new_obj + 0xc4) = obj;
+            ((GameObject *)new_obj)->anim.velocityX = ((GroundBaddieState *)state)->baddie.velX;
+            ((GameObject *)new_obj)->anim.velocityY = ((GroundBaddieState *)state)->baddie.velY;
+            ((GameObject *)new_obj)->anim.velocityZ = ((GroundBaddieState *)state)->baddie.velZ;
+            *(int**)&((GameObject *)new_obj)->unkC4 = obj;
         }
     }
 }

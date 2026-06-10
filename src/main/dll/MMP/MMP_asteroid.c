@@ -1,3 +1,4 @@
+#include "main/map_block.h"
 #include "main/dll/MMP/mmp_asteroid_re_state.h"
 #include "main/dll/MMP/MMP_asteroid.h"
 #include "main/obj_placement.h"
@@ -698,7 +699,7 @@ void texframeanimator_update(int *obj)
         block = mapGetBlock(objPosToMapBlockIdx(((GameObject *)obj)->anim.localPosX,
                                                 ((GameObject *)obj)->anim.localPosY,
                                                 ((GameObject *)obj)->anim.localPosZ));
-        if ((block != NULL) && ((*(u16 *)((char *)block + 4) & 8) != 0)) {
+        if ((block != NULL) && ((((MapBlockData *)block)->unk4 & 8) != 0)) {
             textureHit = return0_80056694(block, state->textureSlot);
             if (textureHit != NULL) {
                 textureEntry = mapTextureOverrideGetEntry(*(s16 *)textureHit);

@@ -811,12 +811,12 @@ void drakorhoverpad_func0F(int obj, f32 *ox, f32 *oy, f32 *oz) {
     if (src == 0) {
         src = (int *)obj;
     }
-    pos.x = *(f32 *)((char *)src + 0xc);
-    pos.y = *(f32 *)((char *)src + 0x10);
-    pos.z = *(f32 *)((char *)src + 0x14);
+    pos.x = ((GameObject *)src)->anim.localPosX;
+    pos.y = ((GameObject *)src)->anim.localPosY;
+    pos.z = ((GameObject *)src)->anim.localPosZ;
     pos.rx = *(s16 *)src;
-    pos.ry = *(s16 *)((char *)src + 0x2);
-    pos.rz = *(s16 *)((char *)src + 0x4);
+    pos.ry = ((GameObject *)src)->anim.rotY;
+    pos.rz = ((GameObject *)src)->anim.rotZ;
     pos.scale = lbl_803E6A48;
     setMatrixFromObjectPos(mtx, &pos);
     Matrix_TransformPoint(mtx, lbl_803E6A3C, lbl_803DC300, lbl_803DC304, ox, oy, oz);

@@ -310,12 +310,12 @@ void DR_CloudRunner_func15(int obj, f32 *a, f32 *b, f32 *c)
     if (src == NULL) {
         src = (void *)obj;
     }
-    v.mat[1] = *(f32 *)((char *)src + 0xc);
-    v.mat[2] = *(f32 *)((char *)src + 0x10);
-    v.mat[3] = *(f32 *)((char *)src + 0x14);
-    v.angles[0] = *(s16 *)((char *)src + 0);
-    v.angles[1] = *(s16 *)((char *)src + 2);
-    v.angles[2] = *(s16 *)((char *)src + 4);
+    v.mat[1] = ((GameObject *)src)->anim.localPosX;
+    v.mat[2] = ((GameObject *)src)->anim.localPosY;
+    v.mat[3] = ((GameObject *)src)->anim.localPosZ;
+    v.angles[0] = ((GameObject *)src)->anim.rotX;
+    v.angles[1] = ((GameObject *)src)->anim.rotY;
+    v.angles[2] = ((GameObject *)src)->anim.rotZ;
     v.mat[0] = lbl_803E83A8;
     setMatrixFromObjectPos(matrix, v.angles);
     Matrix_TransformPoint(matrix, lbl_803E83A4, lbl_803DC78C, lbl_803DC790, a, b, c);
@@ -798,14 +798,14 @@ int DR_CloudRunner_stateHandler06(int obj, int p2)
             dir[1] = lbl_803E83A4;
             dir[2] = lbl_803E83AC;
             vecRotateZXY(s1.angles, dir);
-            *(f32 *)((char *)newObj + 0x24) = dir[0];
-            *(f32 *)((char *)newObj + 0x28) = dir[1];
-            *(f32 *)((char *)newObj + 0x2c) = dir[2];
-            *(int *)((char *)newObj + 0xf4) = 0xb4;
-            *(int *)((char *)newObj + 0xf8) = obj;
-            *(s16 *)((char *)newObj + 0x4) = 0;
-            *(s16 *)((char *)newObj + 0x2) = 0;
-            *(s16 *)((char *)newObj + 0) = 0;
+            ((GameObject *)newObj)->anim.velocityX = dir[0];
+            ((GameObject *)newObj)->anim.velocityY = dir[1];
+            ((GameObject *)newObj)->anim.velocityZ = dir[2];
+            ((GameObject *)newObj)->unkF4 = 0xb4;
+            ((GameObject *)newObj)->unkF8 = obj;
+            ((GameObject *)newObj)->anim.rotZ = 0;
+            ((GameObject *)newObj)->anim.rotY = 0;
+            ((GameObject *)newObj)->anim.rotX = 0;
             (*gPartfxInterface)->spawnObject(newObj, 0x66, NULL, 2, -1, NULL);
         }
     }
@@ -995,31 +995,31 @@ void fn_802BF4D8(int obj)
     dir[1] = lbl_803E83A4;
     dir[2] = lbl_803E83AC;
     vecRotateZXY(s1.angles, dir);
-    *(f32 *)((char *)newObj + 0x24) = dir[0];
-    *(f32 *)((char *)newObj + 0x28) = dir[1];
-    *(f32 *)((char *)newObj + 0x2c) = dir[2];
-    pos[0] = lbl_803E83B0 * *(f32 *)((char *)newObj + 0x24);
-    pos[1] = lbl_803E83B0 * *(f32 *)((char *)newObj + 0x28);
-    pos[2] = lbl_803E83B0 * *(f32 *)((char *)newObj + 0x2c);
-    pos[0] = *(f32 *)((char *)newObj + 0xc) + pos[0];
-    pos[1] = *(f32 *)((char *)newObj + 0x10) + pos[1];
-    pos[2] = *(f32 *)((char *)newObj + 0x14) + pos[2];
+    ((GameObject *)newObj)->anim.velocityX = dir[0];
+    ((GameObject *)newObj)->anim.velocityY = dir[1];
+    ((GameObject *)newObj)->anim.velocityZ = dir[2];
+    pos[0] = lbl_803E83B0 * ((GameObject *)newObj)->anim.velocityX;
+    pos[1] = lbl_803E83B0 * ((GameObject *)newObj)->anim.velocityY;
+    pos[2] = lbl_803E83B0 * ((GameObject *)newObj)->anim.velocityZ;
+    pos[0] = ((GameObject *)newObj)->anim.localPosX + pos[0];
+    pos[1] = ((GameObject *)newObj)->anim.localPosY + pos[1];
+    pos[2] = ((GameObject *)newObj)->anim.localPosZ + pos[2];
     voxmaps_worldToGrid((void *)&((GameObject *)obj)->anim.worldPosX, gC);
     voxmaps_worldToGrid(pos, gB);
     if (voxmaps_traceLine(gC, gB, tr, 0, 0) == 0) {
         voxmaps_gridToWorld(pos, tr);
-        diff[0] = pos[0] - *(f32 *)((char *)newObj + 0xc);
-        diff[1] = pos[1] - *(f32 *)((char *)newObj + 0x10);
-        diff[2] = pos[2] - *(f32 *)((char *)newObj + 0x14);
+        diff[0] = pos[0] - ((GameObject *)newObj)->anim.localPosX;
+        diff[1] = pos[1] - ((GameObject *)newObj)->anim.localPosY;
+        diff[2] = pos[2] - ((GameObject *)newObj)->anim.localPosZ;
         dist = sqrtf(diff[2] * diff[2] + (diff[0] * diff[0] + diff[1] * diff[1]));
     } else {
         dist = lbl_803E83B4;
     }
-    *(int *)((char *)newObj + 0xf4) = (int)dist;
-    *(int *)((char *)newObj + 0xf8) = obj;
-    *(s16 *)((char *)newObj + 0x4) = 0;
-    *(s16 *)((char *)newObj + 0x2) = 0;
-    *(s16 *)((char *)newObj + 0) = 0;
+    ((GameObject *)newObj)->unkF4 = (int)dist;
+    ((GameObject *)newObj)->unkF8 = obj;
+    ((GameObject *)newObj)->anim.rotZ = 0;
+    ((GameObject *)newObj)->anim.rotY = 0;
+    ((GameObject *)newObj)->anim.rotX = 0;
     (*gPartfxInterface)->spawnObject(newObj, 0x66, NULL, 2, -1, NULL);
 }
 
