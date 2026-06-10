@@ -18,14 +18,14 @@ extern void *lbl_803DDBE0;
  * EN v1.0 Address: 0x801CBA98
  * EN v1.0 Size: 636b
  */
-int dll_19B_SeqFn(int obj, int unused, u8 *buf)
+int dll_19B_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     int state;
     int i;
 
     state = *(int *)&((GameObject *)obj)->extra;
-    *(s16 *)(buf + 0x6e) = -1;
-    buf[0x56] = 0;
+    animUpdate->hitVolumePair = -1;
+    animUpdate->sequenceEventActive = 0;
 
     if (((Torch1CDState *)state)->unkA != 0) {
         ((Torch1CDState *)state)->unk8 += ((Torch1CDState *)state)->unkA;
@@ -39,8 +39,8 @@ int dll_19B_SeqFn(int obj, int unused, u8 *buf)
         ((void (**)(int, u8))*gTitleMenuControlInterface)[0x38/4](3, (u8)((Torch1CDState *)state)->unk8);
     }
 
-    for (i = 0; i < (int)buf[0x8b]; i++) {
-        u8 cmd = buf[0x81 + i];
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        u8 cmd = animUpdate->eventIds[i];
         if (cmd != 0) {
             switch (cmd) {
             case 1:
@@ -93,7 +93,7 @@ int dll_19B_SeqFn(int obj, int unused, u8 *buf)
                 break;
             }
         }
-        buf[0x81 + i] = 0;
+        animUpdate->eventIds[i] = 0;
     }
     return 0;
 }

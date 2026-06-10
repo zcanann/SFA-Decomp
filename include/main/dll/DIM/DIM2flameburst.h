@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
+#include "main/objanim_update.h"
 
 extern ObjectDescriptor gExplosionObjDescriptor;
 extern ObjectDescriptor gDIMWoodDoor2ObjDescriptor;
@@ -68,6 +69,7 @@ void dimmagicbridge_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dimmagicbridge_hitDetect(void);
 void dimmagicbridge_update(int obj);
 void dimmagicbridge_init(u8* obj, u8* params);
+int dimmagicbridge_flameSeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate);
 void dimmagicbridge_release(void);
 void dimmagicbridge_initialise(void);
 int dll_1CE_getExtraSize(void);

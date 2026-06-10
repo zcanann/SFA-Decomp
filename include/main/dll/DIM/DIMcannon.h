@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
+#include "main/objanim_update.h"
 
 void imicepillar_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void FUN_801ae184(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
@@ -64,7 +65,7 @@ int imanimspacecraft_getObjectTypeId(void);
 void imanimspacecraft_modelMtxFn(void);
 u32 imanimspacecraft_func0B(int *obj);
 int imanimspacecraft_setScale(int *obj, int bitIdx);
-int imanimspacecraft_SeqFn(int *obj, int unused, u8 *events);
+int imanimspacecraft_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate);
 void imanimspacecraft_free(int *obj);
 void imanimspacecraft_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void imanimspacecraft_hitDetect(void);

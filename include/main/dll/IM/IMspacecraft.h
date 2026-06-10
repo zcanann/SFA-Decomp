@@ -2,6 +2,7 @@
 #define MAIN_DLL_IM_IMSPACECRAFT_H_
 
 #include "ghidra_import.h"
+#include "main/objanim_update.h"
 
 int SpiritDoorLock_getExtraSize(void);
 int SpiritDoorLock_getObjectTypeId(void);
@@ -22,7 +23,7 @@ void RollingBarrel_update(int obj);
 void RollingBarrel_init(int obj, int *params);
 void RollingBarrel_release(void);
 void RollingBarrel_initialise(void);
-int MMP_LevelControl_SeqFn(int obj, int p2, u8 *seq);
+int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 int MMP_levelcontrol_getExtraSize(void);
 int MMP_levelcontrol_getObjectTypeId(void);
 void MMP_levelcontrol_free(int obj);

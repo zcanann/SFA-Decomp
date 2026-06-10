@@ -1754,7 +1754,7 @@ void dimmagicbridge_release(void) {}
 void dimmagicbridge_initialise(void) {}
 
 extern f32 lbl_803E4A10;
-extern int dimmagicbridge_flameSeqFn(int* obj, int p2, u8* p3);
+extern int dimmagicbridge_flameSeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate);
 extern int Obj_GetActiveModel(int obj);
 extern int ObjModel_GetCurrentVertexCoords(int model, int idx);
 extern void fn_80065574(int a, int b, int c);
@@ -2010,16 +2010,17 @@ void dimmagicbridge_scrollTextureChannels(int param_1, u8* obj)
  * the animated bridge mesh. */
 #pragma scheduling off
 #pragma peephole off
-int dimmagicbridge_flameSeqFn(int* obj, int p2, u8* p3)
+int dimmagicbridge_flameSeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     u8* sub = ((GameObject *)obj)->extra;
+    u8 *animUpdateBytes = (u8 *)animUpdate;
     int j;
     int i;
-    p3[0x56] = 0;
-    *(s16*)(p3 + 0x6e) = (s16)(*(s16*)(p3 + 0x6e) & ~0x40);
+    animUpdate->sequenceEventActive = 0;
+    animUpdate->hitVolumePair &= ~0x40;
     dimmagicbridge_scrollTextureChannels((int)obj, (u8 *)sub);
-    if (p3[0x80] == 1) {
-        p3[0x80] = 0;
+    if (animUpdateBytes[0x80] == 1) {
+        animUpdateBytes[0x80] = 0;
         sub[0x5f] = 1;
     }
     if (sub[0x5f] != 0) {

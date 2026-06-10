@@ -6,6 +6,7 @@
 #include "main/dll/curves.h"
 #include "main/object_descriptor.h"
 #include "main/objanim.h"
+#include "main/objanim_update.h"
 
 int mikabomb_getExtraSize();
 int mikabomb_getObjectTypeId();
@@ -171,6 +172,7 @@ extern ObjectDescriptor12 gCurveObjDescriptor;
 extern ObjectDescriptor gReStartMarkerObjDescriptor;
 extern ObjectDescriptor dll_F7;
 
-int depthoffieldpoint_SeqFn(int *obj, int msg, u8 *cmds);
+int depthoffieldpoint_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate);
+int Fireball_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate);
 
 #endif /* MAIN_DLL_GENPROPS_H_ */

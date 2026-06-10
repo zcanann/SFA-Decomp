@@ -2953,7 +2953,7 @@ void lavaball1be_update(s16 *obj) {
 extern int *objFindTexture(int *obj, int a, int b);
 extern f32 lbl_803E4770, lbl_803E4774, lbl_803E4778, lbl_803E477C;
 
-int imanimspacecraft_SeqFn(int *obj, int unused, u8 *p3) {
+int imanimspacecraft_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate) {
     ImAnimSpacecraftState *state;
     int i;
     int *tex;
@@ -2981,8 +2981,8 @@ int imanimspacecraft_SeqFn(int *obj, int unused, u8 *p3) {
     }
     tex = objFindTexture(obj, 0, 0);
     *tex = 0x100;
-    for (i = 0; i < p3[0x8b]; i++) {
-        u32 ev = p3[i + 0x81];
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        u32 ev = animUpdate->eventIds[i];
         switch (ev) {
         case 1:
             state->maskBits = (u8)(state->maskBits ^ (1 << (ev - 1)));

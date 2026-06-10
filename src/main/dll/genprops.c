@@ -5428,7 +5428,7 @@ void dll_F7_init(int *obj, int *params)
     }
 }
 
-int depthoffieldpoint_SeqFn(int *obj, int msg, u8 *cmds)
+int depthoffieldpoint_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     DofState *s = ((GameObject *)obj)->extra;
     int i;
@@ -5436,8 +5436,8 @@ int depthoffieldpoint_SeqFn(int *obj, int msg, u8 *cmds)
         turnOnBlurFilter(((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY,
                          ((GameObject *)obj)->anim.worldPosZ, s->field1, s->field2);
     }
-    for (i = 0; i < cmds[0x8b]; i++) {
-        switch (cmds[i + 0x81]) {
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        switch (animUpdate->eventIds[i]) {
         case 0:
             s->enabled = 0;
             Rcp_DisableBlurFilter();
@@ -5463,15 +5463,15 @@ int depthoffieldpoint_SeqFn(int *obj, int msg, u8 *cmds)
 
 extern void modelLightStruct_setEnabled(int handle, int flag, f32 v);
 extern f32 lbl_803E3330;
-int Fireball_SeqFn(int *obj, int msg, u8 *cmds)
+int Fireball_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     int i;
     int *state = ((GameObject *)obj)->extra;
     if (*(u8 *)((char *)state + 0x70) & 8) {
         return 0;
     }
-    for (i = 0; i < cmds[0x8b]; i++) {
-        u8 cmd = cmds[i + 0x81];
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        u8 cmd = animUpdate->eventIds[i];
         if (cmd == 1) {
             if (*(void **)state != NULL) {
                 modelLightStruct_setEnabled(*(int *)state, 1, lbl_803E3330);

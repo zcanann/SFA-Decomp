@@ -493,15 +493,15 @@ void RollingBarrel_update(int obj)
 }
 #pragma peephole reset
 
-int MMP_LevelControl_SeqFn(int obj, int p2, u8 *seq)
+int MMP_LevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     int player;
     int i;
 
     player = Obj_GetPlayerObject();
-    seq[0x56] = 0;
-    for (i = 0; i < seq[0x8b]; i++) {
-        u8 v = seq[0x81 + i];
+    animUpdate->sequenceEventActive = 0;
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        u8 v = animUpdate->eventIds[i];
         switch (v) {
         case 1:
             getEnvfxAct(obj, player, 315, 0);
