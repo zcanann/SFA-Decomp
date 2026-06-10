@@ -1307,7 +1307,7 @@ void FUN_801af9e8(undefined8 param_1,double param_2,double param_3,undefined8 pa
   FUN_80080f18(&DAT_80324550,&DAT_80324518,&DAT_80324588,&DAT_803245c0);
   iVar2 = FUN_800e8b98();
   if (iVar2 == 0) {
-    cVar3 = (*gMapEventInterface)->getAnimEvent((int)*(char *)(param_9 + 0xac),0);
+    cVar3 = (*gMapEventInterface)->getAnimEvent((int)((GameObject *)param_9)->anim.mapEventSlot,0);
     uVar5 = extraout_f1_00;
     if (cVar3 == '\0') {
       uVar5 = FUN_80080f14(extraout_f1_00,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
@@ -1317,7 +1317,7 @@ void FUN_801af9e8(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  in_r8,in_r9,in_r10);
   }
   else {
-    cVar3 = (*gMapEventInterface)->getAnimEvent((int)*(char *)(param_9 + 0xac),0);
+    cVar3 = (*gMapEventInterface)->getAnimEvent((int)((GameObject *)param_9)->anim.mapEventSlot,0);
     uVar5 = extraout_f1;
     if (cVar3 == '\0') {
       uVar5 = FUN_80080f14(extraout_f1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x3f)
@@ -1355,7 +1355,7 @@ void FUN_801afcf8(int param_1)
   int iVar4;
   
   iVar4 = *(int *)&((GameObject *)param_1)->extra;
-  cVar1 = *(char *)(param_1 + 0xac);
+  cVar1 = ((GameObject *)param_1)->anim.mapEventSlot;
   if (cVar1 == 'H') {
     uVar3 = GameBit_Get(0xe1e);
     if (uVar3 == 0) {
@@ -1424,7 +1424,7 @@ void FUN_801afe70(undefined8 param_1,double param_2,double param_3,undefined8 pa
   undefined4 in_r10;
   undefined8 uVar2;
   
-  cVar1 = *(char *)(param_9 + 0xac);
+  cVar1 = ((GameObject *)param_9)->anim.mapEventSlot;
   if (cVar1 == 'G') {
     uVar2 = FUN_80080f18(&DAT_80324668,&DAT_80324630,&DAT_803246a0,&DAT_803246d8);
     if (((GameObject *)param_9)->unkF4 == 2) {
@@ -1484,7 +1484,7 @@ void FUN_801b0190(int param_1)
 {
   char cVar1;
   
-  cVar1 = *(char *)(param_1 + 0xac);
+  cVar1 = ((GameObject *)param_1)->anim.mapEventSlot;
   if (cVar1 < 'H') {
     if (cVar1 == 'E') {
       FUN_800067c0((int *)0xda,0);
@@ -1523,17 +1523,17 @@ void FUN_801b01e8(undefined8 param_1,undefined8 param_2,double param_3,undefined
   pcVar2 = ((GameObject *)param_9)->extra;
   iVar1 = FUN_80017a98();
   if (iVar1 != 0) {
-    if (*pcVar2 != *(char *)(param_9 + 0xac)) {
+    if (*pcVar2 != ((GameObject *)param_9)->anim.mapEventSlot) {
       dVar3 = (double)*(float *)(iVar1 + 0xc);
       dVar4 = (double)*(float *)(iVar1 + 0x14);
       iVar1 = FUN_8005b024();
-      if (*(char *)(param_9 + 0xac) != iVar1) {
+      if (((GameObject *)param_9)->anim.mapEventSlot != iVar1) {
         return;
       }
       FUN_801afe70(dVar3,dVar4,param_3,param_4,param_5,param_6,param_7,param_8,param_9);
     }
     iVar1 = FUN_8005b024();
-    if (*(char *)(param_9 + 0xac) == iVar1) {
+    if (((GameObject *)param_9)->anim.mapEventSlot == iVar1) {
       FUN_801afcf8(param_9);
     }
     iVar1 = FUN_8005b024();
@@ -2039,7 +2039,7 @@ void FUN_801b0df4(undefined8 param_1,double param_2,double param_3,undefined8 pa
     puVar4[0xe] = (ushort)*(byte *)(iVar9 + 0x1b);
     *(undefined4 *)(puVar4 + 10) = *(undefined4 *)(iVar9 + 0x14);
     uVar5 = FUN_80017ae4(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar4,5,
-                         *(undefined *)(param_9 + 0xac),0xffffffff,(uint *)0x0,in_r8,in_r9,in_r10);
+                         ((GameObject *)param_9)->anim.mapEventSlot,0xffffffff,(uint *)0x0,in_r8,in_r9,in_r10);
     *(undefined4 *)(iVar8 + 8) = uVar5;
   }
   iVar7 = *(int *)(iVar8 + 8);
@@ -2232,7 +2232,7 @@ extern int getSaveGameLoadStatus(void);
 extern void *Obj_GetPlayerObject(void);
 extern int coordsToMapCell(f32 x, f32 z);
 void link_levcontrol_free(int obj) {
-    switch ((s32)*(s8 *)(obj + 0xac)) {
+    switch ((s32)((GameObject *)obj)->anim.mapEventSlot) {
         case 0x45: Music_Trigger(0xda, 0); break;
         case 0x48:
         case 0x49: Music_Trigger(0x36, 0); break;
@@ -2243,14 +2243,14 @@ void link_levcontrol_update(int *obj) {
     f32 *player = (f32 *)Obj_GetPlayerObject();
     if (player == NULL) return;
 
-    if ((s32)inner->areaCell != (s32)*((s8 *)obj + 0xac)) {
-        if ((s32)*((s8 *)obj + 0xac) == coordsToMapCell(player[3], player[5])) {
+    if ((s32)inner->areaCell != (s32)((GameObject *)obj)->anim.mapEventSlot) {
+        if ((s32)((GameObject *)obj)->anim.mapEventSlot == coordsToMapCell(player[3], player[5])) {
             link_levcontrol_applyEnterAreaEffects(obj);
         } else {
             return;
         }
     }
-    if ((s32)*((s8 *)obj + 0xac) == coordsToMapCell(player[3], player[5])) {
+    if ((s32)((GameObject *)obj)->anim.mapEventSlot == coordsToMapCell(player[3], player[5])) {
         link_levcontrol_updateAreaMusic(obj);
     }
     inner->areaCell = (s8)coordsToMapCell(player[3], player[5]);
@@ -2259,7 +2259,7 @@ extern void *gSHthorntailAnimationInterface;
 extern void SCGameBitLatch_Update(void *p, int a, int b, int c, int d, int e);
 void link_levcontrol_updateAreaMusic(int *obj) {
     LinkLevControlState *sub = ((GameObject *)obj)->extra;
-    switch (*(s8 *)((char *)obj + 0xac)) {
+    switch (((GameObject *)obj)->anim.mapEventSlot) {
     case 0x47:
         if (((int (*)(int))((void **)*(int *)gSHthorntailAnimationInterface)[9])(0) != 0) {
             if (sub->musicTrack != 0x2d) {
@@ -2302,7 +2302,7 @@ extern void getEnvfxAct(int a, int b, int c, int d);
 extern u8 lbl_803239F0[];
 void link_levcontrol_applyEnterAreaEffects(int *obj) {
     u8 *tbl = lbl_803239F0;
-    switch (*(s8 *)((char *)obj + 0xac)) {
+    switch (((GameObject *)obj)->anim.mapEventSlot) {
     case 0x47:
         fn_80088870(tbl + 0x38, tbl, tbl + 0x70, tbl + 0xa8);
         if (((GameObject *)obj)->unkF4 == 2) {
@@ -2432,12 +2432,12 @@ void linkb_levcontrol_init(int *obj) {
     }
     fn_80088870(t + 0x38, (u8 *)(int)lbl_803238D8, t + 0x70, t + 0xa8);
     if (getSaveGameLoadStatus() != 0) {
-        if ((*gMapEventInterface)->getAnimEvent(*(s8*)((char*)obj + 0xac), 0) == 0) {
+        if ((*gMapEventInterface)->getAnimEvent(((GameObject *)obj)->anim.mapEventSlot, 0) == 0) {
             envFxActFn_800887f8(0x3f);
         }
         getEnvfxActImmediately(0, 0, 0x23c, 0);
     } else {
-        if ((*gMapEventInterface)->getAnimEvent(*(s8*)((char*)obj + 0xac), 0) == 0) {
+        if ((*gMapEventInterface)->getAnimEvent(((GameObject *)obj)->anim.mapEventSlot, 0) == 0) {
             envFxActFn_800887f8(0x1f);
         }
         getEnvfxAct(0, 0, 0x23c, 0);
@@ -3112,7 +3112,7 @@ void lavaball1bf_update(int *obj) {
         *(s16 *)(s + 0x1a) = setup[0x1a];
         *(s16 *)(s + 0x1c) = setup[0x1b];
         *(int *)(s + 0x14) = ((ObjPlacement *)setup)->mapId;
-        *(int *)&state->spawnedObj = ((int (*)(int, int, int, int, int))Obj_SetupObject)(s, 5, *(s8 *)((char *)obj + 0xac), -1, 0);
+        *(int *)&state->spawnedObj = ((int (*)(int, int, int, int, int))Obj_SetupObject)(s, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, 0);
     }
     spawned = state->spawnedObj;
     t = state->fireTimer - timeDelta;

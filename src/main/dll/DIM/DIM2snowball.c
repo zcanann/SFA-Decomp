@@ -379,7 +379,7 @@ void FUN_801b6d24(int param_1)
   uVar2 = GameBit_Get(0xa21);
   *(byte *)((int)pfVar4 + 0xe) =
        (byte)((uVar2 & 0xff) << 3) & 8 | *(byte *)((int)pfVar4 + 0xe) & 0xf7;
-  (*gMapEventInterface)->setMode((int)*(char *)(param_1 + 0xac),1);
+  (*gMapEventInterface)->setMode((int)((GameObject *)param_1)->anim.mapEventSlot,1);
   ((GameObject *)param_1)->objectFlags = ((GameObject *)param_1)->objectFlags | 0x6000;
   FUN_80042b9c(0,0,1);
   return;
@@ -1490,7 +1490,7 @@ void dim_levelcontrol_init(int obj)
     st->b5 = (u8)GameBit_Get(0xd0d);
     st->b4 = (u8)GameBit_Get(0xd0e);
     st->b3 = (u8)GameBit_Get(0xa21);
-    (*gMapEventInterface)->setMode(*(s8 *)(obj + 0xac), 1);
+    (*gMapEventInterface)->setMode(((GameObject *)obj)->anim.mapEventSlot, 1);
     ((GameObject *)obj)->objectFlags |= 0x6000;
     unlockLevel(0, 0, 1);
 }

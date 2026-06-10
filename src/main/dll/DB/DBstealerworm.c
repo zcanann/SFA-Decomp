@@ -211,7 +211,7 @@ extern f32 timeDelta;
 int SB_Galleon_animEventCallback(int obj, int p2, int msgSrc) {
     int state = *(int *)&((GameObject *)obj)->extra;
     int i;
-    *(s8 *)(obj + 0xac) = -1;
+    ((GameObject *)obj)->anim.mapEventSlot = -1;
     fn_801E1588(obj, state);
     {
         f32 z = lbl_803E56CC;
@@ -1065,7 +1065,7 @@ extern MapEventInterface **gMapEventInterface;
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 void SB_Galleon_update(int obj) {
     s8 *p = (s8 *)((int **)obj)[0xb8/4];
-    *(s8 *)(obj + 0xac) = ((SBGalleonState *)p)->mapLayer;
+    ((GameObject *)obj)->anim.mapEventSlot = ((SBGalleonState *)p)->mapLayer;
     fn_801E1588(obj, (int)p);
     if (GameBit_Get(0x75) == 0) {
         (*gMapEventInterface)->setMode(0xb, 1);
@@ -1095,7 +1095,7 @@ void SB_Galleon_update(int obj) {
             break;
         case 3:
             (*gMapEventInterface)->setMode(0xb, 1);
-            *(s8 *)(obj + 0xac) = -1;
+            ((GameObject *)obj)->anim.mapEventSlot = -1;
             (*gObjectTriggerInterface)->runSequence(2, (void *)obj, -1);
             *(s8 *)&((SBGalleonState *)p)->cameraState = 4;
             break;
@@ -1136,14 +1136,14 @@ void SB_Galleon_init(int obj) {
     ((SBGalleonState *)p)->envfxActs[5] = 0x88;
     ((SBGalleonState *)p)->envfxActs[0] = 0x87;
     ((SBGalleonState *)p)->envfxActs[1] = 0x97;
-    ((SBGalleonState *)p)->mapLayer = *(s8 *)(obj + 0xac);
+    ((SBGalleonState *)p)->mapLayer = ((GameObject *)obj)->anim.mapEventSlot;
     *(s16 *)obj = 0x4000;
     ((GameObject *)obj)->anim.rotY = 0;
     ((GameObject *)obj)->anim.rotZ = 0;
     lbl_803DDC18 = (int)textureLoadAsset(0x16d);
     lbl_803DDC1C = (int)textureLoadAsset(0x89);
     ((SBGalleonState *)p)->unk84 = 100;
-    (*gMapEventInterface)->setMode(*(s8 *)(obj + 0xac), 1);
+    (*gMapEventInterface)->setMode(((GameObject *)obj)->anim.mapEventSlot, 1);
     getLActions(obj, obj, 0x58, 0, 0, 0);
     ((SBGalleonState *)p)->wanderTimerA = lbl_803E56CC;
     ((SBGalleonState *)p)->wanderTimerB = lbl_803E580C;

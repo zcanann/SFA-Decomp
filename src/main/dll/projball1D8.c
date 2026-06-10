@@ -68,9 +68,9 @@ void nw_levcontrol_update(int param_1)
       *pfVar10 = lbl_803E5F10;
     }
   }
-  cVar7 = (*gMapEventInterface)->getMode((int)*(char *)(iVar1 + 0xac));
+  cVar7 = (*gMapEventInterface)->getMode((int)((GameObject *)iVar1)->anim.mapEventSlot);
   if (cVar7 != '\x01') {
-    (*gMapEventInterface)->setMode((int)*(char *)(iVar1 + 0xac),1);
+    (*gMapEventInterface)->setMode((int)((GameObject *)iVar1)->anim.mapEventSlot,1);
   }
   cVar7 = (*gMapEventInterface)->getMode(7);
   if (cVar7 == '\x01') {
@@ -105,9 +105,9 @@ void nw_levcontrol_update(int param_1)
   SCGameBitLatch_Update(pfVar10 + 2,0x80,-1,-1,0xf31,(int *)0xaf);
   uVar4 = GameBit_Get(0x398);
   if ((uVar4 != 0) &&
-     (cVar7 = (*gMapEventInterface)->getAnimEvent((int)*(char *)(iVar1 + 0xac),0x1f), cVar7 == '\0')
+     (cVar7 = (*gMapEventInterface)->getAnimEvent((int)((GameObject *)iVar1)->anim.mapEventSlot,0x1f), cVar7 == '\0')
      ) {
-    (*gMapEventInterface)->setAnimEvent((int)*(char *)(iVar1 + 0xac),0x1f,1);
+    (*gMapEventInterface)->setAnimEvent((int)((GameObject *)iVar1)->anim.mapEventSlot,0x1f,1);
   }
   if (((*((uint*)pfVar10 + 2) & 2) == 0) || (bVar8 = FUN_80006b44(), bVar8 == 0)) {
     switch(*(undefined *)(pfVar10 + 1)) {
