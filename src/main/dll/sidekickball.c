@@ -41,7 +41,7 @@ void sidekickball_update(u8 *self)
   u8 *player;
   u8 *other;
   u32 otherStatusZeroWord;
-  u32 otherStatusMask;
+  int otherStatusMask;
   int gotHit;
 
   state = (SidekickBallState *)*(int *)(self + 0xB8);
@@ -81,7 +81,7 @@ void sidekickball_update(u8 *self)
   case SIDEKICK_BALL_HELD:
     self[0xAF] = (u8)(self[0xAF] & ~0x8);
     gotHit = 0;
-    if ((buttonGetDisabled(0) & 0x100) == 0
+    if ((buttonGetDisabled(0) & 0x100) == 0u
         && *(int *)(self + 0xF8) == 0
         && ObjTrigger_IsSet(self) != 0) {
       ObjHits_DisableObject(self);
@@ -96,7 +96,7 @@ void sidekickball_update(u8 *self)
     break;
   case SIDEKICK_BALL_FADING:
     state->fadeTimer = state->fadeTimer + timeDelta;
-    if (state->fadeTimer >= lbl_803E36A4) {
+    if (state->fadeTimer >= *(f32 *)&lbl_803E36A4) {
       Obj_FreeObject(self);
       return;
     }
