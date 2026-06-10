@@ -293,16 +293,16 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
       gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAG_0040;
       break;
     case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG_0040:
-      gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~DIMBOSS_SEQUENCE_FLAG_0040;
+      gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~(u64)DIMBOSS_SEQUENCE_FLAG_0040;
       break;
     case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG_0080:
-      gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~DIMBOSS_SEQUENCE_FLAG_0080;
+      gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~(u64)DIMBOSS_SEQUENCE_FLAG_0080;
       break;
     case DIMBOSS_EVENT_SET_SEQUENCE_FLAG_0100:
       gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAG_0100;
       break;
     case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG_0100:
-      gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~DIMBOSS_SEQUENCE_FLAG_0100;
+      gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~(u64)DIMBOSS_SEQUENCE_FLAG_0100;
       break;
     case DIMBOSS_EVENT_SET_SEQUENCE_FLAGS_2001:
       gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAGS_2001;
