@@ -139,3 +139,15 @@ the param never copied. Transplant test on infotext: split-init alone inert
 value). Next: identify which of infotext's values the original named
 (candidates: the lbl compare bound per #71-inverse, a GameBit result) and
 A/B each as a live named local + split-init combination.
+
+
+## Round-9: the live-local constraint is CALL-CROSSING
+
+infotext transplant attempts (trig local for the ObjTrigger result, both
+decl orders, split inits): ALL INERT — the single-use local copy-props
+away. The rosetta's `interrupt` survives because it CROSSES a call
+(OSRestoreInterrupts consumes it later). The transplant grammar's precise
+constraint: the extra named local must be call-crossing-live; fns without
+such a value in their dataflow (infotext) cannot take this pattern — their
+original source must differ another way (open). The 2-web class verdict:
+transplantable ONLY when a call-crossing value exists to name.
