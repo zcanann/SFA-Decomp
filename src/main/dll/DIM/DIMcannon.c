@@ -483,7 +483,7 @@ void FUN_801ae760(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  */
 #pragma scheduling on
 #pragma peephole on
-undefined4 FUN_801ae788(int param_1,undefined4 param_2,int param_3)
+undefined4 FUN_801ae788(int param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate)
 {
   short sVar1;
   ushort uVar2;
@@ -520,8 +520,8 @@ undefined4 FUN_801ae788(int param_1,undefined4 param_2,int param_3)
   }
   puVar4 = (undefined4 *)FUN_80039520(param_1,0);
   *puVar4 = 0x100;
-  for (iVar5 = 0; iVar5 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar5 = iVar5 + 1) {
-    uVar6 = (uint)*(byte *)(param_3 + iVar5 + 0x81);
+  for (iVar5 = 0; iVar5 < (int)(uint)animUpdate->eventCount; iVar5 = iVar5 + 1) {
+    uVar6 = (uint)animUpdate->eventIds[iVar5];
     switch(uVar6) {
     case 1:
       *(byte *)(psVar7 + 1) = *(byte *)(psVar7 + 1) ^ (byte)(1 << uVar6 - 1);

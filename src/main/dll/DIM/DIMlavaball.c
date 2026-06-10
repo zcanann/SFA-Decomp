@@ -339,7 +339,7 @@ void MMP_levelcontrol_update(int obj)
 undefined4
 FUN_801a68b8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,undefined4 param_10
-            ,int param_11,undefined4 param_12,undefined4 param_13,undefined4 param_14,
+            ,ObjAnimUpdateState *animUpdate,undefined4 param_12,undefined4 param_13,undefined4 param_14,
             undefined4 param_15,undefined4 param_16)
 {
   byte bVar1;
@@ -347,9 +347,9 @@ FUN_801a68b8(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   int iVar3;
   
   uVar2 = FUN_80017a98();
-  *(undefined *)(param_11 + 0x56) = 0;
-  for (iVar3 = 0; iVar3 < (int)(uint)*(byte *)(param_11 + 0x8b); iVar3 = iVar3 + 1) {
-    bVar1 = *(byte *)(param_11 + iVar3 + 0x81);
+  animUpdate->sequenceEventActive = 0;
+  for (iVar3 = 0; iVar3 < (int)(uint)animUpdate->eventCount; iVar3 = iVar3 + 1) {
+    bVar1 = animUpdate->eventIds[iVar3];
     if (bVar1 == 2) {
       param_1 = FUN_80006728(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9
                              ,uVar2,0x138,0,param_13,param_14,param_15,param_16);
@@ -573,7 +573,7 @@ void FUN_801a7648(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801a764c(undefined4 param_1,undefined4 param_2,int param_3)
+void FUN_801a764c(undefined4 param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate)
 {
   byte bVar1;
   int iVar2;
@@ -589,8 +589,8 @@ void FUN_801a764c(undefined4 param_1,undefined4 param_2,int param_3)
   if ((*pcVar7 == '\0') && (uVar3 = GameBit_Get((int)*(short *)(iVar6 + 0x18)), uVar3 != 0)) {
     *pcVar7 = '\x02';
   }
-  for (iVar5 = 0; iVar5 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar5 = iVar5 + 1) {
-    bVar1 = *(byte *)(param_3 + iVar5 + 0x81);
+  for (iVar5 = 0; iVar5 < (int)(uint)animUpdate->eventCount; iVar5 = iVar5 + 1) {
+    bVar1 = animUpdate->eventIds[iVar5];
     if (bVar1 == 2) {
       (*gPartfxInterface)->spawnObject((void *)iVar2, 0x70b, NULL, 2, -1, NULL);
       iVar4 = 0;
@@ -702,7 +702,7 @@ void FUN_801a7870(short *param_1,int param_2)
 undefined4
 FUN_801a7874(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,uint param_9,
-            undefined4 param_10,int param_11)
+            undefined4 param_10,ObjAnimUpdateState *animUpdate)
 {
   byte bVar1;
   uint uVar2;
@@ -710,9 +710,9 @@ FUN_801a7874(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   byte *pbVar4;
   
   pbVar4 = ((GameObject *)param_9)->extra;
-  *(undefined *)(param_11 + 0x56) = 0;
-  for (iVar3 = 0; iVar3 < (int)(uint)*(byte *)(param_11 + 0x8b); iVar3 = iVar3 + 1) {
-    bVar1 = *(byte *)(param_11 + iVar3 + 0x81);
+  animUpdate->sequenceEventActive = 0;
+  for (iVar3 = 0; iVar3 < (int)(uint)animUpdate->eventCount; iVar3 = iVar3 + 1) {
+    bVar1 = animUpdate->eventIds[iVar3];
     if (bVar1 == 2) {
       *pbVar4 = *pbVar4 & 0xf6;
       *pbVar4 = *pbVar4 | 0x30;
