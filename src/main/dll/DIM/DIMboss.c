@@ -308,7 +308,7 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
       gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAGS_2001;
       break;
     case DIMBOSS_EVENT_SET_SEQUENCE_FLAGS_8021:
-      gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAGS_8021;
+      gDIMbossSequenceFlags = gDIMbossSequenceFlags | (u64)DIMBOSS_SEQUENCE_FLAGS_8021;
       break;
     case DIMBOSS_EVENT_TRIGGER_DEFEAT_FLAGS:
       topState->defeatTimer = DIMBOSS_DEFEAT_TIMER_START;
