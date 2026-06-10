@@ -1018,9 +1018,9 @@ void DIMexplosionFn_8009a96c(u8 *src, f32 vx, f32 vy, f32 vz, f32 fval, u8 a, u8
         if (doShake != 0) {
             u8 *player = Obj_GetPlayerObject();
             if (player != NULL && (((GameObject *)player)->objectFlags & 0x1000) == 0) {
-                f32 d = Camera_DistanceToCurrentViewPosition(*(f32 *)(src + 0x18),
-                                                             *(f32 *)(src + 0x1c),
-                                                             *(f32 *)(src + 0x20));
+                f32 d = Camera_DistanceToCurrentViewPosition(((ObjAnimComponent *)src)->worldPosX,
+                                                             ((ObjAnimComponent *)src)->worldPosY,
+                                                             ((ObjAnimComponent *)src)->worldPosZ);
                 if (d <= lbl_803DF3B0) {
                     f32 t = lbl_803DF354 - d / lbl_803DF3B0;
                     CameraShake_Start(lbl_803DF3A0 * t, lbl_803DF384 * t, lbl_803DF3A4);
@@ -1039,9 +1039,9 @@ void spawnExplosion(u8 *src, f32 fval, u8 a, u8 flag4, u8 flag8, u8 flag10, u8 d
         obj = Obj_AllocObjectSetup(0x24, 0x253);
         *(u8 *)(obj + 4) = 2;
         *(u8 *)(obj + 5) = 1;
-        ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(src + 0x18);
-        ((GameObject *)obj)->anim.localPosX = *(f32 *)(src + 0x1c);
-        ((GameObject *)obj)->anim.localPosY = *(f32 *)(src + 0x20);
+        ((GameObject *)obj)->anim.rootMotionScale = ((ObjAnimComponent *)src)->worldPosX;
+        ((GameObject *)obj)->anim.localPosX = ((ObjAnimComponent *)src)->worldPosY;
+        ((GameObject *)obj)->anim.localPosY = ((ObjAnimComponent *)src)->worldPosZ;
         *(s8 *)(obj + 0x19) = (s8)a;
         *(s16 *)(obj + 0x1a) = (s16)(lbl_803DF3AC * fval);
         *(s16 *)(obj + 0x1c) = (u8)f1cinit;
@@ -1060,9 +1060,9 @@ void spawnExplosion(u8 *src, f32 fval, u8 a, u8 flag4, u8 flag8, u8 flag10, u8 d
         if (doShake != 0) {
             u8 *player = Obj_GetPlayerObject();
             if (player != NULL && (((GameObject *)player)->objectFlags & 0x1000) == 0) {
-                f32 d = Camera_DistanceToCurrentViewPosition(*(f32 *)(src + 0x18),
-                                                             *(f32 *)(src + 0x1c),
-                                                             *(f32 *)(src + 0x20));
+                f32 d = Camera_DistanceToCurrentViewPosition(((ObjAnimComponent *)src)->worldPosX,
+                                                             ((ObjAnimComponent *)src)->worldPosY,
+                                                             ((ObjAnimComponent *)src)->worldPosZ);
                 if (d <= lbl_803DF3B0) {
                     f32 t = lbl_803DF354 - d / lbl_803DF3B0;
                     CameraShake_Start(lbl_803DF3A0 * t, lbl_803DF384 * t, lbl_803DF3A4);

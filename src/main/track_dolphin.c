@@ -1796,8 +1796,8 @@ int FUN_80061024(int param_1,uint param_2)
     uVar4 = 1000;
     iVar3 = 2000;
   }
-  dVar5 = (double)FUN_80006958((double)*(float *)(param_1 + 0x18),(double)*(float *)(param_1 + 0x1c)
-                               ,(double)*(float *)(param_1 + 0x20));
+  dVar5 = (double)FUN_80006958((double)((ObjAnimComponent *)param_1)->worldPosX,(double)((ObjAnimComponent *)param_1)->worldPosY
+                               ,(double)((ObjAnimComponent *)param_1)->worldPosZ);
   fVar1 = (float)(dVar5 - (double)(f32)(s32)(uVar4)) /
           (f32)(s32)(iVar3 - uVar4);
   fVar2 = (fVar1 < lbl_803DF8D8) ? lbl_803DF8D8 : ((fVar1 > lbl_803DF8E8) ? lbl_803DF8E8 : fVar1);
@@ -1996,8 +1996,8 @@ int FUN_800614dc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefi
   ObjModelInstance *modelDef;
   
   uVar1 = roundUpTo4(param_10);
-  *(uint *)(param_9 + 100) = uVar1;
-  puVar4 = *(undefined4 **)(param_9 + 100);
+  *(uint *)&((ObjAnimComponent *)param_9)->modelState = uVar1;
+  puVar4 = *(undefined4 **)&((ObjAnimComponent *)param_9)->modelState;
   modelDef = ((ObjAnimComponent *)param_9)->modelInstance;
   if ((modelDef->shadowTextureId == -1) || (modelDef->shadowType == 2)) {
     if ((modelDef->renderFlags & 4) == 0) {

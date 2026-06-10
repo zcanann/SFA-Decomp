@@ -947,10 +947,10 @@ void FUN_8005bc0c(void)
         (*gModgfxInterface)->renderEffects(NULL,0,0,1,(void *)iVar6);
       }
       FUN_8003b878(0,0,0,0,iVar6,1);
-      iVar5 = *(int *)(iVar6 + 100);
+      iVar5 = *(int *)&((ObjAnimComponent *)iVar6)->modelState;
       if ((iVar5 == 0) || (*(int *)(iVar5 + 0xc) == 0)) {
         if ((modelDef->shadowType == 3) &&
-           (((*(ushort *)(iVar6 + 6) & 0x4000) == 0 && ((*(uint *)(iVar5 + 0x30) & 4) != 0)))) {
+           (((*(ushort *)&((ObjAnimComponent *)iVar6)->flags & 0x4000) == 0 && ((*(uint *)(iVar5 + 0x30) & 4) != 0)))) {
           lightmap_queueObjectRenderEntry(iVar6,0x13,0);
           (&DAT_8037ed2c)[DAT_803ddab0 * 4] = 3;
           DAT_803ddab0 = DAT_803ddab0 + 1;

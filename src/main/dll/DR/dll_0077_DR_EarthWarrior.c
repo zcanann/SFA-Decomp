@@ -922,7 +922,7 @@ void DR_EarthWarrior_hitDetect(int obj)
     rows = lbl_802C2CC0;
     if (!(((GameObject *)obj)->objectFlags & 0x1000)) {
         if (((ObjHitsPriorityState *)p54)->contactFlags != 0) {
-            int i = *(s8 *)((char *)p54 + 0xac);
+            int i = *(s8 *)&((ObjHitsPriorityState *)p54)->contactHitVolume;
             if (i < 0) {
                 i = 0;
             } else if (i > 0x23) {
@@ -932,9 +932,9 @@ void DR_EarthWarrior_hitDetect(int obj)
             v.angles[2] = 0;
             v.angles[1] = 0;
             v.angles[0] = 0;
-            v.mat[1] = *(f32 *)((char *)p54 + 0x3c);
-            v.mat[2] = *(f32 *)((char *)p54 + 0x40);
-            v.mat[3] = *(f32 *)((char *)p54 + 0x44);
+            v.mat[1] = ((ObjHitsPriorityState *)p54)->contactPosX;
+            v.mat[2] = ((ObjHitsPriorityState *)p54)->contactPosY;
+            v.mat[3] = ((ObjHitsPriorityState *)p54)->contactPosZ;
             (*(void (*)(int, int, void *, int, int, void *))(*(int *)(*(int *)lbl_803DE4D0 + 0x4)))(0, 1, &v, 0x401, -1, rows.m[lbl_803352AC[i]]);
             ((ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState)->suppressOutgoingHits = 1;
             doRumble(lbl_803E8330);

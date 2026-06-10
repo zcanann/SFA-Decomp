@@ -449,8 +449,8 @@ void FUN_801cf1a0(undefined8 param_1,double param_2,double param_3,undefined8 pa
     *(byte *)(iVar6 + 0x43c) = *(byte *)(iVar6 + 0x43c) & 0xdf;
   }
   uVar2 = FUN_80017a98();
-  *(undefined4 *)(iVar6 + 0x28) = uVar2;
-  if (*(int *)(iVar6 + 0x28) == 0) {
+  *(undefined4 *)&((NwMammothState *)iVar6)->playerObject = uVar2;
+  if (*(int *)&((NwMammothState *)iVar6)->playerObject == 0) {
     return;
   }
   if (((&gNwMammothStateFlags)[*(byte *)(iVar6 + 0x408)] & 0x20) == 0) {
@@ -476,8 +476,8 @@ void FUN_801cf1a0(undefined8 param_1,double param_2,double param_3,undefined8 pa
       return;
     }
   }
-  dVar8 = FUN_80017714((float *)(param_9 + 0xc),(float *)(*(int *)(iVar6 + 0x28) + 0x18));
-  *(float *)(iVar6 + 0x18) = (float)dVar8;
+  dVar8 = FUN_80017714((float *)(param_9 + 0xc),(float *)(*(int *)&((NwMammothState *)iVar6)->playerObject + 0x18));
+  ((NwMammothState *)iVar6)->playerDistanceSq = (float)dVar8;
   cVar1 = *(char *)(iVar5 + 0x1d);
   if (cVar1 == '\x02') {
     nw_mammoth_update((NwMammothObject *)param_9,iVar6);
@@ -528,10 +528,10 @@ LAB_801cf840:
       FUN_800305f8((double)lbl_803E5EA4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                    param_9,iVar5,0,uVar4,in_r7,in_r8,in_r9,in_r10);
     }
-    *(undefined4 *)(iVar6 + 0x4c) =
+    *(undefined4 *)&((NwMammothState *)iVar6)->animStepScale =
          *(undefined4 *)(&gNwMammothStateMoveStepScales + (uint)*(byte *)(iVar6 + 0x408) * 4);
   }
-  iVar5 = FUN_8002fc3c((double)*(float *)(iVar6 + 0x4c),(double)lbl_803DC074);
+  iVar5 = FUN_8002fc3c((double)((NwMammothState *)iVar6)->animStepScale,(double)lbl_803DC074);
   if (iVar5 == 0) {
     *(byte *)(iVar6 + 0x43c) = *(byte *)(iVar6 + 0x43c) & 0xfd;
   }
@@ -544,9 +544,9 @@ LAB_801cf840:
   *(byte *)(iVar6 + 0x43c) = *(byte *)(iVar6 + 0x43c) & 0xfb;
   if (((*(byte *)(iVar6 + 0x43c) & 0x10) == 0) && (iVar5 = ObjTrigger_IsSet((int)param_9), iVar5 != 0))
   {
-    uVar4 = randomGetRange(1,(uint)**(byte **)(iVar6 + 0x48));
+    uVar4 = randomGetRange(1,(uint)**(byte **)&((NwMammothState *)iVar6)->triggerList);
     *(byte *)(iVar6 + 0x43c) = *(byte *)(iVar6 + 0x43c) | 4;
-    (*gObjectTriggerInterface)->runSequence(*(u8 *)(*(int *)(iVar6 + 0x48) + uVar4),
+    (*gObjectTriggerInterface)->runSequence(*(u8 *)(*(int *)&((NwMammothState *)iVar6)->triggerList + uVar4),
                                             (void *)param_9, -1);
   }
   if ((*(byte *)(iVar6 + 0x43c) & 1) != 0) {

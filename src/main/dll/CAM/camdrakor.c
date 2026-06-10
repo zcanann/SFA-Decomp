@@ -161,24 +161,24 @@ void CameraModeCombat_update(short *cam)
 
     if (lbl_803DD568->invalidTarget != 0) {
         if (((CameraObject *)cam)->targetObj != NULL) {
-            if ((*(u8 *)(*(int *)((char *)cam + 0x11c) + 0xaf) & 0x40) || (((CameraObject *)cam)->unk141 & 2)) {
+            if ((*(u8 *)(*(int *)&((CameraObject *)cam)->targetObj + 0xaf) & 0x40) || (((CameraObject *)cam)->unk141 & 2)) {
                 return;
             }
             (*gCameraInterface)->setTarget(0);
         }
         (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
     } else {
-        focus = *(int *)((char *)cam + 0xa4);
+        focus = *(int *)&((CameraObject *)cam)->anim.targetObj;
         if (((GameObject *)focus)->anim.classId == 1 && objAnimFn_80296328(focus) == 0) {
             if (((CameraObject *)cam)->targetObj != NULL) {
-                if ((*(u8 *)(*(int *)((char *)cam + 0x11c) + 0xaf) & 0x40) || (((CameraObject *)cam)->unk141 & 2)) {
+                if ((*(u8 *)(*(int *)&((CameraObject *)cam)->targetObj + 0xaf) & 0x40) || (((CameraObject *)cam)->unk141 & 2)) {
                     return;
                 }
                 (*gCameraInterface)->setTarget(0);
             }
             (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
         } else {
-            tgt = *(char **)((char *)cam + 0x11c);
+            tgt = *(char **)&((CameraObject *)cam)->targetObj;
             if (tgt == NULL || (((GameObject *)tgt)->objectFlags & 0x40) || (*(u8 *)&((GameObject *)tgt)->anim.resetHitboxMode & 0x28)) {
                 if (tgt != NULL) {
                     if ((*(u8 *)&((GameObject *)tgt)->anim.resetHitboxMode & 0x40) || (((CameraObject *)cam)->unk141 & 2)) {
@@ -193,7 +193,7 @@ void CameraModeCombat_update(short *cam)
                     range = (f32)(s32)((u32)*(u8 *)(*(int *)(*(int *)&((GameObject *)tgt)->anim.modelInstance + 0x40) + 0xd) << 2);
                     if (((u16)getButtonsJustPressed(0) & 0x200) && (int)fn_8029630C(focus) != 0) {
                         if (((CameraObject *)cam)->targetObj != NULL) {
-                            if ((*(u8 *)(*(int *)((char *)cam + 0x11c) + 0xaf) & 0x40) || (((CameraObject *)cam)->unk141 & 2)) {
+                            if ((*(u8 *)(*(int *)&((CameraObject *)cam)->targetObj + 0xaf) & 0x40) || (((CameraObject *)cam)->unk141 & 2)) {
                                 return;
                             }
                             (*gCameraInterface)->setTarget(0);
@@ -224,7 +224,7 @@ void CameraModeCombat_update(short *cam)
                         ((CameraObject *)cam)->unk13C = 1;
                         if (dist > range) {
                             if (((CameraObject *)cam)->targetObj != NULL) {
-                                if ((*(u8 *)(*(int *)((char *)cam + 0x11c) + 0xaf) & 0x40) || (((CameraObject *)cam)->unk141 & 2)) {
+                                if ((*(u8 *)(*(int *)&((CameraObject *)cam)->targetObj + 0xaf) & 0x40) || (((CameraObject *)cam)->unk141 & 2)) {
                                     return;
                                 }
                                 (*gCameraInterface)->setTarget(0);
@@ -356,7 +356,7 @@ void CameraModeCombat_update(short *cam)
                             }
                             Obj_TransformWorldPointToLocal(*(f32 *)((char *)cam + 0x18), ((CameraObject *)cam)->anim.worldPosY, ((CameraObject *)cam)->anim.worldPosZ,
                                                            (f32 *)((char *)cam + 0xc), (f32 *)((char *)cam + 0x10), (f32 *)((char *)cam + 0x14),
-                                                           *(int *)((char *)cam + 0x30));
+                                                           *(int *)&((CameraObject *)cam)->anim.parent);
                         }
                     }
                 }
@@ -540,7 +540,7 @@ void CameraModeShipBattle_update(short *cam)
     lbl_803DD570->lateralOffset = lbl_803DD570->lateralOffset + r;
     Obj_TransformWorldPointToLocal(((CameraObject *)cam)->anim.worldPosX, ((CameraObject *)cam)->anim.worldPosY, ((CameraObject *)cam)->anim.worldPosZ,
                                    (f32 *)((char *)cam + 0xc), (f32 *)((char *)cam + 0x10), (f32 *)((char *)cam + 0x14),
-                                   *(int *)((char *)cam + 0x30));
+                                   *(int *)&((CameraObject *)cam)->anim.parent);
 }
 
 /*

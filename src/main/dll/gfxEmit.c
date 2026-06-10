@@ -494,14 +494,14 @@ void FUN_8017308c(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   iVar2 = *(int *)(iVar1 + 0xb8);
   if ((((visible != 0) && (*(float *)(iVar2 + 8) == lbl_803E40F4)) &&
       (*(int *)(iVar1 + 0xf4) == 0)) &&
-     ((*(short *)(iVar1 + 0x46) == 0x156 || (*(char *)(iVar2 + 0x1e) == '\0')))) {
+     ((((ObjAnimComponent *)iVar1)->seqId == 0x156 || (*(char *)(iVar2 + 0x1e) == '\0')))) {
     if (((((ObjAnimComponent *)iVar1)->modelInstance->flags & 0x10000) != 0) &&
        (*(char *)(iVar2 + 0x36) != '\0')) {
       FUN_8003b56c((ushort)*(byte *)(iVar2 + 0x38),(ushort)*(byte *)(iVar2 + 0x39),
                    (ushort)*(byte *)(iVar2 + 0x3a));
     }
     FUN_8003b818(iVar1);
-    if (*(short *)(iVar1 + 0x46) == 0xa8) {
+    if (((ObjAnimComponent *)iVar1)->seqId == 0xa8) {
       FUN_800810f4((double)lbl_803E40EC,(double)lbl_803E4124,iVar1,7,5,1,10,0,0x20000000);
     }
   }

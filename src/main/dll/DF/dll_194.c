@@ -135,7 +135,7 @@ void dfropenode_render2(f32 phase, f32 force, int obj)
   node = **(int **)(extra + 0x2c) + idx * 0x34;
   *(f32 *)(node + 0x1c) = force * fraction + *(f32 *)(node + 0x1c);
   fraction = lbl_803E4E18 - fraction;
-  node = **(int **)(extra + 0x2c) + idx * 0x34;
+  node = **(int **)&((DFropenodeExtra *)extra)->rope + idx * 0x34;
   *(f32 *)(node + 0x1c) = force * fraction + *(f32 *)(node + 0x1c);
 }
 
@@ -169,8 +169,8 @@ void dfropenode_modelMtxFn(f32 distance, int obj, float *phase)
   raw = (s32)ph;
   idx = (s8)raw;
   *phase = ph - (f32)idx;
-  x0 = *((f32 *)**(int **)(extra + 0x2c) + idx * 13);
-  node = **(int **)(extra + 0x2c) + idx * 0x34;
+  x0 = *((f32 *)**(int **)&((DFropenodeExtra *)extra)->rope + idx * 13);
+  node = **(int **)&((DFropenodeExtra *)extra)->rope + idx * 0x34;
   dx = x0 - *(f32 *)(node + 0x34);
   dz = *(f32 *)(node + 8) - *(f32 *)(node + 0x3c);
   len = sqrtf(dx * dx + dz * dz);

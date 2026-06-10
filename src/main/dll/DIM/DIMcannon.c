@@ -1683,8 +1683,8 @@ void FUN_801b05b0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
         *(undefined *)(iVar3 + 0x6e) = 0xb;
         *(undefined *)(iVar3 + 0x6f) = 1;
         *(undefined4 *)(iVar3 + 0x48) = 0x10;
-        *(undefined4 *)(iVar3 + 0x4c) = 0x10;
-        if (*(int *)(iVar3 + 0x50) != 0) {
+        *(undefined4 *)&((ObjAnimComponent *)iVar3)->placementData = 0x10;
+        if (*(int *)&((ObjAnimComponent *)iVar3)->modelInstance != 0) {
           if (*(char *)(iVar4 + 0x11) == '\0') {
             *(undefined *)(iVar4 + 0x11) = 10;
             FUN_8008112c((double)lbl_803E5494,dVar5,dVar6,param_4,param_5,param_6,param_7,param_8,

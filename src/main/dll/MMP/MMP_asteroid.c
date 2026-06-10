@@ -1140,7 +1140,7 @@ void FUN_80195b9c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       }
       if (((*(byte *)(iVar8 + 0x3c) & 4) != 0) && (*(char *)(param_9 + 0x1b) == -1)) {
         dVar15 = (double)(*(float *)(param_9 + 6) - *(float *)(param_9 + 0x40));
-        dVar14 = (double)(*(float *)(param_9 + 8) - *(float *)(param_9 + 0x42));
+        dVar14 = (double)(((ObjAnimComponent *)param_9)->rootMotionScale - *(float *)(param_9 + 0x42));
         dVar13 = (double)(*(float *)(param_9 + 10) - *(float *)(param_9 + 0x44));
         uVar6 = 0;
         dVar10 = (double)lbl_803E4CF4;

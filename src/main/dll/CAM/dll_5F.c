@@ -75,7 +75,7 @@ void CameraModeTestStrength_update(short *cam)
   if (lbl_803DD560->pathFailed != 0) {
     (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
   } else {
-    obj = *(int *)((char *)cam + 0xa4);
+    obj = *(int *)&((CameraObject *)cam)->anim.targetObj;
     getButtonsJustPressed(0);
     node = (int)(*gRomCurveInterface)->getById(lbl_803DD560->nextNodeId);
     node2 = (int)(*gRomCurveInterface)->getById(lbl_803DD560->prevNodeId);
@@ -232,7 +232,7 @@ void CameraModeTestStrength_init(short *cam, int param2, int *param3)
   f32 zS[4];
   int tags[2];
 
-  obj = *(int *)((char *)cam + 0xa4);
+  obj = *(int *)&((CameraObject *)cam)->anim.targetObj;
   if (lbl_803DD560 == 0) {
     lbl_803DD560 = (CamCannonState *)mmAlloc(sizeof(CamCannonState), 0xf, 0);
   }

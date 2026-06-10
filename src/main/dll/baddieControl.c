@@ -899,7 +899,7 @@ void FUN_8010edc4(int param_1,int param_2)
     ((CameraObject *)iVar2)->probePosZ = local_40;
     FUN_800068f4((double)((CameraObject *)iVar2)->anim.worldPosX,(double)((CameraObject *)iVar2)->anim.worldPosY,
                  (double)((CameraObject *)iVar2)->anim.worldPosZ,(float *)(iVar2 + 0xc),(float *)(iVar2 + 0x10),
-                 (float *)(iVar2 + 0x14),*(int *)(iVar2 + 0x30));
+                 (float *)(iVar2 + 0x14),*(int *)&((CameraObject *)iVar2)->anim.parent);
     *(byte *)(DAT_803de210 + 8) = *(byte *)(DAT_803de210 + 8) & 0x7f | 0x80;
   }
   return;

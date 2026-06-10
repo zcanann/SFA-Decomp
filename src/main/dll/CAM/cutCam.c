@@ -364,7 +364,7 @@ int cameraFn_80103b40(short *cam, f32 *outA, f32 *outB, int angle)
   result = 0;
   (*gCameraInterface)->getRelativePosition(cameraMtxVar57->targetHeight, (int)cam,
                                            &spinB, &spinC, &spinD, &spinA, 0);
-  tgt0 = *(int *)((char *)cam + 0xa4);
+  tgt0 = *(int *)&((CameraObject *)cam)->anim.targetObj;
   *(int *)&probe[35] = tgt0;
   probe[1] = ((CameraObject *)cam)->anim.worldPosY;
   pathA[0] = ((CameraObject *)cam)->anim.worldPosX;
@@ -395,7 +395,7 @@ int cameraFn_80103b40(short *cam, f32 *outA, f32 *outB, int angle)
     if (found1 == -1) {
       dx = spinD;
       dz = spinB;
-      tgt = *(int *)((char *)cam + 0xa4);
+      tgt = *(int *)&((CameraObject *)cam)->anim.targetObj;
       rad = (lbl_803E168C * (f32)(s16)ang) / lbl_803E1690;
       cosv = mathSinf(rad);
       sinv = mathCosf(rad);
@@ -415,7 +415,7 @@ int cameraFn_80103b40(short *cam, f32 *outA, f32 *outB, int angle)
     if (found2 == -1) {
       dx = spinD;
       dz = spinB;
-      tgt = *(int *)((char *)cam + 0xa4);
+      tgt = *(int *)&((CameraObject *)cam)->anim.targetObj;
       rad = (lbl_803E168C * (f32)(s16)(-s * 0xb6)) / lbl_803E1690;
       cosv = mathSinf(rad);
       sinv = mathCosf(rad);

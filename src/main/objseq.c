@@ -2001,9 +2001,9 @@ int ObjSeq_ExecuteActionCommand(u8 *obj, u8 *action, u8 **cmdPtr, int flags, voi
         if (((GameObject *)activeObj)->anim.classId == 1) {
             act2 = ObjSeq_GetActiveModel(activeObj);
             animState = *(u8 **)(act2 + 0x2c);
-            *(s16 *)(animState + 0x64) = -1;
-            *(s16 *)(animState + 0x5a) = 0;
-            *(s16 *)(animState + 0x5c) = 0;
+            ((ObjAnimState *)animState)->lastBlendMoveIndex = -1;
+            *(s16 *)&((ObjAnimState *)animState)->eventState = 0;
+            *(s16 *)&((ObjAnimState *)animState)->prevEventState = 0;
             st2 = *(u8 **)(act2 + 0x30);
             if (st2 != NULL) {
                 *(s16 *)(st2 + 0x64) = -1;

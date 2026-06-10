@@ -976,7 +976,7 @@ void CameraModeStatic_init(u8 *cam, int p2, int *p3)
   }
   Obj_TransformWorldPointToLocal(((CameraObject *)cam)->anim.worldPosX, ((CameraObject *)cam)->anim.worldPosY, ((CameraObject *)cam)->anim.worldPosZ,
                                  (f32 *)(cam + 12), (f32 *)(cam + 16), (f32 *)(cam + 20),
-                                 *(int *)(cam + 48));
+                                 *(int *)&((CameraObject *)cam)->anim.parent);
 }
 
 
