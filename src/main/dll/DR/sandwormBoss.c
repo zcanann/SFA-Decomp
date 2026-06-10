@@ -3396,7 +3396,7 @@ void sandworm_turnTowardTargetAnim(int* a, int* b, u8* c, int d)
  * lit/active state from gamebit 0x44 and notify on completion. */
 #pragma scheduling off
 #pragma peephole off
-int cfprisoncage_SeqFn(int* obj, int p2, u8* p3)
+int cfprisoncage_SeqFn(int* obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     int msg;
     int v;
@@ -3404,7 +3404,7 @@ int cfprisoncage_SeqFn(int* obj, int p2, u8* p3)
     u8* sub = *(u8**)&((GameObject *)obj)->anim.placementData;
     if (GameBit_Get(*(s16*)(sub + 0x18)) != 0) {
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x8);
-        *(u8*)((char*)p3 + 0x90) = (u8)(*(u8*)((char*)p3 + 0x90) | 0x4);
+        animUpdate->sequenceControlFlags |= 4;
         return 0;
     }
     if (((GameObject *)obj)->anim.seqId == 0x127) {
@@ -3998,9 +3998,9 @@ int fn_8019FC84(int *obj, int unused, ObjAnimUpdateState *animUpdate) {
 
 /* GameBit-gated byte write. */
 #pragma scheduling off
-int fn_801A04F4(int p1, int p2, void *p3) {
+int fn_801A04F4(int obj, int unused, ObjAnimUpdateState *animUpdate) {
     if (GameBit_Get(0x4d) != 0) {
-        *(u8*)((char*)p3 + 0x90) = 4;
+        animUpdate->sequenceControlFlags = 4;
     }
     return 0;
 }

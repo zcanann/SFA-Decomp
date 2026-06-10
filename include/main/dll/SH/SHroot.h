@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_SH_SHROOT_H_
 #define MAIN_DLL_SH_SHROOT_H_
 
+#include "main/objanim_update.h"
 #include "main/dll/SH/SHthorntail_internal.h"
 
 void SHthorntail_updateRootControlMode3(SHthorntailObject *obj,SHthorntailRuntime *runtime);
@@ -9,7 +10,8 @@ void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runti
                                          SHthorntailConfig *config);
 void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRuntime *runtime,
                                          SHthorntailConfig *config);
-undefined4 SHthorntail_updateLevelControlState(SHthorntailObject *obj,undefined4 param_2,int param_3);
+undefined4 SHthorntail_updateLevelControlState(SHthorntailObject *obj,int unused,
+                                               ObjAnimUpdateState *animUpdate);
 int SHthorntail_getExtraSize(void);
 void SHthorntail_free(SHthorntailObject *obj);
 

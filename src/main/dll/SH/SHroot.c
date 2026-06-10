@@ -235,7 +235,8 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 SHthorntail_updateLevelControlState(SHthorntailObject *obj,undefined4 param_2,int param_3)
+undefined4 SHthorntail_updateLevelControlState(SHthorntailObject *obj,int unused,
+                                               ObjAnimUpdateState *animUpdate)
 {
   SHthorntailRuntime *runtime;
   int randomIdleWait;
@@ -258,16 +259,15 @@ undefined4 SHthorntail_updateLevelControlState(SHthorntailObject *obj,undefined4
   }
   impactPending = (int)(runtime->behaviorFlags & SHTHORNTAIL_FLAG_IMPACT_PENDING);
   if (impactPending != 0) {
-    impactHandled = dll_2E_func07((int)obj,param_3,(int)runtime,0,0);
+    impactHandled = dll_2E_func07((int)obj,(int)animUpdate,(int)runtime,0,0);
     if (impactHandled != 0) {
       return 0;
     }
-    *(short *)(param_3 + 0x6e) =
-        *(short *)(param_3 + 0x6e) & ~SHTHORNTAIL_LEVELCONTROL_COLLISION_FLAG;
+    animUpdate->hitVolumePair &= ~SHTHORNTAIL_LEVELCONTROL_COLLISION_FLAG;
     characterDoEyeAnims((int)obj,(int)runtime->collisionShapeState);
   }
   runtime->activeMoveValid = 0;
-  objAudioFn_8006ef38((int)obj,param_3 + 0xf0,8,(int)runtime->renderPathPoints,
+  objAudioFn_8006ef38((int)obj,(int)&animUpdate->animEvents,8,(int)runtime->renderPathPoints,
               (int)runtime->moveScratch,lbl_803E5448,lbl_803E5448);
   return 0;
 }

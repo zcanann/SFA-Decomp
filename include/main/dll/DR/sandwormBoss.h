@@ -116,6 +116,8 @@ void FUN_8019f16c(int param_1);
 void FUN_8019f1ac(int param_1);
 void FUN_8019f1dc(void);
 int cfguardian_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate);
+int fn_801A04F4(int obj, int unused, ObjAnimUpdateState *animUpdate);
+int cfprisoncage_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate);
 int cfpowerbase_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 int cfprisonguard_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate);
 
