@@ -1143,7 +1143,7 @@ void fuelcell_render(int* obj, int p2, int p3, int p4, int p5)
     u8 pickCount;
     f32 angle;
     f32 scale;
-    int* candidates[10];
+    int* candidates[8];
     f32 pos[3];
     int objCount;
 
