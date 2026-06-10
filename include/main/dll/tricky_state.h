@@ -16,21 +16,21 @@ typedef struct TrickyState {
     int playerObj; /* owning player/sidekick object */
     u8 unk08;
     u8 unk09;
-    u8 unkA;
+    u8 substate; /* anim-sequence substate 0..7 */
     u8 unk0B;
     u8 unk0C;
     s8 unkD;
     u8 padE[0x10 - 0xE];
-    f32 unk10;
-    f32 unk14;
+    f32 prevSpeed;
+    f32 speed; /* planar speed magnitude, multiplied into dirX/dirZ */
     f32 unk18;
     u8 pad1C[0x20 - 0x1C];
-    int unk20;
-    u8 *unk24;
+    int moveId; /* compared to anim.currentMove, passed to ObjAnim_SetCurrentMove */
+    u8 *followObj; /* the followed object (playerObj/target/found stores; dll vtable dispatched) */
     u8 *unk28;
-    f32 unk2C;
-    f32 unk30;
-    f32 unk34;
+    f32 dirX; /* normalized planar direction (pos delta / length) */
+    f32 dirZ;
+    f32 moveProgress; /* passed to ObjAnim_SetMoveProgress */
     f32 unk38;
     f32 unk3C;
     f32 unk40;
@@ -38,7 +38,7 @@ typedef struct TrickyState {
     f32 unk48;
     f32 unk4C;
     u32 unk50;
-    u32 unk54;
+    u32 stateFlags; /* the TRICKY state flag word (bit masks 0x80..0x100000) */
     u8 unk58;
     u8 pad59[0x5A - 0x59];
     s16 unk5A;
@@ -66,7 +66,7 @@ typedef struct TrickyState {
     u8 unk260;
     u8 unk261;
     u8 pad262[0x264 - 0x262];
-    u8 unk264;
+    u8 surfaceFlags; /* TRICKY_SURFACE_FLAG_* (HAS_NEARBY_FLOOR etc.) */
     u8 pad265[0x290 - 0x265];
     s16 pathRotY;
     s16 pathRotZ;
@@ -89,7 +89,7 @@ typedef struct TrickyState {
     f32 unk2D8;
     u32 flags2DC; /* flag word */
     u32 unk2E0;
-    u32 unk2E4;
+    u32 controlFlags; /* TRICKY_CONTROL_FLAG_* (collectable.c macro set) */
     u32 unk2E8;
     u8 pad2EC[0x2EF - 0x2EC];
     u8 unk2EF;
@@ -210,7 +210,7 @@ typedef struct TrickyState {
 } TrickyState;
 
 STATIC_ASSERT(sizeof(TrickyState) == 0x840);
-STATIC_ASSERT(offsetof(TrickyState, unk54) == 0x54);
+STATIC_ASSERT(offsetof(TrickyState, stateFlags) == 0x54);
 STATIC_ASSERT(offsetof(TrickyState, pathRotY) == 0x290);
 STATIC_ASSERT(offsetof(TrickyState, lastContactObj) == 0x360);
 STATIC_ASSERT(offsetof(TrickyState, hitCooldown) == 0x370);

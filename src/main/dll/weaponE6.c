@@ -79,11 +79,11 @@ void fn_8013F100(int obj, register int state)
     f32 fz;
     u8 *pTgt;
 
-    switch (((TrickyState *)state)->unkA) {
+    switch (((TrickyState *)state)->substate) {
     case 0:
-        *(int *)&((TrickyState *)state)->unk700 = *(int *)&((TrickyState *)state)->unk24;
+        *(int *)&((TrickyState *)state)->unk700 = *(int *)&((TrickyState *)state)->followObj;
         *(float *)&((TrickyState *)state)->unk704 = lbl_803E24EC;
-        ((TrickyState *)state)->unkA = 1;
+        ((TrickyState *)state)->substate = 1;
         ((TrickyState *)state)->unk7A4 = (f32)(s32)randomGetRange(150, 300);
         if (fn_80179650(*(int *)&((TrickyState *)state)->unk700) != 0) {
             iVar2 = trickyFn_8013b368(obj, lbl_803E24F0, state);
@@ -102,8 +102,8 @@ void fn_8013F100(int obj, register int state)
                 } else {
                     objAnimFn_8013a3f0(obj, 17, lbl_803E24F4, 0x4000000);
                 }
-                *(int *)&((TrickyState *)state)->unk54 |= 0x10;
-                ((TrickyState *)state)->unkA = 3;
+                *(int *)&((TrickyState *)state)->stateFlags |= 0x10;
+                ((TrickyState *)state)->substate = 3;
                 fn_80179678(*(int *)&((TrickyState *)state)->unk700, obj);
             } else if (iVar2 == 2) {
                 iVar3 = *(int *)&((GameObject *)obj)->extra;
@@ -116,7 +116,7 @@ void fn_8013F100(int obj, register int state)
                     }
                 }
                 ((TrickyState *)state)->unk08 = 1;
-                ((TrickyState *)state)->unkA = 0;
+                ((TrickyState *)state)->substate = 0;
                 fz = lbl_803E23DC;
                 ((TrickyState *)state)->unk71C = fz;
                 ((TrickyState *)state)->unk720 = fz;
@@ -216,11 +216,11 @@ void fn_8013F100(int obj, register int state)
             fn_801796BC(*(int *)&((TrickyState *)state)->unk700, obj,
                         -mathSinf(lbl_803E2454 * (f32)(s32)*(short *)obj / lbl_803E2458),
                         lbl_803E23E8, dVar);
-            ((TrickyState *)state)->unkA = 2;
+            ((TrickyState *)state)->substate = 2;
         }
         break;
     case 2:
-        if ((((TrickyState *)state)->unk54 & 0x8000000) != 0) {
+        if ((((TrickyState *)state)->stateFlags & 0x8000000) != 0) {
             *(float *)(state + 0x828) = lbl_803E2408;
             iVar2 = ((TrickyState *)state)->progressPtr;
             if (*(u8 *)(iVar2 + 2) >= 0xef) {
@@ -229,8 +229,8 @@ void fn_8013F100(int obj, register int state)
                 *(u8 *)(iVar2 + 2) += 1;
             }
             *(u32 *)(state + TRICKY_STATE_FLAGS_OFFSET) &= ~(u64)TRICKY_STATE_RESET_FLAG_10;
-            ((TrickyState *)state)->unkA = 7;
-            pTgt = ((TrickyState *)state)->unk24 + 24;
+            ((TrickyState *)state)->substate = 7;
+            pTgt = ((TrickyState *)state)->followObj + 24;
             if (((TrickyState *)state)->unk28 != pTgt) {
                 ((TrickyState *)state)->unk28 = pTgt;
                 TRICKY_CLEAR_TARGET_DIRTY(state);
@@ -261,14 +261,14 @@ void fn_8013F100(int obj, register int state)
             }
             return;
         }
-        if (fn_801793A4(*(int *)&((TrickyState *)state)->unk24) != 0) {
+        if (fn_801793A4(*(int *)&((TrickyState *)state)->followObj) != 0) {
             *(float *)&((TrickyState *)state)->unk704 = lbl_803E24EC;
-            ((TrickyState *)state)->unkA = 1;
+            ((TrickyState *)state)->substate = 1;
         }
         break;
     case 4:
         if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E24A8) {
-            ((TrickyState *)state)->unkA = 4;
+            ((TrickyState *)state)->substate = 4;
         }
         break;
     case 5:
@@ -279,7 +279,7 @@ void fn_8013F100(int obj, register int state)
                 TRICKY_CLEAR_TARGET_DIRTY(state);
                 *(short *)&((TrickyState *)state)->unkD2 = 0;
             }
-            ((TrickyState *)state)->unkA = 5;
+            ((TrickyState *)state)->substate = 5;
             if (trickyFn_8013b368(obj, lbl_803E24C8, state) == 0) {
                 if (lbl_803E23DC == ((TrickyState *)state)->unk2AC) {
                     iVar4 = 0;
@@ -295,7 +295,7 @@ void fn_8013F100(int obj, register int state)
                 } else {
                     objAnimFn_8013a3f0(obj, 19, lbl_803E24F4, 0x4000000);
                 }
-                ((TrickyState *)state)->unkA = 6;
+                ((TrickyState *)state)->substate = 6;
             }
         }
         break;
@@ -303,9 +303,9 @@ void fn_8013F100(int obj, register int state)
     case 7:
         break;
     }
-    if (((((TrickyState *)state)->unk54 & 0x10000) != 0) &&
+    if (((((TrickyState *)state)->stateFlags & 0x10000) != 0) &&
         ViewFrustum_IsSphereVisible(obj + 0xc, lbl_803E2500) == 0) {
-        Obj_FreeObject(*(int *)&((TrickyState *)state)->unk24);
+        Obj_FreeObject(*(int *)&((TrickyState *)state)->followObj);
     } else {
         fn_8017962C(*(int *)&((TrickyState *)state)->unk700);
     }
@@ -349,7 +349,7 @@ void fn_8013F9E4(int obj, int state)
             } else {
                 switch (((GameObject *)obj)->anim.currentMove) {
                 case 13:
-                    if ((((TrickyState *)state)->unk54 & 0x8000000) != 0) {
+                    if ((((TrickyState *)state)->stateFlags & 0x8000000) != 0) {
                         objAnimFn_8013a3f0(obj, 49, lbl_803E243C, 0);
                     }
                     break;
@@ -383,12 +383,12 @@ void fn_8013FBE4(int obj, register int state)
     u8 bitIndex;
     u8 newBit;
 
-    switch (((TrickyState *)state)->unkA) {
+    switch (((TrickyState *)state)->substate) {
     case 0:
         newBit = GameBit_Get(0x48b);
         ((WeaponNibble *)(state + 0x700))->hi = newBit;
         *(int *)&((TrickyState *)state)->unk710 = 0;
-        ((TrickyState *)state)->unkA = 1;
+        ((TrickyState *)state)->substate = 1;
         /* fall through */
     case 1:
         currentBit = GameBit_Get(0x48b);
@@ -397,7 +397,7 @@ void fn_8013FBE4(int obj, register int state)
             ((WeaponNibble *)(state + 0x700))->hi = bitIndex + 1;
             **(u8 **)state -= 2;
         }
-        targetPos = (float *)fn_801CDE70(*(int *)&((TrickyState *)state)->unk24);
+        targetPos = (float *)fn_801CDE70(*(int *)&((TrickyState *)state)->followObj);
         trackedObj = (u8 *)tumbleweedbush_findNearestActive();
         if (trackedObj != 0 && **(u8 **)state != 0) {
             if (trackedObj != *(u8 **)&((TrickyState *)state)->unk710 &&
@@ -439,7 +439,7 @@ void fn_8013FBE4(int obj, register int state)
             }
         } else {
             ((TrickyState *)state)->unk08 = 1;
-            ((TrickyState *)state)->unkA = 0;
+            ((TrickyState *)state)->substate = 0;
             fz = lbl_803E23DC;
             ((TrickyState *)state)->unk71C = fz;
             ((TrickyState *)state)->unk720 = fz;

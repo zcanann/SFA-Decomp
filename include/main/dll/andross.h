@@ -11,8 +11,8 @@
  */
 typedef struct AndrossState {
     int unk0;
-    int unk4;
-    int unk8;
+    int handObjA; /* ObjList_FindObjectById(0x47b78); driven via androsshand_setState */
+    int handObjB; /* ObjList_FindObjectById(0x47b6a); driven via androsshand_setState */
     int unkC;
     int unk10;
     int unk14;
@@ -26,32 +26,32 @@ typedef struct AndrossState {
     u8 unk46[0x4C - 0x46];
     int unk4C;
     u8 unk50[0x58 - 0x50];
-    f32 unk58;
-    f32 unk5C;
-    f32 unk60;
-    f32 unk64;
-    f32 unk68;
+    f32 homePosX; /* anchor position from the placement (setup->posX/Y/Z) */
+    f32 homePosY;
+    f32 homePosZ;
+    f32 animSpeed; /* passed with ObjAnim_SetCurrentMove */
+    f32 fadeAlpha; /* mesh alpha source (alpha = K * fadeAlpha) */
     f32 unk6C;
     f32 unk70;
-    f32 unk74;
-    f32 unk78;
-    int unk7C;
-    int unk80;
-    int unk84;
-    int unk88;
-    int unk8C;
+    f32 springStiffness; /* vel += stiffness * (targetPos - pos) */
+    f32 springDamping; /* vel *= damping each tick */
+    int fightPhase; /* phase switch (1/2/5/6...) */
+    int prevFightPhase; /* change-detect latch for fightPhase */
+    int actionPending; /* set when timers expire; drives the actionState switch */
+    int actionState; /* main action state machine (switch 0..0xd) */
+    int prevActionState; /* change-detect latch for actionState */
     int unk90;
     int unk94;
-    s16 unk98;
+    s16 actionTimer; /* frames; -= framesThisStep, re-armed from config on expiry */
     u8 unk9A[0x9C - 0x9A];
-    f32 unk9C;
+    f32 durationTimer; /* seconds; -= timeDelta, compared to thresholds */
     s16 unkA0;
     s16 unkA2;
     s16 unkA4;
     s16 unkA6;
     f32 unkA8;
     u8 unkAC;
-    u8 unkAD;
+    u8 signalFlags; /* |= signal (the setter param name) */
     u8 unkAE;
     u8 unkAF;
     u8 unkB0;
@@ -65,9 +65,9 @@ typedef struct AndrossState {
     f32 unkC0;
     f32 unkC4;
     f32 unkC8;
-    f32 unkCC;
-    f32 unkD0;
-    f32 unkD4;
+    f32 targetPosX; /* tracked target: K*sin(t) + homePos + clamped arwing delta */
+    f32 targetPosY;
+    f32 targetPosZ;
     f32 unkD8;
     f32 unkDC;
     f32 unkE0;
@@ -77,7 +77,7 @@ typedef struct AndrossState {
 } AndrossState;
 
 STATIC_ASSERT(sizeof(AndrossState) == 0xEC);
-STATIC_ASSERT(offsetof(AndrossState, unk58) == 0x58);
-STATIC_ASSERT(offsetof(AndrossState, unk98) == 0x98);
+STATIC_ASSERT(offsetof(AndrossState, homePosX) == 0x58);
+STATIC_ASSERT(offsetof(AndrossState, actionTimer) == 0x98);
 
 #endif /* MAIN_DLL_ANDROSS_H_ */

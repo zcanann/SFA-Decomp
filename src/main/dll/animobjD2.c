@@ -58,20 +58,20 @@ fail:
 
 void trickyUpdateCirclingTargetPosition(void *p1, void *p2) {
     GameObject *obj = (GameObject *)p1;
-    GameObject *target = *(GameObject **)&((TrickyState *)p2)->unk24;
+    GameObject *target = *(GameObject **)&((TrickyState *)p2)->followObj;
     f32 dx = target->anim.worldPosX - obj->anim.worldPosX;
     f32 dz = target->anim.worldPosZ - obj->anim.worldPosZ;
     int angle = atan2_8002178c(dx, dz);
     s32 delta;
     s32 absDelta;
 
-    if (((TrickyState *)p2)->unkA == 0) {
+    if (((TrickyState *)p2)->substate == 0) {
         *(s32 *)&((TrickyState *)p2)->unk700 = randomGetRange(0, 1);
         if (*(s32 *)&((TrickyState *)p2)->unk700 == 0) {
             *(s32 *)&((TrickyState *)p2)->unk700 = -1;
         }
         *(s32 *)&((TrickyState *)p2)->unk704 = angle;
-        ((TrickyState *)p2)->unkA = 1;
+        ((TrickyState *)p2)->substate = 1;
     }
 
     delta = angle - (s32)(u16)*(volatile s32 *)((u8 *)p2 + 0x704);
@@ -89,12 +89,12 @@ void trickyUpdateCirclingTargetPosition(void *p1, void *p2) {
     }
 
     *(f32 *)&((TrickyState *)p2)->unk708 =
-        (*(GameObject **)&((TrickyState *)p2)->unk24)->anim.worldPosX -
+        (*(GameObject **)&((TrickyState *)p2)->followObj)->anim.worldPosX -
         lbl_803E24D4 * fsin16Precise((u16)*(s32 *)&((TrickyState *)p2)->unk704);
     *(f32 *)&((TrickyState *)p2)->unk70C =
-        (*(GameObject **)&((TrickyState *)p2)->unk24)->anim.worldPosY;
+        (*(GameObject **)&((TrickyState *)p2)->followObj)->anim.worldPosY;
     ((TrickyState *)p2)->unk710 =
-        (*(GameObject **)&((TrickyState *)p2)->unk24)->anim.worldPosZ -
+        (*(GameObject **)&((TrickyState *)p2)->followObj)->anim.worldPosZ -
         lbl_803E24D4 * fcos16Precise((u16)*(s32 *)&((TrickyState *)p2)->unk704);
 
     if (trickyFn_8013b368(p1, lbl_803E2488, p2) == 0) {

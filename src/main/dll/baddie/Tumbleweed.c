@@ -1467,20 +1467,20 @@ int trickySelectQueuedCommandTarget(u8* state, int commandType)
     }
 
     if (bestPriorityTarget != NULL) {
-        ((TrickyState *)state)->unk24 = bestPriorityTarget;
+        ((TrickyState *)state)->followObj = bestPriorityTarget;
     } else {
         if (bestFallbackTarget == NULL) {
             return 0;
         }
-        ((TrickyState *)state)->unk24 = bestFallbackTarget;
+        ((TrickyState *)state)->followObj = bestFallbackTarget;
     }
 
     {
-        u8* targetPos = ((TrickyState *)state)->unk24 + 0x18;
+        u8* targetPos = ((TrickyState *)state)->followObj + 0x18;
         u32 pathMask = 0xfffffbff;
         if (((TrickyState *)state)->unk28 != targetPos) {
             ((TrickyState *)state)->unk28 = targetPos;
-            ((TrickyState *)state)->unk54 = ((TrickyState *)state)->unk54 & pathMask;
+            ((TrickyState *)state)->stateFlags = ((TrickyState *)state)->stateFlags & pathMask;
             ((TrickyState *)state)->unkD2 = 0;
         }
     }
@@ -2474,18 +2474,18 @@ void titlescreen_update(u8 *obj)
             if (((GameObject *)obj)->anim.seqId == 0x77d || ((GameObject *)obj)->anim.seqId == 0x780) {
                 state[0x30] = 3;
                 ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E2318, 0);
-                ((TrickyState *)state)->unk34 = lbl_8031CE10[((GameObject *)obj)->anim.seqId - 0x77d].moves[3];
+                ((TrickyState *)state)->moveProgress = lbl_8031CE10[((GameObject *)obj)->anim.seqId - 0x77d].moves[3];
             } else {
                 state[0x30] = 0;
                 ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E22F8, 0);
-                ((TrickyState *)state)->unk34 = lbl_8031CE10[((GameObject *)obj)->anim.seqId - 0x77d].moves[0];
+                ((TrickyState *)state)->moveProgress = lbl_8031CE10[((GameObject *)obj)->anim.seqId - 0x77d].moves[0];
             }
         }
         if ((s8)state[0x31] == (s8)lbl_803DD990 && (s8)lbl_803DD991 != 0 &&
             (c = state[0x30]) != 1 && c != 2 && c != 5) {
             state[0x30] = 1;
             ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E22F8, 0);
-            ((TrickyState *)state)->unk34 = lbl_8031CE10[((GameObject *)obj)->anim.seqId - 0x77d].moves[1];
+            ((TrickyState *)state)->moveProgress = lbl_8031CE10[((GameObject *)obj)->anim.seqId - 0x77d].moves[1];
             if (((GameObject *)obj)->anim.seqId == 0x77e) {
                 Sfx_StopFromObject(obj, 0x370);
                 Sfx_StopFromObject(obj, 0x36c);
@@ -2504,29 +2504,29 @@ void titlescreen_update(u8 *obj)
                     f = lbl_803DBC0C;
                 }
             } else {
-                f = ((TrickyState *)state)->unk34;
+                f = ((TrickyState *)state)->moveProgress;
             }
             evt = ObjAnim_AdvanceCurrentMove(f, timeDelta, (int)obj, (ObjAnimEventList *)buf);
             if (evt != 0) {
                 if ((s8)state[0x31] == (s8)lbl_803DD990 && state[0x30] == 1) {
                     state[0x30] = 2;
                     ObjAnim_SetCurrentMove((int)obj, 2, lbl_803E22F8, 0);
-                    ((TrickyState *)state)->unk34 = lbl_8031CE10[((GameObject *)obj)->anim.seqId - 0x77d].moves[2];
+                    ((TrickyState *)state)->moveProgress = lbl_8031CE10[((GameObject *)obj)->anim.seqId - 0x77d].moves[2];
                 } else if (state[0x30] == 3) {
                     state[0x30] = 0;
                     ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E22F8, 0);
-                    ((TrickyState *)state)->unk34 = lbl_8031CE10[((GameObject *)obj)->anim.seqId - 0x77d].moves[0];
+                    ((TrickyState *)state)->moveProgress = lbl_8031CE10[((GameObject *)obj)->anim.seqId - 0x77d].moves[0];
                 } else if (((GameObject *)obj)->anim.seqId >= 0x77d && ((GameObject *)obj)->anim.seqId < 0x781) {
                     if (randomGetRange(0, 4) == 0) {
                         if ((c = state[0x30]) == 0 || c == 4) {
                             state[0x30] = 4;
                             ObjAnim_SetCurrentMove((int)obj, randomGetRange(3, 4), lbl_803E22F8, 0);
-                            ((TrickyState *)state)->unk34 =
+                            ((TrickyState *)state)->moveProgress =
                                 lbl_8031CE10[((GameObject *)obj)->anim.seqId - 0x77d].moves[1 + ((GameObject *)obj)->anim.currentMove];
                         } else {
                             state[0x30] = 5;
                             ObjAnim_SetCurrentMove((int)obj, randomGetRange(5, 6), lbl_803E22F8, 0);
-                            ((TrickyState *)state)->unk34 =
+                            ((TrickyState *)state)->moveProgress =
                                 lbl_8031CE10[((GameObject *)obj)->anim.seqId - 0x77d].moves[1 + ((GameObject *)obj)->anim.currentMove];
                         }
                     } else {
@@ -2534,11 +2534,11 @@ void titlescreen_update(u8 *obj)
                         if (c == 4) {
                             state[0x30] = 0;
                             ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E22F8, 0);
-                            ((TrickyState *)state)->unk34 = lbl_8031CE10[((GameObject *)obj)->anim.seqId - 0x77d].moves[0];
+                            ((TrickyState *)state)->moveProgress = lbl_8031CE10[((GameObject *)obj)->anim.seqId - 0x77d].moves[0];
                         } else if (c == 5) {
                             state[0x30] = 2;
                             ObjAnim_SetCurrentMove((int)obj, 2, lbl_803E22F8, 0);
-                            ((TrickyState *)state)->unk34 = lbl_8031CE10[((GameObject *)obj)->anim.seqId - 0x77d].moves[2];
+                            ((TrickyState *)state)->moveProgress = lbl_8031CE10[((GameObject *)obj)->anim.seqId - 0x77d].moves[2];
                         }
                     }
                 }
