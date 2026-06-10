@@ -268,7 +268,7 @@ undefined4 SHthorntail_updateLevelControlState(SHthorntailObject *obj,int unused
   }
   runtime->activeMoveValid = 0;
   objAudioFn_8006ef38((int)obj,(int)&animUpdate->animEvents,8,(int)runtime->renderPathPoints,
-              (int)runtime->moveScratch,lbl_803E5448,lbl_803E5448);
+              (int)runtime->moveScratch,lbl_803E5448,*(f32 *)&lbl_803E5448);
   return 0;
 }
 
