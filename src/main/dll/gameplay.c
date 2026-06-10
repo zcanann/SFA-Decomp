@@ -6862,7 +6862,7 @@ void FUN_800ecbf8(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   local_2f0 = lbl_803E1554;
   local_2ec = lbl_803E1554;
   if ((iVar3 == 3) && (param_3 != 0)) {
-    local_2c0 = *(float *)(param_3 + 8);
+    local_2c0 = ((PartFxSpawnParams *)param_3)->unk10;
     local_2d4 = lbl_803E1558 * local_2c0;
     local_2d8 = lbl_803E155C * local_2c0;
     local_2bc = lbl_803E1560 * local_2c0;
@@ -11984,7 +11984,7 @@ void FUN_800ed948(int param_1,undefined2 param_2,short *param_3,uint param_4)
     local_2a4 = lbl_803E1908;
   }
   else {
-    uStack_24 = (int)param_3[2] ^ 0x80000000;
+    uStack_24 = (int)((PartFxSpawnParams *)param_3)->unk4 ^ 0x80000000;
     local_28 = 0x43300000;
     local_2ac = lbl_803E1904 *
                 lbl_803E1908 * (f32)(s32)uStack_24;
@@ -12046,9 +12046,9 @@ void FUN_800ed948(int param_1,undefined2 param_2,short *param_3,uint param_4)
     local_354 = lbl_803E18F4;
   }
   else {
-    local_35c = *(float *)(param_3 + 6);
-    local_358 = *(float *)(param_3 + 8);
-    local_354 = *(float *)(param_3 + 10);
+    local_35c = ((PartFxSpawnParams *)param_3)->unkC;
+    local_358 = ((PartFxSpawnParams *)param_3)->unk10;
+    local_354 = ((PartFxSpawnParams *)param_3)->unk14;
   }
   local_368 = lbl_803E18F4;
   local_364 = lbl_803E18F4;
@@ -12071,9 +12071,9 @@ void FUN_800ed948(int param_1,undefined2 param_2,short *param_3,uint param_4)
   local_334 = param_4 | 0x4000400;
   if ((param_4 & 1) != 0) {
     if (param_1 == 0) {
-      local_35c = local_35c + *(float *)(param_3 + 6);
-      local_358 = local_358 + *(float *)(param_3 + 8);
-      local_354 = local_354 + *(float *)(param_3 + 10);
+      local_35c = local_35c + ((PartFxSpawnParams *)param_3)->unkC;
+      local_358 = local_358 + ((PartFxSpawnParams *)param_3)->unk10;
+      local_354 = local_354 + ((PartFxSpawnParams *)param_3)->unk14;
     }
     else {
       local_35c = local_35c + ((GameObject *)param_1)->anim.worldPosX;

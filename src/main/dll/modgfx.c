@@ -5812,12 +5812,12 @@ int Effect6_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     if (param_1 == 0) return -1;
     if ((param_4 & 0x200000) != 0) {
         if (param_3 == 0) return -1;
-        cfg.f18 = *(f32 *)(param_3 + 6);
-        cfg.f1c = *(f32 *)(param_3 + 8);
-        cfg.f20 = *(f32 *)(param_3 + 10);
-        cfg.f14 = *(f32 *)(param_3 + 4);
-        cfg.f10 = param_3[2];
-        cfg.f0e = param_3[1];
+        cfg.f18 = ((PartFxSpawnParams *)param_3)->unkC;
+        cfg.f1c = ((PartFxSpawnParams *)param_3)->unk10;
+        cfg.f20 = ((PartFxSpawnParams *)param_3)->unk14;
+        cfg.f14 = ((PartFxSpawnParams *)param_3)->unk8;
+        cfg.f10 = ((PartFxSpawnParams *)param_3)->unk4;
+        cfg.f0e = ((PartFxSpawnParams *)param_3)->unk2;
         cfg.f0c = *param_3;
         cfg.f62 = param_5;
     }
@@ -6120,12 +6120,12 @@ int Effect9_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     if (param_1 == 0) return -1;
     if ((param_4 & 0x200000) != 0) {
         if (param_3 == 0) return -1;
-        cfg.f18 = *(f32 *)(param_3 + 6);
-        cfg.f1c = *(f32 *)(param_3 + 8);
-        cfg.f20 = *(f32 *)(param_3 + 10);
-        cfg.f14 = *(f32 *)(param_3 + 4);
-        cfg.f10 = param_3[2];
-        cfg.f0e = param_3[1];
+        cfg.f18 = ((PartFxSpawnParams *)param_3)->unkC;
+        cfg.f1c = ((PartFxSpawnParams *)param_3)->unk10;
+        cfg.f20 = ((PartFxSpawnParams *)param_3)->unk14;
+        cfg.f14 = ((PartFxSpawnParams *)param_3)->unk8;
+        cfg.f10 = ((PartFxSpawnParams *)param_3)->unk4;
+        cfg.f0e = ((PartFxSpawnParams *)param_3)->unk2;
         cfg.f0c = *param_3;
         cfg.f62 = param_5;
     }
@@ -6156,8 +6156,8 @@ int Effect9_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     case 1:
         if (param_3 == 0) FILL9();
         if (param_3 != 0) {
-            cfg.f30 = *(f32 *)(param_3 + 6);
-            cfg.f38 = *(f32 *)(param_3 + 10);
+            cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
         } else {
             cfg.f30 = 0.0f;
             cfg.f38 = 0.0f;
@@ -6194,9 +6194,9 @@ int Effect9_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     case 6:
         if (param_3 == 0) FILL9();
         if (param_3 != 0) {
-            cfg.f30 = *(f32 *)(param_3 + 6);
-            cfg.f34 = *(f32 *)(param_3 + 8);
-            cfg.f38 = *(f32 *)(param_3 + 10);
+            cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+            cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
         }
         cfg.f3c = lbl_803DFE58;
         cfg.f08 = 0x96;
@@ -6206,9 +6206,9 @@ int Effect9_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         break;
     case 5:
         if (param_3 == 0) FILL9();
-        cfg.f30 = *(f32 *)(param_3 + 6);
-        cfg.f34 = *(f32 *)(param_3 + 8);
-        cfg.f38 = *(f32 *)(param_3 + 10);
+        cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+        cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+        cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
         cfg.f28 = lbl_803DFE5C * (f32)(s32)randomGetRange(1, 4);
         cfg.f3c = lbl_803DFE64 * (f32)(s32)randomGetRange(0, 0xa) + lbl_803DFE60;
         cfg.f08 = 0xa0;
@@ -6248,8 +6248,8 @@ int Effect9_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         cfg.f42 = 0x2b;
         break;
     case 18:
-        if (param_3 != 0) cfg.f34 = *(f32 *)(param_3 + 8);
-        cfg.f3c = param_3 != 0 ? lbl_803DFE7C * *(f32 *)(param_3 + 4) : lbl_803DFE80;
+        if (param_3 != 0) cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+        cfg.f3c = param_3 != 0 ? lbl_803DFE7C * ((PartFxSpawnParams *)param_3)->unk8 : lbl_803DFE80;
         cfg.f08 = 0xf;
         cfg.f60 = 0x7f;
         cfg.f44 = 0x80210;
@@ -6265,8 +6265,8 @@ int Effect9_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         break;
     case 13:
         if (param_3 != 0) {
-            cfg.f30 = *(f32 *)(param_3 + 6);
-            cfg.f38 = *(f32 *)(param_3 + 10);
+            cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
         } else {
             cfg.f30 = 0.0f;
             cfg.f38 = 0.0f;
@@ -6288,8 +6288,8 @@ int Effect9_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     case 11:
     case 12:
         if (param_3 != 0) {
-            cfg.f30 = *(f32 *)(param_3 + 6);
-            cfg.f38 = *(f32 *)(param_3 + 10);
+            cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
         } else {
             cfg.f30 = 0.0f;
             cfg.f38 = 0.0f;
@@ -6314,9 +6314,9 @@ int Effect9_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     case 17:
         if (param_3 == 0) FILL9();
         if (param_3 != 0) {
-            cfg.f24 = *(f32 *)(param_3 + 6);
-            cfg.f28 = *(f32 *)(param_3 + 8);
-            cfg.f2c = *(f32 *)(param_3 + 10);
+            cfg.f24 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f28 = ((PartFxSpawnParams *)param_3)->unk10;
+            cfg.f2c = ((PartFxSpawnParams *)param_3)->unk14;
         } else {
             cfg.f24 = lbl_803DFE28 * (f32)(s32)randomGetRange(-0xa, 0xa);
             cfg.f28 = lbl_803DFE74 * (f32)(s32)randomGetRange(5, 0x64);
@@ -6335,9 +6335,9 @@ int Effect9_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     case 16:
         if (param_3 == 0) FILL9();
         if (param_3 != 0) {
-            cfg.f30 = *(f32 *)(param_3 + 6);
-            cfg.f34 = *(f32 *)(param_3 + 8);
-            cfg.f38 = *(f32 *)(param_3 + 10);
+            cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+            cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
         }
         cfg.f3c = lbl_803DFE78;
         cfg.f08 = 0x64;
@@ -6347,13 +6347,13 @@ int Effect9_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         break;
     case 15:
         if (param_3 == 0) FILL9();
-        cfg.f08 = (s32)(lbl_803DFE48 * *(f32 *)(param_3 + 4) + lbl_803DFE90);
+        cfg.f08 = (s32)(lbl_803DFE48 * ((PartFxSpawnParams *)param_3)->unk8 + lbl_803DFE90);
         cfg.f3c = lbl_803DFE94 * (f32)(s32)cfg.f08;
         cfg.f44 = 0xe100200;
         cfg.f42 = 0x57;
-        cfg.f30 = *(f32 *)(param_3 + 6);
-        cfg.f34 = *(f32 *)(param_3 + 8);
-        cfg.f38 = *(f32 *)(param_3 + 10);
+        cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+        cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+        cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
         cfg.f18 = 0.0f;
         cfg.f1c = 0.0f;
         cfg.f20 = 0.0f;
@@ -6364,9 +6364,9 @@ int Effect9_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     case 14:
         if (param_3 == 0) FILL9();
         if (param_3 != 0) {
-            cfg.f24 = *(f32 *)(param_3 + 6);
-            cfg.f28 = *(f32 *)(param_3 + 8);
-            cfg.f2c = *(f32 *)(param_3 + 10);
+            cfg.f24 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f28 = ((PartFxSpawnParams *)param_3)->unk10;
+            cfg.f2c = ((PartFxSpawnParams *)param_3)->unk14;
         }
         cfg.f34 = lbl_803DFE2C * (f32)(s32)randomGetRange(-0xa, 0xa);
         cfg.f30 = lbl_803DFE2C * (f32)(s32)randomGetRange(-0xa, 0xa);
@@ -6382,9 +6382,9 @@ int Effect9_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         cfg.f24 = lbl_803DFE7C * (f32)(s32)randomGetRange(-0xa, 0xa);
         cfg.f28 = lbl_803DFE98 * (f32)(s32)randomGetRange(0x14, 0x1e);
         cfg.f2c = lbl_803DFE7C * (f32)(s32)randomGetRange(-0xa, 0xa);
-        cfg.f30 = param_3 != 0 ? *(f32 *)(param_3 + 6) : 0.0f;
-        cfg.f34 = param_3 != 0 ? *(f32 *)(param_3 + 8) : 0.0f;
-        cfg.f38 = param_3 != 0 ? *(f32 *)(param_3 + 10) : 0.0f;
+        cfg.f30 = param_3 != 0 ? ((PartFxSpawnParams *)param_3)->unkC : 0.0f;
+        cfg.f34 = param_3 != 0 ? ((PartFxSpawnParams *)param_3)->unk10 : 0.0f;
+        cfg.f38 = param_3 != 0 ? ((PartFxSpawnParams *)param_3)->unk14 : 0.0f;
         cfg.f34 = lbl_803DFE2C * (f32)(s32)randomGetRange(-0x32, 0x32) + cfg.f34;
         cfg.f30 = lbl_803DFE2C * (f32)(s32)randomGetRange(-0x32, 0x32) + cfg.f30;
         cfg.f38 = lbl_803DFE2C * (f32)(s32)randomGetRange(-0x32, 0x32) + cfg.f38;
@@ -6408,8 +6408,8 @@ int Effect9_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         cfg.f28 = lbl_803DFE78 * (f32)(s32)randomGetRange(0x14, 0x1e);
         cfg.f2c = lbl_803DFE74 * (f32)(s32)randomGetRange(-0xa, 0xa);
         cfg.f30 = lbl_803DFE2C * (f32)(s32)randomGetRange(-0x96, 0x96);
-        cfg.f38 = param_3 != 0 ? *(f32 *)(param_3 + 10) : 0.0f;
-        cfg.f34 = param_3 != 0 ? *(f32 *)(param_3 + 8) : lbl_803DFEA0;
+        cfg.f38 = param_3 != 0 ? ((PartFxSpawnParams *)param_3)->unk14 : 0.0f;
+        cfg.f34 = param_3 != 0 ? ((PartFxSpawnParams *)param_3)->unk10 : lbl_803DFEA0;
         cfg.f38 = lbl_803DFE2C * (f32)(s32)randomGetRange(-0x32, -0xa) + cfg.f38;
         cfg.f3c = lbl_803DFEA4;
         cfg.f08 = 0x1e;
@@ -6510,12 +6510,12 @@ int Effect8_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     if (param_1 == 0) return -1;
     if ((param_4 & 0x200000) != 0) {
         if (param_3 == 0) return -1;
-        cfg.f18 = *(f32 *)(param_3 + 6);
-        cfg.f1c = *(f32 *)(param_3 + 8);
-        cfg.f20 = *(f32 *)(param_3 + 10);
-        cfg.f14 = *(f32 *)(param_3 + 4);
-        cfg.f10 = param_3[2];
-        cfg.f0e = param_3[1];
+        cfg.f18 = ((PartFxSpawnParams *)param_3)->unkC;
+        cfg.f1c = ((PartFxSpawnParams *)param_3)->unk10;
+        cfg.f20 = ((PartFxSpawnParams *)param_3)->unk14;
+        cfg.f14 = ((PartFxSpawnParams *)param_3)->unk8;
+        cfg.f10 = ((PartFxSpawnParams *)param_3)->unk4;
+        cfg.f0e = ((PartFxSpawnParams *)param_3)->unk2;
         cfg.f0c = *param_3;
         cfg.f62 = param_5;
     }
@@ -6599,9 +6599,9 @@ int Effect8_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     case 0x357:
         if (param_3 == 0) FILL8();
         if (param_3 == 0) return -1;
-        cfg.f58 = (u16)((u8)param_3[2] << 8);
-        cfg.f5a = (u16)((u8)param_3[1] << 8);
-        cfg.f5c = (u16)((u8)param_3[0] << 8);
+        cfg.f58 = (u16)((u8)((PartFxSpawnParams *)param_3)->unk4 << 8);
+        cfg.f5a = (u16)((u8)((PartFxSpawnParams *)param_3)->unk2 << 8);
+        cfg.f5c = (u16)((u8)((PartFxSpawnParams *)param_3)->unk0 << 8);
         cfg.f4c = 0xfe00;
         cfg.f50 = 0xfe00;
         cfg.f54 = 0xfe00;
@@ -6677,27 +6677,27 @@ int Effect8_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     case 0x35a:
         if (param_3 == 0) FILL8();
         if (param_3 == 0) return -1;
-        cfg.f30 = *(f32 *)(param_3 + 6);
-        cfg.f34 = *(f32 *)(param_3 + 8);
-        cfg.f38 = *(f32 *)(param_3 + 10);
-        cfg.f3c = lbl_803DFDB0 * (lbl_803DFDE0 * (f32)(s32)param_3[2]);
+        cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+        cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+        cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
+        cfg.f3c = lbl_803DFDB0 * (lbl_803DFDE0 * (f32)(s32)((PartFxSpawnParams *)param_3)->unk4);
         cfg.f08 = 0x3c;
         cfg.f58 = 0xff00;
         cfg.f5a = 0xff00;
         cfg.f5c = 0xff00;
-        cfg.f4c = param_3[2] << 8;
-        cfg.f50 = param_3[2] << 8;
+        cfg.f4c = ((PartFxSpawnParams *)param_3)->unk4 << 8;
+        cfg.f50 = ((PartFxSpawnParams *)param_3)->unk4 << 8;
         cfg.f54 = 0xff00;
         cfg.f48 = 0x60;
-        cfg.f60 = param_3[2];
+        cfg.f60 = ((PartFxSpawnParams *)param_3)->unk4;
         cfg.f44 = 0x201;
         cfg.f42 = 0x76;
         break;
     case 0x35b:
         if (param_3 == 0) FILL8();
-        cfg.f30 = *(f32 *)(param_3 + 6);
-        cfg.f34 = *(f32 *)(param_3 + 8);
-        cfg.f38 = *(f32 *)(param_3 + 10);
+        cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+        cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+        cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
         cfg.f3c = lbl_803DFD9C;
         cfg.f08 = 0xa;
         cfg.f60 = 0xff;
@@ -6707,37 +6707,37 @@ int Effect8_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     case 0x35c:
         if (param_3 == 0) FILL8();
         if (param_3 == 0) return -1;
-        cfg.f30 = *(f32 *)(param_3 + 6);
-        cfg.f34 = *(f32 *)(param_3 + 8);
-        cfg.f38 = *(f32 *)(param_3 + 10);
-        cfg.f3c = lbl_803DFDE4 * (lbl_803DFDC0 * (lbl_803DFDE8 + (f32)(s32)param_3[0]));
+        cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+        cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+        cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
+        cfg.f3c = lbl_803DFDE4 * (lbl_803DFDC0 * (lbl_803DFDE8 + (f32)(s32)((PartFxSpawnParams *)param_3)->unk0));
         cfg.f08 = 0xa;
-        cfg.f58 = (u16)(param_3[0] << 8);
-        cfg.f5a = (u16)(param_3[0] << 8);
+        cfg.f58 = (u16)(((PartFxSpawnParams *)param_3)->unk0 << 8);
+        cfg.f5a = (u16)(((PartFxSpawnParams *)param_3)->unk0 << 8);
         cfg.f5c = 0xff00;
-        cfg.f4c = param_3[0] << 8;
-        cfg.f50 = param_3[0] << 8;
+        cfg.f4c = ((PartFxSpawnParams *)param_3)->unk0 << 8;
+        cfg.f50 = ((PartFxSpawnParams *)param_3)->unk0 << 8;
         cfg.f54 = 0xff00;
         cfg.f48 = 0x20;
-        cfg.f60 = param_3[2];
+        cfg.f60 = ((PartFxSpawnParams *)param_3)->unk4;
         cfg.f42 = 0xc9d;
         break;
     case 0x35d:
         if (param_3 == 0) FILL8();
         if (param_3 == 0) return -1;
-        cfg.f30 = *(f32 *)(param_3 + 6);
-        cfg.f34 = *(f32 *)(param_3 + 8);
-        cfg.f38 = *(f32 *)(param_3 + 10);
-        cfg.f3c = lbl_803DFDE4 * (lbl_803DFDC0 * (lbl_803DFDE8 + (f32)(s32)param_3[0]));
+        cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+        cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+        cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
+        cfg.f3c = lbl_803DFDE4 * (lbl_803DFDC0 * (lbl_803DFDE8 + (f32)(s32)((PartFxSpawnParams *)param_3)->unk0));
         cfg.f08 = 0xa;
         cfg.f58 = 0xff00;
-        cfg.f5a = (u16)(param_3[0] << 8);
+        cfg.f5a = (u16)(((PartFxSpawnParams *)param_3)->unk0 << 8);
         cfg.f5c = 0xff00;
         cfg.f4c = 0xff00;
-        cfg.f50 = param_3[0] << 8;
+        cfg.f50 = ((PartFxSpawnParams *)param_3)->unk0 << 8;
         cfg.f54 = 0xff00;
         cfg.f48 = 0x20;
-        cfg.f60 = param_3[2];
+        cfg.f60 = ((PartFxSpawnParams *)param_3)->unk4;
         cfg.f42 = 0xc9d;
         break;
     case 0x35e:
@@ -6745,11 +6745,11 @@ int Effect8_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         cfg.f3c = lbl_803DFDEC;
         cfg.f34 = lbl_803DFDF0;
         cfg.f08 = 0x46;
-        cfg.f60 = param_3 != 0 ? param_3[2] : 0xff;
+        cfg.f60 = param_3 != 0 ? ((PartFxSpawnParams *)param_3)->unk4 : 0xff;
         cfg.f61 = 0;
-        cfg.f30 = param_3 != 0 ? *(f32 *)(param_3 + 6) : 0.0f;
-        cfg.f34 = param_3 != 0 ? *(f32 *)(param_3 + 8) : 0.0f;
-        cfg.f38 = param_3 != 0 ? *(f32 *)(param_3 + 10) : 0.0f;
+        cfg.f30 = param_3 != 0 ? ((PartFxSpawnParams *)param_3)->unkC : 0.0f;
+        cfg.f34 = param_3 != 0 ? ((PartFxSpawnParams *)param_3)->unk10 : 0.0f;
+        cfg.f38 = param_3 != 0 ? ((PartFxSpawnParams *)param_3)->unk14 : 0.0f;
         cfg.f44 = 0xa100200;
         cfg.f42 = 0x7d;
         break;
@@ -7320,12 +7320,12 @@ int partfx_update(s16 *param_1, u32 p2_, s16 *param_3, u32 param_4,
     if (param_3 == NULL) {
       return -1;
     }
-    cfg.f18 = *(f32 *)(param_3 + 6);
-    cfg.f1c = *(f32 *)(param_3 + 8);
-    cfg.f20 = *(f32 *)(param_3 + 10);
-    cfg.f14 = *(f32 *)(param_3 + 4);
-    cfg.f10 = param_3[2];
-    cfg.f0e = param_3[1];
+    cfg.f18 = ((PartFxSpawnParams *)param_3)->unkC;
+    cfg.f1c = ((PartFxSpawnParams *)param_3)->unk10;
+    cfg.f20 = ((PartFxSpawnParams *)param_3)->unk14;
+    cfg.f14 = ((PartFxSpawnParams *)param_3)->unk8;
+    cfg.f10 = ((PartFxSpawnParams *)param_3)->unk4;
+    cfg.f0e = ((PartFxSpawnParams *)param_3)->unk2;
     cfg.f0c = *param_3;
     cfg.f62 = param_5;
   }
@@ -7502,8 +7502,8 @@ cfg.f30 = (f32)(s32)randomGetRange(0xfffffff9,7);
     break;
   case 0x68b:
 if (param_3 != NULL) {
-          cfg.f30 = *(f32 *)(param_3 + 6) - *(f32 *)(param_1 + 0xc);
-          cfg.f38 = *(f32 *)(param_3 + 10) - *(f32 *)(param_1 + 0x10);
+          cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC - *(f32 *)(param_1 + 0xc);
+          cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14 - *(f32 *)(param_1 + 0x10);
         }
         else {
           cfg.f30 = (f32)(s32)randomGetRange(0xfffffff9,7);
@@ -7515,7 +7515,7 @@ if (param_3 != NULL) {
         cfg.f2c = lbl_803DF4E4 * (f32)(s32)randomGetRange(0xffffffce,0x32);
         cfg.f3c = lbl_803DF4E8;
         if (param_3 != NULL) {
-          cfg.f3c = *(f32 *)(param_3 + 4);
+          cfg.f3c = ((PartFxSpawnParams *)param_3)->unk8;
         }
         cfg.f08 = 0x32;
         cfg.f60 = 0x96;
@@ -7637,7 +7637,7 @@ cfg.f34 = lbl_803DF4FC;
         lbl_8039C308[3] = 0;
         param_3 = lbl_8039C308;
       }
-      cfg.f34 = *(f32 *)(param_3 + 8) + (f32)(s32)randomGetRange(0xfffffffa,6);
+      cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10 + (f32)(s32)randomGetRange(0xfffffffa,6);
       cfg.f24 = lbl_803DF4E8 * (f32)(s32)randomGetRange(0xffffff9c,100);
       cfg.f2c = lbl_803DF4E8 * (f32)(s32)randomGetRange(0xffffff9c,100);
       cfg.f3c = lbl_803DF514;
@@ -7894,7 +7894,7 @@ if (param_3 == NULL) {
             lbl_8039C308[3] = 0;
             param_3 = lbl_8039C308;
           }
-          cfg.f3c = lbl_803DF530 * *(f32 *)(param_3 + 4);
+          cfg.f3c = lbl_803DF530 * ((PartFxSpawnParams *)param_3)->unk8;
           cfg.f08 = 4;
           cfg.f44 = 0x480000;
           cfg.f48 = 2;
@@ -7914,7 +7914,7 @@ if (param_3 == NULL) {
           lbl_8039C308[3] = 0;
           param_3 = lbl_8039C308;
         }
-        cfg.f3c = lbl_803DF534 * *(f32 *)(param_3 + 4);
+        cfg.f3c = lbl_803DF534 * ((PartFxSpawnParams *)param_3)->unk8;
         cfg.f08 = 4;
         cfg.f44 = 0x480000;
         cfg.f48 = 0x2000002;
@@ -7983,9 +7983,9 @@ if (param_3 == NULL) {
           param_3 = lbl_8039C308;
         }
         if (param_3 != NULL) {
-          cfg.f30 = *(f32 *)(param_3 + 6);
-          cfg.f34 = *(f32 *)(param_3 + 8);
-          cfg.f38 = *(f32 *)(param_3 + 10);
+          cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+          cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+          cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
           cfg.f30 = cfg.f30 - *(f32 *)((char *)cfg.f00 + 0x18);
           cfg.f34 = cfg.f34 - *(f32 *)((char *)cfg.f00 + 0x1c);
           cfg.f38 = cfg.f38 - *(f32 *)((char *)cfg.f00 + 0x20);
@@ -8014,9 +8014,9 @@ if (param_3 == NULL) {
                 param_3 = lbl_8039C308;
               }
               if (param_3 != NULL) {
-                cfg.f30 = *(f32 *)(param_3 + 6);
-                cfg.f34 = *(f32 *)(param_3 + 8);
-                cfg.f38 = *(f32 *)(param_3 + 10);
+                cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+                cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+                cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
                 cfg.f30 = cfg.f30 - *(f32 *)((char *)cfg.f00 + 0x18);
                 cfg.f34 = cfg.f34 - *(f32 *)((char *)cfg.f00 + 0x1c);
                 cfg.f38 = cfg.f38 - *(f32 *)((char *)cfg.f00 + 0x20);
@@ -8113,9 +8113,9 @@ cfg.f30 = lbl_803DF564;
               if (param_3 == NULL) {
                 return -1;
               }
-              cfg.f30 = *(f32 *)(param_3 + 6);
-              cfg.f34 = *(f32 *)(param_3 + 8);
-              cfg.f38 = *(f32 *)(param_3 + 10);
+              cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+              cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+              cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
               cfg.f24 = lbl_803DF568 * (f32)(s32)randomGetRange(0xffffffe2,0x1e);
               cfg.f28 = lbl_803DF568 * (f32)(s32)randomGetRange(0xffffffe2,0x1e);
               cfg.f2c = lbl_803DF56C * (f32)(s32)randomGetRange(0x14,0x1e);
@@ -8148,9 +8148,9 @@ if (param_3 == NULL) {
               if (param_3 == NULL) {
                 return -1;
               }
-              cfg.f30 = *(f32 *)(param_3 + 6);
-              cfg.f34 = *(f32 *)(param_3 + 8);
-              cfg.f38 = *(f32 *)(param_3 + 10);
+              cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+              cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+              cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
               cfg.f24 = lbl_803DF568 * (f32)(s32)randomGetRange(0xffffffe2,0x1e);
               cfg.f28 = lbl_803DF4E8 * (f32)(s32)randomGetRange(8,10);
               cfg.f2c = lbl_803DF574 * (f32)(s32)randomGetRange(10,0x1e);
@@ -8190,9 +8190,9 @@ if (param_3 == NULL) {
             if (param_3 == NULL) {
               return -1;
             }
-            cfg.f30 = *(f32 *)(param_3 + 6);
-            cfg.f34 = *(f32 *)(param_3 + 8);
-            cfg.f38 = *(f32 *)(param_3 + 10);
+            cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+            cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
             cfg.f24 = lbl_803DF4E8 * (f32)(s32)randomGetRange(0xffffffe2,0x1e);
             cfg.f28 = lbl_803DF4E8 * (f32)(s32)randomGetRange(0xffffffe2,0x1e);
             cfg.f2c = lbl_803DF578 * (f32)(s32)randomGetRange(0x14,0x1e);
@@ -8248,9 +8248,9 @@ if (param_3 == NULL) {
         if (param_3 == NULL) {
           return -1;
         }
-        cfg.f30 = *(f32 *)(param_3 + 6);
-        cfg.f34 = *(f32 *)(param_3 + 8);
-        cfg.f38 = *(f32 *)(param_3 + 10);
+        cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+        cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+        cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
         cfg.f3c = lbl_803DF58C;
         cfg.f08 = 10;
         cfg.f60 = 0xff;
@@ -8284,9 +8284,9 @@ if (param_3 == NULL) {
           if (param_3 == NULL) {
             return -1;
           }
-          cfg.f30 = *(f32 *)(param_3 + 6);
-          cfg.f34 = *(f32 *)(param_3 + 8);
-          cfg.f38 = *(f32 *)(param_3 + 10);
+          cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+          cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+          cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
           cfg.f3c = lbl_803DF598;
           cfg.f08 = 10;
           cfg.f60 = 0xff;
@@ -8338,9 +8338,9 @@ if (param_3 == NULL) {
               param_3 = lbl_8039C308;
             }
             if (param_3 != NULL) {
-              cfg.f30 = *(f32 *)(param_3 + 6);
-              cfg.f34 = *(f32 *)(param_3 + 8);
-              cfg.f38 = *(f32 *)(param_3 + 10);
+              cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+              cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+              cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
               cfg.f30 = cfg.f30 - *(f32 *)((char *)cfg.f00 + 0x18);
               cfg.f34 = cfg.f34 - *(f32 *)((char *)cfg.f00 + 0x1c);
               cfg.f38 = cfg.f38 - *(f32 *)((char *)cfg.f00 + 0x20);
@@ -8465,7 +8465,7 @@ if (param_3 == NULL) {
               cfg.f61 = 0x14;
               cfg.f44 = 0x9100110;
               cfg.f48 = 0x4000000;
-              cfg.f42 = param_3[2];
+              cfg.f42 = ((PartFxSpawnParams *)param_3)->unk4;
     break;
   case 0x5:
 
@@ -8481,7 +8481,7 @@ if (param_3 == NULL) {
             cfg.f61 = randomGetRange(10,0x1e);
             cfg.f44 = 0x100218;
             cfg.f48 = 0x4000000;
-            cfg.f42 = param_3[2];
+            cfg.f42 = ((PartFxSpawnParams *)param_3)->unk4;
             if (cfg.f42 == 0x4c) {
               cfg.f58 = 0x6400;
               cfg.f5a = 0x3200;
@@ -8507,7 +8507,7 @@ if (param_3 == NULL) {
               cfg.f61 = 0x1e;
               cfg.f44 = 0x511;
               cfg.f48 = 0x4000000;
-              cfg.f42 = param_3[2];
+              cfg.f42 = ((PartFxSpawnParams *)param_3)->unk4;
     break;
   case 0x7b:
 cfg.f34 = lbl_803DF5E4 + (f32)(s32)randomGetRange(0,10);
@@ -8672,14 +8672,14 @@ cfg.f30 = (f32)(s32)randomGetRange(0xfffffffe,2);
       if (param_3 == NULL) {
         return -1;
       }
-      cfg.f30 = *(f32 *)(param_3 + 6);
-      cfg.f34 = *(f32 *)(param_3 + 8);
-      cfg.f38 = *(f32 *)(param_3 + 10);
-      cfg.f3c = *(f32 *)(param_3 + 4);
+      cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+      cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+      cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
+      cfg.f3c = ((PartFxSpawnParams *)param_3)->unk8;
       cfg.f08 = 1;
       cfg.f61 = 0;
       cfg.f60 = 0x19;
-      if (param_3[2] != 0) {
+      if (((PartFxSpawnParams *)param_3)->unk4 != 0) {
         cfg.f60 = 0x7d;
       }
       cfg.f44 = 0xc0012;
@@ -8742,9 +8742,9 @@ cfg.f24 = lbl_803DF5EC * (f32)(s32)randomGetRange(0xfffffff6,10);
           if (param_3 == NULL) {
             return -1;
           }
-          cfg.f30 = *(f32 *)(param_3 + 6);
-          cfg.f34 = *(f32 *)(param_3 + 8);
-          cfg.f38 = *(f32 *)(param_3 + 10);
+          cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+          cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+          cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
           cfg.f4c = 0xffff;
           cfg.f50 = 0xffff;
           cfg.f54 = 0xffff;
@@ -9350,9 +9350,9 @@ cfg.f34 = lbl_803DF644;
           if (param_3 == NULL) {
             return -1;
           }
-          cfg.f30 = *(f32 *)(param_3 + 6) + (f32)(s32)randomGetRange(0,6);
-          cfg.f34 = *(f32 *)(param_3 + 8);
-          cfg.f38 = *(f32 *)(param_3 + 10) + (f32)(s32)randomGetRange(0,6);
+          cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC + (f32)(s32)randomGetRange(0,6);
+          cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+          cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14 + (f32)(s32)randomGetRange(0,6);
           cfg.f28 = lbl_803DF634 * (f32)(s32)randomGetRange(0,10);
           cfg.f3c = lbl_803DF5B4 * (f32)(s32)randomGetRange(4,8);
           cfg.f08 = 0x24;
@@ -9668,15 +9668,15 @@ if (param_3 == NULL) {
         if (param_6 == NULL) {
           return -1;
         }
-        cfg.f30 = *(f32 *)(param_3 + 6);
-        cfg.f34 = *(f32 *)(param_3 + 8);
-        cfg.f38 = *(f32 *)(param_3 + 10);
+        cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+        cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+        cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
         cfg.f24 = *param_6;
         cfg.f28 = param_6[1];
         cfg.f2c = param_6[2];
         cfg.f3c = lbl_803DF4C8;
         cfg.f08 = 0x28;
-        cfg.f60 = (u8)(int)*(f32 *)(param_3 + 4);
+        cfg.f60 = (u8)(int)((PartFxSpawnParams *)param_3)->unk8;
         cfg.f61 = 10;
         cfg.f44 = 0x200;
         cfg.f42 = 0xc13;
@@ -9710,10 +9710,10 @@ if (param_3 == NULL) {
           }
           cfg.f30 = (f32)(s32)randomGetRange(0xfffffffa,6);
           cfg.f38 = (f32)(s32)randomGetRange(0xfffffffa,6);
-          cfg.f24 = *(f32 *)(param_3 + 4) * (lbl_803DF508 * (f32)(s32)randomGetRange(0xfffffffe,2));
-          cfg.f28 = *(f32 *)(param_3 + 4) * (lbl_803DF4CC * (f32)(s32)randomGetRange(0,4));
-          cfg.f2c = *(f32 *)(param_3 + 4) * (lbl_803DF508 * (f32)(s32)randomGetRange(0xfffffffe,2));
-          cfg.f3c = lbl_803DF634 * *(f32 *)(param_3 + 4);
+          cfg.f24 = ((PartFxSpawnParams *)param_3)->unk8 * (lbl_803DF508 * (f32)(s32)randomGetRange(0xfffffffe,2));
+          cfg.f28 = ((PartFxSpawnParams *)param_3)->unk8 * (lbl_803DF4CC * (f32)(s32)randomGetRange(0,4));
+          cfg.f2c = ((PartFxSpawnParams *)param_3)->unk8 * (lbl_803DF508 * (f32)(s32)randomGetRange(0xfffffffe,2));
+          cfg.f3c = lbl_803DF634 * ((PartFxSpawnParams *)param_3)->unk8;
           cfg.f08 = 0x18;
           cfg.f44 = 0x1080000;
           cfg.f48 = 0x1000000;
@@ -9743,12 +9743,12 @@ if (param_3 == NULL) {
           param_3 = lbl_8039C308;
         }
         cfg.f34 = (f32)(s32)randomGetRange(0,10);
-        cfg.f24 = *(f32 *)(param_3 + 4) * (lbl_803DF5B4 * (f32)(s32)randomGetRange(0xffffff9c,100));
-        cfg.f28 = *(f32 *)(param_3 + 4) * (lbl_803DF5B4 * (f32)(s32)randomGetRange(200,400));
-        cfg.f2c = *(f32 *)(param_3 + 4) * (lbl_803DF5B4 * (f32)(s32)randomGetRange(0xffffff9c,100));
-        cfg.f3c = *(f32 *)(param_3 + 4) * (lbl_803DF524 * (f32)(s32)randomGetRange(8,0xb));
+        cfg.f24 = ((PartFxSpawnParams *)param_3)->unk8 * (lbl_803DF5B4 * (f32)(s32)randomGetRange(0xffffff9c,100));
+        cfg.f28 = ((PartFxSpawnParams *)param_3)->unk8 * (lbl_803DF5B4 * (f32)(s32)randomGetRange(200,400));
+        cfg.f2c = ((PartFxSpawnParams *)param_3)->unk8 * (lbl_803DF5B4 * (f32)(s32)randomGetRange(0xffffff9c,100));
+        cfg.f3c = ((PartFxSpawnParams *)param_3)->unk8 * (lbl_803DF524 * (f32)(s32)randomGetRange(8,0xb));
         cfg.f60 = 0xbe;
-        cfg.f08 = (u32)(lbl_803DF6C8 * *(f32 *)(param_3 + 4));
+        cfg.f08 = (u32)(lbl_803DF6C8 * ((PartFxSpawnParams *)param_3)->unk8);
         cfg.f44 = 0x1200000;
         cfg.f48 = 0x1000000;
         cfg.f42 = 0x77;
@@ -9774,10 +9774,10 @@ if (param_3 == NULL) {
             lbl_8039C308[3] = 0;
             param_3 = lbl_8039C308;
           }
-          cfg.f24 = *(f32 *)(param_3 + 4) * (lbl_803DF4F0 * (f32)(s32)randomGetRange(0xffffff9c,100));
-          cfg.f28 = *(f32 *)(param_3 + 4) * (lbl_803DF4F0 * (f32)(s32)randomGetRange(10,200));
-          cfg.f2c = *(f32 *)(param_3 + 4) * (lbl_803DF4F0 * (f32)(s32)randomGetRange(0xffffff9c,100));
-          cfg.f3c = *(f32 *)(param_3 + 4) * (lbl_803DF524 * (f32)(s32)randomGetRange(8,0xb));
+          cfg.f24 = ((PartFxSpawnParams *)param_3)->unk8 * (lbl_803DF4F0 * (f32)(s32)randomGetRange(0xffffff9c,100));
+          cfg.f28 = ((PartFxSpawnParams *)param_3)->unk8 * (lbl_803DF4F0 * (f32)(s32)randomGetRange(10,200));
+          cfg.f2c = ((PartFxSpawnParams *)param_3)->unk8 * (lbl_803DF4F0 * (f32)(s32)randomGetRange(0xffffff9c,100));
+          cfg.f3c = ((PartFxSpawnParams *)param_3)->unk8 * (lbl_803DF524 * (f32)(s32)randomGetRange(8,0xb));
           cfg.f08 = 0x4b;
           cfg.f44 = 0x1080000;
           cfg.f48 = 0x1000000;
@@ -10088,9 +10088,9 @@ if (param_3 == NULL) {
             cfg.f38 = lbl_803DF4CC * (f32)(s32)randomGetRange(0xfffffff6,10);
           }
           else {
-            cfg.f30 = *(f32 *)(param_3 + 6);
-            cfg.f34 = *(f32 *)(param_3 + 8);
-            cfg.f38 = *(f32 *)(param_3 + 10);
+            cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+            cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
           }
           cfg.f24 = lbl_803DF4DC;
           cfg.f28 = lbl_803DF508;
@@ -10150,9 +10150,9 @@ if (param_3 == NULL) {
             cfg.f24 = lbl_803DF608 * (f32)(s32)randomGetRange(0xfffffffe,2);
             cfg.f28 = lbl_803DF674 * (f32)(s32)randomGetRange(2,5);
             cfg.f2c = lbl_803DF700 * (f32)(s32)randomGetRange(1,3);
-            cfg.f30 = *(f32 *)(param_3 + 6);
-            cfg.f34 = *(f32 *)(param_3 + 8);
-            cfg.f38 = *(f32 *)(param_3 + 10);
+            cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+            cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
             cfg.f3c = lbl_803DF550;
             cfg.f08 = 0x28;
             cfg.f48 = 0x5000000;
@@ -10173,9 +10173,9 @@ if (param_3 == NULL) {
             }
             cfg.f28 = lbl_803DF4CC * (f32)(s32)randomGetRange(0,4);
             cfg.f2c = lbl_803DF704 * (f32)(s32)randomGetRange(2,4);
-            cfg.f30 = *(f32 *)(param_3 + 6);
-            cfg.f34 = *(f32 *)(param_3 + 8);
-            cfg.f38 = *(f32 *)(param_3 + 10);
+            cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+            cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
             cfg.f3c = lbl_803DF4E8;
             cfg.f08 = 100;
             cfg.f44 = 0x1180200;
@@ -10195,9 +10195,9 @@ if (param_3 == NULL) {
             lbl_8039C308[3] = 0;
             param_3 = lbl_8039C308;
           }
-          cfg.f30 = *(f32 *)(param_3 + 6);
-          cfg.f34 = *(f32 *)(param_3 + 8);
-          cfg.f38 = *(f32 *)(param_3 + 10);
+          cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+          cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+          cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
           cfg.f3c = lbl_803DF504;
           cfg.f08 = 0x50;
           cfg.f44 = 0x180200;
@@ -10219,9 +10219,9 @@ if (param_3 == NULL) {
             param_3 = lbl_8039C308;
           }
           cfg.f2c = lbl_803DF708;
-          cfg.f30 = *(f32 *)(param_3 + 6);
-          cfg.f34 = *(f32 *)(param_3 + 8);
-          cfg.f38 = *(f32 *)(param_3 + 10);
+          cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+          cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+          cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
           cfg.f3c = lbl_803DF618 * (f32)(s32)randomGetRange(0x32,100);
           cfg.f08 = randomGetRange(0x28,0x50);
           cfg.f44 = 0x8100200;
@@ -10243,8 +10243,8 @@ if (param_3 == NULL) {
         }
         cfg.f0c = 700;
         cfg.f42 = 0xc09;
-        cfg.f30 = *(f32 *)(param_3 + 6);
-        cfg.f34 = *(f32 *)(param_3 + 8);
+        cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+        cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
         cfg.f3c = lbl_803DF524 * (f32)(s32)randomGetRange(10,0x14);
         cfg.f08 = 0xaa;
         cfg.f44 = 0xa0104;
@@ -10350,12 +10350,12 @@ int Effect2_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     if (param_1 == 0) return -1;
     if ((param_4 & 0x200000) != 0) {
         if (param_3 == 0) return -1;
-        cfg.f18 = *(f32 *)(param_3 + 6);
-        cfg.f1c = *(f32 *)(param_3 + 8);
-        cfg.f20 = *(f32 *)(param_3 + 10);
-        cfg.f14 = *(f32 *)(param_3 + 4);
-        cfg.f10 = param_3[2];
-        cfg.f0e = param_3[1];
+        cfg.f18 = ((PartFxSpawnParams *)param_3)->unkC;
+        cfg.f1c = ((PartFxSpawnParams *)param_3)->unk10;
+        cfg.f20 = ((PartFxSpawnParams *)param_3)->unk14;
+        cfg.f14 = ((PartFxSpawnParams *)param_3)->unk8;
+        cfg.f10 = ((PartFxSpawnParams *)param_3)->unk4;
+        cfg.f0e = ((PartFxSpawnParams *)param_3)->unk2;
         cfg.f0c = *param_3;
         cfg.f62 = param_5;
     }
@@ -10602,16 +10602,16 @@ int Effect2_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         cfg.f1c = 0.0f;
         cfg.f20 = 0.0f;
         if (param_3 != 0) {
-            cfg.f30 = *(f32 *)(param_3 + 6);
-            cfg.f34 = *(f32 *)(param_3 + 8);
-            cfg.f38 = *(f32 *)(param_3 + 10);
+            cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+            cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
         }
         cfg.f08 = 6;
         cfg.f60 = 0xe1;
         cfg.f44 = 0x4a0010;
         if ((int)randomGetRange(0, 1) != 0) cfg.f48 = 0x202;
         else cfg.f48 = 0x102;
-        if (0.0f == *(f32 *)(param_3 + 4)) {
+        if (0.0f == ((PartFxSpawnParams *)param_3)->unk8) {
             cfg.f3c = lbl_803DF87C * (f32)(s32)randomGetRange(0, 3) + lbl_803DF870;
             cfg.f42 = 0xc0f;
         } else {
@@ -10622,14 +10622,14 @@ int Effect2_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     case 0x29e:
         if (param_3 == 0) FILL338();
         if (param_3 != 0) {
-            cfg.f30 = *(f32 *)(param_3 + 6);
-            cfg.f34 = *(f32 *)(param_3 + 8);
-            cfg.f38 = *(f32 *)(param_3 + 10);
+            cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+            cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
         }
         cfg.f08 = 0x3c;
         cfg.f60 = 0xff;
         cfg.f44 = 0x480010;
-        if (0.0f == *(f32 *)(param_3 + 4)) {
+        if (0.0f == ((PartFxSpawnParams *)param_3)->unk8) {
             cfg.f3c = lbl_803DF928;
             cfg.f42 = 0x74;
         } else {
@@ -10641,15 +10641,15 @@ int Effect2_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     case 0x29f:
         if (param_3 == 0) FILL338();
         if (param_3 != 0) {
-            cfg.f30 = *(f32 *)(param_3 + 6);
-            cfg.f34 = *(f32 *)(param_3 + 8);
-            cfg.f38 = *(f32 *)(param_3 + 10);
+            cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+            cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
         }
         cfg.f08 = 0x3c;
         cfg.f60 = 0xff;
         cfg.f44 = 0x480010;
         cfg.f48 = 2;
-        if (0.0f == *(f32 *)(param_3 + 4)) {
+        if (0.0f == ((PartFxSpawnParams *)param_3)->unk8) {
             cfg.f3c = lbl_803DF8C8;
             cfg.f42 = 0xc22;
         } else {
@@ -10663,7 +10663,7 @@ int Effect2_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         cfg.f61 = 0;
         cfg.f60 = 0x37;
         cfg.f44 = 0x180010;
-        if (0.0f == *(f32 *)(param_3 + 4)) {
+        if (0.0f == ((PartFxSpawnParams *)param_3)->unk8) {
             cfg.f3c = lbl_803DF934 * (f32)(s32)randomGetRange(0x14, 0x32);
             cfg.f42 = 0x73;
         } else {
@@ -10678,7 +10678,7 @@ int Effect2_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         cfg.f60 = 0x37;
         cfg.f44 = 0x480010;
         cfg.f48 = 2;
-        if (0.0f == *(f32 *)(param_3 + 4)) {
+        if (0.0f == ((PartFxSpawnParams *)param_3)->unk8) {
             cfg.f3c = lbl_803DF93C * (f32)(s32)randomGetRange(0x46, 0x50);
             cfg.f42 = 0x73;
         } else {
@@ -10929,9 +10929,9 @@ int Effect2_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     case 0x280:
         if (param_3 == 0) FILL338();
         if (param_3 != 0) {
-            cfg.f30 = *(f32 *)(param_3 + 6);
-            cfg.f34 = lbl_803DF98C + *(f32 *)(param_3 + 8);
-            cfg.f38 = *(f32 *)(param_3 + 10);
+            cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f34 = lbl_803DF98C + ((PartFxSpawnParams *)param_3)->unk10;
+            cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
         } else {
             cfg.f30 = (f32)(s32)randomGetRange(-0x14, 0x14);
             cfg.f34 = lbl_803DF98C;
@@ -10965,9 +10965,9 @@ int Effect2_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     case 0x282:
         if (param_3 == 0) FILL338();
         if (param_3 != 0) {
-            cfg.f30 = *(f32 *)(param_3 + 6);
-            cfg.f34 = *(f32 *)(param_3 + 8);
-            cfg.f38 = *(f32 *)(param_3 + 10);
+            cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+            cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
         } else {
             cfg.f30 = (f32)(s32)randomGetRange(-5, 5);
             cfg.f34 = (f32)(s32)randomGetRange(1, 0xa);
@@ -10986,9 +10986,9 @@ int Effect2_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     case 0x283:
         if (param_3 == 0) FILL338();
         if (param_3 != 0) {
-            cfg.f30 = *(f32 *)(param_3 + 6);
-            cfg.f34 = *(f32 *)(param_3 + 8);
-            cfg.f38 = *(f32 *)(param_3 + 10);
+            cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+            cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
         } else {
             cfg.f30 = (f32)(s32)randomGetRange(-5, 5);
             cfg.f34 = (f32)(s32)randomGetRange(1, 0xa);
@@ -11019,9 +11019,9 @@ int Effect2_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     case 0x285:
         if (param_3 == 0) FILL338();
         if (param_3 != 0) {
-            cfg.f30 = *(f32 *)(param_3 + 6);
-            cfg.f34 = *(f32 *)(param_3 + 8);
-            cfg.f38 = *(f32 *)(param_3 + 10);
+            cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+            cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
         } else {
             cfg.f30 = (f32)(s32)randomGetRange(-5, 5);
             cfg.f34 = (f32)(s32)randomGetRange(1, 0xa);
@@ -11261,12 +11261,12 @@ int Effect7_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     if (param_1 == 0) return -1;
     if ((param_4 & 0x200000) != 0) {
         if (param_3 == 0) return -1;
-        cfg.f18 = *(f32 *)(param_3 + 6);
-        cfg.f1c = *(f32 *)(param_3 + 8);
-        cfg.f20 = *(f32 *)(param_3 + 10);
-        cfg.f14 = *(f32 *)(param_3 + 4);
-        cfg.f10 = param_3[2];
-        cfg.f0e = param_3[1];
+        cfg.f18 = ((PartFxSpawnParams *)param_3)->unkC;
+        cfg.f1c = ((PartFxSpawnParams *)param_3)->unk10;
+        cfg.f20 = ((PartFxSpawnParams *)param_3)->unk14;
+        cfg.f14 = ((PartFxSpawnParams *)param_3)->unk8;
+        cfg.f10 = ((PartFxSpawnParams *)param_3)->unk4;
+        cfg.f0e = ((PartFxSpawnParams *)param_3)->unk2;
         cfg.f0c = *param_3;
         cfg.f62 = param_5;
     }
@@ -11375,7 +11375,7 @@ int Effect7_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         cfg.f08 = 0x28;
         cfg.f60 = 0xff;
         cfg.f44 = 0x110;
-        cfg.f42 = param_3[2] + 0x170;
+        cfg.f42 = ((PartFxSpawnParams *)param_3)->unk4 + 0x170;
         break;
     case 0x8a:
         cfg.f30 = lbl_803DFD28;
@@ -11480,13 +11480,13 @@ int Effect7_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         cfg.f38 = lbl_803DFCDC * (f32)(s32)randomGetRange(-0xa, 0);
         cfg.f60 = 0xff;
         if (param_3 != 0) {
-            cfg.f30 = cfg.f30 + *(f32 *)(param_3 + 6);
-            cfg.f34 = cfg.f34 + *(f32 *)(param_3 + 8);
-            cfg.f38 = cfg.f38 + *(f32 *)(param_3 + 10);
-            if (lbl_803DFCE0 == *(f32 *)(param_3 + 4)) {
+            cfg.f30 = cfg.f30 + ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f34 = cfg.f34 + ((PartFxSpawnParams *)param_3)->unk10;
+            cfg.f38 = cfg.f38 + ((PartFxSpawnParams *)param_3)->unk14;
+            if (lbl_803DFCE0 == ((PartFxSpawnParams *)param_3)->unk8) {
                 cfg.f60 = 0xff;
             } else {
-                cfg.f60 = (u8)(s32)(lbl_803DFD60 * *(f32 *)(param_3 + 4));
+                cfg.f60 = (u8)(s32)(lbl_803DFD60 * ((PartFxSpawnParams *)param_3)->unk8);
             }
         }
         cfg.f3c = lbl_803DFD64 * (f32)(s32)randomGetRange(0xa, 0x14);
@@ -11512,14 +11512,14 @@ int Effect7_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         break;
     case 0xa3:
         if (param_3 == 0) break;
-        cfg.f30 = *(f32 *)(param_3 + 6);
-        cfg.f34 = *(f32 *)(param_3 + 8);
-        cfg.f38 = *(f32 *)(param_3 + 10);
+        cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+        cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+        cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
         cfg.f2c = lbl_803DFD78 * (f32)(s32)randomGetRange(0x64, 0x78);
         cfg.f3c = lbl_803DFD7C * (f32)(s32)randomGetRange(0x3c, 0x50);
         {
             int t = randomGetRange(0, 5);
-            t += param_3[3];
+            t += ((PartFxSpawnParams *)param_3)->unk6;
             cfg.f08 = t + 7;
         }
         cfg.f42 = 0x185;
@@ -11546,7 +11546,7 @@ int Effect7_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         break;
     case 0xa9:
         if (param_3 != 0) {
-            cfg.f3c = *(f32 *)(param_3 + 4) * (lbl_803DFD20 * (f32)(s32)randomGetRange(0x4b, 0x64));
+            cfg.f3c = ((PartFxSpawnParams *)param_3)->unk8 * (lbl_803DFD20 * (f32)(s32)randomGetRange(0x4b, 0x64));
         } else {
             cfg.f3c = lbl_803DFD20 * (f32)(s32)randomGetRange(0x4b, 0x64);
         }
@@ -11660,12 +11660,12 @@ int Effect5_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     if (param_1 == 0) return -1;
     if ((param_4 & 0x200000) != 0) {
         if (param_3 == 0) return -1;
-        cfg.f18 = *(f32 *)(param_3 + 6);
-        cfg.f1c = *(f32 *)(param_3 + 8);
-        cfg.f20 = *(f32 *)(param_3 + 10);
-        cfg.f14 = *(f32 *)(param_3 + 4);
-        cfg.f10 = param_3[2];
-        cfg.f0e = param_3[1];
+        cfg.f18 = ((PartFxSpawnParams *)param_3)->unkC;
+        cfg.f1c = ((PartFxSpawnParams *)param_3)->unk10;
+        cfg.f20 = ((PartFxSpawnParams *)param_3)->unk14;
+        cfg.f14 = ((PartFxSpawnParams *)param_3)->unk8;
+        cfg.f10 = ((PartFxSpawnParams *)param_3)->unk4;
+        cfg.f0e = ((PartFxSpawnParams *)param_3)->unk2;
         cfg.f0c = *param_3;
         cfg.f62 = param_5;
     }
@@ -11722,11 +11722,11 @@ int Effect5_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         cfg.f61 = 0;
         cfg.f44 = 0x180108;
         cfg.f48 = 0x5000000;
-        if (param_3[2] == 0) {
+        if (((PartFxSpawnParams *)param_3)->unk4 == 0) {
             cfg.f42 = 0x2b;
-        } else if (param_3[2] == 1) {
+        } else if (((PartFxSpawnParams *)param_3)->unk4 == 1) {
             cfg.f42 = 0x1a1;
-        } else if (param_3[2] == 2) {
+        } else if (((PartFxSpawnParams *)param_3)->unk4 == 2) {
             cfg.f42 = 0xc10;
             cfg.f48 = cfg.f48 | 0x800;
         } else {
@@ -11752,11 +11752,11 @@ int Effect5_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         cfg.f61 = 0;
         cfg.f44 = 0x1080100;
         cfg.f48 = 0x5000000;
-        if (param_3[2] == 0) {
+        if (((PartFxSpawnParams *)param_3)->unk4 == 0) {
             cfg.f42 = 0x2b;
-        } else if (param_3[2] == 1) {
+        } else if (((PartFxSpawnParams *)param_3)->unk4 == 1) {
             cfg.f42 = 0x1a1;
-        } else if (param_3[2] == 2) {
+        } else if (((PartFxSpawnParams *)param_3)->unk4 == 2) {
             cfg.f42 = 0xc10;
             cfg.f48 = cfg.f48 | 0x800;
         } else {
@@ -11977,12 +11977,12 @@ int Effect3_func04(void *param_1, int param_2, void *param_3v, u32 param_4,
     if (param_1 == 0) return -1;
     if ((param_4 & 0x200000) != 0) {
         if (param_3 == 0) return -1;
-        cfg.f18 = *(f32 *)(param_3 + 6);
-        cfg.f1c = *(f32 *)(param_3 + 8);
-        cfg.f20 = *(f32 *)(param_3 + 10);
-        cfg.f14 = *(f32 *)(param_3 + 4);
-        cfg.f10 = param_3[2];
-        cfg.f0e = param_3[1];
+        cfg.f18 = ((PartFxSpawnParams *)param_3)->unkC;
+        cfg.f1c = ((PartFxSpawnParams *)param_3)->unk10;
+        cfg.f20 = ((PartFxSpawnParams *)param_3)->unk14;
+        cfg.f14 = ((PartFxSpawnParams *)param_3)->unk8;
+        cfg.f10 = ((PartFxSpawnParams *)param_3)->unk4;
+        cfg.f0e = ((PartFxSpawnParams *)param_3)->unk2;
         cfg.f0c = *param_3;
         cfg.f62 = param_5;
     }
@@ -12016,9 +12016,9 @@ int Effect3_func04(void *param_1, int param_2, void *param_3v, u32 param_4,
         cfg.f34 = lbl_803DF9D8 * (f32)(s32)randomGetRange(-0xa, 0xa);
         cfg.f38 = lbl_803DF9D8 * (f32)(s32)randomGetRange(-0xa, 0);
         if (param_3 != 0) {
-            cfg.f30 = cfg.f30 + *(f32 *)(param_3 + 6);
-            cfg.f34 = cfg.f34 + *(f32 *)(param_3 + 8);
-            cfg.f38 = cfg.f38 + *(f32 *)(param_3 + 10);
+            cfg.f30 = cfg.f30 + ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f34 = cfg.f34 + ((PartFxSpawnParams *)param_3)->unk10;
+            cfg.f38 = cfg.f38 + ((PartFxSpawnParams *)param_3)->unk14;
         }
         cfg.f3c = lbl_803DF9DC * (f32)(s32)randomGetRange(0xd, 0x14);
         cfg.f08 = 0x19;
@@ -12034,9 +12034,9 @@ int Effect3_func04(void *param_1, int param_2, void *param_3v, u32 param_4,
         cfg.f34 = lbl_803DF9D8 * (f32)(s32)randomGetRange(-0xa, 0xa);
         cfg.f38 = lbl_803DF9D8 * (f32)(s32)randomGetRange(-0xa, 0);
         if (param_3 != 0) {
-            cfg.f30 = cfg.f30 + *(f32 *)(param_3 + 6);
-            cfg.f34 = cfg.f34 + *(f32 *)(param_3 + 8);
-            cfg.f38 = cfg.f38 + *(f32 *)(param_3 + 10);
+            cfg.f30 = cfg.f30 + ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f34 = cfg.f34 + ((PartFxSpawnParams *)param_3)->unk10;
+            cfg.f38 = cfg.f38 + ((PartFxSpawnParams *)param_3)->unk14;
         }
         cfg.f3c = lbl_803DF9E0 * (f32)(s32)randomGetRange(1, 4);
         cfg.f08 = 0x19;
@@ -12056,7 +12056,7 @@ int Effect3_func04(void *param_1, int param_2, void *param_3v, u32 param_4,
         break;
     case 0x1f7:
         if (param_3 == 0) FILL350();
-        if (param_3 != 0) cfg.f34 = *(f32 *)(param_3 + 8);
+        if (param_3 != 0) cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
         cfg.f3c = lbl_803DF9E8;
         cfg.f08 = randomGetRange(0, 0x1e) + 0x46;
         cfg.f60 = 0x7f;
@@ -12067,7 +12067,7 @@ int Effect3_func04(void *param_1, int param_2, void *param_3v, u32 param_4,
     case 0x1f8:
         if (param_3 == 0) FILL350();
         if (param_3 != 0) {
-            cfg.f3c = lbl_803DF9E8 * *(f32 *)(param_3 + 4);
+            cfg.f3c = lbl_803DF9E8 * ((PartFxSpawnParams *)param_3)->unk8;
         } else {
             cfg.f3c = lbl_803DF9E8;
         }
@@ -12118,9 +12118,9 @@ int Effect3_func04(void *param_1, int param_2, void *param_3v, u32 param_4,
         if (param_3 == 0) FILL350();
         if (param_6 == 0) return -1;
         if (param_3 != 0) {
-            cfg.f30 = *(f32 *)(param_3 + 6);
-            cfg.f34 = *(f32 *)(param_3 + 8);
-            cfg.f38 = *(f32 *)(param_3 + 10);
+            cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+            cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
         }
         if (param_6 != 0) {
             cfg.f24 = *(f32 *)param_6;
@@ -12163,7 +12163,7 @@ int Effect3_func04(void *param_1, int param_2, void *param_3v, u32 param_4,
     case 0x202:
         cfg.f28 = lbl_803DF9D8 * (f32)(s32)randomGetRange(0x96, 0xc8) / lbl_803DFA14;
         cfg.f3c = lbl_803DFA1C * ((f32)(s32)randomGetRange(0x32, 0x64) / lbl_803DFA14) + lbl_803DFA18;
-        cfg.f08 = (s32)(*(f32 *)(param_3 + 4) / cfg.f28);
+        cfg.f08 = (s32)(((PartFxSpawnParams *)param_3)->unk8 / cfg.f28);
         if (cfg.f08 < 0xa) cfg.f08 = 0xa;
         if (cfg.f08 > 0x78) cfg.f08 = 0x78;
         cfg.f61 = 0;
@@ -12174,24 +12174,24 @@ int Effect3_func04(void *param_1, int param_2, void *param_3v, u32 param_4,
         break;
     case 0x203:
         if (param_3 == 0) FILL350();
-        cfg.f34 = *(f32 *)(param_3 + 8);
+        cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
         cfg.f28 = lbl_803DFA20;
         switch (randomGetRange(0, 3)) {
         case 0:
-            cfg.f30 = *(f32 *)(param_3 + 6);
-            cfg.f38 = (f32)(s32)randomGetRange((s16)(s32)-*(f32 *)(param_3 + 10), (s16)(s32) * (f32 *)(param_3 + 10));
+            cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f38 = (f32)(s32)randomGetRange((s16)(s32)-((PartFxSpawnParams *)param_3)->unk14, (s16)(s32) * (f32 *)(param_3 + 10));
             break;
         case 1:
-            cfg.f30 = -*(f32 *)(param_3 + 6);
-            cfg.f38 = (f32)(s32)randomGetRange((s16)(s32)-*(f32 *)(param_3 + 10), (s16)(s32) * (f32 *)(param_3 + 10));
+            cfg.f30 = -((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f38 = (f32)(s32)randomGetRange((s16)(s32)-((PartFxSpawnParams *)param_3)->unk14, (s16)(s32) * (f32 *)(param_3 + 10));
             break;
         case 2:
-            cfg.f38 = *(f32 *)(param_3 + 10);
-            cfg.f30 = (f32)(s32)randomGetRange((s16)(s32)-*(f32 *)(param_3 + 6), (s16)(s32) * (f32 *)(param_3 + 6));
+            cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
+            cfg.f30 = (f32)(s32)randomGetRange((s16)(s32)-((PartFxSpawnParams *)param_3)->unkC, (s16)(s32) * (f32 *)(param_3 + 6));
             break;
         case 3:
-            cfg.f38 = -*(f32 *)(param_3 + 10);
-            cfg.f30 = (f32)(s32)randomGetRange((s16)(s32)-*(f32 *)(param_3 + 6), (s16)(s32) * (f32 *)(param_3 + 6));
+            cfg.f38 = -((PartFxSpawnParams *)param_3)->unk14;
+            cfg.f30 = (f32)(s32)randomGetRange((s16)(s32)-((PartFxSpawnParams *)param_3)->unkC, (s16)(s32) * (f32 *)(param_3 + 6));
             break;
         }
         cfg.f3c = lbl_803DFA24;
@@ -12202,24 +12202,24 @@ int Effect3_func04(void *param_1, int param_2, void *param_3v, u32 param_4,
         break;
     case 0x204:
         if (param_3 == 0) FILL350();
-        cfg.f34 = *(f32 *)(param_3 + 8);
+        cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
         cfg.f28 = lbl_803DFA20;
         switch (randomGetRange(0, 3)) {
         case 0:
-            cfg.f30 = *(f32 *)(param_3 + 6);
-            cfg.f38 = (f32)(s32)randomGetRange((s16)(s32)-*(f32 *)(param_3 + 10), (s16)(s32) * (f32 *)(param_3 + 10));
+            cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f38 = (f32)(s32)randomGetRange((s16)(s32)-((PartFxSpawnParams *)param_3)->unk14, (s16)(s32) * (f32 *)(param_3 + 10));
             break;
         case 1:
-            cfg.f30 = -*(f32 *)(param_3 + 6);
-            cfg.f38 = (f32)(s32)randomGetRange((s16)(s32)-*(f32 *)(param_3 + 10), (s16)(s32) * (f32 *)(param_3 + 10));
+            cfg.f30 = -((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f38 = (f32)(s32)randomGetRange((s16)(s32)-((PartFxSpawnParams *)param_3)->unk14, (s16)(s32) * (f32 *)(param_3 + 10));
             break;
         case 2:
-            cfg.f38 = *(f32 *)(param_3 + 10);
-            cfg.f30 = (f32)(s32)randomGetRange((s16)(s32)-*(f32 *)(param_3 + 6), (s16)(s32) * (f32 *)(param_3 + 6));
+            cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
+            cfg.f30 = (f32)(s32)randomGetRange((s16)(s32)-((PartFxSpawnParams *)param_3)->unkC, (s16)(s32) * (f32 *)(param_3 + 6));
             break;
         case 3:
-            cfg.f38 = -*(f32 *)(param_3 + 10);
-            cfg.f30 = (f32)(s32)randomGetRange((s16)(s32)-*(f32 *)(param_3 + 6), (s16)(s32) * (f32 *)(param_3 + 6));
+            cfg.f38 = -((PartFxSpawnParams *)param_3)->unk14;
+            cfg.f30 = (f32)(s32)randomGetRange((s16)(s32)-((PartFxSpawnParams *)param_3)->unkC, (s16)(s32) * (f32 *)(param_3 + 6));
             break;
         }
         cfg.f28 = lbl_803DFA28 * (f32)(s32)randomGetRange(0x28, 0x50);
@@ -12231,24 +12231,24 @@ int Effect3_func04(void *param_1, int param_2, void *param_3v, u32 param_4,
         break;
     case 0x205:
         if (param_3 == 0) FILL350();
-        cfg.f34 = *(f32 *)(param_3 + 8);
+        cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
         cfg.f28 = lbl_803DFA20;
         switch (randomGetRange(0, 3)) {
         case 0:
-            cfg.f30 = *(f32 *)(param_3 + 6);
-            cfg.f38 = (f32)(s32)randomGetRange((s16)(s32)-*(f32 *)(param_3 + 10), (s16)(s32) * (f32 *)(param_3 + 10));
+            cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f38 = (f32)(s32)randomGetRange((s16)(s32)-((PartFxSpawnParams *)param_3)->unk14, (s16)(s32) * (f32 *)(param_3 + 10));
             break;
         case 1:
-            cfg.f30 = -*(f32 *)(param_3 + 6);
-            cfg.f38 = (f32)(s32)randomGetRange((s16)(s32)-*(f32 *)(param_3 + 10), (s16)(s32) * (f32 *)(param_3 + 10));
+            cfg.f30 = -((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f38 = (f32)(s32)randomGetRange((s16)(s32)-((PartFxSpawnParams *)param_3)->unk14, (s16)(s32) * (f32 *)(param_3 + 10));
             break;
         case 2:
-            cfg.f38 = *(f32 *)(param_3 + 10);
-            cfg.f30 = (f32)(s32)randomGetRange((s16)(s32)-*(f32 *)(param_3 + 6), (s16)(s32) * (f32 *)(param_3 + 6));
+            cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
+            cfg.f30 = (f32)(s32)randomGetRange((s16)(s32)-((PartFxSpawnParams *)param_3)->unkC, (s16)(s32) * (f32 *)(param_3 + 6));
             break;
         case 3:
-            cfg.f38 = -*(f32 *)(param_3 + 10);
-            cfg.f30 = (f32)(s32)randomGetRange((s16)(s32)-*(f32 *)(param_3 + 6), (s16)(s32) * (f32 *)(param_3 + 6));
+            cfg.f38 = -((PartFxSpawnParams *)param_3)->unk14;
+            cfg.f30 = (f32)(s32)randomGetRange((s16)(s32)-((PartFxSpawnParams *)param_3)->unkC, (s16)(s32) * (f32 *)(param_3 + 6));
             break;
         }
         cfg.f28 = lbl_803DFA28 * (f32)(s32)randomGetRange(0x28, 0x50);
@@ -12267,24 +12267,24 @@ int Effect3_func04(void *param_1, int param_2, void *param_3v, u32 param_4,
         break;
     case 0x206:
         if (param_3 == 0) FILL350();
-        cfg.f34 = *(f32 *)(param_3 + 8) - lbl_803DFA30;
+        cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10 - lbl_803DFA30;
         cfg.f28 = lbl_803DFA20;
         switch (randomGetRange(0, 3)) {
         case 0:
-            cfg.f30 = *(f32 *)(param_3 + 6);
-            cfg.f38 = (f32)(s32)randomGetRange((s16)(s32)-*(f32 *)(param_3 + 10), (s16)(s32) * (f32 *)(param_3 + 10));
+            cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f38 = (f32)(s32)randomGetRange((s16)(s32)-((PartFxSpawnParams *)param_3)->unk14, (s16)(s32) * (f32 *)(param_3 + 10));
             break;
         case 1:
-            cfg.f30 = -*(f32 *)(param_3 + 6);
-            cfg.f38 = (f32)(s32)randomGetRange((s16)(s32)-*(f32 *)(param_3 + 10), (s16)(s32) * (f32 *)(param_3 + 10));
+            cfg.f30 = -((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f38 = (f32)(s32)randomGetRange((s16)(s32)-((PartFxSpawnParams *)param_3)->unk14, (s16)(s32) * (f32 *)(param_3 + 10));
             break;
         case 2:
-            cfg.f38 = *(f32 *)(param_3 + 10);
-            cfg.f30 = (f32)(s32)randomGetRange((s16)(s32)-*(f32 *)(param_3 + 6), (s16)(s32) * (f32 *)(param_3 + 6));
+            cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
+            cfg.f30 = (f32)(s32)randomGetRange((s16)(s32)-((PartFxSpawnParams *)param_3)->unkC, (s16)(s32) * (f32 *)(param_3 + 6));
             break;
         case 3:
-            cfg.f38 = -*(f32 *)(param_3 + 10);
-            cfg.f30 = (f32)(s32)randomGetRange((s16)(s32)-*(f32 *)(param_3 + 6), (s16)(s32) * (f32 *)(param_3 + 6));
+            cfg.f38 = -((PartFxSpawnParams *)param_3)->unk14;
+            cfg.f30 = (f32)(s32)randomGetRange((s16)(s32)-((PartFxSpawnParams *)param_3)->unkC, (s16)(s32) * (f32 *)(param_3 + 6));
             break;
         }
         cfg.f28 = lbl_803DFA34 * (f32)(s32)randomGetRange(0x50, 0x64);
@@ -12519,12 +12519,12 @@ int Effect4_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     if (param_1 == 0) return -1;
     if ((param_4 & 0x200000) != 0) {
         if (param_3 == 0) return -1;
-        cfg.f18 = *(f32 *)(param_3 + 6);
-        cfg.f1c = *(f32 *)(param_3 + 8);
-        cfg.f20 = *(f32 *)(param_3 + 10);
-        cfg.f14 = *(f32 *)(param_3 + 4);
-        cfg.f10 = param_3[2];
-        cfg.f0e = param_3[1];
+        cfg.f18 = ((PartFxSpawnParams *)param_3)->unkC;
+        cfg.f1c = ((PartFxSpawnParams *)param_3)->unk10;
+        cfg.f20 = ((PartFxSpawnParams *)param_3)->unk14;
+        cfg.f14 = ((PartFxSpawnParams *)param_3)->unk8;
+        cfg.f10 = ((PartFxSpawnParams *)param_3)->unk4;
+        cfg.f0e = ((PartFxSpawnParams *)param_3)->unk2;
         cfg.f0c = *param_3;
         cfg.f62 = param_5;
     }
@@ -12915,9 +12915,9 @@ int Effect4_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         break;
     case 0x1a4:
         if (param_3 != 0) {
-            cfg.f30 = *(f32 *)(param_3 + 6);
-            cfg.f34 = lbl_803DFB30 + *(f32 *)(param_3 + 8);
-            cfg.f38 = *(f32 *)(param_3 + 10);
+            cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f34 = lbl_803DFB30 + ((PartFxSpawnParams *)param_3)->unk10;
+            cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
         } else {
             cfg.f30 = (f32)(s32)randomGetRange(-0xa, 0xa);
             cfg.f34 = lbl_803DFB34;
@@ -12942,10 +12942,10 @@ int Effect4_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         break;
     case 0x1a5:
         if (param_3 != 0) {
-            if (*(f32 *)(param_3 + 4) <= lbl_803DFAB0) {
-                *(f32 *)(param_3 + 4) = *(f32 *)&lbl_803DFAB0;
+            if (((PartFxSpawnParams *)param_3)->unk8 <= lbl_803DFAB0) {
+                ((PartFxSpawnParams *)param_3)->unk8 = *(f32 *)&lbl_803DFAB0;
             }
-            cfg.f28 = -*(f32 *)(param_3 + 4);
+            cfg.f28 = -((PartFxSpawnParams *)param_3)->unk8;
         } else {
             cfg.f28 = lbl_803DFB44 * (f32)(s32)randomGetRange(0, 0x14);
         }
@@ -12959,9 +12959,9 @@ int Effect4_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         break;
     case 0x1a6:
         if (param_3 != 0) {
-            cfg.f30 = *(f32 *)(param_3 + 6);
-            cfg.f34 = *(f32 *)(param_3 + 8);
-            cfg.f38 = *(f32 *)(param_3 + 10);
+            cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+            cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
         } else {
             cfg.f30 = (f32)(s32)randomGetRange(-0xa, 0xa);
             cfg.f34 = lbl_803DFB34;
@@ -12993,7 +12993,7 @@ int Effect4_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         break;
     case 0x1b6:
         if (param_3 != 0) {
-            cfg.f28 = *(f32 *)(param_3 + 4);
+            cfg.f28 = ((PartFxSpawnParams *)param_3)->unk8;
         } else {
             cfg.f28 = lbl_803DFAD8 * (f32)(s32)randomGetRange(-3, 3);
         }
@@ -13085,9 +13085,9 @@ int Effect4_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         break;
     case 0x1af:
         if (param_3 == 0) return -1;
-        cfg.f24 = *(f32 *)(param_3 + 6) * (f32)(s32)randomGetRange(-1, 1);
-        cfg.f28 = *(f32 *)(param_3 + 6) * (f32)(s32)randomGetRange(-1, 1);
-        cfg.f2c = *(f32 *)(param_3 + 6) * (f32)(s32)randomGetRange(-1, 1);
+        cfg.f24 = ((PartFxSpawnParams *)param_3)->unkC * (f32)(s32)randomGetRange(-1, 1);
+        cfg.f28 = ((PartFxSpawnParams *)param_3)->unkC * (f32)(s32)randomGetRange(-1, 1);
+        cfg.f2c = ((PartFxSpawnParams *)param_3)->unkC * (f32)(s32)randomGetRange(-1, 1);
         cfg.f3c = lbl_803DFB74 * (f32)(s32)randomGetRange(0x190, 0x1f4);
         cfg.f60 = 0xff;
         cfg.f08 = randomGetRange(0, 0x14) + 0xa0;
@@ -13123,7 +13123,7 @@ int Effect4_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         if (param_3 == 0) return -1;
         cfg.f30 = lbl_803DFB78 * (f32)(s32)randomGetRange(-0x14, 0x14);
         cfg.f38 = lbl_803DFB78 * (f32)(s32)randomGetRange(-0x14, 0x14);
-        cfg.f3c = *(f32 *)(param_3 + 6) * (lbl_803DFB80 * (f32)(s32)randomGetRange(1, 5));
+        cfg.f3c = ((PartFxSpawnParams *)param_3)->unkC * (lbl_803DFB80 * (f32)(s32)randomGetRange(1, 5));
         cfg.f60 = 0xff;
         cfg.f0c = (s16)randomGetRange(0, 0xffff);
         cfg.f0e = (s16)randomGetRange(0, 0xffff);
@@ -13457,12 +13457,12 @@ int Effect1_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     if (param_1 == 0) return -1;
     if ((param_4 & 0x200000) != 0) {
         if (param_3 == 0) return -1;
-        cfg.f18 = *(f32 *)(param_3 + 6);
-        cfg.f1c = *(f32 *)(param_3 + 8);
-        cfg.f20 = *(f32 *)(param_3 + 10);
-        cfg.f14 = *(f32 *)(param_3 + 4);
-        cfg.f10 = param_3[2];
-        cfg.f0e = param_3[1];
+        cfg.f18 = ((PartFxSpawnParams *)param_3)->unkC;
+        cfg.f1c = ((PartFxSpawnParams *)param_3)->unk10;
+        cfg.f20 = ((PartFxSpawnParams *)param_3)->unk14;
+        cfg.f14 = ((PartFxSpawnParams *)param_3)->unk8;
+        cfg.f10 = ((PartFxSpawnParams *)param_3)->unk4;
+        cfg.f0e = ((PartFxSpawnParams *)param_3)->unk2;
         cfg.f0c = *param_3;
         cfg.f62 = param_5;
     }
@@ -13542,8 +13542,8 @@ int Effect1_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     case 0x3a5: /* L_800AFC1C */
         if (param_3 == 0) FILL320();
         if (param_3 != 0) {
-            cfg.f38 = *(f32 *)(param_3 + 6);
-            cfg.f34 = *(f32 *)(param_3 + 8);
+            cfg.f38 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
         } else {
             cfg.f38 = lbl_803DF758;
             cfg.f34 = lbl_803DF75C;
@@ -13560,8 +13560,8 @@ int Effect1_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     case 0x3a6: /* L_800AFD80 */
         if (param_3 == 0) FILL320();
         if (param_3 != 0) {
-            cfg.f38 = *(f32 *)(param_3 + 6);
-            cfg.f34 = *(f32 *)(param_3 + 8);
+            cfg.f38 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
         } else {
             cfg.f38 = lbl_803DF758;
             cfg.f34 = lbl_803DF75C;
@@ -13609,13 +13609,13 @@ int Effect1_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     case 0x3a2:
         if (param_3 == 0) FILL320();
         if (param_3 == 0) return -1;
-        cfg.f24 = *(f32 *)(param_3 + 4) * (lbl_803DF78C * (f32)(s32)randomGetRange(-0x64, 0x64));
-        cfg.f28 = *(f32 *)(param_3 + 4) * (lbl_803DF790 * (f32)(s32)randomGetRange(0x50, 0x8c));
-        cfg.f2c = *(f32 *)(param_3 + 4) * (lbl_803DF794 * (f32)(s32)randomGetRange(-0x64, 0x64));
+        cfg.f24 = ((PartFxSpawnParams *)param_3)->unk8 * (lbl_803DF78C * (f32)(s32)randomGetRange(-0x64, 0x64));
+        cfg.f28 = ((PartFxSpawnParams *)param_3)->unk8 * (lbl_803DF790 * (f32)(s32)randomGetRange(0x50, 0x8c));
+        cfg.f2c = ((PartFxSpawnParams *)param_3)->unk8 * (lbl_803DF794 * (f32)(s32)randomGetRange(-0x64, 0x64));
         cfg.f30 = lbl_803DF798 * (f32)(s32)randomGetRange(-0x64, 0x64);
         cfg.f34 = lbl_803DF75C;
         cfg.f38 = lbl_803DF79C * (f32)(s32)randomGetRange(-0x64, 0x64);
-        cfg.f3c = *(f32 *)(param_3 + 4) * (lbl_803DF7A0 * (f32)(s32)randomGetRange(0x16, 0x46));
+        cfg.f3c = ((PartFxSpawnParams *)param_3)->unk8 * (lbl_803DF7A0 * (f32)(s32)randomGetRange(0x16, 0x46));
         cfg.f08 = randomGetRange(0xe, 0x30) + 0x29;
         cfg.f42 = 0x60;
         cfg.f58 = 0x10000 - 0x108b;
@@ -13634,9 +13634,9 @@ int Effect1_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     case 0x3a1: /* L_800B032C */
         if (param_3 == 0) FILL320();
         if (param_3 == 0) return -1;
-        cfg.f30 = *(f32 *)(param_3 + 6);
-        cfg.f34 = lbl_803DF7A4 + *(f32 *)(param_3 + 8);
-        cfg.f38 = *(f32 *)(param_3 + 10);
+        cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+        cfg.f34 = lbl_803DF7A4 + ((PartFxSpawnParams *)param_3)->unk10;
+        cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
         cfg.f2c = lbl_803DF724 * (f32)(s32)randomGetRange(0x14, 0x1e);
         cfg.f24 = lbl_803DF7A8 * (f32)(s32)randomGetRange(-0x14, 0x14);
         cfg.f28 = lbl_803DF7A8 * (f32)(s32)randomGetRange(-0x14, 0x14);
@@ -13658,9 +13658,9 @@ int Effect1_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     case 0x3a0: /* L_800B04A0 */
         if (param_3 == 0) FILL320();
         if (param_3 == 0) return -1;
-        cfg.f30 = *(f32 *)(param_3 + 6);
-        cfg.f34 = lbl_803DF7A4 + *(f32 *)(param_3 + 8);
-        cfg.f38 = *(f32 *)(param_3 + 10);
+        cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+        cfg.f34 = lbl_803DF7A4 + ((PartFxSpawnParams *)param_3)->unk10;
+        cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
         cfg.f2c = lbl_803DF7AC * (f32)(s32)randomGetRange(0x14, 0x1e);
         cfg.f24 = lbl_803DF760 * (f32)(s32)randomGetRange(-0x14, 0x14);
         cfg.f28 = lbl_803DF7B0 * (f32)(s32)randomGetRange(2, 6);
@@ -13743,11 +13743,11 @@ int Effect1_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         cfg.f20 = 0.0f;
         cfg.f14 = 1.0f;
         if (param_3 != 0) {
-            cfg.f30 = *(f32 *)(param_3 + 6);
-            cfg.f34 = lbl_803DF7C4 + *(f32 *)(param_3 + 8);
-            cfg.f38 = *(f32 *)(param_3 + 10);
+            cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f34 = lbl_803DF7C4 + ((PartFxSpawnParams *)param_3)->unk10;
+            cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
             cfg.f0c = *param_3;
-            cfg.f10 = param_3[2];
+            cfg.f10 = ((PartFxSpawnParams *)param_3)->unk4;
         }
         cfg.f60 = 0xff;
         cfg.f3c = lbl_803DF7C8;
@@ -13902,11 +13902,11 @@ int Effect1_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         cfg.f20 = 0.0f;
         cfg.f14 = 1.0f;
         if (param_3 != 0) {
-            cfg.f30 = *(f32 *)(param_3 + 6);
-            cfg.f34 = lbl_803DF7C4 + *(f32 *)(param_3 + 8);
-            cfg.f38 = *(f32 *)(param_3 + 10);
+            cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f34 = lbl_803DF7C4 + ((PartFxSpawnParams *)param_3)->unk10;
+            cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
             cfg.f0c = *param_3;
-            cfg.f10 = param_3[2];
+            cfg.f10 = ((PartFxSpawnParams *)param_3)->unk4;
         }
         cfg.f60 = 0xff;
         cfg.f3c = lbl_803DF7C8;
@@ -13923,11 +13923,11 @@ int Effect1_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         cfg.f20 = 0.0f;
         cfg.f14 = 1.0f;
         if (param_3 != 0) {
-            cfg.f30 = *(f32 *)(param_3 + 6);
-            cfg.f34 = lbl_803DF7C4 + *(f32 *)(param_3 + 8);
-            cfg.f38 = *(f32 *)(param_3 + 10);
+            cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f34 = lbl_803DF7C4 + ((PartFxSpawnParams *)param_3)->unk10;
+            cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
             cfg.f0c = *param_3;
-            cfg.f10 = param_3[2];
+            cfg.f10 = ((PartFxSpawnParams *)param_3)->unk4;
         }
         cfg.f60 = 0xff;
         cfg.f3c = lbl_803DF7C8 * (f32)(s32)randomGetRange(1, 3);
@@ -14121,9 +14121,9 @@ int Effect1_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     case 0x394: /* L_800B1AAC */
         if (param_3 == 0) FILL320();
         if (param_3 != 0) {
-            cfg.f38 = *(f32 *)(param_3 + 6);
-            cfg.f34 = *(f32 *)(param_3 + 8);
-            cfg.f30 = *(f32 *)(param_3 + 10);
+            cfg.f38 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+            cfg.f30 = ((PartFxSpawnParams *)param_3)->unk14;
         }
         cfg.f0c = (s16)(s32)randomGetRange(0, 0xffff);
         cfg.f0e = (s16)(s32)randomGetRange(0, 0xffff);
@@ -14140,9 +14140,9 @@ int Effect1_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     case 0x395: /* L_800B1BBC */
         if (param_3 == 0) FILL320();
         if (param_3 != 0) {
-            cfg.f38 = *(f32 *)(param_3 + 6);
-            cfg.f34 = *(f32 *)(param_3 + 8);
-            cfg.f30 = *(f32 *)(param_3 + 10);
+            cfg.f38 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
+            cfg.f30 = ((PartFxSpawnParams *)param_3)->unk14;
         }
         cfg.f0c = (s16)(s32)randomGetRange(0, 0xffff);
         cfg.f0e = (s16)(s32)randomGetRange(0, 0xffff);
@@ -14182,8 +14182,8 @@ int Effect1_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     case 0x390: /* L_800B1F2C */
         if (param_3 == 0) FILL320();
         if (param_3 != 0) {
-            cfg.f38 = *(f32 *)(param_3 + 6);
-            cfg.f34 = *(f32 *)(param_3 + 8);
+            cfg.f38 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
         } else {
             cfg.f38 = lbl_803DF758;
             cfg.f34 = lbl_803DF75C;
@@ -14200,8 +14200,8 @@ int Effect1_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     case 0x391: /* L_800B2090 */
         if (param_3 == 0) FILL320();
         if (param_3 != 0) {
-            cfg.f38 = *(f32 *)(param_3 + 6);
-            cfg.f34 = *(f32 *)(param_3 + 8);
+            cfg.f38 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f34 = ((PartFxSpawnParams *)param_3)->unk10;
         } else {
             cfg.f38 = lbl_803DF758;
             cfg.f34 = lbl_803DF75C;
@@ -14239,9 +14239,9 @@ int Effect1_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         cfg.f2c = lbl_803DF7DC * (f32)(s32)randomGetRange(-0xa, 0xa);
         cfg.f60 = 0xff;
         if (param_3 != 0) {
-            cfg.f30 = cfg.f30 + *(f32 *)(param_3 + 6);
-            cfg.f34 = cfg.f34 + *(f32 *)(param_3 + 8);
-            cfg.f38 = cfg.f38 + *(f32 *)(param_3 + 10);
+            cfg.f30 = cfg.f30 + ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f34 = cfg.f34 + ((PartFxSpawnParams *)param_3)->unk10;
+            cfg.f38 = cfg.f38 + ((PartFxSpawnParams *)param_3)->unk14;
         }
         cfg.f3c = lbl_803DF828 * (f32)(s32)randomGetRange(0xa, 0x14);
         cfg.f08 = 0x55;
@@ -14275,8 +14275,8 @@ int Effect1_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
     case 0x38d: /* L_800B2610 */
         if (param_3 == 0) FILL320();
         if (param_3 != 0) {
-            cfg.f30 = *(f32 *)(param_3 + 6);
-            cfg.f38 = *(f32 *)(param_3 + 10);
+            cfg.f30 = ((PartFxSpawnParams *)param_3)->unkC;
+            cfg.f38 = ((PartFxSpawnParams *)param_3)->unk14;
         }
         cfg.f34 = lbl_803DF838;
         cfg.f24 = lbl_803DF7B0 * (f32)(s32)randomGetRange(-0xa, 0xa) + lbl_803DF738;
