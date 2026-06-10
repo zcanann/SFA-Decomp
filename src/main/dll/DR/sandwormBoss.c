@@ -3474,9 +3474,9 @@ void fn_8019D9F0(int* obj)
                 dir[2] = -dir[2];
                 pay.d = i;
                 (*gPartfxInterface)->spawnObject(obj, 0x7f4, &pay, 2, -1, dir);
-                dir[0] = *(f32*)p32 - *(f32*)((char*)lbl_803DDB10 + 0xc);
+                dir[0] = *(f32*)p32 - ((GameObject *)lbl_803DDB10)->anim.localPosX;
                 dir[1] = lbl_803E41E4;
-                dir[2] = *(f32*)(p32 + 0x20) - *(f32*)((char*)lbl_803DDB10 + 0x14);
+                dir[2] = *(f32*)(p32 + 0x20) - ((GameObject *)lbl_803DDB10)->anim.localPosZ;
                 PSVECNormalize(dir, dir);
                 pay.x = lbl_803E41E8;
                 pay.y = lbl_803E41DC;

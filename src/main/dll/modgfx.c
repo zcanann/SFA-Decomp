@@ -12764,9 +12764,9 @@ void fn_800A3AF0(void *table, int count, void *ctx, f32 a, f32 b)
     cam = Camera_GetCurrentViewSlot();
     lbl_803DD29A = *(s16 *)cam;
     lbl_803DD29C = ((GameObject *)cam)->anim.rotY;
-    dx = ((GameObject *)cam)->anim.localPosX - *(f32 *)((char *)ctx + 0xc);
-    dy = ((GameObject *)cam)->anim.localPosY - *(f32 *)((char *)ctx + 0x10);
-    dz = ((GameObject *)cam)->anim.localPosZ - *(f32 *)((char *)ctx + 0x14);
+    dx = ((GameObject *)cam)->anim.localPosX - ((GameObject *)ctx)->anim.localPosX;
+    dy = ((GameObject *)cam)->anim.localPosY - ((GameObject *)ctx)->anim.localPosY;
+    dz = ((GameObject *)cam)->anim.localPosZ - ((GameObject *)ctx)->anim.localPosZ;
     for (i = 0; i < count; i++) {
         int t = *(s8 *)((char *)table + i * 0x4c + 0x48);
         if (t == 0x12 || (u8)(t - 0x10) <= 1 || (u8)(t - 0x14) <= 1 || t == 0x17) {
@@ -12801,15 +12801,15 @@ void fn_800A3AF0(void *table, int count, void *ctx, f32 a, f32 b)
             int t = *(s8 *)(e + 0x48);
             if (t == 0x12 || (u8)(t - 0x10) <= 1 || (u8)(t - 0x14) <= 1 || t == 0x17) {
                 int rt;
-                p0x = *(f32 *)((char *)ctx + 0xc) + ((f32)*(s16 *)(e + 0x10) - a);
+                p0x = ((GameObject *)ctx)->anim.localPosX + ((f32)*(s16 *)(e + 0x10) - a);
                 p0y = (f32)*(s16 *)(e + 0x16);
-                p0z = *(f32 *)((char *)ctx + 0x14) + ((f32)*(s16 *)(e + 0x1c) - b);
-                p1x = *(f32 *)((char *)ctx + 0xc) + ((f32)*(s16 *)(e + 0x12) - a);
+                p0z = ((GameObject *)ctx)->anim.localPosZ + ((f32)*(s16 *)(e + 0x1c) - b);
+                p1x = ((GameObject *)ctx)->anim.localPosX + ((f32)*(s16 *)(e + 0x12) - a);
                 p1y = (f32)*(s16 *)(e + 0x18);
-                p1z = *(f32 *)((char *)ctx + 0x14) + ((f32)*(s16 *)(e + 0x1e) - b);
-                p2x = *(f32 *)((char *)ctx + 0xc) + ((f32)*(s16 *)(e + 0x14) - a);
+                p1z = ((GameObject *)ctx)->anim.localPosZ + ((f32)*(s16 *)(e + 0x1e) - b);
+                p2x = ((GameObject *)ctx)->anim.localPosX + ((f32)*(s16 *)(e + 0x14) - a);
                 p2y = (f32)*(s16 *)(e + 0x1a);
-                p2z = *(f32 *)((char *)ctx + 0x14) + ((f32)*(s16 *)(e + 0x20) - b);
+                p2z = ((GameObject *)ctx)->anim.localPosZ + ((f32)*(s16 *)(e + 0x20) - b);
                 r1 = (f32)randomGetRange(1, 1000) / lbl_803DF474;
                 r2 = (f32)randomGetRange(1, 1000) / lbl_803DF474;
                 s = sqrtf(r2);
@@ -13760,8 +13760,8 @@ void dll_0B_func05(void)
                                 tmpl.z += ((ModgfxEffectSlot *)eff)->unk20;
                             }
                             o = Obj_AllocObjectSetup(0x20, 0x66);
-                            *(f32 *)((char *)o + 0x8) = tmpl.x;
-                            *(f32 *)((char *)o + 0xc) = tmpl.y;
+                            ((GameObject *)o)->anim.rootMotionScale = tmpl.x;
+                            ((GameObject *)o)->anim.localPosX = tmpl.y;
                             *(f32 *)&((ObjDef *)o)->jointData = tmpl.z;
                             *(int *)eff = (int)Obj_SetupObject(o, 5, -1, -1, 0);
                             *(int *)(*(int *)eff + 0xf8) = 1;
@@ -13782,7 +13782,7 @@ void dll_0B_func05(void)
                     }
                     if (*(int *)eff != 0) {
                         int *o = *(int **)eff;
-                        int *list = *(int **)((char *)*(int **)((char *)o + 0x54) + 0x50);
+                        int *list = *(int **)((char *)*(int **)&((GameObject *)o)->anim.hitReactState + 0x50);
                         if (list != NULL) {
                             if (*(s16 *)((char *)list + 0x44) == (int)*(f32 *)(E9 + emOff + 0x4)) {
                                 Obj_FreeObject(o);

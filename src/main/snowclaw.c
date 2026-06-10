@@ -442,7 +442,7 @@ void snowclaw_hitDetect(int obj) {
         }
     }
     sub = *(int **)inner;
-    if (sub != 0 && (*(int (*)(int *))(*(int *)(*(int *)(*(int *)((char *)sub + 0x68)) + 0x38)))(sub) == 2) {
+    if (sub != 0 && (*(int (*)(int *))(*(int *)(*(int *)(*(int *)&((GameObject *)sub)->anim.dll) + 0x38)))(sub) == 2) {
         snowclaw_syncMountTransform(obj, (int)sub, 0, 0, 0, 0, 0, 0, 0);
     }
     a5 = ((SnowclawState *)inner)->unkA5;

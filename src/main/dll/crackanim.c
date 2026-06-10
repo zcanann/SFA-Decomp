@@ -113,7 +113,7 @@ void appleontree_update(int param_1)
         itemPickupDoParticleFx((int)puVar2, lbl_803E37C8, 0xff, 0x28);
         Sfx_PlayFromObject((int)puVar2, SFXen_waterblock_stop);
         iVar3 = *(int *)(puVar2 + 0x5c);
-        if (*(s16 *)((u8 *)puVar2 + 6) & 0x2000) {
+        if (((GameObject *)puVar2)->anim.flags & 0x2000) {
           Obj_FreeObject((int)puVar2);
         }
         else {
@@ -286,7 +286,7 @@ void appleontree_update(int param_1)
     case 5:
       if (lbl_803E3810 < fVar11) {
         iVar7 = *(int *)(puVar2 + 0x5c);
-        if (*(s16 *)((u8 *)puVar2 + 6) & 0x2000) {
+        if (((GameObject *)puVar2)->anim.flags & 0x2000) {
           Obj_FreeObject((int)puVar2);
         }
         else {
@@ -301,7 +301,7 @@ void appleontree_update(int param_1)
       fVar13 = lbl_803E3814;
       if (fVar11 > fVar13) {
         iVar7 = *(int *)(puVar2 + 0x5c);
-        if (*(s16 *)((u8 *)puVar2 + 6) & 0x2000) {
+        if (((GameObject *)puVar2)->anim.flags & 0x2000) {
           Obj_FreeObject((int)puVar2);
         }
         else {
