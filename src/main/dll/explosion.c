@@ -504,15 +504,15 @@ extern int return0_8005669C(int p);
 extern int lbl_803DB610;
 extern u32 lbl_803DDBD8;
 
-int NWSH_levcon_SeqFn(int p1, int p2, u8 *p3)
+int NWSH_levcon_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     void *player;
     int i;
 
     player = Obj_GetPlayerObject();
     if (player != 0) {
-        for (i = 0; i < *(u8 *)(p3 + 0x8b); i++) {
-            if (p3[i + 0x81] != 1) {
+        for (i = 0; i < animUpdate->eventCount; i++) {
+            if (animUpdate->eventIds[i] != 1) {
             } else {
                 fn_80296518(player, 0x10, 1);
                 GameBit_Set(0x174, 1);
@@ -527,15 +527,15 @@ int NWSH_levcon_SeqFn(int p1, int p2, u8 *p3)
     return 0;
 }
 
-int dll_199_SeqFn(int obj, int p2, u8 *p3)
+int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState *animUpdate)
 {
     u8 *st;
     int i;
-    int idx;
+    u8 eventId;
 
     st = ((GameObject *)obj)->extra;
-    *(s16 *)(p3 + 0x70) = -1;
-    *(u8 *)(p3 + 0x56) = 0;
+    animUpdate->activeHitVolumePair = -1;
+    animUpdate->sequenceEventActive = 0;
     if (*(s16 *)(st + 0xa) != 0) {
         *(s16 *)(st + 8) += *(s16 *)(st + 0xa);
         if (*(s16 *)(st + 8) <= 1 && *(s16 *)(st + 0xa) <= 0) {
@@ -547,9 +547,9 @@ int dll_199_SeqFn(int obj, int p2, u8 *p3)
         }
         (**(void (**)(int, int))(*(int *)gTitleMenuControlInterface + 0x38))(3, *(s16 *)(st + 8) & 0xff);
     }
-    for (i = 0; i < *(u8 *)(p3 + 0x8b); i++) {
-        idx = i + 0x81;
-        switch (p3[idx]) {
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        eventId = animUpdate->eventIds[i];
+        switch (eventId) {
         case 0xb:
             *(u8 *)(st + 0xf) = 7;
             break;
@@ -600,16 +600,16 @@ int dll_199_SeqFn(int obj, int p2, u8 *p3)
             (**(void (**)(int, int, int, int, int))(*(int *)gTitleMenuControlInterface + 0x18))(3, 0x2d, 0x50, *(s16 *)(st + 8) & 0xff, 0);
             break;
         }
-        p3[idx] = 0;
+        animUpdate->eventIds[i] = 0;
     }
     if (*(u8 *)(st + 0xf) != 7) {
     } else {
         if ((getButtonsHeld(0) & 0x100) != 0) {
-            (*gObjectTriggerInterface)->endSequence((s8)*(u8 *)(p3 + 0x57));
+            (*gObjectTriggerInterface)->endSequence(animUpdate->sequenceSlot);
             *(u8 *)(st + 0xf) = 8;
             *(s16 *)(st + 2) = 0;
         } else if ((getButtonsHeld(0) & 0x200) != 0) {
-            (*gObjectTriggerInterface)->endSequence((s8)*(u8 *)(p3 + 0x57));
+            (*gObjectTriggerInterface)->endSequence(animUpdate->sequenceSlot);
             *(u8 *)(st + 0xf) = 7;
             *(s16 *)(st + 2) = 0;
         }

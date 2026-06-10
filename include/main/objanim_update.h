@@ -6,7 +6,8 @@
 typedef struct ObjAnimUpdateState {
   u8 pad00[0x56];
   u8 sequenceEventActive;
-  u8 pad57[0x6E - 0x57];
+  s8 sequenceSlot;
+  u8 pad58[0x6E - 0x58];
   union {
     struct {
       s8 hitVolumeA;
@@ -29,6 +30,7 @@ typedef struct ObjAnimUpdateState {
 } ObjAnimUpdateState;
 
 STATIC_ASSERT(offsetof(ObjAnimUpdateState, sequenceEventActive) == 0x56);
+STATIC_ASSERT(offsetof(ObjAnimUpdateState, sequenceSlot) == 0x57);
 STATIC_ASSERT(offsetof(ObjAnimUpdateState, hitVolumePair) == 0x6E);
 STATIC_ASSERT(offsetof(ObjAnimUpdateState, activeHitVolumePair) == 0x70);
 STATIC_ASSERT(offsetof(ObjAnimUpdateState, eventIds) == 0x81);

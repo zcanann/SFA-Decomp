@@ -2,6 +2,7 @@
 #define MAIN_DLL_DLL_1CA_H_
 
 #include "ghidra_import.h"
+#include "main/objanim_update.h"
 
 void dll_197_init(int obj, int data);
 void FUN_801caa30(undefined2 *param_1,int param_2);
@@ -21,6 +22,6 @@ int dll_199_getExtraSize(void);
 int dll_199_getObjectTypeId(void);
 void dll_199_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dll_199_hitDetect(void);
-int NWSH_levcon_SeqFn(int obj, int unused, u8 *events);
+int NWSH_levcon_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 
 #endif /* MAIN_DLL_DLL_1CA_H_ */
