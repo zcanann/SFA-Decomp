@@ -385,7 +385,7 @@ extern int getAngle(f32 dx, f32 dz);
 extern f32 lbl_803E72EC;
 extern f32 lbl_803E72F0;
 
-int suntemple_interactCallback(int obj, int p2, int p3);
+int suntemple_interactCallback(int obj, int p2, ObjAnimUpdateState *animUpdate);
 
 extern f32 lbl_802C25D8[];
 extern int getCurMapLayer(void);
@@ -1934,7 +1934,7 @@ void wctile_release(void);
 void wctile_initialise(void);
 void wctile_update(int obj);
 int wcpressures_getExtraSize(void);
-int wcpressures_tileStateCallback(int obj, int unused, int callbackData);
+int wcpressures_tileStateCallback(int obj, int unused, ObjAnimUpdateState *animUpdate);
 int wcpressures_getObjectTypeId(int obj);
 void wcpressures_free(int obj);
 void wcpressures_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
@@ -2008,7 +2008,7 @@ int suntemple_getObjectTypeId(void);
 void suntemple_free(void);
 void suntemple_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void suntemple_hitDetect(int obj);
-int suntemple_interactCallback(int obj, int p2, int p3);
+int suntemple_interactCallback(int obj, int p2, ObjAnimUpdateState *animUpdate);
 void suntemple_init(u8 *obj, u8 *setup);
 void suntemple_update(int obj);
 void suntemple_release(void);

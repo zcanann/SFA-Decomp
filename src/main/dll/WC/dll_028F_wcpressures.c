@@ -46,7 +46,6 @@
 #define WCPRESSURES_OBJECT_STATE_OFFSET 0xb8
 #define WCPRESSURES_OBJECT_TILE_CALLBACK_OFFSET 0xbc
 
-#define WCPRESSURES_CALLBACK_COMMAND_OFFSET 0x80
 #define WCPRESSURES_CALLBACK_NONE 0
 #define WCPRESSURES_CALLBACK_SNAPSHOT_TILES 1
 #define WCPRESSURES_CALLBACK_RESET 2
@@ -114,21 +113,21 @@ STATIC_ASSERT(offsetof(WCPressuresSetup, activateBit) == WCPRESSURES_SETUP_ACTIV
 
 int wcpressures_getExtraSize(void) { return WCPRESSURES_EXTRA_SIZE; }
 
-int wcpressures_tileStateCallback(int obj, int unused, int callbackData)
+int wcpressures_tileStateCallback(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     WCPressuresState *state = *(WCPressuresState **)(obj + WCPRESSURES_OBJECT_STATE_OFFSET);
     WCPressuresSetup *setup = *(WCPressuresSetup **)(obj + WCPRESSURES_OBJECT_SETUP_OFFSET);
     u8 i;
 
-    if (*(u8 *)(callbackData + WCPRESSURES_CALLBACK_COMMAND_OFFSET) == WCPRESSURES_CALLBACK_SNAPSHOT_TILES) {
+    if (animUpdate->triggerCommand == WCPRESSURES_CALLBACK_SNAPSHOT_TILES) {
         for (i = 0; i < WCPRESSURES_TRACKED_COUNT; i++) {
             if ((void *)state->objects[i] != NULL) {
                 state->savedPos[i].x = *(f32 *)(state->objects[i] + 0xc);
                 state->savedPos[i].z = *(f32 *)(state->objects[i] + WCPRESSURES_OBJECT_Z_OFFSET);
             }
         }
-        *(u8 *)(callbackData + WCPRESSURES_CALLBACK_COMMAND_OFFSET) = WCPRESSURES_CALLBACK_NONE;
-    } else if (*(u8 *)(callbackData + WCPRESSURES_CALLBACK_COMMAND_OFFSET) == WCPRESSURES_CALLBACK_RESET) {
+        animUpdate->triggerCommand = WCPRESSURES_CALLBACK_NONE;
+    } else if (animUpdate->triggerCommand == WCPRESSURES_CALLBACK_RESET) {
         for (i = 0; i < WCPRESSURES_TRACKED_COUNT; i++) {
             state->objects[i] = 0;
         }
@@ -136,7 +135,7 @@ int wcpressures_tileStateCallback(int obj, int unused, int callbackData)
         *(f32 *)(obj + WCPRESSURES_OBJECT_Y_OFFSET) = setup->y;
         *(f32 *)(obj + WCPRESSURES_OBJECT_Z_OFFSET) = setup->z;
         GameBit_Set(setup->solvedBit, 0);
-        *(u8 *)(callbackData + WCPRESSURES_CALLBACK_COMMAND_OFFSET) = WCPRESSURES_CALLBACK_NONE;
+        animUpdate->triggerCommand = WCPRESSURES_CALLBACK_NONE;
     }
 
     return 0;

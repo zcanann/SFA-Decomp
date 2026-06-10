@@ -49,12 +49,6 @@ typedef struct SunTempleState {
     u8 mapEventMode;
 } SunTempleState;
 
-typedef struct SunTempleAnimEvent {
-    u8 pad0[0x81];
-    u8 commands[10];
-    u8 commandCount;
-} SunTempleAnimEvent;
-
 STATIC_ASSERT(offsetof(SunTempleSetup, rotXByte) == 0x18);
 STATIC_ASSERT(offsetof(SunTempleSetup, flags) == 0x1B);
 STATIC_ASSERT(offsetof(SunTempleSetup, activationGameBit) == 0x1C);
@@ -65,8 +59,6 @@ STATIC_ASSERT(offsetof(SunTempleSetup, gateGameBit) == 0x22);
 STATIC_ASSERT(offsetof(SunTempleSetup, preemptSequenceId) == 0x24);
 STATIC_ASSERT(sizeof(SunTempleSetup) == 0x28);
 STATIC_ASSERT(sizeof(SunTempleState) == SUNTEMPLE_STATE_SIZE);
-STATIC_ASSERT(offsetof(SunTempleAnimEvent, commands) == 0x81);
-STATIC_ASSERT(offsetof(SunTempleAnimEvent, commandCount) == 0x8B);
 
 int suntemple_getExtraSize(void) { return SUNTEMPLE_STATE_SIZE; }
 
@@ -89,16 +81,15 @@ void suntemple_hitDetect(int obj)
     }
 }
 
-int suntemple_interactCallback(int obj, int p2, int p3)
+int suntemple_interactCallback(int obj, int p2, ObjAnimUpdateState *animUpdate)
 {
     SunTempleSetup *setup = (SunTempleSetup *)((GameObject *)obj)->anim.placementData;
-    SunTempleAnimEvent *event = (SunTempleAnimEvent *)p3;
     int i;
     SunVec3 vec = *(SunVec3 *)lbl_802C25D8;
 
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= SUNTEMPLE_RESET_HITBOX_FLAG;
-    for (i = 0; i < event->commandCount; i++) {
-        switch (event->commands[i]) {
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        switch (animUpdate->eventIds[i]) {
         default:
             if (setup->flags & SUNTEMPLE_FLAG_CALLBACK_LATCHES_BIT) {
                 int *tex;
@@ -110,7 +101,7 @@ int suntemple_interactCallback(int obj, int p2, int p3)
             break;
         case 2:
             if (setup->preemptSequenceId != 0)
-                (*gObjectTriggerInterface)->yield((ObjSeqState *)p3, setup->preemptSequenceId);
+                (*gObjectTriggerInterface)->yield((ObjSeqState *)animUpdate, setup->preemptSequenceId);
             break;
         case 3:
             if (((ObjAnimComponent *)obj)->bankIndex == 1)
