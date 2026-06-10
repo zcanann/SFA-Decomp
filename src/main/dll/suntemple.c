@@ -103,6 +103,8 @@ int suntemple_interactCallback(int obj, int p2, ObjAnimUpdateState *animUpdate)
             if (setup->preemptSequenceId != 0)
                 (*gObjectTriggerInterface)->yield((ObjSeqState *)animUpdate, setup->preemptSequenceId);
             break;
+        case 1:
+            break;
         case 3:
             if (((ObjAnimComponent *)obj)->bankIndex == 1)
                 (*gMapEventInterface)->setEventWarpPosition(&vec, -0x4000, getCurMapLayer(), 0);
