@@ -260,20 +260,20 @@ void FUN_80157100(undefined4 param_1,int param_2)
 {
   float fVar1;
   
-  *(float *)(param_2 + 0x2ac) = lbl_803E37A0;
-  *(undefined4 *)(param_2 + 0x2e4) = 0x46001;
-  *(float *)(param_2 + 0x308) = lbl_803E37A4;
-  *(float *)(param_2 + 0x300) = lbl_803E37A8;
-  *(float *)(param_2 + 0x304) = lbl_803E37AC;
-  *(undefined *)(param_2 + 800) = 0;
+  ((BaddieState *)param_2)->unk2AC = lbl_803E37A0;
+  ((BaddieState *)param_2)->unk2E4 = 0x46001;
+  ((BaddieState *)param_2)->unk308 = lbl_803E37A4;
+  ((BaddieState *)param_2)->unk300 = lbl_803E37A8;
+  ((BaddieState *)param_2)->unk304 = lbl_803E37AC;
+  ((BaddieState *)param_2)->unk320 = 0;
   fVar1 = lbl_803E379C;
-  *(float *)(param_2 + 0x314) = lbl_803E379C;
-  *(undefined *)(param_2 + 0x321) = 4;
-  *(float *)(param_2 + 0x318) = fVar1;
-  *(undefined *)(param_2 + 0x322) = 3;
-  *(float *)(param_2 + 0x31c) = fVar1;
-  *(undefined *)(param_2 + 0x33a) = 1;
-  *(undefined2 *)(param_2 + 0x2b0) = 10;
+  *(float *)&((BaddieState *)param_2)->eventFlags = lbl_803E379C;
+  ((BaddieState *)param_2)->unk321 = 4;
+  ((BaddieState *)param_2)->unk318 = fVar1;
+  ((BaddieState *)param_2)->unk322 = 3;
+  ((BaddieState *)param_2)->unk31C = fVar1;
+  ((BaddieState *)param_2)->unk33A = 1;
+  ((BaddieState *)param_2)->hitCounter = 10;
   return;
 }
 
@@ -293,12 +293,12 @@ void FUN_80157100(undefined4 param_1,int param_2)
 void FUN_80157168(uint param_1,int param_2,undefined4 param_3,int param_4)
 {
   if (param_4 == 0x10) {
-    *(uint *)(param_2 + 0x2e8) = *(uint *)(param_2 + 0x2e8) | 0x20;
+    ((BaddieState *)param_2)->reactionFlags = ((BaddieState *)param_2)->reactionFlags | 0x20;
   }
   else {
-    *(uint *)(param_2 + 0x2e8) = *(uint *)(param_2 + 0x2e8) | 8;
+    ((BaddieState *)param_2)->reactionFlags = ((BaddieState *)param_2)->reactionFlags | 8;
     FUN_80006824(param_1,SFXwatery_bubble2);
-    *(undefined2 *)(param_2 + 0x2b0) = 0;
+    ((BaddieState *)param_2)->hitCounter = 0;
   }
   return;
 }
@@ -770,26 +770,26 @@ void FUN_8015801c(int param_1,int param_2)
     fVar1 = lbl_803E37D0;
   }
   fVar1 = fVar1 / lbl_803E37D0;
-  *(float *)(param_2 + 0x2ac) = lbl_803E37FC;
-  *(undefined4 *)(param_2 + 0x2e4) = 0x8b;
-  *(uint *)(param_2 + 0x2e4) = *(uint *)(param_2 + 0x2e4) | 0x20;
-  *(float *)(param_2 + 0x308) = lbl_803E3800 * fVar1;
+  ((BaddieState *)param_2)->unk2AC = lbl_803E37FC;
+  ((BaddieState *)param_2)->unk2E4 = 0x8b;
+  *(uint *)&((BaddieState *)param_2)->unk2E4 = *(uint *)&((BaddieState *)param_2)->unk2E4 | 0x20;
+  ((BaddieState *)param_2)->unk308 = lbl_803E3800 * fVar1;
   fVar2 = lbl_803E37D8;
-  *(float *)(param_2 + 0x300) = lbl_803E37D8;
-  *(float *)(param_2 + 0x304) = lbl_803E3804;
-  *(undefined *)(param_2 + 800) = 0;
-  *(float *)(param_2 + 0x314) = lbl_803E3808;
-  *(undefined *)(param_2 + 0x321) = 3;
+  ((BaddieState *)param_2)->unk300 = lbl_803E37D8;
+  ((BaddieState *)param_2)->unk304 = lbl_803E3804;
+  ((BaddieState *)param_2)->unk320 = 0;
+  *(float *)&((BaddieState *)param_2)->eventFlags = lbl_803E3808;
+  ((BaddieState *)param_2)->unk321 = 3;
   fVar3 = lbl_803E37E4;
-  *(float *)(param_2 + 0x318) = lbl_803E37E4;
-  *(undefined *)(param_2 + 0x322) = 5;
-  *(float *)(param_2 + 0x31c) = fVar3;
+  ((BaddieState *)param_2)->unk318 = lbl_803E37E4;
+  ((BaddieState *)param_2)->unk322 = 5;
+  ((BaddieState *)param_2)->unk31C = fVar3;
   *(undefined2 *)(param_2 + 0x338) = 0;
   *(float *)(param_2 + 0x324) = lbl_803E380C;
   *(float *)(param_2 + 0x328) = fVar2;
   ((GameObject *)param_1)->anim.alpha = 0;
-  *(float *)(param_2 + 0x2fc) = lbl_803E3810 * fVar1;
-  *(undefined4 *)(param_2 + 0x2e8) = 0;
+  ((BaddieState *)param_2)->pathStep = lbl_803E3810 * fVar1;
+  *(undefined4 *)&((BaddieState *)param_2)->reactionFlags = 0;
   ObjHits_EnableObject(param_1);
   return;
 }
@@ -1582,60 +1582,60 @@ void FUN_801599e0(int param_1,int param_2)
   int iVar3;
   
   iVar3 = *(int *)(param_1 + 0x4c);
-  *(undefined4 *)(param_2 + 0x2e4) = 0xb;
-  *(uint *)(param_2 + 0x2e4) = *(uint *)(param_2 + 0x2e4) | 0x400b0;
-  *(uint *)(param_2 + 0x2e4) = *(uint *)(param_2 + 0x2e4) | 0x40001040;
+  ((BaddieState *)param_2)->unk2E4 = 0xb;
+  *(uint *)&((BaddieState *)param_2)->unk2E4 = *(uint *)&((BaddieState *)param_2)->unk2E4 | 0x400b0;
+  *(uint *)&((BaddieState *)param_2)->unk2E4 = *(uint *)&((BaddieState *)param_2)->unk2E4 | 0x40001040;
   sVar1 = *(short *)(param_1 + 0x46);
   if (sVar1 == 0x6a3) {
-    *(float *)(param_2 + 0x2ac) = lbl_803E387C;
-    *(float *)(param_2 + 0x2a8) = lbl_803E3850;
-    *(undefined2 *)(param_2 + 0x2b0) = 0x1e;
-    *(undefined *)(param_2 + 0x33b) = 0;
-    *(undefined *)(param_2 + 800) = 9;
+    ((BaddieState *)param_2)->unk2AC = lbl_803E387C;
+    ((BaddieState *)param_2)->unk2A8 = lbl_803E3850;
+    ((BaddieState *)param_2)->hitCounter = 0x1e;
+    ((BaddieState *)param_2)->inWhirlpoolGroup = 0;
+    ((BaddieState *)param_2)->unk320 = 9;
     fVar2 = lbl_803E3880;
-    *(float *)(param_2 + 0x314) = lbl_803E3880;
-    *(undefined *)(param_2 + 0x321) = 0xc;
-    *(float *)(param_2 + 0x318) = lbl_803E3884;
-    *(undefined *)(param_2 + 0x322) = 9;
-    *(float *)(param_2 + 0x31c) = fVar2;
-    *(uint *)(param_2 + 0x2e4) = *(uint *)(param_2 + 0x2e4) | 0x400;
+    *(float *)&((BaddieState *)param_2)->eventFlags = lbl_803E3880;
+    ((BaddieState *)param_2)->unk321 = 0xc;
+    ((BaddieState *)param_2)->unk318 = lbl_803E3884;
+    ((BaddieState *)param_2)->unk322 = 9;
+    ((BaddieState *)param_2)->unk31C = fVar2;
+    *(uint *)&((BaddieState *)param_2)->unk2E4 = *(uint *)&((BaddieState *)param_2)->unk2E4 | 0x400;
   }
   else if (sVar1 < 0x6a3) {
     if (0x6a1 < sVar1) {
-      *(float *)(param_2 + 0x2ac) = lbl_803E3888;
-      *(float *)(param_2 + 0x2a8) = lbl_803E3850;
-      *(undefined2 *)(param_2 + 0x2b0) = 0x32;
-      *(undefined *)(param_2 + 0x33b) = 1;
-      *(undefined *)(param_2 + 800) = 0xe;
+      ((BaddieState *)param_2)->unk2AC = lbl_803E3888;
+      ((BaddieState *)param_2)->unk2A8 = lbl_803E3850;
+      ((BaddieState *)param_2)->hitCounter = 0x32;
+      ((BaddieState *)param_2)->inWhirlpoolGroup = 1;
+      ((BaddieState *)param_2)->unk320 = 0xe;
       fVar2 = lbl_803E3880;
-      *(float *)(param_2 + 0x314) = lbl_803E3880;
-      *(undefined *)(param_2 + 0x321) = 0xd;
-      *(float *)(param_2 + 0x318) = lbl_803E3884;
-      *(undefined *)(param_2 + 0x322) = 0xe;
-      *(float *)(param_2 + 0x31c) = fVar2;
-      *(uint *)(param_2 + 0x2e4) = *(uint *)(param_2 + 0x2e4) | 0xc00;
+      *(float *)&((BaddieState *)param_2)->eventFlags = lbl_803E3880;
+      ((BaddieState *)param_2)->unk321 = 0xd;
+      ((BaddieState *)param_2)->unk318 = lbl_803E3884;
+      ((BaddieState *)param_2)->unk322 = 0xe;
+      ((BaddieState *)param_2)->unk31C = fVar2;
+      *(uint *)&((BaddieState *)param_2)->unk2E4 = *(uint *)&((BaddieState *)param_2)->unk2E4 | 0xc00;
     }
   }
   else if (sVar1 < 0x6a5) {
-    *(float *)(param_2 + 0x2ac) = lbl_803E388C;
-    *(float *)(param_2 + 0x2a8) = lbl_803E3890;
-    *(undefined2 *)(param_2 + 0x2b0) = 0xf;
-    *(undefined *)(param_2 + 0x33b) = 2;
-    *(undefined *)(param_2 + 800) = 0xd;
+    ((BaddieState *)param_2)->unk2AC = lbl_803E388C;
+    ((BaddieState *)param_2)->unk2A8 = lbl_803E3890;
+    ((BaddieState *)param_2)->hitCounter = 0xf;
+    ((BaddieState *)param_2)->inWhirlpoolGroup = 2;
+    ((BaddieState *)param_2)->unk320 = 0xd;
     fVar2 = lbl_803E3880;
-    *(float *)(param_2 + 0x314) = lbl_803E3880;
-    *(undefined *)(param_2 + 0x321) = 0x10;
-    *(float *)(param_2 + 0x318) = lbl_803E3884;
-    *(undefined *)(param_2 + 0x322) = 0xd;
-    *(float *)(param_2 + 0x31c) = fVar2;
-    *(uint *)(param_2 + 0x2e4) = *(uint *)(param_2 + 0x2e4) | 0xc00;
+    *(float *)&((BaddieState *)param_2)->eventFlags = lbl_803E3880;
+    ((BaddieState *)param_2)->unk321 = 0x10;
+    ((BaddieState *)param_2)->unk318 = lbl_803E3884;
+    ((BaddieState *)param_2)->unk322 = 0xd;
+    ((BaddieState *)param_2)->unk31C = fVar2;
+    *(uint *)&((BaddieState *)param_2)->unk2E4 = *(uint *)&((BaddieState *)param_2)->unk2E4 | 0xc00;
   }
-  *(float *)(param_2 + 0x308) = lbl_803E386C;
-  *(float *)(param_2 + 0x300) = lbl_803E3894;
-  *(float *)(param_2 + 0x304) = lbl_803E3898;
-  *(float *)(param_2 + 0x2fc) = *(float *)(param_2 + 0x2fc) * lbl_803E389C;
+  ((BaddieState *)param_2)->unk308 = lbl_803E386C;
+  ((BaddieState *)param_2)->unk300 = lbl_803E3894;
+  ((BaddieState *)param_2)->unk304 = lbl_803E3898;
+  ((BaddieState *)param_2)->pathStep = ((BaddieState *)param_2)->pathStep * lbl_803E389C;
   if (*(char *)(iVar3 + 0x2e) != -1) {
-    *(uint *)(param_2 + 0x2dc) = *(uint *)(param_2 + 0x2dc) | 1;
+    ((BaddieState *)param_2)->controlFlags = ((BaddieState *)param_2)->controlFlags | 1;
   }
   *(float *)(param_1 + 8) =
        lbl_803E38A0 +
@@ -1709,13 +1709,13 @@ void FUN_80159c60(uint param_1,int param_2,undefined4 param_3,int param_4)
 {
   if (param_4 != 0x11) {
     if (param_4 == 0x10) {
-      *(uint *)(param_2 + 0x2e8) = *(uint *)(param_2 + 0x2e8) | 0x20;
+      ((BaddieState *)param_2)->reactionFlags = ((BaddieState *)param_2)->reactionFlags | 0x20;
     }
     else {
-      *(uint *)(param_2 + 0x2e8) = *(uint *)(param_2 + 0x2e8) | 8;
+      ((BaddieState *)param_2)->reactionFlags = ((BaddieState *)param_2)->reactionFlags | 8;
       FUN_80006810(param_1,1000);
       FUN_80006824(param_1,0x3ea);
-      *(undefined2 *)(param_2 + 0x2b0) = 0;
+      ((BaddieState *)param_2)->hitCounter = 0;
     }
   }
   return;
