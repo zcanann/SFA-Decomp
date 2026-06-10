@@ -879,13 +879,15 @@ void dll_1DF_update(void* obj)
     tex = objFindTexture(obj, 0, 0);
     if (tex != 0) {
         if (((GameObject *)obj)->anim.seqId == 209) {
-            *(u8*)((char*)tex + 0xC) = lbl_803E4B9C;
-            *(u8*)((char*)tex + 0xD) = lbl_803E4B9C;
-            *(u8*)((char*)tex + 0xE) = lbl_803E4B9C;
+            f32 v = lbl_803E4B9C;
+            *(u8*)((char*)tex + 0xC) = v;
+            *(u8*)((char*)tex + 0xD) = v;
+            *(u8*)((char*)tex + 0xE) = v;
         } else {
-            *(u8*)((char*)tex + 0xC) = lbl_803E4B9C;
-            *(u8*)((char*)tex + 0xD) = lbl_803E4B9C;
-            *(u8*)((char*)tex + 0xE) = lbl_803E4B9C;
+            f32 v = lbl_803E4B9C;
+            *(u8*)((char*)tex + 0xC) = v;
+            *(u8*)((char*)tex + 0xD) = v;
+            *(u8*)((char*)tex + 0xE) = v;
         }
     }
     player = Obj_GetPlayerObject();
