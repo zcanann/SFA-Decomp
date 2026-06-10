@@ -249,10 +249,10 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
   for (eventIndex = 0; eventIndex < (int)(uint)animUpdate->eventCount; eventIndex = eventIndex + 1) {
     switch(animUpdate->eventIds[eventIndex]) {
     case DIMBOSS_EVENT_SET_SEQUENCE_FLAG_80000:
-      gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAG_80000;
+      gDIMbossSequenceFlags = gDIMbossSequenceFlags | (u64)DIMBOSS_SEQUENCE_FLAG_80000;
       break;
     case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG_80000:
-      gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~DIMBOSS_SEQUENCE_FLAG_80000;
+      gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~(u64)DIMBOSS_SEQUENCE_FLAG_80000;
       break;
     case DIMBOSS_EVENT_CLEAR_RENDER_ATTACHMENT:
       DIMboss_GetBoneParticleEffectInterface()->spawnEffect(
@@ -280,7 +280,7 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
       (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,DIMBOSS_MAP_AREA_BOSS,0);
       break;
     case DIMBOSS_EVENT_SET_SEQUENCE_FLAGS_40004:
-      gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAGS_40004;
+      gDIMbossSequenceFlags = gDIMbossSequenceFlags | (u64)DIMBOSS_SEQUENCE_FLAGS_40004;
       break;
     case DIMBOSS_EVENT_SET_SEQUENCE_FLAG_0002:
       gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAG_0002;
