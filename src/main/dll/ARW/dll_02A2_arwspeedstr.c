@@ -70,7 +70,7 @@ void arwspeedstr_update(int obj) {
                 state->alpha = lbl_803E7108 * timeDelta + state->alpha;
                 if (state->alpha > *(f32 *)&lbl_803E710C)
                     state->alpha = lbl_803E710C;
-                ((GameObject *)obj)->anim.alpha = (int)state->alpha;
+                ((GameObject *)obj)->anim.alpha = state->alpha;
             }
         }
     }
