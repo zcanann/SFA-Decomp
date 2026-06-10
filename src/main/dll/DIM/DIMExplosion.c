@@ -257,7 +257,7 @@ void dimsnowball1c2_update(int *obj)
                 *(s16 *)((char *)np + 0x1c) =
                     (int)((f32)(u32)*(u8 *)((char *)def + 0x1b) +
                           (f32)(int)randomGetRange(0, 100) / lbl_803E4864);
-                Obj_SetupObject((int)np, 5, *(s8 *)((char *)obj + 0xac), -1, 0);
+                Obj_SetupObject((int)np, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, 0);
                 *(s16 *)extra = *(s16 *)((char *)extra + 2);
             }
         }

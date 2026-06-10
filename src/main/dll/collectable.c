@@ -710,7 +710,7 @@ int tricky_SeqFn(int obj,int unused,int seq)
           *(u8 *)(setup + 4) = 2;
           *(u8 *)(setup + 5) = 1;
           *(s16 *)(setup + 0x1a) = j;
-          *(int *)(slot + 0x700) = Obj_SetupObject(setup,5,*(s8 *)(obj + 0xac),-1,*(int *)&((GameObject *)obj)->anim.parent);
+          *(int *)(slot + 0x700) = Obj_SetupObject(setup,5,((GameObject *)obj)->anim.mapEventSlot,-1,*(int *)&((GameObject *)obj)->anim.parent);
           slot = slot + 4;
           j = j + 1;
         } while (j < 7);
@@ -2169,7 +2169,7 @@ int collectibleFn_80149cec(int obj,int state,int spawnBits,u32 useAltMode,u32 mo
   *(u8 *)(setup + 6) = *(u8 *)(parentSetup + 6);
   *(u8 *)(setup + 5) = *(u8 *)(parentSetup + 5);
   *(u8 *)(setup + 7) = *(u8 *)(parentSetup + 7);
-  lbl_803DDA54 = Obj_SetupObject(setup,5,*(s8 *)(obj + 0xac),-1,*(int *)&((GameObject *)obj)->anim.parent);
+  lbl_803DDA54 = Obj_SetupObject(setup,5,((GameObject *)obj)->anim.mapEventSlot,-1,*(int *)&((GameObject *)obj)->anim.parent);
   if ((*(s16 *)(lbl_803DDA54 + 0x46) == 0x3cd) ||
       (*(s16 *)(lbl_803DDA54 + 0x46) == 0xb)) {
     (*(void (**)(f32,f32,f32))(*(int *)(*(int *)(lbl_803DDA54 + 0x68)) + 0x2c))
@@ -2486,7 +2486,7 @@ void baddieInstantiateWeapon(int obj,int state)
       if (*(s16 *)(state + 0x2b6) > 0) {
         setup = Obj_AllocObjectSetup(0x20);
         *(u8 *)(setup + 5) = *(u8 *)(setup + 5) | (*(u8 *)(parentSetup + 5) & 0x18);
-        child = (void *)Obj_SetupObject(setup,4,*(s8 *)(obj + 0xac),-1,*(int *)&((GameObject *)obj)->anim.parent);
+        child = (void *)Obj_SetupObject(setup,4,((GameObject *)obj)->anim.mapEventSlot,-1,*(int *)&((GameObject *)obj)->anim.parent);
         ObjLink_AttachChild(obj, (int)child, 0);
         *(s16 *)&((TrickyState *)state)->unk2B4 = *(s16 *)(state + 0x2b6);
       }

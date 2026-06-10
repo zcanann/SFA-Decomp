@@ -2167,7 +2167,7 @@ void dll_1CE_update(int* obj)
         *(s16*)((char*)no + 0x2c) = -1;
         *(u8*)((char*)no + 0x1a) = 5;
         *(u8*)((char*)no + 0x1b) = (u8)((s16)*(s16*)obj >> 8);
-        Obj_SetupObject(no, 5, (s8)*(s8*)((char*)obj + 0xac), -1, 0);
+        Obj_SetupObject(no, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, 0);
     }
 }
 #pragma peephole reset

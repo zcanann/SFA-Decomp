@@ -458,7 +458,7 @@ void sc_cloudrunnera_update(int obj)
             *(u8 *)(setup + 0x7) = 0xff;
             *(u8 *)(setup + 0x29) = 1;
             *(u8 *)(setup + 0x2a) = 0;
-            newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
+            newObj = Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
             ((GameObject *)newObj)->anim.flags = (s16)(((GameObject *)newObj)->anim.flags | 0x4000);
             ObjLink_AttachChild(obj, newObj, 0);
             Sfx_PlayFromObject(obj, 0x10f);

@@ -1263,7 +1263,7 @@ int fn_801A8F88(int obj, int arg2)
                 Obj_FreeObject((int)state);
             }
             alloc = Obj_AllocObjectSetup(32, ((GameObject *)obj)->unkF8);
-            alloc = Obj_SetupObject(alloc, 4, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
+            alloc = Obj_SetupObject(alloc, 4, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
             ObjLink_AttachChild(obj, alloc, 0);
             break;
         case 2:

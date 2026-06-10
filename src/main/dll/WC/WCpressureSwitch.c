@@ -161,7 +161,7 @@ void WM_ObjCreator_update(int obj) {
                 *(s16 *)(setup + 0x1e) = 0xffff;
                 *(s16 *)(setup + 0x1a) = 2;
                 *(u8 *)(setup + 0x18) = placement->yaw;
-                spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
+                spawned = Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
                 if ((u32)spawned != 0) {
                     ((GameObject *)spawned)->unkF4 = 8;
                 }
@@ -186,7 +186,7 @@ void WM_ObjCreator_update(int obj) {
                 *(s16 *)(setup + 0x18) = randomGetRange(-500, 500) + 0x5dc;
                 *(s16 *)(setup + 0x1a) = 0;
                 *(s16 *)(setup + 0x1c) = randomGetRange(-500, 500) + 0x5dc;
-                spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
+                spawned = Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
                 if ((u32)spawned != 0) {
                     ((GameObject *)spawned)->anim.velocityX = lbl_803E5CCC + (f32)(int)randomGetRange(0, 10);
                 }
@@ -204,7 +204,7 @@ void WM_ObjCreator_update(int obj) {
                 ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ + (f32)(int)randomGetRange(-100, 100);
                 *(s16 *)(setup + 0x1a) = 0x31;
                 *(s16 *)(setup + 0x1c) = 200;
-                spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
+                spawned = Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
                 if ((u32)spawned != 0) {
                     lbl_803DDC68 += 1;
                 }
@@ -223,7 +223,7 @@ void WM_ObjCreator_update(int obj) {
                 ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
                 *(s16 *)(setup + 0x18) = state->gameBit;
                 *(s16 *)(setup + 0x22) = 1;
-                spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
+                spawned = Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
                 if ((u32)spawned != 0) {
                     (*gPartfxInterface)->spawnObject((void *)obj, 0x1c3, NULL, 2, -1, NULL);
                 }
@@ -245,7 +245,7 @@ void WM_ObjCreator_update(int obj) {
                 *(s16 *)(setup + 0x22) = 0xffff;
                 *(s16 *)(setup + 0x18) = randomGetRange(-500, 500) + 0x5dc;
                 *(s16 *)(setup + 0x1c) = randomGetRange(-500, 500) + 0x5dc;
-                spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
+                spawned = Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
                 if ((u32)spawned != 0) {
                     ((GameObject *)spawned)->anim.velocityX = lbl_803E5CD0 - (f32)(int)randomGetRange(0, 10);
                 }
@@ -273,7 +273,7 @@ void WM_ObjCreator_update(int obj) {
                     *(s16 *)(setup + 0x1a) = 0;
                     *(s16 *)(setup + 0x1c) = 0;
                     *(u8 *)(setup + 0x24) = 0;
-                    spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
+                    spawned = Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
                     if ((u32)spawned != 0) {
                         *(u8 *)(*(int *)&((GameObject *)spawned)->extra + 0x120) |= 2;
                         ((GameObject *)spawned)->anim.velocityX = lbl_803E5CD4 * (f32)(int)randomGetRange(-0x23, 0x23);
@@ -307,7 +307,7 @@ void WM_ObjCreator_update(int obj) {
                 *(s16 *)(setup + 0x22) = 0xffff;
                 *(s16 *)(setup + 0x18) = randomGetRange(-500, 500) + 0x5dc;
                 *(s16 *)(setup + 0x1c) = randomGetRange(-500, 500) + 0x5dc;
-                Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
+                Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
                 state->spawnTimer = state->spawnPeriod + randomGetRange(0, state->spawnJitter);
             }
             break;
@@ -323,7 +323,7 @@ void WM_ObjCreator_update(int obj) {
                 *(u8 *)(setup + 7) = 0xff;
                 *(s16 *)(setup + 0x1e) = 0xffff;
                 *(s8 *)(setup + 0x18) = (u16)*(s16 *)obj >> 8;
-                Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
+                Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
                 {
                     f32 size = lbl_803E5CC8;
                     f32 yoff = lbl_803E5CDC;

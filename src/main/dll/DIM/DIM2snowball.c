@@ -1777,7 +1777,7 @@ void dim2pathgenerator_update(int *obj)
         *(s16 *)((char *)np + 0x1a) = *(u8 *)((char *)def + 0x1a);
         *(s16 *)((char *)np + 0x1c) = *(u8 *)((char *)def + 0x1b);
         *(int *)((char *)np + 0x14) = *(int *)((char *)def + 0x14);
-        Obj_SetupObject((int)np, 5, *(s8 *)((char *)obj + 0xac), -1, 0);
+        Obj_SetupObject((int)np, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, 0);
         ((Dim2PathGeneratorState *)extra)->flags |= (toggle ^ 1) & 1;
     }
 }

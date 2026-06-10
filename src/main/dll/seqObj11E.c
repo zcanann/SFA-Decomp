@@ -528,7 +528,7 @@ int fn_80152370(int obj, int p2)
   *(f32 *)(no + 0x10) = ((GameObject *)obj)->anim.localPosZ;
   *(u8 *)(no + 0x19) = 0;
   *(s16 *)(no + 0x20) = 149;
-  return (int)Obj_SetupObject(no, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
+  return (int)Obj_SetupObject(no, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
 }
 #pragma peephole reset
 #pragma scheduling reset

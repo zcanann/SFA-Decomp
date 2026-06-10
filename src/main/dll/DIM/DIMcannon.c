@@ -2661,7 +2661,7 @@ void imspaceringgen_update(s16 *obj) {
                 *(u8 *)(ring + 6) = setup[6];
                 *(u8 *)(ring + 5) = 1;
                 *(u8 *)(ring + 7) = 0xff;
-                Obj_SetupObject(ring, 5, *(s8 *)((char *)obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
+                Obj_SetupObject(ring, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
             }
             ((GameObject *)obj)->unkF4 = 1;
         }

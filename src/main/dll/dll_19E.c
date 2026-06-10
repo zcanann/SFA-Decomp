@@ -112,7 +112,7 @@ void dfsh_objcreator_update(int obj)
         spawnSetup[0x29] = 0xff;
         *(s8 *)(spawnSetup + 0x2e) = -1;
         *(u16 *)(spawnSetup + 0x34) = 0xffff;
-        Obj_SetupObject(spawnSetup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
+        Obj_SetupObject(spawnSetup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
         state->spawnTimer = 100;
         state->spawnTimerStep = 0;
     }

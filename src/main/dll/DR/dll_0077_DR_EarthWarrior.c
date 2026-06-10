@@ -1035,7 +1035,7 @@ void DR_EarthWarrior_update(int obj)
     }
     if (*(void * *)&inner->unkB54 == NULL && Obj_IsLoadingLocked() != 0) {
         int setup = Obj_AllocObjectSetup(0x18, 0x6f5);
-        int newObj = Obj_SetupObject(setup, 4, *(s8 *)((char *)obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
+        int newObj = Obj_SetupObject(setup, 4, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
         ObjLink_AttachChild(obj, newObj, 2);
         inner->unkB54 = newObj;
     }

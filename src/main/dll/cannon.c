@@ -281,7 +281,7 @@ void trickyFlame(int p1, int p2) {
                         *(u8 *)((char *)setup + 0x4) = 2;
                         *(u8 *)((char *)setup + 0x5) = 1;
                         *(s16 *)((char *)setup + 0x1a) = (s16)i;
-                        slot[0x700 / 4] = (void *)Obj_SetupObject(setup, 5, *(s8 *)(p1 + 0xac), -1, ((GameObject *)p1)->anim.parent);
+                        slot[0x700 / 4] = (void *)Obj_SetupObject(setup, 5, ((GameObject *)p1)->anim.mapEventSlot, -1, ((GameObject *)p1)->anim.parent);
                         slot++;
                     }
                     Sfx_PlayFromObject(p1, 0x3db);
@@ -359,7 +359,7 @@ void trickyFlame(int p1, int p2) {
                         *(u8 *)((char *)setup + 0x4) = 2;
                         *(u8 *)((char *)setup + 0x5) = 1;
                         *(s16 *)((char *)setup + 0x1a) = (s16)i;
-                        slot[0x700 / 4] = (void *)Obj_SetupObject(setup, 5, *(s8 *)(p1 + 0xac), -1, ((GameObject *)p1)->anim.parent);
+                        slot[0x700 / 4] = (void *)Obj_SetupObject(setup, 5, ((GameObject *)p1)->anim.mapEventSlot, -1, ((GameObject *)p1)->anim.parent);
                         slot++;
                     }
                     Sfx_PlayFromObject(p1, 0x3db);
