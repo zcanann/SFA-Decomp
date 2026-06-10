@@ -2,18 +2,45 @@
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim_internal.h"
+#include "main/obj_placement.h"
+
+#define WM_SUN_GLARE_COUNT 20
+
+typedef struct WmSunGlareParams {
+    s16 unk00[WM_SUN_GLARE_COUNT];
+    s16 angleOffsets[WM_SUN_GLARE_COUNT];
+    s16 flickerTimers[WM_SUN_GLARE_COUNT];
+    s16 alphaValues[WM_SUN_GLARE_COUNT];
+} WmSunGlareParams;
+
+typedef struct WmSunMapData {
+    ObjPlacement base;
+    s8 rotXByte;
+    u8 bankIndex;
+    s16 unused1A;
+    s16 rootMotionScaleParam;
+    u8 pad1E[2];
+} WmSunMapData;
 
 typedef struct WmSunState {
     s16 pad00;
     s16 riseStep;
     s16 spinStep;
     u8 pad06[2];
-    s16 *glareParams;
+    WmSunGlareParams *glareParams;
     u8 pad0C;
     u8 renderEnabled;
     u8 pad0E[2];
 } WmSunState;
 
+STATIC_ASSERT(sizeof(WmSunGlareParams) == 0xA0);
+STATIC_ASSERT(offsetof(WmSunGlareParams, angleOffsets) == 0x28);
+STATIC_ASSERT(offsetof(WmSunGlareParams, flickerTimers) == 0x50);
+STATIC_ASSERT(offsetof(WmSunGlareParams, alphaValues) == 0x78);
+STATIC_ASSERT(offsetof(WmSunMapData, rotXByte) == 0x18);
+STATIC_ASSERT(offsetof(WmSunMapData, bankIndex) == 0x19);
+STATIC_ASSERT(offsetof(WmSunMapData, rootMotionScaleParam) == 0x1C);
+STATIC_ASSERT(sizeof(WmSunMapData) == 0x20);
 STATIC_ASSERT(sizeof(WmSunState) == 0x10);
 STATIC_ASSERT(offsetof(WmSunState, riseStep) == 0x02);
 STATIC_ASSERT(offsetof(WmSunState, spinStep) == 0x04);
@@ -76,6 +103,7 @@ void wmsun_init(int obj, int params)
 {
     ObjAnimComponent *objAnim;
     WmSunState *state = ((GameObject *)obj)->extra;
+    WmSunMapData *mapData;
     u8 c;
     int c2;
     int j;
@@ -83,6 +111,7 @@ void wmsun_init(int obj, int params)
     s16 mode;
 
     objAnim = (ObjAnimComponent *)obj;
+    mapData = (WmSunMapData *)params;
     ((GameObject *)obj)->animEventCallback = (void *)fn_801F6E8C;
     c = (*gMapEventInterface)->getMode((int)((GameObject *)obj)->anim.mapEventSlot);
     if (c == 3 && (u32)GameBit_Get(0x21b) == 0) {
@@ -92,10 +121,10 @@ void wmsun_init(int obj, int params)
     state->renderEnabled = 1;
     mode = ((GameObject *)obj)->anim.seqId;
     if (mode == 0x262) {
-        *(s16 *)obj = (s16)(*(s8 *)(params + 0x18) << 8);
+        *(s16 *)obj = (s16)(mapData->rotXByte << 8);
         state->riseStep = 100;
-        if (*(s16 *)(params + 0x1c) >= 1000) {
-            ((GameObject *)obj)->anim.rootMotionScale = (f32)*(s16 *)(params + 0x1c) / lbl_803E5F8C;
+        if (mapData->rootMotionScaleParam >= 1000) {
+            ((GameObject *)obj)->anim.rootMotionScale = (f32)mapData->rootMotionScaleParam / lbl_803E5F8C;
         } else {
             ((GameObject *)obj)->anim.rootMotionScale = lbl_803E5F24;
         }
@@ -105,13 +134,13 @@ void wmsun_init(int obj, int params)
         lbl_803DDCAC = 800;
         lbl_803DDCAA = 800;
         lbl_803DDCA8 = 800;
-        *(s16 *)obj = (s16)(*(s8 *)(params + 0x18) << 8);
-        if (*(s16 *)(params + 0x1c) >= 0) {
-            ((GameObject *)obj)->anim.rootMotionScale = (f32)*(s16 *)(params + 0x1c) / lbl_803E5F8C;
+        *(s16 *)obj = (s16)(mapData->rotXByte << 8);
+        if (mapData->rootMotionScaleParam >= 0) {
+            ((GameObject *)obj)->anim.rootMotionScale = (f32)mapData->rootMotionScaleParam / lbl_803E5F8C;
         } else {
             ((GameObject *)obj)->anim.rootMotionScale = lbl_803E5F24;
         }
-        objAnim->bankIndex = *(u8 *)(params + 0x19);
+        objAnim->bankIndex = mapData->bankIndex;
         c2 = objAnim->bankIndex;
         if (c2 == 0) {
             state->riseStep = randomGetRange(300, 600);
@@ -125,19 +154,19 @@ void wmsun_init(int obj, int params)
         }
         objAnim->alpha = 0;
     } else if (mode == 0x2c2) {
-        state->glareParams = (s16 *)mmAlloc(0xa0, 0xe, 0);
+        state->glareParams = (WmSunGlareParams *)mmAlloc(sizeof(WmSunGlareParams), 0xe, 0);
         i = 0x14;
         j = 0x28;
         while (i != 0) {
             j -= 2;
             i--;
-            *(s16 *)((u8 *)state->glareParams + j + 0x28) = 0;
-            *(s16 *)((u8 *)state->glareParams + j + 0x50) = randomGetRange(10, 0x14);
-            *(s16 *)((u8 *)state->glareParams + j + 0x78) = randomGetRange(0x50, 0xff);
+            *(s16 *)((u8 *)state->glareParams->angleOffsets + j) = 0;
+            *(s16 *)((u8 *)state->glareParams->flickerTimers + j) = randomGetRange(10, 0x14);
+            *(s16 *)((u8 *)state->glareParams->alphaValues + j) = randomGetRange(0x50, 0xff);
         }
         objAnim->alpha = 0;
-        if (*(s16 *)(params + 0x1c) != 0) {
-            ((GameObject *)obj)->anim.rootMotionScale = lbl_803E5F24 / ((f32)*(s16 *)(params + 0x1c) / lbl_803E5F8C);
+        if (mapData->rootMotionScaleParam != 0) {
+            ((GameObject *)obj)->anim.rootMotionScale = lbl_803E5F24 / ((f32)mapData->rootMotionScaleParam / lbl_803E5F8C);
         }
     }
 }
