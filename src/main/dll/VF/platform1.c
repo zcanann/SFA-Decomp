@@ -121,7 +121,7 @@ int platform1_control(int obj, int unused, ObjAnimUpdateState *animUpdate)
     int vol;
     int ret;
     f32 c566C, c5674, c5670, c5678, c5684, c5680, c567C, c568C, c5690, c569C;
-    int idx1, cnt1, idx2, cnt2, idx3, cnt3, idx4, cnt4, idx5, cnt5;
+    int cnt1, idx1, cnt2, idx2, cnt3, idx3, cnt4, idx4, cnt5, idx5;
     struct {
         int mode;
         u8 flag;
