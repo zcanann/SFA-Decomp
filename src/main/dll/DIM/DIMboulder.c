@@ -886,41 +886,41 @@ int dll_16C_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate)
     int *extra = ((GameObject *)obj)->extra;
     s16 ids[5];
 
-    *(u8 *)((char *)extra + 0x20) = 0xff;
+    ((Dll16CState *)extra)->opacity = 0xff;
     p = (int *)*extra;
     if (animUpdate->triggerCommand == 3) {
-        *(s8 *)((char *)extra + 0x21) = -1;
+        ((Dll16CState *)extra)->subObjIndex = -1;
         animUpdate->triggerCommand = 0;
     }
     *(Blob10 *)ids = *(Blob10 *)lbl_802C2308;
 
-    if (*(s8 *)((char *)extra + 0x21) != *(s8 *)((char *)extra + 0x22)) {
+    if (((Dll16CState *)extra)->subObjIndex != ((Dll16CState *)extra)->subObjIndexApplied) {
         if (((GameObject *)obj)->unkC8 != NULL) {
             Obj_FreeObject(((GameObject *)obj)->unkC8);
             *(int *)&((GameObject *)obj)->unkC8 = 0;
             ((GameObject *)obj)->unkEB = 0;
         }
         if (Obj_IsLoadingLocked()) {
-            s8 idx = *(s8 *)((char *)extra + 0x21);
+            s8 idx = ((Dll16CState *)extra)->subObjIndex;
             if (idx > 0) {
                 *(int *)&((GameObject *)obj)->unkC8 =
                     Obj_SetupObject(Obj_AllocObjectSetup(24, ids[idx - 1]), 4, -1, -1,
                                     *(int *)&((GameObject *)obj)->anim.parent);
                 ((GameObject *)obj)->unkEB = 1;
             }
-            *(s8 *)((char *)extra + 0x22) = *(s8 *)((char *)extra + 0x21);
+            ((Dll16CState *)extra)->subObjIndexApplied = ((Dll16CState *)extra)->subObjIndex;
         } else {
-            *(s8 *)((char *)extra + 0x22) = 0;
+            ((Dll16CState *)extra)->subObjIndexApplied = 0;
         }
     }
 
     animUpdate->hitVolumePair = animUpdate->activeHitVolumePair;
 
     if (p != NULL && animUpdate->triggerCommand == 2) {
-        *(f32 *)((char *)extra + 4) = lbl_803E4758;
-        *(f32 *)((char *)extra + 8) = *(f32 *)((char *)extra + 0x14);
-        *(f32 *)((char *)extra + 0xc) = *(f32 *)((char *)extra + 0x18);
-        *(f32 *)((char *)extra + 0x10) = *(f32 *)((char *)extra + 0x1c);
+        ((Dll16CState *)extra)->unk04 = lbl_803E4758;
+        ((Dll16CState *)extra)->snapX = ((Dll16CState *)extra)->pathPointX;
+        ((Dll16CState *)extra)->snapY = ((Dll16CState *)extra)->pathPointY;
+        ((Dll16CState *)extra)->snapZ = ((Dll16CState *)extra)->pathPointZ;
         (*(void (**)(int *, int))(**(int **)((char *)p + 0x68) + 0x3c))(p, 2);
         ObjAnim_SetCurrentMove((int)obj, 0x100, lbl_803E4748, 1);
         if (((GameObject *)obj)->anim.modelState != NULL) {
