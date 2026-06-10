@@ -229,19 +229,19 @@ void ring_update(int obj)
                     Obj_BuildWorldTransformMatrix(obj, mtx, 0);
                     for (ang = -0x7fff; ang < 0x7fff;
                          ang += lbl_8032B720[state->mode].f8) {
-                        dir[0] = lbl_803E70C4 *
-                                 mathCosf(lbl_803E70C8 *
+                        dir[0] = 10.0f *
+                                 mathCosf(3.1415927f *
                                      (f32)(ang +
                                            (int)(state->pullTimer *
                                                  lbl_8032B720[state->mode].f14)) /
-                                     lbl_803E70CC);
-                        dir[1] = lbl_803E70C4 *
-                                 mathSinf(lbl_803E70C8 *
+                                     32768.0f);
+                        dir[1] = 10.0f *
+                                 mathSinf(3.1415927f *
                                              (f32)(ang +
                                                    (int)(state->pullTimer *
                                                          lbl_8032B720[state->mode].f14)) /
-                                             lbl_803E70CC);
-                        dir[2] = lbl_803E70A0;
+                                             32768.0f);
+                        dir[2] = 0.0f;
                         PSMTXMultVecSR(mtx, dir, dir);
                         spawnBuf[3] = dir[0] + ((GameObject *)obj)->anim.localPosX;
                         spawnBuf[4] = dir[1] + ((GameObject *)obj)->anim.localPosY;
@@ -283,6 +283,8 @@ void ring_update(int obj)
         } else {
             state->pullTimer = lbl_803E70C0;
         }
+        break;
+    case 4:
         break;
     }
 
