@@ -2,8 +2,9 @@
 #include "main/game_object.h"
 #include "main/dll/mclightning_state.h"
 
-int mclightning_handleScriptEvents(int obj, int eventId, u8 *script) {
+int mclightning_handleScriptEvents(int obj, int unused, ObjAnimUpdateState *animUpdate) {
     McLightningState *state = ((GameObject *)obj)->extra;
+    u8 *script = (u8 *)animUpdate;
     int i;
     for (i = 0; i < script[0x8b]; i++) {
         switch (state->flags.phase) {

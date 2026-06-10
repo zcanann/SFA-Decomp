@@ -343,7 +343,7 @@ int fn_80223CF0(int obj, int ai)
     return 0;
 }
 
-int earthwalker_animEventCallback(int obj, int p2, int p3, int p4)
+int earthwalker_animEventCallback(int obj, int unused, ObjAnimUpdateState *animUpdate, int shouldAdvanceMove)
 {
     EarthWalkerObject *ewObj = (EarthWalkerObject *)obj;
     int state = (int)ewObj->state;
@@ -352,14 +352,14 @@ int earthwalker_animEventCallback(int obj, int p2, int p3, int p4)
 
     ewState->flags &= ~1;
     characterDoEyeAnims(obj, (int)ewState->eyeAnimState);
-    if (dll_2E_func07(obj, p3, state, 0, 0) != 0) {
+    if (dll_2E_func07(obj, (int)(u8 *)animUpdate, state, 0, 0) != 0) {
         return 0;
     }
-    if ((s8)p4 != 0) {
+    if ((s8)shouldAdvanceMove != 0) {
         ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E6CDC, timeDelta, 0);
     }
-    for (i = 0; i < *(u8 *)(p3 + 0x8b); i++) {
-        switch (*(u8 *)(p3 + i + 0x81)) {
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        switch (animUpdate->eventIds[i]) {
         case 1:
             getEnvfxActImmediately(obj, obj, 509, 0);
             break;

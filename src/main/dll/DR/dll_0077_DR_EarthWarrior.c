@@ -1,6 +1,7 @@
 #include "main/dll/DR/dr_802bbc10_shared.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/objanim_update.h"
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 #include "main/objseq.h"
@@ -406,20 +407,19 @@ void DR_EarthWarrior_func22(int obj, f32 scale)
     fn_8003B950((int)lbl_803DB170);
 }
 
-int fn_802BDBE8(int obj, int p2, int p3)
+int fn_802BDBE8(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     EarthWarriorState *inner = ((GameObject *)obj)->extra;
     u8 *pathState = (u8 *)&inner->baddie + 4;
     int i;
     f32 fz;
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
-    if (dll_2E_func07(obj, p3, (void *)((int)((char *)inner + 0x3ec)), 0, 0) != 0) {
+    if (dll_2E_func07(obj, (int)(u8 *)animUpdate, (void *)((int)((char *)inner + 0x3ec)), 0, 0) != 0) {
         return 1;
     }
-    for (i = 0; i < *(u8 *)((char *)p3 + 0x8b); i++) {
-        int idx = i + 0x81;
-        int v = *(u8 *)((char *)p3 + idx);
-        switch (v) {
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        int eventId = animUpdate->eventIds[i];
+        switch (eventId) {
         case 0xa:
             break;
         case 0xe:

@@ -1026,7 +1026,7 @@ extern f32 timeDelta;
 
 
 extern f32 lbl_803E745C;
-extern int mclightning_handleScriptEvents(int obj, int eventId, u8 *script);
+extern int mclightning_handleScriptEvents(int obj, int unused, ObjAnimUpdateState *animUpdate);
 extern f32 lbl_803E7440;
 
 extern void *lightningCreate(f32 *pos, f32 *dir, f32 a, f32 b, u16 angle, int c, int d);
@@ -2304,7 +2304,7 @@ void gf_levelcon_update(int obj);
 void gf_levelcon_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void gf_levelcon_init(int obj);
 int tree_getExtraSize(void);
-int mclightning_handleScriptEvents(int obj, int eventId, u8 *script);
+int mclightning_handleScriptEvents(int obj, int unused, ObjAnimUpdateState *animUpdate);
 int mclightning_getExtraSize(void);
 void mclightning_free(int obj);
 void mclightning_update(int obj);
@@ -2343,7 +2343,7 @@ int fn_80223CF0(int obj, int ai);
 void dll_28B_update(int obj);
 void dll_28B_init(int obj);
 void dll_28B_initialise(void);
-int earthwalker_animEventCallback(int obj, int p2, int p3, int p4);
+int earthwalker_animEventCallback(int obj, int unused, ObjAnimUpdateState *animUpdate, int shouldAdvanceMove);
 void earthwalker_init(int obj, int setup);
 void barrelgener_update(int obj);
 void dll_299_free(int obj);
