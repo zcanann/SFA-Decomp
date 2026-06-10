@@ -335,9 +335,10 @@ void SnowBike_update(int obj)
         return;
     }
     mode = ((SnowBikeState *)state)->unk421;
-    if (mode != 1) {
-        if (mode < 1) {
-            if (mode >= 0) {
+    switch (mode) {
+    case 0:
+        {
+            {
                 *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
                 if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) != 0) {
                     ((SnowBikeState *)state)->unk420 = 1;
@@ -346,7 +347,10 @@ void SnowBike_update(int obj)
                 }
                 Sfx_StopObjectChannel(obj, 0x57);
             }
-        } else if (mode < 3) {
+        }
+        break;
+    case 2:
+        {
             fn_801EAE4C(obj, state);
             if (((SnowBikeFlags *)(state + 0x428))->b02) {
                 if (drshackle_updateAttachedPosition(obj, state) != 0) {
@@ -454,5 +458,6 @@ void SnowBike_update(int obj)
             fn_801EB634(obj, state);
             *(s16 *)obj = ((SnowBikeState *)state)->unk40E;
         }
+        break;
     }
 }
