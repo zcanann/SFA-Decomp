@@ -4,6 +4,7 @@
 #include "main/dll/tframeanimator_state.h"
 #include "main/objanim_internal.h"
 #include "main/objlib.h"
+#include "main/objanim_update.h"
 
 extern void *memset(void *dest, int value, u32 size);
 extern int *Obj_GetPlayerObject(void);
@@ -14,7 +15,7 @@ extern int *gameTextGet(int textId);
 extern u8 lbl_80320F30[];
 extern f32 lbl_803E369C;
 
-int levelname_SeqFn(int obj, int unused, u8 *setupData);
+int levelname_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 
 /*
  * --INFO--
@@ -166,11 +167,11 @@ int ProjectileSwitch_getObjectTypeId(int *obj) {
     return ((u32)v << 11) | 0x400;
 }
 
-int levelname_SeqFn(int obj, int unused, u8 *setupData) {
+int levelname_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate) {
     int *state = ((GameObject *)obj)->extra;
     int i;
-    for (i = 0; i < setupData[0x8B]; i++) {
-        if (setupData[0x81 + i] == 1) {
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        if (animUpdate->eventIds[i] == 1) {
             if (*(s16 *)((char *)state + 0xE) != -1) {
                 GameBit_Set(*(s16 *)((char *)state + 0xE), 1);
             }

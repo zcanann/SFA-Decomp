@@ -4,9 +4,8 @@
 #include "main/objanim_update.h"
 #include "main/objseq.h"
 
-int mcupgradema_SeqFn(int obj, int unused, void *eventData)
+int mcupgradema_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
-    ObjAnimUpdateState *animUpdate = (ObjAnimUpdateState *)eventData;
     int i;
 
     for (i = 0; i < animUpdate->eventCount; i++) {

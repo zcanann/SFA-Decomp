@@ -131,10 +131,8 @@ void cnthitobjec_update(int obj)
     }
 }
 
-int mcupgrade_SeqFn(int obj, int unused, void *eventData)
+int mcupgrade_SeqFn(int obj, int unused, CntHitObjectAnimEvent *event)
 {
-    CntHitObjectAnimEvent *event = (CntHitObjectAnimEvent *)eventData;
-
     if (event->explosionCount != 0) {
         (*gGameUIInterface)->showNpcDialogue(
             ((CntHitObjectSetup *)((GameObject *)obj)->anim.placementData)->startHealth, 0x14, 0x8c, 0);

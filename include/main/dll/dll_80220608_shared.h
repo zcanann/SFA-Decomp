@@ -18,6 +18,7 @@
 #include "main/dll/path_control_interface.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/screen_transition.h"
+#include "main/dll/cnthitobjec_state.h"
 
 /* Pattern wrappers. */
 extern byte framesThisStep;
@@ -2391,9 +2392,9 @@ void arwarwing_upgradeLaserLevel(int arwing);
 int arwarwing_isExplodingOrWarping(int arwing);
 int arwarwing_isBarrelRolling(int arwing);
 int arwarwing_isDead(int arwing);
-int mcupgrade_SeqFn(int obj, int p2, void *setup);
-int mcupgradema_SeqFn(int obj, int unused, void *animUpdate);
-int mcstaffeffe_SeqFn(int obj, int unused, void *animUpdate);
+int mcupgrade_SeqFn(int obj, int unused, CntHitObjectAnimEvent *event);
+int mcupgradema_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
+int mcstaffeffe_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 void mcupgrade_update(int obj);
 void mcupgrade_init(int obj);
 void mcupgradema_update(int obj);
