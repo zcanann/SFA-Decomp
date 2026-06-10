@@ -305,14 +305,7 @@ void SnowBike_func12(int obj, f32 *outFloat, s32 *outBool)
     f32 v, r;
     *outFloat = *(f32 *)(t + 0x414) / lbl_803E5C48;
     v = *outFloat;
-    r = lbl_803E5B70;
-    if (!(v < r)) {
-        r = lbl_803E5AEC;
-        if (!(v > r)) {
-            r = v;
-        }
-    }
-    *outFloat = r;
+    *outFloat = (v < lbl_803E5B70) ? lbl_803E5B70 : ((v > lbl_803E5AEC) ? lbl_803E5AEC : v);
     *outBool = *(f32 *)(t + 0x414) < lbl_803E5AE8;
 }
 
