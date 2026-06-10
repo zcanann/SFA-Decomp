@@ -59,6 +59,8 @@ void vfplevelcontrol_update(int obj) {
     coordsToMapCell(*(f32 *)(player + 0xc), *(f32 *)(player + 0x14));
     mapEventState = (*gMapEventInterface)->getMode(((GameObject *)obj)->anim.mapEventSlot);
     switch (mapEventState) {
+    case 0:
+        break;
     case 1:
         if (lbl_803DC148 != 0) {
             lbl_803DC148 -= (s16)(int)timeDelta;
