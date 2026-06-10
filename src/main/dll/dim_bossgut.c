@@ -388,9 +388,9 @@ void enemymushroom_update(int *obj)
     switch (*(u8 *)(state + 0x36)) {
     case 6:
         Sfx_KeepAliveLoopedObjectSound(obj, 0x9a);
-        *(u8 *)(state + 0x37) = (u8)(*(u8 *)(state + 0x37) & ~0x6);
+        *(u8 *)(state + 0x37) = (u8)(*(u8 *)(state + 0x37) & ~0x4);
         *(f32 *)(state + 0x2c) = lbl_803E5318 * timeDelta + *(f32 *)(state + 0x2c);
-        if (*(f32 *)(state + 0x2c) > lbl_803E531C) {
+        if (*(f32 *)(state + 0x2c) > *(f32 *)&lbl_803E531C) {
             *(f32 *)(state + 0x2c) = lbl_803E531C;
         }
         if (!(*(u8 *)(state + 0x37) & 0x1)) {
@@ -419,7 +419,7 @@ void enemymushroom_update(int *obj)
         }
         break;
     case 2:
-        *(u8 *)(state + 0x37) = (u8)(*(u8 *)(state + 0x37) & ~0x6);
+        *(u8 *)(state + 0x37) = (u8)(*(u8 *)(state + 0x37) & ~0x4);
         if (*(u8 *)(state + 0x37) & 0x2) {
             int t = ((GameObject *)obj)->anim.alpha - framesThisStep * 4;
             if (t < 0) {
@@ -452,7 +452,7 @@ void enemymushroom_update(int *obj)
                 *(u8 *)(state + 0x37) |= 0x1;
             }
         }
-        if (*(f32 *)(state + 0x2c) > lbl_803E531C) {
+        if (*(f32 *)(state + 0x2c) > *(f32 *)&lbl_803E531C) {
             *(f32 *)(state + 0x2c) = lbl_803E531C;
         }
         *(f32 *)(state + 0x0) = *(f32 *)(state + 0x0) + timeDelta;
@@ -485,7 +485,7 @@ void enemymushroom_update(int *obj)
         }
         break;
     case 1:
-        *(u8 *)(state + 0x37) = (u8)(*(u8 *)(state + 0x37) & ~0x6);
+        *(u8 *)(state + 0x37) = (u8)(*(u8 *)(state + 0x37) & ~0x4);
         if (((GameObject *)obj)->anim.rootMotionScale > *(f32 *)(state + 0x4)) {
             *(f32 *)(state + 0x10) = *(f32 *)(state + 0x10) / lbl_803E5328;
         }
