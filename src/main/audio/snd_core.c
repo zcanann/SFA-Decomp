@@ -60,20 +60,28 @@ void salApplyMatrix(f32 *matrix, f32 *vec, f32 *out)
 #pragma fp_contract reset
 
 #pragma fp_contract off
+extern inline f32 sqrtf(f32 x)
+{
+    static const f64 _half = .5;
+    static const f64 _three = 3.0;
+    volatile f32 y;
+    if (x > 0.0f) {
+        f64 guess = __frsqrte((f64)x);
+        guess = _half * guess * (_three - guess * guess * x);
+        guess = _half * guess * (_three - guess * guess * x);
+        guess = _half * guess * (_three - guess * guess * x);
+        y = (f32)(x * guess);
+        return y;
+    }
+    return x;
+}
+
 void salNormalizeVector(f32 *v)
 {
-    f32 divisor;
-    f32 lensq = v[0] * v[0] + v[1] * v[1] + v[2] * v[2];
-    divisor = lensq;
-    if (lensq > lbl_803E78C8) {
-        f64 g = __frsqrte((f64)lensq);
-        g = lbl_803E78D0 * g * (lbl_803E78D8 - g * g * (f64)lensq);
-        g = lbl_803E78D0 * g * (lbl_803E78D8 - g * g * (f64)lensq);
-        *(volatile f32 *)&divisor = (f32)((f64)lensq * ((lbl_803E78D0 * g) * (lbl_803E78D8 - g * g * (f64)lensq)));
-    }
-    v[0] /= divisor;
-    v[1] /= divisor;
-    v[2] /= divisor;
+    f32 len = sqrtf(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+    v[0] /= len;
+    v[1] /= len;
+    v[2] /= len;
 }
 #pragma fp_contract reset
 
