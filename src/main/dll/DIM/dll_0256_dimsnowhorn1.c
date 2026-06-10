@@ -232,22 +232,22 @@ int DIMSnowHorn1_stateHandler0B(int obj, int state)
 
     if (*(s8 *)&((DIMSnowHorn1State *)state)->baddie.moveJustStartedA != 0) {
         inner->unkA8E &= ~0x8;
-        *(s16 *)((char *)sub + 0x60) |= 0x200;
+        ((ObjHitsPriorityState *)sub)->flags |= 0x200;
         ObjAnim_SetCurrentMove(obj, 0x204, k, 0);
         ((DIMSnowHorn1State *)state)->baddie.moveSpeed = lbl_803E8238;
         Sfx_PlayFromObject(obj, 0x3b3);
     }
-    if ((*(s16 *)((char *)sub + 0x60) & 0x200) && (*(s8 *)((char *)sub + 0xad) & 2)) {
+    if ((((ObjHitsPriorityState *)sub)->flags & 0x200) && (((ObjHitsPriorityState *)sub)->contactFlags & 2)) {
         inner->unkA8E |= 0x8;
     }
     if (inner->unkA8E & 0x8) {
-        *(u8 *)((char *)sub + 0x6e) = 0;
-        *(u8 *)((char *)sub + 0x6f) = 0;
-        *(s16 *)((char *)sub + 0x60) &= ~0x200;
+        *(u8 *)&((ObjHitsPriorityState *)sub)->hitVolumePriority = 0;
+        *(u8 *)&((ObjHitsPriorityState *)sub)->hitVolumeId = 0;
+        ((ObjHitsPriorityState *)sub)->flags &= ~0x200;
     } else {
-        *(u8 *)((char *)sub + 0x6e) = 0xb;
-        *(u8 *)((char *)sub + 0x6f) = 1;
-        *(s16 *)((char *)sub + 0x60) |= 0x200;
+        *(u8 *)&((ObjHitsPriorityState *)sub)->hitVolumePriority = 0xb;
+        *(u8 *)&((ObjHitsPriorityState *)sub)->hitVolumeId = 1;
+        ((ObjHitsPriorityState *)sub)->flags |= 0x200;
     }
     if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E823C) {
         return 8;

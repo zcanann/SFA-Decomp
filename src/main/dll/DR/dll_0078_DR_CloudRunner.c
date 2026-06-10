@@ -762,7 +762,7 @@ int DR_CloudRunner_stateHandler06(int obj, int p2)
         void *newObj;
         int setup;
         inner->unkBB6 &= ~8;
-        *(s16 *)((char *)q + 0x60) = *(s16 *)((char *)q + 0x60) | 0x200;
+        ((ObjHitsPriorityState *)q)->flags = ((ObjHitsPriorityState *)q)->flags | 0x200;
         ObjAnim_SetCurrentMove(obj, 0xd, lbl_803E83A4, 0);
         ((CloudRunnerState *)p2)->baddie.moveSpeed = lbl_803E83B8;
         if (Obj_IsLoadingLocked() == 0) {

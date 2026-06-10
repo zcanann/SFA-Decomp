@@ -1899,9 +1899,9 @@ void crrockfall_init(int *obj, u8 *params)
     if (sub != NULL) {
         f32 scale = ((GameObject *)obj)->anim.rootMotionScale;
         ObjHitbox_SetCapsuleBounds(obj,
-                                   (int)((f32)*(s16 *)((char *)sub + 0x5a) * scale),
-                                   (int)((f32)*(s16 *)((char *)sub + 0x5c) * scale),
-                                   (int)((f32)*(s16 *)((char *)sub + 0x5e) * scale));
+                                   (int)((f32)((ObjHitsPriorityState *)sub)->primaryRadius * scale),
+                                   (int)((f32)((ObjHitsPriorityState *)sub)->primaryCapsuleOffsetA * scale),
+                                   (int)((f32)((ObjHitsPriorityState *)sub)->primaryCapsuleOffsetB * scale));
         ObjHits_DisableObject(obj);
     }
 
@@ -2033,12 +2033,12 @@ void crrockfall_update(int *obj)
                         Sfx_PlayFromObject(obj, SFXwp_sexpl2_c);
                     }
                     Sfx_PlayFromObject(obj, SFXmv_blockscrape_lp);
-                    *(s16 *)((char *)s54 + 0x60) |= 1;
+                    ((ObjHitsPriorityState *)s54)->flags |= 1;
                 }
-                *(int *)((char *)s54 + 0x48) = 16;
-                *(int *)((char *)s54 + 0x4c) = 16;
-                *(u8 *)((char *)s54 + 0x6f) = 1;
-                *(u8 *)((char *)s54 + 0x6e) = 13;
+                *(int *)&((ObjHitsPriorityState *)s54)->objectHitMask = 16;
+                *(int *)&((ObjHitsPriorityState *)s54)->skeletonHitMask = 16;
+                *(u8 *)&((ObjHitsPriorityState *)s54)->hitVolumeId = 1;
+                *(u8 *)&((ObjHitsPriorityState *)s54)->hitVolumePriority = 13;
                 ((GameObject *)obj)->anim.velocityY =
                     lbl_803E4720 * timeDelta + ((GameObject *)obj)->anim.velocityY;
                 ((GameObject *)obj)->anim.localPosY =
@@ -2055,17 +2055,17 @@ void crrockfall_update(int *obj)
                 }
                 break;
             case 2:
-                *(int *)((char *)s54 + 0x48) = 16;
-                *(int *)((char *)s54 + 0x4c) = 16;
-                *(u8 *)((char *)s54 + 0x6f) = 1;
-                *(u8 *)((char *)s54 + 0x6e) = 13;
+                *(int *)&((ObjHitsPriorityState *)s54)->objectHitMask = 16;
+                *(int *)&((ObjHitsPriorityState *)s54)->skeletonHitMask = 16;
+                *(u8 *)&((ObjHitsPriorityState *)s54)->hitVolumeId = 1;
+                *(u8 *)&((ObjHitsPriorityState *)s54)->hitVolumePriority = 13;
                 break;
             case 4:
                 break;
             }
 
-            if (*(void **)((char *)s54 + 0x50) != NULL) {
-                *(s16 *)((char *)s54 + 0x60) &= ~1;
+            if (*(void **)&((ObjHitsPriorityState *)s54)->lastHitObject != NULL) {
+                ((ObjHitsPriorityState *)s54)->flags &= ~1;
                 ex->mode = 3;
                 Sfx_StopObjectChannel(obj, 8);
                 if (((GameObject *)obj)->anim.seqId == 103) {

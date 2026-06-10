@@ -652,7 +652,7 @@ void blasted_init(int param_1, int param_2)
     state[0xc / 4] = 0;
     objSetSlot((int*)param_1, 0x51);
     targ = *(int**)&((GameObject *)param_1)->anim.hitReactState;
-    *(s16*)((char*)targ + 0x60) = (s16)(*(s16*)((char*)targ + 0x60) | 1);
+    ((ObjHitsPriorityState *)targ)->flags = (s16)(((ObjHitsPriorityState *)targ)->flags | 1);
     *(u8*)((char*)state + 0x10) = (u8)*(s16*)(param_2 + 0x1a);
     gbid = *(s16*)(param_2 + 0x20);
     if (gbid != -1) {

@@ -684,8 +684,8 @@ void SB_ShipHead_render(int param_1,int param_2,int param_3,int param_4,int para
     iVar2 = *(int *)&((GameObject *)param_1)->extra;
     FUN_8003b818(param_1);
     iVar1 = *(int *)&((GameObject *)param_1)->anim.parent;
-    if ((((iVar1 != 0) && (*(short *)(iVar1 + 0x46) == 0x8e)) &&
-        (iVar1 = (**(code **)(**(int **)(iVar1 + 0x68) + 0x2c))(), iVar1 != 0)) && (iVar1 != 2)) {
+    if ((((iVar1 != 0) && (((GameObject *)iVar1)->anim.seqId == 0x8e)) &&
+        (iVar1 = (**(code **)(**(int **)&((GameObject *)iVar1)->anim.dll + 0x2c))(), iVar1 != 0)) && (iVar1 != 2)) {
       ((SBShipHeadState *)iVar2)->swayA = ((SBShipHeadState *)iVar2)->swayA - lbl_803DC074;
       if (((SBShipHeadState *)iVar2)->swayA <= lbl_803E64CC) {
         ((SBShipHeadState *)iVar2)->swayA = ((SBShipHeadState *)iVar2)->swayA + lbl_803E64D0;
@@ -776,7 +776,7 @@ void SB_ShipHead_update(int obj) {
                 Sfx_StopObjectChannel(obj, 0x40);
             }
         }
-        state = *(int *)(galleon + 0xf4);
+        state = ((GameObject *)galleon)->unkF4;
         hs = ((GameObject *)obj)->extra;
         if (*(void **)&hs->target == 0) {
             int *arr = (int *)ObjList_GetObjects(&start, &end);
@@ -798,7 +798,7 @@ void SB_ShipHead_update(int obj) {
                 break;
             }
         }
-        if (((**(int (**)(u8 *))(**(int **)(galleon + 0x68) + 0x28))(galleon) >= 2)
+        if (((**(int (**)(u8 *))(**(int **)&((GameObject *)galleon)->anim.dll + 0x28))(galleon) >= 2)
             && (((GameObject *)obj)->unkF8 <= 0) && (((uint)(state - 3) <= 1 || (state == 5)))
             && (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0)
             && (*(s16 *)(hit + 0x46) != 0x114)) {
@@ -806,7 +806,7 @@ void SB_ShipHead_update(int obj) {
             Sfx_PlayFromObject(obj, 0x37);
             hs->health -= 1;
             if (hs->health <= 0) {
-                (**(void (**)(u8 *))(**(int **)(galleon + 0x68) + 0x20))(galleon);
+                (**(void (**)(u8 *))(**(int **)&((GameObject *)galleon)->anim.dll + 0x20))(galleon);
                 ((GameObject *)obj)->unkF8 = 300;
                 ObjHits_DisableObject(obj);
             }
@@ -897,7 +897,7 @@ void SB_ShipMast_update(int *obj) {
 
     parent = *(int**)&((GameObject *)obj)->anim.parent;
     if (parent == NULL) return;
-    pf4 = *(int*)((char*)parent + 0xf4);
+    pf4 = ((GameObject *)parent)->unkF4;
     ((GameObject *)obj)->anim.localPosX = lbl_803E586C;
     ((GameObject *)obj)->anim.localPosY = lbl_803E586C;
     ((GameObject *)obj)->anim.localPosZ = lbl_803E586C;
@@ -1195,7 +1195,7 @@ void SB_ShipGun_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
     s8 *p = ((GameObject *)obj)->extra;
     s32 v;
     if (o30 != NULL) {
-        if (*(s16*)((char*)o30 + 0x46) == 0x139) return;
+        if (((GameObject *)o30)->anim.seqId == 0x139) return;
     }
     v = visible;
     if (v != 0 && p[0xc] != 0 && ((u8*)p)[0xd] != 0) {

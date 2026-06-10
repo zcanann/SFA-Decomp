@@ -465,8 +465,8 @@ void FUN_801e4950(int param_1)
   int iVar1;
   
   iVar1 = *(int *)&((GameObject *)param_1)->anim.hitReactState;
-  if (*(int *)(iVar1 + 0x50) != 0) {
-    *(ushort *)(iVar1 + 0x60) = *(ushort *)(iVar1 + 0x60) & ~1;
+  if (*(int *)&((ObjHitsPriorityState *)iVar1)->lastHitObject != 0) {
+    *(ushort *)&((ObjHitsPriorityState *)iVar1)->flags = *(ushort *)&((ObjHitsPriorityState *)iVar1)->flags & ~1;
     iVar1 = 0x32;
     do {
       (*gPartfxInterface)->spawnObject((void *)param_1, 0xa7, NULL, 1, -1, NULL);
@@ -850,7 +850,7 @@ void FUN_801e524c(undefined8 param_1,double param_2,double param_3,undefined8 pa
     iVar1 = FUN_80017b00(&local_18,local_14);
     for (local_18 = 0; local_18 < local_14[0]; local_18 = local_18 + 1) {
       iVar3 = *(int *)(iVar1 + local_18 * 4);
-      if (*(short *)(iVar3 + 0x46) == 0x121) {
+      if (((GameObject *)iVar3)->anim.seqId == 0x121) {
         *piVar4 = iVar3;
         ObjLink_AttachChild(param_9,*piVar4,1);
         local_18 = local_14[0];
@@ -1846,10 +1846,10 @@ void Flag_update(int obj)
     } else if (((GameObject *)obj)->anim.seqId == 0x803) {
         Obj_GetPlayerObject();
         linkedObj = *(int *)&((GameObject *)obj)->anim.parent;
-        if ((*(u16 *)(linkedObj + 0xb0) & 0x1000) != 0) {
+        if ((((GameObject *)linkedObj)->objectFlags & 0x1000) != 0) {
             ((GameObject *)obj)->anim.velocityX = lbl_803E5998;
         } else {
-            ((GameObject *)obj)->anim.velocityX = (f32)*(s16 *)(linkedObj + 4) * lbl_803E599C;
+            ((GameObject *)obj)->anim.velocityX = (f32)((GameObject *)linkedObj)->anim.rotZ * lbl_803E599C;
             ((GameObject *)obj)->anim.rotZ = (s16)((f32)((GameObject *)obj)->anim.rotZ + ((GameObject *)obj)->anim.velocityX);
         }
     } else {
@@ -2090,7 +2090,7 @@ void SB_CloudBall_hitDetect(int *obj)
 {
     SBCloudBallState *state = ((GameObject *)obj)->extra;
     int *params = *(int **)&((GameObject *)obj)->anim.hitReactState;
-    int *target = *(int **)((char *)params + 0x50);
+    int *target = *(int **)&((ObjHitsPriorityState *)params)->lastHitObject;
 
     if ((void *)target == NULL) return;
     if (state->fadeTimer != lbl_803E58EC) return;
@@ -2098,7 +2098,7 @@ void SB_CloudBall_hitDetect(int *obj)
         Sfx_PlayFromObject(obj, SFXen_rockshat16);
     }
     params = *(int **)&((GameObject *)obj)->anim.hitReactState;
-    *(s16 *)((char *)params + 0x60) = (s16)(*(s16 *)((char *)params + 0x60) & ~1);
+    ((ObjHitsPriorityState *)params)->flags = (s16)(((ObjHitsPriorityState *)params)->flags & ~1);
     state->fadeTimer = lbl_803E58F0;
     ((GameObject *)obj)->anim.alpha = 0;
     projectileParticleFxFn_80099660(obj, lbl_803E58E8, 2);
@@ -2116,9 +2116,9 @@ void SB_CloudBall_init(int *obj)
     SBCloudBallState *state = ((GameObject *)obj)->extra;
     int *params = *(int **)&((GameObject *)obj)->anim.hitReactState;
 
-    *(s16 *)((char *)params + 0x60) = (s16)(*(s16 *)((char *)params + 0x60) & ~1);
+    ((ObjHitsPriorityState *)params)->flags = (s16)(((ObjHitsPriorityState *)params)->flags & ~1);
     params = *(int **)&((GameObject *)obj)->anim.hitReactState;
-    *(u16 *)((char *)params + 0xb2) = (u16)(*(u16 *)((char *)params + 0xb2) | 1);
+    ((ObjHitsPriorityState *)params)->trackContactMask = (u16)(((ObjHitsPriorityState *)params)->trackContactMask | 1);
     if ((void *)state->light == NULL) {
         state->light = objCreateLight(obj, 1);
         if ((void *)state->light != NULL) {

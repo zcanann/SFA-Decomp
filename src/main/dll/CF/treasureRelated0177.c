@@ -508,9 +508,9 @@ void campfire_init(int obj, int p2)
         f32 scale = ((GameObject *)obj)->anim.rootMotionScale / *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4);
         int m = *(int *)&((GameObject *)obj)->anim.hitReactState;
         ObjHitbox_SetCapsuleBounds(obj,
-            (int)((f32)*(s16 *)(m + 0x5a) * scale),
-            (int)((f32)*(s16 *)(m + 0x5c) * scale),
-            (int)((f32)*(s16 *)(m + 0x5e) * scale));
+            (int)((f32)((ObjHitsPriorityState *)m)->primaryRadius * scale),
+            (int)((f32)((ObjHitsPriorityState *)m)->primaryCapsuleOffsetA * scale),
+            (int)((f32)((ObjHitsPriorityState *)m)->primaryCapsuleOffsetB * scale));
     }
     *(f32 *)(state + 1) = lbl_803E3D80;
     *(f32 *)(state + 2) = lbl_803E3D78;

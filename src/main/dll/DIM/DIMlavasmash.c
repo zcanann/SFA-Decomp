@@ -484,10 +484,10 @@ void dimsnowball_update(int obj)
     ((GameObject *)obj)->anim.rotZ = (int)-(lbl_803E4854 * v24 - (f32)((GameObject *)obj)->anim.rotZ);
     model = *(u8 **)&((GameObject *)obj)->anim.hitReactState;
     if (model != NULL) {
-        *(s16 *)(model + 0x60) |= 1;
-        *(u8 *)(model + 0x6e) = 4;
-        *(u8 *)(model + 0x6f) = 2;
-        *(int *)(model + 0x48) = 0x10;
-        *(int *)(model + 0x4c) = 0x10;
+        ((ObjHitsPriorityState *)model)->flags |= 1;
+        *(u8 *)&((ObjHitsPriorityState *)model)->hitVolumePriority = 4;
+        *(u8 *)&((ObjHitsPriorityState *)model)->hitVolumeId = 2;
+        *(int *)&((ObjHitsPriorityState *)model)->objectHitMask = 0x10;
+        *(int *)&((ObjHitsPriorityState *)model)->skeletonHitMask = 0x10;
     }
 }

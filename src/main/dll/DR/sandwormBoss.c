@@ -3814,9 +3814,9 @@ void gcrobotlightbea_hitDetect(int* obj)
     }
     if (hit != Obj_GetPlayerObject()) return;
     if (playerIsDisguised(hit) != 0) return;
-    vec[0] = *(f32*)((char*)hit + 0xc);
-    vec[1] = lbl_803E4298 + *(f32*)((char*)hit + 0x10);
-    vec[2] = *(f32*)((char*)hit + 0x14);
+    vec[0] = ((ObjHitsPriorityState *)hit)->primaryRadiusSquared;
+    vec[1] = lbl_803E4298 + ((ObjHitsPriorityState *)hit)->localPosX;
+    vec[2] = ((ObjHitsPriorityState *)hit)->localPosY;
     if (voxmaps_traceWorldLine((void *)((int)obj + 0xc), vec) == 0) return;
     if (((GameObject *)obj)->unkF4 != 0 ||
         objBboxFn_800640cc((int)obj + 0xc, vec, 0, &out, (int)obj, 4, -1, 0, 0) == 0) {

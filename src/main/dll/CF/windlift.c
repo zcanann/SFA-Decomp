@@ -1471,9 +1471,9 @@ void fn_801862CC(int obj, int p)
   sub = ((GameObject *)obj)->extra;
   ((GameObject *)obj)->anim.rotX = 0;
   p54 = *(int *)(obj + 0x54);
-  *(int *)(p54 + 0x4c) = 16;
+  *(int *)&((ObjHitsPriorityState *)p54)->skeletonHitMask = 16;
   p54 = *(int *)&((GameObject *)obj)->anim.hitReactState;
-  *(int *)(p54 + 0x48) = 16;
+  *(int *)&((ObjHitsPriorityState *)p54)->objectHitMask = 16;
   ObjHits_DisableObject(obj);
   ObjGroup_AddObject(obj, 16);
   sub->ventState = 0;

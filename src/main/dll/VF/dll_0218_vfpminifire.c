@@ -110,12 +110,12 @@ void vfpminifire_update(int obj)
 
     linkedGfx = *(int *)&((GameObject *)obj)->anim.hitReactState;
     if (linkedGfx != 0) {
-        *(u8 *)(linkedGfx + 0x6e) = 0xb;
-        *(u8 *)(linkedGfx + 0x6f) = 1;
-        *(int *)(linkedGfx + 0x48) = 0x10;
-        *(int *)(linkedGfx + 0x4c) = 0x10;
+        *(u8 *)&((ObjHitsPriorityState *)linkedGfx)->hitVolumePriority = 0xb;
+        *(u8 *)&((ObjHitsPriorityState *)linkedGfx)->hitVolumeId = 1;
+        *(int *)&((ObjHitsPriorityState *)linkedGfx)->objectHitMask = 0x10;
+        *(int *)&((ObjHitsPriorityState *)linkedGfx)->skeletonHitMask = 0x10;
     }
-    if ((linkedGfx != 0 && *(int *)(linkedGfx + 0x50) != 0) ||
+    if ((linkedGfx != 0 && *(int *)&((ObjHitsPriorityState *)linkedGfx)->lastHitObject != 0) ||
         (((GameObject *)obj)->anim.localPosY < state->baseY && state->burstStarted == 0)) {
         state->burstStarted = 1;
         Sfx_StopObjectChannel(obj, 0x7f);

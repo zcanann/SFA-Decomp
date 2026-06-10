@@ -5333,7 +5333,7 @@ int objShadowFn_80062498(int *obj, int param2)
         {
             void *p54 = ((GameObject *)obj)->anim.hitReactState;
             if (p54 != NULL) {
-                yOff = (f32)((int)*(s16 *)((char *)p54 + 0x5e) / 2);
+                yOff = (f32)((int)((ObjHitsPriorityState *)p54)->primaryCapsuleOffsetB / 2);
             } else {
                 yOff = lbl_803DEC58;
             }

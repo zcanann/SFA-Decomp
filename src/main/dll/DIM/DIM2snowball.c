@@ -2033,11 +2033,11 @@ checkHit:
     if (((GameObject *)obj)->anim.alpha == 255) {
         int *m = *(int **)&((GameObject *)obj)->anim.hitReactState;
         if (m != NULL) {
-            *(s16 *)((char *)m + 0x60) |= 1;
-            *(u8 *)((char *)m + 0x6e) = 4;
-            *(u8 *)((char *)m + 0x6f) = 2;
-            *(int *)((char *)m + 0x48) = 16;
-            *(int *)((char *)m + 0x4c) = 16;
+            ((ObjHitsPriorityState *)m)->flags |= 1;
+            *(u8 *)&((ObjHitsPriorityState *)m)->hitVolumePriority = 4;
+            *(u8 *)&((ObjHitsPriorityState *)m)->hitVolumeId = 2;
+            *(int *)&((ObjHitsPriorityState *)m)->objectHitMask = 16;
+            *(int *)&((ObjHitsPriorityState *)m)->skeletonHitMask = 16;
         }
     }
     Sfx_KeepAliveLoopedObjectSound(obj, 1171);

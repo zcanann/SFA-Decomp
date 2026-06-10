@@ -1801,7 +1801,7 @@ void Obj_UpdateAllObjects(u8 flags)
     for (; obj != 0; obj = *(int *)(obj + off)) {
         t = (void *)((GameObject *)obj)->anim.hitReactState;
         if (t != 0) {
-            if ((*(u8 *)(t + 0x62) & 8) == 0 || (*(s16 *)(t + 0x60) & 1) == 0) {
+            if ((((ObjHitsPriorityState *)t)->shapeFlags & 8) == 0 || (((ObjHitsPriorityState *)t)->flags & 1) == 0) {
                 Obj_UpdateObject((u8 *)obj);
             }
         } else {

@@ -520,7 +520,7 @@ void dimlavasmash_update(int *obj) {
     sub = ((GameObject *)obj)->extra;
     if (sub[2] == 1) {
         p = *(int**)&((GameObject *)obj)->anim.hitReactState;
-        *(s16*)((char*)p + 0x60) = (s16)(*(s16*)((char*)p + 0x60) & ~1);
+        ((ObjHitsPriorityState *)p)->flags = (s16)(((ObjHitsPriorityState *)p)->flags & ~1);
     } else if (((GameObject *)obj)->unkF4 == 0) {
         if ((s8)sub[0] != -1) {
             (*gObjectTriggerInterface)->runSequence((s8)sub[0], obj, -1);
@@ -686,9 +686,9 @@ void dimcannon_init(int *obj, int *arg)
         ((GameObject *)obj)->unkF4 = 0;
         p = *(int **)&((GameObject *)obj)->anim.modelState;
         if (p != 0) {
-            *(int *)((char *)p + 0x30) |= 0xc10;
+            *(int *)&((ObjHitsPriorityState *)p)->secondaryRadiusY |= 0xc10;
             p = *(int **)&((GameObject *)obj)->anim.modelState;
-            *(u32 *)((char *)p + 0x30) |= 0x8000LL;
+            *(u32 *)&((ObjHitsPriorityState *)p)->secondaryRadiusY |= 0x8000LL;
         }
         state = ((GameObject *)obj)->extra;
         ((DimcannonState *)state)->unk9 = (s8)randomGetRange(-0x64, 0x64);
@@ -697,7 +697,7 @@ void dimcannon_init(int *obj, int *arg)
         ((DimcannonState *)state)->unk7 = 1;
         p = *(int **)&((GameObject *)obj)->anim.hitReactState;
         if (p != 0) {
-            *(s16 *)((char *)p + 0xb2) = 1;
+            *(s16 *)&((ObjHitsPriorityState *)p)->trackContactMask = 1;
         }
         ((GameObject *)obj)->objectFlags |= 0x4000;
     } else {

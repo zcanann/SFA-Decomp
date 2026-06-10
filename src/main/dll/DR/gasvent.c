@@ -93,16 +93,16 @@ void FUN_801a1230(int param_1,char param_2)
   iVar2 = *(int *)&((GameObject *)param_1)->extra;
   iVar1 = *(int *)&((GameObject *)param_1)->anim.hitReactState;
   if (param_2 == '\0') {
-    *(undefined *)(iVar1 + 0x6a) = *(undefined *)(*(int *)&((GameObject *)param_1)->anim.modelInstance + 99);
-    *(undefined *)(iVar1 + 0x6b) = *(undefined *)(*(int *)&((GameObject *)param_1)->anim.modelInstance + 100);
+    ((ObjHitsPriorityState *)iVar1)->lateralResponseWeight = *(undefined *)(*(int *)&((GameObject *)param_1)->anim.modelInstance + 99);
+    ((ObjHitsPriorityState *)iVar1)->axialResponseWeight = *(undefined *)(*(int *)&((GameObject *)param_1)->anim.modelInstance + 100);
     *(byte *)(iVar2 + 0x4a) = *(byte *)(iVar2 + 0x4a) & 0x7f;
     *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode & 0xf7;
     ObjHits_ClearFlags(param_1,0x400);
     *(byte *)(iVar2 + 0x49) = *(byte *)(iVar2 + 0x49) | 1;
   }
   else {
-    *(undefined *)(iVar1 + 0x6a) = 1;
-    *(undefined *)(iVar1 + 0x6b) = 1;
+    ((ObjHitsPriorityState *)iVar1)->lateralResponseWeight = 1;
+    ((ObjHitsPriorityState *)iVar1)->axialResponseWeight = 1;
     *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode | 8;
     *(byte *)(iVar2 + 0x4a) = *(byte *)(iVar2 + 0x4a) & 0x7f | 0x80;
     *(byte *)(iVar2 + 0x49) = *(byte *)(iVar2 + 0x49) & 0xfd;

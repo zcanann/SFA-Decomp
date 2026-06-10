@@ -535,7 +535,7 @@ void dll_19D_hitDetect(int obj)
     vec[2] = (float)(int)(s8)((Dll19DPlacement *)state2)->unk19;
 
     linkObj = *(int *)&((GameObject *)self)->anim.hitReactState;
-    linkSubObj = *(void **)(linkObj + 0x50);
+    linkSubObj = *(void **)&((ObjHitsPriorityState *)linkObj)->lastHitObject;
     if (linkSubObj == 0) return;
     if (*(short *)((u8 *)linkSubObj + 0x46) == 0x248) return;
 

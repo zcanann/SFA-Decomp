@@ -2283,9 +2283,9 @@ LAB_80055824:
                 fVar4 = (float)(&DAT_803872b0)[iVar12 * 4];
               }
               else {
-                fVar2 = *(float *)(iVar12 + 0x18);
-                fVar3 = *(float *)(iVar12 + 0x1c);
-                fVar4 = *(float *)(iVar12 + 0x20);
+                fVar2 = ((GameObject *)iVar12)->anim.worldPosX;
+                fVar3 = ((GameObject *)iVar12)->anim.worldPosY;
+                fVar4 = ((GameObject *)iVar12)->anim.worldPosZ;
               }
               if (*(int *)&((GameObject *)param_1)->anim.parent == 0) {
                 fVar5 = ((GameObject *)param_1)->anim.worldPosX;

@@ -206,7 +206,7 @@ void fn_801D2B70(int *obj, int unused, int *p3) {
     Sfx_PlayFromObject(obj, SFXmv_curtainrustle);
     {
         int *p = *(int **)&((GameObject *)obj)->anim.hitReactState;
-        *(s16 *)((char *)p + 0x60) = (s16)(*(s16 *)((char *)p + 0x60) | 0x40);
+        ((ObjHitsPriorityState *)p)->flags = (s16)(((ObjHitsPriorityState *)p)->flags | 0x40);
     }
     spawnExplosion((int)obj, lbl_803E5378, 0, 1, 1, 1, 0, 1, 0);
     *(u8 *)((char *)p3 + 0x14) = 1;

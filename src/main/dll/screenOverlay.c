@@ -242,7 +242,7 @@ void ProjectileSwitch_init(int obj, u8 *initData)
 
   linkObj = ((GameObject *)obj)->anim.parent;
   if (linkObj != 0) {
-    linkSub = *(u8 **)(linkObj + 0x4c);
+    linkSub = *(u8 **)&((GameObject *)linkObj)->anim.placementData;
     if (linkSub != 0) {
       *(short *)(state + 2) =
           (short)seqStreamLookupFn_8007fff8(lbl_80321008, 2, *(int *)(linkSub + 0x14));

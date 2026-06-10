@@ -174,8 +174,8 @@ void SB_ShipGun_update(int obj)
     }
     iVar5 = *(int *)&((GameObject *)obj)->anim.parent;
     if (((void *)iVar5 != NULL) &&
-        (*(short *)(iVar5 + 0x46) == SB_SHIPGUN_GALLEON_ALIAS_OBJECT_TYPE)) {
-      iVar6 = (*(code *)(**(int **)(iVar5 + 0x68) + 0x24))(iVar5);
+        (((GameObject *)iVar5)->anim.seqId == SB_SHIPGUN_GALLEON_ALIAS_OBJECT_TYPE)) {
+      iVar6 = (*(code *)(**(int **)&((GameObject *)iVar5)->anim.dll + 0x24))(iVar5);
     }
     else {
       iVar6 = 0;
@@ -186,7 +186,7 @@ void SB_ShipGun_update(int obj)
     switch (cVar1) {
     case 0:
       if (((void *)iVar5 != NULL) &&
-         (iVar5 = (*(code *)(**(int **)(iVar5 + 0x68) + 0x28))(iVar5), iVar5 == 0)) {
+         (iVar5 = (*(code *)(**(int **)&((GameObject *)iVar5)->anim.dll + 0x28))(iVar5), iVar5 == 0)) {
         if (*(char *)(iVar11 + 0x19) == '\0') {
           *(undefined *)((int)piVar10 + 10) = 2;
           *(undefined2 *)(piVar10 + 2) = SB_SHIPGUN_WAKE_DELAY;
@@ -201,7 +201,7 @@ void SB_ShipGun_update(int obj)
     case 2:
       {
           (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags |= 1;
-          iVar11 = (*(code *)(**(int **)(iVar5 + 0x68) + 0x28))(iVar5);
+          iVar11 = (*(code *)(**(int **)&((GameObject *)iVar5)->anim.dll + 0x28))(iVar5);
           if ((iVar11 == 0) &&
              (iVar7 = ObjHits_GetPriorityHit(obj,0,0,0), iVar7 != 0)) {
             Obj_SetModelColorFadeRecursive(obj,SB_SHIPGUN_HIT_REACT_TYPE,SB_SHIPGUN_HIT_REACT_POWER,0,0,1);
@@ -211,7 +211,7 @@ void SB_ShipGun_update(int obj)
               *(s8 *)(piVar10 + 3) -= 1;
               *(undefined *)((int)piVar10 + 10) = 3;
               if ((void *)iVar5 != NULL) {
-                (*(code *)(**(int **)(iVar5 + 0x68) + 0x20))(iVar5);
+                (*(code *)(**(int **)&((GameObject *)iVar5)->anim.dll + 0x20))(iVar5);
               }
             }
             else if (*(char *)((int)piVar10 + 0xb) == SB_SHIPGUN_SECOND_DAMAGE_HIT_COUNT) {
@@ -219,7 +219,7 @@ void SB_ShipGun_update(int obj)
               *(s8 *)(piVar10 + 3) -= 1;
               *(undefined *)((int)piVar10 + 10) = 3;
               if ((void *)iVar5 != NULL) {
-                (*(code *)(**(int **)(iVar5 + 0x68) + 0x20))(iVar5);
+                (*(code *)(**(int **)&((GameObject *)iVar5)->anim.dll + 0x20))(iVar5);
               }
             }
           }
@@ -332,7 +332,7 @@ void SB_ShipGun_update(int obj)
     case 5:
       (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
       if (((void *)iVar5 != NULL) &&
-         (iVar5 = (*(code *)(**(int **)(iVar5 + 0x68) + 0x28))(iVar5), iVar5 == 0)) {
+         (iVar5 = (*(code *)(**(int **)&((GameObject *)iVar5)->anim.dll + 0x28))(iVar5), iVar5 == 0)) {
         if (*(char *)(iVar11 + 0x19) == '\0') {
           if (SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE <= iVar6) {
             *(undefined *)((int)piVar10 + 10) = 2;
@@ -488,7 +488,7 @@ void SB_CannonBall_hitDetect(int *obj) {
 
     {
         int *side = *(int **)&((GameObject *)obj)->anim.hitReactState;
-        int *target = *(int **)((char *)side + 0x50);
+        int *target = *(int **)&((ObjHitsPriorityState *)side)->lastHitObject;
         s16 type;
         if (target == NULL) return;
         type = *(s16 *)((char *)target + 0x46);
@@ -501,7 +501,7 @@ void SB_CannonBall_hitDetect(int *obj) {
     Sfx_PlayFromObject(obj, SB_CANNONBALL_IMPACT_SFX);
     {
         int *p = *(int **)&((GameObject *)obj)->anim.hitReactState;
-        *(s16 *)((char *)p + 0x60) = (s16)(*(s16 *)((char *)p + 0x60) & ~SB_CANNONBALL_SOLID_HITBOX_FLAG);
+        ((ObjHitsPriorityState *)p)->flags = (s16)(((ObjHitsPriorityState *)p)->flags & ~SB_CANNONBALL_SOLID_HITBOX_FLAG);
     }
     ((SBCannonBallState *)state)->unk1C = lbl_803E58B8;
     ((GameObject *)obj)->anim.alpha = SB_CANNONBALL_IMPACT_VISUAL_TIMER;
@@ -543,7 +543,7 @@ void SB_CannonBall_init(int *obj) {
     }
     {
         int *p = *(int **)&((GameObject *)obj)->anim.hitReactState;
-        *(s16 *)((char *)p + 0x60) = (s16)(*(s16 *)((char *)p + 0x60) & ~SB_CANNONBALL_SOLID_HITBOX_FLAG);
+        ((ObjHitsPriorityState *)p)->flags = (s16)(((ObjHitsPriorityState *)p)->flags & ~SB_CANNONBALL_SOLID_HITBOX_FLAG);
     }
     ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale * lbl_803E58D0;
     ((SBCannonBallState *)state)->unk1A = (s8)(((SBCannonBallState *)state)->unk1A | SB_CANNONBALL_INITIAL_BURST_FLAG);

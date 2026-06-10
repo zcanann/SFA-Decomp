@@ -1452,21 +1452,21 @@ void invhit_init(int *obj, u8 *def) {
 
     state->mode = def[0x1a];
     sub = *(char **)&((GameObject *)obj)->anim.hitReactState;
-    *(s16 *)(sub + 0x60) = *(s16 *)(sub + 0x60) & ~1;
+    ((ObjHitsPriorityState *)sub)->flags = ((ObjHitsPriorityState *)sub)->flags & ~1;
     switch (state->mode) {
     case 0:
         ((GameObject *)obj)->unkF8 = def[0x18];
         break;
     case 6:
         sub[0x62] = 1;
-        *(s16 *)(sub + 0x5a) = 0x23;
-        *(s16 *)(sub + 0x60) = *(s16 *)(sub + 0x60) | 0x45;
+        ((ObjHitsPriorityState *)sub)->primaryRadius = 0x23;
+        ((ObjHitsPriorityState *)sub)->flags = ((ObjHitsPriorityState *)sub)->flags | 0x45;
         sub[0x6e] = 0xb;
         sub[0x6f] = 1;
         sub[0xae] = 0;
         sub[0xaf] = 0;
-        *(int *)(sub + 0x48) = 0x10;
-        *(int *)(sub + 0x4c) = 0x10;
+        *(int *)&((ObjHitsPriorityState *)sub)->objectHitMask = 0x10;
+        *(int *)&((ObjHitsPriorityState *)sub)->skeletonHitMask = 0x10;
         sub[0x6a] = 0;
         sub[0x6b] = 0;
         break;
@@ -1480,36 +1480,36 @@ void invhit_init(int *obj, u8 *def) {
         break;
     case 7:
         sub[0x62] = 1;
-        *(s16 *)(sub + 0x5a) = def[0x18];
-        *(s16 *)(sub + 0x60) = *(s16 *)(sub + 0x60) | 0x45;
+        ((ObjHitsPriorityState *)sub)->primaryRadius = def[0x18];
+        ((ObjHitsPriorityState *)sub)->flags = ((ObjHitsPriorityState *)sub)->flags | 0x45;
         sub[0xae] = 0;
         sub[0x6e] = 0xa;
         sub[0x6f] = 0;
         sub[0xaf] = 0;
-        *(int *)(sub + 0x48) = 0x10;
-        *(int *)(sub + 0x4c) = 0x10;
+        *(int *)&((ObjHitsPriorityState *)sub)->objectHitMask = 0x10;
+        *(int *)&((ObjHitsPriorityState *)sub)->skeletonHitMask = 0x10;
         sub[0x6a] = 0;
         sub[0x6b] = 0;
         break;
     case 1:
         sub[0x62] = 1;
-        *(s16 *)(sub + 0x5a) = def[0x18];
-        *(s16 *)(sub + 0x60) = *(s16 *)(sub + 0x60) | 0x45;
+        ((ObjHitsPriorityState *)sub)->primaryRadius = def[0x18];
+        ((ObjHitsPriorityState *)sub)->flags = ((ObjHitsPriorityState *)sub)->flags | 0x45;
         sub[0xae] = 0;
         sub[0x6e] = 0xb;
         sub[0x6f] = 1;
         sub[0xaf] = 0;
         sub[0x6e] = 0x11;
         sub[0x6f] = 1;
-        *(int *)(sub + 0x48) = 0x10;
-        *(int *)(sub + 0x4c) = 0x10;
+        *(int *)&((ObjHitsPriorityState *)sub)->objectHitMask = 0x10;
+        *(int *)&((ObjHitsPriorityState *)sub)->skeletonHitMask = 0x10;
         sub[0x6a] = 0;
         sub[0x6b] = 0;
         break;
     case 2:
-        *(u8 *)(sub + 0x62) = def[0x19];
-        *(s16 *)(sub + 0x5a) = def[0x18];
-        *(s16 *)(sub + 0x60) = *(s16 *)(sub + 0x60) | 1;
+        ((ObjHitsPriorityState *)sub)->shapeFlags = def[0x19];
+        ((ObjHitsPriorityState *)sub)->primaryRadius = def[0x18];
+        ((ObjHitsPriorityState *)sub)->flags = ((ObjHitsPriorityState *)sub)->flags | 1;
         sub[0xae] = 0;
         sub[0xaf] = 0;
         sub[0x6a] = 0;
@@ -1517,9 +1517,9 @@ void invhit_init(int *obj, u8 *def) {
         break;
     case 4:
         sub[0x62] = 1;
-        *(s16 *)(sub + 0x5a) = 0xa;
-        *(s16 *)(sub + 0x60) = 3;
-        *(int *)(sub + 0x48) = 0x10;
+        ((ObjHitsPriorityState *)sub)->primaryRadius = 0xa;
+        ((ObjHitsPriorityState *)sub)->flags = 3;
+        *(int *)&((ObjHitsPriorityState *)sub)->objectHitMask = 0x10;
         ((GameObject *)obj)->unkF8 = 0x78;
         {
             char *anchorObj = *(char **)(def + 0x1c);
@@ -1647,7 +1647,7 @@ void invhit_update(int *obj) {
             if (dist < (f32)((GameObject *)obj)->unkF8) {
                 u8 *victimHits = *(u8 **)&((GameObject *)victim)->anim.hitReactState;
                 victimHits[0x71] += 1;
-                *(s16 *)(victimHits + 0x60) = *(s16 *)(victimHits + 0x60) & ~1;
+                ((ObjHitsPriorityState *)victimHits)->flags = ((ObjHitsPriorityState *)victimHits)->flags & ~1;
                 (*(u8 **)&((GameObject *)obj)->anim.hitReactState)[0x71] += 1;
             }
             if (((GameObject *)victim)->anim.classId == 1) {
@@ -1704,8 +1704,8 @@ void invhit_update(int *obj) {
         f32 thr;
 
         ((GameObject *)obj)->unkF8 -= framesThisStep;
-        if (*(void **)(hitState + 0x50) != NULL) {
-            *(s16 *)(hitState + 0x60) = 0;
+        if (*(void **)&((ObjHitsPriorityState *)hitState)->lastHitObject != NULL) {
+            ((ObjHitsPriorityState *)hitState)->flags = 0;
         }
         targetObj = *(char **)&((GameObject *)obj)->unkF4;
         if (targetObj != NULL) {

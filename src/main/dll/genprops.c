@@ -2706,8 +2706,8 @@ void FUN_8016e668(uint param_1)
   local_18 = DAT_802c29d8;
   local_14 = DAT_802c29dc;
   FUN_8016ddd8();
-  if ((*(char *)(iVar2 + 0xad) != '\0') && (iVar1 = FUN_800176d0(), iVar1 == 0)) {
-    iVar1 = (int)*(char *)(iVar2 + 0xac);
+  if ((((ObjHitsPriorityState *)iVar2)->contactFlags != '\0') && (iVar1 = FUN_800176d0(), iVar1 == 0)) {
+    iVar1 = (int)*(char *)&((ObjHitsPriorityState *)iVar2)->contactHitVolume;
     if (iVar1 < 0) {
       iVar1 = 0;
     }
@@ -2715,27 +2715,27 @@ void FUN_8016e668(uint param_1)
       iVar1 = 0x23;
     }
     if (iVar1 == 0xe) {
-      FUN_80006820((double)*(float *)(iVar2 + 0x3c),(double)*(float *)(iVar2 + 0x40),
-                   (double)*(float *)(iVar2 + 0x44),param_1,0xba);
+      FUN_80006820((double)((ObjHitsPriorityState *)iVar2)->contactPosX,(double)((ObjHitsPriorityState *)iVar2)->contactPosY,
+                   (double)((ObjHitsPriorityState *)iVar2)->contactPosZ,param_1,0xba);
       (**(code **)(*DAT_803dd718 + 0x10))
-                ((double)*(float *)(iVar2 + 0x3c),(double)*(float *)(iVar2 + 0x40),
-                 (double)*(float *)(iVar2 + 0x44),(double)lbl_803E3F4C,param_1);
+                ((double)((ObjHitsPriorityState *)iVar2)->contactPosX,(double)((ObjHitsPriorityState *)iVar2)->contactPosY,
+                 (double)((ObjHitsPriorityState *)iVar2)->contactPosZ,(double)lbl_803E3F4C,param_1);
       (**(code **)(*DAT_803dd718 + 0x14))
-                ((double)*(float *)(iVar2 + 0x3c),(double)*(float *)(iVar2 + 0x40),
-                 (double)*(float *)(iVar2 + 0x44),(double)lbl_803E3F4C,0,2);
+                ((double)((ObjHitsPriorityState *)iVar2)->contactPosX,(double)((ObjHitsPriorityState *)iVar2)->contactPosY,
+                 (double)((ObjHitsPriorityState *)iVar2)->contactPosZ,(double)lbl_803E3F4C,0,2);
     }
     else {
       local_60 = lbl_803E3F20;
       local_64 = 0;
       local_66 = 0;
       local_68 = 0;
-      local_5c = *(undefined4 *)(iVar2 + 0x3c);
-      local_58 = *(undefined4 *)(iVar2 + 0x40);
-      local_54 = *(undefined4 *)(iVar2 + 0x44);
+      local_5c = *(undefined4 *)&((ObjHitsPriorityState *)iVar2)->contactPosX;
+      local_58 = *(undefined4 *)&((ObjHitsPriorityState *)iVar2)->contactPosY;
+      local_54 = *(undefined4 *)&((ObjHitsPriorityState *)iVar2)->contactPosZ;
       (**(code **)(*DAT_803de720 + 4))
                 (0,1,&local_68,0x401,0xffffffff,local_50 + (uint)(byte)(&DAT_80321538)[iVar1] * 4);
-      FUN_80006820((double)*(float *)(iVar2 + 0x3c),(double)*(float *)(iVar2 + 0x40),
-                   (double)*(float *)(iVar2 + 0x44),param_1,(&DAT_803214f0)[iVar1]);
+      FUN_80006820((double)((ObjHitsPriorityState *)iVar2)->contactPosX,(double)((ObjHitsPriorityState *)iVar2)->contactPosY,
+                   (double)((ObjHitsPriorityState *)iVar2)->contactPosZ,param_1,(&DAT_803214f0)[iVar1]);
     }
   }
   return;
@@ -5648,7 +5648,7 @@ void staff_init(int *obj)
     *(f32 *)((char *)state + 0x50) = lbl_803E3328;
     r54 = *(int **)&((GameObject *)obj)->anim.hitReactState;
     if (r54 != NULL) {
-        *(s16 *)((char *)r54 + 0xb2) = 0x109;
+        *(s16 *)&((ObjHitsPriorityState *)r54)->trackContactMask = 0x109;
     }
     i = 0;
     p = state;
@@ -5726,7 +5726,7 @@ void dll_F7_init(int *obj, int *params)
         int r = (*gMapEventInterface)->isTimedEventActive(*(int *)((char *)params + 0x14));
         if (r == 0) {
             int *r54 = *(int **)&((GameObject *)obj)->anim.hitReactState;
-            *(s16 *)((char *)r54 + 0x60) &= ~1;
+            ((ObjHitsPriorityState *)r54)->flags &= ~1;
             *(u8 *)((char *)state + 9) = 1;
             *(u8 *)((char *)state + 8) = 0;
         }
@@ -6565,7 +6565,7 @@ void fireball_init(int *obj)
         {
             int *r54 = *(int **)&((GameObject *)obj)->anim.hitReactState;
             if (r54 != NULL) {
-                *(s16 *)((char *)r54 + 0xb2) = 257;
+                *(s16 *)&((ObjHitsPriorityState *)r54)->trackContactMask = 257;
             }
         }
         if (*(void **)state == NULL) {
@@ -6653,8 +6653,8 @@ void fireball_update(int *obj)
     }
     {
         int *r54 = *(int **)&((GameObject *)obj)->anim.hitReactState;
-        if (*(s8 *)((char *)r54 + 0xad) != 0) {
-            if (*(s8 *)((char *)r54 + 0xac) != 14) {
+        if (((ObjHitsPriorityState *)r54)->contactFlags != 0) {
+            if (*(s8 *)&((ObjHitsPriorityState *)r54)->contactHitVolume != 14) {
                 Sfx_PlayFromObject(obj, 179);
             } else {
                 Sfx_PlayFromObject(obj, 186);
@@ -7328,8 +7328,8 @@ void staff_hitDetectGeometry(int *obj)
     SwipeColorTable tbl = lbl_802C2220;
 
     staffDrawSwipe(obj, swipe);
-    if (*(s8 *)(state + 0xad) != 0 && getHudHiddenFrameCount() == 0) {
-        int t = *(s8 *)(state + 0xac);
+    if (((ObjHitsPriorityState *)state)->contactFlags != 0 && getHudHiddenFrameCount() == 0) {
+        int t = *(s8 *)&((ObjHitsPriorityState *)state)->contactHitVolume;
         int idx;
         if (t < 0) {
             idx = 0;
@@ -7339,25 +7339,25 @@ void staff_hitDetectGeometry(int *obj)
             idx = t;
         }
         if (idx == 14) {
-            Sfx_PlayAtPositionFromObject(obj, *(f32 *)(state + 0x3c), *(f32 *)(state + 0x40), *(f32 *)(state + 0x44), 186);
+            Sfx_PlayAtPositionFromObject(obj, ((ObjHitsPriorityState *)state)->contactPosX, ((ObjHitsPriorityState *)state)->contactPosY, ((ObjHitsPriorityState *)state)->contactPosZ, 186);
             (*gWaterfxInterface)->spawnSplashBurst(
-                obj, *(f32 *)(state + 0x3c), *(f32 *)(state + 0x40),
-                *(f32 *)(state + 0x44), lbl_803E32B4);
+                obj, ((ObjHitsPriorityState *)state)->contactPosX, ((ObjHitsPriorityState *)state)->contactPosY,
+                ((ObjHitsPriorityState *)state)->contactPosZ, lbl_803E32B4);
             (*gWaterfxInterface)->spawnRipple(
-                0, 2, *(f32 *)(state + 0x3c), *(f32 *)(state + 0x40),
-                *(f32 *)(state + 0x44), lbl_803E32B4);
+                0, 2, ((ObjHitsPriorityState *)state)->contactPosX, ((ObjHitsPriorityState *)state)->contactPosY,
+                ((ObjHitsPriorityState *)state)->contactPosZ, lbl_803E32B4);
         } else {
             QuakePartVec v;
             v.scale = lbl_803E3288;
             v.h2 = 0;
             v.h1 = 0;
             v.h0 = 0;
-            v.x = *(f32 *)(state + 0x3c);
-            v.y = *(f32 *)(state + 0x40);
-            v.z = *(f32 *)(state + 0x44);
+            v.x = ((ObjHitsPriorityState *)state)->contactPosX;
+            v.y = ((ObjHitsPriorityState *)state)->contactPosY;
+            v.z = ((ObjHitsPriorityState *)state)->contactPosZ;
             ((void (*)(int, int, void *, int, int, u8 *))(*(int **)lbl_803DDAA0)[1])(0, 1, &v, 0x401, -1,
                 (u8 *)&tbl + (((u8 *)lbl_803208E8)[idx] << 4));
-            Sfx_PlayAtPositionFromObject(obj, *(f32 *)(state + 0x3c), *(f32 *)(state + 0x40), *(f32 *)(state + 0x44), (u16)((s16 *)lbl_803208A0)[idx]);
+            Sfx_PlayAtPositionFromObject(obj, ((ObjHitsPriorityState *)state)->contactPosX, ((ObjHitsPriorityState *)state)->contactPosY, ((ObjHitsPriorityState *)state)->contactPosZ, (u16)((s16 *)lbl_803208A0)[idx]);
         }
     }
 }

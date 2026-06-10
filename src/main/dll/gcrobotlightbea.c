@@ -387,10 +387,10 @@ int fn_801821FC(u8 *obj) {
 
     st = *(u8 **)&((GameObject *)obj)->anim.hitReactState;
     if (objBboxFn_800640cc(obj + 0x80, obj + 0xc, lbl_803E3970, 1, 0, obj, 1, -1, 0xff, 0) != 0) {
-        *(s8 *)(st + 0xad) |= 1;
-        *(f32 *)(st + 0x10) = ((GameObject *)obj)->anim.previousLocalPosX;
-        *(f32 *)(st + 0x14) = ((GameObject *)obj)->anim.previousLocalPosY;
-        *(f32 *)(st + 0x18) = ((GameObject *)obj)->anim.previousLocalPosZ;
+        ((ObjHitsPriorityState *)st)->contactFlags |= 1;
+        ((ObjHitsPriorityState *)st)->localPosX = ((GameObject *)obj)->anim.previousLocalPosX;
+        ((ObjHitsPriorityState *)st)->localPosY = ((GameObject *)obj)->anim.previousLocalPosY;
+        ((ObjHitsPriorityState *)st)->localPosZ = ((GameObject *)obj)->anim.previousLocalPosZ;
         fz = lbl_803E3938;
         ((GameObject *)obj)->anim.velocityX = fz;
         ((GameObject *)obj)->anim.velocityY = fz;
@@ -398,14 +398,14 @@ int fn_801821FC(u8 *obj) {
         return 1;
     }
 
-    if ((int)(*(u32 *)(st + 0x48) >> 4) != 0 && (s8)st[0x70] == 0) {
+    if ((int)(((ObjHitsPriorityState *)st)->objectHitMask >> 4) != 0 && (s8)st[0x70] == 0) {
         endPoints[0] = ((GameObject *)obj)->anim.localPosX;
         *(endY = &endPoints[1]) = ((GameObject *)obj)->anim.localPosY;
         *(endZ = &endPoints[2]) = ((GameObject *)obj)->anim.localPosZ;
         startPoints[0] = ((GameObject *)obj)->anim.previousLocalPosX;
         startPoints[1] = ((GameObject *)obj)->anim.previousLocalPosY;
         startPoints[2] = ((GameObject *)obj)->anim.previousLocalPosZ;
-        hitResults.radii[0] = (f32)*(s16 *)(st + 0x5a);
+        hitResults.radii[0] = (f32)((ObjHitsPriorityState *)st)->primaryRadius;
         *(axes = hitResults.axes) = -1;
         axes[4] = 3;
     } else {
@@ -413,7 +413,7 @@ int fn_801821FC(u8 *obj) {
     }
 
     hitDetect_calcSweptSphereBounds(sweptBounds, startPoints, endPoints, hitResults.radii, 1);
-    hitDetectFn_800691c0(obj, sweptBounds, *(u16 *)(st + 0xb2), 1);
+    hitDetectFn_800691c0(obj, sweptBounds, ((ObjHitsPriorityState *)st)->trackContactMask, 1);
     hit = hitDetectFn_80067958(obj, startPoints, endPoints, 1, &hitResults, 0);
     if (hit != 0) {
         if (hit & 1) {
@@ -426,34 +426,34 @@ int fn_801821FC(u8 *obj) {
             idx = 3;
         }
         st[0xac] = axes[idx];
-        *(f32 *)(st + 0x3c) = endPoints[idx * 3];
-        *(f32 *)(st + 0x40) = endY[idx * 3];
-        *(f32 *)(st + 0x44) = endZ[idx * 3];
+        ((ObjHitsPriorityState *)st)->contactPosX = endPoints[idx * 3];
+        ((ObjHitsPriorityState *)st)->contactPosY = endY[idx * 3];
+        ((ObjHitsPriorityState *)st)->contactPosZ = endZ[idx * 3];
         lbl_803AC790[0] = hitResults.hitInfo[idx][0];
         lbl_803AC790[1] = hitResults.hitInfo[idx][1];
         lbl_803AC790[2] = hitResults.hitInfo[idx][2];
         lbl_803AC790[3] = hitResults.hitInfo[idx][3];
         if (hitResults.solidFlags[idx] != 0) {
-            *(s8 *)(st + 0xad) |= 2;
-            ((GameObject *)obj)->anim.localPosX = *(f32 *)(st + 0x3c);
-            ((GameObject *)obj)->anim.localPosY = *(f32 *)(st + 0x40);
-            ((GameObject *)obj)->anim.localPosZ = *(f32 *)(st + 0x44);
-            *(f32 *)(st + 0x10) = ((GameObject *)obj)->anim.previousLocalPosX;
-            *(f32 *)(st + 0x14) = ((GameObject *)obj)->anim.previousLocalPosY;
-            *(f32 *)(st + 0x18) = ((GameObject *)obj)->anim.previousLocalPosZ;
+            ((ObjHitsPriorityState *)st)->contactFlags |= 2;
+            ((GameObject *)obj)->anim.localPosX = ((ObjHitsPriorityState *)st)->contactPosX;
+            ((GameObject *)obj)->anim.localPosY = ((ObjHitsPriorityState *)st)->contactPosY;
+            ((GameObject *)obj)->anim.localPosZ = ((ObjHitsPriorityState *)st)->contactPosZ;
+            ((ObjHitsPriorityState *)st)->localPosX = ((GameObject *)obj)->anim.previousLocalPosX;
+            ((ObjHitsPriorityState *)st)->localPosY = ((GameObject *)obj)->anim.previousLocalPosY;
+            ((ObjHitsPriorityState *)st)->localPosZ = ((GameObject *)obj)->anim.previousLocalPosZ;
             fz = lbl_803E3938;
             ((GameObject *)obj)->anim.velocityX = fz;
             ((GameObject *)obj)->anim.velocityY = fz;
             ((GameObject *)obj)->anim.velocityZ = fz;
             return 1;
         } else {
-            *(s8 *)(st + 0xad) |= 1;
-            ((GameObject *)obj)->anim.localPosX = *(f32 *)(st + 0x3c);
-            ((GameObject *)obj)->anim.localPosY = *(f32 *)(st + 0x40);
-            ((GameObject *)obj)->anim.localPosZ = *(f32 *)(st + 0x44);
-            *(f32 *)(st + 0x10) = ((GameObject *)obj)->anim.previousLocalPosX;
-            *(f32 *)(st + 0x14) = ((GameObject *)obj)->anim.previousLocalPosY;
-            *(f32 *)(st + 0x18) = ((GameObject *)obj)->anim.previousLocalPosZ;
+            ((ObjHitsPriorityState *)st)->contactFlags |= 1;
+            ((GameObject *)obj)->anim.localPosX = ((ObjHitsPriorityState *)st)->contactPosX;
+            ((GameObject *)obj)->anim.localPosY = ((ObjHitsPriorityState *)st)->contactPosY;
+            ((GameObject *)obj)->anim.localPosZ = ((ObjHitsPriorityState *)st)->contactPosZ;
+            ((ObjHitsPriorityState *)st)->localPosX = ((GameObject *)obj)->anim.previousLocalPosX;
+            ((ObjHitsPriorityState *)st)->localPosY = ((GameObject *)obj)->anim.previousLocalPosY;
+            ((ObjHitsPriorityState *)st)->localPosZ = ((GameObject *)obj)->anim.previousLocalPosZ;
             fz = lbl_803E3938;
             ((GameObject *)obj)->anim.velocityX = fz;
             ((GameObject *)obj)->anim.velocityY = fz;

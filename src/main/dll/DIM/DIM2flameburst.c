@@ -2059,7 +2059,7 @@ void dimwooddoor2_update(int* obj)
         int v = ((GameObject *)obj)->anim.alpha - framesThisStep * 16;
         int* q2 = *(int**)&((GameObject *)obj)->anim.hitReactState;
         if (v < 0) v = 0;
-        *(s16*)((char*)q2 + 0x60) = (s16)(*(s16*)((char*)q2 + 0x60) & ~1);
+        ((ObjHitsPriorityState *)q2)->flags = (s16)(((ObjHitsPriorityState *)q2)->flags & ~1);
         ((GameObject *)obj)->anim.alpha = (u8)v;
     } else {
         int found = 0;
@@ -2102,7 +2102,7 @@ void dll_1CE_update(int* obj)
     if (((GameObject *)obj)->anim.alpha == 0) return;
     if ((s8)sub->igniteCountdown <= 0) {
         int* q2 = *(int**)&((GameObject *)obj)->anim.hitReactState;
-        *(s16*)((char*)q2 + 0x60) = (s16)(*(s16*)((char*)q2 + 0x60) & ~1);
+        ((ObjHitsPriorityState *)q2)->flags = (s16)(((ObjHitsPriorityState *)q2)->flags & ~1);
         if (sub->opened == 1) {
             sub->openProgress = sub->openVelocity * timeDelta + sub->openProgress;
             if (sub->openProgress > lbl_803E49EC) {

@@ -375,8 +375,8 @@ void dll_19A_update(int obj)
                 *(u8 *)(newObj + 0x32) = linkIdx;
             }
             r = Obj_SetupObject(newObj, 5, ((GameObject *)obj)->anim.mapEventSlot, 0xffffffff, *(int *)&((GameObject *)obj)->anim.parent);
-            if ((r != 0) && (*(void **)(r + 0xb8) != 0)) {
-                *(u8 *)(*(int *)(r + 0xb8) + 0x404) = 0x20;
+            if ((r != 0) && (((GameObject *)r)->extra != 0)) {
+                *(u8 *)(*(int *)&((GameObject *)r)->extra + 0x404) = 0x20;
             }
             *state = 100;
             state[1] = 0;

@@ -1030,8 +1030,8 @@ void DR_EarthWarrior_update(int obj)
     Obj_GetPlayerObject();
     {
         int p54 = *(int *)&((GameObject *)obj)->anim.hitReactState;
-        *(u8 *)(p54 + 0x6e) = 0;
-        *(u8 *)(p54 + 0x6f) = 0;
+        *(u8 *)&((ObjHitsPriorityState *)p54)->hitVolumePriority = 0;
+        *(u8 *)&((ObjHitsPriorityState *)p54)->hitVolumeId = 0;
     }
     if (*(void * *)&inner->unkB54 == NULL && Obj_IsLoadingLocked() != 0) {
         int setup = Obj_AllocObjectSetup(0x18, 0x6f5);

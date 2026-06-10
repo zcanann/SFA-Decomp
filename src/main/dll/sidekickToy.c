@@ -2069,7 +2069,7 @@ void fn_8014D08C(int obj, int p2, f32 mult, int a, int b, u8 c)
   ObjAnim_SetCurrentMove(obj, (u8)a, lbl_803E2574, b);
   sub = ((GameObject *)obj)->anim.hitReactState;
   if (sub != NULL) {
-    *(u8 *)((char *)sub + 0x70) = 0;
+    ((ObjHitsPriorityState *)sub)->suppressOutgoingHits = 0;
   }
 }
 

@@ -169,7 +169,7 @@ int objHitboxFn_801843c0(int obj)
   }
 
   hitDetect_calcSweptSphereBounds(sweptBounds, startPoints, endPoints, results.radii, 1);
-  hitDetectFn_800691c0(obj, sweptBounds, *(ushort *)(state + 0xb2), 1);
+  hitDetectFn_800691c0(obj, sweptBounds, ((ObjHitsPriorityState *)state)->trackContactMask, 1);
   hit = hitDetectFn_80067958(obj, startPoints, endPoints, 1, &results, 0);
   if (hit != 0) {
 
@@ -186,32 +186,32 @@ int objHitboxFn_801843c0(int obj)
     idx = 3;
   }
 
-  *(u8 *)(state + 0xac) = results.axisTable[idx];
-  *(float *)(state + 0x3c) = endPoints[idx * 3];
-  *(float *)(state + 0x40) = endPoints[idx * 3 + 1];
-  *(float *)(state + 0x44) = endPoints[idx * 3 + 2];
+  ((ObjHitsPriorityState *)state)->contactHitVolume = results.axisTable[idx];
+  ((ObjHitsPriorityState *)state)->contactPosX = endPoints[idx * 3];
+  ((ObjHitsPriorityState *)state)->contactPosY = endPoints[idx * 3 + 1];
+  ((ObjHitsPriorityState *)state)->contactPosZ = endPoints[idx * 3 + 2];
   lbl_803AC7A0[0] = results.hitInfo[idx][0];
   lbl_803AC7A0[1] = results.hitInfo[idx][1];
   lbl_803AC7A0[2] = results.hitInfo[idx][2];
   lbl_803AC7A0[3] = results.hitInfo[idx][3];
 
   if (results.solidFlags[idx] != 0) {
-    *(s8 *)(state + 0xad) = *(u8 *)(state + 0xad) | 2;
-    ((GameObject *)obj)->anim.localPosX = *(float *)(state + 0x3c);
-    ((GameObject *)obj)->anim.localPosY = *(float *)(state + 0x40);
-    ((GameObject *)obj)->anim.localPosZ = *(float *)(state + 0x44);
-    *(float *)(state + 0x10) = ((GameObject *)obj)->anim.previousLocalPosX;
-    *(float *)(state + 0x14) = ((GameObject *)obj)->anim.previousLocalPosY;
-    *(float *)(state + 0x18) = ((GameObject *)obj)->anim.previousLocalPosZ;
+    ((ObjHitsPriorityState *)state)->contactFlags = *(u8 *)&((ObjHitsPriorityState *)state)->contactFlags | 2;
+    ((GameObject *)obj)->anim.localPosX = ((ObjHitsPriorityState *)state)->contactPosX;
+    ((GameObject *)obj)->anim.localPosY = ((ObjHitsPriorityState *)state)->contactPosY;
+    ((GameObject *)obj)->anim.localPosZ = ((ObjHitsPriorityState *)state)->contactPosZ;
+    ((ObjHitsPriorityState *)state)->localPosX = ((GameObject *)obj)->anim.previousLocalPosX;
+    ((ObjHitsPriorityState *)state)->localPosY = ((GameObject *)obj)->anim.previousLocalPosY;
+    ((ObjHitsPriorityState *)state)->localPosZ = ((GameObject *)obj)->anim.previousLocalPosZ;
     return 1;
   }
-  *(s8 *)(state + 0xad) = *(u8 *)(state + 0xad) | 1;
-  ((GameObject *)obj)->anim.localPosX = *(float *)(state + 0x3c);
-  ((GameObject *)obj)->anim.localPosY = *(float *)(state + 0x40);
-  ((GameObject *)obj)->anim.localPosZ = *(float *)(state + 0x44);
-  *(float *)(state + 0x10) = ((GameObject *)obj)->anim.previousLocalPosX;
-  *(float *)(state + 0x14) = ((GameObject *)obj)->anim.previousLocalPosY;
-  *(float *)(state + 0x18) = ((GameObject *)obj)->anim.previousLocalPosZ;
+  ((ObjHitsPriorityState *)state)->contactFlags = *(u8 *)&((ObjHitsPriorityState *)state)->contactFlags | 1;
+  ((GameObject *)obj)->anim.localPosX = ((ObjHitsPriorityState *)state)->contactPosX;
+  ((GameObject *)obj)->anim.localPosY = ((ObjHitsPriorityState *)state)->contactPosY;
+  ((GameObject *)obj)->anim.localPosZ = ((ObjHitsPriorityState *)state)->contactPosZ;
+  ((ObjHitsPriorityState *)state)->localPosX = ((GameObject *)obj)->anim.previousLocalPosX;
+  ((ObjHitsPriorityState *)state)->localPosY = ((GameObject *)obj)->anim.previousLocalPosY;
+  ((ObjHitsPriorityState *)state)->localPosZ = ((GameObject *)obj)->anim.previousLocalPosZ;
   return 1;
   }
   return 0;

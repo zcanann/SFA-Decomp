@@ -2126,14 +2126,14 @@ int collectibleFn_80149cec(int obj,int state,int spawnBits,u32 useAltMode,u32 mo
       ((GameObject *)obj)->anim.worldPosZ = savedZ;
       if ((void *)lbl_803DDA54 != NULL) {
         v = ((GameObject *)obj)->anim.localPosX;
-        *(f32 *)(lbl_803DDA54 + 0x18) = v;
-        *(f32 *)(lbl_803DDA54 + 0xc) = v;
+        ((GameObject *)lbl_803DDA54)->anim.worldPosX = v;
+        ((GameObject *)lbl_803DDA54)->anim.localPosX = v;
         v = lbl_803E25AC + ((GameObject *)obj)->anim.localPosY;
-        *(f32 *)(lbl_803DDA54 + 0x1c) = v;
-        *(f32 *)(lbl_803DDA54 + 0x10) = v;
+        ((GameObject *)lbl_803DDA54)->anim.worldPosY = v;
+        ((GameObject *)lbl_803DDA54)->anim.localPosY = v;
         v = ((GameObject *)obj)->anim.localPosZ;
-        *(f32 *)(lbl_803DDA54 + 0x20) = v;
-        *(f32 *)(lbl_803DDA54 + 0x14) = v;
+        ((GameObject *)lbl_803DDA54)->anim.worldPosZ = v;
+        ((GameObject *)lbl_803DDA54)->anim.localPosZ = v;
       }
       return lbl_803DDA54;
     default:
@@ -2168,9 +2168,9 @@ int collectibleFn_80149cec(int obj,int state,int spawnBits,u32 useAltMode,u32 mo
   *(u8 *)(setup + 5) = *(u8 *)(parentSetup + 5);
   *(u8 *)(setup + 7) = *(u8 *)(parentSetup + 7);
   lbl_803DDA54 = Obj_SetupObject(setup,5,((GameObject *)obj)->anim.mapEventSlot,-1,*(int *)&((GameObject *)obj)->anim.parent);
-  if ((*(s16 *)(lbl_803DDA54 + 0x46) == 0x3cd) ||
-      (*(s16 *)(lbl_803DDA54 + 0x46) == 0xb)) {
-    (*(void (**)(f32,f32,f32))(*(int *)(*(int *)(lbl_803DDA54 + 0x68)) + 0x2c))
+  if ((((GameObject *)lbl_803DDA54)->anim.seqId == 0x3cd) ||
+      (((GameObject *)lbl_803DDA54)->anim.seqId == 0xb)) {
+    (*(void (**)(f32,f32,f32))(*(int *)(*(int *)&((GameObject *)lbl_803DDA54)->anim.dll) + 0x2c))
         (lbl_803E2574,lbl_803E256C,lbl_803E2574);
   }
   return lbl_803DDA54;

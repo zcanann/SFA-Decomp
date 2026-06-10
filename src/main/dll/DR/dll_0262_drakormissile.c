@@ -349,7 +349,7 @@ void drakormissile_init(int obj, char *arg) {
     ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumePriority = 0x13;
     ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumeId = 1;
     s = *(int *)&((GameObject *)obj)->anim.hitReactState;
-    *(s16 *)(s + 0x60) = *(s16 *)(s + 0x60) & ~1;
+    ((ObjHitsPriorityState *)s)->flags = ((ObjHitsPriorityState *)s)->flags & ~1;
     ((GameObject *)obj)->anim.localPosX = *(f32 *)(arg + DRAKORMISSILE_SETUP_POS_X);
     ((GameObject *)obj)->anim.localPosY = *(f32 *)(arg + DRAKORMISSILE_SETUP_POS_Y);
     ((GameObject *)obj)->anim.localPosZ = *(f32 *)(arg + DRAKORMISSILE_SETUP_POS_Z);
@@ -359,7 +359,7 @@ void drakormissile_init(int obj, char *arg) {
     {
         int *r = *(int **)&((GameObject *)obj)->anim.hitReactState;
         if (r != 0) {
-            *(s16 *)((char *)r + 0xb2) = 1;
+            *(s16 *)&((ObjHitsPriorityState *)r)->trackContactMask = 1;
         }
     }
     ObjGroup_AddObject(obj, DRAKORMISSILE_GROUP_ID);

@@ -671,7 +671,7 @@ void FUN_801aeab4(int param_1)
   pbVar5 = ((GameObject *)param_1)->extra;
   iVar3 = *(int *)&((GameObject *)param_1)->anim.parent;
   if (iVar3 != 0) {
-    sVar4 = (**(code **)(**(int **)(iVar3 + 0x68) + 0x20))(iVar3,*pbVar5);
+    sVar4 = (**(code **)(**(int **)&((GameObject *)iVar3)->anim.dll + 0x20))(iVar3,*pbVar5);
     bVar1 = pbVar5[1];
     if (bVar1 == 1) {
       if (sVar4 == 0) {
@@ -2817,7 +2817,7 @@ void lavaball1be_update(s16 *obj) {
                 *((u8 *)sub + 0x6f) = 1;
                 sub[0x48 / 4] = 0x10;
                 sub[0x4c / 4] = 0x10;
-                if (*(void **)((char *)sub + 0x50) != NULL) {
+                if (*(void **)&((ObjHitsPriorityState *)sub)->lastHitObject != NULL) {
                     if (state->explodeCooldown != 0) {
                         spawnExplosion(obj, lbl_803E47FC, 0, 1, 0, 0, 0, 0, 0);
                     } else {

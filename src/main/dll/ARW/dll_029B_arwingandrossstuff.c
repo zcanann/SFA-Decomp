@@ -196,7 +196,7 @@ void arwingandrossstuff_init(int obj, u8 *setup)
     }
     linked = *(int *)&((GameObject *)obj)->anim.hitReactState;
     if (linked != 0) {
-        *(s16 *)(linked + 0xb2) = 1;
+        *(s16 *)&((ObjHitsPriorityState *)linked)->trackContactMask = 1;
     }
     ObjGroup_AddObject(obj, 2);
 }

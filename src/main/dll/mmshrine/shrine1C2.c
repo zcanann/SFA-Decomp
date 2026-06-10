@@ -1076,7 +1076,7 @@ void ecsh_creator_update(s16 *obj) {
         *(u8 *)(p + 0x32) = sub[4];
         ret = Obj_SetupObject(p, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
         if ((u32)ret != 0) {
-            *(u8 *)(*(int *)(ret + 0xb8) + 0x404) = 0x20;
+            *(u8 *)(*(int *)&((GameObject *)ret)->extra + 0x404) = 0x20;
         }
         *sub = 100;
         sub[1] = 0;

@@ -906,12 +906,12 @@ void trickyBallFn_801793b8(int *obj, u8 *params)
             k * (lbl_803E3698 * *(f32 *)((char *)playerState + 0x298) + lbl_803E3694);
     }
 
-    *(f32 *)((char *)lcl + 0xc) = lbl_803E369C;
-    *(f32 *)((char *)lcl + 0x10) = lbl_803E369C;
-    *(f32 *)((char *)lcl + 0x14) = lbl_803E369C;
-    *(f32 *)((char *)lcl + 0x8) = lbl_803E36A0;
-    *(s16 *)((char *)lcl + 0x4) = 0;
-    *(s16 *)((char *)lcl + 0x2) = 0;
+    ((GameObject *)lcl)->anim.localPosX = lbl_803E369C;
+    ((GameObject *)lcl)->anim.localPosY = lbl_803E369C;
+    ((GameObject *)lcl)->anim.localPosZ = lbl_803E369C;
+    ((GameObject *)lcl)->anim.rootMotionScale = lbl_803E36A0;
+    ((GameObject *)lcl)->anim.rotZ = 0;
+    ((GameObject *)lcl)->anim.rotY = 0;
     if (((GameObject *)player)->anim.parent != NULL) {
         *(s16 *)lcl = (s16)(*(s16 *)*(int **)&((GameObject *)player)->anim.parent + *(s16 *)player);
     } else {
