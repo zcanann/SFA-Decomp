@@ -6,6 +6,7 @@
 #include "main/dll/cfperch.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim_internal.h"
+#include "main/objfx.h"
 #include "main/objhits_types.h"
 #include "main/resource.h"
 
@@ -196,7 +197,6 @@ extern void ObjMsg_SendToObject(int target, int msg, int obj, u32 value);
 extern void fn_801816F8(int obj, int player, int state);
 extern void fn_801814D0(int obj, int player, int state);
 extern void fn_801821FC(int obj);
-extern void objLightFn_8009a1dc(int obj, f32 scale, void *pos, int mode, int param);
 extern f32 getXZDistance(f32 *a, f32 *b);
 extern u8 framesThisStep;
 extern f32 timeDelta;
@@ -439,7 +439,7 @@ void smallbasket_update(int obj)
                 blk.fy = ((GameObject *)obj)->anim.localPosX;
                 blk.fz = ((GameObject *)obj)->anim.localPosY;
                 blk.fw = ((GameObject *)obj)->anim.localPosZ;
-                objLightFn_8009a1dc(obj, lbl_803E3934, &blk, 1, 0);
+                objLightFn_8009a1dc((void *)obj, lbl_803E3934, &blk, 1, 0);
                 (**(void (**)(int, int, int, int, int, int))(*(int *)lbl_803DDAC0 + 0x4))(
                     obj, 1, 0, 2, -1, 0);
                 Sfx_PlayFromObject(obj, (u16)((CfperchState *)state)->unk10);

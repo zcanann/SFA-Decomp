@@ -4,6 +4,7 @@
 #include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/WM/WMcrystal.h"
+#include "main/objfx.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
@@ -62,7 +63,6 @@ extern f32 lbl_803E5628;
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_PlayFromObjectLimited(int obj, int sfxId, int maxCount);
-extern void objLightFn_8009a1dc(int obj, f32 scale, void *params, int mode, int arg);
 extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
 extern int *objFindTexture(int obj, int textureIndex, int materialIndex);
 extern u8 Obj_IsLoadingLocked(void);
@@ -147,7 +147,7 @@ void sc_totempuzzle_update(ScTotemPuzzleObject *obj)
       Sfx_PlayFromObject((int)obj, SFXtr_gal_prophitbird);
       lightArgs[3] += playerMapOffsetX;
       lightArgs[5] += playerMapOffsetZ;
-      objLightFn_8009a1dc((int)obj, lbl_803E5618, lightArgs, 1, 0);
+      objLightFn_8009a1dc((void *)obj, lbl_803E5618, lightArgs, 1, 0);
     }
     return;
   }
@@ -156,7 +156,7 @@ void sc_totempuzzle_update(ScTotemPuzzleObject *obj)
     Sfx_PlayFromObject((int)obj, SFXtr_gal_prophitbird);
     lightArgs[3] += playerMapOffsetX;
     lightArgs[5] += playerMapOffsetZ;
-    objLightFn_8009a1dc((int)obj, lbl_803E5618, lightArgs, 1, 0);
+    objLightFn_8009a1dc((void *)obj, lbl_803E5618, lightArgs, 1, 0);
     state->flags ^= SC_TOTEMPUZZLE_STATE_READY_FLAG;
     if ((state->flags & SC_TOTEMPUZZLE_STATE_READY_FLAG) != 0) {
       if (state->pulseTimer != lbl_803E55F4) {

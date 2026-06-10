@@ -9,6 +9,7 @@
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
+#include "main/objfx.h"
 #include "main/objhits_types.h"
 
 extern bool FUN_800067f0();
@@ -73,7 +74,6 @@ extern f32 getXZDistance(f32 *a,f32 *b);
 extern f32 sqrtf(f32 x);
 extern s16 getAngle(f32 dx,f32 dz);
 extern undefined4 FUN_80081120();
-extern void objLightFn_8009a1dc(int obj,f32 scale,void *pos,int count,int param_5);
 extern int hitDetectFn_80065e50(int obj,void *outHits,int param_3,int param_4,
                                 f32 x,f32 y,f32 z);
 extern int FUN_800d9de0();
@@ -292,7 +292,7 @@ void fn_8017F4F4(int obj, MagicPlantSetup *setupParam, MagicPlantState *statePar
 
       hitPos[0] += playerMapOffsetX;
       hitPos[2] += playerMapOffsetZ;
-      objLightFn_8009a1dc(obj, lbl_803E3888, lightPos, 1, 0);
+      objLightFn_8009a1dc((void *)obj, lbl_803E3888, lightPos, 1, 0);
       Obj_SetModelColorFadeRecursive(obj, 0xf, 200, 0, 0, 1);
       break;
     }
@@ -475,7 +475,7 @@ void MagicPlant_update(int obj)
     if ((hitKind != 0) && (hitKind != 0x10)) {
       hitPos[0] += playerMapOffsetX;
       hitPos[2] += playerMapOffsetZ;
-      objLightFn_8009a1dc(obj, lbl_803E3888, lightPos, 1, 0);
+      objLightFn_8009a1dc((void *)obj, lbl_803E3888, lightPos, 1, 0);
       Sfx_PlayFromObject(obj, 0x47b);
       Obj_ResetModelColorState(obj);
     }
@@ -2597,7 +2597,7 @@ void fn_801814D0(int obj, int param_2, u8 *state) {
       effectPos.z += playerMapOffsetZ;
       if (state[0x20] != 0) {
         if (hitType != 5) {
-          objLightFn_8009a1dc(obj,lbl_803E3934,&effectPos,4,0);
+          objLightFn_8009a1dc((void *)obj,lbl_803E3934,&effectPos,4,0);
           if (Sfx_IsPlayingFromObject(0,0x37e) == 0) {
             Sfx_PlayFromObject(obj,0x37e);
           }
@@ -2619,7 +2619,7 @@ void fn_801814D0(int obj, int param_2, u8 *state) {
           objects++;
         }
       }
-      objLightFn_8009a1dc(obj,lbl_803E3934,&effectPos,1,0);
+      objLightFn_8009a1dc((void *)obj,lbl_803E3934,&effectPos,1,0);
       Obj_SetModelColorFadeRecursive(obj,0xf,0xc8,0,0,1);
       if (Sfx_IsPlayingFromObject(0,(u16)*(s16 *)(state + 0x10)) == 0) {
         Sfx_PlayFromObject(obj,(u16)*(s16 *)(state + 0x10));

@@ -3,6 +3,7 @@
 #include "main/effect_interfaces.h"
 #include "main/obj_placement.h"
 #include "main/game_object.h"
+#include "main/objfx.h"
 #include "main/dll/explodable_state.h"
 #include "main/mapEventTypes.h"
 #include "main/resource.h"
@@ -23,7 +24,6 @@ extern f32 vec3f_distanceSquared(f32 *a, f32 *b);
 extern int ObjHits_GetPriorityHitWithPosition(int obj, void *info, int *a, int *b, f32 *x, f32 *y, f32 *z);
 extern void Obj_StartModelFadeIn(int obj, int frames);
 extern void Obj_SetModelColorFadeRecursive(int obj, int frames, int red, int green, int blue, int startAtHalf);
-extern void objLightFn_8009a1dc(int obj, f32 scale, void *pos, int mode, int param);
 extern int Sfx_IsPlayingFromObject(int obj, u32 sfxId);
 extern void Sfx_PlayFromObject(int obj, u32 sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
@@ -430,7 +430,7 @@ void largecrate_update(int obj)
             Obj_SetModelColorFadeRecursive(obj, 0xf, 200, 0, 0, 1);
             pos.x = pos.x + playerMapOffsetX;
             pos.z = pos.z + playerMapOffsetZ;
-            objLightFn_8009a1dc(obj, lbl_803E39E4, &lightPos, 1, 0);
+            objLightFn_8009a1dc((void *)obj, lbl_803E39E4, &lightPos, 1, 0);
             if (((ExplodableState *)state)->damageTaken < ((ExplodableState *)state)->damageThreshold) {
                 if (Sfx_IsPlayingFromObject(0, (u16)((ExplodableState *)state)->hitSfxId) == 0) {
                     Sfx_PlayFromObject(obj, (u16)((ExplodableState *)state)->hitSfxId);

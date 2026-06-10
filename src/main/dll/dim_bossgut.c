@@ -3,6 +3,7 @@
 #include "main/expgfx.h"
 #include "main/game_object.h"
 #include "main/objanim.h"
+#include "main/objfx.h"
 #include "main/dll/dim_bossgut.h"
 #include "main/dll/ediblemushroom.h"
 
@@ -327,7 +328,6 @@ extern f32  fn_8029610C(u8 *player);
 extern void objFn_8002b67c(int *obj);
 extern void Obj_StartModelFadeIn(int *obj, int frames);
 extern void Obj_ResetModelColorState(int *obj);
-extern void objLightFn_8009a1dc(int *obj, f32 a, void *vec, int b, int c);
 extern int  Sfx_PlayFromObject(int *obj, int id);
 extern f32  sqrtf(f32 x);
 extern u8   framesThisStep;

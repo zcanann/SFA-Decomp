@@ -1,6 +1,7 @@
 #include "main/dll/DIM/dll_223.h"
 #include "main/effect_interfaces.h"
 #include "main/objanim.h"
+#include "main/objfx.h"
 
 extern undefined4 FUN_800067c0();
 extern undefined4 FUN_80006b14();
@@ -36,7 +37,6 @@ extern undefined4 FUN_801bbea0();
 extern undefined4 DIMboss_updateState();
 extern void *Obj_GetPlayerObject(void);
 extern int ObjHits_GetPriorityHit(void *obj, void **hitObj, int *outModelPart, int *outIndex);
-extern void objLightFn_8009a1dc(void *obj, f32 param_2, void *param_3, int param_4, int param_5);
 extern void Sfx_PlayFromObject(void *obj, int sfxId);
 extern void doRumble(f32 val);
 extern void ObjMsg_SendToObject(void *obj, int msg, void *sender, int param_4);

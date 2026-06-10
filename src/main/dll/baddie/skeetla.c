@@ -10,6 +10,7 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/baddie/skeetla.h"
+#include "main/objfx.h"
 #include "main/objhits_types.h"
 
 
@@ -30,7 +31,6 @@ extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern void hitDetectFn_800658a4(u8 *obj, f32 x, f32 y, f32 z, f32 *out, int flags);
 extern u8 *Obj_GetPlayerObject(void);
 extern f32 vec3f_distanceSquared(f32 *a, f32 *b);
-extern void objLightFn_8009a1dc(u8 *obj, f32 scale, void *args, int mode, int param);
 extern void objfx_spawnHitEmitterAtPos(void *hitPos, int a, int b, int c, int d);
 extern void Sfx_PlayFromObject(u8 *obj, int sfxId);
 extern int coordsToMapCell(f32 x, f32 z);

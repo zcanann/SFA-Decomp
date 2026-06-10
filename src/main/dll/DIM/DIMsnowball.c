@@ -5,6 +5,7 @@
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/objanim.h"
+#include "main/objfx.h"
 #include "main/objseq.h"
 #include "main/dll/DIM/DIMsnowball.h"
 
@@ -1770,7 +1771,6 @@ extern int Obj_FreeObject(int o);
 extern void Obj_SetModelColorFadeRecursive(int obj, int frames, int red, int green, int blue, int startAtHalf);
 extern int ObjList_FindObjectById(int id);
 extern void objfx_spawnHitEmitterAtPos(f32 *p, int a, int b, int c, int d);
-extern void objLightFn_8009a1dc(int obj, f32 v, f32 *pos, int a, int b);
 
 typedef struct LightfootAnimTable {
     u8 stateFlags[0x10];
@@ -2068,7 +2068,7 @@ void cclightfoot_update(int obj)
         if (ObjHits_PollPriorityHitWithCooldown(obj, lbl_803DDB38, 0, hitPos) != 0) {
             if (getXZDistance((f32 *)(obj + 0x18), (f32 *)(state[1] + 0x18)) < lbl_803E4690) {
                 objfx_spawnHitEmitterAtPos(hitPos, 8, 0xff, 0xff, 0x78);
-                objLightFn_8009a1dc(obj, lbl_803E4694, hitPos, 4, 0);
+                objLightFn_8009a1dc((void *)obj, lbl_803E4694, hitPos, 4, 0);
             }
             Sfx_PlayFromObject(obj, 0x129);
         }

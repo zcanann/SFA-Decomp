@@ -7,6 +7,7 @@
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
 #include "main/game_object.h"
+#include "main/objfx.h"
 #include "main/objhits_types.h"
 
 extern undefined4 FUN_800033a8();
@@ -718,7 +719,6 @@ extern int Obj_GetPlayerObject(void);
 extern f32 Vec_distance(void *a, void *b);
 extern int Curve_AdvanceAlongPath(int curve, f32 t);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
-extern void objLightFn_8009a1dc(int obj, f32 radius, void *pos, int type, int flags);
 extern f32 sqrtf(f32 x);
 extern f32 mathSinf(f32 x);
 extern int getAngle(f32 dx, f32 dz);
@@ -1284,7 +1284,7 @@ void hagabon_update(int obj)
             hitZ += playerMapOffsetZ;
             lightPos[0] = hitX;
             lightPos[2] = hitZ;
-            objLightFn_8009a1dc(obj, lbl_803E2660, lightPos, 3, 0);
+            objLightFn_8009a1dc((void *)obj, lbl_803E2660, lightPos, 3, 0);
             eventAsDouble.bits = CONCAT44(0x43300000,
                                           (s32)(*(s16 *)(data + 0x1c) * 0x3c) ^ 0x80000000);
             (*gMapEventInterface)->startTimedEvent(*(int *)(data + 0x14),

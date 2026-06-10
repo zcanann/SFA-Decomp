@@ -2,6 +2,7 @@
 #include "main/game_object.h"
 #include "main/obj_placement.h"
 #include "main/objanim_internal.h"
+#include "main/objfx.h"
 #include "main/objseq.h"
 
 extern u32 GameBit_Get(int id);
@@ -23,7 +24,6 @@ extern u8 Obj_IsLoadingLocked(void);
 extern void *Obj_GetPlayerObject(void);
 extern void objSetSlot(int obj, int slot);
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
-extern void objLightFn_8009a1dc(int obj, f32 scale, void *pos, int mode, int param);
 extern void objfx_spawnRandomBurst(int obj, int mode, int p3, void *vec, f32 f, int flag);
 extern void vecRotateZXY(int obj, void *vec);
 extern f32 sqrtf(f32 x);
@@ -159,7 +159,7 @@ void sc_musictree_update(int obj)
     if (*(u8 *)(inner + 0x4c) & 0xc0) {
         vec[0] = vec[0] + playerMapOffsetX;
         vec[2] = vec[2] + playerMapOffsetZ;
-        objLightFn_8009a1dc(obj, lbl_803E559C, vec2, 1, 0);
+        objLightFn_8009a1dc((void *)obj, lbl_803E559C, vec2, 1, 0);
         Obj_SetModelColorFadeRecursive(obj, 0xf, 0xc8, 0, 0, 1);
         sc_musictree_handleHitObject(obj, inner, *(u8 *)(inner + 0x4c) & 0xf);
     } else {
