@@ -66,8 +66,8 @@ void vfpobjcreator_init(int *obj, u8 *init) {
 }
 
 extern u8 Obj_IsLoadingLocked(void);
-extern char *Obj_AllocObjectSetup(int size, int typeId);
-extern char *Obj_SetupObject(char *setup, int a, int b, int c, int d);
+extern u8 *Obj_AllocObjectSetup(int size, int typeId);
+extern char *Obj_SetupObject(u8 *setup, int a, int b, int c, int d);
 extern void vecRotateZXY(s16 *angles, f32 *vec);
 extern f32 lbl_803E6068;
 extern f32 lbl_803E606C;
@@ -95,7 +95,7 @@ void vfpobjcreator_update(int *obj)
         }
         state->spawnTimer -= (s16)timeDelta;
         if (state->spawnTimer <= 0) {
-            char *o;
+            u8 *o;
             char *n;
             state->spawnTimer = state->spawnInterval;
             o = Obj_AllocObjectSetup(0x28, VFP_OBJCREATOR_FALLING_OBJECT_ID);
@@ -131,7 +131,7 @@ void vfpobjcreator_update(int *obj)
     case VFP_OBJCREATOR_PROJECTILE_MODE:
         state->spawnTimer -= (s16)timeDelta;
         if (state->spawnTimer <= 0) {
-            char *o;
+            u8 *o;
             char *n;
             struct {
                 s16 ang[3];
@@ -155,8 +155,8 @@ void vfpobjcreator_update(int *obj)
             }
             *(int *)(n + 0xf8) = 0x1f4;
             {
-                f32 a = lbl_803E6074;
                 f32 b;
+                f32 a = *(f32 *)&lbl_803E6074;
                 *(f32 *)(n + 0x28) = a;
                 *(f32 *)(n + 0x24) = a;
                 b = lbl_803E6078;
