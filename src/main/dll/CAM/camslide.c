@@ -255,9 +255,9 @@ void firstperson_updatePitch(f32 targetY, CameraObject *camera)
     int v;
     f64 d;
 
-    v = (getAngle((f64)(camera->anim.worldPosY -
-        (targetY + gCamcontrolModeSettings->targetHeight))) & 0xffff) -
-        ((uint)camera->anim.rotY & 0xffff);
+    v = getAngle((f64)(camera->anim.worldPosY -
+        (targetY + gCamcontrolModeSettings->targetHeight))) & 0xffff;
+    v -= (uint)camera->anim.rotY & 0xffff;
     if (v > 0x8000) {
         v -= 0xffff;
     }
