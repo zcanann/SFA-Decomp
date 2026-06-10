@@ -747,7 +747,7 @@ int tricky_SeqFn(int obj,int unused,ObjAnimUpdateState *animUpdate)
   objAnimFreeChildren(obj,state,(int *)&((TrickyState *)state)->unk7B8);
   fn_80138D7C(obj,state);
   Tricky_updateBlendChannelWeight(obj,state);
-  objAudioFn_8006ef38(obj,(int)((u8 *)animUpdate + 0xf0),1,state + 0x7d8,state + 0xf8,lbl_803E23E8,lbl_803E23E8);
+  objAudioFn_8006ef38(obj,(int)&animUpdate->animEvents,1,state + 0x7d8,state + 0xf8,lbl_803E23E8,lbl_803E23E8);
   if ((((TrickyState *)state)->unk54 & 1) != 0) {
     animUpdate->hitVolumePair &= ~0x40;
     characterDoEyeAnims(obj,(void *)(state + 0x378));

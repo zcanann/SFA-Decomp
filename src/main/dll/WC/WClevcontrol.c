@@ -1025,7 +1025,7 @@ int SB_CloudRunner_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate) {
     int *state = ((GameObject *)obj)->extra;
     int player = Obj_GetPlayerObject();
     int i;
-    animUpdate->sequenceCallback = SB_CloudRunner_onSeqFree;
+    animUpdate->freeCallback = (ObjAnimSequenceFreeCallback)SB_CloudRunner_onSeqFree;
     *(f32 *)((char *)state + 0x4C) = ((GameObject *)obj)->anim.localPosX;
     *(f32 *)((char *)state + 0x50) = ((GameObject *)obj)->anim.localPosY;
     *(f32 *)((char *)state + 0x54) = ((GameObject *)obj)->anim.localPosZ;

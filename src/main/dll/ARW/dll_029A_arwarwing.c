@@ -956,7 +956,7 @@ int arwarwing_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
     int i;
 
     Camera_GetCurrentViewSlot();
-    animUpdate->sequenceCallback = arwarwing_clearAimSnapshot;
+    animUpdate->freeCallback = (ObjAnimSequenceFreeCallback)arwarwing_clearAimSnapshot;
     if ((((ArwingState *)state)->flags477 & 1) == 0) {
         arwarwing_initAttachments(obj, state);
         return 0;

@@ -501,11 +501,8 @@ int PaymentKiosk_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
     int player;
     int i;
     u8 ev;
-    u8 *animUpdateBytes;
-
     player = (int)Obj_GetPlayerObject();
-    animUpdateBytes = (u8 *)animUpdate;
-    *(void **)(animUpdateBytes + 0xec) = (void *)PaymentKiosk_testEvent;
+    animUpdate->conditionCallback = (ObjAnimSequenceConditionCallback)PaymentKiosk_testEvent;
     for (i = 0; i < animUpdate->eventCount; i++) {
         ev = animUpdate->eventIds[i];
         switch (ev) {

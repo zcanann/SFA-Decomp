@@ -220,7 +220,7 @@ int SB_Galleon_animEventCallback(int obj, int unused, ObjAnimUpdateState *animUp
         ((SBGalleonState *)state)->swayY = z;
         ((SBGalleonState *)state)->swayZ = z;
     }
-    animUpdate->sequenceCallback = (void *)DBprotection_storeHomePosition;
+    animUpdate->freeCallback = (ObjAnimSequenceFreeCallback)DBprotection_storeHomePosition;
     for (i = 0; i < animUpdate->eventCount; i++) {
         switch (animUpdate->eventIds[i]) {
         case 2:

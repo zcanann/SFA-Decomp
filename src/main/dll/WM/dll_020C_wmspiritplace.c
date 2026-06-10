@@ -63,7 +63,7 @@ int wmspiritplace_SeqFn(int obj, int unused, ObjAnimUpdateState *actor)
 
     actor->sequenceEventActive = 0;
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x8);
-    actor->sequenceCallback = (void *)fn_801F568C;
+    actor->freeCallback = (ObjAnimSequenceFreeCallback)fn_801F568C;
 
     for (i = 0; i < actor->eventCount; i++) {
         action = actor->eventIds[i];

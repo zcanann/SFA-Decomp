@@ -83,7 +83,7 @@ int wmseqpoint_SeqFn(int obj, int unused, ObjAnimUpdateState *actor)
     state = ((GameObject *)obj)->extra;
     player = (int)Obj_GetPlayerObject();
     actor->sequenceEventActive = 0;
-    actor->sequenceCallback = (void *)fn_801F654C;
+    actor->freeCallback = (ObjAnimSequenceFreeCallback)fn_801F654C;
 
     for (i = 0; i < actor->eventCount; i++) {
         switch (state->sequenceId) {

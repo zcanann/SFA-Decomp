@@ -3,6 +3,7 @@
 #include "main/mapEvent.h"
 #include "main/dll/SC/SCcollectables.h"
 #include "main/objanim.h"
+#include "main/objanim_update.h"
 #include "main/objfx.h"
 
 extern undefined4 FUN_80006820();
@@ -268,11 +269,11 @@ extern f32 timeDelta;
 
 int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
 {
-    int commandOffset;
     int i;
     int child;
     u8 command;
     int state = *(int *)&((GameObject *)obj)->extra;
+    ObjAnimUpdateState *animUpdate = (ObjAnimUpdateState *)animObj;
 
     if (animatedObjGetSeqId(animObj) == 0x35f) {
         fn_80080360(animObj, 0x2648);
@@ -289,10 +290,10 @@ int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
              timeDelta, NULL);
     }
 
-    *(void **)(animObj + 0xec) = warpstone_handleMenuOptionInput;
-    *(void **)(animObj + 0xe8) = warpstone_loadBaseUi;
+    animUpdate->conditionCallback = (ObjAnimSequenceConditionCallback)warpstone_handleMenuOptionInput;
+    animUpdate->freeCallback = (ObjAnimSequenceFreeCallback)warpstone_loadBaseUi;
 
-    if (*(s8 *)(animObj + 0x56) != 0) {
+    if ((s8)animUpdate->sequenceEventActive != 0) {
         *(u8 *)(state + 0xa) = *(u8 *)(state + 0xa) & ~3;
         if (playerFn_801d6d58() != 0) {
             *(u8 *)(state + 0xa) = *(u8 *)(state + 0xa) | 1;
@@ -300,19 +301,18 @@ int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
         if (GameBit_Get(0x2e8) != 0 || GameBit_Get(0x123) != 0) {
             *(u8 *)(state + 0xa) = *(u8 *)(state + 0xa) | 2;
         }
-        *(u8 *)(animObj + 0x56) = 0;
+        animUpdate->sequenceEventActive = 0;
 
         if (GameBit_Get(*(s16 *)(state + 0xe)) != 0 && animatedObjGetSeqId(animObj) == 0x35f) {
             AudioStream_CancelPrepared();
             seqClearTaskTexts();
             doNothing_8000CF54(0);
-            *(u8 *)(animObj + 0x90) = *(u8 *)(animObj + 0x90) | 4;
+            animUpdate->sequenceControlFlags |= 4;
         }
     }
 
-    for (i = 0; i < *(u8 *)(animObj + 0x8b); i++) {
-        commandOffset = i + 0x81;
-        command = *(u8 *)(animObj + commandOffset);
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        command = animUpdate->eventIds[i];
         switch (command) {
         case 0x17:
             *(u8 *)(state + 0xd4) = *(u8 *)(state + 0xd4) | 4;
