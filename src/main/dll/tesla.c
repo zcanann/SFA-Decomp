@@ -132,7 +132,7 @@ void fn_80206968(TrickyCurveObject *obj)
     }
 
     if (state->cooldown >= 0) {
-        state->cooldown -= (int)timeDelta;
+        state->cooldown -= (s16)timeDelta;
     }
     if (insideAxes == 3 && state->cooldown <= 0) {
         if (objGetAnimState80A(player) == TRICKY_CURVE_PLAYER_ANIM_SLIDE) {
