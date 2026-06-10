@@ -59,9 +59,7 @@ void vfpladders_update(int obj) {
         }
     } else {
         if (state->delayTimer != 0) {
-            countdown = state->delayTimer;
-            countdown -= (s32)timeDelta;
-            state->delayTimer = countdown;
+            state->delayTimer -= (s16)timeDelta;
             if (state->delayTimer <= 0) {
                 state->phase = 1;
                 Sfx_PlayFromObject(obj, SFXen_flybuzz_loop);
