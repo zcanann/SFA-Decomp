@@ -1,6 +1,24 @@
 #include "main/dll/MMP/MMP_gyservent.h"
 #include "main/game_object.h"
 
+typedef struct MmpGyserventState {
+    u8 pad0[0x4 - 0x0];
+    f32 unk4;
+    u8 pad8[0xC - 0x8];
+    f32 unkC;
+    f32 unk10;
+    f32 unk14;
+    f32 unk18;
+    f32 unk1C;
+    f32 unk20;
+    f32 unk24;
+    f32 unk28;
+    f32 unk2C;
+    f32 unk30;
+    f32 unk34;
+} MmpGyserventState;
+
+
 
 extern void mtxRotateByVec3s(void *out, void *vec);
 extern void mtx44Transpose(void *m, void *out);
@@ -52,10 +70,10 @@ void objFn_80198fa4(s16 *param_1, void *param_2)
     tmp[3] = lbl_803E40D8;
     setMatrixFromObjectPos(&tmp[4], vec);
     Matrix_TransformPoint(&tmp[4], lbl_803E40D8, *(f32 *)&lbl_803E40D8, lbl_803E40E0, &out_z, &out_y, &out_x);
-    *(f32 *)((char *)state + 0xc) = out_y;
-    *(f32 *)((char *)state + 0x10) = out_z;
-    *(f32 *)((char *)state + 0x14) = out_x;
-    *(f32 *)((char *)state + 0x18) =
+    ((MmpGyserventState *)state)->unkC = out_y;
+    ((MmpGyserventState *)state)->unk10 = out_z;
+    ((MmpGyserventState *)state)->unk14 = out_x;
+    ((MmpGyserventState *)state)->unk18 =
         -(((GameObject *)param_1)->anim.worldPosZ * out_x +
           ((GameObject *)param_1)->anim.worldPosX * out_y +
           ((GameObject *)param_1)->anim.worldPosY * out_z);
@@ -70,8 +88,8 @@ void objFn_80198fa4(s16 *param_1, void *param_2)
     mtxRotateByVec3s(mtx, vec);
     mtx44Transpose(mtx, (char *)state + 0x38);
 
-    *(f32 *)((char *)state + 0x34) = lbl_803E40E4 * *(f32 *)(param_1 + 4);
-    *(f32 *)((char *)state + 0x4) = lbl_803E40E8 * *(f32 *)(param_1 + 4) * lbl_803E40E8 * *(f32 *)(param_1 + 4);
+    ((MmpGyserventState *)state)->unk34 = lbl_803E40E4 * *(f32 *)(param_1 + 4);
+    ((MmpGyserventState *)state)->unk4 = lbl_803E40E8 * *(f32 *)(param_1 + 4) * lbl_803E40E8 * *(f32 *)(param_1 + 4);
     if (*(int *)((char *)param_2 + 0x14) == 0x46a31) {
         OSReport(lbl_8032253C);
     }
@@ -166,17 +184,17 @@ void objSeqFn_801992ec(void *param_1, int param_2)
 
     state = ((GameObject *)param_1)->extra;
 
-    dx0 = *(f32 *)((char *)state + 0x1c) - ((GameObject *)param_1)->anim.worldPosX;
-    dy0 = *(f32 *)((char *)state + 0x20) - ((GameObject *)param_1)->anim.worldPosY;
-    dz0 = *(f32 *)((char *)state + 0x24) - ((GameObject *)param_1)->anim.worldPosZ;
+    dx0 = ((MmpGyserventState *)state)->unk1C - ((GameObject *)param_1)->anim.worldPosX;
+    dy0 = ((MmpGyserventState *)state)->unk20 - ((GameObject *)param_1)->anim.worldPosY;
+    dz0 = ((MmpGyserventState *)state)->unk24 - ((GameObject *)param_1)->anim.worldPosZ;
     d0 = dx0 * dx0 + dy0 * dy0 + dz0 * dz0;
 
-    dx1 = *(f32 *)((char *)state + 0x28) - ((GameObject *)param_1)->anim.worldPosX;
-    dy1 = *(f32 *)((char *)state + 0x2c) - ((GameObject *)param_1)->anim.worldPosY;
-    dz1 = *(f32 *)((char *)state + 0x30) - ((GameObject *)param_1)->anim.worldPosZ;
+    dx1 = ((MmpGyserventState *)state)->unk28 - ((GameObject *)param_1)->anim.worldPosX;
+    dy1 = ((MmpGyserventState *)state)->unk2C - ((GameObject *)param_1)->anim.worldPosY;
+    dz1 = ((MmpGyserventState *)state)->unk30 - ((GameObject *)param_1)->anim.worldPosZ;
     d1 = dx1 * dx1 + dy1 * dy1 + dz1 * dz1;
 
-    r = *(f32 *)((char *)state + 0x4);
+    r = ((MmpGyserventState *)state)->unk4;
     if (d1 < r) {
         cat = (d0 < r) ? 2 : 1;
     } else {
