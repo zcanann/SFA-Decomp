@@ -9,6 +9,18 @@
 #include "main/track_dolphin.h"
 #include "dolphin/os/OSFastCast.h"
 
+typedef struct TrackP6Entry {
+    f32 unk0;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    f32 unk14;
+    f32 unk18;
+    f32 unk1C;
+    f32 unk20;
+} TrackP6Entry;
+
 
 #pragma peephole off
 #pragma scheduling off
@@ -3150,15 +3162,15 @@ int fn_80060C14(f32 a, f32 b, int *obj, int p4, void *p5, int p6, int p7, int p8
             outA = (f32 *)((char *)p5 + outOff);
             while (j < (s16)*(s16 *)((char *)d + 0x1c) && grp < 0x4b0 && total < 0xe10) {
                 if (mask & (s8)*(u8 *)((char *)p4 + j * 0x4c + 0x49)) {
-                    *(f32 *)((char *)p6 + 0x00) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x10)) - fx;
-                    *(f32 *)((char *)p6 + 0x04) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x16)) - ((GameObject *)obj)->anim.localPosY;
-                    *(f32 *)((char *)p6 + 0x08) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1c)) - fz;
-                    *(f32 *)((char *)p6 + 0x0c) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x12)) - fx;
-                    *(f32 *)((char *)p6 + 0x10) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x18)) - ((GameObject *)obj)->anim.localPosY;
-                    *(f32 *)((char *)p6 + 0x14) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1e)) - fz;
-                    *(f32 *)((char *)p6 + 0x18) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x14)) - fx;
-                    *(f32 *)((char *)p6 + 0x1c) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1a)) - ((GameObject *)obj)->anim.localPosY;
-                    *(f32 *)((char *)p6 + 0x20) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x20)) - fz;
+                    ((TrackP6Entry *)p6)->unk0 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x10)) - fx;
+                    ((TrackP6Entry *)p6)->unk4 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x16)) - ((GameObject *)obj)->anim.localPosY;
+                    ((TrackP6Entry *)p6)->unk8 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1c)) - fz;
+                    ((TrackP6Entry *)p6)->unkC = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x12)) - fx;
+                    ((TrackP6Entry *)p6)->unk10 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x18)) - ((GameObject *)obj)->anim.localPosY;
+                    ((TrackP6Entry *)p6)->unk14 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1e)) - fz;
+                    ((TrackP6Entry *)p6)->unk18 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x14)) - fx;
+                    ((TrackP6Entry *)p6)->unk1C = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1a)) - ((GameObject *)obj)->anim.localPosY;
+                    ((TrackP6Entry *)p6)->unk20 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x20)) - fz;
                     outA[0] = *(f32 *)((char *)p4 + j * 0x4c + 0x4);
                     outA[1] = *(f32 *)((char *)p4 + j * 0x4c + 0x8);
                     outA[2] = *(f32 *)((char *)p4 + j * 0x4c + 0xc);
@@ -3193,15 +3205,15 @@ int fn_80060C14(f32 a, f32 b, int *obj, int p4, void *p5, int p6, int p7, int p8
             outA = (f32 *)((char *)p5 + outOff);
             while (j < (s16)*(s16 *)((char *)d + 0x1c) && grp < 0x4b0 && total < 0xe10) {
                 if (mask & (s8)*(u8 *)((char *)p4 + j * 0x4c + 0x49)) {
-                    *(f32 *)((char *)p6 + 0x00) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x10));
-                    *(f32 *)((char *)p6 + 0x04) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x16));
-                    *(f32 *)((char *)p6 + 0x08) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1c));
-                    *(f32 *)((char *)p6 + 0x0c) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x12));
-                    *(f32 *)((char *)p6 + 0x10) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x18));
-                    *(f32 *)((char *)p6 + 0x14) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1e));
-                    *(f32 *)((char *)p6 + 0x18) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x14));
-                    *(f32 *)((char *)p6 + 0x1c) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1a));
-                    *(f32 *)((char *)p6 + 0x20) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x20));
+                    ((TrackP6Entry *)p6)->unk0 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x10));
+                    ((TrackP6Entry *)p6)->unk4 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x16));
+                    ((TrackP6Entry *)p6)->unk8 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1c));
+                    ((TrackP6Entry *)p6)->unkC = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x12));
+                    ((TrackP6Entry *)p6)->unk10 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x18));
+                    ((TrackP6Entry *)p6)->unk14 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1e));
+                    ((TrackP6Entry *)p6)->unk18 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x14));
+                    ((TrackP6Entry *)p6)->unk1C = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1a));
+                    ((TrackP6Entry *)p6)->unk20 = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x20));
                     outA[0] = *(f32 *)((char *)p4 + j * 0x4c + 0x4);
                     outA[1] = *(f32 *)((char *)p4 + j * 0x4c + 0x8);
                     outA[2] = *(f32 *)((char *)p4 + j * 0x4c + 0xc);

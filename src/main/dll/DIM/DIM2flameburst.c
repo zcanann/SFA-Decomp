@@ -11,6 +11,25 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 
+typedef struct ExplosionDebris {
+    f32 unk0;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+    s32 unk10;
+    s32 unk14;
+    f32 unk18;
+    f32 unk1C;
+    s32 unk20;
+    s32 unk24;
+    u16 unk28;
+    u16 unk2A;
+    u8 unk2C;
+    u8 unk2D;
+    u8 unk2E;
+    u8 unk2F;
+} ExplosionDebris;
+
 typedef struct Dll1CEPlacement {
     u8 pad0[0x4 - 0x0];
     u8 unk4;
@@ -1247,28 +1266,28 @@ void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         GXSetCurrentMtx(0);
         p = state;
         for (i = 0; i < ((ExplosionState *)state)->unkA58; i++) {
-            if (*(s8 *)((char *)p + 0x2f) != 0) {
+            if (*(s8 *)&((ExplosionDebris *)p)->unk2F != 0) {
                 void **tex;
                 int k;
                 u32 cv;
                 Obj_BuildWorldTransformMatrix(obj, mE, 0);
-                PSMTXRotRad(m1, 0x7a, (f32)((lbl_803E4978 * (f64)(int)*(s16 *)((char *)p + 0x28)) / lbl_803E4980));
+                PSMTXRotRad(m1, 0x7a, (f32)((lbl_803E4978 * (f64)(int)*(s16 *)&((ExplosionDebris *)p)->unk28) / lbl_803E4980));
                 PSMTXRotRad(m3, 0x78, (f32)((lbl_803E4978 * ((f64)(u32)(fn_8000FA70() & 0xffff) - 0.0)) / lbl_803E4980));
                 PSMTXConcat(m3, m1, m3);
                 PSMTXRotRad(m2, 0x79, (f32)((lbl_803E4978 * (f64)(int)(0x10000 - (fn_8000FA90() & 0xffff))) / lbl_803E4980));
                 PSMTXConcat(m2, m3, m2);
-                PSMTXScale(m4, *(f32 *)((char *)p + 0xc), *(f32 *)((char *)p + 0xc), *(f32 *)((char *)p + 0xc));
+                PSMTXScale(m4, ((ExplosionDebris *)p)->unkC, ((ExplosionDebris *)p)->unkC, ((ExplosionDebris *)p)->unkC);
                 PSMTXConcat(m4, m2, m4);
-                PSMTXTrans(mE, *(f32 *)((char *)p + 0x0) - lbl_803DCDD8, *(f32 *)((char *)p + 0x4), *(f32 *)((char *)p + 0x8) - lbl_803DCDDC);
+                PSMTXTrans(mE, ((ExplosionDebris *)p)->unk0 - lbl_803DCDD8, ((ExplosionDebris *)p)->unk4, ((ExplosionDebris *)p)->unk8 - lbl_803DCDDC);
                 PSMTXConcat(mE, m4, mE);
                 PSMTXConcat(Camera_GetViewMatrix(), mE, mE);
                 GXLoadPosMtxImm(mE, 0);
-                colA = (colA & 0xffffff00) | *(u8 *)((char *)p + 0x2e);
-                cv = (int)(lbl_803DDB68 * (lbl_803E4938 * expf((lbl_803E4958 * ((f32)(int)*(int *)((char *)p + 0x14) - (f32)(int)*(int *)((char *)p + 0x10))) / (f32)(int)*(int *)((char *)p + 0x14))));
+                colA = (colA & 0xffffff00) | ((ExplosionDebris *)p)->unk2E;
+                cv = (int)(lbl_803DDB68 * (lbl_803E4938 * expf((lbl_803E4958 * ((f32)(int)((ExplosionDebris *)p)->unk14 - (f32)(int)((ExplosionDebris *)p)->unk10)) / (f32)(int)((ExplosionDebris *)p)->unk14)));
                 colB = (cv & 0xff) | ((u8)cv << 8) | ((u8)cv << 16) | ((u8)cv << 24);
-                fn_801B40B8(((ExplosionState *)state)->modelKind, (u8 *)&colA, (f32)(int)*(int *)((char *)p + 0x10), (f32)(int)*(int *)((char *)p + 0x14));
+                fn_801B40B8(((ExplosionState *)state)->modelKind, (u8 *)&colA, (f32)(int)((ExplosionDebris *)p)->unk10, (f32)(int)((ExplosionDebris *)p)->unk14);
                 tex = (void **)((int *)lbl_803AC960)[((ExplosionState *)state)->modelKind];
-                for (k = 0; k < *(u8 *)((char *)p + 0x2c); k++) {
+                for (k = 0; k < ((ExplosionDebris *)p)->unk2C; k++) {
                     tex = (void **)*tex;
                 }
                 colB2 = colB;
@@ -1327,43 +1346,43 @@ void explosion_update(int obj)
     lbl_803DDB58 += 1;
     ((ExplosionState *)state)->frameCounter += framesThisStep;
     for (i = 0, p = state; i < ((ExplosionState *)state)->unkA58; i++) {
-        *(int *)((char *)p + 0x10) += framesThisStep;
-        if (*(u8 *)((char *)p + 0x2f) != 0) {
-            f32 sp = *(f32 *)((char *)p + 0x1c);
-            f32 ev = expf((lbl_803E4934 * ((f32)(int)*(int *)((char *)p + 0x14) - (f32)(int)*(int *)((char *)p + 0x10))) / (f32)(int)*(int *)((char *)p + 0x14));
-            f32 t = (sp - *(f32 *)((char *)p + 0x18)) * ev;
-            *(f32 *)((char *)p + 0xc) = sp - t * lbl_803DDB70;
-            ev = expf((lbl_803E493C * (f32)(int)*(int *)((char *)p + 0x10)) / (f32)(int)*(int *)((char *)p + 0x14));
+        ((ExplosionDebris *)p)->unk10 += framesThisStep;
+        if (((ExplosionDebris *)p)->unk2F != 0) {
+            f32 sp = ((ExplosionDebris *)p)->unk1C;
+            f32 ev = expf((lbl_803E4934 * ((f32)(int)((ExplosionDebris *)p)->unk14 - (f32)(int)((ExplosionDebris *)p)->unk10)) / (f32)(int)((ExplosionDebris *)p)->unk14);
+            f32 t = (sp - ((ExplosionDebris *)p)->unk18) * ev;
+            ((ExplosionDebris *)p)->unkC = sp - t * lbl_803DDB70;
+            ev = expf((lbl_803E493C * (f32)(int)((ExplosionDebris *)p)->unk10) / (f32)(int)((ExplosionDebris *)p)->unk14);
             t = lbl_803E4938 * ev;
-            *(s8 *)((char *)p + 0x2e) = lbl_803E4938 - t * lbl_803DDB6C;
-            if (*(int *)((char *)p + 0x10) >= *(int *)((char *)p + 0x14)) {
-                *(u8 *)((char *)p + 0x2f) = 0;
+            *(s8 *)&((ExplosionDebris *)p)->unk2E = lbl_803E4938 - t * lbl_803DDB6C;
+            if (((ExplosionDebris *)p)->unk10 >= ((ExplosionDebris *)p)->unk14) {
+                ((ExplosionDebris *)p)->unk2F = 0;
             } else {
-                *(s16 *)((char *)p + 0x28) += framesThisStep * *(s16 *)((char *)p + 0x2a);
-                if (*(u8 *)((char *)p + 0x2c) >= 4) {
-                    *(u8 *)((char *)p + 0x2c) -= 4;
+                *(s16 *)&((ExplosionDebris *)p)->unk28 += framesThisStep * *(s16 *)&((ExplosionDebris *)p)->unk2A;
+                if (((ExplosionDebris *)p)->unk2C >= 4) {
+                    ((ExplosionDebris *)p)->unk2C -= 4;
                 }
-                if (*(u8 *)((char *)p + 0x2d) < 5) {
-                    if ((f32)(int)*(int *)((char *)p + 0x10) / (f32)(int)*(int *)((char *)p + 0x14) < lbl_803E4998 &&
-                        (*(int *)((char *)p + 0x20) -= framesThisStep, *(int *)((char *)p + 0x20) <= 0)) {
-                        u8 c = *(u8 *)((char *)p + 0x2d);
-                        f32 sp2 = *(f32 *)((char *)p + 0x1c);
+                if (((ExplosionDebris *)p)->unk2D < 5) {
+                    if ((f32)(int)((ExplosionDebris *)p)->unk10 / (f32)(int)((ExplosionDebris *)p)->unk14 < lbl_803E4998 &&
+                        (((ExplosionDebris *)p)->unk20 -= framesThisStep, ((ExplosionDebris *)p)->unk20 <= 0)) {
+                        u8 c = ((ExplosionDebris *)p)->unk2D;
+                        f32 sp2 = ((ExplosionDebris *)p)->unk1C;
                         int st2 = *(int *)&((GameObject *)obj)->extra;
                         f32 sv;
-                        vpos[0] = *(f32 *)((char *)p + 0xc) * (lbl_803E495C * (f32)(int)randomGetRange(-5, 3) + lbl_803E492C);
+                        vpos[0] = ((ExplosionDebris *)p)->unkC * (lbl_803E495C * (f32)(int)randomGetRange(-5, 3) + lbl_803E492C);
                         vpos[1] = lbl_803E4960;
                         vpos[2] = lbl_803E4960;
                         PSMTXRotRad(m, 0x7a, (f32)(lbl_803E4968 * (f64)((f32)(int)randomGetRange(0, 0xffff) / lbl_803E4970)));
                         PSMTXConcat(Camera_GetInverseViewRotationMatrix(), m, m);
                         PSMTXMultVecSR(m, vpos, vpos);
-                        vpos[0] += *(f32 *)((char *)p + 0x0);
-                        vpos[1] += *(f32 *)((char *)p + 0x4);
-                        vpos[2] += *(f32 *)((char *)p + 0x8);
+                        vpos[0] += ((ExplosionDebris *)p)->unk0;
+                        vpos[1] += ((ExplosionDebris *)p)->unk4;
+                        vpos[2] += ((ExplosionDebris *)p)->unk8;
                         sv = sp2 * (f32)(int)randomGetRange(0xc0, 0x100);
                         if (*(u8 *)((char *)st2 + 0xa58) < 0x32) {
                             fn_801B3DE4(obj, (u8)(c + 1), sv * lbl_803E4974, vpos[0], vpos[1], vpos[2]);
                         }
-                        *(int *)((char *)p + 0x20) = *(int *)((char *)p + 0x24);
+                        ((ExplosionDebris *)p)->unk20 = ((ExplosionDebris *)p)->unk24;
                     }
                 }
             }
