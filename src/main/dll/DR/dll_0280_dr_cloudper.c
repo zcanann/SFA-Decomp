@@ -93,7 +93,10 @@ void drcloudper_init(int obj, int setup)
     ObjGroup_AddObject(obj, DRCLOUDPER_GROUP_SURFACE);
     cloud = (DrCloudPerObject *)obj;
     setupData = (DrCloudPerSetup *)setup;
-    cloud->yaw = (s16)(setupData->yawByte << 8);
+    {
+        int yawTmp = setupData->yawByte << 8;
+        cloud->yaw = (s16)yawTmp;
+    }
     state = cloud->state;
     state->normalX = mathSinf(lbl_803E6BF0 * (f32)cloud->yaw / lbl_803E6BF4);
     state->normalY = lbl_803E6BF8;
