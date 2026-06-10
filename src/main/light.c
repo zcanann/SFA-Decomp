@@ -7,6 +7,7 @@
 #include "main/expgfx.h"
 #include "main/light.h"
 #include "main/objanim_internal.h"
+#include "main/objanim_update.h"
 #include "main/objseq.h"
 #include "main/objlib.h"
 #include "main/resource.h"
@@ -1171,7 +1172,7 @@ void vfpdraghead_init(int obj, int data) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void fn_801FC6F4(int, int, int);
+extern void fn_801FC6F4(int, int, ObjAnimUpdateState *);
 #pragma scheduling off
 #pragma peephole off
 void seqpoint_init(int obj, int data) {
@@ -1435,18 +1436,19 @@ extern void warpToMap(int, int);
 
 #pragma scheduling off
 #pragma peephole off
-void fn_801FC6F4(int obj, int param2, int ctx)
+void fn_801FC6F4(int obj, int param2, ObjAnimUpdateState *ctx)
 {
     SeqPointState *state = ((GameObject *)obj)->extra;
     int i;
-    *(s16 *)(ctx + 0x70) = -1;
-    *(u8 *)(ctx + 0x56) = 0;
-    for (i = 0; i < *(u8 *)(ctx + 0x8b); i++) {
+
+    ctx->hitVolumePair = -1;
+    ctx->sequenceEventActive = 0;
+    for (i = 0; i < ctx->eventCount; i++) {
         switch (state->sequenceId) {
         case 0:
             break;
         case 13:
-            if ((int)*(u8 *)(ctx + i + 0x81) == 20) {
+            if ((int)ctx->eventIds[i] == 20) {
                 GameBit_Set(0x500, 0);
                 GameBit_Set(0xd72, 1);
                 GameBit_Set(0xd44, 1);
@@ -1472,7 +1474,7 @@ void fn_801FC6F4(int obj, int param2, int ctx)
             }
             break;
         }
-        *(u8 *)(ctx + i + 0x81) = 0;
+        ctx->eventIds[i] = 0;
     }
 }
 #pragma peephole reset
