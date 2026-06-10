@@ -1,3 +1,4 @@
+#include "main/dll/explosion_state.h"
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"

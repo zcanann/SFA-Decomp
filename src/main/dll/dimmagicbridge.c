@@ -1,3 +1,4 @@
+#include "main/dll/dimmagicbridge_state.h"
 #include "ghidra_import.h"
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"

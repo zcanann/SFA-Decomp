@@ -1,3 +1,4 @@
+#include "main/dll/cfguardian_state.h"
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -198,10 +199,10 @@ skip_insert: ;
         }
       }
       if ((((SwitchFlags *)(state + 0x84))->released) == 0) {
-        target = *(f32 *)(state + 0x7c) - (f32)(u32)*(u8 *)(def + 0x1c);
+        target = ((CfGuardianState *)state)->unk7C - (f32)(u32)*(u8 *)(def + 0x1c);
         cur = ((GameObject *)obj)->anim.localPosY;
         if (cur < target) {
-          ((GameObject *)obj)->anim.localPosY = *(f32 *)(state + 0x80) * timeDelta + cur;
+          ((GameObject *)obj)->anim.localPosY = ((CfGuardianState *)state)->unk80 * timeDelta + cur;
           if (((GameObject *)obj)->anim.localPosY > target) {
             ((GameObject *)obj)->anim.localPosY = target;
           }
@@ -214,7 +215,7 @@ skip_insert: ;
             ((SwitchFlags *)(state + 0x84))->latched = 1;
           }
         } else {
-          ((GameObject *)obj)->anim.localPosY = -(*(f32 *)(state + 0x80) * timeDelta - cur);
+          ((GameObject *)obj)->anim.localPosY = -(((CfGuardianState *)state)->unk80 * timeDelta - cur);
           if (((GameObject *)obj)->anim.localPosY < target) {
             ((GameObject *)obj)->anim.localPosY = target;
             GameBit_Set(*(s16 *)(def + 0x1a), 1);
@@ -230,9 +231,9 @@ skip_insert: ;
           }
         }
       } else {
-        ((GameObject *)obj)->anim.localPosY = *(f32 *)(state + 0x80) * timeDelta + ((GameObject *)obj)->anim.localPosY;
-        if (((GameObject *)obj)->anim.localPosY > *(f32 *)(state + 0x7c)) {
-          ((GameObject *)obj)->anim.localPosY = *(f32 *)(state + 0x7c);
+        ((GameObject *)obj)->anim.localPosY = ((CfGuardianState *)state)->unk80 * timeDelta + ((GameObject *)obj)->anim.localPosY;
+        if (((GameObject *)obj)->anim.localPosY > ((CfGuardianState *)state)->unk7C) {
+          ((GameObject *)obj)->anim.localPosY = ((CfGuardianState *)state)->unk7C;
         } else {
           i = 1;
         }
@@ -240,10 +241,10 @@ skip_insert: ;
     } else {
       if ((((SwitchFlags *)(state + 0x84))->latched) == 0) {
         cur = ((GameObject *)obj)->anim.localPosY;
-        if (cur < *(f32 *)(state + 0x7c)) {
-          ((GameObject *)obj)->anim.localPosY = *(f32 *)(state + 0x80) * timeDelta + cur;
-          if (((GameObject *)obj)->anim.localPosY > *(f32 *)(state + 0x7c)) {
-            ((GameObject *)obj)->anim.localPosY = *(f32 *)(state + 0x7c);
+        if (cur < ((CfGuardianState *)state)->unk7C) {
+          ((GameObject *)obj)->anim.localPosY = ((CfGuardianState *)state)->unk80 * timeDelta + cur;
+          if (((GameObject *)obj)->anim.localPosY > ((CfGuardianState *)state)->unk7C) {
+            ((GameObject *)obj)->anim.localPosY = ((CfGuardianState *)state)->unk7C;
             GameBit_Set(*(s16 *)(def + 0x1a), 0);
           } else {
             i = 1;
@@ -612,17 +613,17 @@ void pressureswitchfb_init(u8* obj, u8* params) {
         objAnim->bankIndex = 0;
     }
     defaultOffset = lbl_803E3778;
-    *(f32*)(sub + 0x80) = defaultOffset;
+    ((CfGuardianState *)sub)->unk80 = defaultOffset;
     if (((GameObject *)obj)->anim.seqId == 0x77b) {
         flags->usePressedTexture = 1;
         flags->startPressed = 1;
         flags->canRelease = 1;
-        *(f32*)(sub + 0x80) = defaultOffset;
+        ((CfGuardianState *)sub)->unk80 = defaultOffset;
     }
-    *(f32*)(sub + 0x7c) = *(f32*)(params + 0xc);
+    ((CfGuardianState *)sub)->unk7C = *(f32*)(params + 0xc);
     if (GameBit_Get(*(s16*)(params + 0x1a)) != 0) {
         s16 model;
-        ((GameObject *)obj)->anim.localPosY = *(f32*)(sub + 0x7c) - (f32)(u32)params[0x1c];
+        ((GameObject *)obj)->anim.localPosY = ((CfGuardianState *)sub)->unk7C - (f32)(u32)params[0x1c];
         sub[0] = 0x1e;
         flags->canRelease = 0;
         model = ((GameObject *)obj)->anim.seqId;
@@ -643,16 +644,16 @@ void pressureswitchfb_init(u8* obj, u8* params) {
         }
     }
     ObjGroup_AddObject(obj, 0x53);
-    *(int*)(sub + 4) = 0;
-    *(int*)(sub + 8) = 0;
-    *(int*)(sub + 0xc) = 0;
-    *(int*)(sub + 0x10) = 0;
-    *(int*)(sub + 0x14) = 0;
-    *(int*)(sub + 0x18) = 0;
-    *(int*)(sub + 0x1c) = 0;
-    *(int*)(sub + 0x20) = 0;
-    *(int*)(sub + 0x24) = 0;
-    *(int*)(sub + 0x28) = 0;
+    ((CfGuardianState *)sub)->unk4 = 0;
+    ((CfGuardianState *)sub)->unk8 = 0;
+    ((CfGuardianState *)sub)->unkC = 0;
+    ((CfGuardianState *)sub)->unk10 = 0;
+    ((CfGuardianState *)sub)->unk14 = 0;
+    ((CfGuardianState *)sub)->unk18 = 0;
+    ((CfGuardianState *)sub)->unk1C = 0;
+    ((CfGuardianState *)sub)->unk20 = 0;
+    ((CfGuardianState *)sub)->unk24 = 0;
+    ((CfGuardianState *)sub)->unk28 = 0;
     ((GameObject *)obj)->animEventCallback = (void *)pressureswitchfb_updateStateMode;
 }
 
@@ -732,16 +733,16 @@ void Door_init(int *obj, u8 *def) {
             s32 subtype = ((GameObject *)obj)->anim.mapEventSlot;
             if ((subtype < 35 && subtype >= 31) || (subtype < 43 && subtype >= 40)) {
                 *(s16 *)state = 832;
-                *(s16 *)(state + 2) = 833;
+                *(s16 *)&((CfGuardianState *)state)->unk2 = 833;
             } else {
                 *(s16 *)state = 1154;
-                *(s16 *)(state + 2) = 1155;
+                *(s16 *)&((CfGuardianState *)state)->unk2 = 1155;
             }
             break;
         }
         case 358:
             *(s16 *)state = 275;
-            *(s16 *)(state + 2) = 504;
+            *(s16 *)&((CfGuardianState *)state)->unk2 = 504;
             break;
         }
     }
@@ -876,8 +877,8 @@ int Door_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
         if ((*(u16 *)state != 0) && (Sfx_IsPlayingFromObject(obj, *(u16 *)state) != 0)) {
           Sfx_StopFromObject(obj, *(u16 *)state);
         }
-        if (*(u16 *)(state + 2) != 0) {
-          Sfx_PlayFromObject(obj, *(u16 *)(state + 2));
+        if (((CfGuardianState *)state)->unk2 != 0) {
+          Sfx_PlayFromObject(obj, ((CfGuardianState *)state)->unk2);
         }
       }
     }
@@ -892,8 +893,8 @@ int Door_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
         if ((*(u16 *)state != 0) && (Sfx_IsPlayingFromObject(obj, *(u16 *)state) != 0)) {
           Sfx_StopFromObject(obj, *(u16 *)state);
         }
-        if (*(u16 *)(state + 2) != 0) {
-          Sfx_PlayFromObject(obj, *(u16 *)(state + 2));
+        if (((CfGuardianState *)state)->unk2 != 0) {
+          Sfx_PlayFromObject(obj, ((CfGuardianState *)state)->unk2);
         }
       }
     }

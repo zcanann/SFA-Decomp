@@ -1,3 +1,4 @@
+#include "main/dll/DIM/dimcannon_state.h"
 #include "main/audio/sfx_ids.h"
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
@@ -1299,18 +1300,18 @@ void FUN_801afcf8(int param_1)
       if (uVar3 == 0) {
         iVar2 = (**(code **)(*DAT_803dd6d8 + 0x24))(0);
         if (iVar2 == 0) {
-          if (*(int *)(iVar4 + 8) != 0x33) {
-            *(undefined4 *)(iVar4 + 8) = 0x33;
+          if (((DimCannonState *)iVar4)->unk8 != 0x33) {
+            ((DimCannonState *)iVar4)->unk8 = 0x33;
             FUN_800067c0((int *)0x33,1);
           }
         }
-        else if (*(int *)(iVar4 + 8) != 0x2d) {
-          *(undefined4 *)(iVar4 + 8) = 0x2d;
+        else if (((DimCannonState *)iVar4)->unk8 != 0x2d) {
+          ((DimCannonState *)iVar4)->unk8 = 0x2d;
           FUN_800067c0((int *)0x2d,1);
         }
       }
-      else if (*(int *)(iVar4 + 8) != 0x95) {
-        *(undefined4 *)(iVar4 + 8) = 0x95;
+      else if (((DimCannonState *)iVar4)->unk8 != 0x95) {
+        ((DimCannonState *)iVar4)->unk8 = 0x95;
         FUN_800067c0((int *)0x95,1);
       }
     }
@@ -1319,13 +1320,13 @@ void FUN_801afcf8(int param_1)
   else if ((cVar1 < 'H') && ('F' < cVar1)) {
     iVar2 = (**(code **)(*DAT_803dd6d8 + 0x24))(0);
     if (iVar2 == 0) {
-      if (*(int *)(iVar4 + 8) != 0x33) {
-        *(undefined4 *)(iVar4 + 8) = 0x33;
+      if (((DimCannonState *)iVar4)->unk8 != 0x33) {
+        ((DimCannonState *)iVar4)->unk8 = 0x33;
         FUN_800067c0((int *)0x33,1);
       }
     }
-    else if (*(int *)(iVar4 + 8) != 0x2d) {
-      *(undefined4 *)(iVar4 + 8) = 0x2d;
+    else if (((DimCannonState *)iVar4)->unk8 != 0x2d) {
+      ((DimCannonState *)iVar4)->unk8 = 0x2d;
       FUN_800067c0((int *)0x2d,1);
     }
   }
@@ -1908,19 +1909,19 @@ void FUN_801b0df4(undefined8 param_1,double param_2,double param_3,undefined8 pa
   iVar8 = *(int *)&((GameObject *)param_9)->extra;
   iVar9 = *(int *)&((GameObject *)param_9)->anim.placementData;
   uVar3 = GameBit_Get((int)*(short *)(iVar9 + 0x24));
-  *(char *)(iVar8 + 0x1a) = (char)uVar3;
-  if (*(char *)(iVar8 + 0x1b) != '\0') {
+  *(char *)&((DimCannonState *)iVar8)->unk1A = (char)uVar3;
+  if (*(char *)&((DimCannonState *)iVar8)->unk1B != '\0') {
     uVar3 = GameBit_Get((int)*(short *)(iVar9 + 0x1e));
     if (uVar3 == 0) {
-      *(undefined *)(iVar8 + 0x1a) = 0;
+      ((DimCannonState *)iVar8)->unk1A = 0;
     }
     else {
-      *(undefined *)(iVar8 + 0x1a) = 1;
-      *(undefined *)(iVar8 + 0x1b) = 0;
-      *(float *)(iVar8 + 0xc) = lbl_803E54AC;
+      ((DimCannonState *)iVar8)->unk1A = 1;
+      ((DimCannonState *)iVar8)->unk1B = 0;
+      ((DimCannonState *)iVar8)->unkC = lbl_803E54AC;
     }
   }
-  if ((*(int *)(iVar8 + 8) == 0) && (uVar3 = FUN_80017ae8(), (uVar3 & 0xff) != 0)) {
+  if ((((DimCannonState *)iVar8)->unk8 == 0) && (uVar3 = FUN_80017ae8(), (uVar3 & 0xff) != 0)) {
     puVar4 = FUN_80017aa4(0x24,0x18d);
     *(undefined *)(puVar4 + 1) = 9;
     *(undefined *)(puVar4 + 2) = 2;
@@ -1936,27 +1937,27 @@ void FUN_801b0df4(undefined8 param_1,double param_2,double param_3,undefined8 pa
     *(undefined4 *)(puVar4 + 10) = *(undefined4 *)(iVar9 + 0x14);
     uVar5 = FUN_80017ae4(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar4,5,
                          ((GameObject *)param_9)->anim.mapEventSlot,0xffffffff,(uint *)0x0,in_r8,in_r9,in_r10);
-    *(undefined4 *)(iVar8 + 8) = uVar5;
+    ((DimCannonState *)iVar8)->unk8 = uVar5;
   }
-  iVar7 = *(int *)(iVar8 + 8);
-  fVar2 = *(float *)(iVar8 + 0xc) - lbl_803DC074;
-  *(float *)(iVar8 + 0xc) = fVar2;
+  iVar7 = ((DimCannonState *)iVar8)->unk8;
+  fVar2 = ((DimCannonState *)iVar8)->unkC - lbl_803DC074;
+  ((DimCannonState *)iVar8)->unkC = fVar2;
   if ((fVar2 <= lbl_803E54AC) &&
      (iVar6 = (**(code **)(**(int **)(iVar7 + 0x68) + 0x24))(iVar7), iVar6 != 0)) {
-    if (*(char *)(iVar8 + 0x1a) != '\0') {
+    if (*(char *)&((DimCannonState *)iVar8)->unk1A != '\0') {
       uVar3 = GameBit_Get((int)*(short *)(iVar9 + 0x1e));
-      if ((uVar3 == 0) || (*(char *)(iVar8 + 0x18) != '\0')) {
+      if ((uVar3 == 0) || (*(char *)&((DimCannonState *)iVar8)->unk18 != '\0')) {
         uVar1 = *(undefined *)(iVar9 + 0x1a);
       }
       else {
         uVar1 = *(undefined *)(iVar9 + 0x20);
-        *(undefined *)(iVar8 + 0x18) = 1;
+        ((DimCannonState *)iVar8)->unk18 = 1;
       }
       (**(code **)(**(int **)(iVar7 + 0x68) + 0x20))(iVar7,uVar1,*(undefined *)(iVar9 + 0x1b));
     }
     uVar3 = randomGetRange(0,0x3c);
-    *(float *)(iVar8 + 0xc) =
-         *(float *)(iVar8 + 0x10) +
+    ((DimCannonState *)iVar8)->unkC =
+         ((DimCannonState *)iVar8)->unk10 +
          (f32)(s32)(uVar3);
   }
   return;

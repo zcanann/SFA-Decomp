@@ -1,3 +1,4 @@
+#include "main/dll/DIM/dimcannon_state.h"
 #include "ghidra_import.h"
 #include "main/camera_interface.h"
 #include "main/game_ui_interface.h"
@@ -537,26 +538,6 @@ int dimlavasmash_getObjectTypeId(void) { return 0x0; }
 
 /* dimcannon extra block (0xb4); the head is the per-cannonball column
  * arrays walked via state + i*4 (kept raw), this names the scalar tail. */
-typedef struct DimCannonState {
-    u8 pad00[0x88];
-    f32 unk88;
-    f32 unk8C;
-    f32 unk90;
-    f32 unk94;
-    f32 unk98;
-    u8 pad9C[8];
-    s16 aimYaw;     /* 0xa4 */
-    s16 aimPitch;   /* 0xa6 */
-    int unkA8;
-    u8 fireState;   /* 0xac */
-    u8 unkAD;
-    u8 unkAE;
-    u8 unkAF;
-    s8 unkB0;
-    u8 unkB1;
-    u8 unkB2;
-    u8 padB3;
-} DimCannonState;
 STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
 
 int dimcannon_getExtraSize(int *obj) { if (((GameObject *)obj)->anim.seqId == 0x1d6) return 0xc; return 0xb4; }

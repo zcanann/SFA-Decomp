@@ -1,3 +1,4 @@
+#include "main/dll/explosion_state.h"
 #include "main/dll/explosion.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"

@@ -1,3 +1,5 @@
+#include "main/dll/dimmagicbridge_state.h"
+#include "main/dll/explosion_state.h"
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -41,18 +43,6 @@ STATIC_ASSERT(sizeof(Dll1CEState) == 0xC);
  * (dimmagicbridge_getExtraSize == 0x68). init/SeqFn here, dll_199/19A
  * variants in dimmagicbridge.c use their own layout.
  */
-typedef struct DimMagicBridgeState {
-    f32 minVertexY; /* lowest model vertex, wave reference */
-    f32 unk04[0xF];
-    u8 segmentLit[0xF]; /* per-segment ignition flags */
-    u8 segmentCount; /* 10 */
-    u8 segmentGlow[0xF]; /* per-segment burn ramp 0..0xFF */
-    u8 ignited; /* gamebit 0x1E9 / anim event 1 */
-    u16 wavePhase;
-    u8 pad62[2];
-    s16 igniteTimer; /* 0x10-frame cadence between segment ignitions */
-    u8 pad66[2];
-} DimMagicBridgeState;
 
 STATIC_ASSERT(sizeof(DimMagicBridgeState) == 0x68);
 
@@ -92,27 +82,6 @@ STATIC_ASSERT(offsetof(ExplosionPartfxSource, velocityX) == 0x24);
  * (int) casts) flips saved-reg coloring in init/update/render/fn_801B3DE4
  * (recipe #36/#77); the layout is documented here for a future pass.
  */
-typedef struct ExplosionState {
-    u8 flames[0x960];
-    f32 groundY;
-    u8 debris[0xD8];
-    f32 driftYSpeed; /* upward drift while flag 4 variant */
-    int light; /* objCreateLight handle or 0 */
-    s16 rayYawA; /* light-ray pair angles */
-    s16 rayPitchA;
-    s16 rayYawB;
-    s16 rayPitchB;
-    int frameCounter;
-    int lifeFrames; /* scale-derived, clamped 0..60 */
-    f32 scale;
-    u8 unkA58;
-    u8 rayMode; /* 0 none, 1 grounded pair, 2 random pair */
-    u8 debrisCount;
-    s8 unkA5B;
-    s8 nearGround; /* spawned close to the probed floor */
-    u8 modelKind; /* params & 3, active model index */
-    u8 padA5E[2];
-} ExplosionState;
 
 STATIC_ASSERT(sizeof(ExplosionState) == 0xA60);
 STATIC_ASSERT(offsetof(ExplosionState, driftYSpeed) == 0xA3C);
