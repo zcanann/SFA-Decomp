@@ -27,3 +27,27 @@ Open questions (next session):
    fix per fn = find the import construct whose IR differs (CONCAT44
    blobs, division spellings, conversion node counts) without changing
    the instruction stream.
+
+
+## Round-2 results (carrier taxonomy, this window)
+
+| construct | first-param reg | dose |
+|---|---|---|
+| (none) / const-folded `600/7` / big-const / 1-4 f32 convs / variable `p3/p2` divw | r25 | ZERO |
+| `p3 % 7` (modulo-by-const expansion) | r28 | partial (3 ranks) |
+| `p3 / 7` (magic-const div expansion) | r29 | FULL inversion |
+| `(unsigned)p3 / 7u` | r29 | FULL inversion |
+| HAND-EXPANDED `/7` (s64-mul spelling, same mulhw) | r28 | partial — DOSE IS SPELLING-MODULABLE |
+
+Conclusions: (1) the dose carrier is the DIVISION-BY-CONSTANT STRENGTH-
+REDUCTION IR specifically — not divisions (divw=0), not conversions (0-4
+all zero on this harness), not big consts; (2) the modulo expansion and the
+hand-expanded s64-mul spelling carry PARTIAL doses — the dose rides
+IR-node kinds the front-end creates for the expansion, and respelling the
+same computation changes it WITHOUT changing the instruction stream
+(mulhw still emitted); (3) therefore the parked rotation fns carrying
+`/ CONST` or `% CONST` may be fixable by dose-tuning respells (hand
+expansion, modulo->div+mul-sub rewrites) that move OUR interleave to
+target's — the next session should pick a real banked fn with a division
+(cnthitobjec_init's /3 mulhwu!) and battery the respells against its
+target coloring.
