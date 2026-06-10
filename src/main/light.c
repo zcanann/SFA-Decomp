@@ -800,11 +800,11 @@ FUN_801fcccc(undefined8 param_1,double param_2,double param_3,undefined8 param_4
       FUN_80017698(0x500,0);
       FUN_80017698(0xd72,1);
       FUN_80017698(0xd44,1);
-      (*gMapEventInterface)->setAnimEvent((int)*(char *)(param_9 + 0xac),1,1);
-      (*gMapEventInterface)->setAnimEvent((int)*(char *)(param_9 + 0xac),2,1);
+      (*gMapEventInterface)->setAnimEvent((int)((GameObject *)param_9)->anim.mapEventSlot,1,1);
+      (*gMapEventInterface)->setAnimEvent((int)((GameObject *)param_9)->anim.mapEventSlot,2,1);
       iVar4 = (int)*gMapEventInterface;
-      (*gMapEventInterface)->setAnimEvent((int)*(char *)(param_9 + 0xac),0x16,1);
-      cVar2 = (*gMapEventInterface)->getMode((int)*(char *)(param_9 + 0xac));
+      (*gMapEventInterface)->setAnimEvent((int)((GameObject *)param_9)->anim.mapEventSlot,0x16,1);
+      cVar2 = (*gMapEventInterface)->getMode((int)((GameObject *)param_9)->anim.mapEventSlot);
       if (cVar2 == '\x01') {
         uVar7 = extraout_f1;
         FUN_80042b9c(0,0,1);
@@ -819,7 +819,7 @@ FUN_801fcccc(undefined8 param_1,double param_2,double param_3,undefined8 param_4
                      iVar4,param_13,param_14,param_15,param_16);
       }
       else {
-        cVar2 = (*gMapEventInterface)->getMode((int)*(char *)(param_9 + 0xac));
+        cVar2 = (*gMapEventInterface)->getMode((int)((GameObject *)param_9)->anim.mapEventSlot);
         if (cVar2 == '\x02') {
           uVar7 = extraout_f1_00;
           FUN_80042b9c(0,0,1);
@@ -1450,17 +1450,17 @@ void fn_801FC6F4(int obj, int param2, int ctx)
                 GameBit_Set(0x500, 0);
                 GameBit_Set(0xd72, 1);
                 GameBit_Set(0xd44, 1);
-                (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 1, 1);
-                (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 2, 1);
-                (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 22, 1);
-                if ((*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 1) {
+                (*gMapEventInterface)->setAnimEvent(((GameObject *)obj)->anim.mapEventSlot, 1, 1);
+                (*gMapEventInterface)->setAnimEvent(((GameObject *)obj)->anim.mapEventSlot, 2, 1);
+                (*gMapEventInterface)->setAnimEvent(((GameObject *)obj)->anim.mapEventSlot, 22, 1);
+                if ((*gMapEventInterface)->getMode(((GameObject *)obj)->anim.mapEventSlot) == 1) {
                     unlockLevel(0, 0, 1);
                     lockLevel(mapGetDirIdx(70), 1);
                     lockLevel(mapGetDirIdx(4), 0);
                     loadMapAndParent(70);
                     (*gMapEventInterface)->setMode(18, 2);
                     warpToMap(124, 0);
-                } else if ((*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 2) {
+                } else if ((*gMapEventInterface)->getMode(((GameObject *)obj)->anim.mapEventSlot) == 2) {
                     unlockLevel(0, 0, 1);
                     lockLevel(mapGetDirIdx(70), 1);
                     lockLevel(mapGetDirIdx(4), 0);

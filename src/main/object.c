@@ -968,7 +968,7 @@ void *loadObjectAtObject(u8 *src, int arg1) {
     int type;
     int objF30;
     objF30 = *(int *)(src + 0x30);
-    type = *(s8 *)(src + 0xac);
+    type = ((ObjAnimComponent *)src)->mapEventSlot;
     if (getLoadedFileFlags(0) & 0x100000) {
         OSReport(sObjSetupObjectLoadingLockedWarning, -1);
         obj = NULL;

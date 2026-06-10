@@ -335,7 +335,7 @@ void FUN_801fd964(int param_1)
 {
   byte bVar1;
   
-  bVar1 = (*gMapEventInterface)->getMode((int)*(char *)(param_1 + 0xac));
+  bVar1 = (*gMapEventInterface)->getMode((int)((GameObject *)param_1)->anim.mapEventSlot);
   if (bVar1 == 2) {
     DAT_803de948 = 0x83b;
   }
@@ -1325,7 +1325,7 @@ extern void spellStoneUseFn_801fd270(void *obj);
 void dll_224_update(void *param_1) {
     void *obj = param_1;
     int v;
-    v = (*gMapEventInterface)->getMode(*((s8 *)obj + 0xac));
+    v = (*gMapEventInterface)->getMode(((GameObject *)obj)->anim.mapEventSlot);
     v = (u8)v;
     switch (v) {
         case 1:
