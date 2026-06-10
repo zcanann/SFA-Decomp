@@ -2,6 +2,7 @@
  * Asm symbols: 13.  Fill bodies one at a time using:
  *   python3 tools/function_objdump.py --diff main/main/dll/baddie/skeetla <symbol>
  */
+#include "main/dll/objfsa_romcurve.h"
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
 #include "main/dll/path_control_interface.h"
@@ -876,7 +877,7 @@ void trickyRankLinkedRouteCandidates(u8 *obj, u8 *outRouteFlags, s16 linkSelecto
 
     for (i = 0; i < count; i++) {
         curve = curves[i];
-        if ((*(s8 *)((u8 *)curve + 0x19) != 0x24) || (*(u8 *)((u8 *)curve + 3) != 0)) {
+        if ((((ObjfsaRomCurveDef *)curve)->type != 0x24) || (*(u8 *)((u8 *)curve + 3) != 0)) {
             continue;
         }
         if (((*(s16 *)((u8 *)curve + 0x30) != -1) &&
@@ -886,11 +887,11 @@ void trickyRankLinkedRouteCandidates(u8 *obj, u8 *outRouteFlags, s16 linkSelecto
             continue;
         }
 
-        cz = *(f32 *)((u8 *)curve + 0x10);
+        cz = ((ObjfsaRomCurveDef *)curve)->z;
         p = *(f32 **)&((TrickyState *)state)->unk28;
         dz = p[2] - cz;
         zz = dz * dz;
-        cx = *(f32 *)((u8 *)curve + 8);
+        cx = ((ObjfsaRomCurveDef *)curve)->x;
         dx = p[0] - cx;
         xx = dx * dx;
         dx2 = ((GameObject *)obj)->anim.worldPosX - cx;
@@ -909,7 +910,7 @@ void trickyRankLinkedRouteCandidates(u8 *obj, u8 *outRouteFlags, s16 linkSelecto
                         }
                     }
 
-                    routeFlags = (u8)(*(s8 *)((u8 *)curve + 0x1b) >> (u8)j);
+                    routeFlags = (u8)(((ObjfsaRomCurveDef *)curve)->blockedLinkMask >> (u8)j);
                     break;
                 }
             }

@@ -330,7 +330,7 @@ void dimsnowball1c2_update(int *obj)
                 *(u8 *)((char *)np + 7) = ((Dimsnowball1c2Placement *)def)->unk7;
                 *(f32 *)((char *)np + 8) = ((GameObject *)obj)->anim.localPosX;
                 *(f32 *)((char *)np + 0xc) = ((GameObject *)obj)->anim.localPosY;
-                *(f32 *)((char *)np + 0x10) = ((GameObject *)obj)->anim.localPosZ;
+                *(f32 *)&((ObjDef *)np)->jointData = ((GameObject *)obj)->anim.localPosZ;
                 *(int *)((char *)np + 0x14) = ((Dimsnowball1c2Placement *)def)->unk14;
                 *(s8 *)((char *)np + 0x18) = ((Dimsnowball1c2Placement *)def)->unk1C;
                 *(s16 *)((char *)np + 0x1a) = ((Dimsnowball1c2Placement *)def)->unk1A;

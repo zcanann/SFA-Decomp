@@ -3162,7 +3162,7 @@ void baddieinterestp_update(int *obj)
             id |= (u16)((BaddieinterestpPlacement *)params)->unk1A;
             for (i = 0; (int)(i & 0xffff) < count; i++) {
                 int *other = (int *)objs[i & 0xffff];
-                int *otherParams = *(int **)((char *)other + 0x4c);
+                int *otherParams = *(int **)&((GameObject *)other)->anim.placementData;
                 if (otherParams != NULL) {
                     found = 0;
                     if (id == *(u32 *)((char *)otherParams + 0x14) || id == 0) {
@@ -3279,11 +3279,11 @@ void animatedobj_update(int *obj)
             slot = slot8;
             for (res = 0; res < count; res++) {
                 int *other = (int *)*list;
-                if (*(s16 *)((char *)other + 0xb4) == slot8) {
+                if (((GameObject *)other)->unkB4 == slot8) {
                     match = other;
                 }
-                if (*(s16 *)((char *)other + 0xb4) == -2 && *(s16 *)((char *)other + 0x44) == 0x10) {
-                    ObjSeqState *otherSeq = *(ObjSeqState **)((char *)other + 0xb8);
+                if (((GameObject *)other)->unkB4 == -2 && ((GameObject *)other)->anim.classId == 0x10) {
+                    ObjSeqState *otherSeq = *(ObjSeqState **)&((GameObject *)other)->extra;
                     if (slot == (s8)otherSeq->slot) {
                         cnt++;
                     }
@@ -3570,11 +3570,11 @@ void dim2roofrub_update(int *obj)
             slot = slot8;
             for (res = cnt = 0; res < count; res++) {
                 int *other = (int *)*list;
-                if (*(s16 *)((char *)other + 0xb4) == slot8) {
+                if (((GameObject *)other)->unkB4 == slot8) {
                     match = other;
                 }
-                if (*(s16 *)((char *)other + 0xb4) == -2 && *(s16 *)((char *)other + 0x44) == 0x10) {
-                    ObjSeqState *otherSeq = *(ObjSeqState **)((char *)other + 0xb8);
+                if (((GameObject *)other)->unkB4 == -2 && ((GameObject *)other)->anim.classId == 0x10) {
+                    ObjSeqState *otherSeq = *(ObjSeqState **)&((GameObject *)other)->extra;
                     if (slot == (s8)otherSeq->slot) {
                         cnt++;
                     }

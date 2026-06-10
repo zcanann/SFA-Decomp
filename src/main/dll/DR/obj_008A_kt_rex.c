@@ -1,3 +1,4 @@
+#include "main/dll/objfsa_romcurve.h"
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 #include "global.h"
@@ -779,21 +780,21 @@ void ktrex_init(int obj, char *arg) {
     for (i = 0; i < 4; i++) {
         cp = (int)(*gRomCurveInterface)->getById(*(int *)((char *)lbl_8032A510 + 0x4c + i * 4));
         if (cp != 0) {
-            ((KTRexArenaState *)gKTRexState)->laneAX[i] = *(f32 *)((char *)cp + 0x8);
-            ((KTRexArenaState *)gKTRexState)->laneAY[i] = *(f32 *)((char *)cp + 0xc);
-            ((KTRexArenaState *)gKTRexState)->laneAZ[i] = *(f32 *)((char *)cp + 0x10);
+            ((KTRexArenaState *)gKTRexState)->laneAX[i] = ((ObjfsaRomCurveDef *)cp)->x;
+            ((KTRexArenaState *)gKTRexState)->laneAY[i] = ((ObjfsaRomCurveDef *)cp)->y;
+            ((KTRexArenaState *)gKTRexState)->laneAZ[i] = ((ObjfsaRomCurveDef *)cp)->z;
             cp = (int)(*gRomCurveInterface)->getById(*(int *)((char *)lbl_8032A510 + 0x3c + i * 4));
-            ((KTRexArenaState *)gKTRexState)->laneBX[i] = *(f32 *)((char *)cp + 0x8);
-            ((KTRexArenaState *)gKTRexState)->laneBY[i] = *(f32 *)((char *)cp + 0xc);
-            ((KTRexArenaState *)gKTRexState)->laneBZ[i] = *(f32 *)((char *)cp + 0x10);
+            ((KTRexArenaState *)gKTRexState)->laneBX[i] = ((ObjfsaRomCurveDef *)cp)->x;
+            ((KTRexArenaState *)gKTRexState)->laneBY[i] = ((ObjfsaRomCurveDef *)cp)->y;
+            ((KTRexArenaState *)gKTRexState)->laneBZ[i] = ((ObjfsaRomCurveDef *)cp)->z;
             cp = (int)(*gRomCurveInterface)->getById(*(int *)((char *)lbl_8032A510 + 0x6c + i * 4));
-            ((KTRexArenaState *)gKTRexState)->laneCX[i] = *(f32 *)((char *)cp + 0x8);
-            ((KTRexArenaState *)gKTRexState)->laneCY[i] = *(f32 *)((char *)cp + 0xc);
-            ((KTRexArenaState *)gKTRexState)->laneCZ[i] = *(f32 *)((char *)cp + 0x10);
+            ((KTRexArenaState *)gKTRexState)->laneCX[i] = ((ObjfsaRomCurveDef *)cp)->x;
+            ((KTRexArenaState *)gKTRexState)->laneCY[i] = ((ObjfsaRomCurveDef *)cp)->y;
+            ((KTRexArenaState *)gKTRexState)->laneCZ[i] = ((ObjfsaRomCurveDef *)cp)->z;
             cp = (int)(*gRomCurveInterface)->getById(*(int *)((char *)lbl_8032A510 + 0x5c + i * 4));
-            ((KTRexArenaState *)gKTRexState)->laneDX[i] = *(f32 *)((char *)cp + 0x8);
-            ((KTRexArenaState *)gKTRexState)->laneDY[i] = *(f32 *)((char *)cp + 0xc);
-            ((KTRexArenaState *)gKTRexState)->laneDZ[i] = *(f32 *)((char *)cp + 0x10);
+            ((KTRexArenaState *)gKTRexState)->laneDX[i] = ((ObjfsaRomCurveDef *)cp)->x;
+            ((KTRexArenaState *)gKTRexState)->laneDY[i] = ((ObjfsaRomCurveDef *)cp)->y;
+            ((KTRexArenaState *)gKTRexState)->laneDZ[i] = ((ObjfsaRomCurveDef *)cp)->z;
         }
     }
     ((KTRexArenaState *)gKTRexState)->rowAX = (char *)gKTRexState + 0x10;

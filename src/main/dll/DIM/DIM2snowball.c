@@ -1067,7 +1067,7 @@ void dim2pathgenerator_update(int *obj)
         int *np = (int *)Obj_AllocObjectSetup(36, ((Dim2PathGeneratorState *)extra)->spawnTypes[toggle]);
         *(f32 *)((char *)np + 8) = ((Dim2PathGeneratorState *)extra)->originX;
         *(f32 *)((char *)np + 0xc) = ((Dim2PathGeneratorState *)extra)->originY;
-        *(f32 *)((char *)np + 0x10) = ((Dim2PathGeneratorState *)extra)->originZ;
+        *(f32 *)&((ObjDef *)np)->jointData = ((Dim2PathGeneratorState *)extra)->originZ;
         *(u8 *)((char *)np + 4) = ((Dim2pathgeneratorPlacement *)def)->unk4;
         *(u8 *)((char *)np + 6) = ((Dim2pathgeneratorPlacement *)def)->unk6;
         *(u8 *)((char *)np + 5) = ((Dim2pathgeneratorPlacement *)def)->unk5;

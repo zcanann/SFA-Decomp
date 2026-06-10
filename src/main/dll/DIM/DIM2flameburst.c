@@ -1000,7 +1000,7 @@ void dll_1CE_update(int* obj)
         int* no = Obj_AllocObjectSetup(0x30, 0x246);
         *(f32*)((char*)no + 8) = ((Dll1CEPlacement *)q)->unk8;
         *(f32*)((char*)no + 0xc) = lbl_803E49FC + ((Dll1CEPlacement *)q)->unkC;
-        *(f32*)((char*)no + 0x10) = ((Dll1CEPlacement *)q)->unk10;
+        *(f32 *)&((ObjDef *)no)->jointData = ((Dll1CEPlacement *)q)->unk10;
         *(u8*)((char*)no + 4) = ((Dll1CEPlacement *)q)->unk4;
         *(u8*)((char*)no + 5) = ((Dll1CEPlacement *)q)->unk5;
         *(u8*)((char*)no + 6) = ((Dll1CEPlacement *)q)->unk6;

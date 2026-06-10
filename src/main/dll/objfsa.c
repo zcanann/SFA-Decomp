@@ -1,3 +1,4 @@
+#include "main/dll/objfsa_romcurve.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/objfsa.h"
 #include "main/dll/path_control_interface.h"
@@ -150,18 +151,6 @@ extern f32 lbl_803E12BC;
 extern f32 lbl_803E12C0;
 extern f32 gFloatOne;
 
-typedef struct ObjfsaRomCurveDef {
-  u8 pad00[0x08];
-  f32 x;
-  f32 y;
-  f32 z;
-  u32 id;
-  s8 action;
-  s8 type;
-  u8 pad1A;
-  s8 blockedLinkMask;
-  s32 linkIds[4];
-} ObjfsaRomCurveDef;
 extern f32 lbl_803E12C4;
 extern f32 lbl_803E12C8;
 extern f32 lbl_803E12CC;
