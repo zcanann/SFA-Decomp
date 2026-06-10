@@ -1048,7 +1048,7 @@ extern f32 lbl_803E366C;
 extern f32 lbl_803E3670;
 extern f32 lbl_803E3674;
 
-int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
+int doorf4_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate) {
     int msg;
     int objCount;
     int objIdx;
@@ -1070,12 +1070,14 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
     f32 dx;
     f32 dy;
     f32 thr;
+    u8 *seq;
 
+    seq = (u8 *)animUpdate;
     def = *(u8 **)((char *)obj + 0x4c);
     sub = *(DoorF4State **)((char *)obj + 0xb8);
     sd = lbl_803E3648;
     list = ObjList_GetObjects(&objIdx, &objCount);
-    seq[0x56] = 0;
+    animUpdate->sequenceEventActive = 0;
     player = Obj_GetPlayerObject();
     dx = ((GameObject *)player)->anim.localPosX - ((ObjPlacement *)def)->posX;
     dy = ((GameObject *)player)->anim.localPosZ - ((ObjPlacement *)def)->posZ;
@@ -1239,8 +1241,8 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
     }
     while (ObjMsg_Pop(obj, &msg, 0, 0) != 0) {
     }
-    for (i = 0; i < seq[0x8b]; i++) {
-        ev = seq[i + 0x81];
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        ev = animUpdate->eventIds[i];
         if (ev != 0) {
             switch (ev) {
             case 1:
@@ -1338,7 +1340,7 @@ int doorf4_SeqFn(int *obj, int arg1, u8 *seq) {
                 }
                 break;
             }
-            seq[i + 0x81] = 0;
+            animUpdate->eventIds[i] = 0;
         }
     }
     if (((GameObject *)obj)->unkF4 != 0) {

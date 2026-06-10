@@ -2,12 +2,13 @@
 #define MAIN_DLL_AUTOTRANSPORTER_H_
 
 #include "ghidra_import.h"
+#include "main/objanim_update.h"
 #include "main/object_descriptor.h"
 
 extern ObjectDescriptor gDoorF4ObjDescriptor;
 extern ObjectDescriptor gSidekickBallObjDescriptor;
 
-int doorf4_SeqFn(int *obj, int arg1, u8 *seq);
+int doorf4_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate);
 void FUN_80178370(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9);
