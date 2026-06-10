@@ -46,7 +46,7 @@ void drakord_thornbush_free(int obj)
 {
     int inner = *(int *)&((GameObject *)obj)->extra;
     if (((GameObject *)obj)->anim.seqId == 0x709) {
-        fn_80221978(obj, inner + 0x14, 3, inner + 0x64, lbl_803E6588);
+        ((void (*)(int, int, int, f32, int))fn_80221978)(obj, inner + 0x14, 3, lbl_803E6588, inner + 0x64);
     }
     if (*(void **)((char *)inner + 0x64) != NULL) {
         ModelLightStruct_free(*(int *)((char *)inner + 0x64));
@@ -62,7 +62,7 @@ void drakord_thornbush_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
         if (v < lbl_803E6590) {
             v = lbl_803E658C;
         }
-        fn_80221978(p1, inner + 0x14, 3, inner + 0x64, v);
+        ((void (*)(int, int, int, f32, int))fn_80221978)(p1, inner + 0x14, 3, v, inner + 0x64);
     }
     objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E6594);
 }
@@ -130,12 +130,14 @@ void drakord_thornbush_hitDetect(int obj)
     int pC;
     int hitObj;
     int flag;
+    int hit;
     int setup;
     if (*(int *)((char *)inner + 0) != 0) {
         flag = timerCountDown((f32 *)((char *)inner + 0x10));
-        if (ObjHits_GetPriorityHitWithPosition(obj, &hitObj, 0, &pC, &v0, &v1, &v2) != 0) {
+        hit = ObjHits_GetPriorityHitWithPosition(obj, &hitObj, 0, &pC, &v0, &v1, &v2);
+        if (hit != 0) {
             if (*(s16 *)((char *)hitObj + 0x46) != 0x35f &&
-                *(int *)((char *)inner + 8) != hitObj &&
+                *(void **)((char *)inner + 8) != (void *)hitObj &&
                 arrayIndexOf(*(int *)((char *)inner + 0x6c), 2) != -1) {
                 *(int *)((char *)inner + 8) = hitObj;
                 Obj_SpawnHitLightAndFade(obj, &v0, lbl_803E6598);
@@ -159,7 +161,7 @@ void drakord_thornbush_hitDetect(int obj)
             case 0x709:
                 Sfx_PlayFromObject(obj, 0x2f9);
                 spawnExplosion((int *)obj, (f32)(s32)(*(int *)((char *)inner + 0x74) << 1), 1, 1, 1, 1, 0, 1, 0);
-                fn_80221978(obj, inner + 0x14, 3, inner + 0x64, lbl_803E6588);
+                ((void (*)(int, int, int, f32, int))fn_80221978)(obj, inner + 0x14, 3, lbl_803E6588, inner + 0x64);
                 break;
             }
             if (*(s16 *)((char *)setup + 0x1a) != 0) {
