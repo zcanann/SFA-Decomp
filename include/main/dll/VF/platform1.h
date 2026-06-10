@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "ghidra_import.h"
+#include "main/objanim_update.h"
 #include "main/object_descriptor.h"
 
 typedef struct Platform1State {
@@ -55,7 +56,7 @@ void platform1_controlUnsupported(void);
 void platform1_init(void);
 void platform1_release(void);
 void platform1_initialise(void);
-int platform1_control(int obj, int p2, u8 *data);
-int PaymentKiosk_SeqFn(int obj, int unused, u8 *data);
+int platform1_control(int obj, int unused, ObjAnimUpdateState *animUpdate);
+int PaymentKiosk_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 
 #endif /* MAIN_DLL_VF_PLATFORM1_H_ */

@@ -464,7 +464,7 @@ extern void ObjLink_DetachChild(int *parent, int *child);
  * EN v1.0 Address: 0x801F48C0
  * EN v1.0 Size: 652b
  */
-int wmgeneralscales_SeqFn(int obj, int p2, u8 *seq)
+int wmgeneralscales_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     f32 *state;
     int i;
@@ -483,8 +483,8 @@ int wmgeneralscales_SeqFn(int obj, int p2, u8 *seq)
     } else {
         Obj_SetModelRenderOpAlpha(obj, 0);
     }
-    for (i = 0; i < (int)seq[0x8b]; i++) {
-        switch (seq[i + 0x81]) {
+    for (i = 0; i < (int)animUpdate->eventCount; i++) {
+        switch (animUpdate->eventIds[i]) {
         case 1:
             *((u8 *)state + 4) = 1;
             break;
@@ -539,7 +539,7 @@ int wmgeneralscales_SeqFn(int obj, int p2, u8 *seq)
             break;
         }
         }
-        seq[i + 0x81] = 0;
+        animUpdate->eventIds[i] = 0;
     }
     return 0;
 }

@@ -102,7 +102,7 @@ extern f32  lbl_803E56A4;
  * frame works the rope position from A-press mashing, runs both pull anims
  * and grunt/creak sfx, and ends the game through the screen transition
  * when either side wins. */
-int platform1_control(int obj, int p2, u8 *data)
+int platform1_control(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     GameObject *self;
     Platform1State *st;
@@ -142,8 +142,8 @@ int platform1_control(int obj, int p2, u8 *data)
             idx1 = cnt1;
         }
     }
-    for (i = 0; i < data[0x8b]; i++) {
-        ev = data[i + 0x81];
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        ev = animUpdate->eventIds[i];
         switch (ev) {
         case 1:
             st->flags = (u8)(st->flags | PLATFORM1_TRIGGER_FLAG_01);
@@ -209,8 +209,8 @@ int platform1_control(int obj, int p2, u8 *data)
             ObjAnim_SetCurrentMove(o, PLATFORM1_IDLE_PULL_MOVE_ID,
                                    ((GameObject *)o)->anim.currentMoveProgress, 0);
         }
-        *(u16 *)(data + 0x6e) = 0xffff;
-        data[0x56] = 0;
+        animUpdate->hitVolumePair = -1;
+        animUpdate->sequenceEventActive = 0;
         Sfx_KeepAliveLoopedObjectSound(obj, PLATFORM1_LOOP_SFX_ID);
         c566C = lbl_803E566C;
         c5674 = lbl_803E5674;
@@ -494,18 +494,20 @@ u32 PaymentKiosk_testEvent(int obj, int p2, int ev)
 }
 
 /* EN v1.0 0x801DF1EC  size: 280b  PaymentKiosk_SeqFn. */
-int PaymentKiosk_SeqFn(int obj, int p2, u8 *data)
+int PaymentKiosk_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     PaymentKioskState *st = ((GameObject *)obj)->extra;
     PaymentKioskMapData *setup = (PaymentKioskMapData *)((GameObject *)obj)->anim.placementData;
     int player;
     int i;
     u8 ev;
+    u8 *animUpdateBytes;
 
     player = (int)Obj_GetPlayerObject();
-    *(void **)(data + 0xec) = (void *)PaymentKiosk_testEvent;
-    for (i = 0; i < data[0x8b]; i++) {
-        ev = data[i + 0x81];
+    animUpdateBytes = (u8 *)animUpdate;
+    *(void **)(animUpdateBytes + 0xec) = (void *)PaymentKiosk_testEvent;
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        ev = animUpdate->eventIds[i];
         switch (ev) {
         case 2:
             GameBit_Set(setup->gameBit, 1);
