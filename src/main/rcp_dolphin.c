@@ -2227,7 +2227,7 @@ uint FUN_80053f60(int param_1)
   if ((*(byte *)(iVar12 + 4) & 2) != 0) {
     return 0;
   }
-  uVar10 = (*gMapEventInterface)->getMode((int)*(char *)(param_1 + 0xac));
+  uVar10 = (*gMapEventInterface)->getMode((int)((GameObject *)param_1)->anim.mapEventSlot);
   uVar10 = uVar10 & 0xff;
   if (uVar10 == 0xffffffff) {
     bVar9 = false;
@@ -2320,7 +2320,7 @@ LAB_80055824:
         }
       }
       else {
-        uVar10 = (*gMapEventInterface)->getAnimEvent((int)*(char *)(param_1 + 0xac),
+        uVar10 = (*gMapEventInterface)->getAnimEvent((int)((GameObject *)param_1)->anim.mapEventSlot,
                            *(undefined *)(iVar12 + 6));
         uVar10 = countLeadingZeros(uVar10 & 0xff);
         uVar10 = uVar10 >> 5;
@@ -3750,7 +3750,7 @@ int objShouldUnload(u8 *obj)
     if (def[4] & 2) {
         return 0;
     }
-    m = (*gMapEventInterface)->getMode((s8)obj[0xac]);
+    m = (*gMapEventInterface)->getMode(((GameObject *)obj)->anim.mapEventSlot);
     if (m == -1) {
         keep = 0;
     } else if (m == 0) {
@@ -3774,7 +3774,7 @@ int objShouldUnload(u8 *obj)
         return 0;
     }
     if (flags & 0x10) {
-        return !(*gMapEventInterface)->getAnimEvent((s8)obj[0xac], def[6]);
+        return !(*gMapEventInterface)->getAnimEvent(((GameObject *)obj)->anim.mapEventSlot, def[6]);
     }
     if (((GameObject *)obj)->unkC0 != NULL && ((GameObject *)obj)->unkB4 < 0) {
         return 0;
