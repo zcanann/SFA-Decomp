@@ -26,21 +26,17 @@ extern VoiceNode *vidFree;
  */
 void vidInit(void)
 {
-    VoiceNode *node = vidListNodes;
-    VoiceNode *prev = NULL;
     int i;
+    VoiceNode *prev;
 
-    vidFree = node;
     vidCurrentId = 0;
     vidRoot = 0;
-
-    for (i = 0; i < 128; i++) {
-        node->prev = prev;
+    vidFree = vidListNodes;
+    for (prev = NULL, i = 0; i < 128; prev = &vidListNodes[i], ++i) {
+        vidListNodes[i].prev = prev;
         if (prev != NULL) {
-            prev->next = node;
+            prev->next = &vidListNodes[i];
         }
-        prev = node;
-        node++;
     }
     prev->next = NULL;
 }
