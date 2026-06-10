@@ -215,13 +215,17 @@ int utf8GetNextChar(u8* str, int* outLen)
         str++;
         acc = first << 6;
     case 4:
-        acc = (acc + *str++) << 6;
+        acc += *str++;
+        acc <<= 6;
     case 3:
-        acc = (acc + *str++) << 6;
+        acc += *str++;
+        acc <<= 6;
     case 2:
-        acc = (acc + *str++) << 6;
+        acc += *str++;
+        acc <<= 6;
     case 1:
-        acc = (acc + *str++) << 6;
+        acc += *str++;
+        acc <<= 6;
     case 0:
         acc += *str;
     default:
