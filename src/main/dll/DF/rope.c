@@ -671,7 +671,7 @@ void DIMbossspit_update(int obj)
 
   state = *(int *)&((GameObject *)obj)->extra;
   if (*(s16 *)state == 0) {
-    ((GameObject *)obj)->unkF4 = ((GameObject *)obj)->unkF4 - (u8)framesThisStep;
+    ((GameObject *)obj)->unkF4 -= (u8)framesThisStep;
     if (((GameObject *)obj)->unkF4 < 0) {
       Obj_FreeObject(obj);
       return;
@@ -680,9 +680,9 @@ void DIMbossspit_update(int obj)
     ObjHitbox_SetSphereRadius(obj, 10);
     ((GameObject *)obj)->anim.velocityY = ((GameObject *)obj)->anim.velocityY - lbl_803E4D60 * timeDelta;
     ((GameObject *)obj)->anim.velocityY = ((GameObject *)obj)->anim.velocityY * lbl_803E4D64;
-    ((GameObject *)obj)->anim.rotX = (int)(lbl_803E4D68 * timeDelta + (f32)((GameObject *)obj)->anim.rotX);
-    ((GameObject *)obj)->anim.rotZ = (int)(lbl_803E4D6C * timeDelta + (f32)((GameObject *)obj)->anim.rotZ);
-    ((GameObject *)obj)->anim.rotY = (int)(lbl_803E4D6C * timeDelta + (f32)((GameObject *)obj)->anim.rotY);
+    ((GameObject *)obj)->anim.rotX = lbl_803E4D68 * timeDelta + (f32)((GameObject *)obj)->anim.rotX;
+    ((GameObject *)obj)->anim.rotZ = lbl_803E4D6C * timeDelta + (f32)((GameObject *)obj)->anim.rotZ;
+    ((GameObject *)obj)->anim.rotY = lbl_803E4D6C * timeDelta + (f32)((GameObject *)obj)->anim.rotY;
     objMove(obj, ((GameObject *)obj)->anim.velocityX * timeDelta, ((GameObject *)obj)->anim.velocityY * timeDelta,
             ((GameObject *)obj)->anim.velocityZ * timeDelta);
     i = 0;
