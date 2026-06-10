@@ -2,6 +2,7 @@
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim_internal.h"
+#include "main/objanim_update.h"
 #include "main/obj_placement.h"
 
 #define WM_SUN_GLARE_COUNT 20
@@ -47,13 +48,13 @@ STATIC_ASSERT(offsetof(WmSunState, spinStep) == 0x04);
 STATIC_ASSERT(offsetof(WmSunState, glareParams) == 0x08);
 STATIC_ASSERT(offsetof(WmSunState, renderEnabled) == 0x0D);
 
-int fn_801F6E8C(int p1, int p2, int actor)
+int fn_801F6E8C(int p1, int p2, ObjAnimUpdateState *actor)
 {
     int ret;
 
     ret = 0;
-    *(s16 *)(actor + 0x6e) = -1;
-    *(u8 *)(actor + 0x56) = (u8)ret;
+    actor->hitVolumePair = -1;
+    actor->sequenceEventActive = (u8)ret;
     return ret;
 }
 

@@ -2,6 +2,7 @@
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
+#include "main/objanim_update.h"
 #include "main/obj_placement.h"
 
 typedef struct WmSpiritPlaceState {
@@ -46,7 +47,7 @@ STATIC_ASSERT(sizeof(WmSpiritPlaceMapData) == 0x24);
 
 void fn_801F568C(void) {}
 
-int wmspiritplace_SeqFn(int obj, int unused, int actor)
+int wmspiritplace_SeqFn(int obj, int unused, ObjAnimUpdateState *actor)
 {
     int i;
     WmSpiritPlaceState *state;
@@ -60,12 +61,12 @@ int wmspiritplace_SeqFn(int obj, int unused, int actor)
         (*gPartfxInterface)->spawnObject((void *)obj, 0x7d8, fxPos, 2, -1, NULL);
     }
 
-    *(u8 *)(actor + 0x56) = 0;
+    actor->sequenceEventActive = 0;
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x8);
-    *(void **)(actor + 0xe8) = fn_801F568C;
+    actor->sequenceCallback = (void *)fn_801F568C;
 
-    for (i = 0; i < *(u8 *)(actor + 0x8b); i++) {
-        action = *(u8 *)(actor + i + 0x81);
+    for (i = 0; i < actor->eventCount; i++) {
+        action = actor->eventIds[i];
         switch (action) {
             case 1:
                 unlockLevel(0, 0, 1);

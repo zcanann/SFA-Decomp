@@ -1,6 +1,7 @@
 #include "main/dll/WM/wm_shared.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
+#include "main/objanim_update.h"
 #include "main/obj_placement.h"
 
 typedef struct WmSeqPointState {
@@ -73,7 +74,7 @@ void fn_801F654C(int obj)
 }
 
 
-int wmseqpoint_SeqFn(int obj, int unused, int actor)
+int wmseqpoint_SeqFn(int obj, int unused, ObjAnimUpdateState *actor)
 {
     WmSeqPointState *state;
     int player;
@@ -81,15 +82,15 @@ int wmseqpoint_SeqFn(int obj, int unused, int actor)
 
     state = ((GameObject *)obj)->extra;
     player = (int)Obj_GetPlayerObject();
-    *(u8 *)(actor + 0x56) = 0;
-    *(void **)(actor + 0xe8) = fn_801F654C;
+    actor->sequenceEventActive = 0;
+    actor->sequenceCallback = (void *)fn_801F654C;
 
-    for (i = 0; i < *(u8 *)(actor + 0x8b); i++) {
+    for (i = 0; i < actor->eventCount; i++) {
         switch (state->sequenceId) {
         case 0:
-            if (*(u8 *)(actor + i + 0x81) != 0) {
-                state->command = *(u8 *)(actor + i + 0x81);
-                switch (*(u8 *)(actor + i + 0x81)) {
+            if (actor->eventIds[i] != 0) {
+                state->command = actor->eventIds[i];
+                switch (actor->eventIds[i]) {
                     case 1:
                         GameBit_Set(0x143, 1);
                         break;
@@ -110,7 +111,7 @@ int wmseqpoint_SeqFn(int obj, int unused, int actor)
             }
             break;
         default:
-            switch (*(u8 *)(actor + i + 0x81)) {
+            switch (actor->eventIds[i]) {
                 case 0xb:
                     if ((u32)(getSkyColorFn_80088e08(0) & 0xff) != 0) {
                         getEnvfxActImmediately(0, 0, 0x217, 0);
@@ -138,7 +139,7 @@ int wmseqpoint_SeqFn(int obj, int unused, int actor)
             }
             break;
         }
-        *(u8 *)(actor + i + 0x81) = 0;
+        actor->eventIds[i] = 0;
     }
 
     return 0;
