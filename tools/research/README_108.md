@@ -63,3 +63,15 @@ functions. The research must attack the order law directly: why does target
 color n_rareware by E1-creation but timer by decl-order when both are
 dose-free? Candidate next probes: graft each specimen's exact web list onto
 the minimal harness and binary-search the construct that flips the law.
+
+
+## Round-4: graft probes hit the known wall
+
+Grafting n_rareware's web structure (loop + 3 call results + final consume,
+with and without the FP-arg call) onto a minimal TU colors NEAR-CANONICALLY
+(fmt/wid at r30/r31) — it does NOT reproduce the real fn's inversion
+(fmt/wid at r26/r25). Consistent with the campaign's standing rule: the
+within-pool order divergence is fn-/TU-context-bound and NOT reproducible
+in minimal probes (the #113 probe-trap, order-law edition). All further
+order-law experiments must be IN-TREE A/B on the real fns; the harness is
+only valid for the dose mechanism (rounds 1-2).
