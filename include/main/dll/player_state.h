@@ -70,21 +70,21 @@ typedef struct PlayerState {
     int unk464;
     u8 pad468[0x46C - 0x468];
     int unk46C;
-    f32 unk470;
-    int unk474;
+    f32 inputMagnitude;
+    int inputHeading;
     s16 targetYaw; /* desired heading; copied into yaw when applied */
     u8 pad47A[0x47C - 0x47A];
-    int unk47C;
-    int unk480;
+    int targetYawRateSigned;
+    int targetYawRate;
     s16 yaw; /* applied heading; drives sin/angle math */
     u8 pad486[0x488 - 0x486];
-    int unk488;
-    int unk48C;
-    s16 unk490;
-    s16 unk492;
-    int unk494;
-    int unk498;
-    int unk49C;
+    int yawRateSigned;
+    int yawRate;
+    s16 prevYaw;
+    s16 prevTargetYaw;
+    int lastInputHeading;
+    int bodyLeanRateSigned;
+    int bodyLeanRate;
     u16 unk4A0;
     u16 unk4A2;
     int unk4A4;
@@ -100,8 +100,8 @@ typedef struct PlayerState {
     f32 unk4C8;
     f32 unk4CC;
     s16 unk4D0;
-    s16 unk4D2;
-    s16 unk4D4;
+    s16 bodyLeanHalf;
+    s16 bodyLeanAngle;
     s16 unk4D6;
     s16 unk4D8;
     s16 unk4DA;
@@ -302,7 +302,7 @@ typedef struct PlayerState {
     f32 unk850;
     f32 unk854;
     int unk858;
-    f32 unk85C;
+    f32 turnDeadzoneScale;
     u8 pad860[0x86C - 0x860];
     u8 unk86C;
     s8 unk86D;

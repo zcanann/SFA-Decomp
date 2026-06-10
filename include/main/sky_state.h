@@ -44,22 +44,15 @@ typedef struct SkyState {
     SkyLight lights[3];
     f32 timeOfDay;
     s32 clockTime;
-    f32 unk214;
+    f32 timeOfDayRate;
     s32 unk218;
-    s32 unk21C;
-    s32 unk220;
-    s32 unk224;
-    s32 unk228;
-    s32 unk22C;
-    s32 unk230;
-    s32 unk234;
-    s32 unk238;
+    s32 skyTextureIds[8]; /* 0x21C: texture asset ids (id + 0xc38 -> textureLoadAsset) */
     f32 unk23C;
     f32 unk240;
-    f32 unk244;
+    f32 lightBlendFactor;
     f32 unk248;
-    u8 unk24C;
-    u8 unk24D;
+    u8 currentLightIndex;
+    u8 previousLightIndex;
     u8 unk24E;
     u8 unk24F;
     s8 unk250;
@@ -78,10 +71,10 @@ STATIC_ASSERT(offsetof(SkyState, unk250) == 0x250);
 /* Per-map sky blend config record passed to sky2_update / Sky_func03. */
 typedef struct Sky2Config {
     u8 unk00[0xC];
-    u8 unk0C;
-    u8 unk0D;
-    u8 unk0E;
-    u8 unk0F;
+    u8 lightColorR;
+    u8 lightColorG;
+    u8 lightColorB;
+    u8 lightColorA;
     u8 unk10[4];
     u8 unk14;
     u8 unk15;
@@ -107,7 +100,7 @@ typedef struct Sky2Config {
     u16 unk42;
     u16 unk44;
     u8 unk46[0xE];
-    u16 unk54;
+    u16 cloudMode;
     u16 unk56;
     u8 unk58;
     u8 unk59;

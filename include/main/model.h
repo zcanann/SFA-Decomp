@@ -27,43 +27,43 @@ typedef struct ModelFileHeader {
     u8 *unk30;
     u8 *unk34;
     u8 *renderOps; /* 0x44 each, renderOpCount */
-    u8 *unk3C;
+    u8 *jointData;
     u8 *unk40;
     u8 unk44[0x10];
     u8 *unk54;
     u8 *unk58;
     u8 *unk5C;
     u8 *unk60;
-    u8 *unk64;
-    u8 *unk68;
-    u8 *unk6C; /* per-joint s16 table */
+    u8 *animationModelPtrs;
+    u8 *animationDataSection;
+    u8 *animationHeaderBuffer; /* per-joint s16 table */
     u8 unk70[0x10];
-    s32 unk80;
+    s32 animationDataFileOffset;
     s16 unk84;
     u8 unk86[4];
-    u16 unk8A; /* count of 0x74-stride entries at unkA4 */
+    u16 vertexAnimCount; /* count of 0x74-stride entries at vertexAnimEntries */
     u8 unk8C[8];
-    u8 *unk94;
+    u8 *vertexAnimEntriesRaw;
     u8 unk98[0xC];
-    u8 *unkA4; /* 0x74-stride entries */
-    u8 *unkA8;
+    u8 *vertexAnimEntries; /* 0x74-stride entries */
+    u8 *vertexAnimBase;
     u8 unkAC[2];
-    u16 unkAE; /* count of 0x74-stride entries at unkC8 */
+    u16 blendAnimCount; /* count of 0x74-stride entries at blendAnimEntries */
     u8 unkB0[8];
-    u8 *unkB8;
+    u8 *blendAnimEntriesRaw;
     u8 unkBC[0xC];
-    u8 *unkC8; /* 0x74-stride entries */
-    u8 *unkCC;
+    u8 *blendAnimEntries; /* 0x74-stride entries */
+    u8 *blendAnimBase;
     u8 *displayLists; /* 0x1c-stride entries, unkF5 + unkF6 */
     u8 *unkD4;
     u8 unkD8[4];
-    u8 *unkDC; /* pointer table, unkF9 entries */
+    u8 *morphTargetPtrs; /* pointer table, morphTargetCount entries */
     u16 cullDistance;
-    u16 unkE2;
+    u16 shaderFlags;
     u16 vertexCount;
     u16 normalCount;
     u8 unkE8[4];
-    u16 unkEC; /* nonzero = per-joint matrix buffers */
+    u16 animationCount; /* nonzero = per-joint matrix buffers */
     u8 unkEE[4];
     u8 textureCount;
     u8 jointCount;
@@ -72,13 +72,13 @@ typedef struct ModelFileHeader {
     u8 unkF6;
     u8 unkF7;
     u8 renderOpCount;
-    u8 unkF9;
+    u8 morphTargetCount;
 } ModelFileHeader;
 
 STATIC_ASSERT(offsetof(ModelFileHeader, textureIds) == 0x20);
-STATIC_ASSERT(offsetof(ModelFileHeader, unkC8) == 0xC8);
+STATIC_ASSERT(offsetof(ModelFileHeader, blendAnimEntries) == 0xC8);
 STATIC_ASSERT(offsetof(ModelFileHeader, textureCount) == 0xF2);
-STATIC_ASSERT(offsetof(ModelFileHeader, unkF9) == 0xF9);
+STATIC_ASSERT(offsetof(ModelFileHeader, morphTargetCount) == 0xF9);
 
 typedef struct ObjModelJointMatrix {
     f32 row0[3];
@@ -128,8 +128,8 @@ typedef struct ObjModel {
     u8 *textureRefs;   /* 0xc each, renderOpCount */
     void *renderCallback;
     void *postRenderCallback;
-    s32 *unk40; /* per-entry ints, file->unk8A */
-    s32 *unk44; /* per-entry ints, file->unkAE */
+    s32 *unk40; /* per-entry ints, file->vertexAnimCount */
+    s32 *unk44; /* per-entry ints, file->blendAnimCount */
     u8 *unk48;
     u8 *unk4C;
     u8 *unk50;

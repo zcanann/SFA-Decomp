@@ -10,17 +10,17 @@
  */
 typedef struct NewCloud {
     u8 unk0000[0x1378];
-    f32 unk1378;
+    f32 flakeMinX;
     u8 unk137C[0x4];
-    f32 unk1380;
+    f32 flakeMinZ;
     u8 unk1384[0x4];
     f32 unk1388;
     u8 unk138C[0x4];
     f32 unk1390;
     u8 unk1394[0x8];
-    f32 unk139C;
+    f32 flakeMaxX;
     u8 unk13A0[0x10];
-    f32 unk13B0;
+    f32 flakeMaxZ;
     u8 unk13B4[0x24];
     f32 unk13D8;
     f32 unk13DC;
@@ -28,19 +28,19 @@ typedef struct NewCloud {
     f32 unk13E4;
     f32 unk13E8;
     f32 unk13EC;
-    s32 unk13F0;
-    s32 unk13F4;
+    s32 cloudId;
+    s32 cloudType;
     s32 unk13F8;
-    s32 unk13FC;
+    s32 flakeCount;
     s32 unk1400;
     u8 unk1404[0x8];
-    f32 unk140C;
-    f32 unk1410;
-    f32 unk1414;
-    f32 unk1418;
+    f32 worldPosX;
+    f32 worldPosY;
+    f32 worldPosZ;
+    f32 cloudHeight;
     f32 unk141C;
-    f32 unk1420;
-    f32 unk1424;
+    f32 windVelX;
+    f32 windVelZ;
     f32 unk1428;
     f32 unk142C;
     f32 unk1430;
@@ -52,8 +52,8 @@ typedef struct NewCloud {
     s16 unk1448;
 } NewCloud;
 
-STATIC_ASSERT(offsetof(NewCloud, unk1378) == 0x1378);
-STATIC_ASSERT(offsetof(NewCloud, unk13F4) == 0x13F4);
+STATIC_ASSERT(offsetof(NewCloud, flakeMinX) == 0x1378);
+STATIC_ASSERT(offsetof(NewCloud, cloudType) == 0x13F4);
 STATIC_ASSERT(offsetof(NewCloud, unk1448) == 0x1448);
 
 #endif

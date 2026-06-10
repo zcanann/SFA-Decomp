@@ -3777,7 +3777,7 @@ void modelDoAltRenderInstrs(int *obj, int *obj2, u8 *m, int p4) {
     PSMTXConcat(Camera_GetViewMatrix(), wm, cm);
     if (!(*(u16 *)((char *)am + 0x18) & 8)) {
         ((ObjDef *)am)->hitboxStateIndex = 0;
-        if (((ModelFileHeader *)m)->unkEC != 0 && !(((ModelFileHeader *)m)->flags & 2) && ((ModelFileHeader *)m)->jointCount != 0) {
+        if (((ModelFileHeader *)m)->animationCount != 0 && !(((ModelFileHeader *)m)->flags & 2) && ((ModelFileHeader *)m)->jointCount != 0) {
             if (lbl_803DCC30 != (u32)m) {
                 ObjModel_UpdateAnimMatrices(am, m, obj, lbl_802CAEE8);
                 modelInitMtxs(m, am);
@@ -3801,7 +3801,7 @@ void modelDoAltRenderInstrs(int *obj, int *obj2, u8 *m, int p4) {
         *(u16 *)((char *)am + 0x18) |= 8;
     }
     modelRenderInstrsState_init(&bs, ((ModelFileHeader *)m)->unkD4, *(u16 *)(m + 0xd8) << 3, *(u16 *)(m + 0xd8) << 3);
-    if (((ModelFileHeader *)m)->unkE2 & 2) {
+    if (((ModelFileHeader *)m)->shaderFlags & 2) {
         if (lbl_803DCC28 != 0) {
             color[0] = lbl_803DCC58;
             color[1] = (&lbl_803DCC58)[1];
@@ -3928,8 +3928,8 @@ void objRenderShadow2(int *obj, int *obj2, u8 *m, int p4) {
         did = 0;
         *(u8 *)((char *)am + 0x60) = 0;
         ObjModel_ToggleVertexBuffer(am);
-        if (((ModelFileHeader *)m)->unkEC != 0 && !(((ModelFileHeader *)m)->flags & 2) && ((ModelFileHeader *)m)->jointCount != 0) {
-            if (*(u32 *)&((ModelFileHeader *)m)->unkA4 != 0) {
+        if (((ModelFileHeader *)m)->animationCount != 0 && !(((ModelFileHeader *)m)->flags & 2) && ((ModelFileHeader *)m)->jointCount != 0) {
+            if (*(u32 *)&((ModelFileHeader *)m)->vertexAnimEntries != 0) {
                 PSMTXIdentity(im);
                 ObjModel_UpdateAnimMatrices(am, m, obj, im);
                 modelInitBoneMtxs2(am, wm, lbl_80342E10);
@@ -3947,7 +3947,7 @@ void objRenderShadow2(int *obj, int *obj2, u8 *m, int p4) {
             ObjModel_ToggleMatrixBuffer(am);
             PSMTXCopy(wm, (f32 *)ObjModel_GetJointMatrix((u8 *)am, 0));
         }
-        if (((ModelFileHeader *)m)->unkF9 != 0) {
+        if (((ModelFileHeader *)m)->morphTargetCount != 0) {
             ObjModel_ApplyBlendChannels(am);
         }
         if (did != 0) {
@@ -3975,7 +3975,7 @@ void objRenderShadow2(int *obj, int *obj2, u8 *m, int p4) {
     }
     modelInitMtxs(m, am);
     modelRenderInstrsState_init(&bs, ((ModelFileHeader *)m)->unkD4, *(u16 *)(m + 0xd8) << 3, *(u16 *)(m + 0xd8) << 3);
-    if (*(u32 *)&((ModelFileHeader *)m)->unkA4 != 0) {
+    if (*(u32 *)&((ModelFileHeader *)m)->vertexAnimEntries != 0) {
         PSMTXConcat(vm, wm, cm);
         GXLoadPosMtxImm(cm, lbl_802CAED0[9]);
     }
@@ -4201,8 +4201,8 @@ void modelDoRenderInstrs(int *obj, int *obj2, u8 *m, u8 mode) {
     if (!(*(u16 *)((char *)am + 0x18) & 8)) {
         *(u8 *)((char *)am + 0x60) = 0;
         ObjModel_ToggleVertexBuffer(am);
-        if (((ModelFileHeader *)m)->unkEC != 0 && !(((ModelFileHeader *)m)->flags & 2) && ((ModelFileHeader *)m)->jointCount != 0) {
-            if (*(u32 *)&((ModelFileHeader *)m)->unkA4 != 0) {
+        if (((ModelFileHeader *)m)->animationCount != 0 && !(((ModelFileHeader *)m)->flags & 2) && ((ModelFileHeader *)m)->jointCount != 0) {
+            if (*(u32 *)&((ModelFileHeader *)m)->vertexAnimEntries != 0) {
                 PSMTXIdentity(im);
                 ObjModel_UpdateAnimMatrices(am, m, obj, im);
                 if (m4 == 0) {
@@ -4225,7 +4225,7 @@ void modelDoRenderInstrs(int *obj, int *obj2, u8 *m, u8 mode) {
             PSMTXCopy(wm, (f32 *)ObjModel_GetJointMatrix((u8 *)am, 0));
         }
         if ((m4 == 0 && (mode8 & 8) == 0) || lbl_803DCC44 == 0) {
-            if (((ModelFileHeader *)m)->unkF9 != 0) {
+            if (((ModelFileHeader *)m)->morphTargetCount != 0) {
                 ObjModel_ApplyBlendChannels(am);
             }
             if (did != 0) {
@@ -4288,7 +4288,7 @@ void modelDoRenderInstrs(int *obj, int *obj2, u8 *m, u8 mode) {
         f32 inv = lbl_803DEA1C / ((GameObject *)obj)->anim.rootMotionScale;
         PSMTXScale(sm, inv, inv, inv);
     }
-    if (*(u32 *)&((ModelFileHeader *)m)->unkA4 != 0) {
+    if (*(u32 *)&((ModelFileHeader *)m)->vertexAnimEntries != 0) {
         if (m4 || m2 || (mode8 & 8)) {
             f32 sc2 = lbl_803DEA1C + (lbl_803DEA54 * ((f32)(lbl_803DCC44 + 1) * fade)) / *(f32 *)(m + 0x50);
             PSMTXTrans(tm, -*(f32 *)(m + 0x44), -*(f32 *)(m + 0x48), -*(f32 *)(m + 0x4c));
