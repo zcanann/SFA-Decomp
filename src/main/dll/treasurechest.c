@@ -76,7 +76,7 @@ void dll_D3_update(int *obj)
     f32 local_8c;
     f32 local_88;
     f32 local_84;
-    int aiStack_80[20];
+    int aiStack_80[24];
     char local_30;
 
     trans = *(int *)&((GameObject *)obj)->anim.placementData;
