@@ -489,9 +489,10 @@ void mmsh_waterspike_update(int param_1)
     if (((GameObject *)param_1)->unkF4 <= 0) {
       ((GameObject *)param_1)->unkF4 = randomGetRange(0x3c, 0xf0);
       if (lbl_803E4F84 == dist) {
-        (*gWaterfxInterface)->spawnRipple(0, 3, ((GameObject *)param_1)->anim.localPosX,
-                                          ((GameObject *)param_1)->anim.localPosY,
-                                          ((GameObject *)param_1)->anim.localPosZ, lbl_803E4F88);
+        ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(
+            ((GameObject *)param_1)->anim.localPosX,
+            ((GameObject *)param_1)->anim.localPosY,
+            ((GameObject *)param_1)->anim.localPosZ, 0, lbl_803E4F88, 3);
       }
     }
   }
