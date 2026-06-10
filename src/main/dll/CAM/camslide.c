@@ -160,7 +160,7 @@ void camslide_update(CameraObject *camera, GameObject *target)
             step = gCamcontrolModeSettings->baseLowerHeightOffset -
                 gCamcontrolModeSettings->lowerHeightOffset;
             step *= lbl_803E16E4;
-            if (step > lbl_803E16E8) {
+            if (step > *(f32 *)&lbl_803E16E8) {
                 step = lbl_803E16E8;
             }
             if (step < lbl_803E16EC) {
@@ -176,7 +176,7 @@ void camslide_update(CameraObject *camera, GameObject *target)
             step = gCamcontrolModeSettings->baseUpperHeightOffset -
                 gCamcontrolModeSettings->upperHeightOffset;
             step *= lbl_803E16E4;
-            if (step > lbl_803E16E8) {
+            if (step > *(f32 *)&lbl_803E16E8) {
                 step = lbl_803E16E8;
             }
             if (step < lbl_803E16EC) {
