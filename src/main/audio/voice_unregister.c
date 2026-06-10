@@ -23,6 +23,7 @@ void voiceUnregister(int obj)
     u32 voiceId;
     u32 midiSlot;
     u32 midiChannel;
+    u32 vid8;
     u8 *slot;
 
     voice = (SynthVoiceState *)obj;
@@ -31,10 +32,10 @@ void voiceUnregister(int obj)
     midiSlot = voice->midiSlot;
     if (midiSlot == SYNTH_INVALID_VOICE_U8) return;
     midiChannel = voice->midiChannel;
-    voiceId = (u8)voiceId;
+    vid8 = (u8)voiceId;
     if (midiChannel == SYNTH_INVALID_VOICE_U8) {
-        slot = &voiceDirectSlots[voiceId];
-        if (*slot != voiceId) return;
+        slot = &voiceDirectSlots[vid8];
+        if (*slot != vid8) return;
         *slot = SYNTH_INVALID_VOICE_U8;
     } else {
         slot = &voiceMidiKeySlots[midiChannel][midiSlot];
