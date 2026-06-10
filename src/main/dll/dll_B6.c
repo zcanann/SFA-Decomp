@@ -106,7 +106,7 @@ void *camcontrol_findBestTarget(int param_1, u8 *focus)
         }
         dx = *(f32 *)(f + 0x18) - *(f32 *)(*(u8 **)(obj + 0x74) + ((GameObject *)obj)->unkE4 * 0x18 + 0xc);
         dz = *(f32 *)(f + 0x20) - *(f32 *)(*(u8 **)(obj + 0x74) + ((GameObject *)obj)->unkE4 * 0x18 + 0x14);
-        distsq = dz * dz + dx * dx;
+        distsq = dx * dx + dz * dz;
         entry = data + ((GameObject *)obj)->unkE4 * 5;
         range = (f32)(int)(entry[2] << 2);
         if (!(distsq < range * range)) {
