@@ -889,9 +889,9 @@ void pollenfragment_update(int obj) {
     if (timerCountDown((int)extra + 0x24) != 0) {
         s16toFloat(extra + 0x20, 0x78);
     }
-    if (*(void **)&((GameObject *)obj)->unkC4 != NULL) {
-        *(int *)extra = *(int *)&((GameObject *)obj)->unkC4;
-        *(int *)&((GameObject *)obj)->unkC4 = 0;
+    if (*(void **)&((GameObject *)obj)->ownerObj != NULL) {
+        *(int *)extra = *(int *)&((GameObject *)obj)->ownerObj;
+        *(int *)&((GameObject *)obj)->ownerObj = 0;
     }
     if ((((PollenFragmentExtra *)extra)->def)->timed) {
         *(f32 *)(extra + 8) -= timeDelta;

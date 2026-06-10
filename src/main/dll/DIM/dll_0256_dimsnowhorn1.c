@@ -828,7 +828,7 @@ int DIMSnowHorn1_animEventCallback(int obj, int unused, ObjAnimUpdateState *anim
     switch (state->unkA8C) {
         case 0:
             animUpdate->sequenceEventActive = 0;
-            if (((GameObject *)obj)->unkB4 == -1) {
+            if (((GameObject *)obj)->seqIndex == -1) {
                 for (i = 0; i < (int)(u32)animUpdate->eventCount; i++) {
                     GameBit_Set(0x17b, 1);
                     state->unkA8E |= 0x20;
@@ -846,7 +846,7 @@ int DIMSnowHorn1_animEventCallback(int obj, int unused, ObjAnimUpdateState *anim
             break;
         case 1:
             animUpdate->sequenceEventActive = 0;
-            if (((GameObject *)obj)->unkB4 != -1) {
+            if (((GameObject *)obj)->seqIndex != -1) {
                 switch (state->unkA8D) {
                     case 0:
                     case 1:
@@ -932,7 +932,7 @@ int DIMSnowHorn1_setScale(int obj)
     if (state->baddie.controlMode != 7) {
         return 0;
     }
-    if (((GameObject *)obj)->unkC0 != NULL) {
+    if (((GameObject *)obj)->pendingParentObj != NULL) {
         return 0;
     }
 

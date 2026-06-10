@@ -2467,10 +2467,10 @@ int objShouldUnload(u8 *obj)
     if (flags & 0x10) {
         return !(*gMapEventInterface)->getAnimEvent(((GameObject *)obj)->anim.mapEventSlot, def[6]);
     }
-    if (((GameObject *)obj)->unkC0 != NULL && ((GameObject *)obj)->unkB4 < 0) {
+    if (((GameObject *)obj)->pendingParentObj != NULL && ((GameObject *)obj)->seqIndex < 0) {
         return 0;
     }
-    if (((GameObject *)obj)->unkC4 != NULL) {
+    if (((GameObject *)obj)->ownerObj != NULL) {
         return 0;
     }
     if (((GameObject *)obj)->anim.parent == NULL) {

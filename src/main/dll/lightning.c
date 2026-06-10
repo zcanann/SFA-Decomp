@@ -236,7 +236,7 @@ void magicdust_update(int obj)
         ((MagicDustState *)iVar8)->unk278 = (short)uVar7;
       }
     }
-    if (*(uint *)&((GameObject *)obj)->unkC4 != 0) {
+    if (*(uint *)&((GameObject *)obj)->ownerObj != 0) {
       iVar5 = (int)((GameObject *)obj)->anim.modelState;
       if ((uint)iVar5 != 0) {
         ((GameObject *)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;

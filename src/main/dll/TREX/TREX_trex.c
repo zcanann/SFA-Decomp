@@ -562,7 +562,7 @@ int SB_KyteCage_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
     }
 
     animUpdate->hitVolumePair = -4;
-    if (((GameObject *)obj)->unkB4 != -1) {
+    if (((GameObject *)obj)->seqIndex != -1) {
         animUpdate->hitVolumePair &= ~4;
         if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E5918,
                                                                          timeDelta, NULL) != 0) {
@@ -1229,7 +1229,7 @@ void ShipBattle_update(int obj)
     }
 
     triggerResult = (*gObjectTriggerInterface)->update((u8 *)obj, (f32)lbl_803DB411);
-    if (triggerResult == 0 || ((GameObject *)obj)->unkB4 != -2) {
+    if (triggerResult == 0 || ((GameObject *)obj)->seqIndex != -2) {
         return;
     }
 
@@ -1254,7 +1254,7 @@ void ShipBattle_update(int obj)
         *(s16 *)(linkedObject + 0xb4) = -1;
         (*gObjectTriggerInterface)->endSequence(groupId);
     }
-    ((GameObject *)obj)->unkB4 = -1;
+    ((GameObject *)obj)->seqIndex = -1;
     Obj_FreeObject(obj);
 }
 void shop_buyItem(int obj, int price)

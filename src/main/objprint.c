@@ -2193,7 +2193,7 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
     void (*vfn)(int, int, int, int, int, int);
 
     if ((((GameObject *)obj)->objectFlags & 0x40) != 0) return;
-    if (((GameObject *)obj)->unkC4 == NULL) {
+    if (((GameObject *)obj)->ownerObj == NULL) {
     } else {
         return;
     }
@@ -2233,8 +2233,8 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
         }
     }
     doNothing_afterRenderObject();
-    for (i = 0, walk = obj; i < (s32)(u32)((GameObject *)obj)->unkEB; i++) {
-        int staff = *(int *)&((GameObject *)walk)->unkC8;
+    for (i = 0, walk = obj; i < (s32)(u32)((GameObject *)obj)->childCount; i++) {
+        int staff = *(int *)&((GameObject *)walk)->childObjs[0];
         if (*(s16*)((char*)staff + 0x44) == 0x2d) {
             staffMtxFn_8003b620(staff, obj, (int)OBJPRINT_ACTIVE_BANK(staff), a, b, c);
         }

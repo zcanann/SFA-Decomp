@@ -1057,7 +1057,7 @@ void sky2_run(void)
             if ((*(u16 *)&((GameObject *)p)->anim.rotZ & 0x10) != 0) {
                 r = *(f32 *)(p + 0x70);
                 g = ((GameObject *)p)->anim.activeMoveProgress;
-                b = *(f32 *)&((GameObject *)p)->unkC8;
+                b = *(f32 *)&((GameObject *)p)->childObjs[0];
                 sa = *(f32 *)(p + 0x1fc);
                 sb = *(f32 *)(p + 0x228);
             } else if ((*(u16 *)&((GameObject *)p)->anim.flags & 0x20) != 0) {
@@ -1133,7 +1133,7 @@ void sky2_run(void)
                     p = *pp + idx.best * 4;
                     r = *(f32 *)(p + 0x70) * best.x + r;
                     g = ((GameObject *)p)->anim.activeMoveProgress * best.x + g;
-                    b = *(f32 *)&((GameObject *)p)->unkC8 * best.x + b;
+                    b = *(f32 *)&((GameObject *)p)->childObjs[0] * best.x + b;
                     sa = *(f32 *)(*pp + idx.best * 4 + 0x1fc) * best.x + sa;
                     sb = *(f32 *)(p + 0x228) * best.x + sb;
                 }
@@ -1141,7 +1141,7 @@ void sky2_run(void)
                     p = *pp + idx.second * 4;
                     r = *(f32 *)(p + 0x70) * best.y + r;
                     g = ((GameObject *)p)->anim.activeMoveProgress * best.y + g;
-                    b = *(f32 *)&((GameObject *)p)->unkC8 * best.y + b;
+                    b = *(f32 *)&((GameObject *)p)->childObjs[0] * best.y + b;
                     sa = *(f32 *)(*pp + idx.second * 4 + 0x1fc) * best.y + sa;
                     sb = *(f32 *)(p + 0x228) * best.y + sb;
                 }

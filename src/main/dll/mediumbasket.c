@@ -1933,11 +1933,11 @@ void mediumbasket_updateTargetMotion(int obj, int sub, int state)
         ((void (*)(int, int, f32, int))((void **)*gBaddieControlInterface)[11])(
             obj, state, lbl_803E2DB0, -1);
     }
-    *(int *)(sub + 0x3e0) = *(int *)&((GameObject *)obj)->unkC0;
-    *(int *)&((GameObject *)obj)->unkC0 = 0;
+    *(int *)(sub + 0x3e0) = *(int *)&((GameObject *)obj)->pendingParentObj;
+    *(int *)&((GameObject *)obj)->pendingParentObj = 0;
     ((void (*)(int, int, f32, f32, u8 *, u8 *))((void **)*gPlayerInterface)[2])(
         obj, state, timeDelta, timeDelta, gMediumBasketStateHandlersA, gMediumBasketStateHandlersB);
-    *(int *)&((GameObject *)obj)->unkC0 = *(int *)(sub + 0x3e0);
+    *(int *)&((GameObject *)obj)->pendingParentObj = *(int *)(sub + 0x3e0);
 }
 
 #pragma fp_contract off
@@ -2000,9 +2000,9 @@ void dll_CA_free(int obj)
 
     Camera_DisableViewYOffset();
     ObjGroup_RemoveObject(obj, 3);
-    if (((GameObject *)obj)->unkC8 != NULL) {
-        Obj_FreeObject(*(int *)&((GameObject *)obj)->unkC8);
-        *(int *)&((GameObject *)obj)->unkC8 = 0;
+    if (((GameObject *)obj)->childObjs[0] != NULL) {
+        Obj_FreeObject(*(int *)&((GameObject *)obj)->childObjs[0]);
+        *(int *)&((GameObject *)obj)->childObjs[0] = 0;
     }
     ((void (*)(int, int, int))((void **)*gBaddieControlInterface)[16])(obj, (int)state, 0x20);
 }
@@ -2083,7 +2083,7 @@ void mediumbasket_spawnContactObject(int* obj, int* state) {
             ((GameObject *)new_obj)->anim.velocityX = ((GroundBaddieState *)state)->baddie.velX;
             ((GameObject *)new_obj)->anim.velocityY = ((GroundBaddieState *)state)->baddie.velY;
             ((GameObject *)new_obj)->anim.velocityZ = ((GroundBaddieState *)state)->baddie.velZ;
-            *(int**)&((GameObject *)new_obj)->unkC4 = obj;
+            *(int**)&((GameObject *)new_obj)->ownerObj = obj;
         }
     }
 }

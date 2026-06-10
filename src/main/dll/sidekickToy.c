@@ -1338,7 +1338,7 @@ int enemy_animEventCallback(int *node, int unused, ObjAnimUpdateState *animUpdat
         }
     }
     baddieInstantiateWeapon(node, (int *)sub);
-    if (((GameObject *)node)->unkB4 == -1) {
+    if (((GameObject *)node)->seqIndex == -1) {
         ((TrickyState *)sub)->unk2E8 &= ~3;
         ObjHits_DisableObject(node);
         return 0;
@@ -1349,7 +1349,7 @@ int enemy_animEventCallback(int *node, int unused, ObjAnimUpdateState *animUpdat
     }
     if (n29[0x2e] != -1) {
         if ((((TrickyState *)sub)->flags2DC & 0x600) != 0) {
-            if (animUpdate->sequenceSlot == ((GameObject *)node)->unkB4)
+            if (animUpdate->sequenceSlot == ((GameObject *)node)->seqIndex)
                 return 4;
         }
     }

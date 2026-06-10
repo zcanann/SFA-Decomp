@@ -738,9 +738,9 @@ void fn_801BC7E4(int obj, int param_2, int param_3, int param_4)
   else {
     ((GameObject *)obj)->unkE4 = 2;
   }
-  *(int *)(param_3 + 0x3e0) = *(int *)&((GameObject *)obj)->unkC0;
-  *(int *)&((GameObject *)obj)->unkC0 = 0;
+  *(int *)(param_3 + 0x3e0) = *(int *)&((GameObject *)obj)->pendingParentObj;
+  *(int *)&((GameObject *)obj)->pendingParentObj = 0;
   ((void (*)(f32, int, int, f32, void *, void *))*(code **)(*(int *)gPlayerInterface + 8))
             (timeDelta, obj, param_4, timeDelta, gDIMbossHitDetectAnimTable, gDIMbossAnimTable);
-  *(int *)&((GameObject *)obj)->unkC0 = *(int *)(param_3 + 0x3e0);
+  *(int *)&((GameObject *)obj)->pendingParentObj = *(int *)(param_3 + 0x3e0);
 }

@@ -474,8 +474,8 @@ void bossdrakor_free(int obj)
 {
     int inner = *(int *)&((GameObject *)obj)->extra;
     ObjGroup_RemoveObject(obj, 0x45);
-    if (((GameObject *)obj)->unkC8 != NULL) {
-        ObjLink_DetachChild(obj, *(int *)&((GameObject *)obj)->unkC8);
+    if (((GameObject *)obj)->childObjs[0] != NULL) {
+        ObjLink_DetachChild(obj, *(int *)&((GameObject *)obj)->childObjs[0]);
     }
     if (*(void * *)&((BossDrakorState *)inner)->lightObj != NULL) {
         ModelLightStruct_free(((BossDrakorState *)inner)->lightObj);
@@ -654,7 +654,7 @@ int bossdrakor_animEventCallback(int obj, int unused, ObjAnimUpdateState *animUp
         switch (eventId) {
         case 6:
             target = ObjGroup_FindNearestObject(0x1e, obj, 0);
-            if ((void *)target != NULL && ((GameObject *)obj)->unkEB != 0) {
+            if ((void *)target != NULL && ((GameObject *)obj)->childCount != 0) {
                 (*(void (*)(int, int))(*(int *)(*(int *)(*(int *)&((GameObject *)target)->anim.dll) + 0x20)))(target, 2);
                 ObjLink_DetachChild(obj, target);
             }

@@ -1571,7 +1571,7 @@ void FUN_800406cc(int param_1)
     }
     if (((GameObject *)param_1)->anim.classId == 1) {
       iVar2 = param_1;
-      for (iVar3 = 0; iVar3 < (int)(uint)((GameObject *)param_1)->unkEB; iVar3 = iVar3 + 1) {
+      for (iVar3 = 0; iVar3 < (int)(uint)((GameObject *)param_1)->childCount; iVar3 = iVar3 + 1) {
         if (*(int *)(iVar2 + 200) != 0) {
           FUN_80040784(*(int *)(iVar2 + 200),param_1,1);
         }
@@ -1761,20 +1761,20 @@ void FUN_80040a88(int param_1)
     iVar3 = *piVar2;
     if ((*(ushort *)(iVar3 + 2) & 0x8000) == 0) {
       iVar4 = param_1;
-      if (*(int *)&((GameObject *)param_1)->unkC4 != 0) {
-        iVar4 = *(int *)&((GameObject *)param_1)->unkC4;
+      if (*(int *)&((GameObject *)param_1)->ownerObj != 0) {
+        iVar4 = *(int *)&((GameObject *)param_1)->ownerObj;
       }
       FUN_800400ac(param_1, iVar4, iVar3, 0);
     }
     else {
       iVar4 = param_1;
-      if (*(int *)&((GameObject *)param_1)->unkC4 != 0) {
-        iVar4 = *(int *)&((GameObject *)param_1)->unkC4;
+      if (*(int *)&((GameObject *)param_1)->ownerObj != 0) {
+        iVar4 = *(int *)&((GameObject *)param_1)->ownerObj;
       }
       fn_8003F8EC(param_1, iVar4, iVar3);
     }
     iVar3 = param_1;
-    for (iVar4 = 0; iVar4 < (int)(uint)((GameObject *)param_1)->unkEB; iVar4 = iVar4 + 1) {
+    for (iVar4 = 0; iVar4 < (int)(uint)((GameObject *)param_1)->childCount; iVar4 = iVar4 + 1) {
       if (*(int *)(iVar3 + 200) != 0) {
         FUN_80040784(*(int *)(iVar3 + 200), param_1, 0);
       }
@@ -2656,7 +2656,7 @@ void objRenderShadow(int *obj) {
         u8 *iter;
         int i = 0;
         iter = (u8 *)obj;
-        for (; i < ((GameObject *)obj)->unkEB; i++) {
+        for (; i < ((GameObject *)obj)->childCount; i++) {
             int *child = *(int **)(iter + 200);
             if (child != NULL) {
                 objRenderChild(child, obj, 1);
@@ -2713,7 +2713,7 @@ void objRenderFn_800413d4(int *obj) {
     savedMtx = curObjMtx;
     lbl_803DCC3D = lbl_803DCC38;
     for (lbl_803DCC44 = 0; lbl_803DCC44 < 16; lbl_803DCC44 += lbl_803DCC40) {
-        modelDoRenderInstrs(obj, ((GameObject *)obj)->unkC4 ? ((GameObject *)obj)->unkC4 : obj, (u8 *)*model, 2);
+        modelDoRenderInstrs(obj, ((GameObject *)obj)->ownerObj ? ((GameObject *)obj)->ownerObj : obj, (u8 *)*model, 2);
         curObjMtx = savedMtx;
     }
     curObjMtx = 0;
@@ -2732,7 +2732,7 @@ void fuzzRenderFn_800412dc(int *obj) {
     lbl_803DCC3D = lbl_803DCC38;
     ObjModel_SetRenderCallback(model, modelRenderCb_8003c268);
     for (lbl_803DCC44 = 0; lbl_803DCC44 < 16; lbl_803DCC44 += lbl_803DCC40) {
-        modelDoRenderInstrs(obj, ((GameObject *)obj)->unkC4 ? ((GameObject *)obj)->unkC4 : obj, (u8 *)*model, 8);
+        modelDoRenderInstrs(obj, ((GameObject *)obj)->ownerObj ? ((GameObject *)obj)->ownerObj : obj, (u8 *)*model, 8);
         curObjMtx = savedMtx;
     }
     curObjMtx = 0;
@@ -2794,7 +2794,7 @@ void objRenderFuzz(int *obj) {
         savedMtx = curObjMtx;
         ObjModel_SetRenderCallback(model, shaderFuzzFn_8003cc1c);
         for (lbl_803DCC44 = 0; lbl_803DCC44 < n; lbl_803DCC44++) {
-            modelDoRenderInstrs(obj, ((GameObject *)obj)->unkC4 ? ((GameObject *)obj)->unkC4 : obj, (u8 *)*model, 4);
+            modelDoRenderInstrs(obj, ((GameObject *)obj)->ownerObj ? ((GameObject *)obj)->ownerObj : obj, (u8 *)*model, 4);
             curObjMtx = savedMtx;
         }
         curObjMtx = 0;
@@ -2899,16 +2899,16 @@ void objRenderModel(int *obj) {
     {
         int m0 = *model;
         if (*(u16 *)(m0 + 2) & 0x8000) {
-            modelDoAltRenderInstrs(obj, ((GameObject *)obj)->unkC4 ? ((GameObject *)obj)->unkC4 : obj, (u8 *)m0, 0);
+            modelDoAltRenderInstrs(obj, ((GameObject *)obj)->ownerObj ? ((GameObject *)obj)->ownerObj : obj, (u8 *)m0, 0);
         } else {
-            modelDoRenderInstrs(obj, ((GameObject *)obj)->unkC4 ? ((GameObject *)obj)->unkC4 : obj, (u8 *)m0, 0);
+            modelDoRenderInstrs(obj, ((GameObject *)obj)->ownerObj ? ((GameObject *)obj)->ownerObj : obj, (u8 *)m0, 0);
         }
     }
     {
         u8 *iter;
         int i = 0;
         iter = (u8 *)obj;
-        for (; i < ((GameObject *)obj)->unkEB; i++) {
+        for (; i < ((GameObject *)obj)->childCount; i++) {
             int *child = *(int **)(iter + 0xc8);
             if (child != NULL) {
                 objRenderChild(child, obj, 0);
@@ -3983,7 +3983,7 @@ void objRenderShadow2(int *obj, int *obj2, u8 *m, int p4) {
         u8 *o;
         u8 *nxt;
         o = (u8 *)obj;
-        while ((nxt = *(u8 **)&((GameObject *)o)->unkC4) != NULL) {
+        while ((nxt = *(u8 **)&((GameObject *)o)->ownerObj) != NULL) {
             o = nxt;
         }
         sh = ((u8 *)((GameObject *)o)->anim.modelState->shadowCastSlot)[0x65];
@@ -4325,7 +4325,7 @@ void modelDoRenderInstrs(int *obj, int *obj2, u8 *m, u8 mode) {
             u8 *o;
             u8 *nxt;
             o = (u8 *)obj;
-            while ((nxt = *(u8 **)&((GameObject *)o)->unkC4) != NULL) {
+            while ((nxt = *(u8 **)&((GameObject *)o)->ownerObj) != NULL) {
                 o = nxt;
             }
             sh = ((u8 *)((GameObject *)o)->anim.modelState->shadowCastSlot)[0x65];
@@ -4792,7 +4792,7 @@ u32 objRenderFn_8003edf4(u8 *obj, u8 *p2, int *am, MtxBitStream *bs) {
         gxTextureFn_8004d5b4(op);
     }
     {
-        u8 e5 = ((GameObject *)obj)->unkE5;
+        u8 e5 = ((GameObject *)obj)->colorFadeFlags;
         if ((e5 & 2) || (e5 & 0x10)) {
             color[0] = obj[0xec];
             color[1] = obj[0xed];

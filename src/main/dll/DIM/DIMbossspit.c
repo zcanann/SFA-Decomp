@@ -109,12 +109,12 @@ void dimBossTonsil_newState_hitFightMain(u8 *obj,ObjAnimUpdateState *animUpdate,
     }
   }
 
-  state->savedObjFieldC0 = *(u32 *)&((GameObject *)obj)->unkC0;
-  *(u32 *)&((GameObject *)obj)->unkC0 = 0;
+  state->savedObjFieldC0 = *(u32 *)&((GameObject *)obj)->pendingParentObj;
+  *(u32 *)&((GameObject *)obj)->pendingParentObj = 0;
 
   (*(void (**)(u8 *,DIMbosstonsilState *,double,double,u8 *,u8 *))(*(int *)gPlayerInterface + 0x8))(
       obj, updateState, (double)timeDelta, (double)timeDelta, lbl_803DDBB0, lbl_803DDBA8);
 
-  *(u32 *)&((GameObject *)obj)->unkC0 = state->savedObjFieldC0;
+  *(u32 *)&((GameObject *)obj)->pendingParentObj = state->savedObjFieldC0;
 }
 

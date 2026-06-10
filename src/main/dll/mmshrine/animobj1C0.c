@@ -155,9 +155,9 @@ void FUN_801c5990(undefined8 param_1,undefined8 param_2,double param_3,undefined
     *(undefined *)((int)puVar2 + 7) = 0xff;
     uVar3 = FUN_80017ae4(dVar6,dVar7,param_3,param_4,param_5,param_6,param_7,param_8,puVar2,5,0xff,
                          0xffffffff,(uint *)0x0,in_r8,in_r9,in_r10);
-    *(undefined4 *)&((GameObject *)param_9)->unkC8 = uVar3;
-    *(float *)(*(int *)&((GameObject *)param_9)->unkC8 + 8) =
-         *(float *)(*(int *)&((GameObject *)param_9)->unkC8 + 8) * lbl_803E5C10;
+    *(undefined4 *)&((GameObject *)param_9)->childObjs[0] = uVar3;
+    *(float *)(*(int *)&((GameObject *)param_9)->childObjs[0] + 8) =
+         *(float *)(*(int *)&((GameObject *)param_9)->childObjs[0] + 8) * lbl_803E5C10;
   }
   return;
 }

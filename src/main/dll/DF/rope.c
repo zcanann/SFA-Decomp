@@ -314,7 +314,7 @@ void dimbossgut2_free(int param_9)
     ModelLightStruct_free((void *)uVar1);
   }
   ObjGroup_RemoveObject(obj,3);
-  childObj = ((GameObject *)obj)->unkC8;
+  childObj = ((GameObject *)obj)->childObjs[0];
   if (childObj != 0) {
     Obj_FreeObject((int)childObj);
     *(undefined4 *)(obj + 200) = 0;

@@ -1005,17 +1005,17 @@ void FUN_8016d188(int param_1,int param_2)
         local_18 = (longlong)iVar4;
         local_46 = 0x15 - (short)iVar4;
         local_4c[0] = 0xc95;
-        FUN_80294c48(*(int *)&((GameObject *)param_1)->unkC4,&local_58);
+        FUN_80294c48(*(int *)&((GameObject *)param_1)->ownerObj,&local_58);
         local_28 = *(float *)(local_58 + 0xc);
         local_24 = *(float *)(local_58 + 0x10);
         local_20 = *(undefined4 *)(local_58 + 0x14);
-        (*gPartfxInterface)->spawnObject((void *)*(int *)&((GameObject *)param_1)->unkC4, 0x7b9, &local_34,
+        (*gPartfxInterface)->spawnObject((void *)*(int *)&((GameObject *)param_1)->ownerObj, 0x7b9, &local_34,
                                        0x200001, -1, local_4c);
-        (*gPartfxInterface)->spawnObject((void *)*(int *)&((GameObject *)param_1)->unkC4, 0x7b9, &local_34,
+        (*gPartfxInterface)->spawnObject((void *)*(int *)&((GameObject *)param_1)->ownerObj, 0x7b9, &local_34,
                                        0x200001, -1, local_4c);
-        (*gPartfxInterface)->spawnObject((void *)*(int *)&((GameObject *)param_1)->unkC4, 0x7b9, &local_34,
+        (*gPartfxInterface)->spawnObject((void *)*(int *)&((GameObject *)param_1)->ownerObj, 0x7b9, &local_34,
                                        0x200001, -1, local_4c);
-        (*gPartfxInterface)->spawnObject((void *)*(int *)&((GameObject *)param_1)->unkC4, 0x7b9, &local_34,
+        (*gPartfxInterface)->spawnObject((void *)*(int *)&((GameObject *)param_1)->ownerObj, 0x7b9, &local_34,
                                        0x200001, -1, local_4c);
         local_46 = 9;
         local_4c[0] = 0xc95;
@@ -1023,7 +1023,7 @@ void FUN_8016d188(int param_1,int param_2)
         local_28 = *(float *)(local_58 + 0xc);
         local_24 = *(float *)(local_58 + 0x10);
         local_20 = *(undefined4 *)(local_58 + 0x14);
-        (*gPartfxInterface)->spawnObject((void *)*(int *)&((GameObject *)param_1)->unkC4, 0x7ba, &local_34,
+        (*gPartfxInterface)->spawnObject((void *)*(int *)&((GameObject *)param_1)->ownerObj, 0x7ba, &local_34,
                                        0x200001, -1, local_4c);
       }
     }
@@ -1169,8 +1169,8 @@ void FUN_8016e8cc(undefined8 param_1,undefined8 param_2,double param_3,undefined
     piVar3 = piVar3 + 6;
     iVar2 = iVar2 + -1;
   } while (iVar2 != 0);
-  FUN_8016d188(param_9,*(int *)&((GameObject *)param_9)->unkC4);
-  FUN_80294d6c(*(int *)&((GameObject *)param_9)->unkC4);
+  FUN_8016d188(param_9,*(int *)&((GameObject *)param_9)->ownerObj);
+  FUN_80294d6c(*(int *)&((GameObject *)param_9)->ownerObj);
   *(undefined *)((int)piVar6 + 0xb9) = 0;
   if (DAT_803ad338 != '\0') {
     DAT_803ad324 = DAT_803ad324 + lbl_803E3F78;
@@ -1573,7 +1573,7 @@ void mikabombshadow_update(int *obj) {
     f32 t;
     f32 f;
 
-    r4 = ((GameObject *)obj)->unkC4;
+    r4 = ((GameObject *)obj)->ownerObj;
     t = fz - (*(f32*)((char*)r4 + 0x10) - ((GameObject *)obj)->anim.localPosY) / *(f32*)((GameObject *)obj)->extra;
     ((GameObject *)obj)->anim.modelState->shadowScale = lbl_803E31DC * t + fz;
     f = t * lbl_803E31E0;
@@ -2353,7 +2353,7 @@ void objSetAnimField48to0(int *obj) { s32 v = 0x0; *(s32*)((char*)((int**)obj)[0
 void flamethrowerspe_func0B(int *obj) { s32 v = 0x1; *(s32*)((char*)((int**)obj)[0xb8/4] + 0x10) = v; }
 
 extern void quakeSpellFn_8016cee8(int *obj, int *x);
-void playerRenderQuakeSpell(int *obj) { quakeSpellFn_8016cee8(obj, ((GameObject *)obj)->unkC4); }
+void playerRenderQuakeSpell(int *obj) { quakeSpellFn_8016cee8(obj, ((GameObject *)obj)->ownerObj); }
 
 /* state-byte setters / leaf writers. */
 #pragma dont_inline on
@@ -2678,9 +2678,9 @@ void animatedobj_free(int *obj, int seqFlag)
     ((void (*)(int *, int, int, int, int))((void **)*(void **)gTitleMenuControlInterfaceCopy)[2])(obj, 0xffff, 0, 0, 0);
     Sfx_RemoveLoopedObjectSoundForObject(obj);
     Sfx_StopObjectChannel(obj, 0x7f);
-    if (((GameObject *)obj)->anim.seqId == 0x774 && ((GameObject *)obj)->unkEB != 0) {
-        Obj_FreeObject(((GameObject *)obj)->unkC8);
-        ObjLink_DetachChild(obj, *(int *)&((GameObject *)obj)->unkC8);
+    if (((GameObject *)obj)->anim.seqId == 0x774 && ((GameObject *)obj)->childCount != 0) {
+        Obj_FreeObject(((GameObject *)obj)->childObjs[0]);
+        ObjLink_DetachChild(obj, *(int *)&((GameObject *)obj)->childObjs[0]);
     }
     if (seqFlag != 0) {
         clearCurSeqNo();
@@ -3268,7 +3268,7 @@ void animatedobj_update(int *obj)
         int res;
         int count;
         res = (*gObjectTriggerInterface)->update((u8 *)obj, timeDelta);
-        if (res != 0 && ((GameObject *)obj)->unkB4 == -2) {
+        if (res != 0 && ((GameObject *)obj)->seqIndex == -2) {
             int slot8 = (s8)seq->slot;
             int *match = NULL;
             int *list;
@@ -3279,10 +3279,10 @@ void animatedobj_update(int *obj)
             slot = slot8;
             for (res = 0; res < count; res++) {
                 int *other = (int *)*list;
-                if (((GameObject *)other)->unkB4 == slot8) {
+                if (((GameObject *)other)->seqIndex == slot8) {
                     match = other;
                 }
-                if (((GameObject *)other)->unkB4 == -2 && ((GameObject *)other)->anim.classId == 0x10) {
+                if (((GameObject *)other)->seqIndex == -2 && ((GameObject *)other)->anim.classId == 0x10) {
                     ObjSeqState *otherSeq = *(ObjSeqState **)&((GameObject *)other)->extra;
                     if (slot == (s8)otherSeq->slot) {
                         cnt++;
@@ -3294,7 +3294,7 @@ void animatedobj_update(int *obj)
                 *(s16 *)((char *)match + 0xb4) = -1;
                 (*gObjectTriggerInterface)->endSequence(slot);
             }
-            ((GameObject *)obj)->unkB4 = -1;
+            ((GameObject *)obj)->seqIndex = -1;
             ((GameObject *)obj)->objectFlags |= 0x8000;
             ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
@@ -3303,9 +3303,9 @@ void animatedobj_update(int *obj)
             for (i = 0; i < seq->eventCount; i++) {
                 int b = seq->eventIds[i];
                 if (b == 0xb) {
-                    if (((GameObject *)obj)->unkEB != 0) {
-                        Obj_FreeObject(((GameObject *)obj)->unkC8);
-                        ObjLink_DetachChild(obj, *(int *)&((GameObject *)obj)->unkC8);
+                    if (((GameObject *)obj)->childCount != 0) {
+                        Obj_FreeObject(((GameObject *)obj)->childObjs[0]);
+                        ObjLink_DetachChild(obj, *(int *)&((GameObject *)obj)->childObjs[0]);
                     }
                 } else if (b < 0xb && b > 9) {
                     if ((u8)Obj_IsLoadingLocked() != 0) {
@@ -3560,7 +3560,7 @@ void dim2roofrub_update(int *obj)
             }
         }
         res = (*gObjectTriggerInterface)->update((u8 *)obj, timeDelta);
-        if (res != 0 && ((GameObject *)obj)->unkB4 == -2) {
+        if (res != 0 && ((GameObject *)obj)->seqIndex == -2) {
             int slot8 = (s8)seq->slot;
             int *match = NULL;
             int *list;
@@ -3570,10 +3570,10 @@ void dim2roofrub_update(int *obj)
             slot = slot8;
             for (res = cnt = 0; res < count; res++) {
                 int *other = (int *)*list;
-                if (((GameObject *)other)->unkB4 == slot8) {
+                if (((GameObject *)other)->seqIndex == slot8) {
                     match = other;
                 }
-                if (((GameObject *)other)->unkB4 == -2 && ((GameObject *)other)->anim.classId == 0x10) {
+                if (((GameObject *)other)->seqIndex == -2 && ((GameObject *)other)->anim.classId == 0x10) {
                     ObjSeqState *otherSeq = *(ObjSeqState **)&((GameObject *)other)->extra;
                     if (slot == (s8)otherSeq->slot) {
                         cnt++;
@@ -3585,7 +3585,7 @@ void dim2roofrub_update(int *obj)
                 *(s16 *)((char *)match + 0xb4) = -1;
                 (*gObjectTriggerInterface)->endSequence(slot);
             }
-            ((GameObject *)obj)->unkB4 = -1;
+            ((GameObject *)obj)->seqIndex = -1;
         }
     }
 }
@@ -4573,8 +4573,8 @@ void staff_update(int *obj)
         swp++;
     }
 
-    quakeSpellFn_8016cee8(obj, ((GameObject *)obj)->unkC4);
-    objGetAnimState80A(*(int *)&((GameObject *)obj)->unkC4);
+    quakeSpellFn_8016cee8(obj, ((GameObject *)obj)->ownerObj);
+    objGetAnimState80A(*(int *)&((GameObject *)obj)->ownerObj);
     state[0xb9] = 0;
     {
         u8 *q = lbl_803AC6B8;
@@ -5396,17 +5396,17 @@ void quakeSpellFn_8016cee8(int *obj, int *obj2)
             if (power > lbl_803E32B4) {
                 fxA.count = 21 - (int)(lbl_803E32A0 * (power / lbl_803E32C8));
                 fxA.id = 0xc95;
-                fn_802960F4(*(int *)&((GameObject *)obj)->unkC4, &pos2);
+                fn_802960F4(*(int *)&((GameObject *)obj)->ownerObj, &pos2);
                 fxB.f1 = *(f32 *)(pos2 + 0xc);
                 fxB.f2 = *(f32 *)(pos2 + 0x10);
                 fxB.f3 = *(f32 *)(pos2 + 0x14);
-                (*gPartfxInterface)->spawnObject((void *)*(int *)&((GameObject *)obj)->unkC4,
+                (*gPartfxInterface)->spawnObject((void *)*(int *)&((GameObject *)obj)->ownerObj,
                                                  0x7b9, &fxB, 0x200001, -1, &fxA);
-                (*gPartfxInterface)->spawnObject((void *)*(int *)&((GameObject *)obj)->unkC4,
+                (*gPartfxInterface)->spawnObject((void *)*(int *)&((GameObject *)obj)->ownerObj,
                                                  0x7b9, &fxB, 0x200001, -1, &fxA);
-                (*gPartfxInterface)->spawnObject((void *)*(int *)&((GameObject *)obj)->unkC4,
+                (*gPartfxInterface)->spawnObject((void *)*(int *)&((GameObject *)obj)->ownerObj,
                                                  0x7b9, &fxB, 0x200001, -1, &fxA);
-                (*gPartfxInterface)->spawnObject((void *)*(int *)&((GameObject *)obj)->unkC4,
+                (*gPartfxInterface)->spawnObject((void *)*(int *)&((GameObject *)obj)->ownerObj,
                                                  0x7b9, &fxB, 0x200001, -1, &fxA);
                 fxA.count = 9;
                 fxA.id = 0xc95;
@@ -5414,7 +5414,7 @@ void quakeSpellFn_8016cee8(int *obj, int *obj2)
                 fxB.f1 = *(f32 *)(pos2 + 0xc);
                 fxB.f2 = *(f32 *)(pos2 + 0x10);
                 fxB.f3 = *(f32 *)(pos2 + 0x14);
-                (*gPartfxInterface)->spawnObject((void *)*(int *)&((GameObject *)obj)->unkC4,
+                (*gPartfxInterface)->spawnObject((void *)*(int *)&((GameObject *)obj)->ownerObj,
                                                  0x7ba, &fxB, 0x200001, -1, &fxA);
             }
             break;

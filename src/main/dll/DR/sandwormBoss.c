@@ -461,7 +461,7 @@ FUN_8019b658(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   local_24 = DAT_802c2a5c;
   local_20 = DAT_802c2a60;
   local_1c = DAT_802c2a64;
-  if (((GameObject *)param_9)->unkB4 < 0) {
+  if (((GameObject *)param_9)->seqIndex < 0) {
     FUN_800e8630(param_9);
     uVar1 = 0;
   }
@@ -954,7 +954,7 @@ int cfguardian_SeqFn(int* obj, int unused, ObjAnimUpdateState *animUpdate)
     GuardianMsg stk;
     CfGuardianState* sub = ((GameObject *)obj)->extra;
     stk = lbl_802C22D8;
-    if (((GameObject *)obj)->unkB4 < 0) {
+    if (((GameObject *)obj)->seqIndex < 0) {
         saveGame_saveObjectPos((int)obj);
         return 0;
     }
@@ -1554,7 +1554,7 @@ void cfprisonuncle_update(int* obj)
         }
     } else {
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x8);
-        if (((GameObject *)obj)->unkB4 == -1) {
+        if (((GameObject *)obj)->seqIndex == -1) {
             (*gObjectTriggerInterface)->runSequence(0, obj, -1);
         }
     }
@@ -1580,7 +1580,7 @@ void gcrobotlightbea_hitDetect(int* obj)
     void* hit;
     GcRobotLightBeaState* sub = ((GameObject *)obj)->extra;
     ((Bit80*)&sub->hitFlags)->top = 0;
-    if (((GameObject *)obj)->unkC4 == NULL) return;
+    if (((GameObject *)obj)->ownerObj == NULL) return;
     if (ObjHits_GetPriorityHit((int)obj, &hit, 0, 0) == 0) {
         hit = (void *)(*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject;
         if (hit == NULL) return;
@@ -1951,8 +1951,8 @@ void gcrobotlightbea_free(int* obj)
     if (state->light != NULL) {
         modelLightStruct_freeSlot((int*)state);
     }
-    if (((GameObject *)obj)->unkC4 != NULL) {
-        ObjLink_DetachChild(((GameObject *)obj)->unkC4, obj);
+    if (((GameObject *)obj)->ownerObj != NULL) {
+        ObjLink_DetachChild(((GameObject *)obj)->ownerObj, obj);
     }
 }
 
@@ -2631,7 +2631,7 @@ int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState *animUpdate)
     f32 distSq;
     u8* def = *(u8**)&((GameObject *)obj)->anim.placementData;
     BabyCloudRunnerState* sub = ((GameObject *)obj)->extra;
-    if (((GameObject *)obj)->unkB4 == 4) {
+    if (((GameObject *)obj)->seqIndex == 4) {
         return 0;
     }
     animUpdate->sequenceEventActive = 0;
@@ -2743,7 +2743,7 @@ int cfprisonguard_SeqFn(int* obj, int unused, ObjAnimUpdateState *animUpdate)
         sub->alarmRamp = lbl_803E4264 * (f32)framesThisStep + sub->alarmRamp;
         break;
     }
-    if (((GameObject *)obj)->unkB4 < 0) {
+    if (((GameObject *)obj)->seqIndex < 0) {
         return 0;
     }
     ObjHits_EnableObject(obj);

@@ -135,7 +135,7 @@ void mmsh_scales_free(int param_1,int param_2)
   void *child;
   (*gObjectTriggerInterface)->freeState(((GameObject *)param_1)->extra);
   (*(code *)(*gTitleMenuControlInterface + 8))(param_1,0xffff,0,0,0);
-  child = ((GameObject *)param_1)->unkC8;
+  child = ((GameObject *)param_1)->childObjs[0];
   if ((child != NULL) && (param_2 == 0)) {
     Obj_FreeObject(child);
   }
@@ -164,17 +164,17 @@ void mmsh_scales_update(int param_1)
 
   if ((((GameObject *)param_1)->anim.placementData != NULL) && (*(short *)(*(int *)&((GameObject *)param_1)->anim.placementData + 0x18) != -1)) {
     i = (*gObjectTriggerInterface)->update((u8 *)param_1, (f32)(u32)lbl_803DB411);
-    if ((i != 0) && (((GameObject *)param_1)->unkB4 == -2)) {
+    if ((i != 0) && (((GameObject *)param_1)->seqIndex == -2)) {
       typeId = *(s8 *)(*(int *)&((GameObject *)param_1)->extra + 0x57);
       found = 0;
       list = (int *)ObjList_GetObjects(&i, &count);
       n = 0;
       for (i = 0, id = typeId; i < count; i++) {
         obj = *list;
-        if (((GameObject *)obj)->unkB4 == typeId) {
+        if (((GameObject *)obj)->seqIndex == typeId) {
           found = obj;
         }
-        if (((((GameObject *)obj)->unkB4 == -2) && (((GameObject *)obj)->anim.classId == 0x10)) &&
+        if (((((GameObject *)obj)->seqIndex == -2) && (((GameObject *)obj)->anim.classId == 0x10)) &&
            (id == *(char *)(*(int *)&((GameObject *)obj)->extra + 0x57))) {
           n = n + 1;
         }
@@ -184,7 +184,7 @@ void mmsh_scales_update(int param_1)
         *(s16 *)(found + 0xb4) = -1;
         (*gObjectTriggerInterface)->endSequence(id);
       }
-      ((GameObject *)param_1)->unkB4 = -1;
+      ((GameObject *)param_1)->seqIndex = -1;
       Obj_FreeObject((void *)param_1);
     }
   }
@@ -337,6 +337,6 @@ void mmsh_scales_init(int *obj, s16 *def) {
     no[5] = 4;
     no[7] = 0xff;
     no = Obj_SetupObject(no, 5, -1, -1, 0);
-    ((GameObject *)obj)->unkC8 = no;
-    *(f32 *)(*(u8 **)&((GameObject *)obj)->unkC8 + 8) = *(f32 *)(*(u8 **)&((GameObject *)obj)->unkC8 + 8) * lbl_803E4F78;
+    ((GameObject *)obj)->childObjs[0] = no;
+    *(f32 *)(*(u8 **)&((GameObject *)obj)->childObjs[0] + 8) = *(f32 *)(*(u8 **)&((GameObject *)obj)->childObjs[0] + 8) * lbl_803E4F78;
 }

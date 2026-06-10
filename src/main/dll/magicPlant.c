@@ -827,7 +827,7 @@ void fn_80153640(int obj, int state)
                 ((lbl_803E28F0 + ((GameObject *)p29c)->anim.localPosY + (f32)(s32)rnd) - ((GameObject *)fx)->anim.localPosX);
             p29c = *(int *)&((BaddieState *)state)->trackedObj;
             ((GameObject *)newObj)->anim.velocityZ = lbl_803E28F4 * (((GameObject *)p29c)->anim.localPosZ - ((GameObject *)fx)->anim.localPosY);
-            *(int *)&((GameObject *)newObj)->unkC4 = obj;
+            *(int *)&((GameObject *)newObj)->ownerObj = obj;
         }
         Sfx_PlayFromObject(obj, 0x49a);
     }

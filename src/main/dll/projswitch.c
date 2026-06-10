@@ -352,8 +352,8 @@ void enemy_hitDetect(int obj)
     if ((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->lastHitObject != 0) {
         (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->suppressOutgoingHits = 1;
     }
-    if (((GameObject *)obj)->unkC8 != NULL && *(void **)(*(int *)&((GameObject *)obj)->unkC8 + 0x54) != NULL
-        && (*(ObjHitsPriorityState **)(*(int *)&((GameObject *)obj)->unkC8 + 0x54))->lastHitObject != 0) {
+    if (((GameObject *)obj)->childObjs[0] != NULL && *(void **)(*(int *)&((GameObject *)obj)->childObjs[0] + 0x54) != NULL
+        && (*(ObjHitsPriorityState **)(*(int *)&((GameObject *)obj)->childObjs[0] + 0x54))->lastHitObject != 0) {
         (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->suppressOutgoingHits = 1;
     }
     if (*(void **)&((EnemyState *)state)->unk36C != NULL) {
@@ -396,9 +396,9 @@ void enemy_free(int obj, int flag)
         }
         break;
     }
-    n = ((GameObject *)obj)->unkEB;
+    n = ((GameObject *)obj)->childCount;
     for (i = 0; i < n; i++) {
-        child = ((GameObject *)obj)->unkC8;
+        child = ((GameObject *)obj)->childObjs[0];
         if (child != NULL) {
             ObjLink_DetachChild(obj, child);
             if (flag == 0 || (*(u16 *)(child + 0xb0) & 0x10) == 0) {

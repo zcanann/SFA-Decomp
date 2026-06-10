@@ -805,10 +805,10 @@ void FUN_801115e0(undefined8 param_1,double param_2,double param_3,undefined8 pa
   local_10 = DAT_802c2918;
   if ((*(char *)(param_10 + 0x407) != *(char *)(param_10 + 0x409)) &&
      (((GameObject *)param_9)->anim.alpha != 0)) {
-    if (*(int *)&((GameObject *)param_9)->unkC8 != 0) {
+    if (*(int *)&((GameObject *)param_9)->childObjs[0] != 0) {
       param_1 = FUN_80017ac8(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                             *(int *)&((GameObject *)param_9)->unkC8);
-      *(undefined4 *)&((GameObject *)param_9)->unkC8 = 0;
+                             *(int *)&((GameObject *)param_9)->childObjs[0]);
+      *(undefined4 *)&((GameObject *)param_9)->childObjs[0] = 0;
     }
     uVar1 = FUN_80017ae8();
     if ((uVar1 & 0xff) == 0) {
@@ -819,8 +819,8 @@ void FUN_801115e0(undefined8 param_1,double param_2,double param_3,undefined8 pa
         puVar2 = FUN_80017aa4(0x18,(&uStack_1a)[*(char *)(param_10 + 0x407)]);
         uVar3 = FUN_80017ae4(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar2,
                              4,0xff,0xffffffff,*(uint **)&((GameObject *)param_9)->anim.parent,in_r8,in_r9,in_r10);
-        *(undefined4 *)&((GameObject *)param_9)->unkC8 = uVar3;
-        *(ushort *)(*(int *)&((GameObject *)param_9)->unkC8 + 0xb0) = ((GameObject *)param_9)->objectFlags & 7;
+        *(undefined4 *)&((GameObject *)param_9)->childObjs[0] = uVar3;
+        *(ushort *)(*(int *)&((GameObject *)param_9)->childObjs[0] + 0xb0) = ((GameObject *)param_9)->objectFlags & 7;
       }
       *(undefined *)(param_10 + 0x409) = *(undefined *)(param_10 + 0x407);
     }
@@ -1395,15 +1395,15 @@ void dll_19_func19(u8 *cam, u8 *ctx) {
     if (((GameObject *)cam)->anim.alpha == 0) {
         return;
     }
-    if (*(void **)&((GameObject *)cam)->unkC8 != NULL) {
-        Obj_FreeObject(*(void **)&((GameObject *)cam)->unkC8);
-        *(int *)&((GameObject *)cam)->unkC8 = 0;
+    if (*(void **)&((GameObject *)cam)->childObjs[0] != NULL) {
+        Obj_FreeObject(*(void **)&((GameObject *)cam)->childObjs[0]);
+        *(int *)&((GameObject *)cam)->childObjs[0] = 0;
     }
     if (Obj_IsLoadingLocked() != 0) {
         if ((s8)ctx[1031] > 0) {
             ObjPlacement *setup = Obj_AllocObjectSetup(24, buf[(s8)ctx[1031] - 1]);
-            *(int *)&((GameObject *)cam)->unkC8 = (int)Obj_SetupObject(setup, 4, -1, -1, *(int *)&((GameObject *)cam)->anim.parent);
-            *(u16 *)(*(int *)&((GameObject *)cam)->unkC8 + 0xb0) = ((GameObject *)cam)->objectFlags & 7;
+            *(int *)&((GameObject *)cam)->childObjs[0] = (int)Obj_SetupObject(setup, 4, -1, -1, *(int *)&((GameObject *)cam)->anim.parent);
+            *(u16 *)(*(int *)&((GameObject *)cam)->childObjs[0] + 0xb0) = ((GameObject *)cam)->objectFlags & 7;
         }
         ctx[1033] = ctx[1031];
     } else {

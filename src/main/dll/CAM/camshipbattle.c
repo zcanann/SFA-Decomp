@@ -35,7 +35,7 @@ void camcontrol_updatePathTargetAction(CameraObject *camera,GameObject *target)
     s16 y;
   } local_28;
   
-  if (*(u32 *)&target->unkC0 == 0) {
+  if (*(u32 *)&target->pendingParentObj == 0) {
     buttons = getButtonsJustPressed(0);
     targetObj = (GameObject *)camera->unk124;
     if (targetObj != NULL) {

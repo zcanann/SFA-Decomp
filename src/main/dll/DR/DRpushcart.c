@@ -866,7 +866,7 @@ int fn_801E76A0(int obj, int p2, ObjSeqState *seq, s8 advance)
     if (advance != 0) {
         ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, speed, timeDelta, NULL);
     }
-    if (((GameObject *)obj)->unkB4 == -1) {
+    if (((GameObject *)obj)->seqIndex == -1) {
         if ((s8)seq->movementState != 0) {
             slot = (*(int (**)(int))((char *)**(int ***)(((ShopkeeperState *)state)->vendorObj + 0x68) + 0x44))(((ShopkeeperState *)state)->vendorObj);
             if (slot != -1) {

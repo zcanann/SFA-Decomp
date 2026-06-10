@@ -236,9 +236,9 @@ void FUN_801ae0_dropped_old_imicepillar_render(undefined8 param_1,undefined8 par
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9)
 {
-  if (*(int *)&((GameObject *)param_9)->unkC8 != 0) {
+  if (*(int *)&((GameObject *)param_9)->childObjs[0] != 0) {
     FUN_80017ac8(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                 *(int *)&((GameObject *)param_9)->unkC8);
+                 *(int *)&((GameObject *)param_9)->childObjs[0]);
   }
   return;
 }

@@ -635,7 +635,7 @@ void gunpowderbarrel_update(int obj)
             *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x10;
         }
     }
-    if (((GameObject *)obj)->unkC8 == NULL) {
+    if (((GameObject *)obj)->childObjs[0] == NULL) {
         f32 range = lbl_803E4338;
         if ((u32)(state->linkedTimerObject = ObjGroup_FindNearestObject(0x4c, obj, &range)) != 0 &&
             timer_isEffectMode(state->linkedTimerObject) != 0 &&

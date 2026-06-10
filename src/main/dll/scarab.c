@@ -1005,7 +1005,7 @@ void fn_8015EA48(int obj, GroundBaddieState *p)
           ((lbl_803E2DFC * t + *(f32 *)(*(int *)&p->baddie.targetObj + 0x10)) - ((GameObject *)obj)->anim.localPosY) / dur;
       ((GameObject *)o)->anim.velocityZ =
           (*(f32 *)(*(int *)&p->baddie.targetObj + 0x14) - ((GameObject *)obj)->anim.localPosZ) / dur;
-      *(int *)&((GameObject *)o)->unkC4 = obj;
+      *(int *)&((GameObject *)o)->ownerObj = obj;
     }
   }
 }
@@ -1321,7 +1321,7 @@ void fn_8015ED1C(int p1, int p2, int p3)
       p1, p3, p2 + 0x35c, (s32)*(s16 *)(p2 + 0x3f4), lbl_8031FEA8, lbl_8031FF20, 1, lbl_803AC580);
 
   if (r != 0) {
-    void *pc8 = ((GameObject *)player)->unkC8;
+    void *pc8 = ((GameObject *)player)->childObjs[0];
     (*(void (**)(void *))(**(int **)((char *)pc8 + 0x68) + 0x50))(pc8);
   }
 }
@@ -1485,10 +1485,10 @@ void dll_CE_update(int obj, int p2, int p3)
         (*(void (**)(int, int, f32, int))(*(int *)gBaddieControlInterface + 0x2c))(obj, (int)sub, lbl_803E2DC8, -1);
         (*(void (**)(int, int, f32, int))(*(int *)gPlayerInterface + 0x30))(obj, (int)sub, timeDelta,
                                                                             4);
-        sub->savedObjC0 = *(int *)&((GameObject *)obj)->unkC0;
-        *(int *)&((GameObject *)obj)->unkC0 = 0;
+        sub->savedObjC0 = *(int *)&((GameObject *)obj)->pendingParentObj;
+        *(int *)&((GameObject *)obj)->pendingParentObj = 0;
         (*(void (**)(int, int, f32, f32, void *, void *))(*(int *)gPlayerInterface + 8))(obj, (int)sub, timeDelta, timeDelta, lbl_803AC5B0, lbl_803AC598);
-        *(int *)&((GameObject *)obj)->unkC0 = sub->savedObjC0;
+        *(int *)&((GameObject *)obj)->pendingParentObj = sub->savedObjC0;
       }
       ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)setup)->posY - lbl_803E2E18;
     }
@@ -1566,30 +1566,30 @@ void fn_8015FCCC(int obj)
   Sfx_PlayFromObject(obj, SFXkr_impact3);
   type = ((GameObject *)obj)->anim.seqId;
   if (type == 0x2cb) {
-    if (((GameObject *)obj)->unkC4 != NULL) {
-      if (scarab_isObjectInList(((GameObject *)obj)->unkC4)) {
-        (*(void (**)(void *, int))(**(int **)(*(int *)&((GameObject *)obj)->unkC4 + 0x68) + 0x20))(
-            ((GameObject *)obj)->unkC4, 0x80);
+    if (((GameObject *)obj)->ownerObj != NULL) {
+      if (scarab_isObjectInList(((GameObject *)obj)->ownerObj)) {
+        (*(void (**)(void *, int))(**(int **)(*(int *)&((GameObject *)obj)->ownerObj + 0x68) + 0x20))(
+            ((GameObject *)obj)->ownerObj, 0x80);
       }
     }
     for (n = 0; n < 25; n++) {
       (*gPartfxInterface)->spawnObject((void *)obj, 832, NULL, 1, -1, NULL);
     }
   } else if (type == 100) {
-    if (((GameObject *)obj)->unkC4 != NULL) {
-      if (scarab_isObjectInList(((GameObject *)obj)->unkC4)) {
-        (*(void (**)(void *, int))(**(int **)(*(int *)&((GameObject *)obj)->unkC4 + 0x68) + 0x24))(
-            ((GameObject *)obj)->unkC4, 0x80);
+    if (((GameObject *)obj)->ownerObj != NULL) {
+      if (scarab_isObjectInList(((GameObject *)obj)->ownerObj)) {
+        (*(void (**)(void *, int))(**(int **)(*(int *)&((GameObject *)obj)->ownerObj + 0x68) + 0x24))(
+            ((GameObject *)obj)->ownerObj, 0x80);
       }
     }
     for (n = 0; n < 25; n++) {
       (*gPartfxInterface)->spawnObject((void *)obj, 835, NULL, 1, -1, NULL);
     }
   } else if (type == 0x30a) {
-    if (((GameObject *)obj)->unkC4 != NULL) {
-      if (scarab_isObjectInList(((GameObject *)obj)->unkC4)) {
-        (*(void (**)(void *, int, int))(**(int **)(*(int *)&((GameObject *)obj)->unkC4 + 0x68) + 0x24))(
-            ((GameObject *)obj)->unkC4, 0x80, 0);
+    if (((GameObject *)obj)->ownerObj != NULL) {
+      if (scarab_isObjectInList(((GameObject *)obj)->ownerObj)) {
+        (*(void (**)(void *, int, int))(**(int **)(*(int *)&((GameObject *)obj)->ownerObj + 0x68) + 0x24))(
+            ((GameObject *)obj)->ownerObj, 0x80, 0);
       }
     }
     for (n = 0; n < 25; n++) {
@@ -1775,11 +1775,11 @@ void fn_801606F0(int obj, void *p2, int sub, GroundBaddieState *p)
   }
   (*(void (**)(int, u8 *, f32, int))(*(int *)gBaddieControlInterface + 0x2c))(obj, (u8 *)p,
                                                                               lbl_803E2E9C, 1);
-  *(int *)(sub + 0x3e0) = *(int *)&((GameObject *)obj)->unkC0;
-  *(int *)&((GameObject *)obj)->unkC0 = 0;
+  *(int *)(sub + 0x3e0) = *(int *)&((GameObject *)obj)->pendingParentObj;
+  *(int *)&((GameObject *)obj)->pendingParentObj = 0;
   (*(void (**)(int, u8 *, f32, f32, void *, void *))(*(int *)gPlayerInterface + 8))(
       obj, (u8 *)p, timeDelta, timeDelta, lbl_803AC5E8, lbl_803AC5D0);
-  *(int *)&((GameObject *)obj)->unkC0 = *(int *)(sub + 0x3e0);
+  *(int *)&((GameObject *)obj)->pendingParentObj = *(int *)(sub + 0x3e0);
 }
 #pragma dont_inline reset
 
@@ -1799,8 +1799,8 @@ void fn_8016083C(int *obj, GroundBaddieState *sub, GroundBaddieState *p)
   } d;
   f32 *dp = &d.x;
 
-  if (((GameObject *)obj)->unkC8 != NULL) {
-    *(int *)(*(int *)&((GameObject *)obj)->unkC8 + 0x30) = *(int *)&((GameObject *)obj)->anim.parent;
+  if (((GameObject *)obj)->childObjs[0] != NULL) {
+    *(int *)(*(int *)&((GameObject *)obj)->childObjs[0] + 0x30) = *(int *)&((GameObject *)obj)->anim.parent;
   }
   o = *(char **)&p->baddie.targetObj;
   if (o != NULL) {
@@ -1849,7 +1849,7 @@ int dll_CB_seqFn(short *obj, int p2, u8 *e)
   if (((GameObject *)obj)->unkF4 != 0) {
     return 0;
   }
-  if (((GameObject *)obj)->unkB4 != -1) {
+  if (((GameObject *)obj)->seqIndex != -1) {
     if ((*(int (**)(short *, int, int))(*(int *)gBaddieControlInterface + 0x30))(obj, sub, 1) ==
         0) {
       return 1;
@@ -1898,7 +1898,7 @@ int dll_CB_seqFn(short *obj, int p2, u8 *e)
       break;
     }
   }
-  if (((GameObject *)obj)->unkB4 == -1) {
+  if (((GameObject *)obj)->seqIndex == -1) {
     ((DllCBState *)sub)->unk400 |= 2;
     return 0;
   }
@@ -2104,10 +2104,10 @@ void FUN_80161130(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   
   uVar1 = *(undefined4 *)&((GameObject *)param_9)->extra;
   uVar2 = ObjGroup_RemoveObject(param_9,3);
-  if (*(int *)&((GameObject *)param_9)->unkC8 != 0) {
+  if (*(int *)&((GameObject *)param_9)->childObjs[0] != 0) {
     FUN_80017ac8(uVar2,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                 *(int *)&((GameObject *)param_9)->unkC8);
-    *(undefined4 *)&((GameObject *)param_9)->unkC8 = 0;
+                 *(int *)&((GameObject *)param_9)->childObjs[0]);
+    *(undefined4 *)&((GameObject *)param_9)->childObjs[0] = 0;
   }
   (**(code **)(*DAT_803dd738 + 0x40))(param_9,uVar1,1);
   return;
@@ -3232,10 +3232,10 @@ void dll_CB_free(int* obj)
     GroundBaddieState* state = ((GameObject *)obj)->extra;
     ObjGroup_RemoveObject(obj, 3);
     {
-        int* sub = ((GameObject *)obj)->unkC8;
+        int* sub = ((GameObject *)obj)->childObjs[0];
         if (sub != NULL) {
             Obj_FreeObject(sub);
-            ((GameObject *)obj)->unkC8 = NULL;
+            ((GameObject *)obj)->childObjs[0] = NULL;
         }
     }
     ((void(*)(int*, int*, int))((void**)*gBaddieControlInterface)[16])(obj, (int *)state, 1);
@@ -3246,10 +3246,10 @@ void dll_CE_free(int* obj)
     GroundBaddieState* state = ((GameObject *)obj)->extra;
     ObjGroup_RemoveObject(obj, 3);
     {
-        int* sub = ((GameObject *)obj)->unkC8;
+        int* sub = ((GameObject *)obj)->childObjs[0];
         if (sub != NULL) {
             Obj_FreeObject(sub);
-            ((GameObject *)obj)->unkC8 = NULL;
+            ((GameObject *)obj)->childObjs[0] = NULL;
         }
     }
     ((void(*)(int*, int*, int))((void**)*gBaddieControlInterface)[16])(obj, (int *)state, 32);

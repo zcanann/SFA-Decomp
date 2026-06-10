@@ -74,9 +74,9 @@ void lightfoot_free(int obj, int p2)
     int count;
     int inner = *(int *)&((GameObject *)obj)->extra;
     ObjGroup_RemoveObject(obj, 3);
-    count = ((GameObject *)obj)->unkEB;
+    count = ((GameObject *)obj)->childCount;
     for (i = 0; i < count; i++) {
-        void *child = ((GameObject *)obj)->unkC8;
+        void *child = ((GameObject *)obj)->childObjs[0];
         if (child != NULL) {
             ObjLink_DetachChild(obj, child);
             if (p2 == 0) {

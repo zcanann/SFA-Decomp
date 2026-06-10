@@ -179,7 +179,7 @@ void fn_80297284(int obj)
 
 int fn_802966CC(int obj)
 {
-    return *(int *)&((GameObject *)obj)->unkC8;
+    return *(int *)&((GameObject *)obj)->childObjs[0];
 }
 
 void fn_80296B70(int v)
@@ -3201,10 +3201,10 @@ int player_SeqFn(int obj, int obj2, ObjSeqState *seq, int endFlag)
                 f32 dy2;
                 f32 sp3;
                 (*gObjectTriggerInterface)->setObjects(
-                    *(s16 *)(*(int *)&((GameObject *)obj)->unkC4 + 0x46), *(int *)&((GameObject *)obj)->unkC4,
+                    *(s16 *)(*(int *)&((GameObject *)obj)->ownerObj + 0x46), *(int *)&((GameObject *)obj)->ownerObj,
                     0);
                 {
-                    int prt = *(int *)&((GameObject *)obj)->unkC4;
+                    int prt = *(int *)&((GameObject *)obj)->ownerObj;
                     obj2 = *(int *)(prt + 0xb8);
                     if (*(u32 *)(prt + 0x54) != 0) {
                         spd = (f32)*(s16 *)(*(int *)(prt + 0x54) + 0x5a);
@@ -8928,7 +8928,7 @@ void Lightfoot_UpdateAttachedChild(int obj, int inner)
     if (*(s16 *)((char *)animState + 0x26) == *(s16 *)((char *)animState + 0x28)) return;
     if (((GameObject *)obj)->anim.alpha == 0) return;
 
-    child = *(int *)&((GameObject *)obj)->unkC8;
+    child = *(int *)&((GameObject *)obj)->childObjs[0];
     if ((u32)child != 0) {
         ObjLink_DetachChild(obj, child);
         Obj_FreeObject(child);
@@ -10424,11 +10424,11 @@ void Lightfoot_UpdatePlayerInteraction(int obj, int inner, int state)
             (*(void (*)(int, int, f32, int))(*(int *)(*gBaddieControlInterface + 0x2c)))(
                 obj, state, lbl_803E820C, 1);
         }
-        ((PlayerState *)inner)->unk3E0 = *(int *)&((GameObject *)obj)->unkC0;
-        *(int *)&((GameObject *)obj)->unkC0 = 0;
+        ((PlayerState *)inner)->unk3E0 = *(int *)&((GameObject *)obj)->pendingParentObj;
+        *(int *)&((GameObject *)obj)->pendingParentObj = 0;
         (*(void (*)(int, int, f32, f32, void *, void *))(*(int *)(*gPlayerInterface + 0x8)))(
             obj, state, timeDelta, timeDelta, lbl_803DB0DC, lbl_803DB0D0);
-        *(int *)&((GameObject *)obj)->unkC0 = ((PlayerState *)inner)->unk3E0;
+        *(int *)&((GameObject *)obj)->pendingParentObj = ((PlayerState *)inner)->unk3E0;
         Lightfoot_ProcessHitResponseFlags(obj, inner);
     }
 }

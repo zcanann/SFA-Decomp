@@ -176,7 +176,7 @@ FUN_8017c608(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   byte *pbVar4;
   int iVar5;
   
-  if (((GameObject *)param_9)->unkB4 != -1) {
+  if (((GameObject *)param_9)->seqIndex != -1) {
     iVar5 = *(int *)&((GameObject *)param_9)->anim.placementData;
     pbVar4 = ((GameObject *)param_9)->extra;
     animUpdate->sequenceEventActive = 0;
@@ -545,7 +545,7 @@ int immultiseq_SeqFn(int* obj, int* anim, ObjAnimUpdateState *animUpdate) {
     IMMultiSeqPlacement *def = *(IMMultiSeqPlacement **)&((GameObject *)obj)->anim.placementData;
     animUpdate->hitVolumePair = animUpdate->activeHitVolumePair;
     animUpdate->sequenceEventActive = 0;
-    if (((GameObject *)obj)->unkB4 == -1) {
+    if (((GameObject *)obj)->seqIndex == -1) {
         return 0;
     }
     {
@@ -558,7 +558,7 @@ int immultiseq_SeqFn(int* obj, int* anim, ObjAnimUpdateState *animUpdate) {
                     int bv = GameBit_Get(gbit);
                     int nb = !((def->polarityMask >> next) & 1);
                     if ((u32)nb == (u32)bv) {
-                        (*gObjectTriggerInterface)->endSequence(((GameObject *)obj)->unkB4);
+                        (*gObjectTriggerInterface)->endSequence(((GameObject *)obj)->seqIndex);
                     }
                 }
             }
@@ -618,7 +618,7 @@ int seqobject_SeqFn(int* obj, int* anim, ObjAnimUpdateState *animUpdate)
     SeqObjectPlacement *def;
     SeqObjectState *state;
     int i;
-    if (((GameObject *)obj)->unkB4 == -1) {
+    if (((GameObject *)obj)->seqIndex == -1) {
         return 0;
     }
     def = *(SeqObjectPlacement **)&((GameObject *)obj)->anim.placementData;
@@ -822,7 +822,7 @@ int dll_115_seqFn(int *obj, int p2, ObjAnimUpdateState *animUpdate) {
     s16 *def = *(s16 **)&((GameObject *)obj)->anim.placementData;
     animUpdate->hitVolumePair = animUpdate->activeHitVolumePair;
     animUpdate->sequenceEventActive = 0;
-    if (((GameObject *)obj)->unkB4 == -1) {
+    if (((GameObject *)obj)->seqIndex == -1) {
         return 0;
     }
     {
@@ -833,7 +833,7 @@ int dll_115_seqFn(int *obj, int p2, ObjAnimUpdateState *animUpdate) {
                 s16 newId = (def + n)[0x14];
                 if (newId != -1 && newId != (def + v)[0x14]) {
                     if (GameBit_Get(newId) != 0) {
-                        (*gObjectTriggerInterface)->endSequence(((GameObject *)obj)->unkB4);
+                        (*gObjectTriggerInterface)->endSequence(((GameObject *)obj)->seqIndex);
                     }
                 }
             }

@@ -835,13 +835,13 @@ void fn_80157CDC(int obj, int p2)
         if ((*(u8 *)(sub + 11) & 1) != 0) {
           *(u8 *)(p2 + 0x33d) = (u8)(*(u8 *)(p2 + 0x33d) ^ 0x40);
           if ((*(u8 *)(p2 + 0x33d) & 0x40) != 0) {
-            if (((GameObject *)obj)->unkC8 == NULL) {
+            if (((GameObject *)obj)->childObjs[0] == NULL) {
               smallbasket_spawnLinkedFirepipe(obj, p2);
             } else {
-              firepipe_setLinkedUpdateFlag(*(int *)&((GameObject *)obj)->unkC8);
+              firepipe_setLinkedUpdateFlag(*(int *)&((GameObject *)obj)->childObjs[0]);
             }
-          } else if (((GameObject *)obj)->unkC8 != NULL) {
-            firepipe_clearLinkedUpdateFlag(*(int *)&((GameObject *)obj)->unkC8);
+          } else if (((GameObject *)obj)->childObjs[0] != NULL) {
+            firepipe_clearLinkedUpdateFlag(*(int *)&((GameObject *)obj)->childObjs[0]);
           }
         }
         if ((*(u8 *)(sub + 11) & 2) != 0) {
@@ -1218,8 +1218,8 @@ void fn_80159284(int* obj, u8* state)
         if (*(u8*)(state + 0x33b) == 0) {
             (*gCameraInterface)->loadTriggeredCamAction(0, 0x6c, 0);
         }
-        if (((GameObject *)obj)->anim.seqId == 0x6a2 && ((GameObject *)obj)->unkC8 != NULL) {
-            firepipe_clearLinkedUpdateFlag(*(int *)&((GameObject *)obj)->unkC8);
+        if (((GameObject *)obj)->anim.seqId == 0x6a2 && ((GameObject *)obj)->childObjs[0] != NULL) {
+            firepipe_clearLinkedUpdateFlag(*(int *)&((GameObject *)obj)->childObjs[0]);
         }
         *(u8*)(state + 0x33d) = *(u8*)(state + 0x33d) | 0x10;
     }
@@ -1238,8 +1238,8 @@ void fn_80159284(int* obj, u8* state)
 
     if ((*(u32*)(state + 0x2dc) & 0x40000000) != 0) {
         *(u8*)(state + 0x33d) = *(u8*)(state + 0x33d) & ~0x30;
-        if (((GameObject *)obj)->anim.seqId == 0x6a2 && ((GameObject *)obj)->unkC8 != NULL) {
-            firepipe_clearLinkedUpdateFlag(*(int *)&((GameObject *)obj)->unkC8);
+        if (((GameObject *)obj)->anim.seqId == 0x6a2 && ((GameObject *)obj)->childObjs[0] != NULL) {
+            firepipe_clearLinkedUpdateFlag(*(int *)&((GameObject *)obj)->childObjs[0]);
         }
         if (*(u8*)(state + 0x33f) != 0) {
             i = *(u8*)(state + 0x33f) * 0x10;
@@ -1638,8 +1638,8 @@ void fn_80157EBC(int obj, u8* state, u8* attacker, int cmd, int p5, int damage)
         return;
     }
 
-    if (idx == 1 && ((GameObject *)obj)->unkC8 != NULL) {
-        firepipe_clearLinkedUpdateFlag(*(int *)&((GameObject *)obj)->unkC8);
+    if (idx == 1 && ((GameObject *)obj)->childObjs[0] != NULL) {
+        firepipe_clearLinkedUpdateFlag(*(int *)&((GameObject *)obj)->childObjs[0]);
     }
     *(u8*)(state + 0x33d) = *(u8*)(state + 0x33d) & ~0x40;
     ((BaddieState *)state)->reactionFlags = ((BaddieState *)state)->reactionFlags & ~0x40;
@@ -1810,8 +1810,8 @@ void fn_80158494(s16* obj, u8* state)
     f32 dv[3];
 
     *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) & ~0x40;
-    if (((GameObject *)obj)->unkC8 != NULL) {
-        firepipe_clearLinkedUpdateFlag(*(int *)&((GameObject *)obj)->unkC8);
+    if (((GameObject *)obj)->childObjs[0] != NULL) {
+        firepipe_clearLinkedUpdateFlag(*(int *)&((GameObject *)obj)->childObjs[0]);
     }
 
     if ((*(u32*)(state + 0x2dc) & 0x80000000) != 0) {
@@ -2001,8 +2001,8 @@ void fn_80158C2C(s16* obj, u8* state)
         ((BaddieState *)state)->unk33A = 0;
         if (((GameObject *)obj)->anim.seqId == 0x6a2) {
             Sfx_PlayFromObject((int)obj, 0x4a9);
-            if (((GameObject *)obj)->unkC8 != NULL) {
-                firepipe_clearLinkedUpdateFlag(*(int *)&((GameObject *)obj)->unkC8);
+            if (((GameObject *)obj)->childObjs[0] != NULL) {
+                firepipe_clearLinkedUpdateFlag(*(int *)&((GameObject *)obj)->childObjs[0]);
             }
         }
     }
@@ -2072,8 +2072,8 @@ void fn_80158C2C(s16* obj, u8* state)
     } else {
         if ((((BaddieState *)state)->controlFlags & 0x40000000) != 0) {
             *(u8*)(state + 0x33d) = *(u8*)(state + 0x33d) & ~0x30;
-            if (((GameObject *)obj)->anim.seqId == 0x6a2 && ((GameObject *)obj)->unkC8 != NULL) {
-                firepipe_clearLinkedUpdateFlag(*(int *)&((GameObject *)obj)->unkC8);
+            if (((GameObject *)obj)->anim.seqId == 0x6a2 && ((GameObject *)obj)->childObjs[0] != NULL) {
+                firepipe_clearLinkedUpdateFlag(*(int *)&((GameObject *)obj)->childObjs[0]);
             }
             if (*(u8*)(state + 0x33f) != 0) {
                 i = *(u8*)(state + 0x33f) * 0x10;

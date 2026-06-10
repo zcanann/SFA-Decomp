@@ -818,9 +818,9 @@ extern int *gBaddieControlInterface;
 void dll_D3_free(int obj) {
     int *inner = ((GameObject *)obj)->extra;
     ObjGroup_RemoveObject(obj, 3);
-    if (((GameObject *)obj)->unkC8 != NULL) {
-        Obj_FreeObject(((GameObject *)obj)->unkC8);
-        *(int *)&((GameObject *)obj)->unkC8 = 0;
+    if (((GameObject *)obj)->childObjs[0] != NULL) {
+        Obj_FreeObject(((GameObject *)obj)->childObjs[0]);
+        *(int *)&((GameObject *)obj)->childObjs[0] = 0;
     }
     (*(void (*)(int, int *, int))(*(int *)(*gBaddieControlInterface + 0x40)))(obj, inner, 0);
 }

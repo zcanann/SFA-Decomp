@@ -280,7 +280,7 @@ void cclightfoot_free(int* obj, int p2)
     int* state = ((GameObject *)obj)->extra;
     int* sub = (int*)state[0];
     if (sub != NULL) {
-        if (((GameObject *)obj)->unkC8 != NULL) {
+        if (((GameObject *)obj)->childObjs[0] != NULL) {
             ObjLink_DetachChild(obj, sub);
         }
         if (p2 == 0) {
@@ -508,7 +508,7 @@ int ccqueen_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate) {
             int cmd = animUpdate->eventIds[(u8)i];
             switch (cmd) {
             case 1:
-                if (((GameObject *)obj)->unkC8 != NULL) {
+                if (((GameObject *)obj)->childObjs[0] != NULL) {
                     ObjLink_DetachChild(obj, *(int*)state);
                 }
                 break;
@@ -1072,7 +1072,7 @@ void cclightfoot_update(int obj)
         break;
     case 0xe:
         if ((u32)state[0] != 0) {
-            if (((GameObject *)obj)->unkC8 != NULL) {
+            if (((GameObject *)obj)->childObjs[0] != NULL) {
                 ObjLink_DetachChild(obj, state[0]);
             }
             Obj_FreeObject(state[0]);

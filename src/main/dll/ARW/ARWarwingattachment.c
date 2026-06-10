@@ -1117,7 +1117,7 @@ void dll_1FF_render(int *obj, int p1, int p2, int p3, int p4, s8 visible)
         if (v == 0) return;
     }
     if (((ObjAnimComponent *)obj)->modelInstance->shadowType == 2) {
-        if (((GameObject *)obj)->unkB4 == -1) {
+        if (((GameObject *)obj)->seqIndex == -1) {
             ((GameObject *)obj)->anim.modelState->flags &= ~(long long)OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         } else {
             ((GameObject *)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;

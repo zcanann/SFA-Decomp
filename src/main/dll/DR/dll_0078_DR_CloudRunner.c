@@ -270,7 +270,7 @@ void DR_CloudRunner_func17(int obj, int param)
     if (param == 1) {
         s16 t;
         inner->unk464 = 0;
-        t = ((GameObject *)obj)->unkB4;
+        t = ((GameObject *)obj)->seqIndex;
         if (t != -1) {
             (*gObjectTriggerInterface)->endSequence(t);
         }

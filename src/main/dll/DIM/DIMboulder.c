@@ -340,9 +340,9 @@ FUN_801addec(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   local_24 = DAT_802c2a8c;
   local_20 = DAT_802c2a90;
   if (*(char *)((int)piVar5 + 0x21) != *(char *)((int)piVar5 + 0x22)) {
-    if (*(int *)&((GameObject *)param_9)->unkC8 != 0) {
+    if (*(int *)&((GameObject *)param_9)->childObjs[0] != 0) {
       param_1 = FUN_80017ac8(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                             *(int *)&((GameObject *)param_9)->unkC8);
+                             *(int *)&((GameObject *)param_9)->childObjs[0]);
       *(undefined4 *)(param_9 + 200) = 0;
       *(undefined *)(param_9 + 0xeb) = 0;
     }
@@ -895,18 +895,18 @@ int dll_16C_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate)
     *(Blob10 *)ids = *(Blob10 *)lbl_802C2308;
 
     if (((Dll16CState *)extra)->subObjIndex != ((Dll16CState *)extra)->subObjIndexApplied) {
-        if (((GameObject *)obj)->unkC8 != NULL) {
-            Obj_FreeObject(((GameObject *)obj)->unkC8);
-            *(int *)&((GameObject *)obj)->unkC8 = 0;
-            ((GameObject *)obj)->unkEB = 0;
+        if (((GameObject *)obj)->childObjs[0] != NULL) {
+            Obj_FreeObject(((GameObject *)obj)->childObjs[0]);
+            *(int *)&((GameObject *)obj)->childObjs[0] = 0;
+            ((GameObject *)obj)->childCount = 0;
         }
         if (Obj_IsLoadingLocked()) {
             s8 idx = ((Dll16CState *)extra)->subObjIndex;
             if (idx > 0) {
-                *(int *)&((GameObject *)obj)->unkC8 =
+                *(int *)&((GameObject *)obj)->childObjs[0] =
                     Obj_SetupObject(Obj_AllocObjectSetup(24, ids[idx - 1]), 4, -1, -1,
                                     *(int *)&((GameObject *)obj)->anim.parent);
-                ((GameObject *)obj)->unkEB = 1;
+                ((GameObject *)obj)->childCount = 1;
             }
             ((Dll16CState *)extra)->subObjIndexApplied = ((Dll16CState *)extra)->subObjIndex;
         } else {
@@ -1065,18 +1065,18 @@ void dll_16C_update(int *obj)
 
     *(Blob10 *)ids = *(Blob10 *)lbl_802C2308;
     if (extra->subObjIndex != extra->subObjIndexApplied) {
-        if (((GameObject *)obj)->unkC8 != NULL) {
-            Obj_FreeObject(((GameObject *)obj)->unkC8);
-            *(int *)&((GameObject *)obj)->unkC8 = 0;
-            ((GameObject *)obj)->unkEB = 0;
+        if (((GameObject *)obj)->childObjs[0] != NULL) {
+            Obj_FreeObject(((GameObject *)obj)->childObjs[0]);
+            *(int *)&((GameObject *)obj)->childObjs[0] = 0;
+            ((GameObject *)obj)->childCount = 0;
         }
         if (Obj_IsLoadingLocked()) {
             s8 idx = extra->subObjIndex;
             if (idx > 0) {
-                *(int *)&((GameObject *)obj)->unkC8 =
+                *(int *)&((GameObject *)obj)->childObjs[0] =
                     Obj_SetupObject(Obj_AllocObjectSetup(24, ids[idx - 1]), 4, -1, -1,
                                     *(int *)&((GameObject *)obj)->anim.parent);
-                ((GameObject *)obj)->unkEB = 1;
+                ((GameObject *)obj)->childCount = 1;
             }
             extra->subObjIndexApplied = extra->subObjIndex;
         } else {

@@ -175,7 +175,7 @@ void dll_D3_update(int *obj)
             (int)((TreasureChestState *)state)->gameBitB,
             lbl_803202E8, lbl_80320360, 0, lbl_803AC638);
         if ((int)((TreasureChestState *)state)->hitPoints < hits) {
-            (*(void (**)(void))(*(int **)(*(int *)&((GameObject *)player)->unkC8 + 0x68) + 0x50 / 4))();
+            (*(void (**)(void))(*(int **)(*(int *)&((GameObject *)player)->childObjs[0] + 0x68) + 0x50 / 4))();
             *(f32 *)((char *)lbl_803AC638 + 0xc)  = ((GameObject *)obj)->anim.localPosX;
             *(f32 *)((char *)lbl_803AC638 + 0x10) = ((GameObject *)obj)->anim.localPosY;
             *(f32 *)((char *)lbl_803AC638 + 0x14) = ((GameObject *)obj)->anim.localPosZ;
@@ -186,13 +186,13 @@ void dll_D3_update(int *obj)
     ((void (*)(int *, int *, f32, int))((void **)*(int *)gBaddieControlInterface)[0x2c / 4])(
         obj, state, lbl_803E2FDC, -1);
 
-    ((TreasureChestState *)state)->savedObjC0 = *(int *)&((GameObject *)obj)->unkC0;
-    *(int *)&((GameObject *)obj)->unkC0 = 0;
+    ((TreasureChestState *)state)->savedObjC0 = *(int *)&((GameObject *)obj)->pendingParentObj;
+    *(int *)&((GameObject *)obj)->pendingParentObj = 0;
 
     ((void (*)(f32, f32, int *, int *, void **, void *))((void **)*(int *)gPlayerInterface)[8 / 4])(
         timeDelta, timeDelta, obj, state, gLandedArwingStateHandlers, &gLandedArwingDefaultStateHandler);
 
-    *(int *)&((GameObject *)obj)->unkC0 = ((TreasureChestState *)state)->savedObjC0;
+    *(int *)&((GameObject *)obj)->pendingParentObj = ((TreasureChestState *)state)->savedObjC0;
 
     if ((extra->flags92 & 1) == 0 &&
         extra->surfaceMode == 6) {

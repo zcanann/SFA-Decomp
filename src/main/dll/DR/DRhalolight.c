@@ -66,7 +66,7 @@ void SnowBike_hitDetect(int obj)
 
     state = ((GameObject *)obj)->extra;
     other = *(u8 **)(*(int *)&((GameObject *)obj)->anim.hitReactState);
-    if (((GameObject *)obj)->unkC0 != NULL) {
+    if (((GameObject *)obj)->pendingParentObj != NULL) {
         return;
     }
     if (state->unk421 == 2) {

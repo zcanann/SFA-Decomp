@@ -94,7 +94,7 @@ void timer_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
         *(u8 *)((char *)light + 0x4c) != 0) {
         queueGlowRender(light);
     }
-    if (((GameObject *)obj)->unkC4 == NULL) {
+    if (((GameObject *)obj)->ownerObj == NULL) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E7418);
     }
 }

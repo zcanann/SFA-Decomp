@@ -206,11 +206,11 @@ void fn_80152514(int *obj, u8 *state)
     def = *(int **)&((GameObject *)obj)->anim.placementData;
     path = *(u8 **)state;
     if (*(f32 *)(state + 0x32c) > lbl_803E2814) {
-        int *child = ((GameObject *)obj)->unkC8;
+        int *child = ((GameObject *)obj)->childObjs[0];
         if (child != 0) {
             Obj_FreeObject(child);
-            ObjLink_DetachChild(obj, ((GameObject *)obj)->unkC8);
-            *(int *)&((GameObject *)obj)->unkC8 = 0;
+            ObjLink_DetachChild(obj, ((GameObject *)obj)->childObjs[0]);
+            *(int *)&((GameObject *)obj)->childObjs[0] = 0;
         }
         *(f32 *)(state + 0x32c) = *(f32 *)(state + 0x32c) - timeDelta;
         if (*(f32 *)(state + 0x32c) <= *(f32 *)&lbl_803E2814) {
@@ -303,7 +303,7 @@ void fn_80152514(int *obj, u8 *state)
         int *child2;
 
         if (*(s8 *)((char *)def + 0x2e) != -1 &&
-            (child2 = ((GameObject *)obj)->unkC8) != 0 && fn_801A0174(child2) != 0) {
+            (child2 = ((GameObject *)obj)->childObjs[0]) != 0 && fn_801A0174(child2) != 0) {
             ObjHits_RecordObjectHit(Obj_GetPlayerObject(), obj, 0x16, 2, 0);
             fn_80152370((int)obj, 0x3b2);
             Sfx_PlayFromObject(obj, SFXsp_literun116);
@@ -312,7 +312,7 @@ void fn_80152514(int *obj, u8 *state)
         if ((int)randomGetRange(0, (int)(lbl_803E284C * oneOverTimeDelta)) == 0) {
             Sfx_PlayFromObject(obj, SFXsp_literun114);
         }
-        child2 = ((GameObject *)obj)->unkC8;
+        child2 = ((GameObject *)obj)->childObjs[0];
         if (child2 != 0) {
             int *tex = objFindTexture(child2, 0, 0);
             int v;

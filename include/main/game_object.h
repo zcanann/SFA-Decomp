@@ -33,26 +33,32 @@ typedef struct GameObject {
     u16 objectFlags; /* obj+0xB0 flag word; 9 object families STATIC_ASSERT
         this name (Checkpoint4/CmbSrc/EnemyMushroom/Laser/MagicPlant/...) */
     u8 unkB2[2];
-    s16 unkB4;
+    s16 seqIndex; /* obj+0xB4 trigger-sequence index (-1 = none, -2 = pending);
+        passed to ObjectTriggerInterface.endSequence(seqIndex) */
     u8 unkB6[2];
     void *extra; /* per-class state block */
     void *animEventCallback; /* obj+0xBC anim-event callback slot;
         LinkALevelControlObject/EarthWalkerObject STATIC_ASSERT this at 0xBC */
-    void *unkC0;
-    void *unkC4;
-    void *unkC8;
-    u8 unkCC[0x10];
+    void *pendingParentObj; /* obj+0xC0: object whose anim.parent this object
+        inherits in Obj_ApplyPendingParentLinks (set by objseq, cleared after) */
+    void *ownerObj; /* obj+0xC4 owner-ward chain link (newObj->ownerObj = obj at
+        spawn; objprint walks it to the chain root for shadow state; some DLL
+        classes reuse the slot as f32 scratch via launders) */
+    void *childObjs[5]; /* obj+0xC8..0xD8 child-object slots, childCount used;
+        Obj_*ModelColorFadeRecursive walks them (childScan += 4 loop) */
     void *unkDC;
     u8 unkE0[4];
     u8 unkE4;
-    u8 unkE5;
-    s16 unkE6;
+    u8 colorFadeFlags; /* obj+0xE5 bits 1/2 queried by getters, 4 toggled, 8
+        suppresses the fade tick (Obj_*ModelColorFade* family) */
+    s16 colorFadeFrames; /* obj+0xE6 frames left; -= framesThisStep, <=0 with
+        no ownerObj -> Obj_ClearModelColorFadeRecursive */
     u8 unkE8;
     s8 unkE9;
     u8 unkEA;
-    u8 unkEB;
+    u8 childCount;
     u8 unkEC[3];
-    s8 unkEF;
+    s8 colorFadeAlpha; /* obj+0xEF written from the fade alpha each tick */
     u8 unkF0;
     u8 unkF1[3];
     s32 unkF4;
@@ -65,7 +71,7 @@ typedef struct GameObject {
 STATIC_ASSERT(offsetof(GameObject, objectFlags) == 0xB0);
 STATIC_ASSERT(offsetof(GameObject, extra) == 0xB8);
 STATIC_ASSERT(offsetof(GameObject, unkE4) == 0xE4);
-STATIC_ASSERT(offsetof(GameObject, unkEF) == 0xEF);
+STATIC_ASSERT(offsetof(GameObject, colorFadeAlpha) == 0xEF);
 STATIC_ASSERT(offsetof(GameObject, unkF4) == 0xF4);
 STATIC_ASSERT(offsetof(GameObject, unk104) == 0x104);
 

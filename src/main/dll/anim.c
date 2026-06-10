@@ -1638,9 +1638,9 @@ void dbstealerworm_free(int *obj) {
     int *p40c = *(int**)&((GroundBaddieState *)sub)->control;
     ObjGroup_RemoveObject(obj, 3);
     Stack_Free((int*)((DbStealerwormControl *)p40c)->msgStack);
-    if (((GameObject *)obj)->unkC8 != NULL) {
-        Obj_FreeObject(*(int *)&((GameObject *)obj)->unkC8);
-        *(int *)&((GameObject *)obj)->unkC8 = 0;
+    if (((GameObject *)obj)->childObjs[0] != NULL) {
+        Obj_FreeObject(*(int *)&((GameObject *)obj)->childObjs[0]);
+        *(int *)&((GameObject *)obj)->childObjs[0] = 0;
     }
     ((void(*)(int*, u8*, int))((void**)*gBaddieControlInterface)[16])(obj, sub, 3);
 }
@@ -2247,7 +2247,7 @@ void fn_80202EF0(int obj, int p2)
             ((GameObject *)newObj)->anim.velocityX = (*(f32 *)(*(int *)&((BaddieState *)p2)->targetObj + 0xc) - ((GameObject *)obj)->anim.localPosX) / dur;
             ((GameObject *)newObj)->anim.velocityY = ((lbl_803E6380 * t + *(f32 *)(*(int *)&((BaddieState *)p2)->targetObj + 0x10)) - ((GameObject *)obj)->anim.localPosY) / dur;
             ((GameObject *)newObj)->anim.velocityZ = (*(f32 *)(*(int *)&((BaddieState *)p2)->targetObj + 0x14) - ((GameObject *)obj)->anim.localPosZ) / dur;
-            *(int *)&((GameObject *)newObj)->unkC4 = obj;
+            *(int *)&((GameObject *)newObj)->ownerObj = obj;
         }
     }
 }
@@ -3646,10 +3646,10 @@ void dbstealerworm_update(u8 *objp)
                     if ((((DbStealerwormControl *)sub3)->flags15 & 4) == 0) {
                         ((void (*)(int, int, f32, int))((void **)*(int *)gPlayerInterface)[12])(obj, blob, timeDelta, 4);
                     }
-                    ((GroundBaddieState *)blob)->savedObjC0 = *(int *)&((GameObject *)obj)->unkC0;
-                    *(int *)&((GameObject *)obj)->unkC0 = 0;
+                    ((GroundBaddieState *)blob)->savedObjC0 = *(int *)&((GameObject *)obj)->pendingParentObj;
+                    *(int *)&((GameObject *)obj)->pendingParentObj = 0;
                     ((void (*)(int, int, f32, f32, int, int))((void **)*(int *)gPlayerInterface)[2])(obj, blob, timeDelta, timeDelta, (int)(st + 0x34), (int)(st + 0x18));
-                    *(int *)&((GameObject *)obj)->unkC0 = ((GroundBaddieState *)blob)->savedObjC0;
+                    *(int *)&((GameObject *)obj)->pendingParentObj = ((GroundBaddieState *)blob)->savedObjC0;
                 }
             }
         }

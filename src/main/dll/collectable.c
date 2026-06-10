@@ -2205,8 +2205,8 @@ void baddieInstantiateWeapon(int obj,int state)
   parentSetup = *(int *)&((GameObject *)obj)->anim.placementData;
   if ((*(s16 *)&((TrickyState *)state)->unk2B4 != *(s16 *)(state + 0x2b6)) &&
       (((GameObject *)obj)->anim.alpha != 0)) {
-    if (((GameObject *)obj)->unkC8 != NULL) {
-      child = ((GameObject *)obj)->unkC8;
+    if (((GameObject *)obj)->childObjs[0] != NULL) {
+      child = ((GameObject *)obj)->childObjs[0];
       ObjLink_DetachChild(obj, (int)child);
       Obj_FreeObject((int)child);
     }

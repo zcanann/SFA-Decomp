@@ -567,7 +567,7 @@ void SpiritPrize_update(int obj)
     }
 
     objectIndex = (*gObjectTriggerInterface)->update((u8 *)obj, (f32)(u32)lbl_803DB411);
-    if (objectIndex != 0 && ((GameObject *)obj)->unkB4 == -2) {
+    if (objectIndex != 0 && ((GameObject *)obj)->seqIndex == -2) {
         int matchingObj;
         int prizeId;
         int duplicateCount;
@@ -592,7 +592,7 @@ void SpiritPrize_update(int obj)
             *(s16 *)(matchingObj + 0xb4) = -1;
             (*gObjectTriggerInterface)->endSequence(prizeId);
         }
-        ((GameObject *)obj)->unkB4 = -1;
+        ((GameObject *)obj)->seqIndex = -1;
         Obj_FreeObject(obj);
     }
 

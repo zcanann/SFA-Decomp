@@ -330,8 +330,8 @@ int drakorhoverpad_update(void *curve, int arg) {
     if (*(int *)&((GameObject *)p)->anim.previousLocalPosX != 0) {
         *(f32 *)&((GameObject *)p)->extra = *(f32 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 8);
         *(f32 *)&((GameObject *)p)->animEventCallback = *(f32 *)(*(u8 **)&((GameObject *)p)->anim.activeMoveProgress + 8);
-        *(f32 *)&((GameObject *)p)->unkC0 = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2c) << 8) / lbl_803E6A58));
-        *(f32 *)&((GameObject *)p)->unkC4 = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)&((GameObject *)p)->anim.activeMoveProgress + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)&((GameObject *)p)->anim.activeMoveProgress + 0x2c) << 8) / lbl_803E6A58));
+        *(f32 *)&((GameObject *)p)->pendingParentObj = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2c) << 8) / lbl_803E6A58));
+        *(f32 *)&((GameObject *)p)->ownerObj = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)&((GameObject *)p)->anim.activeMoveProgress + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)&((GameObject *)p)->anim.activeMoveProgress + 0x2c) << 8) / lbl_803E6A58));
         *(f32 *)(p + 0xd8) = *(f32 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0xc);
         *(f32 *)&((GameObject *)p)->unkDC = *(f32 *)(*(u8 **)&((GameObject *)p)->anim.activeMoveProgress + 0xc);
         *(f32 *)(p + 0xe0) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2d) << 8) / lbl_803E6A58));
@@ -343,8 +343,8 @@ int drakorhoverpad_update(void *curve, int arg) {
     } else {
         *(f32 *)&((GameObject *)p)->extra = *(f32 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 8);
         *(f32 *)&((GameObject *)p)->animEventCallback = *(f32 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 8);
-        *(f32 *)&((GameObject *)p)->unkC0 = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2c) << 8) / lbl_803E6A58));
-        *(f32 *)&((GameObject *)p)->unkC4 = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2c) << 8) / lbl_803E6A58));
+        *(f32 *)&((GameObject *)p)->pendingParentObj = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2c) << 8) / lbl_803E6A58));
+        *(f32 *)&((GameObject *)p)->ownerObj = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2c) << 8) / lbl_803E6A58));
         *(f32 *)(p + 0xd8) = *(f32 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0xc);
         *(f32 *)&((GameObject *)p)->unkDC = *(f32 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0xc);
         *(f32 *)(p + 0xe0) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2d) << 8) / lbl_803E6A58));

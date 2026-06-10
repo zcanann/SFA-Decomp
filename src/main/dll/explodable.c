@@ -469,7 +469,7 @@ void largecrate_free(int obj) {
 }
 
 int LargeCrate_SeqFn(int *obj) {
-    if (((GameObject *)obj)->unkB4 != -1) {
+    if (((GameObject *)obj)->seqIndex != -1) {
         (*gCameraInterface)->setTargetReticleOverride((int)obj);
     }
     return 0;

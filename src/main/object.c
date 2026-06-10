@@ -248,12 +248,12 @@ void Obj_ClearModelColorFadeRecursive(u8 *obj) {
     int i;
     u8 *childScan;
 
-    ((GameObject *)obj)->unkE6 = 0;
-    ((GameObject *)obj)->unkE5 &= ~0x6;
+    ((GameObject *)obj)->colorFadeFrames = 0;
+    ((GameObject *)obj)->colorFadeFlags &= ~0x6;
     i = 0;
     childScan = obj;
-    while (i < ((GameObject *)obj)->unkEB) {
-        Obj_ClearModelColorFadeRecursive(((GameObject *)childScan)->unkC8);
+    while (i < ((GameObject *)obj)->childCount) {
+        Obj_ClearModelColorFadeRecursive(((GameObject *)childScan)->childObjs[0]);
         childScan += 4;
         i++;
     }
@@ -264,7 +264,7 @@ void Obj_TickModelColorFadeRecursive(u8 *obj) {
     int i;
     u8 *childScan;
 
-    if ((((GameObject *)obj)->unkE5 & 4) != 0) {
+    if ((((GameObject *)obj)->colorFadeFlags & 4) != 0) {
         alpha = (f32)obj[0xef] + lbl_803DE89C * timeDelta;
     } else {
         alpha = (f32)obj[0xef] - lbl_803DE89C * timeDelta;
@@ -272,24 +272,24 @@ void Obj_TickModelColorFadeRecursive(u8 *obj) {
 
     if (alpha < lbl_803DE88C) {
         alpha = -alpha;
-        ((GameObject *)obj)->unkE5 ^= 4;
+        ((GameObject *)obj)->colorFadeFlags ^= 4;
     } else if (alpha > lbl_803DE8A0) {
         alpha = lbl_803DE8A0 - (alpha - lbl_803DE8A0);
-        ((GameObject *)obj)->unkE5 ^= 4;
+        ((GameObject *)obj)->colorFadeFlags ^= 4;
     }
 
-    ((GameObject *)obj)->unkEF = (int)alpha;
-    if ((((GameObject *)obj)->unkE5 & 8) == 0) {
-        ((GameObject *)obj)->unkE6 -= framesThisStep;
-        if (((GameObject *)obj)->unkE6 <= 0 && ((GameObject *)obj)->unkC4 == NULL) {
+    ((GameObject *)obj)->colorFadeAlpha = (int)alpha;
+    if ((((GameObject *)obj)->colorFadeFlags & 8) == 0) {
+        ((GameObject *)obj)->colorFadeFrames -= framesThisStep;
+        if (((GameObject *)obj)->colorFadeFrames <= 0 && ((GameObject *)obj)->ownerObj == NULL) {
             Obj_ClearModelColorFadeRecursive(obj);
         }
     }
 
     i = 0;
     childScan = obj;
-    while (i < ((GameObject *)obj)->unkEB) {
-        Obj_TickModelColorFadeRecursive(((GameObject *)childScan)->unkC8);
+    while (i < ((GameObject *)obj)->childCount) {
+        Obj_TickModelColorFadeRecursive(((GameObject *)childScan)->childObjs[0]);
         childScan += 4;
         i++;
     }
@@ -300,16 +300,16 @@ void Obj_SetModelColorFadeRecursive(u8 *obj, int frames, u8 red, u8 green, u8 bl
     u8 *childScan;
     int i;
 
-    ((GameObject *)obj)->unkE6 = (s16)frames;
-    ((GameObject *)obj)->unkE5 &= ~4;
-    ((GameObject *)obj)->unkE5 |= 2;
+    ((GameObject *)obj)->colorFadeFrames = (s16)frames;
+    ((GameObject *)obj)->colorFadeFlags &= ~4;
+    ((GameObject *)obj)->colorFadeFlags |= 2;
     obj[0xec] = red;
     obj[0xed] = green;
     obj[0xee] = blue;
     if (frames == 10000) {
-        ((GameObject *)obj)->unkE5 |= 8;
+        ((GameObject *)obj)->colorFadeFlags |= 8;
     } else {
-        ((GameObject *)obj)->unkE5 &= ~8;
+        ((GameObject *)obj)->colorFadeFlags &= ~8;
     }
     if (startAtHalf != 0) {
         obj[0xef] = 0x7f;
@@ -319,8 +319,8 @@ void Obj_SetModelColorFadeRecursive(u8 *obj, int frames, u8 red, u8 green, u8 bl
 
     i = 0;
     childScan = obj;
-    while (i < ((GameObject *)obj)->unkEB) {
-        Obj_SetModelColorFadeRecursive(((GameObject *)childScan)->unkC8, frames, red, green, blue, startAtHalf);
+    while (i < ((GameObject *)obj)->childCount) {
+        Obj_SetModelColorFadeRecursive(((GameObject *)childScan)->childObjs[0], frames, red, green, blue, startAtHalf);
         childScan += 4;
         i++;
     }
@@ -332,27 +332,27 @@ void Obj_SetModelColorOverrideRecursive(u8 *obj, u8 red, u8 green, u8 blue, u8 a
     u8 *childScan;
 
     if (enabled != 0) {
-        ((GameObject *)obj)->unkE5 |= 0x10;
+        ((GameObject *)obj)->colorFadeFlags |= 0x10;
         obj[0xec] = red;
         obj[0xed] = green;
         obj[0xee] = blue;
         obj[0xef] = alpha;
     } else {
-        ((GameObject *)obj)->unkE5 &= ~0x10;
+        ((GameObject *)obj)->colorFadeFlags &= ~0x10;
     }
 
     i = 0;
     childScan = obj;
-    while (i < ((GameObject *)obj)->unkEB) {
-        Obj_SetModelColorOverrideRecursive(((GameObject *)childScan)->unkC8, red, green, blue, alpha, enabled);
+    while (i < ((GameObject *)obj)->childCount) {
+        Obj_SetModelColorOverrideRecursive(((GameObject *)childScan)->childObjs[0], red, green, blue, alpha, enabled);
         childScan += 4;
         i++;
     }
 }
 
 void Obj_ResetModelColorState(u8 *obj) {
-    ((GameObject *)obj)->unkE6 = 0;
-    ((GameObject *)obj)->unkE5 &= ~1;
+    ((GameObject *)obj)->colorFadeFrames = 0;
+    ((GameObject *)obj)->colorFadeFlags &= ~1;
     ((GameObject *)obj)->unkF0 = 0;
     ObjModel_ClearRenderAttachment((u8 *)Obj_GetActiveModel(obj));
     (*(void (*)(int, int, int, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))((int)obj, 0x7fb, 0, 0x50, 0);
@@ -377,11 +377,11 @@ void Obj_StartModelFadeIn(u8 *obj, int frames) {
             Obj_SetModelColorFadeRecursive(obj, 0x1e, 0xa0, 0xff, 0xff, 0);
         }
         if (((GameObject *)obj)->unkF0 == fadeLimit) {
-            if ((((GameObject *)obj)->unkE5 & 2) != 0) {
+            if ((((GameObject *)obj)->colorFadeFlags & 2) != 0) {
                 Obj_ClearModelColorFadeRecursive(obj);
             }
-            ((GameObject *)obj)->unkE6 = (s16)frames;
-            ((GameObject *)obj)->unkE5 = (u8)(((GameObject *)obj)->unkE5 | 1);
+            ((GameObject *)obj)->colorFadeFrames = (s16)frames;
+            ((GameObject *)obj)->colorFadeFlags = (u8)(((GameObject *)obj)->colorFadeFlags | 1);
             Obj_BuildWorldTransformMatrix(obj, mtx, 0);
             ((void (*)(u8 *, u8 *, f32 *, int, f32))ObjModel_EnableDefaultRenderCallback)(
                 obj, (u8 *)objAnim->banks[objAnim->bankIndex], mtx, 1,
@@ -402,11 +402,11 @@ void Obj_StartModelFadeIn(u8 *obj, int frames) {
 #pragma scheduling on
 #pragma peephole on
 int objIsFrozen(u8 *obj) {
-    return ((GameObject *)obj)->unkE5 & 1;
+    return ((GameObject *)obj)->colorFadeFlags & 1;
 }
 
 int objGetFlagsE5_2(u8 *obj) {
-    return ((GameObject *)obj)->unkE5 & 2;
+    return ((GameObject *)obj)->colorFadeFlags & 2;
 }
 
 int roundUpTo4(int x);
@@ -779,12 +779,12 @@ void Obj_ApplyPendingParentLinks(void) {
     for (i = 0; i < lbl_803DCB84; i++) {
         u8 *obj = ((u8 **)lbl_803DCB88)[i];
         obj[0xaf] &= ~7;
-        if (((GameObject *)obj)->unkC0 != NULL) {
+        if (((GameObject *)obj)->pendingParentObj != NULL) {
             if (((GameObject *)obj)->anim.parent == NULL &&
-                *(void **)((u8 *)((GameObject *)obj)->unkC0 + 0x30) != NULL) {
-                ((GameObject *)obj)->anim.parent = *(void **)((u8 *)((GameObject *)obj)->unkC0 + 0x30);
+                *(void **)((u8 *)((GameObject *)obj)->pendingParentObj + 0x30) != NULL) {
+                ((GameObject *)obj)->anim.parent = *(void **)((u8 *)((GameObject *)obj)->pendingParentObj + 0x30);
             }
-            ((GameObject *)obj)->unkC0 = NULL;
+            ((GameObject *)obj)->pendingParentObj = NULL;
         }
     }
 }
@@ -1586,9 +1586,9 @@ void objFreeObjDef(void *objp, int flag) {
             ObjModel_Release((u8 *)objAnim->banks[i]);
         }
     }
-    if (((GameObject *)obj)->unkE5 & 1) {
-        *(u16 *)&((GameObject *)obj)->unkE6 = 0;
-        ((GameObject *)obj)->unkE5 = ((GameObject *)obj)->unkE5 & ~1;
+    if (((GameObject *)obj)->colorFadeFlags & 1) {
+        *(u16 *)&((GameObject *)obj)->colorFadeFrames = 0;
+        ((GameObject *)obj)->colorFadeFlags = ((GameObject *)obj)->colorFadeFlags & ~1;
         ((GameObject *)obj)->unkF0 = 0;
         ObjModel_ClearRenderAttachment((u8 *)objAnim->banks[objAnim->bankIndex]);
         cb2 = (void (*)(u8 *, int, int, int, int))*(int *)(*(int *)lbl_803DCAB4 + 0xc);
@@ -1596,7 +1596,7 @@ void objFreeObjDef(void *objp, int flag) {
         cb2 = (void (*)(u8 *, int, int, int, int))*(int *)(*(int *)lbl_803DCAB4 + 0xc);
         cb2(obj, 0x7fc, 0, 0x32, 0);
     }
-    if (((GameObject *)obj)->unkE5 & 2) {
+    if (((GameObject *)obj)->colorFadeFlags & 2) {
         Obj_ClearModelColorFadeRecursive(obj);
     }
     group = ObjGroup_GetObjectGroup((uint)obj);
@@ -1619,11 +1619,11 @@ void objFreeObjDef(void *objp, int flag) {
             mm_free(o);
         }
     }
-    if (((GameObject *)obj)->unkB4 >= 0) {
+    if (((GameObject *)obj)->seqIndex >= 0) {
         if (flag == 0) {
-            (*gObjectTriggerInterface)->endSequence(((GameObject *)obj)->unkB4);
+            (*gObjectTriggerInterface)->endSequence(((GameObject *)obj)->seqIndex);
         }
-        ((GameObject *)obj)->unkB4 = 0xffff;
+        ((GameObject *)obj)->seqIndex = 0xffff;
     }
     if ((*(u16 *)&((GameObject *)obj)->anim.flags & 0x2000) && *(int *)&((GameObject *)obj)->anim.placementData != 0) {
         mm_free(((GameObject *)obj)->anim.placementData);
@@ -1675,12 +1675,12 @@ void Obj_UpdateObject(u8 *obj)
         }
         return;
     }
-    if (((GameObject *)obj)->unkE5 != 0 && *(int *)&((GameObject *)obj)->unkC4 == 0 && (((GameObject *)obj)->unkE5 & 2)) {
+    if (((GameObject *)obj)->colorFadeFlags != 0 && *(int *)&((GameObject *)obj)->ownerObj == 0 && (((GameObject *)obj)->colorFadeFlags & 2)) {
         Obj_TickModelColorFadeRecursive(obj);
     }
-    if (*(int *)&((GameObject *)obj)->unkC0 != 0) {
-        if (*(int *)&((GameObject *)obj)->unkC8 != 0) {
-            t = *(u8 **)((u8 *)((GameObject *)obj)->unkC8 + 0x54);
+    if (*(int *)&((GameObject *)obj)->pendingParentObj != 0) {
+        if (*(int *)&((GameObject *)obj)->childObjs[0] != 0) {
+            t = *(u8 **)((u8 *)((GameObject *)obj)->childObjs[0] + 0x54);
             if (t != 0) {
                 childHitState = (ObjHitsPriorityState *)t;
                 childHitState->lastHitObject = 0;
@@ -1706,11 +1706,11 @@ void Obj_UpdateObject(u8 *obj)
     ((GameObject *)obj)->unkFC = object->velocityX;
     ((GameObject *)obj)->unk100 = object->velocityY;
     ((GameObject *)obj)->unk104 = object->velocityZ;
-    if (((GameObject *)obj)->unkE5 != 0 && *(int *)&((GameObject *)obj)->unkC4 == 0 && (((GameObject *)obj)->unkE5 & 1)) {
-        ((GameObject *)obj)->unkE6 = (s16)(int)((f32)((GameObject *)obj)->unkE6 - timeDelta);
-        if (((GameObject *)obj)->unkE6 <= 0) {
-            ((GameObject *)obj)->unkE6 = 0;
-            ((GameObject *)obj)->unkE5 &= ~1;
+    if (((GameObject *)obj)->colorFadeFlags != 0 && *(int *)&((GameObject *)obj)->ownerObj == 0 && (((GameObject *)obj)->colorFadeFlags & 1)) {
+        ((GameObject *)obj)->colorFadeFrames = (s16)(int)((f32)((GameObject *)obj)->colorFadeFrames - timeDelta);
+        if (((GameObject *)obj)->colorFadeFrames <= 0) {
+            ((GameObject *)obj)->colorFadeFrames = 0;
+            ((GameObject *)obj)->colorFadeFlags &= ~1;
             ((GameObject *)obj)->unkF0 = 0;
             ObjModel_ClearRenderAttachment((u8 *)object->banks[object->bankIndex]);
             cb = (void (*)(u8 *, int, int, int, int))*(int *)(*lbl_803DCAB4 + 0xc);
@@ -1741,8 +1741,8 @@ void Obj_UpdateObject(u8 *obj)
 skip:
     hitState = (ObjHitsPriorityState *)object->hitReactState;
     if (hitState != NULL) {
-        if (*(int *)&((GameObject *)obj)->unkC8 != 0) {
-            t = *(u8 **)((u8 *)((GameObject *)obj)->unkC8 + 0x54);
+        if (*(int *)&((GameObject *)obj)->childObjs[0] != 0) {
+            t = *(u8 **)((u8 *)((GameObject *)obj)->childObjs[0] + 0x54);
             if (t != 0) {
                 childHitState = (ObjHitsPriorityState *)t;
                 childHitState->lastHitObject = 0;
@@ -1814,9 +1814,9 @@ void Obj_UpdateAllObjects(u8 flags)
     } else {
         obj2 = 0;
     }
-    if (obj2 != 0 && ((GameObject *)obj2)->unkC8 != 0) {
-        *(int *)((u8 *)((GameObject *)obj2)->unkC8 + 0x30) = *(int *)&((GameObject *)obj2)->anim.parent;
-        Obj_UpdateObject(((GameObject *)obj2)->unkC8);
+    if (obj2 != 0 && ((GameObject *)obj2)->childObjs[0] != 0) {
+        *(int *)((u8 *)((GameObject *)obj2)->childObjs[0] + 0x30) = *(int *)&((GameObject *)obj2)->anim.parent;
+        Obj_UpdateObject(((GameObject *)obj2)->childObjs[0]);
     }
     if (timeStop == 0) {
         ObjHits_Update(lbl_803DCB84);
@@ -1849,9 +1849,9 @@ void Obj_UpdateAllObjects(u8 flags)
         } else {
             obj2 = 0;
         }
-        if (obj2 != 0 && ((GameObject *)obj2)->unkC8 != 0) {
-            *(int *)((u8 *)((GameObject *)obj2)->unkC8 + 0x30) = *(int *)&((GameObject *)obj2)->anim.parent;
-            child = *(int *)&((GameObject *)obj2)->unkC8;
+        if (obj2 != 0 && ((GameObject *)obj2)->childObjs[0] != 0) {
+            *(int *)((u8 *)((GameObject *)obj2)->childObjs[0] + 0x30) = *(int *)&((GameObject *)obj2)->anim.parent;
+            child = *(int *)&((GameObject *)obj2)->childObjs[0];
             if ((((GameObject *)child)->objectFlags & 0x2000) == 0) {
                 switch (((GameObject *)child)->anim.seqId) {
                 case 0:
@@ -2086,7 +2086,7 @@ void Obj_UpdateModelBlendStates(void)
             }
             j = 0;
             walker = obj;
-            for (; j < ((GameObject *)obj)->unkEB; j++) {
+            for (; j < ((GameObject *)obj)->childCount; j++) {
                 child = *(u8 **)(walker + 0xc8);
                 childAnim = (ObjAnimComponent *)child;
                 if (child != 0 && childAnim->modelInstance != NULL) {
@@ -2096,7 +2096,7 @@ void Obj_UpdateModelBlendStates(void)
                         if (m != 0) {
                             *(u16 *)(m + 0x18) &= ~8;
                             if (*(u8 *)(*(u8 **)m + 0xf9) != 0) {
-                                c0 = ((GameObject *)child)->unkC0;
+                                c0 = ((GameObject *)child)->pendingParentObj;
                                 if (c0 != 0) {
                                     bp = *(u8 **)(c0 + 0xb8);
                                 } else {

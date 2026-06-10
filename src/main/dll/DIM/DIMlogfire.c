@@ -227,7 +227,7 @@ FUN_801a9408(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   for (iVar3 = 0; iVar3 < (int)(uint)animUpdate->eventCount; iVar3 = iVar3 + 1) {
     bVar1 = animUpdate->eventIds[iVar3];
     if (bVar1 == 2) {
-      iVar4 = *(int *)&((GameObject *)param_9)->unkC8;
+      iVar4 = *(int *)&((GameObject *)param_9)->childObjs[0];
       if (iVar4 != 0) {
         uVar5 = ObjLink_DetachChild(param_9,iVar4);
         param_1 = FUN_80017ac8(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar4);
@@ -236,7 +236,7 @@ FUN_801a9408(undefined8 param_1,double param_2,double param_3,undefined8 param_4
     }
     else if ((bVar1 < 2) && (bVar1 != 0)) {
       *(undefined4 *)(param_9 + 0xf8) = 0x30b;
-      iVar4 = *(int *)&((GameObject *)param_9)->unkC8;
+      iVar4 = *(int *)&((GameObject *)param_9)->childObjs[0];
       if (iVar4 != 0) {
         uVar5 = ObjLink_DetachChild(param_9,iVar4);
         param_1 = FUN_80017ac8(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar4);
@@ -365,7 +365,7 @@ extern void disableHeavyFog(void);
 void animsharpclaw_free(int obj) {
     char *inner;
     int *child;
-    child = ((GameObject *)obj)->unkC8;
+    child = ((GameObject *)obj)->childObjs[0];
     inner = ((GameObject *)obj)->extra;
     if (child != NULL) {
         ObjLink_DetachChild(obj, (int)child);
@@ -716,7 +716,7 @@ int fn_801A8F88(int obj, ObjAnimUpdateState *animUpdate)
         switch (v) {
         case 1:
             ((GameObject *)obj)->unkF8 = 779;
-            state = (int)((GameObject *)obj)->unkC8;
+            state = (int)((GameObject *)obj)->childObjs[0];
             if ((void *)state != NULL) {
                 ObjLink_DetachChild(obj, state);
                 Obj_FreeObject(state);
@@ -726,7 +726,7 @@ int fn_801A8F88(int obj, ObjAnimUpdateState *animUpdate)
             ObjLink_AttachChild(obj, alloc, 0);
             break;
         case 2:
-            state = (int)((GameObject *)obj)->unkC8;
+            state = (int)((GameObject *)obj)->childObjs[0];
             if ((void *)state != NULL) {
                 ObjLink_DetachChild(obj, state);
                 Obj_FreeObject(state);
@@ -906,7 +906,7 @@ void animsharpclaw_update(int *obj) {
             return;
         }
     }
-    if (((GameObject *)obj)->unkB4 != -2) {
+    if (((GameObject *)obj)->seqIndex != -2) {
         return;
     }
     kind = (s8)((AnimsharpclawState *)inner)->unk57;
@@ -915,10 +915,10 @@ void animsharpclaw_update(int *obj) {
     matchCount = 0;
     for (i = 0; i < count; i++) {
         int *o = (int *)objects[i];
-        if (((GameObject *)o)->unkB4 == kind) {
+        if (((GameObject *)o)->seqIndex == kind) {
             found = o;
         }
-        if (((GameObject *)o)->unkB4 == -2 && ((GameObject *)o)->anim.classId == 0x10 &&
+        if (((GameObject *)o)->seqIndex == -2 && ((GameObject *)o)->anim.classId == 0x10 &&
             kind == (s8)*(u8 *)((char *)*(int **)&((GameObject *)o)->extra + 0x57)) {
             matchCount++;
         }
@@ -927,7 +927,7 @@ void animsharpclaw_update(int *obj) {
         *(s16 *)((char *)found + 0xb4) = -1;
         (*gObjectTriggerInterface)->endSequence(kind);
     }
-    ((GameObject *)obj)->unkB4 = -1;
+    ((GameObject *)obj)->seqIndex = -1;
 }
 #pragma peephole reset
 #pragma scheduling reset

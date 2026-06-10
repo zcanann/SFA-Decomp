@@ -1278,8 +1278,8 @@ f32 modelLightStruct_getObjectIntensity(u8 *light, u8 *obj) {
     f32 dist;
     f32 amount;
 
-    if (((GameObject *)obj)->unkC4 != NULL) {
-        obj = ((GameObject *)obj)->unkC4;
+    if (((GameObject *)obj)->ownerObj != NULL) {
+        obj = ((GameObject *)obj)->ownerObj;
     }
 
     PSVECSubtract(&((GameObject *)obj)->anim.worldPosX, (f32 *)(light + 0x10), delta);

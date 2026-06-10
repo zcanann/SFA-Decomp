@@ -417,7 +417,7 @@ void sc_cloudrunnera_update(int obj)
     if (sub == NULL) return;
     if (((ScCloudrunneraPlacement *)sub)->unk18 == -1) return;
     idx = (*gObjectTriggerInterface)->update((u8 *)obj, (f32)(u32)lbl_803DB411);
-    if (idx != 0 && ((GameObject *)obj)->unkB4 == -2) {
+    if (idx != 0 && ((GameObject *)obj)->seqIndex == -2) {
         int found;
         register s32 mark = *(s8 *)&seq->slot;
         int *arr;
@@ -433,7 +433,7 @@ void sc_cloudrunnera_update(int obj)
         n = count;
         for (; idx < n; idx++) {
             int o = *arr;
-            s16 t = ((GameObject *)o)->unkB4;
+            s16 t = ((GameObject *)o)->seqIndex;
             if (t == mark) {
                 found = o;
             }
@@ -449,7 +449,7 @@ void sc_cloudrunnera_update(int obj)
             *(s16 *)(found + 0xb4) = -1;
             (*gObjectTriggerInterface)->endSequence(markCopy);
         }
-        ((GameObject *)obj)->unkB4 = -1;
+        ((GameObject *)obj)->seqIndex = -1;
     }
 
     for (i = 0; i < seq->eventCount; i++) {
@@ -457,7 +457,7 @@ void sc_cloudrunnera_update(int obj)
         case 0: {
             int setup;
             int newObj;
-            if (*(void **)&((GameObject *)obj)->unkC8 != NULL) {
+            if (*(void **)&((GameObject *)obj)->childObjs[0] != NULL) {
                 break;
             }
             if (Obj_IsLoadingLocked() == 0) {
@@ -485,13 +485,13 @@ void sc_cloudrunnera_update(int obj)
             break;
         }
         case 1: {
-            if (*(void **)&((GameObject *)obj)->unkC8 != NULL) {
-                cmbsrc_setExternalActive(*(int *)&((GameObject *)obj)->unkC8, 0);
+            if (*(void **)&((GameObject *)obj)->childObjs[0] != NULL) {
+                cmbsrc_setExternalActive(*(int *)&((GameObject *)obj)->childObjs[0], 0);
             }
             break;
         }
         case 2: {
-            int innerSlot = *(int *)&((GameObject *)obj)->unkC8;
+            int innerSlot = *(int *)&((GameObject *)obj)->childObjs[0];
             if ((u32)innerSlot != 0) {
                 ObjLink_DetachChild(obj, innerSlot);
                 Obj_FreeObject(innerSlot);
@@ -501,11 +501,11 @@ void sc_cloudrunnera_update(int obj)
         }
     }
     {
-        int t = *(int *)&((GameObject *)obj)->unkC8;
+        int t = *(int *)&((GameObject *)obj)->childObjs[0];
         if ((u32)t != 0) {
             *(s16 *)(t + 4) = ((GameObject *)obj)->anim.rotZ;
-            *(s16 *)(*(int *)&((GameObject *)obj)->unkC8 + 2) = (s16)(((GameObject *)obj)->anim.rotY + 0xe38);
-            *(s16 *)(*(int *)&((GameObject *)obj)->unkC8 + 0) = (s16)(((GameObject *)obj)->anim.rotX + -0x8000);
+            *(s16 *)(*(int *)&((GameObject *)obj)->childObjs[0] + 2) = (s16)(((GameObject *)obj)->anim.rotY + 0xe38);
+            *(s16 *)(*(int *)&((GameObject *)obj)->childObjs[0] + 0) = (s16)(((GameObject *)obj)->anim.rotX + -0x8000);
         }
     }
 }

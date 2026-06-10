@@ -126,7 +126,7 @@ int dll_DIM_BossGutSpik_update(void *obj,undefined4 param_2,ObjAnimUpdateState *
   }
   lbl_803DDBA0 += timeDelta;
 
-  if (((GameObject *)obj)->unkB4 != -1) {
+  if (((GameObject *)obj)->seqIndex != -1) {
     animOk = (*(int (**)(void *,DIMbosstonsilState *,int))(*(int *)gBaddieControlInterface + 0x30))
         (obj,state,1);
     if (animOk == 0) {
@@ -174,7 +174,7 @@ clearHitVolumePair:
 updateDone:;
   }
 
-  if (((GameObject *)obj)->unkB4 == -1) {
+  if (((GameObject *)obj)->seqIndex == -1) {
     state->stateFlags |= DIMBOSSTONSIL_STATE_FLAG_START_MOVE;
     return 0;
   }

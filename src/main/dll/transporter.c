@@ -584,7 +584,7 @@ void iceblast_update(int *obj) {
     player = (int *)Obj_GetPlayerObject();
     state = ((GameObject *)obj)->extra;
     def = *(int **)&((GameObject *)obj)->anim.placementData;
-    if (player != NULL && (path = ((GameObject *)player)->unkC8) != NULL) {
+    if (player != NULL && (path = ((GameObject *)player)->childObjs[0]) != NULL) {
         ((GameObject *)obj)->anim.rotZ = *(s16 *)((char *)path + 4);
         ((GameObject *)obj)->anim.rotY = *(s16 *)((char *)path + 2);
         *(s16 *)obj = *(s16 *)path;
