@@ -3152,6 +3152,48 @@ bare array's base web is created first regardless of decl position
     the MP4 oracle (find a 100%-matched fn with li-rematerialize-at-use, read
     its C) — a fresh-headroom probe-batch job, not a deep-context grind.
 
+**#108 ROTATION-CLASS RESEARCH CAMPAIGN (timer_update deep-dive + corpus
+sweep; tools/rotmap.py):**
+- **ALWAYS rotmap BEFORE banking a rotation.** `tools/rotmap.py <unit> <fn>`
+  aligns the two streams on register SKELETONS (regs masked) so pure renames
+  pair up — the structural diffs HIDDEN under a rotation fall out as
+  explicit regions. timer_update's "pure #108 rotation" hid FOUR invisible
+  fixes (a missing #83a setup re-deref + 3 compare-width sites, 96.89→98.36);
+  WM_ObjCreator's hid an FP-const lift diff; wcpressures' hid a #110 li;mr
+  chain. The fuzzy%% of a rotation fn UNDERSTATES how much is structurally
+  fixable — the rotation's transposition penalty drowns the real signal.
+- **OUR O4 saved-reg ranking on timer = USE-COUNT DESCENDING** (state 29
+  uses→r31, setup 16→r30, obj 8→r29, flag+v→r28 COALESCED); **TARGET's =
+  DECL ORDER with const-flag sinking** (v decl-1→r31, state→r30, setup→r29,
+  obj param→r28, flag const-class→r27, NO coalescing) — which is exactly the
+  coloring `#pragma optimization_level 2` produces (probe: O2 = 4/5 webs
+  target-exact, but O2's ISEL diverges — clrlwi/extsh artifacts target
+  lacks, so a plain O2 wrap is NOT the fix). The use-count law does NOT
+  generalize to drcloudper — per-fn, as #108 says.
+- **Coalescing direction tell**: ours REUSES a freed saved reg for the next
+  disjoint same-class web (timer flag+v share r28; WM_ObjCreator's three
+  per-arm setup/spawned webs share r29); target SPREADS onto fresh regs
+  (r27/r30/r31 per arm) even when the source already has block-scope
+  per-arm decls. No source form found that stops the reuse.
+- **Exhausted levers on the standalone-reproducing timer probe (~35
+  variants — do NOT re-run these on this class)**: decl-order perms,
+  block-scope flag/v, v-as-ternary/x-copy/hoisted-def, #77 void*+cast-copy
+  (moves state/setup to target homes but obj inverts), v init-at-decl,
+  register kw, #114 (f64)/(int)(f64) sandwiches, conversion REMOVAL (the
+  dose theory is falsified for this fn — zero conversions, same coloring),
+  embedded-assign removal, hold-local removal, -O4 vs -O4,s vs -O4,p vs
+  -O3,p, optimize_for_size on/off, global_optimizer/opt_lifetimes/
+  register_coloring/opt_* pragma battery, ALL 14 GC compiler versions
+  (1.0-3.0a5.2: none match target's coloring — three distinct version-era
+  colorings, all wrong; NOT a version artifact).
+- WORKFLOW for any banked rotation now: (1) rotmap, (2) fix every
+  structural region (real score gains — the transposition penalty often
+  releases more than the instr count suggests), (3) re-rotmap to confirm
+  pure-rename state, (4) bank with the permutation table in the commit
+  message. The pure-rename residual awaits an allocator-policy lever
+  (decl-order-at-O4) that the probe battery says is not source-reachable
+  with known spellings.
+
 *(Numbering note: the entry below landed twice into collisions — first as
 #107 (vs the #61c un-naming crack), then as #108 (vs the class-pooled
 allocator model at 121e28185) — and is now #112. Commit messages citing
@@ -4633,6 +4675,11 @@ is one level less indirect. The matched-code convention is `extern int *lbl;`
   (mid-fn pragmas). Phase-1/3 sweep results: 90 uniform files migrated to
   unit cflags (cflags_dll_noopt/nosched/nopeep), 119 mixed files minimized,
   ~2400 lines removed, all byte-identical.
+- `python3 tools/rotmap.py <unit> <symbol>` — register-rotation mapper:
+  skeleton-aligns T/C streams, prints the T→C register permutation with
+  per-web counts + the STRUCTURAL diffs hidden under the rotation. Run on
+  every #108-class partial before banking (see the rotation-campaign
+  section).
 - `python3 tools/pragma_depushpop.py [--apply] [--filter S]` — eliminate
   `#pragma push/pop` scaffolding: full-environment model (push/pop saves +
   per-kind value/reset stacks across 9 pragma kinds incl. optimization_level
