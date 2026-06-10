@@ -69,19 +69,15 @@ void drcagewith_hitDetect(int obj) {
         }
         v = oneOverTimeDelta * (((GameObject *)obj)->anim.localPosX - ((GameObject *)obj)->anim.previousLocalPosX) * lbl_803E69FC;
         v = interpolate(v - *(f32 *)(p + 0x24), lbl_803E6A00, timeDelta);
-        clamped = lbl_803E6A04 * timeDelta;
-        if (v >= clamped) {
-            clamped = lbl_803E6A08 * timeDelta;
-            if (v <= clamped) {
-                clamped = v;
-            }
-        }
+        clamped = (v < lbl_803E6A04 * timeDelta)
+                      ? lbl_803E6A04 * timeDelta
+                      : ((v > lbl_803E6A08 * timeDelta) ? lbl_803E6A08 * timeDelta : v);
         *(f32 *)(p + 0x24) = *(f32 *)(p + 0x24) + clamped;
         div = lbl_803E6A0C;
         for (i = 0; i < 9; i++) {
             nearest = objModelGetVecFn_800395d8(obj, i);
             if (nearest != NULL) {
-                *(s16 *)((char *)nearest + 4) = (int)(*(f32 *)(p + 0x24) / div);
+                *(s16 *)((char *)nearest + 4) = *(f32 *)(p + 0x24) / div;
             }
         }
         if (*(void **)p != NULL) {
