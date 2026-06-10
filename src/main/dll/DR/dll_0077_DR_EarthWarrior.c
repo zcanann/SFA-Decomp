@@ -85,9 +85,9 @@ typedef struct EarthWarriorSub {
     u8 flags3F1;
     u8 flags3F2;
     u8 pad3F3[5];
-    int unk3F8;      /* config row pointer */
+    int moveTable;      /* config row pointer */
     int unk3FC;
-    int unk400;      /* config row pointer */
+    int configRow;      /* config row pointer */
     f32 unk404;
     f32 unk408;
     u8 pad40C[4];
@@ -115,7 +115,7 @@ typedef struct EarthWarriorSub {
     int unk480;
     s16 unk484;      /* current yaw */
     u8 pad486[2];
-    int unk488;
+    int frameCounter;
     int unk48C;
     u8 pad490[4];
     int unk494;
@@ -138,9 +138,9 @@ typedef struct EarthWarriorSub {
     u8 unk8A6;
     u8 unk8A7;
     u8 pad8A8[8];
-    u8 unk8B0;
+    u8 attackStage;
     u8 pad8B1[0x1b];
-    s8 unk8CC;       /* attack phase */
+    s8 attackPhase;       /* attack phase */
     u8 pad8CD[3];
     u8 unk8D0;
     u8 unk8D1;
@@ -557,24 +557,24 @@ int fn_802BC830(int obj, int p2, int p3)
     ((BaddieState *)p3)->moveSpeed = lbl_803E82EC;
     if (((GameObject *)obj)->anim.currentMoveProgress > GXInit_ClearColor &&
         ((GameObject *)obj)->anim.currentMoveProgress < GXInit_BlackColor &&
-        ((BaddieState *)p3)->animSpeedC > *(f32 *)((char *)((EarthWarriorSub *)p2)->unk400 + 0x1c) - GXInit_WhiteColor &&
+        ((BaddieState *)p3)->animSpeedC > *(f32 *)((char *)((EarthWarriorSub *)p2)->configRow + 0x1c) - GXInit_WhiteColor &&
         *(f32 *)((char *)p3 + 0x298) > lbl_803E82FC &&
-        ((EarthWarriorSub *)p2)->unk488 >= 0x96) {
+        ((EarthWarriorSub *)p2)->frameCounter >= 0x96) {
         ((ByteFlags *)&((EarthWarriorSub *)p2)->flags3F0)->b40 = 1;
         ((ByteFlags *)&((EarthWarriorSub *)p2)->flags3F0)->b80 = 0;
         ((EarthWarriorSub *)p2)->unk8A6 = ((EarthWarriorSub *)p2)->unk8A7;
         ((BaddieState *)p3)->moveSpeed = lbl_803E8300;
-        ObjAnim_SetCurrentMove(obj, *(s16 *)((char *)((EarthWarriorSub *)p2)->unk3F8 + 0x3a), lbl_803E8304, 0);
+        ObjAnim_SetCurrentMove(obj, *(s16 *)((char *)((EarthWarriorSub *)p2)->moveTable + 0x3a), lbl_803E8304, 0);
         ObjAnim_SetCurrentEventStepFrames((struct ObjAnimComponent *)obj, 0x10);
         ((EarthWarriorSub *)p2)->unk858 = ((EarthWarriorSub *)p2)->unk484;
-        ((EarthWarriorSub *)p2)->unk844 = (lbl_803E8308 + (*(f32 *)((char *)((EarthWarriorSub *)p2)->unk400 + 0x14) + ((BaddieState *)p3)->animSpeedC)) / lbl_803E830C;
+        ((EarthWarriorSub *)p2)->unk844 = (lbl_803E8308 + (*(f32 *)((char *)((EarthWarriorSub *)p2)->configRow + 0x14) + ((BaddieState *)p3)->animSpeedC)) / lbl_803E830C;
         ((EarthWarriorSub *)p2)->unk478 = ((EarthWarriorSub *)p2)->unk484;
         ((EarthWarriorSub *)p2)->unk484 += 0x8000;
         ((BaddieState *)p3)->animSpeedC = -((BaddieState *)p3)->animSpeedC;
         ((BaddieState *)p3)->animSpeedA = -((BaddieState *)p3)->animSpeedA;
     }
     if (((ByteFlags *)&((EarthWarriorSub *)p2)->flags3F0)->b80 != 0) {
-        f32 lim = *(f32 *)((char *)((EarthWarriorSub *)p2)->unk400 + 0x10);
+        f32 lim = *(f32 *)((char *)((EarthWarriorSub *)p2)->configRow + 0x10);
         if (((BaddieState *)p3)->animSpeedC <= lim && ((BaddieState *)p3)->animSpeedA <= lim) {
             ((EarthWarriorSub *)p2)->unk494 = ((EarthWarriorSub *)p2)->unk484;
             ((ByteFlags *)&((EarthWarriorSub *)p2)->flags3F0)->b40 = 0;
@@ -684,7 +684,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
     if (*(s8 *)&((EarthWarriorState *)p2)->baddie.moveJustStartedA != 0) {
         ((ByteFlags *)&((EarthWarriorSub *)q)->flags3F0)->b80 = 0;
         ((ByteFlags *)&((EarthWarriorSub *)q)->flags3F0)->b40 = 0;
-        *(u8 *)&((EarthWarriorSub *)q)->unk8CC = 0;
+        *(u8 *)&((EarthWarriorSub *)q)->attackPhase = 0;
         ((ByteFlags *)&((EarthWarriorSub *)q)->flags3F2)->b10 = 1;
     }
     if (!((ByteFlags *)&((EarthWarriorSub *)q)->flags3F0)->b80 && !((ByteFlags *)&((EarthWarriorSub *)q)->flags3F0)->b40 &&
@@ -701,7 +701,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
     ((EarthWarriorSub *)q)->unk404 = lbl_803E82E8;
     if (*(s8 *)&((EarthWarriorState *)p2)->baddie.moveJustStartedA != 0) {
         ((EarthWarriorSub *)q)->unk484 += ((EarthWarriorSub *)q)->unk48C * 0xb6;
-        ((EarthWarriorSub *)q)->unk488 = 0;
+        ((EarthWarriorSub *)q)->frameCounter = 0;
         ((EarthWarriorSub *)q)->unk48C = 0;
     }
     {
@@ -723,7 +723,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
             sw = ((EarthWarriorSub *)q)->unk484;
             ((EarthWarriorSub *)q)->unk478 = sw;
             ((EarthWarriorSub *)q)->unk494 = sw;
-            *(u8 *)&((EarthWarriorSub *)q)->unk8CC = 0xc;
+            *(u8 *)&((EarthWarriorSub *)q)->attackPhase = 0xc;
             ((ByteFlags *)&((EarthWarriorSub *)q)->flags3F1)->b04 = 1;
             ((ByteFlags *)&((EarthWarriorSub *)q)->flags3F1)->b08 = 1;
         }
@@ -754,7 +754,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
         }
         ((EarthWarriorSub *)q)->unk408 *= lbl_803E831C;
         {
-            f32 lim = *(f32 *)(((EarthWarriorSub *)q)->unk400 + 0xc);
+            f32 lim = *(f32 *)(((EarthWarriorSub *)q)->configRow + 0xc);
             if (((EarthWarriorSub *)q)->unk408 < lim) {
                 ((EarthWarriorSub *)q)->unk408 = lim;
             }
@@ -764,16 +764,16 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
     }
     if (!((ByteFlags *)((char *)inner + 0x14ec))->b01 && !((ByteFlags *)&((EarthWarriorSub *)q)->flags3F0)->b40 &&
         !((ByteFlags *)&((EarthWarriorSub *)q)->flags3F0)->b80 &&
-        ((EarthWarriorState *)p2)->baddie.animSpeedC > lbl_803E8340 + *(f32 *)(((EarthWarriorSub *)q)->unk400 + 0x14) &&
-        (((EarthWarriorSub *)q)->unk470 < lbl_803E8344 || ((EarthWarriorSub *)q)->unk488 >= 0x96)) {
+        ((EarthWarriorState *)p2)->baddie.animSpeedC > lbl_803E8340 + *(f32 *)(((EarthWarriorSub *)q)->configRow + 0x14) &&
+        (((EarthWarriorSub *)q)->unk470 < lbl_803E8344 || ((EarthWarriorSub *)q)->frameCounter >= 0x96)) {
         ((ByteFlags *)&((EarthWarriorSub *)q)->flags3F0)->b80 = 1;
         ((EarthWarriorSub *)q)->unk360 |= 0x1000000;
         ((EarthWarriorSub *)q)->unk844 = ((EarthWarriorState *)p2)->baddie.animSpeedA;
-        ObjAnim_SetCurrentMove(obj, *(s16 *)(((EarthWarriorSub *)q)->unk3F8 + 0x3c), lbl_803E8304, 0);
+        ObjAnim_SetCurrentMove(obj, *(s16 *)(((EarthWarriorSub *)q)->moveTable + 0x3c), lbl_803E8304, 0);
         ((EarthWarriorState *)p2)->baddie.moveSpeed = lbl_803E82EC;
     }
     if (!((ByteFlags *)&((EarthWarriorSub *)q)->flags3F0)->b80 && !((ByteFlags *)&((EarthWarriorSub *)q)->flags3F0)->b40) {
-        if (((EarthWarriorSub *)q)->unk488 < 0x96) {
+        if (((EarthWarriorSub *)q)->frameCounter < 0x96) {
             f32 v = interpolate((f32)(s32)((EarthWarriorSub *)q)->unk47C, lbl_803E8338 / ((EarthWarriorSub *)q)->unk428, timeDelta);
             f32 cap = timeDelta * (((EarthWarriorSub *)q)->unk42C * ((EarthWarriorSub *)q)->unk420);
             if (v > cap) {
@@ -784,8 +784,8 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
             }
             ((EarthWarriorSub *)q)->unk478 = (s16)(int)(lbl_803E8348 * v + (f32)(s32)((EarthWarriorSub *)q)->unk478);
         }
-        if (((EarthWarriorSub *)q)->unk488 < 0x96) {
-            f32 v = interpolate((f32)(s32)((EarthWarriorSub *)q)->unk488, lbl_803E8338 / ((EarthWarriorSub *)q)->unk430, timeDelta);
+        if (((EarthWarriorSub *)q)->frameCounter < 0x96) {
+            f32 v = interpolate((f32)(s32)((EarthWarriorSub *)q)->frameCounter, lbl_803E8338 / ((EarthWarriorSub *)q)->unk430, timeDelta);
             f32 cap = ((EarthWarriorSub *)q)->unk434 * timeDelta;
             if (v > cap) {
                 v = cap;
@@ -794,8 +794,8 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
                 v = -v;
             }
             ((EarthWarriorSub *)q)->unk484 = (s16)(int)(lbl_803E8348 * v + (f32)(s32)((EarthWarriorSub *)q)->unk484);
-        } else if (((EarthWarriorState *)p2)->baddie.animSpeedC <= *(f32 *)(((EarthWarriorSub *)q)->unk400 + 0x4) &&
-                   ((EarthWarriorState *)p2)->baddie.animSpeedA <= *(f32 *)(((EarthWarriorSub *)q)->unk400 + 0xc)) {
+        } else if (((EarthWarriorState *)p2)->baddie.animSpeedC <= *(f32 *)(((EarthWarriorSub *)q)->configRow + 0x4) &&
+                   ((EarthWarriorState *)p2)->baddie.animSpeedA <= *(f32 *)(((EarthWarriorSub *)q)->configRow + 0xc)) {
             ((EarthWarriorSub *)q)->unk484 += ((EarthWarriorSub *)q)->unk48C * 0xb6;
         }
     }
@@ -803,13 +803,13 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
         f32 v = interpolate(((EarthWarriorSub *)q)->unk408 - ((EarthWarriorState *)p2)->baddie.animSpeedC, ((EarthWarriorSub *)q)->unk438, timeDelta);
         f32 r = lbl_803E834C * timeDelta;
         r = (v < r) ? r : ((v > GXInit_ClearColor * timeDelta) ? GXInit_ClearColor * timeDelta : v);
-        if (((EarthWarriorSub *)q)->unk488 >= 0x96 && r > lbl_803E8304) {
+        if (((EarthWarriorSub *)q)->frameCounter >= 0x96 && r > lbl_803E8304) {
             r = lbl_803E8314 * -r;
         }
         ((EarthWarriorState *)p2)->baddie.animSpeedC += r;
         {
             f32 vv = ((EarthWarriorState *)p2)->baddie.animSpeedC;
-            f32 t = **(f32 **)&((EarthWarriorSub *)q)->unk400;
+            f32 t = **(f32 **)&((EarthWarriorSub *)q)->configRow;
             t = (vv < t) ? t : ((vv > ((EarthWarriorSub *)q)->unk404) ? ((EarthWarriorSub *)q)->unk404 : vv);
             ((EarthWarriorState *)p2)->baddie.animSpeedC = t;
         }
@@ -833,45 +833,45 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
         } else {
             blend = ((GameObject *)obj)->anim.currentMoveProgress;
         }
-        i2 = (((EarthWarriorSub *)q)->unk8CC / 4) << 1;
-        ((EarthWarriorSub *)q)->unk8B0 = (i2 >> 1) + 1;
-        if (((EarthWarriorSub *)q)->unk8B0 > 4) {
-            ((EarthWarriorSub *)q)->unk8B0 = 4;
+        i2 = (((EarthWarriorSub *)q)->attackPhase / 4) << 1;
+        ((EarthWarriorSub *)q)->attackStage = (i2 >> 1) + 1;
+        if (((EarthWarriorSub *)q)->attackStage > 4) {
+            ((EarthWarriorSub *)q)->attackStage = 4;
         }
-        if (((EarthWarriorSub *)q)->unk8B0 > 3) {
+        if (((EarthWarriorSub *)q)->attackStage > 3) {
             ((EarthWarriorSub *)q)->unk8A6 = 0xa;
         } else {
             ((EarthWarriorSub *)q)->unk8A6 = 8;
         }
         {
             f32 v294 = ((EarthWarriorState *)p2)->baddie.animSpeedC;
-            int tbl = ((EarthWarriorSub *)q)->unk400;
+            int tbl = ((EarthWarriorSub *)q)->configRow;
             if (v294 < *(f32 *)(tbl + i2 * 4)) {
-                if (((EarthWarriorSub *)q)->unk8CC == 4) {
+                if (((EarthWarriorSub *)q)->attackPhase == 4) {
                     if (((EarthWarriorState *)p2)->baddie.animSpeedA < *(f32 *)(tbl + 0x10) && ((BaddieState *)p2)->unk298 < lbl_803E8308) {
                         return 2;
                     }
                 } else {
-                    ((EarthWarriorSub *)q)->unk8CC -= 4;
+                    ((EarthWarriorSub *)q)->attackPhase -= 4;
                 }
             } else if (v294 >= *(f32 *)(tbl + i2 * 4 + 4)) {
-                if (((EarthWarriorSub *)q)->unk8CC < 0x14) {
-                    if (((EarthWarriorSub *)q)->unk8CC == 0) {
+                if (((EarthWarriorSub *)q)->attackPhase < 0x14) {
+                    if (((EarthWarriorSub *)q)->attackPhase == 0) {
                         blend = lbl_803E8350;
                     }
                     if (v294 < ((EarthWarriorSub *)q)->unk404) {
-                        *(u8 *)&((EarthWarriorSub *)q)->unk8CC += 4;
+                        *(u8 *)&((EarthWarriorSub *)q)->attackPhase += 4;
                     }
                 }
             }
         }
-        if ((skip != 0 || ((EarthWarriorSub *)q)->unk3FC != ((EarthWarriorSub *)q)->unk3F8 ||
-             ((GameObject *)obj)->anim.currentMove != *(s16 *)(((EarthWarriorSub *)q)->unk3F8 + ((EarthWarriorSub *)q)->unk8CC * 2)) &&
+        if ((skip != 0 || ((EarthWarriorSub *)q)->unk3FC != ((EarthWarriorSub *)q)->moveTable ||
+             ((GameObject *)obj)->anim.currentMove != *(s16 *)(((EarthWarriorSub *)q)->moveTable + ((EarthWarriorSub *)q)->attackPhase * 2)) &&
             (ObjAnim_GetCurrentEventCountdown((ObjAnimComponent *)obj) == 0 || ((ByteFlags *)&((EarthWarriorSub *)q)->flags3F2)->b10 != 0)) {
             if (((GameObject *)obj)->anim.currentMove == 0x14) {
                 blend = lbl_803E8350;
             }
-            ObjAnim_SetCurrentMove(obj, *(s16 *)(((EarthWarriorSub *)q)->unk3F8 + ((EarthWarriorSub *)q)->unk8CC * 2), blend, 0);
+            ObjAnim_SetCurrentMove(obj, *(s16 *)(((EarthWarriorSub *)q)->moveTable + ((EarthWarriorSub *)q)->attackPhase * 2), blend, 0);
         }
     }
     if (!((ByteFlags *)&((EarthWarriorSub *)q)->flags3F0)->b80 && !((ByteFlags *)&((EarthWarriorSub *)q)->flags3F0)->b40 &&
@@ -912,10 +912,10 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
         return 3;
     }
     if (*(f32 *)&((EarthWarriorState *)p2)->baddie.trackedObj >= lbl_803E8358 && ((BaddieState *)p2)->unk298 >= lbl_803E8358 &&
-        ((BaddieState *)p2)->animSpeedC >= *(f32 *)(q->unk400 + 0x4)) {
+        ((BaddieState *)p2)->animSpeedC >= *(f32 *)(q->configRow + 0x4)) {
         return 3;
     }
-    s = *(s16 *)q->unk3F8;
+    s = *(s16 *)q->moveTable;
     *(s16 *)((char *)p2 + 0x278) = 0;
     q->unk404 = lbl_803E82E8;
     {
@@ -928,15 +928,15 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
     if (*(s8 *)&((BaddieState *)p2)->moveJustStartedA != 0) {
         q->unk47C = 0;
         q->unk480 = 0;
-        q->unk488 = 0;
+        q->frameCounter = 0;
         q->unk48C = 0;
         q->unk8A6 = 8;
-        q->unk8B0 = 0;
+        q->attackStage = 0;
         ((BaddieState *)p2)->velSmoothTime = lbl_803E835C;
         ((BaddieState *)p2)->moveSpeed = lbl_803E8354;
     }
-    if (((GameObject *)obj)->anim.currentMove == *(s16 *)(q->unk3F8 + 0x30) ||
-        ((GameObject *)obj)->anim.currentMove == *(s16 *)(q->unk3F8 + 0x32)) {
+    if (((GameObject *)obj)->anim.currentMove == *(s16 *)(q->moveTable + 0x30) ||
+        ((GameObject *)obj)->anim.currentMove == *(s16 *)(q->moveTable + 0x32)) {
         if (*(s8 *)&((BaddieState *)p2)->moveDone != 0 && ObjAnim_GetCurrentEventCountdown((ObjAnimComponent *)obj) == 0 &&
             !((ByteFlags *)&inner->sub.flags994)->b01) {
             ObjAnim_SetCurrentMove(obj, s, lbl_803E8304, 0);
@@ -958,7 +958,7 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
         q->unk478 = (s16)(int)(lbl_803E8348 * v + (f32)(s32)q->unk478);
     }
     {
-        f32 v = interpolate((f32)(s32)q->unk488, lbl_803E8338 / q->unk430, timeDelta);
+        f32 v = interpolate((f32)(s32)q->frameCounter, lbl_803E8338 / q->unk430, timeDelta);
         f32 cap = q->unk434 * timeDelta;
         if (v >= cap) {
             v = cap;

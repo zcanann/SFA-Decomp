@@ -310,7 +310,7 @@ void enemy_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
                     if (*(void **)&((EnemyState *)state)->modelLight == NULL) {
                         ((EnemyState *)state)->modelLight = objCreateLight(0, 1);
                     }
-                    objParticleFn_80099d84(obj, lbl_803E256C, 3, ((EnemyState *)state)->unk30C,
+                    objParticleFn_80099d84(obj, lbl_803E256C, 3, ((EnemyState *)state)->particleScale,
                                            ((EnemyState *)state)->modelLight);
                 }
             }
@@ -318,19 +318,19 @@ void enemy_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
                 if (*(void **)&((EnemyState *)state)->modelLight == NULL) {
                     ((EnemyState *)state)->modelLight = objCreateLight(0, 1);
                 }
-                objParticleFn_80099d84(obj, lbl_803E256C, 4, ((EnemyState *)state)->unk30C,
+                objParticleFn_80099d84(obj, lbl_803E256C, 4, ((EnemyState *)state)->particleScale,
                                        ((EnemyState *)state)->modelLight);
             }
     if ((*(u32 *)&((EnemyState *)state)->unk2E8 & 0x40) != 0) {
         Sfx_KeepAliveLoopedObjectSound(obj, SFXmv_liftloop);
-        objParticleFn_80099d84(obj, lbl_803E256C, 5, ((EnemyState *)state)->unk30C, 0);
+        objParticleFn_80099d84(obj, lbl_803E256C, 5, ((EnemyState *)state)->particleScale, 0);
     }
     if ((*(u32 *)&((EnemyState *)state)->unk2E8 & 0x80) != 0) {
         Sfx_KeepAliveLoopedObjectSound(obj, SFXmv_liftloop);
-        objParticleFn_80099d84(obj, lbl_803E25F8, 6, ((EnemyState *)state)->unk30C, 0);
+        objParticleFn_80099d84(obj, lbl_803E25F8, 6, ((EnemyState *)state)->particleScale, 0);
     }
     if ((*(u32 *)&((EnemyState *)state)->unk2E8 & 0x100) != 0) {
-        objParticleFn_80099d84(obj, lbl_803E25FC, 7, ((EnemyState *)state)->unk30C, 0);
+        objParticleFn_80099d84(obj, lbl_803E25FC, 7, ((EnemyState *)state)->particleScale, 0);
     }
         }
     }
@@ -356,8 +356,8 @@ void enemy_hitDetect(int obj)
         && (*(ObjHitsPriorityState **)(*(int *)&((GameObject *)obj)->childObjs[0] + 0x54))->lastHitObject != 0) {
         (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->suppressOutgoingHits = 1;
     }
-    if (*(void **)&((EnemyState *)state)->unk36C != NULL) {
-        fn_80026C54(((EnemyState *)state)->unk36C);
+    if (*(void **)&((EnemyState *)state)->tailSimHandle != NULL) {
+        fn_80026C54(((EnemyState *)state)->tailSimHandle);
     }
 }
 
@@ -375,8 +375,8 @@ void enemy_free(int obj, int flag)
 
     state = ((GameObject *)obj)->extra;
 
-    if (*(void **)&((EnemyState *)state)->unk36C != NULL) {
-        fn_80026C88(((EnemyState *)state)->unk36C);
+    if (*(void **)&((EnemyState *)state)->tailSimHandle != NULL) {
+        fn_80026C88(((EnemyState *)state)->tailSimHandle);
     }
     if (*(void **)&((EnemyState *)state)->modelLight != NULL) {
         ModelLightStruct_free(((EnemyState *)state)->modelLight);
@@ -676,7 +676,7 @@ void enemy_init(int obj, u8 *setup, int flag)
         ((EnemyState *)state)->unk300 = fz;
         ((EnemyState *)state)->unk304 = fz;
         ((EnemyState *)state)->unk308 = fz;
-        ((EnemyState *)state)->unk30C = fz;
+        ((EnemyState *)state)->particleScale = fz;
         state[0x323] = 0;
         ((EnemyState *)state)->unk310 = fz;
         ((EnemyState *)state)->unk2F8 = 0;

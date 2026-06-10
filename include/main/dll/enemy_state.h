@@ -36,7 +36,7 @@ typedef struct EnemyState {
     f32 unk300;
     f32 unk304;
     f32 unk308;
-    f32 unk30C;
+    f32 particleScale;
     f32 unk310;
     u8 unk314[0x324 - 0x314];
     f32 unk324;
@@ -49,7 +49,7 @@ typedef struct EnemyState {
     int lastHitObject;
     u8 unk344[0x368 - 0x344];
     int modelLight;
-    int unk36C;
+    int tailSimHandle;
     u8 unk370[0x374 - 0x370];
 } EnemyState;
 
