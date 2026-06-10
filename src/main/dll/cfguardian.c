@@ -706,7 +706,7 @@ render_basic:
     ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3798);
 }
 
-int Door_SeqFn(int obj, int p2, int seq);
+int Door_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 extern f32 lbl_803E3784;
 extern f32 lbl_803E3788;
 extern f32 lbl_803E3790;
@@ -805,7 +805,7 @@ extern void buttonDisable(int index, int mask);
  * EN v1.0 Address: 0x8017B5C8
  * EN v1.0 Size: 788b
  */
-int Door_SeqFn(int obj, int p2, int seq)
+int Door_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
   int i;
   int state;
@@ -867,8 +867,8 @@ int Door_SeqFn(int obj, int p2, int seq)
     }
   }
   if (*(u8 *)(state + 4) == 2) {
-    for (i = 0; i < *(u8 *)(seq + 0x8b); i++) {
-      if (*(u8 *)(seq + i + 0x81) == 2) {
+    for (i = 0; i < animUpdate->eventCount; i++) {
+      if (animUpdate->eventIds[i] == 2) {
         *(u8 *)(state + 4) = 1;
         if (*(s16 *)(def + 0x1a) != -1) {
           GameBit_Set(*(s16 *)(def + 0x1a), 1);
@@ -882,8 +882,8 @@ int Door_SeqFn(int obj, int p2, int seq)
       }
     }
   } else if (*(u8 *)(state + 4) == 3) {
-    for (i = 0; i < *(u8 *)(seq + 0x8b); i++) {
-      if (*(u8 *)(seq + i + 0x81) == 1) {
+    for (i = 0; i < animUpdate->eventCount; i++) {
+      if (animUpdate->eventIds[i] == 1) {
         *(u8 *)(state + 4) = 0;
         *(u8 *)(state + 6) = 0;
         if (*(s16 *)(def + 0x1a) != -1) {
@@ -912,19 +912,19 @@ int Door_SeqFn(int obj, int p2, int seq)
  * EN v1.0 Address: 0x8017BCF8
  * EN v1.0 Size: 180b
  */
-int Lock_DoorLock_SeqFn(int obj, int p2, int seq)
+int Lock_DoorLock_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
   int def;
 
   def = *(int *)&((GameObject *)obj)->anim.placementData;
-  if (*(u8 *)(seq + 0x80) != 0) {
-    if (((*(u8 *)(def + 0x1b) & 4) != 0) && (*(u8 *)(seq + 0x80) == 1)) {
+  if (((u8 *)animUpdate)[0x80] != 0) {
+    if (((*(u8 *)(def + 0x1b) & 4) != 0) && (((u8 *)animUpdate)[0x80] == 1)) {
       GameBit_Set(*(s16 *)(def + 0x1c), 1);
     }
-    if ((*(u8 *)(seq + 0x80) == 2) && (*(s16 *)(def + 0x24) != 0)) {
-      (*gObjectTriggerInterface)->yield((u8 *)seq, *(s16 *)(def + 0x24));
+    if ((((u8 *)animUpdate)[0x80] == 2) && (*(s16 *)(def + 0x24) != 0)) {
+      (*gObjectTriggerInterface)->yield((u8 *)animUpdate, *(s16 *)(def + 0x24));
     }
-    *(u8 *)(seq + 0x80) = 0;
+    ((u8 *)animUpdate)[0x80] = 0;
   }
   ((GameObject *)obj)->unkF8 = 0;
   return 0;

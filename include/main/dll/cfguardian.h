@@ -2,6 +2,7 @@
 #define MAIN_DLL_DLL_148_H_
 
 #include "ghidra_import.h"
+#include "main/objanim_update.h"
 
 void pressureswitchfb_update(int obj);
 void FUN_8017b3b8(short *param_1,int param_2);

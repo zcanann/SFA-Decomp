@@ -147,7 +147,7 @@ STATIC_ASSERT(sizeof(DbshSymbolState) == 0x24);
 STATIC_ASSERT(offsetof(DbshSymbolState, phase) == 0x1E);
 STATIC_ASSERT(offsetof(DbshSymbolState, flags) == 0x20);
 
-int DBSH_Symbol_SeqFn(int *obj, int *anim, u8 *seq)
+int DBSH_Symbol_SeqFn(int *obj, int *anim, ObjAnimUpdateState *animUpdate)
 {
     f32 maxSpeed;
     f32 spdThresh;
@@ -164,9 +164,9 @@ int DBSH_Symbol_SeqFn(int *obj, int *anim, u8 *seq)
     player = Obj_GetPlayerObject();
     Sfx_SetObjectSfxVolume((int)obj, 0x3af, 10, lbl_803E50E0);
     Sfx_KeepAliveLoopedObjectSound((int)obj, 0x3af);
-    seq[0x56] = 0;
-    for (i = 0; i < seq[0x8b]; i++) {
-        if (seq[i + 0x81] == 1) {
+    animUpdate->sequenceEventActive = 0;
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        if (animUpdate->eventIds[i] == 1) {
             gameTimerInit(0x1d, 0x3c);
             timerSetToCountUp();
             state->flags.active = 0;
@@ -197,7 +197,7 @@ int DBSH_Symbol_SeqFn(int *obj, int *anim, u8 *seq)
             Sfx_PlayFromObject((int)obj, 0x1d4);
             state->flags.finished = 0;
             state->flags.active = 1;
-            (*gObjectTriggerInterface)->yield(seq, 0xbd);
+            (*gObjectTriggerInterface)->yield((u8 *)animUpdate, 0xbd);
         }
         if ((getButtonsJustPressedIfNotBusy(0) & 0x100) != 0) {
             state->spinSpeed = state->spinSpeed + lbl_803E50E4;
@@ -213,7 +213,7 @@ int DBSH_Symbol_SeqFn(int *obj, int *anim, u8 *seq)
             state->flags.finished = 1;
             state->flags.active = 1;
             state->spinProgress = 0x7ef4;
-            (*gObjectTriggerInterface)->yield(seq, 0xbd);
+            (*gObjectTriggerInterface)->yield((u8 *)animUpdate, 0xbd);
             return 0;
         }
         (*gObjectTriggerInterface)->setXrot(state->triggerHandle, 0xbd);

@@ -51,7 +51,7 @@ typedef struct IMMultiSeqPlacement {
     u8 pad31[3];
 } IMMultiSeqPlacement;
 
-int Lock_DoorLock_SeqFn(int obj, int unused, int seq);
+int Lock_DoorLock_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 void doorlock_init(short *obj, DoorLockPlacement *config);
 void FUN_8017c230(int param_1);
 void FUN_8017c254(int param_1,int p1,int p2,int p3,int p4,s8 visible);

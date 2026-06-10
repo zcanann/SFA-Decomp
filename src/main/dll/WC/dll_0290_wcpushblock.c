@@ -729,7 +729,7 @@ void wcpushblock_updateLevelControlState(int obj, WcLevelControlState *state)
     state->completionFlags &= ~1;
 }
 
-int wcpushblock_levelControlTriggerCallback(int obj, int p2, int p3)
+int wcpushblock_levelControlTriggerCallback(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     WcLevelControlState *state = ((GameObject *)obj)->extra;
     int i;
@@ -755,8 +755,8 @@ int wcpushblock_levelControlTriggerCallback(int obj, int p2, int p3)
             (*gMapEventInterface)->triggerEvent(player + 0xc, *(s16 *)player, 1, 0);
         }
     }
-    for (i = 0; i < *(u8 *)(p3 + 0x8b); i++) {
-        switch (*(u8 *)(p3 + i + 0x81)) {
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        switch (animUpdate->eventIds[i]) {
         case 1:
             state->mode = 6;
             break;
