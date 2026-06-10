@@ -349,7 +349,7 @@ void fxemit_emitEffect(FxEmitObject *obj)
 
 #undef CFTREAS_PARTFX_SPAWN
 
-int fxemit_SeqFn(FxEmitObject *obj, int unused, int events)
+int fxemit_SeqFn(FxEmitObject *obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     FxEmitState *state;
     FxEmitPlacement *def;
@@ -359,15 +359,15 @@ int fxemit_SeqFn(FxEmitObject *obj, int unused, int events)
 
     state = obj->state;
     def = (FxEmitPlacement *)obj->objAnim.placementData;
-    for (i = 0; i < *(u8 *)(events + 0x8b); i++) {
-        event = *(u8 *)(events + i + 0x81);
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        event = animUpdate->eventIds[i];
         if (event == 1) {
             fxemit_emitEffect(obj);
         }
-        if (*(u8 *)(events + i + 0x81) == 2) {
+        if (animUpdate->eventIds[i] == 2) {
             state->seqToggle = (u8)(1 - state->seqToggle);
         }
-        *(u8 *)(events + i + 0x81) = 0;
+        animUpdate->eventIds[i] = 0;
     }
 
     if (state->seqToggle != 0) {

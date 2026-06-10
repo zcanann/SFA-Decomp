@@ -6,6 +6,7 @@
 #include "main/object_descriptor.h"
 #include "main/obj_placement.h"
 #include "main/objanim_internal.h"
+#include "main/objanim_update.h"
 
 extern ObjectDescriptor gFXEmitObjDescriptor;
 
@@ -23,7 +24,7 @@ extern ObjectDescriptor gFXEmitObjDescriptor;
 #define FXEMIT_SFX_SUPPRESS 0xFF
 
 typedef struct FxEmitObject FxEmitObject;
-typedef int (*FxEmitSeqCallback)(FxEmitObject *obj, int unused, int events);
+typedef int (*FxEmitSeqCallback)(FxEmitObject *obj, int unused, ObjAnimUpdateState *animUpdate);
 
 typedef struct FxEmitPlacement {
     ObjPlacement base;
@@ -149,7 +150,7 @@ STATIC_ASSERT(offsetof(CfCcrateState, sfxTable) == 0x44);
 
 void cfccrate_init(int obj, int aux);
 void fxemit_emitEffect(FxEmitObject *obj);
-int fxemit_SeqFn(FxEmitObject *obj, int unused, int events);
+int fxemit_SeqFn(FxEmitObject *obj, int unused, ObjAnimUpdateState *animUpdate);
 void cfccrate_release(void);
 void cfccrate_initialise(void);
 int fxemit_getExtraSize(void);

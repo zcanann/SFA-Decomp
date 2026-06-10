@@ -276,20 +276,18 @@ int FireFlyLantern_spawnFireFly(int *obj) {
     return loadObjectAtObject(obj);
 }
 
-int FireFlyLantern_SeqFn(int obj, int unused, int events)
+int FireFlyLantern_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     FireFlyLanternState *state;
-    u8 *eventData;
     int *slot;
     void *child;
     int i;
     f32 yOffset;
 
     state = ((GameObject *)obj)->extra;
-    eventData = (u8 *)events;
     i = 0;
-    while (i < eventData[0x8B]) {
-        if (eventData[i + 0x81] == 1) {
+    while (i < animUpdate->eventCount) {
+        if (animUpdate->eventIds[i] == 1) {
             if (state->fireflyCount != 0) {
                 child = (void *)state->fireflies[state->fireflyCount - 1];
                 if (child != 0) {

@@ -4,6 +4,7 @@
 #include "global.h"
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
+#include "main/objanim_update.h"
 
 typedef struct FireFlyLanternSpawnSetup {
   s16 objectType;
@@ -73,7 +74,7 @@ void FireFlyLantern_render(void);
 void FireFlyLantern_update(int obj);
 void FireFlyLantern_init(int param_1,int param_2);
 int FireFlyLantern_spawnFireFly(int *obj);
-int FireFlyLantern_SeqFn(int obj, int unused, int events);
+int FireFlyLantern_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 
 int flammablevine_getExtraSize(void);
 int flammablevine_getObjectTypeId(void);
