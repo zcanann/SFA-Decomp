@@ -76,12 +76,13 @@ extern inline f32 sqrtf(f32 x)
     return x;
 }
 
-void salNormalizeVector(f32 *v)
+f32 salNormalizeVector(f32 *v)
 {
     f32 len = sqrtf(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
     v[0] /= len;
     v[1] /= len;
     v[2] /= len;
+    return len;
 }
 #pragma fp_contract reset
 
