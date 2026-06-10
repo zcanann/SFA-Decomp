@@ -54,8 +54,7 @@ void camcontrol_updateVerticalBounds(CameraObject *camera,int flags,int param_3,
   cameraAddr = (int)camera;
   camObj = (int)camera->anim.targetObj;
   if ((flags & 1) != 0) {
-    zB = lbl_803E1688;
-    *(float *)(cameraAddr + 0x74) = zB;
+    *(float *)(cameraAddr + 0x74) = lbl_803E1688;
     *(s8 *)(cameraAddr + 0x84) = -1;
     *(s8 *)(cameraAddr + 0x88) = (s8)param_3;
     res = objBboxFn_800640cc(&camera->probePosX,&camera->anim.worldPosX,1,0,0,0x10,0xffffffff,0xff,0);
