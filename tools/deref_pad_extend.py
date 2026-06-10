@@ -40,6 +40,11 @@ for m in deref_re.finditer(src):
         wants[off] = (w, ftype)
 
 hsrc = open(hfile, encoding='latin-1').read()
+# substitute simple numeric #defines (macro array dims) - parse-side only;
+# the WRITTEN output preserves the original text except edited pad lines
+_subs = dict(re.findall(r'^#define\s+(\w+)\s+(0[xX][0-9a-fA-F]+|\d+)\s*$', hsrc, re.M))
+for _d in deps:
+    _subs.update(dict(re.findall(r'^#define\s+(\w+)\s+(0[xX][0-9a-fA-F]+|\d+)\s*$', open(_d, errors='ignore').read(), re.M)))
 m = re.search(r'(typedef struct %s\s*\{)(.*?)(\}\s*\w*\s*;)' % re.escape(sname), hsrc, re.S)
 if not m:
     sys.exit('struct %s not found in %s' % (sname, hfile))
@@ -54,6 +59,8 @@ field_re = re.compile(r'^\s*(?:struct\s+)?(\w+)\s*(\*+|)\s*(\w+)\s*(?:\[([^\]]+)
 
 def evaldim(a):
     a = a.strip()
+    for _k, _v in _subs.items():
+        a = re.sub(r'\b%s\b' % _k, _v, a)
     toks = re.findall(r'0[xX][0-9a-fA-F]+|\d+', a)
     norm = a
     for t in toks:
