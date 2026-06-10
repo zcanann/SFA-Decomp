@@ -1,6 +1,17 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
+typedef struct DrbarrelgrPlacement {
+    u8 pad0[0x18 - 0x0];
+    s8 unk18;
+    u8 unk19;
+    s16 unk1A;
+    u8 pad1C[0x20 - 0x1C];
+    s16 unk20;
+    u8 pad22[0x28 - 0x22];
+} DrbarrelgrPlacement;
+
+
 typedef struct DrbarrelgrState {
     s32 unk0;
     s32 unk4;
@@ -95,7 +106,7 @@ void drbarrelgr_update(int obj)
         }
     }
 
-    gbId = *(s16 *)(setup + 0x20);
+    gbId = ((DrbarrelgrPlacement *)setup)->unk20;
     if (gbId != -1 && (u32)GameBit_Get(gbId) == 0) {
         flags->bit40 = 0;
         return;
@@ -163,7 +174,7 @@ void drbarrelgr_update(int obj)
         if (r != 0) {
             newMode = r - 1;
             storeZeroToFloatParam((void *)(state + 12));
-            s16toFloat((void *)(state + 12), *(s16 *)(setup + 0x1a));
+            s16toFloat((void *)(state + 12), ((DrbarrelgrPlacement *)setup)->unk1A);
             ((GameObject *)obj)->anim.velocityX = lbl_803E6CA4;
             ((GameObject *)obj)->anim.velocityY = lbl_803E6CA4;
             ((GameObject *)obj)->anim.velocityZ = lbl_803E6CA4;
@@ -171,11 +182,11 @@ void drbarrelgr_update(int obj)
         break;
     }
     case 2:
-        if (((DrbarrelgrState *)state)->unk128 == *(u8 *)(setup + 0x19)) {
+        if (((DrbarrelgrState *)state)->unk128 == ((DrbarrelgrPlacement *)setup)->unk19) {
             ((DrbarrelgrState *)state)->unk128 =
                 (int)((f32)((DrbarrelgrState *)state)->unk128 * lbl_803E6CA8);
         } else {
-            ((DrbarrelgrState *)state)->unk128 = *(u8 *)(setup + 0x19);
+            ((DrbarrelgrState *)state)->unk128 = ((DrbarrelgrPlacement *)setup)->unk19;
         }
         storeZeroToFloatParam((void *)(state + 12));
         newMode = 5;

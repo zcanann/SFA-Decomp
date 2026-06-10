@@ -4,6 +4,15 @@
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
 
+typedef struct DimbridgecogmaiPlacement {
+    u8 pad0[0x18 - 0x0];
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+} DimbridgecogmaiPlacement;
+
+
 typedef struct DimdismountpointState {
     f32 unk0;
     f32 unk4;
@@ -161,7 +170,7 @@ int dimbridgecogmai_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate) {
     char *param = *(char **)&((GameObject *)obj)->anim.placementData;
     animUpdate->sequenceEventActive = 0;
     if ((*(u8 *)(param + 0x1d) & 0x2) != 0 && animUpdate->triggerCommand == 1) {
-        GameBit_Set(*(s16 *)(param + 0x18), 1);
+        GameBit_Set(((DimbridgecogmaiPlacement *)param)->unk18, 1);
         animUpdate->triggerCommand = 0;
     }
     return 0;
@@ -176,16 +185,16 @@ void dimbridgecogmai_update(int *obj) {
     int callArg;
 
     def = *(u8**)&((GameObject *)obj)->anim.placementData;
-    if (GameBit_Get(*(s16*)(def + 0x1a)) != 0) {
+    if (GameBit_Get(((DimbridgecogmaiPlacement *)def)->unk1A) != 0) {
         if ((s8)def[0x1e] != -1) {
-            switch (*(s16*)(def + 0x1a)) {
+            switch (((DimbridgecogmaiPlacement *)def)->unk1A) {
             case 0x17a:
                 if (GameBit_Get(0x181) != 0) {
                     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x8000);
                     code = -1;
                     callArg = 0;
                 } else {
-                    GameBit_Set(*(s16*)(def + 0x1a), 0);
+                    GameBit_Set(((DimbridgecogmaiPlacement *)def)->unk1A, 0);
                     code = 0x1f;
                     callArg = 1;
                 }
@@ -199,7 +208,7 @@ void dimbridgecogmai_update(int *obj) {
                     code = -1;
                     callArg = 2;
                 } else {
-                    GameBit_Set(*(s16*)(def + 0x1a), 0);
+                    GameBit_Set(((DimbridgecogmaiPlacement *)def)->unk1A, 0);
                     code = 0x1d;
                     if ((bits & 4) != 0) {
                         code = code | 2;
@@ -217,7 +226,7 @@ void dimbridgecogmai_update(int *obj) {
             (*gObjectTriggerInterface)->runSequence(callArg, obj, code);
         }
         if ((def[0x1d] & 2) == 0) {
-            GameBit_Set(*(s16*)(def + 0x18), 1);
+            GameBit_Set(((DimbridgecogmaiPlacement *)def)->unk18, 1);
         }
     }
 }

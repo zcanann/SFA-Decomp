@@ -11,6 +11,23 @@
 #include "main/dll/DF/rope.h"
 #include "main/dll/mmsh_waterspike.h"
 
+typedef struct DimbosscrackparPlacement {
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    u8 pad1C[0x1E - 0x1C];
+    s16 unk1E;
+} DimbosscrackparPlacement;
+
+
+typedef struct MagicmakerPlacement {
+    u8 pad0[0x4 - 0x0];
+    u8 unk4;
+    u8 unk5;
+    u8 unk6;
+    u8 unk7;
+} MagicmakerPlacement;
+
+
 typedef struct DIMbossspitUpdateBurstState {
     u8 pad0[0x4 - 0x0];
     s32 unk4;
@@ -832,10 +849,10 @@ void magicmaker_update(int obj)
           ((ObjPlacement *)setup)->posY = lbl_803E4D8C + ((GameObject *)obj)->anim.localPosY;
           ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ + (f32)(int)randomGetRange(-0x15e, 0x15e);
           *(s16 *)(setup + 0x24) = -1;
-          *(u8 *)(setup + 0x4) = *(u8 *)(def + 0x4);
-          *(u8 *)(setup + 0x6) = *(u8 *)(def + 0x6);
-          *(u8 *)(setup + 0x5) = *(u8 *)(def + 0x5);
-          *(u8 *)(setup + 0x7) = *(u8 *)(def + 0x7);
+          *(u8 *)(setup + 0x4) = ((MagicmakerPlacement *)def)->unk4;
+          *(u8 *)(setup + 0x6) = ((MagicmakerPlacement *)def)->unk6;
+          *(u8 *)(setup + 0x5) = ((MagicmakerPlacement *)def)->unk5;
+          *(u8 *)(setup + 0x7) = ((MagicmakerPlacement *)def)->unk7;
           *(s16 *)(setup + 0x2e) = 3;
           newobj = Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
           if (newobj != NULL) {
@@ -854,19 +871,19 @@ void magicmaker_update(int obj)
 extern f32 lbl_803E4D98;
 int dimbosscrackpar_SeqFn(int *obj) {
     int *side = *(int **)&((GameObject *)obj)->anim.placementData;
-    if ((u32)GameBit_Get(*(s16 *)((char *)side + 0x1e)) == 0u) {
+    if ((u32)GameBit_Get(((DimbosscrackparPlacement *)side)->unk1E) == 0u) {
         return 0;
     }
     (*gPartfxInterface)->spawnObject(
-        obj, *(s16 *)((char *)side + 0x1a) + 1222, NULL, 2, -1, NULL);
+        obj, ((DimbosscrackparPlacement *)side)->unk1A + 1222, NULL, 2, -1, NULL);
     (*gPartfxInterface)->spawnObject(obj, 1224, NULL, 2, -1, NULL);
     return 0;
 }
 void dimbosscrackpar_update(int *obj) {
     int *side = *(int **)&((GameObject *)obj)->anim.placementData;
-    if ((u32)GameBit_Get(*(s16 *)((char *)side + 0x1e)) != 0u) {
+    if ((u32)GameBit_Get(((DimbosscrackparPlacement *)side)->unk1E) != 0u) {
         (*gPartfxInterface)->spawnObject(
-            obj, *(s16 *)((char *)side + 0x1a) + 1222, NULL, 2, -1, NULL);
+            obj, ((DimbosscrackparPlacement *)side)->unk1A + 1222, NULL, 2, -1, NULL);
         (*gPartfxInterface)->spawnObject(obj, 1224, NULL, 2, -1, NULL);
     }
 }

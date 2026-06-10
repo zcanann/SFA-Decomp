@@ -9,6 +9,13 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 
+typedef struct Dll19DPlacement {
+    u8 pad0[0x19 - 0x0];
+    u8 unk19;
+    u8 pad1A[0x20 - 0x1A];
+} Dll19DPlacement;
+
+
 typedef struct Dll19DState {
     u8 pad0[0x8 - 0x0];
     f32 unk8;
@@ -493,9 +500,9 @@ void dll_19D_init(int obj)
     }
     ObjHits_SetHitVolumeSlot(self, 0xe, slot, 0);
 
-    if ((int)(signed char)*(u8 *)(state2 + 0x19) == 1) {
+    if ((int)(signed char)((Dll19DPlacement *)state2)->unk19 == 1) {
         getLActions(self, self, 0x203, 0, 0, 0);
-    } else if ((int)(signed char)*(u8 *)(state2 + 0x19) == 2) {
+    } else if ((int)(signed char)((Dll19DPlacement *)state2)->unk19 == 2) {
         getLActions(self, self, 0x204, 0, 0, 0);
     } else {
         getLActions(self, self, 0x201, 0, 0, 0);
@@ -525,7 +532,7 @@ void dll_19D_hitDetect(int obj)
     vec[3] = lbl_803E51B8;
     vec[4] = lbl_803E51B8;
     vec[5] = lbl_803E51B8;
-    vec[2] = (float)(int)(s8)*(u8 *)(state2 + 0x19);
+    vec[2] = (float)(int)(s8)((Dll19DPlacement *)state2)->unk19;
 
     linkObj = *(int *)&((GameObject *)self)->anim.hitReactState;
     linkSubObj = *(void **)(linkObj + 0x50);

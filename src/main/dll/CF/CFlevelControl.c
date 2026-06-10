@@ -4,6 +4,15 @@
 #include "main/objanim.h"
 #include "main/objseq.h"
 
+typedef struct CfccratePlacement {
+    u8 pad0[0xC - 0x0];
+    f32 unkC;
+    u8 pad10[0x18 - 0x10];
+    s8 unk18;
+    u8 pad19[0x20 - 0x19];
+} CfccratePlacement;
+
+
 extern void *Obj_GetPlayerObject(void);
 extern void *Camera_GetCurrentViewSlot(void);
 extern u32 GameBit_Get(int bit);
@@ -82,9 +91,9 @@ void cfccrate_update(int obj)
         break;
     case 0x6fc:
         if ((GameBit_Get(state->gameBit) != 0) &&
-            (((GameObject *)obj)->anim.localPosY <= lbl_803E3DE8 + *(f32 *)(viewslot + 0xc))) {
+            (((GameObject *)obj)->anim.localPosY <= lbl_803E3DE8 + ((CfccratePlacement *)viewslot)->unkC)) {
             ((GameObject *)obj)->anim.localPosY = lbl_803E3DEC * timeDelta + ((GameObject *)obj)->anim.localPosY;
-            if (lbl_803E3DE8 + *(f32 *)(viewslot + 0xc) <= ((GameObject *)obj)->anim.localPosY) {
+            if (lbl_803E3DE8 + ((CfccratePlacement *)viewslot)->unkC <= ((GameObject *)obj)->anim.localPosY) {
                 GameBit_Set(state->gameBit, 0);
             }
         }
@@ -128,7 +137,7 @@ void cfccrate_update(int obj)
             GameBit_Set(state->gameBit, 1);
         }
         if (GameBit_Get(state->gameBit) == 0) {
-            ((GameObject *)obj)->anim.rotX = ((GameObject *)obj)->anim.rotX + (short)*(s8 *)(viewslot + 0x18) * framesThisStep;
+            ((GameObject *)obj)->anim.rotX = ((GameObject *)obj)->anim.rotX + (short)((CfccratePlacement *)viewslot)->unk18 * framesThisStep;
         }
         break;
     case 0x409:
@@ -141,7 +150,7 @@ void cfccrate_update(int obj)
         }
         break;
     case 0x4bf:
-        if ((((GameObject *)obj)->anim.localPosY < lbl_803E3DFC + *(f32 *)(viewslot + 0xc)) &&
+        if ((((GameObject *)obj)->anim.localPosY < lbl_803E3DFC + ((CfccratePlacement *)viewslot)->unkC) &&
             (GameBit_Get(state->gameBit) != 0)) {
             ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY + timeDelta;
         }

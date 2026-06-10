@@ -4,6 +4,20 @@
 
 #include "main/audio/sfx_ids.h"
 
+typedef struct KtrexfloorswitchPlacement {
+    u8 pad0[0x8 - 0x0];
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    u8 pad14[0x19 - 0x14];
+    u8 unk19;
+    s16 unk1A;
+    s16 unk1C;
+    u8 unk1E;
+    u8 unk1F;
+} KtrexfloorswitchPlacement;
+
+
 typedef struct KtrexfloorswitchSpawnEnergyArcState {
     u8 pad0[0x8 - 0x0];
     f32 unk8;
@@ -49,7 +63,7 @@ void ktrexfloorswitch_init(int obj, char *arg) {
     ((GameObject *)obj)->unkF4 = 1;
     ((GameObject *)obj)->unkF8 = 1;
     q = *(int *)&((GameObject *)obj)->anim.placementData;
-    r = (*gRomCurveInterface)->find(&lbl_803DC2A0, 1, 0, *(f32 *)(q + 0x8), *(f32 *)(q + 0xc), *(f32 *)(q + 0x10));
+    r = (*gRomCurveInterface)->find(&lbl_803DC2A0, 1, 0, ((KtrexfloorswitchPlacement *)q)->unk8, ((KtrexfloorswitchPlacement *)q)->unkC, ((KtrexfloorswitchPlacement *)q)->unk10);
     if (r != -1) {
         r = (int)(*gRomCurveInterface)->getById(r);
         if (r != 0) {
@@ -105,7 +119,7 @@ void ktrexfloorswitch_update(int obj) {
     vecB[1] = lbl_802C256C[1];
     vecB[2] = lbl_802C256C[2];
     ((GameObject *)obj)->unkF8 = ((GameObject *)obj)->unkF4;
-    ((GameObject *)obj)->unkF4 = GameBit_Get(*(s16 *)((char *)sub + 0x1c));
+    ((GameObject *)obj)->unkF4 = GameBit_Get(((KtrexfloorswitchPlacement *)sub)->unk1C);
     tex = objFindTexture(obj, 0, 0);
     anim = 0;
     if (((GameObject *)obj)->unkF4 <= 1) {
@@ -116,7 +130,7 @@ void ktrexfloorswitch_update(int obj) {
         if (((GameObject *)obj)->unkF4 != 0 && ((GameObject *)obj)->unkF8 == 0) {
             int cp;
             ((KtrexfloorswitchState *)state)->unk10 |= 0x2;
-            ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)sub + 0xc) - (f32)(u32)*(u8 *)((char *)sub + 0x1f);
+            ((GameObject *)obj)->anim.localPosY = ((KtrexfloorswitchPlacement *)sub)->unkC - (f32)(u32)((KtrexfloorswitchPlacement *)sub)->unk1F;
             cp = (*gRomCurveInterface)->find(
                 &lbl_803DC2A0, 1, GameBit_Get(0x572) >> 1, *(f32 *)(*(int *)&((GameObject *)obj)->anim.placementData + 8),
                 *(f32 *)(*(int *)&((GameObject *)obj)->anim.placementData + 0xc), *(f32 *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x10));
@@ -138,7 +152,7 @@ void ktrexfloorswitch_update(int obj) {
         } else {
             int cp;
             ((KtrexfloorswitchState *)state)->unk10 |= 0x2;
-            ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)sub + 0xc) - (f32)(u32)*(u8 *)((char *)sub + 0x1f);
+            ((GameObject *)obj)->anim.localPosY = ((KtrexfloorswitchPlacement *)sub)->unkC - (f32)(u32)((KtrexfloorswitchPlacement *)sub)->unk1F;
             cp = (*gRomCurveInterface)->find(
                 &lbl_803DC2A0, 1, GameBit_Get(0x572) >> 1, *(f32 *)(*(int *)&((GameObject *)obj)->anim.placementData + 8),
                 *(f32 *)(*(int *)&((GameObject *)obj)->anim.placementData + 0xc), *(f32 *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x10));
@@ -190,7 +204,7 @@ void ktrexfloorswitch_update(int obj) {
         }
     }
     if ((((KtrexfloorswitchState *)state)->unk10 & 0x4) != 0) {
-        height = *(f32 *)((char *)sub + 0xc) - (f32)(u32)*(u8 *)((char *)sub + 0x1f);
+        height = ((KtrexfloorswitchPlacement *)sub)->unkC - (f32)(u32)((KtrexfloorswitchPlacement *)sub)->unk1F;
         if (((GameObject *)obj)->anim.localPosY > height) {
             ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY - lbl_803E6874 * timeDelta;
             if (((GameObject *)obj)->anim.localPosY <= height) {
@@ -202,10 +216,10 @@ void ktrexfloorswitch_update(int obj) {
             }
         }
     } else if ((((KtrexfloorswitchState *)state)->unk10 & 0x2) != 0) {
-        if (((GameObject *)obj)->anim.localPosY < *(f32 *)((char *)sub + 0xc)) {
+        if (((GameObject *)obj)->anim.localPosY < ((KtrexfloorswitchPlacement *)sub)->unkC) {
             ((GameObject *)obj)->anim.localPosY = lbl_803E6874 * timeDelta + ((GameObject *)obj)->anim.localPosY;
-            if (((GameObject *)obj)->anim.localPosY >= *(f32 *)((char *)sub + 0xc)) {
-                ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)sub + 0xc);
+            if (((GameObject *)obj)->anim.localPosY >= ((KtrexfloorswitchPlacement *)sub)->unkC) {
+                ((GameObject *)obj)->anim.localPosY = ((KtrexfloorswitchPlacement *)sub)->unkC;
                 ((KtrexfloorswitchState *)state)->unk10 &= ~0x2;
             } else {
                 anim = 1;
@@ -213,7 +227,7 @@ void ktrexfloorswitch_update(int obj) {
             }
         }
     } else if ((s8)((KtrexfloorswitchState *)state)->unk4 != 0 && (((KtrexfloorswitchState *)state)->unk10 & 1) == 0) {
-        height = *(f32 *)((char *)sub + 0xc) - (f32)(u32)*(u8 *)((char *)sub + 0x1e);
+        height = ((KtrexfloorswitchPlacement *)sub)->unkC - (f32)(u32)((KtrexfloorswitchPlacement *)sub)->unk1E;
         if (((GameObject *)obj)->anim.localPosY > height) {
             ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY - lbl_803E6878 * timeDelta;
             if (((GameObject *)obj)->anim.localPosY < height) {
@@ -223,18 +237,18 @@ void ktrexfloorswitch_update(int obj) {
             }
         }
         if (((KtrexfloorswitchState *)state)->unk8 < lbl_803E687C) {
-            ((KtrexfloorswitchState *)state)->unk8 = (f32)(u32)*(u8 *)((char *)sub + 0x19);
-            level = GameBit_Get(*(s16 *)((char *)sub + 0x1a)) & 0xff;
+            ((KtrexfloorswitchState *)state)->unk8 = (f32)(u32)((KtrexfloorswitchPlacement *)sub)->unk19;
+            level = GameBit_Get(((KtrexfloorswitchPlacement *)sub)->unk1A) & 0xff;
             if (level < 0xf) {
                 level += 1;
-                GameBit_Set(*(s16 *)((char *)sub + 0x1a), level);
+                GameBit_Set(((KtrexfloorswitchPlacement *)sub)->unk1A, level);
                 if (level == 0xf) {
                     ((KtrexfloorswitchState *)state)->unk10 |= 0x8;
                 }
             } else {
                 ((KtrexfloorswitchState *)state)->unk10 &= ~0x8;
                 ((KtrexfloorswitchState *)state)->unk10 |= 1;
-                GameBit_Set(*(s16 *)((char *)sub + 0x1a), 0);
+                GameBit_Set(((KtrexfloorswitchPlacement *)sub)->unk1A, 0);
                 if (GameBit_Get(0x55a) != 0) {
                     GameBit_Set(0x55a, 0);
                     GameBit_Set(0x55b, 1);
@@ -248,8 +262,8 @@ void ktrexfloorswitch_update(int obj) {
         ((KtrexfloorswitchState *)state)->unk8 -= timeDelta;
     } else {
         ((GameObject *)obj)->anim.localPosY = lbl_803E6878 * timeDelta + ((GameObject *)obj)->anim.localPosY;
-        if (((GameObject *)obj)->anim.localPosY > *(f32 *)((char *)sub + 0xc)) {
-            ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)sub + 0xc);
+        if (((GameObject *)obj)->anim.localPosY > ((KtrexfloorswitchPlacement *)sub)->unkC) {
+            ((GameObject *)obj)->anim.localPosY = ((KtrexfloorswitchPlacement *)sub)->unkC;
         } else {
             anim = 1;
         }
@@ -257,7 +271,7 @@ void ktrexfloorswitch_update(int obj) {
             if (((KtrexfloorswitchState *)state)->unk8 < lbl_803E687C) {
                 ((KtrexfloorswitchState *)state)->unk10 &= ~0x8;
                 ((KtrexfloorswitchState *)state)->unk10 |= 1;
-                GameBit_Set(*(s16 *)((char *)sub + 0x1a), 0);
+                GameBit_Set(((KtrexfloorswitchPlacement *)sub)->unk1A, 0);
                 if (GameBit_Get(0x55a) != 0) {
                     GameBit_Set(0x55a, 0);
                     GameBit_Set(0x55b, 1);
@@ -271,8 +285,8 @@ void ktrexfloorswitch_update(int obj) {
         }
     }
     if ((((KtrexfloorswitchState *)state)->unk10 & 1) == 0 && (s8)((KtrexfloorswitchState *)state)->unk5 != (s8)((KtrexfloorswitchState *)state)->unk4) {
-        GameBit_Get(*(s16 *)((char *)sub + 0x1a));
-        GameBit_Set(*(s16 *)((char *)sub + 0x1a), 0);
+        GameBit_Get(((KtrexfloorswitchPlacement *)sub)->unk1A);
+        GameBit_Set(((KtrexfloorswitchPlacement *)sub)->unk1A, 0);
     }
     if ((s8)anim != 0 && lbl_803DDD60 == 0) {
         Sfx_PlayFromObject(obj, SFXmv_bodyf2_c);

@@ -10,6 +10,19 @@
 #include "main/objfx.h"
 #include "main/objhits_types.h"
 
+typedef struct HagabonPlacement {
+    u8 pad0[0x14 - 0x0];
+    s32 unk14;
+    u8 pad18[0x19 - 0x18];
+    s8 unk19;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    u8 pad22[0x28 - 0x22];
+} HagabonPlacement;
+
+
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006810();
@@ -1212,10 +1225,10 @@ void hagabon_update(int obj)
     data = *(int *)&((GameObject *)obj)->anim.placementData;
 
     if (((GameObject *)obj)->unkF4 != 0) {
-        if ((*(s16 *)(data + 0x20) != -1) && (GameBit_Get(*(s16 *)(data + 0x20)) != 0)) {
+        if ((((HagabonPlacement *)data)->unk20 != -1) && (GameBit_Get(((HagabonPlacement *)data)->unk20) != 0)) {
             return;
         }
-        if (((u8 (*)(int))(*gMapEventInterface)->isTimedEventActive)(*(int *)(data + 0x14)) == 0) {
+        if (((u8 (*)(int))(*gMapEventInterface)->isTimedEventActive)(((HagabonPlacement *)data)->unk14) == 0) {
             return;
         }
         ((GameObject *)obj)->unkF4 = 0;
@@ -1270,11 +1283,11 @@ void hagabon_update(int obj)
             lightPos[2] = hitZ;
             objLightFn_8009a1dc((void *)obj, lbl_803E2660, lightPos, 3, 0);
             eventAsDouble.bits = CONCAT44(0x43300000,
-                                          (s32)(*(s16 *)(data + 0x1c) * 0x3c) ^ 0x80000000);
-            (*gMapEventInterface)->startTimedEvent(*(int *)(data + 0x14),
+                                          (s32)(((HagabonPlacement *)data)->unk1C * 0x3c) ^ 0x80000000);
+            (*gMapEventInterface)->startTimedEvent(((HagabonPlacement *)data)->unk14,
                                                    (f32)(eventAsDouble.value - lbl_803E2648));
-            if (*(s16 *)(data + 0x20) != -1) {
-                GameBit_Set(*(s16 *)(data + 0x20), 1);
+            if (((HagabonPlacement *)data)->unk20 != -1) {
+                GameBit_Set(((HagabonPlacement *)data)->unk20, 1);
             }
         }
         ObjHits_SetHitVolumeSlot(obj, 10, 1, 0);
@@ -1302,7 +1315,7 @@ void hagabon_update(int obj)
     if (((state->flags & 4) != 0) && (state->pathDistance < lbl_803E2668)) {
         state->flags &= 0xfb;
     }
-    if (((state->flags & 6) == 0) && (*(s16 *)(data + 0x1e) == 0) &&
+    if (((state->flags & 6) == 0) && (((HagabonPlacement *)data)->unk1E == 0) &&
         (state->player != 0) && (state->playerDistance < state->chaseRadius)) {
         state->flags |= 2;
     }

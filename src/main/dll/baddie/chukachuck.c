@@ -6,6 +6,12 @@
 #include "main/dll/baddie/chuka.h"
 #include "main/dll/baddie/chukachuck.h"
 
+typedef struct DfpfloorbarPlacement {
+    u8 pad0[0xC - 0x0];
+    f32 unkC;
+} DfpfloorbarPlacement;
+
+
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern u8 *Obj_GetPlayerObject(void);
@@ -62,13 +68,13 @@ void dfpfloorbar_update(int param_1)
         case 1:
             if (state->modeIndex > 5) return;
             if (GameBit_Get(0xe57) != 0) {
-                ((GameObject *)param_1)->anim.localPosY = *(f32 *)(iVar6 + 0xc) - lbl_803E640C;
+                ((GameObject *)param_1)->anim.localPosY = ((DfpfloorbarPlacement *)iVar6)->unkC - lbl_803E640C;
                 return;
             }
             break;
         case 2:
             if (GameBit_Get(0xe58) != 0) {
-                ((GameObject *)param_1)->anim.localPosY = *(f32 *)(iVar6 + 0xc) - lbl_803E640C;
+                ((GameObject *)param_1)->anim.localPosY = ((DfpfloorbarPlacement *)iVar6)->unkC - lbl_803E640C;
                 return;
             }
             break;
@@ -106,11 +112,11 @@ void dfpfloorbar_update(int param_1)
 
     active = state->active;
     if (active != 0) {
-        if (((GameObject *)param_1)->anim.localPosY > *(f32 *)(iVar6 + 0xc) - lbl_803E640C) {
+        if (((GameObject *)param_1)->anim.localPosY > ((DfpfloorbarPlacement *)iVar6)->unkC - lbl_803E640C) {
             Sfx_KeepAliveLoopedObjectSound(param_1, SFXfoot_water_walk_2);
             ((GameObject *)param_1)->anim.localPosY = ((GameObject *)param_1)->anim.localPosY - timeDelta / lbl_803E6410;
-            if (((GameObject *)param_1)->anim.localPosY <= *(f32 *)(iVar6 + 0xc) - lbl_803E640C) {
-                ((GameObject *)param_1)->anim.localPosY = *(f32 *)(iVar6 + 0xc) - lbl_803E640C;
+            if (((GameObject *)param_1)->anim.localPosY <= ((DfpfloorbarPlacement *)iVar6)->unkC - lbl_803E640C) {
+                ((GameObject *)param_1)->anim.localPosY = ((DfpfloorbarPlacement *)iVar6)->unkC - lbl_803E640C;
             }
         }
         return;
@@ -118,7 +124,7 @@ void dfpfloorbar_update(int param_1)
 
     if (state->requiredScore == 0) return;
     if (active == 0) {
-        ((GameObject *)param_1)->anim.localPosY = *(f32 *)(iVar6 + 0xc);
+        ((GameObject *)param_1)->anim.localPosY = ((DfpfloorbarPlacement *)iVar6)->unkC;
     }
     if (state->active != 0) return;
 

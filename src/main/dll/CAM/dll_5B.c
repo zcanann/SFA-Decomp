@@ -13,6 +13,15 @@
 #include "main/object_transform.h"
 #include "main/pad.h"
 
+typedef struct CameraModeStaticPlacement {
+    u8 pad0[0x1C - 0x0];
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    u8 pad22[0x28 - 0x22];
+} CameraModeStaticPlacement;
+
+
 
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_80006810();
@@ -861,13 +870,13 @@ void CameraModeStatic_update(short *param_1)
     iVar3 = *(int *)(param_1 + 0x52);
     iVar4 = (int)lbl_803DD558->staticObject->anim.placementData;
     if ((*(byte *)(iVar4 + 0x1b) & 1) == 0) {
-      *param_1 = *(short *)(iVar4 + 0x1c) + -0x8000;
+      *param_1 = ((CameraModeStaticPlacement *)iVar4)->unk1C + -0x8000;
     }
     if ((*(byte *)(iVar4 + 0x1b) & 2) == 0) {
-      param_1[1] = *(short *)(iVar4 + 0x1e);
+      param_1[1] = ((CameraModeStaticPlacement *)iVar4)->unk1E;
     }
     if ((*(byte *)(iVar4 + 0x1b) & 4) == 0) {
-      param_1[2] = *(short *)(iVar4 + 0x20);
+      param_1[2] = ((CameraModeStaticPlacement *)iVar4)->unk20;
     }
     ((CameraObject *)param_1)->anim.worldPosX = lbl_803DD558->staticObject->anim.worldPosX;
     ((CameraObject *)param_1)->anim.worldPosY = lbl_803DD558->staticObject->anim.worldPosY;
@@ -882,7 +891,7 @@ void CameraModeStatic_update(short *param_1)
     }
     if ((*(byte *)(iVar4 + 0x1b) & 2) != 0) {
       uVar2 = getAngle(dVar7,sqrtf((float)(dVar6 * dVar6 + (double)(float)(dVar5 * dVar5))));
-      iVar1 = ((uVar2 & 0xffff) - (int)*(short *)(iVar4 + 0x1e)) - (uint)(ushort)param_1[1];
+      iVar1 = ((uVar2 & 0xffff) - (int)((CameraModeStaticPlacement *)iVar4)->unk1E) - (uint)(ushort)param_1[1];
       if (0x8000 < iVar1) {
         iVar1 = iVar1 + -0xffff;
       }
@@ -952,17 +961,17 @@ void CameraModeStatic_init(u8 *cam, int p2, int *p3)
   if ((setup[27] & 1) != 0) {
     yaw = 0x8000 - getAngle(dx, dz);
   } else {
-    yaw = *(s16 *)(setup + 28) + 0x8000;
+    yaw = ((CameraModeStaticPlacement *)setup)->unk1C + 0x8000;
   }
   if ((setup[27] & 2) != 0) {
-    pitch = (s16)getAngle(dy, sqrtf(dx * dx + dz * dz)) - *(s16 *)(setup + 30);
+    pitch = (s16)getAngle(dy, sqrtf(dx * dx + dz * dz)) - ((CameraModeStaticPlacement *)setup)->unk1E;
   } else {
-    pitch = *(s16 *)(setup + 30);
+    pitch = ((CameraModeStaticPlacement *)setup)->unk1E;
   }
   if ((setup[27] & 4) != 0) {
     roll = state->anim.rotZ;
   } else {
-    roll = *(s16 *)(setup + 32);
+    roll = ((CameraModeStaticPlacement *)setup)->unk20;
   }
   {
     f32 fov = (f32)(u32)setup[26];

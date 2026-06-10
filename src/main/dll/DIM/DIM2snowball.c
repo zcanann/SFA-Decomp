@@ -9,6 +9,25 @@
 #include "main/objanim_internal.h"
 #include "global.h"
 
+typedef struct Dim2pathgeneratorPlacement {
+    u8 pad0[0x3 - 0x0];
+    u8 unk3;
+    u8 unk4;
+    u8 unk5;
+    u8 unk6;
+    u8 unk7;
+    u8 pad8[0x14 - 0x8];
+    s32 unk14;
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    u16 unk1E;
+    s16 unk20;
+    s16 unk22;
+    u8 pad24[0x28 - 0x24];
+} Dim2pathgeneratorPlacement;
+
+
 /* dim2conveyor_getExtraSize == 0x14. */
 typedef struct Dim2ConveyorState {
     f32 scrollX;    /* 0x00: per-area conveyor scroll vector */
@@ -1649,7 +1668,7 @@ void dim2pathgenerator_update(int *obj)
     int count;
 
     def = *(int **)&((GameObject *)obj)->anim.placementData;
-    if (GameBit_Get(*(s16 *)((char *)def + 0x22)) == 0) {
+    if (GameBit_Get(((Dim2pathgeneratorPlacement *)def)->unk22) == 0) {
         return;
     }
     if ((((Dim2PathGeneratorState *)extra)->flags & 4) != 0) {
@@ -1696,7 +1715,7 @@ void dim2pathgenerator_update(int *obj)
             *(f32 *)((char *)p + 8) = ((Dim2PathGeneratorState *)extra)->originX;
             *(f32 *)((char *)p + 0xc) = ((Dim2PathGeneratorState *)extra)->originY;
             *(f32 *)((char *)p + 0x10) = ((Dim2PathGeneratorState *)extra)->originZ;
-            *(int *)((char *)p + 0x14) = *(int *)((char *)def + 0x14);
+            *(int *)((char *)p + 0x14) = ((Dim2pathgeneratorPlacement *)def)->unk14;
             (*(void (**)(int *, int))(**(int **)((char *)objs[i] + 0x68) + 4))(objs[i], 1);
             ObjGroup_RemoveObject(objs[i], 47);
             o2 = ObjGroup_GetObjects(47, &c2);
@@ -1711,16 +1730,16 @@ void dim2pathgenerator_update(int *obj)
         *(f32 *)((char *)np + 8) = ((Dim2PathGeneratorState *)extra)->originX;
         *(f32 *)((char *)np + 0xc) = ((Dim2PathGeneratorState *)extra)->originY;
         *(f32 *)((char *)np + 0x10) = ((Dim2PathGeneratorState *)extra)->originZ;
-        *(u8 *)((char *)np + 4) = *(u8 *)((char *)def + 4);
-        *(u8 *)((char *)np + 6) = *(u8 *)((char *)def + 6);
-        *(u8 *)((char *)np + 5) = *(u8 *)((char *)def + 5);
-        *(u8 *)((char *)np + 7) = *(u8 *)((char *)def + 7);
+        *(u8 *)((char *)np + 4) = ((Dim2pathgeneratorPlacement *)def)->unk4;
+        *(u8 *)((char *)np + 6) = ((Dim2pathgeneratorPlacement *)def)->unk6;
+        *(u8 *)((char *)np + 5) = ((Dim2pathgeneratorPlacement *)def)->unk5;
+        *(u8 *)((char *)np + 7) = ((Dim2pathgeneratorPlacement *)def)->unk7;
         *(u8 *)((char *)np + 7) = 255;
-        *(u8 *)((char *)np + 3) = *(u8 *)((char *)def + 3);
+        *(u8 *)((char *)np + 3) = ((Dim2pathgeneratorPlacement *)def)->unk3;
         *(s8 *)((char *)np + 0x18) = (s8)*(u8 *)((char *)def + 0x1c);
         *(s16 *)((char *)np + 0x1a) = *(u8 *)((char *)def + 0x1a);
         *(s16 *)((char *)np + 0x1c) = *(u8 *)((char *)def + 0x1b);
-        *(int *)((char *)np + 0x14) = *(int *)((char *)def + 0x14);
+        *(int *)((char *)np + 0x14) = ((Dim2pathgeneratorPlacement *)def)->unk14;
         Obj_SetupObject((int)np, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, 0);
         ((Dim2PathGeneratorState *)extra)->flags |= (toggle ^ 1) & 1;
     }

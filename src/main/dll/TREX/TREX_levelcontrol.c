@@ -5,6 +5,19 @@
 #include "main/dll/TREX/TREX_levelcontrol.h"
 #include "main/objhits_types.h"
 
+typedef struct SBShipGunPlacement {
+    u8 pad0[0x8 - 0x0];
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    u8 pad14[0x18 - 0x14];
+    f32 unk18;
+    f32 unk1C;
+    f32 unk20;
+    u8 pad24[0x28 - 0x24];
+} SBShipGunPlacement;
+
+
 typedef struct SBShipGunState {
     u8 pad0[0x3 - 0x0];
     s8 unk3;
@@ -243,18 +256,18 @@ void SB_ShipGun_update(int obj)
             local_6c = lbl_803E588C;
             vecRotateZXY(local_68,&local_74);
             iVar11 = (int)Obj_AllocObjectSetup(SB_SHIPGUN_CANNONBALL_ALLOC_SIZE,SB_CANNONBALL_ALIAS_OBJECT_TYPE);
-            *(float *)(iVar11 + 8) = local_78;
-            *(float *)(iVar11 + 0xc) = local_7c;
-            *(float *)(iVar11 + 0x10) = local_80;
+            ((SBShipGunPlacement *)iVar11)->unk8 = local_78;
+            ((SBShipGunPlacement *)iVar11)->unkC = local_7c;
+            ((SBShipGunPlacement *)iVar11)->unk10 = local_80;
             *(undefined *)(iVar11 + 4) = SB_SHIPGUN_CANNONBALL_MODEL_FIELD;
             *(undefined *)(iVar11 + 5) = SB_SHIPGUN_CANNONBALL_FLAGS_FIELD;
             *(undefined *)(iVar11 + 6) = SB_SHIPGUN_CANNONBALL_BYTE_FF;
             *(undefined *)(iVar11 + 7) = SB_SHIPGUN_CANNONBALL_BYTE_FF;
             puVar9 = Obj_SetupObject((void *)iVar11,5,0xffffffff,0xffffffff,0);
             iVar11 = *piVar10;
-            fdx = *(float *)(iVar11 + 0x18) - ((GameObject *)obj)->anim.worldPosX;
-            fdy = *(float *)(iVar11 + 0x1c) - (((GameObject *)obj)->anim.worldPosY - lbl_803E5898);
-            fdz = *(float *)(iVar11 + 0x20) - ((GameObject *)obj)->anim.worldPosZ;
+            fdx = ((SBShipGunPlacement *)iVar11)->unk18 - ((GameObject *)obj)->anim.worldPosX;
+            fdy = ((SBShipGunPlacement *)iVar11)->unk1C - (((GameObject *)obj)->anim.worldPosY - lbl_803E5898);
+            fdz = ((SBShipGunPlacement *)iVar11)->unk20 - ((GameObject *)obj)->anim.worldPosZ;
             dist = sqrtf(fdz * fdz + (fdx * fdx + fdy * fdy));
             local_78 = lbl_803E589C / dist;
             *(float *)(puVar9 + 0x12) = fdx * local_78;

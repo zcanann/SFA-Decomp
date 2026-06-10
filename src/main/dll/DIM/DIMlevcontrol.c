@@ -536,6 +536,18 @@ int dimlavasmash_getObjectTypeId(void) { return 0x0; }
 /* if (o->_X == K) return A; else return B; */
 #include "global.h"
 
+typedef struct DimcannonPlacement {
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    u8 pad20[0x26 - 0x20];
+    s16 unk26;
+    s8 unk28;
+    u8 pad29[0x30 - 0x29];
+} DimcannonPlacement;
+
+
 typedef struct DimcannonState {
     u8 pad0[0x7 - 0x0];
     u8 unk7;
@@ -764,7 +776,7 @@ void dimcannon_update(int *obj)
         return;
     }
 
-    if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 0x8) && GameBit_Get(*(s16 *)((char *)src + 0x1a))) {
+    if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 0x8) && GameBit_Get(((DimcannonPlacement *)src)->unk1A)) {
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x8);
     }
 
@@ -780,7 +792,7 @@ void dimcannon_update(int *obj)
 
     switch (((DimCannonState *)state)->fireState) {
     case 0:
-        if (GameBit_Get(*(s16 *)((char *)src + 0x1c))) {
+        if (GameBit_Get(((DimcannonPlacement *)src)->unk1C)) {
             ((DimCannonState *)state)->fireState = 4;
         }
         break;
@@ -808,12 +820,12 @@ void dimcannon_update(int *obj)
     case 4:
         DIMwooddoor_updateShardAim(obj, *(f32 *)&((DimCannonState *)state)->unk4, *(f32 *)&((DimCannonState *)state)->unk8,
                                    ((DimCannonState *)state)->unkC, ((DimCannonState *)state)->unk10);
-        if (GameBit_Get(*(s16 *)((char *)src + 0x1a))) {
+        if (GameBit_Get(((DimcannonPlacement *)src)->unk1A)) {
             ((DimCannonState *)state)->fireState = 5;
-        } else if (*(void **)(state + 0x0) != 0 && !GameBit_Get(*(s16 *)((char *)src + 0x1e))) {
+        } else if (*(void **)(state + 0x0) != 0 && !GameBit_Get(((DimcannonPlacement *)src)->unk1E)) {
             f32 d = getXZDistance(&((GameObject *)obj)->anim.worldPosX,
                                   (f32 *)(*(char **)(state + 0x0) + 0x18));
-            int v = *(s16 *)((char *)src + 0x26) * lbl_803DBF10;
+            int v = ((DimcannonPlacement *)src)->unk26 * lbl_803DBF10;
             if (d < (f32)v / lbl_803E48EC) {
                 ((DimCannonState *)state)->fireState = 1;
             }
@@ -823,11 +835,11 @@ void dimcannon_update(int *obj)
         ((DimCannonState *)state)->aimPitch = 0;
         break;
     case 1:
-        if (GameBit_Get(*(s16 *)((char *)src + 0x1a))) {
+        if (GameBit_Get(((DimcannonPlacement *)src)->unk1A)) {
             ((DimCannonState *)state)->fireState = 5;
             break;
         }
-        if (GameBit_Get(*(s16 *)((char *)src + 0x1e))) {
+        if (GameBit_Get(((DimcannonPlacement *)src)->unk1E)) {
             ((DimCannonState *)state)->fireState = 4;
             break;
         }
@@ -865,7 +877,7 @@ void dimcannon_update(int *obj)
         DIMwooddoor_spawnShard(obj, 0);
         {
             f32 d2 = ((DimCannonState *)state)->unk10;
-            int v = *(s16 *)((char *)src + 0x26) * lbl_803DBF0C;
+            int v = ((DimcannonPlacement *)src)->unk26 * lbl_803DBF0C;
             if (d2 > (f32)v / lbl_803E48EC) {
                 ((DimCannonState *)state)->fireState = 4;
             }

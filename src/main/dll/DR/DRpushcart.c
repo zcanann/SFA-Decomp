@@ -8,6 +8,13 @@
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
+typedef struct ShopitemPlacement {
+    u8 pad0[0x19 - 0x0];
+    u8 unk19;
+    u8 pad1A[0x20 - 0x1A];
+} ShopitemPlacement;
+
+
 /* shopitem_getExtraSize == 0xec (spline-following pushcart item). */
 typedef struct ShopItemState {
     u8 pad00[4];
@@ -1274,14 +1281,14 @@ void shopitem_update(int obj)
             ((ShopItemState *)state)->vendorObj = ObjGroup_FindNearestObject(9, obj, &range);
             item = ((ShopItemState *)state)->vendorObj;
             if ((u32)item != 0) {
-                if ((*(int (**)(int, int))((char *)**(int ***)(item + 0x68) + 0x28))(item, *(u8 *)(def + 0x19)) == 0
-                    || (*(int (**)(int, int))((char *)**(int ***)(((ShopItemState *)state)->vendorObj + 0x68) + 0x2C))(((ShopItemState *)state)->vendorObj, *(u8 *)(def + 0x19)) != 0) {
+                if ((*(int (**)(int, int))((char *)**(int ***)(item + 0x68) + 0x28))(item, ((ShopitemPlacement *)def)->unk19) == 0
+                    || (*(int (**)(int, int))((char *)**(int ***)(((ShopItemState *)state)->vendorObj + 0x68) + 0x2C))(((ShopItemState *)state)->vendorObj, ((ShopitemPlacement *)def)->unk19) != 0) {
                     b->flag_40 = 1;
                     ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
                     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x8000);
                     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
                 }
-                ((ShopItemState *)state)->helpTextId = (s16)(*(int (**)(int, int))((char *)**(int ***)(((ShopItemState *)state)->vendorObj + 0x68) + 0x3C))(((ShopItemState *)state)->vendorObj, *(u8 *)(def + 0x19));
+                ((ShopItemState *)state)->helpTextId = (s16)(*(int (**)(int, int))((char *)**(int ***)(((ShopItemState *)state)->vendorObj + 0x68) + 0x3C))(((ShopItemState *)state)->vendorObj, ((ShopitemPlacement *)def)->unk19);
             }
         } else {
             if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) {
@@ -1290,8 +1297,8 @@ void shopitem_update(int obj)
             }
             if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) {
                 money = playerGetMoney(player);
-                price = (*(int (**)(int, int))((char *)**(int ***)(((ShopItemState *)state)->vendorObj + 0x68) + 0x38))(((ShopItemState *)state)->vendorObj, *(u8 *)(def + 0x19));
-                (*(int (**)(int, int))((char *)**(int ***)(((ShopItemState *)state)->vendorObj + 0x68) + 0x40))(((ShopItemState *)state)->vendorObj, *(u8 *)(def + 0x19));
+                price = (*(int (**)(int, int))((char *)**(int ***)(((ShopItemState *)state)->vendorObj + 0x68) + 0x38))(((ShopItemState *)state)->vendorObj, ((ShopitemPlacement *)def)->unk19);
+                (*(int (**)(int, int))((char *)**(int ***)(((ShopItemState *)state)->vendorObj + 0x68) + 0x40))(((ShopItemState *)state)->vendorObj, ((ShopitemPlacement *)def)->unk19);
                 switch (((GameObject *)obj)->anim.seqId) {
                 case 0x467:
                     ((GameObject *)obj)->anim.localPosY = lbl_803E5A68 + *(f32 *)(*(int *)&((GameObject *)obj)->anim.placementData + 0xC);

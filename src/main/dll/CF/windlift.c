@@ -14,6 +14,16 @@
 #include "main/resource.h"
 #include "global.h"
 
+typedef struct LanternFireFlyPlacement {
+    u8 pad0[0x18 - 0x0];
+    s8 unk18;
+    u8 unk19;
+    s16 unk1A;
+    s16 unk1C;
+    u8 pad1E[0x20 - 0x1E];
+} LanternFireFlyPlacement;
+
+
 /* scarab_getExtraSize == 0x34 (collectible money beetle). */
 typedef struct ScarabState {
     f32 velX;        /* 0x00 */
@@ -1629,10 +1639,10 @@ void LanternFireFly_func0B(int obj)
 
     state = ((GameObject *)obj)->extra;
     setup = *(int *)&((GameObject *)obj)->anim.placementData;
-    state->field68 = *(s8 *)(setup + 0x18);
-    state->stateId = *(u8 *)(setup + 0x19);
+    state->field68 = ((LanternFireFlyPlacement *)setup)->unk18;
+    state->stateId = ((LanternFireFlyPlacement *)setup)->unk19;
     state->field4C = lbl_803E3AA0;
-    state->field50 = (f32)(int)*(s16 *)(setup + 0x1c);
+    state->field50 = (f32)(int)((LanternFireFlyPlacement *)setup)->unk1C;
     state->field6F = 0;
     objHitDetectFn_80062e84(obj, 0, 1);
     p = Obj_GetPlayerObject();
@@ -1663,7 +1673,7 @@ void LanternFireFly_func0B(int obj)
     fn_801869DC(obj);
     fn_801869DC(obj);
     ((LFFlags *)&state->modeFlags)->mode = 1;
-    state->timer = *(s16 *)(setup + 0x1a);
+    state->timer = ((LanternFireFlyPlacement *)setup)->unk1A;
     gameBitIncrement(0x698);
 }
 

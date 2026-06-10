@@ -8,6 +8,16 @@
 #include "main/objseq.h"
 #include "main/dll/rom_curve_interface.h"
 
+typedef struct ObjInterpretSeqPlacement {
+    u8 pad0[0x2 - 0x0];
+    s8 unk2;
+    u8 pad3[0x4 - 0x3];
+    s16 unk4;
+    u8 unk6;
+    u8 pad7[0x8 - 0x7];
+} ObjInterpretSeqPlacement;
+
+
 typedef struct TriggerState {
     u8 pad0[0x4 - 0x0];
     f32 unk4;
@@ -1594,7 +1604,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
             run:
                 switch (p[1]) {
                 case 1:
-                    switch (*(s8 *)(p + 2)) {
+                    switch (((ObjInterpretSeqPlacement *)p)->unk2) {
                     case 0:
                         break;
                     case 8:
@@ -1710,7 +1720,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     getLActions(obj, p2, (s16)((p[2] << 8) | p[3]), p3, p4, 0);
                     break;
                 case 0xb:
-                    switch (*(s8 *)(p + 2)) {
+                    switch (((ObjInterpretSeqPlacement *)p)->unk2) {
                     case 0:
                     case 3:
                         t = ObjGroup_FindNearestObject(0xf, obj, 0);
@@ -1879,7 +1889,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     break;
                 case 0x23:
-                    switch (*(s8 *)(p + 2)) {
+                    switch (((ObjInterpretSeqPlacement *)p)->unk2) {
                     case 0:
                         (*(code *)((u8 *)*gMapEventInterface + 0x24))(obj + 0xc, (int)*(s16 *)obj, getCurMapLayer(), 0);
                         break;
@@ -1897,7 +1907,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                 case 0x26:
                     t = getTrickyObject();
                     if ((void *)t != NULL) {
-                        switch (*(s8 *)(p + 2)) {
+                        switch (((ObjInterpretSeqPlacement *)p)->unk2) {
                         case 0:
                             (*(code *)(**(int **)(t + 0x68) + 0x3c))();
                             break;

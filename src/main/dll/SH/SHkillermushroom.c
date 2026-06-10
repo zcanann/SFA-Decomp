@@ -8,6 +8,35 @@
 #include "main/objfx.h"
 #include "main/objseq.h"
 
+typedef struct BombplantsporeStartDriftBurstPlacement {
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    s16 unk1C;
+    u8 pad1E[0x20 - 0x1E];
+} BombplantsporeStartDriftBurstPlacement;
+
+
+typedef struct BombplantsporeUpdateDriftPlacement {
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    s16 unk1C;
+    u8 pad1E[0x20 - 0x1E];
+} BombplantsporeUpdateDriftPlacement;
+
+
+typedef struct BombplantPlacement {
+    u8 pad0[0x8 - 0x0];
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    u8 pad14[0x18 - 0x14];
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    u8 pad1E[0x20 - 0x1E];
+} BombplantPlacement;
+
+
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068c4();
 extern void ModelLightStruct_free(void *light);
@@ -148,7 +177,7 @@ void bombplantspore_startDriftBurst(void *obj, void *state)
   s32 angleDelta;
 
   params = ((GameObject *)obj)->anim.placementData;
-  baseAngle = *(s16 *)((u8 *)params + 0x1c);
+  baseAngle = ((BombplantsporeStartDriftBurstPlacement *)params)->unk1C;
 
   ((BombPlantSporeState *)state)->spinTimer = (f32)(int)randomGetRange(0x1e, 0x2d);
 
@@ -164,11 +193,11 @@ void bombplantspore_startDriftBurst(void *obj, void *state)
   if (angleDelta < -0x8000) {
     angleDelta += 0xffff;
   }
-  if (*(s16 *)((u8 *)params + 0x1a) < angleDelta) {
-    ((BombPlantSporeState *)state)->unk2aa = (s16)(baseAngle + *(s16 *)((u8 *)params + 0x1a));
+  if (((BombplantsporeStartDriftBurstPlacement *)params)->unk1A < angleDelta) {
+    ((BombPlantSporeState *)state)->unk2aa = (s16)(baseAngle + ((BombplantsporeStartDriftBurstPlacement *)params)->unk1A);
   }
-  if (angleDelta < -(s32)*(s16 *)((u8 *)params + 0x1a)) {
-    ((BombPlantSporeState *)state)->unk2aa = (s16)(baseAngle - *(s16 *)((u8 *)params + 0x1a));
+  if (angleDelta < -(s32)((BombplantsporeStartDriftBurstPlacement *)params)->unk1A) {
+    ((BombPlantSporeState *)state)->unk2aa = (s16)(baseAngle - ((BombplantsporeStartDriftBurstPlacement *)params)->unk1A);
   }
 
   ((BombPlantSporeState *)state)->driftSpeedTarget = (f32)(int)randomGetRange(900, 0x514) / lbl_803E5390;
@@ -200,7 +229,7 @@ void bombplantspore_updateDrift(void *obj, void *state)
   s32 angleDelta;
 
   params = ((GameObject *)obj)->anim.placementData;
-  baseAngle = *(s16 *)((u8 *)params + 0x1c);
+  baseAngle = ((BombplantsporeUpdateDriftPlacement *)params)->unk1C;
 
   if (randomGetRange(0, 100) < 10 && ((BombPlantSporeState *)state)->unk2a0 <= lbl_803E5394) {
     ((BombPlantSporeState *)state)->spinAngle = (s16)randomGetRange(2000, 4000);
@@ -216,11 +245,11 @@ void bombplantspore_updateDrift(void *obj, void *state)
     if (angleDelta < -0x8000) {
       angleDelta += 0xffff;
     }
-    if (*(s16 *)((u8 *)params + 0x1a) < angleDelta) {
-      ((BombPlantSporeState *)state)->spinAngle = (s16)(baseAngle + *(s16 *)((u8 *)params + 0x1a));
+    if (((BombplantsporeUpdateDriftPlacement *)params)->unk1A < angleDelta) {
+      ((BombPlantSporeState *)state)->spinAngle = (s16)(baseAngle + ((BombplantsporeUpdateDriftPlacement *)params)->unk1A);
     }
-    if (angleDelta < -(s32)*(s16 *)((u8 *)params + 0x1a)) {
-      ((BombPlantSporeState *)state)->spinAngle = (s16)(baseAngle - *(s16 *)((u8 *)params + 0x1a));
+    if (angleDelta < -(s32)((BombplantsporeUpdateDriftPlacement *)params)->unk1A) {
+      ((BombPlantSporeState *)state)->spinAngle = (s16)(baseAngle - ((BombplantsporeUpdateDriftPlacement *)params)->unk1A);
     }
     ((BombPlantSporeState *)state)->unk2a0 = lbl_803E53A8;
   }
@@ -279,14 +308,14 @@ void bombplant_init(void *obj, void *param, int flag)
     return;
   }
 
-  bitId = *(s16 *)((u8 *)param + 0x1c);
+  bitId = ((BombplantPlacement *)param)->unk1C;
   if (bitId != -1 && GameBit_Get(bitId) == 0) {
     p4c = ((GameObject *)obj)->anim.placementData;
     ((GameObject *)obj)->anim.alpha = 0xff;
     ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-    ((GameObject *)obj)->anim.localPosX = *(f32 *)((u8 *)p4c + 0x8);
-    ((GameObject *)obj)->anim.localPosY = *(f32 *)((u8 *)p4c + 0xc);
-    ((GameObject *)obj)->anim.localPosZ = *(f32 *)((u8 *)p4c + 0x10);
+    ((GameObject *)obj)->anim.localPosX = ((BombplantPlacement *)p4c)->unk8;
+    ((GameObject *)obj)->anim.localPosY = ((BombplantPlacement *)p4c)->unkC;
+    ((GameObject *)obj)->anim.localPosZ = ((BombplantPlacement *)p4c)->unk10;
     ((GameObject *)obj)->anim.rootMotionScale = lbl_803E5358;
     ((BombPlantState *)state)->growDuration = lbl_803E535C;
     ((BombPlantState *)state)->growStartScale = ((BombPlantState *)state)->growTargetScale;
@@ -299,9 +328,9 @@ void bombplant_init(void *obj, void *param, int flag)
     p4c = ((GameObject *)obj)->anim.placementData;
     ((GameObject *)obj)->anim.alpha = 0xff;
     ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-    ((GameObject *)obj)->anim.localPosX = *(f32 *)((u8 *)p4c + 0x8);
-    ((GameObject *)obj)->anim.localPosY = *(f32 *)((u8 *)p4c + 0xc);
-    ((GameObject *)obj)->anim.localPosZ = *(f32 *)((u8 *)p4c + 0x10);
+    ((GameObject *)obj)->anim.localPosX = ((BombplantPlacement *)p4c)->unk8;
+    ((GameObject *)obj)->anim.localPosY = ((BombplantPlacement *)p4c)->unkC;
+    ((GameObject *)obj)->anim.localPosZ = ((BombplantPlacement *)p4c)->unk10;
     ObjHits_RefreshObjectState(obj);
   }
 }
@@ -345,9 +374,9 @@ void bombplant_update(void *obj)
     param = ((GameObject *)obj)->anim.placementData;
     if ((((BombPlantState *)state)->flags & 0x2) != 0) {
       ((BombPlantState *)state)->flags &= ~0x2;
-      ((BombPlantState *)state)->growTimer = (f32)(int)*(s16 *)((u8 *)param + 0x18);
+      ((BombPlantState *)state)->growTimer = (f32)(int)((BombplantPlacement *)param)->unk18;
     }
-    bitId = *(s16 *)((u8 *)param + 0x1c);
+    bitId = ((BombplantPlacement *)param)->unk1C;
     if (bitId != -1) {
       if (GameBit_Get(bitId) != 0) {
         plr = Obj_GetPlayerObject();
@@ -381,9 +410,9 @@ void bombplant_update(void *obj)
       p4c = ((GameObject *)obj)->anim.placementData;
       ((GameObject *)obj)->anim.alpha = 0xff;
       ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-      ((GameObject *)obj)->anim.localPosX = *(f32 *)((u8 *)p4c + 0x8);
-      ((GameObject *)obj)->anim.localPosY = *(f32 *)((u8 *)p4c + 0xc);
-      ((GameObject *)obj)->anim.localPosZ = *(f32 *)((u8 *)p4c + 0x10);
+      ((GameObject *)obj)->anim.localPosX = ((BombplantPlacement *)p4c)->unk8;
+      ((GameObject *)obj)->anim.localPosY = ((BombplantPlacement *)p4c)->unkC;
+      ((GameObject *)obj)->anim.localPosZ = ((BombplantPlacement *)p4c)->unk10;
       ((GameObject *)obj)->anim.rootMotionScale = lbl_803E5358;
       ((BombPlantState *)state)->growDuration = lbl_803E535C;
       ((BombPlantState *)state)->growStartScale = ((BombPlantState *)state)->growTargetScale;
@@ -422,7 +451,7 @@ void bombplant_update(void *obj)
     if ((((BombPlantState *)state)->flags & 0x2) != 0) {
       ((BombPlantState *)state)->flags &= ~0x2;
       ((BombPlantState *)state)->growTimer =
-          (f32)(int)(*(s16 *)((u8 *)param + 0x1a) + randomGetRange(-0x32, 0x32));
+          (f32)(int)(((BombplantPlacement *)param)->unk1A + randomGetRange(-0x32, 0x32));
     }
     if ((((GameObject *)obj)->objectFlags & 0x800) != 0) {
       (*gPartfxInterface)->spawnObject(obj, 0x7f1, NULL, 2, -1, NULL);

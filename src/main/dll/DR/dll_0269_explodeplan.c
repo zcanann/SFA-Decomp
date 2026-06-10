@@ -3,6 +3,14 @@
 #include "main/objseq.h"
 
 #include "main/audio/sfx_ids.h"
+
+typedef struct ExplodeplanUpdateTriggerCallbackPlacement {
+    u8 pad0[0x1E - 0x0];
+    s16 unk1E;
+    s16 unk20;
+    u8 pad22[0x28 - 0x22];
+} ExplodeplanUpdateTriggerCallbackPlacement;
+
 void explodeplan_free(void) {}
 
 int explodeplan_getExtraSize(void) { return 0x4; }
@@ -60,24 +68,24 @@ int explodeplan_updateTriggerCallback(int obj) {
     int q = *(int *)&((GameObject *)obj)->anim.placementData;
     char *runtime = ((GameObject *)obj)->extra;
     if (*(int *)runtime == 0) {
-        if (GameBit_Get(*(s16 *)(q + 0x1e)) != 0) {
+        if (GameBit_Get(((ExplodeplanUpdateTriggerCallbackPlacement *)q)->unk1E) != 0) {
             Sfx_StopObjectChannel(obj, 8);
             return 4;
         }
-        if (((BitFlags8 *)(runtime + 4))->b0 != GameBit_Get(*(s16 *)(q + 0x20))) {
+        if (((BitFlags8 *)(runtime + 4))->b0 != GameBit_Get(((ExplodeplanUpdateTriggerCallbackPlacement *)q)->unk20)) {
             Sfx_PlayFromObject(obj, SFXar_ring_pickup);
             Sfx_PlayFromObject(obj, SFXar_generic_pickup);
-            if (GameBit_Get(*(s16 *)(q + 0x20)) != 0) {
+            if (GameBit_Get(((ExplodeplanUpdateTriggerCallbackPlacement *)q)->unk20) != 0) {
                 Sfx_PlayFromObject(obj, SFXar_bomb_pickup);
             } else {
                 Sfx_StopObjectChannel(obj, 8);
             }
         }
-        ((BitFlags8 *)(runtime + 4))->b0 = GameBit_Get(*(s16 *)(q + 0x20));
+        ((BitFlags8 *)(runtime + 4))->b0 = GameBit_Get(((ExplodeplanUpdateTriggerCallbackPlacement *)q)->unk20);
     }
     ret = 0;
     if (*(int *)runtime == 0) {
-        if (GameBit_Get(*(s16 *)(q + 0x20)) == 0) {
+        if (GameBit_Get(((ExplodeplanUpdateTriggerCallbackPlacement *)q)->unk20) == 0) {
             ret = 1;
         }
     }

@@ -4,6 +4,14 @@
 
 #include "main/audio/sfx_ids.h"
 
+typedef struct KtlazerwallPlacement {
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+} KtlazerwallPlacement;
+
+
 typedef struct KtlazerwallState {
     u8 pad0[0x4 - 0x0];
     f32 unk4;
@@ -49,18 +57,18 @@ void ktlazerwall_update(int obj) {
     int i;
     runtime[1] = runtime[0];
     runtime[0] &= ~3;
-    cur = (s16)GameBit_Get(*(s16 *)(q + 0x1a));
-    if (cur >= *(s16 *)(q + 0x1c)) {
+    cur = (s16)GameBit_Get(((KtlazerwallPlacement *)q)->unk1A);
+    if (cur >= ((KtlazerwallPlacement *)q)->unk1C) {
         runtime[0] |= 4;
     } else {
         runtime[0] &= ~4;
-        if (GameBit_Get(*(s16 *)(q + 0x1e)) == 0) {
+        if (GameBit_Get(((KtlazerwallPlacement *)q)->unk1E) == 0) {
             return;
         }
     }
     ((GameObject *)obj)->anim.rotZ += 910;
     if (cur >= 15 && (runtime[0] & 9) == 0) {
-        GameBit_Set(*(s16 *)(q + 0x1e), 1);
+        GameBit_Set(((KtlazerwallPlacement *)q)->unk1E, 1);
         runtime[0] |= 9;
         ktrexfloorswitch_spawnEnergyArc(obj, lbl_803E68B8, 120);
         (*gPartfxInterface)->spawnObject((void *)obj, 1150, NULL, 2, -1, NULL);
@@ -119,7 +127,7 @@ void ktlazerwall_render(int obj) {
             mm_free((void *)m);
             ((KtlazerwallState *)p)->unk10 = 0;
             *(u8 *)p &= ~8;
-            GameBit_Set(*(s16 *)(q + 0x1e), 0);
+            GameBit_Set(((KtlazerwallPlacement *)q)->unk1E, 0);
         }
     }
 }

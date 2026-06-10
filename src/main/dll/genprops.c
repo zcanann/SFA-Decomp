@@ -13,6 +13,68 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 
+typedef struct AnimatedobjPlacement {
+    u8 pad0[0x8 - 0x0];
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    s32 unk14;
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    u8 pad22[0x2C - 0x22];
+    s16 unk2C;
+    u8 pad2E[0x30 - 0x2E];
+} AnimatedobjPlacement;
+
+
+typedef struct Dim2roofrubPlacement {
+    u8 pad0[0x8 - 0x0];
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    s32 unk14;
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    u8 pad22[0x2C - 0x22];
+    s16 unk2C;
+    u8 pad2E[0x30 - 0x2E];
+} Dim2roofrubPlacement;
+
+
+typedef struct DllF7Placement {
+    u8 pad0[0x14 - 0x0];
+    s32 unk14;
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    u8 pad22[0x2C - 0x22];
+    s16 unk2C;
+    u8 pad2E[0x30 - 0x2E];
+} DllF7Placement;
+
+
+typedef struct BaddieinterestpPlacement {
+    u8 pad0[0x14 - 0x0];
+    s32 unk14;
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    u8 pad22[0x2C - 0x22];
+    s16 unk2C;
+    u8 pad2E[0x30 - 0x2E];
+} BaddieinterestpPlacement;
+
+
 typedef struct MikabombState {
     u8 pad0[0x4 - 0x0];
     f32 unk4;
@@ -6034,17 +6096,17 @@ void baddieinterestp_update(int *obj)
 {
     int *params = *(int **)&((GameObject *)obj)->anim.placementData;
 
-    if (((int)*(s16 *)((char *)params + 0x20) == -1 ||
-         GameBit_Get((int)*(s16 *)((char *)params + 0x20)) != 0) &&
-        ((int)*(s16 *)((char *)params + 0x1e) == -1 ||
-         GameBit_Get((int)*(s16 *)((char *)params + 0x1e)) == 0)) {
+    if (((int)((BaddieinterestpPlacement *)params)->unk20 == -1 ||
+         GameBit_Get((int)((BaddieinterestpPlacement *)params)->unk20) != 0) &&
+        ((int)((BaddieinterestpPlacement *)params)->unk1E == -1 ||
+         GameBit_Get((int)((BaddieinterestpPlacement *)params)->unk1E) == 0)) {
         int count;
         int *objs = (int *)ObjGroup_GetObjects(3, &count);
         if (count > 0) {
-            u32 id = (u32)(u16)*(s16 *)((char *)params + 0x1c) << 16;
+            u32 id = (u32)(u16)((BaddieinterestpPlacement *)params)->unk1C << 16;
             u32 i;
             u8 found;
-            id |= (u16)*(s16 *)((char *)params + 0x1a);
+            id |= (u16)((BaddieinterestpPlacement *)params)->unk1A;
             for (i = 0; (int)(i & 0xffff) < count; i++) {
                 int *other = (int *)objs[i & 0xffff];
                 int *otherParams = *(int **)((char *)other + 0x4c);
@@ -6068,8 +6130,8 @@ void baddieinterestp_update(int *obj)
                                 case 0: {
                                     int kind = b & 0xf;
                                     int *target = (int *)objs[i & 0xffff];
-                                    if ((int)*(s16 *)((char *)params + 0x1e) != -1) {
-                                        GameBit_Set((int)*(s16 *)((char *)params + 0x1e), 1);
+                                    if ((int)((BaddieinterestpPlacement *)params)->unk1E != -1) {
+                                        GameBit_Set((int)((BaddieinterestpPlacement *)params)->unk1E, 1);
                                     }
                                     switch (*(s16 *)((char *)target + 0x46)) {
                                     case 17:
@@ -6088,8 +6150,8 @@ void baddieinterestp_update(int *obj)
                                         u8 b2 = *(u8 *)((char *)params + 0x18);
                                         int kind = b2 & 0xf;
                                         int *target = (int *)objs[i & 0xffff];
-                                        if ((int)*(s16 *)((char *)params + 0x1e) != -1) {
-                                            GameBit_Set((int)*(s16 *)((char *)params + 0x1e), 1);
+                                        if ((int)((BaddieinterestpPlacement *)params)->unk1E != -1) {
+                                            GameBit_Set((int)((BaddieinterestpPlacement *)params)->unk1E, 1);
                                         }
                                         switch (*(s16 *)((char *)target + 0x46)) {
                                         case 17:
@@ -6108,8 +6170,8 @@ void baddieinterestp_update(int *obj)
                                         u8 b2 = *(u8 *)((char *)params + 0x18);
                                         int kind = b2 & 0xf;
                                         int *target = (int *)objs[i & 0xffff];
-                                        if ((int)*(s16 *)((char *)params + 0x1e) != -1) {
-                                            GameBit_Set((int)*(s16 *)((char *)params + 0x1e), 1);
+                                        if ((int)((BaddieinterestpPlacement *)params)->unk1E != -1) {
+                                            GameBit_Set((int)((BaddieinterestpPlacement *)params)->unk1E, 1);
                                         }
                                         switch (*(s16 *)((char *)target + 0x46)) {
                                         case 17:
@@ -6149,7 +6211,7 @@ void animatedobj_update(int *obj)
     ObjSeqState *seq = ((GameObject *)obj)->extra;
     int *params = *(int **)&((GameObject *)obj)->anim.placementData;
 
-    if (params != NULL && *(s16 *)((char *)params + 0x18) != -1) {
+    if (params != NULL && ((AnimatedobjPlacement *)params)->unk18 != -1) {
         int res;
         int count;
         res = (*gObjectTriggerInterface)->update((u8 *)obj, timeDelta);
@@ -6242,9 +6304,9 @@ void animatedobj_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
         s16 *cam;
         Obj_BuildWorldTransformMatrix(obj, mWorld, 0);
         prm = *(int **)&((GameObject *)obj)->anim.placementData;
-        PSMTXTrans(mTransPlayer, -(*(f32 *)((char *)prm + 8) - playerMapOffsetX),
-                   -*(f32 *)((char *)prm + 0xc),
-                   -(*(f32 *)((char *)prm + 0x10) - playerMapOffsetZ));
+        PSMTXTrans(mTransPlayer, -(((AnimatedobjPlacement *)prm)->unk8 - playerMapOffsetX),
+                   -((AnimatedobjPlacement *)prm)->unkC,
+                   -(((AnimatedobjPlacement *)prm)->unk10 - playerMapOffsetZ));
         PSMTXConcat(mTransPlayer, mWorld, mWorldCombined);
         cam = (s16 *)(*gCameraInterface)->getCamera();
         *(s16 *)((char *)cam + 2) += 0x8000;
@@ -6378,9 +6440,9 @@ void dim2roofrub_render(int *obj, int p2, int p3, int p4, int p5)
         s16 *cam;
         Obj_BuildWorldTransformMatrix(obj, mWorld, 0);
         prm = *(int **)&((GameObject *)obj)->anim.placementData;
-        PSMTXTrans(mTransPlayer, -(*(f32 *)((char *)prm + 8) - playerMapOffsetX),
-                   -*(f32 *)((char *)prm + 0xc),
-                   -(*(f32 *)((char *)prm + 0x10) - playerMapOffsetZ));
+        PSMTXTrans(mTransPlayer, -(((Dim2roofrubPlacement *)prm)->unk8 - playerMapOffsetX),
+                   -((Dim2roofrubPlacement *)prm)->unkC,
+                   -(((Dim2roofrubPlacement *)prm)->unk10 - playerMapOffsetZ));
         PSMTXConcat(mTransPlayer, mWorld, mWorldCombined);
         cam = (s16 *)(*gCameraInterface)->getCamera();
         *(s16 *)((char *)cam + 2) += 0x8000;
@@ -6416,7 +6478,7 @@ void dim2roofrub_update(int *obj)
     ObjSeqState *seq = ((GameObject *)obj)->extra;
     int *params = *(int **)&((GameObject *)obj)->anim.placementData;
 
-    if (params != NULL && *(s16 *)((char *)params + 0x18) != -1) {
+    if (params != NULL && ((Dim2roofrubPlacement *)params)->unk18 != -1) {
         Dim2PartVec v;
         int count;
         int res;
@@ -6924,7 +6986,7 @@ void dll_F7_update(int *obj)
     if (state->byte9 != 0) {
         int *params = *(int **)&((GameObject *)obj)->anim.placementData;
         if (state->byteB == 0 &&
-            (*gMapEventInterface)->isTimedEventActive(*(int *)((char *)params + 0x14)) != 0) {
+            (*gMapEventInterface)->isTimedEventActive(((DllF7Placement *)params)->unk14) != 0) {
             state->byte9 = 0;
             state->byte8 = 1;
             state->hitsRemaining = 2;
@@ -6956,14 +7018,14 @@ void dll_F7_update(int *obj)
     if (state->hitsRemaining <= 0) {
         int *params = *(int **)&((GameObject *)obj)->anim.placementData;
         if (state->byteB == 0) {
-            (*gMapEventInterface)->startTimedEvent(*(int *)((char *)params + 0x14), lbl_803E340C);
+            (*gMapEventInterface)->startTimedEvent(((DllF7Placement *)params)->unk14, lbl_803E340C);
         }
         state->byte9 = 1;
         state->byte8 = 0;
         Sfx_PlayFromObject(obj, 74);
         (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags &= ~1;
-        if ((int)*(s16 *)((char *)params + 0x1e) != -1) {
-            GameBit_Set((int)*(s16 *)((char *)params + 0x1e), 1);
+        if ((int)((DllF7Placement *)params)->unk1E != -1) {
+            GameBit_Set((int)((DllF7Placement *)params)->unk1E, 1);
         }
         if (state->byteB == 0) {
             if ((u8)Obj_IsLoadingLocked() != 0) {

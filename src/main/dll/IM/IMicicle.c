@@ -6,6 +6,18 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 
+typedef struct SlidingdoorPlacement {
+    u8 pad0[0x18 - 0x0];
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    s16 unk22;
+    u8 pad24[0x28 - 0x24];
+} SlidingdoorPlacement;
+
+
 extern undefined8 FUN_80006724();
 extern undefined8 FUN_80006824();
 extern undefined4 FUN_80006958();
@@ -1756,18 +1768,18 @@ int slidingdoor_SeqFn(u8* obj, int unused, ObjAnimUpdateState *animUpdate) {
     mode = ((u32)state[0] >> 5) & 7;
 
     if (mode == 0) {
-        if (GameBit_Get(*(s16*)(params + 0x18)) != 0 &&
-            (*(s16*)(params + 0x22) == -1 ||
-             GameBit_Get(*(s16*)(params + 0x22)) != 0)) {
-            GameBit_Set(*(s16*)(params + 0x1a), 1);
+        if (GameBit_Get(((SlidingdoorPlacement *)params)->unk18) != 0 &&
+            (((SlidingdoorPlacement *)params)->unk22 == -1 ||
+             GameBit_Get(((SlidingdoorPlacement *)params)->unk22) != 0)) {
+            GameBit_Set(((SlidingdoorPlacement *)params)->unk1A, 1);
             if (playerNear != 0 || trickyNear != 0) {
                 ((DoorFlags*)state)->mode = 2;
             }
         }
     } else if (mode == 1) {
-        if ((GameBit_Get(*(s16*)(params + 0x18)) != 0 ||
-             (*(s16*)(params + 0x22) != -1 &&
-              GameBit_Get(*(s16*)(params + 0x22)) != 0)) &&
+        if ((GameBit_Get(((SlidingdoorPlacement *)params)->unk18) != 0 ||
+             (((SlidingdoorPlacement *)params)->unk22 != -1 &&
+              GameBit_Get(((SlidingdoorPlacement *)params)->unk22) != 0)) &&
             playerNear == 0 && trickyNear == 0) {
             ((DoorFlags*)state)->mode = 3;
         }
@@ -1806,10 +1818,10 @@ void slidingdoor_update(u8* obj) {
     if (((GameObject *)obj)->unkF4 != 0) return;
     sub = ((GameObject *)obj)->extra;
     data = *(u8**)&((GameObject *)obj)->anim.placementData;
-    if (*(s16*)(data + 0x1c) != 0) {
+    if (((SlidingdoorPlacement *)data)->unk1C != 0) {
         u32 mode = (u32)((sub[0] >> 5) & 7);
         if (mode != 0) {
-            (*gObjectTriggerInterface)->preempt((int)obj, *(s16*)(data + 0x1c));
+            (*gObjectTriggerInterface)->preempt((int)obj, ((SlidingdoorPlacement *)data)->unk1C);
         }
     }
     {

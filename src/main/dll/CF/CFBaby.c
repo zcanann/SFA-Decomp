@@ -10,6 +10,58 @@
 #include "main/objseq.h"
 #include "main/dll/CF/CFBaby.h"
 
+typedef struct FlammablevinePlacement {
+    u8 pad0[0x14 - 0x0];
+    s32 unk14;
+    u16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    u8 pad22[0x28 - 0x22];
+} FlammablevinePlacement;
+
+
+typedef struct LandedArwingPlacement {
+    u8 pad0[0x14 - 0x0];
+    s32 unk14;
+    u16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    u8 pad22[0x28 - 0x22];
+} LandedArwingPlacement;
+
+
+typedef struct LandedArwingUpdateHitReactionPlacement {
+    u8 pad0[0x14 - 0x0];
+    s32 unk14;
+    u16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    u8 pad22[0x24 - 0x22];
+    s16 unk24;
+    u8 pad26[0x28 - 0x26];
+} LandedArwingUpdateHitReactionPlacement;
+
+
+typedef struct LandedArwingUpdateDamageTexturePlacement {
+    u8 pad0[0x14 - 0x0];
+    s32 unk14;
+    u16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    s16 unk22;
+    s16 unk24;
+    u8 pad26[0x28 - 0x26];
+} LandedArwingUpdateDamageTexturePlacement;
+
+
 typedef struct ColdwatercontrolState {
     u8 pad0[0x8 - 0x0];
     u8 unk8;
@@ -1868,8 +1920,8 @@ void flammablevine_hitDetect(int obj)
     def = *(u8 **)&((GameObject *)obj)->anim.placementData;
     if ((state[0] & 3) == 0) {
         if (ObjHits_GetPriorityHit(obj, 0, 0, &hitObj) == 0x1a) {
-            if (*(s16 *)(def + 0x1e) != -1) {
-                GameBit_Set(*(s16 *)(def + 0x1e), 1);
+            if (((FlammablevinePlacement *)def)->unk1E != -1) {
+                GameBit_Set(((FlammablevinePlacement *)def)->unk1E, 1);
                 Sfx_PlayFromObject(0, 0x409);
             }
             *(f32 *)(state + 4) = lbl_803E3AFC;
@@ -1930,10 +1982,10 @@ void flammablevine_update(int obj)
     tricky = getTrickyObject();
 
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8;
-    if (*(s16 *)(def + 0x20) == -1) {
+    if (((FlammablevinePlacement *)def)->unk20 == -1) {
         goto can_use_vine;
     }
-    if (GameBit_Get(*(s16 *)(def + 0x20)) == 0) {
+    if (GameBit_Get(((FlammablevinePlacement *)def)->unk20) == 0) {
         goto cant_use_vine;
     }
     if (tricky == NULL) {
@@ -2267,7 +2319,7 @@ int Landed_Arwing_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate) {
                 break;
             case 3:
             case 0x64:
-                mapId = *(int *)(def + 0x14);
+                mapId = ((LandedArwingPlacement *)def)->unk14;
                 if (mapId == 0x49f5a) {
                     MAP_EVENT_OP(0xb, 4, 0);
                 } else if (mapId < 0x49f5a) {
@@ -2289,7 +2341,7 @@ int Landed_Arwing_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate) {
                 }
                 break;
             case 5:
-                mapId = *(int *)(def + 0x14);
+                mapId = ((LandedArwingPlacement *)def)->unk14;
                 if (mapId == 0x451b9) {
                     if (MAP_EVENT_STATUS(0xd) == 2) {
                         setLoadedFileFlags_blocks1();
@@ -2303,7 +2355,7 @@ int Landed_Arwing_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate) {
                 }
                 break;
             case 6:
-                mapId = *(int *)(def + 0x14);
+                mapId = ((LandedArwingPlacement *)def)->unk14;
                 if (mapId == 0x451b9) {
                     if (MAP_EVENT_STATUS(0xd) == 2) {
                         clearLoadedFileFlags_blocks1();
@@ -2318,7 +2370,7 @@ int Landed_Arwing_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate) {
                 break;
             case 7:
             case 0x66:
-                mapId = *(int *)(def + 0x14);
+                mapId = ((LandedArwingPlacement *)def)->unk14;
                 if (mapId == 0x49f5a) {
                     warpToMap(0x32, 0);
                 } else if (mapId < 0x49f5a) {
@@ -2515,8 +2567,8 @@ void landed_arwing_updateHitReaction(int obj, CFLandedArwingState *state) {
             ((GameObject *)obj)->anim.rotY = 0;
             ((GameObject *)obj)->anim.rotZ = 0;
             if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E3BBC && ((state->hitFlags >> 4) & 1) == 0) {
-                if (*(s16 *)(def + 0x24) > 0) {
-                    GameBit_Set(*(s16 *)(def + 0x24), 1);
+                if (((LandedArwingUpdateHitReactionPlacement *)def)->unk24 > 0) {
+                    GameBit_Set(((LandedArwingUpdateHitReactionPlacement *)def)->unk24, 1);
                 }
 
                 switch (*(u8 *)(def + 0x1e)) {
@@ -2573,8 +2625,8 @@ void landed_arwing_updateDamageTexture(int obj, CFLandedArwingState *state) {
 
     def = *(int *)&((GameObject *)obj)->anim.placementData;
     flags = (LandedArwingHitFlagBits *)&state->hitFlags;
-    if (*(s16 *)(def + 0x24) != -1) {
-        bit = GameBit_Get(*(s16 *)(def + 0x24));
+    if (((LandedArwingUpdateDamageTexturePlacement *)def)->unk24 != -1) {
+        bit = GameBit_Get(((LandedArwingUpdateDamageTexturePlacement *)def)->unk24);
         flags->gameBit24Set = bit;
         bit = flags->gameBit24Set;
         if (bit != 0 && *(u8 *)(def + 0x1c) == 5) {
@@ -2585,11 +2637,11 @@ void landed_arwing_updateDamageTexture(int obj, CFLandedArwingState *state) {
     }
 
     if (flags->damaged == 0) {
-        if (*(s16 *)(def + 0x22) != -1 && GameBit_Get(*(s16 *)(def + 0x22)) != 0) {
+        if (((LandedArwingUpdateDamageTexturePlacement *)def)->unk22 != -1 && GameBit_Get(((LandedArwingUpdateDamageTexturePlacement *)def)->unk22) != 0) {
             flags->damaged = 1;
         }
     } else {
-        if (*(s16 *)(def + 0x22) != -1 && GameBit_Get(*(s16 *)(def + 0x22)) == 0) {
+        if (((LandedArwingUpdateDamageTexturePlacement *)def)->unk22 != -1 && GameBit_Get(((LandedArwingUpdateDamageTexturePlacement *)def)->unk22) == 0) {
             flags->damaged = 0;
         }
     }

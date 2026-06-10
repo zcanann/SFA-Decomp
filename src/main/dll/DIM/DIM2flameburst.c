@@ -11,6 +11,22 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 
+typedef struct Dll1CEPlacement {
+    u8 pad0[0x4 - 0x0];
+    u8 unk4;
+    u8 unk5;
+    u8 unk6;
+    u8 unk7;
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    u8 pad14[0x1A - 0x14];
+    s16 unk1A;
+    u8 pad1C[0x1E - 0x1C];
+    s16 unk1E;
+} Dll1CEPlacement;
+
+
 typedef struct DimmagicbridgeFlameSeqFnState {
     u8 pad0[0x51 - 0x0];
     u8 unk51;
@@ -2115,19 +2131,19 @@ void dll_1CE_update(int* obj)
     }
     sub->igniteCountdown = sub->igniteCountdown - 1;
     if ((s8)sub->igniteCountdown > 0) return;
-    GameBit_Set(*(s16*)((char*)q + 0x1e), 1);
+    GameBit_Set(((Dll1CEPlacement *)q)->unk1E, 1);
     sub->opened = 1;
-    if ((s16)*(s16*)((char*)q + 0x1a) != (int)GameBit_Get(0x46d)) return;
+    if ((s16)((Dll1CEPlacement *)q)->unk1A != (int)GameBit_Get(0x46d)) return;
     if (Obj_IsLoadingLocked() == 0) return;
     {
         int* no = Obj_AllocObjectSetup(0x30, 0x246);
-        *(f32*)((char*)no + 8) = *(f32*)((char*)q + 8);
-        *(f32*)((char*)no + 0xc) = lbl_803E49FC + *(f32*)((char*)q + 0xc);
-        *(f32*)((char*)no + 0x10) = *(f32*)((char*)q + 0x10);
-        *(u8*)((char*)no + 4) = *(u8*)((char*)q + 4);
-        *(u8*)((char*)no + 5) = *(u8*)((char*)q + 5);
-        *(u8*)((char*)no + 6) = *(u8*)((char*)q + 6);
-        *(u8*)((char*)no + 7) = *(u8*)((char*)q + 7);
+        *(f32*)((char*)no + 8) = ((Dll1CEPlacement *)q)->unk8;
+        *(f32*)((char*)no + 0xc) = lbl_803E49FC + ((Dll1CEPlacement *)q)->unkC;
+        *(f32*)((char*)no + 0x10) = ((Dll1CEPlacement *)q)->unk10;
+        *(u8*)((char*)no + 4) = ((Dll1CEPlacement *)q)->unk4;
+        *(u8*)((char*)no + 5) = ((Dll1CEPlacement *)q)->unk5;
+        *(u8*)((char*)no + 6) = ((Dll1CEPlacement *)q)->unk6;
+        *(u8*)((char*)no + 7) = ((Dll1CEPlacement *)q)->unk7;
         *(s16*)((char*)no + 0x1c) = 0x17f;
         *(s16*)((char*)no + 0x24) = -1;
         *(s16*)((char*)no + 0x2c) = -1;

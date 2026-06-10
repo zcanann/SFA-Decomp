@@ -7,6 +7,34 @@
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 
+typedef struct DimicewallPlacement {
+    u8 pad0[0x14 - 0x0];
+    s32 unk14;
+    u8 pad18[0x19 - 0x18];
+    s8 unk19;
+    u8 pad1A[0x1E - 0x1A];
+    s16 unk1E;
+} DimicewallPlacement;
+
+
+typedef struct Dimsnowball1c2Placement {
+    u8 pad0[0x4 - 0x0];
+    u8 unk4;
+    u8 unk5;
+    u8 unk6;
+    u8 unk7;
+    u8 pad8[0x14 - 0x8];
+    s32 unk14;
+    u8 pad18[0x19 - 0x18];
+    s8 unk19;
+    u8 unk1A;
+    u8 unk1B;
+    s8 unk1C;
+    u8 pad1D[0x1E - 0x1D];
+    s16 unk1E;
+} Dimsnowball1c2Placement;
+
+
 typedef struct DimicewallState {
     u8 pad0[0x1 - 0x0];
     u8 unk1;
@@ -276,18 +304,18 @@ void dimsnowball1c2_update(int *obj)
             if (fn_802972A8(Obj_GetPlayerObject()) == 0) {
                 int *def = *(int **)&((GameObject *)obj)->anim.placementData;
                 int *np = (int *)Obj_AllocObjectSetup(36, 406);
-                *(u8 *)((char *)np + 4) = *(u8 *)((char *)def + 4);
-                *(u8 *)((char *)np + 6) = *(u8 *)((char *)def + 6);
-                *(u8 *)((char *)np + 5) = *(u8 *)((char *)def + 5);
-                *(u8 *)((char *)np + 7) = *(u8 *)((char *)def + 7);
+                *(u8 *)((char *)np + 4) = ((Dimsnowball1c2Placement *)def)->unk4;
+                *(u8 *)((char *)np + 6) = ((Dimsnowball1c2Placement *)def)->unk6;
+                *(u8 *)((char *)np + 5) = ((Dimsnowball1c2Placement *)def)->unk5;
+                *(u8 *)((char *)np + 7) = ((Dimsnowball1c2Placement *)def)->unk7;
                 *(f32 *)((char *)np + 8) = ((GameObject *)obj)->anim.localPosX;
                 *(f32 *)((char *)np + 0xc) = ((GameObject *)obj)->anim.localPosY;
                 *(f32 *)((char *)np + 0x10) = ((GameObject *)obj)->anim.localPosZ;
-                *(int *)((char *)np + 0x14) = *(int *)((char *)def + 0x14);
-                *(s8 *)((char *)np + 0x18) = *(s8 *)((char *)def + 0x1c);
-                *(s16 *)((char *)np + 0x1a) = *(u8 *)((char *)def + 0x1a);
+                *(int *)((char *)np + 0x14) = ((Dimsnowball1c2Placement *)def)->unk14;
+                *(s8 *)((char *)np + 0x18) = ((Dimsnowball1c2Placement *)def)->unk1C;
+                *(s16 *)((char *)np + 0x1a) = ((Dimsnowball1c2Placement *)def)->unk1A;
                 *(s16 *)((char *)np + 0x1c) =
-                    (int)((f32)(u32)*(u8 *)((char *)def + 0x1b) +
+                    (int)((f32)(u32)((Dimsnowball1c2Placement *)def)->unk1B +
                           (f32)(int)randomGetRange(0, 100) / lbl_803E4864);
                 Obj_SetupObject((int)np, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, 0);
                 *(s16 *)extra = *(s16 *)((char *)extra + 2);
@@ -378,7 +406,7 @@ void dimicewall_update(int *obj)
         if (*(s8 *)extra <= 0) {
             f32 desc[6];
             int i;
-            desc[2] = (f32)(s8)*(s8 *)((char *)def + 0x19) / lbl_803E4880;
+            desc[2] = (f32)(s8)((DimicewallPlacement *)def)->unk19 / lbl_803E4880;
             desc[5] = lbl_803E4884;
             for (i = 45; i != 0; i--) {
                 desc[3] = desc[2] * (lbl_803E4888 * (f32)(int)randomGetRange(-250, 250));
@@ -390,12 +418,12 @@ void dimicewall_update(int *obj)
                 desc[4] = desc[2] * (lbl_803E4888 * (f32)(int)randomGetRange(0, 450));
                 (*gPartfxInterface)->spawnObject(obj, 2042, desc, 2, -1, NULL);
             }
-            if (*(int *)((char *)def + 0x14) != 7433) {
+            if (((DimicewallPlacement *)def)->unk14 != 7433) {
                 Sfx_PlayFromObject((int)obj, 1147);
             }
             ((DimicewallState *)extra)->unk1 = 1;
-            if (*(s16 *)((char *)def + 0x1e) != -1) {
-                GameBit_Set(*(s16 *)((char *)def + 0x1e), 1);
+            if (((DimicewallPlacement *)def)->unk1E != -1) {
+                GameBit_Set(((DimicewallPlacement *)def)->unk1E, 1);
             }
         } else {
             int *tricky = getTrickyObject();

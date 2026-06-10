@@ -9,6 +9,22 @@
 #include "main/game_object.h"
 #include "main/resource.h"
 
+typedef struct EffectboxPlacement {
+    u8 pad0[0x18 - 0x0];
+    u8 unk18;
+    u8 unk19;
+    u8 unk1A;
+    u8 unk1B;
+    u8 unk1C;
+    u8 unk1D;
+    u8 pad1E[0x1F - 0x1E];
+    u8 unk1F;
+    s16 unk20;
+    u8 unk22;
+    u8 pad23[0x28 - 0x23];
+} EffectboxPlacement;
+
+
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopFromObject(int obj, int sfxId);
 extern void itemPickupDoParticleFx(int obj, f32 scale, int p3, int p4);
@@ -920,15 +936,15 @@ void effectbox_update(int obj)
 
   def = *(int *)&((GameObject *)obj)->anim.placementData;
   gb = ((GameObject *)obj)->unkF8;
-  if ((gb <= -1) || (*(u8 *)(def + 0x1f) != GameBit_Get(gb))) {
-    sinY = mathCosf((lbl_803E350C * (f32)-(*(u8 *)(def + 0x18) << 8)) / lbl_803E3510);
-    cosY = mathSinf((lbl_803E350C * (f32)-(*(u8 *)(def + 0x18) << 8)) / lbl_803E3510);
-    sinX = mathCosf((lbl_803E350C * (f32)-(*(u8 *)(def + 0x19) << 8)) / lbl_803E3510);
-    cosX = mathSinf((lbl_803E350C * (f32)-(*(u8 *)(def + 0x19) << 8)) / lbl_803E3510);
-    extX = (f32)*(u8 *)(def + 0x1a);
-    extYNeg = (f32)-(*(u8 *)(def + 0x1b) << 1);
-    extZ = (f32)*(u8 *)(def + 0x1c);
-    switch (*(u8 *)(def + 0x22)) {
+  if ((gb <= -1) || (((EffectboxPlacement *)def)->unk1F != GameBit_Get(gb))) {
+    sinY = mathCosf((lbl_803E350C * (f32)-(((EffectboxPlacement *)def)->unk18 << 8)) / lbl_803E3510);
+    cosY = mathSinf((lbl_803E350C * (f32)-(((EffectboxPlacement *)def)->unk18 << 8)) / lbl_803E3510);
+    sinX = mathCosf((lbl_803E350C * (f32)-(((EffectboxPlacement *)def)->unk19 << 8)) / lbl_803E3510);
+    cosX = mathSinf((lbl_803E350C * (f32)-(((EffectboxPlacement *)def)->unk19 << 8)) / lbl_803E3510);
+    extX = (f32)((EffectboxPlacement *)def)->unk1A;
+    extYNeg = (f32)-(((EffectboxPlacement *)def)->unk1B << 1);
+    extZ = (f32)((EffectboxPlacement *)def)->unk1C;
+    switch (((EffectboxPlacement *)def)->unk22) {
     case 1:
       single = (int)Obj_GetPlayerObject();
       if (single == 0) {
@@ -966,14 +982,14 @@ void effectbox_update(int obj)
         if ((proj > negExtZ) && (proj < extZ)) {
           proj = dy * sinX + proj * cosX;
           if ((proj >= lbl_803E3514) && (proj < extYNeg)) {
-            switch (*(u8 *)(def + 0x22)) {
+            switch (((EffectboxPlacement *)def)->unk22) {
             case 1:
               break;
             case 0:
-              fn_80295918((f32)*(u8 *)(def + 0x1d), other, 1);
+              fn_80295918((f32)((EffectboxPlacement *)def)->unk1D, other, 1);
               break;
             case 2:
-              (*(code *)(*(int *)(*(int *)(other + 0x68)) + 0x28))(other, *(u8 *)(def + 0x1d));
+              (*(code *)(*(int *)(*(int *)(other + 0x68)) + 0x28))(other, ((EffectboxPlacement *)def)->unk1D);
               break;
             }
           }

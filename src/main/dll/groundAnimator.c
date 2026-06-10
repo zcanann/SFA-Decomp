@@ -7,6 +7,22 @@
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
 
+typedef struct WmColumnPlacement {
+    u8 pad0[0x18 - 0x0];
+    u8 unk18;
+    u8 unk19;
+    u8 pad1A[0x1E - 0x1A];
+    s16 unk1E;
+    u8 pad20[0x38 - 0x20];
+    u8 unk38;
+    u8 unk39;
+    u8 unk3A;
+    u8 unk3B;
+    s16 unk3C;
+    u8 pad3E[0x40 - 0x3E];
+} WmColumnPlacement;
+
+
 extern undefined8 FUN_80006824();
 extern undefined4 FUN_80017710();
 extern undefined4 FUN_8001771c();
@@ -374,12 +390,12 @@ void wm_column_update(int obj)
         if (((u32)other != (u32)obj) && (((GameObject *)other)->anim.seqId == 499) &&
             (Vec_distance((float *)(obj + 0x18), (float *)(other + 0x18)) < lbl_803E37C0)) {
           int mapData = *(int *)&((GameObject *)objects[i])->anim.placementData;
-          if (((GameObject *)obj)->anim.seqId == (s8)*(u8 *)(mapData + 0x19) + 500) {
-            if (*(s16 *)(mapData + 0x1e) != -1) {
-              GameBit_Set(*(s16 *)(mapData + 0x1e), 1);
+          if (((GameObject *)obj)->anim.seqId == (s8)((WmColumnPlacement *)mapData)->unk19 + 500) {
+            if (((WmColumnPlacement *)mapData)->unk1E != -1) {
+              GameBit_Set(((WmColumnPlacement *)mapData)->unk1E, 1);
             }
-          } else if (*(s16 *)(mapData + 0x1e) != -1) {
-            GameBit_Set(*(s16 *)(mapData + 0x1e), 0);
+          } else if (((WmColumnPlacement *)mapData)->unk1E != -1) {
+            GameBit_Set(((WmColumnPlacement *)mapData)->unk1E, 0);
           }
           ((GameObject *)obj)->anim.localPosX = ((GameObject *)objects[i])->anim.localPosX;
           ((GameObject *)obj)->anim.localPosY = ((GameObject *)objects[i])->anim.localPosY;

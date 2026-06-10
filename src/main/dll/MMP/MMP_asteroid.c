@@ -7,6 +7,86 @@
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 
+typedef struct DimbossicesmashPlacement {
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    s16 unk22;
+    s16 unk24;
+    s16 unk26;
+    s16 unk28;
+    s16 unk2A;
+    s16 unk2C;
+    s16 unk2E;
+    s16 unk30;
+    s16 unk32;
+    s16 unk34;
+    s16 unk36;
+    u16 unk38;
+    u16 unk3A;
+    u8 unk3C;
+    u8 pad3D[0x3E - 0x3D];
+    s16 unk3E;
+    s16 unk40;
+    s16 unk42;
+    s16 unk44;
+    s16 unk46;
+} DimbossicesmashPlacement;
+
+
+typedef struct FogcontrolPlacement {
+    u8 pad0[0x18 - 0x0];
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    s16 unk22;
+    s16 unk24;
+    s16 unk26;
+    s16 unk28;
+    s16 unk2A;
+    s16 unk2C;
+    s16 unk2E;
+    s16 unk30;
+    s16 unk32;
+    s16 unk34;
+    s16 unk36;
+    u16 unk38;
+    u16 unk3A;
+    u8 unk3C;
+    u8 pad3D[0x3E - 0x3D];
+    s16 unk3E;
+    s16 unk40;
+    s16 unk42;
+    s16 unk44;
+    s16 unk46;
+} FogcontrolPlacement;
+
+
+typedef struct ExplodeanimatorPlacement {
+    u8 pad0[0x18 - 0x0];
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    s16 unk22;
+    s16 unk24;
+    u8 pad26[0x28 - 0x26];
+    s16 unk28;
+    s16 unk2A;
+    u8 pad2C[0x2E - 0x2C];
+    s16 unk2E;
+    s16 unk30;
+    s16 unk32;
+    s16 unk34;
+    u8 pad36[0x38 - 0x36];
+} ExplodeanimatorPlacement;
+
+
 extern undefined4 FUN_800068c4();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
@@ -1314,16 +1394,16 @@ void explodeanimator_update(int *obj) {
     sub = ((GameObject *)obj)->extra;
     if ((sub[2] & 1) != 0) return;
     def = *(u8**)&((GameObject *)obj)->anim.placementData;
-    if (GameBit_Get(*(s16*)(def + 0x34)) == 0) return;
-    GameBit_Set(*(s16*)(def + 0x32), 1);
+    if (GameBit_Get(((ExplodeanimatorPlacement *)def)->unk34) == 0) return;
+    GameBit_Set(((ExplodeanimatorPlacement *)def)->unk32, 1);
     sub[2] = (u8)(sub[2] | 1);
     for (i = 0; i < def[0x2c]; i++) {
-        vel[0] = (f32)(s32)randomGetRange(*(s16*)(def + 0x2e), *(s16*)(def + 0x28)) * lbl_803E4020;
-        vel[1] = (f32)(s32)randomGetRange(*(s16*)(def + 0x30), *(s16*)(def + 0x2a)) * lbl_803E4020;
-        buf[3] = (f32)(s32)randomGetRange(*(s16*)(def + 0x18), *(s16*)(def + 0x1e));
-        buf[4] = (f32)(s32)randomGetRange(*(s16*)(def + 0x1a), *(s16*)(def + 0x20));
-        buf[5] = (f32)(s32)randomGetRange(*(s16*)(def + 0x1c), *(s16*)(def + 0x22));
-        (*gPartfxInterface)->spawnObject(obj, *(s16*)(def + 0x24), buf, 2, -1, vel);
+        vel[0] = (f32)(s32)randomGetRange(((ExplodeanimatorPlacement *)def)->unk2E, ((ExplodeanimatorPlacement *)def)->unk28) * lbl_803E4020;
+        vel[1] = (f32)(s32)randomGetRange(((ExplodeanimatorPlacement *)def)->unk30, ((ExplodeanimatorPlacement *)def)->unk2A) * lbl_803E4020;
+        buf[3] = (f32)(s32)randomGetRange(((ExplodeanimatorPlacement *)def)->unk18, ((ExplodeanimatorPlacement *)def)->unk1E);
+        buf[4] = (f32)(s32)randomGetRange(((ExplodeanimatorPlacement *)def)->unk1A, ((ExplodeanimatorPlacement *)def)->unk20);
+        buf[5] = (f32)(s32)randomGetRange(((ExplodeanimatorPlacement *)def)->unk1C, ((ExplodeanimatorPlacement *)def)->unk22);
+        (*gPartfxInterface)->spawnObject(obj, ((ExplodeanimatorPlacement *)def)->unk24, buf, 2, -1, vel);
     }
 }
 void dimbossicesmash_hitDetect(void) {}
@@ -1577,10 +1657,10 @@ void dimbossicesmash_update(u8 *obj)
         setup = *(u8 **)&((GameObject *)obj)->anim.placementData;
         if ((flags & 1) == 0) {
             if (((ObjAnimComponent *)obj)->bankIndex == 0) {
-                t = GameBit_Get(*(s16 *)(setup + 0x40));
-                if (t != 0 || *(s16 *)(setup + 0x40) == -1) {
+                t = GameBit_Get(((DimbossicesmashPlacement *)setup)->unk40);
+                if (t != 0 || ((DimbossicesmashPlacement *)setup)->unk40 == -1) {
                     state[0x29e] = state[0x29e] | 1;
-                    GameBit_Set(*(s16 *)(setup + 0x3e), 1);
+                    GameBit_Set(((DimbossicesmashPlacement *)setup)->unk3E, 1);
                     lbl_803DDB00 = 1;
                 }
             } else if (lbl_803DDB00 != 0) {
@@ -1591,14 +1671,14 @@ void dimbossicesmash_update(u8 *obj)
             ((GameObject *)obj)->anim.alpha = 0xff;
             ((DimBossIceSmashState *)state)->unk29C += framesThisStep;
             cnt = ((DimBossIceSmashState *)state)->unk29C;
-            if (*(u16 *)(setup + 0x38) <= cnt) {
+            if (((DimbossicesmashPlacement *)setup)->unk38 <= cnt) {
                 state[0x29e] = state[0x29e] | 2;
             }
-            if (((DimBossIceSmashState *)state)->unk29C > *(u16 *)(setup + 0x3a) &&
-                (t1 = *(u16 *)(setup + 0x38) - *(u16 *)(setup + 0x3a)) != 0) {
+            if (((DimBossIceSmashState *)state)->unk29C > ((DimbossicesmashPlacement *)setup)->unk3A &&
+                (t1 = ((DimbossicesmashPlacement *)setup)->unk38 - ((DimbossicesmashPlacement *)setup)->unk3A) != 0) {
                 a = (int)(lbl_803E404C *
                           (lbl_803E4048 -
-                           (f32)(((DimBossIceSmashState *)state)->unk29C - *(u16 *)(setup + 0x3a)) / (f32)t1));
+                           (f32)(((DimBossIceSmashState *)state)->unk29C - ((DimbossicesmashPlacement *)setup)->unk3A) / (f32)t1));
                 if (a > 0xff) {
                     a = 0xff;
                 } else if (a < 0) {
@@ -1656,7 +1736,7 @@ void dimbossicesmash_update(u8 *obj)
             ((GameObject *)obj)->anim.rotX = ((DimBossIceSmashState *)state)->unk278 * timeDelta + (f32)((GameObject *)obj)->anim.rotX;
             ((GameObject *)obj)->anim.rotY = ((DimBossIceSmashState *)state)->unk27C * timeDelta + (f32)((GameObject *)obj)->anim.rotY;
             ((GameObject *)obj)->anim.rotZ = ((DimBossIceSmashState *)state)->unk280 * timeDelta + (f32)((GameObject *)obj)->anim.rotZ;
-            if ((*(u8 *)(setup + 0x3c) & 2) != 0) {
+            if ((((DimbossicesmashPlacement *)setup)->unk3C & 2) != 0) {
                 (*gPathControlInterface)->update(obj, state, timeDelta);
                 (*gPathControlInterface)->apply(obj, state);
                 (*gPathControlInterface)->advance(obj, state, timeDelta);
@@ -1690,7 +1770,7 @@ void dimbossicesmash_update(u8 *obj)
                     ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ * ff;
                 }
             }
-            if ((*(u8 *)(setup + 0x3c) & 4) != 0 && ((GameObject *)obj)->anim.alpha == 0xff) {
+            if ((((DimbossicesmashPlacement *)setup)->unk3C & 4) != 0 && ((GameObject *)obj)->anim.alpha == 0xff) {
                 dx = ((GameObject *)obj)->anim.localPosX - ((GameObject *)obj)->anim.previousLocalPosX;
                 dy = ((GameObject *)obj)->anim.localPosY - ((GameObject *)obj)->anim.previousLocalPosY;
                 dz = ((GameObject *)obj)->anim.localPosZ - ((GameObject *)obj)->anim.previousLocalPosZ;
@@ -1818,10 +1898,10 @@ void fogcontrol_update(int obj)
     u8 run;
     f32 t;
 
-    if (*(s16 *)(setup + 0x18) == -1) {
+    if (((FogcontrolPlacement *)setup)->unk18 == -1) {
         cv = 1;
     } else {
-        cv = (u8)GameBit_Get(*(s16 *)(setup + 0x18));
+        cv = (u8)GameBit_Get(((FogcontrolPlacement *)setup)->unk18);
     }
     if ((cv != 0 && st->full == 0) || (cv == 0 && st->on != 0)) {
         run = 1;
@@ -1854,13 +1934,13 @@ void fogcontrol_update(int obj)
                 st->blend = *(f32 *)&lbl_803E4074;
                 st->full = 1;
             }
-            t = st->blend * ((f32)*(s16 *)(setup + 0x1c) - (f32)*(s16 *)(setup + 0x20)) +
-                (f32)*(s16 *)(setup + 0x20);
+            t = st->blend * ((f32)((FogcontrolPlacement *)setup)->unk1C - (f32)((FogcontrolPlacement *)setup)->unk20) +
+                (f32)((FogcontrolPlacement *)setup)->unk20;
             t = ((GameObject *)obj)->anim.localPosY + t;
             enableHeavyFog(*(u8 *)(setup + 0x1a) & 1, t,
-                           ((f32)*(s16 *)(setup + 0x1e) + t) - (f32)*(s16 *)(setup + 0x1c),
-                           (f32)*(s16 *)(setup + 0x24),
-                           (f32)*(s16 *)(setup + 0x22) / lbl_803E4078,
+                           ((f32)((FogcontrolPlacement *)setup)->unk1E + t) - (f32)((FogcontrolPlacement *)setup)->unk1C,
+                           (f32)((FogcontrolPlacement *)setup)->unk24,
+                           (f32)((FogcontrolPlacement *)setup)->unk22 / lbl_803E4078,
                            lbl_803E407C);
         }
     }

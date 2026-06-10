@@ -7,6 +7,33 @@
 #include "main/dll/dim_bossgut.h"
 #include "main/dll/ediblemushroom.h"
 
+typedef struct BombplantPlacement {
+    u8 pad0[0x8 - 0x0];
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    u8 pad14[0x1A - 0x14];
+    s16 unk1A;
+    u8 pad1C[0x1E - 0x1C];
+    s8 unk1E;
+    u8 pad1F[0x20 - 0x1F];
+} BombplantPlacement;
+
+
+typedef struct EnemymushroomPlacement {
+    u8 pad0[0x8 - 0x0];
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    u8 pad14[0x18 - 0x14];
+    u16 unk18;
+    u8 pad1A[0x1C - 0x1A];
+    s16 unk1C;
+    u8 unk1E;
+    u8 pad1F[0x20 - 0x1F];
+} EnemymushroomPlacement;
+
+
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068c4();
@@ -290,9 +317,9 @@ int bombplant_SeqFn(int *obj)
         src = *(int **)&((GameObject *)obj)->anim.placementData;
         ((GameObject *)obj)->anim.alpha = 0xff;
         ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags & ~OBJANIM_FLAG_HIDDEN);
-        ((GameObject *)obj)->anim.localPosX  = *(f32 *)((char *)src + 0x8);
-        ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)src + 0xc);
-        ((GameObject *)obj)->anim.localPosZ = *(f32 *)((char *)src + 0x10);
+        ((GameObject *)obj)->anim.localPosX  = ((BombplantPlacement *)src)->unk8;
+        ((GameObject *)obj)->anim.localPosY = ((BombplantPlacement *)src)->unkC;
+        ((GameObject *)obj)->anim.localPosZ = ((BombplantPlacement *)src)->unk10;
         ((GameObject *)obj)->anim.rootMotionScale = lbl_803E5358;
         ((EnemyMushroomState *)state)->riseDuration = lbl_803E535C;
         ((EnemyMushroomState *)state)->heightTarget = ((EnemyMushroomState *)state)->baseScale;
@@ -310,7 +337,7 @@ int bombplant_SeqFn(int *obj)
         if (flags & 0x2) {
             int v;
             ((EnemyMushroomState *)state)->flags = (u8)(flags & ~0x2);
-            v = *(s16 *)((char *)base + 0x1a) + randomGetRange(-0x32, 0x32);
+            v = ((BombplantPlacement *)base)->unk1A + randomGetRange(-0x32, 0x32);
             ((EnemyMushroomState *)state)->timer = (f32)v;
         }
         if (((GameObject *)obj)->objectFlags & 0x800) {
@@ -476,7 +503,7 @@ void enemymushroom_update(int *obj)
     case 5:
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x8);
         ((EnemyMushroomState *)state)->timer = ((EnemyMushroomState *)state)->timer + timeDelta;
-        if (((EnemyMushroomState *)state)->timer > (f32)*(u16 *)((char *)src + 0x18)) {
+        if (((EnemyMushroomState *)state)->timer > (f32)((EnemymushroomPlacement *)src)->unk18) {
             if (((EnemyMushroomState *)state)->stateFlags & 0x2) {
                 ((EnemyMushroomState *)state)->stateId = 0;
                 ((EnemyMushroomState *)state)->hitRadius = lbl_803E52FC;
@@ -543,7 +570,7 @@ void enemymushroom_update(int *obj)
             f32 dy = ((GameObject *)player)->anim.localPosY - ((GameObject *)obj)->anim.localPosY;
             f32 dz = ((GameObject *)player)->anim.localPosZ - ((GameObject *)obj)->anim.localPosZ;
             if ((u16)(int)sqrtf(dx * dx + dy * dy + dz * dz) <
-                (u16)(int)(lbl_803E5338 * (f32)*(u8 *)((char *)src + 0x1e))) {
+                (u16)(int)(lbl_803E5338 * (f32)((EnemymushroomPlacement *)src)->unk1E)) {
                 if (fn_8029610C(player) >= lbl_803E533C) {
                     ((EnemyMushroomState *)state)->stateFlags = (u8)(((EnemyMushroomState *)state)->stateFlags & ~0x1);
                     ((EnemyMushroomState *)state)->stateId = 3;
@@ -567,8 +594,8 @@ void enemymushroom_update(int *obj)
                     Sfx_PlayFromObject(obj, 0x9d);
                 }
                 ((EnemyMushroomState *)state)->stateFlags = (u8)(((EnemyMushroomState *)state)->stateFlags & ~0x1);
-                if (*(s16 *)((char *)src + 0x1c) != -1) {
-                    GameBit_Set(*(s16 *)((char *)src + 0x1c), 1);
+                if (((EnemymushroomPlacement *)src)->unk1C != -1) {
+                    GameBit_Set(((EnemymushroomPlacement *)src)->unk1C, 1);
                 }
                 ((EnemyMushroomState *)state)->stateId = 9;
                 ((EnemyMushroomState *)state)->timer = lbl_803E52FC;

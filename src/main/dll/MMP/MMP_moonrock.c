@@ -6,6 +6,17 @@
 #include "main/expgfx.h"
 #include "main/game_object.h"
 
+typedef struct SfxplayerObjPlacement {
+    u8 pad0[0x14 - 0x0];
+    u32 unk14;
+    u32 unk18;
+    u8 pad1C[0x22 - 0x1C];
+    u16 unk22;
+    s16 unk24;
+    u8 pad26[0x28 - 0x26];
+} SfxplayerObjPlacement;
+
+
 typedef struct WaterFallSprayState {
     u32 unk0;
     u32 unk4;
@@ -406,14 +417,14 @@ void sfxplayerObj_free(u8* obj)
         u16 sfx1 = *(u16*)(data + 0x1a);
         if (sfx1 != 0) Sfx_RemoveLoopedObjectSound(obj, sfx1);
         {
-            u16 sfx2 = *(u16*)(data + 0x22);
+            u16 sfx2 = ((SfxplayerObjPlacement *)data)->unk22;
             if (sfx2 != 0) Sfx_RemoveLoopedObjectSound(obj, sfx2);
         }
     } else {
         u16 sfx1 = *(u16*)(data + 0x1a);
         if (sfx1 != 0) Sfx_StopFromObject(obj, sfx1);
         {
-            u16 sfx2 = *(u16*)(data + 0x22);
+            u16 sfx2 = ((SfxplayerObjPlacement *)data)->unk22;
             if (sfx2 != 0) Sfx_StopFromObject(obj, sfx2);
         }
     }
@@ -506,7 +517,7 @@ void sfxplayerObj_update(u8 *obj)
                     *(u32 *)state = 0;
                     if ((data[0x1c] & 4) != 0) {
                         SFXPLAYER_START_SOUND(*(u16 *)(data + 0x1a));
-                        SFXPLAYER_START_SOUND(*(u16 *)(data + 0x22));
+                        SFXPLAYER_START_SOUND(((SfxplayerObjPlacement *)data)->unk22);
                     }
                 }
             }
@@ -514,7 +525,7 @@ void sfxplayerObj_update(u8 *obj)
                 *(u32 *)state = 1;
                 if ((data[0x1c] & 2) != 0) {
                     SFXPLAYER_START_SOUND(*(u16 *)(data + 0x1a));
-                    SFXPLAYER_START_SOUND(*(u16 *)(data + 0x22));
+                    SFXPLAYER_START_SOUND(((SfxplayerObjPlacement *)data)->unk22);
                 }
             }
         }
@@ -525,7 +536,7 @@ void sfxplayerObj_update(u8 *obj)
             (((data[0x1c] & 4) != 0) && (bitState == 0))) {
             if ((state[4] & SFXPLAYER_RUNTIME_ACTIVE_FLAG) == 0) {
                 SFXPLAYER_START_SOUND(*(u16 *)(data + 0x1a));
-                SFXPLAYER_START_SOUND(*(u16 *)(data + 0x22));
+                SFXPLAYER_START_SOUND(((SfxplayerObjPlacement *)data)->unk22);
             }
         }
         else if ((state[4] & SFXPLAYER_RUNTIME_ACTIVE_FLAG) != 0) {
@@ -541,7 +552,7 @@ void sfxplayerObj_update(u8 *obj)
             if (*(f32 *)state <= lbl_803E40B8) {
                 *(f32 *)state = (f32)(s32)randomGetRange(data[0x1e], data[0x1f]) * lbl_803E40BC;
                 SFXPLAYER_START_SOUND(*(u16 *)(data + 0x1a));
-                SFXPLAYER_START_SOUND(*(u16 *)(data + 0x22));
+                SFXPLAYER_START_SOUND(((SfxplayerObjPlacement *)data)->unk22);
             }
         }
         else if ((state[4] & SFXPLAYER_RUNTIME_ACTIVE_FLAG) != 0) {

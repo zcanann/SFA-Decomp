@@ -5,6 +5,19 @@
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
 
+typedef struct DrshacklePlacement {
+    u8 pad0[0xC - 0x0];
+    f32 unkC;
+    f32 unk10;
+    f32 unk14;
+    u8 pad18[0x19 - 0x18];
+    s8 unk19;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+} DrshacklePlacement;
+
+
 typedef struct DrshackleState {
     u8 pad0[0x8 - 0x0];
     f32 unk8;
@@ -64,9 +77,9 @@ int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f) {
                                   parentPos);
     PSVECSubtract(parentPos, jointPos, jointPos);
 
-    if (*(s16 *)((char *)q + 0x1c) != 0) {
+    if (((DrshacklePlacement *)q)->unk1C != 0) {
         ((GameObject *)obj)->anim.rotZ =
-            (s16)((*(s16 *)((char *)q + 0x1c) << 14) + getAngle(jointPos[2], jointPos[0]));
+            (s16)((((DrshacklePlacement *)q)->unk1C << 14) + getAngle(jointPos[2], jointPos[0]));
         ((GameObject *)obj)->anim.rotY = (s16)getAngle(jointPos[2], jointPos[1]);
     } else {
         f32 savedY = jointPos[1];
@@ -95,7 +108,7 @@ int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f) {
 
 int drshackle_func0B(int obj) {
     int p = *(int *)&((GameObject *)obj)->anim.placementData;
-    return *(s8 *)(p + 0x19);
+    return ((DrshacklePlacement *)p)->unk19;
 }
 
 void drshackle_free(int obj) {
@@ -161,12 +174,12 @@ void drshackle_update(int obj) {
     int count;
     int *list;
     int j;
-    if (*(s16 *)(q + 0x1a) != 0 && *(void **)p == 0) {
+    if (((DrshacklePlacement *)q)->unk1A != 0 && *(void **)p == 0) {
         list = ObjGroup_GetObjects(0x17, &count);
         while (count-- != 0) {
             int sub = *(int *)(*list + 0x4c);
             for (j = 0; j < ((DrshackleState *)p)->unk14; j++) {
-                if (*(u8 *)(sub + 0x18) == *(s16 *)(q + 0x1a) + j * 4) {
+                if (*(u8 *)(sub + 0x18) == ((DrshacklePlacement *)q)->unk1A + j * 4) {
                     *(int *)(p + j * 4) = *list;
                     (*gObjectTriggerInterface)
                         ->runSequence(0, (void *)*(int *)(p + j * 4), -1);
@@ -176,7 +189,7 @@ void drshackle_update(int obj) {
         }
     }
     if (((BitFlags8 *)(p + 0x1a))->b0 != 0) {
-        ((BitFlags8 *)(p + 0x1a))->b0 = (GameBit_Get(*(s16 *)(q + 0x1e)) == 0);
+        ((BitFlags8 *)(p + 0x1a))->b0 = (GameBit_Get(((DrshacklePlacement *)q)->unk1E) == 0);
     }
 }
 

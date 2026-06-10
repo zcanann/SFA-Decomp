@@ -2,6 +2,15 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 
+typedef struct DrakordThornbushPlacement {
+    u8 pad0[0x19 - 0x0];
+    u8 unk19;
+    s16 unk1A;
+    s16 unk1C;
+    u8 pad1E[0x20 - 0x1E];
+} DrakordThornbushPlacement;
+
+
 typedef struct DrakordThornbushState {
     s32 unk0;
     u8 pad4[0x8 - 0x4];
@@ -87,9 +96,9 @@ void drakord_thornbush_update(int obj)
     int setup = *(int *)&((GameObject *)obj)->anim.placementData;
     int s2;
     if (fn_80080150((int)((char *)inner + 0xc)) != 0) {
-        if (((DrakordThornbushState *)inner)->unkC < (f32)(s32)*(s16 *)((char *)setup + 0x1c)) {
+        if (((DrakordThornbushState *)inner)->unkC < (f32)(s32)((DrakordThornbushPlacement *)setup)->unk1C) {
             ObjHits_EnableObject(obj);
-            ObjHitbox_SetSphereRadius(obj, (int)(lbl_803E65A8 + (f32)(s32)*(s16 *)((char *)setup + 0x1c) - ((DrakordThornbushState *)inner)->unkC));
+            ObjHitbox_SetSphereRadius(obj, (int)(lbl_803E65A8 + (f32)(s32)((DrakordThornbushPlacement *)setup)->unk1C - ((DrakordThornbushState *)inner)->unkC));
         }
         if (timerCountDown((f32 *)((char *)inner + 0xc)) != 0) {
             ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
@@ -114,7 +123,7 @@ void drakord_thornbush_update(int obj)
             break;
         case 0x709:
             if (Vec_distance((int *)((char *)Obj_GetPlayerObject() + 0x18), (int *)&((GameObject *)obj)->anim.worldPosX) <
-                (f32)(s32)(*(s16 *)((char *)setup + 0x1c) << 1)) {
+                (f32)(s32)(((DrakordThornbushPlacement *)setup)->unk1C << 1)) {
                 ObjHits_RecordObjectHit((int)Obj_GetPlayerObject(), obj, 5, 1, 0);
             }
             break;
@@ -122,14 +131,14 @@ void drakord_thornbush_update(int obj)
         if (((DrakordThornbushState *)inner)->unk0 == 0) {
             s2 = *(int *)&((GameObject *)obj)->anim.placementData;
             ObjHits_EnableObject(obj);
-            ((DrakordThornbushState *)inner)->unk0 = *(u8 *)((char *)s2 + 0x19);
+            ((DrakordThornbushState *)inner)->unk0 = ((DrakordThornbushPlacement *)s2)->unk19;
             ObjHitbox_SetSphereRadius(obj, (s16)((DrakordThornbushState *)inner)->unk74);
         }
         if (((GameObject *)obj)->anim.seqId == 0x709) {
             if (((DrakordThornbushState *)inner)->unk68 < lbl_803E658C) {
                 ((DrakordThornbushState *)inner)->unk68 = lbl_803E65AC * (f32)(u32)framesThisStep + ((DrakordThornbushState *)inner)->unk68;
                 ((GameObject *)obj)->anim.rootMotionScale =
-                    ((DrakordThornbushState *)inner)->unk68 * (*(f32 *)((char *)*(int *)&((GameObject *)obj)->anim.modelInstance + 4) * (f32)(s32)*(s16 *)((char *)setup + 0x1c)) / lbl_803E65B0;
+                    ((DrakordThornbushState *)inner)->unk68 * (*(f32 *)((char *)*(int *)&((GameObject *)obj)->anim.modelInstance + 4) * (f32)(s32)((DrakordThornbushPlacement *)setup)->unk1C) / lbl_803E65B0;
             }
         }
     }
@@ -170,7 +179,7 @@ void drakord_thornbush_hitDetect(int obj)
             ((DrakordThornbushState *)inner)->unk0 = 0;
             switch (((GameObject *)obj)->anim.seqId) {
             case 0x727:
-                spawnExplosion((int *)obj, (f32)(s32)*(s16 *)((char *)setup + 0x1c), 1, 0, 0, 0, 0, 1, 1);
+                spawnExplosion((int *)obj, (f32)(s32)((DrakordThornbushPlacement *)setup)->unk1C, 1, 0, 0, 0, 0, 1, 1);
                 break;
             case 0x709:
                 Sfx_PlayFromObject(obj, 0x2f9);
@@ -178,8 +187,8 @@ void drakord_thornbush_hitDetect(int obj)
                 ((void (*)(int, int, int, f32, int))fn_80221978)(obj, inner + 0x14, 3, lbl_803E6588, inner + 0x64);
                 break;
             }
-            if (*(s16 *)((char *)setup + 0x1a) != 0) {
-                s16toFloat((void *)((char *)inner + 0xc), *(s16 *)((char *)setup + 0x1a));
+            if (((DrakordThornbushPlacement *)setup)->unk1A != 0) {
+                s16toFloat((void *)((char *)inner + 0xc), ((DrakordThornbushPlacement *)setup)->unk1A);
                 ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 ObjHits_DisableObject(obj);
             } else if (*(u32 *)&((ObjPlacement *)setup)->mapId == 0xffffffff) {

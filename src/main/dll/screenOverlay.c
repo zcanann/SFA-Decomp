@@ -5,6 +5,29 @@
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 
+typedef struct ProjectileSwitchPlacement {
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    u8 pad1C[0x1E - 0x1C];
+    u8 unk1E;
+    u8 pad1F[0x20 - 0x1F];
+    u8 unk20;
+    u8 unk21;
+    u8 unk22;
+    u8 unk23;
+    u8 pad24[0x28 - 0x24];
+} ProjectileSwitchPlacement;
+
+
+typedef struct InvisibleHitSwitchPlacement {
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    u8 pad1C[0x1E - 0x1C];
+    u8 unk1E;
+    u8 pad1F[0x20 - 0x1F];
+} InvisibleHitSwitchPlacement;
+
+
 typedef struct ProjectileSwitchState {
     u8 pad0[0x4 - 0x0];
     f32 unk4;
@@ -71,8 +94,8 @@ void ProjectileSwitch_render(int obj, int p2, int p3, int p4, int p5, char flag)
 {
   int state = *(int *)&((GameObject *)obj)->anim.placementData;
   if ((int)(signed char)flag != 0) {
-    if ((*(u8 *)(state + 0x23) & 1) != 0) {
-      fn_8003B608(*(u8 *)(state + 0x20), *(u8 *)(state + 0x21), *(u8 *)(state + 0x22));
+    if ((((ProjectileSwitchPlacement *)state)->unk23 & 1) != 0) {
+      fn_8003B608(((ProjectileSwitchPlacement *)state)->unk20, ((ProjectileSwitchPlacement *)state)->unk21, ((ProjectileSwitchPlacement *)state)->unk22);
     }
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E3700);
   }
@@ -110,7 +133,7 @@ void ProjectileSwitch_hitDetect(int obj)
 
   if (*(u8 *)state != 0) {
     /* deactivate */
-    if ((*(u8 *)(state2 + 0x1e) & 3) != 1) return;
+    if ((((ProjectileSwitchPlacement *)state2)->unk1E & 3) != 1) return;
     state = *(int *)&((GameObject *)obj)->extra;
     if (((GameObject *)obj)->anim.mapEventSlot == 0x2c) {
       Sfx_PlayFromObject(obj, SFXsp_lf_mutter4);
@@ -137,10 +160,10 @@ void ProjectileSwitch_hitDetect(int obj)
     }
     *(u8 *)state = 1;
     GameBit_Set((int)*(short *)(state + 2), 1);
-    if ((*(u8 *)(state2 + 0x1e) & 3) == 2) {
+    if ((((ProjectileSwitchPlacement *)state2)->unk1E & 3) == 2) {
       ((ProjectileSwitchState *)state)->unk4 =
           lbl_803E3704 * lbl_803E3708 *
-          (f32)*(s16 *)(state2 + 0x1a);
+          (f32)((ProjectileSwitchPlacement *)state2)->unk1A;
     }
   }
 }
@@ -307,20 +330,20 @@ void InvisibleHitSwitch_update(int obj)
     hitId = ObjHits_GetPriorityHit(obj, 0, 0, 0);
     if ((int)((InvisibleHitSwitchState *)state)->unk1 != hitId) return;
     if (*(u8 *)state != 0) {
-      if ((*(u8 *)(state2 + 0x1e) & 3) != 1) return;
+      if ((((InvisibleHitSwitchPlacement *)state2)->unk1E & 3) != 1) return;
       *(u8 *)state = 0;
       GameBit_Set((int)*(short *)(state2 + 0x18), 0);
     } else {
-      if ((*(u8 *)(state2 + 0x1e) & 3) == 3) {
+      if ((((InvisibleHitSwitchPlacement *)state2)->unk1E & 3) == 3) {
         ((InvisibleHitSwitchState *)state)->unk8 = lbl_803E3738;
         return;
       }
       *(u8 *)state = 1;
       GameBit_Set((int)*(short *)(state2 + 0x18), 1);
-      if ((*(u8 *)(state2 + 0x1e) & 3) == 2) {
+      if ((((InvisibleHitSwitchPlacement *)state2)->unk1E & 3) == 2) {
         ((InvisibleHitSwitchState *)state)->unk4 =
             lbl_803E3734 * lbl_803E373C *
-            (f32)*(s16 *)(state2 + 0x1a);
+            (f32)((InvisibleHitSwitchPlacement *)state2)->unk1A;
       }
     }
   }

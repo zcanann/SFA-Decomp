@@ -3543,6 +3543,38 @@ typedef struct SpiritDoorSpiritState {
 
 #include "main/dll/DR/gunpowderbarrel_state.h"
 
+typedef struct CfprisonguardPlacement {
+    u8 pad0[0x8 - 0x0];
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    u8 pad14[0x18 - 0x14];
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    u8 pad20[0x22 - 0x20];
+    s16 unk22;
+    u8 pad24[0x28 - 0x24];
+} CfprisonguardPlacement;
+
+
+typedef struct BabycloudrunnerPlacement {
+    u8 pad0[0x8 - 0x0];
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    u8 pad14[0x18 - 0x14];
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    u8 pad20[0x22 - 0x20];
+    s16 unk22;
+    u8 pad24[0x28 - 0x24];
+} BabycloudrunnerPlacement;
+
+
 /* EN v1.0 0x8019D8B4  size: 308b  cfpowerbase_init: seed header and the
  * sub's type from spawn params, map the type id (0x54..0x56) to a model
  * and gamebit, then gate the active/lit state bits on those gamebits. */
@@ -3666,7 +3698,7 @@ void cfprisonguard_update(int *obj) {
     if (((u32)sub->flags39 >> 7) & 1u) {
         sub->flags39 = (u8)(sub->flags39 & ~0x80);
     }
-    if (GameBit_Get(*(s16*)(def + 0x1e)) != 0) {
+    if (GameBit_Get(((CfprisonguardPlacement *)def)->unk1E) != 0) {
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x8);
         ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | 0x4000);
         ObjHits_DisableObject(obj);
@@ -3682,7 +3714,7 @@ void cfprisonguard_update(int *obj) {
     }
     if (bit44 == 0) {
         if (sub->guardState != 4) {
-            if (dist >= (f32)(s32)*(s16*)(def + 0x1a)) {
+            if (dist >= (f32)(s32)((CfprisonguardPlacement *)def)->unk1A) {
                 if (waterfx_consumePendingImpactNearPoint(&((GameObject *)obj)->anim.localPosX, lbl_803E4268) == 0) return;
             }
         }
@@ -4962,7 +4994,7 @@ int cfprisonguard_SeqFn(int* obj, int unused, ObjAnimUpdateState *animUpdate)
         fn_8003B228(obj, sub);
         dist = Vec_distance((char*)obj + 0x18, player + 0x18);
         if (gb48 == 0) {
-            if (dist < (f32)*(s16*)(def + 0x1a)
+            if (dist < (f32)((CfprisonguardPlacement *)def)->unk1A
                 || waterfx_consumePendingImpactNearPoint(&((GameObject *)obj)->anim.localPosX, lbl_803E4268) != 0) {
                 if (objGetAnimState80A(player) != 0x40) {
                     moved = 1;
@@ -4986,7 +5018,7 @@ int cfprisonguard_SeqFn(int* obj, int unused, ObjAnimUpdateState *animUpdate)
     case 1:
         dist = Vec_distance((char*)obj + 0x18, player + 0x18);
         if (gb48 == 0) {
-            if (dist < (f32)*(s16*)(def + 0x1a)) {
+            if (dist < (f32)((CfprisonguardPlacement *)def)->unk1A) {
                 if (objGetAnimState80A(player) != 0x40) {
                     moved = 1;
                     sub->guardState = 4;

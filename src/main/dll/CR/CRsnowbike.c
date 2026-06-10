@@ -7,6 +7,20 @@
 
 #include "global.h"
 
+typedef struct ScMusictreeSpawnAmbientEffectPlacement {
+    u8 pad0[0x4 - 0x0];
+    u8 unk4;
+    u8 unk5;
+    u8 unk6;
+    u8 unk7;
+    u8 pad8[0x20 - 0x8];
+    u8 unk20;
+    u8 unk21;
+    u8 unk22;
+    u8 pad23[0x28 - 0x23];
+} ScMusictreeSpawnAmbientEffectPlacement;
+
+
 /* sc_levelcontrol_getExtraSize == 0x24 (CloudRunner race level control). */
 typedef struct ScLevelControlState {
     f32 fogNear;    /* 0x00: enableHeavyFog base */
@@ -895,10 +909,10 @@ void sc_musictree_spawnAmbientEffect(int obj, int p2, int p3, s8 idx)
 
     if (Obj_IsLoadingLocked() != 0) {
         setup = Obj_AllocObjectSetup(0x28, 0x210);
-        *(u8 *)(setup + 4) = *(u8 *)(def + 4);
-        *(u8 *)(setup + 6) = *(u8 *)(def + 6);
-        *(u8 *)(setup + 5) = *(u8 *)(def + 5);
-        *(u8 *)(setup + 7) = *(u8 *)(def + 7) - 10;
+        *(u8 *)(setup + 4) = ((ScMusictreeSpawnAmbientEffectPlacement *)def)->unk4;
+        *(u8 *)(setup + 6) = ((ScMusictreeSpawnAmbientEffectPlacement *)def)->unk6;
+        *(u8 *)(setup + 5) = ((ScMusictreeSpawnAmbientEffectPlacement *)def)->unk5;
+        *(u8 *)(setup + 7) = ((ScMusictreeSpawnAmbientEffectPlacement *)def)->unk7 - 10;
         ((ObjPlacement *)setup)->posX = state->pathPoint[idx][0];
         ((ObjPlacement *)setup)->posY = state->pathPoint[idx][1];
         ((ObjPlacement *)setup)->posZ = state->pathPoint[idx][2];

@@ -11,6 +11,17 @@
 #include "main/objseq.h"
 #include "main/objhits_types.h"
 
+typedef struct MoonSeedBushPlacement {
+    u8 pad0[0x18 - 0x0];
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    u8 pad22[0x28 - 0x22];
+} MoonSeedBushPlacement;
+
+
 /*
  * Per-object extra state for the MoonSeedBush plant spot
  * (MoonSeedBush_getExtraSize == 0x2).
@@ -1469,9 +1480,9 @@ void MoonSeedBush_update(int obj) {
     int def = *(int *)&((GameObject *)obj)->anim.placementData;
     int v;
     if ((state->flags & 1) == 0) return;
-    if (*(s16 *)(def + 0x1C) != 0 && state->seedState != 0) {
+    if (((MoonSeedBushPlacement *)def)->unk1C != 0 && state->seedState != 0) {
         v = *(u8 *)(def + 0x20);
-        (*gObjectTriggerInterface)->preempt(obj, *(s16 *)(def + 0x1C));
+        (*gObjectTriggerInterface)->preempt(obj, ((MoonSeedBushPlacement *)def)->unk1C);
     } else {
         v = -1;
     }
@@ -1522,7 +1533,7 @@ int MoonSeedBush_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate) {
     int i;
     int j;
     if (state->seedState == 0) {
-        if (GameBit_Get(*(s16 *)(def + 0x18)) != 0) {
+        if (GameBit_Get(((MoonSeedBushPlacement *)def)->unk18) != 0) {
             state->seedState = 2;
         }
     }
@@ -1530,8 +1541,8 @@ int MoonSeedBush_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate) {
         switch ((s32)animUpdate->eventIds[i]) {
         case 1:
             state->seedState = 1;
-            if (*(s16 *)(def + 0x1A) != -1) {
-                GameBit_Set(*(s16 *)(def + 0x1A), 1);
+            if (((MoonSeedBushPlacement *)def)->unk1A != -1) {
+                GameBit_Set(((MoonSeedBushPlacement *)def)->unk1A, 1);
             }
             break;
         case 2:

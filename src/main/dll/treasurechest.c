@@ -6,6 +6,17 @@
 #include "main/objfx.h"
 #include "main/object_descriptor.h"
 
+typedef struct DllD3Placement {
+    u8 pad0[0x8 - 0x0];
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    u8 pad14[0x2E - 0x14];
+    u8 unk2E;
+    u8 pad2F[0x30 - 0x2F];
+} DllD3Placement;
+
+
 extern u32 randomGetRange(int min, int max);
 extern void *Obj_GetPlayerObject(void);
 extern int ObjContact_AddCallback(int *obj, int p2, void *cb);
@@ -94,10 +105,10 @@ void dll_D3_update(int *obj)
     if (((GameObject *)obj)->unkF4 != 0) return;
 
     if (((GameObject *)obj)->unkF8 == 0) {
-        ((GameObject *)obj)->anim.localPosX  = *(f32 *)((char *)trans + 0x8);
-        ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)trans + 0xc);
-        ((GameObject *)obj)->anim.localPosZ = *(f32 *)((char *)trans + 0x10);
-        (*gObjectTriggerInterface)->runSequence((s8)*(u8 *)((char *)trans + 0x2e), obj, -1);
+        ((GameObject *)obj)->anim.localPosX  = ((DllD3Placement *)trans)->unk8;
+        ((GameObject *)obj)->anim.localPosY = ((DllD3Placement *)trans)->unkC;
+        ((GameObject *)obj)->anim.localPosZ = ((DllD3Placement *)trans)->unk10;
+        (*gObjectTriggerInterface)->runSequence((s8)((DllD3Placement *)trans)->unk2E, obj, -1);
         ((GameObject *)obj)->unkF8 = 1;
         return;
     }

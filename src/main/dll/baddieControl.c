@@ -18,6 +18,20 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/screen_transition.h"
 
+typedef struct Dll19Placement {
+    u8 pad0[0x22 - 0x0];
+    s16 unk22;
+    u8 pad24[0x32 - 0x24];
+    u8 unk32;
+    u8 pad33[0x3E8 - 0x33];
+    f32 unk3E8;
+    f32 unk3EC;
+    u8 pad3F0[0x400 - 0x3F0];
+    u16 unk400;
+    u8 pad402[0x408 - 0x402];
+} Dll19Placement;
+
+
 extern undefined4 ABS();
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_8000676c();
@@ -3571,7 +3585,7 @@ f32 dll_19_func1A(int obj)
 {
   int p_b8 = *(int *)&((GameObject *)obj)->extra;
   int p_4c = *(int *)&((GameObject *)obj)->anim.placementData;
-  u8 denom = *(u8 *)(p_4c + 0x32);
+  u8 denom = ((Dll19Placement *)p_4c)->unk32;
   if (denom != 0) {
     s8 numer = *(s8 *)(p_b8 + 0x354);
     if (numer != 0) {
@@ -4175,7 +4189,7 @@ int dll_19_func15(u8 *p1, int p2, int p3, int p4) {
     if (Obj_IsLoadingLocked() == 0) {
         return 0;
     }
-    if ((*(s16 *)(state + 34) & 0xf00) != 0) {
+    if ((((Dll19Placement *)state)->unk22 & 0xf00) != 0) {
         idx = ((p2 & 0xf00) >> 8) - 1;
         if (idx > 3) {
             idx = 3;
@@ -4183,7 +4197,7 @@ int dll_19_func15(u8 *p1, int p2, int p3, int p4) {
         setup = Obj_AllocObjectSetup(48, ids1[idx]);
         scale = lbl_803E1C54;
     }
-    if ((*(s16 *)(state + 34) & 0xf000) != 0) {
+    if ((((Dll19Placement *)state)->unk22 & 0xf000) != 0) {
         idx = ((p2 & 0xf000) >> 12) - 1;
         if (idx > 3) {
             idx = 3;
@@ -4191,7 +4205,7 @@ int dll_19_func15(u8 *p1, int p2, int p3, int p4) {
         setup = Obj_AllocObjectSetup(48, ids2[idx]);
         scale = lbl_803E1C54;
     }
-    if ((u8)*(s16 *)(state + 34) != 0) {
+    if ((u8)((Dll19Placement *)state)->unk22 != 0) {
         switch (p2) {
         case 1:
             setup = Obj_AllocObjectSetup(48, 717);

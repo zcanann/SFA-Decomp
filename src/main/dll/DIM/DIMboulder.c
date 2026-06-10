@@ -9,6 +9,15 @@
 #include "main/dll/DIM/DIMboulder.h"
 #include "main/resource.h"
 
+typedef struct CrrockfallPlacement {
+    u8 pad0[0x1A - 0x0];
+    u8 unk1A;
+    u8 unk1B;
+    s16 unk1C;
+    u8 pad1E[0x20 - 0x1E];
+} CrrockfallPlacement;
+
+
 /*
  * Per-object extra state for the IM ice-mountain event controller
  * (imicemountain_getExtraSize == 0x14).
@@ -1984,8 +1993,8 @@ void crrockfall_update(int *obj)
                        ((f32)n * (lbl_803E4708 - dist)));
         }
 
-        if (*(s16 *)((char *)p4c + 0x1c) == -1 ||
-            GameBit_Get(*(s16 *)((char *)p4c + 0x1c)) != 0) {
+        if (((CrrockfallPlacement *)p4c)->unk1C == -1 ||
+            GameBit_Get(((CrrockfallPlacement *)p4c)->unk1C) != 0) {
             switch (ex->mode) {
             case 0: {
                 int cond;
@@ -2000,7 +2009,7 @@ void crrockfall_update(int *obj)
                     if (dy < lbl_803E46E8) {
                         dy = lbl_803E46E8;
                     }
-                    if (xz < lbl_803E46EC * (f32)(u32)*(u8 *)((char *)def + 0x1a) &&
+                    if (xz < lbl_803E46EC * (f32)(u32)((CrrockfallPlacement *)def)->unk1A &&
                         dy < lbl_803E46F0) {
                         cond = 1;
                     } else {
@@ -2063,7 +2072,7 @@ void crrockfall_update(int *obj)
                     Sfx_PlayFromObject(obj, SFXwp_simp1_c);
                 } else {
                     Sfx_PlayFromObject(obj, 955);
-                    spawnExplosion(obj, (f32)(u32)*(u8 *)((char *)p4c + 0x1b),
+                    spawnExplosion(obj, (f32)(u32)((CrrockfallPlacement *)p4c)->unk1B,
                                    1, 1, 0, 1, 1, 1, 1);
                 }
             }

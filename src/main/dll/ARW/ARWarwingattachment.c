@@ -11,6 +11,35 @@
 #include "main/resource.h"
 #include "global.h"
 
+typedef struct WmlasertargetPlacement {
+    u8 pad0[0xC - 0x0];
+    f32 unkC;
+    u8 pad10[0x1A - 0x10];
+    s16 unk1A;
+    u8 pad1C[0x1E - 0x1C];
+    s16 unk1E;
+    s16 unk20;
+    u8 pad22[0x28 - 0x22];
+} WmlasertargetPlacement;
+
+
+typedef struct PressureswitchPlacement {
+    u8 pad0[0xC - 0x0];
+    f32 unkC;
+    u8 pad10[0x1A - 0x10];
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    u8 pad20[0x4C - 0x20];
+    u8 unk4C;
+    u8 pad4D[0x2F8 - 0x4D];
+    u8 unk2F8;
+    u8 unk2F9;
+    s8 unk2FA;
+    u8 pad2FB[0x300 - 0x2FB];
+} PressureswitchPlacement;
+
+
 /* Per-object extra state for the WM laser beam emitter. */
 typedef struct LaserBeamState {
     int texture;
@@ -1920,20 +1949,20 @@ void wmlasertarget_update(int *obj) {
     sub = ((GameObject *)obj)->extra;
     if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0) {
         sub->toggleQueued = 1;
-        sub->cooldown = *(s16*)(def + 0x1a);
+        sub->cooldown = ((WmlasertargetPlacement *)def)->unk1A;
     }
     if (sub->cooldown <= 0 && sub->toggleQueued != 0) {
-        if (GameBit_Get(*(s16*)(def + 0x1e)) != 0) {
+        if (GameBit_Get(((WmlasertargetPlacement *)def)->unk1E) != 0) {
             Obj_SetActiveModelIndex(obj, 0);
-            GameBit_Set(*(s16*)(def + 0x1e), 0);
-            GameBit_Set(*(s16*)(def + 0x20), 0);
+            GameBit_Set(((WmlasertargetPlacement *)def)->unk1E, 0);
+            GameBit_Set(((WmlasertargetPlacement *)def)->unk20, 0);
         } else {
             Obj_SetActiveModelIndex(obj, 1);
-            GameBit_Set(*(s16*)(def + 0x1e), 1);
-            GameBit_Set(*(s16*)(def + 0x20), 1);
+            GameBit_Set(((WmlasertargetPlacement *)def)->unk1E, 1);
+            GameBit_Set(((WmlasertargetPlacement *)def)->unk20, 1);
         }
         sub->toggleQueued = 0;
-        sub->cooldown = *(s16*)(def + 0x1a);
+        sub->cooldown = ((WmlasertargetPlacement *)def)->unk1A;
     } else if (sub->cooldown > 0) {
         u8 fs = framesThisStep;
         sub->cooldown -= fs;
@@ -2658,7 +2687,7 @@ void pressureswitch_update(int obj)
     }
     ((PswFlags *)&b->flags)->active = 0;
     if (*(char **)(obj + 0x58) != NULL && *(s8 *)(*(char **)(obj + 0x58) + 0x10f) > 0) {
-        b->retriggerTimer = (s16)(*(s16 *)(t + 0x1e) * 60);
+        b->retriggerTimer = (s16)(((PressureswitchPlacement *)t)->unk1E * 60);
         i = 0;
         thr = lbl_803E5D60;
         for (; i < *(s8 *)((slots = *(char **)(obj + 0x58)) + 0x10f); i++) {
@@ -2687,7 +2716,7 @@ void pressureswitch_update(int obj)
     ac = ((GameObject *)obj)->anim.mapEventSlot;
     if (ac == 11 && (*gMapEventInterface)->getMode(ac) == 1 && far == 0) {
         if (b->holdTimer != 0) {
-            f = *(f32 *)(t + 0xc) - ((GameObject *)obj)->anim.localPosY;
+            f = ((PressureswitchPlacement *)t)->unkC - ((GameObject *)obj)->anim.localPosY;
             if (f > lbl_803E5D68 && f < lbl_803E5D6C && GameBit_Get(b->mapGameBit) == 0) {
                 GameBit_Set(0x905, 1);
             } else if (GameBit_Get(0x905) != 0) {
@@ -2699,14 +2728,14 @@ void pressureswitch_update(int obj)
     }
     played = 0;
     if (b->holdTimer != 0) {
-        lim = *(f32 *)(t + 0xc) - lbl_803E5D6C;
+        lim = ((PressureswitchPlacement *)t)->unkC - lbl_803E5D6C;
         cur = ((GameObject *)obj)->anim.localPosY;
         if (cur < lim) {
             ((GameObject *)obj)->anim.localPosY = lbl_803E5D70 * timeDelta + cur;
             if (((GameObject *)obj)->anim.localPosY > lim) {
                 ((GameObject *)obj)->anim.localPosY = lim;
             }
-            GameBit_Set(*(s16 *)(t + 0x1c), 1);
+            GameBit_Set(((PressureswitchPlacement *)t)->unk1C, 1);
             if (((PswFlags *)&b->flags)->active) {
                 GameBit_Set(b->mapGameBit, 1);
             }
@@ -2714,7 +2743,7 @@ void pressureswitch_update(int obj)
             ((GameObject *)obj)->anim.localPosY = -(lbl_803E5D74 * timeDelta - cur);
             if (((GameObject *)obj)->anim.localPosY < lim) {
                 ((GameObject *)obj)->anim.localPosY = lim;
-                GameBit_Set(*(s16 *)(t + 0x1c), 1);
+                GameBit_Set(((PressureswitchPlacement *)t)->unk1C, 1);
                 v = b->mapGameBit;
                 if (v != -1) {
                     GameBit_Set(v, 1);
@@ -2729,12 +2758,12 @@ void pressureswitch_update(int obj)
     } else {
         if (b->retriggerTimer == 0) {
             ((GameObject *)obj)->anim.localPosY = lbl_803E5D74 * timeDelta + ((GameObject *)obj)->anim.localPosY;
-            if (((GameObject *)obj)->anim.localPosY > *(f32 *)(t + 0xc)) {
-                ((GameObject *)obj)->anim.localPosY = *(f32 *)(t + 0xc);
+            if (((GameObject *)obj)->anim.localPosY > ((PressureswitchPlacement *)t)->unkC) {
+                ((GameObject *)obj)->anim.localPosY = ((PressureswitchPlacement *)t)->unkC;
             } else {
                 played = 1;
             }
-            GameBit_Set(*(s16 *)(t + 0x1c), 0);
+            GameBit_Set(((PressureswitchPlacement *)t)->unk1C, 0);
             v = b->mapGameBit;
             if (v != -1) {
                 if (!((PswFlags *)&b->flags)->latched) {

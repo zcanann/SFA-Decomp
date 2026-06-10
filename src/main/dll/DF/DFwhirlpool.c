@@ -3,6 +3,16 @@
 #include "main/dll/DF/DFwhirlpool.h"
 #include "main/dll/DF/dfropenode.h"
 
+typedef struct DfropenodePlacement {
+    u8 pad0[0x18 - 0x0];
+    u8 unk18;
+    u8 pad19[0x1B - 0x19];
+    u8 unk1B;
+    s16 unk1C;
+    u8 pad1E[0x20 - 0x1E];
+} DfropenodePlacement;
+
+
 typedef struct DFWhirlpoolRenderState {
   undefined4 objAndParam;
   u8 red;
@@ -66,7 +76,7 @@ void dfropenode_render(int obj, int param_2, int param_3)
   objAnim = &((GameObject *)obj)->anim;
   extra = ((GameObject *)obj)->extra;
   objDef = *(int *)&objAnim->placementData;
-  eventId = *(s16 *)(objDef + 0x1c);
+  eventId = ((DfropenodePlacement *)objDef)->unk1C;
   if ((eventId != 0) && (GameBit_Get(eventId) != 0)) {
     oldAlpha = objAnim->alpha;
     if (oldAlpha == 0x46) {
@@ -89,7 +99,7 @@ void dfropenode_render(int obj, int param_2, int param_3)
     }
   }
 
-  if (((*(u8 *)(objDef + 0x18) & 1) != 0) && (*(void **)&extra->linkedObj != NULL) &&
+  if (((((DfropenodePlacement *)objDef)->unk18 & 1) != 0) && (*(void **)&extra->linkedObj != NULL) &&
       (extra->rope != NULL)) {
     originalScale = ((GameObject *)obj)->anim.rootMotionScale;
     ((GameObject *)obj)->anim.rootMotionScale = lbl_803E4DF8;
@@ -98,7 +108,7 @@ void dfropenode_render(int obj, int param_2, int param_3)
     textureSetupFn_800799c0();
     textRenderSetupFn_800795e8();
     textRenderSetupFn_80079804();
-    if (*(u8 *)(objDef + 0x1b) == 1) {
+    if (((DfropenodePlacement *)objDef)->unk1B == 1) {
       renderState.red = 0xff;
       renderState.green = 0xff;
       renderState.blue = 0xff;
@@ -118,7 +128,7 @@ void dfropenode_render(int obj, int param_2, int param_3)
         gxBlendFn_80078b4c();
         alpha = (objAnim->alpha + objAnim->alpha) >> 1;
       }
-      selectTexture((&lbl_803DBF48)[*(u8 *)(objDef + 0x1b)], 0);
+      selectTexture((&lbl_803DBF48)[((DfropenodePlacement *)objDef)->unk1B], 0);
       setTextColor(&renderState.objAndParam, renderState.blue, renderState.green, renderState.red,
                   (u8)alpha);
     }
@@ -128,7 +138,7 @@ void dfropenode_render(int obj, int param_2, int param_3)
       fn_801C0BF8(lbl_80325E00, extra->angle, (node - 1)->pos, node->pos, matrix);
       drawFn_8005cf8c(matrix, lbl_802C2358, 6);
     }
-    if (*(u8 *)(objDef + 0x1b) == 1) {
+    if (((DfropenodePlacement *)objDef)->unk1B == 1) {
       Sfx_KeepAliveLoopedObjectSound(obj, 0x480);
       gxBlendFn_80078b4c();
       {

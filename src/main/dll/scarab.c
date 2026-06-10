@@ -11,6 +11,24 @@
 #include "main/objhits_types.h"
 #include "main/objseq.h"
 
+typedef struct DllCBPlacement {
+    u8 pad0[0x4 - 0x0];
+    s8 unk4;
+    s8 unk5;
+    u8 unk6;
+    u8 unk7;
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    u8 pad14[0x24 - 0x14];
+    s16 unk24;
+    u8 pad26[0x2C - 0x26];
+    s16 unk2C;
+    s8 unk2E;
+    u8 pad2F[0x30 - 0x2F];
+} DllCBPlacement;
+
+
 typedef struct DllCBState {
     f32 unk0;
     f32 unk4;
@@ -2732,7 +2750,7 @@ int dll_CB_seqFn(short *obj, int p2, u8 *e)
     }
     fn_8016083C((int *)obj, (GroundBaddieState *)sub, (GroundBaddieState *)sub);
     if (((DllCBState *)sub)->unk3F6 != -1 && GameBit_Get(((DllCBState *)sub)->unk3F6) != 0) {
-      (*gObjectTriggerInterface)->yield((ObjSeqState *)e, *(s16 *)(setup + 0x2c));
+      (*gObjectTriggerInterface)->yield((ObjSeqState *)e, ((DllCBPlacement *)setup)->unk2C);
       ((DllCBState *)sub)->unk3F6 = -1;
     }
     switch (*(u8 *)&((DllCBState *)sub)->unk405) {
@@ -4110,9 +4128,9 @@ void dll_CB_update(int *obj) {
     def = *(u8**)&((GameObject *)obj)->anim.placementData;
     if (((GameObject *)obj)->unkF4 != 0) return;
     if (((GameObject *)obj)->unkF8 == 0) {
-        ((GameObject *)obj)->anim.localPosX = *(f32*)(def + 8);
-        ((GameObject *)obj)->anim.localPosY = *(f32*)(def + 0xc);
-        ((GameObject *)obj)->anim.localPosZ = *(f32*)(def + 0x10);
+        ((GameObject *)obj)->anim.localPosX = ((DllCBPlacement *)def)->unk8;
+        ((GameObject *)obj)->anim.localPosY = ((DllCBPlacement *)def)->unkC;
+        ((GameObject *)obj)->anim.localPosZ = ((DllCBPlacement *)def)->unk10;
         ((GameObject *)obj)->unkF8 = 1;
         return;
     }

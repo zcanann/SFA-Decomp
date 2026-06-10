@@ -12,6 +12,27 @@
 #include "main/objhits_types.h"
 #include "main/resource.h"
 
+typedef struct EnemyPlacement {
+    u8 pad0[0x8 - 0x0];
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    u8 pad14[0x18 - 0x14];
+    s16 unk18;
+    s16 unk1A;
+    u8 pad1C[0x28 - 0x1C];
+    s8 unk28;
+    u8 pad29[0x2A - 0x29];
+    s8 unk2A;
+    u8 pad2B[0x2C - 0x2B];
+    s16 unk2C;
+    s8 unk2E;
+    u8 pad2F[0x34 - 0x2F];
+    u16 unk34;
+    u8 pad36[0x38 - 0x36];
+} EnemyPlacement;
+
+
 
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_800068c4();
@@ -651,7 +672,7 @@ void enemy_update(int obj)
     baddieInstantiateWeapon(obj, state);
     flags = ((EnemyState *)state)->controlFlags;
     if ((flags & 1) != 0 && (flags & 2) == 0) {
-        if (*(s8 *)(setup + 0x2e) == -1) {
+        if (((EnemyPlacement *)setup)->unk2E == -1) {
             return;
         }
         if (setup != NULL && (setup[0x2b] & 8) != 0) {
@@ -659,14 +680,14 @@ void enemy_update(int obj)
             ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)setup)->posY;
             ((GameObject *)obj)->anim.localPosZ = ((ObjPlacement *)setup)->posZ;
         }
-        (*gObjectTriggerInterface)->runSequence(*(s8 *)(setup + 0x2e), (void *)obj, -1);
+        (*gObjectTriggerInterface)->runSequence(((EnemyPlacement *)setup)->unk2E, (void *)obj, -1);
         ((EnemyState *)state)->controlFlags |= 2;
         *(int *)&((EnemyState *)state)->controlFlags = *(int *)&((EnemyState *)state)->controlFlags & -2;
         return;
     }
     if (((GameObject *)obj)->unkF4 != 0) {
-        if (*(s16 *)(setup + 0x1a) != -1) {
-            if (GameBit_Get(*(s16 *)(setup + 0x1a)) == 0) {
+        if (((EnemyPlacement *)setup)->unk1A != -1) {
+            if (GameBit_Get(((EnemyPlacement *)setup)->unk1A) == 0) {
                 return;
             }
             if ((((EnemyState *)state)->controlFlags & 0x800) != 0) {
@@ -676,8 +697,8 @@ void enemy_update(int obj)
                 return;
             }
             player = Obj_GetPlayerObject();
-            if (*(s16 *)(setup + 0x18) != -1) {
-                if (GameBit_Get(*(s16 *)(setup + 0x18)) != 0) {
+            if (((EnemyPlacement *)setup)->unk18 != -1) {
+                if (GameBit_Get(((EnemyPlacement *)setup)->unk18) != 0) {
                     return;
                 }
             }
@@ -692,8 +713,8 @@ void enemy_update(int obj)
             } else {
                 return;
             }
-        } else if (*(s16 *)(setup + 0x18) != -1) {
-            if (GameBit_Get(*(s16 *)(setup + 0x18)) != 0) {
+        } else if (((EnemyPlacement *)setup)->unk18 != -1) {
+            if (GameBit_Get(((EnemyPlacement *)setup)->unk18) != 0) {
                 return;
             }
             if ((((EnemyState *)state)->controlFlags & 0x800) != 0) {
@@ -715,7 +736,7 @@ void enemy_update(int obj)
             if (*(u32 *)&((ObjPlacement *)setup)->mapId == 0xFFFFFFFF) {
                 return;
             }
-            if (*(s16 *)(setup + 0x2c) == 0) {
+            if (((EnemyPlacement *)setup)->unk2C == 0) {
                 return;
             }
             if ((*gMapEventInterface)->isTimedEventActive(((ObjPlacement *)setup)->mapId) != 0) {
@@ -746,12 +767,12 @@ void enemy_update(int obj)
         ((EnemyState *)state)->controlFlags &= ~0x8003;
         if ((((EnemyState *)state)->flags2E4 & 0x20000) != 0) {
             s2 = *(u8 **)&((GameObject *)obj)->anim.placementData;
-            ((GameObject *)obj)->anim.localPosX = *(f32 *)(s2 + 8);
-            ((GameObject *)obj)->anim.localPosY = *(f32 *)(s2 + 0xc);
-            ((GameObject *)obj)->anim.localPosZ = *(f32 *)(s2 + 0x10);
+            ((GameObject *)obj)->anim.localPosX = ((EnemyPlacement *)s2)->unk8;
+            ((GameObject *)obj)->anim.localPosY = ((EnemyPlacement *)s2)->unkC;
+            ((GameObject *)obj)->anim.localPosZ = ((EnemyPlacement *)s2)->unk10;
             ((GameObject *)obj)->anim.rotZ = 0;
             ((GameObject *)obj)->anim.rotY = 0;
-            *(s16 *)obj = *(s8 *)(s2 + 0x2a) << 8;
+            *(s16 *)obj = ((EnemyPlacement *)s2)->unk2A << 8;
             fz = lbl_803E2574;
             ((GameObject *)obj)->anim.velocityX = fz;
             ((GameObject *)obj)->anim.velocityY = fz;

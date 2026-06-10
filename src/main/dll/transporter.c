@@ -10,6 +10,27 @@
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
 
+typedef struct WarpPointPlacement {
+    u8 pad0[0x18 - 0x0];
+    s16 unk18;
+    s16 unk1A;
+    void *unk1C;
+    s16 unk20;
+    u8 unk22;
+    u8 unk23;
+    u8 pad24[0x48 - 0x24];
+    f32 unk48;
+    u8 pad4C[0x50 - 0x4C];
+    f32 unk50;
+    u8 pad54[0x114 - 0x54];
+    f32 unk114;
+    f32 unk118;
+    u8 pad11C[0x128 - 0x11C];
+    f32 unk128;
+    f32 unk12C;
+} WarpPointPlacement;
+
+
 typedef struct WarpPointState {
     u8 pad0[0x8 - 0x0];
     f32 unk8;
