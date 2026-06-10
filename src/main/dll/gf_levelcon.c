@@ -2,14 +2,14 @@
 #include "main/game_object.h"
 
 #pragma peephole on
-int gf_levelcon_handleScriptEvents(int obj, int eventId, u8 *script)
+int gf_levelcon_handleScriptEvents(int obj, int eventId, ObjAnimUpdateState *animUpdate)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
     int i;
 
-    script[0x56] = 0;
-    for (i = 0; i < script[0x8b]; i++) {
-        switch (script[0x81 + i]) {
+    animUpdate->sequenceEventActive = 0;
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        switch (animUpdate->eventIds[i]) {
         case 0:
             break;
         case 1:

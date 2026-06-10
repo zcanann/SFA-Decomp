@@ -13,6 +13,7 @@
 #include "main/objfx.h"
 #include "main/objHitReact.h"
 #include "main/objseq.h"
+#include "main/objanim_update.h"
 #include "main/resource.h"
 #include "main/dll/path_control_interface.h"
 #include "main/dll/rom_curve_interface.h"
@@ -999,7 +1000,7 @@ extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, 
 
 extern ScreenTransitionInterface **gScreenTransitionInterface;
 extern f32 lbl_803E7480;
-extern int gf_levelcon_handleScriptEvents(int obj, int eventId, u8 *script);
+extern int gf_levelcon_handleScriptEvents(int obj, int eventId, ObjAnimUpdateState *animUpdate);
 extern void gf_levelcon_findLinkedObjects(int obj);
 extern int loadMapAndParent(int mapId);
 extern void mapUnload(int a, int b);
@@ -2292,7 +2293,7 @@ void androsshand_init(int obj, u8 *setup);
 void androssligh_update(int obj);
 void androssligh_updateBeam(int obj, int beam);
 void androssbrain_update(int obj);
-int gf_levelcon_handleScriptEvents(int obj, int eventId, u8 *script);
+int gf_levelcon_handleScriptEvents(int obj, int eventId, ObjAnimUpdateState *animUpdate);
 int gf_levelcon_getExtraSize(void);
 int gf_levelcon_getObjectTypeId(void);
 void gf_levelcon_hitDetect(void);
