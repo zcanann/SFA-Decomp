@@ -1116,7 +1116,21 @@ cap (fn_801B6D40 76.4->100, DIM2snowball; paired with peephole-off to keep the
     intended reg IS the variable's home.
 
 61b. **Saved-reg coloring IS often source-flippable: declare a late-used
-    scratch local (`int ret;`/loop counter) FIRST.** Three confirmed wins in
+    scratch local (`int ret;`/loop counter) FIRST.**
+    **TRANSPLANT BATTERY (the #108 rosetta method, 3 wins on previously
+    35-lever-resistant fns): probe every banked rotation with the standard
+    3-variant battery — (a) late-local-first, (b) FULL-REVERSE-SPLIT
+    (decl order reversed AND inits separated from decls: `int flag;
+    TimerFlags *f; TimerSetup *setup; TimerState *state; int v;` then
+    `state = ...; setup = ...; f = ...;` — the strongest member:
+    timer_update 98.36->99.10 after the whole campaign failed),
+    (c) full-reverse with inits in place (n_rareware 86.69->87.26,
+    fn_800D55BC ret-first +0.24). Hit rate ~3/8 on the banked inventory;
+    inert where address-taken locals dominate (#5 pins offsets) or the fn
+    is a bare 2-web pair (dead decls DCE). Derived from reading MP4's
+    matched THPSimpleDecode (locals literally named after their registers —
+    the matched corpus encodes decl-order->coloring patterns per shape;
+    see tools/research/README_108.md rounds 6-7).** Three confirmed wins in
     one session: when target colors params/early locals to HIGHER saved regs
     than yours (obj→r31 vs your obj→r29, with the whole body cascading),
     insert/move a plain `int` local that's only used LATE to the TOP of the
