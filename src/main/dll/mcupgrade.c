@@ -25,7 +25,6 @@ int mcupgradema_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
     return 0;
 }
 
-#pragma peephole on
 void mcupgrade_update(int obj)
 {
     GameObject *gameObj = (GameObject *)obj;
