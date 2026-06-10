@@ -116,7 +116,7 @@ void ecsh_cup_update(short *obj)
         }
         ((EcshCupState *)state)->unk20 -= timeDelta;
         if (((EcshCupState *)state)->unk20 <= lbl_803E5068) {
-            ((EcshCupState *)state)->unk2E = *(u8 *)&((EcshCupState *)state)->unk2E * -1;
+            ((EcshCupState *)state)->unk2E = *(u8 *)&((EcshCupState *)state)->unk2E * -1LL;
             ((EcshCupState *)state)->unk20 = lbl_803E5070;
         }
         ((GameObject *)obj)->anim.localPosY = lbl_803E5074 * (f32)((EcshCupState *)state)->unk2E + ((GameObject *)obj)->anim.localPosY;
