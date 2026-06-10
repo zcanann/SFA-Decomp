@@ -405,8 +405,8 @@ void fn_80154328(int obj, int p)
         tx = lbl_803E2998 + (f32)(s32)randomGetRange(-20, 20) / lbl_803E299C;
         tz = lbl_803E29A0 + (f32)(s32)randomGetRange(-20, 20) / lbl_803E299C;
         Matrix_TransformPoint(mtx, tx, lbl_803E2990, tz, &tx, &ox, &tz);
-        (*gWaterfxInterface)->spawnRipple(0, 3, tx, *(f32 *)(p + 0x32c), tz,
-                                          lbl_803E2990);
+        ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(
+            tx, *(f32 *)(p + 0x32c), tz, 0, lbl_803E2990, 3);
         if (sqrtf(((GameObject *)obj)->anim.velocityX * ((GameObject *)obj)->anim.velocityX + ((GameObject *)obj)->anim.velocityZ * ((GameObject *)obj)->anim.velocityZ) > lbl_803E29A4) {
             Sfx_PlayAtPositionFromObject(obj, stk.pos[0], stk.pos[1], stk.pos[2], SFXstaff_proj_putaway);
         }
