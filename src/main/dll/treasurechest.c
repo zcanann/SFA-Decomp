@@ -97,7 +97,7 @@ void dll_D3_update(int *obj)
                 extra->surfaceMode = 5;
             }
             extra->flags92 =
-                (u8)((((extra->flags92 >> 4) - 1) << 4) |
+                (u8)((((extra->flags92 >> 4 & 0xF) - 1) << 4) |
                      (extra->flags92 & 0xf));
         }
     }
