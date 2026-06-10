@@ -276,7 +276,7 @@ void DIMbosstonsil_checkHit(void *obj,DIMbosstonsilState *state)
       state->hitDamageCount = hit;
       state->hitPointsLeft--;
       gDIMbosstonsilRoutePhase++;
-      GameBit_Set(DIMBOSSTONSIL_HIT_GAMEBIT,(s8)gDIMbosstonsilRoutePhase);
+      GameBit_Set(DIMBOSSTONSIL_HIT_GAMEBIT,*(s8 *)&gDIMbosstonsilRoutePhase);
       if (gDIMbosstonsilRoutePhase == 3 || gDIMbosstonsilRoutePhase == 7) {
         lbl_803DDB98 = lbl_803E4CB0;
       }
