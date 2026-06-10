@@ -324,7 +324,7 @@ void FUN_8017b3b8(short *param_1,int param_2)
  */
 #pragma scheduling on
 #pragma peephole on
-void FUN_8017b3bc(undefined4 param_1,undefined4 param_2,int param_3)
+void FUN_8017b3bc(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
   uint uVar1;
   undefined4 *puVar2;
@@ -385,8 +385,8 @@ void FUN_8017b3bc(undefined4 param_1,undefined4 param_2,int param_3)
     }
   }
   if (*(char *)(puVar8 + 2) == '\x02') {
-    for (iVar6 = 0; iVar6 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar6 = iVar6 + 1) {
-      if (*(char *)(param_3 + iVar6 + 0x81) == '\x02') {
+    for (iVar6 = 0; iVar6 < animUpdate->eventCount; iVar6 = iVar6 + 1) {
+      if (animUpdate->eventIds[iVar6] == 2) {
         *(undefined *)(puVar8 + 2) = 1;
         if ((int)*(short *)(iVar7 + 0x1a) != 0xffffffff) {
           FUN_80017698((int)*(short *)(iVar7 + 0x1a),1);
@@ -401,8 +401,8 @@ void FUN_8017b3bc(undefined4 param_1,undefined4 param_2,int param_3)
     }
   }
   else if (*(char *)(puVar8 + 2) == '\x03') {
-    for (iVar6 = 0; iVar6 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar6 = iVar6 + 1) {
-      if (*(char *)(param_3 + iVar6 + 0x81) == '\x01') {
+    for (iVar6 = 0; iVar6 < animUpdate->eventCount; iVar6 = iVar6 + 1) {
+      if (animUpdate->eventIds[iVar6] == 1) {
         *(undefined *)(puVar8 + 2) = 0;
         *(undefined *)(puVar8 + 3) = 0;
         if ((int)*(short *)(iVar7 + 0x1a) != 0xffffffff) {
