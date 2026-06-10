@@ -132,7 +132,6 @@ int fn_801CDE7C(int obj, int unused, ObjAnimUpdateState *animUpdate)
     void *audioEvents;
     void *audioPoints;
     void *audioScratch;
-    f32 audioScale;
 
     state = ((GameObject *)obj)->extra;
     if ((state[0x43c] & 0x20) == 0) {
@@ -150,9 +149,8 @@ int fn_801CDE7C(int obj, int unused, ObjAnimUpdateState *animUpdate)
     audioEvents = state + 0x440;
     audioPoints = state + 0x45c;
     audioScratch = state + 0x16c;
-    audioScale = lbl_803E5210;
     objAudioFn_8006ef38(obj, audioEvents, 8, audioPoints, audioScratch,
-                        audioScale, audioScale);
+                        lbl_803E5210, *(f32 *)&lbl_803E5210);
     if (animUpdate->eventCount != 0) {
         ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags & ~0x400);
         ((GameObject *)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_VISIBLE;
