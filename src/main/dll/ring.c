@@ -205,7 +205,7 @@ void ring_update(int obj)
             }
         }
         ((GameObject *)obj)->anim.rotX =
-            (s16)(int)((f32)(int) * (s16 *)(obj + 0) + lbl_803E70B8 * timeDelta);
+            (f32)(int) * (s16 *)(obj + 0) + lbl_803E70B8 * timeDelta;
         break;
     case RING_PHASE_PULL_TO_ARWING:
         if (state->pullTimer > lbl_803E70A0) {
@@ -220,10 +220,12 @@ void ring_update(int obj)
                 objMove(obj, ((GameObject *)obj)->anim.velocityX * timeDelta, ((GameObject *)obj)->anim.velocityY * timeDelta,
                         ((GameObject *)obj)->anim.velocityZ * timeDelta);
             }
-            if (state->pullTimer > lbl_803E70BC) {
+            {
+            f32 sixty = lbl_803E70BC;
+            if (state->pullTimer > sixty) {
                 ((GameObject *)obj)->anim.rotX =
                     (s16)(((GameObject *)obj)->anim.rotX + lbl_8032B720[state->mode].f10);
-                ((GameObject *)obj)->anim.rootMotionScale = (state->pullTimer - lbl_803E70BC) / lbl_803E70BC *
+                ((GameObject *)obj)->anim.rootMotionScale = (state->pullTimer - sixty) / sixty *
                                     *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4);
                 if (lbl_803E70C0 != state->pullTimer) {
                     Obj_BuildWorldTransformMatrix(obj, mtx, 0);
@@ -265,6 +267,7 @@ void ring_update(int obj)
                 state->flags.bit40 = 0;
                 ((GameObject *)obj)->anim.alpha = 0;
             }
+            }
             state->pullTimer -= timeDelta;
             if (state->pullTimer <= lbl_803E70A0) {
                 state->pullTimer = lbl_803E70A0;
@@ -274,9 +277,12 @@ void ring_update(int obj)
                 ((GameObject *)obj)->anim.rotX = 0;
                 ((GameObject *)obj)->anim.alpha = RING_ALPHA_OPAQUE;
                 ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4);
-                ((GameObject *)obj)->anim.velocityX = lbl_803E70A0;
-                ((GameObject *)obj)->anim.velocityY = lbl_803E70A0;
-                ((GameObject *)obj)->anim.velocityZ = lbl_803E70A0;
+                {
+                    f32 fz = lbl_803E70A0;
+                    ((GameObject *)obj)->anim.velocityX = fz;
+                    ((GameObject *)obj)->anim.velocityY = fz;
+                    ((GameObject *)obj)->anim.velocityZ = fz;
+                }
                 state->phase = RING_PHASE_COLLECTED;
                 ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | RING_OBJFLAG_HIDDEN);
             }
@@ -284,6 +290,7 @@ void ring_update(int obj)
             state->pullTimer = lbl_803E70C0;
         }
         break;
+    case 3:
     case 4:
         break;
     }
