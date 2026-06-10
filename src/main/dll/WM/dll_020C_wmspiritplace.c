@@ -299,9 +299,9 @@ void wmspiritplace_update(int obj)
                         getEnvfxActImmediately(obj, obj, 0x216, 0);
                         getEnvfxActImmediately(obj, obj, 0x229, 0);
                         getEnvfxActImmediately(obj, obj, 0x22a, 0);
-                        (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 4, 1);
-                        (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 10, 0);
-                        (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 0xb, 1);
+                        (*gMapEventInterface)->setAnimEvent(((GameObject *)obj)->anim.mapEventSlot, 4, 1);
+                        (*gMapEventInterface)->setAnimEvent(((GameObject *)obj)->anim.mapEventSlot, 10, 0);
+                        (*gMapEventInterface)->setAnimEvent(((GameObject *)obj)->anim.mapEventSlot, 0xb, 1);
                     }
                 } else {
                     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
@@ -359,7 +359,7 @@ void wmspiritplace_init(int obj, int setup)
     state->setupParam = (s16)*(s8 *)(setup + 0x19);
     state->f80 = 0;
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x6000);
-    state->mapEventState = (*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));
+    state->mapEventState = (*gMapEventInterface)->getMode(((GameObject *)obj)->anim.mapEventSlot);
 
     if (*(int *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x14) == 0x47295) {
         if (GameBit_Get(0x1fc) != 0 || GameBit_Get(0xeaf) != 0 || state->mapEventState > 2) {
