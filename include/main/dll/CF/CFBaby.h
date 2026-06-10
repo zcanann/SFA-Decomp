@@ -15,7 +15,7 @@ int FireFlyLantern_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 int FUN_80187664(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                 int param_9);
-undefined4 FUN_801877b0(int param_1,undefined4 param_2,int param_3);
+int FUN_801877b0(int obj, int unused, ObjAnimUpdateState *animUpdate);
 void FUN_801878f8(int param_1);
 void FUN_8018793c(int param_1);
 void FUN_8018795c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
@@ -63,6 +63,8 @@ void FUN_80189a90(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9);
 void FUN_80189e94(int param_1,int param_2);
+int Landed_Arwing_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
+int InfoPoint_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 
 int flammablevine_getExtraSize(void);
 int flammablevine_getObjectTypeId(void);

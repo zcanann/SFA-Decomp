@@ -656,12 +656,12 @@ void FUN_8018f650(void)
  */
 #pragma scheduling on
 #pragma peephole on
-undefined4 FUN_8018fca4(undefined4 param_1,undefined4 param_2,int param_3)
+int FUN_8018fca4(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
   byte bVar1;
   
-  for (bVar1 = 0; bVar1 < *(byte *)(param_3 + 0x8b); bVar1 = bVar1 + 1) {
-    if (*(char *)(param_3 + bVar1 + 0x81) == '\x01') {
+  for (bVar1 = 0; bVar1 < animUpdate->eventCount; bVar1 = bVar1 + 1) {
+    if (animUpdate->eventIds[bVar1] == 1) {
       FUN_8018f650();
     }
   }

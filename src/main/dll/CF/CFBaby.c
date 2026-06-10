@@ -257,16 +257,16 @@ int FUN_80187664(undefined8 param_1,double param_2,double param_3,undefined8 par
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_801877b0(int param_1,undefined4 param_2,int param_3)
+int FUN_801877b0(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
   int iVar1;
   int *piVar2;
   int *piVar3;
   double dVar4;
   
-  piVar3 = ((GameObject *)param_1)->extra;
-  for (iVar1 = 0; iVar1 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar1 = iVar1 + 1) {
-    if ((*(char *)(param_3 + iVar1 + 0x81) == '\x01') && (*(byte *)(piVar3 + 7) != 0)) {
+  piVar3 = ((GameObject *)obj)->extra;
+  for (iVar1 = 0; iVar1 < animUpdate->eventCount; iVar1 = iVar1 + 1) {
+    if ((animUpdate->eventIds[iVar1] == 1) && (*(byte *)(piVar3 + 7) != 0)) {
       if (piVar3[*(byte *)(piVar3 + 7) - 1] != 0) {
         (**(code **)(**(int **)(piVar3[*(byte *)(piVar3 + 7) - 1] + 0x68) + 0x24))();
       }
@@ -280,9 +280,9 @@ undefined4 FUN_801877b0(int param_1,undefined4 param_2,int param_3)
   piVar2 = piVar3;
   for (iVar1 = 0; iVar1 < (int)(uint)*(byte *)(piVar3 + 7); iVar1 = iVar1 + 1) {
     (**(code **)(**(int **)(*piVar2 + 0x68) + 0x28))
-              ((double)((GameObject *)param_1)->anim.localPosX,
-               (double)(float)(dVar4 + (double)((GameObject *)param_1)->anim.localPosY),
-               (double)((GameObject *)param_1)->anim.localPosZ);
+              ((double)((GameObject *)obj)->anim.localPosX,
+               (double)(float)(dVar4 + (double)((GameObject *)obj)->anim.localPosY),
+               (double)((GameObject *)obj)->anim.localPosZ);
     piVar2 = piVar2 + 1;
   }
   return 0;
@@ -2223,7 +2223,7 @@ extern f32 lbl_803E3BB0;
 
 #pragma scheduling off
 #pragma peephole off
-int Landed_Arwing_SeqFn(int obj, int unused, u8 *events) {
+int Landed_Arwing_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate) {
     int i;
     int def;
     CFLandedArwingState *state;
@@ -2232,8 +2232,8 @@ int Landed_Arwing_SeqFn(int obj, int unused, u8 *events) {
 
     def = *(int *)&((GameObject *)obj)->anim.placementData;
     state = ((GameObject *)obj)->extra;
-    for (i = 0; i < events[0x8b]; i++) {
-        switch (events[0x81 + i]) {
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        switch (animUpdate->eventIds[i]) {
             case 2:
             case 0x65:
                 mapId = *(int *)(def + 0x14);
@@ -2662,11 +2662,11 @@ void decoration11a_expandBoundsWithVertex(f32 *vertex, f32 *maxOut, f32 *minOut)
 #pragma dont_inline reset
 
 #pragma scheduling off
-int InfoPoint_SeqFn(int obj, int unused, u8 *p3) {
+int InfoPoint_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate) {
     s16 *inner = ((GameObject *)obj)->extra;
     int i;
-    for (i = 0; i < p3[0x8b]; i++) {
-        switch (p3[0x81 + i]) {
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        switch (animUpdate->eventIds[i]) {
             case 1: inner[0xb] = (s16)0xff; break;
             case 2: inner[0xb] = 0; break;
             case 5: break;
