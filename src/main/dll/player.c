@@ -3519,8 +3519,8 @@ s8 fn_802A74A4(int obj, int p2, int p3, void *out, f32 fv, u32 mask)
     f32 *dir;
 
     ang = (lbl_803E7F94 *
-           (f32)((u16)getAngle(*(f32 *)(p3 + 0x290), -*(f32 *)(p3 + 0x28c)) -
-                 *(s16 *)(p3 + 0x330))) /
+           (f32)((u16)getAngle(((PlayerState *)p3)->baddie.unk290, -((PlayerState *)p3)->baddie.unk28C) -
+                 ((PlayerState *)p3)->baddie.unk330)) /
           lbl_803E7F98;
     rot[0] = -mathSinf(ang);
     rot[1] = lbl_803E7EA4;
@@ -3546,7 +3546,7 @@ s8 fn_802A74A4(int obj, int p2, int p3, void *out, f32 fv, u32 mask)
         case 7:
         case 12: {
             u8 b;
-            s16 v = *(s16 *)(p2 + 0x274);
+            s16 v = ((PlayerState *)p2)->baddie.controlMode;
             if (v == 0xc) {
                 continue;
             }
@@ -3740,7 +3740,7 @@ s8 fn_802A74A4(int obj, int p2, int p3, void *out, f32 fv, u32 mask)
                 continue;
             }
             *(u32 *)(p2 + 0x360) |= 0x100LL;
-            if ((*(int *)(p3 + 0x31c) & 0x100) == 0) {
+            if ((*(int *)&((PlayerState *)p3)->baddie.unk31C & 0x100) == 0) {
                 continue;
             }
             *(f32 *)(p2 + 0x654) = buf.nx;
@@ -3763,7 +3763,7 @@ s8 fn_802A74A4(int obj, int p2, int p3, void *out, f32 fv, u32 mask)
             if (hd >= lbl_803E8098) {
                 continue;
             }
-            if ((*(int *)(p3 + 0x31c) & 0x100) == 0) {
+            if ((*(int *)&((PlayerState *)p3)->baddie.unk31C & 0x100) == 0) {
                 continue;
             }
             *(f32 *)(p2 + 0x654) = buf.nx;
@@ -3857,7 +3857,7 @@ s8 fn_802A74A4(int obj, int p2, int p3, void *out, f32 fv, u32 mask)
             }
             if (buf.kind == 0xd) {
                 int k;
-                if (*(f32 *)(p3 + 0x280) <= lbl_803E80A0) {
+                if (((PlayerState *)p3)->baddie.animSpeedA <= lbl_803E80A0) {
                     continue;
                 }
                 if (*(f32 *)(p2 + 0x878) <= lbl_803E7EA4) {
@@ -3887,7 +3887,7 @@ s8 fn_802A74A4(int obj, int p2, int p3, void *out, f32 fv, u32 mask)
             break;
         }
     }
-    if ((*(int *)(p3 + 0x31c) & 0x100) != 0 && (mask & 0x200) != 0) {
+    if ((*(int *)&((PlayerState *)p3)->baddie.unk31C & 0x100) != 0 && (mask & 0x200) != 0) {
         int *objs = (int *)ObjGroup_GetObjects(10, &objCount);
         int k2;
         for (k2 = 0; k2 < objCount; k2++) {
@@ -11253,17 +11253,17 @@ void fn_802B4A9C(int obj, int sA, int sB)
                 ((PlayerState *)sA)->unk8B4 = 2;
                 ((ByteFlags *)((char *)sA + 0x3f4))->b08 = 0;
             }
-            *(u8 *)((char *)sB + 0x349) = 1;
+            ((PlayerState *)sB)->baddie.unk349 = 1;
             if (target != NULL) {
-                *(int **)((char *)sB + 0x2d0) = target;
+                *(int **)&((PlayerState *)sB)->baddie.targetObj = target;
             } else {
                 f32 dist = lbl_803E8150;
-                *(int *)((char *)sB + 0x2d0) = ObjGroup_FindNearestObject(3, obj, &dist);
+                *(int *)&((PlayerState *)sB)->baddie.targetObj = ObjGroup_FindNearestObject(3, obj, &dist);
             }
         } else {
             if (target != NULL) {
-                if (*(int **)((char *)sB + 0x2d0) != target) {
-                    *(u8 *)((char *)sB + 0x349) = 0;
+                if (*(int **)&((PlayerState *)sB)->baddie.targetObj != target) {
+                    ((PlayerState *)sB)->baddie.unk349 = 0;
                     if ((*(u8 *)((char *)*(int *)((char *)target + 0x78) + 4) & 0xf) == 1) {
                         if (lbl_803DE44C != NULL) {
                             u32 targetFlag = (*(u8 *)((char *)sA + 0x3f4) >> 6) & 1;
@@ -11272,17 +11272,17 @@ void fn_802B4A9C(int obj, int sA, int sB)
                                 ((ByteFlags *)((char *)sA + 0x3f4))->b08 = 0;
                             }
                         }
-                        *(u8 *)((char *)sB + 0x349) = 1;
+                        ((PlayerState *)sB)->baddie.unk349 = 1;
                     }
                 }
-                *(int **)((char *)sB + 0x2d0) = target;
+                *(int **)&((PlayerState *)sB)->baddie.targetObj = target;
             } else {
-                *(int *)((char *)sB + 0x2d0) = 0;
-                *(u8 *)((char *)sB + 0x349) = 0;
+                *(int *)&((PlayerState *)sB)->baddie.targetObj = 0;
+                ((PlayerState *)sB)->baddie.unk349 = 0;
             }
         }
-        if (*(int **)((char *)sB + 0x2d0) != NULL) {
-            fn_8014C540(*(int *)((char *)sB + 0x2d0), (char *)sA + 0x884, (char *)sA + 0x888,
+        if (*(int **)&((PlayerState *)sB)->baddie.targetObj != NULL) {
+            fn_8014C540(*(int *)&((PlayerState *)sB)->baddie.targetObj, (char *)sA + 0x884, (char *)sA + 0x888,
                         (char *)sA + 0x88c);
         } else {
             ((PlayerState *)sA)->unk80E = -1;

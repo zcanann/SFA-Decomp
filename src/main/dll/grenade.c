@@ -1579,7 +1579,7 @@ void tricky_startRandomIdleMove(int param_1,int param_2)
   switch (iVar1) {
   case 0:
     objAnimFn_8013a3f0(param_1,0,lbl_803E2444,0);
-    *(undefined *)(param_2 + 10) = 2;
+    ((TrickyState *)param_2)->unkA = 2;
     break;
   case 1:
     iVar3 = *(int *)&((GameObject *)param_1)->extra;
@@ -1591,19 +1591,19 @@ void tricky_startRandomIdleMove(int param_1,int param_2)
       }
     }
     objAnimFn_8013a3f0(param_1,0x26,lbl_803E251C,0);
-    *(undefined *)(param_2 + 10) = 5;
+    ((TrickyState *)param_2)->unkA = 5;
     break;
   case 2:
     objAnimFn_8013a3f0(param_1,0x21,lbl_803E2478,0);
-    *(undefined *)(param_2 + 10) = 6;
+    ((TrickyState *)param_2)->unkA = 6;
     break;
   case 3:
     objAnimFn_8013a3f0(param_1,0x23,lbl_803E2478,0);
-    *(undefined *)(param_2 + 10) = 7;
+    ((TrickyState *)param_2)->unkA = 7;
     break;
   case 4:
     objAnimFn_8013a3f0(param_1,0x25,lbl_803E2518,0);
-    *(undefined *)(param_2 + 10) = 2;
+    ((TrickyState *)param_2)->unkA = 2;
     break;
   }
 }

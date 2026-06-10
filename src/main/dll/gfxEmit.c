@@ -665,7 +665,7 @@ void fn_80172824(int obj, u8 *state)
         dy = -dy;
     }
     if (dy < lbl_803E3490 && dist < *(f32 *)(state + 4) && fn_8029622C(player) != 0) {
-        *(s16 *)(state + 0x48) = -1;
+        ((GfxEmitState *)state)->unk48 = -1;
         switch (((GameObject *)obj)->anim.seqId) {
         case 0xb:
             if (GameBit_Get(0x90e) == 0) {
@@ -703,7 +703,7 @@ void fn_80172824(int obj, u8 *state)
         default:
             if (ObjTrigger_IsSet(obj) != 0) {
                 GameBit_Set(0xa7b, 1);
-                *(s16 *)(state + 0x48) = attach[0xf];
+                ((GfxEmitState *)state)->unk48 = attach[0xf];
                 ObjMsg_SendToObject(player, 0x7000a, obj, state + 0x48);
                 state[0x37] |= 1;
                 if (((GameObject *)obj)->anim.modelState != NULL) {

@@ -85,7 +85,13 @@ def fn_range(lines, name):
     return None
 
 def main():
-    cfile, mode, varnames = sys.argv[1], sys.argv[2], sys.argv[3:]
+    argv = sys.argv[1:]
+    fn_whitelist = None
+    if '--fns' in argv:
+        i = argv.index('--fns')
+        fn_whitelist = set(argv[i+1].split(','))
+        argv = argv[:i] + argv[i+2:]
+    cfile, mode, varnames = argv[0], argv[1], argv[2:]
     rel_o = cfile[len('src/'):-2] + '.o'
     cur_o = os.path.join(ROOT, 'build/GSAE01/src', rel_o)
     base_o = os.path.join(BASE, rel_o)
@@ -189,8 +195,11 @@ def main():
         fn_text = {name: '\n'.join(olines[s:e+1]) for name, s, e in all_ranges}
         for i in conv_lines:
             fn = fn_of(i)
-            txt = fn_text.get(fn, '')
-            if not any(r.search(txt) for r in assoc_res):
+            if fn_whitelist is not None:
+                ok = fn in fn_whitelist
+            else:
+                ok = any(r.search(fn_text.get(fn, '')) for r in assoc_res)
+            if not ok:
                 applied[i] = False
                 dropped += 1
         if dropped:
