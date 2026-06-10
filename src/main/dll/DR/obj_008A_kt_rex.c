@@ -118,11 +118,11 @@ int ktrex_getObjectTypeId(void) { return 0x49; }
 
 void ktrex_release(void) {}
 
-int ktrex_animEventCallback(int obj, int p2, u8 *arg) {
+int ktrex_animEventCallback(int obj, int unused, ObjAnimUpdateState *animUpdate) {
     int i;
-    arg[0x56] = 0;
-    for (i = 0; i < arg[0x8b]; i++) {
-        switch (arg[0x81 + i]) {
+    animUpdate->sequenceEventActive = 0;
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        switch (animUpdate->eventIds[i]) {
         case 1:
             *(int *)&((KTRexArenaState *)gKTRexState)->phaseFlags |= 4;
             break;
