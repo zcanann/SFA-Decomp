@@ -60,10 +60,11 @@ void arwspeedstr_update(int obj) {
     }
     {
         f32 t = state->lifeTimer;
-        if (t > lbl_803E7104) {
+        f32 zero = lbl_803E7104;
+        if (t > zero) {
             state->lifeTimer = t - timeDelta;
-            if (state->lifeTimer <= lbl_803E7104) {
-                state->lifeTimer = lbl_803E7104;
+            if (state->lifeTimer <= zero) {
+                state->lifeTimer = zero;
                 Obj_FreeObject(obj);
             } else {
                 objMove(obj, lbl_803E7104, lbl_803E7104, state->speed * timeDelta);
