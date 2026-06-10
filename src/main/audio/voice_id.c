@@ -233,7 +233,7 @@ void voiceRemovePriority(int state)
     VoicePrioRootRec *pr;
 
     vb = (VoicePrioBlockRec *)vidListNodes;
-    vps = (VoicePrioVoiceRec *)&((u8 *)vb)[((s->voiceHandle & 0xff) << 2) + 2240];
+    vps = (VoicePrioVoiceRec *)&((u8 *)voicePriorityLinks)[(s->voiceHandle & 0xff) << 2];
     if (vps->user != 1) {
         return;
     }
