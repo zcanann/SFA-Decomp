@@ -104,3 +104,24 @@ block-scope re-decls (#108's shrine1CE lever, untested on this specimen)
 and accumulating more 100%-matched specimens whose C is known (MP4-oracle
 the GX-result shape: find a matched fn with 3 sequential call results
 feeding a consume call and read its locals' declaration pattern).
+
+
+## Round-7: the MP4 matched corpus IS the order-law oracle
+
+THPSimpleDecode (MP4, 100%-matched) has 3+ distinct call-result saves at
+r26,r27,r25 (non-E1!) and its C is readable: the decl block is
+`u8 *var_r29; s32 *var_r30; s32 temp_r27; s32 temp_r26; s32 temp_r25;
+s32 var_r28; s32 i;` — the matching authors literally named locals after
+their registers, and the DECL ORDER produces the coloring: the two loop
+walkers (var_) declared first take r29/r30; the call-result temps (temp_)
+descend r27->r26->r25... in a creation-order-within-class pattern, with
+var_r28 (a multi-def join var) seated between. METHOD extracted: for any
+rotation-banked fn, (1) grep the MP4 matched corpus for the same WEB SHAPE
+(the regex batteries in this round's commits: distinct mr-result runs,
+walker counts), (2) read the matched fn's decl ORDER + naming classes
+(var_ multi-def vs temp_ single-def vs sp stack), (3) transplant the decl
+ordering pattern onto the SFA fn. This is the inp_value precedent
+('rotation dissolved when source matched upstream forms') turned into a
+general procedure. Scanner one-liner in commit message; candidates with
+the n_rareware shape: SetMtx (E1-descending), THPSimpleDecode (mixed),
+HuAudSndGrpSetSet (30,31,26,27 — another readable mix).
