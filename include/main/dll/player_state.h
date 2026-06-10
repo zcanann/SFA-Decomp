@@ -85,7 +85,8 @@ typedef struct PlayerState {
     int unk494;
     int unk498;
     int unk49C;
-    u8 pad4A0[0x4A4 - 0x4A0];
+    u16 unk4A0;
+    u16 unk4A2;
     int unk4A4;
     int unk4A8;
     int unk4AC;
@@ -184,9 +185,9 @@ typedef struct PlayerState {
     u8 unk609;
     u8 pad60A[0x60C - 0x60A];
     f32 unk60C;
-    u8 pad610[0x614 - 0x610];
+    f32 unk610;
     f32 unk614;
-    u8 pad618[0x61C - 0x618];
+    f32 unk618;
     f32 unk61C;
     f32 unk620;
     f32 unk624;
@@ -202,9 +203,9 @@ typedef struct PlayerState {
     f32 unk64C;
     u8 pad650[0x654 - 0x650];
     f32 unk654;
-    u8 pad658[0x65C - 0x658];
+    f32 unk658;
     f32 unk65C;
-    u8 pad660[0x664 - 0x660];
+    f32 unk660;
     f32 unk664;
     f32 unk668;
     f32 unk66C;
@@ -228,7 +229,11 @@ typedef struct PlayerState {
     f32 unk6C4;
     f32 unk6C8;
     u8 unk6CC;
-    u8 pad6CD[0x6E0 - 0x6CD];
+    u8 pad6CD[0x6D0 - 0x6CD];
+    s32 unk6D0;
+    s32 unk6D4;
+    f32 unk6D8;
+    f32 unk6DC;
     u16 unk6E0;
     u16 unk6E2;
     u16 unk6E4;
@@ -269,7 +274,9 @@ typedef struct PlayerState {
     int heldObj; /* carried object (playerSetHeldObject) */
     f32 unk7FC;
     u8 unk800;
-    u8 pad801[0x80A - 0x801];
+    u8 pad801[0x806 - 0x801];
+    u16 unk806;
+    u16 unk808;
     s16 unk80A;
     s16 unk80C;
     s16 unk80E;
@@ -303,7 +310,7 @@ typedef struct PlayerState {
     u8 unk86F;
     u8 pad870[0x874 - 0x870];
     f32 unk874;
-    u8 pad878[0x87C - 0x878];
+    f32 unk878;
     f32 unk87C;
     f32 unk880;
     u32 unk884;
@@ -313,7 +320,8 @@ typedef struct PlayerState {
     f32 unk894;
     int unk898;
     u16 unk89C;
-    u8 pad89E[0x8A2 - 0x89E];
+    u8 pad89E[0x8A0 - 0x89E];
+    u16 unk8A0;
     u8 unk8A2;
     u8 unk8A3;
     u8 unk8A4;

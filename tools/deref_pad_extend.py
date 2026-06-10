@@ -2,7 +2,9 @@
 """Split state-struct pad arrays into named unkNNN fields for offsets that
 a TU actually derefs, so deref_convert_struct can map them.
 
-Usage: pad_extend.py <file.c> <header-with-struct> <StructName> <var> [var...]
+Usage: pad_extend.py [--deps h1,h2] <file.c> <header-with-struct> <StructName> <var> [var...]
+
+--deps: extra headers parsed for nested struct SIZES only (not edited).
 
 Only edits the struct definition inside <header-with-struct> (which may be
 the .c itself). Layout is unchanged by construction (pad splits + same-width
@@ -15,8 +17,13 @@ SIZES = {'u8':1,'s8':1,'char':1,'u16':2,'s16':2,'u32':4,'s32':4,'int':4,
          'uint':4,'f32':4,'float':4,'f64':8}
 FIELD_T = {1:'u8',2:'u16',4:'s32'}
 
-cfile, hfile, sname = sys.argv[1], sys.argv[2], sys.argv[3]
-varnames = sys.argv[4:]
+argv = sys.argv[1:]
+deps = []
+if argv and argv[0] == '--deps':
+    deps = argv[1].split(',')
+    argv = argv[2:]
+cfile, hfile, sname = argv[0], argv[1], argv[2]
+varnames = argv[3:]
 
 src = open(cfile, encoding='latin-1').read()
 deref_re = re.compile(r'\*\(\s*(u8|s8|u16|s16|u32|s32|int|uint|f32|float|char)\s*\*\)\s*'
@@ -58,12 +65,13 @@ def evaldim(a):
 # nested struct sizes from any header content already concatenated? handle only
 # same-file structs defined earlier
 known_structs = {}
-for sm in re.finditer(r'typedef struct (\w+)\s*\{(.*?)\}\s*\w*\s*;', hsrc, re.S):
+dep_src = '\n'.join(open(d, errors='ignore').read() for d in deps) + '\n' + hsrc
+for sm in re.finditer(r'typedef struct (\w+)\s*\{(.*?)\}\s*\w*\s*;', dep_src, re.S):
     if sm.group(1) == sname:
         continue
     sz = 0
     ok = True
-    for line in sm.group(2).split('\n'):
+    for line in re.sub(r'/\*.*?\*/', '', sm.group(2), flags=re.S).split('\n'):
         line = line.split('//')[0].strip()
         if not line:
             continue
