@@ -949,16 +949,15 @@ extern u8 Obj_IsLoadingLocked(void);
 extern int *Obj_AllocObjectSetup(int a, int b);
 extern int loadObjectAtObject(int obj, int *setup);
 extern void hudFn_8011f38c(int a);
-extern void fn_801DA4A8(int obj, int state, int a);
+extern void fn_801DA4A8(int obj, ShStaffState *state, int a);
 extern f32 lbl_803E5508;
 int sh_staff_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
-    int state = *(int *)&((GameObject *)obj)->extra;
-    int *p;
+    ShStaffState *state = ((GameObject *)obj)->extra;
     int i;
 
-    for (i = 0, p = (int *)state; i < 10; i++) {
-        if (*(u8 *)(state + i + 0x60) != 0) {
+    for (i = 0; i < 10; i++) {
+        if (state->pending[i] != 0) {
             int loadResult;
             if ((u8)Obj_IsLoadingLocked() == 0) {
                 loadResult = 0;
@@ -968,51 +967,50 @@ int sh_staff_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
                 *(u8 *)((char *)newSetup + 7) = 0xff;
                 loadResult = loadObjectAtObject(obj, newSetup);
             }
-            *(int *)((char *)p + 0x38) = loadResult;
-            *(u8 *)(state + i + 0x60) = 0;
+            state->slots[i] = loadResult;
+            state->pending[i] = 0;
         }
-        p = (int *)((char *)p + 4);
     }
 
     for (i = 0; i < animUpdate->eventCount; i++) {
         u8 v = animUpdate->eventIds[i];
         switch (v) {
         case 0:
-            ((ShStaffState *)state)->phase = 3;
+            state->phase = 3;
             break;
         case 1:
-            ((ShStaffState *)state)->hudFlag = 1;
+            state->hudFlag = 1;
             break;
         case 2:
-            ((ShStaffState *)state)->hudFlag = 0;
+            state->hudFlag = 0;
             break;
         case 3:
             fn_801DA4A8(obj, state, 1);
             break;
         case 4:
-            ((ShStaffState *)state)->phase = 4;
+            state->phase = 4;
             break;
         case 5:
             hudFn_8011f38c(1);
             break;
         case 6:
-            ((ShStaffState *)state)->flags = (u8)(((ShStaffState *)state)->flags | 1);
+            state->flags = (u8)(state->flags | 1);
             break;
         case 7:
-            ((ShStaffState *)state)->flags = (u8)(((ShStaffState *)state)->flags | 4);
+            state->flags = (u8)(state->flags | 4);
             break;
         case 8:
-            ((ShStaffState *)state)->flags = (u8)(((ShStaffState *)state)->flags | 0x10);
-            ((ShStaffState *)state)->fadeTimer = lbl_803E54E0;
+            state->flags = (u8)(state->flags | 0x10);
+            state->fadeTimer = lbl_803E54E0;
             break;
         case 9:
-            ((ShStaffState *)state)->flags = (u8)(((ShStaffState *)state)->flags | 0x20);
-            ((ShStaffState *)state)->fadeTimer = lbl_803E54D4;
+            state->flags = (u8)(state->flags | 0x20);
+            state->fadeTimer = lbl_803E54D4;
             break;
         case 0xa:
-            ((ShStaffState *)state)->flags = (u8)(((ShStaffState *)state)->flags | 0x10);
-            ((ShStaffState *)state)->flags = (u8)(((ShStaffState *)state)->flags | 0xa);
-            ((ShStaffState *)state)->fadeTimer = lbl_803E5508;
+            state->flags = (u8)(state->flags | 0x10);
+            state->flags = (u8)(state->flags | 0xa);
+            state->fadeTimer = lbl_803E5508;
             break;
         case 0xb:
         case 0xc:
@@ -1020,13 +1018,13 @@ int sh_staff_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
         }
     }
 
-    if (((ShStaffState *)state)->hudFlag != 0) {
+    if (state->hudFlag != 0) {
         ((void (*)(s16, int, int))((int *)*gGameUIInterface)[0x34 / 4])
             (*(s16 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x7e), 0xa0, 0x8c);
     }
-    ((ShStaffState *)state)->pulseTimer = lbl_803E54D8 * timeDelta + ((ShStaffState *)state)->pulseTimer;
-    if (((ShStaffState *)state)->pulseTimer > lbl_803E54D0) {
-        ((ShStaffState *)state)->pulseTimer = lbl_803E54D4;
+    state->pulseTimer = lbl_803E54D8 * timeDelta + state->pulseTimer;
+    if (state->pulseTimer > lbl_803E54D0) {
+        state->pulseTimer = lbl_803E54D4;
     }
     return 0;
 }
@@ -1044,11 +1042,11 @@ extern f32 lbl_803E550C;
 extern f32 lbl_803E5510;
 extern f32 lbl_803E5514;
 
-void fn_801DA4A8(int obj, int state, int clearChildren)
+void fn_801DA4A8(int obj, ShStaffState *state, int clearChildren)
 {
     int player;
     void *child;
-    u8 *childSlots;
+    int *childSlots;
     int i;
     int zero;
 
@@ -1061,53 +1059,53 @@ void fn_801DA4A8(int obj, int state, int clearChildren)
         fn_80295CF4(player, 1);
         fn_8029672C(player, 1);
         zero = 0;
-        childSlots = (u8 *)state;
+        childSlots = state->slots;
         for (i = 0; i < 8; i += 4) {
-            child = *(void **)(childSlots + 0x38);
+            child = (void *)childSlots[0];
             if (child != NULL) {
                 *(s16 *)((char *)child + 6) = (s16)(*(s16 *)((char *)child + 6) | 0x4000);
-                *(int *)(childSlots + 0x38) = zero;
+                childSlots[0] = zero;
             }
-            child = *(void **)(childSlots + 0x3c);
+            child = (void *)childSlots[1];
             if (child != NULL) {
                 *(s16 *)((char *)child + 6) = (s16)(*(s16 *)((char *)child + 6) | 0x4000);
-                *(int *)(childSlots + 0x3c) = zero;
+                childSlots[1] = zero;
             }
-            child = *(void **)(childSlots + 0x40);
+            child = (void *)childSlots[2];
             if (child != NULL) {
                 *(s16 *)((char *)child + 6) = (s16)(*(s16 *)((char *)child + 6) | 0x4000);
-                *(int *)(childSlots + 0x40) = zero;
+                childSlots[2] = zero;
             }
-            child = *(void **)(childSlots + 0x44);
+            child = (void *)childSlots[3];
             if (child != NULL) {
                 *(s16 *)((char *)child + 6) = (s16)(*(s16 *)((char *)child + 6) | 0x4000);
-                *(int *)(childSlots + 0x44) = zero;
+                childSlots[3] = zero;
             }
-            child = *(void **)(childSlots + 0x48);
+            child = (void *)childSlots[4];
             if (child != NULL) {
                 *(s16 *)((char *)child + 6) = (s16)(*(s16 *)((char *)child + 6) | 0x4000);
-                *(int *)(childSlots + 0x48) = zero;
+                childSlots[4] = zero;
             }
-            childSlots += 0x14;
+            childSlots += 5;
         }
     }
 
-    ((ShStaffState *)state)->phase = 6;
+    state->phase = 6;
 }
 
 void sh_staff_update(int obj)
 {
-    int state = *(int *)&((GameObject *)obj)->extra;
+    ShStaffState *state = ((GameObject *)obj)->extra;
     int setup = *(int *)&((GameObject *)obj)->anim.placementData;
     void *player = Obj_GetPlayerObject();
     f32 dist = getXZDistance(&((GameObject *)obj)->anim.worldPosX, (f32 *)((int)player + 0x18));
-    u8 mode = ((ShStaffState *)state)->phase;
+    u8 mode = state->phase;
 
     if (mode == 0) {
         if (player == NULL) goto end;
         if (fn_802966CC((int)player) == 0) goto end;
         if (GameBit_Get(0x18b) != 0) {
-            fn_801DA4A8(obj, *(int *)&((GameObject *)obj)->extra, 0);
+            fn_801DA4A8(obj, state, 0);
         } else {
             int loadResult;
             fn_80295CF4((int)player, 0);
@@ -1115,7 +1113,7 @@ void sh_staff_update(int obj)
             ((GameObject *)obj)->anim.rotY = (s16)(*(u8 *)(setup + 0x19) << 8);
             ((GameObject *)obj)->anim.rotZ = (s16)(*(u8 *)(setup + 0x18) << 8);
             ((GameObject *)obj)->animEventCallback = (void *)sh_staff_SeqFn;
-            ((ShStaffState *)state)->phase = 1;
+            state->phase = 1;
             if (Obj_IsLoadingLocked() == 0) {
                 loadResult = 0;
             } else {
@@ -1124,44 +1122,44 @@ void sh_staff_update(int obj)
                 *(u8 *)((char *)newSetup + 7) = 0xff;
                 loadResult = loadObjectAtObject(obj, newSetup);
             }
-            ((ShStaffState *)state)->slots[0] = loadResult;
-            ((ShStaffState *)state)->sfxTimer = lbl_803E550C;
+            state->slots[0] = loadResult;
+            state->sfxTimer = lbl_803E550C;
         }
     } else if (mode == 1) {
         if (ObjTrigger_IsSet(obj) != 0) {
             int target = ObjGroup_FindNearestObject(0xf, (u32)obj, 0);
             (*gObjectTriggerInterface)->runSequence(0, (void *)target, -1);
-            ((ShStaffState *)state)->phase = 2;
-            ((ShStaffState *)state)->fadeTimer = lbl_803E54E0;
+            state->phase = 2;
+            state->fadeTimer = lbl_803E54E0;
             GameBit_Set(0x18b, 1);
         } else if (dist > lbl_803E5510) {
-            if (((ShStaffState *)state)->mapLoaded != 0) {
-                ((ShStaffState *)state)->mapLoaded = 0;
+            if (state->mapLoaded != 0) {
+                state->mapLoaded = 0;
                 mapUnload(0x13, 0x20000000);
             }
         } else if (dist < lbl_803E5514) {
-            if (((ShStaffState *)state)->mapLoaded == 0) {
-                ((ShStaffState *)state)->mapLoaded = 1;
+            if (state->mapLoaded == 0) {
+                state->mapLoaded = 1;
                 loadMapAndParent(8);
             }
         }
     } else {
-        if (((ShStaffState *)state)->mapLoaded != 0) {
-            ((ShStaffState *)state)->mapLoaded = 0;
+        if (state->mapLoaded != 0) {
+            state->mapLoaded = 0;
             mapUnload(0x13, 0x20000000);
             GameBit_Set(0x3b8, 1);
         }
     }
 end:
     hudFn_8011f38c(0);
-    ((ShStaffState *)state)->pulseTimer = lbl_803E54D8 * timeDelta + ((ShStaffState *)state)->pulseTimer;
-    if (((ShStaffState *)state)->pulseTimer > lbl_803E54D0) {
-        ((ShStaffState *)state)->pulseTimer = lbl_803E54D4;
+    state->pulseTimer = lbl_803E54D8 * timeDelta + state->pulseTimer;
+    if (state->pulseTimer > lbl_803E54D0) {
+        state->pulseTimer = lbl_803E54D4;
     }
-    ((ShStaffState *)state)->sfxTimer = lbl_803E54D8 * timeDelta + ((ShStaffState *)state)->sfxTimer;
-    if (((ShStaffState *)state)->sfxTimer > lbl_803E54D0) {
-        ((ShStaffState *)state)->sfxTimer = lbl_803E54D4;
-        if (((ShStaffState *)state)->phase == 1) {
+    state->sfxTimer = lbl_803E54D8 * timeDelta + state->sfxTimer;
+    if (state->sfxTimer > lbl_803E54D0) {
+        state->sfxTimer = lbl_803E54D4;
+        if (state->phase == 1) {
             Sfx_PlayFromObject(obj, 0x3fe);
         }
     }
