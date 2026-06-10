@@ -2477,7 +2477,11 @@ dll_CE_render's conditional fade call, WClaser dll_1FB's render guard)
 still fold under helper/bool-helper/ternary/empty-then spellings — the
 DCE'd materialization removes the join. The objseq 15-copy ternary IS
 value-producing (prime retry candidate; unit has 27 blockers so it's a
-fuzzy win not a unit win).
+fuzzy win not a unit win). SECOND GATE: check the TARGET .o's symbol list
+for the helper — a fully-inlined static still gets EMITTED as a dead fn,
+and if target lacks that symbol the extra bytes cost more than the shape
+gains (dll_B7: helper form 96.8 vs 97.6 baseline despite fixing the
+b-over-b; snd_groups worked because target HAS the GetXAddr symbols).
 
 92. **OPEN — the INT-compare `bge +8; b far` two-branch guard with
     STATEMENT-BLOCK arms (branch-to-NEXT over an unconditional b) has resisted
