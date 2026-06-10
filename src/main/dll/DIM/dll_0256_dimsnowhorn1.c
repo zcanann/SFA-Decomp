@@ -54,7 +54,7 @@ int DIMSnowHorn1_stateHandler04(int obj, int state)
     f32 k = lbl_803E8234;
     int idx;
 
-    ((DIMSnowHorn1State *)state)->baddie.unk294 = k;
+    ((DIMSnowHorn1State *)state)->baddie.animSpeedC = k;
     ((DIMSnowHorn1State *)state)->baddie.animSpeedB = k;
     ((DIMSnowHorn1State *)state)->baddie.animSpeedA = k;
     ((GameObject *)obj)->anim.velocityX = k;
@@ -111,7 +111,7 @@ int DIMSnowHorn1_stateHandler02(int obj, int state, f32 fv)
     f32 k = lbl_803E8234;
     s16 v;
 
-    ((DIMSnowHorn1State *)state)->baddie.unk294 = k;
+    ((DIMSnowHorn1State *)state)->baddie.animSpeedC = k;
     ((DIMSnowHorn1State *)state)->baddie.animSpeedB = k;
     ((DIMSnowHorn1State *)state)->baddie.animSpeedA = k;
     ((GameObject *)obj)->anim.velocityX = k;
@@ -144,7 +144,7 @@ int DIMSnowHorn1_stateHandler03(int obj, int state)
     f32 k = lbl_803E8234;
     int idx;
 
-    ((DIMSnowHorn1State *)state)->baddie.unk294 = k;
+    ((DIMSnowHorn1State *)state)->baddie.animSpeedC = k;
     ((DIMSnowHorn1State *)state)->baddie.animSpeedB = k;
     ((DIMSnowHorn1State *)state)->baddie.animSpeedA = k;
     ((GameObject *)obj)->anim.velocityX = k;
@@ -179,7 +179,7 @@ int DIMSnowHorn1_stateHandler01(int obj, int state, f32 fv)
     f32 k = lbl_803E8234;
     s16 v;
 
-    ((DIMSnowHorn1State *)state)->baddie.unk294 = k;
+    ((DIMSnowHorn1State *)state)->baddie.animSpeedC = k;
     ((DIMSnowHorn1State *)state)->baddie.animSpeedB = k;
     ((DIMSnowHorn1State *)state)->baddie.animSpeedA = k;
     ((GameObject *)obj)->anim.velocityX = k;
@@ -223,7 +223,7 @@ int DIMSnowHorn1_stateHandler0B(int obj, int state)
     sub = *(int *)&((GameObject *)obj)->anim.hitReactState;
     *(u32 *)((char *)state) |= 0x200000;
     k = lbl_803E8234;
-    ((DIMSnowHorn1State *)state)->baddie.unk294 = k;
+    ((DIMSnowHorn1State *)state)->baddie.animSpeedC = k;
     ((DIMSnowHorn1State *)state)->baddie.animSpeedB = k;
     ((DIMSnowHorn1State *)state)->baddie.animSpeedA = k;
     ((GameObject *)obj)->anim.velocityX = k;
@@ -354,7 +354,7 @@ int DIMSnowHorn1_stateHandler07(int obj, int state)
     inner = ((GameObject *)obj)->extra;
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x8;
     fz = lbl_803E8234;
-    ((DIMSnowHorn1State *)state)->baddie.unk294 = fz;
+    ((DIMSnowHorn1State *)state)->baddie.animSpeedC = fz;
     ((DIMSnowHorn1State *)state)->baddie.animSpeedB = fz;
     ((DIMSnowHorn1State *)state)->baddie.animSpeedA = fz;
     ((GameObject *)obj)->anim.velocityX = fz;
@@ -413,7 +413,7 @@ int DIMSnowHorn1_stateHandler06(int obj, int state)
     f32 fz;
 
     fz = lbl_803E8234;
-    ((DIMSnowHorn1State *)state)->baddie.unk294 = fz;
+    ((DIMSnowHorn1State *)state)->baddie.animSpeedC = fz;
     ((DIMSnowHorn1State *)state)->baddie.animSpeedB = fz;
     ((DIMSnowHorn1State *)state)->baddie.animSpeedA = fz;
     ((GameObject *)obj)->anim.velocityX = fz;
@@ -479,7 +479,7 @@ int DIMSnowHorn1_stateHandler05(int obj, int state)
     f32 f;
 
     f = lbl_803E8234;
-    ((DIMSnowHorn1State *)state)->baddie.unk294 = f;
+    ((DIMSnowHorn1State *)state)->baddie.animSpeedC = f;
     ((DIMSnowHorn1State *)state)->baddie.animSpeedB = f;
     ((DIMSnowHorn1State *)state)->baddie.animSpeedA = f;
     ((GameObject *)obj)->anim.velocityX = f;
@@ -617,9 +617,9 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
     if (target < lbl_803E8234) {
         target = lbl_803E8234;
     }
-    ((DIMSnowHorn1State *)state)->baddie.unk294 =
-        t * ((target - ((DIMSnowHorn1State *)state)->baddie.unk294) / *(f32 *)((char *)state + 0x2b8)) +
-        ((DIMSnowHorn1State *)state)->baddie.unk294;
+    ((DIMSnowHorn1State *)state)->baddie.animSpeedC =
+        t * ((target - ((DIMSnowHorn1State *)state)->baddie.animSpeedC) / *(f32 *)((char *)state + 0x2b8)) +
+        ((DIMSnowHorn1State *)state)->baddie.animSpeedC;
 
     if (((GameObject *)obj)->anim.rotY > 0) {
         target = target -
@@ -651,7 +651,7 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
         phase = 1;
     }
 
-    f2 = ((DIMSnowHorn1State *)state)->baddie.unk294;
+    f2 = ((DIMSnowHorn1State *)state)->baddie.animSpeedC;
     if (f2 < lbl_80335128[phase * 2]) {
         if (phase == 1) {
             return 8;
@@ -875,7 +875,7 @@ int DIMSnowHorn1_animEventCallback(int obj, int unused, ObjAnimUpdateState *anim
 
     (*gPathControlInterface)->attachObject((void *)obj, (u8 *)&state->baddie + 4);
     fz = lbl_803E8234;
-    state->baddie.unk294 = fz;
+    state->baddie.animSpeedC = fz;
     state->baddie.animSpeedB = fz;
     state->baddie.animSpeedA = fz;
     ((GameObject *)obj)->anim.velocityX = fz;
@@ -1151,7 +1151,7 @@ void DIMSnowHorn1_update(int obj)
         f32 fz;
         ((DIMSnowHorn1State *)data)->baddie.unk25F = 0;
         fz = lbl_803E8234;
-        ((DIMSnowHorn1State *)data)->baddie.unk294 = fz;
+        ((DIMSnowHorn1State *)data)->baddie.animSpeedC = fz;
         ((DIMSnowHorn1State *)data)->baddie.animSpeedB = fz;
         ((DIMSnowHorn1State *)data)->baddie.animSpeedA = fz;
         ((GameObject *)obj)->anim.velocityX = fz;

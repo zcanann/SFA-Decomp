@@ -633,7 +633,7 @@ void hightop_update(int obj) {
 int hightop_stateHandler01(int obj, int p) {
     f32 v;
     v = lbl_803E6AA8;
-    ((BaddieState *)p)->unk294 = v;
+    ((BaddieState *)p)->animSpeedC = v;
     ((BaddieState *)p)->animSpeedB = v;
     ((BaddieState *)p)->animSpeedA = v;
     ((GameObject *)obj)->anim.velocityX = v;
@@ -643,7 +643,7 @@ int hightop_stateHandler01(int obj, int p) {
     if ((s8)((BaddieState *)p)->moveJustStartedA != 0) {
         *(s16 *)((char *)p + 0x338) = 0;
         ((BaddieState *)p)->moveSpeed = lbl_803E6B24;
-        ((BaddieState *)p)->unk2B8 = lbl_803E6B28;
+        ((BaddieState *)p)->velSmoothTime = lbl_803E6B28;
         if (((GameObject *)obj)->anim.currentMove != lbl_803DC32C) {
             ObjAnim_SetCurrentMove(obj, lbl_803DC32C, lbl_803E6AA8, 0);
         }
@@ -664,7 +664,7 @@ int hightop_stateHandler07(int obj, int p) {
     f32 v;
     if ((s8)((BaddieState *)p)->moveJustStartedA != 0) {
         v = lbl_803E6AA8;
-        ((BaddieState *)p)->unk294 = v;
+        ((BaddieState *)p)->animSpeedC = v;
         ((BaddieState *)p)->animSpeedB = v;
         ((BaddieState *)p)->animSpeedA = v;
         ((GameObject *)obj)->anim.velocityX = v;

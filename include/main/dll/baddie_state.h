@@ -66,7 +66,7 @@ typedef struct BaddieState {
     u8 unk288[4];
     f32 unk28C;
     f32 unk290;
-    f32 unk294; /* scaled together with animSpeedA and obj+0x28 */
+    f32 animSpeedC; /* third of the animSpeed family - stored in lockstep with animSpeedB (z = K; animSpeedC = z; animSpeedB = z), scaled with animSpeedA and obj+0x28 */
     f32 unk298;
     void *trackedObj; /* current target/player object (5-family census: lwz 668) */
     /* 0x2A0-0x2A7 is a PER-FAMILY UNION (lead-arbitrated): scarab and
@@ -83,7 +83,7 @@ typedef struct BaddieState {
     f32 unk2AC;
     u16 hitCounter; /* hit/impact counter (lhz-only reads in all families; sth stores) */
     u8 pad2B2[0x2B8 - 0x2B2];
-    f32 unk2B8;
+    f32 velSmoothTime; /* first-order velocity smoothing divisor: vel += t * (target - vel) / velSmoothTime */
     u8 pad2BC[0x2C0 - 0x2BC];
     f32 targetDistance; /* sqrtf dist to targetObj (scarab/campfire/anim/mediumbasket); also (s32)-compared */
     u8 unk2C4[0x2D0 - 0x2C4];

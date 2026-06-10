@@ -1176,7 +1176,7 @@ int fn_8029A76C(int obj, int state, f32 fv)
 
     if (((PlayerState *)state)->baddie.targetObj == NULL) {
         f32 z = lbl_803E7EA4;
-        ((PlayerState *)state)->baddie.unk294 = z;
+        ((PlayerState *)state)->baddie.animSpeedC = z;
         ((PlayerState *)state)->baddie.animSpeedB = z;
         ((PlayerState *)state)->baddie.animSpeedA = z;
         ((GameObject *)obj)->anim.velocityX = z;
@@ -1402,8 +1402,8 @@ int fn_802A5384(int obj, int state)
                 ((ByteFlags *)((char *)inner + 0x3f1))->b04 = 1;
                 ((ByteFlags *)((char *)inner + 0x3f1))->b08 = 1;
             }
-            ((PlayerState *)state)->baddie.unk294 =
-                *(f32 *)((char *)inner + 0x844) * timeDelta + ((PlayerState *)state)->baddie.unk294;
+            ((PlayerState *)state)->baddie.animSpeedC =
+                *(f32 *)((char *)inner + 0x844) * timeDelta + ((PlayerState *)state)->baddie.animSpeedC;
             *(f32 *)((char *)inner + 0x408) = lbl_803E7EA4;
             if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E7EFC &&
                 ((GameObject *)obj)->anim.currentMoveProgress < lbl_803E8074) {
@@ -1422,8 +1422,8 @@ int fn_802A5384(int obj, int state)
             *(u32 *)((char *)inner + 0x360) |= 0x800LL;
             {
                 f32 z = lbl_803E7EA4;
-                ((PlayerState *)state)->baddie.unk294 = z;
-                ((PlayerState *)state)->baddie.unk294 = z;
+                ((PlayerState *)state)->baddie.animSpeedC = z;
+                ((PlayerState *)state)->baddie.animSpeedC = z;
                 ((PlayerState *)state)->baddie.animSpeedB = z;
                 ((PlayerState *)state)->baddie.animSpeedA = z;
                 ((GameObject *)obj)->anim.velocityX = z;
@@ -1520,7 +1520,7 @@ int fn_802A5384(int obj, int state)
             }
         }
         if (ok &&
-            ((PlayerState *)state)->baddie.unk294 >
+            ((PlayerState *)state)->baddie.animSpeedC >
                 lbl_803E7EAC + *(f32 *)(*(int *)((char *)inner + 0x400) + 0x14) &&
             (*(f32 *)((char *)inner + 0x470) < lbl_803E8030 ||
              *(int *)((char *)inner + 0x488) >= 0x96)) {
@@ -1569,7 +1569,7 @@ int fn_802A5384(int obj, int state)
             } else {
                 u32 fl3 = *(u8 *)((char *)inner + 0x3f0);
                 if ((fl3 >> 3 & 1) == 0 && (fl3 >> 2 & 1) == 0 && (fl3 >> 4 & 1) == 0 &&
-                    ((PlayerState *)state)->baddie.unk294 <=
+                    ((PlayerState *)state)->baddie.animSpeedC <=
                         *(f32 *)(*(int *)((char *)inner + 0x400) + 4) &&
                     ((PlayerState *)state)->baddie.animSpeedA <=
                         *(f32 *)(*(int *)((char *)inner + 0x400) + 0xc)) {
@@ -1598,17 +1598,17 @@ int fn_802A5384(int obj, int state)
                 *(f32 *)((char *)inner + 0x4c8) = *(f32 *)((char *)inner + 0x4c8) + t;
                 *(f32 *)((char *)inner + 0x4cc) = *(f32 *)((char *)inner + 0x4cc) + dy;
             }
-            ((PlayerState *)state)->baddie.unk294 =
+            ((PlayerState *)state)->baddie.animSpeedC =
                 sqrtf(*(f32 *)((char *)inner + 0x4c8) * *(f32 *)((char *)inner + 0x4c8) +
                       *(f32 *)((char *)inner + 0x4cc) * *(f32 *)((char *)inner + 0x4cc));
             {
-                ((PlayerState *)state)->baddie.unk294 =
-                    (((PlayerState *)state)->baddie.unk294 < **(f32 **)((char *)inner + 0x400))
+                ((PlayerState *)state)->baddie.animSpeedC =
+                    (((PlayerState *)state)->baddie.animSpeedC < **(f32 **)((char *)inner + 0x400))
                         ? **(f32 **)((char *)inner + 0x400)
-                        : ((((PlayerState *)state)->baddie.unk294 >
+                        : ((((PlayerState *)state)->baddie.animSpeedC >
                             *(f32 *)((char *)inner + 0x404))
                                ? *(f32 *)((char *)inner + 0x404)
-                               : ((PlayerState *)state)->baddie.unk294);
+                               : ((PlayerState *)state)->baddie.animSpeedC);
             }
             t = mathSinf((lbl_803E7F94 * (f32)*(s16 *)((char *)inner + 0x478)) /
                             lbl_803E7F98);
@@ -1633,7 +1633,7 @@ int fn_802A5384(int obj, int state)
             t = ((PlayerState *)state)->baddie.animSpeedA;
             t = (t < lbl_803E7EA4) ? -t : t;
             {
-                int r = ObjAnim_SampleRootCurvePhase(((PlayerState *)state)->baddie.unk294,
+                int r = ObjAnim_SampleRootCurvePhase(((PlayerState *)state)->baddie.animSpeedC,
                                                      (ObjAnimComponent *)obj,
                                                      (f32 *)(state + 0x2a0));
                 if (r == 0) {
@@ -1661,7 +1661,7 @@ int fn_802A5384(int obj, int state)
                 (fl1 >> 1 & 1) == 0 && (fl >> 3 & 1) == 0 && (fl >> 2 & 1) == 0 &&
                 (fl >> 1 & 1) == 0) {
                 f32 d = interpolate(*(f32 *)((char *)inner + 0x408) -
-                                        ((PlayerState *)state)->baddie.unk294,
+                                        ((PlayerState *)state)->baddie.animSpeedC,
                                     *(f32 *)((char *)inner + 0x438), timeDelta);
                 f32 m = (d < lbl_803E7EA8 * timeDelta)
                             ? lbl_803E7EA8 * timeDelta
@@ -1669,15 +1669,15 @@ int fn_802A5384(int obj, int state)
                 if (*(int *)((char *)inner + 0x488) >= 0x96 && m > lbl_803E7EA4) {
                     m = lbl_803E7ED4 * -m;
                 }
-                ((PlayerState *)state)->baddie.unk294 = ((PlayerState *)state)->baddie.unk294 + m;
+                ((PlayerState *)state)->baddie.animSpeedC = ((PlayerState *)state)->baddie.animSpeedC + m;
                 {
-                    ((PlayerState *)state)->baddie.unk294 =
-                        (((PlayerState *)state)->baddie.unk294 < **(f32 **)((char *)inner + 0x400))
+                    ((PlayerState *)state)->baddie.animSpeedC =
+                        (((PlayerState *)state)->baddie.animSpeedC < **(f32 **)((char *)inner + 0x400))
                             ? **(f32 **)((char *)inner + 0x400)
-                            : ((((PlayerState *)state)->baddie.unk294 >
+                            : ((((PlayerState *)state)->baddie.animSpeedC >
                                 *(f32 *)((char *)inner + 0x404))
                                    ? *(f32 *)((char *)inner + 0x404)
-                                   : ((PlayerState *)state)->baddie.unk294);
+                                   : ((PlayerState *)state)->baddie.animSpeedC);
                 }
                 ((PlayerState *)state)->baddie.animSpeedB = lbl_803E7EA4;
             } else if (((u32)*(u8 *)((char *)inner + 0x3f0) >> 3 & 1) != 0 ||
@@ -1691,23 +1691,23 @@ int fn_802A5384(int obj, int state)
                           (lbl_803E7F00 * (f32)*(int *)((char *)inner + 0x48c))) /
                          lbl_803E7F98);
                 if (((u32)*(u8 *)((char *)inner + 0x3f0) >> 2 & 1) != 0) {
-                    ((PlayerState *)state)->baddie.unk294 =
-                        ((PlayerState *)state)->baddie.unk294 *
+                    ((PlayerState *)state)->baddie.animSpeedC =
+                        ((PlayerState *)state)->baddie.animSpeedC *
                         powfBitEstimate(lbl_803E7F90, timeDelta);
                 } else {
-                    ((PlayerState *)state)->baddie.unk294 =
-                        -(lbl_803E7F20 * timeDelta - ((PlayerState *)state)->baddie.unk294);
+                    ((PlayerState *)state)->baddie.animSpeedC =
+                        -(lbl_803E7F20 * timeDelta - ((PlayerState *)state)->baddie.animSpeedC);
                 }
                 {
                     f32 v2 = lbl_803E7E8C * ya;
                     f32 m = (v2 < lbl_803E8078) ? lbl_803E8078
                                                 : ((v2 > lbl_803E807C) ? lbl_803E807C : v2);
-                    ((PlayerState *)state)->baddie.unk294 =
-                        m * timeDelta + ((PlayerState *)state)->baddie.unk294;
+                    ((PlayerState *)state)->baddie.animSpeedC =
+                        m * timeDelta + ((PlayerState *)state)->baddie.animSpeedC;
                 }
                 {
-                    f32 v = ((PlayerState *)state)->baddie.unk294;
-                    ((PlayerState *)state)->baddie.unk294 =
+                    f32 v = ((PlayerState *)state)->baddie.animSpeedC;
+                    ((PlayerState *)state)->baddie.animSpeedC =
                         (v < lbl_803E8080)
                             ? lbl_803E8080
                             : ((v > lbl_803E7EFC + *(f32 *)((char *)inner + 0x404))
@@ -1720,9 +1720,9 @@ int fn_802A5384(int obj, int state)
                     interpolate(t - ((PlayerState *)state)->baddie.animSpeedB, lbl_803E807C,
                                 timeDelta);
             } else {
-                f32 v = ((PlayerState *)state)->baddie.unk294;
+                f32 v = ((PlayerState *)state)->baddie.animSpeedC;
                 f32 lim = *(f32 *)((char *)inner + 0x404);
-                ((PlayerState *)state)->baddie.unk294 =
+                ((PlayerState *)state)->baddie.animSpeedC =
                     (v < -lim) ? -lim : ((v > lim) ? lim : v);
             }
             {
@@ -1731,7 +1731,7 @@ int fn_802A5384(int obj, int state)
                     ((u32)*(u8 *)((char *)inner + 0x3f0) >> 1 & 1) == 0) {
                     ((PlayerState *)state)->baddie.animSpeedA =
                         ((PlayerState *)state)->baddie.animSpeedA +
-                        interpolate(((PlayerState *)state)->baddie.unk294 -
+                        interpolate(((PlayerState *)state)->baddie.animSpeedC -
                                         ((PlayerState *)state)->baddie.animSpeedA,
                                     *(f32 *)((char *)inner + 0x82c), timeDelta);
                 }
@@ -1767,7 +1767,7 @@ int fn_802A5384(int obj, int state)
                 *(u8 *)((char *)inner + 0x8a6) = c;
             }
             {
-                f32 v = ((PlayerState *)state)->baddie.unk294;
+                f32 v = ((PlayerState *)state)->baddie.animSpeedC;
                 int tb = *(int *)((char *)inner + 0x400);
                 if (v < *(f32 *)(tb + step * 4)) {
                     if (*(s8 *)((char *)inner + 0x8cc) == 4) {
@@ -1837,7 +1837,7 @@ int fn_802A5384(int obj, int state)
                         (int)(lbl_803E7FAC * ad));
                 }
                 {
-                    int r = ObjAnim_SampleRootCurvePhase(((PlayerState *)state)->baddie.unk294,
+                    int r = ObjAnim_SampleRootCurvePhase(((PlayerState *)state)->baddie.animSpeedC,
                                                          (ObjAnimComponent *)obj,
                                                          (f32 *)(state + 0x2a0));
                     if (r == 0) {
@@ -2123,7 +2123,7 @@ int fn_802A1CA8(int obj, int state)
                         } else {
                             {
                                 f32 z3 = lbl_803E7EA4;
-                                ((PlayerState *)state)->baddie.unk294 = z3;
+                                ((PlayerState *)state)->baddie.animSpeedC = z3;
                                 ((PlayerState *)state)->baddie.animSpeedB = z3;
                                 ((PlayerState *)state)->baddie.animSpeedA = z3;
                                 ((GameObject *)obj)->anim.velocityX = z3;
@@ -3914,7 +3914,7 @@ int fn_802ABAE8(int obj, int state, int inner, f32 fv)
         d = 0;
     }
     {
-        f32 f2 = lbl_803E7E98 * (((PlayerState *)state)->baddie.unk294 - lbl_803E7E9C) + lbl_803E7EE0;
+        f32 f2 = lbl_803E7E98 * (((PlayerState *)state)->baddie.animSpeedC - lbl_803E7E9C) + lbl_803E7EE0;
         if (f2 < lbl_803E7EA4) {
             f2 = lbl_803E7EA4;
         }
@@ -3942,7 +3942,7 @@ int fn_802ABAE8(int obj, int state, int inner, f32 fv)
         f32 f5;
         if (gd > 0x8000) gd -= 0xffff;
         if (gd < -0x8000) gd += 0xffff;
-        t = lbl_803E7EE0 - (((PlayerState *)state)->baddie.unk294 - lbl_803E7E9C) /
+        t = lbl_803E7EE0 - (((PlayerState *)state)->baddie.animSpeedC - lbl_803E7E9C) /
                               (((PlayerState *)inner)->unk404 - lbl_803E7E9C);
         f5 = lbl_803E80C4 * ((t < *(f32 *)&lbl_803E7EA4) ? lbl_803E7EA4 : ((t > lbl_803E7EE0) ? lbl_803E7EE0 : t)) +
              lbl_803E80F4;
@@ -4292,7 +4292,7 @@ int fn_8029AF9C(int obj, int state)
     }
     {
         f32 z = lbl_803E7EA4;
-        ((PlayerState *)state)->baddie.unk294 = z;
+        ((PlayerState *)state)->baddie.animSpeedC = z;
         ((PlayerState *)state)->baddie.animSpeedB = z;
         ((PlayerState *)state)->baddie.animSpeedA = z;
         ((GameObject *)obj)->anim.velocityX = z;
@@ -4636,7 +4636,7 @@ int fn_8029BDB4(int obj, int state, f32 fv)
             inner->unk8AB = 0;
             inner->unk4C0 = 0;
             inner->unk8CD = -1;
-            ((PlayerState *)state)->baddie.unk294 = z;
+            ((PlayerState *)state)->baddie.animSpeedC = z;
             ((PlayerState *)state)->baddie.animSpeedB = z;
             ((PlayerState *)state)->baddie.animSpeedA = z;
             ((GameObject *)obj)->anim.velocityX = z;
@@ -4908,7 +4908,7 @@ int fn_8029EBCC(int obj, int state)
     sub = *(void **)((char *)inner + 0x7f0);
     if (sub == NULL) {
         f32 z = lbl_803E7EA4;
-        ((PlayerState *)state)->baddie.unk294 = z;
+        ((PlayerState *)state)->baddie.animSpeedC = z;
         ((PlayerState *)state)->baddie.animSpeedB = z;
         ((PlayerState *)state)->baddie.animSpeedA = z;
         ((GameObject *)obj)->anim.velocityX = z;
@@ -5674,7 +5674,7 @@ int fn_802A2EE0(int obj, int state, f32 fv)
         ((PlayerState *)inner)->yaw = ang;
         ((PlayerState *)inner)->targetYaw = ang;
         if (*(s8 *)&((PlayerState *)state)->baddie.moveDone != 0) {
-            ((PlayerState *)state)->baddie.unk294 = z;
+            ((PlayerState *)state)->baddie.animSpeedC = z;
             ((PlayerState *)state)->baddie.animSpeedA = z;
             ((PlayerState *)state)->baddie.animSpeedB = z;
             ((GameObject *)obj)->anim.velocityX = z;
@@ -5951,7 +5951,7 @@ int fn_802AD2F4(int obj, int inner, int state)
         }
         if (hdiff > lbl_803E810C) {
             f32 z2 = lbl_803E7EA4;
-            ((PlayerState *)state)->baddie.unk294 = z2;
+            ((PlayerState *)state)->baddie.animSpeedC = z2;
             ((PlayerState *)state)->baddie.animSpeedA = z2;
         }
         ((PlayerState *)state)->baddie.animSpeedB = lbl_803E7EA4;
@@ -6077,7 +6077,7 @@ void playerUpdate(int obj)
             (*gCameraInterface)->setTarget(0);
             {
                 f32 z = lbl_803E7EA4;
-                ((PlayerState *)inner)->baddie.unk294 = z;
+                ((PlayerState *)inner)->baddie.animSpeedC = z;
                 ((PlayerState *)inner)->baddie.animSpeedB = z;
                 ((PlayerState *)inner)->baddie.animSpeedA = z;
                 ((GameObject *)obj)->anim.velocityX = z;
@@ -6097,7 +6097,7 @@ void playerUpdate(int obj)
                 (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, inner, 1);
                 {
                     f32 z = lbl_803E7EA4;
-                    ((PlayerState *)inner)->baddie.unk294 = z;
+                    ((PlayerState *)inner)->baddie.animSpeedC = z;
                     ((PlayerState *)inner)->baddie.animSpeedB = z;
                     ((PlayerState *)inner)->baddie.animSpeedA = z;
                     ((GameObject *)obj)->anim.velocityX = z;
@@ -6540,7 +6540,7 @@ int fn_802A6694(int obj, int state, f32 fv)
     if (*(s8 *)&((PlayerState *)state)->baddie.moveJustStartedA != 0) {
         if (((PlayerState *)state)->baddie.unk276 != 0x24 &&
             ((PlayerState *)state)->baddie.unk276 != 0x25) {
-            ((PlayerState *)state)->baddie.unk294 = lbl_803E7EA4;
+            ((PlayerState *)state)->baddie.animSpeedC = lbl_803E7EA4;
         } else if (((ByteFlags *)((char *)inner + 0x3f1))->b20 == 0) {
             int a = *(int *)((char *)inner + 0x474);
             *(int *)((char *)inner + 0x494) = a;
@@ -6576,7 +6576,7 @@ int fn_802A6694(int obj, int state, f32 fv)
     }
     if (*(f32 *)&((PlayerState *)state)->baddie.trackedObj >= lbl_803E7FC8 &&
         *(f32 *)((char *)state + 0x298) >= lbl_803E7FC8 &&
-        ((PlayerState *)state)->baddie.unk294 >= *(f32 *)(*(int *)((char *)inner + 0x400) + 4)) {
+        ((PlayerState *)state)->baddie.animSpeedC >= *(f32 *)(*(int *)((char *)inner + 0x400) + 4)) {
         *(int *)&((PlayerState *)state)->baddie.unk308 = (int)fn_802A514C;
         return 3;
     }
@@ -6686,9 +6686,9 @@ int fn_802A6694(int obj, int state, f32 fv)
         return 3;
     }
     if (((ByteFlags *)((char *)inner + 0x3f1))->b20 == 0) {
-        ((PlayerState *)state)->baddie.unk294 =
-            ((PlayerState *)state)->baddie.unk294 +
-            interpolate(*(f32 *)((char *)inner + 0x408) - ((PlayerState *)state)->baddie.unk294,
+        ((PlayerState *)state)->baddie.animSpeedC =
+            ((PlayerState *)state)->baddie.animSpeedC +
+            interpolate(*(f32 *)((char *)inner + 0x408) - ((PlayerState *)state)->baddie.animSpeedC,
                         *(f32 *)((char *)inner + 0x438), timeDelta);
     }
     if (*(s8 *)&((PlayerState *)state)->baddie.moveJustStartedA != 0) {
@@ -6797,15 +6797,15 @@ int fn_802A6694(int obj, int state, f32 fv)
                          *(f32 *)((char *)inner + 0x438), timeDelta);
         *(f32 *)((char *)inner + 0x4c8) = *(f32 *)((char *)inner + 0x4c8) + vx;
         *(f32 *)((char *)inner + 0x4cc) = *(f32 *)((char *)inner + 0x4cc) + vz;
-        ((PlayerState *)state)->baddie.unk294 =
+        ((PlayerState *)state)->baddie.animSpeedC =
             sqrtf(*(f32 *)((char *)inner + 0x4c8) * *(f32 *)((char *)inner + 0x4c8) +
                   *(f32 *)((char *)inner + 0x4cc) * *(f32 *)((char *)inner + 0x4cc));
-        ((PlayerState *)state)->baddie.unk294 =
-            (((PlayerState *)state)->baddie.unk294 < lbl_803E7EA4)
+        ((PlayerState *)state)->baddie.animSpeedC =
+            (((PlayerState *)state)->baddie.animSpeedC < lbl_803E7EA4)
                 ? lbl_803E7EA4
-                : ((((PlayerState *)state)->baddie.unk294 > *(f32 *)((char *)inner + 0x404))
+                : ((((PlayerState *)state)->baddie.animSpeedC > *(f32 *)((char *)inner + 0x404))
                        ? *(f32 *)((char *)inner + 0x404)
-                       : ((PlayerState *)state)->baddie.unk294);
+                       : ((PlayerState *)state)->baddie.animSpeedC);
     }
     if (((ByteFlags *)((char *)inner + 0x3f0))->b20 == 0) {
         fn_802AC32C(obj, state, inner);
@@ -7023,7 +7023,7 @@ void playerDoHitDetection(int obj)
                             (c < lbl_803E7EA4) ? lbl_803E7EA4 : ((c > spd) ? spd : c);
                     }
                     if (((ByteFlags *)((char *)inner + 0x3f0))->b40 == 0) {
-                        ((PlayerState *)inner)->baddie.unk294 = ((PlayerState *)inner)->baddie.animSpeedA;
+                        ((PlayerState *)inner)->baddie.animSpeedC = ((PlayerState *)inner)->baddie.animSpeedA;
                     }
                 }
                 *(u32 *)inner &= ~0x800000;
@@ -9691,7 +9691,7 @@ int fn_8029E3F4(int obj, int state)
         inner->unk898 = 0;
     }
     k = lbl_803E7EA4;
-    ((PlayerState *)state)->baddie.unk294 = k;
+    ((PlayerState *)state)->baddie.animSpeedC = k;
     ((PlayerState *)state)->baddie.animSpeedB = k;
     ((PlayerState *)state)->baddie.animSpeedA = k;
     ((GameObject *)obj)->anim.velocityX = k;
@@ -9749,7 +9749,7 @@ int fn_802A49C8(int obj, int state)
         inner->unk898 = (int)fn_802A514C;
     }
     k = lbl_803E7EA4;
-    ((PlayerState *)state)->baddie.unk294 = k;
+    ((PlayerState *)state)->baddie.animSpeedC = k;
     ((PlayerState *)state)->baddie.animSpeedB = k;
     ((PlayerState *)state)->baddie.animSpeedA = k;
     ((GameObject *)obj)->anim.velocityX = k;
@@ -9793,7 +9793,7 @@ int fn_80298CCC(int obj, int state)
         ObjHits_MarkObjectPositionDirty(obj);
     }
     k = lbl_803E7EA4;
-    ((PlayerState *)state)->baddie.unk294 = k;
+    ((PlayerState *)state)->baddie.animSpeedC = k;
     ((PlayerState *)state)->baddie.animSpeedB = k;
     ((PlayerState *)state)->baddie.animSpeedA = k;
     ((GameObject *)obj)->anim.velocityX = k;
@@ -9921,7 +9921,7 @@ int fn_80298380(int obj, int state, f32 fv)
     if (*(s8 *)&((PlayerState *)state)->baddie.moveJustStartedA != 0) {
         ObjAnim_SetCurrentMove(obj, 0xfb, lbl_803E7EA4, 0);
         ((PlayerState *)state)->baddie.moveSpeed = lbl_803E7F28;
-        ((PlayerState *)state)->baddie.unk294 = lbl_803E7EA4;
+        ((PlayerState *)state)->baddie.animSpeedC = lbl_803E7EA4;
         ((PlayerState *)state)->baddie.animSpeedB = lbl_803E7EA4;
         ((PlayerState *)state)->baddie.animSpeedA = lbl_803E7EA4;
         ((GameObject *)obj)->anim.velocityX = lbl_803E7EA4;
@@ -10060,7 +10060,7 @@ int fn_80298184(int obj, int state, f32 fv)
     if (*(s8 *)&((PlayerState *)state)->baddie.moveJustStartedA != 0) {
         ((PlayerState *)state)->baddie.moveSpeed = lbl_803E7EF8;
         k = lbl_803E7EA4;
-        ((PlayerState *)state)->baddie.unk294 = k;
+        ((PlayerState *)state)->baddie.animSpeedC = k;
         ((PlayerState *)state)->baddie.animSpeedB = k;
         ((PlayerState *)state)->baddie.animSpeedA = k;
         ((GameObject *)obj)->anim.velocityX = k;
@@ -10118,7 +10118,7 @@ int fn_80297AD0(int obj, int state, f32 fv)
                                lbl_803E7EA4, 0);
         ((PlayerState *)state)->baddie.moveSpeed = lbl_803E7F20;
         k = lbl_803E7EA4;
-        ((PlayerState *)state)->baddie.unk294 = k;
+        ((PlayerState *)state)->baddie.animSpeedC = k;
         ((PlayerState *)state)->baddie.animSpeedB = k;
         ((PlayerState *)state)->baddie.animSpeedA = k;
         ((GameObject *)obj)->anim.velocityX = k;
@@ -10178,7 +10178,7 @@ int fn_80297D0C(int obj, int state, f32 fv)
         ((PlayerState *)state)->baddie.moveSpeed = lbl_803E7F24;
         ((PlayerState *)state)->baddie.unk356 = 0;
         k = lbl_803E7EA4;
-        ((PlayerState *)state)->baddie.unk294 = k;
+        ((PlayerState *)state)->baddie.animSpeedC = k;
         ((PlayerState *)state)->baddie.animSpeedB = k;
         ((PlayerState *)state)->baddie.animSpeedA = k;
         ((GameObject *)obj)->anim.velocityX = k;
@@ -10238,7 +10238,7 @@ int fn_80297F48(int obj, int state, f32 fv)
         ((PlayerState *)state)->baddie.moveSpeed = lbl_803E7F24;
         ((PlayerState *)state)->baddie.unk356 = 0;
         k = lbl_803E7EA4;
-        ((PlayerState *)state)->baddie.unk294 = k;
+        ((PlayerState *)state)->baddie.animSpeedC = k;
         ((PlayerState *)state)->baddie.animSpeedB = k;
         ((PlayerState *)state)->baddie.animSpeedA = k;
         ((GameObject *)obj)->anim.velocityX = k;
@@ -10344,7 +10344,7 @@ int fn_80297854(int obj, int state, f32 fv)
                                lbl_803E7EA4, 0);
         ((PlayerState *)state)->baddie.moveSpeed = lbl_803E7F0C;
         k = lbl_803E7EA4;
-        ((PlayerState *)state)->baddie.unk294 = k;
+        ((PlayerState *)state)->baddie.animSpeedC = k;
         ((PlayerState *)state)->baddie.animSpeedB = k;
         ((PlayerState *)state)->baddie.animSpeedA = k;
         ((GameObject *)obj)->anim.velocityX = k;
@@ -10501,7 +10501,7 @@ void fn_802AC32C(int p1, int p2, int p3)
         if (delta < -0x8000) {
             delta += 0xFFFF;
         }
-        ratio = lbl_803E7EE0 - (((PlayerState *)p2)->baddie.unk294 - lbl_803E7E9C) /
+        ratio = lbl_803E7EE0 - (((PlayerState *)p2)->baddie.animSpeedC - lbl_803E7E9C) /
                                    (*(f32 *)((char *)p3 + 0x404) - lbl_803E7E9C);
         if (ratio < lbl_803E7EA4) {
             clamped = lbl_803E7EA4;
@@ -10567,7 +10567,7 @@ void fn_802AC32C(int p1, int p2, int p3)
         angle2 = 0;
     }
     {
-        f32 f2 = lbl_803E7E98 * (((PlayerState *)p2)->baddie.unk294 - lbl_803E7E9C) + lbl_803E7EE0;
+        f32 f2 = lbl_803E7E98 * (((PlayerState *)p2)->baddie.animSpeedC - lbl_803E7E9C) + lbl_803E7EE0;
         if (f2 < lbl_803E7EA4) {
             f2 = lbl_803E7EA4;
         }
@@ -10842,7 +10842,7 @@ int fn_802AE480(int obj, int inner, int state)
     ((PlayerState *)state)->baddie.moveSpeed = lbl_803E7F20;
     h = ((GameObject *)obj)->anim.currentMoveProgress;
     if (h > lbl_803E7EFC && h < lbl_803E7F44 &&
-        ((PlayerState *)state)->baddie.unk294 >
+        ((PlayerState *)state)->baddie.animSpeedC >
             *(f32 *)((char *)*(int *)((char *)inner + 0x400) + 0x1c) - lbl_803E7E9C &&
         *(f32 *)((char *)state + 0x298) > lbl_803E7F2C &&
         *(int *)((char *)inner + 0x488) >= 0x96) {
@@ -10856,14 +10856,14 @@ int fn_802AE480(int obj, int inner, int state)
         *(int *)((char *)inner + 0x858) = *(s16 *)((char *)inner + 0x484);
         *(f32 *)((char *)inner + 0x844) =
             (lbl_803E7F14 + (*(f32 *)((char *)*(int *)((char *)inner + 0x400) + 0x14) +
-                             ((PlayerState *)state)->baddie.unk294)) / lbl_803E7F30;
+                             ((PlayerState *)state)->baddie.animSpeedC)) / lbl_803E7F30;
         *(s16 *)((char *)inner + 0x478) = *(s16 *)((char *)inner + 0x484);
         *(s16 *)((char *)inner + 0x484) += 0x8000;
-        ((PlayerState *)state)->baddie.unk294 = -((PlayerState *)state)->baddie.unk294;
+        ((PlayerState *)state)->baddie.animSpeedC = -((PlayerState *)state)->baddie.animSpeedC;
         ((PlayerState *)state)->baddie.animSpeedA = -((PlayerState *)state)->baddie.animSpeedA;
     }
     if (((ByteFlags *)((char *)inner + 0x3f0))->b80) {
-        if (((PlayerState *)state)->baddie.unk294 <=
+        if (((PlayerState *)state)->baddie.animSpeedC <=
                 (lim = *(f32 *)((char *)*(int *)((char *)inner + 0x400) + 0x10)) &&
             ((PlayerState *)state)->baddie.animSpeedA <= lim) {
             *(int *)((char *)inner + 0x494) = *(s16 *)((char *)inner + 0x484);
@@ -11409,7 +11409,7 @@ int fn_8029B7B0(int obj, int state)
     }
     {
         f32 z = lbl_803E7EA4;
-        ((PlayerState *)state)->baddie.unk294 = z;
+        ((PlayerState *)state)->baddie.animSpeedC = z;
         ((PlayerState *)state)->baddie.animSpeedB = z;
         ((PlayerState *)state)->baddie.animSpeedA = z;
         ((GameObject *)obj)->anim.velocityX = z;
@@ -11600,13 +11600,13 @@ int fn_8029C9C8(int obj, int state)
         inner->unk4C8 += a;
         inner->unk4CC += b;
     }
-    ((PlayerState *)state)->baddie.unk294 =
+    ((PlayerState *)state)->baddie.animSpeedC =
         sqrtf(inner->unk4C8 * inner->unk4C8 +
               inner->unk4CC * inner->unk4CC);
     {
-        f32 v = ((PlayerState *)state)->baddie.unk294;
+        f32 v = ((PlayerState *)state)->baddie.animSpeedC;
         f32 lo = *(f32 *)inner->unk400;
-        ((PlayerState *)state)->baddie.unk294 =
+        ((PlayerState *)state)->baddie.animSpeedC =
             (v < lo) ? lo : ((v > inner->unk404) ? inner->unk404 : v);
     }
     {
@@ -11631,7 +11631,7 @@ int fn_8029C9C8(int obj, int state)
     {
         u8 phase = *(u8 *)((char *)inner + 0x8cc);
         int idx = (u8)((s8)phase >> 1);
-        if (((PlayerState *)state)->baddie.unk294 < lbl_80332FC0[idx]) {
+        if (((PlayerState *)state)->baddie.animSpeedC < lbl_80332FC0[idx]) {
             if ((s8)phase == 4) {
                 if (*(f32 *)((char *)state + 0x298) < lbl_803E7F14) {
                     *(int *)&((PlayerState *)state)->baddie.unk308 = (int)fn_8029C8C8;
@@ -11641,12 +11641,12 @@ int fn_8029C9C8(int obj, int state)
                 *(u8 *)((char *)inner + 0x8cc) = phase - 4;
             }
         } else {
-            if (((PlayerState *)state)->baddie.unk294 >= lbl_80332FC0[idx + 1] &&
+            if (((PlayerState *)state)->baddie.animSpeedC >= lbl_80332FC0[idx + 1] &&
                 (s8)phase < 8) {
                 if ((s8)phase == 0) {
                     t0 = lbl_803E7EA4;
                 }
-                if (((PlayerState *)state)->baddie.unk294 < inner->unk404) {
+                if (((PlayerState *)state)->baddie.animSpeedC < inner->unk404) {
                     *(u8 *)((char *)inner + 0x8cc) += 4;
                 }
             }
@@ -11661,7 +11661,7 @@ int fn_8029C9C8(int obj, int state)
         if (ax < lbl_803E7EA4) {
             ax = -ax;
         }
-        if (((int (*)(f32, int, f32 *))ObjAnim_SampleRootCurvePhase)(((PlayerState *)state)->baddie.unk294, obj, &curveOut) != 0) {
+        if (((int (*)(f32, int, f32 *))ObjAnim_SampleRootCurvePhase)(((PlayerState *)state)->baddie.animSpeedC, obj, &curveOut) != 0) {
             ((PlayerState *)state)->baddie.moveSpeed = curveOut;
         }
         if (ax > az) {
@@ -13140,7 +13140,7 @@ int fn_8029CF30(int obj, int state, f32 fv)
         inner->unk4C8 = zero;
         inner->unk4CC = zero;
         ((PlayerState *)state)->baddie.moveSpeed = lbl_803E7F84;
-        ((PlayerState *)state)->baddie.unk294 = zero;
+        ((PlayerState *)state)->baddie.animSpeedC = zero;
         lbl_803DC66C = 5;
     }
 
@@ -13159,18 +13159,18 @@ int fn_8029CF30(int obj, int state, f32 fv)
     dy = interpolate(vy - inner->unk4CC, lbl_803E7F44, timeDelta);
     inner->unk4C8 += dx;
     inner->unk4CC += dy;
-    ((PlayerState *)state)->baddie.unk294 =
+    ((PlayerState *)state)->baddie.animSpeedC =
         sqrtf(inner->unk4C8 * inner->unk4C8 +
               inner->unk4CC * inner->unk4CC);
     {
-        f32 d = ((PlayerState *)state)->baddie.unk294;
+        f32 d = ((PlayerState *)state)->baddie.animSpeedC;
         f32 c = (d < lbl_803E7EA4) ? lbl_803E7EA4 : ((d > inner->unk404) ? inner->unk404 : d);
-        ((PlayerState *)state)->baddie.unk294 = c;
+        ((PlayerState *)state)->baddie.animSpeedC = c;
     }
 
     if (*(f32 *)&((PlayerState *)state)->baddie.trackedObj >= lbl_803E7FC8 &&
         *(f32 *)((char *)state + 0x298) >= lbl_803E7FC8 &&
-        ((PlayerState *)state)->baddie.unk294 >= lbl_80332FC0[1]) {
+        ((PlayerState *)state)->baddie.animSpeedC >= lbl_80332FC0[1]) {
         *(int *)&((PlayerState *)state)->baddie.unk308 = (int)fn_8029C8C8;
         return 0x26;
     }
@@ -13394,7 +13394,7 @@ void fn_802AE650(int obj, int state, int p3)
                 ((lbl_803E7F14 + *(f32 *)((char *)*(int *)((char *)state + 0x400) + 0x14)) -
                  ((PlayerState *)p3)->baddie.animSpeedA) +
             ((PlayerState *)p3)->baddie.animSpeedA;
-        ((PlayerState *)p3)->baddie.unk294 = ((PlayerState *)p3)->baddie.animSpeedA;
+        ((PlayerState *)p3)->baddie.animSpeedC = ((PlayerState *)p3)->baddie.animSpeedA;
         *(f32 *)((char *)state + 0x844) =
             lbl_803E7EFC * timeDelta + *(f32 *)((char *)state + 0x844);
         v = *(f32 *)((char *)state + 0x844);
@@ -14077,7 +14077,7 @@ void fn_802B0920(int obj, int state)
             (f32)((PlayerState *)state)->unk4D2 * powfBitEstimate(lbl_803E7F1C, timeDelta);
     }
     if (((ByteFlags *)((char *)state + 0x3f0))->b20) {
-        f31v = inner->baddie.unk294 /
+        f31v = inner->baddie.animSpeedC /
                *(f32 *)((char *)(((PlayerState *)state)->unk400) + 0x18);
         if (f31v < lbl_803E7EA4) {
             f31v = lbl_803E7EA4;
@@ -14258,7 +14258,7 @@ void fn_802ADE80(int obj, int inner, int state)
         ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(
             tx, *(f32 *)((char *)inner + 0x83c), tz, 0, lbl_803E7EA4, 5);
         if (*(f32 *)((char *)inner + 0x838) > lbl_803E8128 &&
-            ((PlayerState *)state)->baddie.unk294 > lbl_803E7E9C) {
+            ((PlayerState *)state)->baddie.animSpeedC > lbl_803E7E9C) {
             s16 ang = (s16)(*(s16 *)((char *)inner + 0x478) -
                             getAngle(((PlayerState *)state)->baddie.animSpeedB, ((PlayerState *)state)->baddie.animSpeedA));
             (*gWaterfxInterface)->spawnSimpleRipple(
@@ -14340,7 +14340,7 @@ int fn_802A16CC(int obj, int state, f32 fv)
                     } else {
                         f32 zero = lbl_803E7EA4;
                         void *sub;
-                        ((PlayerState *)state)->baddie.unk294 = zero;
+                        ((PlayerState *)state)->baddie.animSpeedC = zero;
                         ((PlayerState *)state)->baddie.animSpeedB = zero;
                         ((PlayerState *)state)->baddie.animSpeedA = zero;
                         ((GameObject *)obj)->anim.velocityX = zero;
@@ -14457,7 +14457,7 @@ int fn_80298E54(int obj, int state, f32 fv)
     setBButtonIcon(0xa);
     {
         f32 zero = lbl_803E7EA4;
-        ((PlayerState *)state)->baddie.unk294 = zero;
+        ((PlayerState *)state)->baddie.animSpeedC = zero;
         ((PlayerState *)state)->baddie.animSpeedB = zero;
         ((PlayerState *)state)->baddie.animSpeedA = zero;
         ((GameObject *)obj)->anim.velocityX = zero;
@@ -14734,7 +14734,7 @@ int fn_802994D0(int obj, int state, f32 fv)
         f32 toVec[3];
         u8 hitBuf[0x40];
         f32 zero = lbl_803E7EA4;
-        ((PlayerState *)state)->baddie.unk294 = zero;
+        ((PlayerState *)state)->baddie.animSpeedC = zero;
         ((PlayerState *)state)->baddie.animSpeedB = zero;
         ((PlayerState *)state)->baddie.animSpeedA = zero;
         ((GameObject *)obj)->anim.velocityX = zero;
@@ -14843,15 +14843,15 @@ int fn_8029E568(int obj, int state, f32 fv)
                 Sfx_PlayFromObject(0, 0x378);
             }
         }
-        ((PlayerState *)state)->baddie.unk294 =
-            ((PlayerState *)state)->baddie.unk294 +
-            interpolate(spd - ((PlayerState *)state)->baddie.unk294, lbl_803E7EFC, timeDelta);
+        ((PlayerState *)state)->baddie.animSpeedC =
+            ((PlayerState *)state)->baddie.animSpeedC +
+            interpolate(spd - ((PlayerState *)state)->baddie.animSpeedC, lbl_803E7EFC, timeDelta);
         inner->unk640 =
-            ((PlayerState *)state)->baddie.unk294 * timeDelta + inner->unk640;
+            ((PlayerState *)state)->baddie.animSpeedC * timeDelta + inner->unk640;
         {
-            f32 ph = ((PlayerState *)state)->baddie.unk294;
+            f32 ph = ((PlayerState *)state)->baddie.animSpeedC;
             if (ph < lbl_803E7EF8 && ph > lbl_803E7FEC) {
-                ((PlayerState *)state)->baddie.unk294 = lbl_803E7EA4;
+                ((PlayerState *)state)->baddie.animSpeedC = lbl_803E7EA4;
                 if (((GameObject *)obj)->anim.currentMove != 0x76) {
                     ObjAnim_SetCurrentMove(obj, 0x76, lbl_803E7EA4, 0);
                 }
@@ -14860,7 +14860,7 @@ int fn_8029E568(int obj, int state, f32 fv)
                 if (((GameObject *)obj)->anim.currentMove != 0x40d) {
                     ObjAnim_SetCurrentMove(obj, 0x40d, lbl_803E7EA4, 0);
                 }
-                ObjAnim_SampleRootCurvePhase(((PlayerState *)state)->baddie.unk294, (ObjAnimComponent *)obj,
+                ObjAnim_SampleRootCurvePhase(((PlayerState *)state)->baddie.animSpeedC, (ObjAnimComponent *)obj,
                                              (f32 *)((char *)state + 0x2a0));
             }
         }
@@ -14949,7 +14949,7 @@ int fn_8029E568(int obj, int state, f32 fv)
                     0x50, 1, 0, 0, NULL, 0x28, 0xff);
             }
         }
-        ((PlayerState *)state)->baddie.unk294 = lbl_803E7EA4;
+        ((PlayerState *)state)->baddie.animSpeedC = lbl_803E7EA4;
         break;
     }
     }
@@ -15040,7 +15040,7 @@ int fn_80298944(int obj, int state)
         ObjHits_MarkObjectPositionDirty(obj);
     }
     f = lbl_803E7EA4;
-    ((PlayerState *)state)->baddie.unk294 = f;
+    ((PlayerState *)state)->baddie.animSpeedC = f;
     ((PlayerState *)state)->baddie.animSpeedB = f;
     ((PlayerState *)state)->baddie.animSpeedA = f;
     ((GameObject *)obj)->anim.velocityX = f;
@@ -15204,7 +15204,7 @@ int fn_802985FC(int obj, int state, f32 fv)
     default:
         Sfx_PlayFromObject(obj, SFXmammoth_huff2);
         f = lbl_803E7EA4;
-        ((PlayerState *)state)->baddie.unk294 = f;
+        ((PlayerState *)state)->baddie.animSpeedC = f;
         ((PlayerState *)state)->baddie.animSpeedB = f;
         ((PlayerState *)state)->baddie.animSpeedA = f;
         ((GameObject *)obj)->anim.velocityX = f;
@@ -15235,7 +15235,7 @@ void fn_802AE9C8(int obj, int inner, int state)
     ((PlayerState *)inner)->unk404 = lbl_803E8068;
     ((PlayerState *)inner)->unk408 =
         lbl_803E7EA0 * (lbl_803E806C * *(f32 *)((char *)state + 0x298)) +
-        lbl_803E7EB4 * ((PlayerState *)state)->baddie.unk294;
+        lbl_803E7EB4 * ((PlayerState *)state)->baddie.animSpeedC;
     ((PlayerState *)inner)->unk408 =
         (((PlayerState *)inner)->unk408 < lbl_803E7F18)
             ? lbl_803E7F18
@@ -15245,7 +15245,7 @@ void fn_802AE9C8(int obj, int inner, int state)
     {
         f32 a = ((PlayerState *)inner)->unk408;
         ((PlayerState *)state)->baddie.animSpeedA = a;
-        ((PlayerState *)state)->baddie.unk294 = a;
+        ((PlayerState *)state)->baddie.animSpeedC = a;
     }
 
     ((GameObject *)obj)->anim.velocityY = ((PlayerState *)state)->baddie.animSpeedA / lbl_803E8068;

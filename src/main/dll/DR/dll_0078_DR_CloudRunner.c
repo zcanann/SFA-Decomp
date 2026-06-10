@@ -134,7 +134,7 @@ int DR_CloudRunner_stateHandler02(int obj, int p2)
     *(int *)((char *)p2 + 0) |= 0x200000;
     if (*(s8 *)&((CloudRunnerState *)p2)->baddie.moveJustStartedA != 0) {
         f32 fz = lbl_803E83A4;
-        ((CloudRunnerState *)p2)->baddie.unk294 = fz;
+        ((CloudRunnerState *)p2)->baddie.animSpeedC = fz;
         ((CloudRunnerState *)p2)->baddie.animSpeedB = fz;
         ((CloudRunnerState *)p2)->baddie.animSpeedA = fz;
         ((GameObject *)obj)->anim.velocityX = fz;
@@ -142,7 +142,7 @@ int DR_CloudRunner_stateHandler02(int obj, int p2)
         ((GameObject *)obj)->anim.velocityZ = fz;
         *(s16 *)((char *)p2 + 0x338) = 0;
         ((CloudRunnerState *)p2)->baddie.moveSpeed = lbl_803E83F4;
-        ((CloudRunnerState *)p2)->baddie.unk2B8 = lbl_803E83F8;
+        ((CloudRunnerState *)p2)->baddie.velSmoothTime = lbl_803E83F8;
         if (((GameObject *)obj)->anim.currentMove != 0) {
             ObjAnim_SetCurrentMove(obj, 0, fz, 0);
         }
@@ -170,7 +170,7 @@ int DR_CloudRunner_stateHandler01(int obj, int p2)
         ((CloudRunnerState *)p2)->baddie.unk25F = 0;
         ((CloudRunnerState *)p2)->baddie.moveSpeed = lbl_803E8408;
         fz = lbl_803E83A4;
-        ((CloudRunnerState *)p2)->baddie.unk294 = fz;
+        ((CloudRunnerState *)p2)->baddie.animSpeedC = fz;
         ((CloudRunnerState *)p2)->baddie.animSpeedB = fz;
         ((CloudRunnerState *)p2)->baddie.animSpeedA = fz;
         ((GameObject *)obj)->anim.velocityX = fz;
@@ -223,7 +223,7 @@ int DR_CloudRunner_stateHandler03(int obj, int p2)
         ObjAnim_SetCurrentMove(obj, 0x203, lbl_803E83A4, 0);
         ((DRCloudRunnerState *)inner)->unkAD5 |= 2;
         fz = lbl_803E83A4;
-        ((CloudRunnerState *)p2)->baddie.unk294 = fz;
+        ((CloudRunnerState *)p2)->baddie.animSpeedC = fz;
         ((CloudRunnerState *)p2)->baddie.animSpeedB = fz;
         ((CloudRunnerState *)p2)->baddie.animSpeedA = fz;
         ((GameObject *)obj)->anim.velocityX = fz;
@@ -417,7 +417,7 @@ int DR_CloudRunner_stateHandler05(int obj, int p2, f32 f)
         inner->unkBBE = ((GameObject *)obj)->anim.rotZ;
         {
             f32 fz = lbl_803E83A4;
-            ((CloudRunnerState *)p2)->baddie.unk294 = fz;
+            ((CloudRunnerState *)p2)->baddie.animSpeedC = fz;
             ((CloudRunnerState *)p2)->baddie.animSpeedB = fz;
             ((CloudRunnerState *)p2)->baddie.animSpeedA = fz;
             ((GameObject *)obj)->anim.velocityX = fz;
@@ -1034,7 +1034,7 @@ int DR_CloudRunner_stateHandler04(int obj, int p2)
         f32 fz = lbl_803E83A4;
         CloudRunnerState *inner2;
         int q;
-        ((CloudRunnerState *)p2)->baddie.unk294 = fz;
+        ((CloudRunnerState *)p2)->baddie.animSpeedC = fz;
         ((CloudRunnerState *)p2)->baddie.animSpeedB = fz;
         ((CloudRunnerState *)p2)->baddie.animSpeedA = fz;
         ((GameObject *)obj)->anim.velocityX = fz;
@@ -1047,13 +1047,13 @@ int DR_CloudRunner_stateHandler04(int obj, int p2)
         (*gGameUIInterface)->runAirMeter(inner2->unkBB0);
         *(s16 *)((char *)p2 + 0x338) = 0;
         ((CloudRunnerState *)p2)->baddie.moveSpeed = lbl_803E83F4;
-        ((CloudRunnerState *)p2)->baddie.unk2B8 = lbl_803E83F8;
+        ((CloudRunnerState *)p2)->baddie.velSmoothTime = lbl_803E83F8;
         ObjAnim_SetCurrentMove(obj, 1, lbl_803E83A4, 0);
         ((ByteFlags *)&inner->flagsBC0)->b01 = 1;
     }
     {
         f32 fz = lbl_803E83A4;
-        ((CloudRunnerState *)p2)->baddie.unk294 = fz;
+        ((CloudRunnerState *)p2)->baddie.animSpeedC = fz;
         ((CloudRunnerState *)p2)->baddie.animSpeedB = fz;
         ((CloudRunnerState *)p2)->baddie.animSpeedA = fz;
         ((GameObject *)obj)->anim.velocityX = fz;

@@ -739,12 +739,12 @@ void dll_19_func06(s16 *yaw, char *st, f32 cap, f32 speed)
     }
     ((BaddieState *)st)->animSpeedB = lbl_803E1C2C;
     *yaw = lbl_803E1C7C * ((f32)((BaddieState *)st)->unk336 * timeDelta / speed) + (f32)*yaw;
-    ((BaddieState *)st)->unk294 +=
-        timeDelta * ((*(f32 *)(st + 0x298) - ((BaddieState *)st)->unk294) / *(f32 *)(st + 0x2b8));
+    ((BaddieState *)st)->animSpeedC +=
+        timeDelta * ((*(f32 *)(st + 0x298) - ((BaddieState *)st)->animSpeedC) / *(f32 *)(st + 0x2b8));
     ((BaddieState *)st)->animSpeedA +=
         timeDelta * ((*(f32 *)(st + 0x298) - ((BaddieState *)st)->animSpeedA) / *(f32 *)(st + 0x2b8));
-    if (((BaddieState *)st)->unk294 > cap) {
-        ((BaddieState *)st)->unk294 = cap;
+    if (((BaddieState *)st)->animSpeedC > cap) {
+        ((BaddieState *)st)->animSpeedC = cap;
     }
     if (((BaddieState *)st)->animSpeedA > cap) {
         ((BaddieState *)st)->animSpeedA = cap;

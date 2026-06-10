@@ -657,7 +657,7 @@ void dim2prisonmammoth_initialise(void)
 int dim2prisonmammoth_stateHandler03(int obj, int p2)
 {
     f32 fz = lbl_803E82C0;
-    ((BaddieState *)p2)->unk294 = fz;
+    ((BaddieState *)p2)->animSpeedC = fz;
     ((BaddieState *)p2)->animSpeedB = fz;
     ((BaddieState *)p2)->animSpeedA = fz;
     ((GameObject *)obj)->anim.velocityX = fz;
@@ -679,7 +679,7 @@ int dim2prisonmammoth_stateHandler02(int obj, int p2)
 {
     int inner = *(int *)&((GameObject *)obj)->extra;
     f32 fz = lbl_803E82C0;
-    ((BaddieState *)p2)->unk294 = fz;
+    ((BaddieState *)p2)->animSpeedC = fz;
     ((BaddieState *)p2)->animSpeedB = fz;
     ((BaddieState *)p2)->animSpeedA = fz;
     ((GameObject *)obj)->anim.velocityX = fz;
@@ -703,7 +703,7 @@ int dim2prisonmammoth_stateHandler01(int obj, int p2)
 {
     int inner = *(int *)&((GameObject *)obj)->extra;
     f32 fz = lbl_803E82C0;
-    ((BaddieState *)p2)->unk294 = fz;
+    ((BaddieState *)p2)->animSpeedC = fz;
     ((BaddieState *)p2)->animSpeedB = fz;
     ((BaddieState *)p2)->animSpeedA = fz;
     ((GameObject *)obj)->anim.velocityX = fz;

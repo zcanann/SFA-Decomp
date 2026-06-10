@@ -307,7 +307,7 @@ void player_clearXZvel(int *obj, int *state) {
     f32 z = lbl_803E0570;
     ((GameObject *)obj)->anim.velocityX = z;
     ((GameObject *)obj)->anim.velocityZ = z;
-    ((BaddieState *)state)->unk294 = z;
+    ((BaddieState *)state)->animSpeedC = z;
     ((BaddieState *)state)->animSpeedA = z;
     ((BaddieState *)state)->animSpeedB = z;
 }
@@ -488,7 +488,7 @@ void player_followCurve(int* obj, int* state, f32 cx, f32 cz, f32 t, int p5)
     max = lbl_803E0578;
     if (*(f32*)((char*)state + 0x2bc) < lbl_803E0580) {
         max = lbl_803E0584 * *(f32*)((char*)state + 0x2bc);
-        ((BaddieState *)state)->unk294 = ((BaddieState *)state)->unk294 * lbl_803E0574;
+        ((BaddieState *)state)->animSpeedC = ((BaddieState *)state)->animSpeedC * lbl_803E0574;
     }
     if (dist > max) {
         f32 q = dist / max;
@@ -539,19 +539,19 @@ void dll_0F_func13(s16* obj, int* state, int angle, f32 t, f32 scale)
             vz = vx;
         }
         ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX
-            + (t * (vx - ((GameObject *)obj)->anim.velocityX)) / ((BaddieState *)state)->unk2B8;
+            + (t * (vx - ((GameObject *)obj)->anim.velocityX)) / ((BaddieState *)state)->velSmoothTime;
         ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ
-            + (t * (vz - ((GameObject *)obj)->anim.velocityZ)) / ((BaddieState *)state)->unk2B8;
+            + (t * (vz - ((GameObject *)obj)->anim.velocityZ)) / ((BaddieState *)state)->velSmoothTime;
     } else {
         *(s8*)((char*)state + 0x34c) &= ~1;
     }
     q = ((GameObject *)obj)->anim.velocityX * ((GameObject *)obj)->anim.velocityX;
     w = ((GameObject *)obj)->anim.velocityZ * ((GameObject *)obj)->anim.velocityZ;
     dist = sqrtf(q + w);
-    ((BaddieState *)state)->unk294 = dist;
-    if (((BaddieState *)state)->unk294 < lbl_803E05B0) {
+    ((BaddieState *)state)->animSpeedC = dist;
+    if (((BaddieState *)state)->animSpeedC < lbl_803E05B0) {
         f32 z = lbl_803E0570;
-        ((BaddieState *)state)->unk294 = z;
+        ((BaddieState *)state)->animSpeedC = z;
         ((GameObject *)obj)->anim.velocityX = z;
         ((GameObject *)obj)->anim.velocityZ = z;
     }
@@ -811,7 +811,7 @@ void player_getExtraSize(int *a, int *ctx, f32 px, f32 pz, f32 lo, f32 hi, f32 s
         ((BaddieState *)ctx)->unk290 = dx * spd;
         ((BaddieState *)ctx)->unk28C = -dz * spd;
     } else {
-        ((BaddieState *)ctx)->unk294 = ((BaddieState *)ctx)->unk294 * lbl_803E0574;
+        ((BaddieState *)ctx)->animSpeedC = ((BaddieState *)ctx)->animSpeedC * lbl_803E0574;
         ((BaddieState *)ctx)->unk290 = lbl_803E0570;
         ((BaddieState *)ctx)->unk28C = lbl_803E0570;
     }

@@ -2793,20 +2793,20 @@ int fn_8016032C(int* obj, GroundBaddieState *state)
         fz = lbl_803E2E7C;
         ((GameObject *)obj)->anim.velocityY = fz;
         state->baddie.animSpeedA = fz;
-        state->baddie.unk294 = fz;
+        state->baddie.animSpeedC = fz;
     }
     if (((GameObject *)obj)->anim.velocityY < lbl_803E2E80) {
         f32 fz = lbl_803E2E68;
         ((GameObject *)obj)->anim.velocityY = fz;
         state->baddie.animSpeedA = fz;
-        state->baddie.unk294 = fz;
+        state->baddie.animSpeedC = fz;
         return 6;
     }
     {
         f32 d = lbl_803E2E88;
         ((GameObject *)obj)->anim.velocityY = ((GameObject *)obj)->anim.velocityY / d;
         state->baddie.animSpeedA = state->baddie.animSpeedA / d;
-        state->baddie.unk294 = state->baddie.unk294 / d;
+        state->baddie.animSpeedC = state->baddie.animSpeedC / d;
     }
     return 0;
 }
