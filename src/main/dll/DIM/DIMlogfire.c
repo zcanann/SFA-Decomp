@@ -212,7 +212,8 @@ void FUN_801a93b0(int param_1)
  */
 undefined4
 FUN_801a9408(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
-            undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,int param_10)
+            undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,
+            ObjAnimUpdateState *animUpdate)
 {
   byte bVar1;
   undefined2 *puVar2;
@@ -223,8 +224,8 @@ FUN_801a9408(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   int iVar4;
   undefined8 uVar5;
   
-  for (iVar3 = 0; iVar3 < (int)(uint)*(byte *)(param_10 + 0x8b); iVar3 = iVar3 + 1) {
-    bVar1 = *(byte *)(param_10 + iVar3 + 0x81);
+  for (iVar3 = 0; iVar3 < (int)(uint)animUpdate->eventCount; iVar3 = iVar3 + 1) {
+    bVar1 = animUpdate->eventIds[iVar3];
     if (bVar1 == 2) {
       iVar4 = *(int *)&((GameObject *)param_9)->unkC8;
       if (iVar4 != 0) {
@@ -338,7 +339,8 @@ void FUN_801a9758(undefined8 param_1,double param_2,double param_3,undefined8 pa
     local_24[0] = (*gObjectTriggerInterface)->update((u8 *)param_9,
                             (f32)((double)CONCAT44(0x43300000,local_24[2]) -
                                   DOUBLE_803e5268));
-    FUN_801a9408(extraout_f1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,iVar4);
+    FUN_801a9408(extraout_f1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,
+                 (ObjAnimUpdateState *)iVar4);
     if ((local_24[0] != 0) && (((GameObject *)param_9)->unkB4 == -2)) {
       iVar5 = (int)*(char *)(iVar4 + 0x57);
       iVar4 = 0;
@@ -1247,13 +1249,13 @@ extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
 
 #pragma scheduling off
 #pragma dont_inline on
-int fn_801A8F88(int obj, int arg2)
+int fn_801A8F88(int obj, ObjAnimUpdateState *animUpdate)
 {
     int i;
     void *state;
     int alloc;
-    for (i = 0; i < (int)*(u8 *)(arg2 + 0x8b); i++) {
-        u8 v = *(u8 *)(arg2 + (i + 0x81));
+    for (i = 0; i < (int)animUpdate->eventCount; i++) {
+        u8 v = animUpdate->eventIds[i];
         switch (v) {
         case 1:
             ((GameObject *)obj)->unkF8 = 779;
@@ -1441,7 +1443,7 @@ void animsharpclaw_update(int *obj) {
         return;
     }
     result = (*gObjectTriggerInterface)->update((u8 *)obj, (f32)(u32)framesThisStep);
-    fn_801A8F88((int)obj, (int)inner);
+    fn_801A8F88((int)obj, (ObjAnimUpdateState *)inner);
     if (result == 0) {
         return;
     }

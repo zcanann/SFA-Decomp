@@ -664,7 +664,7 @@ void dimcannon_free(int *obj) {
 }
 
 extern void ObjMsg_AllocQueue(int *obj, int n);
-extern int fn_801B2550(int *obj, int p2, char *p3);
+extern int fn_801B2550(int *obj, int p2, ObjAnimUpdateState *animUpdate);
 extern f32 lbl_803E48B8;
 
 /* EN v1.0 0x801B30C8  size: 628b  Dimcannon constructor: handles the 0x1d6
@@ -910,7 +910,7 @@ extern f32 lbl_803DBEFC;
 /* EN v1.0 0x801B2550  size: 1504b  Dimcannon manned-control sequence: aims the
  * turret with the stick, charges with A, fires on release/full charge, and
  * exits on B or after the post-completion delay. */
-int fn_801B2550(int *obj, int p2, char *p3)
+int fn_801B2550(int *obj, int p2, ObjAnimUpdateState *animUpdate)
 {
     int *src = *(int **)&((GameObject *)obj)->anim.placementData;
     char *state;
@@ -918,8 +918,8 @@ int fn_801B2550(int *obj, int p2, char *p3)
     u8 done = 0;
     void *player;
 
-    *(u8 *)(p3 + 0x56) = 0;
-    *(s16 *)(p3 + 0x6e) = (s16)(*(s16 *)(p3 + 0x6e) & ~0x608);
+    animUpdate->sequenceEventActive = 0;
+    animUpdate->hitVolumePair &= ~0x608;
     state = ((GameObject *)obj)->extra;
 
     if (*(u8 *)(state + 0xac) == 0x3) {
@@ -1032,7 +1032,7 @@ int fn_801B2550(int *obj, int p2, char *p3)
                 (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0, 0xff);
                 *(u8 *)(state + 0xac) = 5;
                 *(u8 *)(state + 0xb0) = 0x3c;
-                *(u8 *)(p3 + 0x90) |= 0x4;
+                animUpdate->sequenceControlFlags |= 0x4;
                 *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & ~0x8);
                 if (Sfx_IsPlayingFromObjectChannel(obj, 8) != 0) {
                     Sfx_IsPlayingFromObjectChannel(obj, 0);
