@@ -122,16 +122,6 @@ typedef struct MMSHShrineObject {
   s32 loadTriggerTimer;
 } MMSHShrineObject;
 
-typedef struct MMSHShrineSequenceState {
-  u8 pad00[0x56];
-  u8 activeCommand;
-  u8 pad57[0x70 - 0x57];
-  s16 targetObject;
-  u8 pad72[0x81 - 0x72];
-  u8 commands[10];
-  u8 commandCount;
-} MMSHShrineSequenceState;
-
 /*
  * --INFO--
  *
@@ -145,17 +135,15 @@ typedef struct MMSHShrineSequenceState {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int MMSH_Shrine_SeqFn(int objArg, undefined4 unused, int seqArg)
+int MMSH_Shrine_SeqFn(int objArg, undefined4 unused, MMSHShrineSequenceState *seq)
 {
   MMSHShrineObject *obj;
   MMSHShrineRuntime *runtime;
-  MMSHShrineSequenceState *seq;
   int playerObj;
   int i;
   u8 command;
 
   obj = (MMSHShrineObject *)objArg;
-  seq = (MMSHShrineSequenceState *)seqArg;
   runtime = obj->runtime;
   playerObj = Obj_GetPlayerObject();
   seq->targetObject = -1;

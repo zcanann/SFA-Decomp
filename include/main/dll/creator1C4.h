@@ -2,10 +2,11 @@
 #define MAIN_DLL_CREATOR1C4_H_
 
 #include "ghidra_import.h"
+#include "main/objanim_update.h"
 
 void gpsh_shrine_update(int obj);
 void gpsh_shrine_init(int *obj, int *def);
-int gpsh_shrine_SeqFn(int *obj, int arg1, u8 *seq);
+int gpsh_shrine_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate);
 void gpsh_shrine_release(void);
 void gpsh_shrine_initialise(void);
 
