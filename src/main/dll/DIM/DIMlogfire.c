@@ -696,27 +696,27 @@ extern int Obj_SetupObject(int allocResult, int a, int b, int c, int d);
 int fn_801A8F88(int obj, ObjAnimUpdateState *animUpdate)
 {
     int i;
-    void *state;
+    int state;
     int alloc;
     for (i = 0; i < (int)animUpdate->eventCount; i++) {
         u8 v = animUpdate->eventIds[i];
         switch (v) {
         case 1:
             ((GameObject *)obj)->unkF8 = 779;
-            state = ((GameObject *)obj)->unkC8;
-            if (state != NULL) {
-                ObjLink_DetachChild(obj, (int)state);
-                Obj_FreeObject((int)state);
+            state = (int)((GameObject *)obj)->unkC8;
+            if ((void *)state != NULL) {
+                ObjLink_DetachChild(obj, state);
+                Obj_FreeObject(state);
             }
             alloc = Obj_AllocObjectSetup(32, ((GameObject *)obj)->unkF8);
             alloc = Obj_SetupObject(alloc, 4, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
             ObjLink_AttachChild(obj, alloc, 0);
             break;
         case 2:
-            state = ((GameObject *)obj)->unkC8;
-            if (state != NULL) {
-                ObjLink_DetachChild(obj, (int)state);
-                Obj_FreeObject((int)state);
+            state = (int)((GameObject *)obj)->unkC8;
+            if ((void *)state != NULL) {
+                ObjLink_DetachChild(obj, state);
+                Obj_FreeObject(state);
             }
             ((GameObject *)obj)->unkF8 = -1;
             break;
