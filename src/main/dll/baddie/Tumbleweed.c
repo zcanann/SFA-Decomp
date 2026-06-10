@@ -591,7 +591,7 @@ int Minimap_update(void)
     player = Obj_GetPlayerObject();
     if (player != NULL) {
         if (((GameObject *)player)->anim.parent != NULL) {
-            cell = *(u8 *)(*(int *)&((GameObject *)player)->anim.parent + 0xac);
+            cell = ((GameObject *)((GameObject *)player)->anim.parent)->anim.mapEventSlot;
         } else {
             cell = (u8)coordsToMapCell(((GameObject *)player)->anim.localPosX, ((GameObject *)player)->anim.localPosZ);
         }

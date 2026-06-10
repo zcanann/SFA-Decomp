@@ -425,7 +425,8 @@ int curves_distanceToNearestOfType16(f32 x,f32 y,f32 z,int param_4)
   nearestDistance = (double)lbl_803E12B8;
   for (i = 0; i < objectCount; i = i + 1) {
     obj = objects[i];
-    if ((((((GameObject *)obj)->anim.classId == 0x2c) && (*(char *)(obj + 0xac) != param_4)) &&
+    if ((((((GameObject *)obj)->anim.classId == 0x2c) &&
+        (((GameObject *)obj)->anim.mapEventSlot != param_4)) &&
         (curve = (RomCurveDef *)((GameObject *)obj)->anim.placementData, curve != NULL)) &&
        ((curve->type == 0x16 &&
          ((dx = ((GameObject *)obj)->anim.worldPosX - x,

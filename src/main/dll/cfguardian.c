@@ -732,7 +732,7 @@ void Door_init(int *obj, u8 *def) {
     {
         s16 model = ((GameObject *)obj)->anim.seqId;
         if (model == 1101) {
-            s32 subtype = (s32)*(s8 *)((char *)obj + 0xac);
+            s32 subtype = ((GameObject *)obj)->anim.mapEventSlot;
             if ((subtype >= 31 && subtype < 35) || (subtype >= 40 && subtype < 43)) {
                 *(s16 *)state = 832;
                 *(s16 *)(state + 2) = 833;

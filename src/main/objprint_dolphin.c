@@ -2400,7 +2400,7 @@ void FUN_800404cc(int param_1)
   double dVar11;
   
   puVar6 = FUN_800069a8();
-  if (((((((GameObject *)param_1)->objectFlags & 0x1000) == 0) && (*(char *)(param_1 + 0xac) != '?')) &&
+  if (((((((GameObject *)param_1)->objectFlags & 0x1000) == 0) && (((GameObject *)param_1)->anim.mapEventSlot != '?')) &&
       (((GameObject *)param_1)->anim.seqId != 0x882)) && (((GameObject *)param_1)->anim.seqId != 0x887)) {
     bVar5 = false;
     iVar9 = 3;
@@ -4645,7 +4645,7 @@ void objRenderFuzz(int *obj) {
     int cnt;
     f32 dx, dy, dz, dist;
     int *cam = Camera_GetCurrentViewSlot();
-    if ((((GameObject *)obj)->objectFlags & 0x1000) || *(s8 *)((char *)obj + 0xac) == 0x3f
+    if ((((GameObject *)obj)->objectFlags & 0x1000) || ((GameObject *)obj)->anim.mapEventSlot == 0x3f
         || ((GameObject *)obj)->anim.seqId == 0x882 || ((GameObject *)obj)->anim.seqId == 0x887) {
         strong = 1;
         if (((GameObject *)obj)->anim.classId == 1 || ((GameObject *)obj)->anim.seqId == 0x77d

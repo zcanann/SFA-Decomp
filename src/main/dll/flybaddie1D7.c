@@ -1,5 +1,6 @@
 #include "main/mapEvent.h"
 #include "main/dll/flybaddie1D7.h"
+#include "main/game_object.h"
 #include "main/objseq.h"
 
 extern int ObjList_FindObjectById(int objectId);
@@ -68,13 +69,12 @@ extern MapEventInterface **gMapEventInterface;
 extern void   envFxActFn_800887f8(s32);
 extern void   gameTimerStop(void);
 
-/* EN v1.0 0x801CFECC  size: 84b  nw_levcontrol_free: dispatches
- * vtable+0x4c on the singleton at gMapEventInterface with the s8 obj+0xac;
- * when the call returns 0 also fires envFxActFn_800887f8(0); always tails into
- * gameTimerStop. */
-void nw_levcontrol_free(s8* obj)
+/* EN v1.0 0x801CFECC  size: 84b  nw_levcontrol_free: dispatches the object's
+ * map event slot through gMapEventInterface; when the call returns 0 also fires
+ * envFxActFn_800887f8(0); always tails into gameTimerStop. */
+void nw_levcontrol_free(GameObject *obj)
 {
-    s8 v = obj[0xac];
+    s8 v = obj->anim.mapEventSlot;
     int ret = (*gMapEventInterface)->getAnimEvent((s32)v, 0);
     if ((u8)ret == 0) {
         envFxActFn_800887f8(0);

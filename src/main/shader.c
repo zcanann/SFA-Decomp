@@ -3811,32 +3811,34 @@ void mapLoadUnloadObjects(int flag)
     {
         int* objs = ObjList_GetObjects(&i, &n);
         while (i < n) {
+            s8 mapEventSlot;
             obj = (char*)objs[i];
             fp = (void *)((GameObject *)obj)->anim.placementData;
             i++;
             unload = 0;
-            if (*(s8*)(obj + 0xAC) > -1) {
+            mapEventSlot = ((GameObject *)obj)->anim.mapEventSlot;
+            if (mapEventSlot > -1) {
                 u8 fl = *(u8*)(fp + 4);
                 if (!(fl & 2)) {
                     if (fl & 0x10) {
                         if (((GameObject *)obj)->anim.classId > -1 && objShouldUnload(obj)) {
                             unload = 1;
-                        } else if (*(s8*)(obj + 0xAC) < 80 &&
-                                   *(void**)(base + 0x83A8 + *(s8*)(obj + 0xAC) * 4) == 0) {
+                        } else if (mapEventSlot < 80 &&
+                                   *(void**)(base + 0x83A8 + mapEventSlot * 4) == 0) {
                             unload = 1;
                         }
                     } else {
                         if (((GameObject *)obj)->anim.classId > -1 && objShouldUnload(obj)) {
                             unload = 1;
-                        } else if (*(s8*)(obj + 0xAC) < 80 &&
-                                   *(s8*)(obj + 0xAC) != lbl_803DCEC8) {
+                        } else if (mapEventSlot < 80 &&
+                                   mapEventSlot != lbl_803DCEC8) {
                             unload = 1;
                         }
                     }
                 }
             }
             if (unload) {
-                char* page = *(char**)(base + 0x83A8 + *(s8*)(obj + 0xAC) * 4);
+                char* page = *(char**)(base + 0x83A8 + mapEventSlot * 4);
                 if (page != 0) {
                     s16 tbit = *(s16*)(obj + 0xB2);
                     if (tbit >= 0 && tbit >= 0) {
@@ -3846,7 +3848,7 @@ void mapLoadUnloadObjects(int flag)
                     }
                 }
                 if (((GameObject *)obj)->anim.seqId == 0x72) {
-                    s8 mid = *(s8*)(obj + 0xAC);
+                    s8 mid = mapEventSlot;
                     s16 j3 = 0;
                     s16* w2 = list;
                     for (j3 = 0; j3 < count; j3++) {

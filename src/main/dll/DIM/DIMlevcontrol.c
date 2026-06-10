@@ -698,7 +698,7 @@ void dimcannon_init(int *obj, int *arg)
         void *state = ((GameObject *)obj)->extra;
         u8 i;
 
-        if (*(s8 *)((char *)obj + 0xac) == 0x13) {
+        if (((GameObject *)obj)->anim.mapEventSlot == 0x13) {
             int v = 0;
             if (GameBit_Get(0xc17) && GameBit_Get(0xa21)) {
                 v = 1;
@@ -1011,7 +1011,7 @@ int fn_801B2550(int *obj, int p2, char *p3)
                 }
             }
             DIMwooddoor_spawnShard(obj, 1);
-            if (*(s8 *)((char *)obj + 0xac) == 0x13 && *(u8 *)(state + 0xb2) == 0 &&
+            if (((GameObject *)obj)->anim.mapEventSlot == 0x13 && *(u8 *)(state + 0xb2) == 0 &&
                 GameBit_Get(0xc17) && GameBit_Get(0xa21)) {
                 *(u8 *)(state + 0xb2) = 1;
                 *(u8 *)(state + 0xb1) = 1;

@@ -1,6 +1,7 @@
 #include "main/objanim.h"
 #include "main/game_ui_interface.h"
 #include "main/dll/baddie/swarmBaddie.h"
+#include "main/game_object.h"
 
 
 #pragma peephole off
@@ -825,7 +826,7 @@ void drawArwingHud(void) {
                 drawTexture(hudTextures[57], (f32)(pos + 0x23), lbl_803E2064, arwingHudAlpha & 0xff, 0x100);
             }
         }
-        if (*(s8 *)((char *)arwing + 0xac) != 0x26) {
+        if (((GameObject *)arwing)->anim.mapEventSlot != 0x26) {
             drawTexture(hudTextures[61], lbl_803E2068, lbl_803E1FAC, arwingHudAlpha & 0xff, 0x100);
             for (i = 0; (int)(i & 0xff) < rings; i++) {
                 drawTexture(hudTextures[60], (f32)(int)(0x244 - (i & 0xff) * 0x14), lbl_803E1F9C,

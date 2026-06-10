@@ -1086,7 +1086,7 @@ void SB_CloudRunner_update(int obj)
     int state = *(int *)&((GameObject *)obj)->extra;
     int prevKey;
 
-    if (*(s8 *)(state + 0x6e) != 0 || *(s8 *)(obj + 0xac) == 0xb) {
+    if (*(s8 *)(state + 0x6e) != 0 || ((GameObject *)obj)->anim.mapEventSlot == 0xb) {
         ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
         return;
     }

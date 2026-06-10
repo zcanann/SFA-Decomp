@@ -286,7 +286,7 @@ void fn_801DFA28(u8 *obj)
   spawnData = *(int *)&((GameObject *)obj)->anim.placementData;
   state = ((GameObject *)obj)->extra;
   camShake = lbl_803E56C8;
-  *(s8 *)(obj + 0xAC) = -1;
+  ((GameObject *)obj)->anim.mapEventSlot = -1;
   if ((*(void **)&((SBGalleonState *)state)->targetObj != NULL) &&
       ((*(s16 *)(((SBGalleonState *)state)->targetObj + 6) & 0x40) != 0)) {
     ((SBGalleonState *)state)->targetObj = NULL;

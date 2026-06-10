@@ -2315,7 +2315,7 @@ void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z)
             } else if (c == 3) {
                 Sfx_PlayFromObject(obj, 0x4c2);
             } else {
-                s8 m = *(s8 *)((char *)obj + 0xac);
+                s8 m = ((GameObject *)obj)->anim.mapEventSlot;
                 if (m < 0x3a) {
                     if (m == 0x2c) {
                         goto playLimited;
