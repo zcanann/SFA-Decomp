@@ -108,7 +108,8 @@ void wcbeacon_update(int obj)
     if (phase == WCBEACON_PHASE_WAITING_FOR_TRICKY) {
         int tricky = getTrickyObject();
         if ((u32)GameBit_Get(setup->armBit) == 0) {
-            if ((u32)fn_80138F84(tricky) != (u32)obj || trickyFn_80138f14(tricky) != 0) {
+            u32 owner = (u32)fn_80138F84(tricky);
+            if (owner != (u32)obj || trickyFn_80138f14(tricky) != 0) {
                 (*gObjectTriggerInterface)
                     ->runSequence(WCBEACON_TRIGGER_RELEASE_SLOT, (void *)obj, WCBEACON_TRIGGER_NO_ARG);
                 state->phase = WCBEACON_PHASE_IDLE;
@@ -116,7 +117,7 @@ void wcbeacon_update(int obj)
         } else {
             *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~WCBEACON_BLOCK_PLAYER_FLAG;
             if ((u32)tricky != 0 && (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & WCBEACON_TRICKY_PROMPT_FLAG)) {
-                (*(void (**)(int, int, int, int, int))(*(int *)(*(int *)(tricky + 0x68)) + 0x28))(
+                (*(void (**)(int, int, int, int, int))(*(int *)(*(int *)((int)tricky + 0x68)) + 0x28))(
                     tricky, obj, WCBEACON_TRIGGER_ACCEPT_ARG, WCBEACON_TRICKY_PROMPT_FLAG,
                     *(int *)(*(int *)(tricky + 0x68)));
             }
