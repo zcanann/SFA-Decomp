@@ -127,9 +127,9 @@ void deathseq_init(int* obj)
   (*gScreenTransitionInterface)->start(1, 1);
   ObjAnim_SetCurrentMove((int)obj, 0x8e, lbl_803E3D1C, 0);
   state[0] = lbl_803E3D58;
-  state[1] = *(f32*)((char*)cam + 0xc);
-  state[2] = *(f32*)((char*)cam + 0x10);
-  state[3] = *(f32*)((char*)cam + 0x14);
+  state[1] = ((GameObject *)cam)->anim.localPosX;
+  state[2] = ((GameObject *)cam)->anim.localPosY;
+  state[3] = ((GameObject *)cam)->anim.localPosZ;
   *(int*)(state + 6) = cam[0];
   *(int*)(state + 7) = cam[1];
   f = lbl_803E3D2C;
@@ -673,9 +673,9 @@ void deathseq_update(int* obj)
         negSin = -mathCosf((lbl_803E3D3C * (f32)*(s16*)obj) / lbl_803E3D40);
         fz = lbl_803E3D38;
         zTerm = fz * negSin;
-        *(f32*)((char*)cam + 0xc) = sin30 + (((GameObject *)obj)->anim.worldPosX + xTerm);
-        *(f32*)((char*)cam + 0x10) = (fz + ((GameObject *)obj)->anim.worldPosY) + dz;
-        *(f32*)((char*)cam + 0x14) = sin34 + (((GameObject *)obj)->anim.worldPosZ + zTerm);
+        ((GameObject *)cam)->anim.localPosX = sin30 + (((GameObject *)obj)->anim.worldPosX + xTerm);
+        ((GameObject *)cam)->anim.localPosY = (fz + ((GameObject *)obj)->anim.worldPosY) + dz;
+        ((GameObject *)cam)->anim.localPosZ = sin34 + (((GameObject *)obj)->anim.worldPosZ + zTerm);
         Camera_SetFovY(lbl_803E3D44);
         state->camActive = 1;
         state->dist += interpolate(state->distTarget - state->dist, lbl_803E3D48, timeDelta);
@@ -683,9 +683,9 @@ void deathseq_update(int* obj)
     } else {
         cam[0] = state->camRotY;
         cam[1] = state->camRotX;
-        *(f32*)((char*)cam + 0xc) = state->camX;
-        *(f32*)((char*)cam + 0x10) = state->camY;
-        *(f32*)((char*)cam + 0x14) = state->camZ;
+        ((GameObject *)cam)->anim.localPosX = state->camX;
+        ((GameObject *)cam)->anim.localPosY = state->camY;
+        ((GameObject *)cam)->anim.localPosZ = state->camZ;
         state->camActive = 0;
     }
 

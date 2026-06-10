@@ -12763,10 +12763,10 @@ void fn_800A3AF0(void *table, int count, void *ctx, f32 a, f32 b)
     found = 0;
     cam = Camera_GetCurrentViewSlot();
     lbl_803DD29A = *(s16 *)cam;
-    lbl_803DD29C = *(s16 *)((char *)cam + 2);
-    dx = *(f32 *)((char *)cam + 0xc) - *(f32 *)((char *)ctx + 0xc);
-    dy = *(f32 *)((char *)cam + 0x10) - *(f32 *)((char *)ctx + 0x10);
-    dz = *(f32 *)((char *)cam + 0x14) - *(f32 *)((char *)ctx + 0x14);
+    lbl_803DD29C = ((GameObject *)cam)->anim.rotY;
+    dx = ((GameObject *)cam)->anim.localPosX - *(f32 *)((char *)ctx + 0xc);
+    dy = ((GameObject *)cam)->anim.localPosY - *(f32 *)((char *)ctx + 0x10);
+    dz = ((GameObject *)cam)->anim.localPosZ - *(f32 *)((char *)ctx + 0x14);
     for (i = 0; i < count; i++) {
         int t = *(s8 *)((char *)table + i * 0x4c + 0x48);
         if (t == 0x12 || (u8)(t - 0x10) <= 1 || (u8)(t - 0x14) <= 1 || t == 0x17) {
@@ -13344,7 +13344,7 @@ int dll_0B_func09(void *a0, int a1, int a2, u8 a3, void *a4)
         if (*(int *)((char *)*p + 0xa4) & 0x1000) {
             if (*(void **)((char *)*p + 4) != NULL) {
                 dirX = *(f32 *)((char *)view + 0x44) - *(f32 *)(*(char **)((char *)*p + 4) + 0x18);
-                dirZ = *(f32 *)((char *)view + 0x4c) - *(f32 *)(*(char **)((char *)*p + 4) + 0x20);
+                dirZ = *(f32 *)&((GameObject *)view)->anim.placementData - *(f32 *)(*(char **)((char *)*p + 4) + 0x20);
                 dscale = sqrtf(dirX * dirX + dirZ * dirZ);
                 if (dscale != lbl_803DF430) {
                     dirX = dirX / dscale;

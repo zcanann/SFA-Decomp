@@ -1189,7 +1189,7 @@ void playerVecFn_8005a9b0(void)
     viewSlot = Camera_GetCurrentViewSlot();
     camPos.x = *(f32*)((char*)viewSlot + 0x44) - playerMapOffsetX;
     camPos.y = *(f32*)((char*)viewSlot + 0x48);
-    camPos.z = *(f32*)((char*)viewSlot + 0x4c) - playerMapOffsetZ;
+    camPos.z = *(f32 *)&((GameObject *)viewSlot)->anim.placementData - playerMapOffsetZ;
     invRotMtx = Camera_GetInverseViewRotationMatrix();
     if (player != NULL) {
         clipDist = -Camera_DistanceToCurrentViewPosition(
@@ -2631,9 +2631,9 @@ void beginLoadingMap(void)
     renderFlags &= ~4;
     trackIntersect();
     cam = Camera_GetCurrentViewSlot();
-    *(f32*)((char*)cam + 0xc) = p[0];
-    *(f32*)((char*)cam + 0x10) = p[1];
-    *(f32*)((char*)cam + 0x14) = p[2];
+    ((GameObject *)cam)->anim.localPosX = p[0];
+    ((GameObject *)cam)->anim.localPosY = p[1];
+    ((GameObject *)cam)->anim.localPosZ = p[2];
     mapSetupPlayer();
     lbl_803DCEBD = 0;
     (*gWaterfxInterface)->onMapSetup();

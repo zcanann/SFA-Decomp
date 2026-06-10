@@ -4173,7 +4173,7 @@ void modelDoRenderInstrs(int *obj, int *obj2, u8 *m, u8 mode) {
     if (((ObjAnimComponent *)obj)->modelInstance->flags & 0x400) {
         int *player = Obj_GetPlayerObject();
         int *cam = (int *)(*gCameraInterface)->getCamera();
-        if (player != NULL && !(((GameObject *)player)->objectFlags & 0x1000) && *(int **)((char *)cam + 0xa4) == player) {
+        if (player != NULL && !(((GameObject *)player)->objectFlags & 0x1000) && *(int **)&((GameObject *)cam)->anim.targetObj == player) {
             f32 d = lbl_803DEA38 + (((GameObject *)obj)->anim.hitboxScale * ((GameObject *)obj)->anim.rootMotionScale + *(f32 *)&((GameObject *)obj)->anim.targetObj);
             f32 dist = Camera_DistanceToCurrentViewPosition(((GameObject *)player)->anim.worldPosX, ((GameObject *)player)->anim.worldPosY, ((GameObject *)player)->anim.worldPosZ);
             if (d > -dist) {

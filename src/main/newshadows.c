@@ -2790,13 +2790,13 @@ void renderShadows(void) {
     savedFovY = Camera_GetFovY();
     Camera_SetFovY(lbl_803DED30);
     Camera_SetAspectRatio(lbl_803DED2C);
-    sCamX = *(f32 *)((char *)slot + 0xc);
-    sCamY = *(f32 *)((char *)slot + 0x10);
-    sCamZ = *(f32 *)((char *)slot + 0x14);
-    s170 = *(s16 *)((char *)slot + 0x2);
-    s14 = *(s16 *)((char *)slot + 0x0);
-    s19 = *(s16 *)((char *)slot + 0x4);
-    *(s16 *)((char *)slot + 0x2) = 0;
+    sCamX = ((GameObject *)slot)->anim.localPosX;
+    sCamY = ((GameObject *)slot)->anim.localPosY;
+    sCamZ = ((GameObject *)slot)->anim.localPosZ;
+    s170 = ((GameObject *)slot)->anim.rotY;
+    s14 = ((GameObject *)slot)->anim.rotX;
+    s19 = ((GameObject *)slot)->anim.rotZ;
+    ((GameObject *)slot)->anim.rotY = 0;
     v30[0] = lbl_803DED28;
     v30[1] = lbl_803DED2C;
     v30[2] = lbl_803DED28;
@@ -2862,8 +2862,8 @@ void renderShadows(void) {
             dirZ = -f21;
             lbl_803DCF84 = (u16)getAngle(dirX, f21);
             lbl_803DCF88 = getAngle(sqrtf(f22 * f22 + f21 * f21), vAy) - 0x3fc8;
-            *(s16 *)((char *)slot + 0x2) = (s16)lbl_803DCF88;
-            *(s16 *)((char *)slot + 0x0) = (s16)lbl_803DCF84;
+            ((GameObject *)slot)->anim.rotY = (s16)lbl_803DCF88;
+            ((GameObject *)slot)->anim.rotX = (s16)lbl_803DCF84;
             {
                 f32 mag = sqrtf(dirX * dirX + dirY * dirY + dirZ * dirZ);
                 if (mag > lbl_803DED28) {
@@ -2880,19 +2880,19 @@ void renderShadows(void) {
             setScreenWidth(screenW);
             {
                 f32 *m = ObjModel_GetJointMatrix(Obj_GetActiveModel(obj), 0);
-                *(f32 *)((char *)slot + 0xc) = dirX + m[3];
-                *(f32 *)((char *)slot + 0x10) = dirY + m[7];
-                *(f32 *)((char *)slot + 0x14) = dirZ + m[11];
+                ((GameObject *)slot)->anim.localPosX = dirX + m[3];
+                ((GameObject *)slot)->anim.localPosY = dirY + m[7];
+                ((GameObject *)slot)->anim.localPosZ = dirZ + m[11];
             }
             if (*(u32 *)&((GameObject *)obj)->anim.parent == 0) {
-                *(f32 *)((char *)slot + 0xc) += lbl_803DCED0;
-                *(f32 *)((char *)slot + 0x14) += lbl_803DCECC;
+                ((GameObject *)slot)->anim.localPosX += lbl_803DCED0;
+                ((GameObject *)slot)->anim.localPosZ += lbl_803DCECC;
             }
             f21 = *(f32 *)of64;
             f22 = -f21;
             if (*(u32 *)&((GameObject *)obj)->anim.parent != 0) {
-                *(f32 *)((char *)slot + 0xc) += playerMapOffsetX;
-                *(f32 *)((char *)slot + 0x14) += playerMapOffsetZ;
+                ((GameObject *)slot)->anim.localPosX += playerMapOffsetX;
+                ((GameObject *)slot)->anim.localPosZ += playerMapOffsetZ;
             }
             GXSetScissor(2, 2, screenW - 4, screenW - 4);
             GXSetViewport(lbl_803DED28, lbl_803DED28, (f32)(u32)screenW, (f32)(u32)screenW, lbl_803DED28, lbl_803DED2C);
@@ -2982,12 +2982,12 @@ void renderShadows(void) {
         setDisplayCopyFilter();
     }
     clearScreenWidth();
-    *(f32 *)((char *)slot + 0xc) = sCamX;
-    *(f32 *)((char *)slot + 0x10) = sCamY;
-    *(f32 *)((char *)slot + 0x14) = sCamZ;
-    *(s16 *)((char *)slot + 0x2) = s170;
-    *(s16 *)((char *)slot + 0x0) = s14;
-    *(s16 *)((char *)slot + 0x4) = s19;
+    ((GameObject *)slot)->anim.localPosX = sCamX;
+    ((GameObject *)slot)->anim.localPosY = sCamY;
+    ((GameObject *)slot)->anim.localPosZ = sCamZ;
+    ((GameObject *)slot)->anim.rotY = s170;
+    ((GameObject *)slot)->anim.rotX = s14;
+    ((GameObject *)slot)->anim.rotZ = s19;
     if (getDrawDistanceFlag_8005cd48() != 0) {
         Camera_SetCurrentViewIndex(0);
         Camera_SetFovY(savedFovY);
