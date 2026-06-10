@@ -18,8 +18,8 @@ typedef struct SnowBikeState {
     f32 unk020;             /* 0x020 */
     f32 unk024;             /* 0x024 */
     u8 pad028[0x4];
-    s16 unk02C;             /* 0x02c: rider yaw on free */
-    s16 unk02E;             /* 0x02e: rider pitch on free */
+    s16 riderYawOnFree;             /* 0x02c: rider yaw on free */
+    s16 riderPitchOnFree;             /* 0x02e: rider pitch on free */
     u8 pad030[0x4];
     f32 unk034;             /* 0x034 */
     int unk038;             /* 0x038 */
@@ -27,9 +27,9 @@ typedef struct SnowBikeState {
     int unk040;             /* 0x040 */
     int unk044;             /* 0x044 */
     u8 pad048[0x4];
-    f32 unk04C;             /* 0x04c: rider pos X on free */
-    f32 unk050;             /* 0x050: rider pos Y on free */
-    f32 unk054;             /* 0x054: rider pos Z on free */
+    f32 riderPosX;             /* 0x04c: rider pos X on free */
+    f32 riderPosY;             /* 0x050: rider pos Y on free */
+    f32 riderPosZ;             /* 0x054: rider pos Z on free */
     u8 unk058;              /* 0x058 */
     u8 pad059[0x3];
     u8 unk05C;              /* 0x05c */
@@ -61,13 +61,13 @@ typedef struct SnowBikeState {
     f32 unk3F8;             /* 0x3f8 */
     u8 pad3FC[0x10];
     s16 unk40C;             /* 0x40c: yaw current */
-    s16 unk40E;             /* 0x40e: yaw target */
+    s16 yaw;             /* 0x40e: yaw target */
     int unk410;             /* 0x410 */
     u8 pad414[0x8];
     s16 unk41C;             /* 0x41c */
     s16 unk41E;             /* 0x41e */
     u8 unk420;              /* 0x420 */
-    s8 unk421;              /* 0x421: rider mode */
+    s8 riderMode;              /* 0x421: rider mode */
     s8 unk422;              /* 0x422 */
     u8 pad423;
     f32 unk424;             /* 0x424 */
@@ -75,22 +75,22 @@ typedef struct SnowBikeState {
     u8 pad429[0x3];
     int unk42C;             /* 0x42c: linked object */
     f32 unk430;             /* 0x430 */
-    u8 unk434;              /* 0x434: bike kind */
-    u8 unk435;              /* 0x435: variant */
+    u8 bikeType;              /* 0x434: bike kind */
+    u8 bikeVariant;              /* 0x435: variant */
     u8 pad436[0x2];
     f32 unk438;             /* 0x438 */
     f32 unk43C;             /* 0x43c */
-    s16 unk440;             /* 0x440: model id */
+    s16 modelId;             /* 0x440: model id */
     u8 pad442[0x6];
     s16 unk448;             /* 0x448 */
-    s16 unk44A;             /* 0x44a: gamebit id */
+    s16 gameBitId;             /* 0x44a: gamebit id */
     s16 unk44C;             /* 0x44c */
     u8 pad44E[0x2];
-    u32 unk450;             /* 0x450 */
-    u32 unk454;             /* 0x454 */
-    u32 unk458;             /* 0x458 */
-    f32 unk45C;             /* 0x45c */
-    s8 unk460;              /* 0x460 */
+    u32 buttonsJustPressed;             /* 0x450 */
+    u32 buttonsJustPressedIfNotBusy;             /* 0x454 */
+    u32 buttonsHeld;             /* 0x458 */
+    f32 stickX;             /* 0x45c */
+    s8 stickY;              /* 0x460 */
     u8 pad461[0x3];
     f32 unk464;             /* 0x464 */
     f32 unk468;             /* 0x468 */
@@ -110,14 +110,14 @@ typedef struct SnowBikeState {
     f32 unk4B0;             /* 0x4b0 */
     u8 unk4B4;              /* 0x4b4 */
     u8 pad4B5[0x3];
-    f32 unk4B8;             /* 0x4b8 */
-    f32 unk4BC;             /* 0x4bc */
-    f32 unk4C0;             /* 0x4c0 */
+    f32 airMeterMax;             /* 0x4b8 */
+    f32 airMeterCurrent;             /* 0x4bc */
+    f32 airDrainRate;             /* 0x4c0 */
     f32 unk4C4;             /* 0x4c4 */
     u8 pad4C8[0x54];        /* 0x4c8: 9 path allocation slots (stride 8) */
-    f32 unk51C;             /* 0x51c: home X */
-    f32 unk520;             /* 0x520: home Y */
-    f32 unk524;             /* 0x524: home Z */
+    f32 homePosX;             /* 0x51c: home X */
+    f32 homePosY;             /* 0x520: home Y */
+    f32 homePosZ;             /* 0x524: home Z */
     u8 pad528[0x8];
     f32 unk530;             /* 0x530 */
     f32 unk534;             /* 0x534 */
@@ -139,9 +139,9 @@ typedef struct SnowBikeState {
     f32 unk584;             /* 0x584 */
     s16 unk588;             /* 0x588 */
     s16 unk58A;             /* 0x58a */
-    f32 unk58C;             /* 0x58c */
+    f32 haloYawDrift;             /* 0x58c */
     f32 unk590;             /* 0x590 */
-    f32 unk594;             /* 0x594: halo-light yaw drift */
+    f32 haloPitchDrift;             /* 0x594: halo-light yaw drift */
     f32 unk598;             /* 0x598: halo-light pitch drift */
 } SnowBikeState; /* extends to at least 0x59C (DRhightop/DRhalolight tail) */
 STATIC_ASSERT(offsetof(SnowBikeState, unk16C) == 0x16C);
@@ -151,7 +151,7 @@ STATIC_ASSERT(offsetof(SnowBikeState, unk424) == 0x424);
 STATIC_ASSERT(offsetof(SnowBikeState, flags428) == 0x428);
 STATIC_ASSERT(offsetof(SnowBikeState, unk4AC) == 0x4AC);
 STATIC_ASSERT(offsetof(SnowBikeState, unk530) == 0x530);
-STATIC_ASSERT(offsetof(SnowBikeState, unk594) == 0x594);
+STATIC_ASSERT(offsetof(SnowBikeState, haloPitchDrift) == 0x594);
 
 void SnowBike_update(int obj);
 

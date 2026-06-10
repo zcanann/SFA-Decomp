@@ -14,19 +14,19 @@
  */
 typedef struct PlayerState {
     BaddieState baddie;
-    int unk35C;
+    int playerStatus;
     int flags360; /* player state flag word; bits 2/0x2000/0x800000/0x2000000... */
     u8 pad364[0x3C4 - 0x364];
-    f32 unk3C4;
-    f32 unk3C8;
-    f32 unk3CC;
-    f32 unk3D0;
-    f32 unk3D4;
-    f32 unk3D8;
-    int unk3DC; /* MoveSlot/HitDesc array base; indexed by unk8A9, stride 0xB0 */
+    f32 fxOffsetX;
+    f32 fxOffsetY;
+    f32 fxOffsetZ;
+    f32 fxOffset2X;
+    f32 fxOffset2Y;
+    f32 fxOffset2Z;
+    int moveSlots; /* MoveSlot/HitDesc array base; indexed by moveSlotIndex, stride 0xB0 */
     int unk3E0;
     u8 pad3E4[0x3E8 - 0x3E4];
-    u8 unk3E8;
+    u8 maxMagicUsed;
     u8 pad3E9[0x3F0 - 0x3E9];
     u8 unk3F0;
     u8 unk3F1;
@@ -40,7 +40,7 @@ typedef struct PlayerState {
     u8 pad3FC[0x3FE - 0x3FC];
     u16 unk3FE;
     int unk400;
-    f32 unk404;
+    f32 maxSpeed;
     f32 unk408;
     u8 unk40C;
     u8 unk40D;
@@ -197,7 +197,7 @@ typedef struct PlayerState {
     f32 unk634;
     u8 pad638[0x63C - 0x638];
     f32 unk63C;
-    f32 unk640;
+    f32 traveledDistance;
     f32 unk644;
     f32 unk648;
     f32 unk64C;
@@ -234,9 +234,9 @@ typedef struct PlayerState {
     s32 unk6D4;
     f32 unk6D8;
     f32 unk6DC;
-    u16 unk6E0;
-    u16 unk6E2;
-    u16 unk6E4;
+    u16 buttonsHeld;
+    u16 buttonsJustPressed;
+    u16 buttonsJustPressedIfNotBusy;
     u8 pad6E6[0x6E8 - 0x6E6];
     int unk6E8;
     u8 unk6EC;
@@ -284,7 +284,7 @@ typedef struct PlayerState {
     s16 unk812;
     f32 unk814;
     u8 pad818[0x81A - 0x818];
-    s16 unk81A;
+    s16 characterId;
     s16 unk81C;
     s16 unk81E;
     f32 unk820;
@@ -328,8 +328,8 @@ typedef struct PlayerState {
     u8 unk8A5;
     u8 unk8A6;
     u8 unk8A7;
-    u8 unk8A8;
-    u8 unk8A9;
+    u8 moveSlotCount;
+    u8 moveSlotIndex;
     u8 unk8AA;
     u8 unk8AB;
     u8 unk8AC;
@@ -351,7 +351,7 @@ typedef struct PlayerState {
     u8 unk8C4;
     u8 unk8C5;
     u8 pad8C6[0x8C7 - 0x8C6];
-    u8 unk8C7;
+    u8 staffUnlockedFlags;
     u8 curAnimId; /* current move/anim id (0x44 = default) */
     u8 unk8C9;
     u8 unk8CA;
@@ -372,7 +372,7 @@ typedef struct PlayerState {
 } PlayerState;
 
 STATIC_ASSERT(sizeof(PlayerState) == 0x8E0);
-STATIC_ASSERT(offsetof(PlayerState, unk35C) == 0x35C);
+STATIC_ASSERT(offsetof(PlayerState, playerStatus) == 0x35C);
 STATIC_ASSERT(offsetof(PlayerState, targetYaw) == 0x478);
 STATIC_ASSERT(offsetof(PlayerState, heldObj) == 0x7F8);
 STATIC_ASSERT(offsetof(PlayerState, unk8D8) == 0x8D8);

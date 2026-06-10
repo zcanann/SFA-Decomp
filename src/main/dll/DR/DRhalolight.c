@@ -69,11 +69,11 @@ void SnowBike_hitDetect(int obj)
     if (((GameObject *)obj)->pendingParentObj != NULL) {
         return;
     }
-    if (state->unk421 == 2) {
+    if (state->riderMode == 2) {
         fn_801EB940(obj, (u8 *)state);
         state->unk41C = ((GameObject *)obj)->anim.rotY;
         state->unk41E = ((GameObject *)obj)->anim.rotZ;
-        ((GameObject *)obj)->anim.rotY = (f32)((GameObject *)obj)->anim.rotY + state->unk594;
+        ((GameObject *)obj)->anim.rotY = (f32)((GameObject *)obj)->anim.rotY + state->haloPitchDrift;
         ((GameObject *)obj)->anim.rotZ = (f32)((GameObject *)obj)->anim.rotZ + ((f32)state->unk410 + state->unk598);
     }
     if (state->unk3D9 == 4 || state->unk3D6 != 0) {

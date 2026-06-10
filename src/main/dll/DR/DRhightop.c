@@ -266,33 +266,33 @@ void fn_801EB0D4(uint param_1,int param_2)
   float v;
 
   if ((u32)(st->flags428 >> 5 & 1) != 0) {
-    if (st->unk4BC >= lbl_803E5AE8) {
+    if (st->airMeterCurrent >= lbl_803E5AE8) {
       td = timeDelta;
-      st->unk4BC -=
-           td * lbl_803DC0D8 + (f32)(s32)(st->unk4C0 *
+      st->airMeterCurrent -=
+           td * lbl_803DC0D8 + (f32)(s32)(st->airDrainRate *
                                           (td * PSVECMag(&st->unk494)));
       fVar2 = lbl_803E5AE8;
       if (fVar2 != st->unk4C4) {
         fVar3 = lbl_803E5B14;
-        st->unk4BC =
-             fVar3 * timeDelta + st->unk4BC;
+        st->airMeterCurrent =
+             fVar3 * timeDelta + st->airMeterCurrent;
         st->unk4C4 =
              st->unk4C4 - (f32)(s32)(fVar3 * timeDelta);
         fVar1 = st->unk4C4;
         st->unk4C4 =
             (fVar1 < fVar2) ? fVar2
                             : ((fVar1 > lbl_803E5B80) ? lbl_803E5B80 : fVar1);
-        fVar1 = st->unk4BC;
-        st->unk4BC =
+        fVar1 = st->airMeterCurrent;
+        st->airMeterCurrent =
             (fVar1 < lbl_803E5AE8) ? lbl_803E5AE8
-                                   : ((fVar1 > st->unk4B8)
-                                          ? st->unk4B8
+                                   : ((fVar1 > st->airMeterMax)
+                                          ? st->airMeterMax
                                           : fVar1);
       }
-      if (st->unk4BC < lbl_803E5B84) {
+      if (st->airMeterCurrent < lbl_803E5B84) {
         Sfx_KeepAliveLoopedObjectSound(param_1,0x44e);
       }
-      (*gGameUIInterface)->runAirMeter((s32)st->unk4BC);
+      (*gGameUIInterface)->runAirMeter((s32)st->airMeterCurrent);
     }
     else {
       Sfx_StopObjectChannel(param_1,0x7f);
@@ -339,7 +339,7 @@ void fn_801EB334(int *obj) {
         ((HightopFlags *)&state->flags428)->resetLatch = 0;
         state->unk424 = fz;
         sv = *(s16 *)obj;
-        state->unk40E = sv;
+        state->yaw = sv;
         state->unk40C = sv;
         state->unk430 = lbl_803E5B74;
     }
@@ -409,7 +409,7 @@ undefined4 SnowBike_animEventCallback(short *param_1,undefined4 param_2,ObjSeqSt
     }
   }
 
-  if (((SnowBikeState *)state)->unk421 == 2) {
+  if (((SnowBikeState *)state)->riderMode == 2) {
     xSpeed = (double)(float)(oneOverTimeDelta *
                              (*(float *)(param_1 + 6) - ((SnowBikeState *)state)->unk16C));
     ySpeed = (double)(float)(oneOverTimeDelta *
@@ -428,9 +428,9 @@ undefined4 SnowBike_animEventCallback(short *param_1,undefined4 param_2,ObjSeqSt
     Matrix_TransformPoint(matrix, xSpeed, ySpeed, zSpeed, (float *)(state + 0x494),
                           (float *)(state + 0x498), (float *)(state + 0x49c));
 
-    ((SnowBikeState *)state)->unk460 = ((SnowBikeState *)state)->unk460 + (framesThisStep << 3);
-    if (((SnowBikeState *)state)->unk460 > 0x46) {
-      ((SnowBikeState *)state)->unk460 = 0x46;
+    ((SnowBikeState *)state)->stickY = ((SnowBikeState *)state)->stickY + (framesThisStep << 3);
+    if (((SnowBikeState *)state)->stickY > 0x46) {
+      ((SnowBikeState *)state)->stickY = 0x46;
     }
 
     fn_801EA240(((SnowBikeState *)state)->unk49C, (int)param_1, state,
@@ -601,7 +601,7 @@ void fn_801EB940(short *param_1,int param_2)
     if ((u32)(st->flags428 >> 7 & 1) != 0) {
       iVar5 = 0;
       fVar1 = lbl_803E5BBC;
-      st->unk58C = fVar1 * (f32)(s32)param_1[1];
+      st->haloYawDrift = fVar1 * (f32)(s32)param_1[1];
       st->unk590 = fVar1 * (f32)(s32)param_1[2];
       st->unk588 = iVar5;
       st->unk58A = iVar5;
@@ -625,24 +625,24 @@ void fn_801EB940(short *param_1,int param_2)
        fVar1 * timeDelta + (f32)(s32)st->unk588;
   st->unk58A =
        fVar1 * timeDelta + (f32)(s32)st->unk58A;
-  st->unk58C =
-       st->unk58C * powfBitEstimate(lbl_803E5BCC,timeDelta);
+  st->haloYawDrift =
+       st->haloYawDrift * powfBitEstimate(lbl_803E5BCC,timeDelta);
   st->unk590 =
        st->unk590 * powfBitEstimate(lbl_803E5BCC,timeDelta);
-  st->unk594 =
-       st->unk58C *
+  st->haloPitchDrift =
+       st->haloYawDrift *
        mathSinf((lbl_803E5BD0 * (f32)(s32)st->unk588) / lbl_803E5BD4);
   st->unk598 =
        st->unk590 *
        mathSinf((lbl_803E5BD0 * (f32)(s32)st->unk58A) / lbl_803E5BD4);
-  iVar4 = (int)*param_1 - ((int)st->unk40E & 0xffffU);
+  iVar4 = (int)*param_1 - ((int)st->yaw & 0xffffU);
   if (0x8000 < iVar4) {
     iVar4 = iVar4 + -0xffff;
   }
   if (iVar4 < -0x8000) {
     iVar4 = iVar4 + 0xffff;
   }
-  st->unk40E = st->unk40E + (short)iVar4;
+  st->yaw = st->yaw + (short)iVar4;
   st->unk40C = st->unk40C + (short)iVar4;
   param_1[1] = param_1[1] + (short)((int)st->unk310 >> iVar5);
   param_1[2] = param_1[2] + (short)((int)st->unk312 >> iVar5);

@@ -58,14 +58,14 @@ void SnowBike_initialise(void) {
 
 void SB_CloudRunner_onSeqFree(int *obj) {
     SnowBikeState *p = (SnowBikeState *)obj[0xb8/4];
-    p->unk04C = ((GameObject *)obj)->anim.localPosX;
-    p->unk050 = ((GameObject *)obj)->anim.localPosY;
-    p->unk054 = ((GameObject *)obj)->anim.localPosZ;
+    p->riderPosX = ((GameObject *)obj)->anim.localPosX;
+    p->riderPosY = ((GameObject *)obj)->anim.localPosY;
+    p->riderPosZ = ((GameObject *)obj)->anim.localPosZ;
     {
         s32 v = *(s16*)obj - 0x4000;
-        p->unk02C = (s16)v;
+        p->riderYawOnFree = (s16)v;
     }
-    p->unk02E = ((GameObject *)obj)->anim.rotZ;
+    p->riderPitchOnFree = ((GameObject *)obj)->anim.rotZ;
 }
 
 extern char lbl_803284E0[];
@@ -129,16 +129,16 @@ void SnowBike_init(int obj, u8 *params, int flag)
     }
     rot = params[0x18] << 8;
     ((SnowBikeState *)state)->unk40C = rot;
-    ((SnowBikeState *)state)->unk40E = rot;
+    ((SnowBikeState *)state)->yaw = rot;
     *(s16 *)obj = rot;
     fn_801EC928(obj, state);
     if (flag == 0) {
         if (((SnowBikeFlags *)(state + 0x428))->b20) {
-            ((SnowBikeState *)state)->unk4B8 = lbl_803E5B90;
-            ((SnowBikeState *)state)->unk4C0 = lbl_803E5AEC;
-            ((SnowBikeState *)state)->unk4BC = lbl_803E5B94;
-            if (((SnowBikeState *)state)->unk421 == 2) {
-                (*gGameUIInterface)->initAirMeter((int)((SnowBikeState *)state)->unk4B8, 1485);
+            ((SnowBikeState *)state)->airMeterMax = lbl_803E5B90;
+            ((SnowBikeState *)state)->airDrainRate = lbl_803E5AEC;
+            ((SnowBikeState *)state)->airMeterCurrent = lbl_803E5B94;
+            if (((SnowBikeState *)state)->riderMode == 2) {
+                (*gGameUIInterface)->initAirMeter((int)((SnowBikeState *)state)->airMeterMax, 1485);
                 (*gGameUIInterface)->airMeterSetRatio(lbl_803E5B98);
             }
         }
@@ -163,13 +163,13 @@ void SnowBike_init(int obj, u8 *params, int flag)
             path += 8;
         }
     }
-    ((SnowBikeState *)state)->unk51C = ((GameObject *)obj)->anim.worldPosX;
-    ((SnowBikeState *)state)->unk520 = ((GameObject *)obj)->anim.worldPosY;
-    ((SnowBikeState *)state)->unk524 = ((GameObject *)obj)->anim.worldPosZ;
+    ((SnowBikeState *)state)->homePosX = ((GameObject *)obj)->anim.worldPosX;
+    ((SnowBikeState *)state)->homePosY = ((GameObject *)obj)->anim.worldPosY;
+    ((SnowBikeState *)state)->homePosZ = ((GameObject *)obj)->anim.worldPosZ;
     ((SnowBikeState *)state)->unk068 = lbl_803E5AE8;
     ((SnowBikeState *)state)->unk448 = *(s16 *)(params + 0x1a);
-    ((SnowBikeState *)state)->unk44A = *(s16 *)(params + 0x1e);
-    if (GameBit_Get(((SnowBikeState *)state)->unk44A) != 0) {
+    ((SnowBikeState *)state)->gameBitId = *(s16 *)(params + 0x1e);
+    if (GameBit_Get(((SnowBikeState *)state)->gameBitId) != 0) {
         ((SnowBikeFlags *)(state + 0x428))->b04 = 1;
     }
     ((SnowBikeState *)state)->unk438 = lbl_803E5B1C;
@@ -184,51 +184,51 @@ void SnowBike_init(int obj, u8 *params, int flag)
     fv = lbl_803E5B98;
     ((SnowBikeState *)state)->unk464 = fv;
     ((SnowBikeState *)state)->unk468 = fv;
-    ((SnowBikeState *)state)->unk440 = 0x436;
+    ((SnowBikeState *)state)->modelId = 0x436;
     switch (((GameObject *)obj)->anim.seqId) {
     case 0x72:
     default:
-        ((SnowBikeState *)state)->unk434 = 1;
+        ((SnowBikeState *)state)->bikeType = 1;
         ((SnowBikeState *)state)->unk46C = lbl_803E5C50;
-        ((SnowBikeState *)state)->unk440 = 282;
+        ((SnowBikeState *)state)->modelId = 282;
         break;
     case 0x16c:
-        ((SnowBikeState *)state)->unk434 = 1;
-        ((SnowBikeState *)state)->unk435 = 0;
+        ((SnowBikeState *)state)->bikeType = 1;
+        ((SnowBikeState *)state)->bikeVariant = 0;
         ((SnowBikeState *)state)->unk01C = lbl_803E5B14;
         ((SnowBikeState *)state)->unk018 = lbl_803E5C54;
         ((SnowBikeState *)state)->unk065 = 1;
         ((SnowBikeState *)state)->unk46C = lbl_803E5AF0;
         break;
     case 0x16f:
-        ((SnowBikeState *)state)->unk434 = 1;
+        ((SnowBikeState *)state)->bikeType = 1;
         ((SnowBikeState *)state)->unk058 = 1;
-        ((SnowBikeState *)state)->unk435 = 1;
+        ((SnowBikeState *)state)->bikeVariant = 1;
         ((SnowBikeState *)state)->unk065 = 2;
         ((SnowBikeState *)state)->unk46C = lbl_803E5AF0;
         break;
     case 0x38c:
-        ((SnowBikeState *)state)->unk434 = 0;
+        ((SnowBikeState *)state)->bikeType = 0;
         ((SnowBikeState *)state)->unk46C = lbl_803DC0C4;
-        ((SnowBikeState *)state)->unk440 = 282;
+        ((SnowBikeState *)state)->modelId = 282;
         break;
     case 0x38d:
-        ((SnowBikeState *)state)->unk434 = 0;
-        ((SnowBikeState *)state)->unk435 = 0;
+        ((SnowBikeState *)state)->bikeType = 0;
+        ((SnowBikeState *)state)->bikeVariant = 0;
         ((SnowBikeState *)state)->unk01C = lbl_803E5B14;
         ((SnowBikeState *)state)->unk018 = lbl_803E5C54;
         ((SnowBikeState *)state)->unk46C = lbl_803E5C58 * lbl_803DC0C0;
         break;
     case 0x38e:
-        ((SnowBikeState *)state)->unk434 = 0;
-        ((SnowBikeState *)state)->unk435 = 1;
+        ((SnowBikeState *)state)->bikeType = 0;
+        ((SnowBikeState *)state)->bikeVariant = 1;
         ((SnowBikeState *)state)->unk01C = lbl_803E5B48;
         ((SnowBikeState *)state)->unk018 = lbl_803E5C5C;
         ((SnowBikeState *)state)->unk46C = lbl_803E5C60 * lbl_803DC0C0;
         break;
     case 0x4d4:
-        ((SnowBikeState *)state)->unk434 = 0;
-        ((SnowBikeState *)state)->unk435 = 2;
+        ((SnowBikeState *)state)->bikeType = 0;
+        ((SnowBikeState *)state)->bikeVariant = 2;
         ((SnowBikeState *)state)->unk01C = lbl_803E5B48;
         ((SnowBikeState *)state)->unk018 = lbl_803E5C5C;
         ((SnowBikeState *)state)->unk46C = lbl_803DC0C0;
@@ -243,8 +243,8 @@ void SnowBike_init(int obj, u8 *params, int flag)
     fv = ((SnowBikeState *)state)->unk46C;
     ((SnowBikeState *)state)->unk484 = fv;
     ((SnowBikeState *)state)->unk478 = fv;
-    ((SnowBikeState *)state)->unk060 = base + ((SnowBikeState *)state)->unk434 * 6 + 0xa4;
-    if (((SnowBikeState *)state)->unk434 == 0) {
+    ((SnowBikeState *)state)->unk060 = base + ((SnowBikeState *)state)->bikeType * 6 + 0xa4;
+    if (((SnowBikeState *)state)->bikeType == 0) {
         if (!((SnowBikeFlags *)(state + 0x428))->b02) {
             ((SnowBikeFlags *)(state + 0x428))->b20 = 1;
             ((SnowBikeState *)state)->unk4C4 = lbl_803E5AE8;
@@ -330,11 +330,11 @@ void SnowBike_update(int obj)
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     ((GameObject *)obj)->anim.rotY = ((SnowBikeState *)state)->unk41C;
     ((GameObject *)obj)->anim.rotZ = ((SnowBikeState *)state)->unk41E;
-    if (((SnowBikeFlags *)(state + 0x428))->b04 || GameBit_Get(((SnowBikeState *)state)->unk44A) != 0) {
+    if (((SnowBikeFlags *)(state + 0x428))->b04 || GameBit_Get(((SnowBikeState *)state)->gameBitId) != 0) {
         ((SnowBikeFlags *)(state + 0x428))->b04 = 1;
         return;
     }
-    mode = ((SnowBikeState *)state)->unk421;
+    mode = ((SnowBikeState *)state)->riderMode;
     switch (mode) {
     case 0:
         {
@@ -376,7 +376,7 @@ void SnowBike_update(int obj)
                     rq1.quad[2] = fz;
                     rq1.quad[3] = fz;
                     rq1.quad[0] = lbl_803E5AEC;
-                    rq1.rot[0] = -((SnowBikeState *)state)->unk40E;
+                    rq1.rot[0] = -((SnowBikeState *)state)->yaw;
                     rq1.rot[1] = -((GameObject *)obj)->anim.rotY;
                     rq1.rot[2] = -((GameObject *)obj)->anim.rotZ;
                     mtxRotateByVec3s(mtx1, rq1.rot);
@@ -397,14 +397,14 @@ void SnowBike_update(int obj)
             } else {
                 setAButtonIcon(0x10);
                 setBButtonIcon(0x11);
-                ((SnowBikeState *)state)->unk45C = (f32)padGetStickX(0);
-                ((SnowBikeState *)state)->unk460 = (f32)padGetStickY(0);
-                ((SnowBikeState *)state)->unk458 = getButtonsHeld(0);
-                ((SnowBikeState *)state)->unk450 = getButtonsJustPressed(0);
-                ((SnowBikeState *)state)->unk454 = getButtonsJustPressedIfNotBusy(0);
-                ((SnowBikeState *)state)->unk44C = (f32)(u16)getAngle(((SnowBikeState *)state)->unk45C, (f32)-(int)((SnowBikeState *)state)->unk460) / lbl_803E5C18;
-                ((SnowBikeState *)state)->unk45C = ((SnowBikeState *)state)->unk45C / lbl_803E5B6C;
-                v = ((SnowBikeState *)state)->unk45C;
+                ((SnowBikeState *)state)->stickX = (f32)padGetStickX(0);
+                ((SnowBikeState *)state)->stickY = (f32)padGetStickY(0);
+                ((SnowBikeState *)state)->buttonsHeld = getButtonsHeld(0);
+                ((SnowBikeState *)state)->buttonsJustPressed = getButtonsJustPressed(0);
+                ((SnowBikeState *)state)->buttonsJustPressedIfNotBusy = getButtonsJustPressedIfNotBusy(0);
+                ((SnowBikeState *)state)->unk44C = (f32)(u16)getAngle(((SnowBikeState *)state)->stickX, (f32)-(int)((SnowBikeState *)state)->stickY) / lbl_803E5C18;
+                ((SnowBikeState *)state)->stickX = ((SnowBikeState *)state)->stickX / lbl_803E5B6C;
+                v = ((SnowBikeState *)state)->stickX;
                 if (v < lbl_803E5B70) {
                     c = lbl_803E5B70;
                 } else if (v > lbl_803E5AEC) {
@@ -412,7 +412,7 @@ void SnowBike_update(int obj)
                 } else {
                     c = v;
                 }
-                ((SnowBikeState *)state)->unk45C = c;
+                ((SnowBikeState *)state)->stickX = c;
                 fn_801EBD60(obj, state);
                 fn_801EC7A0(obj, state);
                 if (((SnowBikeState *)state)->unk3E4 != lbl_803E5AE8) {
@@ -435,7 +435,7 @@ void SnowBike_update(int obj)
                 rq2.quad[2] = fz;
                 rq2.quad[3] = fz;
                 rq2.quad[0] = lbl_803E5AEC;
-                rq2.rot[0] = -((SnowBikeState *)state)->unk40E;
+                rq2.rot[0] = -((SnowBikeState *)state)->yaw;
                 rq2.rot[1] = -((GameObject *)obj)->anim.rotY;
                 rq2.rot[2] = -((GameObject *)obj)->anim.rotZ;
                 mtxRotateByVec3s(mtx2, rq2.rot);
@@ -456,7 +456,7 @@ void SnowBike_update(int obj)
             fn_801EB0D4(obj, state);
             fn_801EA240(obj, state, ((SnowBikeState *)state)->unk49C, (int)(lbl_803E5BA0 * -((SnowBikeState *)state)->unk430), state + 0x461, 7);
             fn_801EB634(obj, state);
-            *(s16 *)obj = ((SnowBikeState *)state)->unk40E;
+            *(s16 *)obj = ((SnowBikeState *)state)->yaw;
         }
         break;
     }
