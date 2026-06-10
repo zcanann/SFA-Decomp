@@ -8,6 +8,18 @@
 #include "main/dll/TrickyCurve.h"
 #include "main/dll/sfxplayer.h"
 
+typedef struct TrickyCurveObjectDef {
+    u8 pad0[0x18 - 0x0];
+    s8 unk18;
+    u8 pad19[0x1A - 0x19];
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    u8 pad22[0x28 - 0x22];
+} TrickyCurveObjectDef;
+
+
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068c4();
 extern uint FUN_80017690();
@@ -819,15 +831,15 @@ void TrickyCurve_free(int obj) {
 void TrickyCurve_init(int *obj, u8 *def) {
     u8 *state = ((GameObject *)obj)->extra;
     state[0xc] = def[0x19];
-    ((TrickyCurveObjState *)state)->unk4 = (s16)((s32)*(s8 *)((char *)def + 0x18) << 2);
-    *(s16 *)state = *(s16 *)((char *)def + 0x1a);
-    ((TrickyCurveObjState *)state)->unk2 = *(s16 *)((char *)def + 0x1c);
+    ((TrickyCurveObjState *)state)->unk4 = (s16)((s32)((TrickyCurveObjectDef *)def)->unk18 << 2);
+    *(s16 *)state = ((TrickyCurveObjectDef *)def)->unk1A;
+    ((TrickyCurveObjState *)state)->unk2 = ((TrickyCurveObjectDef *)def)->unk1C;
     state[0xe] = def[0x19];
     state[0x10] = 0;
     state[0x11] = 0;
     state[0x12] = 0;
-    ((TrickyCurveObjState *)state)->unk8 = *(s16 *)((char *)def + 0x20);
-    ((TrickyCurveObjState *)state)->unkA = *(s16 *)((char *)def + 0x1e);
+    ((TrickyCurveObjState *)state)->unk8 = ((TrickyCurveObjectDef *)def)->unk20;
+    ((TrickyCurveObjState *)state)->unkA = ((TrickyCurveObjectDef *)def)->unk1E;
     ((TrickyCurveObjState *)state)->unk6 = 0;
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x2000);
 }

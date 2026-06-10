@@ -10,6 +10,18 @@
 #include "main/objhits_types.h"
 #include "main/resource.h"
 
+typedef struct SmallbasketObjectDef {
+    u8 pad0[0x18 - 0x0];
+    s8 unk18;
+    u8 unk19;
+    s16 unk1A;
+    f32 unk1C;
+    s16 unk20;
+    u8 pad22[0x24 - 0x22];
+    f32 unk24;
+} SmallbasketObjectDef;
+
+
 #define SMALLBASKET_LINKED_ID_BASE 0x40000
 #define SMALLBASKET_ROB_WAVE_DIRECT_ID 0x66
 #define SMALLBASKET_ROB_WAVE_ID_65D0 0x65d0
@@ -102,16 +114,16 @@ void smallbasket_init(int obj, int def)
 
     lbl_803DDAC0 = Resource_Acquire(0x5b, 1);
     ((CfperchState *)state)->randomTimer = (s16)(randomGetRange(0, 0x64) + 0x12c);
-    ((CfperchState *)state)->unk1F = (u8)*(s16*)(def + 0x1a);
-    *(s16*)obj = (s16)(*(s8*)(def + 0x18) << 8);
+    ((CfperchState *)state)->unk1F = (u8)((SmallbasketObjectDef *)def)->unk1A;
+    *(s16*)obj = (s16)(((SmallbasketObjectDef *)def)->unk18 << 8);
     ((CfperchState *)state)->enableGameBit = *(s16*)(def + 0x1e);
-    ((CfperchState *)state)->unkC = *(s16*)(def + 0x20);
+    ((CfperchState *)state)->unkC = ((SmallbasketObjectDef *)def)->unk20;
     if (((CfperchState *)state)->unkC == 0) {
         ((CfperchState *)state)->unkC = 0x14;
     }
     ((CfperchState *)state)->unk12 = 0x320;
     ((GameObject *)obj)->objectFlags |= 0x2000;
-    ((CfperchState *)state)->unk1E = *(u8*)(def + 0x19);
+    ((CfperchState *)state)->unk1E = ((SmallbasketObjectDef *)def)->unk19;
     ((GameObject *)obj)->anim.previousLocalPosX = ((GameObject *)obj)->anim.localPosX;
     ((GameObject *)obj)->anim.previousLocalPosY = ((GameObject *)obj)->anim.localPosY;
     ((GameObject *)obj)->anim.previousLocalPosX = ((GameObject *)obj)->anim.localPosZ;

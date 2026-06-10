@@ -3,6 +3,14 @@
 #include "main/dll/CF/warp_pad.h"
 #include "main/game_object.h"
 
+typedef struct CfDoorlightObjectDef {
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    s16 unk1C;
+    u8 pad1E[0x20 - 0x1E];
+} CfDoorlightObjectDef;
+
+
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
 extern undefined4 FUN_800400b0();
@@ -304,8 +312,8 @@ void cf_doorlight_init(int *obj, s8 *def) {
     u32 b;
     state->textureId = 0;
     *(s16 *)obj = (s16)((s32)def[0x19] << 9);
-    state->maxFrame = (int)*(s16 *)((char *)def + 0x1a) << 8;
-    state->frameStep = (u8)*(s16 *)((char *)def + 0x1c);
+    state->maxFrame = (int)((CfDoorlightObjectDef *)def)->unk1A << 8;
+    state->frameStep = (u8)((CfDoorlightObjectDef *)def)->unk1C;
     state->resetFrame = (int)def[0x18] << 8;
     b = (u32)(u8)GameBit_Get(((CfDoorLightDef *)def)->doneEvent);
     state->flags = (u8)((state->flags & ~0x40) | ((b & 1) << 6));

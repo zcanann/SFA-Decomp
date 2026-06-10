@@ -10,6 +10,42 @@
 #include "main/objseq.h"
 #include "main/dll/CF/CFBaby.h"
 
+typedef struct InfopointObjectDef {
+    u8 pad0[0x14 - 0x0];
+    s32 unk14;
+    u16 unk18;
+    u8 pad1A[0x1B - 0x1A];
+    u8 unk1B;
+    s16 unk1C;
+    u8 unk1E;
+    u8 unk1F;
+} InfopointObjectDef;
+
+
+typedef struct FallLaddersObjectDef {
+    u8 pad0[0x14 - 0x0];
+    s32 unk14;
+    u16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    u8 pad22[0x28 - 0x22];
+} FallLaddersObjectDef;
+
+
+typedef struct FlammablevineObjectDef {
+    u8 pad0[0x14 - 0x0];
+    s32 unk14;
+    u16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    u8 pad22[0x28 - 0x22];
+} FlammablevineObjectDef;
+
+
 typedef struct FlammablevinePlacement {
     u8 pad0[0x14 - 0x0];
     s32 unk14;
@@ -1939,7 +1975,7 @@ void flammablevine_init(int obj, int def)
     ObjGroup_AddObject(obj, 0x31);
     *(s16 *)obj = (s16)((s8)*(u8 *)(def + 0x18) << 8);
 
-    ((GameObject *)obj)->anim.rootMotionScale = lbl_803E3B20 * ((f32)*(s16 *)(def + 0x1a) / lbl_803E3B24);
+    ((GameObject *)obj)->anim.rootMotionScale = lbl_803E3B20 * ((f32)((FlammablevineObjectDef *)def)->unk1A / lbl_803E3B24);
     if (((GameObject *)obj)->anim.rootMotionScale <= *(f32 *)&lbl_803E3B28) {
         ((GameObject *)obj)->anim.rootMotionScale = lbl_803E3B28;
     }
@@ -1953,7 +1989,7 @@ void flammablevine_init(int obj, int def)
     *(f32 *)(state + 0x10) = lbl_803E3B34;
     ObjAnim_SetMoveProgress(lbl_803E3B00, (ObjAnimComponent *)obj);
 
-    if (*(s16 *)(def + 0x1e) != -1 && GameBit_Get(*(s16 *)(def + 0x1e)) != 0) {
+    if (((FlammablevineObjectDef *)def)->unk1E != -1 && GameBit_Get(((FlammablevineObjectDef *)def)->unk1E) != 0) {
         Obj_RemoveFromUpdateList(obj);
         ObjHits_DisableObject(obj);
         ((GameObject *)obj)->anim.alpha = 0;
@@ -2764,9 +2800,9 @@ void Fall_Ladders_update(int obj) {
 void Fall_Ladders_init(int *obj, s8 *def) {
     s16 *state = ((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)((s32)*(s8 *)((char *)def + 0x18) << 8);
-    state[3] = *(s16 *)((char *)def + 0x20);
-    state[2] = *(s16 *)((char *)def + 0x1e);
-    *(f32 *)state = (f32)(s32)*(s16 *)((char *)def + 0x1a);
+    state[3] = ((FallLaddersObjectDef *)def)->unk20;
+    state[2] = ((FallLaddersObjectDef *)def)->unk1E;
+    *(f32 *)state = (f32)(s32)((FallLaddersObjectDef *)def)->unk1A;
     ((GameObject *)obj)->objectFlags |= 0x6000;
     ((GameObject *)obj)->animEventCallback = (void *)Fall_Ladders_SeqFn;
     ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)def)->posY + *(f32 *)state;
@@ -2789,13 +2825,13 @@ void infopoint_init(int *obj, u8 *def) {
         *(int *)lbl_803219A0 = textureLoadAsset(616);
     }
     *(int *)(state + 8) = (int)lbl_80321990;
-    txt = gameTextGet(*(u16 *)((char *)def + 0x18));
+    txt = gameTextGet(((InfopointObjectDef *)def)->unk18);
     *(int *)(state + 4) = **(int **)((char *)txt + 8);
     *(int *)(state + 0xc) = 100;
     *(int *)state = (int)txt;
     *(s16 *)obj = (s16)((s32)*(u8 *)((char *)def + 0x1c) << 8);
     *(int *)(state + 0x18) = 2;
-    *(u8 *)(state + 0x10) = *(u8 *)((char *)def + 0x1b);
+    *(u8 *)(state + 0x10) = ((InfopointObjectDef *)def)->unk1B;
     *(s16 *)(state + 0x16) = 0;
     ((GameObject *)obj)->objectFlags |= 0x2000;
 }

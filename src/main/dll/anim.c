@@ -161,6 +161,17 @@ STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 /* chuka extra block (extraSize 0xC). */
 #include "main/dll/baddie/chuka.h"
 
+typedef struct DfpobjcreatorObjectDef {
+    u8 pad0[0x18 - 0x0];
+    s16 unk18;
+    u8 pad1A[0x1C - 0x1A];
+    s16 unk1C;
+    u8 pad1E[0x24 - 0x1E];
+    s16 unk24;
+    u8 pad26[0x28 - 0x26];
+} DfpobjcreatorObjectDef;
+
+
 typedef struct Dbholecontrol1Placement {
     u8 pad0[0x8 - 0x0];
     f32 unk8;
@@ -4564,8 +4575,8 @@ void DFP_Torch_free(int obj) {
 void dfpobjcreator_init(int obj, s8 *def) {
     DfpObjCreatorState *state = ((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)((s32)def[0x1E] << 8);
-    state->gameBit = *(s16 *)((char *)def + 0x18);
-    state->spawnPeriod = *(s16 *)((char *)def + 0x1C);
+    state->gameBit = ((DfpobjcreatorObjectDef *)def)->unk18;
+    state->spawnPeriod = ((DfpobjcreatorObjectDef *)def)->unk1C;
     state->spawnTimer = state->spawnPeriod;
     state->unk12 = (s16)(s32)def[0x1F];
     state->unk14 = (s16)((s32)(u8)def[0x20] << 1);

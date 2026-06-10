@@ -10,6 +10,36 @@
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
 
+typedef struct InvhitObjectDef {
+    u8 pad0[0x18 - 0x0];
+    s16 unk18;
+    s16 unk1A;
+    void *unk1C;
+} InvhitObjectDef;
+
+
+typedef struct WarpPointObjectDef {
+    u8 pad0[0x18 - 0x0];
+    s16 unk18;
+    s16 unk1A;
+    void *unk1C;
+    s16 unk20;
+    u8 pad22[0x28 - 0x22];
+} WarpPointObjectDef;
+
+
+typedef struct PushableObjectDef {
+    u8 pad0[0x18 - 0x0];
+    s16 unk18;
+    s16 unk1A;
+    void *unk1C;
+    s16 unk20;
+    u8 unk22;
+    u8 unk23;
+    u8 pad24[0x28 - 0x24];
+} PushableObjectDef;
+
+
 typedef struct WarpPointPlacement {
     u8 pad0[0x18 - 0x0];
     s16 unk18;
@@ -1328,7 +1358,7 @@ void WarpPoint_init(int *obj, u8 *def) {
     *(s16 *)obj = (s16)((u32)def[0x18] << 8);
     state[0] = 0x1e;
     ((WarpPointState *)state)->unk8 = (f32)((s32)*(s8 *)((char *)def + 0x1e) << 2);
-    state[1] = *(s16 *)((char *)def + 0x20);
+    state[1] = ((WarpPointObjectDef *)def)->unk20;
     state[2] = (s16)(s32)*(s8 *)((char *)def + 0x1b);
     if (*(s8 *)((char *)def + 0x1c) != 0) {
         ((WarpPointState *)state)->unkC = 0;
@@ -1522,10 +1552,10 @@ void invhit_init(int *obj, u8 *def) {
         *(int *)&((ObjHitsPriorityState *)sub)->objectHitMask = 0x10;
         ((GameObject *)obj)->unkF8 = 0x78;
         {
-            char *anchorObj = *(char **)(def + 0x1c);
+            char *anchorObj = *(char **)&((InvhitObjectDef *)def)->unk1C;
             if (anchorObj != NULL) {
                 state->anchorX = ((GameObject *)anchorObj)->anim.localPosX;
-                state->anchorZ = *(f32 *)(*(char **)(def + 0x1c) + 0x14);
+                state->anchorZ = *(f32 *)(*(char **)&((InvhitObjectDef *)def)->unk1C + 0x14);
             }
         }
         break;
@@ -1912,11 +1942,11 @@ void pushable_init(s16 *obj, char *def) {
     f32 vtx[3];
 
     if (((ObjPlacement *)def)->mapId == 0x30398) {
-        *(u8 *)(def + 0x23) = 1;
+        ((PushableObjectDef *)def)->unk23 = 1;
     } else {
-        *(s8 *)(def + 0x23) = -1;
+        *(s8 *)&((PushableObjectDef *)def)->unk23 = -1;
     }
-    *obj = *(u8 *)(def + 0x22) << 8;
+    *obj = ((PushableObjectDef *)def)->unk22 << 8;
     ((GameObject *)obj)->anim.localPosY = lbl_803E358C + ((ObjPlacement *)def)->posY;
     ObjGroup_AddObject(obj, 5);
     objSetSlot(obj, 0x5a);
@@ -1925,12 +1955,12 @@ void pushable_init(s16 *obj, char *def) {
     state->pointCount = 0;
     entry = Transporter_GetActiveModel(obj);
     model = (int *)*entry;
-    state->unk_B0 = *(int *)(def + 0x1c);
-    state->scale = (f32)*(u16 *)(def + 0x20) / lbl_803E35CC;
+    state->unk_B0 = *(int *)&((PushableObjectDef *)def)->unk1C;
+    state->scale = (f32)*(u16 *)&((PushableObjectDef *)def)->unk20 / lbl_803E35CC;
     state->scale = state->scale * *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4);
     state->cullDistance = state->scale * (f32)(u16)modelFileHeaderGetCullDistance(*entry) + lbl_803E3558;
     state->timer_0x14 = lbl_803E3528;
-    state->gameBit = *(s16 *)(def + 0x18);
+    state->gameBit = ((PushableObjectDef *)def)->unk18;
     ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E3528, 0);
     ObjMsg_AllocQueue(obj, 4);
     ObjHits_EnableObject(obj);
@@ -2040,7 +2070,7 @@ void pushable_init(s16 *obj, char *def) {
         fn_80174588(obj, state);
         break;
     case 0x1cb:
-        if (*(s16 *)(def + 0x18) > -1 && GameBit_Get(*(s16 *)(def + 0x18)) != 0) {
+        if (((PushableObjectDef *)def)->unk18 > -1 && GameBit_Get(((PushableObjectDef *)def)->unk18) != 0) {
             state->flags = state->flags | 0x81;
             *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8;
             pushable_savePos((int *)obj);
@@ -2048,7 +2078,7 @@ void pushable_init(s16 *obj, char *def) {
         state->savePosEnabled = 0;
         break;
     default:
-        if (*(s16 *)(def + 0x18) > -1 && GameBit_Get(*(s16 *)(def + 0x18)) != 0) {
+        if (((PushableObjectDef *)def)->unk18 > -1 && GameBit_Get(((PushableObjectDef *)def)->unk18) != 0) {
             state->flags = state->flags | 1;
         }
         break;

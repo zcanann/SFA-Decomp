@@ -5,6 +5,21 @@
 #include "main/dll/baddie_state.h"
 #include "main/dll/crackanim.h"
 
+typedef struct AppleontreeObjectDef {
+    u8 pad0[0x18 - 0x0];
+    u32 unk18;
+    u16 unk1C;
+    u16 unk1E;
+    u8 unk20;
+    u8 unk21;
+    u8 unk22;
+    u8 unk23;
+    u8 unk24;
+    s8 unk25;
+    s16 unk26;
+} AppleontreeObjectDef;
+
+
 
 extern undefined8 FUN_80006824();
 extern uint GameBit_Get(int eventId);
@@ -331,15 +346,15 @@ void appleontree_init(int obj, int def)
 
     state = *(int *)&((GameObject *)obj)->extra;
 
-    ((CrackAnimState *)state)->unk0 = *(u32 *)(def + 0x18);
-    ((CrackAnimState *)state)->duration = (f32)*(u16 *)(def + 0x1c);
-    ((CrackAnimState *)state)->elapsed = (f32)*(u16 *)(def + 0x1e);
-    ((CrackAnimState *)state)->stageEnd0 = (f32)*(u8 *)(def + 0x20) / lbl_803E3828;
-    ((CrackAnimState *)state)->stageEnd1 = ((CrackAnimState *)state)->stageEnd0 + (f32)*(u8 *)(def + 0x21) / lbl_803E3828;
-    ((CrackAnimState *)state)->stageEnd2 = ((CrackAnimState *)state)->stageEnd1 + (f32)*(u8 *)(def + 0x22) / lbl_803E3828;
-    ((CrackAnimState *)state)->stageEnd3 = ((CrackAnimState *)state)->stageEnd2 + (f32)*(u8 *)(def + 0x23) / lbl_803E3828;
-    ((CrackAnimState *)state)->unk20 = (f32)*(u8 *)(def + 0x24) / lbl_803E3828;
-    ((CrackAnimState *)state)->unk28 = (f32)*(s8 *)(def + 0x25) / lbl_803E3828;
+    ((CrackAnimState *)state)->unk0 = ((AppleontreeObjectDef *)def)->unk18;
+    ((CrackAnimState *)state)->duration = (f32)((AppleontreeObjectDef *)def)->unk1C;
+    ((CrackAnimState *)state)->elapsed = (f32)((AppleontreeObjectDef *)def)->unk1E;
+    ((CrackAnimState *)state)->stageEnd0 = (f32)((AppleontreeObjectDef *)def)->unk20 / lbl_803E3828;
+    ((CrackAnimState *)state)->stageEnd1 = ((CrackAnimState *)state)->stageEnd0 + (f32)((AppleontreeObjectDef *)def)->unk21 / lbl_803E3828;
+    ((CrackAnimState *)state)->stageEnd2 = ((CrackAnimState *)state)->stageEnd1 + (f32)((AppleontreeObjectDef *)def)->unk22 / lbl_803E3828;
+    ((CrackAnimState *)state)->stageEnd3 = ((CrackAnimState *)state)->stageEnd2 + (f32)((AppleontreeObjectDef *)def)->unk23 / lbl_803E3828;
+    ((CrackAnimState *)state)->unk20 = (f32)((AppleontreeObjectDef *)def)->unk24 / lbl_803E3828;
+    ((CrackAnimState *)state)->unk28 = (f32)((AppleontreeObjectDef *)def)->unk25 / lbl_803E3828;
     ((CrackAnimState *)state)->unk28 = ((CrackAnimState *)state)->unk28 * lbl_803E37DC;
     ((CrackAnimState *)state)->unk24 = lbl_803E37C8;
     ((CrackAnimState *)state)->unk38 = 0;
@@ -357,7 +372,7 @@ void appleontree_init(int obj, int def)
     ((GameObject *)obj)->anim.rootMotionScale = lbl_803E3834;
     Obj_SetActiveModelIndex(obj, 0);
 
-    eventBit = *(s16 *)(def + 0x26);
+    eventBit = ((AppleontreeObjectDef *)def)->unk26;
     if ((eventBit != -1) && (GameBit_Get(eventBit) != 0)) {
         ((CrackAnimState *)state)->elapsed = lbl_803E3838;
         ((CrackAnimState *)state)->stage = 6;

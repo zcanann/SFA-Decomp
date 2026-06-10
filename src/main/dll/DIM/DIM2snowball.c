@@ -9,6 +9,48 @@
 #include "main/objanim_internal.h"
 #include "global.h"
 
+typedef struct DimtruthhorniceObjectDef {
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+} DimtruthhorniceObjectDef;
+
+
+typedef struct Dim2snowballObjectDef {
+    u8 pad0[0x14 - 0x0];
+    s32 unk14;
+    s8 unk18;
+    u8 pad19[0x1A - 0x19];
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+} Dim2snowballObjectDef;
+
+
+typedef struct Dll1CFObjectDef {
+    u8 pad0[0x14 - 0x0];
+    s32 unk14;
+    s8 unk18;
+    u8 pad19[0x1A - 0x19];
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+} Dll1CFObjectDef;
+
+
+typedef struct Dim2pathgeneratorObjectDef {
+    u8 pad0[0x14 - 0x0];
+    s32 unk14;
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    u16 unk1E;
+    s16 unk20;
+    u8 pad22[0x28 - 0x22];
+} Dim2pathgeneratorObjectDef;
+
+
 typedef struct Dim2pathgeneratorPlacement {
     u8 pad0[0x3 - 0x0];
     u8 unk3;
@@ -1364,13 +1406,13 @@ void dim2pathgenerator_init(int* obj, int* def)
     Dim2PathGeneratorState* state;
     *(s16*)obj = (s16)((u32)*(u8*)((char*)def + 28) << 8);
     state = ((GameObject *)obj)->extra;
-    state->spawnPeriod = *(s16*)((char*)def + 24);
+    state->spawnPeriod = ((Dim2pathgeneratorObjectDef *)def)->unk18;
     state->spawnTimer = (s16)*(u8*)((char*)def + 29);
-    state->spawnTypes[0] = (s16)*(u16*)((char*)def + 30);
+    state->spawnTypes[0] = (s16)((Dim2pathgeneratorObjectDef *)def)->unk1E;
     {
-        s16 v = *(s16*)((char*)def + 32);
+        s16 v = ((Dim2pathgeneratorObjectDef *)def)->unk20;
         if (v == -1) {
-            state->spawnTypes[1] = (s16)*(u16*)((char*)def + 30);
+            state->spawnTypes[1] = (s16)((Dim2pathgeneratorObjectDef *)def)->unk1E;
         } else {
             state->spawnTypes[1] = v;
         }
@@ -1382,8 +1424,8 @@ void dim2pathgenerator_init(int* obj, int* def)
 void dimtruthhornice_init(int* obj, int* def)
 {
     TruthHornIceState* state = ((GameObject *)obj)->extra;
-    state->hitsLeft = (s8)*(s16*)((char*)def + 26);
-    state->gameBit = *(s16*)((char*)def + 30);
+    state->hitsLeft = (s8)((DimtruthhorniceObjectDef *)def)->unk1A;
+    state->gameBit = ((DimtruthhorniceObjectDef *)def)->unk1E;
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x4000);
     {
         s16 slot = state->gameBit;
@@ -1398,10 +1440,10 @@ void dimtruthhornice_init(int* obj, int* def)
 void dim2snowball_init(int* obj, int* def)
 {
     Dim2SnowballState* state = ((GameObject *)obj)->extra;
-    state->targetId = *(int*)((char*)def + 20);
+    state->targetId = ((Dim2snowballObjectDef *)def)->unk14;
     state->flagsAC = (u8)(state->flagsAC | 4);
-    *(int*)((char*)def + 20) = -1;
-    *(s16*)obj = (s16)((s32)*(s8*)((char*)def + 24) << 8);
+    ((Dim2snowballObjectDef *)def)->unk14 = -1;
+    *(s16*)obj = (s16)((s32)((Dim2snowballObjectDef *)def)->unk18 << 8);
     *(s8*)((char*)obj + 54) = 0;
     {
         ObjModelState* p = ((GameObject *)obj)->anim.modelState;
@@ -1415,10 +1457,10 @@ void dim2snowball_init(int* obj, int* def)
 
 void dll_1CF_init(int* obj, int* def)
 {
-    if ((u32)GameBit_Get(*(s16*)((char*)def + 30)) != 0u) {
-        ((GameObject *)obj)->anim.rotY = (s16)(((s32)*(s16*)((char*)def + 26) << 13) / 45);
+    if ((u32)GameBit_Get(((Dll1CFObjectDef *)def)->unk1E) != 0u) {
+        ((GameObject *)obj)->anim.rotY = (s16)(((s32)((Dll1CFObjectDef *)def)->unk1A << 13) / 45);
     }
-    *(s16*)obj = (s16)((s32)*(s8*)((char*)def + 24) << 8);
+    *(s16*)obj = (s16)((s32)((Dll1CFObjectDef *)def)->unk18 << 8);
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0xe000);
 }
 

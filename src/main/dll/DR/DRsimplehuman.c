@@ -2,6 +2,15 @@
 #include "main/game_object.h"
 #include "main/dll/DR/DRsimplehuman.h"
 
+typedef struct SpdrapeObjectDef {
+    u8 pad0[0x18 - 0x0];
+    s8 unk18;
+    u8 pad19[0x1A - 0x19];
+    s16 unk1A;
+    u8 pad1C[0x20 - 0x1C];
+} SpdrapeObjectDef;
+
+
 typedef struct SpdrapeState {
     u8 pad0[0x10 - 0x0];
     s32 unk10;
@@ -430,9 +439,9 @@ void spdrape_init(int *obj, u8 *def) {
     state = ((GameObject *)obj)->extra;
     ((GameObject *)obj)->objectFlags |= 0x2000;
     ((GameObject *)obj)->objectFlags |= 0x4000;
-    *(s16 *)obj = (s16)((s32)*(s8 *)((char *)def + 0x18) << 8);
-    if (*(s16 *)((char *)def + 0x1a) != 0) {
-        ((GameObject *)obj)->anim.rootMotionScale = (f32)(s32)*(s16 *)((char *)def + 0x1a) / lbl_803E5AC4 * lbl_803E5AC0;
+    *(s16 *)obj = (s16)((s32)((SpdrapeObjectDef *)def)->unk18 << 8);
+    if (((SpdrapeObjectDef *)def)->unk1A != 0) {
+        ((GameObject *)obj)->anim.rootMotionScale = (f32)(s32)((SpdrapeObjectDef *)def)->unk1A / lbl_803E5AC4 * lbl_803E5AC0;
     }
     state[0] = lbl_803E5ABC;
     state[1] = mathSinf(lbl_803E5AC8 * (f32)(s32)*(s16 *)obj / lbl_803E5ACC);

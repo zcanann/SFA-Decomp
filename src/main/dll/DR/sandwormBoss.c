@@ -3543,6 +3543,70 @@ typedef struct SpiritDoorSpiritState {
 
 #include "main/dll/DR/gunpowderbarrel_state.h"
 
+typedef struct BabycloudrunnerObjectDef {
+    u8 pad0[0x8 - 0x0];
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    u8 pad14[0x18 - 0x14];
+    s16 unk18;
+    s16 unk1A;
+    u8 pad1C[0x1E - 0x1C];
+    s16 unk1E;
+    u8 pad20[0x22 - 0x20];
+    s16 unk22;
+    u8 pad24[0x28 - 0x24];
+} BabycloudrunnerObjectDef;
+
+
+typedef struct CfmaincrystalObjectDef {
+    u8 pad0[0x8 - 0x0];
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    u8 pad14[0x18 - 0x14];
+    s16 unk18;
+    s16 unk1A;
+    u8 pad1C[0x1E - 0x1C];
+    s16 unk1E;
+    u8 pad20[0x22 - 0x20];
+    s16 unk22;
+    u8 pad24[0x28 - 0x24];
+} CfmaincrystalObjectDef;
+
+
+typedef struct CfprisoncageObjectDef {
+    u8 pad0[0x8 - 0x0];
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    u8 pad14[0x18 - 0x14];
+    s16 unk18;
+    s16 unk1A;
+    u8 pad1C[0x1E - 0x1C];
+    s16 unk1E;
+    u8 pad20[0x22 - 0x20];
+    s16 unk22;
+    u8 pad24[0x28 - 0x24];
+} CfprisoncageObjectDef;
+
+
+typedef struct WindliftObjectDef {
+    u8 pad0[0x8 - 0x0];
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    u8 pad14[0x18 - 0x14];
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    u8 pad20[0x22 - 0x20];
+    s16 unk22;
+    u8 pad24[0x28 - 0x24];
+} WindliftObjectDef;
+
+
 typedef struct CfprisonguardPlacement {
     u8 pad0[0x8 - 0x0];
     f32 unk8;
@@ -4207,13 +4271,13 @@ void cfprisoncage_init(int *obj, u8 *def) {
     ((GameObject *)obj)->unkF4 = 1;
     ((GameObject *)obj)->animEventCallback = (void *)cfprisoncage_SeqFn;
     if (((GameObject *)obj)->anim.seqId == 296) {
-        if (GameBit_Get(*(s16 *)((char *)def + 0x18)) != 0) {
+        if (GameBit_Get(((CfprisoncageObjectDef *)def)->unk18) != 0) {
             ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E42B4, 0);
         } else {
             ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E42B4, 0);
         }
     } else {
-        if (GameBit_Get(*(s16 *)((char *)def + 0x18)) != 0) {
+        if (GameBit_Get(((CfprisoncageObjectDef *)def)->unk18) != 0) {
             (*gObjectTriggerInterface)->preempt((int)obj, 60);
         }
     }
@@ -4707,7 +4771,7 @@ void windlift_init(int* obj, u8* def)
 {
     int i;
     WindLiftSub* sub = ((GameObject *)obj)->extra;
-    sub->seqId = *(s16*)(def + 0x1e);
+    sub->seqId = ((WindliftObjectDef *)def)->unk1E;
     sub->duration = seqStreamLookupFn_8007fff8(lbl_80322A48, 4, sub->seqId);
     sub->gamebit = seqStreamLookupFn_8007fff8(lbl_80322A68, 3, sub->seqId);
     if (sub->gamebit == 0) {
@@ -4716,7 +4780,7 @@ void windlift_init(int* obj, u8* def)
     if (sub->duration == 0) {
         sub->duration = 100;
     }
-    sub->delay = *(s16*)(def + 0x1c);
+    sub->delay = ((WindliftObjectDef *)def)->unk1C;
     sub->timer = 0;
     if (*(s8*)(def + 0x19) != 0) {
         sub->liftHeight = lbl_803E41C8 * (f32)*(s8*)(def + 0x19);

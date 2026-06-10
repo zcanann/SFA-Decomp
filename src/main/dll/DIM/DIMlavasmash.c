@@ -5,6 +5,14 @@
 #include "main/dll/DIM/DIMlavasmash.h"
 #include "main/dll/DIM/dimlogfire.h"
 
+typedef struct DimlogfireObjectDef {
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+} DimlogfireObjectDef;
+
+
 typedef struct DimsnowballState {
     u8 pad0[0xC - 0x0];
     s8 unkC;
@@ -300,10 +308,10 @@ void dimlogfire_init(int obj, int def)
     ObjGroup_AddObject(obj, 0x31);
     state = ((GameObject *)obj)->extra;
     state->unk20 = 0;
-    state->unk18 = *(s16 *)(def + 0x1a);
-    state->strengthInit = (s8)*(s16 *)(def + 0x1c);
+    state->unk18 = ((DimlogfireObjectDef *)def)->unk1A;
+    state->strengthInit = (s8)((DimlogfireObjectDef *)def)->unk1C;
     *(u8 *)&state->strength = *(u8 *)&state->strengthInit;
-    if (GameBit_Get(*(s16 *)(def + 0x1e)) != 0) {
+    if (GameBit_Get(((DimlogfireObjectDef *)def)->unk1E) != 0) {
         state->mode = 1;
         state->dousedLatch = 1;
     }

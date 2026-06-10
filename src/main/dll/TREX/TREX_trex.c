@@ -11,6 +11,34 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 
+typedef struct LampObjectDef {
+    u8 pad0[0x18 - 0x0];
+    s8 unk18;
+    u8 pad19[0x1A - 0x19];
+    u8 unk1A;
+    u8 pad1B[0x20 - 0x1B];
+} LampObjectDef;
+
+
+typedef struct SBSeqDoorObjectDef {
+    u8 pad0[0x18 - 0x0];
+    s8 unk18;
+    s8 unk19;
+    u8 unk1A;
+    u8 pad1B[0x20 - 0x1B];
+} SBSeqDoorObjectDef;
+
+
+typedef struct ShipBattleObjectDef {
+    u8 pad0[0x18 - 0x0];
+    s16 unk18;
+    s16 unk1A;
+    u8 pad1C[0x24 - 0x1C];
+    u8 unk24;
+    u8 pad25[0x28 - 0x25];
+} ShipBattleObjectDef;
+
+
 /*
  * Per-object extra state for the ShipBattle cloud-ball projectile
  * (SB_CloudBall_getExtraSize == 0x24).
@@ -1984,9 +2012,9 @@ void Lamp_init(int* obj, int* def)
 {
     int* state = ((GameObject *)obj)->extra;
     if (((GameObject *)obj)->anim.seqId == 996) {
-        *(s16*)obj = (s16)((u32)*(u8*)((char*)def + 26) << 8);
+        *(s16*)obj = (s16)((u32)((LampObjectDef *)def)->unk1A << 8);
     } else {
-        *(s16*)obj = (s16)((s32)*(s8*)((char*)def + 24) << 8);
+        *(s16*)obj = (s16)((s32)((LampObjectDef *)def)->unk18 << 8);
     }
     ((GameObject *)obj)->anim.rotY = 0;
     ((GameObject *)obj)->anim.rotZ = 0;
@@ -2430,9 +2458,9 @@ void SB_MiniFire_update(int obj)
 void SB_SeqDoor_init(int* obj, int* def)
 {
     ((GameObject *)obj)->animEventCallback = (void *)SB_SeqDoor_SeqFn;
-    *(s16*)obj = (s16)((s32)*(s8*)((char*)def + 24) << 8);
+    *(s16*)obj = (s16)((s32)((SBSeqDoorObjectDef *)def)->unk18 << 8);
     {
-        s8 b = *(s8*)((char*)def + 25);
+        s8 b = ((SBSeqDoorObjectDef *)def)->unk19;
         ((ObjAnimComponent *)obj)->bankIndex = (s8)(((u32)-b | (u32)b) >> 31);
     }
 }
@@ -2484,28 +2512,28 @@ void ShipBattle_init(int obj, int def)
     int chainIndex;
 
     state = ((GameObject *)obj)->extra;
-    state->unk6A = *(s16 *)(def + 0x1a);
+    state->unk6A = ((ShipBattleObjectDef *)def)->unk1A;
     state->unk6E = -1;
     state->unk24 =
-        lbl_803E595C / (lbl_803E595C + (f32)*(u8 *)(def + 0x24));
+        lbl_803E595C / (lbl_803E595C + (f32)((ShipBattleObjectDef *)def)->unk24);
     state->unk28 = -1;
 
     chainIndex = ((GameObject *)obj)->unkF4;
     if (chainIndex == 0) {
-        if (*(s16 *)(def + 0x18) != 1) {
+        if (((ShipBattleObjectDef *)def)->unk18 != 1) {
             (*gObjectTriggerInterface)->loadAnimData((u8 *)state, (u8 *)def);
-            ((GameObject *)obj)->unkF4 = *(s16 *)(def + 0x18) + 1;
+            ((GameObject *)obj)->unkF4 = ((ShipBattleObjectDef *)def)->unk18 + 1;
             goto light_setup;
         }
     }
 
     if (chainIndex != 0) {
-        if (*(s16 *)(def + 0x18) != chainIndex - 1) {
+        if (((ShipBattleObjectDef *)def)->unk18 != chainIndex - 1) {
             (*gObjectTriggerInterface)->freeState((u8 *)state);
-            if (*(s16 *)(def + 0x18) != -1) {
+            if (((ShipBattleObjectDef *)def)->unk18 != -1) {
                 (*gObjectTriggerInterface)->loadAnimData((u8 *)state, (u8 *)def);
             }
-            ((GameObject *)obj)->unkF4 = *(s16 *)(def + 0x18) + 1;
+            ((GameObject *)obj)->unkF4 = ((ShipBattleObjectDef *)def)->unk18 + 1;
         }
     }
 

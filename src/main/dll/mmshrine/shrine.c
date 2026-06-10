@@ -5,6 +5,16 @@
 #include "main/objlib.h"
 #include "main/objseq.h"
 
+typedef struct MmshWaterspikeObjectDef {
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    s16 unk1C;
+    u8 pad1E[0x24 - 0x1E];
+    u8 unk24;
+    u8 pad25[0x28 - 0x25];
+} MmshWaterspikeObjectDef;
+
+
 
 extern undefined8 FUN_80006728();
 extern undefined4 FUN_80006770();
@@ -504,8 +514,8 @@ void mmsh_waterspike_init(int obj, s16 *def) {
     register u32 lowEventId;
     ObjHits_EnableObject(obj);
     ((GameObject *)obj)->unkF4 = 0;
-    packedEventIds = (u32)(u16)*(s16 *)((char *)def + 0x1C) << 16;
-    lowEventId = (u32)(u16)*(s16 *)((char *)def + 0x1A);
+    packedEventIds = (u32)(u16)((MmshWaterspikeObjectDef *)def)->unk1C << 16;
+    lowEventId = (u32)(u16)((MmshWaterspikeObjectDef *)def)->unk1A;
     packedEventIds |= lowEventId;
     *(u32 *)&((GameObject *)obj)->unkF8 = packedEventIds;
 }

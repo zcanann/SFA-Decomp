@@ -4,6 +4,24 @@
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
 
+typedef struct DimbridgecogmaiObjectDef {
+    u8 pad0[0x18 - 0x0];
+    s16 unk18;
+    u8 pad1A[0x1C - 0x1A];
+    u8 unk1C;
+    u8 pad1D[0x20 - 0x1D];
+} DimbridgecogmaiObjectDef;
+
+
+typedef struct DimlavasmashObjectDef {
+    u8 pad0[0x18 - 0x0];
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+} DimlavasmashObjectDef;
+
+
 typedef struct DimbridgecogmaiPlacement {
     u8 pad0[0x18 - 0x0];
     s16 unk18;
@@ -51,9 +69,9 @@ void dimlavasmash_init(s16 *obj, s8 *def) {
     ((GameObject *)obj)->anim.rotX = (s16)((s32)def[0x18] << 8);
     ((GameObject *)obj)->animEventCallback = (void *)dimlavasmash_SeqFn;
     inner = ((GameObject *)obj)->extra;
-    *(u8 *)(inner + 1) = (u8)*(s16 *)(def + 0x1a);
-    *(s8 *)(inner + 0) = (s8)*(s16 *)(def + 0x1c);
-    *(u8 *)(inner + 2) = (u8)GameBit_Get(*(s16 *)(def + 0x1e));
+    *(u8 *)(inner + 1) = (u8)((DimlavasmashObjectDef *)def)->unk1A;
+    *(s8 *)(inner + 0) = (s8)((DimlavasmashObjectDef *)def)->unk1C;
+    *(u8 *)(inner + 2) = (u8)GameBit_Get(((DimlavasmashObjectDef *)def)->unk1E);
     if (*(u8 *)(inner + 2) == 1) {
         block = mapGetBlock(objPosToMapBlockIdx(((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ));
         if (block != NULL) {
@@ -146,10 +164,10 @@ int dimdismountpoint_getObjectTypeId(void) { return 0; }
 
 void dimbridgecogmai_init(int *obj, int *def) {
     *(u8 *)((GameObject *)obj)->extra = 100;
-    *(s16 *)obj = (s16)((u32)*(u8 *)((char *)def + 0x1c) << 8);
+    *(s16 *)obj = (s16)((u32)((DimbridgecogmaiObjectDef *)def)->unk1C << 8);
     ((GameObject *)obj)->animEventCallback = (void *)dimbridgecogmai_SeqFn;
     ObjGroup_AddObject(obj, 15);
-    if ((u8)GameBit_Get(*(s16 *)((char *)def + 0x18)) != 0) {
+    if ((u8)GameBit_Get(((DimbridgecogmaiObjectDef *)def)->unk18) != 0) {
         ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x8000);
     }
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x6000);

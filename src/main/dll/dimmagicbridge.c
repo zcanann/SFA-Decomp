@@ -8,6 +8,13 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 
+typedef struct Dll199ObjectDef {
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    u8 pad1C[0x20 - 0x1C];
+} Dll199ObjectDef;
+
+
 typedef struct Dll199State {
     u8 pad0[0x2 - 0x0];
     s16 unk2;
@@ -278,8 +285,8 @@ void dll_199_init(int obj, int def)
     state = ((GameObject *)obj)->extra;
     *(s16 *)obj = 0;
     *state = 10;
-    if (*(s16 *)(def + 0x1a) > 0) {
-        *state = *(s16 *)(def + 0x1a) >> 8;
+    if (((Dll199ObjectDef *)def)->unk1A > 0) {
+        *state = ((Dll199ObjectDef *)def)->unk1A >> 8;
     }
     ((Dll199State *)state)->unkF = 0;
     *(u8 *)(state + 8) = 0;

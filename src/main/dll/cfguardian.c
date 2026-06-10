@@ -7,6 +7,20 @@
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
 
+typedef struct DoorObjectDef {
+    u8 pad0[0x18 - 0x0];
+    s16 unk18;
+    s16 unk1A;
+    u8 unk1C;
+    u8 unk1D;
+    u8 pad1E[0x20 - 0x1E];
+    u8 unk20;
+    u8 unk21;
+    s16 unk22;
+    u8 pad24[0x28 - 0x24];
+} DoorObjectDef;
+
+
 typedef struct LockDoorLockPlacement {
     u8 pad0[0x18 - 0x0];
     s16 unk18;
@@ -776,19 +790,19 @@ void Door_init(int *obj, u8 *def) {
     *(s16 *)obj = (s16)(def[0x1f] << 8);
     ((GameObject *)obj)->animEventCallback = (void *)Door_SeqFn;
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x2000);
-    ((GameObject *)obj)->anim.rootMotionScale = ((f32)(u32)*(u8 *)((char *)def + 0x21) - lbl_803E3790) * lbl_803E3784;
+    ((GameObject *)obj)->anim.rootMotionScale = ((f32)(u32)((DoorObjectDef *)def)->unk21 - lbl_803E3790) * lbl_803E3784;
     if (((GameObject *)obj)->anim.rootMotionScale == lbl_803E3788) {
         ((GameObject *)obj)->anim.rootMotionScale = lbl_803E3780;
     }
     ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale * *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4);
-    if (*(s16 *)(def + 0x1a) != -1) {
-        state[4] = (u8)GameBit_Get(*(s16 *)(def + 0x1a));
+    if (((DoorObjectDef *)def)->unk1A != -1) {
+        state[4] = (u8)GameBit_Get(((DoorObjectDef *)def)->unk1A);
     } else {
         state[4] = 0;
     }
     state[6] = 0;
-    if (GameBit_Get(*(s16 *)(def + 0x18)) != 0) state[6] = (u8)(state[6] | 1);
-    if (GameBit_Get(*(s16 *)(def + 0x22)) != 0) state[6] = (u8)(state[6] | 2);
+    if (GameBit_Get(((DoorObjectDef *)def)->unk18) != 0) state[6] = (u8)(state[6] | 1);
+    if (GameBit_Get(((DoorObjectDef *)def)->unk22) != 0) state[6] = (u8)(state[6] | 2);
     {
         s16 model = ((GameObject *)obj)->anim.seqId;
         switch (model) {

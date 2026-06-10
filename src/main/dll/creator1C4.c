@@ -8,6 +8,17 @@
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
+typedef struct GpshObjcreatorObjectDef {
+    u8 pad0[0x18 - 0x0];
+    s8 unk18;
+    u8 pad19[0x1A - 0x19];
+    s16 unk1A;
+    u8 pad1C[0x1E - 0x1C];
+    s8 unk1E;
+    u8 pad1F[0x20 - 0x1F];
+} GpshObjcreatorObjectDef;
+
+
 typedef struct GpshShrineState {
     u8 pad0[0x4 - 0x0];
     f32 unk4;
@@ -411,10 +422,10 @@ void gpsh_objcreator_init(int *obj, int *def) {
     register u32 zero;
     register int *state;
     state = ((GameObject *)obj)->extra;
-    *(s16 *)obj = (s16)((s32)*(s8 *)((char *)def + 0x1e) << 8);
+    *(s16 *)obj = (s16)((s32)((GpshObjcreatorObjectDef *)def)->unk1E << 8);
     zero = 0;
     ((GameObject *)obj)->unkF8 = zero;
-    *(u8 *)((char *)state + 4) = (u8)*(s16 *)((char *)def + 0x1a);
+    *(u8 *)((char *)state + 4) = (u8)((GpshObjcreatorObjectDef *)def)->unk1A;
     ((GpshShrineFlags *)((char *)state + 5))->b80 = 0;
     *(u8 *)((char *)obj + 0x37) = 0xff;
     ((GameObject *)obj)->anim.alpha = 0xff;

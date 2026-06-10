@@ -6,6 +6,19 @@
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
 
+typedef struct MagiccavetopObjectDef {
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    s8 unk20;
+    s8 unk21;
+    u8 pad22[0x24 - 0x22];
+    s16 unk24;
+    u8 pad26[0x28 - 0x26];
+} MagiccavetopObjectDef;
+
+
 typedef struct MagiccavetopState {
     u8 pad0[0x1 - 0x0];
     u8 unk1;
@@ -745,13 +758,13 @@ void magiccavetop_init(int *obj, s8 *def) {
     int *state = ((GameObject *)obj)->extra;
     int *refs;
     ((GameObject *)obj)->objectFlags = (u16)((u32)((GameObject *)obj)->objectFlags | 0x6000);
-    if (GameBit_Get(*(s16 *)((char *)def + 0x1c)) != 0) {
+    if (GameBit_Get(((MagiccavetopObjectDef *)def)->unk1C) != 0) {
         ((MagiccavetopState *)state)->unk4 = lbl_803E3C4C;
     }
     *(s16 *)obj = (s16)((s32)(u8)def[0x23] << 8);
     refs = ObjModel_GetRenderOpTextureRefs(Obj_GetActiveModel(obj), 0);
-    if (*(s16 *)((char *)def + 0x24) > 0) {
-        if (GameBit_Get(*(s16 *)((char *)def + 0x24)) != 0) {
+    if (((MagiccavetopObjectDef *)def)->unk24 > 0) {
+        if (GameBit_Get(((MagiccavetopObjectDef *)def)->unk24) != 0) {
             ((MagiccavetopState *)state)->unk1 = (u8)(((MagiccavetopState *)state)->unk1 | 0x0c);
             *(u8 *)((char *)refs + 8) = 23;
         } else {
