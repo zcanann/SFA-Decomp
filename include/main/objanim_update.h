@@ -1,7 +1,7 @@
 #ifndef MAIN_OBJANIM_UPDATE_H_
 #define MAIN_OBJANIM_UPDATE_H_
 
-#include "ghidra_import.h"
+#include "global.h"
 
 typedef struct ObjAnimUpdateState {
   u8 pad00[0x56];

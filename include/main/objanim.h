@@ -1,7 +1,7 @@
 #ifndef MAIN_OBJANIM_H_
 #define MAIN_OBJANIM_H_
 
-#include "ghidra_import.h"
+#include "global.h"
 
 typedef struct ObjAnimDef ObjAnimDef;
 typedef struct ObjAnimState ObjAnimState;
@@ -29,9 +29,9 @@ extern char gObjAnimSetBlendMoveMissingAnimWarning[];
 #define OBJANIM_STATE_WORD_PREV_EVENT_STATE 2
 
 void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimState *state,
-                          uint moveId,s16 eventState);
-void Object_ObjAnimSetPrimaryBlendMove(ObjAnimComponent *objAnim,uint moveId,int eventState);
-void Object_ObjAnimSetSecondaryBlendMove(ObjAnimComponent *objAnim,uint moveId,int eventState);
+                          u32 moveId,s16 eventState);
+void Object_ObjAnimSetPrimaryBlendMove(ObjAnimComponent *objAnim,u32 moveId,int eventState);
+void Object_ObjAnimSetSecondaryBlendMove(ObjAnimComponent *objAnim,u32 moveId,int eventState);
 /* ABI-facing callbacks pass object pointers through int; implementations cast to ObjAnimComponent. */
 int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimHandle,
                               ObjAnimEventList *events);
@@ -39,7 +39,7 @@ int Object_ObjAnimSetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim);
 int Object_ObjAnimSetMove(f32 moveProgress,int objAnimHandle,int moveId,int moveControlFlags);
 u16 ObjAnim_GetCurrentEventCountdown(ObjAnimComponent *objAnim);
 void ObjAnim_WriteStateWord(ObjAnimComponent *objAnim,int stateIndex,short wordIndex,int value);
-void ObjAnim_SetCurrentEventStepFrames(ObjAnimComponent *objAnim,uint frameCount);
+void ObjAnim_SetCurrentEventStepFrames(ObjAnimComponent *objAnim,u32 frameCount);
 int ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,float *phaseOut);
 int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimHandle,
                                ObjAnimEventList *events);

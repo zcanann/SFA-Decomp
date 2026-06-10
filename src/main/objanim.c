@@ -42,7 +42,7 @@ static inline s16 ObjAnim_ReadRootAxisSample(s16 *axis,int sampleIndex)
 #pragma peephole off
 #pragma dont_inline on
 void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimState *state,
-                          uint moveId,s16 eventState)
+                          u32 moveId,s16 eventState)
 {
   int requestedEventState;
   int moveIndex;
@@ -116,7 +116,7 @@ void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimS
  * PAL Size: TODO
  */
 #pragma scheduling off
-void Object_ObjAnimSetPrimaryBlendMove(ObjAnimComponent *objAnim,uint moveId,int eventState)
+void Object_ObjAnimSetPrimaryBlendMove(ObjAnimComponent *objAnim,u32 moveId,int eventState)
 {
   ObjAnimBank *bank;
 
@@ -140,7 +140,7 @@ void Object_ObjAnimSetPrimaryBlendMove(ObjAnimComponent *objAnim,uint moveId,int
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void Object_ObjAnimSetSecondaryBlendMove(ObjAnimComponent *objAnim,uint moveId,int eventState)
+void Object_ObjAnimSetSecondaryBlendMove(ObjAnimComponent *objAnim,u32 moveId,int eventState)
 {
   ObjAnimBank *bank;
 
@@ -518,7 +518,7 @@ void ObjAnim_WriteStateWord(ObjAnimComponent *objAnim,int stateIndex,short wordI
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjAnim_SetCurrentEventStepFrames(ObjAnimComponent *objAnim,uint frameCount)
+void ObjAnim_SetCurrentEventStepFrames(ObjAnimComponent *objAnim,u32 frameCount)
 {
   ObjAnimBank *bank;
   float eventCountdownStep;
