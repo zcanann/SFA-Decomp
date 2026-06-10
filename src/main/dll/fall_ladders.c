@@ -190,7 +190,7 @@ void fn_80154584(int obj, int p)
             (*gRomCurveInterface)->goNextPoint((void *)curve) != 0 &&
             (*gRomCurveInterface)->initCurve(*(void **)p, (void *)obj, lbl_803E29B0,
                                              (int *)&lbl_803DBCD0, -1) != 0) {
-            *(u32 *)(p + 0x2dc) &= ~0x2000;
+            *(u32 *)(p + 0x2dc) &= ~(u64)0x2000;
         }
         vec[0] = *(f32 *)(curve + 0x68) - ((GameObject *)obj)->anim.localPosX;
         vec[1] = lbl_803E2990;
@@ -198,13 +198,12 @@ void fn_80154584(int obj, int p)
         fn_8014C678(obj, p, vec, lbl_803E29A0, lbl_803E29B4, *(f32 *)&lbl_803E29B4, 1);
         *(f32 *)(p + 0x324) += timeDelta;
         if (*(f32 *)(p + 0x324) > lbl_803E29B8) {
-            *(u32 *)(p + 0x2e4) &= ~0x10000;
+            *(u32 *)(p + 0x2e4) &= ~(u64)0x10000;
             *(f32 *)(p + 0x324) = lbl_803E2990;
         }
     }
     {
-        int a = (int)-(lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32)*(u8 *)(p + 0x33a)) - (f32)((GameObject *)obj)->anim.rotY);
-        ((GameObject *)obj)->anim.rotY = a;
+        ((GameObject *)obj)->anim.rotY = -(lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32)*(u8 *)(p + 0x33a)) - (f32)((GameObject *)obj)->anim.rotY);
     }
     fn_8014CD1C(obj, p, 0xf, lbl_803E29C4, lbl_803E2994, 0);
     if ((*(u32 *)(p + 0x2dc) & 0x40000000) != 0) {
@@ -225,8 +224,7 @@ void fn_80154584(int obj, int p)
     }
     *(u8 *)(p + 0x33a) += 1;
     {
-        int a = (int)(lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32)*(u8 *)(p + 0x33a)) + (f32)((GameObject *)obj)->anim.rotY);
-        ((GameObject *)obj)->anim.rotY = a;
+        ((GameObject *)obj)->anim.rotY = lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32)*(u8 *)(p + 0x33a)) + (f32)((GameObject *)obj)->anim.rotY;
     }
     fn_80154328(obj, p);
 }
