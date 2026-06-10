@@ -47,6 +47,13 @@ typedef struct ProjNearSearch {
   f32 dz;
 } ProjNearSearch;
 
+static uint projGetLockTarget(int iVar10, ushort *puVar5, ProjNearSearch *sv)
+{
+    uint t = *(uint *)(iVar10 + 0x608);
+    if (t != 0) return t;
+    return ObjGroup_FindNearestObject(8, puVar5, sv);
+}
+
 void dll_2E_func03(ushort *puVar5,int iVar10,undefined4 unused)
 {
   register int sVar11;
@@ -98,14 +105,7 @@ void dll_2E_func03(ushort *puVar5,int iVar10,undefined4 unused)
       }
     }
     else {
-      uVar3 = *(uint *)(iVar10 + 0x608);
-      if (uVar3 != 0) {
-      }
-      else {
-        uVar3 = ObjGroup_FindNearestObject(8,puVar5,&sv);
-      }
-      iVar9 = uVar3;
-      if (iVar9 != 0) {
+      if ((iVar9 = projGetLockTarget(iVar10, puVar5, &sv)) != 0) {
         if ((*(byte *)(iVar10 + 0x611) & 0x20) != 0) {
           sv.dx = *(float *)(iVar10 + 0x10) - *(float *)(iVar9 + 0xc);
           sv.dy = *(float *)(iVar10 + 0x14) - *(float *)(iVar9 + 0x10);
