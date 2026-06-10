@@ -1399,17 +1399,17 @@ void timeOfDayFn_8008b964(void)
                 ((SkyState *)lbl_803DD12C)->timeOfDay = ((SkyState *)lbl_803DD12C)->timeOfDay + lbl_803DF078;
             }
             if (getSunPos(&time) != 0) {
-                if (((SkyState *)lbl_803DD12C)->unk24E == 0) {
-                    ((SkyState *)lbl_803DD12C)->unk24E = 1;
+                if (((SkyState *)lbl_803DD12C)->transitionLatch == 0) {
+                    ((SkyState *)lbl_803DD12C)->transitionLatch = 1;
                 }
             } else {
-                if (((SkyState *)lbl_803DD12C)->unk24E != 0) {
+                if (((SkyState *)lbl_803DD12C)->transitionLatch != 0) {
                     timer = ((SkyState *)lbl_803DD12C)->unk218 + 1;
                     ((SkyState *)lbl_803DD12C)->unk218 = timer;
                     if (timer > 0x1e) {
                         ((SkyState *)lbl_803DD12C)->unk218 = 0;
                     }
-                    ((SkyState *)lbl_803DD12C)->unk24E = 0;
+                    ((SkyState *)lbl_803DD12C)->transitionLatch = 0;
                 }
             }
             if (Obj_GetPlayerObject() != NULL) {

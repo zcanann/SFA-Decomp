@@ -28,10 +28,10 @@ void texframeanimator_init(int *obj, u8 *params);
 /* xyzanimator per-object extra state (xyzanimator_getExtraSize == 0x50):
  * 16 int slots, current-offset vec at 0x40, mode/active bytes, frame u16. */
 typedef struct XyzAnimatorState {
-    int unk0;
+    int rowCount;
     int unk4;
     int unk8;
-    int unkC;
+    int dataBuffer;
     int unk10;
     int unk14;
     int unk18;

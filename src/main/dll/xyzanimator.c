@@ -648,7 +648,7 @@ extern f32 lbl_803E3148;
 void pollen_init(int *obj) {
     s16 *state = ((GameObject *)obj)->extra;
     state[0] = (s16)randomGetRange(-0x8000, 0x7fff);
-    *(f32 *)&((XyzAnimatorState *)state)->unkC = lbl_803E3148 * (f32)(s32)randomGetRange(0xfa0, 0x1388);
+    *(f32 *)&((XyzAnimatorState *)state)->dataBuffer = lbl_803E3148 * (f32)(s32)randomGetRange(0xfa0, 0x1388);
     *(s16 *)((char *)state + 4) = (s16)randomGetRange(-0x8000, 0x7fff);
     *(f32 *)&((XyzAnimatorState *)state)->unk8 = lbl_803E313C;
     *(s16 *)((char *)state + 6) = (s16)randomGetRange(0xe6, 0x1f4);

@@ -53,7 +53,7 @@ typedef struct SkyState {
     f32 unk248;
     u8 currentLightIndex;
     u8 previousLightIndex;
-    u8 unk24E;
+    u8 transitionLatch;
     u8 unk24F;
     s8 unk250;
     u8 unk251;

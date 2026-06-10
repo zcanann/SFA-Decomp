@@ -551,15 +551,15 @@ typedef struct AppleOnTreeState {
     f32 unk2C;
     f32 unk30;
     f32 unk34;
-    u16 unk38;
+    u16 healthRestore;
     u8 unk3A;
     u8 pad3B;
     f32 unk3C;
     f32 unk40;
-    f32 unk44;
-    s16 unk48;
-    s16 unk4A;
-    s16 unk4C;
+    f32 bounceVel;
+    s16 rotX;
+    s16 rotY;
+    s16 rotZ;
     u8 pad4E[2];
     f32 unk50;
     u8 pad54[6];
@@ -570,7 +570,7 @@ typedef struct AppleOnTreeState {
     f32 unk60;
 } AppleOnTreeState;
 
-STATIC_ASSERT(offsetof(AppleOnTreeState, unk38) == 0x38);
+STATIC_ASSERT(offsetof(AppleOnTreeState, healthRestore) == 0x38);
 STATIC_ASSERT(offsetof(AppleOnTreeState, unk50) == 0x50);
 STATIC_ASSERT(offsetof(AppleOnTreeState, unk60) == 0x60);
 STATIC_ASSERT(sizeof(AppleOnTreeState) == 0x64);
@@ -830,7 +830,7 @@ void appleontree_handleCollectableHit(int obj)
         GameBit_Set(0x90f, 1);
         ((AppleOnTreeState *)state)->unk5A = (u8)(((AppleOnTreeState *)state)->unk5A | 4);
     } else {
-        playerAddHealth(player, ((AppleOnTreeState *)state)->unk38);
+        playerAddHealth(player, ((AppleOnTreeState *)state)->healthRestore);
         itemPickupDoParticleFx(obj, lbl_803E37C8, 0xff, 0x28);
         Sfx_PlayFromObject(obj, SFXen_waterblock_stop);
         state = *(int *)&((GameObject *)obj)->extra;
@@ -1118,13 +1118,13 @@ void fn_8017D854(int obj, int msg)
         v = 0;
         break;
     }
-    ((AppleOnTreeState *)state)->unk38 = (u16)v;
+    ((AppleOnTreeState *)state)->healthRestore = (u16)v;
     ((AppleOnTreeState *)state)->unk3A = 4;
     ((AppleOnTreeState *)state)->unk08 = timeDelta;
     ((AppleOnTreeState *)state)->unk0C = timeDelta;
-    ((AppleOnTreeState *)state)->unk48 = (s16)randomGetRange(-0x8000, 0x7fff);
-    ((AppleOnTreeState *)state)->unk4A = (s16)randomGetRange(-0x8000, 0x7fff);
-    ((AppleOnTreeState *)state)->unk4C = 0x2000;
+    ((AppleOnTreeState *)state)->rotX = (s16)randomGetRange(-0x8000, 0x7fff);
+    ((AppleOnTreeState *)state)->rotY = (s16)randomGetRange(-0x8000, 0x7fff);
+    ((AppleOnTreeState *)state)->rotZ = 0x2000;
 
     if (fn_80065684(obj, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ,
                     (f32 *)(state + 0x30), 0) == 0) {
@@ -1193,7 +1193,7 @@ int fn_8017DCD4(int p, int state, f32 y)
 
     if (zero != m) {
         if (((AppleOnTreeState *)state)->unk30 - (((AppleOnTreeState *)state)->unk2C - y) < zero) {
-            f32 b = ((AppleOnTreeState *)state)->unk44;
+            f32 b = ((AppleOnTreeState *)state)->bounceVel;
             if (zero == b) {
                 f32 g = lbl_803E37D8 * m;
                 f32 q = sqrtf(b * b - g * ((AppleOnTreeState *)state)->unk30);
@@ -1217,10 +1217,10 @@ int fn_8017DCD4(int p, int state, f32 y)
                 ((AppleOnTreeState *)state)->unk2C = ((AppleOnTreeState *)state)->unk2C - ((AppleOnTreeState *)state)->unk30;
                 ((AppleOnTreeState *)state)->unk30 = lbl_803E37D4;
                 ((GameObject *)p)->anim.localPosY = ((AppleOnTreeState *)state)->unk2C;
-                ((GameObject *)p)->anim.rotX = ((AppleOnTreeState *)state)->unk48;
-                ((GameObject *)p)->anim.rotY = ((AppleOnTreeState *)state)->unk4A;
-                ((GameObject *)p)->anim.rotZ = ((AppleOnTreeState *)state)->unk4C;
-                ((AppleOnTreeState *)state)->unk44 = -((AppleOnTreeState *)state)->unk28;
+                ((GameObject *)p)->anim.rotX = ((AppleOnTreeState *)state)->rotX;
+                ((GameObject *)p)->anim.rotY = ((AppleOnTreeState *)state)->rotY;
+                ((GameObject *)p)->anim.rotZ = ((AppleOnTreeState *)state)->rotZ;
+                ((AppleOnTreeState *)state)->bounceVel = -((AppleOnTreeState *)state)->unk28;
                 if ((((AppleOnTreeState *)state)->unk5A & 8) == 0) {
                     Sfx_PlayFromObject(p, 0x407);
                     ((AppleOnTreeState *)state)->unk5A = (u8)(((AppleOnTreeState *)state)->unk5A | 8);
@@ -1229,7 +1229,7 @@ int fn_8017DCD4(int p, int state, f32 y)
             } else if (b < lbl_803E37F4) {
                 ((GameObject *)p)->anim.localPosY = ((AppleOnTreeState *)state)->unk2C;
                 ((AppleOnTreeState *)state)->unk40 = zero;
-                ((AppleOnTreeState *)state)->unk44 = zero;
+                ((AppleOnTreeState *)state)->bounceVel = zero;
                 return 1;
             } else {
                 f32 g;
@@ -1256,7 +1256,7 @@ int fn_8017DCD4(int p, int state, f32 y)
                 }
                 ((AppleOnTreeState *)state)->unk0C = ((AppleOnTreeState *)state)->unk0C - r;
                 ((GameObject *)p)->anim.localPosY = ((AppleOnTreeState *)state)->unk2C;
-                ((AppleOnTreeState *)state)->unk44 = ((AppleOnTreeState *)state)->unk44 * lbl_803E37F8;
+                ((AppleOnTreeState *)state)->bounceVel = ((AppleOnTreeState *)state)->bounceVel * lbl_803E37F8;
                 return 0;
             }
         } else {
@@ -1278,7 +1278,7 @@ int fn_8017DF34(int p, int state, f32 y)
             f32 t;
             f32 a;
             f32 r;
-            b = ((AppleOnTreeState *)state)->unk44;
+            b = ((AppleOnTreeState *)state)->bounceVel;
             g = lbl_803E37D8 * m;
             q = sqrtf(b * b - g * ((AppleOnTreeState *)state)->unk30);
             t = lbl_803E37DC * m;
@@ -1302,12 +1302,12 @@ int fn_8017DF34(int p, int state, f32 y)
             ((AppleOnTreeState *)state)->unk2C = ((AppleOnTreeState *)state)->unk2C - ((AppleOnTreeState *)state)->unk30;
             ((AppleOnTreeState *)state)->unk30 = lbl_803E37D4;
             ((GameObject *)p)->anim.localPosY = ((AppleOnTreeState *)state)->unk2C;
-            ((GameObject *)p)->anim.rotX = ((AppleOnTreeState *)state)->unk48;
-            ((GameObject *)p)->anim.rotY = ((AppleOnTreeState *)state)->unk4A;
-            ((GameObject *)p)->anim.rotZ = ((AppleOnTreeState *)state)->unk4C;
+            ((GameObject *)p)->anim.rotX = ((AppleOnTreeState *)state)->rotX;
+            ((GameObject *)p)->anim.rotY = ((AppleOnTreeState *)state)->rotY;
+            ((GameObject *)p)->anim.rotZ = ((AppleOnTreeState *)state)->rotZ;
             {
                 f32 g2 = lbl_803E37DC * ((AppleOnTreeState *)state)->unk40;
-                ((AppleOnTreeState *)state)->unk44 = g2 * r + ((AppleOnTreeState *)state)->unk44;
+                ((AppleOnTreeState *)state)->bounceVel = g2 * r + ((AppleOnTreeState *)state)->bounceVel;
             }
             ((AppleOnTreeState *)state)->unk3C = ((AppleOnTreeState *)state)->unk28;
             ((WaterfxSpawnSplashBurstAtPointFn)(*gWaterfxInterface)->spawnSplashBurst)(
@@ -1326,7 +1326,7 @@ int fn_8017DF34(int p, int state, f32 y)
         f32 t;
         f32 a;
         f32 r;
-        b = ((AppleOnTreeState *)state)->unk44;
+        b = ((AppleOnTreeState *)state)->bounceVel;
         g = lbl_803E37D8 * m;
         q = sqrtf(b * b - g * ((AppleOnTreeState *)state)->unk30);
         t = lbl_803E37DC * m;
@@ -1349,7 +1349,7 @@ int fn_8017DF34(int p, int state, f32 y)
         ((AppleOnTreeState *)state)->unk0C = ((AppleOnTreeState *)state)->unk0C - r;
         ((GameObject *)p)->anim.localPosY = ((AppleOnTreeState *)state)->unk2C;
         ((AppleOnTreeState *)state)->unk3C = lbl_803E37FC;
-        ((AppleOnTreeState *)state)->unk44 = lbl_803E3800;
+        ((AppleOnTreeState *)state)->bounceVel = lbl_803E3800;
         return 0;
     } else {
         ((GameObject *)p)->anim.localPosY = y;

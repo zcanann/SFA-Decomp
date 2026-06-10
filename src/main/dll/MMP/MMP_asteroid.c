@@ -62,7 +62,7 @@ typedef struct DimbossicesmashPlacement {
 
 typedef struct FogcontrolPlacement {
     u8 pad0[0x18 - 0x0];
-    s16 unk18;
+    s16 enableGameBit;
     s16 unk1A;
     s16 unk1C;
     s16 unk1E;
@@ -214,7 +214,7 @@ void xyzanimator_update(int obj)
             row = mapBlockFn_800606ec(block, i);
             t = mapBlockFn_80060678();
             if (((XyzAnimatorPlacement *)setup)->unk28 == t) {
-                ((XyzAnimatorState *)state)->unk0 = ((XyzAnimatorState *)state)->unk0 + 1;
+                ((XyzAnimatorState *)state)->rowCount = ((XyzAnimatorState *)state)->rowCount + 1;
                 ((XyzAnimatorState *)state)->unk4 =
                     ((XyzAnimatorState *)state)->unk4 + (*(u16 *)(row + 0x14) - *(u16 *)(row + 0));
             }
@@ -238,10 +238,10 @@ void xyzanimator_update(int obj)
             ((XyzAnimatorState *)state)->unk48 = (f32)((XyzAnimatorPlacement *)setup)->unk26;
             ((XyzAnimatorState *)state)->gameBitValue = 1;
         }
-        t = ((XyzAnimatorState *)state)->unk4 * 6 + ((XyzAnimatorState *)state)->unk0 * 0xc;
+        t = ((XyzAnimatorState *)state)->unk4 * 6 + ((XyzAnimatorState *)state)->rowCount * 0xc;
         alloc = mmAlloc(t + ((XyzAnimatorState *)state)->unk8 * 0xc, 5, 0);
-        ((XyzAnimatorState *)state)->unkC = alloc;
-        stride = ((XyzAnimatorState *)state)->unk0 * 2;
+        ((XyzAnimatorState *)state)->dataBuffer = alloc;
+        stride = ((XyzAnimatorState *)state)->rowCount * 2;
         alloc = alloc + ((XyzAnimatorState *)state)->unk4 * 6;
         ((XyzAnimatorState *)state)->unk18 = alloc;
         alloc = alloc + stride;
@@ -1141,10 +1141,10 @@ void fogcontrol_update(int obj)
     u8 run;
     f32 t;
 
-    if (((FogcontrolPlacement *)setup)->unk18 == -1) {
+    if (((FogcontrolPlacement *)setup)->enableGameBit == -1) {
         cv = 1;
     } else {
-        cv = (u8)GameBit_Get(((FogcontrolPlacement *)setup)->unk18);
+        cv = (u8)GameBit_Get(((FogcontrolPlacement *)setup)->enableGameBit);
     }
     if ((cv != 0 && st->full == 0) || (cv == 0 && st->on != 0)) {
         run = 1;
