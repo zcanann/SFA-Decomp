@@ -951,7 +951,7 @@ extern int loadObjectAtObject(int obj, int *setup);
 extern void hudFn_8011f38c(int a);
 extern void fn_801DA4A8(int obj, int state, int a);
 extern f32 lbl_803E5508;
-int sh_staff_SeqFn(int obj, int unused, u8 *buf)
+int sh_staff_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
     int *p;
@@ -974,8 +974,8 @@ int sh_staff_SeqFn(int obj, int unused, u8 *buf)
         p = (int *)((char *)p + 4);
     }
 
-    for (i = 0; i < (int)buf[0x8b]; i++) {
-        u8 v = buf[0x81 + i];
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        u8 v = animUpdate->eventIds[i];
         switch (v) {
         case 0:
             ((ShStaffState *)state)->phase = 3;

@@ -2399,7 +2399,7 @@ extern void baddieInstantiateWeapon(int *node, int *sub);
 extern void fn_8014BC98(int *node, int *sub);
 extern void fn_8014B878(int *node, int *sub);
 
-int enemy_animEventCallback(int *node, int p2, u8 *cmds)
+int enemy_animEventCallback(int *node, int unused, ObjAnimUpdateState *animUpdate)
 {
     char *sub = *(char **)((char *)node + 0xb8);
     s8 *n29 = *(s8 **)((char *)node + 0x4c);
@@ -2411,8 +2411,8 @@ int enemy_animEventCallback(int *node, int p2, u8 *cmds)
     ((TrickyState *)sub)->flags2DC |= 0x8000;
     memcpy(sub + 0x2c4, sub + 0x2b8, 0xc);
     memcpy(sub + 0x2b8, (char *)node + 0x24, 0xc);
-    for (i = 0; i < cmds[0x8b]; i++) {
-        switch (cmds[0x81 + i]) {
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        switch (animUpdate->eventIds[i]) {
         case 1:
             obj = getTrickyObject();
             if (obj != NULL) {
@@ -2459,7 +2459,7 @@ int enemy_animEventCallback(int *node, int p2, u8 *cmds)
     }
     if (n29[0x2e] != -1) {
         if ((((TrickyState *)sub)->flags2DC & 0x600) != 0) {
-            if ((s8)cmds[0x57] == *(s16 *)((char *)node + 0xb4))
+            if (animUpdate->sequenceSlot == *(s16 *)((char *)node + 0xb4))
                 return 4;
         }
     }

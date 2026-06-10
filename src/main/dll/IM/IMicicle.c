@@ -1891,15 +1891,13 @@ void slidingdoor_init(u8* obj, u8* data) {
     ((SlidingDoorSubFlags *)sub)->doorState = doorState;
 }
 
-/* CFLevelControl_SeqFn: loop through u8 array at +0x81 of param 3; on element==1, do game state setup. */
 extern void loadMapAndParent(int mapId);
 extern int mapGetDirIdx(int mapId);
 extern void lockLevel(int dirIdx, int b);
-int CFLevelControl_SeqFn(int p1, int p2, void *p3) {
+int CFLevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate) {
     int i;
-    u8 *base = (u8*)p3;
-    for (i = 0; i < (int)base[0x8b]; i++) {
-        int v = base[0x81 + i];
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        int v = animUpdate->eventIds[i];
         switch (v) {
         case 1:
             GameBit_Set(0xdcb, 1);

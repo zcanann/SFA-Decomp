@@ -4,29 +4,28 @@
 
 int mclightning_handleScriptEvents(int obj, int unused, ObjAnimUpdateState *animUpdate) {
     McLightningState *state = ((GameObject *)obj)->extra;
-    u8 *script = (u8 *)animUpdate;
     int i;
-    for (i = 0; i < script[0x8b]; i++) {
+    for (i = 0; i < animUpdate->eventCount; i++) {
         switch (state->flags.phase) {
         case 0:
             state->flags.phase = 1;
-            state->boltParamA = lbl_803E7440 * (f32)(u32)script[0x81 + i];
+            state->boltParamA = lbl_803E7440 * (f32)(u32)animUpdate->eventIds[i];
             break;
         case 1:
             state->flags.phase = 2;
-            state->boltParamB = lbl_803E7440 * (f32)(u32)script[0x81 + i];
+            state->boltParamB = lbl_803E7440 * (f32)(u32)animUpdate->eventIds[i];
             break;
         case 2:
             state->flags.phase = 3;
-            state->boltParamC = script[0x81 + i];
+            state->boltParamC = animUpdate->eventIds[i];
             break;
         case 3:
             state->flags.phase = 4;
-            state->boltParamD = script[0x81 + i];
+            state->boltParamD = animUpdate->eventIds[i];
             break;
         case 4:
             state->flags.phase = 5;
-            state->targetLinkId = script[0x81 + i];
+            state->targetLinkId = animUpdate->eventIds[i];
             ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
             break;
         default:

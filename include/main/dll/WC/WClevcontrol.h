@@ -2,6 +2,7 @@
 #define MAIN_DLL_WC_WCLEVCONTROL_H_
 
 #include "ghidra_import.h"
+#include "main/objanim_update.h"
 
 void FUN_801ee668(ushort *param_1,int param_2);
 void FUN_801ee7bc(short *param_1,int param_2,undefined4 param_3,undefined4 param_4,
@@ -22,5 +23,6 @@ void FUN_801ef980(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined2 *param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
 void FUN_801ef984(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
+int SB_CloudRunner_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 
 #endif /* MAIN_DLL_WC_WCLEVCONTROL_H_ */

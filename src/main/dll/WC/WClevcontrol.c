@@ -1021,24 +1021,24 @@ extern int Obj_GetPlayerObject(void);
 extern void SB_CloudRunner_onSeqFree(void);
 extern void objHitDetectFn_80062e84(int player, int hitObj, int p3);
 extern void fn_80295918(int player, int p2, f32 p3);
-int SB_CloudRunner_SeqFn(int obj, int unused, u8 *setupData) {
+int SB_CloudRunner_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate) {
     int *state = ((GameObject *)obj)->extra;
     int player = Obj_GetPlayerObject();
     int i;
-    *(void (**)(void))((char *)setupData + 0xE8) = SB_CloudRunner_onSeqFree;
+    animUpdate->sequenceCallback = SB_CloudRunner_onSeqFree;
     *(f32 *)((char *)state + 0x4C) = ((GameObject *)obj)->anim.localPosX;
     *(f32 *)((char *)state + 0x50) = ((GameObject *)obj)->anim.localPosY;
     *(f32 *)((char *)state + 0x54) = ((GameObject *)obj)->anim.localPosZ;
     *(s16 *)((char *)state + 0x2C) = (s16)(*(s16 *)obj - 0x4000);
     *(s16 *)((char *)state + 0x2E) = ((GameObject *)obj)->anim.rotZ;
-    for (i = 0; i < setupData[0x8B]; i++) {
-        if (setupData[0x81 + i] == 1) {
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        if (animUpdate->eventIds[i] == 1) {
             objHitDetectFn_80062e84(player, *(int *)((char *)state + 0x10), 0);
             fn_80295918(player, 5, lbl_803E5C70);
             *(u8 *)((char *)state + 0x6E) = 1;
         }
     }
-    setupData[0x56] = 0;
+    animUpdate->sequenceEventActive = 0;
     ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
     return 0;
 }

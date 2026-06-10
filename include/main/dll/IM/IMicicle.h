@@ -2,6 +2,7 @@
 #define MAIN_DLL_IM_IMICICLE_H_
 
 #include "ghidra_import.h"
+#include "main/objanim_update.h"
 
 typedef struct ExplodedObjectMapData {
   u8 pad00[0x08];
@@ -126,7 +127,7 @@ void cfmagicwall_init(s16 *dst, void *src);
 void cfmagicwall_release(void);
 void cfmagicwall_initialise(void);
 
-int CFLevelControl_SeqFn(int p1, int p2, void *p3);
+int CFLevelControl_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 int cflevelcontrol_getExtraSize(void);
 int cflevelcontrol_getObjectTypeId(void);
 void cflevelcontrol_free(int param_1);

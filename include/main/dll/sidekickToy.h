@@ -2,6 +2,7 @@
 #define MAIN_DLL_SIDEKICKTOY_H_
 
 #include "ghidra_import.h"
+#include "main/objanim_update.h"
 
 void objAnimFn_8014a9f0(short *obj, int state);
 void FUN_8014ab58(undefined8 param_1,double param_2,double param_3,double param_4,double param_5,
@@ -19,6 +20,7 @@ void FUN_8014c694(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9);
 void FUN_8014c78c(undefined4 param_1,undefined4 param_2,int param_3,int *param_4);
+int enemy_animEventCallback(int *node, int unused, ObjAnimUpdateState *animUpdate);
 f32 sidekickToy_accelerateTowardTarget3D(int obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale,
                                         f32 maxVel, f32 drag);
 f32 sidekickToy_accelerateTowardTargetXZ(int obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale,
