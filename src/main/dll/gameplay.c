@@ -4043,9 +4043,9 @@ void FUN_800eb464(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   local_324 = param_4 | 0x4000000;
   if ((param_4 & 1) != 0) {
     if (local_374 == 0) {
-      local_34c = lbl_803E1370 + *(float *)(param_3 + 0xc);
-      local_348 = lbl_803E138C + *(float *)(param_3 + 0x10);
-      local_344 = lbl_803E1370 + *(float *)(param_3 + 0x14);
+      local_34c = lbl_803E1370 + ((PartFxSpawnParams *)param_3)->unkC;
+      local_348 = lbl_803E138C + ((PartFxSpawnParams *)param_3)->unk10;
+      local_344 = lbl_803E1370 + ((PartFxSpawnParams *)param_3)->unk14;
     }
     else {
       local_34c = lbl_803E1370 + *(float *)(local_374 + 0x18);
@@ -4355,9 +4355,9 @@ void FUN_800eb4d0(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
       if ((iVar6 == 0) || (param_3 == 0)) {
         if (iVar6 == 0) {
           if (param_3 != 0) {
-            local_424 = local_424 + *(float *)(param_3 + 0xc);
-            local_420 = local_420 + *(float *)(param_3 + 0x10);
-            local_41c = local_41c + *(float *)(param_3 + 0x14);
+            local_424 = local_424 + ((PartFxSpawnParams *)param_3)->unkC;
+            local_420 = local_420 + ((PartFxSpawnParams *)param_3)->unk10;
+            local_41c = local_41c + ((PartFxSpawnParams *)param_3)->unk14;
           }
         }
         else {
@@ -4367,9 +4367,9 @@ void FUN_800eb4d0(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
         }
       }
       else {
-        local_424 = local_424 + *(float *)(iVar6 + 0x18) + *(float *)(param_3 + 0xc);
-        local_420 = local_420 + *(float *)(iVar6 + 0x1c) + *(float *)(param_3 + 0x10);
-        local_41c = local_41c + *(float *)(iVar6 + 0x20) + *(float *)(param_3 + 0x14);
+        local_424 = local_424 + *(float *)(iVar6 + 0x18) + ((PartFxSpawnParams *)param_3)->unkC;
+        local_420 = local_420 + *(float *)(iVar6 + 0x1c) + ((PartFxSpawnParams *)param_3)->unk10;
+        local_41c = local_41c + *(float *)(iVar6 + 0x20) + ((PartFxSpawnParams *)param_3)->unk14;
       }
     }
     if (iVar8 == 0) {
@@ -5135,9 +5135,9 @@ void FUN_800ec43c(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   local_324 = param_4 | 0xc000040;
   if ((param_4 & 1) != 0) {
     if (local_374 == 0) {
-      local_34c = lbl_803E13E0 + *(float *)(param_3 + 0xc);
-      local_348 = lbl_803E1408 + *(float *)(param_3 + 0x10);
-      local_344 = lbl_803E13E0 + *(float *)(param_3 + 0x14);
+      local_34c = lbl_803E13E0 + ((PartFxSpawnParams *)param_3)->unkC;
+      local_348 = lbl_803E1408 + ((PartFxSpawnParams *)param_3)->unk10;
+      local_344 = lbl_803E13E0 + ((PartFxSpawnParams *)param_3)->unk14;
     }
     else {
       local_34c = lbl_803E13E0 + *(float *)(local_374 + 0x18);
@@ -5377,9 +5377,9 @@ void FUN_800ec4a8(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   local_324 = param_4 | 0xc000040;
   if ((param_4 & 1) != 0) {
     if (local_374 == 0) {
-      local_34c = lbl_803E1410 + *(float *)(param_3 + 0xc);
-      local_348 = lbl_803E1438 + *(float *)(param_3 + 0x10);
-      local_344 = lbl_803E1410 + *(float *)(param_3 + 0x14);
+      local_34c = lbl_803E1410 + ((PartFxSpawnParams *)param_3)->unkC;
+      local_348 = lbl_803E1438 + ((PartFxSpawnParams *)param_3)->unk10;
+      local_344 = lbl_803E1410 + ((PartFxSpawnParams *)param_3)->unk14;
     }
     else {
       local_34c = lbl_803E1410 + *(float *)(local_374 + 0x18);
@@ -5708,9 +5708,9 @@ void FUN_800eca00(int param_1,undefined2 param_2,int param_3,uint param_4)
   local_324 = param_4 | 0x4000002;
   if ((param_4 & 1) != 0) {
     if (param_1 == 0) {
-      local_34c = lbl_803E1484 + *(float *)(param_3 + 0xc);
-      local_348 = lbl_803E1484 + *(float *)(param_3 + 0x10);
-      local_344 = lbl_803E1484 + *(float *)(param_3 + 0x14);
+      local_34c = lbl_803E1484 + ((PartFxSpawnParams *)param_3)->unkC;
+      local_348 = lbl_803E1484 + ((PartFxSpawnParams *)param_3)->unk10;
+      local_344 = lbl_803E1484 + ((PartFxSpawnParams *)param_3)->unk14;
     }
     else {
       local_34c = lbl_803E1484 + ((GameObject *)param_1)->anim.worldPosX;
@@ -5990,9 +5990,9 @@ void FUN_800eca64(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   local_344 = param_4 | 0x1000000;
   if ((param_4 & 1) != 0) {
     if (iVar2 == 0) {
-      local_36c = lbl_803E14B0 + *(float *)(param_3 + 0xc);
-      local_368 = lbl_803E14C0 + *(float *)(param_3 + 0x10);
-      local_364 = lbl_803E14B0 + *(float *)(param_3 + 0x14);
+      local_36c = lbl_803E14B0 + ((PartFxSpawnParams *)param_3)->unkC;
+      local_368 = lbl_803E14C0 + ((PartFxSpawnParams *)param_3)->unk10;
+      local_364 = lbl_803E14B0 + ((PartFxSpawnParams *)param_3)->unk14;
     }
     else {
       local_36c = lbl_803E14B0 + *(float *)(iVar2 + 0x18);
@@ -6296,9 +6296,9 @@ void FUN_800ecb04(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   local_334 = param_4 | 0x4000010;
   if ((param_4 & 1) != 0) {
     if (psVar2 == (short *)0x0) {
-      local_35c = lbl_803E14D8 + *(float *)(param_3 + 0xc);
-      local_358 = lbl_803E14E4 + *(float *)(param_3 + 0x10);
-      local_354 = lbl_803E1508 + *(float *)(param_3 + 0x14);
+      local_35c = lbl_803E14D8 + ((PartFxSpawnParams *)param_3)->unkC;
+      local_358 = lbl_803E14E4 + ((PartFxSpawnParams *)param_3)->unk10;
+      local_354 = lbl_803E1508 + ((PartFxSpawnParams *)param_3)->unk14;
     }
     else {
       local_35c = lbl_803E14D8 + *(float *)(psVar2 + 0xc);
@@ -6602,9 +6602,9 @@ void FUN_800ecb7c(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   local_334 = param_4 | 0xc0400c0;
   if ((param_4 & 1) != 0) {
     if (local_384 == 0) {
-      local_35c = lbl_803E1520 + *(float *)(param_3 + 0xc);
-      local_358 = lbl_803E1520 + *(float *)(param_3 + 0x10);
-      local_354 = lbl_803E1520 + *(float *)(param_3 + 0x14);
+      local_35c = lbl_803E1520 + ((PartFxSpawnParams *)param_3)->unkC;
+      local_358 = lbl_803E1520 + ((PartFxSpawnParams *)param_3)->unk10;
+      local_354 = lbl_803E1520 + ((PartFxSpawnParams *)param_3)->unk14;
     }
     else {
       local_35c = lbl_803E1520 + *(float *)(local_384 + 0x18);
@@ -7005,9 +7005,9 @@ void FUN_800ecbf8(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   local_334 = param_4 | 0x40000c0;
   if ((param_4 & 1) != 0) {
     if (iVar1 == 0) {
-      local_35c = lbl_803E1554 + *(float *)(param_3 + 0xc);
-      local_358 = lbl_803E1578 + *(float *)(param_3 + 0x10);
-      local_354 = lbl_803E1554 + *(float *)(param_3 + 0x14);
+      local_35c = lbl_803E1554 + ((PartFxSpawnParams *)param_3)->unkC;
+      local_358 = lbl_803E1578 + ((PartFxSpawnParams *)param_3)->unk10;
+      local_354 = lbl_803E1554 + ((PartFxSpawnParams *)param_3)->unk14;
     }
     else {
       local_35c = lbl_803E1554 + *(float *)(iVar1 + 0x18);
@@ -7234,9 +7234,9 @@ void FUN_800ecd94(int param_1,int param_2,int param_3,uint param_4)
   local_324 = param_4 | 0x4040080;
   if ((param_4 & 1) != 0) {
     if (param_1 == 0) {
-      local_34c = lbl_803E1598 + *(float *)(param_3 + 0xc);
-      local_348 = lbl_803E1598 + *(float *)(param_3 + 0x10);
-      local_344 = lbl_803E1598 + *(float *)(param_3 + 0x14);
+      local_34c = lbl_803E1598 + ((PartFxSpawnParams *)param_3)->unkC;
+      local_348 = lbl_803E1598 + ((PartFxSpawnParams *)param_3)->unk10;
+      local_344 = lbl_803E1598 + ((PartFxSpawnParams *)param_3)->unk14;
     }
     else {
       local_34c = lbl_803E1598 + ((GameObject *)param_1)->anim.worldPosX;
@@ -7515,9 +7515,9 @@ void FUN_800ece08(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   local_334 = param_4 | 0x40000c0;
   if ((param_4 & 1) != 0) {
     if (local_384 == 0) {
-      local_35c = lbl_803E15B8 + *(float *)(param_3 + 0xc);
-      local_358 = lbl_803E15B8 + *(float *)(param_3 + 0x10);
-      local_354 = lbl_803E15B8 + *(float *)(param_3 + 0x14);
+      local_35c = lbl_803E15B8 + ((PartFxSpawnParams *)param_3)->unkC;
+      local_358 = lbl_803E15B8 + ((PartFxSpawnParams *)param_3)->unk10;
+      local_354 = lbl_803E15B8 + ((PartFxSpawnParams *)param_3)->unk14;
     }
     else {
       local_35c = lbl_803E15B8 + *(float *)(local_384 + 0x18);
@@ -7807,9 +7807,9 @@ void FUN_800ece84(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   local_334 = param_4 | 0xc0400c0;
   if ((param_4 & 1) != 0) {
     if (local_384 == 0) {
-      local_35c = lbl_803E15E8 + *(float *)(param_3 + 0xc);
-      local_358 = lbl_803E15E8 + *(float *)(param_3 + 0x10);
-      local_354 = lbl_803E15E8 + *(float *)(param_3 + 0x14);
+      local_35c = lbl_803E15E8 + ((PartFxSpawnParams *)param_3)->unkC;
+      local_358 = lbl_803E15E8 + ((PartFxSpawnParams *)param_3)->unk10;
+      local_354 = lbl_803E15E8 + ((PartFxSpawnParams *)param_3)->unk14;
     }
     else {
       local_35c = lbl_803E15E8 + *(float *)(local_384 + 0x18);
@@ -8156,9 +8156,9 @@ void FUN_800ecef0(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   local_334 = param_4 | 0xc010080;
   if ((param_4 & 1) != 0) {
     if (local_384 == 0) {
-      local_35c = lbl_803E1610 + *(float *)(param_3 + 0xc);
-      local_358 = lbl_803E1610 + *(float *)(param_3 + 0x10);
-      local_354 = lbl_803E1610 + *(float *)(param_3 + 0x14);
+      local_35c = lbl_803E1610 + ((PartFxSpawnParams *)param_3)->unkC;
+      local_358 = lbl_803E1610 + ((PartFxSpawnParams *)param_3)->unk10;
+      local_354 = lbl_803E1610 + ((PartFxSpawnParams *)param_3)->unk14;
     }
     else {
       local_35c = lbl_803E1610 + *(float *)(local_384 + 0x18);
@@ -8336,9 +8336,9 @@ void FUN_800ecf5c(int param_1,undefined2 param_2,int param_3,uint param_4)
   local_324 = param_4 | 0xc010040;
   if ((param_4 & 1) != 0) {
     if (param_1 == 0) {
-      local_34c = lbl_803E1648 + *(float *)(param_3 + 0xc);
-      local_348 = lbl_803E1648 + *(float *)(param_3 + 0x10);
-      local_344 = lbl_803E1648 + *(float *)(param_3 + 0x14);
+      local_34c = lbl_803E1648 + ((PartFxSpawnParams *)param_3)->unkC;
+      local_348 = lbl_803E1648 + ((PartFxSpawnParams *)param_3)->unk10;
+      local_344 = lbl_803E1648 + ((PartFxSpawnParams *)param_3)->unk14;
     }
     else {
       local_34c = lbl_803E1648 + ((GameObject *)param_1)->anim.worldPosX;
@@ -8572,9 +8572,9 @@ void FUN_800ecfc0(int param_1,undefined2 param_2,int param_3,uint param_4)
   local_324 = param_4 | 0xc0100c0;
   if ((param_4 & 1) != 0) {
     if (param_1 == 0) {
-      local_34c = lbl_803E1660 + *(float *)(param_3 + 0xc);
-      local_348 = lbl_803E1660 + *(float *)(param_3 + 0x10);
-      local_344 = lbl_803E1660 + *(float *)(param_3 + 0x14);
+      local_34c = lbl_803E1660 + ((PartFxSpawnParams *)param_3)->unkC;
+      local_348 = lbl_803E1660 + ((PartFxSpawnParams *)param_3)->unk10;
+      local_344 = lbl_803E1660 + ((PartFxSpawnParams *)param_3)->unk14;
     }
     else {
       local_34c = lbl_803E1660 + ((GameObject *)param_1)->anim.worldPosX;
@@ -8789,7 +8789,7 @@ void FUN_800ed024(short *param_1,int param_2,int param_3,uint param_4,undefined4
     local_358 = lbl_803E1680;
   }
   else {
-    local_358 = *(float *)(param_3 + 0x10);
+    local_358 = ((PartFxSpawnParams *)param_3)->unk10;
   }
   local_354 = lbl_803E1680;
   local_368 = lbl_803E1680;
@@ -8820,9 +8820,9 @@ void FUN_800ed024(short *param_1,int param_2,int param_3,uint param_4,undefined4
   }
   if ((local_334 & 1) != 0) {
     if (param_1 == (short *)0x0) {
-      local_35c = lbl_803E1680 + *(float *)(param_3 + 0xc);
-      local_358 = local_358 + *(float *)(param_3 + 0x10);
-      local_354 = lbl_803E1680 + *(float *)(param_3 + 0x14);
+      local_35c = lbl_803E1680 + ((PartFxSpawnParams *)param_3)->unkC;
+      local_358 = local_358 + ((PartFxSpawnParams *)param_3)->unk10;
+      local_354 = lbl_803E1680 + ((PartFxSpawnParams *)param_3)->unk14;
     }
     else {
       local_35c = lbl_803E1680 + ((GameObject *)param_1)->anim.localPosX;
@@ -9066,9 +9066,9 @@ void FUN_800ed228(int param_1,int param_2,int param_3,uint param_4)
   local_334 = param_4 | 0x5000004;
   if ((param_4 & 1) != 0) {
     if (param_1 == 0) {
-      local_35c = lbl_803E16A8 + *(float *)(param_3 + 0xc);
-      local_358 = lbl_803E16A8 + *(float *)(param_3 + 0x10);
-      local_354 = lbl_803E16A8 + *(float *)(param_3 + 0x14);
+      local_35c = lbl_803E16A8 + ((PartFxSpawnParams *)param_3)->unkC;
+      local_358 = lbl_803E16A8 + ((PartFxSpawnParams *)param_3)->unk10;
+      local_354 = lbl_803E16A8 + ((PartFxSpawnParams *)param_3)->unk14;
     }
     else {
       local_35c = lbl_803E16A8 + ((GameObject *)param_1)->anim.worldPosX;
@@ -9231,9 +9231,9 @@ void FUN_800ed2f0(int param_1,undefined2 param_2,int param_3,uint param_4)
   local_314 = param_4 | 0x4000004;
   if ((param_4 & 1) != 0) {
     if (param_1 == 0) {
-      local_33c = lbl_803E16F8 + *(float *)(param_3 + 0xc);
-      local_338 = lbl_803E16F8 + *(float *)(param_3 + 0x10);
-      local_334 = lbl_803E16F8 + *(float *)(param_3 + 0x14);
+      local_33c = lbl_803E16F8 + ((PartFxSpawnParams *)param_3)->unkC;
+      local_338 = lbl_803E16F8 + ((PartFxSpawnParams *)param_3)->unk10;
+      local_334 = lbl_803E16F8 + ((PartFxSpawnParams *)param_3)->unk14;
     }
     else {
       local_33c = lbl_803E16F8 + ((GameObject *)param_1)->anim.worldPosX;
@@ -9397,9 +9397,9 @@ void FUN_800ed354(int param_1,undefined2 param_2,int param_3,uint param_4)
   local_314 = param_4 | 0x4000010;
   if ((param_4 & 1) != 0) {
     if (param_1 == 0) {
-      local_33c = lbl_803E171C + *(float *)(param_3 + 0xc);
-      local_338 = lbl_803E1730 + *(float *)(param_3 + 0x10);
-      local_334 = lbl_803E171C + *(float *)(param_3 + 0x14);
+      local_33c = lbl_803E171C + ((PartFxSpawnParams *)param_3)->unkC;
+      local_338 = lbl_803E1730 + ((PartFxSpawnParams *)param_3)->unk10;
+      local_334 = lbl_803E171C + ((PartFxSpawnParams *)param_3)->unk14;
     }
     else {
       local_33c = lbl_803E171C + ((GameObject *)param_1)->anim.worldPosX;
@@ -9901,9 +9901,9 @@ void FUN_800ed3b8(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   local_344 = param_4 | 0x4000084;
   if ((param_4 & 1) != 0) {
     if (local_394 == 0) {
-      local_36c = lbl_803E1740 + *(float *)(param_3 + 0xc);
-      local_368 = lbl_803E1740 + *(float *)(param_3 + 0x10);
-      local_364 = lbl_803E1740 + *(float *)(param_3 + 0x14);
+      local_36c = lbl_803E1740 + ((PartFxSpawnParams *)param_3)->unkC;
+      local_368 = lbl_803E1740 + ((PartFxSpawnParams *)param_3)->unk10;
+      local_364 = lbl_803E1740 + ((PartFxSpawnParams *)param_3)->unk14;
     }
     else {
       local_36c = lbl_803E1740 + *(float *)(local_394 + 0x18);
@@ -10363,9 +10363,9 @@ void FUN_800ed424(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   local_344 = param_4 | 0x1000082;
   if ((param_4 & 1) != 0) {
     if (local_394 == 0) {
-      local_36c = lbl_803E1778 + *(float *)(param_3 + 0xc);
-      local_368 = lbl_803E1778 + *(float *)(param_3 + 0x10);
-      local_364 = lbl_803E1778 + *(float *)(param_3 + 0x14);
+      local_36c = lbl_803E1778 + ((PartFxSpawnParams *)param_3)->unkC;
+      local_368 = lbl_803E1778 + ((PartFxSpawnParams *)param_3)->unk10;
+      local_364 = lbl_803E1778 + ((PartFxSpawnParams *)param_3)->unk14;
     }
     else {
       local_36c = lbl_803E1778 + *(float *)(local_394 + 0x18);
@@ -10647,9 +10647,9 @@ void FUN_800ed490(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   local_334 = param_4 | 0xc0100c0;
   if ((param_4 & 1) != 0) {
     if (local_384 == 0) {
-      local_35c = lbl_803E17B8 + *(float *)(param_3 + 0xc);
-      local_358 = lbl_803E17B8 + *(float *)(param_3 + 0x10);
-      local_354 = lbl_803E17B8 + *(float *)(param_3 + 0x14);
+      local_35c = lbl_803E17B8 + ((PartFxSpawnParams *)param_3)->unkC;
+      local_358 = lbl_803E17B8 + ((PartFxSpawnParams *)param_3)->unk10;
+      local_354 = lbl_803E17B8 + ((PartFxSpawnParams *)param_3)->unk14;
     }
     else {
       local_35c = lbl_803E17B8 + *(float *)(local_384 + 0x18);
@@ -10873,9 +10873,9 @@ void FUN_800ed4fc(int param_1,undefined2 param_2,int param_3,uint param_4)
   local_324 = param_4 | 0xc0100c0;
   if ((param_4 & 1) != 0) {
     if (param_1 == 0) {
-      local_34c = lbl_803E17E0 + *(float *)(param_3 + 0xc);
-      local_348 = lbl_803E17E0 + *(float *)(param_3 + 0x10);
-      local_344 = lbl_803E17E0 + *(float *)(param_3 + 0x14);
+      local_34c = lbl_803E17E0 + ((PartFxSpawnParams *)param_3)->unkC;
+      local_348 = lbl_803E17E0 + ((PartFxSpawnParams *)param_3)->unk10;
+      local_344 = lbl_803E17E0 + ((PartFxSpawnParams *)param_3)->unk14;
     }
     else {
       local_34c = lbl_803E17E0 + ((GameObject *)param_1)->anim.worldPosX;
@@ -11205,9 +11205,9 @@ void FUN_800ed560(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   local_334 = param_4 | 0xc0104c0;
   if ((param_4 & 1) != 0) {
     if (iVar2 == 0) {
-      local_35c = lbl_803E1800 + *(float *)(param_3 + 0xc);
-      local_358 = lbl_803E1800 + *(float *)(param_3 + 0x10);
-      local_354 = lbl_803E1800 + *(float *)(param_3 + 0x14);
+      local_35c = lbl_803E1800 + ((PartFxSpawnParams *)param_3)->unkC;
+      local_358 = lbl_803E1800 + ((PartFxSpawnParams *)param_3)->unk10;
+      local_354 = lbl_803E1800 + ((PartFxSpawnParams *)param_3)->unk14;
     }
     else {
       local_35c = lbl_803E1800 + *(float *)(iVar2 + 0xc);
@@ -11447,9 +11447,9 @@ void FUN_800ed68c(int param_1,int param_2,int param_3,uint param_4)
   local_314 = param_4 | 0x10800;
   if ((param_4 & 1) != 0) {
     if (param_1 == 0) {
-      local_33c = lbl_803E18B4 + *(float *)(param_3 + 0xc);
-      local_338 = lbl_803E18B4 + *(float *)(param_3 + 0x10);
-      local_334 = lbl_803E18B4 + *(float *)(param_3 + 0x14);
+      local_33c = lbl_803E18B4 + ((PartFxSpawnParams *)param_3)->unkC;
+      local_338 = lbl_803E18B4 + ((PartFxSpawnParams *)param_3)->unk10;
+      local_334 = lbl_803E18B4 + ((PartFxSpawnParams *)param_3)->unk14;
     }
     else {
       local_33c = lbl_803E18B4 + ((GameObject *)param_1)->anim.worldPosX;
@@ -11616,9 +11616,9 @@ void FUN_800ed880(int param_1,undefined2 param_2,int param_3,uint param_4)
   local_314 = param_4 | 0x10c00;
   if ((param_4 & 1) != 0) {
     if (param_1 == 0) {
-      local_33c = lbl_803E18CC + *(float *)(param_3 + 0xc);
-      local_338 = lbl_803E18CC + *(float *)(param_3 + 0x10);
-      local_334 = lbl_803E18CC + *(float *)(param_3 + 0x14);
+      local_33c = lbl_803E18CC + ((PartFxSpawnParams *)param_3)->unkC;
+      local_338 = lbl_803E18CC + ((PartFxSpawnParams *)param_3)->unk10;
+      local_334 = lbl_803E18CC + ((PartFxSpawnParams *)param_3)->unk14;
     }
     else {
       local_33c = lbl_803E18CC + ((GameObject *)param_1)->anim.worldPosX;
@@ -11786,9 +11786,9 @@ void FUN_800ed8e4(int param_1,undefined2 param_2,int param_3,uint param_4)
   local_314 = param_4 | 0x10c00;
   if ((param_4 & 1) != 0) {
     if (param_1 == 0) {
-      local_33c = lbl_803E18E4 + *(float *)(param_3 + 0xc);
-      local_338 = lbl_803E18E4 + *(float *)(param_3 + 0x10);
-      local_334 = lbl_803E18E4 + *(float *)(param_3 + 0x14);
+      local_33c = lbl_803E18E4 + ((PartFxSpawnParams *)param_3)->unkC;
+      local_338 = lbl_803E18E4 + ((PartFxSpawnParams *)param_3)->unk10;
+      local_334 = lbl_803E18E4 + ((PartFxSpawnParams *)param_3)->unk14;
     }
     else {
       local_33c = lbl_803E18E4 + ((GameObject *)param_1)->anim.worldPosX;
@@ -12428,9 +12428,9 @@ void FUN_800ed9ac(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   local_354 = local_35c;
   if ((param_4 & 1) != 0) {
     if (iVar2 == 0) {
-      local_35c = lbl_803E1930 + *(float *)(param_3 + 0xc);
-      local_358 = lbl_803E1930 + *(float *)(param_3 + 0x10);
-      local_354 = lbl_803E1930 + *(float *)(param_3 + 0x14);
+      local_35c = lbl_803E1930 + ((PartFxSpawnParams *)param_3)->unkC;
+      local_358 = lbl_803E1930 + ((PartFxSpawnParams *)param_3)->unk10;
+      local_354 = lbl_803E1930 + ((PartFxSpawnParams *)param_3)->unk14;
     }
     else {
       local_35c = lbl_803E1930 + *(float *)(iVar2 + 0x18);
@@ -12658,9 +12658,9 @@ void FUN_800ee000(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   local_384 = local_38c;
   if ((param_4 & 1) != 0) {
     if (iVar2 == 0) {
-      local_38c = lbl_803E1988 + *(float *)(param_3 + 0xc);
-      local_388 = local_388 + *(float *)(param_3 + 0x10);
-      local_384 = lbl_803E1988 + *(float *)(param_3 + 0x14);
+      local_38c = lbl_803E1988 + ((PartFxSpawnParams *)param_3)->unkC;
+      local_388 = local_388 + ((PartFxSpawnParams *)param_3)->unk10;
+      local_384 = lbl_803E1988 + ((PartFxSpawnParams *)param_3)->unk14;
     }
     else {
       local_38c = lbl_803E1988 + *(float *)(iVar2 + 0x18);
@@ -12940,9 +12940,9 @@ void FUN_800ee10c(undefined4 param_1,undefined4 param_2,int param_3,uint param_4
   local_344 = param_4 | 0x1000000;
   if ((param_4 & 1) != 0) {
     if (local_394 == 0) {
-      local_36c = local_36c + *(float *)(param_3 + 0xc);
-      local_368 = local_368 + *(float *)(param_3 + 0x10);
-      local_364 = local_364 + *(float *)(param_3 + 0x14);
+      local_36c = local_36c + ((PartFxSpawnParams *)param_3)->unkC;
+      local_368 = local_368 + ((PartFxSpawnParams *)param_3)->unk10;
+      local_364 = local_364 + ((PartFxSpawnParams *)param_3)->unk14;
     }
     else {
       local_36c = local_36c + *(float *)(local_394 + 0x18);
@@ -13812,9 +13812,9 @@ void dll_6B_func03(int param_1, int param_2, int param_3, uint param_4)
   buf.flags |= param_4;
   if ((buf.flags & 1) != 0) {
     if (ctx == 0) {
-      buf.pos[0] = lbl_803E0A6C + *(f32 *)(param_3 + 0xc);
-      buf.pos[1] = lbl_803E0A6C + *(f32 *)(param_3 + 0x10);
-      buf.pos[2] = lbl_803E0A6C + *(f32 *)(param_3 + 0x14);
+      buf.pos[0] = lbl_803E0A6C + ((PartFxSpawnParams *)param_3)->unkC;
+      buf.pos[1] = lbl_803E0A6C + ((PartFxSpawnParams *)param_3)->unk10;
+      buf.pos[2] = lbl_803E0A6C + ((PartFxSpawnParams *)param_3)->unk14;
     } else {
       buf.pos[0] = lbl_803E0A6C + *(f32 *)(ctx + 0x18);
       buf.pos[1] = lbl_803E0A6C + *(f32 *)(ctx + 0x1c);
@@ -14116,9 +14116,9 @@ void dll_59_func03(int param_1, int param_2, int param_3, uint param_4)
   buf.flags |= param_4;
   if ((buf.flags & 1) != 0) {
     if (ctx == 0) {
-      buf.pos[0] = lbl_803E0708 + *(f32 *)(param_3 + 0xc);
-      buf.pos[1] = lbl_803E0708 + *(f32 *)(param_3 + 0x10);
-      buf.pos[2] = lbl_803E0708 + *(f32 *)(param_3 + 0x14);
+      buf.pos[0] = lbl_803E0708 + ((PartFxSpawnParams *)param_3)->unkC;
+      buf.pos[1] = lbl_803E0708 + ((PartFxSpawnParams *)param_3)->unk10;
+      buf.pos[2] = lbl_803E0708 + ((PartFxSpawnParams *)param_3)->unk14;
     } else {
       buf.pos[0] = lbl_803E0708 + *(f32 *)(ctx + 0x18);
       buf.pos[1] = lbl_803E0708 + *(f32 *)(ctx + 0x1c);
@@ -14178,9 +14178,9 @@ void dll_5C_func03(int param_1, int param_2, int param_3, uint param_4)
   buf.flags |= param_4;
   if ((buf.flags & 1) != 0) {
     if (ctx == 0) {
-      buf.pos[0] = lbl_803E078C + *(f32 *)(param_3 + 0xc);
-      buf.pos[1] = lbl_803E078C + *(f32 *)(param_3 + 0x10);
-      buf.pos[2] = lbl_803E078C + *(f32 *)(param_3 + 0x14);
+      buf.pos[0] = lbl_803E078C + ((PartFxSpawnParams *)param_3)->unkC;
+      buf.pos[1] = lbl_803E078C + ((PartFxSpawnParams *)param_3)->unk10;
+      buf.pos[2] = lbl_803E078C + ((PartFxSpawnParams *)param_3)->unk14;
     } else {
       buf.pos[0] = lbl_803E078C + *(f32 *)(ctx + 0x18);
       buf.pos[1] = lbl_803E078C + *(f32 *)(ctx + 0x1c);
@@ -14240,9 +14240,9 @@ void dll_5D_func03(int param_1, int param_2, int param_3, uint param_4)
   buf.flags |= param_4;
   if ((buf.flags & 1) != 0) {
     if (ctx == 0) {
-      buf.pos[0] = lbl_803E07BC + *(f32 *)(param_3 + 0xc);
-      buf.pos[1] = lbl_803E07BC + *(f32 *)(param_3 + 0x10);
-      buf.pos[2] = lbl_803E07BC + *(f32 *)(param_3 + 0x14);
+      buf.pos[0] = lbl_803E07BC + ((PartFxSpawnParams *)param_3)->unkC;
+      buf.pos[1] = lbl_803E07BC + ((PartFxSpawnParams *)param_3)->unk10;
+      buf.pos[2] = lbl_803E07BC + ((PartFxSpawnParams *)param_3)->unk14;
     } else {
       buf.pos[0] = lbl_803E07BC + *(f32 *)(ctx + 0x18);
       buf.pos[1] = lbl_803E07BC + *(f32 *)(ctx + 0x1c);
@@ -14306,9 +14306,9 @@ void dll_5F_func03(int param_1, int param_2, int param_3, uint param_4)
   buf.flags |= param_4;
   if ((buf.flags & 1) != 0) {
     if (ctx == 0) {
-      buf.pos[0] = lbl_803E0828 + *(f32 *)(param_3 + 0xc);
-      buf.pos[1] = lbl_803E0828 + *(f32 *)(param_3 + 0x10);
-      buf.pos[2] = lbl_803E0828 + *(f32 *)(param_3 + 0x14);
+      buf.pos[0] = lbl_803E0828 + ((PartFxSpawnParams *)param_3)->unkC;
+      buf.pos[1] = lbl_803E0828 + ((PartFxSpawnParams *)param_3)->unk10;
+      buf.pos[2] = lbl_803E0828 + ((PartFxSpawnParams *)param_3)->unk14;
     } else {
       buf.pos[0] = lbl_803E0828 + *(f32 *)(ctx + 0x18);
       buf.pos[1] = lbl_803E0828 + *(f32 *)(ctx + 0x1c);
@@ -14382,9 +14382,9 @@ void dll_61_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
       buf.pos[1] = lbl_803E0864 + ((GameObject *)param_1)->anim.worldPosY;
       buf.pos[2] = lbl_803E0888 + ((GameObject *)param_1)->anim.worldPosZ;
     } else {
-      buf.pos[0] = lbl_803E0858 + *(f32 *)(param_3 + 0xc);
-      buf.pos[1] = lbl_803E0864 + *(f32 *)(param_3 + 0x10);
-      buf.pos[2] = lbl_803E0888 + *(f32 *)(param_3 + 0x14);
+      buf.pos[0] = lbl_803E0858 + ((PartFxSpawnParams *)param_3)->unkC;
+      buf.pos[1] = lbl_803E0864 + ((PartFxSpawnParams *)param_3)->unk10;
+      buf.pos[2] = lbl_803E0888 + ((PartFxSpawnParams *)param_3)->unk14;
     }
   }
   (*gModgfxInterface)->spawnEffect(&buf, 0, 9, &base[0x0], 8, &base[0x5c], 0x90, 0);
@@ -14445,9 +14445,9 @@ void dll_62_func03(int param_1, int param_2, int param_3, uint param_4)
   buf.flags |= param_4;
   if ((buf.flags & 1) != 0) {
     if (ctx == 0) {
-      buf.pos[0] = lbl_803E0898 + *(f32 *)(param_3 + 0xc);
-      buf.pos[1] = lbl_803E0898 + *(f32 *)(param_3 + 0x10);
-      buf.pos[2] = lbl_803E0898 + *(f32 *)(param_3 + 0x14);
+      buf.pos[0] = lbl_803E0898 + ((PartFxSpawnParams *)param_3)->unkC;
+      buf.pos[1] = lbl_803E0898 + ((PartFxSpawnParams *)param_3)->unk10;
+      buf.pos[2] = lbl_803E0898 + ((PartFxSpawnParams *)param_3)->unk14;
     } else {
       buf.pos[0] = lbl_803E0898 + *(f32 *)(ctx + 0x18);
       buf.pos[1] = lbl_803E0898 + *(f32 *)(ctx + 0x1c);
@@ -14515,9 +14515,9 @@ void dll_64_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
       buf.pos[1] += *(f32 *)(buf.ctx + 0x1c);
       buf.pos[2] += *(f32 *)(buf.ctx + 0x20);
     } else {
-      buf.pos[0] += *(f32 *)(param_3 + 0xc);
-      buf.pos[1] += *(f32 *)(param_3 + 0x10);
-      buf.pos[2] += *(f32 *)(param_3 + 0x14);
+      buf.pos[0] += ((PartFxSpawnParams *)param_3)->unkC;
+      buf.pos[1] += ((PartFxSpawnParams *)param_3)->unk10;
+      buf.pos[2] += ((PartFxSpawnParams *)param_3)->unk14;
     }
   }
   (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, (u8 *)(int)lbl_80312D18, 0xc, &base[0x8c], 0x5e0, 0);
@@ -14576,9 +14576,9 @@ void dll_65_func03(int param_1, int param_2, int param_3, uint param_4)
   buf.flags |= param_4;
   if ((buf.flags & 1) != 0) {
     if (ctx == 0) {
-      buf.pos[0] = lbl_803E0958 + *(f32 *)(param_3 + 0xc);
-      buf.pos[1] = lbl_803E0958 + *(f32 *)(param_3 + 0x10);
-      buf.pos[2] = lbl_803E0958 + *(f32 *)(param_3 + 0x14);
+      buf.pos[0] = lbl_803E0958 + ((PartFxSpawnParams *)param_3)->unkC;
+      buf.pos[1] = lbl_803E0958 + ((PartFxSpawnParams *)param_3)->unk10;
+      buf.pos[2] = lbl_803E0958 + ((PartFxSpawnParams *)param_3)->unk14;
     } else {
       buf.pos[0] = lbl_803E0958 + *(f32 *)(ctx + 0x18);
       buf.pos[1] = lbl_803E0958 + *(f32 *)(ctx + 0x1c);
@@ -14653,9 +14653,9 @@ void dll_66_func03(int param_1, int param_2, int param_3, uint param_4)
   buf.flags |= param_4;
   if ((buf.flags & 1) != 0) {
     if (ctx == 0) {
-      buf.pos[0] = lbl_803E09C0 + *(f32 *)(param_3 + 0xc);
-      buf.pos[1] = lbl_803E09C0 + *(f32 *)(param_3 + 0x10);
-      buf.pos[2] = lbl_803E09C0 + *(f32 *)(param_3 + 0x14);
+      buf.pos[0] = lbl_803E09C0 + ((PartFxSpawnParams *)param_3)->unkC;
+      buf.pos[1] = lbl_803E09C0 + ((PartFxSpawnParams *)param_3)->unk10;
+      buf.pos[2] = lbl_803E09C0 + ((PartFxSpawnParams *)param_3)->unk14;
     } else {
       buf.pos[0] = lbl_803E09C0 + *(f32 *)(ctx + 0x18);
       buf.pos[1] = lbl_803E09C0 + *(f32 *)(ctx + 0x1c);
@@ -14707,9 +14707,9 @@ void dll_67_func03(int param_1, int param_2, int param_3, uint param_4)
   buf.flags |= param_4;
   if ((buf.flags & 1) != 0) {
     if (ctx == 0) {
-      buf.pos[0] = lbl_803E09DC + *(f32 *)(param_3 + 0xc);
-      buf.pos[1] = lbl_803E09DC + *(f32 *)(param_3 + 0x10);
-      buf.pos[2] = lbl_803E09DC + *(f32 *)(param_3 + 0x14);
+      buf.pos[0] = lbl_803E09DC + ((PartFxSpawnParams *)param_3)->unkC;
+      buf.pos[1] = lbl_803E09DC + ((PartFxSpawnParams *)param_3)->unk10;
+      buf.pos[2] = lbl_803E09DC + ((PartFxSpawnParams *)param_3)->unk14;
     } else {
       buf.pos[0] = lbl_803E09DC + *(f32 *)(ctx + 0x18);
       buf.pos[1] = lbl_803E09DC + *(f32 *)(ctx + 0x1c);
@@ -14769,9 +14769,9 @@ void dll_68_func03(int param_1, int param_2, int param_3, uint param_4)
   buf.flags |= param_4;
   if ((buf.flags & 1) != 0) {
     if (ctx == 0) {
-      buf.pos[0] = lbl_803E09F8 + *(f32 *)(param_3 + 0xc);
-      buf.pos[1] = lbl_803E09F8 + *(f32 *)(param_3 + 0x10);
-      buf.pos[2] = lbl_803E09F8 + *(f32 *)(param_3 + 0x14);
+      buf.pos[0] = lbl_803E09F8 + ((PartFxSpawnParams *)param_3)->unkC;
+      buf.pos[1] = lbl_803E09F8 + ((PartFxSpawnParams *)param_3)->unk10;
+      buf.pos[2] = lbl_803E09F8 + ((PartFxSpawnParams *)param_3)->unk14;
     } else {
       buf.pos[0] = lbl_803E09F8 + *(f32 *)(ctx + 0x18);
       buf.pos[1] = lbl_803E09F8 + *(f32 *)(ctx + 0x1c);
@@ -14840,7 +14840,7 @@ void dll_69_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, int para
   buf.v44 = param_2;
   buf.pos[0] = lbl_803E0A00;
   if (param_3 != 0) {
-    buf.pos[1] = *(f32 *)(param_3 + 0x10);
+    buf.pos[1] = ((PartFxSpawnParams *)param_3)->unk10;
   } else {
     buf.pos[1] = lbl_803E0A00;
   }
@@ -14869,9 +14869,9 @@ void dll_69_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, int para
       buf.pos[1] += *(f32 *)(buf.ctx + 0x1c);
       buf.pos[2] += *(f32 *)(buf.ctx + 0x20);
     } else {
-      buf.pos[0] += *(f32 *)(param_3 + 0xc);
-      buf.pos[1] += *(f32 *)(param_3 + 0x10);
-      buf.pos[2] += *(f32 *)(param_3 + 0x14);
+      buf.pos[0] += ((PartFxSpawnParams *)param_3)->unkC;
+      buf.pos[1] += ((PartFxSpawnParams *)param_3)->unk10;
+      buf.pos[2] += ((PartFxSpawnParams *)param_3)->unk14;
     }
   }
   (*gModgfxInterface)->spawnEffect(&buf, 0, 8, (u8 *)(int)lbl_803137F8, 4, &base[0x50], param_2 == 2 ? 0xc11 : 0x5e0, 0);
@@ -14926,9 +14926,9 @@ void dll_6A_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
       buf.pos[1] = lbl_803E0A28 + ((GameObject *)param_1)->anim.worldPosY;
       buf.pos[2] = lbl_803E0A28 + ((GameObject *)param_1)->anim.worldPosZ;
     } else {
-      buf.pos[0] = lbl_803E0A28 + *(f32 *)(param_3 + 0xc);
-      buf.pos[1] = lbl_803E0A28 + *(f32 *)(param_3 + 0x10);
-      buf.pos[2] = lbl_803E0A28 + *(f32 *)(param_3 + 0x14);
+      buf.pos[0] = lbl_803E0A28 + ((PartFxSpawnParams *)param_3)->unkC;
+      buf.pos[1] = lbl_803E0A28 + ((PartFxSpawnParams *)param_3)->unk10;
+      buf.pos[2] = lbl_803E0A28 + ((PartFxSpawnParams *)param_3)->unk14;
     }
   }
   (*gModgfxInterface)->spawnEffect(&buf, 0, 0x12, &lbl_803138A0[0], 0x10, &lbl_803138A0[180], 0x3e, 0);
@@ -14974,9 +14974,9 @@ void dll_6D_func03(int param_1, int param_2, int param_3, uint param_4)
   buf.flags |= param_4;
   if ((buf.flags & 1) != 0) {
     if (ctx == 0) {
-      buf.pos[0] = lbl_803E0A90 + *(f32 *)(param_3 + 0xc);
-      buf.pos[1] = lbl_803E0A90 + *(f32 *)(param_3 + 0x10);
-      buf.pos[2] = lbl_803E0A90 + *(f32 *)(param_3 + 0x14);
+      buf.pos[0] = lbl_803E0A90 + ((PartFxSpawnParams *)param_3)->unkC;
+      buf.pos[1] = lbl_803E0A90 + ((PartFxSpawnParams *)param_3)->unk10;
+      buf.pos[2] = lbl_803E0A90 + ((PartFxSpawnParams *)param_3)->unk14;
     } else {
       buf.pos[0] = lbl_803E0A90 + *(f32 *)(ctx + 0x18);
       buf.pos[1] = lbl_803E0A90 + *(f32 *)(ctx + 0x1c);
@@ -15026,9 +15026,9 @@ void dll_6E_func03(int param_1, int param_2, int param_3, uint param_4)
   buf.flags |= param_4;
   if ((buf.flags & 1) != 0) {
     if (ctx == 0) {
-      buf.pos[0] = lbl_803E0AAC + *(f32 *)(param_3 + 0xc);
-      buf.pos[1] = lbl_803E0AAC + *(f32 *)(param_3 + 0x10);
-      buf.pos[2] = lbl_803E0AAC + *(f32 *)(param_3 + 0x14);
+      buf.pos[0] = lbl_803E0AAC + ((PartFxSpawnParams *)param_3)->unkC;
+      buf.pos[1] = lbl_803E0AAC + ((PartFxSpawnParams *)param_3)->unk10;
+      buf.pos[2] = lbl_803E0AAC + ((PartFxSpawnParams *)param_3)->unk14;
     } else {
       buf.pos[0] = lbl_803E0AAC + *(f32 *)(ctx + 0x18);
       buf.pos[1] = lbl_803E0AAC + *(f32 *)(ctx + 0x1c);
@@ -15126,9 +15126,9 @@ void dll_6F_func03(int param_1, int param_2, int param_3, uint param_4)
   buf.flags |= param_4;
   if ((buf.flags & 1) != 0) {
     if (ctx == 0) {
-      buf.pos[0] = lbl_803E0AF0 + *(f32 *)(param_3 + 0xc);
-      buf.pos[1] = lbl_803E0AF0 + *(f32 *)(param_3 + 0x10);
-      buf.pos[2] = lbl_803E0AF0 + *(f32 *)(param_3 + 0x14);
+      buf.pos[0] = lbl_803E0AF0 + ((PartFxSpawnParams *)param_3)->unkC;
+      buf.pos[1] = lbl_803E0AF0 + ((PartFxSpawnParams *)param_3)->unk10;
+      buf.pos[2] = lbl_803E0AF0 + ((PartFxSpawnParams *)param_3)->unk14;
     } else {
       buf.pos[0] = lbl_803E0AF0 + *(f32 *)(ctx + 0x18);
       buf.pos[1] = lbl_803E0AF0 + *(f32 *)(ctx + 0x1c);
@@ -15220,9 +15220,9 @@ void dll_70_func03(int param_1, int param_2, int param_3, uint param_4)
   buf.flags |= param_4;
   if ((buf.flags & 1) != 0) {
     if (ctx == 0) {
-      buf.pos[0] = lbl_803E0B30 + *(f32 *)(param_3 + 0xc);
-      buf.pos[1] = lbl_803E0B30 + *(f32 *)(param_3 + 0x10);
-      buf.pos[2] = lbl_803E0B30 + *(f32 *)(param_3 + 0x14);
+      buf.pos[0] = lbl_803E0B30 + ((PartFxSpawnParams *)param_3)->unkC;
+      buf.pos[1] = lbl_803E0B30 + ((PartFxSpawnParams *)param_3)->unk10;
+      buf.pos[2] = lbl_803E0B30 + ((PartFxSpawnParams *)param_3)->unk14;
     } else {
       buf.pos[0] = lbl_803E0B30 + *(f32 *)(ctx + 0x18);
       buf.pos[1] = lbl_803E0B30 + *(f32 *)(ctx + 0x1c);
@@ -15288,9 +15288,9 @@ void dll_71_func03(int param_1, int param_2, int param_3, uint param_4)
   buf.flags |= param_4;
   if ((buf.flags & 1) != 0) {
     if (ctx == 0) {
-      buf.pos[0] = lbl_803E0B58 + *(f32 *)(param_3 + 0xc);
-      buf.pos[1] = lbl_803E0B58 + *(f32 *)(param_3 + 0x10);
-      buf.pos[2] = lbl_803E0B58 + *(f32 *)(param_3 + 0x14);
+      buf.pos[0] = lbl_803E0B58 + ((PartFxSpawnParams *)param_3)->unkC;
+      buf.pos[1] = lbl_803E0B58 + ((PartFxSpawnParams *)param_3)->unk10;
+      buf.pos[2] = lbl_803E0B58 + ((PartFxSpawnParams *)param_3)->unk14;
     } else {
       buf.pos[0] = lbl_803E0B58 + *(f32 *)(ctx + 0x18);
       buf.pos[1] = lbl_803E0B58 + *(f32 *)(ctx + 0x1c);
@@ -15348,9 +15348,9 @@ void dll_72_func03(int param_1, int param_2, int param_3, uint param_4)
   buf.flags |= param_4;
   if ((buf.flags & 1) != 0) {
     if (ctx == 0) {
-      buf.pos[0] = lbl_803E0B7C + *(f32 *)(param_3 + 0xc);
-      buf.pos[1] = lbl_803E0B7C + *(f32 *)(param_3 + 0x10);
-      buf.pos[2] = lbl_803E0B7C + *(f32 *)(param_3 + 0x14);
+      buf.pos[0] = lbl_803E0B7C + ((PartFxSpawnParams *)param_3)->unkC;
+      buf.pos[1] = lbl_803E0B7C + ((PartFxSpawnParams *)param_3)->unk10;
+      buf.pos[2] = lbl_803E0B7C + ((PartFxSpawnParams *)param_3)->unk14;
     } else {
       buf.pos[0] = lbl_803E0B7C + *(f32 *)(ctx + 0x18);
       buf.pos[1] = lbl_803E0B7C + *(f32 *)(ctx + 0x1c);
@@ -15424,9 +15424,9 @@ void dll_73_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
       buf.pos[1] = lbl_803E0B80 + ((GameObject *)param_1)->anim.worldPosY;
       buf.pos[2] = lbl_803E0B80 + ((GameObject *)param_1)->anim.worldPosZ;
     } else {
-      buf.pos[0] = lbl_803E0B80 + *(f32 *)(param_3 + 0xc);
-      buf.pos[1] = lbl_803E0B80 + *(f32 *)(param_3 + 0x10);
-      buf.pos[2] = lbl_803E0B80 + *(f32 *)(param_3 + 0x14);
+      buf.pos[0] = lbl_803E0B80 + ((PartFxSpawnParams *)param_3)->unkC;
+      buf.pos[1] = lbl_803E0B80 + ((PartFxSpawnParams *)param_3)->unk10;
+      buf.pos[2] = lbl_803E0B80 + ((PartFxSpawnParams *)param_3)->unk14;
     }
   }
   (*gModgfxInterface)->spawnEffect(&buf, 0, 0x15, (u8 *)(int)lbl_803144B0, 0x18, &base[212], 0xd9, 0);
@@ -15475,9 +15475,9 @@ void dll_76_func03(int param_1, int param_2, int param_3, uint param_4)
       buf.pos[1] = lbl_803E0C4C + *(f32 *)(ctx + 0x1c);
       buf.pos[2] = lbl_803E0C4C + *(f32 *)(ctx + 0x20);
     } else {
-      buf.pos[0] = lbl_803E0C4C + *(f32 *)(param_3 + 0xc);
-      buf.pos[1] = lbl_803E0C4C + *(f32 *)(param_3 + 0x10);
-      buf.pos[2] = lbl_803E0C4C + *(f32 *)(param_3 + 0x14);
+      buf.pos[0] = lbl_803E0C4C + ((PartFxSpawnParams *)param_3)->unkC;
+      buf.pos[1] = lbl_803E0C4C + ((PartFxSpawnParams *)param_3)->unk10;
+      buf.pos[2] = lbl_803E0C4C + ((PartFxSpawnParams *)param_3)->unk14;
     }
   }
   (*gModgfxInterface)->spawnEffect(&buf, 0, 0, 0, 0, 0, 0, 0);
@@ -15526,9 +15526,9 @@ void dll_77_func03(int param_1, int param_2, int param_3, uint param_4)
       buf.pos[1] = lbl_803E0C64 + *(f32 *)(ctx + 0x1c);
       buf.pos[2] = lbl_803E0C64 + *(f32 *)(ctx + 0x20);
     } else {
-      buf.pos[0] = lbl_803E0C64 + *(f32 *)(param_3 + 0xc);
-      buf.pos[1] = lbl_803E0C64 + *(f32 *)(param_3 + 0x10);
-      buf.pos[2] = lbl_803E0C64 + *(f32 *)(param_3 + 0x14);
+      buf.pos[0] = lbl_803E0C64 + ((PartFxSpawnParams *)param_3)->unkC;
+      buf.pos[1] = lbl_803E0C64 + ((PartFxSpawnParams *)param_3)->unk10;
+      buf.pos[2] = lbl_803E0C64 + ((PartFxSpawnParams *)param_3)->unk14;
     }
   }
   (*gModgfxInterface)->spawnEffect(&buf, 0, 0, 0, 0, 0, 0, 0);
@@ -15562,9 +15562,9 @@ void dll_78_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
   }
   e[5].layer = 1; e[5].flags = 7; e[5].tex = &lbl_803149B0[256]; e[5].mode = 2;
   if (param_3 != 0) {
-    e[5].x = lbl_803E0C84 * (lbl_803E0C88 * (f32)*(s16 *)(param_3 + 4));
-    e[5].y = lbl_803E0C84 * (lbl_803E0C8C * (f32)*(s16 *)(param_3 + 4));
-    e[5].z = lbl_803E0C84 * (lbl_803E0C88 * (f32)*(s16 *)(param_3 + 4));
+    e[5].x = lbl_803E0C84 * (lbl_803E0C88 * (f32)((PartFxSpawnParams *)param_3)->unk4);
+    e[5].y = lbl_803E0C84 * (lbl_803E0C8C * (f32)((PartFxSpawnParams *)param_3)->unk4);
+    e[5].z = lbl_803E0C84 * (lbl_803E0C88 * (f32)((PartFxSpawnParams *)param_3)->unk4);
   } else {
     e[5].x = lbl_803E0C88; e[5].y = lbl_803E0C8C; e[5].z = lbl_803E0C88;
   }
@@ -15584,9 +15584,9 @@ void dll_78_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
   buf.ctx = param_1;
   buf.v44 = param_2;
   if (param_3 != 0) {
-    buf.pos[0] = *(f32 *)(param_3 + 0xc);
-    buf.pos[1] = *(f32 *)(param_3 + 0x10);
-    buf.pos[2] = *(f32 *)(param_3 + 0x14);
+    buf.pos[0] = ((PartFxSpawnParams *)param_3)->unkC;
+    buf.pos[1] = ((PartFxSpawnParams *)param_3)->unk10;
+    buf.pos[2] = ((PartFxSpawnParams *)param_3)->unk14;
   } else {
     buf.pos[0] = lbl_803E0C74; buf.pos[1] = lbl_803E0C74; buf.pos[2] = lbl_803E0C74;
   }
@@ -15609,9 +15609,9 @@ void dll_78_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
       buf.pos[1] += *(f32 *)(buf.ctx + 0x1c);
       buf.pos[2] += *(f32 *)(buf.ctx + 0x20);
     } else {
-      buf.pos[0] += *(f32 *)(param_3 + 0xc);
-      buf.pos[1] += *(f32 *)(param_3 + 0x10);
-      buf.pos[2] += *(f32 *)(param_3 + 0x14);
+      buf.pos[0] += ((PartFxSpawnParams *)param_3)->unkC;
+      buf.pos[1] += ((PartFxSpawnParams *)param_3)->unk10;
+      buf.pos[2] += ((PartFxSpawnParams *)param_3)->unk14;
     }
   }
   (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, &lbl_803149B0[0], 0xc, &lbl_803149B0[140], 0x34, 0);
@@ -15693,9 +15693,9 @@ int dll_7A_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
       buf.pos[1] += *(f32 *)(buf.ctx + 0x1c);
       buf.pos[2] += *(f32 *)(buf.ctx + 0x20);
     } else {
-      buf.pos[0] += *(f32 *)(param_3 + 0xc);
-      buf.pos[1] += *(f32 *)(param_3 + 0x10);
-      buf.pos[2] += *(f32 *)(param_3 + 0x14);
+      buf.pos[0] += ((PartFxSpawnParams *)param_3)->unkC;
+      buf.pos[1] += ((PartFxSpawnParams *)param_3)->unk10;
+      buf.pos[2] += ((PartFxSpawnParams *)param_3)->unk14;
     }
   }
   if (param_2 == 0) {
@@ -15766,9 +15766,9 @@ void dll_60_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
       buf.pos[1] = lbl_803E0840 + *(f32 *)(buf.ctx + 0x1c);
       buf.pos[2] = lbl_803E0830 + *(f32 *)(buf.ctx + 0x20);
     } else {
-      buf.pos[0] = lbl_803E0830 + *(f32 *)(param_3 + 0xc);
-      buf.pos[1] = lbl_803E0840 + *(f32 *)(param_3 + 0x10);
-      buf.pos[2] = lbl_803E0830 + *(f32 *)(param_3 + 0x14);
+      buf.pos[0] = lbl_803E0830 + ((PartFxSpawnParams *)param_3)->unkC;
+      buf.pos[1] = lbl_803E0840 + ((PartFxSpawnParams *)param_3)->unk10;
+      buf.pos[2] = lbl_803E0830 + ((PartFxSpawnParams *)param_3)->unk14;
     }
   }
   (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, (u8 *)(int)lbl_80312790, 0xc, &base[140], 0x46, 0);
@@ -15829,9 +15829,9 @@ void dll_A3_func03(int param_1, int param_2, int param_3, uint param_4)
   buf.flags |= param_4;
   if ((buf.flags & 1) != 0) {
     if (ctx == 0) {
-      buf.pos[0] = lbl_803E0984 + *(f32 *)(param_3 + 0xc);
-      buf.pos[1] = lbl_803E0984 + *(f32 *)(param_3 + 0x10);
-      buf.pos[2] = lbl_803E0984 + *(f32 *)(param_3 + 0x14);
+      buf.pos[0] = lbl_803E0984 + ((PartFxSpawnParams *)param_3)->unkC;
+      buf.pos[1] = lbl_803E0984 + ((PartFxSpawnParams *)param_3)->unk10;
+      buf.pos[2] = lbl_803E0984 + ((PartFxSpawnParams *)param_3)->unk14;
     } else {
       buf.pos[0] = lbl_803E0984 + *(f32 *)(ctx + 0x18);
       buf.pos[1] = lbl_803E0984 + *(f32 *)(ctx + 0x1c);
@@ -15924,9 +15924,9 @@ void dll_74_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
       buf.pos[1] = lbl_803E0BB8 + ((GameObject *)param_1)->anim.localPosY;
       buf.pos[2] = lbl_803E0BB8 + ((GameObject *)param_1)->anim.localPosZ;
     } else {
-      buf.pos[0] = lbl_803E0BB8 + *(f32 *)(param_3 + 0xc);
-      buf.pos[1] = lbl_803E0BB8 + *(f32 *)(param_3 + 0x10);
-      buf.pos[2] = lbl_803E0BB8 + *(f32 *)(param_3 + 0x14);
+      buf.pos[0] = lbl_803E0BB8 + ((PartFxSpawnParams *)param_3)->unkC;
+      buf.pos[1] = lbl_803E0BB8 + ((PartFxSpawnParams *)param_3)->unk10;
+      buf.pos[2] = lbl_803E0BB8 + ((PartFxSpawnParams *)param_3)->unk14;
     }
   }
   if (param_2 == 0) {
@@ -16000,7 +16000,7 @@ void dll_63_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
     e[2].x = lbl_803E08E0; e[2].y = lbl_803E08E4; e[2].z = lbl_803E08E0;
     e += 3;
   } else {
-    f32 s = *(f32 *)(param_3 + 8);
+    f32 s = ((PartFxSpawnParams *)param_3)->unk8;
     e[1].layer = 0; e[1].flags = 7; e[1].tex = &base[0x100]; e[1].mode = 2;
     e[1].x = lbl_803E08D8 * s; e[1].y = lbl_803E08DC * s; e[1].z = lbl_803E08D8 * s;
     e[2].layer = 0; e[2].flags = 7; e[2].tex = &base[0xf0]; e[2].mode = 2;
@@ -16060,9 +16060,9 @@ void dll_63_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
       buf.pos[1] += *(f32 *)(buf.ctx + 0x1c);
       buf.pos[2] += *(f32 *)(buf.ctx + 0x20);
     } else {
-      buf.pos[0] += *(f32 *)(param_3 + 0xc);
-      buf.pos[1] += *(f32 *)(param_3 + 0x10);
-      buf.pos[2] += *(f32 *)(param_3 + 0x14);
+      buf.pos[0] += ((PartFxSpawnParams *)param_3)->unkC;
+      buf.pos[1] += ((PartFxSpawnParams *)param_3)->unk10;
+      buf.pos[2] += ((PartFxSpawnParams *)param_3)->unk14;
     }
   }
   (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, base, 0xc, &base[0x8c], 0x40, 0);
@@ -16201,9 +16201,9 @@ int dll_79_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
       buf.pos[1] += *(f32 *)(buf.ctx + 0x1c);
       buf.pos[2] += *(f32 *)(buf.ctx + 0x20);
     } else {
-      buf.pos[0] += *(f32 *)(param_3 + 0xc);
-      buf.pos[1] += *(f32 *)(param_3 + 0x10);
-      buf.pos[2] += *(f32 *)(param_3 + 0x14);
+      buf.pos[0] += ((PartFxSpawnParams *)param_3)->unkC;
+      buf.pos[1] += ((PartFxSpawnParams *)param_3)->unk10;
+      buf.pos[2] += ((PartFxSpawnParams *)param_3)->unk14;
     }
   }
   if (param_2 == 0) {
@@ -16311,9 +16311,9 @@ void dll_7B_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
       buf.pos[1] += *(f32 *)(buf.ctx + 0x1c);
       buf.pos[2] += *(f32 *)(buf.ctx + 0x20);
     } else {
-      buf.pos[0] += *(f32 *)(param_3 + 0xc);
-      buf.pos[1] += *(f32 *)(param_3 + 0x10);
-      buf.pos[2] += *(f32 *)(param_3 + 0x14);
+      buf.pos[0] += ((PartFxSpawnParams *)param_3)->unkC;
+      buf.pos[1] += ((PartFxSpawnParams *)param_3)->unk10;
+      buf.pos[2] += ((PartFxSpawnParams *)param_3)->unk14;
     }
   }
   (*gModgfxInterface)->spawnEffect(&buf, 0, 0xe, base, 0xc, &base[0x8c], 0x8e, 0);
@@ -16412,17 +16412,17 @@ void StaffCollision_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, 
     buf.flags |= param_4;
     if ((buf.flags & 1) != 0) {
       if (buf.ctx != 0 && param_3 != 0) {
-        buf.pos[0] += *(f32 *)(buf.ctx + 0x18) + *(f32 *)(param_3 + 0xc);
-        buf.pos[1] += *(f32 *)(buf.ctx + 0x1c) + *(f32 *)(param_3 + 0x10);
-        buf.pos[2] += *(f32 *)(buf.ctx + 0x20) + *(f32 *)(param_3 + 0x14);
+        buf.pos[0] += *(f32 *)(buf.ctx + 0x18) + ((PartFxSpawnParams *)param_3)->unkC;
+        buf.pos[1] += *(f32 *)(buf.ctx + 0x1c) + ((PartFxSpawnParams *)param_3)->unk10;
+        buf.pos[2] += *(f32 *)(buf.ctx + 0x20) + ((PartFxSpawnParams *)param_3)->unk14;
       } else if (buf.ctx != 0) {
         buf.pos[0] += *(f32 *)(buf.ctx + 0x18);
         buf.pos[1] += *(f32 *)(buf.ctx + 0x1c);
         buf.pos[2] += *(f32 *)(buf.ctx + 0x20);
       } else if (param_3 != 0) {
-        buf.pos[0] += *(f32 *)(param_3 + 0xc);
-        buf.pos[1] += *(f32 *)(param_3 + 0x10);
-        buf.pos[2] += *(f32 *)(param_3 + 0x14);
+        buf.pos[0] += ((PartFxSpawnParams *)param_3)->unkC;
+        buf.pos[1] += ((PartFxSpawnParams *)param_3)->unk10;
+        buf.pos[2] += ((PartFxSpawnParams *)param_3)->unk14;
       }
     }
     (*gModgfxInterface)->spawnEffect(&buf, 0, param_2 != 0 ? 4 : 3,
@@ -16576,9 +16576,9 @@ void dll_75_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
       buf.pos[1] = lbl_803E0C34 + ((GameObject *)param_1)->anim.worldPosY;
       buf.pos[2] = lbl_803E0C34 + ((GameObject *)param_1)->anim.worldPosZ;
     } else {
-      buf.pos[0] = lbl_803E0C34 + *(f32 *)(param_3 + 0xc);
-      buf.pos[1] = lbl_803E0C34 + *(f32 *)(param_3 + 0x10);
-      buf.pos[2] = lbl_803E0C34 + *(f32 *)(param_3 + 0x14);
+      buf.pos[0] = lbl_803E0C34 + ((PartFxSpawnParams *)param_3)->unkC;
+      buf.pos[1] = lbl_803E0C34 + ((PartFxSpawnParams *)param_3)->unk10;
+      buf.pos[2] = lbl_803E0C34 + ((PartFxSpawnParams *)param_3)->unk14;
     }
   }
   (*gModgfxInterface)->spawnEffect(&buf, 0, 0, 0, 0, 0, 0, 0);

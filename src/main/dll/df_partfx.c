@@ -1553,37 +1553,37 @@ void FUN_800d88f8(double param_1,double param_2,int param_3,int param_4)
       dVar3 = (double)lbl_803E11F0;
       dVar2 = dVar3;
     }
-    *(float *)(param_3 + 0x24) =
-         (float)((double)*(float *)(param_3 + 0x24) +
+    ((PartFxSpawnParams *)param_3)->unk24 =
+         (float)((double)((PartFxSpawnParams *)param_3)->unk24 +
                 (double)((float)(param_1 *
-                                (double)(float)(dVar2 - (double)*(float *)(param_3 + 0x24))) /
+                                (double)(float)(dVar2 - (double)((PartFxSpawnParams *)param_3)->unk24)) /
                         *(float *)(param_4 + 0x2b8)));
-    *(float *)(param_3 + 0x2c) =
-         (float)((double)*(float *)(param_3 + 0x2c) +
+    ((PartFxSpawnParams *)param_3)->unk2C =
+         (float)((double)((PartFxSpawnParams *)param_3)->unk2C +
                 (double)((float)(param_1 *
-                                (double)(float)(dVar3 - (double)*(float *)(param_3 + 0x2c))) /
+                                (double)(float)(dVar3 - (double)((PartFxSpawnParams *)param_3)->unk2C)) /
                         *(float *)(param_4 + 0x2b8)));
   }
   else {
     *(byte *)(param_4 + 0x34c) = *(byte *)(param_4 + 0x34c) & 0xfe;
   }
-  dVar2 = FUN_80293900((double)(*(float *)(param_3 + 0x24) * *(float *)(param_3 + 0x24) +
-                               *(float *)(param_3 + 0x2c) * *(float *)(param_3 + 0x2c)));
+  dVar2 = FUN_80293900((double)(((PartFxSpawnParams *)param_3)->unk24 * ((PartFxSpawnParams *)param_3)->unk24 +
+                               ((PartFxSpawnParams *)param_3)->unk2C * ((PartFxSpawnParams *)param_3)->unk2C));
   ((BaddieState *)param_4)->unk294 = (float)dVar2;
   fVar1 = lbl_803E11F0;
   if (((BaddieState *)param_4)->unk294 < lbl_803E1230) {
     ((BaddieState *)param_4)->unk294 = lbl_803E11F0;
-    *(float *)(param_3 + 0x24) = fVar1;
-    *(float *)(param_3 + 0x2c) = fVar1;
+    ((PartFxSpawnParams *)param_3)->unk24 = fVar1;
+    ((PartFxSpawnParams *)param_3)->unk2C = fVar1;
   }
   dVar2 = (double)FUN_80293f90();
   dVar3 = (double)FUN_80294964();
   ((BaddieState *)param_4)->animSpeedB =
-       (float)((double)*(float *)(param_3 + 0x24) * dVar3 -
-              (double)(float)((double)*(float *)(param_3 + 0x2c) * dVar2));
+       (float)((double)((PartFxSpawnParams *)param_3)->unk24 * dVar3 -
+              (double)(float)((double)((PartFxSpawnParams *)param_3)->unk2C * dVar2));
   ((BaddieState *)param_4)->animSpeedA =
-       (float)(-(double)*(float *)(param_3 + 0x2c) * dVar3 -
-              (double)(float)((double)*(float *)(param_3 + 0x24) * dVar2));
+       (float)(-(double)((PartFxSpawnParams *)param_3)->unk2C * dVar3 -
+              (double)(float)((double)((PartFxSpawnParams *)param_3)->unk24 * dVar2));
   return;
 }
 
