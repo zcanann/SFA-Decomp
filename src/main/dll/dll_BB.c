@@ -56,7 +56,7 @@ void camcontrol_applyState(short *param_1)
   *psVar3 = *param_1;
   psVar3[1] = param_1[1];
   psVar3[2] = param_1[2];
-  if ((*(byte *)((int)param_1 + 0x143) & 0x80) != 0) {
+  if ((*(byte *)((int)param_1 + 0x143) >> 7 & 1) != 0u) {
     PSVECSubtract((float *)(param_1 + 0xc),(float *)(psVar3 + 6),delta);
     fVar5 = PSVECMag(delta);
     if (fVar5 > lbl_803E1630) {
