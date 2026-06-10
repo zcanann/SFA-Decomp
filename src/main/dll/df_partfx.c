@@ -736,7 +736,7 @@ void player_applyVelocityStep(int *p, int *ctx, f32 t) {
         setMatrixFromObjectPos(mtx, &desc);
         if ((ctx[0] & 0x10000) != 0) {
             Matrix_TransformPoint(mtx, ((BaddieState *)ctx)->animSpeedB, *(f32 *)((char *)ctx + 0x288),
-                                  -((BaddieState *)ctx)->animSpeedA, &outX, (f32 *)((char *)p + 0x28),
+                                  -((BaddieState *)ctx)->animSpeedA, &outX, &((GameObject *)p)->anim.velocityY,
                                   &outZ);
         } else {
             Matrix_TransformPoint(mtx, ((BaddieState *)ctx)->animSpeedB, lbl_803E0570,

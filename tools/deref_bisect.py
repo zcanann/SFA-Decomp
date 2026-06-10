@@ -103,6 +103,9 @@ def main():
         args = ['python3', 'tools/deref_convert_struct.py', cfile, header, sname]
         if kind == 'structu':
             args.append('--include-unk')
+    elif mode.startswith('addrs:'):
+        _, header, sname = mode.split(':')
+        args = ['python3', 'tools/deref_addr_struct.py', cfile, header, sname, '--include-unk']
     elif mode.startswith('scaled:'):
         _, header, sname, esz = mode.split(':')
         args = ['python3', 'tools/deref_scaled_convert.py', cfile, header, sname, esz]
@@ -121,7 +124,7 @@ def main():
     if conv == orig:
         print('NOCHANGE')
         return
-    if mode.startswith(('struct:', 'structu:', 'scaled:')):
+    if mode.startswith(('struct:', 'structu:', 'scaled:', 'addrs:')):
         h = mode.split(':')[1]
         need_inc = h[len('include/'):] if h.startswith('include/') else None
     else:

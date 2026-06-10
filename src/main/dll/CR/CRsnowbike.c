@@ -366,7 +366,7 @@ void sc_musictree_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
                 &state->pathPoint[0][1],
                 &state->pathPoint[0][2],
                 0);
-            state = (SCMusicTreeState *)((char *)state + 12);
+            state = (SCMusicTreeState *)&((ScLevelControlState *)state)->fog0C;
         }
     }
     ((GameObject *)obj)->unkF8 = 1;

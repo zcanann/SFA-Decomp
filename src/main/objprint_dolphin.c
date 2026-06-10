@@ -3036,7 +3036,7 @@ void objRenderChild(int *child, int *parent, u8 p3) {
         space = ((GameObject *)child)->anim.parent;
         if (space != NULL) {
             Obj_TransformWorldPointToLocal(((GameObject *)child)->anim.worldPosX, ((GameObject *)child)->anim.worldPosY, ((GameObject *)child)->anim.worldPosZ,
-                (f32 *)((char *)child + 0xc), (f32 *)((char *)child + 0x10), (f32 *)((char *)child + 0x14), space);
+                &((GameObject *)child)->anim.localPosX, &((GameObject *)child)->anim.localPosY, &((GameObject *)child)->anim.localPosZ, space);
         } else {
             ((GameObject *)child)->anim.localPosX = ((GameObject *)child)->anim.worldPosX;
             ((GameObject *)child)->anim.localPosY = ((GameObject *)child)->anim.worldPosY;

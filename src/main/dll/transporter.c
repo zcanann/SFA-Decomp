@@ -654,7 +654,7 @@ int fn_8017805C(int *obj, f32 *state) {
     if ((((GameObject *)tricky)->objectFlags & 0x800) != 0) {
         pf = trickyGetQueuedPathParticlePos(tricky);
     } else {
-        pf = (f32 *)((char *)tricky + 0xc);
+        pf = &((GameObject *)tricky)->anim.localPosX;
     }
     k = lbl_803E3624;
     state[1] = -(k * ((GameObject *)obj)->anim.velocityX - pf[0]);

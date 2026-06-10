@@ -183,7 +183,7 @@ void snowclaw_init(int *obj, u8 *init) {
     s16toFloat((char *)inner + 0x98, (s16)*(int *)(table + 0x3c));
     objSeqInitFn_80080078(table, 6);
     lbl_803DDD38 = 0x96;
-    ((SnowclawAaFlags *)((char *)inner + 0xaa))->b0 = 0;
+    ((SnowclawAaFlags *)&((SnowclawState *)inner)->unkAA)->b0 = 0;
 }
 
 #pragma dont_inline on
@@ -356,7 +356,7 @@ void snowclaw_render(int obj, int p2, int p3, int p4, int p5, int vis) {
             *(u8 *)((char *)obj + 0x37) = ((SnowclawState *)inner)->unkA0;
         }
         if (((GameObject *)obj)->unkEB == 0 && ((GameObject *)obj)->anim.seqId == 0x389 &&
-            ((SnowclawAaFlags *)((char *)inner + 0xaa))->b0 != 0) {
+            ((SnowclawAaFlags *)&((SnowclawState *)inner)->unkAA)->b0 != 0) {
             near = ObjGroup_FindNearestObject(0x1e, obj, &dist);
             if ((u32)near != 0 &&
                 (*(int (*)(int))(*(int *)(*(int *)(*(int *)&((GameObject *)near)->anim.dll) + 0x24)))(near) != 0 &&
@@ -365,13 +365,13 @@ void snowclaw_render(int obj, int p2, int p3, int p4, int p5, int vis) {
             }
         }
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E670C);
-        ObjPath_GetPointWorldPosition(obj, 1, (f32 *)((char *)inner + 0x18), (f32 *)((char *)inner + 0x1c), (f32 *)((char *)inner + 0x20), 0);
+        ObjPath_GetPointWorldPosition(obj, 1, &((SnowclawState *)inner)->unk18, &((SnowclawState *)inner)->unk1C, &((SnowclawState *)inner)->unk20, 0);
         *(u8 *)((char *)obj + 0x37) = oldFlag;
-        if (((SnowclawAaFlags *)((char *)inner + 0xaa))->flag6 != 0) {
+        if (((SnowclawAaFlags *)&((SnowclawState *)inner)->unkAA)->flag6 != 0) {
             if (((SnowclawState *)inner)->unkAC != lbl_803E66F0) {
                 ((SnowclawState *)inner)->unkAC = lbl_803E670C + (f32)(s32)(0xff - ((GameObject *)obj)->anim.alpha) / lbl_803E6710;
             } else {
-                ((SnowclawAaFlags *)((char *)inner + 0xaa))->flag6 = 0;
+                ((SnowclawAaFlags *)&((SnowclawState *)inner)->unkAA)->flag6 = 0;
             }
             objParticleFn_80099d84(obj, lbl_803E670C, 3, ((SnowclawState *)inner)->unkAC, 0);
         }
@@ -422,7 +422,7 @@ void snowclaw_hitDetect(int obj) {
                 } else {
                     (*gObjectTriggerInterface)->runSequence(0, (void *)obj, 3);
                 }
-                ((SnowclawAaFlags *)((char *)inner + 0xaa))->flag6 = 1;
+                ((SnowclawAaFlags *)&((SnowclawState *)inner)->unkAA)->flag6 = 1;
                 ((SnowclawState *)inner)->unkAC = lbl_803E670C;
                 ((SnowclawState *)inner)->unk24 = lbl_803E6728 * mathSinf((f32)((GameObject *)obj)->anim.rotX * lbl_803E672C / lbl_803E6730);
                 ((SnowclawState *)inner)->unk28 = lbl_803E6734 * (f32)(int)randomGetRange(0x28, 0x64);
@@ -655,7 +655,7 @@ int snowclaw_animEventCallback(int obj, int a2, ObjSeqState *seq) {
             int *found = (int *)ObjGroup_FindNearestObject(0x1e, obj, &dist);
             if (found != 0) {
                 (*(void (*)(int *, int))(*(int *)(*(int *)(*(int *)&((GameObject *)found)->anim.dll) + 0x20)))(found, 2);
-                ((SnowclawAaFlags *)((char *)inner + 0xaa))->b0 = 0;
+                ((SnowclawAaFlags *)&((SnowclawState *)inner)->unkAA)->b0 = 0;
             }
             break;
         }
@@ -663,7 +663,7 @@ int snowclaw_animEventCallback(int obj, int a2, ObjSeqState *seq) {
             int *found = (int *)ObjGroup_FindNearestObject(0x1e, obj, &dist);
             if (found != 0) {
                 (*(void (*)(int *, int))(*(int *)(*(int *)(*(int *)&((GameObject *)found)->anim.dll) + 0x20)))(found, 0);
-                ((SnowclawAaFlags *)((char *)inner + 0xaa))->b0 = 1;
+                ((SnowclawAaFlags *)&((SnowclawState *)inner)->unkAA)->b0 = 1;
             }
             break;
         }

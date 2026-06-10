@@ -100,7 +100,7 @@ void drakord_thornbush_update(int obj)
             ObjHits_EnableObject(obj);
             ObjHitbox_SetSphereRadius(obj, (int)(lbl_803E65A8 + (f32)(s32)((DrakordThornbushPlacement *)setup)->unk1C - ((DrakordThornbushState *)inner)->unkC));
         }
-        if (timerCountDown((f32 *)((char *)inner + 0xc)) != 0) {
+        if (timerCountDown(&((DrakordThornbushState *)inner)->unkC) != 0) {
             ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
             ((DrakorFlags *)((char *)inner + 0x79))->b80 = 1;
             if (*(u32 *)&((ObjPlacement *)setup)->mapId == 0xffffffff) {
@@ -188,7 +188,7 @@ void drakord_thornbush_hitDetect(int obj)
                 break;
             }
             if (((DrakordThornbushPlacement *)setup)->unk1A != 0) {
-                s16toFloat((void *)((char *)inner + 0xc), ((DrakordThornbushPlacement *)setup)->unk1A);
+                s16toFloat((void *)&((DrakordThornbushState *)inner)->unkC, ((DrakordThornbushPlacement *)setup)->unk1A);
                 ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 ObjHits_DisableObject(obj);
             } else if (*(u32 *)&((ObjPlacement *)setup)->mapId == 0xffffffff) {
@@ -211,7 +211,7 @@ void drakord_thornbush_init(int obj, u8 *init)
     if (*(u32 *)((char *)init + 0x14) == 0xffffffff) {
         ((DrakorFlags *)((char *)inner + 0x79))->b80 = 1;
     }
-    storeZeroToFloatParam((f32 *)((char *)inner + 0xc));
+    storeZeroToFloatParam(&((DrakordThornbushState *)inner)->unkC);
     storeZeroToFloatParam((f32 *)((char *)inner + 0x10));
     ((DrakordThornbushState *)inner)->unk8 = 0;
     switch (((GameObject *)obj)->anim.seqId) {

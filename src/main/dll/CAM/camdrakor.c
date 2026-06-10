@@ -355,7 +355,7 @@ void CameraModeCombat_update(short *cam)
                                 ((CombatCamFlags *)((char *)cam + 0x143))->b80 = 1;
                             }
                             Obj_TransformWorldPointToLocal(*(f32 *)((char *)cam + 0x18), ((CameraObject *)cam)->anim.worldPosY, ((CameraObject *)cam)->anim.worldPosZ,
-                                                           (f32 *)((char *)cam + 0xc), (f32 *)((char *)cam + 0x10), (f32 *)((char *)cam + 0x14),
+                                                           &((CameraObject *)cam)->anim.localPosX, &((CameraObject *)cam)->anim.localPosY, &((CameraObject *)cam)->anim.localPosZ,
                                                            *(int *)&((CameraObject *)cam)->anim.parent);
                         }
                     }
@@ -520,7 +520,7 @@ void CameraModeShipBattle_update(short *cam)
     r = r * timeDelta;
     lbl_803DD570->lateralOffset = lbl_803DD570->lateralOffset + r;
     Obj_TransformWorldPointToLocal(((CameraObject *)cam)->anim.worldPosX, ((CameraObject *)cam)->anim.worldPosY, ((CameraObject *)cam)->anim.worldPosZ,
-                                   (f32 *)((char *)cam + 0xc), (f32 *)((char *)cam + 0x10), (f32 *)((char *)cam + 0x14),
+                                   &((CameraObject *)cam)->anim.localPosX, &((CameraObject *)cam)->anim.localPosY, &((CameraObject *)cam)->anim.localPosZ,
                                    *(int *)&((CameraObject *)cam)->anim.parent);
 }
 

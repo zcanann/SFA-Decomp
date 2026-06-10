@@ -954,7 +954,7 @@ void SB_KyteCage_init(int *obj, int *params)
 {
     SBKyteCageState *state = ((GameObject *)obj)->extra;
     ((GameObject *)obj)->animEventCallback = (void *)SB_KyteCage_SeqFn;
-    *(s16 *)obj = (s16)((s8) * (s8 *)((char *)params + 0x18) << 8);
+    *(s16 *)obj = (s16)((s8) * (s8 *)&((ObjHitsPriorityState *)params)->localPosZ << 8);
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x6000);
     state->seqLatch = 0;
     if ((u32)GameBit_Get(117) == 0u) {

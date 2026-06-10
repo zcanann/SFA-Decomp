@@ -480,7 +480,7 @@ void ktrex_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefi
     ((KTRexArenaState *)gKTRexState)->unk16C = lbl_803E67B4 * (f32)(int)randomGetRange(-50, 50);
     ((KTRexArenaState *)gKTRexState)->unk170 = lbl_803E67B4 * (f32)(int)randomGetRange(60, 120);
     ((KTRexArenaState *)gKTRexState)->unk174 = lbl_803E6848 * (f32)(int)randomGetRange(100, 150);
-    PSMTXMultVecSR(m, (f32 *)((char *)gKTRexState + 0x16c), (f32 *)((char *)gKTRexState + 0x16c));
+    PSMTXMultVecSR(m, &((KTRexArenaState *)gKTRexState)->unk16C, &((KTRexArenaState *)gKTRexState)->unk16C);
     *(int *)&((KTRexArenaState *)gKTRexState)->phaseFlags |= 0x100000;
 }
 
@@ -702,7 +702,7 @@ int ktrex_stateHandlerB01(int obj, int runtime) {
     }
     dx = oneOverTimeDelta * (((KTRexArenaState *)gKTRexState)->unkE8 - ((GameObject *)obj)->anim.localPosX);
     dz = oneOverTimeDelta * (((KTRexArenaState *)gKTRexState)->unkF0 - ((GameObject *)obj)->anim.localPosZ);
-    ObjAnim_SampleRootCurvePhase(sqrtf(dx * dx + dz * dz), (ObjAnimComponent *)obj, (f32 *)((char *)runtime + 0x2a0));
+    ObjAnim_SampleRootCurvePhase(sqrtf(dx * dx + dz * dz), (ObjAnimComponent *)obj, &((KTRexRuntime *)runtime)->unk2A0);
     ((GameObject *)obj)->anim.localPosX = ((KTRexArenaState *)gKTRexState)->unkE8;
     ((GameObject *)obj)->anim.localPosZ = ((KTRexArenaState *)gKTRexState)->unkF0;
     return 0;

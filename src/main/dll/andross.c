@@ -1668,8 +1668,8 @@ LAB_8023de5c:
       iVar8 = *(int *)&((GameObject *)obj)->extra;
       ObjAnim_SetCurrentMove(obj,0x16,lbl_803E74D4,0);
       *(f32 *)(iVar8 + 100) = lbl_8032C0F0[0];
-      ((AndrossFlagByte *)((u8 *)piVar14 + 0xe8))->f80 = 0;
-      ((AndrossFlagByte *)((u8 *)piVar14 + 0xe8))->f40 = 0;
+      ((AndrossFlagByte *)&((AndrossState *)piVar14)->unkE8)->f80 = 0;
+      ((AndrossFlagByte *)&((AndrossState *)piVar14)->unkE8)->f40 = 0;
     }
     dVar19 = ((GameObject *)obj)->anim.currentMoveProgress;
     if (dVar19 < lbl_803E7540) {
@@ -1698,11 +1698,11 @@ LAB_8023de5c:
         uVar9 = 0x471;
       }
       Sfx_PlayFromObject(obj,uVar9);
-      ((AndrossFlagByte *)((u8 *)piVar14 + 0xe8))->f40 = 1;
+      ((AndrossFlagByte *)&((AndrossState *)piVar14)->unkE8)->f40 = 1;
     }
-    if ((((GameObject *)obj)->anim.currentMoveProgress > lbl_803E7570) && (((AndrossFlagByte *)((u8 *)piVar14 + 0xe8))->f80 == 0)) {
+    if ((((GameObject *)obj)->anim.currentMoveProgress > lbl_803E7570) && (((AndrossFlagByte *)&((AndrossState *)piVar14)->unkE8)->f80 == 0)) {
       Sfx_PlayFromObject(obj,0x46d);
-      ((AndrossFlagByte *)((u8 *)piVar14 + 0xe8))->f80 = 1;
+      ((AndrossFlagByte *)&((AndrossState *)piVar14)->unkE8)->f80 = 1;
     }
     cVar11 = *(char *)&((AndrossState *)iVar12)->unk23;
     if ((((cVar11 != '\x02') && (cVar11 != '\x01')) &&
@@ -1724,12 +1724,12 @@ LAB_8023de5c:
       ObjAnim_SetCurrentMove(obj,3,lbl_803E74D4,0);
       ((AndrossState *)iVar12)->unk64 = lbl_8032C0A4[0];
       ((AndrossState *)piVar14)->unkE4 = lbl_803E74D4;
-      ((AndrossFlagByte *)((u8 *)piVar14 + 0xe8))->f20 = 0;
+      ((AndrossFlagByte *)&((AndrossState *)piVar14)->unkE8)->f20 = 0;
     }
     ((AndrossState *)piVar14)->unkE4 = ((AndrossState *)piVar14)->unkE4 + timeDelta;
     if ((lbl_803E7578 < ((AndrossState *)piVar14)->unkE4) && ((((AndrossState *)piVar14)->unkE8 >> 5 & 1) == 0)) {
       Sfx_PlayFromObject(obj,0x46f);
-      ((AndrossFlagByte *)((u8 *)piVar14 + 0xe8))->f20 = 1;
+      ((AndrossFlagByte *)&((AndrossState *)piVar14)->unkE8)->f20 = 1;
     }
     if (((GameObject *)obj)->anim.currentMoveProgress <= lbl_803DC490) {
       ((AndrossState *)piVar14)->unkC0 = ((GameObject *)obj)->anim.localPosX;
@@ -1770,7 +1770,7 @@ LAB_8023de5c:
       iVar12 = *(int *)&((GameObject *)obj)->extra;
       ObjAnim_SetCurrentMove(obj,0x11,lbl_803E74D4,0);
       ((AndrossState *)iVar12)->unk64 = lbl_8032C0DC[0];
-      ((AndrossFlagByte *)((u8 *)piVar14 + 0xe8))->f20 = 0;
+      ((AndrossFlagByte *)&((AndrossState *)piVar14)->unkE8)->f20 = 0;
     }
     if (((GameObject *)obj)->anim.currentMoveProgress <= lbl_803DC4A0) {
       iVar12 = *piVar14;
@@ -1800,7 +1800,7 @@ LAB_8023de5c:
       arwarwing_setVelocity(*piVar14,(int)&local_c0);
       if ((((AndrossState *)piVar14)->unkE8 >> 5 & 1) == 0) {
         Sfx_PlayFromObject(obj,0x46f);
-        ((AndrossFlagByte *)((u8 *)piVar14 + 0xe8))->f20 = 1;
+        ((AndrossFlagByte *)&((AndrossState *)piVar14)->unkE8)->f20 = 1;
       }
     }
     if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E74DC) {

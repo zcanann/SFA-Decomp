@@ -600,7 +600,7 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
     }
 
     ((GameObject *)obj)->anim.rotX = (s16)(s32)(
-        lbl_803E8250 * ((f32)(s16) * (s16 *)((char *)state + 0x336) * t / lbl_803E8254) +
+        lbl_803E8250 * ((f32)(s16) * &((DIMSnowHorn1State *)state)->baddie.unk336 * t / lbl_803E8254) +
         (f32)(s16) * &((GameObject *)obj)->anim.rotX);
 
     v = *(f32 *)((char *)state + 0x298);
@@ -680,7 +680,7 @@ int DIMSnowHorn1_stateHandler0A(int obj, int state, f32 t)
     }
 
     ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)((int)obj, ((DIMSnowHorn1State *)state)->baddie.animSpeedA,
-                                 (f32 *)((char *)state + 0x2a0));
+                                 &((DIMSnowHorn1State *)state)->baddie.moveSpeed);
     if ((*(int *)&((DIMSnowHorn1State *)state)->baddie.unk31C & 0x100) == 0) {
         return 0;
     }

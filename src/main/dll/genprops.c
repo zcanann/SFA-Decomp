@@ -3174,7 +3174,7 @@ void baddieinterestp_update(int *obj)
                 if (found != 0) {
                     found = 0;
                     if (vec3f_distanceSquared(&((GameObject *)obj)->anim.worldPosX,
-                                              (f32 *)((char *)other + 0x18)) < lbl_803E3224) {
+                                              &((GameObject *)other)->anim.worldPosX) < lbl_803E3224) {
                         if (((GameObject *)obj)->unkF4 == 0) {
                             if ((int)randomGetRange(1, 100) <= *(s8 *)((char *)params + 0x19)) {
                                 u8 local;
