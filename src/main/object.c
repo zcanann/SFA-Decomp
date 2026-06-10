@@ -246,11 +246,11 @@ void Obj_SetModelRenderOpAlpha(u8 *obj, int alpha) {
 }
 
 void Obj_SetModelSlotIndex(u8 *obj, int slotIndex) {
-    *(s8 *)(obj + 0xac) = slotIndex;
+    ((ObjAnimComponent *)obj)->mapEventSlot = slotIndex;
 }
 
 void Obj_ClearModelSlotIndex(u8 *obj) {
-    *(s8 *)(obj + 0xac) = -1;
+    ((ObjAnimComponent *)obj)->mapEventSlot = -1;
 }
 
 void *Obj_GetActiveModel(u8 *obj) {

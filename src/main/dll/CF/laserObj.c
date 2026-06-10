@@ -40,7 +40,7 @@ void laserObj_update(LaserObject *obj)
   }
   objRenderFn_80041018((int)obj);
   if ((obj->statusFlags & LASER_OBJECT_STATUS_ACTIVE) != 0) {
-    mode = (u8)(*gMapEventInterface)->getMode((int)obj->modeIndex);
+    mode = (u8)(*gMapEventInterface)->getMode((int)obj->mapEventSlot);
     switch (mode) {
       case LASEROBJ_MODE_SEQUENCE_A:
         state = obj->state;
@@ -81,7 +81,7 @@ void laserObj_init(LaserObject *obj,LaserObjectMapData *mapData)
   state->primaryGameBit = mapData->primaryGameBit;
   state->secondaryGameBit = mapData->secondaryGameBit;
   state->gameBitLatched = 0;
-  obj->modeWord = (s16)(mapData->modeIndex << LASEROBJ_MODE_WORD_SHIFT);
+  obj->modeWord = (s16)(mapData->mapEventSlot << LASEROBJ_MODE_WORD_SHIFT);
   primaryGameBitSet = GameBit_Get((int)state->primaryGameBit);
   if (primaryGameBitSet != 0) {
     state->gameBitLatched = 1;

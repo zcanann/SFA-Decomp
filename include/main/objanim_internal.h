@@ -287,7 +287,7 @@ typedef struct ObjAnimComponent {
                      sites across CAM TUs + baddieControl.c 0xA4-as-pointer
                      census - general object field, not camera-specific */
   f32 hitboxScale;
-  u8 padAC[0xAD - 0xAC];
+  s8 mapEventSlot;
   s8 bankIndex;
   s8 activeHitboxMode;
   s8 resetHitboxMode;
@@ -398,6 +398,7 @@ STATIC_ASSERT(offsetof(ObjAnimBank, activeState) == 0x30);
 
 STATIC_ASSERT(sizeof(ObjAnimComponent) == 0xB0);
 STATIC_ASSERT(offsetof(ObjAnimComponent, targetObj) == 0xA4);
+STATIC_ASSERT(offsetof(ObjAnimComponent, mapEventSlot) == 0xAC);
 STATIC_ASSERT(offsetof(ObjAnimComponent, rotX) == 0x00);
 STATIC_ASSERT(offsetof(ObjAnimComponent, rotY) == 0x02);
 STATIC_ASSERT(offsetof(ObjAnimComponent, rotZ) == 0x04);

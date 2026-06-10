@@ -20,7 +20,7 @@ typedef struct LaserState {
 
 typedef struct LaserObjectMapData {
   ObjPlacement base;
-  s8 modeIndex;
+  s8 mapEventSlot;
   u8 pad19[0x1E - 0x19];
   s16 primaryGameBit;
   s16 secondaryGameBit;
@@ -29,7 +29,7 @@ typedef struct LaserObjectMapData {
 typedef struct LaserObject {
   s16 modeWord;
   u8 pad02[0xAC - 2];
-  s8 modeIndex;
+  s8 mapEventSlot;
   u8 padAD[0xAF - 0xAD];
   u8 statusFlags;
   u16 objectFlags;
@@ -49,13 +49,13 @@ STATIC_ASSERT(offsetof(LaserState, primaryGameBit) == 0x00);
 STATIC_ASSERT(offsetof(LaserState, secondaryGameBit) == 0x02);
 STATIC_ASSERT(offsetof(LaserState, gameBitLatched) == 0x04);
 
-STATIC_ASSERT(offsetof(LaserObjectMapData, modeIndex) == 0x18);
+STATIC_ASSERT(offsetof(LaserObjectMapData, mapEventSlot) == 0x18);
 STATIC_ASSERT(offsetof(LaserObjectMapData, primaryGameBit) == 0x1E);
 STATIC_ASSERT(offsetof(LaserObjectMapData, secondaryGameBit) == 0x20);
 STATIC_ASSERT(sizeof(LaserObjectMapData) == 0x24);
 
 STATIC_ASSERT(offsetof(LaserObject, modeWord) == 0x00);
-STATIC_ASSERT(offsetof(LaserObject, modeIndex) == 0xAC);
+STATIC_ASSERT(offsetof(LaserObject, mapEventSlot) == 0xAC);
 STATIC_ASSERT(offsetof(LaserObject, statusFlags) == 0xAF);
 STATIC_ASSERT(offsetof(LaserObject, objectFlags) == 0xB0);
 STATIC_ASSERT(offsetof(LaserObject, state) == 0xB8);

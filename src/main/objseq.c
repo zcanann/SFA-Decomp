@@ -1205,13 +1205,13 @@ int objSeqExecCmd06(u8 *obj, u8 *sourceObj, u8 *seq, int cmd, s8 flag)
         Obj_SetActiveModelIndex(sourceObj, cmdArg);
         break;
     case 27:
-        (*gMapEventInterface)->setAnimEvent(*(s8 *)(sourceObj + 0xac), cmdArg, 1);
+        (*gMapEventInterface)->setAnimEvent(sourceAnim->mapEventSlot, cmdArg, 1);
         break;
     case 28:
-        (*gMapEventInterface)->setAnimEvent(*(s8 *)(sourceObj + 0xac), cmdArg, 0);
+        (*gMapEventInterface)->setAnimEvent(sourceAnim->mapEventSlot, cmdArg, 0);
         break;
     case 29:
-        (*gMapEventInterface)->setMode(*(s8 *)(sourceObj + 0xac), cmdArg);
+        (*gMapEventInterface)->setMode(sourceAnim->mapEventSlot, cmdArg);
         break;
     case 19:
         if (flag != 0) {
