@@ -229,8 +229,8 @@ void dimbossgut2_updateTracking(int obj, int state)
 {
   int curve;
   int r30v;
-  s16 angle;
   s16 delta;
+  s16 angle;
   int q;
   f32 fv;
   int player;
