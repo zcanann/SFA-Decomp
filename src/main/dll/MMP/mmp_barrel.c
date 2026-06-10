@@ -3,6 +3,23 @@
 #include "main/game_object.h"
 #include "global.h"
 
+typedef struct WaveanimatorObjectDef {
+    u8 pad0[0x18 - 0x0];
+    s16 unk18;
+    s16 unk1A;
+    s8 unk1C;
+    s8 unk1D;
+    s16 unk1E;
+    s8 unk20;
+    s8 unk21;
+    s8 unk22;
+    u8 pad23[0x25 - 0x23];
+    u8 unk25;
+    u8 unk26;
+    u8 unk27;
+} WaveanimatorObjectDef;
+
+
 typedef struct GroundanimatorPlacement {
     u8 pad0[0x18 - 0x0];
     s16 unk18;
@@ -358,15 +375,15 @@ void waveanimator_init(int *obj, int *desc)
 {
     WaveAnimatorState *vstate = (WaveAnimatorState *)((int**)obj)[0xB8/4];
     f32 fz;
-    vstate->unk18 = *(s8 *)((char*)desc + 0x20);
-    vstate->originX = *(s16*)((char*)desc + 0x18);
-    vstate->originY = *(s16*)((char*)desc + 0x1A);
-    vstate->spanX = *(s8 *)((char*)desc + 0x1C);
-    vstate->spanY = *(s8 *)((char*)desc + 0x1D);
+    vstate->unk18 = ((WaveanimatorObjectDef *)desc)->unk20;
+    vstate->originX = ((WaveanimatorObjectDef *)desc)->unk18;
+    vstate->originY = ((WaveanimatorObjectDef *)desc)->unk1A;
+    vstate->spanX = ((WaveanimatorObjectDef *)desc)->unk1C;
+    vstate->spanY = ((WaveanimatorObjectDef *)desc)->unk1D;
     vstate->ampX = (f32)*(s8*)((char*)desc + 0x1E);
     vstate->ampY = (f32)*(s8*)((char*)desc + 0x1F);
-    vstate->period = *(s8 *)((char*)desc + 0x21);
-    vstate->gridN = *(s8 *)((char*)desc + 0x22);
+    vstate->period = ((WaveanimatorObjectDef *)desc)->unk21;
+    vstate->gridN = ((WaveanimatorObjectDef *)desc)->unk22;
     fz = lbl_803E3F70;
     vstate->scaleA = fz;
     vstate->scaleB = fz;
@@ -438,18 +455,18 @@ extern f32 lbl_803E3FB8;
 void groundanimator_init(int *obj, int *desc)
 {
     GroundAnimatorState *vstate = (GroundAnimatorState *)((int**)obj)[0xB8/4];
-    vstate->modelVariant = (u8)*(s16*)((char*)desc + 0x1E);
-    vstate->yOffset = (f32)*(u8*)((char*)desc + 0x27);
+    vstate->modelVariant = (u8)((WaveanimatorObjectDef *)desc)->unk1E;
+    vstate->yOffset = (f32)((WaveanimatorObjectDef *)desc)->unk27;
     vstate->lastDepth = lbl_803E3FB8;
-    vstate->radius = (f32)*(u8*)((char*)desc + 0x26);
-    if (*(u8*)((char*)desc + 0x25) != 0) {
-        if (GameBit_Get(*(s16*)((char*)desc + 0x18)) != 0) {
-            vstate->sinkDepth = lbl_803E3F98 * (f32)*(u8*)((char*)desc + 0x20);
+    vstate->radius = (f32)((WaveanimatorObjectDef *)desc)->unk26;
+    if (((WaveanimatorObjectDef *)desc)->unk25 != 0) {
+        if (GameBit_Get(((WaveanimatorObjectDef *)desc)->unk18) != 0) {
+            vstate->sinkDepth = lbl_803E3F98 * (f32)*(u8 *)&((WaveanimatorObjectDef *)desc)->unk20;
             vstate->flags |= 2;
         }
         ObjGroup_AddObject(obj, 49);
-        if (*(u8*)((char*)desc + 0x21) > 1) {
-            *(u8*)((char*)desc + 0x21) = 0;
+        if (*(u8 *)&((WaveanimatorObjectDef *)desc)->unk21 > 1) {
+            *(u8 *)&((WaveanimatorObjectDef *)desc)->unk21 = 0;
         }
     }
 }
@@ -506,15 +523,15 @@ void visanimator_init(int *obj, int *desc)
     vstate = (VisAnimatorState *)((int**)obj)[0xB8/4];
     sv = *(s8*)((char*)desc + 0x1B);
     vstate->visBit = (s8)sv;
-    vstate->gateMask = (u8)(1 << *(u8*)((char*)desc + 0x1C));
-    gate = (u32)GameBit_Get(*(s16*)((char*)desc + 0x18));
+    vstate->gateMask = (u8)(1 << *(u8 *)&((WaveanimatorObjectDef *)desc)->unk1C);
+    gate = (u32)GameBit_Get(((WaveanimatorObjectDef *)desc)->unk18);
     if ((vstate->gateMask & gate) != 0) {
         vstate->visBit = vstate->visBit ^ 1;
     }
     mapGetBlock(objPosToMapBlockIdx((double)((GameObject *)obj)->anim.localPosX,
                                      (double)((GameObject *)obj)->anim.localPosY,
                                      (double)((GameObject *)obj)->anim.localPosZ));
-    gate = (u32)GameBit_Get(*(s16*)((char*)desc + 0x18));
+    gate = (u32)GameBit_Get(((WaveanimatorObjectDef *)desc)->unk18);
     tmp = (u8)(vstate->gateMask & gate);
     vstate->gateNow = tmp;
     vstate->gatePrev = tmp;
