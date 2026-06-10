@@ -2189,7 +2189,7 @@ void FUN_80202268(undefined8 param_1,double param_2,double param_3,undefined8 pa
     *(undefined *)(puVar4 + 3) = 0xff;
     *(undefined *)((int)puVar4 + 7) = 0xff;
     iVar5 = FUN_80017ae4(dVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar4,5,
-                         *(undefined *)(param_9 + 0xac),0xffffffff,(uint *)0x0,in_r8,in_r9,in_r10);
+                         ((GameObject *)param_9)->anim.mapEventSlot,0xffffffff,(uint *)0x0,in_r8,in_r9,in_r10);
     if (iVar5 != 0) {
       fVar1 = *(float *)(param_10 + 0x2c0) / lbl_803E6F4C;
       fVar2 = lbl_803E6F50 * fVar1;
@@ -3013,8 +3013,8 @@ void FUN_8020368c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   }
   uVar3 = FUN_80017690(0x7a1);
   if ((uVar3 != 0) &&
-     (cVar4 = (*gMapEventInterface)->getAnimEvent((int)*(char *)(uVar1 + 0xac),6), cVar4 == '\0')) {
-    (*gMapEventInterface)->setAnimEvent((int)*(char *)(uVar1 + 0xac),6,1);
+     (cVar4 = (*gMapEventInterface)->getAnimEvent((int)((GameObject *)uVar1)->anim.mapEventSlot,6), cVar4 == '\0')) {
+    (*gMapEventInterface)->setAnimEvent((int)((GameObject *)uVar1)->anim.mapEventSlot,6,1);
   }
   FUN_8028688c();
   return;
@@ -3199,7 +3199,7 @@ void FUN_80203d00(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   }
   dVar8 = (double)*(float *)(iVar2 + 0x14);
   FUN_8005b024();
-  bVar6 = (*gMapEventInterface)->getMode((int)*(char *)(iVar1 + 0xac));
+  bVar6 = (*gMapEventInterface)->getMode((int)((GameObject *)iVar1)->anim.mapEventSlot);
   if (bVar6 == 2) {
     FUN_8020368c(extraout_f1,dVar8,param_3,param_4,param_5,param_6,param_7,param_8);
   }
@@ -3308,7 +3308,7 @@ void FUN_80204078(undefined8 param_1,double param_2,double param_3,undefined8 pa
     puVar2[0x10] = 0xffff;
     puVar2[0xd] = 0xdc;
     iVar3 = FUN_80017ae4(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar2,5,
-                         *(undefined *)(param_9 + 0xac),0xffffffff,*(uint **)&((GameObject *)param_9)->anim.parent,in_r8,
+                         ((GameObject *)param_9)->anim.mapEventSlot,0xffffffff,*(uint **)&((GameObject *)param_9)->anim.parent,in_r8,
                          in_r9,in_r10);
     *(int *)(iVar3 + 0xf4) = (int)*(char *)(iVar4 + 0x1e);
   }
@@ -3678,9 +3678,9 @@ void FUN_80204834(undefined8 param_1,double param_2,double param_3,undefined8 pa
           *(byte *)(iVar8 + 0xf) = *(byte *)(iVar8 + 0xf) & 0x7f | 0x80;
         }
         else {
-          cVar4 = (*gMapEventInterface)->getMode((int)*(char *)(iVar2 + 0xac));
+          cVar4 = (*gMapEventInterface)->getMode((int)((GameObject *)iVar2)->anim.mapEventSlot);
           if ((cVar4 == '\x01') ||
-             (cVar4 = (*gMapEventInterface)->getMode((int)*(char *)(iVar2 + 0xac)),
+             (cVar4 = (*gMapEventInterface)->getMode((int)((GameObject *)iVar2)->anim.mapEventSlot),
              cVar4 == '\x02')) {
             FUN_80042b9c(0,0,1);
             uVar3 = FUN_80044404(0x32);
@@ -3694,18 +3694,18 @@ void FUN_80204834(undefined8 param_1,double param_2,double param_3,undefined8 pa
       }
     }
     else if (((sVar1 < 10) && (sVar1 == 1)) && (*(char *)(param_11 + iVar6 + 0x81) == '\x01')) {
-      cVar4 = (*gMapEventInterface)->getMode((int)*(char *)(iVar2 + 0xac));
+      cVar4 = (*gMapEventInterface)->getMode((int)((GameObject *)iVar2)->anim.mapEventSlot);
       if (cVar4 == '\x01') {
-        (*gMapEventInterface)->setAnimEvent((int)*(char *)(iVar2 + 0xac),5,0);
-        (*gMapEventInterface)->setAnimEvent((int)*(char *)(iVar2 + 0xac),6,0);
-        (*gMapEventInterface)->setAnimEvent((int)*(char *)(iVar2 + 0xac),7,0);
+        (*gMapEventInterface)->setAnimEvent((int)((GameObject *)iVar2)->anim.mapEventSlot,5,0);
+        (*gMapEventInterface)->setAnimEvent((int)((GameObject *)iVar2)->anim.mapEventSlot,6,0);
+        (*gMapEventInterface)->setAnimEvent((int)((GameObject *)iVar2)->anim.mapEventSlot,7,0);
       }
       else {
-        cVar4 = (*gMapEventInterface)->getMode((int)*(char *)(iVar2 + 0xac));
+        cVar4 = (*gMapEventInterface)->getMode((int)((GameObject *)iVar2)->anim.mapEventSlot);
         if (cVar4 == '\x02') {
-          (*gMapEventInterface)->setAnimEvent((int)*(char *)(iVar2 + 0xac),5,0);
-          (*gMapEventInterface)->setAnimEvent((int)*(char *)(iVar2 + 0xac),6,0);
-          (*gMapEventInterface)->setAnimEvent((int)*(char *)(iVar2 + 0xac),7,0);
+          (*gMapEventInterface)->setAnimEvent((int)((GameObject *)iVar2)->anim.mapEventSlot,5,0);
+          (*gMapEventInterface)->setAnimEvent((int)((GameObject *)iVar2)->anim.mapEventSlot,6,0);
+          (*gMapEventInterface)->setAnimEvent((int)((GameObject *)iVar2)->anim.mapEventSlot,7,0);
         }
       }
     }
@@ -4676,10 +4676,10 @@ void dfplevelcontrol_init(int obj, int param2)
     if (v != 0 && v <= 2) {
         state->mode = v;
     }
-    (*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));
+    (*gMapEventInterface)->getMode(((GameObject *)obj)->anim.mapEventSlot);
     unlockLevel(0, 0, 1);
     ((GameObject *)obj)->objectFlags = ((GameObject *)obj)->objectFlags | 0x4000;
-    if (*(s8 *)(obj + 0xac) == 0x15) {
+    if (((GameObject *)obj)->anim.mapEventSlot == 0x15) {
         GameBit_Set(0xdce, 0);
     }
     if ((u32)GameBit_Get(0xdce) != 0) {
@@ -4802,7 +4802,7 @@ void fn_80202EF0(int obj, int p2)
                 setup[5] = 1;
                 setup[6] = 0xff;
                 setup[7] = 0xff;
-        newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, 0);
+        newObj = Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, 0);
         if (newObj != NULL) {
             t = ((BaddieState *)p2)->targetDistance / lbl_803E62B4;
             dur = lbl_803E62B8 * t;
@@ -4935,7 +4935,7 @@ void dfpobjcreator_update(int obj)
                 *(s16 *)(setup + 0x1e) = -1;
                 *(s16 *)(setup + 0x20) = -1;
                 *(s16 *)(setup + 0x1a) = 0xdc;
-                newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
+                newObj = Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
                 ((GameObject *)newObj)->unkF4 = *(s8 *)(data + 0x1e);
             }
             break;
@@ -5275,7 +5275,7 @@ void dfplevelcontrol_update(int obj)
         GameBit_Set(0x5e8, 1);
     }
     coordsToMapCell(*(f32 *)(player + 0xc), *(f32 *)(player + 0x14));
-    mode = (*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));
+    mode = (*gMapEventInterface)->getMode(((GameObject *)obj)->anim.mapEventSlot);
     switch (mode) {
     case 1:
         if (lbl_803DC180 != 0) {
@@ -5513,8 +5513,8 @@ void fn_80204098(int obj)
         }
     }
     if (GameBit_Get(0x7a1) != 0) {
-        if ((*gMapEventInterface)->getAnimEvent(*(s8 *)(obj + 0xac), 6) == 0) {
-            (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 6, 1);
+        if ((*gMapEventInterface)->getAnimEvent(((GameObject *)obj)->anim.mapEventSlot, 6) == 0) {
+            (*gMapEventInterface)->setAnimEvent(((GameObject *)obj)->anim.mapEventSlot, 6, 1);
         }
     }
 }
@@ -7012,14 +7012,14 @@ int dfpseqpoint_SeqFn(int obj, int p2, int p3)
         switch (((DfpSeqPointState *)blob)->triggerId) {
         case 1:
             if (*(u8 *)(p3 + i + 0x81) == 1) {
-                if ((*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 1) {
-                    (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 5, 0);
-                    (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 6, 0);
-                    (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 7, 0);
-                } else if ((*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 2) {
-                    (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 5, 0);
-                    (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 6, 0);
-                    (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 7, 0);
+                if ((*gMapEventInterface)->getMode(((GameObject *)obj)->anim.mapEventSlot) == 1) {
+                    (*gMapEventInterface)->setAnimEvent(((GameObject *)obj)->anim.mapEventSlot, 5, 0);
+                    (*gMapEventInterface)->setAnimEvent(((GameObject *)obj)->anim.mapEventSlot, 6, 0);
+                    (*gMapEventInterface)->setAnimEvent(((GameObject *)obj)->anim.mapEventSlot, 7, 0);
+                } else if ((*gMapEventInterface)->getMode(((GameObject *)obj)->anim.mapEventSlot) == 2) {
+                    (*gMapEventInterface)->setAnimEvent(((GameObject *)obj)->anim.mapEventSlot, 5, 0);
+                    (*gMapEventInterface)->setAnimEvent(((GameObject *)obj)->anim.mapEventSlot, 6, 0);
+                    (*gMapEventInterface)->setAnimEvent(((GameObject *)obj)->anim.mapEventSlot, 7, 0);
                 }
             }
             break;
@@ -7028,8 +7028,8 @@ int dfpseqpoint_SeqFn(int obj, int p2, int p3)
                 if (*(u32 *)(data + 0x14) == 0x49de8) {
                     ((DfpFlags7 *)&((DfpSeqPointState *)blob)->flags0F)->b80 = 1;
                 } else {
-                    if ((*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 1 ||
-                        (*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 2) {
+                    if ((*gMapEventInterface)->getMode(((GameObject *)obj)->anim.mapEventSlot) == 1 ||
+                        (*gMapEventInterface)->getMode(((GameObject *)obj)->anim.mapEventSlot) == 2) {
                         unlockLevel(0, 0, 1);
                         lockLevel(mapGetDirIdx(0x32), 0);
                         (*gMapEventInterface)->setMode(0x32, 2);

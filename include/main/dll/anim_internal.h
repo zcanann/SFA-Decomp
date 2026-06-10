@@ -1,7 +1,7 @@
 #ifndef MAIN_DLL_ANIM_INTERNAL_H_
 #define MAIN_DLL_ANIM_INTERNAL_H_
 
-#include "ghidra_import.h"
+#include "global.h"
 
 typedef struct AnimBehaviorConfig {
   u8 pad00[0x08];
@@ -42,7 +42,7 @@ typedef struct AnimBehaviorObject {
   u8 pad00[0x4C];
   AnimBehaviorConfig *config;
   u8 pad50[0xAC - 0x50];
-  s8 modeIndex;
+  s8 mapEventSlot;
   u8 padAD[0xAF - 0xAD];
   u8 statusFlags;
   u16 objectFlags;
@@ -67,7 +67,7 @@ STATIC_ASSERT(offsetof(AnimBehaviorState, behaviorFlags) == 0x119);
 STATIC_ASSERT(offsetof(AnimBehaviorState, queuedEvent) == 0x11C);
 
 STATIC_ASSERT(offsetof(AnimBehaviorObject, config) == 0x4C);
-STATIC_ASSERT(offsetof(AnimBehaviorObject, modeIndex) == 0xAC);
+STATIC_ASSERT(offsetof(AnimBehaviorObject, mapEventSlot) == 0xAC);
 STATIC_ASSERT(offsetof(AnimBehaviorObject, statusFlags) == 0xAF);
 STATIC_ASSERT(offsetof(AnimBehaviorObject, objectFlags) == 0xB0);
 STATIC_ASSERT(offsetof(AnimBehaviorObject, runtimeState) == 0xB8);
