@@ -950,13 +950,13 @@ void arwarwing_handleObjectDamage(int obj, int state)
 
 #pragma peephole off
 #pragma scheduling off
-int arwarwing_SeqFn(int obj, int p2, int script)
+int arwarwing_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
     int i;
 
     Camera_GetCurrentViewSlot();
-    *(int *)(script + 0xe8) = (int)arwarwing_clearAimSnapshot;
+    animUpdate->sequenceCallback = arwarwing_clearAimSnapshot;
     if ((((ArwingState *)state)->flags477 & 1) == 0) {
         arwarwing_initAttachments(obj, state);
         return 0;
@@ -971,8 +971,8 @@ int arwarwing_SeqFn(int obj, int p2, int script)
     ((GameObject *)((ArwingState *)state)->thrusterR)->anim.alpha = 0;
     ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
 
-    for (i = 0; i < *(u8 *)(script + 0x8b); i++) {
-        switch (*(u8 *)(script + i + 0x81)) {
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        switch (animUpdate->eventIds[i]) {
         case 8: {
             int cam = Camera_GetCurrentViewSlot();
             ((ArwingState *)state)->aimOffsetX = *(f32 *)(cam + 0xc) - ((GameObject *)obj)->anim.localPosX;

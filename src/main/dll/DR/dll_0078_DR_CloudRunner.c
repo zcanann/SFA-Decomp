@@ -2,6 +2,7 @@
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
+#include "main/objanim_update.h"
 #include "main/objseq.h"
 #include "main/dll/baddie_state.h"
 #include "global.h"
@@ -303,15 +304,14 @@ void DR_CloudRunner_func17(int obj, int param)
     }
 }
 
-int DR_CloudRunner_SeqFn(int obj, int p2, int p3)
+int DR_CloudRunner_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     CloudRunnerState *inner = ((GameObject *)obj)->extra;
     int local = 1;
     int i;
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
-    for (i = 0; i < *(u8 *)((char *)p3 + 0x8b); i++) {
-        int idx = i + 0x81;
-        if ((int)*(u8 *)((char *)p3 + idx) == 1) {
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        if (animUpdate->eventIds[i] == 1) {
             (*gRomCurveInterface)->initCurve((char *)inner + 0x35c, (void *)obj, lbl_803E8410, &local, 0xf);
         }
     }

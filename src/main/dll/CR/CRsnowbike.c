@@ -780,15 +780,15 @@ extern u8 *Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(int a, int b);
 extern f32 lbl_803E5550;
 
-int sc_levelcontrol_processAnimEventsCallback(int obj, int p2, int p3)
+int sc_levelcontrol_processAnimEventsCallback(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
     int i;
 
-    *(u8 *)(p3 + 0x56) = 0;
-    for (i = 0; i < (int)(u32)*(u8 *)(p3 + 0x8b); i++) {
-        int b = *(u8 *)(p3 + i + 0x81);
-        switch (b) {
+    animUpdate->sequenceEventActive = 0;
+    for (i = 0; i < (int)(u32)animUpdate->eventCount; i++) {
+        int eventId = animUpdate->eventIds[i];
+        switch (eventId) {
         case 1:
             sc_levelcontrol_applyAnimEventState(obj, 7);
             break;

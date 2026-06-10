@@ -2436,7 +2436,7 @@ void arwarwing_updateThrusters(int obj, int state);
 void arwarwing_handlePathDamage(int obj, int state);
 void arwarwing_handleObjectDamage(int obj, int state);
 void androsshand_spawnShot(int obj, int hand, int p3);
-int arwarwing_SeqFn(int obj, int p2, int script);
+int arwarwing_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 void arwarwing_init(int obj);
 void Obj_SteerVelocityTowardVector(int out, f32 *v1, f32 *v2, f32 a, f32 b, f32 c);
 int Obj_UpdateRomCurveFollowVelocity(int p1, int p2, f32 a, f32 b, f32 c, int flag);

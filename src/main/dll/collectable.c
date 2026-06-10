@@ -639,7 +639,7 @@ extern int fn_80138D7C(int obj,int state);
 extern void Tricky_updateBlendChannelWeight(int obj,int state);
 extern ObjectTriggerInterface **gObjectTriggerInterface;
 
-int tricky_SeqFn(int obj,int unused,int seq)
+int tricky_SeqFn(int obj,int unused,ObjAnimUpdateState *animUpdate)
 {
   int state;
   int i;
@@ -673,7 +673,7 @@ int tricky_SeqFn(int obj,int unused,int seq)
     }
     Sfx_RemoveLoopedObjectSound(obj,0x13d);
     ((TrickyState *)state)->unk54 = ((TrickyState *)state)->unk54 | 0x200;
-    if ((*(short *)(seq + 0x6e) & 3) == 0) {
+    if ((animUpdate->hitVolumePair & 3) == 0) {
       ((TrickyState *)state)->unk54 = ((TrickyState *)state)->unk54 | 0x4000;
     }
     if (((TrickyByteFlags *)&((TrickyState *)state)->unk82E)->bit5 == 0) {
@@ -681,8 +681,8 @@ int tricky_SeqFn(int obj,int unused,int seq)
       ((TrickyByteFlags *)&((TrickyState *)state)->unk82E)->bit6 = 0;
     }
   }
-  for (i = 0; i < *(byte *)(seq + 0x8b); i++) {
-    switch (*(byte *)(seq + i + 0x81)) {
+  for (i = 0; i < animUpdate->eventCount; i++) {
+    switch (animUpdate->eventIds[i]) {
     case 1:
       if ((((TrickyState *)state)->unk54 & 0x800) != 0) {
         ((TrickyState *)state)->unk54 = ((TrickyState *)state)->unk54 & 0xfffff7ff;
@@ -747,11 +747,11 @@ int tricky_SeqFn(int obj,int unused,int seq)
   objAnimFreeChildren(obj,state,(int *)&((TrickyState *)state)->unk7B8);
   fn_80138D7C(obj,state);
   Tricky_updateBlendChannelWeight(obj,state);
-  objAudioFn_8006ef38(obj,seq + 0xf0,1,state + 0x7d8,state + 0xf8,lbl_803E23E8,lbl_803E23E8);
+  objAudioFn_8006ef38(obj,(int)((u8 *)animUpdate + 0xf0),1,state + 0x7d8,state + 0xf8,lbl_803E23E8,lbl_803E23E8);
   if ((((TrickyState *)state)->unk54 & 1) != 0) {
-    *(s16 *)(seq + 0x6e) = *(s16 *)(seq + 0x6e) & ~0x40;
+    animUpdate->hitVolumePair &= ~0x40;
     characterDoEyeAnims(obj,(void *)(state + 0x378));
-    return (*gObjectTriggerInterface)->func20((void *)obj,(u8 *)seq,1,0xf,0x1e,0,0);
+    return (*gObjectTriggerInterface)->func20((void *)obj,(u8 *)animUpdate,1,0xf,0x1e,0,0);
   }
   return 0;
 }

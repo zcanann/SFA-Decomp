@@ -8,6 +8,7 @@
 #include "main/mapEventTypes.h"
 #include "main/objHitReact.h"
 #include "main/objanim.h"
+#include "main/objanim_update.h"
 
 extern undefined4 ObjHits_SetTargetMask();
 extern undefined4 ObjHitbox_SetSphereRadius();
@@ -141,7 +142,7 @@ extern void storeZeroToFloatParam(f32 *p);
 extern void modelLightStruct_setPosition(int model, f32 x, f32 y, f32 z);
 extern void queueGlowRender(int model);
 extern int randomGetRange(int lo, int hi);
-extern int bossdrakor_animEventCallback(int obj, int a2, int events);
+extern int bossdrakor_animEventCallback(int obj, int unused, ObjAnimUpdateState *animUpdate);
 extern f32 lbl_803E6588;
 extern f32 lbl_803E658C;
 extern f32 lbl_803E6590;

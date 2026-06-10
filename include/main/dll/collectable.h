@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/dll/tricky_state.h"
+#include "main/objanim_update.h"
 #include "main/object_descriptor.h"
 
 extern ObjectDescriptor20WithPadding gTrickyObjDescriptor;
@@ -31,7 +32,7 @@ int Tricky_updateSideCommandPrompts(int obj);
 uint FUN_80146874(void);
 void Tricky_destroy(int obj,int shouldKeepFlameChildren);
 void Tricky_init(int obj);
-int tricky_SeqFn(int obj,int unused,int seq);
+int tricky_SeqFn(int obj,int unused,ObjAnimUpdateState *animUpdate);
 void Tricky_update(int obj);
 void fn_80148C18(int obj,int state);
 void trickyFn_80148d8c(int obj,int state);

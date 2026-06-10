@@ -626,7 +626,7 @@ void bossdrakor_hitDetect(int obj)
     ((BossDrakorState *)inner)->unk1A0 -= timeDelta;
 }
 
-int bossdrakor_animEventCallback(int obj, int a2, int events)
+int bossdrakor_animEventCallback(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     int inner = *(int *)&((GameObject *)obj)->extra;
     int i;
@@ -640,8 +640,8 @@ int bossdrakor_animEventCallback(int obj, int a2, int events)
             ((BossDrakorState *)inner)->unk18C = lbl_803E6510;
         }
     }
-    for (i = 0; i < *(u8 *)((char *)events + 0x8b); i++) {
-        eventId = *(u8 *)(events + i + 0x81);
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        eventId = animUpdate->eventIds[i];
         switch (eventId) {
         case 6:
             target = ObjGroup_FindNearestObject(0x1e, obj, 0);
