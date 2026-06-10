@@ -255,7 +255,9 @@ void gameTextFn_8001628c(int id, int a, int b, int* outMaxX, int* outMaxY, int* 
 {
     GameTextFont* font = gameTextFonts;
     int found;
-    if (font->mode == 2) {
+    if (font->mode != 2) {
+        found = 0;
+    } else {
         GlyphEntry* e = font->entries;
         int count = font->count;
         int i;
@@ -266,8 +268,8 @@ void gameTextFn_8001628c(int id, int a, int b, int* outMaxX, int* outMaxY, int* 
             }
             e++;
         }
+        found = 0;
     }
-    found = 0;
 checked:
     if (!found) {
         *outMaxX = 0;
