@@ -46,7 +46,7 @@ void trickyGrowl(void *param_1, void *param_2)
         trickyDebugPrint(strBase + 0x558);
         if (trickyFn_8013b368(param_1, lbl_803E24C8, param_2) == 0) {
             state = ((GameObject *)param_1)->extra;
-            if ((((uint)*(u8 *)((char *)state + 0x58) >> 6) & 1) == 0) {
+            if ((((uint)*(u8 *)((char *)state + 0x58) >> 6) & 1) == 0u) {
                 s16 a0 = ((GameObject *)param_1)->anim.currentMove;
                 if (a0 >= 0x30 || a0 < 0x29) {
                     if (Sfx_IsPlayingFromObjectChannel(param_1, 0x10) == 0) {
@@ -70,7 +70,7 @@ void trickyGrowl(void *param_1, void *param_2)
                 -(*(f32 *)((char *)target + 0x8) - ((GameObject *)param_1)->anim.worldPosZ)));
             if (randomGetRange(0, 10) == 0) {
                 state = ((GameObject *)param_1)->extra;
-                if (((*(u8 *)((char *)state + 0x58) >> 6) & 1) == 0) {
+                if (((*(u8 *)((char *)state + 0x58) >> 6) & 1) == 0u) {
                     s16 a0 = ((GameObject *)param_1)->anim.currentMove;
                     if (a0 >= 0x30 || a0 < 0x29) {
                         if (Sfx_IsPlayingFromObjectChannel(param_1, 0x10) == 0) {
@@ -115,7 +115,7 @@ void trickyGrowl(void *param_1, void *param_2)
             }
             Sfx_RemoveLoopedObjectSound(param_1, 0x3dc);
             state = ((GameObject *)param_1)->extra;
-            if (((*(u8 *)((char *)state + 0x58) >> 6) & 1) == 0) {
+            if (((*(u8 *)((char *)state + 0x58) >> 6) & 1) == 0u) {
                 s16 a0 = ((GameObject *)param_1)->anim.currentMove;
                 if (a0 >= 0x30 || a0 < 0x29) {
                     if (Sfx_IsPlayingFromObjectChannel(param_1, 0x10) == 0) {
