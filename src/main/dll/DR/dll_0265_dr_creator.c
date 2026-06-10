@@ -77,17 +77,17 @@ void drcreator_update(int obj) {
     }
 }
 
-int drcreator_spawnProjectileCallback(int obj, int unused, u8 *arg) {
+int drcreator_spawnProjectileCallback(int obj, int unused, ObjAnimUpdateState *animUpdate) {
     int q = *(int *)&((GameObject *)obj)->anim.placementData;
     char *runtime;
     int o;
     int p;
     int i;
-    fn_80137948(sDrCreatorTimeFormat, *(s16 *)(q + 0x1a), *(s16 *)(arg + 0x58));
+    fn_80137948(sDrCreatorTimeFormat, *(s16 *)(q + 0x1a), *(s16 *)((u8 *)animUpdate + 0x58));
     if (Obj_IsLoadingLocked() == 0) {
         return 0;
     }
-    for (i = 0; i < arg[0x8b]; i++) {
+    for (i = 0; i < animUpdate->eventCount; i++) {
         switch (*(s16 *)(q + 0x1a)) {
         case 3:
         case 4:

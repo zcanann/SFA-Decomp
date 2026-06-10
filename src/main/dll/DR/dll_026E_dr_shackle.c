@@ -101,7 +101,7 @@ void drshackle_init(int obj, char *arg) {
     }
 }
 
-int drshackle_toggleEventCallback(int obj, int unused, u8 *arg) {
+int drshackle_toggleEventCallback(int obj, int unused, ObjAnimUpdateState *animUpdate) {
     char *p = ((GameObject *)obj)->extra;
     void *q = *(void **)p;
     int i;
@@ -110,8 +110,8 @@ int drshackle_toggleEventCallback(int obj, int unused, u8 *arg) {
         *(f32 *)((char *)q + 0x10) = ((GameObject *)obj)->anim.localPosY;
         *(f32 *)((char *)q + 0x14) = ((GameObject *)obj)->anim.localPosZ;
     }
-    for (i = 0; i < arg[0x8b]; i++) {
-        switch (arg[i + 0x81]) {
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        switch (animUpdate->eventIds[i]) {
         case 1:
             ((BitFlags8 *)(p + 0x1a))->b0 = 0;
             break;

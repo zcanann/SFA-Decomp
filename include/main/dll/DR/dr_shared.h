@@ -8,6 +8,7 @@
 #include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
+#include "main/objanim_update.h"
 #include "main/objseq.h"
 #include "main/resource.h"
 #include "main/dll/path_control_interface.h"
@@ -98,7 +99,7 @@ extern void Obj_FreeObject(int obj);
 extern void mm_free(void *ptr);
 extern void storeZeroToFloatParam(void *timer);
 extern GameUIInterface **gGameUIInterface;
-extern int gmmazewell_clearPendingTriggerCallback(int obj, int unused, u8 *arg);
+extern int gmmazewell_clearPendingTriggerCallback(int obj, int unused, ObjAnimUpdateState *animUpdate);
 extern u32 GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 extern int explodeplan_updateTriggerCallback(int obj);
@@ -123,7 +124,7 @@ extern int hightop_stateHandler07();
 extern int hightop_stateHandler09();
 extern int hightop_stateHandler10();
 extern void ObjGroup_AddObject(int obj, int group);
-extern int drcreator_spawnProjectileCallback(int obj, int unused, u8 *arg);
+extern int drcreator_spawnProjectileCallback(int obj, int unused, ObjAnimUpdateState *animUpdate);
 extern char sDrCreatorTimeFormat[];
 extern void fn_80137948(char *fmt, ...);
 extern f32 lbl_803E69A8;
@@ -183,7 +184,7 @@ extern void setDrawCloudsAndLights(int v);
 extern void skyFn_80088c94(int a, int b);
 extern void getEnvfxAct(int a, int b, int c, int d);
 extern void skyFn_80088e54(int a, f32 b);
-extern int drshackle_toggleEventCallback(int obj, int unused, u8 *arg);
+extern int drshackle_toggleEventCallback(int obj, int unused, ObjAnimUpdateState *animUpdate);
 extern f32 lbl_803E6A2C;
 extern f32 lbl_803E6B30;
 extern s16 lbl_803DC310;

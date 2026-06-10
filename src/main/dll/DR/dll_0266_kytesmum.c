@@ -180,7 +180,7 @@ int kytesmum_updateInteractionRangeCallback(int obj, int unused, u8 *arg) {
     return 0;
 }
 
-int kytesmum_animEventCallback(int obj, int unused, u8 *arg) {
+int kytesmum_animEventCallback(int obj, int unused, ObjAnimUpdateState *animUpdate) {
     KytesMumRuntime *runtime = ((KytesMumObject *)obj)->runtime;
     KytesMumSetup *setup;
     int i;
@@ -188,14 +188,14 @@ int kytesmum_animEventCallback(int obj, int unused, u8 *arg) {
     setup = ((KytesMumObject *)obj)->setup;
     ObjHits_EnableObject(obj);
     ObjHits_RegisterActiveHitVolumeObject(obj);
-    for (i = 0; i < arg[0x8b]; i++) {
-        if (arg[i + 0x81] == 1 && setup->mode != 0) {
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        if (animUpdate->eventIds[i] == 1 && setup->mode != 0) {
             Obj_RemoveFromUpdateList(obj);
             ObjHits_DisableObject(obj);
             ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
     }
-    return !!dll_2E_func07(obj, arg, (char *)runtime, runtime->moveSet->moves[2], runtime->moveSet->moves[2]);
+    return !!dll_2E_func07(obj, (u8 *)animUpdate, (char *)runtime, runtime->moveSet->moves[2], runtime->moveSet->moves[2]);
 }
 
 void kytesmum_init(int obj, char *arg) {

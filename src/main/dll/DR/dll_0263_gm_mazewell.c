@@ -22,11 +22,11 @@ void gmmazewell_init(int obj) {
     ((GameObject *)obj)->animEventCallback = (void *)gmmazewell_clearPendingTriggerCallback;
 }
 
-int gmmazewell_clearPendingTriggerCallback(int obj, int unused, u8 *arg) {
+int gmmazewell_clearPendingTriggerCallback(int obj, int unused, ObjAnimUpdateState *animUpdate) {
     char *p = ((GameObject *)obj)->extra;
     int i;
-    for (i = 0; i < arg[0x8b]; i++) {
-        if (arg[i + 0x81] == 1 && *(int *)(p + 0x4) != -1) {
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        if (animUpdate->eventIds[i] == 1 && *(int *)(p + 0x4) != -1) {
             (*gGameUIInterface)->showNpcDialogue(*(int *)(p + 0x4), 0x14, 0x8c, 0);
             *(int *)(p + 0x4) = -1;
         }

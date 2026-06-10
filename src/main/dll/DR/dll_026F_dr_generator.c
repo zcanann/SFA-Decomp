@@ -21,10 +21,10 @@ void drgenerator_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, 
     }
 }
 
-int drgenerator_eventCallback(int obj, int unused, u8 *arg) {
+int drgenerator_eventCallback(int obj, int unused, ObjAnimUpdateState *animUpdate) {
     int i;
-    for (i = 0; i < arg[0x8b]; i++) {
-        if (arg[i + 0x81] == 1) {
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        if (animUpdate->eventIds[i] == 1) {
             int *t = objFindTexture(obj, 0, 0);
             if (t != 0) {
                 *t = 0;

@@ -131,11 +131,11 @@ void drcagewith_free(int obj, int arg) {
     ObjGroup_RemoveObject(obj, 0x18);
 }
 
-int drcagewith_toggleRopeStateCallback(int obj, int unused, u8 *arg) {
+int drcagewith_toggleRopeStateCallback(int obj, int unused, ObjAnimUpdateState *animUpdate) {
     char *p = ((GameObject *)obj)->extra;
     int i;
-    for (i = 0; i < arg[0x8b]; i++) {
-        if (arg[i + 0x81] == 1) {
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        if (animUpdate->eventIds[i] == 1) {
             ((BitFlags8 *)(p + 0x31))->b1 ^= 1;
         }
     }
