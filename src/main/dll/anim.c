@@ -7389,10 +7389,10 @@ void dbegg_update(int obj)
                 int nb = h < lbl_803E6200;
                 nb = (nb < 0) ? -nb : nb;
                 if (nb != 0) {
-                (*gWaterfxInterface)->spawnRipple(
-                    *(s16 *)obj, 1, ((GameObject *)obj)->anim.localPosX,
+                ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(
+                    ((GameObject *)obj)->anim.localPosX,
                     ((GameObject *)obj)->anim.localPosY - ((DbEggState *)blob)->waterOffset,
-                    ((GameObject *)obj)->anim.localPosZ, (f32)randomGetRange(1, 10));
+                    ((GameObject *)obj)->anim.localPosZ, *(s16 *)obj, (f32)randomGetRange(1, 10), 1);
                 }
             }
             if (GameBit_Get(0x426) != 0) {
