@@ -544,9 +544,9 @@ void DIMbossspit_updateBurst(int obj)
 
   state = *(int *)&((GameObject *)obj)->extra;
   ((GameObject *)obj)->anim.rootMotionScale = ((GameObject *)obj)->anim.rootMotionScale + lbl_803E4D38;
-  ((GameObject *)obj)->anim.rotX = ((GameObject *)obj)->anim.rotX + 0xaaa;
-  ((GameObject *)obj)->anim.rotZ = ((GameObject *)obj)->anim.rotZ + 0x38e;
-  ((GameObject *)obj)->anim.rotY = ((GameObject *)obj)->anim.rotY + 0x38e;
+  ((GameObject *)obj)->anim.rotX += 0xaaa;
+  ((GameObject *)obj)->anim.rotZ += 0x38e;
+  ((GameObject *)obj)->anim.rotY += 0x38e;
   if (*(s16 *)state == 1) {
     i = 0;
     do {
@@ -564,7 +564,7 @@ void DIMbossspit_updateBurst(int obj)
       modelLightStruct_setEnabled(((DIMbossspitUpdateBurstState *)state)->unk4, 0, lbl_803E4D44);
     }
   }
-  *(s16 *)state = *(s16 *)state + (u8)framesThisStep;
+  *(s16 *)state += (u8)framesThisStep;
   v = *(s16 *)state;
   if (v > 0x200) {
     if (v > 0x22a) {
