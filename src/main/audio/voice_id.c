@@ -138,8 +138,7 @@ u32 vidMakeNew(int state, int returnNewId)
         cursor = (int **)*node;
     }
 
-    freeNode = (int **)vidFree;
-    if (freeNode == 0) {
+    if ((freeNode = (int **)vidFree) == 0) {
         return 0xffffffffU;
     }
     if ((vidFree = *(void **)vidFree) != 0) {
