@@ -32,9 +32,9 @@ typedef struct DimbridgecogmaiPlacement {
 
 
 typedef struct DimdismountpointState {
-    f32 posX0;
-    f32 posY0;
-    f32 posZ0;
+    f32 unk0;
+    f32 unk4;
+    f32 unk8;
     f32 unkC;
 } DimdismountpointState;
 
@@ -261,9 +261,9 @@ int dimdismountpoint_setScale(int obj) {
     int side;
 
     result = ((DimdismountpointState *)state)->unkC +
-             (((DimdismountpointState *)state)->posZ0 * ((GameObject *)player)->anim.localPosZ +
-              (((DimdismountpointState *)state)->posX0 * ((GameObject *)player)->anim.localPosX +
-               ((DimdismountpointState *)state)->posY0 * ((GameObject *)player)->anim.localPosY));
+             (((DimdismountpointState *)state)->unk8 * ((GameObject *)player)->anim.localPosZ +
+              (((DimdismountpointState *)state)->unk0 * ((GameObject *)player)->anim.localPosX +
+               ((DimdismountpointState *)state)->unk4 * ((GameObject *)player)->anim.localPosY));
 
     if (result >= lbl_803E4908) {
         side = 0;

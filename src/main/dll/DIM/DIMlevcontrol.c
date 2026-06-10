@@ -532,9 +532,9 @@ void dimcannon_init(int *obj, int *arg)
             *(u8 *)&((DimCannonState *)state)->unkB0 = 0x3c;
             ((DimCannonState *)state)->fireState = 5;
         }
-        ((DimCannonState *)state)->posX8C = ((GameObject *)obj)->anim.localPosX;
-        ((DimCannonState *)state)->posY8C = ((GameObject *)obj)->anim.localPosY;
-        ((DimCannonState *)state)->posZ8C = ((GameObject *)obj)->anim.localPosZ;
+        ((DimCannonState *)state)->unk8C = ((GameObject *)obj)->anim.localPosX;
+        ((DimCannonState *)state)->unk90 = ((GameObject *)obj)->anim.localPosY;
+        ((DimCannonState *)state)->unk94 = ((GameObject *)obj)->anim.localPosZ;
     }
 
     ((GameObject *)obj)->objectFlags |= 0x2000;

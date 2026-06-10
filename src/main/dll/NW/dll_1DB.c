@@ -4,9 +4,9 @@
 
 typedef struct EdiblemushroomPlacement {
     u8 pad0[0x8 - 0x0];
-    f32 posX8;
-    f32 posY8;
-    f32 posZ8;
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
     u8 pad14[0x18 - 0x14];
 } EdiblemushroomPlacement;
 
@@ -85,9 +85,9 @@ void ediblemushroom_update(u8 *self)
   }
 
   if (state[0x139] != 0) {
-    ((GameObject *)self)->anim.localPosX = ((EdiblemushroomPlacement *)other)->posX8;
-    ((GameObject *)self)->anim.localPosY = ((EdiblemushroomPlacement *)other)->posY8;
-    ((GameObject *)self)->anim.localPosZ = ((EdiblemushroomPlacement *)other)->posZ8;
+    ((GameObject *)self)->anim.localPosX = ((EdiblemushroomPlacement *)other)->unk8;
+    ((GameObject *)self)->anim.localPosY = ((EdiblemushroomPlacement *)other)->unkC;
+    ((GameObject *)self)->anim.localPosZ = ((EdiblemushroomPlacement *)other)->unk10;
     ((GameObject *)self)->anim.alpha = 0xFF;
     state[0x139] = 0;
   }

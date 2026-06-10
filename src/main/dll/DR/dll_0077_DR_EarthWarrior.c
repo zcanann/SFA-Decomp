@@ -113,7 +113,7 @@ typedef struct EarthWarriorSub {
     u8 pad47A[2];
     int unk47C;
     int unk480;
-    s16 angle484;      /* current yaw */
+    s16 unk484;      /* current yaw */
     u8 pad486[2];
     int unk488;
     int unk48C;
@@ -566,17 +566,17 @@ int fn_802BC830(int obj, int p2, int p3)
         ((BaddieState *)p3)->moveSpeed = lbl_803E8300;
         ObjAnim_SetCurrentMove(obj, *(s16 *)((char *)((EarthWarriorSub *)p2)->unk3F8 + 0x3a), lbl_803E8304, 0);
         ObjAnim_SetCurrentEventStepFrames((struct ObjAnimComponent *)obj, 0x10);
-        ((EarthWarriorSub *)p2)->unk858 = ((EarthWarriorSub *)p2)->angle484;
+        ((EarthWarriorSub *)p2)->unk858 = ((EarthWarriorSub *)p2)->unk484;
         ((EarthWarriorSub *)p2)->unk844 = (lbl_803E8308 + (*(f32 *)((char *)((EarthWarriorSub *)p2)->unk400 + 0x14) + ((BaddieState *)p3)->unk294)) / lbl_803E830C;
-        ((EarthWarriorSub *)p2)->unk478 = ((EarthWarriorSub *)p2)->angle484;
-        ((EarthWarriorSub *)p2)->angle484 += 0x8000;
+        ((EarthWarriorSub *)p2)->unk478 = ((EarthWarriorSub *)p2)->unk484;
+        ((EarthWarriorSub *)p2)->unk484 += 0x8000;
         ((BaddieState *)p3)->unk294 = -((BaddieState *)p3)->unk294;
         ((BaddieState *)p3)->animSpeedA = -((BaddieState *)p3)->animSpeedA;
     }
     if (((ByteFlags *)&((EarthWarriorSub *)p2)->flags3F0)->b80 != 0) {
         f32 lim = *(f32 *)((char *)((EarthWarriorSub *)p2)->unk400 + 0x10);
         if (((BaddieState *)p3)->unk294 <= lim && ((BaddieState *)p3)->animSpeedA <= lim) {
-            ((EarthWarriorSub *)p2)->unk494 = ((EarthWarriorSub *)p2)->angle484;
+            ((EarthWarriorSub *)p2)->unk494 = ((EarthWarriorSub *)p2)->unk484;
             ((ByteFlags *)&((EarthWarriorSub *)p2)->flags3F0)->b40 = 0;
             ((ByteFlags *)&((EarthWarriorSub *)p2)->flags3F0)->b80 = 0;
             return 1;
@@ -700,7 +700,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
     *(s16 *)((char *)p2 + 0x278) = 0;
     ((EarthWarriorSub *)q)->unk404 = lbl_803E82E8;
     if (*(s8 *)&((EarthWarriorState *)p2)->baddie.moveJustStartedA != 0) {
-        ((EarthWarriorSub *)q)->angle484 += ((EarthWarriorSub *)q)->unk48C * 0xb6;
+        ((EarthWarriorSub *)q)->unk484 += ((EarthWarriorSub *)q)->unk48C * 0xb6;
         ((EarthWarriorSub *)q)->unk488 = 0;
         ((EarthWarriorSub *)q)->unk48C = 0;
     }
@@ -720,7 +720,7 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
         if (*(s8 *)&((EarthWarriorState *)p2)->baddie.moveDone != 0) {
             s16 sw;
             ((ByteFlags *)&((EarthWarriorSub *)q)->flags3F0)->b40 = 0;
-            sw = ((EarthWarriorSub *)q)->angle484;
+            sw = ((EarthWarriorSub *)q)->unk484;
             ((EarthWarriorSub *)q)->unk478 = sw;
             ((EarthWarriorSub *)q)->unk494 = sw;
             *(u8 *)&((EarthWarriorSub *)q)->unk8CC = 0xc;
@@ -793,10 +793,10 @@ int DR_EarthWarrior_stateHandler02(int obj, int p2)
             if (((EarthWarriorSub *)q)->unk48C < 0) {
                 v = -v;
             }
-            ((EarthWarriorSub *)q)->angle484 = (s16)(int)(lbl_803E8348 * v + (f32)(s32)((EarthWarriorSub *)q)->angle484);
+            ((EarthWarriorSub *)q)->unk484 = (s16)(int)(lbl_803E8348 * v + (f32)(s32)((EarthWarriorSub *)q)->unk484);
         } else if (((EarthWarriorState *)p2)->baddie.unk294 <= *(f32 *)(((EarthWarriorSub *)q)->unk400 + 0x4) &&
                    ((EarthWarriorState *)p2)->baddie.animSpeedA <= *(f32 *)(((EarthWarriorSub *)q)->unk400 + 0xc)) {
-            ((EarthWarriorSub *)q)->angle484 += ((EarthWarriorSub *)q)->unk48C * 0xb6;
+            ((EarthWarriorSub *)q)->unk484 += ((EarthWarriorSub *)q)->unk48C * 0xb6;
         }
     }
     if (!((ByteFlags *)&((EarthWarriorSub *)q)->flags3F0)->b40 && !((ByteFlags *)&((EarthWarriorSub *)q)->flags3F1)->b04) {
@@ -966,7 +966,7 @@ int DR_EarthWarrior_stateHandler01(int obj, int p2)
         if (q->unk48C < 0) {
             v = -v;
         }
-        q->angle484 = (s16)(int)(lbl_803E8348 * v + (f32)(s32)q->angle484);
+        q->unk484 = (s16)(int)(lbl_803E8348 * v + (f32)(s32)q->unk484);
     }
     fn_802BCA10(obj, (int)q, p2);
     return 0;

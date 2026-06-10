@@ -17,9 +17,9 @@ typedef struct DllCBPlacement {
     s8 unk5;
     u8 unk6;
     u8 unk7;
-    f32 posX8;
-    f32 posY8;
-    f32 posZ8;
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
     u8 pad14[0x24 - 0x14];
     s16 unk24;
     u8 pad26[0x2C - 0x26];
@@ -2384,9 +2384,9 @@ void dll_CB_update(int *obj) {
     def = *(u8**)&((GameObject *)obj)->anim.placementData;
     if (((GameObject *)obj)->unkF4 != 0) return;
     if (((GameObject *)obj)->unkF8 == 0) {
-        ((GameObject *)obj)->anim.localPosX = ((DllCBPlacement *)def)->posX8;
-        ((GameObject *)obj)->anim.localPosY = ((DllCBPlacement *)def)->posY8;
-        ((GameObject *)obj)->anim.localPosZ = ((DllCBPlacement *)def)->posZ8;
+        ((GameObject *)obj)->anim.localPosX = ((DllCBPlacement *)def)->unk8;
+        ((GameObject *)obj)->anim.localPosY = ((DllCBPlacement *)def)->unkC;
+        ((GameObject *)obj)->anim.localPosZ = ((DllCBPlacement *)def)->unk10;
         ((GameObject *)obj)->unkF8 = 1;
         return;
     }

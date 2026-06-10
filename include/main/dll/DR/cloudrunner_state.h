@@ -7,9 +7,9 @@
 typedef struct CloudRunnerState {
     BaddieState baddie;
     u8 pad35C[0x3c4 - 0x35c];
-    f32 posX3C4;
-    f32 posY3C4;
-    f32 posZ3C4;
+    f32 unk3C4;
+    f32 unk3C8;
+    f32 unk3CC;
     f32 unk3D0;
     f32 unk3D4;
     f32 unk3D8;
@@ -21,9 +21,9 @@ typedef struct CloudRunnerState {
     f32 unkAE8;
     f32 unkAEC;
     f32 unkAF0;
-    f32 posXAF4;
-    f32 posYAF4;
-    f32 posZAF4;
+    f32 unkAF4;
+    f32 unkAF8;
+    f32 unkAFC;
     u8 padB00[4];
     int unkB04;
     u8 padB08[0xb50 - 0xb08];
@@ -39,9 +39,9 @@ typedef struct CloudRunnerState {
     u8 unkBB7;
     u8 unkBB8;
     u8 padBB9;
-    s16 angleBBA;
+    s16 unkBBA;
     s16 unkBBC;
-    s16 angleBBE;
+    s16 unkBBE;
     u8 flagsBC0; /* ByteFlags */
     u8 flagsBC1; /* ByteFlags */
     u8 padBC2;

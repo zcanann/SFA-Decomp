@@ -270,7 +270,7 @@ void fn_801EB0D4(uint param_1,int param_2)
       td = timeDelta;
       st->unk4BC -=
            td * lbl_803DC0D8 + (f32)(s32)(st->unk4C0 *
-                                          (td * PSVECMag(&st->velX494)));
+                                          (td * PSVECMag(&st->unk494)));
       fVar2 = lbl_803E5AE8;
       if (fVar2 != st->unk4C4) {
         fVar3 = lbl_803E5B14;
@@ -333,9 +333,9 @@ void fn_801EB334(int *obj) {
     if ((u32)((state->flags428 >> 1) & 1) == 0) {
         s16 sv;
         f32 fz = lbl_803E5AE8;
-        state->velX494 = fz;
-        state->velY494 = fz;
-        state->velZ494 = lbl_803E5B9C;
+        state->unk494 = fz;
+        state->unk498 = fz;
+        state->unk49C = lbl_803E5B9C;
         ((HightopFlags *)&state->flags428)->resetLatch = 0;
         state->unk424 = fz;
         sv = *(s16 *)obj;
@@ -411,11 +411,11 @@ undefined4 SnowBike_animEventCallback(short *param_1,undefined4 param_2,ObjSeqSt
 
   if (((SnowBikeState *)state)->unk421 == 2) {
     xSpeed = (double)(float)(oneOverTimeDelta *
-                             (*(float *)(param_1 + 6) - ((SnowBikeState *)state)->posX16C));
+                             (*(float *)(param_1 + 6) - ((SnowBikeState *)state)->unk16C));
     ySpeed = (double)(float)(oneOverTimeDelta *
-                             (*(float *)(param_1 + 8) - ((SnowBikeState *)state)->posY16C));
+                             (*(float *)(param_1 + 8) - ((SnowBikeState *)state)->unk170));
     zSpeed = (double)(float)(oneOverTimeDelta *
-                             (*(float *)(param_1 + 10) - ((SnowBikeState *)state)->posZ16C));
+                             (*(float *)(param_1 + 10) - ((SnowBikeState *)state)->unk174));
 
     transform.x = lbl_803E5AE8;
     transform.y = lbl_803E5AE8;
@@ -433,7 +433,7 @@ undefined4 SnowBike_animEventCallback(short *param_1,undefined4 param_2,ObjSeqSt
       ((SnowBikeState *)state)->unk460 = 0x46;
     }
 
-    fn_801EA240(((SnowBikeState *)state)->velZ494, (int)param_1, state,
+    fn_801EA240(((SnowBikeState *)state)->unk49C, (int)param_1, state,
                 (int)(lbl_803E5BA0 * -((SnowBikeState *)state)->unk430),
                 state + 0x461, 4);
   }
@@ -502,9 +502,9 @@ void fn_801EB634(int param_1,int param_2)
       if (st->timer3E4 == lbl_803E5AE8) {
         PSVECNormalize((float *)(param_1 + 0x24),afStack_2c);
         dot = PSVECDotProduct(afStack_2c,(float *)(local_38 + 0x24));
-        PSVECScale(&st->velX494,&st->velX494,
+        PSVECScale(&st->unk494,&st->unk494,
                    dot * st->unk4AC + lbl_803E5AEC);
-        st->velY494 = st->velY494 * lbl_803E5BA8;
+        st->unk498 = st->unk498 * lbl_803E5BA8;
         st->timer3E4 = lbl_803E5AF4;
         st->unk3E0 = lbl_803E5AEC;
       }
@@ -618,7 +618,7 @@ void fn_801EB940(short *param_1,int param_2)
     }
     ((HightopFlagsB *)&st->flags428)->resetLatch = 0;
     st->unk424 = lbl_803E5AE8;
-    st->mode4B4 = st->unk230;
+    st->unk4B4 = st->unk230;
   }
   fVar1 = lbl_803E5BC8;
   st->unk588 =
@@ -707,9 +707,9 @@ void fn_801EBD60(int param_1,int param_2)
   f32 k;
   HightopPartfxTransform effect;
 
-  speed = sqrtf(st->velZ494 * st->velZ494 +
-                (st->velX494 * st->velX494 +
-                 st->velY494 * st->velY494));
+  speed = sqrtf(st->unk49C * st->unk49C +
+                (st->unk494 * st->unk494 +
+                 st->unk498 * st->unk498));
   st->unk43C -= timeDelta;
   fVar1 = st->unk43C;
   st->unk43C =
@@ -718,7 +718,7 @@ void fn_801EBD60(int param_1,int param_2)
 
   flags = st->flags428;
   if ((u32)(flags >> 7 & 1) == 0) {
-    switch (st->mode4B4) {
+    switch (st->unk4B4) {
     case 0xd:
       target558 = lbl_803E5BD8;
       target534 = lbl_803E5BDC;

@@ -1446,15 +1446,15 @@ void Tricky_update(int obj)
     }
   }
   if ((((TrickyState *)state)->flags54 & 0x40) != 0) {
-    ((GameObject *)obj)->anim.localPosX += ((TrickyState *)state)->unk44 * (((TrickyState *)state)->unk2C * -((TrickyState *)state)->posZ80C);
-    ((GameObject *)obj)->anim.localPosZ += ((TrickyState *)state)->unk44 * (((TrickyState *)state)->unk30 * -((TrickyState *)state)->posZ80C);
+    ((GameObject *)obj)->anim.localPosX += ((TrickyState *)state)->unk44 * (((TrickyState *)state)->unk2C * -((TrickyState *)state)->unk814);
+    ((GameObject *)obj)->anim.localPosZ += ((TrickyState *)state)->unk44 * (((TrickyState *)state)->unk30 * -((TrickyState *)state)->unk814);
   }
   if ((((TrickyState *)state)->flags54 & 0x80) != 0) {
-    ((GameObject *)obj)->anim.localPosY += ((TrickyState *)state)->posY80C * ((TrickyState *)state)->unk48;
+    ((GameObject *)obj)->anim.localPosY += ((TrickyState *)state)->unk810 * ((TrickyState *)state)->unk48;
   }
   if ((((TrickyState *)state)->flags54 & 0x20) != 0) {
-    ((GameObject *)obj)->anim.localPosX += ((TrickyState *)state)->unk40 * (((TrickyState *)state)->unk30 * ((TrickyState *)state)->posX80C);
-    ((GameObject *)obj)->anim.localPosZ += ((TrickyState *)state)->unk40 * (((TrickyState *)state)->unk2C * -((TrickyState *)state)->posX80C);
+    ((GameObject *)obj)->anim.localPosX += ((TrickyState *)state)->unk40 * (((TrickyState *)state)->unk30 * ((TrickyState *)state)->unk80C);
+    ((GameObject *)obj)->anim.localPosZ += ((TrickyState *)state)->unk40 * (((TrickyState *)state)->unk2C * -((TrickyState *)state)->unk80C);
   }
   if (*(void **)&((TrickyState *)state)->unk24 != NULL) {
     ((TrickyState *)state)->unk378 = 1;
@@ -2140,17 +2140,17 @@ void baddie_updateWhileFrozen(int obj, u8 *state, u8 fromHit)
       params.pos.x = hitPos.x;
       params.pos.y = hitPos.y;
       params.pos.z = hitPos.z;
-      if (*(void **)&((TrickyState *)state)->mode368 == NULL) {
-        ((TrickyState *)state)->mode368 = objCreateLight(0,1);
+      if (*(void **)&((TrickyState *)state)->unk368 == NULL) {
+        ((TrickyState *)state)->unk368 = objCreateLight(0,1);
       }
       if ((((TrickyState *)state)->flags2E8 & 0x200) != 0) {
-        objLightFn_8009a1dc((void *)obj,lbl_803E259C,&params,1,(void *)((TrickyState *)state)->mode368);
+        objLightFn_8009a1dc((void *)obj,lbl_803E259C,&params,1,(void *)((TrickyState *)state)->unk368);
       } else if ((((TrickyState *)state)->flags2F1 & 0x10) != 0) {
-        objLightFn_8009a1dc((void *)obj,lbl_803E259C,&params,3,(void *)((TrickyState *)state)->mode368);
+        objLightFn_8009a1dc((void *)obj,lbl_803E259C,&params,3,(void *)((TrickyState *)state)->unk368);
       } else if ((((TrickyState *)state)->flags2F1 & 8) != 0) {
-        objLightFn_8009a1dc((void *)obj,lbl_803E259C,&params,2,(void *)((TrickyState *)state)->mode368);
+        objLightFn_8009a1dc((void *)obj,lbl_803E259C,&params,2,(void *)((TrickyState *)state)->unk368);
       } else {
-        objLightFn_8009a1dc((void *)obj,lbl_803E259C,&params,1,(void *)((TrickyState *)state)->mode368);
+        objLightFn_8009a1dc((void *)obj,lbl_803E259C,&params,1,(void *)((TrickyState *)state)->unk368);
       }
       Obj_SetModelColorFadeRecursive(obj,0xf,0xc8,0,0,1);
     }
@@ -2171,10 +2171,10 @@ void baddie_updateWhileFrozen(int obj, u8 *state, u8 fromHit)
           ((void (**)(int,int,void *,int,int,void *))*(int *)lbl_803DDA50)[1](0,1,&params,0x401,-1,&colors);
         }
         ((TrickyState *)state)->timer2D0 = lbl_803E25A0;
-        if (*(void **)&((TrickyState *)state)->mode368 == NULL) {
-          ((TrickyState *)state)->mode368 = objCreateLight(0,1);
+        if (*(void **)&((TrickyState *)state)->unk368 == NULL) {
+          ((TrickyState *)state)->unk368 = objCreateLight(0,1);
         }
-        objLightFn_8009a1dc((void *)obj,lbl_803E259C,&params,4,(void *)((TrickyState *)state)->mode368);
+        objLightFn_8009a1dc((void *)obj,lbl_803E259C,&params,4,(void *)((TrickyState *)state)->unk368);
       }
       proj = *(u8 **)&((TrickyState *)state)->unk29C;
       if (proj != NULL && *(s16 *)(proj + 0x44) == 1) {

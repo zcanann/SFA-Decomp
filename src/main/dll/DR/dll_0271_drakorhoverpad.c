@@ -48,12 +48,12 @@ typedef struct DrakorhoverpadState {
     f32 unk110;
     f32 unk114;
     u8 pad118[0x154 - 0x118];
-    f32 posX154;
-    f32 posY154;
-    f32 posZ154;
-    f32 posX160;
-    f32 posY160;
-    f32 posZ160;
+    f32 unk154;
+    f32 unk158;
+    f32 unk15C;
+    f32 unk160;
+    f32 unk164;
+    f32 unk168;
     u8 pad16C[0x174 - 0x16C];
     s16 unk174;
     s16 unk176;
@@ -224,12 +224,12 @@ void drakorhoverpad_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p
         ((DrakorhoverpadState *)p)->unk176 += framesThisStep;
         if (((DrakorhoverpadState *)p)->unk176 == 0 || ((DrakorhoverpadState *)p)->unk176 > 10) {
             ((DrakorhoverpadState *)p)->unk176 = 0;
-            ((DrakorhoverpadState *)p)->posX154 = ((GameObject *)obj)->anim.localPosX + (f32)(int)randomGetRange(-30, 30);
-            ((DrakorhoverpadState *)p)->posY154 = ((GameObject *)obj)->anim.localPosY;
-            ((DrakorhoverpadState *)p)->posZ154 = ((GameObject *)obj)->anim.localPosZ + (f32)(int)randomGetRange(-30, 30);
-            ((DrakorhoverpadState *)p)->posX160 = ((GameObject *)obj)->anim.localPosX + (f32)(int)randomGetRange(-120, 120);
-            ((DrakorhoverpadState *)p)->posY160 = ((GameObject *)obj)->anim.localPosY - lbl_803E6A88;
-            ((DrakorhoverpadState *)p)->posZ160 = ((GameObject *)obj)->anim.localPosZ + (f32)(int)randomGetRange(-120, 120);
+            ((DrakorhoverpadState *)p)->unk154 = ((GameObject *)obj)->anim.localPosX + (f32)(int)randomGetRange(-30, 30);
+            ((DrakorhoverpadState *)p)->unk158 = ((GameObject *)obj)->anim.localPosY;
+            ((DrakorhoverpadState *)p)->unk15C = ((GameObject *)obj)->anim.localPosZ + (f32)(int)randomGetRange(-30, 30);
+            ((DrakorhoverpadState *)p)->unk160 = ((GameObject *)obj)->anim.localPosX + (f32)(int)randomGetRange(-120, 120);
+            ((DrakorhoverpadState *)p)->unk164 = ((GameObject *)obj)->anim.localPosY - lbl_803E6A88;
+            ((DrakorhoverpadState *)p)->unk168 = ((GameObject *)obj)->anim.localPosZ + (f32)(int)randomGetRange(-120, 120);
         }
     }
 }
@@ -337,9 +337,9 @@ int drakorhoverpad_update(void *curve, int arg) {
         *(f32 *)(p + 0xe0) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2d) << 8) / lbl_803E6A58));
         *(f32 *)(p + 0xe4) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)&((GameObject *)p)->anim.activeMoveProgress + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)&((GameObject *)p)->anim.activeMoveProgress + 0x2d) << 8) / lbl_803E6A58));
         *(f32 *)&((GameObject *)p)->unkF8 = *(f32 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x10);
-        ((GameObject *)p)->velXFC = *(f32 *)(*(u8 **)&((GameObject *)p)->anim.activeMoveProgress + 0x10);
-        ((GameObject *)p)->velYFC = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2e) * mathCosf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2c) << 8) / lbl_803E6A58));
-        ((GameObject *)p)->velZFC = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)&((GameObject *)p)->anim.activeMoveProgress + 0x2e) * mathCosf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)&((GameObject *)p)->anim.activeMoveProgress + 0x2c) << 8) / lbl_803E6A58));
+        ((GameObject *)p)->unkFC = *(f32 *)(*(u8 **)&((GameObject *)p)->anim.activeMoveProgress + 0x10);
+        ((GameObject *)p)->unk100 = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2e) * mathCosf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2c) << 8) / lbl_803E6A58));
+        ((GameObject *)p)->unk104 = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)&((GameObject *)p)->anim.activeMoveProgress + 0x2e) * mathCosf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)&((GameObject *)p)->anim.activeMoveProgress + 0x2c) << 8) / lbl_803E6A58));
     } else {
         *(f32 *)&((GameObject *)p)->extra = *(f32 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 8);
         *(f32 *)&((GameObject *)p)->animEventCallback = *(f32 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 8);
@@ -350,9 +350,9 @@ int drakorhoverpad_update(void *curve, int arg) {
         *(f32 *)(p + 0xe0) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2d) << 8) / lbl_803E6A58));
         *(f32 *)(p + 0xe4) = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2e) * mathSinf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2d) << 8) / lbl_803E6A58));
         *(f32 *)&((GameObject *)p)->unkF8 = *(f32 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x10);
-        ((GameObject *)p)->velXFC = *(f32 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x10);
-        ((GameObject *)p)->velYFC = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2e) * mathCosf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2c) << 8) / lbl_803E6A58));
-        ((GameObject *)p)->velZFC = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2e) * mathCosf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2c) << 8) / lbl_803E6A58));
+        ((GameObject *)p)->unkFC = *(f32 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x10);
+        ((GameObject *)p)->unk100 = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2e) * mathCosf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2c) << 8) / lbl_803E6A58));
+        ((GameObject *)p)->unk104 = lbl_803E6A38 * ((f32)(u32)*(u8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2e) * mathCosf(lbl_803E6A54 * (f32)(int)(*(s8 *)(*(u8 **)&((GameObject *)p)->anim.currentMove + 0x2c) << 8) / lbl_803E6A58));
     }
     if (*(int *)&((GameObject *)p)->anim.previousWorldPosY != 0) {
         curvesSetupMoveNetworkCurve(curve);

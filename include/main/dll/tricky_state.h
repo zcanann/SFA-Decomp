@@ -119,7 +119,7 @@ typedef struct TrickyState {
     u8 pad359[0x360 - 0x359];
     void *lastContactObj;
     f32 contactTimer;
-    int mode368; /* object link */
+    int unk368; /* object link */
     int unk36C; /* object link */
     f32 hitCooldown;
     u8 timer374;
@@ -195,9 +195,9 @@ typedef struct TrickyState {
     u8 *unk7D4;
     u8 pad7D8[0x808 - 0x7D8];
     f32 timer808;
-    f32 posX80C;
-    f32 posY80C;
-    f32 posZ80C;
+    f32 unk80C;
+    f32 unk810;
+    f32 unk814;
     u8 pad818[2];
     s16 unk81A;
     u8 pad81C[0x82C - 0x81C];

@@ -9,12 +9,12 @@ typedef struct MmpGyserventState {
     f32 unk10;
     f32 unk14;
     f32 unk18;
-    f32 posX1C;
-    f32 posY1C;
-    f32 posZ1C;
-    f32 posX28;
-    f32 posY28;
-    f32 posZ28;
+    f32 unk1C;
+    f32 unk20;
+    f32 unk24;
+    f32 unk28;
+    f32 unk2C;
+    f32 unk30;
     f32 unk34;
 } MmpGyserventState;
 
@@ -184,14 +184,14 @@ void objSeqFn_801992ec(void *param_1, int param_2)
 
     state = ((GameObject *)param_1)->extra;
 
-    dx0 = ((MmpGyserventState *)state)->posX1C - ((GameObject *)param_1)->anim.worldPosX;
-    dy0 = ((MmpGyserventState *)state)->posY1C - ((GameObject *)param_1)->anim.worldPosY;
-    dz0 = ((MmpGyserventState *)state)->posZ1C - ((GameObject *)param_1)->anim.worldPosZ;
+    dx0 = ((MmpGyserventState *)state)->unk1C - ((GameObject *)param_1)->anim.worldPosX;
+    dy0 = ((MmpGyserventState *)state)->unk20 - ((GameObject *)param_1)->anim.worldPosY;
+    dz0 = ((MmpGyserventState *)state)->unk24 - ((GameObject *)param_1)->anim.worldPosZ;
     d0 = dx0 * dx0 + dy0 * dy0 + dz0 * dz0;
 
-    dx1 = ((MmpGyserventState *)state)->posX28 - ((GameObject *)param_1)->anim.worldPosX;
-    dy1 = ((MmpGyserventState *)state)->posY28 - ((GameObject *)param_1)->anim.worldPosY;
-    dz1 = ((MmpGyserventState *)state)->posZ28 - ((GameObject *)param_1)->anim.worldPosZ;
+    dx1 = ((MmpGyserventState *)state)->unk28 - ((GameObject *)param_1)->anim.worldPosX;
+    dy1 = ((MmpGyserventState *)state)->unk2C - ((GameObject *)param_1)->anim.worldPosY;
+    dz1 = ((MmpGyserventState *)state)->unk30 - ((GameObject *)param_1)->anim.worldPosZ;
     d1 = dx1 * dx1 + dy1 * dy1 + dz1 * dz1;
 
     r = ((MmpGyserventState *)state)->unk4;

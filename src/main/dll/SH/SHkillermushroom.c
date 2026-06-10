@@ -26,9 +26,9 @@ typedef struct BombplantsporeUpdateDriftPlacement {
 
 typedef struct BombplantPlacement {
     u8 pad0[0x8 - 0x0];
-    f32 posX8;
-    f32 posY8;
-    f32 posZ8;
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
     u8 pad14[0x18 - 0x14];
     s16 unk18;
     s16 unk1A;
@@ -313,9 +313,9 @@ void bombplant_init(void *obj, void *param, int flag)
     p4c = ((GameObject *)obj)->anim.placementData;
     ((GameObject *)obj)->anim.alpha = 0xff;
     ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-    ((GameObject *)obj)->anim.localPosX = ((BombplantPlacement *)p4c)->posX8;
-    ((GameObject *)obj)->anim.localPosY = ((BombplantPlacement *)p4c)->posY8;
-    ((GameObject *)obj)->anim.localPosZ = ((BombplantPlacement *)p4c)->posZ8;
+    ((GameObject *)obj)->anim.localPosX = ((BombplantPlacement *)p4c)->unk8;
+    ((GameObject *)obj)->anim.localPosY = ((BombplantPlacement *)p4c)->unkC;
+    ((GameObject *)obj)->anim.localPosZ = ((BombplantPlacement *)p4c)->unk10;
     ((GameObject *)obj)->anim.rootMotionScale = lbl_803E5358;
     ((BombPlantState *)state)->growDuration = lbl_803E535C;
     ((BombPlantState *)state)->growStartScale = ((BombPlantState *)state)->growTargetScale;
@@ -328,9 +328,9 @@ void bombplant_init(void *obj, void *param, int flag)
     p4c = ((GameObject *)obj)->anim.placementData;
     ((GameObject *)obj)->anim.alpha = 0xff;
     ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-    ((GameObject *)obj)->anim.localPosX = ((BombplantPlacement *)p4c)->posX8;
-    ((GameObject *)obj)->anim.localPosY = ((BombplantPlacement *)p4c)->posY8;
-    ((GameObject *)obj)->anim.localPosZ = ((BombplantPlacement *)p4c)->posZ8;
+    ((GameObject *)obj)->anim.localPosX = ((BombplantPlacement *)p4c)->unk8;
+    ((GameObject *)obj)->anim.localPosY = ((BombplantPlacement *)p4c)->unkC;
+    ((GameObject *)obj)->anim.localPosZ = ((BombplantPlacement *)p4c)->unk10;
     ObjHits_RefreshObjectState(obj);
   }
 }
@@ -410,9 +410,9 @@ void bombplant_update(void *obj)
       p4c = ((GameObject *)obj)->anim.placementData;
       ((GameObject *)obj)->anim.alpha = 0xff;
       ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-      ((GameObject *)obj)->anim.localPosX = ((BombplantPlacement *)p4c)->posX8;
-      ((GameObject *)obj)->anim.localPosY = ((BombplantPlacement *)p4c)->posY8;
-      ((GameObject *)obj)->anim.localPosZ = ((BombplantPlacement *)p4c)->posZ8;
+      ((GameObject *)obj)->anim.localPosX = ((BombplantPlacement *)p4c)->unk8;
+      ((GameObject *)obj)->anim.localPosY = ((BombplantPlacement *)p4c)->unkC;
+      ((GameObject *)obj)->anim.localPosZ = ((BombplantPlacement *)p4c)->unk10;
       ((GameObject *)obj)->anim.rootMotionScale = lbl_803E5358;
       ((BombPlantState *)state)->growDuration = lbl_803E535C;
       ((BombPlantState *)state)->growStartScale = ((BombPlantState *)state)->growTargetScale;

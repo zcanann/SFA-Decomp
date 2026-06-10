@@ -16,9 +16,9 @@ typedef struct DimCannonState {
     u8 unk1B;
     u8 pad1C[0x88 - 0x1C];
     f32 unk88;
-    f32 posX8C;
-    f32 posY8C;
-    f32 posZ8C;
+    f32 unk8C;
+    f32 unk90;
+    f32 unk94;
     f32 unk98;
     u8 pad9C[8];
     s16 aimYaw;     /* 0xa4 */

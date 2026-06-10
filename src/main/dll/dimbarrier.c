@@ -6,9 +6,9 @@
 #include "main/objseq.h"
 
 typedef struct EcshCupState {
-    f32 posX0;
-    f32 posY0;
-    f32 posZ0;
+    f32 unk0;
+    f32 unk4;
+    f32 unk8;
     f32 unkC;
     f32 unk10;
     f32 unk14;
@@ -176,8 +176,8 @@ void ecsh_cup_update(short *obj)
             (*(void (*)(int, f32 *, f32 *))*(int *)(*(int *)(*(int *)(lbl_803DDBC8 + 0x68)) + 0x24))((u8)((EcshCupState *)state)->unk28, &v.x, &v.z);
             ((EcshCupState *)state)->unkC = (v.x - ((GameObject *)obj)->anim.localPosX) / lbl_803E5070;
             ((EcshCupState *)state)->unk14 = (v.z - ((GameObject *)obj)->anim.localPosZ) / lbl_803E5070;
-            ((EcshCupState *)state)->posX0 = ((GameObject *)obj)->anim.localPosX;
-            ((EcshCupState *)state)->posZ0 = ((GameObject *)obj)->anim.localPosZ;
+            ((EcshCupState *)state)->unk0 = ((GameObject *)obj)->anim.localPosX;
+            ((EcshCupState *)state)->unk8 = ((GameObject *)obj)->anim.localPosZ;
             ((EcshCupState *)state)->unk24 = mode;
         } else if (mode == 0 && mode != *(int *)(state + 0x24)) {
             ((EcshCupState *)state)->unkC = lbl_803E5068;
@@ -258,9 +258,9 @@ void ecsh_cup_init(int obj, int p2)
     t = *(int *)&((GameObject *)obj)->extra;
     ftmp = lbl_803E5064;
     lbl_803DDBC8 = 0;
-    ((EcshCupState *)t)->posX0 = ((GameObject *)obj)->anim.localPosX;
-    ((EcshCupState *)t)->posY0 = ((GameObject *)obj)->anim.localPosY;
-    ((EcshCupState *)t)->posZ0 = ((GameObject *)obj)->anim.localPosZ;
+    ((EcshCupState *)t)->unk0 = ((GameObject *)obj)->anim.localPosX;
+    ((EcshCupState *)t)->unk4 = ((GameObject *)obj)->anim.localPosY;
+    ((EcshCupState *)t)->unk8 = ((GameObject *)obj)->anim.localPosZ;
     ((EcshCupState *)t)->unk18 = ((GameObject *)obj)->anim.localPosY;
     ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY - lbl_803E5084;
     {

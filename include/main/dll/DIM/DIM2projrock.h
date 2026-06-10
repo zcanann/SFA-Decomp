@@ -89,9 +89,9 @@ typedef struct Dim2IceFloeState {
     u8 pad00[0x10];
     int unk10;
     u8 pad14[0x68 - 0x14];
-    f32 posX68;
-    f32 posY68;
-    f32 posZ68;
+    f32 unk68;
+    f32 unk6C;
+    f32 unk70;
     u8 pad74[0x80 - 0x74];
     int unk80;
     u8 pad84[0x90 - 0x84];

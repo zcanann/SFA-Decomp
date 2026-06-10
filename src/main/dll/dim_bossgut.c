@@ -9,9 +9,9 @@
 
 typedef struct BombplantPlacement {
     u8 pad0[0x8 - 0x0];
-    f32 posX8;
-    f32 posY8;
-    f32 posZ8;
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
     u8 pad14[0x1A - 0x14];
     s16 unk1A;
     u8 pad1C[0x1E - 0x1C];
@@ -317,9 +317,9 @@ int bombplant_SeqFn(int *obj)
         src = *(int **)&((GameObject *)obj)->anim.placementData;
         ((GameObject *)obj)->anim.alpha = 0xff;
         ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags & ~OBJANIM_FLAG_HIDDEN);
-        ((GameObject *)obj)->anim.localPosX  = ((BombplantPlacement *)src)->posX8;
-        ((GameObject *)obj)->anim.localPosY = ((BombplantPlacement *)src)->posY8;
-        ((GameObject *)obj)->anim.localPosZ = ((BombplantPlacement *)src)->posZ8;
+        ((GameObject *)obj)->anim.localPosX  = ((BombplantPlacement *)src)->unk8;
+        ((GameObject *)obj)->anim.localPosY = ((BombplantPlacement *)src)->unkC;
+        ((GameObject *)obj)->anim.localPosZ = ((BombplantPlacement *)src)->unk10;
         ((GameObject *)obj)->anim.rootMotionScale = lbl_803E5358;
         ((EnemyMushroomState *)state)->riseDuration = lbl_803E535C;
         ((EnemyMushroomState *)state)->heightTarget = ((EnemyMushroomState *)state)->baseScale;

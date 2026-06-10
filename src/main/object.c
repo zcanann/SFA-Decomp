@@ -768,9 +768,9 @@ extern f32 lbl_803DE8B8;
 
 
 int objApplyVelocity(u8 *obj) {
-    ((GameObject *)obj)->anim.localPosX += timeDelta * (lbl_803DE8B8 * (((GameObject *)obj)->velXFC + ((GameObject *)obj)->anim.velocityX));
-    ((GameObject *)obj)->anim.localPosY += timeDelta * (lbl_803DE8B8 * (((GameObject *)obj)->velYFC + ((GameObject *)obj)->anim.velocityY));
-    ((GameObject *)obj)->anim.localPosZ += timeDelta * (lbl_803DE8B8 * (((GameObject *)obj)->velZFC + ((GameObject *)obj)->anim.velocityZ));
+    ((GameObject *)obj)->anim.localPosX += timeDelta * (lbl_803DE8B8 * (((GameObject *)obj)->unkFC + ((GameObject *)obj)->anim.velocityX));
+    ((GameObject *)obj)->anim.localPosY += timeDelta * (lbl_803DE8B8 * (((GameObject *)obj)->unk100 + ((GameObject *)obj)->anim.velocityY));
+    ((GameObject *)obj)->anim.localPosZ += timeDelta * (lbl_803DE8B8 * (((GameObject *)obj)->unk104 + ((GameObject *)obj)->anim.velocityZ));
     return 1;
 }
 
@@ -921,9 +921,9 @@ void Obj_RunInitCallback(u8 *obj, int cb, int unused) {
         ((GameObject *)obj)->anim.previousWorldPosY = ((GameObject *)obj)->anim.localPosY;
         ((GameObject *)obj)->anim.previousWorldPosZ = ((GameObject *)obj)->anim.localPosZ;
         v = lbl_803DE88C;
-        ((GameObject *)obj)->velXFC = v;
-        ((GameObject *)obj)->velYFC = v;
-        ((GameObject *)obj)->velZFC = v;
+        ((GameObject *)obj)->unkFC = v;
+        ((GameObject *)obj)->unk100 = v;
+        ((GameObject *)obj)->unk104 = v;
     }
 }
 
@@ -1703,9 +1703,9 @@ void Obj_UpdateObject(u8 *obj)
         object->previousWorldPosY = object->worldPosY;
         object->previousWorldPosZ = object->worldPosZ;
     }
-    ((GameObject *)obj)->velXFC = object->velocityX;
-    ((GameObject *)obj)->velYFC = object->velocityY;
-    ((GameObject *)obj)->velZFC = object->velocityZ;
+    ((GameObject *)obj)->unkFC = object->velocityX;
+    ((GameObject *)obj)->unk100 = object->velocityY;
+    ((GameObject *)obj)->unk104 = object->velocityZ;
     if (((GameObject *)obj)->flagsE5 != 0 && *(int *)&((GameObject *)obj)->unkC4 == 0 && (((GameObject *)obj)->flagsE5 & 1)) {
         ((GameObject *)obj)->unkE6 = (s16)(int)((f32)((GameObject *)obj)->unkE6 - timeDelta);
         if (((GameObject *)obj)->unkE6 <= 0) {

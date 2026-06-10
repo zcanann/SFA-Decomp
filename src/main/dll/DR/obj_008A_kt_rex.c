@@ -13,9 +13,9 @@ typedef struct KTRexWork {
     s16 unk4;
     u8 pad6[0x8 - 0x6];
     f32 unk8;
-    f32 posXC;
-    f32 posYC;
-    f32 posZC;
+    f32 unkC;
+    f32 unk10;
+    f32 unk14;
 } KTRexWork;
 
 
@@ -62,9 +62,9 @@ typedef struct KTRexArenaState {
     void *rowBX;
     void *rowBY;
     void *rowBZ;
-    f32 posXE8;
-    f32 posYE8;
-    f32 posZE8;
+    f32 unkE8;
+    f32 unkEC;
+    f32 unkF0;
     f32 unkF4;
     s16 homeYaw;        /* 0xf8: spawn heading */
     u16 timerFA;
@@ -434,9 +434,9 @@ int ktrex_updateArenaPathProgress(int obj) {
         }
         changed = 1;
     }
-    ((KTRexArenaState *)gKTRexState)->posXE8 = ((KTRexArenaState *)gKTRexState)->unk8 * (((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowBX)[phase] - ((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowAX)[phase]) + ((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowAX)[phase];
-    ((KTRexArenaState *)gKTRexState)->posYE8 = ((KTRexArenaState *)gKTRexState)->unk8 * (((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowBY)[phase] - ((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowAY)[phase]) + ((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowAY)[phase];
-    ((KTRexArenaState *)gKTRexState)->posZE8 = ((KTRexArenaState *)gKTRexState)->unk8 * (((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowBZ)[phase] - ((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowAZ)[phase]) + ((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowAZ)[phase];
+    ((KTRexArenaState *)gKTRexState)->unkE8 = ((KTRexArenaState *)gKTRexState)->unk8 * (((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowBX)[phase] - ((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowAX)[phase]) + ((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowAX)[phase];
+    ((KTRexArenaState *)gKTRexState)->unkEC = ((KTRexArenaState *)gKTRexState)->unk8 * (((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowBY)[phase] - ((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowAY)[phase]) + ((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowAY)[phase];
+    ((KTRexArenaState *)gKTRexState)->unkF0 = ((KTRexArenaState *)gKTRexState)->unk8 * (((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowBZ)[phase] - ((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowAZ)[phase]) + ((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowAZ)[phase];
     return changed;
 }
 
@@ -554,7 +554,7 @@ void ktrex_update(int obj) {
     ObjHits_SetHitVolumeMasks(obj, 24, 2, 0x1fffff);
     (*(void (**)(int, void *, f32, f32, void **, void *))((char *)*gPlayerInterface + 0x8))(
         obj, runtime, timeDelta, timeDelta, gKTRexStateHandlersB, gKTRexStateHandlersA);
-    ((GameObject *)obj)->anim.localPosY = ((KTRexArenaState *)gKTRexState)->posYE8;
+    ((GameObject *)obj)->anim.localPosY = ((KTRexArenaState *)gKTRexState)->unkEC;
 }
 
 int ktrex_stateHandlerB05(int obj, int runtime) {
@@ -700,11 +700,11 @@ int ktrex_stateHandlerB01(int obj, int runtime) {
         ((KTRexRuntime *)gKTRexRuntime)->handlerState &= ~1;
         *(int *)&((KTRexArenaState *)gKTRexState)->phaseFlags |= mask;
     }
-    dx = oneOverTimeDelta * (((KTRexArenaState *)gKTRexState)->posXE8 - ((GameObject *)obj)->anim.localPosX);
-    dz = oneOverTimeDelta * (((KTRexArenaState *)gKTRexState)->posZE8 - ((GameObject *)obj)->anim.localPosZ);
+    dx = oneOverTimeDelta * (((KTRexArenaState *)gKTRexState)->unkE8 - ((GameObject *)obj)->anim.localPosX);
+    dz = oneOverTimeDelta * (((KTRexArenaState *)gKTRexState)->unkF0 - ((GameObject *)obj)->anim.localPosZ);
     ObjAnim_SampleRootCurvePhase(sqrtf(dx * dx + dz * dz), (ObjAnimComponent *)obj, &((KTRexRuntime *)runtime)->unk2A0);
-    ((GameObject *)obj)->anim.localPosX = ((KTRexArenaState *)gKTRexState)->posXE8;
-    ((GameObject *)obj)->anim.localPosZ = ((KTRexArenaState *)gKTRexState)->posZE8;
+    ((GameObject *)obj)->anim.localPosX = ((KTRexArenaState *)gKTRexState)->unkE8;
+    ((GameObject *)obj)->anim.localPosZ = ((KTRexArenaState *)gKTRexState)->unkF0;
     return 0;
 }
 
@@ -1018,9 +1018,9 @@ void ktrex_updateContactEffects(int obj, void *runtime) {
     if ((s8)((KTRexRuntime *)runtime)->timer354 != 0 && (hitType == 3 || hitType == 2) &&
         (((KTRexArenaState *)gKTRexState)->timerFA & 0x10) != 0 && hit == 5) {
         pt = contactPoints + hitType * 4;
-        ((KTRexWork *)lbl_803AD158)->posXC = playerMapOffsetX + pt[1];
-        ((KTRexWork *)lbl_803AD158)->posYC = pt[2];
-        ((KTRexWork *)lbl_803AD158)->posZC = playerMapOffsetZ + pt[3];
+        ((KTRexWork *)lbl_803AD158)->unkC = playerMapOffsetX + pt[1];
+        ((KTRexWork *)lbl_803AD158)->unk10 = pt[2];
+        ((KTRexWork *)lbl_803AD158)->unk14 = playerMapOffsetZ + pt[3];
         Sfx_PlayFromObject(obj, SFXmv_deaththud16);
         Sfx_PlayFromObject(obj, SFXmv_roothack16);
         (*gPartfxInterface)->spawnObject((void *)obj, 0x4b2, lbl_803AD158, 0x200001, -1,
@@ -1042,14 +1042,14 @@ void ktrex_updateContactEffects(int obj, void *runtime) {
         Sfx_PlayFromObject(obj, SFXmv_ropecreak22);
         contactPoints = KTRex_GetActiveContactPointTable(obj);
         pt = contactPoints + hitType * 4;
-        ((KTRexWork *)lbl_803AD158)->posXC = playerMapOffsetX + pt[1];
-        ((KTRexWork *)lbl_803AD158)->posYC = pt[2];
-        ((KTRexWork *)lbl_803AD158)->posZC = playerMapOffsetZ + pt[3];
+        ((KTRexWork *)lbl_803AD158)->unkC = playerMapOffsetX + pt[1];
+        ((KTRexWork *)lbl_803AD158)->unk10 = pt[2];
+        ((KTRexWork *)lbl_803AD158)->unk14 = playerMapOffsetZ + pt[3];
         (*gPartfxInterface)->spawnObject((void *)obj, 0x328, lbl_803AD158, 0x200001, -1,
                                          NULL);
-        ((KTRexWork *)lbl_803AD158)->posXC -= ((GameObject *)obj)->anim.worldPosX;
-        ((KTRexWork *)lbl_803AD158)->posYC -= ((GameObject *)obj)->anim.worldPosY;
-        ((KTRexWork *)lbl_803AD158)->posZC -= ((GameObject *)obj)->anim.worldPosZ;
+        ((KTRexWork *)lbl_803AD158)->unkC -= ((GameObject *)obj)->anim.worldPosX;
+        ((KTRexWork *)lbl_803AD158)->unk10 -= ((GameObject *)obj)->anim.worldPosY;
+        ((KTRexWork *)lbl_803AD158)->unk14 -= ((GameObject *)obj)->anim.worldPosZ;
         ((KTRexWork *)lbl_803AD158)->unk8 = lbl_803E6818;
         ((KTRexWork *)lbl_803AD158)->unk0 = 0;
         ((KTRexWork *)lbl_803AD158)->unk2 = 0;
