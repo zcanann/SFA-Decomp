@@ -79,7 +79,7 @@ void dbsh_shrine_update(DbshShrineObject *obj)
 
     runtime = obj->runtime;
     player = Obj_GetPlayerObject();
-    if (player == 0) {
+    if ((void *)player == NULL) {
         return;
     }
 
@@ -101,12 +101,13 @@ void dbsh_shrine_update(DbshShrineObject *obj)
     switch (runtime->state) {
     case DBSH_SHRINE_STATE_WAITING:
         obj->flags &= ~DBSH_SHRINE_OBJ_FLAG_ACTIVE;
-        runtime->idleSfxTimer -= timeDelta;
-        if (runtime->idleSfxTimer <= lbl_803E50DC) {
+        {
+            f32 t = runtime->idleSfxTimer - timeDelta;
+            runtime->idleSfxTimer = t;
+            if (t <= lbl_803E50DC) {
             Sfx_PlayFromObject(obj, DBSH_SHRINE_IDLE_SFX);
-            rand = randomGetRange(500, 1000);
-            randAsDouble.bits = CONCAT44(0x43300000, rand ^ 0x80000000);
-            runtime->idleSfxTimer = (f32)(randAsDouble.value - lbl_803E50D0);
+            runtime->idleSfxTimer = (f32)(int)randomGetRange(500, 1000);
+            }
         }
         if ((obj->mapFlags & DBSH_SHRINE_MAP_FLAG_TRIGGERED) != 0) {
             active = MAP_EVENT_GET_ANIM(obj->mapId, 1);
@@ -122,7 +123,7 @@ void dbsh_shrine_update(DbshShrineObject *obj)
         break;
     case DBSH_SHRINE_STATE_RISING:
         obj->flags |= DBSH_SHRINE_OBJ_FLAG_ACTIVE;
-        if ((*(u8 *)&runtime->flags & DBSH_SHRINE_LATCH_STARTED) != 0) {
+        if (runtime->flags.latchStarted != 0) {
             runtime->state = DBSH_SHRINE_STATE_ACTIVE;
             GameBit_Set(DBSH_SHRINE_GB_RISE_DONE, 1);
         }
@@ -145,7 +146,7 @@ void dbsh_shrine_update(DbshShrineObject *obj)
         break;
     case DBSH_SHRINE_STATE_RESET:
         runtime->state = DBSH_SHRINE_STATE_WAITING;
-        *(u8 *)&runtime->flags &= ~DBSH_SHRINE_LATCH_STARTED;
+        runtime->flags.latchStarted = 0;
         runtime->resetTimer = 0;
         GameBit_Set(DBSH_SHRINE_GB_APPROACH, 0);
         GameBit_Set(DBSH_SHRINE_GB_FIRST_RISE, 0);
