@@ -21,9 +21,6 @@
 
 #define WCTEMPLE_DIA_FLAG_SOLVED 1
 
-#define WCTEMPLE_DIA_PAYLOAD_SUPPRESS_OFFSET 0x56
-#define WCTEMPLE_DIA_PAYLOAD_FLAGS_A 0x70
-#define WCTEMPLE_DIA_PAYLOAD_FLAGS_B 0x6e
 #define WCTEMPLE_DIA_PAYLOAD_BLOCK_FLAG 2
 
 #define WCTEMPLE_DIA_RESET_SFX 0x487
@@ -85,15 +82,15 @@ void wctempledia_syncPartVisibility(int obj, u8 mask)
     }
 }
 
-int wctempledia_interactCallback(int obj, int p2, int p3)
+int wctempledia_interactCallback(int obj, int p2, ObjAnimUpdateState *animUpdate)
 {
     WCTempleDiaState *state = ((GameObject *)obj)->extra;
 
     state->currentSpeed = lbl_803E6E48 * -state->currentSpeed * timeDelta + state->currentSpeed;
     ((GameObject *)obj)->anim.rotZ = (int)(timeDelta * state->currentSpeed + (f32)((GameObject *)obj)->anim.rotZ);
-    *(s8 *)(p3 + WCTEMPLE_DIA_PAYLOAD_SUPPRESS_OFFSET) = 0;
-    *(s16 *)(p3 + WCTEMPLE_DIA_PAYLOAD_FLAGS_A) &= ~WCTEMPLE_DIA_PAYLOAD_BLOCK_FLAG;
-    *(s16 *)(p3 + WCTEMPLE_DIA_PAYLOAD_FLAGS_B) &= ~WCTEMPLE_DIA_PAYLOAD_BLOCK_FLAG;
+    animUpdate->sequenceEventActive = 0;
+    animUpdate->activeHitVolumePair &= ~WCTEMPLE_DIA_PAYLOAD_BLOCK_FLAG;
+    animUpdate->hitVolumePair &= ~WCTEMPLE_DIA_PAYLOAD_BLOCK_FLAG;
     return 0;
 }
 

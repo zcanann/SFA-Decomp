@@ -27,8 +27,6 @@
 #define WCAPERTURES_ALPHA_STEP_SHIFT 2
 #define WCAPERTURES_LIGHT_ENABLE_THRESHOLD 128
 
-#define WCAPERTURES_CALLBACK_COMMANDS_OFFSET 0x81
-#define WCAPERTURES_CALLBACK_COMMAND_COUNT_OFFSET 0x8b
 #define WCAPERTURES_CALLBACK_ARM 1
 
 #define WCAPERTURES_PARTFX_OPEN 0x805
@@ -142,13 +140,13 @@ void wcapertures_release(void) {}
 
 void wcapertures_initialise(void) {}
 
-int wcapertures_interactCallback(int obj, int p2, int p3)
+int wcapertures_interactCallback(int obj, int p2, ObjAnimUpdateState *animUpdate)
 {
     WCAperturesState *state = ((GameObject *)obj)->extra;
     int i;
 
-    for (i = 0; i < *(u8 *)(p3 + WCAPERTURES_CALLBACK_COMMAND_COUNT_OFFSET); i++) {
-        if (*(u8 *)(p3 + (i + WCAPERTURES_CALLBACK_COMMANDS_OFFSET)) == WCAPERTURES_CALLBACK_ARM)
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        if (animUpdate->eventIds[i] == WCAPERTURES_CALLBACK_ARM)
             state->mode = WCAPERTURES_MODE_ARMED;
     }
     return 0;

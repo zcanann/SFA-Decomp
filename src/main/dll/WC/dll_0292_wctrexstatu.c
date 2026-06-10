@@ -4,8 +4,6 @@
 #include "main/mapEventTypes.h"
 #include "main/obj_placement.h"
 
-#define WCTREXSTATU_CALLBACK_COMMANDS_OFFSET 0x81
-#define WCTREXSTATU_CALLBACK_COMMAND_COUNT_OFFSET 0x8b
 #define WCTREXSTATU_CALLBACK_TRIGGER 1
 
 #define WCTREXSTATU_SETUP_TYPE_OFFSET 0x18
@@ -38,12 +36,12 @@ STATIC_ASSERT(offsetof(WCTrexStatueSetup, modelIndex) == WCTREXSTATU_SETUP_MODEL
 STATIC_ASSERT(offsetof(WCTrexStatueSetup, raisedBit) == WCTREXSTATU_SETUP_RAISED_BIT_OFFSET);
 
 #pragma opt_strength_reduction off
-int wctrexstatu_interactCallback(int obj, int unused, int callbackData)
+int wctrexstatu_interactCallback(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     int i;
 
-    for (i = 0; i < *(u8 *)(callbackData + WCTREXSTATU_CALLBACK_COMMAND_COUNT_OFFSET); i++) {
-        if (((u8 *)callbackData)[i + WCTREXSTATU_CALLBACK_COMMANDS_OFFSET] == WCTREXSTATU_CALLBACK_TRIGGER) {
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        if (animUpdate->eventIds[i] == WCTREXSTATU_CALLBACK_TRIGGER) {
             int *texture = objFindTexture(obj, 0, 0);
 
             if (texture != NULL) {

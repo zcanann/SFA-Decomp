@@ -23,11 +23,7 @@
 #define WCTEMPLEBRI_FLAG_SOLVED 1
 #define WCTEMPLEBRI_GLOBAL_ACTIVE_BIT 0xedb
 
-#define WCTEMPLEBRI_PAYLOAD_TRIGGER_OFFSET 0x80
 #define WCTEMPLEBRI_PAYLOAD_TRIGGER 1
-#define WCTEMPLEBRI_PAYLOAD_SUPPRESS_OFFSET 0x56
-#define WCTEMPLEBRI_PAYLOAD_FLAGS_A 0x70
-#define WCTEMPLEBRI_PAYLOAD_FLAGS_B 0x6e
 #define WCTEMPLEBRI_PAYLOAD_BLOCK_FLAG 0x20
 
 #define WCTEMPLEBRI_ALPHA_OPAQUE 0xff
@@ -101,7 +97,7 @@ void wctemplebri_updateModelWarp(int obj, int p2)
 }
 #pragma peephole reset
 
-int wctemplebri_interactCallback(int obj, int p2, int p3)
+int wctemplebri_interactCallback(int obj, int p2, ObjAnimUpdateState *animUpdate)
 {
     ObjAnimComponent *objAnim = &((GameObject *)obj)->anim;
     WCTempleBriSetup *setup = (WCTempleBriSetup *)((GameObject *)obj)->anim.placementData;
@@ -110,11 +106,11 @@ int wctemplebri_interactCallback(int obj, int p2, int p3)
     int modelBase;
     int i;
 
-    *(s8 *)(p3 + WCTEMPLEBRI_PAYLOAD_SUPPRESS_OFFSET) = 0;
-    *(s16 *)(p3 + WCTEMPLEBRI_PAYLOAD_FLAGS_A) &= ~WCTEMPLEBRI_PAYLOAD_BLOCK_FLAG;
-    *(s16 *)(p3 + WCTEMPLEBRI_PAYLOAD_FLAGS_B) &= ~WCTEMPLEBRI_PAYLOAD_BLOCK_FLAG;
+    animUpdate->sequenceEventActive = 0;
+    animUpdate->activeHitVolumePair &= ~WCTEMPLEBRI_PAYLOAD_BLOCK_FLAG;
+    animUpdate->hitVolumePair &= ~WCTEMPLEBRI_PAYLOAD_BLOCK_FLAG;
     wctemplebri_updateModelWarp(obj, (int)state);
-    if (*(u8 *)(p3 + WCTEMPLEBRI_PAYLOAD_TRIGGER_OFFSET) == WCTEMPLEBRI_PAYLOAD_TRIGGER) {
+    if (animUpdate->triggerCommand == WCTEMPLEBRI_PAYLOAD_TRIGGER) {
         state->active = 1;
     }
     if (state->active != 0) {
