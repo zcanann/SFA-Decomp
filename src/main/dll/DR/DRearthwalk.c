@@ -120,11 +120,11 @@ extern f32 lbl_803E54F8;
 
 void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-  u8 *state;
+  ShStaffState *state;
   int player;
   int i;
   int j;
-  u8 *ptr;
+  int *slotPtr;
   int o;
   f32 dx;
   f32 dy;
@@ -146,18 +146,18 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
   state = ((GameObject *)obj)->extra;
   player = (int)Obj_GetPlayerObject();
   if (visible != 0) {
-    if (((ShStaffState *)state)->phase == 3) {
+    if (state->phase == 3) {
       Obj_BuildWorldTransformMatrix(obj, mtxB, 0);
       PSMTXInverse((int)ObjPath_GetPointModelMtx((void *)player, 0), mtxA);
-      PSMTXConcat(mtxA, mtxB, (f32 *)(state + 8));
-      ((ShStaffState *)state)->phase = 5;
+      PSMTXConcat(mtxA, mtxB, state->carryMtx);
+      state->phase = 5;
     }
-    if (((ShStaffState *)state)->phase == 4) {
-      ObjPath_GetPointLocalMtx((void *)player, 0, (f32 *)(state + 8));
-      ((ShStaffState *)state)->phase = 5;
+    if (state->phase == 4) {
+      ObjPath_GetPointLocalMtx((void *)player, 0, state->carryMtx);
+      state->phase = 5;
     }
-    if (((ShStaffState *)state)->phase == 5) {
-      PSMTXConcat((f32 *)ObjPath_GetPointModelMtx((void *)player, 0), (f32 *)(state + 8), mtxB);
+    if (state->phase == 5) {
+      PSMTXConcat((f32 *)ObjPath_GetPointModelMtx((void *)player, 0), state->carryMtx, mtxB);
       objSetMtxFn_800412d4(mtxB);
       objRenderModel(obj);
     } else {
@@ -168,133 +168,136 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     dx = x1 - x0;
     dy = y1 - y0;
     dz = z1 - z0;
-    if (((((ShStaffState *)state)->flags & 1) != 0) && ((((ShStaffState *)state)->flags & 2) == 0)) {
-      ptr = state + 8;
+    if (((state->flags & 1) != 0) && ((state->flags & 2) == 0)) {
+      slotPtr = &state->slots[2];
       for (i = 2; i < 10; i += 2) {
-        if (*(uint *)(ptr + 0x38) == 0) {
-          state[0x60 + i] = 1;
+        if ((u32)*slotPtr == 0) {
+          state->pending[i] = 1;
           break;
         }
-        ptr += 8;
+        slotPtr += 2;
       }
       if (i >= 10) {
-        ((ShStaffState *)state)->flags |= 2;
+        state->flags |= 2;
       }
     }
-    if (((((ShStaffState *)state)->flags & 4) != 0) && ((((ShStaffState *)state)->flags & 8) == 0)) {
-      ptr = state + 4;
+    if (((state->flags & 4) != 0) && ((state->flags & 8) == 0)) {
+      slotPtr = &state->slots[1];
       for (i = 1; i < 10; i += 2) {
-        if (*(uint *)(ptr + 0x38) == 0) {
-          state[0x60 + i] = 1;
+        if ((u32)*slotPtr == 0) {
+          state->pending[i] = 1;
           break;
         }
-        ptr += 8;
+        slotPtr += 2;
       }
       if (i >= 10) {
-        ((ShStaffState *)state)->flags |= 8;
+        state->flags |= 8;
       }
     }
-    if (((ShStaffState *)state)->flags != 0) {
-      if ((((ShStaffState *)state)->flags & 0x20) != 0) {
+    if (state->flags != 0) {
+      if ((state->flags & 0x20) != 0) {
         i = 5;
-        ptr = state + 0x14;
+        slotPtr = &state->slots[5];
         for (; i < 5; i++) {
-          o = *(int *)(ptr + 0x38);
+          o = *slotPtr;
           if ((uint)o != 0) {
             *(s16 *)(o + 6) |= 0x4000;
-            *(int *)(ptr + 0x38) = 0;
+            *slotPtr = 0;
           }
-          ptr += 4;
+          slotPtr++;
         }
-        if ((((ShStaffState *)state)->flags & 0x10) != 0) {
-          ((ShStaffState *)state)->fadeTimer = ((ShStaffState *)state)->fadeTimer - timeDelta;
-          if (((ShStaffState *)state)->fadeTimer <= lbl_803E54D4) {
+        if ((state->flags & 0x10) != 0) {
+          state->fadeTimer = state->fadeTimer - timeDelta;
+          if (state->fadeTimer <= lbl_803E54D4) {
             spd = lbl_803E54D8;
           } else {
-            ((ShStaffState *)state)->fadeTimer = ((ShStaffState *)state)->fadeTimer - timeDelta;
-            spd = lbl_803E54DC * ((ShStaffState *)state)->fadeTimer;
+            state->fadeTimer = state->fadeTimer - timeDelta;
+            spd = lbl_803E54DC * state->fadeTimer;
           }
         } else {
-          ((ShStaffState *)state)->fadeTimer = ((ShStaffState *)state)->fadeTimer + timeDelta;
-          if (((ShStaffState *)state)->fadeTimer >= lbl_803E54E0) {
-            ((ShStaffState *)state)->fadeTimer = lbl_803E54E0;
+          state->fadeTimer = state->fadeTimer + timeDelta;
+          if (state->fadeTimer >= lbl_803E54E0) {
+            state->fadeTimer = lbl_803E54E0;
           }
-          spd = lbl_803E54E4 * ((ShStaffState *)state)->fadeTimer;
+          spd = lbl_803E54E4 * state->fadeTimer;
         }
         j = 0;
-        ptr = state;
+        slotPtr = state->slots;
         for (; j < 5; j++) {
-          if ((*(uint *)(ptr + 0x38) != 0) && (*(uint *)&((ShStaffState *)state)->slots[4] != 0)) {
+          if (((u32)*slotPtr != 0) && ((u32)state->slots[4] != 0)) {
+            o = *slotPtr;
             t = lbl_803E54E8 + (f32)j / lbl_803E54EC;
-            bx = *(f32 *)(((ShStaffState *)state)->slots[4] + 0xc);
-            *(f32 *)(*(int *)(ptr + 0x38) + 0xc) = t * (x0 - bx) + bx;
-            *(f32 *)(*(int *)(ptr + 0x38) + 0x10) =
-                t * (y0 - *(f32 *)(((ShStaffState *)state)->slots[4] + 0x10)) + *(f32 *)(((ShStaffState *)state)->slots[4] + 0x10);
-            *(f32 *)(*(int *)(ptr + 0x38) + 0x14) =
-                t * (z0 - *(f32 *)(((ShStaffState *)state)->slots[4] + 0x14)) + *(f32 *)(((ShStaffState *)state)->slots[4] + 0x14);
-            *(f32 *)(*(int *)(ptr + 0x38) + 8) = spd;
+            bx = *(f32 *)(state->slots[4] + 0xc);
+            *(f32 *)(o + 0xc) = t * (x0 - bx) + bx;
+            *(f32 *)(o + 0x10) =
+                t * (y0 - *(f32 *)(state->slots[4] + 0x10)) + *(f32 *)(state->slots[4] + 0x10);
+            *(f32 *)(o + 0x14) =
+                t * (z0 - *(f32 *)(state->slots[4] + 0x14)) + *(f32 *)(state->slots[4] + 0x14);
+            *(f32 *)(o + 8) = spd;
           }
-          ptr += 4;
+          slotPtr++;
         }
         j = 9;
-        ptr = state + 0x24;
+        slotPtr = &state->slots[9];
         for (; j > 4; j--) {
-          if ((*(uint *)(ptr + 0x38) != 0) && (*(uint *)&((ShStaffState *)state)->slots[5] != 0)) {
+          if (((u32)*slotPtr != 0) && ((u32)state->slots[5] != 0)) {
+            o = *slotPtr;
             t = lbl_803E54E8 + (f32)(9 - j) / lbl_803E54EC;
-            bx = *(f32 *)(((ShStaffState *)state)->slots[5] + 0xc);
-            *(f32 *)(*(int *)(ptr + 0x38) + 0xc) = t * (x1 - bx) + bx;
-            *(f32 *)(*(int *)(ptr + 0x38) + 0x10) =
-                t * (y1 - *(f32 *)(((ShStaffState *)state)->slots[5] + 0x10)) + *(f32 *)(((ShStaffState *)state)->slots[5] + 0x10);
-            *(f32 *)(*(int *)(ptr + 0x38) + 0x14) =
-                t * (z1 - *(f32 *)(((ShStaffState *)state)->slots[5] + 0x14)) + *(f32 *)(((ShStaffState *)state)->slots[5] + 0x14);
-            *(f32 *)(*(int *)(ptr + 0x38) + 8) = spd;
+            bx = *(f32 *)(state->slots[5] + 0xc);
+            *(f32 *)(o + 0xc) = t * (x1 - bx) + bx;
+            *(f32 *)(o + 0x10) =
+                t * (y1 - *(f32 *)(state->slots[5] + 0x10)) + *(f32 *)(state->slots[5] + 0x10);
+            *(f32 *)(o + 0x14) =
+                t * (z1 - *(f32 *)(state->slots[5] + 0x14)) + *(f32 *)(state->slots[5] + 0x14);
+            *(f32 *)(o + 8) = spd;
           }
-          ptr -= 4;
+          slotPtr--;
         }
       } else {
         spd = lbl_803E54D8;
-        if ((((ShStaffState *)state)->flags & 0x10) != 0) {
-          ((ShStaffState *)state)->fadeTimer = ((ShStaffState *)state)->fadeTimer - timeDelta;
-          if (((ShStaffState *)state)->fadeTimer <= lbl_803E54D4) {
-            ((ShStaffState *)state)->flags &= ~0x10;
+        if ((state->flags & 0x10) != 0) {
+          state->fadeTimer = state->fadeTimer - timeDelta;
+          if (state->fadeTimer <= lbl_803E54D4) {
+            state->flags &= ~0x10;
           } else {
-            spd = lbl_803E54E4 * ((ShStaffState *)state)->fadeTimer;
+            spd = lbl_803E54E4 * state->fadeTimer;
           }
         }
         for (j = 0; j < 10; j++) {
-          if (*(uint *)(state + 0x38) != 0) {
+          if ((u32)state->slots[j] != 0) {
+            o = state->slots[j];
             t = lbl_803E54F0 * (f32)j;
             t = t + (f32)(int)randomGetRange(-0x32, 0x32) / lbl_803E54F4;
-            *(f32 *)(*(int *)(state + 0x38) + 0xc) = dx * t + x0;
-            *(f32 *)(*(int *)(state + 0x38) + 0x10) = dy * t + y0;
-            *(f32 *)(*(int *)(state + 0x38) + 0x14) = dz * t + z0;
-            *(f32 *)(*(int *)(state + 0x38) + 8) = spd;
+            *(f32 *)(o + 0xc) = dx * t + x0;
+            *(f32 *)(o + 0x10) = dy * t + y0;
+            *(f32 *)(o + 0x14) = dz * t + z0;
+            *(f32 *)(o + 8) = spd;
           }
-          state += 4;
         }
       }
     } else {
       scale = lbl_803E54F8;
-      cur2 = ((ShStaffState *)state)->fadeTimer;
+      cur2 = state->fadeTimer;
       bx = lbl_803E54D4;
       if (cur2 != bx) {
-        ((ShStaffState *)state)->fadeTimer = cur2 - timeDelta;
-        if (((ShStaffState *)state)->fadeTimer <= bx) {
-          o = *(int *)(state + 0x38);
+        state->fadeTimer = cur2 - timeDelta;
+        if (state->fadeTimer <= bx) {
+          o = state->slots[0];
           if ((uint)o != 0) {
             *(s16 *)(o + 6) |= 0x4000;
-            *(int *)(state + 0x38) = 0;
-            ((ShStaffState *)state)->fadeTimer = bx;
+            state->slots[0] = 0;
+            state->fadeTimer = bx;
           }
         } else {
-          scale = lbl_803E54E4 * ((ShStaffState *)state)->fadeTimer;
+          scale = lbl_803E54E4 * state->fadeTimer;
         }
       }
-      if (*(uint *)(state + 0x38) != 0) {
-        *(f32 *)(*(int *)(state + 0x38) + 0xc) = dx * ((ShStaffState *)state)->pulseTimer + x0;
-        *(f32 *)(*(int *)(state + 0x38) + 0x10) = dy * ((ShStaffState *)state)->pulseTimer + y0;
-        *(f32 *)(*(int *)(state + 0x38) + 0x14) = dz * ((ShStaffState *)state)->pulseTimer + z0;
-        *(f32 *)(*(int *)(state + 0x38) + 8) = scale;
+      if ((u32)state->slots[0] != 0) {
+        o = state->slots[0];
+        *(f32 *)(o + 0xc) = dx * state->pulseTimer + x0;
+        *(f32 *)(o + 0x10) = dy * state->pulseTimer + y0;
+        *(f32 *)(o + 0x14) = dz * state->pulseTimer + z0;
+        *(f32 *)(o + 8) = scale;
       }
     }
   }
