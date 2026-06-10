@@ -78,11 +78,11 @@ void drcreator_update(int obj) {
 }
 
 int drcreator_spawnProjectileCallback(int obj, int unused, ObjAnimUpdateState *animUpdate) {
+    int i;
     int q = *(int *)&((GameObject *)obj)->anim.placementData;
     char *runtime;
     int o;
     int p;
-    int i;
     fn_80137948(sDrCreatorTimeFormat, *(s16 *)(q + 0x1a), *(s16 *)((u8 *)animUpdate + 0x58));
     if (Obj_IsLoadingLocked() == 0) {
         return 0;
@@ -104,7 +104,7 @@ int drcreator_spawnProjectileCallback(int obj, int unused, ObjAnimUpdateState *a
                 *(u8 *)(o + 7) = 255;
                 *(u8 *)(o + 0x19) = 2;
                 p = Obj_SetupObject(o, 5, -1, -1, 0);
-                if (p != 0) {
+                if ((void *)p != NULL) {
                     *(s16 *)(p + 2) = 0;
                     *(s16 *)p = (s16)randomGetRange(0, 65535);
                     *(f32 *)(p + 0x24) = lbl_803E69A8 * (f32)(int)randomGetRange(-*(s16 *)(runtime + 0xa), *(s16 *)(runtime + 0xa));
