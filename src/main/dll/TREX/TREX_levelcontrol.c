@@ -195,13 +195,11 @@ void SB_ShipGun_update(int obj)
             extern int getAngle(f32 dx, f32 dz);
             *(short *)((int)piVar10 + 6) = (s16)getAngle(-fdy,dist);
           }
-          if (*(short *)((int)piVar10 + 6) <= 8000) {
-            if (*(short *)((int)piVar10 + 6) < -8000) {
-              *(short *)((int)piVar10 + 6) = -8000;
-            }
-          }
-          else {
+          if (*(short *)((int)piVar10 + 6) > 8000) {
             *(short *)((int)piVar10 + 6) = 8000;
+          }
+          else if (*(short *)((int)piVar10 + 6) < -8000) {
+            *(short *)((int)piVar10 + 6) = -8000;
           }
           *(ushort *)(piVar10 + 2) = *(short *)(piVar10 + 2) - (ushort)framesThisStep;
           if ((*(short *)(piVar10 + 2) < 0) && (Obj_IsLoadingLocked() != 0)) {
@@ -247,21 +245,21 @@ void SB_ShipGun_update(int obj)
             Sfx_PlayFromObject(obj,SB_SHIPGUN_FIRE_ANIM);
             *(u8 *)((int)piVar10 + 0xe) += 1;
             if (*(u8 *)((int)piVar10 + 0xe) == SB_SHIPGUN_VOLLEY_SIZE) {
-              if (iVar6 < SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE) {
-                uVar8 = randomGetRange(0,SB_SHIPGUN_FIRE_DELAY_VARIANCE);
-                *(short *)(piVar10 + 2) = (short)uVar8 + SB_SHIPGUN_SLOW_FIRE_DELAY;
-              }
-              else {
+              if (iVar6 >= SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE) {
                 uVar8 = randomGetRange(0,SB_SHIPGUN_FIRE_DELAY_VARIANCE);
                 *(short *)(piVar10 + 2) = (short)uVar8 + SB_SHIPGUN_FAST_FIRE_DELAY;
               }
+              else {
+                uVar8 = randomGetRange(0,SB_SHIPGUN_FIRE_DELAY_VARIANCE);
+                *(short *)(piVar10 + 2) = (short)uVar8 + SB_SHIPGUN_SLOW_FIRE_DELAY;
+              }
               *(undefined *)((int)piVar10 + 0xe) = 0;
             }
-            else if (iVar6 < SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE) {
-              *(undefined2 *)(piVar10 + 2) = SB_SHIPGUN_SLOW_FIRE_DELAY;
+            else if (iVar6 >= SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE) {
+              *(undefined2 *)(piVar10 + 2) = SB_SHIPGUN_FAST_FIRE_DELAY;
             }
             else {
-              *(undefined2 *)(piVar10 + 2) = SB_SHIPGUN_FAST_FIRE_DELAY;
+              *(undefined2 *)(piVar10 + 2) = SB_SHIPGUN_SLOW_FIRE_DELAY;
             }
           }
       }
