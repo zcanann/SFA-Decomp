@@ -22,12 +22,6 @@ typedef struct TreeBirdState {
   void *targetObj;
 } TreeBirdState;
 
-typedef struct TreeBirdSeqData {
-  u8 pad0[0x81];
-  u8 commands[10];
-  u8 commandCount;
-} TreeBirdSeqData;
-
 #define TREEBIRD_SPAWN_PARTICLE(obj,id) \
   (*gPartfxInterface)->spawnObject((void *)(obj),(id),0,1,-1,0)
 
@@ -47,19 +41,17 @@ typedef struct TreeBirdSeqData {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int TreeBird_SeqFn(int obj, int param_2, int data)
+int TreeBird_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
   TreeBirdState *state;
-  TreeBirdSeqData *seqData;
   int i;
   int j;
   u8 cmd;
 
   state = ((GameObject *)obj)->extra;
-  seqData = (TreeBirdSeqData *)data;
   i = 0;
-  while (i < (int)seqData->commandCount) {
-    cmd = seqData->commands[i];
+  while (i < (int)animUpdate->eventCount) {
+    cmd = animUpdate->eventIds[i];
     switch (cmd) {
     case 1:
       j = 200;

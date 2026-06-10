@@ -93,14 +93,16 @@ void FUN_801ce078(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_801ce07c(int param_1,undefined4 param_2,int param_3)
+undefined4 FUN_801ce07c(int param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate)
 {
   uint uVar1;
   int iVar2;
+  u8 *animUpdateBytes;
   
+  animUpdateBytes = (u8 *)animUpdate;
   uVar1 = GameBit_Get(10);
   if (uVar1 != 0) {
-    *(byte *)(param_3 + 0x90) = *(byte *)(param_3 + 0x90) | 4;
+    animUpdateBytes[0x90] = animUpdateBytes[0x90] | 4;
   }
   iVar2 = FUN_80039520(param_1,0);
   FUN_80039520(param_1,1);
@@ -108,8 +110,8 @@ undefined4 FUN_801ce07c(int param_1,undefined4 param_2,int param_3)
   if (0x4e80 < *(short *)(iVar2 + 10)) {
     *(short *)(iVar2 + 10) = *(short *)(iVar2 + 10) + -0x4e80;
   }
-  *(ushort *)(param_3 + 0x6e) = *(ushort *)(param_3 + 0x70) & ~0x40;
-  *(undefined *)(param_3 + 0x56) = 0;
+  animUpdate->hitVolumePair = animUpdate->activeHitVolumePair & ~0x40;
+  animUpdate->sequenceEventActive = 0;
   return 0;
 }
 
@@ -198,7 +200,7 @@ int FUN_801ce238(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_801ce244(short *param_1,undefined4 param_2,int param_3)
+undefined4 FUN_801ce244(short *param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate)
 {
   int iVar1;
   
@@ -211,13 +213,13 @@ undefined4 FUN_801ce244(short *param_1,undefined4 param_2,int param_3)
   }
   if ((*(byte *)(iVar1 + 0x43c) & 4) != 0) {
     *(float *)(iVar1 + 0x18) = lbl_803E5EA4;
-    *(ushort *)(param_3 + 0x6e) = *(ushort *)(param_3 + 0x6e) & ~0x8;
-    *(ushort *)(param_3 + 0x6e) = *(ushort *)(param_3 + 0x6e) & ~0x40;
+    animUpdate->hitVolumePair = animUpdate->hitVolumePair & ~0x8;
+    animUpdate->hitVolumePair = animUpdate->hitVolumePair & ~0x40;
     FUN_801ce340(param_1,iVar1,1);
   }
   objAudioFn_8006ef38((double)lbl_803E5EA8,(double)lbl_803E5EA8,param_1,iVar1 + 0x440,8,iVar1 + 0x45c,
                iVar1 + 0x16c);
-  if (*(char *)(param_3 + 0x8b) != '\0') {
+  if (animUpdate->eventCount != '\0') {
     param_1[0x58] = param_1[0x58] & 0xfbff;
     *(uint *)(*(int *)(param_1 + 0x32) + 0x30) = *(uint *)(*(int *)(param_1 + 0x32) + 0x30) | 4;
   }

@@ -107,10 +107,13 @@ extern int objFindTexture(int *obj, int idx, int p3);
 extern f32 lbl_803E5200;
 extern f32 timeDelta;
 
-int NW_geyser_SeqFn(int *obj, int p2, void *p3) {
+int NW_geyser_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate) {
     int *tex0;
+    u8 *animUpdateBytes;
+
+    animUpdateBytes = (u8 *)animUpdate;
     if (GameBit_Get(0xa) != 0) {
-        *(u8 *)((char *)p3 + 0x90) = (u8)(*(u8 *)((char *)p3 + 0x90) | 4);
+        animUpdateBytes[0x90] = (u8)(animUpdateBytes[0x90] | 4);
     }
     tex0 = (int *)objFindTexture(obj, 0, 0);
     objFindTexture(obj, 1, 0);
@@ -118,20 +121,18 @@ int NW_geyser_SeqFn(int *obj, int p2, void *p3) {
     if (*(s16 *)((char *)tex0 + 0xa) > 0x4e80) {
         *(s16 *)((char *)tex0 + 0xa) -= 0x4e80;
     }
-    *(s16 *)((char *)p3 + 0x6e) = (s16)(*(s16 *)((char *)p3 + 0x70) & ~0x40);
-    *(u8 *)((char *)p3 + 0x56) = 0;
+    animUpdate->hitVolumePair = (s16)(animUpdate->activeHitVolumePair & ~0x40);
+    animUpdate->sequenceEventActive = 0;
     return 0;
 }
 
-int fn_801CDE7C(int obj, int param_2, u8 *seqData)
+int fn_801CDE7C(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     u8 *state;
     void *audioEvents;
     void *audioPoints;
     void *audioScratch;
     f32 audioScale;
-
-    (void)param_2;
 
     state = ((GameObject *)obj)->extra;
     if ((state[0x43c] & 0x20) == 0) {
@@ -142,8 +143,8 @@ int fn_801CDE7C(int obj, int param_2, u8 *seqData)
     }
     if ((state[0x43c] & 4) != 0) {
         *(f32 *)(state + 0x18) = lbl_803E520C;
-        *(s16 *)(seqData + 0x6e) = (s16)(*(s16 *)(seqData + 0x6e) & ~8);
-        *(s16 *)(seqData + 0x6e) = (s16)(*(s16 *)(seqData + 0x6e) & ~0x40);
+        animUpdate->hitVolumePair = (s16)(animUpdate->hitVolumePair & ~8);
+        animUpdate->hitVolumePair = (s16)(animUpdate->hitVolumePair & ~0x40);
         fn_801CDF94(obj, (int)state, 1);
     }
     audioEvents = state + 0x440;
@@ -152,7 +153,7 @@ int fn_801CDE7C(int obj, int param_2, u8 *seqData)
     audioScale = lbl_803E5210;
     objAudioFn_8006ef38(obj, audioEvents, 8, audioPoints, audioScratch,
                         audioScale, audioScale);
-    if (seqData[0x8b] != 0) {
+    if (animUpdate->eventCount != 0) {
         ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags & ~0x400);
         ((GameObject *)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_VISIBLE;
     }
