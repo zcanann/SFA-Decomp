@@ -934,7 +934,7 @@ void dll_4F_update(int *obj) {
     camera->unk13B = 0;
     camera->fov = lbl_803E1AB0;
     lbl_803DD590->blendProgress = lbl_803E1AB4 * timeDelta + lbl_803DD590->blendProgress;
-    if (lbl_803DD590->blendProgress > lbl_803E1A8C) {
+    if (lbl_803DD590->blendProgress > *(f32 *)&lbl_803E1A8C) {
         lbl_803DD590->blendProgress = lbl_803E1A8C;
     }
 }
