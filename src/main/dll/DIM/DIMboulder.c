@@ -272,7 +272,7 @@ void FUN_801ac340(int param_1,undefined *param_2)
       iVar2 = (**(code **)(**(int **)(iVar2 + 0x68) + 0x48))();
     }
     GameBit_Set(0x4e5,1);
-    (*gMapEventInterface)->setAnimEvent((int)*(char *)(param_1 + 0xac),1,1);
+    (*gMapEventInterface)->setAnimEvent((int)((GameObject *)param_1)->anim.mapEventSlot,1,1);
     if (iVar2 == 1) {
       (**(code **)(*DAT_803dd6e8 + 0x40))(1);
       *param_2 = 5;
@@ -318,27 +318,27 @@ void FUN_801ac490(undefined8 param_1,double param_2,double param_3,undefined8 pa
       uVar2 = GameBit_Get(0x70);
       if (uVar2 != 0) {
         *puVar3 = 2;
-        (*gMapEventInterface)->setAnimEvent((int)*(char *)(param_9 + 0xac),0xb,1);
+        (*gMapEventInterface)->setAnimEvent((int)((GameObject *)param_9)->anim.mapEventSlot,0xb,1);
       }
     }
     else {
       GameBit_Set(0xade,1);
       *puVar3 = 2;
-      (*gMapEventInterface)->setAnimEvent((int)*(char *)(param_9 + 0xac),0xb,1);
+      (*gMapEventInterface)->setAnimEvent((int)((GameObject *)param_9)->anim.mapEventSlot,0xb,1);
     }
     break;
   case 2:
     uVar2 = GameBit_Get(0x70);
     if (uVar2 != 0) {
       *puVar3 = 3;
-      (*gMapEventInterface)->setAnimEvent((int)*(char *)(param_9 + 0xac),6,1);
+      (*gMapEventInterface)->setAnimEvent((int)((GameObject *)param_9)->anim.mapEventSlot,6,1);
     }
     break;
   case 3:
     uVar2 = GameBit_Get(0x72);
     if (uVar2 != 0) {
       iVar2 = (int)*gMapEventInterface;
-      param_1 = (**(code **)(iVar2 + 0x50))((int)*(char *)(param_9 + 0xac),0,0);
+      param_1 = (**(code **)(iVar2 + 0x50))((int)((GameObject *)param_9)->anim.mapEventSlot,0,0);
     }
     uVar2 = GameBit_Get(0x3a2);
     if (uVar2 != 0) {
@@ -383,12 +383,12 @@ void FUN_801ac490(undefined8 param_1,double param_2,double param_3,undefined8 pa
     break;
   case 5:
     if ((*(uint *)(puVar3 + 4) & 1) != 0) {
-      (*gMapEventInterface)->setAnimEvent((int)*(char *)(param_9 + 0xac),3,0);
-      (*gMapEventInterface)->setAnimEvent((int)*(char *)(param_9 + 0xac),4,0);
-      (*gMapEventInterface)->setAnimEvent((int)*(char *)(param_9 + 0xac),6,0);
-      (*gMapEventInterface)->setAnimEvent((int)*(char *)(param_9 + 0xac),7,0);
+      (*gMapEventInterface)->setAnimEvent((int)((GameObject *)param_9)->anim.mapEventSlot,3,0);
+      (*gMapEventInterface)->setAnimEvent((int)((GameObject *)param_9)->anim.mapEventSlot,4,0);
+      (*gMapEventInterface)->setAnimEvent((int)((GameObject *)param_9)->anim.mapEventSlot,6,0);
+      (*gMapEventInterface)->setAnimEvent((int)((GameObject *)param_9)->anim.mapEventSlot,7,0);
       *puVar3 = 0;
-      (*gMapEventInterface)->setMode((int)*(char *)(param_9 + 0xac),2);
+      (*gMapEventInterface)->setMode((int)((GameObject *)param_9)->anim.mapEventSlot,2);
     }
     break;
   case 6:
@@ -405,7 +405,7 @@ void FUN_801ac490(undefined8 param_1,double param_2,double param_3,undefined8 pa
     uVar2 = GameBit_Get(0x6e);
     if (uVar2 != 0) {
       *puVar3 = 1;
-      (*gMapEventInterface)->setAnimEvent((int)*(char *)(param_9 + 0xac),2,0);
+      (*gMapEventInterface)->setAnimEvent((int)((GameObject *)param_9)->anim.mapEventSlot,2,0);
     }
   }
   return;
@@ -1140,13 +1140,13 @@ void imicemountain_init(int* obj)
         gameBitFn_800ea2e0(i);
     }
     sub->warningTextTimer = lbl_803E46E0;
-    MEVT_TRIGGER(*(s8*)((char*)obj + 0xac), 1, 0);
-    MEVT_TRIGGER(*(s8*)((char*)obj + 0xac), 5, 1);
+    MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 1, 0);
+    MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 5, 1);
     unlockLevel(0, 0, 1);
     if (GameBit_Get(0x379) != 0) {
-        MEVT_SET(*(s8*)((char*)obj + 0xac), 2);
+        MEVT_SET(((GameObject *)obj)->anim.mapEventSlot, 2);
     }
-    sub->mapEventState = MEVT_QUERY(*(s8*)((char*)obj + 0xac));
+    sub->mapEventState = MEVT_QUERY(((GameObject *)obj)->anim.mapEventSlot);
     switch (sub->mapEventState) {
     case 1:
         if (GameBit_Get(0x72) != 0) {
@@ -1160,20 +1160,20 @@ void imicemountain_init(int* obj)
                 sub->eventState = 3;
             }
         } else {
-            MEVT_TRIGGER(*(s8*)((char*)obj + 0xac), 0, 1);
+            MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 0, 1);
             if (GameBit_Get(0xadc) != 0 && GameBit_Get(0xadd) != 0) {
-                MEVT_TRIGGER(*(s8*)((char*)obj + 0xac), 0xb, 1);
+                MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 0xb, 1);
             }
             if (GameBit_Get(0x6e) != 0) {
                 sub->eventState = 1;
             } else {
-                MEVT_TRIGGER(*(s8*)((char*)obj + 0xac), 2, 1);
+                MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 2, 1);
                 sub->eventState = 7;
             }
         }
-        MEVT_TRIGGER(*(s8*)((char*)obj + 0xac), 3, 1);
-        MEVT_TRIGGER(*(s8*)((char*)obj + 0xac), 4, 1);
-        MEVT_TRIGGER(*(s8*)((char*)obj + 0xac), 7, 1);
+        MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 3, 1);
+        MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 4, 1);
+        MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 7, 1);
         break;
     case 2:
         GameBit_Set(0x3a3, 0);
@@ -1183,7 +1183,7 @@ void imicemountain_init(int* obj)
         GameBit_Set(0xc8, 0);
         GameBit_Set(0x374, 0);
         GameBit_Set(0x37c, 0);
-        MEVT_TRIGGER(*(s8*)((char*)obj + 0xac), 2, 0);
+        MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 2, 0);
         break;
     case 5:
         break;
@@ -1506,28 +1506,28 @@ void imicemountain_updateEventState(int *obj)
     case 7:
         if (GameBit_Get(0x6e) != 0) {
             extra->eventState = 1;
-            MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 2, 0);
+            MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 2, 0);
         }
         break;
     case 1:
         if (GameBit_Get(0xadc) != 0 && GameBit_Get(0xadd) != 0) {
             GameBit_Set(0xade, 1);
             extra->eventState = 2;
-            MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 11, 1);
+            MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 11, 1);
         } else if (GameBit_Get(0x70) != 0) {
             extra->eventState = 2;
-            MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 11, 1);
+            MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 11, 1);
         }
         break;
     case 2:
         if (GameBit_Get(0x70) != 0) {
             extra->eventState = 3;
-            MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 6, 1);
+            MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 6, 1);
         }
         break;
     case 3:
         if (GameBit_Get(0x72) != 0) {
-            MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 0, 0);
+            MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 0, 0);
         }
         if (GameBit_Get(0x3a2) != 0) {
             extra->eventState = 4;
@@ -1564,12 +1564,12 @@ void imicemountain_updateEventState(int *obj)
         break;
     case 5:
         if ((extra->latchFlags & 1) != 0) {
-            MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 3, 0);
-            MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 4, 0);
-            MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 6, 0);
-            MEVT_TRIGGER(*(s8 *)((char *)obj + 0xac), 7, 0);
+            MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 3, 0);
+            MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 4, 0);
+            MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 6, 0);
+            MEVT_TRIGGER(((GameObject *)obj)->anim.mapEventSlot, 7, 0);
             extra->eventState = 0;
-            MEVT_SET(*(s8 *)((char *)obj + 0xac), 2);
+            MEVT_SET(((GameObject *)obj)->anim.mapEventSlot, 2);
         }
         break;
     case 6:
