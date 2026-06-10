@@ -4633,6 +4633,14 @@ is one level less indirect. The matched-code convention is `extern int *lbl;`
   (mid-fn pragmas). Phase-1/3 sweep results: 90 uniform files migrated to
   unit cflags (cflags_dll_noopt/nosched/nopeep), 119 mixed files minimized,
   ~2400 lines removed, all byte-identical.
+- `python3 tools/pragma_depushpop.py [--apply] [--filter S]` — eliminate
+  `#pragma push/pop` scaffolding: full-environment model (push/pop saves +
+  per-kind value/reset stacks across 9 pragma kinds incl. optimization_level
+  and ppc_unroll_speculative), per-fn effective state, straight-line minimal
+  rewrite, byte-gated. Phase-4 result: 13/14 files converted (~2650 lines;
+  the engine files' ~100 push/off/off/pop wrappers each collapsed to <40
+  lines; backpack/NWsfx push/pop blocks were pure no-ops -> 0). Only
+  track_dolphin keeps push/pop (genuinely fine-grained controls).
 - `python3 tools/pragma_audit.py [--max-pct N] [--unit-filter S] [--all]` —
   flag <100% fns whose effective pragma state (stack model, recipe #1) is an
   OUTLIER vs their unit's majority state. THE highest-yield triage signal on
