@@ -197,22 +197,8 @@ void sndOutputMode(int mode)
     }
     if (oldFlags != synthFlags) {
         u32 i;
-        u32 offset;
-        for (i = 0, offset = 0; i < lbl_803BD150[SYNTH_STUDIO_STATE_VOICE_COUNT_OFFSET];) {
-            u32 flagsOffset = offset + SYNTH_VOICE_DIRTY_FLAGS_OFFSET;
-            volatile u32 *readFlags;
-            volatile u32 *writeFlags;
-            u32 lowFlags;
-            u32 highFlags;
-            offset += SYNTH_VOICE_STRIDE;
-            readFlags = (volatile u32 *)(synthVoice + flagsOffset);
-            lowFlags = readFlags[0];
-            writeFlags = (volatile u32 *)(synthVoice + flagsOffset);
-            highFlags = readFlags[1];
-            i++;
-            lowFlags |= SYNTH_VOICE_OUTPUT_MODE_DIRTY;
-            writeFlags[1] = highFlags;
-            writeFlags[0] = lowFlags;
+        for (i = 0; i < lbl_803BD150[SYNTH_STUDIO_STATE_VOICE_COUNT_OFFSET]; ++i) {
+            *(u64 *)(synthVoice + i * SYNTH_VOICE_STRIDE + SYNTH_VOICE_DIRTY_FLAGS_OFFSET) |= 0x0000200000000000ULL;
         }
         synthRefreshJobVolumes();
     }
