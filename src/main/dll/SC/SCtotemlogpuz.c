@@ -27,8 +27,10 @@ int SH_LevelControl_SeqFn(void *obj, void *unused, SCTotemLogPuzzleUpdateState *
     puzzleObj = (SCTotemLogPuzzleObject *)obj;
     i = 0;
     while (i < (int)updateState->eventCount) {
-        if ((int)updateState->eventHandled[i] == 0) {
+        switch (*(u8 *)&updateState->eventHandled[i]) {
+        case 0:
             SH_LevelControl_setMusic(puzzleObj->runtime);
+            break;
         }
         i++;
     }
