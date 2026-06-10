@@ -17,9 +17,9 @@ typedef struct SnowBikeMountState {
     f32 unk3EC;
     f32 unk3F0;
     u8 pad3F4[0x400 - 0x3F4];
-    f32 unk400;
-    f32 unk404;
-    f32 unk408;
+    f32 posX400;
+    f32 posY400;
+    f32 posZ400;
     u8 pad40C[0x414 - 0x40C];
     f32 unk414;
     u8 pad418[0x420 - 0x418];
@@ -101,12 +101,12 @@ u8 SnowBike_func0B(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x420
 void SnowBike_mount(int obj, f32 *x, f32 *y, f32 *z)
 {
     int t = *(int *)&((GameObject *)obj)->extra;
-    ((SnowBikeMountState *)t)->unk400 = ((GameObject *)obj)->anim.localPosX;
-    ((SnowBikeMountState *)t)->unk404 = ((GameObject *)obj)->anim.localPosY;
-    ((SnowBikeMountState *)t)->unk408 = ((GameObject *)obj)->anim.localPosZ;
-    *x = ((SnowBikeMountState *)t)->unk400;
-    *y = ((SnowBikeMountState *)t)->unk404;
-    *z = ((SnowBikeMountState *)t)->unk408;
+    ((SnowBikeMountState *)t)->posX400 = ((GameObject *)obj)->anim.localPosX;
+    ((SnowBikeMountState *)t)->posY400 = ((GameObject *)obj)->anim.localPosY;
+    ((SnowBikeMountState *)t)->posZ400 = ((GameObject *)obj)->anim.localPosZ;
+    *x = ((SnowBikeMountState *)t)->posX400;
+    *y = ((SnowBikeMountState *)t)->posY400;
+    *z = ((SnowBikeMountState *)t)->posZ400;
 }
 
 /*

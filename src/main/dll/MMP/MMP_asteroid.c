@@ -929,9 +929,9 @@ void dimbossicesmash_update(u8 *obj)
                 }
                 ((GameObject *)obj)->anim.alpha = (u8)a;
             }
-            ((GameObject *)obj)->anim.velocityX = timeDelta * ((DimBossIceSmashState *)state)->unk290 + ((GameObject *)obj)->anim.velocityX;
-            ((GameObject *)obj)->anim.velocityY = timeDelta * ((DimBossIceSmashState *)state)->unk294 + ((GameObject *)obj)->anim.velocityY;
-            ((GameObject *)obj)->anim.velocityZ = timeDelta * ((DimBossIceSmashState *)state)->unk298 + ((GameObject *)obj)->anim.velocityZ;
+            ((GameObject *)obj)->anim.velocityX = timeDelta * ((DimBossIceSmashState *)state)->velX290 + ((GameObject *)obj)->anim.velocityX;
+            ((GameObject *)obj)->anim.velocityY = timeDelta * ((DimBossIceSmashState *)state)->velY290 + ((GameObject *)obj)->anim.velocityY;
+            ((GameObject *)obj)->anim.velocityZ = timeDelta * ((DimBossIceSmashState *)state)->velZ290 + ((GameObject *)obj)->anim.velocityZ;
             ((DimBossIceSmashState *)state)->unk278 =
                 timeDelta * ((DimBossIceSmashState *)state)->unk284 + ((DimBossIceSmashState *)state)->unk278;
             ((DimBossIceSmashState *)state)->unk27C =
@@ -1046,9 +1046,9 @@ void fn_80196520(u8 *obj, u8 *state, u8 *setup)
     f32 vx, vy, vz;
     f32 spd, len;
 
-    ((GameObject *)obj)->anim.localPosX = ((DimBossIceSmashState *)state)->unk26C * ((GameObject *)obj)->anim.rootMotionScale + ((ObjPlacement *)setup)->posX;
-    ((GameObject *)obj)->anim.localPosY = ((DimBossIceSmashState *)state)->unk270 * ((GameObject *)obj)->anim.rootMotionScale + ((ObjPlacement *)setup)->posY;
-    ((GameObject *)obj)->anim.localPosZ = ((DimBossIceSmashState *)state)->unk274 * ((GameObject *)obj)->anim.rootMotionScale + ((ObjPlacement *)setup)->posZ;
+    ((GameObject *)obj)->anim.localPosX = ((DimBossIceSmashState *)state)->posX26C * ((GameObject *)obj)->anim.rootMotionScale + ((ObjPlacement *)setup)->posX;
+    ((GameObject *)obj)->anim.localPosY = ((DimBossIceSmashState *)state)->posY26C * ((GameObject *)obj)->anim.rootMotionScale + ((ObjPlacement *)setup)->posY;
+    ((GameObject *)obj)->anim.localPosZ = ((DimBossIceSmashState *)state)->posZ26C * ((GameObject *)obj)->anim.rootMotionScale + ((ObjPlacement *)setup)->posZ;
     ((GameObject *)obj)->anim.rotX = *(s16 *)(setup + 0x1a);
     ((GameObject *)obj)->anim.rotY = *(s16 *)(setup + 0x1c);
     ((GameObject *)obj)->anim.rotZ = *(s16 *)(setup + 0x1e);
@@ -1092,9 +1092,9 @@ void fn_80196520(u8 *obj, u8 *state, u8 *setup)
     ((DimBossIceSmashState *)state)->unk284 = (f32)*(s16 *)(setup + 0x32) / (spd = lbl_803E4038);
     ((DimBossIceSmashState *)state)->unk288 = (f32)*(s16 *)(setup + 0x34) / spd;
     ((DimBossIceSmashState *)state)->unk28C = (f32)*(s16 *)(setup + 0x36) / spd;
-    ((DimBossIceSmashState *)state)->unk290 = (f32)*(s16 *)(setup + 0x26) / (spd = lbl_803E403C);
-    ((DimBossIceSmashState *)state)->unk294 = (f32)*(s16 *)(setup + 0x28) / spd;
-    ((DimBossIceSmashState *)state)->unk298 = (f32)*(s16 *)(setup + 0x2a) / spd;
+    ((DimBossIceSmashState *)state)->velX290 = (f32)*(s16 *)(setup + 0x26) / (spd = lbl_803E403C);
+    ((DimBossIceSmashState *)state)->velY290 = (f32)*(s16 *)(setup + 0x28) / spd;
+    ((DimBossIceSmashState *)state)->velZ290 = (f32)*(s16 *)(setup + 0x2a) / spd;
     ((DimBossIceSmashState *)state)->unk29C = 0;
 }
 
@@ -1110,9 +1110,9 @@ void dimbossicesmash_init(u8 *obj, u8 *params)
     ((ObjAnimComponent *)obj)->bankIndex = params[0x18];
     fz = lbl_803E4034;
     state = ((GameObject *)obj)->extra;
-    ((DimBossIceSmashState *)state)->unk26C = lbl_803E4034;
-    ((DimBossIceSmashState *)state)->unk270 = fz;
-    ((DimBossIceSmashState *)state)->unk274 = fz;
+    ((DimBossIceSmashState *)state)->posX26C = lbl_803E4034;
+    ((DimBossIceSmashState *)state)->posY26C = fz;
+    ((DimBossIceSmashState *)state)->posZ26C = fz;
     fn_80196520(obj, state, params);
     if (GameBit_Get(*(s16 *)(params + 0x3e)) == 0) {
         t = 0;

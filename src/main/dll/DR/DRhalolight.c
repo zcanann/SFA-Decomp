@@ -71,14 +71,14 @@ void SnowBike_hitDetect(int obj)
     }
     if (state->unk421 == 2) {
         fn_801EB940(obj, (u8 *)state);
-        state->unk41C = ((GameObject *)obj)->anim.rotY;
-        state->unk41E = ((GameObject *)obj)->anim.rotZ;
+        state->angle41C = ((GameObject *)obj)->anim.rotY;
+        state->angle41E = ((GameObject *)obj)->anim.rotZ;
         ((GameObject *)obj)->anim.rotY = (f32)((GameObject *)obj)->anim.rotY + state->unk594;
         ((GameObject *)obj)->anim.rotZ = (f32)((GameObject *)obj)->anim.rotZ + ((f32)state->unk410 + state->unk598);
     }
     if (state->unk3D9 == 4 || state->unk3D6 != 0) {
         ((GameObject *)obj)->anim.velocityY = oneOverTimeDelta * (((GameObject *)obj)->anim.localPosY - ((GameObject *)obj)->anim.previousLocalPosY);
-        state->unk498 = ((GameObject *)obj)->anim.velocityY;
+        state->velY494 = ((GameObject *)obj)->anim.velocityY;
     }
     if (state->unk3D6 == 0) {
         if (((*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags & 8) != 0
@@ -131,11 +131,11 @@ void SnowBike_hitDetect(int obj)
         ((GameObject *)obj)->anim.velocityZ = k2 * (oneOverTimeDelta * (((GameObject *)obj)->anim.localPosZ - ((GameObject *)obj)->anim.previousLocalPosZ));
     }
     Matrix_TransformPoint((f32 *)((u8 *)state + 0x12c), ((GameObject *)obj)->anim.velocityX, lbl_803E5AE8, ((GameObject *)obj)->anim.velocityZ,
-                          &state->unk494, &dummy, &state->unk49C);
+                          &state->velX494, &dummy, &state->velZ494);
 clamp:
     {
         f32 lim;
-        f32 v = state->unk494;
+        f32 v = state->velX494;
         f32 c;
         lim = state->unk47C;
         if (v < -lim) {
@@ -145,12 +145,12 @@ clamp:
         } else {
             c = v;
         }
-        state->unk494 = c;
+        state->velX494 = c;
     }
-    if (state->unk494 < lbl_803E5B8C && state->unk494 > lbl_803E5BA4) {
-        state->unk494 = lbl_803E5AE8;
+    if (state->velX494 < lbl_803E5B8C && state->velX494 > lbl_803E5BA4) {
+        state->velX494 = lbl_803E5AE8;
     }
-    v = state->unk498;
+    v = state->velY494;
     lim = state->unk480;
     if (v < -lim) {
         c = -lim;
@@ -159,13 +159,13 @@ clamp:
     } else {
         c = v;
     }
-    state->unk498 = c;
-    if (state->unk498 < lbl_803E5B8C && state->unk498 > lbl_803E5BA4) {
-        state->unk498 = lbl_803E5AE8;
+    state->velY494 = c;
+    if (state->velY494 < lbl_803E5B8C && state->velY494 > lbl_803E5BA4) {
+        state->velY494 = lbl_803E5AE8;
     }
     {
         f32 lim;
-        f32 v = state->unk49C;
+        f32 v = state->velZ494;
         f32 c;
         lim = state->unk484;
         if (v < -lim) {
@@ -175,13 +175,13 @@ clamp:
         } else {
             c = v;
         }
-        state->unk49C = c;
+        state->velZ494 = c;
     }
-    if (state->unk49C < lbl_803E5B8C && state->unk49C > lbl_803E5BA4) {
-        state->unk49C = lbl_803E5AE8;
+    if (state->velZ494 < lbl_803E5B8C && state->velZ494 > lbl_803E5BA4) {
+        state->velZ494 = lbl_803E5AE8;
     }
-    state->unk16C = ((GameObject *)obj)->anim.localPosX;
-    state->unk170 = ((GameObject *)obj)->anim.localPosY;
-    state->unk174 = ((GameObject *)obj)->anim.localPosZ;
+    state->posX16C = ((GameObject *)obj)->anim.localPosX;
+    state->posY16C = ((GameObject *)obj)->anim.localPosY;
+    state->posZ16C = ((GameObject *)obj)->anim.localPosZ;
     state->unk42C = 0;
 }

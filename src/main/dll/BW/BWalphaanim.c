@@ -58,14 +58,14 @@ void SnowBike_initialise(void) {
 
 void SB_CloudRunner_onSeqFree(int *obj) {
     SnowBikeState *p = (SnowBikeState *)obj[0xb8/4];
-    p->unk04C = ((GameObject *)obj)->anim.localPosX;
-    p->unk050 = ((GameObject *)obj)->anim.localPosY;
-    p->unk054 = ((GameObject *)obj)->anim.localPosZ;
+    p->posX04C = ((GameObject *)obj)->anim.localPosX;
+    p->posY04C = ((GameObject *)obj)->anim.localPosY;
+    p->posZ04C = ((GameObject *)obj)->anim.localPosZ;
     {
         s32 v = *(s16*)obj - 0x4000;
         p->unk02C = (s16)v;
     }
-    p->unk02E = ((GameObject *)obj)->anim.rotZ;
+    p->angle02E = ((GameObject *)obj)->anim.rotZ;
 }
 
 extern char lbl_803284E0[];
@@ -151,9 +151,9 @@ void SnowBike_init(int obj, u8 *params, int flag)
     ((SnowBikeState *)state)->unk040 = -1;
     ((SnowBikeState *)state)->unk05C = params[0x1c];
     ((SnowBikeState *)state)->unk05D = params[0x1d];
-    ((SnowBikeState *)state)->unk00C = ((GameObject *)obj)->anim.localPosX;
-    ((SnowBikeState *)state)->unk010 = ((GameObject *)obj)->anim.localPosY;
-    ((SnowBikeState *)state)->unk014 = ((GameObject *)obj)->anim.localPosZ;
+    ((SnowBikeState *)state)->posX00C = ((GameObject *)obj)->anim.localPosX;
+    ((SnowBikeState *)state)->posY00C = ((GameObject *)obj)->anim.localPosY;
+    ((SnowBikeState *)state)->posZ00C = ((GameObject *)obj)->anim.localPosZ;
     ((GameObject *)obj)->animEventCallback = (void *)SnowBike_animEventCallback;
     ObjGroup_AddObject(obj, 10);
     if (flag == 0) {
@@ -163,9 +163,9 @@ void SnowBike_init(int obj, u8 *params, int flag)
             path += 8;
         }
     }
-    ((SnowBikeState *)state)->unk51C = ((GameObject *)obj)->anim.worldPosX;
-    ((SnowBikeState *)state)->unk520 = ((GameObject *)obj)->anim.worldPosY;
-    ((SnowBikeState *)state)->unk524 = ((GameObject *)obj)->anim.worldPosZ;
+    ((SnowBikeState *)state)->posX51C = ((GameObject *)obj)->anim.worldPosX;
+    ((SnowBikeState *)state)->posY51C = ((GameObject *)obj)->anim.worldPosY;
+    ((SnowBikeState *)state)->posZ51C = ((GameObject *)obj)->anim.worldPosZ;
     ((SnowBikeState *)state)->unk068 = lbl_803E5AE8;
     ((SnowBikeState *)state)->unk448 = *(s16 *)(params + 0x1a);
     ((SnowBikeState *)state)->unk44A = *(s16 *)(params + 0x1e);
@@ -328,8 +328,8 @@ void SnowBike_update(int obj)
         }
     }
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
-    ((GameObject *)obj)->anim.rotY = ((SnowBikeState *)state)->unk41C;
-    ((GameObject *)obj)->anim.rotZ = ((SnowBikeState *)state)->unk41E;
+    ((GameObject *)obj)->anim.rotY = ((SnowBikeState *)state)->angle41C;
+    ((GameObject *)obj)->anim.rotZ = ((SnowBikeState *)state)->angle41E;
     if (((SnowBikeFlags *)(state + 0x428))->b04 || GameBit_Get(((SnowBikeState *)state)->unk44A) != 0) {
         ((SnowBikeFlags *)(state + 0x428))->b04 = 1;
         return;
@@ -385,13 +385,13 @@ void SnowBike_update(int obj)
                     vec1[1] = lbl_803E5AE8;
                     PSVECScale(vec1, vec1, timeDelta);
                     PSVECAdd((f32 *)(state + 0x494), vec1, (f32 *)(state + 0x494));
-                    ((SnowBikeState *)state)->unk498 = ((SnowBikeState *)state)->unk4B0 * timeDelta + ((SnowBikeState *)state)->unk498;
+                    ((SnowBikeState *)state)->velY494 = ((SnowBikeState *)state)->unk4B0 * timeDelta + ((SnowBikeState *)state)->velY494;
                     p = powfBitEstimate(((SnowBikeState *)state)->unk548, timeDelta);
-                    ((SnowBikeState *)state)->unk494 *= p;
+                    ((SnowBikeState *)state)->velX494 *= p;
                     p = powfBitEstimate(((SnowBikeState *)state)->unk54C, timeDelta);
-                    ((SnowBikeState *)state)->unk49C *= p;
+                    ((SnowBikeState *)state)->velZ494 *= p;
                     fn_801EC1AC(obj, (int)state);
-                    Matrix_TransformPoint((f32 *)(state + 0xec), ((SnowBikeState *)state)->unk494, ((SnowBikeState *)state)->unk498, ((SnowBikeState *)state)->unk49C, &((GameObject *)obj)->anim.velocityX, &((GameObject *)obj)->anim.velocityY, &((GameObject *)obj)->anim.velocityZ);
+                    Matrix_TransformPoint((f32 *)(state + 0xec), ((SnowBikeState *)state)->velX494, ((SnowBikeState *)state)->velY494, ((SnowBikeState *)state)->velZ494, &((GameObject *)obj)->anim.velocityX, &((GameObject *)obj)->anim.velocityY, &((GameObject *)obj)->anim.velocityZ);
                     objApplyVelocity(obj);
                 }
             } else {
@@ -444,17 +444,17 @@ void SnowBike_update(int obj)
                 vec2[1] = lbl_803E5AE8;
                 PSVECScale(vec2, vec2, timeDelta);
                 PSVECAdd((f32 *)(state + 0x494), vec2, (f32 *)(state + 0x494));
-                ((SnowBikeState *)state)->unk498 = ((SnowBikeState *)state)->unk4B0 * timeDelta + ((SnowBikeState *)state)->unk498;
+                ((SnowBikeState *)state)->velY494 = ((SnowBikeState *)state)->unk4B0 * timeDelta + ((SnowBikeState *)state)->velY494;
                 p = powfBitEstimate(((SnowBikeState *)state)->unk548, timeDelta);
-                ((SnowBikeState *)state)->unk494 *= p;
+                ((SnowBikeState *)state)->velX494 *= p;
                 p = powfBitEstimate(((SnowBikeState *)state)->unk54C, timeDelta);
-                ((SnowBikeState *)state)->unk49C *= p;
+                ((SnowBikeState *)state)->velZ494 *= p;
                 fn_801EC1AC(obj, (int)state);
-                Matrix_TransformPoint((f32 *)(state + 0xec), ((SnowBikeState *)state)->unk494, ((SnowBikeState *)state)->unk498, ((SnowBikeState *)state)->unk49C, &((GameObject *)obj)->anim.velocityX, &((GameObject *)obj)->anim.velocityY, &((GameObject *)obj)->anim.velocityZ);
+                Matrix_TransformPoint((f32 *)(state + 0xec), ((SnowBikeState *)state)->velX494, ((SnowBikeState *)state)->velY494, ((SnowBikeState *)state)->velZ494, &((GameObject *)obj)->anim.velocityX, &((GameObject *)obj)->anim.velocityY, &((GameObject *)obj)->anim.velocityZ);
                 objApplyVelocity(obj);
             }
             fn_801EB0D4(obj, state);
-            fn_801EA240(obj, state, ((SnowBikeState *)state)->unk49C, (int)(lbl_803E5BA0 * -((SnowBikeState *)state)->unk430), state + 0x461, 7);
+            fn_801EA240(obj, state, ((SnowBikeState *)state)->velZ494, (int)(lbl_803E5BA0 * -((SnowBikeState *)state)->unk430), state + 0x461, 7);
             fn_801EB634(obj, state);
             *(s16 *)obj = ((SnowBikeState *)state)->flags40E;
         }

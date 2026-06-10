@@ -341,23 +341,23 @@ void dim2icefloe_update(int obj)
         }
         Curve_AdvanceAlongPath(sub, ((Dim2IceFloeState *)sub)->unkA4);
         reached = ((Dim2IceFloeState *)sub)->unk10 >= ((Dim2IceFloeState *)sub)->unk90 - 4;
-        ((GameObject *)obj)->anim.localPosX = ((Dim2IceFloeState *)sub)->unk68;
+        ((GameObject *)obj)->anim.localPosX = ((Dim2IceFloeState *)sub)->posX68;
         if (!((IceFloeFlags *)(sub + 0xb9))->finished) {
-            ((GameObject *)obj)->anim.localPosY = lbl_803E4B34 + ((Dim2IceFloeState *)sub)->unk6C;
+            ((GameObject *)obj)->anim.localPosY = lbl_803E4B34 + ((Dim2IceFloeState *)sub)->posY68;
         }
-        ((GameObject *)obj)->anim.localPosZ = ((Dim2IceFloeState *)sub)->unk70;
+        ((GameObject *)obj)->anim.localPosZ = ((Dim2IceFloeState *)sub)->posZ68;
         if (reached) {
             ((IceFloeFlags *)(sub + 0xb9))->finished = 1;
         }
         ((Dim2IceFloeState *)sub)->unkB4 = timeDelta * ((Dim2IceFloeState *)sub)->unkAC + (f32)*(u16 *)&((Dim2IceFloeState *)sub)->unkB4;
         if (((IceFloeFlags *)(sub + 0xb9))->finished) {
             ((GameObject *)obj)->anim.localPosY = -(lbl_803E4B38 * timeDelta - ((GameObject *)obj)->anim.localPosY);
-            if (((GameObject *)obj)->anim.localPosY < ((Dim2IceFloeState *)sub)->unk6C) {
+            if (((GameObject *)obj)->anim.localPosY < ((Dim2IceFloeState *)sub)->posY68) {
                 ObjHits_DisableObject(obj);
                 ((GameObject *)obj)->objectFlags |= 0x100;
                 fn_80296D20(Obj_GetPlayerObject(), obj);
             }
-            if (((GameObject *)obj)->anim.localPosY < ((Dim2IceFloeState *)sub)->unk6C - lbl_803E4B3C) {
+            if (((GameObject *)obj)->anim.localPosY < ((Dim2IceFloeState *)sub)->posY68 - lbl_803E4B3C) {
                 Obj_FreeObject(obj);
             }
         }

@@ -306,9 +306,9 @@ typedef struct DbstealerwormPlacement {
     u8 unk5;
     u8 unk6;
     u8 unk7;
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
+    f32 posX8;
+    f32 posY8;
+    f32 posZ8;
     u32 unk14;
     s16 unk18;
     s16 unk1A;
@@ -331,9 +331,9 @@ typedef struct DbeggPlacement {
     u8 unk5;
     u8 unk6;
     u8 unk7;
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
+    f32 posX8;
+    f32 posY8;
+    f32 posZ8;
     u32 unk14;
     s16 unk18;
     s16 unk1A;
@@ -2582,9 +2582,9 @@ int dbstealerworm_stateHandlerB05(int obj, int p2)
         }
         if (*(void **)&sub->unk20 == NULL) {
             sub->unk20 = *(int *)sub->cfg;
-            ((GameObject *)obj)->anim.localPosX = ((DbstealerwormPlacement *)data)->unk8;
-            ((GameObject *)obj)->anim.localPosY = ((DbstealerwormPlacement *)data)->unkC;
-            ((GameObject *)obj)->anim.localPosZ = ((DbstealerwormPlacement *)data)->unk10;
+            ((GameObject *)obj)->anim.localPosX = ((DbstealerwormPlacement *)data)->posX8;
+            ((GameObject *)obj)->anim.localPosY = ((DbstealerwormPlacement *)data)->posY8;
+            ((GameObject *)obj)->anim.localPosZ = ((DbstealerwormPlacement *)data)->posZ8;
         }
         if (*(int *)(sub->unk20 + 4) != 0) {
             *(int *)&((BaddieState *)p2)->targetObj = ObjGroup_FindNearestObjectForObject(*(int *)(sub->unk20 + 4), obj, &range);
@@ -2997,9 +2997,9 @@ int dbstealerworm_stateHandlerB06(int obj, int p2)
                 Stack_Push(sub->msgStack, (int *)(*(int *)entry + (off -= 12)));
             }
             sub->unk34 = 1;
-            ((GameObject *)obj)->anim.localPosX = ((DbstealerwormPlacement *)data)->unk8;
-            ((GameObject *)obj)->anim.localPosY = ((DbstealerwormPlacement *)data)->unkC;
-            ((GameObject *)obj)->anim.localPosZ = ((DbstealerwormPlacement *)data)->unk10;
+            ((GameObject *)obj)->anim.localPosX = ((DbstealerwormPlacement *)data)->posX8;
+            ((GameObject *)obj)->anim.localPosY = ((DbstealerwormPlacement *)data)->posY8;
+            ((GameObject *)obj)->anim.localPosZ = ((DbstealerwormPlacement *)data)->posZ8;
         }
         switch (sub->unk2C) {
         case 0:
@@ -4795,9 +4795,9 @@ void dbegg_update(int obj)
         case 2:
             if (((DbEggState *)blob)->flags119 & 4) {
                 *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
-                ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX + (((DbeggPlacement *)data)->unk8 - ((GameObject *)obj)->anim.localPosX) / (fz = lbl_803E61E4);
-                ((GameObject *)obj)->anim.velocityY = ((GameObject *)obj)->anim.velocityY + (((DbeggPlacement *)data)->unkC - ((GameObject *)obj)->anim.localPosY) / fz;
-                ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ + (((DbeggPlacement *)data)->unk10 - ((GameObject *)obj)->anim.localPosZ) / fz;
+                ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX + (((DbeggPlacement *)data)->posX8 - ((GameObject *)obj)->anim.localPosX) / (fz = lbl_803E61E4);
+                ((GameObject *)obj)->anim.velocityY = ((GameObject *)obj)->anim.velocityY + (((DbeggPlacement *)data)->posY8 - ((GameObject *)obj)->anim.localPosY) / fz;
+                ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ + (((DbeggPlacement *)data)->posZ8 - ((GameObject *)obj)->anim.localPosZ) / fz;
                 if (GameBit_Get(0x44d) != 0) {
                     ((DbEggState *)blob)->mode = 0xa;
                 }
@@ -4949,12 +4949,12 @@ void dbegg_update(int obj)
             break;
         case 0xd:
             ObjHits_DisableObject(obj);
-            ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX + (((DbeggPlacement *)data)->unk8 - ((GameObject *)obj)->anim.localPosX) / (fz = lbl_803E6258);
-            ((GameObject *)obj)->anim.velocityY = ((GameObject *)obj)->anim.velocityY + (((DbeggPlacement *)data)->unkC - ((GameObject *)obj)->anim.localPosY) / fz;
-            ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ + (((DbeggPlacement *)data)->unk10 - ((GameObject *)obj)->anim.localPosZ) / fz;
-            d[0] = ((GameObject *)obj)->anim.localPosX - ((DbeggPlacement *)data)->unk8;
-            d[1] = ((GameObject *)obj)->anim.localPosY - ((DbeggPlacement *)data)->unkC;
-            d[2] = ((GameObject *)obj)->anim.localPosZ - ((DbeggPlacement *)data)->unk10;
+            ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX + (((DbeggPlacement *)data)->posX8 - ((GameObject *)obj)->anim.localPosX) / (fz = lbl_803E6258);
+            ((GameObject *)obj)->anim.velocityY = ((GameObject *)obj)->anim.velocityY + (((DbeggPlacement *)data)->posY8 - ((GameObject *)obj)->anim.localPosY) / fz;
+            ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ + (((DbeggPlacement *)data)->posZ8 - ((GameObject *)obj)->anim.localPosZ) / fz;
+            d[0] = ((GameObject *)obj)->anim.localPosX - ((DbeggPlacement *)data)->posX8;
+            d[1] = ((GameObject *)obj)->anim.localPosY - ((DbeggPlacement *)data)->posY8;
+            d[2] = ((GameObject *)obj)->anim.localPosZ - ((DbeggPlacement *)data)->posZ8;
             Sfx_KeepAliveLoopedObjectSound(obj, 0x442);
             fz = *(f32 *)((int)d + 8);
             fz = fz >= lbl_803E61C8 ? fz : -fz;
@@ -4963,9 +4963,9 @@ void dbegg_update(int obj)
             if (fx + fz < lbl_803E625C) {
                 ObjHits_EnableObject(obj);
                 ((DbEggState *)blob)->mode = 1;
-                ((GameObject *)obj)->anim.localPosX = ((DbeggPlacement *)data)->unk8;
-                ((GameObject *)obj)->anim.localPosY = ((DbeggPlacement *)data)->unkC;
-                ((GameObject *)obj)->anim.localPosZ = ((DbeggPlacement *)data)->unk10;
+                ((GameObject *)obj)->anim.localPosX = ((DbeggPlacement *)data)->posX8;
+                ((GameObject *)obj)->anim.localPosY = ((DbeggPlacement *)data)->posY8;
+                ((GameObject *)obj)->anim.localPosZ = ((DbeggPlacement *)data)->posZ8;
             } else {
                 n = (int)(PSVECMag(obj + 0x24) / lbl_803E6260);
                 for (i = 0; i < n; i++) {

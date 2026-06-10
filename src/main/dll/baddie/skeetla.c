@@ -141,9 +141,9 @@ void trickyUpdateCollisionAndPathState(u8 *obj)
     hitPosPtr = hitPos;
     hitKind = ObjHits_PollPriorityHitWithCooldown(obj, &state->hitCooldown,
                                                   (void **)&lastContactObj, hitPosPtr);
-    state->unk368 = hitKind;
+    state->mode368 = hitKind;
 
-    switch (state->unk368) {
+    switch (state->mode368) {
         case 1:
         case 2:
         case 4:
@@ -1320,8 +1320,8 @@ void FUN_8013939c(uint param_1)
   }
   *(int *)&((TrickyState *)iVar3)->lastContactObj = local_34;
   iVar2 = ObjHits_PollPriorityHitWithCooldown(param_1,&((TrickyState *)iVar3)->hitCooldown,&local_34,afStack_20);
-  ((TrickyState *)iVar3)->unk368 = iVar2;
-  switch(*(u32 *)&((TrickyState *)iVar3)->unk368) {
+  ((TrickyState *)iVar3)->mode368 = iVar2;
+  switch(*(u32 *)&((TrickyState *)iVar3)->mode368) {
   case 1:
   case 2:
   case 4:

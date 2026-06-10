@@ -373,8 +373,8 @@ void andross_update(int obj)
   ObjPath_GetPointWorldPosition(obj,pathFlag,(f32 *)(piVar14 + 0x30),(f32 *)(piVar14 + 0x31),(f32 *)(piVar14 + 0x32),0);
   fVar2 = lbl_803E74E0;
   if (pathFlag == 1) {
-    ((AndrossState *)piVar14)->unkC4 = ((AndrossState *)piVar14)->unkC4 + lbl_803E74E0;
-    ((AndrossState *)piVar14)->unkC8 = ((AndrossState *)piVar14)->unkC8 + fVar2;
+    ((AndrossState *)piVar14)->posYC0 = ((AndrossState *)piVar14)->posYC0 + lbl_803E74E0;
+    ((AndrossState *)piVar14)->posZC0 = ((AndrossState *)piVar14)->posZC0 + fVar2;
   }
   switch (((AndrossState *)piVar14)->unk7C) {
   case 1:
@@ -578,13 +578,13 @@ void andross_update(int obj)
     dVar17 = (dVar16 < lbl_803E74F4) ? lbl_803E74F4 : ((dVar16 > lbl_803E74F8) ? lbl_803E74F8 : dVar16);
         dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkCC = (lbl_803E74CC * dVar16 +
+    ((AndrossState *)piVar14)->posXCC = (lbl_803E74CC * dVar16 +
                      (float)(((AndrossState *)piVar14)->unk58 + dVar19));
         dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkD0 = (lbl_803E74FC * dVar19 +
+    ((AndrossState *)piVar14)->posYCC = (lbl_803E74FC * dVar19 +
                      (float)(((AndrossState *)piVar14)->unk5C + dVar17));
-    ((AndrossState *)piVar14)->unkD4 = ((AndrossState *)piVar14)->unk60;
+    ((AndrossState *)piVar14)->posZCC = ((AndrossState *)piVar14)->unk60;
     ((AndrossState *)piVar14)->unk9C = ((AndrossState *)piVar14)->unk9C - timeDelta;
     if (((AndrossState *)piVar14)->unk9C < lbl_803E74D4) {
       ((AndrossState *)piVar14)->unk84 = 1;
@@ -611,13 +611,13 @@ void andross_update(int obj)
     dVar17 = (dVar16 < lbl_803E74F4) ? lbl_803E74F4 : ((dVar16 > lbl_803E74F8) ? lbl_803E74F8 : dVar16);
         dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkCC = (lbl_803E74CC * dVar16 +
+    ((AndrossState *)piVar14)->posXCC = (lbl_803E74CC * dVar16 +
                      (float)(((AndrossState *)piVar14)->unk58 + dVar19));
         dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkD0 = (lbl_803E74FC * dVar19 +
+    ((AndrossState *)piVar14)->posYCC = (lbl_803E74FC * dVar19 +
                      (float)(((AndrossState *)piVar14)->unk5C + dVar17));
-    ((AndrossState *)piVar14)->unkD4 = ((AndrossState *)piVar14)->unk60;
+    ((AndrossState *)piVar14)->posZCC = ((AndrossState *)piVar14)->unk60;
     if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E74DC) {
       ((AndrossState *)piVar14)->unk88 = 2;
       ((AndrossState *)piVar14)->unk84 = 0;
@@ -646,13 +646,13 @@ void andross_update(int obj)
     dVar17 = (dVar16 < lbl_803E74F4) ? lbl_803E74F4 : ((dVar16 > lbl_803E74F8) ? lbl_803E74F8 : dVar16);
         dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkCC = (lbl_803E74CC * dVar16 +
+    ((AndrossState *)piVar14)->posXCC = (lbl_803E74CC * dVar16 +
                      (float)(((AndrossState *)piVar14)->unk58 + dVar19));
         dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkD0 = (lbl_803E74FC * dVar19 +
+    ((AndrossState *)piVar14)->posYCC = (lbl_803E74FC * dVar19 +
                      (float)(((AndrossState *)piVar14)->unk5C + dVar17));
-    ((AndrossState *)piVar14)->unkD4 = ((AndrossState *)piVar14)->unk60;
+    ((AndrossState *)piVar14)->posZCC = ((AndrossState *)piVar14)->unk60;
     Sfx_KeepAliveLoopedObjectSound(obj,0x467);
     ((AndrossState *)piVar14)->unk98 -= framesThisStep;
     if (((AndrossState *)piVar14)->unk98 < 0) {
@@ -686,13 +686,13 @@ void andross_update(int obj)
     dVar17 = (dVar16 < lbl_803E7500) ? lbl_803E7500 : ((dVar16 > lbl_803E74CC) ? lbl_803E74CC : dVar16);
         dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkCC = (lbl_803E74CC * dVar16 +
+    ((AndrossState *)piVar14)->posXCC = (lbl_803E74CC * dVar16 +
                      (float)(((AndrossState *)piVar14)->unk58 + dVar19));
         dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkD0 = (lbl_803E74FC * dVar19 +
+    ((AndrossState *)piVar14)->posYCC = (lbl_803E74FC * dVar19 +
                      (float)(((AndrossState *)piVar14)->unk5C + dVar17));
-    ((AndrossState *)piVar14)->unkD4 = ((AndrossState *)piVar14)->unk60;
+    ((AndrossState *)piVar14)->posZCC = ((AndrossState *)piVar14)->unk60;
     if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E74DC) {
       ((AndrossState *)piVar14)->unk84 = 1;
     }
@@ -713,13 +713,13 @@ void andross_update(int obj)
     dVar17 = (dVar16 < lbl_803E7500) ? lbl_803E7500 : ((dVar16 > lbl_803E74CC) ? lbl_803E74CC : dVar16);
         dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkCC = (lbl_803E74CC * dVar16 +
+    ((AndrossState *)piVar14)->posXCC = (lbl_803E74CC * dVar16 +
                      (float)(((AndrossState *)piVar14)->unk58 + dVar19));
         dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkD0 = (lbl_803E74FC * dVar19 +
+    ((AndrossState *)piVar14)->posYCC = (lbl_803E74FC * dVar19 +
                      (float)(((AndrossState *)piVar14)->unk5C + dVar17));
-    ((AndrossState *)piVar14)->unkD4 = ((AndrossState *)piVar14)->unk60;
+    ((AndrossState *)piVar14)->posZCC = ((AndrossState *)piVar14)->unk60;
     ((AndrossState *)piVar14)->unk9C = ((AndrossState *)piVar14)->unk9C - timeDelta;
     if (((AndrossState *)piVar14)->unk9C < lbl_803E74D4) {
       ((AndrossState *)piVar14)->unk84 = 1;
@@ -762,13 +762,13 @@ LAB_8023bb18:
     dVar17 = (dVar16 < lbl_803E7500) ? lbl_803E7500 : ((dVar16 > lbl_803E74CC) ? lbl_803E74CC : dVar16);
         dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkCC = (lbl_803E74CC * dVar16 +
+    ((AndrossState *)piVar14)->posXCC = (lbl_803E74CC * dVar16 +
                      (float)(((AndrossState *)piVar14)->unk58 + dVar19));
         dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkD0 = (lbl_803E74FC * dVar19 +
+    ((AndrossState *)piVar14)->posYCC = (lbl_803E74FC * dVar19 +
                      (float)(((AndrossState *)piVar14)->unk5C + dVar17));
-    ((AndrossState *)piVar14)->unkD4 = ((AndrossState *)piVar14)->unk60;
+    ((AndrossState *)piVar14)->posZCC = ((AndrossState *)piVar14)->unk60;
     ((AndrossState *)piVar14)->unk9C = ((AndrossState *)piVar14)->unk9C - timeDelta;
     if (((AndrossState *)piVar14)->unk9C < lbl_803E74D4) {
       ((AndrossState *)piVar14)->unk84 = 1;
@@ -790,13 +790,13 @@ LAB_8023bb18:
     dVar17 = (dVar16 < lbl_803E74F4) ? lbl_803E74F4 : ((dVar16 > lbl_803E74F8) ? lbl_803E74F8 : dVar16);
         dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkCC = (lbl_803E74E8 * dVar16 +
+    ((AndrossState *)piVar14)->posXCC = (lbl_803E74E8 * dVar16 +
                      (float)(((AndrossState *)piVar14)->unk58 + dVar19));
         dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkD0 = (lbl_803E74FC * dVar19 +
+    ((AndrossState *)piVar14)->posYCC = (lbl_803E74FC * dVar19 +
                      (float)(((AndrossState *)piVar14)->unk5C + dVar17));
-    ((AndrossState *)piVar14)->unkD4 = ((AndrossState *)piVar14)->unk60;
+    ((AndrossState *)piVar14)->posZCC = ((AndrossState *)piVar14)->unk60;
     bVar15 = 0;
     iVar5 = *(int *)&((GameObject *)obj)->extra;
     bVar13 = ((AndrossState *)iVar5)->flagsAD;
@@ -820,13 +820,13 @@ LAB_8023bb18:
     dVar17 = (dVar16 < lbl_803E74F4) ? lbl_803E74F4 : ((dVar16 > lbl_803E74F8) ? lbl_803E74F8 : dVar16);
         dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkCC = (lbl_803E74E8 * dVar16 +
+    ((AndrossState *)piVar14)->posXCC = (lbl_803E74E8 * dVar16 +
                      (float)(((AndrossState *)piVar14)->unk58 + dVar19));
         dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkD0 = (lbl_803E74FC * dVar19 +
+    ((AndrossState *)piVar14)->posYCC = (lbl_803E74FC * dVar19 +
                      (float)(((AndrossState *)piVar14)->unk5C + dVar17));
-    ((AndrossState *)piVar14)->unkD4 = ((AndrossState *)piVar14)->unk60;
+    ((AndrossState *)piVar14)->posZCC = ((AndrossState *)piVar14)->unk60;
     bVar15 = 0;
     iVar5 = *(int *)&((GameObject *)obj)->extra;
     bVar13 = ((AndrossState *)iVar5)->flagsAD;
@@ -850,13 +850,13 @@ LAB_8023bb18:
     dVar17 = (dVar16 < lbl_803E7500) ? lbl_803E7500 : ((dVar16 > lbl_803E74CC) ? lbl_803E74CC : dVar16);
         dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkCC = (lbl_803E74CC * dVar16 +
+    ((AndrossState *)piVar14)->posXCC = (lbl_803E74CC * dVar16 +
                      (float)(((AndrossState *)piVar14)->unk58 + dVar19));
         dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkD0 = (lbl_803E74FC * dVar19 +
+    ((AndrossState *)piVar14)->posYCC = (lbl_803E74FC * dVar19 +
                      (float)(((AndrossState *)piVar14)->unk5C + dVar17));
-    ((AndrossState *)piVar14)->unkD4 = ((AndrossState *)piVar14)->unk60;
+    ((AndrossState *)piVar14)->posZCC = ((AndrossState *)piVar14)->unk60;
     bVar15 = 0;
     iVar5 = *(int *)&((GameObject *)obj)->extra;
     bVar13 = ((AndrossState *)iVar5)->flagsAD;
@@ -880,13 +880,13 @@ LAB_8023bb18:
     dVar17 = (dVar16 < lbl_803E7500) ? lbl_803E7500 : ((dVar16 > lbl_803E74CC) ? lbl_803E74CC : dVar16);
         dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkCC = (lbl_803E74CC * dVar16 +
+    ((AndrossState *)piVar14)->posXCC = (lbl_803E74CC * dVar16 +
                      (float)(((AndrossState *)piVar14)->unk58 + dVar19));
         dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkD0 = (lbl_803E74FC * dVar19 +
+    ((AndrossState *)piVar14)->posYCC = (lbl_803E74FC * dVar19 +
                      (float)(((AndrossState *)piVar14)->unk5C + dVar17));
-    ((AndrossState *)piVar14)->unkD4 = ((AndrossState *)piVar14)->unk60;
+    ((AndrossState *)piVar14)->posZCC = ((AndrossState *)piVar14)->unk60;
     bVar15 = 0;
     iVar5 = *(int *)&((GameObject *)obj)->extra;
     bVar13 = ((AndrossState *)iVar5)->flagsAD;
@@ -923,13 +923,13 @@ LAB_8023bb18:
       dVar17 = (dVar16 < lbl_803E74F4) ? lbl_803E74F4 : ((dVar16 > lbl_803E74F8) ? lbl_803E74F8 : dVar16);
             dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA))
                                             / lbl_803E74A4));
-      ((AndrossState *)piVar14)->unkCC = (lbl_803E74E8 * dVar16 +
+      ((AndrossState *)piVar14)->posXCC = (lbl_803E74E8 * dVar16 +
                        (float)(((AndrossState *)piVar14)->unk58 + dVar19));
             dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8))
                                             / lbl_803E74A4));
-      ((AndrossState *)piVar14)->unkD0 = (lbl_803E74FC * dVar19 +
+      ((AndrossState *)piVar14)->posYCC = (lbl_803E74FC * dVar19 +
                        (float)(((AndrossState *)piVar14)->unk5C + dVar17));
-      ((AndrossState *)piVar14)->unkD4 = ((AndrossState *)piVar14)->unk60;
+      ((AndrossState *)piVar14)->posZCC = ((AndrossState *)piVar14)->unk60;
       if (moveChanged) {
         androsshand_setState(((AndrossState *)piVar14)->unk4,5,0);
         androsshand_setState(((AndrossState *)piVar14)->unk8,5,0);
@@ -985,13 +985,13 @@ LAB_8023c584:
     dVar17 = (dVar16 < lbl_803E74F4) ? lbl_803E74F4 : ((dVar16 > lbl_803E74F8) ? lbl_803E74F8 : dVar16);
         dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkCC = (lbl_803E74FC * dVar16 +
+    ((AndrossState *)piVar14)->posXCC = (lbl_803E74FC * dVar16 +
                      (float)(((AndrossState *)piVar14)->unk58 + dVar19));
         dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkD0 = (lbl_803E7514 * dVar19 +
+    ((AndrossState *)piVar14)->posYCC = (lbl_803E7514 * dVar19 +
                      (float)(((AndrossState *)piVar14)->unk5C + dVar17));
-    ((AndrossState *)piVar14)->unkD4 = ((AndrossState *)piVar14)->unk60;
+    ((AndrossState *)piVar14)->posZCC = ((AndrossState *)piVar14)->unk60;
     if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E74DC) {
       switch (((AndrossState *)piVar14)->unk88) {
       default:
@@ -1053,13 +1053,13 @@ LAB_8023c584:
     dVar17 = (dVar16 < lbl_803E7508) ? lbl_803E7508 : ((dVar16 > lbl_803E750C) ? lbl_803E750C : dVar16);
         dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkCC = (lbl_803E74FC * dVar16 +
+    ((AndrossState *)piVar14)->posXCC = (lbl_803E74FC * dVar16 +
                      (float)(((AndrossState *)piVar14)->unk58 + dVar19));
         dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkD0 = (lbl_803E7514 * dVar19 +
+    ((AndrossState *)piVar14)->posYCC = (lbl_803E7514 * dVar19 +
                      (float)(((AndrossState *)piVar14)->unk5C + dVar17));
-    ((AndrossState *)piVar14)->unkD4 = ((AndrossState *)piVar14)->unk60;
+    ((AndrossState *)piVar14)->posZCC = ((AndrossState *)piVar14)->unk60;
     fn_8023A6A4((int)piVar14,lbl_803DC440,lbl_803DC444,lbl_803DC448);
     Sfx_KeepAliveLoopedObjectSound(obj,0x466);
     if ((((AndrossState *)piVar14)->unk98 != 0) &&
@@ -1136,13 +1136,13 @@ LAB_8023cbdc:
     dVar17 = (dVar16 < lbl_803E7510) ? lbl_803E7510 : ((dVar16 > lbl_803E74FC) ? lbl_803E74FC : dVar16);
         dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkCC = (lbl_803E74FC * dVar16 +
+    ((AndrossState *)piVar14)->posXCC = (lbl_803E74FC * dVar16 +
                      (float)(((AndrossState *)piVar14)->unk58 + dVar19));
         dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkD0 = (lbl_803E7514 * dVar19 +
+    ((AndrossState *)piVar14)->posYCC = (lbl_803E7514 * dVar19 +
                      (float)(((AndrossState *)piVar14)->unk5C + dVar17));
-    ((AndrossState *)piVar14)->unkD4 = ((AndrossState *)piVar14)->unk60;
+    ((AndrossState *)piVar14)->posZCC = ((AndrossState *)piVar14)->unk60;
     cVar11 = fn_8023A6A4((int)piVar14,lbl_803DC454,lbl_803DC458,lbl_803DC45C);
     if (cVar11 != '\0') {
       ((AndrossState *)piVar14)->unk88 = 0xf;
@@ -1176,10 +1176,10 @@ LAB_8023cbdc:
       Rcp_DisableDistortionFilter();
     }
     else {
-      if (*(float *)(*piVar14 + 0x14) > ((AndrossState *)piVar14)->unkC8) {
+      if (*(float *)(*piVar14 + 0x14) > ((AndrossState *)piVar14)->posZC0) {
         ((AndrossState *)piVar14)->unk88 = 0x10;
         *(undefined *)(piVar14 + 0x2e) = 1;
-        *(f32 *)(*piVar14 + 0x14) = ((AndrossState *)piVar14)->unkC8;
+        *(f32 *)(*piVar14 + 0x14) = ((AndrossState *)piVar14)->posZC0;
         ((AndrossState *)piVar14)->unkE0 = lbl_803E74D4;
         lbl_803DDDB8 = lbl_803DC4D4;
         lbl_803DDDB8 += lbl_803DC4D0;
@@ -1217,13 +1217,13 @@ LAB_8023cbdc:
     dVar17 = (dVar16 < lbl_803E74F4) ? lbl_803E74F4 : ((dVar16 > lbl_803E74F8) ? lbl_803E74F8 : dVar16);
         dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkCC = (lbl_803E74E8 * dVar16 +
+    ((AndrossState *)piVar14)->posXCC = (lbl_803E74E8 * dVar16 +
                      (float)(((AndrossState *)piVar14)->unk58 + dVar19));
         dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkD0 = (lbl_803E74FC * dVar19 +
+    ((AndrossState *)piVar14)->posYCC = (lbl_803E74FC * dVar19 +
                      (float)(((AndrossState *)piVar14)->unk5C + dVar17));
-    ((AndrossState *)piVar14)->unkD4 = ((AndrossState *)piVar14)->unk60;
+    ((AndrossState *)piVar14)->posZCC = ((AndrossState *)piVar14)->unk60;
     if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E74DC) {
       ((AndrossState *)piVar14)->unk84 = 1;
     }
@@ -1244,17 +1244,17 @@ LAB_8023cbdc:
     dVar17 = (dVar16 < dVar18) ? dVar18 : ((dVar16 > dVar18) ? dVar18 : dVar16);
         dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkCC = (lbl_803E74D4 * dVar16 +
+    ((AndrossState *)piVar14)->posXCC = (lbl_803E74D4 * dVar16 +
                      (float)(((AndrossState *)piVar14)->unk58 + dVar19));
         dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkD0 = (lbl_803E74D4 * dVar19 +
+    ((AndrossState *)piVar14)->posYCC = (lbl_803E74D4 * dVar19 +
                      (float)(((AndrossState *)piVar14)->unk5C + dVar17));
-    ((AndrossState *)piVar14)->unkD4 = ((AndrossState *)piVar14)->unk60;
+    ((AndrossState *)piVar14)->posZCC = ((AndrossState *)piVar14)->unk60;
     iVar12 = *piVar14;
-    local_e4.x = (((AndrossState *)piVar14)->unkC0 - *(float *)&((AndrossState *)iVar12)->unkC) * lbl_803DC468;
-    local_e4.y = (((AndrossState *)piVar14)->unkC4 - *(float *)&((AndrossState *)iVar12)->unk10) * lbl_803DC468;
-    local_e4.z = (((AndrossState *)piVar14)->unkC8 - *(float *)&((AndrossState *)iVar12)->unk14) * lbl_803DC468;
+    local_e4.x = (((AndrossState *)piVar14)->posXC0 - *(float *)&((AndrossState *)iVar12)->unkC) * lbl_803DC468;
+    local_e4.y = (((AndrossState *)piVar14)->posYC0 - *(float *)&((AndrossState *)iVar12)->unk10) * lbl_803DC468;
+    local_e4.z = (((AndrossState *)piVar14)->posZC0 - *(float *)&((AndrossState *)iVar12)->unk14) * lbl_803DC468;
     local_d8 = local_e4;
     arwarwing_setVelocity(iVar12,(int)&local_d8);
     fVar2 = -(lbl_803E74B0 * timeDelta - ((AndrossState *)piVar14)->unkA8);
@@ -1290,13 +1290,13 @@ LAB_8023cbdc:
     dVar17 = (dVar16 < dVar18) ? dVar18 : ((dVar16 > dVar18) ? dVar18 : dVar16);
         dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkCC = (lbl_803E74D4 * dVar16 +
+    ((AndrossState *)piVar14)->posXCC = (lbl_803E74D4 * dVar16 +
                      (float)(((AndrossState *)piVar14)->unk58 + dVar19));
         dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkD0 = (lbl_803E74D4 * dVar19 +
+    ((AndrossState *)piVar14)->posYCC = (lbl_803E74D4 * dVar19 +
                      (float)(((AndrossState *)piVar14)->unk5C + dVar17));
-    ((AndrossState *)piVar14)->unkD4 = ((AndrossState *)piVar14)->unk60;
+    ((AndrossState *)piVar14)->posZCC = ((AndrossState *)piVar14)->unk60;
     if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E74DC) {
       ((AndrossState *)piVar14)->unk84 = 1;
     }
@@ -1346,13 +1346,13 @@ LAB_8023d59c:
     dVar17 = (dVar16 < lbl_803E74F4) ? lbl_803E74F4 : ((dVar16 > lbl_803E74F8) ? lbl_803E74F8 : dVar16);
         dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkCC = (lbl_803E74E8 * dVar16 +
+    ((AndrossState *)piVar14)->posXCC = (lbl_803E74E8 * dVar16 +
                      (float)(((AndrossState *)piVar14)->unk58 + dVar19));
         dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkD0 = (lbl_803E74FC * dVar19 +
+    ((AndrossState *)piVar14)->posYCC = (lbl_803E74FC * dVar19 +
                      (float)(((AndrossState *)piVar14)->unk5C + dVar17));
-    ((AndrossState *)piVar14)->unkD4 = ((AndrossState *)piVar14)->unk60;
+    ((AndrossState *)piVar14)->posZCC = ((AndrossState *)piVar14)->unk60;
     if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E74DC) {
       ((AndrossState *)piVar14)->unk88 = 0x13;
     }
@@ -1394,13 +1394,13 @@ LAB_8023d7cc:
     dVar17 = (dVar16 < lbl_803E7524) ? lbl_803E7524 : ((dVar16 > lbl_803E7528) ? lbl_803E7528 : dVar16);
         dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkCC = (lbl_803E74E8 * dVar16 +
+    ((AndrossState *)piVar14)->posXCC = (lbl_803E74E8 * dVar16 +
                      (float)(((AndrossState *)piVar14)->unk58 + dVar19));
         dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkD0 = (lbl_803E74FC * dVar19 +
+    ((AndrossState *)piVar14)->posYCC = (lbl_803E74FC * dVar19 +
                      (float)(((AndrossState *)piVar14)->unk5C + dVar17));
-    ((AndrossState *)piVar14)->unkD4 = ((AndrossState *)piVar14)->unk60;
+    ((AndrossState *)piVar14)->posZCC = ((AndrossState *)piVar14)->unk60;
     ((AndrossState *)piVar14)->unk98 -= framesThisStep;
     iVar12 = (int)((AndrossState *)piVar14)->unk9C;
     ((AndrossState *)piVar14)->unk9C = ((AndrossState *)piVar14)->unk9C - (f32)framesThisStep;
@@ -1416,9 +1416,9 @@ LAB_8023d7cc:
       if ((((((AndrossState *)piVar14)->unk14 == 0) && (((AndrossState *)piVar14)->unk98 <= local_130[(u8)iVar8])) &&
           (local_130[(u8)iVar8] < (short)iVar12)) && (cVar11 = Obj_IsLoadingLocked(), cVar11 != '\0')) {
         iVar5 = Obj_AllocObjectSetup(0x24,0x819);
-        *(f32 *)&((AndrossState *)iVar5)->unk8 = ((AndrossState *)piVar14)->unkC0;
-        *(f32 *)&((AndrossState *)iVar5)->unkC = ((AndrossState *)piVar14)->unkC4;
-        *(f32 *)&((AndrossState *)iVar5)->unk10 = ((AndrossState *)piVar14)->unkC8;
+        *(f32 *)&((AndrossState *)iVar5)->unk8 = ((AndrossState *)piVar14)->posXC0;
+        *(f32 *)&((AndrossState *)iVar5)->unkC = ((AndrossState *)piVar14)->posYC0;
+        *(f32 *)&((AndrossState *)iVar5)->unk10 = ((AndrossState *)piVar14)->posZC0;
         *(undefined *)(iVar5 + 4) = 1;
         *(undefined *)(iVar5 + 5) = 1;
         ((AndrossState *)iVar5)->unk20 = 0xffff;
@@ -1468,13 +1468,13 @@ LAB_8023db24:
     dVar17 = (dVar16 < lbl_803E752C) ? lbl_803E752C : ((dVar16 > lbl_803E74E8) ? lbl_803E74E8 : dVar16);
         dVar16 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkCC = (lbl_803E74CC * dVar16 +
+    ((AndrossState *)piVar14)->posXCC = (lbl_803E74CC * dVar16 +
                      (float)(((AndrossState *)piVar14)->unk58 + dVar19));
         dVar19 = mathSinf(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    ((AndrossState *)piVar14)->unkD0 = (lbl_803E74FC * dVar19 +
+    ((AndrossState *)piVar14)->posYCC = (lbl_803E74FC * dVar19 +
                      (float)(((AndrossState *)piVar14)->unk5C + dVar17));
-    ((AndrossState *)piVar14)->unkD4 = ((AndrossState *)piVar14)->unk60;
+    ((AndrossState *)piVar14)->posZCC = ((AndrossState *)piVar14)->unk60;
     if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E74DC) {
       ((AndrossState *)piVar14)->unk84 = 1;
     }
@@ -1499,9 +1499,9 @@ LAB_8023db24:
       *(f32 *)(*piVar14 + 0x14) = ((AndrossState *)piVar14)->unk70;
       ((AndrossState *)piVar14)->unkA8 = lbl_803E74D4;
     }
-    ((AndrossState *)piVar14)->unkCC = ((AndrossState *)piVar14)->unk58;
-    ((AndrossState *)piVar14)->unkD0 = ((AndrossState *)piVar14)->unk5C;
-    ((AndrossState *)piVar14)->unkD4 = ((AndrossState *)piVar14)->unk60;
+    ((AndrossState *)piVar14)->posXCC = ((AndrossState *)piVar14)->unk58;
+    ((AndrossState *)piVar14)->posYCC = ((AndrossState *)piVar14)->unk5C;
+    ((AndrossState *)piVar14)->posZCC = ((AndrossState *)piVar14)->unk60;
     if (((u32)GameBit_Get(0x10) != 0) &&
        (sVar3 = ((AndrossState *)piVar14)->unk98, ((AndrossState *)piVar14)->unk98 = sVar3 + -1, sVar3 == 0)) {
       GameBit_Set(0x10,0);
@@ -1514,9 +1514,9 @@ LAB_8023db24:
       ObjHits_DisableObject(obj);
       ((AndrossState *)piVar14)->unk98 = 0x3c;
       ((AndrossState *)piVar14)->unk9C = lbl_803E74D8;
-      ((AndrossState *)piVar14)->unkCC = ((AndrossState *)piVar14)->unk58;
-      ((AndrossState *)piVar14)->unkD0 = ((AndrossState *)piVar14)->unk5C;
-      ((AndrossState *)piVar14)->unkD4 = ((AndrossState *)piVar14)->unk60;
+      ((AndrossState *)piVar14)->posXCC = ((AndrossState *)piVar14)->unk58;
+      ((AndrossState *)piVar14)->posYCC = ((AndrossState *)piVar14)->unk5C;
+      ((AndrossState *)piVar14)->posZCC = ((AndrossState *)piVar14)->unk60;
       fVar2 = lbl_803E74D4;
       ((GameObject *)obj)->anim.velocityX = lbl_803E74D4;
       ((GameObject *)obj)->anim.velocityY = fVar2;
@@ -1562,11 +1562,11 @@ LAB_8023de5c:
         uVar10 = randomGetRange(0x14,0x1e);
         ((AndrossState *)piVar14)->unk98 = uVar10;
         uVar6 = randomGetRange((int)-lbl_803DC470,(int)lbl_803DC470);
-                ((AndrossState *)piVar14)->unkCC = ((AndrossState *)piVar14)->unk58 + (f32)(int)uVar6;
+                ((AndrossState *)piVar14)->posXCC = ((AndrossState *)piVar14)->unk58 + (f32)(int)uVar6;
         uStack100 = randomGetRange((int)-lbl_803DC474,(int)lbl_803DC474);
-        ((AndrossState *)piVar14)->unkD0 = ((AndrossState *)piVar14)->unk5C + (f32)(int)uStack100;
+        ((AndrossState *)piVar14)->posYCC = ((AndrossState *)piVar14)->unk5C + (f32)(int)uStack100;
         uVar6 = randomGetRange((int)-lbl_803DC478,(int)lbl_803DC478);
-                ((AndrossState *)piVar14)->unkD4 = ((AndrossState *)piVar14)->unk60 + (f32)(int)uVar6;
+                ((AndrossState *)piVar14)->posZCC = ((AndrossState *)piVar14)->unk60 + (f32)(int)uVar6;
       }
     }
     if ((*(u8 *)((int)piVar14 + 0xad) & 8) != 0) {
@@ -1592,9 +1592,9 @@ LAB_8023de5c:
       androssbrain_setState(((AndrossState *)piVar14)->unkC,1,0);
       ObjHits_DisableObject(obj);
       ((AndrossState *)piVar14)->unk98 = (short)lbl_803DC484;
-      ((AndrossState *)piVar14)->unkCC = *(f32 *)(*piVar14 + 0xc);
-      ((AndrossState *)piVar14)->unkD0 = *(float *)(*piVar14 + 0x10) + lbl_803DC47C;
-      ((AndrossState *)piVar14)->unkD4 = *(float *)(*piVar14 + 0x14) + lbl_803DC480;
+      ((AndrossState *)piVar14)->posXCC = *(f32 *)(*piVar14 + 0xc);
+      ((AndrossState *)piVar14)->posYCC = *(float *)(*piVar14 + 0x10) + lbl_803DC47C;
+      ((AndrossState *)piVar14)->posZCC = *(float *)(*piVar14 + 0x14) + lbl_803DC480;
       fVar2 = lbl_803E74D4;
       ((GameObject *)obj)->anim.velocityX = lbl_803E74D4;
       ((GameObject *)obj)->anim.velocityY = fVar2;
@@ -1629,9 +1629,9 @@ LAB_8023de5c:
     }
     if (*(u8 *)(piVar14 + 0x2e) != 0) {
       iVar12 = *piVar14;
-      local_fc.x = (((AndrossState *)piVar14)->unkC0 - *(float *)&((AndrossState *)iVar12)->unkC) * lbl_803DC488;
-      local_fc.y = (((AndrossState *)piVar14)->unkC4 - *(float *)&((AndrossState *)iVar12)->unk10) * lbl_803DC488;
-      local_fc.z = (((AndrossState *)piVar14)->unkC8 - *(float *)&((AndrossState *)iVar12)->unk14) * lbl_803DC488;
+      local_fc.x = (((AndrossState *)piVar14)->posXC0 - *(float *)&((AndrossState *)iVar12)->unkC) * lbl_803DC488;
+      local_fc.y = (((AndrossState *)piVar14)->posYC0 - *(float *)&((AndrossState *)iVar12)->unk10) * lbl_803DC488;
+      local_fc.z = (((AndrossState *)piVar14)->posZC0 - *(float *)&((AndrossState *)iVar12)->unk14) * lbl_803DC488;
       local_f0 = local_fc;
       arwarwing_setVelocity(iVar12,(int)&local_f0);
       fVar2 = -(lbl_803E753C * timeDelta - ((AndrossState *)piVar14)->unkA8);
@@ -1677,7 +1677,7 @@ LAB_8023de5c:
                                              (float)(lbl_803E7548 *
                                                     lbl_803E7550 * (dVar19 / lbl_803E7540))) /
                                             lbl_803E74A4));
-      ((AndrossState *)piVar14)->unkD4 = (lbl_803E74A8 * dVar19 + ((AndrossState *)piVar14)->unk60);
+      ((AndrossState *)piVar14)->posZCC = (lbl_803E74A8 * dVar19 + ((AndrossState *)piVar14)->unk60);
     }
     else {
       dVar19 = mathSinf(((lbl_803E74A0 *
@@ -1685,7 +1685,7 @@ LAB_8023de5c:
                                                     (lbl_803E7558 *
                                                      ((dVar19 - lbl_803E7540) / lbl_803E7560)
                                                     + lbl_803E7550))) / lbl_803E74A4));
-            ((AndrossState *)piVar14)->unkD4 = ((f32)(lbl_803DC48C) * dVar19 +
+            ((AndrossState *)piVar14)->posZCC = ((f32)(lbl_803DC48C) * dVar19 +
                        ((AndrossState *)piVar14)->unk60);
     }
     if ((((GameObject *)obj)->anim.currentMoveProgress > lbl_803E7568) &&
@@ -1732,13 +1732,13 @@ LAB_8023de5c:
       ((AndrossFlagByte *)&((AndrossState *)piVar14)->unkE8)->f20 = 1;
     }
     if (((GameObject *)obj)->anim.currentMoveProgress <= lbl_803DC490) {
-      ((AndrossState *)piVar14)->unkC0 = ((GameObject *)obj)->anim.localPosX;
-      ((AndrossState *)piVar14)->unkC4 = ((GameObject *)obj)->anim.localPosY - lbl_803E757C;
-      ((AndrossState *)piVar14)->unkC8 = ((GameObject *)obj)->anim.localPosZ - lbl_803E7580;
+      ((AndrossState *)piVar14)->posXC0 = ((GameObject *)obj)->anim.localPosX;
+      ((AndrossState *)piVar14)->posYC0 = ((GameObject *)obj)->anim.localPosY - lbl_803E757C;
+      ((AndrossState *)piVar14)->posZC0 = ((GameObject *)obj)->anim.localPosZ - lbl_803E7580;
       iVar12 = *piVar14;
-      local_114.x = (((AndrossState *)piVar14)->unkC0 - *(float *)&((AndrossState *)iVar12)->unkC) * lbl_803DC494;
-      local_114.y = (((AndrossState *)piVar14)->unkC4 - *(float *)&((AndrossState *)iVar12)->unk10) * lbl_803DC494;
-      local_114.z = (((AndrossState *)piVar14)->unkC8 - *(float *)&((AndrossState *)iVar12)->unk14) * lbl_803DC494;
+      local_114.x = (((AndrossState *)piVar14)->posXC0 - *(float *)&((AndrossState *)iVar12)->unkC) * lbl_803DC494;
+      local_114.y = (((AndrossState *)piVar14)->posYC0 - *(float *)&((AndrossState *)iVar12)->unk10) * lbl_803DC494;
+      local_114.z = (((AndrossState *)piVar14)->posZC0 - *(float *)&((AndrossState *)iVar12)->unk14) * lbl_803DC494;
       local_108 = local_114;
       arwarwing_setVelocity(iVar12,(int)&local_108);
 
@@ -1774,9 +1774,9 @@ LAB_8023de5c:
     }
     if (((GameObject *)obj)->anim.currentMoveProgress <= lbl_803DC4A0) {
       iVar12 = *piVar14;
-      local_12c.x = (((AndrossState *)piVar14)->unkC0 - *(float *)&((AndrossState *)iVar12)->unkC) * lbl_803DC4A4;
-      local_12c.y = (((AndrossState *)piVar14)->unkC4 - *(float *)&((AndrossState *)iVar12)->unk10) * lbl_803DC4A4;
-      local_12c.z = (((AndrossState *)piVar14)->unkC8 - *(float *)&((AndrossState *)iVar12)->unk14) * lbl_803DC4A4;
+      local_12c.x = (((AndrossState *)piVar14)->posXC0 - *(float *)&((AndrossState *)iVar12)->unkC) * lbl_803DC4A4;
+      local_12c.y = (((AndrossState *)piVar14)->posYC0 - *(float *)&((AndrossState *)iVar12)->unk10) * lbl_803DC4A4;
+      local_12c.z = (((AndrossState *)piVar14)->posZC0 - *(float *)&((AndrossState *)iVar12)->unk14) * lbl_803DC4A4;
       local_120 = local_12c;
       arwarwing_setVelocity(iVar12,(int)&local_120);
 
@@ -1825,13 +1825,13 @@ LAB_8023de5c:
   local_134 = lbl_803E7584 + ((AndrossState *)piVar14)->unkA8;
   (*gCameraInterface)->releaseAction(&local_134, 4);
   ((GameObject *)obj)->anim.velocityX =
-       ((AndrossState *)piVar14)->unk74 * (((AndrossState *)piVar14)->unkCC - ((GameObject *)obj)->anim.localPosX) +
+       ((AndrossState *)piVar14)->unk74 * (((AndrossState *)piVar14)->posXCC - ((GameObject *)obj)->anim.localPosX) +
        ((GameObject *)obj)->anim.velocityX;
   ((GameObject *)obj)->anim.velocityY =
-       ((AndrossState *)piVar14)->unk74 * (((AndrossState *)piVar14)->unkD0 - ((GameObject *)obj)->anim.localPosY) +
+       ((AndrossState *)piVar14)->unk74 * (((AndrossState *)piVar14)->posYCC - ((GameObject *)obj)->anim.localPosY) +
        ((GameObject *)obj)->anim.velocityY;
   ((GameObject *)obj)->anim.velocityZ =
-       ((AndrossState *)piVar14)->unk74 * (((AndrossState *)piVar14)->unkD4 - ((GameObject *)obj)->anim.localPosZ) +
+       ((AndrossState *)piVar14)->unk74 * (((AndrossState *)piVar14)->posZCC - ((GameObject *)obj)->anim.localPosZ) +
        ((GameObject *)obj)->anim.velocityZ;
   ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX * ((AndrossState *)piVar14)->unk78;
   ((GameObject *)obj)->anim.velocityY = ((GameObject *)obj)->anim.velocityY * ((AndrossState *)piVar14)->unk78;
@@ -1861,11 +1861,11 @@ LAB_8023de5c:
   *(short *)((int)piVar14 + 0xa2) =
        *(short *)((int)piVar14 + 0xa2) +
        (short)(((int)sVar3 / lbl_803DC430 - (int)*(short *)((int)piVar14 + 0xa2)) / lbl_803DC434);
-  ((AndrossState *)piVar14)->unkA4 =
-       ((AndrossState *)piVar14)->unkA4 +
-       (short)((-(int)((GameObject *)obj)->anim.rotY / lbl_803DC430 - (int)((AndrossState *)piVar14)->unkA4) / lbl_803DC434);
+  ((AndrossState *)piVar14)->angleA4 =
+       ((AndrossState *)piVar14)->angleA4 +
+       (short)((-(int)((GameObject *)obj)->anim.rotY / lbl_803DC430 - (int)((AndrossState *)piVar14)->angleA4) / lbl_803DC434);
   *(s16 *)obj = *(s16 *)obj + *(short *)((int)piVar14 + 0xa2);
-  ((GameObject *)obj)->anim.rotY = ((GameObject *)obj)->anim.rotY + ((AndrossState *)piVar14)->unkA4;
+  ((GameObject *)obj)->anim.rotY = ((GameObject *)obj)->anim.rotY + ((AndrossState *)piVar14)->angleA4;
   ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj,((AndrossState *)piVar14)->unk64,timeDelta,0);
   fn_8023A3E4(obj,(int)piVar14);
   fn_8023A87C(obj,(int)piVar14);
@@ -1883,8 +1883,8 @@ LAB_8023de5c:
     local_138 = lbl_803E7490;
     iVar12 = ObjList_FindNearestObjectByDefNo(obj,0x7e5,&local_138);
     if ((u32)iVar12 != 0) {
-      if (*(void **)&((AndrossState *)iVar12)->unkC0 != NULL) {
-        iVar12 = *(int *)&((AndrossState *)iVar12)->unkC0;
+      if (*(void **)&((AndrossState *)iVar12)->posXC0 != NULL) {
+        iVar12 = *(int *)&((AndrossState *)iVar12)->posXC0;
       }
       if ((((AndrossState *)iVar12)->unk44 != 0x10) ||
          (iVar5 = animatedObjGetSeqId(((AndrossState *)iVar12)->unkB8), iVar5 != 0x598)) {
@@ -1896,8 +1896,8 @@ LAB_8023de5c:
     local_13c = lbl_803E7490;
     iVar12 = ObjList_FindNearestObjectByDefNo(obj,0x1e,&local_13c);
     if ((u32)iVar12 != 0) {
-      if (*(void **)&((AndrossState *)iVar12)->unkC0 != NULL) {
-        iVar12 = *(int *)&((AndrossState *)iVar12)->unkC0;
+      if (*(void **)&((AndrossState *)iVar12)->posXC0 != NULL) {
+        iVar12 = *(int *)&((AndrossState *)iVar12)->posXC0;
       }
       if ((((AndrossState *)iVar12)->unk44 != 0x10) ||
          (iVar5 = animatedObjGetSeqId(((AndrossState *)iVar12)->unkB8), iVar5 != 0x598)) {
@@ -1909,8 +1909,8 @@ LAB_8023de5c:
     local_140 = lbl_803E7490;
     iVar12 = ObjList_FindNearestObjectByDefNo(obj,0x76f,&local_140);
     if ((u32)iVar12 != 0) {
-      if (*(void **)&((AndrossState *)iVar12)->unkC0 != NULL) {
-        iVar12 = *(int *)&((AndrossState *)iVar12)->unkC0;
+      if (*(void **)&((AndrossState *)iVar12)->posXC0 != NULL) {
+        iVar12 = *(int *)&((AndrossState *)iVar12)->posXC0;
       }
       if ((((AndrossState *)iVar12)->unk44 != 0x10) ||
          (iVar5 = animatedObjGetSeqId(((AndrossState *)iVar12)->unkB8), iVar5 != 0x598)) {
@@ -1922,8 +1922,8 @@ LAB_8023de5c:
     local_144 = lbl_803E7490;
     iVar12 = ObjList_FindNearestObjectByDefNo(obj,0x814,&local_144);
     if ((u32)iVar12 != 0) {
-      if (*(void **)&((AndrossState *)iVar12)->unkC0 != NULL) {
-        iVar12 = *(int *)&((AndrossState *)iVar12)->unkC0;
+      if (*(void **)&((AndrossState *)iVar12)->posXC0 != NULL) {
+        iVar12 = *(int *)&((AndrossState *)iVar12)->posXC0;
       }
       if ((((AndrossState *)iVar12)->unk44 != 0x10) ||
          (iVar5 = animatedObjGetSeqId(((AndrossState *)iVar12)->unkB8), iVar5 != 0x598)) {
@@ -1935,8 +1935,8 @@ LAB_8023de5c:
     local_148 = lbl_803E7490;
     iVar12 = ObjList_FindNearestObjectByDefNo(obj,0x6cf,&local_148);
     if ((u32)iVar12 != 0) {
-      if (*(void **)&((AndrossState *)iVar12)->unkC0 != NULL) {
-        iVar12 = *(int *)&((AndrossState *)iVar12)->unkC0;
+      if (*(void **)&((AndrossState *)iVar12)->posXC0 != NULL) {
+        iVar12 = *(int *)&((AndrossState *)iVar12)->posXC0;
       }
       if ((((AndrossState *)iVar12)->unk44 != 0x10) ||
          (iVar5 = animatedObjGetSeqId(((AndrossState *)iVar12)->unkB8), iVar5 != 0x598)) {

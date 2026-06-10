@@ -41,13 +41,13 @@ typedef struct BossDrakorState {
     f32 unk10;
     f32 unk14;
     f32 unk18;
-    f32 unk1C;
-    f32 unk20;
-    f32 unk24;
+    f32 posX1C;
+    f32 posY1C;
+    f32 posZ1C;
     u8 pad28[0x68];
-    f32 unk90;
-    f32 unk94;
-    f32 unk98;
+    f32 posX90;
+    f32 posY90;
+    f32 posZ90;
     u8 pad9C[0xc4];
     int lightObj;     /* 0x160 */
     f32 unk164;
@@ -115,9 +115,9 @@ void bossdrakor_update(int obj)
         if ((*gRomCurveInterface)->initCurve((void *)((char *)state + 0x28), (void *)obj, lbl_803E6560, &curveArg, 0xd) != 0) {
             (*gRomCurveInterface)->initCurve((void *)((char *)state + 0x28), (void *)obj, lbl_803E6560, &curveArg, 0);
         }
-        ((GameObject *)obj)->anim.localPosX = ((BossDrakorState *)state)->unk90;
-        ((GameObject *)obj)->anim.localPosZ = ((BossDrakorState *)state)->unk98;
-        ((GameObject *)obj)->anim.localPosY = ((BossDrakorState *)state)->unk94;
+        ((GameObject *)obj)->anim.localPosX = ((BossDrakorState *)state)->posX90;
+        ((GameObject *)obj)->anim.localPosZ = ((BossDrakorState *)state)->posZ90;
+        ((GameObject *)obj)->anim.localPosY = ((BossDrakorState *)state)->posY90;
         ((DrakorFlags *)((char *)state + 0x198))->b20 = 1;
         ((BossDrakorState *)state)->unk190 = 0;
         state2 = *(int *)&((GameObject *)obj)->extra;
@@ -228,9 +228,9 @@ void bossdrakor_update(int obj)
         }
     }
     if ((((GameObject *)obj)->objectFlags & 0x800) == 0) {
-        ((BossDrakorState *)state)->unk1C = ((GameObject *)obj)->anim.localPosX;
-        ((BossDrakorState *)state)->unk20 = ((GameObject *)obj)->anim.localPosY - lbl_803E655C;
-        ((BossDrakorState *)state)->unk24 = ((GameObject *)obj)->anim.localPosZ;
+        ((BossDrakorState *)state)->posX1C = ((GameObject *)obj)->anim.localPosX;
+        ((BossDrakorState *)state)->posY1C = ((GameObject *)obj)->anim.localPosY - lbl_803E655C;
+        ((BossDrakorState *)state)->posZ1C = ((GameObject *)obj)->anim.localPosZ;
     }
     objMove(obj, ((GameObject *)obj)->anim.velocityX, ((GameObject *)obj)->anim.velocityY, ((GameObject *)obj)->anim.velocityZ);
     if (((DrakorFlags *)((char *)state + 0x198))->b20) {
@@ -306,7 +306,7 @@ void bossdrakor_updateHeadTracking(int obj, int state)
         v = (s16)-neck[0];
         step = (v < -(framesThisStep << 8)) ? -(framesThisStep << 8) : ((v > (framesThisStep << 8)) ? (framesThisStep << 8) : v);
         neck[0] += (s16)step;
-        PSVECSubtract(&((BossDrakorState *)state)->unk1C, &((GameObject *)obj)->anim.localPosX, prm.vec);
+        PSVECSubtract(&((BossDrakorState *)state)->posX1C, &((GameObject *)obj)->anim.localPosX, prm.vec);
         prm.val = lbl_803E651C;
         if (fn_80080150((int)((char *)state + 0x18)) != 0) {
             vecF = objModelGetVecFn_800395d8(obj, 0xf);
@@ -410,9 +410,9 @@ void bossdrakor_spawnAttackObjects(int obj, int state, int action)
             if (((DrakorFlags *)((char *)state + 0x198))->b40) {
                 if (Obj_IsLoadingLocked() != 0) {
                     setup = Obj_AllocObjectSetup(0x20, 0x70f);
-                    ((ObjPlacement *)setup)->posX = ((BossDrakorState *)state)->unk1C;
-                    ((ObjPlacement *)setup)->posY = ((BossDrakorState *)state)->unk20;
-                    ((ObjPlacement *)setup)->posZ = ((BossDrakorState *)state)->unk24;
+                    ((ObjPlacement *)setup)->posX = ((BossDrakorState *)state)->posX1C;
+                    ((ObjPlacement *)setup)->posY = ((BossDrakorState *)state)->posY1C;
+                    ((ObjPlacement *)setup)->posZ = ((BossDrakorState *)state)->posZ1C;
                     setup[4] = 1;
                     setup[5] = 1;
                     setup[6] = 0xff;
@@ -426,8 +426,8 @@ void bossdrakor_spawnAttackObjects(int obj, int state, int action)
                             target[0] = ((GameObject *)player)->anim.localPosX + (f32)(s32)randomGetRange(lo, hi);
                             target[1] = ((GameObject *)player)->anim.localPosY + (f32)(s32)randomGetRange(lo, hi);
                             target[2] = ((GameObject *)player)->anim.localPosZ + (f32)(s32)randomGetRange(lo, hi);
-                            PSVECSubtract(&((GameObject *)player)->anim.localPosX, &((BossDrakorState *)state)->unk1C, vecA);
-                            PSVECSubtract(target, &((BossDrakorState *)state)->unk1C, vecB);
+                            PSVECSubtract(&((GameObject *)player)->anim.localPosX, &((BossDrakorState *)state)->posX1C, vecA);
+                            PSVECSubtract(target, &((BossDrakorState *)state)->posX1C, vecB);
                             PSVECNormalize(vecA, vecA);
                             spd = ((BossDrakorState *)state)->unk188 * PSVECDotProduct(&((GameObject *)player)->anim.velocityX, vecA) + ((BossDrakorState *)state)->unk184;
                             PSVECScale(vecA, (f32 *)((char *)missile + 0x24), spd);
@@ -455,9 +455,9 @@ void bossdrakor_spawnAttackObjects(int obj, int state, int action)
                     setup[5] = 1;
                     setup[6] = 0xff;
                     setup[7] = 0xff;
-                    ((ObjPlacement *)setup)->posX = ((BossDrakorState *)state)->unk1C;
-                    ((ObjPlacement *)setup)->posY = ((BossDrakorState *)state)->unk20;
-                    ((ObjPlacement *)setup)->posZ = ((BossDrakorState *)state)->unk24;
+                    ((ObjPlacement *)setup)->posX = ((BossDrakorState *)state)->posX1C;
+                    ((ObjPlacement *)setup)->posY = ((BossDrakorState *)state)->posY1C;
+                    ((ObjPlacement *)setup)->posZ = ((BossDrakorState *)state)->posZ1C;
                     *(s16 *)(setup + 0x1a) = 0x3c;
                     *(s16 *)(setup + 0x1c) = lbl_803DC194;
                     *(s8 *)(setup + 0x19) = lbl_803DC190;

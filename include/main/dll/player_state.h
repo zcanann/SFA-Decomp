@@ -160,9 +160,9 @@ typedef struct PlayerState {
     f32 unk5A8;
     f32 unk5AC;
     f32 unk5B0;
-    f32 unk5B4;
-    f32 unk5B8;
-    f32 unk5BC;
+    f32 posX5B4;
+    f32 posY5B4;
+    f32 posZ5B4;
     int unk5C0;
     f32 unk5C4;
     u8 pad5C8[0x5CC - 0x5C8];
@@ -222,9 +222,9 @@ typedef struct PlayerState {
     f32 unk6A8;
     f32 unk6AC;
     f32 unk6B0;
-    f32 unk6B4;
-    f32 unk6B8;
-    f32 unk6BC;
+    f32 posX6B4;
+    f32 posY6B4;
+    f32 posZ6B4;
     f32 unk6C0;
     f32 unk6C4;
     f32 unk6C8;
@@ -241,9 +241,9 @@ typedef struct PlayerState {
     int unk6E8;
     u8 flags6EC;
     u8 pad6ED[0x768 - 0x6ED];
-    f32 unk768;
-    f32 unk76C;
-    f32 unk770;
+    f32 posX768;
+    f32 posY768;
+    f32 posZ768;
     u8 pad774[0x778 - 0x774];
     f32 unk778;
     f32 unk77C;
@@ -284,7 +284,7 @@ typedef struct PlayerState {
     s16 unk812;
     f32 unk814;
     u8 pad818[0x81A - 0x818];
-    s16 unk81A;
+    s16 sfxHandle81A;
     s16 unk81C;
     s16 unk81E;
     f32 unk820;
@@ -346,7 +346,7 @@ typedef struct PlayerState {
     u8 unk8BF;
     u8 unk8C0;
     u8 unk8C1;
-    s8 unk8C2;
+    s8 mode8C2;
     u8 unk8C3;
     u8 unk8C4;
     u8 unk8C5;

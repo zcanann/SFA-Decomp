@@ -11,9 +11,9 @@ typedef struct SBShipGunPlacement {
     f32 unkC;
     f32 unk10;
     u8 pad14[0x18 - 0x14];
-    f32 unk18;
-    f32 unk1C;
-    f32 unk20;
+    f32 posX18;
+    f32 posY18;
+    f32 posZ18;
     u8 pad24[0x28 - 0x24];
 } SBShipGunPlacement;
 
@@ -33,9 +33,9 @@ typedef struct SBCannonBallState {
     u8 pad0[0x4 - 0x0];
     f32 unk4;
     f32 unk8;
-    f32 unkC;
-    f32 unk10;
-    f32 unk14;
+    f32 posXC;
+    f32 posYC;
+    f32 posZC;
     s16 unk18;
     s8 unk1A;
     u8 pad1B[0x1C - 0x1B];
@@ -265,9 +265,9 @@ void SB_ShipGun_update(int obj)
             *(undefined *)(iVar11 + 7) = SB_SHIPGUN_CANNONBALL_BYTE_FF;
             puVar9 = Obj_SetupObject((void *)iVar11,5,0xffffffff,0xffffffff,0);
             iVar11 = *piVar10;
-            fdx = ((SBShipGunPlacement *)iVar11)->unk18 - ((GameObject *)obj)->anim.worldPosX;
-            fdy = ((SBShipGunPlacement *)iVar11)->unk1C - (((GameObject *)obj)->anim.worldPosY - lbl_803E5898);
-            fdz = ((SBShipGunPlacement *)iVar11)->unk20 - ((GameObject *)obj)->anim.worldPosZ;
+            fdx = ((SBShipGunPlacement *)iVar11)->posX18 - ((GameObject *)obj)->anim.worldPosX;
+            fdy = ((SBShipGunPlacement *)iVar11)->posY18 - (((GameObject *)obj)->anim.worldPosY - lbl_803E5898);
+            fdz = ((SBShipGunPlacement *)iVar11)->posZ18 - ((GameObject *)obj)->anim.worldPosZ;
             dist = sqrtf(fdz * fdz + (fdx * fdx + fdy * fdy));
             local_78 = lbl_803E589C / dist;
             *(float *)(puVar9 + 0x12) = fdx * local_78;
@@ -443,19 +443,19 @@ void SB_CannonBall_update(int *obj) {
         ((SBCannonBallState *)state)->unk4 = ((GameObject *)obj)->anim.velocityY;
         ((SBCannonBallState *)state)->unk8 = ((GameObject *)obj)->anim.velocityZ;
         ((SBCannonBallState *)state)->unk1A = (s8)(((SBCannonBallState *)state)->unk1A | SB_CANNONBALL_TRAJECTORY_INITIALIZED_FLAG);
-        ((SBCannonBallState *)state)->unkC = ((GameObject *)obj)->anim.localPosX;
-        ((SBCannonBallState *)state)->unk10 = ((GameObject *)obj)->anim.localPosY;
-        ((SBCannonBallState *)state)->unk14 = ((GameObject *)obj)->anim.localPosZ;
+        ((SBCannonBallState *)state)->posXC = ((GameObject *)obj)->anim.localPosX;
+        ((SBCannonBallState *)state)->posYC = ((GameObject *)obj)->anim.localPosY;
+        ((SBCannonBallState *)state)->posZC = ((GameObject *)obj)->anim.localPosZ;
     }
     {
         f64 scale = lbl_803E58C0;
-        ((SBCannonBallState *)state)->unkC = (f32)(scale * (f64)(*(f32 *)state * timeDelta) + (f64)((SBCannonBallState *)state)->unkC);
-        ((SBCannonBallState *)state)->unk10 = (f32)(scale * (f64)(((SBCannonBallState *)state)->unk4 * timeDelta) + (f64)((SBCannonBallState *)state)->unk10);
-        ((SBCannonBallState *)state)->unk14 = (f32)(scale * (f64)(((SBCannonBallState *)state)->unk8 * timeDelta) + (f64)((SBCannonBallState *)state)->unk14);
+        ((SBCannonBallState *)state)->posXC = (f32)(scale * (f64)(*(f32 *)state * timeDelta) + (f64)((SBCannonBallState *)state)->posXC);
+        ((SBCannonBallState *)state)->posYC = (f32)(scale * (f64)(((SBCannonBallState *)state)->unk4 * timeDelta) + (f64)((SBCannonBallState *)state)->posYC);
+        ((SBCannonBallState *)state)->posZC = (f32)(scale * (f64)(((SBCannonBallState *)state)->unk8 * timeDelta) + (f64)((SBCannonBallState *)state)->posZC);
     }
-    ((GameObject *)obj)->anim.localPosX = ((SBCannonBallState *)state)->unkC;
-    ((GameObject *)obj)->anim.localPosY = ((SBCannonBallState *)state)->unk10;
-    ((GameObject *)obj)->anim.localPosZ = ((SBCannonBallState *)state)->unk14;
+    ((GameObject *)obj)->anim.localPosX = ((SBCannonBallState *)state)->posXC;
+    ((GameObject *)obj)->anim.localPosY = ((SBCannonBallState *)state)->posYC;
+    ((GameObject *)obj)->anim.localPosZ = ((SBCannonBallState *)state)->posZC;
     ((GameObject *)obj)->unkF4 = ((GameObject *)obj)->unkF4 - (int)framesThisStep;
     if (((GameObject *)obj)->unkF4 < 0) {
         Obj_FreeObject(obj);

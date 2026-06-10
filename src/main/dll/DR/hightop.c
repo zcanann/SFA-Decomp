@@ -31,12 +31,12 @@ typedef struct TriggerState {
     f32 unk4;
     u32 unk8;
     u8 padC[0x1C - 0xC];
-    f32 unk1C;
-    f32 unk20;
-    f32 unk24;
-    f32 unk28;
-    f32 unk2C;
-    f32 unk30;
+    f32 posX1C;
+    f32 posY1C;
+    f32 posZ1C;
+    f32 posX28;
+    f32 posY28;
+    f32 posZ28;
     u8 pad34[0x80 - 0x34];
     s16 unk80;
     s16 unk82;
@@ -1813,32 +1813,32 @@ void Trigger_hitDetect(int obj)
                 if (ok) {
                     if ((*state & 0x40) != 0) {
                         if ((s8)def[0x43] == 2) {
-                            ((TriggerState *)state)->unk1C = ((GameObject *)target)->anim.worldPosX;
-                            ((TriggerState *)state)->unk20 = ((GameObject *)target)->anim.worldPosY;
-                            ((TriggerState *)state)->unk24 = ((GameObject *)target)->anim.worldPosZ;
+                            ((TriggerState *)state)->posX1C = ((GameObject *)target)->anim.worldPosX;
+                            ((TriggerState *)state)->posY1C = ((GameObject *)target)->anim.worldPosY;
+                            ((TriggerState *)state)->posZ1C = ((GameObject *)target)->anim.worldPosZ;
                         } else if ((s8)def[0x43] < 2) {
-                            ((TriggerState *)state)->unk1C = ((GameObject *)target)->anim.previousWorldPosX;
-                            ((TriggerState *)state)->unk20 = ((GameObject *)target)->anim.previousWorldPosY;
-                            ((TriggerState *)state)->unk24 = ((GameObject *)target)->anim.previousWorldPosZ;
+                            ((TriggerState *)state)->posX1C = ((GameObject *)target)->anim.previousWorldPosX;
+                            ((TriggerState *)state)->posY1C = ((GameObject *)target)->anim.previousWorldPosY;
+                            ((TriggerState *)state)->posZ1C = ((GameObject *)target)->anim.previousWorldPosZ;
                         } else {
-                            ((TriggerState *)state)->unk1C = ((GameObject *)target)->anim.previousLocalPosX;
-                            ((TriggerState *)state)->unk20 = ((GameObject *)target)->anim.previousLocalPosY;
-                            ((TriggerState *)state)->unk24 = ((GameObject *)target)->anim.previousLocalPosZ;
+                            ((TriggerState *)state)->posX1C = ((GameObject *)target)->anim.previousLocalPosX;
+                            ((TriggerState *)state)->posY1C = ((GameObject *)target)->anim.previousLocalPosY;
+                            ((TriggerState *)state)->posZ1C = ((GameObject *)target)->anim.previousLocalPosZ;
                         }
                         *state &= ~0x40;
                     } else {
-                        ((TriggerState *)state)->unk1C = ((TriggerState *)state)->unk28;
-                        ((TriggerState *)state)->unk20 = ((TriggerState *)state)->unk2C;
-                        ((TriggerState *)state)->unk24 = ((TriggerState *)state)->unk30;
+                        ((TriggerState *)state)->posX1C = ((TriggerState *)state)->posX28;
+                        ((TriggerState *)state)->posY1C = ((TriggerState *)state)->posY28;
+                        ((TriggerState *)state)->posZ1C = ((TriggerState *)state)->posZ28;
                     }
                     if ((s8)def[0x43] < 3) {
-                        ((TriggerState *)state)->unk28 = ((GameObject *)target)->anim.worldPosX;
-                        ((TriggerState *)state)->unk2C = ((GameObject *)target)->anim.worldPosY;
-                        ((TriggerState *)state)->unk30 = ((GameObject *)target)->anim.worldPosZ;
+                        ((TriggerState *)state)->posX28 = ((GameObject *)target)->anim.worldPosX;
+                        ((TriggerState *)state)->posY28 = ((GameObject *)target)->anim.worldPosY;
+                        ((TriggerState *)state)->posZ28 = ((GameObject *)target)->anim.worldPosZ;
                     } else {
-                        ((TriggerState *)state)->unk28 = ((GameObject *)target)->anim.localPosX;
-                        ((TriggerState *)state)->unk2C = ((GameObject *)target)->anim.localPosY;
-                        ((TriggerState *)state)->unk30 = ((GameObject *)target)->anim.localPosZ;
+                        ((TriggerState *)state)->posX28 = ((GameObject *)target)->anim.localPosX;
+                        ((TriggerState *)state)->posY28 = ((GameObject *)target)->anim.localPosY;
+                        ((TriggerState *)state)->posZ28 = ((GameObject *)target)->anim.localPosZ;
                     }
                 }
                 switch (*(s16 *)def) {

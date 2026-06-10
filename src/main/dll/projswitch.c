@@ -14,9 +14,9 @@
 
 typedef struct EnemyPlacement {
     u8 pad0[0x8 - 0x0];
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
+    f32 posX8;
+    f32 posY8;
+    f32 posZ8;
     u8 pad14[0x18 - 0x14];
     s16 unk18;
     s16 unk1A;
@@ -563,9 +563,9 @@ void enemy_update(int obj)
         ((EnemyState *)state)->controlFlags &= ~0x8003;
         if ((((EnemyState *)state)->flags2E4 & 0x20000) != 0) {
             s2 = *(u8 **)&((GameObject *)obj)->anim.placementData;
-            ((GameObject *)obj)->anim.localPosX = ((EnemyPlacement *)s2)->unk8;
-            ((GameObject *)obj)->anim.localPosY = ((EnemyPlacement *)s2)->unkC;
-            ((GameObject *)obj)->anim.localPosZ = ((EnemyPlacement *)s2)->unk10;
+            ((GameObject *)obj)->anim.localPosX = ((EnemyPlacement *)s2)->posX8;
+            ((GameObject *)obj)->anim.localPosY = ((EnemyPlacement *)s2)->posY8;
+            ((GameObject *)obj)->anim.localPosZ = ((EnemyPlacement *)s2)->posZ8;
             ((GameObject *)obj)->anim.rotZ = 0;
             ((GameObject *)obj)->anim.rotY = 0;
             *(s16 *)obj = ((EnemyPlacement *)s2)->unk2A << 8;

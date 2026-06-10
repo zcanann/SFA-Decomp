@@ -11,11 +11,11 @@ typedef struct SBCloudRunnerState {
     s32 unk10;
     u8 pad14[0x2C - 0x14];
     s16 unk2C;
-    s16 unk2E;
+    s16 angle2E;
     u8 pad30[0x4C - 0x30];
-    f32 unk4C;
-    f32 unk50;
-    f32 unk54;
+    f32 posX4C;
+    f32 posY4C;
+    f32 posZ4C;
     u8 pad58[0x64 - 0x58];
     u8 unk64;
     u8 pad65[0x6E - 0x65];
@@ -513,11 +513,11 @@ int SB_CloudRunner_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate) {
     int player = Obj_GetPlayerObject();
     int i;
     animUpdate->freeCallback = (ObjAnimSequenceFreeCallback)SB_CloudRunner_onSeqFree;
-    ((SBCloudRunnerState *)state)->unk4C = ((GameObject *)obj)->anim.localPosX;
-    ((SBCloudRunnerState *)state)->unk50 = ((GameObject *)obj)->anim.localPosY;
-    ((SBCloudRunnerState *)state)->unk54 = ((GameObject *)obj)->anim.localPosZ;
+    ((SBCloudRunnerState *)state)->posX4C = ((GameObject *)obj)->anim.localPosX;
+    ((SBCloudRunnerState *)state)->posY4C = ((GameObject *)obj)->anim.localPosY;
+    ((SBCloudRunnerState *)state)->posZ4C = ((GameObject *)obj)->anim.localPosZ;
     ((SBCloudRunnerState *)state)->unk2C = (s16)(*(s16 *)obj - 0x4000);
-    ((SBCloudRunnerState *)state)->unk2E = ((GameObject *)obj)->anim.rotZ;
+    ((SBCloudRunnerState *)state)->angle2E = ((GameObject *)obj)->anim.rotZ;
     for (i = 0; i < animUpdate->eventCount; i++) {
         if (animUpdate->eventIds[i] == 1) {
             objHitDetectFn_80062e84(player, ((SBCloudRunnerState *)state)->unk10, 0);
@@ -549,9 +549,9 @@ extern void *textureLoadAsset(int id);
 void SB_CloudRunner_init(int *obj) {
     int *state = ((GameObject *)obj)->extra;
     ((GameObject *)obj)->animEventCallback = (void *)SB_CloudRunner_SeqFn;
-    ((SBCloudRunnerState *)state)->unk4C = ((GameObject *)obj)->anim.localPosX;
-    ((SBCloudRunnerState *)state)->unk50 = ((GameObject *)obj)->anim.localPosY;
-    ((SBCloudRunnerState *)state)->unk54 = ((GameObject *)obj)->anim.localPosZ;
+    ((SBCloudRunnerState *)state)->posX4C = ((GameObject *)obj)->anim.localPosX;
+    ((SBCloudRunnerState *)state)->posY4C = ((GameObject *)obj)->anim.localPosY;
+    ((SBCloudRunnerState *)state)->posZ4C = ((GameObject *)obj)->anim.localPosZ;
     ((SBCloudRunnerState *)state)->unk64 = 100;
     *(s16 *)obj = 0x4000;
     *(void **)((char *)state + 0x18) = textureLoadAsset(342);
@@ -616,8 +616,8 @@ void SB_CloudRunner_update(int obj)
     *(f32 *)(state + 0x5c) = *(f32 *)(state + 0x5c) - timeDelta * (*(f32 *)(state + 0x5c) * lbl_803E5CC0);
     *(f32 *)(state + 0x58) = *(f32 *)(state + 0x58) - timeDelta * (*(f32 *)(state + 0x58) * lbl_803E5CC0);
     ((GameObject *)obj)->anim.rotY = (s16)(((GameObject *)obj)->anim.rotY - (int)(lbl_803E5CB8 * *(f32 *)(state + 0x58)));
-    ((GameObject *)obj)->anim.localPosY = lbl_803E5CB8 * *(f32 *)(state + 0x58) + ((SBCloudRunnerState *)state)->unk50;
-    ((GameObject *)obj)->anim.localPosZ = lbl_803E5CB8 * *(f32 *)(state + 0x5c) + ((SBCloudRunnerState *)state)->unk54;
+    ((GameObject *)obj)->anim.localPosY = lbl_803E5CB8 * *(f32 *)(state + 0x58) + ((SBCloudRunnerState *)state)->posY4C;
+    ((GameObject *)obj)->anim.localPosZ = lbl_803E5CB8 * *(f32 *)(state + 0x5c) + ((SBCloudRunnerState *)state)->posZ4C;
     *(s16 *)(state + 0x6c) = (s16)(*(s16 *)(state + 0x6c) + framesThisStep);
     if (*(s8 *)(state + 0x65) != prevKey) {
         *(s16 *)(state + 0x6c) = 0;
