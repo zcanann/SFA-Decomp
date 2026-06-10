@@ -111,7 +111,7 @@ void sh_queenearthwalker_update(void *obj)
 
   state = ((GameObject *)obj)->extra;
   ((QueenEarthWalkerState *)state)->flags &= ~0x20;
-  actionParam = *(s8 *)((u8 *)obj + 0xac);
+  actionParam = ((GameObject *)obj)->anim.mapEventSlot;
   action = (*gMapEventInterface)->getMode(actionParam);
 
   if ((((QueenEarthWalkerState *)state)->flags & 0x1) != 0) {

@@ -55,7 +55,7 @@ void drcreator_update(int obj) {
                     *(u8 *)(o + 5) = 1;
                     *(u8 *)(o + 6) = 255;
                     *(u8 *)(o + 7) = 250;
-                    if ((s8)*(u8 *)((char *)obj + 0xac) == 2) {
+                    if (((GameObject *)obj)->anim.mapEventSlot == 2) {
                         *(u8 *)(o + 0x19) = 4;
                     } else {
                         *(u8 *)(o + 0x19) = 1;

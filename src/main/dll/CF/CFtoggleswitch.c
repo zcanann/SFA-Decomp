@@ -464,7 +464,7 @@ void FUN_8018b6ac(undefined8 param_1,double param_2,double param_3,undefined8 pa
       if (*(char *)(iVar9 + 0x22) == '\0') {
         uVar7 = 1;
         FUN_80042b9c(0,0,1);
-        uVar6 = FUN_80044404((int)*(char *)(uVar3 + 0xac));
+        uVar6 = FUN_80044404(((GameObject *)uVar3)->anim.mapEventSlot);
         FUN_80042bec(uVar6,0);
         FUN_80042bec(uVar5 & 0xff,1);
       }
@@ -474,7 +474,7 @@ void FUN_8018b6ac(undefined8 param_1,double param_2,double param_3,undefined8 pa
         FUN_80042bec((uint)*(byte *)(iVar9 + 0x1e),0);
         FUN_80042bec((uint)*(byte *)(iVar9 + 0x1e),1);
       }
-      if (*(char *)(uVar3 + 0xac) == '\r') {
+      if (((GameObject *)uVar3)->anim.mapEventSlot == '\r') {
         uVar12 = GameBit_Set(0xe05,0);
       }
       FUN_80053c98(uVar12,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
@@ -957,10 +957,10 @@ void magiccavetop_update(int *obj) {
                 lockLevel(def[0x1e], 1);
             } else {
                 unlockLevel(0, 0, 1);
-                lockLevel(mapGetDirIdx(*(s8 *)((char *)obj + 0xac)), 0);
+                lockLevel(mapGetDirIdx(((GameObject *)obj)->anim.mapEventSlot), 0);
                 lockLevel(dirIdx, 1);
             }
-            if (*(s8 *)((char *)obj + 0xac) == 0xd) {
+            if (((GameObject *)obj)->anim.mapEventSlot == 0xd) {
                 GameBit_Set(0xe05, 0);
             }
             warpToMap(*(s8 *)(def + 0x20), 0);

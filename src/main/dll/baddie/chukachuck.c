@@ -55,7 +55,7 @@ void dfpfloorbar_update(int param_1)
     f32 xMid;
     f32 zDelta;
 
-    mode = *(s8 *)(param_1 + 0xac);
+    mode = ((GameObject *)param_1)->anim.mapEventSlot;
     mode = (*gMapEventInterface)->getMode(mode);
 
     switch ((u8)mode) {

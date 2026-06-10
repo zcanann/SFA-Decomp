@@ -60,7 +60,7 @@ int arwlevelcon_ringEventCallback(int obj, int p2, int data)
         if (v == 1) {
             (*gObjectTriggerInterface)->setCamVars(0x56, 0, 0, 0);
         } else if (v == 4) {
-            switch (*(s8 *)(obj + 0xac)) {
+            switch (((GameObject *)obj)->anim.mapEventSlot) {
             case 0x3a:
                 textId = 0;
                 break;
@@ -184,7 +184,7 @@ void arwlevelcon_init(int obj, u8 *setup)
     }
     arwingHudSetVisible(2);
     pauseMenuCreateHeads();
-    switch (*(s8 *)(obj + 0xac)) {
+    switch (((GameObject *)obj)->anim.mapEventSlot) {
     case 0x3a:
         state->streamId = 0x51bc;
         state->ringChoiceTriggerId = 0x6e3;

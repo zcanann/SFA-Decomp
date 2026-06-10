@@ -233,7 +233,7 @@ void arwarwing_emitDamageEffects(int obj, int state) {
 
 #pragma scheduling off
 void arwarwing_warpByCourse(int obj) {
-    switch ((s8) * (u8 *)(obj + 0xac)) {
+    switch (((GameObject *)obj)->anim.mapEventSlot) {
     case 0x3a:
         if ((u32)GameBit_Get(0xc85) != 0) {
             GameBit_Set(0x405, 0);
@@ -333,7 +333,7 @@ void arwarwing_update(int obj)
         t = ((ArwingState *)state)->modeTimer - timeDelta;
         ((ArwingState *)state)->modeTimer = t;
         if (t <= lbl_803E6ECC) {
-            if (*(s8 *)(obj + 0xac) == 0x26) {
+            if (((GameObject *)obj)->anim.mapEventSlot == 0x26) {
                 unlockLevel(0, 0, 1);
                 lockLevel(mapGetDirIdx(0x26), 0);
                 lockLevel(mapGetDirIdx(0xb), 1);
@@ -743,7 +743,7 @@ void arwarwing_initAttachments(int obj, int state)
         ((ArwingState *)state)->unkA4 = ((ArwingState *)state)->unkA8;
         ((ArwingState *)state)->wingFlexCur = lbl_803E6F5C;
         ((ArwingState *)state)->wingFlexTarget = lbl_803E6F5C;
-        if (*(s8 *)(obj + 0xac) == 0x26) {
+        if (((GameObject *)obj)->anim.mapEventSlot == 0x26) {
             ((ArwingState *)state)->velZ = lbl_803E6ECC;
         } else {
             ((ArwingState *)state)->velZ = lbl_803E6F78;
@@ -865,7 +865,7 @@ void arwarwing_handlePathDamage(int obj, int state)
         doRumble(lbl_803E6F2C);
         if ((s8)((ArwingState *)state)->shield <= 0) {
             arwarwingbo_setActiveVisible(((ArwingState *)state)->bombObj, 0, 0);
-            if ((s8)*(u8 *)(obj + 0xac) == 0x26)
+            if (((GameObject *)obj)->anim.mapEventSlot == 0x26)
                 GameBit_Set(0xe74, 1);
             else
                 ((ArwingState *)state)->mode = 4;
@@ -932,7 +932,7 @@ void arwarwing_handleObjectDamage(int obj, int state)
     if (((ArwingState *)state)->mode != 4 && ((ArwingState *)state)->mode != 5 &&
         ((ArwingState *)state)->mode != 6 && (s8)((ArwingState *)state)->shield <= 0) {
         arwarwingbo_setActiveVisible(((ArwingState *)state)->bombObj, 0, 0);
-        if ((s8)*(u8 *)(obj + 0xac) == 0x26)
+        if (((GameObject *)obj)->anim.mapEventSlot == 0x26)
             GameBit_Set(0xe74, 1);
         ((ArwingState *)state)->mode = 4;
         ((ArwingState *)state)->modeTimer = lbl_803E6F30;
@@ -1039,7 +1039,7 @@ int arwarwing_SeqFn(int obj, int p2, int script)
                 loadMapAndParent(lbl_803DC3C8[((ArwingState *)state)->levelIndex]);
                 lockLevel(mapGetDirIdx(lbl_803DC3C8[((ArwingState *)state)->levelIndex]), 0);
             }
-            switch ((s8)*(u8 *)(obj + 0xac)) {
+            switch (((GameObject *)obj)->anim.mapEventSlot) {
             case 0x3b:
                 (*gMapEventInterface)->setAnimEvent(0x13, 0, 1);
                 (*gMapEventInterface)->setAnimEvent(0x13, 0x16, 1);
@@ -1118,7 +1118,7 @@ void arwarwing_init(int obj)
     lbl_803DDD88 = obj;
     ObjHits_SetTargetMask(obj, 1);
     ((ArwingState *)state)->fullLoadout = 1;
-    switch ((s8)*(u8 *)(obj + 0xac) - 0x26) {
+    switch (((GameObject *)obj)->anim.mapEventSlot - 0x26) {
     case 27:
     default:
         ((ArwingState *)state)->fullLoadout = 0;

@@ -259,7 +259,7 @@ void drakormissile_update(int obj) {
             if (((*(ObjHitsPriorityState **)((char *)obj + 0x54))->flags & 8) != 0) {
                 Sfx_PlayFromObject(obj, SFXwp_barrel_bounce1);
             }
-            if (*(s8 *)((char *)obj + 0xac) == 2) {
+            if (((GameObject *)obj)->anim.mapEventSlot == 2) {
                 spawnExplosion(obj, lbl_803E6940, 3, 0, 0, 0, 0, 0, 3);
             } else {
                 spawnExplosion(obj, lbl_803E6940, 1, 0, 0, 0, 0, 0, 3);

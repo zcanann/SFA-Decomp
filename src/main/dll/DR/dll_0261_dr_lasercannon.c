@@ -328,7 +328,7 @@ void drlasercannon_init(int obj, char *arg) {
     state->hasFirepipe = 0;
     state->flags.b7 = 1;
     state->hitExcludeType = DR_LASERCANNON_BEAM_OBJECT_TYPE;
-    if (*(s8 *)((char *)obj + 0xac) == 2) {
+    if (((GameObject *)obj)->anim.mapEventSlot == 2) {
         state->optionalGameBit = DR_LASERCANNON_OPTIONAL_GAMEBIT;
     } else {
         state->optionalGameBit = -1;

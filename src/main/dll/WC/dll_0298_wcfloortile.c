@@ -184,7 +184,7 @@ void arwarwing_updateFlightPhysics(int obj, int state)
     int diff;
     int iv;
 
-    if (*(s8 *)(obj + 0xac) == 0x26) {
+    if (((GameObject *)obj)->anim.mapEventSlot == 0x26) {
         arwing->velTargetZ = lbl_803E6ECC;
     }
     PSVECSubtract((void *)&arwing->velTargetX, (void *)&arwing->velX, v);

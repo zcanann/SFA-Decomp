@@ -122,7 +122,7 @@ void SnowBike_init(int obj, u8 *params, int flag)
     f32 fz;
     f32 fv;
 
-    if (*(s8 *)(obj + 0xac) == 0x13) {
+    if (((GameObject *)obj)->anim.mapEventSlot == 0x13) {
         alloc = mmAlloc(36, 5, 0);
         memcpy(alloc, params, 36);
         *(u8 **)&((GameObject *)obj)->anim.placementData = alloc;
@@ -321,7 +321,7 @@ void SnowBike_update(int obj)
     f32 v;
     f32 c;
 
-    if (*(s8 *)(obj + 0xac) == -1) {
+    if (((GameObject *)obj)->anim.mapEventSlot == -1) {
         if (GameBit_Get(0x1fa) != 0) {
             ((SnowBikeState *)state)->unk420 = 0;
         }

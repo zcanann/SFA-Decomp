@@ -87,7 +87,7 @@ void ProjectileSwitch_hitDetect(int obj)
     /* deactivate */
     if ((*(u8 *)(state2 + 0x1e) & 3) != 1) return;
     state = *(int *)&((GameObject *)obj)->extra;
-    if ((int)(signed char)*(u8 *)(obj + 0xac) == 0x2c) {
+    if (((GameObject *)obj)->anim.mapEventSlot == 0x2c) {
       Sfx_PlayFromObject(obj, SFXsp_lf_mutter4);
     } else {
       Sfx_PlayFromObject(obj, SFXmn_cling01);
@@ -101,7 +101,7 @@ void ProjectileSwitch_hitDetect(int obj)
   } else {
     /* activate */
     state = *(int *)&((GameObject *)obj)->extra;
-    if ((int)(signed char)*(u8 *)(obj + 0xac) == 0x2c) {
+    if (((GameObject *)obj)->anim.mapEventSlot == 0x2c) {
       Sfx_PlayFromObject(obj, SFXsp_lf_mutter4);
     } else {
       Sfx_PlayFromObject(obj, SFXms_windlift_loop);
