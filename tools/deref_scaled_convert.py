@@ -25,7 +25,7 @@ htxt = open(header, errors='ignore').read()
 for dm in re.finditer(r'^#define\s+(\w+)\s+(0[xX][0-9a-fA-F]+|\d+)\s*$', htxt, re.M):
     htxt = re.sub(r'\b%s\b' % dm.group(1), dm.group(2), htxt)
 
-field_re = re.compile(r'^\s*(?:struct\s+)?(\w+)\s*(\*?)\s*(\w+)\s*(?:\[([^\]]+)\])?\s*;')
+field_re = re.compile(r'^\s*(?:struct\s+)?(\w+)\s*(\*+|)\s*(\w+)\s*(?:\[([^\]]+)\])?\s*;')
 struct_re = re.compile(r'typedef struct (\w+)\s*\{(.*?)\}\s*\w*\s*;', re.S)
 
 def evaldim(a):

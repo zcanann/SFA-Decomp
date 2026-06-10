@@ -291,26 +291,26 @@ void FUN_801660c0(int param_1,int param_2)
   undefined local_30;
   
   local_b8 = lbl_803E3CB8;
-  *(float *)(param_1 + 0x28) = *(float *)(param_1 + 0x28) - lbl_803E3C8C;
+  ((GameObject *)param_1)->anim.velocityY = ((GameObject *)param_1)->anim.velocityY - lbl_803E3C8C;
   fVar1 = lbl_803E3CBC;
-  *(float *)(param_1 + 0x24) = *(float *)(param_1 + 0x24) * lbl_803E3CBC;
-  *(float *)(param_1 + 0x28) = *(float *)(param_1 + 0x28) * fVar1;
-  *(float *)(param_1 + 0x2c) = *(float *)(param_1 + 0x2c) * fVar1;
-  local_a8 = *(float *)(param_1 + 0xc);
-  local_a4 = *(float *)(param_1 + 0x10);
-  local_a0 = *(float *)(param_1 + 0x14);
-  local_b4 = local_a8 + *(float *)(param_1 + 0x24);
-  local_b0 = local_a4 + *(float *)(param_1 + 0x28);
-  local_ac = local_a0 + *(float *)(param_1 + 0x2c);
+  ((GameObject *)param_1)->anim.velocityX = ((GameObject *)param_1)->anim.velocityX * lbl_803E3CBC;
+  ((GameObject *)param_1)->anim.velocityY = ((GameObject *)param_1)->anim.velocityY * fVar1;
+  ((GameObject *)param_1)->anim.velocityZ = ((GameObject *)param_1)->anim.velocityZ * fVar1;
+  local_a8 = ((GameObject *)param_1)->anim.localPosX;
+  local_a4 = ((GameObject *)param_1)->anim.localPosY;
+  local_a0 = ((GameObject *)param_1)->anim.localPosZ;
+  local_b4 = local_a8 + ((GameObject *)param_1)->anim.velocityX;
+  local_b0 = local_a4 + ((GameObject *)param_1)->anim.velocityY;
+  local_ac = local_a0 + ((GameObject *)param_1)->anim.velocityZ;
   local_44 = lbl_803E3C74;
   local_30 = 3;
   trackDolphin_buildSweptBounds(auStack_9c,&local_a8,&local_b4,&local_b8,1);
   FUN_80063a74(param_1,auStack_9c,0,'\x01');
   iVar2 = FUN_80063a68();
   if (iVar2 == 0) {
-    *(float *)(param_1 + 0xc) = local_b4;
-    *(float *)(param_1 + 0x10) = local_b0;
-    *(float *)(param_1 + 0x14) = local_ac;
+    ((GameObject *)param_1)->anim.localPosX = local_b4;
+    ((GameObject *)param_1)->anim.localPosY = local_b0;
+    ((GameObject *)param_1)->anim.localPosZ = local_ac;
   }
   else {
     *(byte *)(param_2 + 0x92) = *(byte *)(param_2 + 0x92) & 0xfb;
@@ -632,36 +632,36 @@ void FUN_8016693c(int param_1,int param_2)
   float local_74;
   undefined local_60;
   
-  dVar4 = FUN_80293900((double)(*(float *)(param_1 + 0x2c) * *(float *)(param_1 + 0x2c) +
-                               *(float *)(param_1 + 0x24) * *(float *)(param_1 + 0x24) +
-                               *(float *)(param_1 + 0x28) * *(float *)(param_1 + 0x28)));
+  dVar4 = FUN_80293900((double)(((GameObject *)param_1)->anim.velocityZ * ((GameObject *)param_1)->anim.velocityZ +
+                               ((GameObject *)param_1)->anim.velocityX * ((GameObject *)param_1)->anim.velocityX +
+                               ((GameObject *)param_1)->anim.velocityY * ((GameObject *)param_1)->anim.velocityY));
   dVar6 = (double)lbl_803E3C74;
   iVar3 = 0;
   local_74 = lbl_803E3C74;
   local_60 = 3;
-  local_d8 = *(float *)(param_1 + 0xc);
-  local_d4 = *(float *)(param_1 + 0x10);
-  local_d0 = *(float *)(param_1 + 0x14);
-  local_e4 = local_d8 + *(float *)(param_1 + 0x24);
-  local_e0 = local_d4 + *(float *)(param_1 + 0x28);
-  local_dc = local_d0 + *(float *)(param_1 + 0x2c);
+  local_d8 = ((GameObject *)param_1)->anim.localPosX;
+  local_d4 = ((GameObject *)param_1)->anim.localPosY;
+  local_d0 = ((GameObject *)param_1)->anim.localPosZ;
+  local_e4 = local_d8 + ((GameObject *)param_1)->anim.velocityX;
+  local_e0 = local_d4 + ((GameObject *)param_1)->anim.velocityY;
+  local_dc = local_d0 + ((GameObject *)param_1)->anim.velocityZ;
   local_e8 = lbl_803E3CB8;
   trackDolphin_buildSweptBounds(auStack_cc,&local_d8,&local_e4,&local_e8,1);
   FUN_80063a74(param_1,auStack_cc,0,'\x01');
   dVar7 = (double)lbl_803E3C8C;
   while ((dVar6 < dVar4 && (iVar3 = iVar3 + 1, iVar3 < 10))) {
-    local_d8 = *(float *)(param_1 + 0xc);
-    local_d4 = *(float *)(param_1 + 0x10);
-    local_d0 = *(float *)(param_1 + 0x14);
+    local_d8 = ((GameObject *)param_1)->anim.localPosX;
+    local_d4 = ((GameObject *)param_1)->anim.localPosY;
+    local_d0 = ((GameObject *)param_1)->anim.localPosZ;
     fVar1 = (float)(dVar7 - (double)(float)(dVar6 / dVar4));
-    local_e4 = *(float *)(param_1 + 0x24) * fVar1 + local_d8;
-    local_e0 = *(float *)(param_1 + 0x28) * fVar1 + local_d4;
-    local_dc = *(float *)(param_1 + 0x2c) * fVar1 + local_d0;
+    local_e4 = ((GameObject *)param_1)->anim.velocityX * fVar1 + local_d8;
+    local_e0 = ((GameObject *)param_1)->anim.velocityY * fVar1 + local_d4;
+    local_dc = ((GameObject *)param_1)->anim.velocityZ * fVar1 + local_d0;
     iVar2 = FUN_80063a68();
     if (iVar2 == 0) {
-      *(float *)(param_1 + 0xc) = local_e4;
-      *(float *)(param_1 + 0x10) = local_e0;
-      *(float *)(param_1 + 0x14) = local_dc;
+      ((GameObject *)param_1)->anim.localPosX = local_e4;
+      ((GameObject *)param_1)->anim.localPosY = local_e0;
+      ((GameObject *)param_1)->anim.localPosZ = local_dc;
       dVar6 = dVar4;
     }
     else {
@@ -672,9 +672,9 @@ void FUN_8016693c(int param_1,int param_2)
       FUN_80166c6c(param_1,param_2,&local_b4,&local_e4);
     }
   }
-  local_d8 = *(float *)(param_1 + 0xc);
-  local_d4 = *(float *)(param_1 + 0x10);
-  local_d0 = *(float *)(param_1 + 0x14);
+  local_d8 = ((GameObject *)param_1)->anim.localPosX;
+  local_d4 = ((GameObject *)param_1)->anim.localPosY;
+  local_d0 = ((GameObject *)param_1)->anim.localPosZ;
   local_e4 = -(lbl_803E3CC0 * *(float *)(param_2 + 0x7c) - local_d8);
   local_e0 = -(lbl_803E3CC0 * *(float *)(param_2 + 0x80) - local_d4);
   local_dc = -(lbl_803E3CC0 * *(float *)(param_2 + 0x84) - local_d0);
@@ -685,9 +685,9 @@ void FUN_8016693c(int param_1,int param_2)
     local_d8 = local_e4;
     local_d4 = local_e0;
     local_d0 = local_dc;
-    local_e4 = -*(float *)(param_1 + 0x24);
-    local_e0 = -*(float *)(param_1 + 0x28);
-    local_dc = -*(float *)(param_1 + 0x2c);
+    local_e4 = -((GameObject *)param_1)->anim.velocityX;
+    local_e0 = -((GameObject *)param_1)->anim.velocityY;
+    local_dc = -((GameObject *)param_1)->anim.velocityZ;
     FUN_80017784(&local_e4);
     local_e4 = lbl_803E3CC4 * local_e4 + local_d8;
     local_e0 = lbl_803E3CC4 * local_e0 + local_d4;
@@ -697,9 +697,9 @@ void FUN_8016693c(int param_1,int param_2)
     iVar3 = FUN_80063a68();
     fVar1 = lbl_803E3CC8;
     if (iVar3 == 0) {
-      *(float *)(param_1 + 0x24) = lbl_803E3CC8 * *(float *)(param_2 + 0x7c);
-      *(float *)(param_1 + 0x28) = fVar1 * *(float *)(param_2 + 0x80);
-      *(float *)(param_1 + 0x2c) = fVar1 * *(float *)(param_2 + 0x84);
+      ((GameObject *)param_1)->anim.velocityX = lbl_803E3CC8 * *(float *)(param_2 + 0x7c);
+      ((GameObject *)param_1)->anim.velocityY = fVar1 * *(float *)(param_2 + 0x80);
+      ((GameObject *)param_1)->anim.velocityZ = fVar1 * *(float *)(param_2 + 0x84);
       *(byte *)(param_2 + 0x92) = *(byte *)(param_2 + 0x92) & 0xfb | 4;
     }
     else {
@@ -709,9 +709,9 @@ void FUN_8016693c(int param_1,int param_2)
   else if ((((local_b4 == *(float *)(param_2 + 0x7c)) && (local_b0 == *(float *)(param_2 + 0x80)))
            && (local_ac == *(float *)(param_2 + 0x84))) && (local_a8 == *(float *)(param_2 + 0x88)))
   {
-    *(float *)(param_1 + 0xc) = local_e4;
-    *(float *)(param_1 + 0x10) = local_e0;
-    *(float *)(param_1 + 0x14) = local_dc;
+    ((GameObject *)param_1)->anim.localPosX = local_e4;
+    ((GameObject *)param_1)->anim.localPosY = local_e0;
+    ((GameObject *)param_1)->anim.localPosZ = local_dc;
   }
   else {
     FUN_80166c6c(param_1,param_2,&local_b4,&local_e4);
@@ -755,15 +755,15 @@ void FUN_80166c6c(int param_1,int param_2,float *param_3,float *param_4)
   float local_80;
   
   dVar2 = (double)lbl_803E3CB8;
-  dVar5 = (double)*(float *)(param_1 + 0xc);
+  dVar5 = (double)((GameObject *)param_1)->anim.localPosX;
   dVar10 = (double)(float)(dVar2 * (double)*(float *)(param_2 + 0x7c) + dVar5);
-  dVar6 = (double)*(float *)(param_1 + 0x10);
+  dVar6 = (double)((GameObject *)param_1)->anim.localPosY;
   dVar9 = (double)(float)(dVar2 * (double)*(float *)(param_2 + 0x80) + dVar6);
-  dVar7 = (double)*(float *)(param_1 + 0x14);
+  dVar7 = (double)((GameObject *)param_1)->anim.localPosZ;
   dVar8 = (double)(float)(dVar2 * (double)*(float *)(param_2 + 0x84) + dVar7);
-  dVar3 = (double)(float)(dVar2 * (double)*(float *)(param_1 + 0x24) + dVar5);
-  dVar4 = (double)(float)(dVar2 * (double)*(float *)(param_1 + 0x28) + dVar6);
-  dVar2 = (double)(float)(dVar2 * (double)*(float *)(param_1 + 0x2c) + dVar7);
+  dVar3 = (double)(float)(dVar2 * (double)((GameObject *)param_1)->anim.velocityX + dVar5);
+  dVar4 = (double)(float)(dVar2 * (double)((GameObject *)param_1)->anim.velocityY + dVar6);
+  dVar2 = (double)(float)(dVar2 * (double)((GameObject *)param_1)->anim.velocityZ + dVar7);
   dVar11 = (double)(float)(dVar6 * (double)(float)(dVar8 - dVar2) +
                           (double)(float)(dVar9 * (double)(float)(dVar2 - dVar7) +
                                          (double)(float)(dVar4 * (double)(float)(dVar7 - dVar8))));
@@ -790,16 +790,16 @@ void FUN_80166c6c(int param_1,int param_2,float *param_3,float *param_4)
   FUN_80017788(&local_98,param_3,&local_88);
   FUN_80017784(&local_88);
   fVar1 = lbl_803E3C9C;
-  *(float *)(param_1 + 0x24) = lbl_803E3C9C * local_88;
-  *(float *)(param_1 + 0x28) = fVar1 * local_84;
-  *(float *)(param_1 + 0x2c) = fVar1 * local_80;
+  ((GameObject *)param_1)->anim.velocityX = lbl_803E3C9C * local_88;
+  ((GameObject *)param_1)->anim.velocityY = fVar1 * local_84;
+  ((GameObject *)param_1)->anim.velocityZ = fVar1 * local_80;
   *(float *)(param_2 + 0x7c) = *param_3;
   *(float *)(param_2 + 0x80) = param_3[1];
   *(float *)(param_2 + 0x84) = param_3[2];
   *(float *)(param_2 + 0x88) = param_3[3];
-  *(float *)(param_1 + 0xc) = *param_4 + *(float *)(param_2 + 0x7c);
-  *(float *)(param_1 + 0x10) = param_4[1] + *(float *)(param_2 + 0x80);
-  *(float *)(param_1 + 0x14) = param_4[2] + *(float *)(param_2 + 0x84);
+  ((GameObject *)param_1)->anim.localPosX = *param_4 + *(float *)(param_2 + 0x7c);
+  ((GameObject *)param_1)->anim.localPosY = param_4[1] + *(float *)(param_2 + 0x80);
+  ((GameObject *)param_1)->anim.localPosZ = param_4[2] + *(float *)(param_2 + 0x84);
   return;
 }
 

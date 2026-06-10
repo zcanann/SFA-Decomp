@@ -50,7 +50,7 @@ lines = body.split('\n')
 out = []
 off = 0
 pad_re = re.compile(r'^(\s*)u8\s+(\w*pad\w*)\s*\[\s*([^\]]+)\s*\]\s*;(.*)$')
-field_re = re.compile(r'^\s*(?:struct\s+)?(\w+)\s*(\*?)\s*(\w+)\s*(?:\[([^\]]+)\])?\s*;')
+field_re = re.compile(r'^\s*(?:struct\s+)?(\w+)\s*(\*+|)\s*(\w+)\s*(?:\[([^\]]+)\])?\s*;')
 
 def evaldim(a):
     a = a.strip()

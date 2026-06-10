@@ -28,7 +28,7 @@ CLASS_OF = {'f32':'F32','float':'F32','int':'S32','s32':'S32','u32':'U32','uint'
 SIZE = {'F32':4,'S32':4,'U32':4,'PTR':4,'S16':2,'U16':2,'S8':1,'U8':1}
 
 struct_re = re.compile(r'typedef struct (\w+)\s*\{(.*?)\}\s*\w*\s*;', re.S)
-field_re = re.compile(r'^\s*(?:struct\s+)?(\w+)\s*(\*?)\s*(\w+)\s*(?:\[([^\]]+)\])?\s*(?:\[([^\]]+)\])?\s*;')
+field_re = re.compile(r'^\s*(?:struct\s+)?(\w+)\s*(\*+|)\s*(\w+)\s*(?:\[([^\]]+)\])?\s*(?:\[([^\]]+)\])?\s*;')
 
 
 def _evaldim(a):
