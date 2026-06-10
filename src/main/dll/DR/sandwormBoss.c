@@ -4840,8 +4840,9 @@ extern f32 lbl_803E4248;
  * then steer toward the player (or Tricky) per the current behaviour state. */
 #pragma scheduling off
 #pragma peephole off
-int babycloudrunner_SeqFn(int* obj, int p2, u8* p3)
+int babycloudrunner_SeqFn(int* obj, int unused, ObjAnimUpdateState *animUpdate)
 {
+    u8 *animUpdateBytes = (u8 *)animUpdate;
     s8 inRange;
     s8 i;
     int yaw;
@@ -4854,7 +4855,7 @@ int babycloudrunner_SeqFn(int* obj, int p2, u8* p3)
     if (((GameObject *)obj)->unkB4 == 4) {
         return 0;
     }
-    p3[0x56] = 0;
+    animUpdate->sequenceEventActive = 0;
     player = (char*)Obj_GetPlayerObject();
     dx = *(f32*)(player + 0xc) - *(f32*)(def + 8);
     dz = *(f32*)(player + 0x14) - *(f32*)(def + 0x10);
@@ -4887,9 +4888,8 @@ int babycloudrunner_SeqFn(int* obj, int p2, u8* p3)
             inRange = 1;
         }
     }
-    for (i = 0; i < *(u8*)(p3 + 0x8b); i++) {
-        int idx = i + 0x81;
-        if (p3[idx] == 1) {
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        if (animUpdate->eventIds[i] == 1) {
             Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
         }
     }
@@ -4910,18 +4910,18 @@ int babycloudrunner_SeqFn(int* obj, int p2, u8* p3)
         break;
     case 0:
     case 8:
-        *(s16*)(p3 + 0x6e) &= ~0x2;
+        animUpdate->hitVolumePair &= ~0x2;
         yaw = Obj_GetYawDeltaToObject((int)obj, (int)player, 0);
         fn_8003ADC4(obj, (int*)player, (char*)sub + 0x3c, 0x28, 0, 3);
         *(s16*)obj += (s16)yaw / 8;
         if (inRange != 0) {
-            *(u8*)(p3 + 0x90) |= 4;
+            animUpdateBytes[0x90] |= 4;
         } else {
-            *(u8*)(p3 + 0x90) = 8;
+            animUpdateBytes[0x90] = 8;
         }
         break;
     case 5:
-        *(s16*)(p3 + 0x6e) &= ~0x2;
+        animUpdate->hitVolumePair &= ~0x2;
         yaw = Obj_GetYawDeltaToObject((int)obj, (int)getTrickyObject(), 0);
         fn_8003ADC4(obj, (int*)getTrickyObject(), (char*)sub + 0x3c, 0x28, 0, 3);
         *(s16*)obj += (s16)yaw / 8;
@@ -4941,7 +4941,7 @@ extern void Sfx_StopObjectChannel(int obj, int ch);
  * SFX and queued-message drain. */
 #pragma scheduling off
 #pragma peephole off
-int cfprisonguard_SeqFn(int* obj, int p2, u8* p3)
+int cfprisonguard_SeqFn(int* obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     char* player;
     CfPrisonGuardState* sub = ((GameObject *)obj)->extra;
@@ -4953,7 +4953,7 @@ int cfprisonguard_SeqFn(int* obj, int p2, u8* p3)
     int msgA;
     int payload = 0;
     u8* def = *(u8**)&((GameObject *)obj)->anim.placementData;
-    switch (p3[0x80]) {
+    switch (animUpdate->triggerCommand) {
     case 0x29:
         sub->alarmRamp = lbl_803E4260;
         break;
@@ -5048,12 +5048,12 @@ int cfprisonguard_SeqFn(int* obj, int p2, u8* p3)
         return 4;
     }
     sub->capturedLatch = gb50;
-    p3[0x56] = 0;
+    animUpdate->sequenceEventActive = 0;
     while (ObjMsg_Pop(obj, &msgA, &msgB, &payload) != 0) {
     }
-    if (p3[0x80] == 1) {
+    if (animUpdate->triggerCommand == 1) {
         getLActions(obj, obj, 0x18, 0, 0, 0);
-        p3[0x80] = 0;
+        animUpdate->triggerCommand = 0;
     }
     return 0;
 }
