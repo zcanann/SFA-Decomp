@@ -3132,7 +3132,7 @@ void windlift_update(int* obj)
             sub->slots[found].link14 = found;
             {
                 int* rider = *objs;
-                if ((*(u16*)((char*)rider + 0xb0) & 0x1000) != 0) {
+                if ((((GameObject *)rider)->objectFlags & 0x1000) != 0) {
                     objs++;
                 } else if (rider != NULL) {
                     fn_8019C784(obj, *objs++, &sub->slots[found], pull, gb2, 0, sub->duration, sub->liftHeight);

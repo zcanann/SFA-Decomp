@@ -464,8 +464,8 @@ s8 fn_801631C8(int *obj) {
         list = ObjList_GetObjects(&idx, &outCount);
         while (idx < outCount) {
             int *child = list[idx];
-            if (*(s16 *)((char*)child + 0x46) == 0x27f) {
-                *(f32 *)((char*)newObj + 0x8) = *(f32 *)((char*)child + 0xc);
+            if (((GameObject *)child)->anim.seqId == 0x27f) {
+                *(f32 *)((char*)newObj + 0x8) = ((GameObject *)child)->anim.localPosX;
                 *(f32 *)((char*)newObj + 0xc) = *(f32 *)((char*)list[idx] + 0x10);
                 *(f32 *)((char*)newObj + 0x10) = *(f32 *)((char*)list[idx] + 0x14);
                 idx = outCount;

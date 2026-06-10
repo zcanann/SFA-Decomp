@@ -349,7 +349,7 @@ void sc_totempole_update(int obj)
                 arr = ObjList_GetObjects(&idx, &count);
                 for (; idx < count; idx++) {
                     void *o = (void *)arr[idx];
-                    if (o != (void *)obj && *(s16 *)((char *)o + 0x46) == SC_TOTEMPOLE_OBJECT_TYPE) {
+                    if (o != (void *)obj && ((GameObject *)o)->anim.seqId == SC_TOTEMPOLE_OBJECT_TYPE) {
                         (*(void (**)(int, int))(*(int *)(*(int *)(arr[idx] + 0x68)) + 0x20))(arr[idx], 6);
                         break;
                     }

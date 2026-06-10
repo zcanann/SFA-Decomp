@@ -915,11 +915,11 @@ void animsharpclaw_update(int *obj) {
     matchCount = 0;
     for (i = 0; i < count; i++) {
         int *o = (int *)objects[i];
-        if (*(s16 *)((char *)o + 0xb4) == kind) {
+        if (((GameObject *)o)->unkB4 == kind) {
             found = o;
         }
-        if (*(s16 *)((char *)o + 0xb4) == -2 && *(s16 *)((char *)o + 0x44) == 0x10 &&
-            kind == (s8)*(u8 *)((char *)*(int **)((char *)o + 0xb8) + 0x57)) {
+        if (((GameObject *)o)->unkB4 == -2 && ((GameObject *)o)->anim.classId == 0x10 &&
+            kind == (s8)*(u8 *)((char *)*(int **)&((GameObject *)o)->extra + 0x57)) {
             matchCount++;
         }
     }

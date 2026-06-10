@@ -3186,7 +3186,7 @@ void baddieinterestp_update(int *obj)
                                     if ((int)((BaddieinterestpPlacement *)params)->unk1E != -1) {
                                         GameBit_Set((int)((BaddieinterestpPlacement *)params)->unk1E, 1);
                                     }
-                                    switch (*(s16 *)((char *)target + 0x46)) {
+                                    switch (((GameObject *)target)->anim.seqId) {
                                     case 17:
                                     case 314:
                                     case 1463:
@@ -3206,7 +3206,7 @@ void baddieinterestp_update(int *obj)
                                         if ((int)((BaddieinterestpPlacement *)params)->unk1E != -1) {
                                             GameBit_Set((int)((BaddieinterestpPlacement *)params)->unk1E, 1);
                                         }
-                                        switch (*(s16 *)((char *)target + 0x46)) {
+                                        switch (((GameObject *)target)->anim.seqId) {
                                         case 17:
                                         case 314:
                                         case 1463:
@@ -3226,7 +3226,7 @@ void baddieinterestp_update(int *obj)
                                         if ((int)((BaddieinterestpPlacement *)params)->unk1E != -1) {
                                             GameBit_Set((int)((BaddieinterestpPlacement *)params)->unk1E, 1);
                                         }
-                                        switch (*(s16 *)((char *)target + 0x46)) {
+                                        switch (((GameObject *)target)->anim.seqId) {
                                         case 17:
                                         case 314:
                                         case 1463:

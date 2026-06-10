@@ -455,8 +455,8 @@ int fn_8015E210(int *obj, GroundBaddieState *p)
     objs = ObjList_GetObjects(&i, &count);
     for (; i < count; i++) {
       void *o = (void *)objs[i];
-      if (o != (void *)obj && *(s16 *)((char *)o + 0x46) == 774) {
-        (*(void (**)(void *, int, int))(**(int **)((char *)o + 0x68) + 0x24))(
+      if (o != (void *)obj && ((GameObject *)o)->anim.seqId == 774) {
+        (*(void (**)(void *, int, int))(**(int **)&((GameObject *)o)->anim.dll + 0x24))(
             o, 129, 0);
       }
     }
@@ -654,8 +654,8 @@ int fn_8015DC04(int obj, GroundBaddieState *p)
     objs = ObjList_GetObjects(&i, &count);
     for (; i < count; i++) {
       void *o = (void *)objs[i];
-      if (o != (void *)obj && *(s16 *)((char *)o + 0x46) == 774) {
-        int v = (*(int (**)(void *, int))(**(int **)((char *)o + 0x68) + 0x20))(o, 0);
+      if (o != (void *)obj && ((GameObject *)o)->anim.seqId == 774) {
+        int v = (*(int (**)(void *, int))(**(int **)&((GameObject *)o)->anim.dll + 0x20))(o, 0);
         if (v > maxr) {
           maxr = v;
         }
@@ -795,8 +795,8 @@ int fn_8015E5DC(short *obj, GroundBaddieState *p)
     objs = ObjList_GetObjects(&i, &count);
     for (; i < count; i++) {
       void *o = (void *)objs[i];
-      if (o != (void *)obj && *(s16 *)((char *)o + 0x46) == 774) {
-        (*(void (**)(void *, int, int))(**(int **)((char *)o + 0x68) + 0x24))(
+      if (o != (void *)obj && ((GameObject *)o)->anim.seqId == 774) {
+        (*(void (**)(void *, int, int))(**(int **)&((GameObject *)o)->anim.dll + 0x24))(
             o, 129, 0);
       }
     }

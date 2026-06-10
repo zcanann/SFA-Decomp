@@ -966,10 +966,10 @@ void imspaceringgen_update(s16 *obj) {
         int *objs = ObjList_GetObjects(&objIndex, &objCount);
         for (objIndex = 0; objIndex < objCount; objIndex++) {
             int *o = (int *)objs[objIndex];
-            if (*(s16 *)((char *)o + 0x46) == 0x164) {
+            if (((GameObject *)o)->anim.seqId == 0x164) {
                 state->ringA = o;
             }
-            if (*(s16 *)((char *)o + 0x46) == 0x168) {
+            if (((GameObject *)o)->anim.seqId == 0x168) {
                 state->ringB = o;
             }
         }

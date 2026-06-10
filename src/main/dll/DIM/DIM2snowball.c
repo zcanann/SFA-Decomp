@@ -1293,7 +1293,7 @@ void dim2snowball_update(int *obj)
                 hit = NULL;
 checkHit:
                 if (hit != NULL) {
-                    (*(void (**)(int *))(**(int **)((char *)hit + 0x68) + 0x20))(hit);
+                    (*(void (**)(int *))(**(int **)&((GameObject *)hit)->anim.dll + 0x20))(hit);
                 }
                 Sfx_PlayFromObject((int)obj, SFXfoot_run_jingle1);
             }
