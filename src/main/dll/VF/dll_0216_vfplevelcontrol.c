@@ -45,8 +45,8 @@ void vfplevelcontrol_update(int obj) {
     int player = (int)Obj_GetPlayerObject();
     u8 mapEventState;
 
-    if (((GameObject *)obj)->unkF4 == 0 && GameBit_Get(0xef6) == 0) {
-        if (GameBit_Get(0xd72) != 0) {
+    if (((GameObject *)obj)->unkF4 == 0 && GameBit_Get(0xef6) == 0u) {
+        if (GameBit_Get(0xd72) != 0u) {
             getEnvfxActImmediately(obj, obj, 0x10c, 0);
             getEnvfxActImmediately(obj, obj, 0x10d, 0);
             getEnvfxActImmediately(obj, obj, 0x10e, 0);
@@ -67,8 +67,8 @@ void vfplevelcontrol_update(int obj) {
             }
         }
         Obj_GetPlayerObject();
-        if (GameBit_Get(0x4ec) == 0 && GameBit_Get(0x9b1) != 0 &&
-            GameBit_Get(0x9b2) != 0) {
+        if (GameBit_Get(0x4ec) == 0u && GameBit_Get(0x9b1) != 0u &&
+            GameBit_Get(0x9b2) != 0u) {
             GameBit_Set(0x4ec, 1);
         }
         if (GameBit_Get(0xd6d) != 0 && GameBit_Get(0xd6e) != 0 &&
