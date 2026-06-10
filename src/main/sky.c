@@ -406,8 +406,8 @@ void modelTextureFn_80089970(int slot)
     if (lbl_803DD144 != NULL) {
         offset = slot * 0xa4;
         sky = lbl_803DD12C + offset;
-        modelLightStruct_setDirection(lbl_803DD144, ((SkyState *)sky)->lights[0].unk70, ((SkyState *)sky)->lights[0].unk74,
-                                ((SkyState *)sky)->lights[0].unk78);
+        modelLightStruct_setDirection(lbl_803DD144, ((SkyState *)sky)->lights[0].directionX, ((SkyState *)sky)->lights[0].directionY,
+                                ((SkyState *)sky)->lights[0].directionZ);
         modelLightStruct_setDiffuseColor(lbl_803DD144, lbl_803DD12C[offset + 0x78],
                                        lbl_803DD12C[offset + 0x79],
                                        lbl_803DD12C[offset + 0x7a], 0xff);
@@ -526,13 +526,13 @@ void fn_800897D4(int slot, f32 *x, f32 *y, f32 *z)
 
     offset = slot * 0xa4;
     sky = lbl_803DD12C + offset;
-    *x = ((SkyState *)sky)->lights[0].unk70;
+    *x = ((SkyState *)sky)->lights[0].directionX;
     sky = lbl_803DD12C;
     sky += offset;
-    *y = ((SkyState *)sky)->lights[0].unk74;
+    *y = ((SkyState *)sky)->lights[0].directionY;
     sky = lbl_803DD12C;
     sky += offset;
-    *z = ((SkyState *)sky)->lights[0].unk78;
+    *z = ((SkyState *)sky)->lights[0].directionZ;
 }
 
 void objGetColor(int slot, u8 *red, u8 *green, u8 *blue)

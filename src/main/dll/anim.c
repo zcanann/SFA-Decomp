@@ -24,7 +24,7 @@ typedef struct DbStealerwormControl {
     int cfg; /* entry in the lbl_80329514 table (stride 8 ints) */
     f32 unk04;
     f32 unk08;
-    f32 unk0C; /* countdown; init randomGetRange(10, 300) */
+    f32 countdown; /* countdown; init randomGetRange(10, 300) */
     f32 unk10;
     u8 flags14; /* bits 1/2 */
     u8 flags15; /* bits 1/4 */
@@ -309,8 +309,8 @@ typedef struct DbstealerwormPlacement {
     f32 unk8;
     f32 unkC;
     f32 unk10;
-    u32 unk14;
-    s16 unk18;
+    u32 eventConfigId;
+    s16 incrementGameBit;
     s16 unk1A;
     s16 unk1C;
     s16 unk1E;
@@ -331,13 +331,13 @@ typedef struct DbeggPlacement {
     u8 unk5;
     u8 unk6;
     u8 unk7;
-    f32 unk8;
-    f32 unkC;
-    f32 unk10;
+    f32 targetPosX;
+    f32 targetPosY;
+    f32 targetPosZ;
     u32 unk14;
     s16 unk18;
     s16 unk1A;
-    s16 unk1C;
+    s16 triggerGameBit;
     s16 unk1E;
     s16 unk20;
     u8 pad22[0x24 - 0x22];
@@ -683,7 +683,7 @@ int dbstealerworm_stateHandlerB04(int obj, int p)
     (**(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, p, 1);
     b8 = *(int *)&((GroundBaddieState *)b8)->control;
     fz = lbl_803E62A8;
-    ((DbStealerwormControl *)b8)->unk0C = lbl_803E62A8;
+    ((DbStealerwormControl *)b8)->countdown = lbl_803E62A8;
     ((DbStealerwormControl *)b8)->unk10 = fz;
     ((DbStealerwormControl *)b8)->unk04 = fz;
   }
@@ -702,7 +702,7 @@ int dbstealerworm_stateHandlerB02(int obj, int p)
   if (*(char *)&((BaddieState *)p)->moveJustStartedB != '\0') {
     b8 = *(int *)&((GroundBaddieState *)b8)->control;
     fz = lbl_803E62A8;
-    ((DbStealerwormControl *)b8)->unk0C = lbl_803E62A8;
+    ((DbStealerwormControl *)b8)->countdown = lbl_803E62A8;
     ((DbStealerwormControl *)b8)->unk10 = fz;
     ((DbStealerwormControl *)b8)->unk04 = fz;
     (**(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, p, 6);
@@ -1239,8 +1239,8 @@ int dbstealerworm_stateHandlerA06(int obj, int p2)
   bs->moveSpeed = lbl_803E6334;
   if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E6338) {
     int local;
-    gameBitIncrement(((DbstealerwormPlacement *)data)->unk18);
-    if ((((DbstealerwormPlacement *)data)->unk14 + 0x10000) == 0xffff) {
+    gameBitIncrement(((DbstealerwormPlacement *)data)->incrementGameBit);
+    if ((((DbstealerwormPlacement *)data)->eventConfigId + 0x10000) == 0xffff) {
       Obj_FreeObject(obj);
       return 0;
     }
@@ -1248,7 +1248,7 @@ int dbstealerworm_stateHandlerA06(int obj, int p2)
       Stack_Pop(sub_40c->msgStack, &local);
     }
     if (((DbstealerwormPlacement *)data)->unk2C == 0) {
-      (*gMapEventInterface)->startTimedEvent(*(int *)&((DbstealerwormPlacement *)data)->unk14, lbl_803E633C);
+      (*gMapEventInterface)->startTimedEvent(*(int *)&((DbstealerwormPlacement *)data)->eventConfigId, lbl_803E633C);
     }
     sub->configFlags |= ((DbstealerwormPlacement *)data)->unk2B;
   }
@@ -1617,7 +1617,7 @@ void dbstealerworm_init(int *obj, u8 *def, int param3) {
     ((DbStealerwormControl *)p40c)->unk08 = lbl_803E62FC;
     ((DbStealerwormControl *)p40c)->cfg = (int)&lbl_80329514[((s16)*(s16*)(def + 0x24)) * 8];
     r = randomGetRange(0xa, 0x12c);
-    ((DbStealerwormControl *)p40c)->unk0C = (f32)(s32)r;
+    ((DbStealerwormControl *)p40c)->countdown = (f32)(s32)r;
     ((DbStealerwormControl *)p40c)->flags44 = (u8)((((DbStealerwormControl *)p40c)->flags44 & ~0x20) | ((def[0x2b] & 1) << 5));
     ((DbStealerwormControl *)p40c)->flags44 = (u8)(((DbStealerwormControl *)p40c)->flags44 | 0x10);
     ((DbStealerwormControl *)p40c)->linkedObj = 0;
@@ -2670,11 +2670,11 @@ void fn_80203144(int obj, int p2, int p3)
         } else {
             dist = lbl_803E6354;
         }
-        if (sub->unk0C > sub->unk10 && dist < lbl_803E6384) {
+        if (sub->countdown > sub->unk10 && dist < lbl_803E6384) {
             Sfx_PlayFromObject(obj, (u16)lbl_80329640[1]);
             sub->unk10 = sub->unk10 + (f32)(int)randomGetRange(0x32, 0xfa);
         }
-        sub->unk0C += timeDelta;
+        sub->countdown += timeDelta;
     }
 }
 
@@ -2986,7 +2986,7 @@ int dbstealerworm_stateHandlerB06(int obj, int p2)
         if (Stack_IsEmpty(sub->msgStack) == 0) {
             Stack_Pop(sub->msgStack, (int *)&sub->unk28);
         } else {
-            if (((DbstealerwormPlacement *)data)->unk14 == 0xFFFFFFFF) {
+            if (((DbstealerwormPlacement *)data)->eventConfigId == 0xFFFFFFFF) {
                 Obj_FreeObject(obj);
                 return 0;
             }
@@ -4795,9 +4795,9 @@ void dbegg_update(int obj)
         case 2:
             if (((DbEggState *)blob)->flags119 & 4) {
                 *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
-                ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX + (((DbeggPlacement *)data)->unk8 - ((GameObject *)obj)->anim.localPosX) / (fz = lbl_803E61E4);
-                ((GameObject *)obj)->anim.velocityY = ((GameObject *)obj)->anim.velocityY + (((DbeggPlacement *)data)->unkC - ((GameObject *)obj)->anim.localPosY) / fz;
-                ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ + (((DbeggPlacement *)data)->unk10 - ((GameObject *)obj)->anim.localPosZ) / fz;
+                ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX + (((DbeggPlacement *)data)->targetPosX - ((GameObject *)obj)->anim.localPosX) / (fz = lbl_803E61E4);
+                ((GameObject *)obj)->anim.velocityY = ((GameObject *)obj)->anim.velocityY + (((DbeggPlacement *)data)->targetPosY - ((GameObject *)obj)->anim.localPosY) / fz;
+                ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ + (((DbeggPlacement *)data)->targetPosZ - ((GameObject *)obj)->anim.localPosZ) / fz;
                 if (GameBit_Get(0x44d) != 0) {
                     ((DbEggState *)blob)->mode = 0xa;
                 }
@@ -4864,7 +4864,7 @@ void dbegg_update(int obj)
                 GameBit_Set(0x3c4, 1);
                 GameBit_Set(0x86d, 1);
                 *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
-                GameBit_Set(((DbeggPlacement *)d2)->unk1C, 1);
+                GameBit_Set(((DbeggPlacement *)d2)->triggerGameBit, 1);
                 ((DbEggState *)b2)->msg11C = -1;
                 ((DbEggState *)b2)->msg11E = 0;
                 ((DbEggState *)b2)->msg120 = lbl_803E61CC;
@@ -4949,12 +4949,12 @@ void dbegg_update(int obj)
             break;
         case 0xd:
             ObjHits_DisableObject(obj);
-            ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX + (((DbeggPlacement *)data)->unk8 - ((GameObject *)obj)->anim.localPosX) / (fz = lbl_803E6258);
-            ((GameObject *)obj)->anim.velocityY = ((GameObject *)obj)->anim.velocityY + (((DbeggPlacement *)data)->unkC - ((GameObject *)obj)->anim.localPosY) / fz;
-            ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ + (((DbeggPlacement *)data)->unk10 - ((GameObject *)obj)->anim.localPosZ) / fz;
-            d[0] = ((GameObject *)obj)->anim.localPosX - ((DbeggPlacement *)data)->unk8;
-            d[1] = ((GameObject *)obj)->anim.localPosY - ((DbeggPlacement *)data)->unkC;
-            d[2] = ((GameObject *)obj)->anim.localPosZ - ((DbeggPlacement *)data)->unk10;
+            ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX + (((DbeggPlacement *)data)->targetPosX - ((GameObject *)obj)->anim.localPosX) / (fz = lbl_803E6258);
+            ((GameObject *)obj)->anim.velocityY = ((GameObject *)obj)->anim.velocityY + (((DbeggPlacement *)data)->targetPosY - ((GameObject *)obj)->anim.localPosY) / fz;
+            ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ + (((DbeggPlacement *)data)->targetPosZ - ((GameObject *)obj)->anim.localPosZ) / fz;
+            d[0] = ((GameObject *)obj)->anim.localPosX - ((DbeggPlacement *)data)->targetPosX;
+            d[1] = ((GameObject *)obj)->anim.localPosY - ((DbeggPlacement *)data)->targetPosY;
+            d[2] = ((GameObject *)obj)->anim.localPosZ - ((DbeggPlacement *)data)->targetPosZ;
             Sfx_KeepAliveLoopedObjectSound(obj, 0x442);
             fz = *(f32 *)((int)d + 8);
             fz = fz >= lbl_803E61C8 ? fz : -fz;
@@ -4963,9 +4963,9 @@ void dbegg_update(int obj)
             if (fx + fz < lbl_803E625C) {
                 ObjHits_EnableObject(obj);
                 ((DbEggState *)blob)->mode = 1;
-                ((GameObject *)obj)->anim.localPosX = ((DbeggPlacement *)data)->unk8;
-                ((GameObject *)obj)->anim.localPosY = ((DbeggPlacement *)data)->unkC;
-                ((GameObject *)obj)->anim.localPosZ = ((DbeggPlacement *)data)->unk10;
+                ((GameObject *)obj)->anim.localPosX = ((DbeggPlacement *)data)->targetPosX;
+                ((GameObject *)obj)->anim.localPosY = ((DbeggPlacement *)data)->targetPosY;
+                ((GameObject *)obj)->anim.localPosZ = ((DbeggPlacement *)data)->targetPosZ;
             } else {
                 n = (int)(PSVECMag(obj + 0x24) / lbl_803E6260);
                 for (i = 0; i < n; i++) {
@@ -4978,7 +4978,7 @@ void dbegg_update(int obj)
         if (((DbEggState *)blob)->flags119 & 8) {
             *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
             ObjHits_DisableObject(obj);
-            if (GameBit_Get(((DbeggPlacement *)data)->unk1C) != 0) {
+            if (GameBit_Get(((DbeggPlacement *)data)->triggerGameBit) != 0) {
                 ((DbEggState *)blob)->flags119 &= ~9;
                 *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
                 ObjHits_EnableObject(obj);
@@ -4995,7 +4995,7 @@ void dbegg_update(int obj)
                         GameBit_Set(0x3c4, 1);
                         GameBit_Set(0x86d, 1);
                         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
-                        GameBit_Set(((DbeggPlacement *)d2)->unk1C, 1);
+                        GameBit_Set(((DbeggPlacement *)d2)->triggerGameBit, 1);
                         ((DbEggState *)b2)->msg11C = -1;
                         ((DbEggState *)b2)->msg11E = 0;
                         ((DbEggState *)b2)->msg120 = lbl_803E61CC;

@@ -17,9 +17,9 @@ typedef struct SkyLight {
     u8 unk6D;
     u8 unk6E;
     u8 unk6F;
-    f32 unk70;
-    f32 unk74;
-    f32 unk78;
+    f32 directionX;
+    f32 directionY;
+    f32 directionZ;
     f32 unk7C;
     f32 unk80;
     f32 unk84;
