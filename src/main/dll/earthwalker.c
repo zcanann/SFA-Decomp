@@ -47,7 +47,7 @@ void earthwalker_update(int obj)
     hitOut = ObjHitReact_Update(obj, gEarthWalkerHitReactEntries, 1, ewState->hitReactState,
                                 &ewState->hitReactStepScale);
     ewState->hitReactState = hitOut;
-    if ((u8)hitOut != 0) {
+    if (ewState->hitReactState != 0) {
         return;
     }
 
