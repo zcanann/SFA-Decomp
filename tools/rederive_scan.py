@@ -18,9 +18,11 @@ args = [a for a in sys.argv[1:] if not a.startswith('--')]
 flt = args[0] if args else None
 minpct = 90.0
 limit = 200
+skip = 0
 for a in sys.argv[1:]:
     if a.startswith('--min-pct'): minpct = float(a.split('=')[1])
     if a.startswith('--limit'): limit = int(a.split('=')[1])
+    if a.startswith('--skip'): skip = int(a.split('=')[1])
 
 r = json.load(open('build/GSAE01/report.json'))
 todo = []
@@ -35,7 +37,7 @@ for u in r['units']:
                 todo.append((un, f['name'], p))
 
 print(f'{len(todo)} fns; scanning up to {limit}', file=sys.stderr)
-for un, fn, p in todo[:limit]:
+for un, fn, p in todo[skip:skip+limit]:
     try:
         out = subprocess.run(['python3','tools/function_objdump.py',un,fn],
                              capture_output=True,text=True,timeout=60).stdout
