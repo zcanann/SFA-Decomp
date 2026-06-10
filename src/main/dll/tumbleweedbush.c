@@ -108,7 +108,7 @@ void trickyGrowl(void *param_1, void *param_2)
     case 3:
         trickyDebugPrint(strBase + 0x590);
         if (((GameObject *)param_1)->anim.currentMoveProgress >= lbl_803E24D0) {
-            *(u32 *)((char *)param_2 + 0x54) = *(u32 *)((char *)param_2 + 0x54) & 0xfffff7ff;
+            *(u32 *)((char *)param_2 + 0x54) &= ~0x800LL;
             *(u32 *)((char *)param_2 + 0x54) = *(u32 *)((char *)param_2 + 0x54) | 0x1000;
             for (i = 0, slot = (void **)param_2; i < 7; slot++, i++) {
                 objSetAnimSpeedTo1(slot[0x700 / 4]);
@@ -130,10 +130,10 @@ void trickyGrowl(void *param_1, void *param_2)
                 *(f32 *)((char *)param_2 + 0x71c) = resetValue;
                 *(f32 *)((char *)param_2 + 0x720) = resetValue;
             }
-            *(u32 *)((char *)param_2 + 0x54) = *(u32 *)((char *)param_2 + 0x54) & 0xffffffef;
-            *(u32 *)((char *)param_2 + 0x54) = *(u32 *)((char *)param_2 + 0x54) & 0xfffeffff;
-            *(u32 *)((char *)param_2 + 0x54) = *(u32 *)((char *)param_2 + 0x54) & 0xfffdffff;
-            *(u32 *)((char *)param_2 + 0x54) = *(u32 *)((char *)param_2 + 0x54) & 0xfffbffff;
+            *(u32 *)((char *)param_2 + 0x54) &= ~0x10LL;
+            *(u32 *)((char *)param_2 + 0x54) &= ~0x10000LL;
+            *(u32 *)((char *)param_2 + 0x54) &= ~0x20000LL;
+            *(u32 *)((char *)param_2 + 0x54) &= ~0x40000LL;
             *(s8 *)((char *)param_2 + 0xd) = -1;
         } else {
             void *target = *(void **)((char *)((GameObject *)param_1)->extra + 0x28);
