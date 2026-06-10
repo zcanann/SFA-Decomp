@@ -8,6 +8,7 @@
 #include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
+#include "main/objanim_update.h"
 #include "main/objseq.h"
 #include "main/resource.h"
 #include "main/dll/path_control_interface.h"
@@ -1614,7 +1615,7 @@ void Lightfoot_ProcessHitResponseFlags(int obj, int inner);
 void Lightfoot_ResetScriptedPosition(int obj);
 void Lightfoot_UpdateAttachedChild(int obj, int inner);
 void Lightfoot_UpdatePlayerInteraction(int obj, int inner, int state);
-int Lightfoot_SeqFn(int p1, int p2, int p3);
+int Lightfoot_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 int lightfoot_getExtraSize(void);
 int lightfoot_getObjectTypeId(void);
 void lightfoot_free(int obj, int p2);

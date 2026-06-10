@@ -10600,9 +10600,8 @@ void fn_802AC32C(int p1, int p2, int p3)
               powfBitEstimate(lbl_803E7F1C, timeDelta));
 }
 
-int Lightfoot_SeqFn(int p1, int p2, int p3)
+int Lightfoot_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
-    int obj = p1;
     int inner = *(int *)&((GameObject *)obj)->extra;
     int iv6 = *(int *)&((GameObject *)obj)->anim.placementData;
     int t;
@@ -10623,8 +10622,8 @@ int Lightfoot_SeqFn(int p1, int p2, int p3)
          *(f32 *)((char *)t + 0x10) <= z)) {
         Obj_FreeObject(obj);
     }
-    for (i = 0; i < *(u8 *)((char *)p3 + 0x8b); i++) {
-        if (*(u8 *)((char *)p3 + i + 0x81) == 1) {
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        if (animUpdate->eventIds[i] == 1) {
             *(u8 *)((char *)inner + 0x404) = *(u8 *)((char *)inner + 0x404) | 1;
             GameBit_Set(*(s16 *)((char *)iv6 + 0x1c), 1);
             arr[3] = lbl_803E8180;

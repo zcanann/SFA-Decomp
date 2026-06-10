@@ -6,6 +6,7 @@
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
 #include "main/objanim_internal.h"
+#include "main/objanim_update.h"
 #include "main/objhits_types.h"
 #include "main/objseq.h"
 #include "main/resource.h"
@@ -1940,7 +1941,7 @@ extern int* lbl_803DCAB4;
 #define gBoneParticleEffectInterface lbl_803DCAB4
 extern int Stack_IsEmpty(int stack);
 extern int Stack_Pop(int stack, int *out);
-int SB_SeqDoor_SeqFn(int p1, int p2, int p3);
+int SB_SeqDoor_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 int Lamp_SeqFn(int obj, int unused, int state);
 void SB_CloudBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E58E8); }
 void SB_SeqDoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5920); }
@@ -1981,17 +1982,17 @@ void Flag_update(int obj)
                                                                      NULL);
     }
 }
-int SB_KyteCage_SeqFn(int obj, int unused, int seqState)
+int SB_KyteCage_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     int i;
     int state;
 
     i = 0;
     state = *(int *)&((GameObject *)obj)->extra;
-    while (i < *(u8 *)(seqState + 0x8b)) {
+    while (i < animUpdate->eventCount) {
         u8 seqCode;
 
-        seqCode = *(u8 *)(seqState + (i + 0x81));
+        seqCode = animUpdate->eventIds[i];
         if (seqCode == 1) {
             *(u8 *)(state + 4) = 1;
         } else if (seqCode == 2) {
@@ -2000,37 +2001,37 @@ int SB_KyteCage_SeqFn(int obj, int unused, int seqState)
         i++;
     }
 
-    *(s16 *)(seqState + 0x6e) = -4;
+    animUpdate->hitVolumePair = -4;
     if (((GameObject *)obj)->unkB4 != -1) {
-        *(s16 *)(seqState + 0x6e) = (s16)(*(s16 *)(seqState + 0x6e) & ~4);
+        animUpdate->hitVolumePair &= ~4;
         if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E5918,
                                                                          timeDelta, NULL) != 0) {
             Sfx_PlayFromObject((int *)obj, SFXfend_rob_beep2);
         }
     }
 
-    *(u8 *)(seqState + 0x56) = 0;
+    animUpdate->sequenceEventActive = 0;
     return 0;
 }
 /* EN v1.0 0x801E4F14  size: 60b  Decrement obj->_f4 if > 0, OR in bit 0x8
  * of obj->_af, latch state->_6e = -2 and state->_56 = 0; return 0. */
-int SB_CageKyte_SeqFn(int* obj, int p2, void* state)
+int SB_CageKyte_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     int v = ((GameObject *)obj)->unkF4;
     if (v > 0) {
         ((GameObject *)obj)->unkF4 = v - 1;
     }
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x8;
-    *(s16*)((char*)state + 0x6e) = -2;
-    *(u8*)((char*)state + 0x56) = 0;
+    animUpdate->hitVolumePair = -2;
+    animUpdate->sequenceEventActive = 0;
     return 0;
 }
-int SB_SeqDoor_SeqFn(int p1, int p2, int p3)
+int SB_SeqDoor_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
-    if (*(s16 *)((char *)p1 + 0x46) != 0x173) {
-        *(s16 *)((char *)p3 + 0x6e) = -2;
+    if (((GameObject *)obj)->anim.seqId != 0x173) {
+        animUpdate->hitVolumePair = -2;
     }
-    *(u8 *)((char *)p3 + 0x56) = 0;
+    animUpdate->sequenceEventActive = 0;
     return 0;
 }
 extern f32 lbl_803E597C;
