@@ -251,7 +251,7 @@ void dbsh_shrine_render(int obj,undefined4 p2,undefined4 p3,undefined4 p4,undefi
     if (state[0] != NULL) {
       modelLightStruct_setEnabled((int)state[0],1,(double)lbl_803E50D8);
     }
-    objRenderFn_8003b8f4((double)lbl_803E50D8,obj,p2,p3,p4,p5);
+    ((void (*)(int, undefined4, undefined4, undefined4, undefined4, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E50D8);
     objParticleFn_80099d84(obj, lbl_803E50D8, 7, *(f32 *)&lbl_803E50D8, (int)state[0]);
   }
 }
