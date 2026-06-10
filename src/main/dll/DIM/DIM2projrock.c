@@ -1249,9 +1249,9 @@ void dim2icicle_update(int obj)
                 (void *)obj, ((GameObject *)obj)->anim.localPosX,
                 ((Dim2IcicleState *)sub)->dropY, ((GameObject *)obj)->anim.localPosZ,
                 lbl_803E4B7C);
-            (*gWaterfxInterface)->spawnRipple(
-                0, 2, ((GameObject *)obj)->anim.localPosX, ((Dim2IcicleState *)sub)->dropY,
-                ((GameObject *)obj)->anim.localPosZ, lbl_803E4B80);
+            ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(
+                ((GameObject *)obj)->anim.localPosX, ((Dim2IcicleState *)sub)->dropY,
+                ((GameObject *)obj)->anim.localPosZ, 0, lbl_803E4B80, 2);
             Sfx_PlayFromObject(obj, SFXmv_missingcog_lp);
             ((Dim2IcicleState *)sub)->timer = 0x96;
         }
