@@ -164,15 +164,15 @@ void runLoadingScreens(void)
  */
 void initLoadingScreenTextures(void)
 {
-  int arenaHi;
-  int i;
-  LoadingScreenTexture **textureSlot;
-  LoadingScreenTexture *textureHeader;
-  void *texObj;
-  uint textureFormat;
-  uint textureWidth;
-  uint textureHeight;
   int textureSize;
+  int arenaHi;
+  void *texObj;
+  LoadingScreenTexture *textureHeader;
+  LoadingScreenTexture **textureSlot;
+  uint textureFormat;
+  uint textureHeight;
+  uint textureWidth;
+  int i;
 
   arenaHi = (int)OSGetArenaHi() - 0x40000;
   for (i = 0; i < 3; i++) {
