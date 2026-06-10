@@ -202,8 +202,10 @@ void WCPushBlock_UpdateCloudAction(int obj, WCPushBlockState *state)
     state->bankAmount = state->liftAmount;
     state->liftBase = baseLift;
 
-    moveZ = (moveZ * timeDelta) / lbl_803E5C98;
-    moveX = (moveX * timeDelta) / lbl_803E5C98;
+    moveZ = moveZ * timeDelta;
+    moveX = moveX * timeDelta;
+    moveZ = moveZ / lbl_803E5C98;
+    moveX = moveX / lbl_803E5C98;
     (*gCloudActionInterface)->moveRelative(moveZ, moveX);
 }
 
