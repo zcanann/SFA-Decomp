@@ -2368,6 +2368,7 @@ typedef struct CheckpointPair {
 #pragma dont_inline off
 s32 fn_800D55BC(u8 *p, s32 idx, f32 *out1, f32 *out2, f32 *out3, u8 mode, f32 fa, f32 fb)
 {
+    s32 ret;
     s32 local_idx;
     u8 *q;
     f32 cosA;
@@ -2376,7 +2377,6 @@ s32 fn_800D55BC(u8 *p, s32 idx, f32 *out1, f32 *out2, f32 *out3, u8 mode, f32 fa
     f32 sinB;
     f32 sclA;
     f32 sclB;
-    s32 ret;
     s32 i;
     s32 j;
     f32 *v3;
