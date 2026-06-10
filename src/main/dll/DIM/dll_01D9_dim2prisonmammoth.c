@@ -1,3 +1,4 @@
+#include "main/dll/baddie_state.h"
 #include "main/objHitReact.h"
 #include "main/game_object.h"
 #include "main/objanim_update.h"
@@ -656,19 +657,19 @@ void dim2prisonmammoth_initialise(void)
 int dim2prisonmammoth_stateHandler03(int obj, int p2)
 {
     f32 fz = lbl_803E82C0;
-    *(f32 *)((char *)p2 + 0x294) = fz;
-    *(f32 *)((char *)p2 + 0x284) = fz;
-    *(f32 *)((char *)p2 + 0x280) = fz;
+    ((BaddieState *)p2)->unk294 = fz;
+    ((BaddieState *)p2)->animSpeedB = fz;
+    ((BaddieState *)p2)->animSpeedA = fz;
     ((GameObject *)obj)->anim.velocityX = fz;
     ((GameObject *)obj)->anim.velocityY = fz;
     ((GameObject *)obj)->anim.velocityZ = fz;
     *(int *)((char *)p2 + 0) |= 0x200000;
-    if (*(s8 *)((char *)p2 + 0x27a) != 0) {
+    if (*(s8 *)&((BaddieState *)p2)->moveJustStartedA != 0) {
         int k = randomGetRange(0, 1);
-        *(f32 *)((char *)p2 + 0x2a0) = (&lbl_803DC758)[k];
+        ((BaddieState *)p2)->moveSpeed = (&lbl_803DC758)[k];
         ObjAnim_SetCurrentMove(obj, (&lbl_803DC754)[k], lbl_803E82C0, 0);
     }
-    if (*(s8 *)((char *)p2 + 0x346) != 0) {
+    if (*(s8 *)&((BaddieState *)p2)->moveDone != 0) {
         return -1;
     }
     return 0;
@@ -678,14 +679,14 @@ int dim2prisonmammoth_stateHandler02(int obj, int p2)
 {
     int inner = *(int *)&((GameObject *)obj)->extra;
     f32 fz = lbl_803E82C0;
-    *(f32 *)((char *)p2 + 0x294) = fz;
-    *(f32 *)((char *)p2 + 0x284) = fz;
-    *(f32 *)((char *)p2 + 0x280) = fz;
+    ((BaddieState *)p2)->unk294 = fz;
+    ((BaddieState *)p2)->animSpeedB = fz;
+    ((BaddieState *)p2)->animSpeedA = fz;
     ((GameObject *)obj)->anim.velocityX = fz;
     ((GameObject *)obj)->anim.velocityY = fz;
     ((GameObject *)obj)->anim.velocityZ = fz;
     *(int *)((char *)p2 + 0) |= 0x200000;
-    *(f32 *)((char *)p2 + 0x2a0) = lbl_803E82C4;
+    ((BaddieState *)p2)->moveSpeed = lbl_803E82C4;
     if (((GameObject *)obj)->anim.currentMove != 0) {
         ObjAnim_SetCurrentMove(obj, 0, fz, 0);
     }
@@ -702,15 +703,15 @@ int dim2prisonmammoth_stateHandler01(int obj, int p2)
 {
     int inner = *(int *)&((GameObject *)obj)->extra;
     f32 fz = lbl_803E82C0;
-    *(f32 *)((char *)p2 + 0x294) = fz;
-    *(f32 *)((char *)p2 + 0x284) = fz;
-    *(f32 *)((char *)p2 + 0x280) = fz;
+    ((BaddieState *)p2)->unk294 = fz;
+    ((BaddieState *)p2)->animSpeedB = fz;
+    ((BaddieState *)p2)->animSpeedA = fz;
     ((GameObject *)obj)->anim.velocityX = fz;
     ((GameObject *)obj)->anim.velocityY = fz;
     ((GameObject *)obj)->anim.velocityZ = fz;
     *(int *)((char *)p2 + 0) |= 0x200000;
-    if (*(s8 *)((char *)p2 + 0x27a) != 0) {
-        *(f32 *)((char *)p2 + 0x2a0) = lbl_803E82C4;
+    if (*(s8 *)&((BaddieState *)p2)->moveJustStartedA != 0) {
+        ((BaddieState *)p2)->moveSpeed = lbl_803E82C4;
         if (((GameObject *)obj)->anim.currentMove != 5) {
             ObjAnim_SetCurrentMove(obj, 5, fz, 0);
         }

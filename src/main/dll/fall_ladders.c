@@ -1,3 +1,4 @@
+#include "main/dll/baddie_state.h"
 #include "main/audio/sfx_ids.h"
 #include "main/effect_interfaces.h"
 #include "main/game_object.h"
@@ -358,31 +359,31 @@ extern f32 lbl_803E298C;
 void fn_801544E8(int* obj, u8* state, int p3, int p4) {
     if (p4 == 17 || p4 == 16) return;
     if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E29A4) {
-        *(int*)((char*)state + 744) |= 8;
+        *(int *)&((BaddieState *)state)->reactionFlags |= 8;
         Sfx_PlayFromObject(obj, SFXdoor_unlocked);
         Sfx_PlayFromObject(obj, SFXdoor_creak);
-        *(s16*)((char*)state + 688) = 0;
-        *(int*)((char*)state + 740) |= 32;
+        *(s16 *)&((BaddieState *)state)->hitCounter = 0;
+        ((BaddieState *)state)->unk2E4 |= 32;
     } else {
-        *(int*)((char*)state + 744) |= 16;
+        *(int *)&((BaddieState *)state)->reactionFlags |= 16;
     }
 }
 
 void fn_801542AC(int unused, u8* state) {
     f32 fz;
     f32 fc;
-    *(f32*)((char*)state + 684) = lbl_803E2978;
-    *(int*)((char*)state + 740) = 173;
-    *(f32*)((char*)state + 776) = lbl_803E297C;
-    *(f32*)((char*)state + 768) = lbl_803E2954;
-    *(f32*)((char*)state + 772) = lbl_803E2980;
+    ((BaddieState *)state)->unk2AC = lbl_803E2978;
+    ((BaddieState *)state)->unk2E4 = 173;
+    ((BaddieState *)state)->unk308 = lbl_803E297C;
+    ((BaddieState *)state)->unk300 = lbl_803E2954;
+    ((BaddieState *)state)->unk304 = lbl_803E2980;
     state[800] = 0;
     fz = lbl_803E2984;
-    *(f32*)((char*)state + 788) = fz;
+    *(f32 *)&((BaddieState *)state)->eventFlags = fz;
     state[801] = 7;
-    *(f32*)((char*)state + 792) = lbl_803E2988;
+    ((BaddieState *)state)->unk318 = lbl_803E2988;
     state[802] = 0;
-    *(f32*)((char*)state + 796) = fz;
+    ((BaddieState *)state)->unk31C = fz;
     fc = lbl_803E294C;
     *(f32*)((char*)state + 804) = fc;
     *(f32*)((char*)state + 808) = fc;
@@ -390,5 +391,5 @@ void fn_801542AC(int unused, u8* state) {
     state[826] = 0;
     state[827] = 0;
     *(f32*)((char*)state + 816) = lbl_803E298C;
-    *(f32*)((char*)state + 764) = lbl_803E2958;
+    ((BaddieState *)state)->pathStep = lbl_803E2958;
 }

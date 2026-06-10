@@ -1,3 +1,4 @@
+#include "main/dll/tricky_state.h"
 #include "main/dll/animobjD2.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
@@ -57,20 +58,20 @@ fail:
 
 void trickyUpdateCirclingTargetPosition(void *p1, void *p2) {
     GameObject *obj = (GameObject *)p1;
-    GameObject *target = *(GameObject **)((u8 *)p2 + 0x24);
+    GameObject *target = *(GameObject **)&((TrickyState *)p2)->unk24;
     f32 dx = target->anim.worldPosX - obj->anim.worldPosX;
     f32 dz = target->anim.worldPosZ - obj->anim.worldPosZ;
     int angle = atan2_8002178c(dx, dz);
     s32 delta;
     s32 absDelta;
 
-    if (*(u8 *)((u8 *)p2 + 0xa) == 0) {
-        *(s32 *)((u8 *)p2 + 0x700) = randomGetRange(0, 1);
-        if (*(s32 *)((u8 *)p2 + 0x700) == 0) {
-            *(s32 *)((u8 *)p2 + 0x700) = -1;
+    if (((TrickyState *)p2)->unkA == 0) {
+        *(s32 *)&((TrickyState *)p2)->unk700 = randomGetRange(0, 1);
+        if (*(s32 *)&((TrickyState *)p2)->unk700 == 0) {
+            *(s32 *)&((TrickyState *)p2)->unk700 = -1;
         }
-        *(s32 *)((u8 *)p2 + 0x704) = angle;
-        *(u8 *)((u8 *)p2 + 0xa) = 1;
+        *(s32 *)&((TrickyState *)p2)->unk704 = angle;
+        ((TrickyState *)p2)->unkA = 1;
     }
 
     delta = angle - (s32)(u16)*(volatile s32 *)((u8 *)p2 + 0x704);
@@ -83,18 +84,18 @@ void trickyUpdateCirclingTargetPosition(void *p1, void *p2) {
         absDelta = -delta;
     }
     if (absDelta < 0x2000) {
-        *(s32 *)((u8 *)p2 + 0x704) =
-            *(volatile s32 *)((u8 *)p2 + 0x704) + (*(s32 *)((u8 *)p2 + 0x700) << 11);
+        *(s32 *)&((TrickyState *)p2)->unk704 =
+            *(volatile s32 *)((u8 *)p2 + 0x704) + (*(s32 *)&((TrickyState *)p2)->unk700 << 11);
     }
 
-    *(f32 *)((u8 *)p2 + 0x708) =
-        (*(GameObject **)((u8 *)p2 + 0x24))->anim.worldPosX -
-        lbl_803E24D4 * fsin16Precise((u16)*(s32 *)((u8 *)p2 + 0x704));
-    *(f32 *)((u8 *)p2 + 0x70c) =
-        (*(GameObject **)((u8 *)p2 + 0x24))->anim.worldPosY;
-    *(f32 *)((u8 *)p2 + 0x710) =
-        (*(GameObject **)((u8 *)p2 + 0x24))->anim.worldPosZ -
-        lbl_803E24D4 * fcos16Precise((u16)*(s32 *)((u8 *)p2 + 0x704));
+    *(f32 *)&((TrickyState *)p2)->unk708 =
+        (*(GameObject **)&((TrickyState *)p2)->unk24)->anim.worldPosX -
+        lbl_803E24D4 * fsin16Precise((u16)*(s32 *)&((TrickyState *)p2)->unk704);
+    *(f32 *)&((TrickyState *)p2)->unk70C =
+        (*(GameObject **)&((TrickyState *)p2)->unk24)->anim.worldPosY;
+    ((TrickyState *)p2)->unk710 =
+        (*(GameObject **)&((TrickyState *)p2)->unk24)->anim.worldPosZ -
+        lbl_803E24D4 * fcos16Precise((u16)*(s32 *)&((TrickyState *)p2)->unk704);
 
     if (trickyFn_8013b368(p1, lbl_803E2488, p2) == 0) {
         trickyReportError(sTrickyShouldNeverStopCirclingError);
