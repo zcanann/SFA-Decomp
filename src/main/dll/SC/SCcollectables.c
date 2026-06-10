@@ -299,7 +299,7 @@ int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
             *(u8 *)(state + 0xa) = *(u8 *)(state + 0xa) | 1;
         }
         {
-            int hit = (GameBit_Get(0x2e8) != 0 || GameBit_Get(0x123) != 0);
+            int hit = (GameBit_Get(0x2e8) != 0 || GameBit_Get(0x123) != 0) ? 1 : 0;
             if (hit) {
                 *(u8 *)(state + 0xa) = *(u8 *)(state + 0xa) | 2;
             }
