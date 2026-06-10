@@ -243,8 +243,8 @@ void objAnimFn_8014a9f0(short *obj, int state)
   if ((((TrickyState *)state)->controlFlags & 0x400) != 0) {
     characterDoEyeAnims(obj, (void *)(state + 0x26c));
   }
-  if ((*(void **)&((TrickyState *)state)->unk29C != 0) && ((((TrickyState *)state)->controlFlags & 0x800) != 0)) {
-    fn_8003B0D0(obj, *(int *)&((TrickyState *)state)->unk29C, (void *)(state + 0x26c), 0x19);
+  if ((*(void **)&((TrickyState *)state)->actionTargetObj != 0) && ((((TrickyState *)state)->controlFlags & 0x800) != 0)) {
+    fn_8003B0D0(obj, *(int *)&((TrickyState *)state)->actionTargetObj, (void *)(state + 0x26c), 0x19);
   }
   ((TrickyState *)state)->unk2F0 = ((TrickyState *)state)->unk2EF;
   flags = ((TrickyState *)state)->flags2DC;
@@ -386,7 +386,7 @@ void objAnimFn_8014a9f0(short *obj, int state)
     ((TrickyState *)state)->unk2EF = 2;
     if (((((TrickyState *)state)->flags2DC & 0x100) != 0) && ((((TrickyState *)state)->unk2E0 & 0x100) == 0)) {
       int moveId = ((TrickyState *)state)->unk322;
-      ((TrickyState *)state)->unk308 = lbl_803E256C / (lbl_803E2570 * ((TrickyState *)state)->unk31C);
+      ((TrickyState *)state)->animPlaySpeed = lbl_803E256C / (lbl_803E2570 * ((TrickyState *)state)->unk31C);
       ((TrickyState *)state)->unk323 = 1;
       ObjAnim_SetCurrentMove((int)obj, moveId, lbl_803E2574, 0x10);
       if (*(void **)(obj + 0x2a) != 0) {
@@ -394,7 +394,7 @@ void objAnimFn_8014a9f0(short *obj, int state)
       }
     }
     if ((((TrickyState *)state)->flags2DC & 0x40000000) != 0) {
-      ((TrickyState *)state)->unk308 = lbl_803E2578;
+      ((TrickyState *)state)->animPlaySpeed = lbl_803E2578;
       ((TrickyState *)state)->unk323 = 0;
       ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2574, 0);
       if (*(void **)(obj + 0x2a) != 0) {
@@ -478,7 +478,7 @@ void objAnimFn_8014a9f0(short *obj, int state)
     ((TrickyState *)state)->flags2DC = ((TrickyState *)state)->flags2DC & 0x7fffffff;
   }
   res.eventCount = 0;
-  if (((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)((int)obj, ((TrickyState *)state)->unk308, timeDelta,
+  if (((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)((int)obj, ((TrickyState *)state)->animPlaySpeed, timeDelta,
                                  (ObjAnimEventList *)&res) != 0) {
     ((TrickyState *)state)->flags2DC |= 0x40000000LL;
   }
@@ -550,7 +550,7 @@ void objAnimFn_8014a9f0(short *obj, int state)
             sqrtf(*(f32 *)(obj + 0x12) * *(f32 *)(obj + 0x12) +
                   *(f32 *)(obj + 0x16) * *(f32 *)(obj + 0x16)),
             (ObjAnimComponent *)obj, &phase) != 0) {
-      ((TrickyState *)state)->unk308 = phase;
+      ((TrickyState *)state)->animPlaySpeed = phase;
     }
   }
   else if (mode == 3) {
@@ -1308,14 +1308,14 @@ int enemy_animEventCallback(int *node, int unused, ObjAnimUpdateState *animUpdat
             if (obj != NULL) {
                 (*(void (*)(int *, int, int *))(*(int *)(*(int *)(*(int *)&((GameObject *)obj)->anim.dll) + 0x34)))(obj, 1, node);
                 ((TrickyState *)sub)->flags2DC |= 0x200000;
-                *(int **)&((TrickyState *)sub)->unk29C = obj;
+                *(int **)&((TrickyState *)sub)->actionTargetObj = obj;
             }
             break;
         case 4:
             obj = Obj_GetPlayerObject();
             if (obj != NULL) {
                 ((TrickyState *)sub)->flags2DC &= ~0x200000;
-                *(int **)&((TrickyState *)sub)->unk29C = obj;
+                *(int **)&((TrickyState *)sub)->actionTargetObj = obj;
             }
             break;
         case 2:
@@ -1374,7 +1374,7 @@ void fn_8014B878(int *arg1, int *sub) {
 
     player = Obj_GetPlayerObject();
     tricky = getTrickyObject();
-    target = *(int**)&((TrickyState *)sub)->unk29C;
+    target = *(int**)&((TrickyState *)sub)->actionTargetObj;
     if (target != NULL && (((TrickyState *)sub)->controlFlags & 0x10000) == 0 &&
         (target != player || (((GameObject *)player)->objectFlags & 0x1000) == 0)) {
         ((TrickyState *)sub)->flags2DC &= 0xff7fffff;
@@ -1384,7 +1384,7 @@ void fn_8014B878(int *arg1, int *sub) {
         }
         {
             u16 dist = ((TrickyState *)sub)->unk2A4;
-            u16 near = (u16)(int)((TrickyState *)sub)->unk2AC;
+            u16 near = (u16)(int)((TrickyState *)sub)->waterLevel;
             if (dist < near) {
                 ((TrickyState *)sub)->flags2DC |= 0x400;
                 ((TrickyState *)sub)->flags2DC &= 0xfffffdff;
@@ -1405,7 +1405,7 @@ void fn_8014B878(int *arg1, int *sub) {
     } else {
         ((TrickyState *)sub)->flags2DC &= 0xff7ff9ff;
         if ((((TrickyState *)sub)->controlFlags & 0x10000) != 0 ||
-            (*(int**)&((TrickyState *)sub)->unk29C == player && (((GameObject *)player)->objectFlags & 0x1000) != 0)) {
+            (*(int**)&((TrickyState *)sub)->actionTargetObj == player && (((GameObject *)player)->objectFlags & 0x1000) != 0)) {
             ((TrickyState *)sub)->flags2DC &= 0xdfffffff;
         }
     }
@@ -1414,7 +1414,7 @@ void fn_8014B878(int *arg1, int *sub) {
         u8 r = (*(u8(**)(int*))(*(int*)*(int*)((char*)tricky + 0x68) + 0x40))(tricky);
         if ((u8)r != 0) ((TrickyState *)sub)->flags2DC |= 0x200000;
     }
-    if (*(int**)&((TrickyState *)sub)->unk29C == player) {
+    if (*(int**)&((TrickyState *)sub)->actionTargetObj == player) {
         if (playerIsDisguised(player) != 0) {
             ((TrickyState *)sub)->flags2DC |= 8;
             if ((((TrickyState *)sub)->controlFlags & 0x2000) != 0) {
@@ -1425,7 +1425,7 @@ void fn_8014B878(int *arg1, int *sub) {
     if ((((TrickyState *)sub)->flags2DC & 0x20000600) != 0) {
         if ((((TrickyState *)sub)->controlFlags & 0x1000) != 0) {
             u8 r = baddieTargetFn_8014a150((int)arg1, (u8*)sub, (f32*)((char*)arg1 + 0x18),
-                                            (void*)(*(char**)&((TrickyState *)sub)->unk29C + 0x18));
+                                            (void*)(*(char**)&((TrickyState *)sub)->actionTargetObj + 0x18));
             if ((u8)r != 0) ((TrickyState *)sub)->flags2DC |= 0x1000000;
             if ((((TrickyState *)sub)->flags2DC & 0x1000000) == 0) {
                 ((TrickyState *)sub)->flags2DC &= 0xdfffffff;
@@ -1442,7 +1442,7 @@ void fn_8014B878(int *arg1, int *sub) {
             }
         }
         if ((((TrickyState *)sub)->controlFlags & 0x4000) == 0) {
-            f32 *t = (f32*)*(int**)&((TrickyState *)sub)->unk29C;
+            f32 *t = (f32*)*(int**)&((TrickyState *)sub)->actionTargetObj;
             f32 mag = sqrtf(t[11]*t[11] + (t[9]*t[9] + t[10]*t[10]));
             if (mag > lbl_803E25D4) ((TrickyState *)sub)->flags2DC |= 0x4000000;
         }
@@ -1453,7 +1453,7 @@ void fn_8014B878(int *arg1, int *sub) {
         }
         if ((((TrickyState *)sub)->flags2DC & 0x20000000) != 0) {
             if ((((TrickyState *)sub)->controlFlags & 0x40) != 0) {
-                baddieFn_8014a304(arg1, sub, ((TrickyState *)sub)->unk2AC);
+                baddieFn_8014a304(arg1, sub, ((TrickyState *)sub)->waterLevel);
             } else {
                 ((TrickyState *)sub)->flags2DC |= 0xf0000;
             }
@@ -1600,7 +1600,7 @@ void fn_8014CD1C(int *node, int *sub, u16 p3, u8 p5, f32 fa, f32 fb) {
 }
 
 void fn_8014BC98(int *node, int *sub) {
-    int *target = *(int**)&((TrickyState *)sub)->unk29C;
+    int *target = *(int**)&((TrickyState *)sub)->actionTargetObj;
     if (target != NULL) {
         volatile f32 d[3];
         int angle;
@@ -1635,7 +1635,7 @@ void fn_8014BC98(int *node, int *sub) {
         *(s16 *)&((TrickyState *)sub)->unk2A4 = (s16)(s32)dist;
 
         {
-            int *t = *(int**)&((TrickyState *)sub)->unk29C;
+            int *t = *(int**)&((TrickyState *)sub)->actionTargetObj;
             *(s16 *)&((TrickyState *)sub)->unk2A6 = (s16)(s32)(*(f32*)((char*)t + 0x1c) - ((GameObject *)node)->anim.worldPosY);
         }
     }

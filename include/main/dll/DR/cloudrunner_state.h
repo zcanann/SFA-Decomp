@@ -10,28 +10,28 @@ typedef struct CloudRunnerState {
     f32 unk3C4;
     f32 unk3C8;
     f32 unk3CC;
-    f32 unk3D0;
-    f32 unk3D4;
-    f32 unk3D8;
+    f32 pathPointX;
+    f32 pathPointY;
+    f32 pathPointZ;
     u8 pad3DC[0x464 - 0x3dc];
     u8 unk464;
     u8 pad465[0xad5 - 0x465];
-    u8 unkAD5;
+    u8 moveFlags;
     u8 padAD6[0xae8 - 0xad6];
     f32 unkAE8;
     f32 unkAEC;
     f32 unkAF0;
-    f32 unkAF4;
-    f32 unkAF8;
-    f32 unkAFC;
+    f32 lastPosX;
+    f32 lastPosY;
+    f32 lastPosZ;
     u8 padB00[4];
     int unkB04;
     u8 padB08[0xb50 - 0xb08];
-    f32 unkB50;
+    f32 pathFollowSpeed;
     u8 padB54[0xbae - 0xb54];
     s16 unkBAE;
-    s16 unkBB0;
-    u8 unkBB2;
+    s16 airTimeRemaining;
+    u8 flightState;
     u8 padBB3;
     u8 unkBB4;
     u8 padBB5;
@@ -40,13 +40,13 @@ typedef struct CloudRunnerState {
     u8 unkBB8;
     u8 padBB9;
     s16 unkBBA;
-    s16 unkBBC;
-    s16 unkBBE;
+    s16 pitchAngle;
+    s16 rollAngle;
     u8 flagsBC0; /* ByteFlags */
     u8 flagsBC1; /* ByteFlags */
     u8 padBC2;
-    s8 unkBC3;
-    s8 unkBC4;
+    s8 cooldownTimer;
+    s8 sequenceIndex;
     u8 padBC5[3];
 } CloudRunnerState;
 

@@ -915,7 +915,7 @@ void Tricky_destroy(int obj,int shouldKeepFlameChildren)
     ObjLink_DetachChild(obj,*(int *)&((TrickyState *)state)->unk7CC);
     Obj_FreeObject(*(int *)&((TrickyState *)state)->unk7CC);
   }
-  if (((((TrickyState *)state)->unk58 >> 7 & 1) != 0) && (lbl_803DDA48 != 0)) {
+  if (((((TrickyState *)state)->statusFlags >> 7 & 1) != 0) && (lbl_803DDA48 != 0)) {
     Obj_FreeObject(lbl_803DDA48);
     lbl_803DDA48 = 0;
   }
@@ -1096,10 +1096,10 @@ void Tricky_update(int obj)
       (*gPathControlInterface)->attachObject((void *)obj,
                                              &((TrickyState *)state)->pathControlFlags);
       if (((GameObject *)obj)->anim.currentMove == 8 || ((GameObject *)obj)->anim.currentMove == 7) {
-        ((TrickyState *)state)->unk2AC = lbl_803E2414;
+        ((TrickyState *)state)->waterLevel = lbl_803E2414;
         ((TrickyState *)state)->unk2B0 = lbl_803E2544;
       } else {
-        ((TrickyState *)state)->unk2AC = lbl_803E23DC;
+        ((TrickyState *)state)->waterLevel = lbl_803E23DC;
       }
     }
     ((TrickyState *)state)->stateFlags = ((TrickyState *)state)->stateFlags & 0xffffbdfe;
@@ -1395,18 +1395,18 @@ void Tricky_update(int obj)
   ((TrickyState *)state)->unk353 = 1;
   ((TrickyHandlerTable *)base)->handlers[((TrickyState *)state)->unk08](obj,state);
   ((TrickyState *)state)->stateFlags = ((TrickyState *)state)->stateFlags & 0xfffffffd;
-  ((TrickyState *)state)->unk18 += timeDelta;
-  if (((TrickyState *)state)->unk18 > lbl_803E247C) {
+  ((TrickyState *)state)->animTransitionTimer += timeDelta;
+  if (((TrickyState *)state)->animTransitionTimer > lbl_803E247C) {
     if (((GameObject *)obj)->anim.currentMove != ((TrickyState *)state)->moveId) {
-      if ((((TrickyState *)state)->unk50 & 0x1000000) != 0 && (((TrickyState *)state)->stateFlags & 0x1000000) != 0) {
+      if ((((TrickyState *)state)->pendingStateFlags & 0x1000000) != 0 && (((TrickyState *)state)->stateFlags & 0x1000000) != 0) {
         ObjAnim_SetCurrentMove(obj,((TrickyState *)state)->moveId,((GameObject *)obj)->anim.currentMoveProgress,0);
       } else {
         ObjAnim_SetCurrentMove(obj,((TrickyState *)state)->moveId,lbl_803E23DC,0);
       }
       ((TrickyState *)state)->stateFlags = ((TrickyState *)state)->stateFlags & 0xf9fffe1f;
-      ((TrickyState *)state)->stateFlags = ((TrickyState *)state)->stateFlags | ((TrickyState *)state)->unk50;
-      ((TrickyState *)state)->unk18 = lbl_803E23DC;
-      ((TrickyState *)state)->moveProgress = ((TrickyState *)state)->unk38;
+      ((TrickyState *)state)->stateFlags = ((TrickyState *)state)->stateFlags | ((TrickyState *)state)->pendingStateFlags;
+      ((TrickyState *)state)->animTransitionTimer = lbl_803E23DC;
+      ((TrickyState *)state)->moveProgress = ((TrickyState *)state)->moveProgressTarget;
     }
   }
   if ((((TrickyState *)state)->stateFlags & 0x2000000) != 0) {
@@ -1430,7 +1430,7 @@ void Tricky_update(int obj)
     if (diff < -0x8000) {
       diff += 0xffff;
     }
-    step = (int)((f32)((TrickyState *)state)->unk81A * ((TrickyState *)state)->unk4C);
+    step = (int)((f32)((TrickyState *)state)->rotRate * ((TrickyState *)state)->rotStepScale);
     if ((diff < 0 ? -diff : diff) >= 4) {
       if ((step > 0 && diff > 0) || (step < 0 && diff < 0)) {
         if ((step < 0 ? -step : step) > (diff < 0 ? -diff : diff)) {
@@ -1446,15 +1446,15 @@ void Tricky_update(int obj)
     }
   }
   if ((((TrickyState *)state)->stateFlags & 0x40) != 0) {
-    ((GameObject *)obj)->anim.localPosX += ((TrickyState *)state)->unk44 * (((TrickyState *)state)->dirX * -((TrickyState *)state)->unk814);
-    ((GameObject *)obj)->anim.localPosZ += ((TrickyState *)state)->unk44 * (((TrickyState *)state)->dirZ * -((TrickyState *)state)->unk814);
+    ((GameObject *)obj)->anim.localPosX += ((TrickyState *)state)->backstepDelta * (((TrickyState *)state)->dirX * -((TrickyState *)state)->unk814);
+    ((GameObject *)obj)->anim.localPosZ += ((TrickyState *)state)->backstepDelta * (((TrickyState *)state)->dirZ * -((TrickyState *)state)->unk814);
   }
   if ((((TrickyState *)state)->stateFlags & 0x80) != 0) {
-    ((GameObject *)obj)->anim.localPosY += ((TrickyState *)state)->unk810 * ((TrickyState *)state)->unk48;
+    ((GameObject *)obj)->anim.localPosY += ((TrickyState *)state)->unk810 * ((TrickyState *)state)->verticalDelta;
   }
   if ((((TrickyState *)state)->stateFlags & 0x20) != 0) {
-    ((GameObject *)obj)->anim.localPosX += ((TrickyState *)state)->unk40 * (((TrickyState *)state)->dirZ * ((TrickyState *)state)->unk80C);
-    ((GameObject *)obj)->anim.localPosZ += ((TrickyState *)state)->unk40 * (((TrickyState *)state)->dirX * -((TrickyState *)state)->unk80C);
+    ((GameObject *)obj)->anim.localPosX += ((TrickyState *)state)->sidestepDelta * (((TrickyState *)state)->dirZ * ((TrickyState *)state)->unk80C);
+    ((GameObject *)obj)->anim.localPosZ += ((TrickyState *)state)->sidestepDelta * (((TrickyState *)state)->dirX * -((TrickyState *)state)->unk80C);
   }
   if (*(void **)&((TrickyState *)state)->followObj != NULL) {
     ((TrickyState *)state)->unk378 = 1;
@@ -1537,7 +1537,7 @@ void Tricky_update(int obj)
   if (((TrickyState *)state)->speed > lbl_803E254C) {
     objAudioFn_8006ef38(obj,state + 0x80c,1,state + 0x7d8,state + 0xf8,((TrickyState *)state)->speed,lbl_803E23E8);
   }
-  if (lbl_803E23DC == ((TrickyState *)state)->unk2AC) {
+  if (lbl_803E23DC == ((TrickyState *)state)->waterLevel) {
     talking = 0;
   } else if (lbl_803E2410 == ((TrickyState *)state)->unk2B0) {
     talking = 1;
@@ -1661,7 +1661,7 @@ void Tricky_resumeAfterCommand(int obj,int state)
       ((((TrickyState *)state)->unk2E0 & 0x1000) == 0)) {
     ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags & ~OBJANIM_FLAG_HIDDEN;
     moveId = ((TrickyState *)state)->unk320;
-    ((TrickyState *)state)->unk308 = lbl_803E256C / (lbl_803E2570 * ((TrickyState *)state)->unk314);
+    ((TrickyState *)state)->animPlaySpeed = lbl_803E256C / (lbl_803E2570 * ((TrickyState *)state)->unk314);
     ((TrickyState *)state)->unk323 = 1;
     ObjAnim_SetCurrentMove(obj,moveId,lbl_803E2574,0x10);
     if (((GameObject *)obj)->anim.hitReactState != NULL) {
@@ -1672,7 +1672,7 @@ void Tricky_resumeAfterCommand(int obj,int state)
     ObjHits_EnableObject(obj);
   }
   if ((((TrickyState *)state)->flags2DC & 0x40000000) != 0) {
-    ((TrickyState *)state)->unk308 = lbl_803E2578;
+    ((TrickyState *)state)->animPlaySpeed = lbl_803E2578;
     ((TrickyState *)state)->unk323 = 0;
     ObjAnim_SetCurrentMove(obj,0,lbl_803E2574,0);
     if (((GameObject *)obj)->anim.hitReactState != NULL) {
@@ -1714,11 +1714,11 @@ void trickyFn_80148d8c(int obj,int state)
         GameBit_Set(*(s16 *)(setup + 0x1a),0);
       }
     }
-    ((TrickyState *)state)->unk29C = 0;
+    ((TrickyState *)state)->actionTargetObj = 0;
     ObjHits_DisableObject(obj);
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8;
     moveId = ((TrickyState *)state)->unk321;
-    ((TrickyState *)state)->unk308 = lbl_803E256C / (lbl_803E2570 * ((TrickyState *)state)->unk318);
+    ((TrickyState *)state)->animPlaySpeed = lbl_803E256C / (lbl_803E2570 * ((TrickyState *)state)->unk318);
     ((TrickyState *)state)->unk323 = 1;
     ObjAnim_SetCurrentMove(obj,moveId,lbl_803E2574,0);
     if (*(int *)&((GameObject *)obj)->anim.hitReactState != 0) {
@@ -2176,7 +2176,7 @@ void baddie_updateWhileFrozen(int obj, u8 *state, u8 fromHit)
         }
         objLightFn_8009a1dc((void *)obj,lbl_803E259C,&params,4,(void *)((TrickyState *)state)->unk368);
       }
-      proj = *(u8 **)&((TrickyState *)state)->unk29C;
+      proj = *(u8 **)&((TrickyState *)state)->actionTargetObj;
       if (proj != NULL && *(s16 *)(proj + 0x44) == 1) {
         fn_802961FC(proj,result);
       }
@@ -2240,7 +2240,7 @@ u8 baddieTargetFn_8014a150(int obj,int state,void *from,void *to)
 
   traceHit[0] = 0;
   visible = 0;
-  if (((TrickyState *)state)->unk29C != 0) {
+  if (((TrickyState *)state)->actionTargetObj != 0) {
     probe.x = *(f32 *)((int)from + 0);
     probe.y = *(f32 *)((int)from + 4);
     probe.z = *(f32 *)((int)from + 8);
@@ -2572,48 +2572,48 @@ void Tricky_hitDetect(int obj)
   }
   if (lbl_803E23E8 == dy) {
     if (y == ((GameObject *)obj)->anim.worldPosY) {
-      ((TrickyStatusFlags58 *)&((TrickyState *)state)->unk58)->heightTracking = 1;
-      *(s32 *)&((TrickyState *)state)->unk5C = -1;
-      ((TrickyState *)state)->unk60 = lbl_803E23DC;
+      ((TrickyStatusFlags58 *)&((TrickyState *)state)->statusFlags)->heightTracking = 1;
+      *(s32 *)&((TrickyState *)state)->heightTrackObjId = -1;
+      ((TrickyState *)state)->trackedHeight = lbl_803E23DC;
     }
   }
   else {
     firepipeObj = ObjList_FindObjectById(TRICKY_HEIGHT_TRACK_FIREPIPE_OBJECT_ID);
     if ((firepipeObj != (void *)0) &&
         (getXZDistance(&((GameObject *)obj)->anim.worldPosX,(f32 *)((int)firepipeObj + 0x18)) < lbl_803E2540)) {
-      ((TrickyStatusFlags58 *)&((TrickyState *)state)->unk58)->heightTracking = 1;
-      ((TrickyState *)state)->unk5C = TRICKY_HEIGHT_TRACK_FIREPIPE_OBJECT_ID;
-      ((TrickyState *)state)->unk60 = lbl_803E23DC;
+      ((TrickyStatusFlags58 *)&((TrickyState *)state)->statusFlags)->heightTracking = 1;
+      ((TrickyState *)state)->heightTrackObjId = TRICKY_HEIGHT_TRACK_FIREPIPE_OBJECT_ID;
+      ((TrickyState *)state)->trackedHeight = lbl_803E23DC;
     }
   }
-  if ((((TrickyState *)state)->unk58 >> 5 & 1) != 0) {
+  if ((((TrickyState *)state)->statusFlags >> 5 & 1) != 0) {
     objects = ObjGroup_GetObjects(TRICKY_HEIGHT_TRACK_GROUP,count);
     for (i = 0; i < count[0]; i++) {
       height = objFn_801948c0(*objects,TRICKY_HEIGHT_TRACK_MODEL_SLOT);
-      if (*(s32 *)&((TrickyState *)state)->unk5C == -1) {
+      if (*(s32 *)&((TrickyState *)state)->heightTrackObjId == -1) {
         dy = height - ((GameObject *)obj)->anim.localPosY;
         if (dy < lbl_803E23DC) {
           dy = -dy;
         }
         if (dy < lbl_803E24B8) {
-          ((TrickyState *)state)->unk5C = *(u32 *)(*(int *)(*objects + 0x4c) + 0x14);
+          ((TrickyState *)state)->heightTrackObjId = *(u32 *)(*(int *)(*objects + 0x4c) + 0x14);
         }
       }
-      if (((TrickyState *)state)->unk5C == *(u32 *)(*(int *)(*objects + 0x4c) + 0x14)) {
-        if ((((TrickyState *)state)->unk60 == lbl_803E23DC) ||
-           (((TrickyState *)state)->unk60 != height)) {
+      if (((TrickyState *)state)->heightTrackObjId == *(u32 *)(*(int *)(*objects + 0x4c) + 0x14)) {
+        if ((((TrickyState *)state)->trackedHeight == lbl_803E23DC) ||
+           (((TrickyState *)state)->trackedHeight != height)) {
           ((GameObject *)obj)->anim.localPosY = height;
-          ((TrickyState *)state)->unk60 = height;
+          ((TrickyState *)state)->trackedHeight = height;
         }
         else {
-          ((TrickyStatusFlags58 *)&((TrickyState *)state)->unk58)->heightTracking = 0;
+          ((TrickyStatusFlags58 *)&((TrickyState *)state)->statusFlags)->heightTracking = 0;
         }
         break;
       }
       objects = objects + 1;
     }
     if (i == count[0]) {
-      ((TrickyStatusFlags58 *)&((TrickyState *)state)->unk58)->heightTracking = 0;
+      ((TrickyStatusFlags58 *)&((TrickyState *)state)->statusFlags)->heightTracking = 0;
     }
   }
   return;
@@ -2766,7 +2766,7 @@ int trickyFn_801451d8(int obj,int state) {
     }
     {
         int ret = 1;
-        ((TrickyByteFlags *)&((TrickyState *)state)->unk58)->bit7 = ret;
+        ((TrickyByteFlags *)&((TrickyState *)state)->statusFlags)->bit7 = ret;
         return ret;
     }
 }
@@ -2938,7 +2938,7 @@ void trickyFn_80144f50(int obj, int state) {
                 }
             }
 
-            if (lbl_803E23DC == ((TrickyState *)state)->unk2AC) {
+            if (lbl_803E23DC == ((TrickyState *)state)->waterLevel) {
                 isInWater = 0;
             } else if (lbl_803E2410 == ((TrickyState *)state)->unk2B0) {
                 isInWater = 1;

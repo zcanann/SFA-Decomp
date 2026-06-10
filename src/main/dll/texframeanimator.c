@@ -95,15 +95,15 @@ void collectible_init(int obj,int setup)
   ((CollectibleState *)state)->unkF = 0;
   ((CollectibleState *)state)->unk18 = -2;
   ((CollectibleState *)state)->unk1D = 0;
-  ((CollectibleState *)state)->unk14 = *(s16 *)(setup + 0x24);
-  ((CollectibleState *)state)->unk20 = ((ObjPlacement *)setup)->mapId;
+  ((CollectibleState *)state)->visibilityGameBit = *(s16 *)(setup + 0x24);
+  ((CollectibleState *)state)->mapId = ((ObjPlacement *)setup)->mapId;
   ((CollectibleState *)state)->basePosX = ((GameObject *)obj)->anim.localPosX;
   ((CollectibleState *)state)->basePosY = ((GameObject *)obj)->anim.localPosY;
   ((CollectibleState *)state)->basePosZ = ((GameObject *)obj)->anim.localPosZ;
   ((CollectibleState *)state)->unk36 = *(u8 *)(setup + 0x27);
   ((CollectibleState *)state)->unk3E = 0;
-  if (((CollectibleState *)state)->unk14 != -1) {
-    ((CollectibleState *)state)->unk1E = (u8)((u32)__cntlzw(GameBit_Get(((CollectibleState *)state)->unk14)) >> 5);
+  if (((CollectibleState *)state)->visibilityGameBit != -1) {
+    ((CollectibleState *)state)->gameBitValue = (u8)((u32)__cntlzw(GameBit_Get(((CollectibleState *)state)->visibilityGameBit)) >> 5);
   }
   ((CollectibleState *)state)->hideGameBit = *(s16 *)(setup + 0x1c);
   if (((CollectibleState *)state)->hideGameBit != -1) {
@@ -114,13 +114,13 @@ void collectible_init(int obj,int setup)
   if (((GameObject *)obj)->unkF4 == 0) {
     data = *(u8 **)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x18);
     if (data != 0) {
-      ((CollectibleState *)state)->unk4 = (f32)*(s8 *)(data + 8);
+      ((CollectibleState *)state)->scale = (f32)*(s8 *)(data + 8);
     } else {
-      ((CollectibleState *)state)->unk4 = lbl_803E3494;
+      ((CollectibleState *)state)->scale = lbl_803E3494;
     }
     data = *(u8 **)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x40);
     if (data != 0) {
-      ((CollectibleState *)state)->unk4 = (f32)(s32)(*(u8 *)(data + 0xc) << 2);
+      ((CollectibleState *)state)->scale = (f32)(s32)(*(u8 *)(data + 0xc) << 2);
     }
     if (((((ObjAnimComponent *)obj)->modelInstance->flags & 0x10000) != 0) &&
         (((CollectibleState *)state)->unk36 != 0)) {

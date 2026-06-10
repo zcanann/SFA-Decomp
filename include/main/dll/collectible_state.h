@@ -14,7 +14,7 @@
  */
 typedef struct CollectibleState {
     u8 unk0[0x4 - 0x0];
-    f32 unk4;
+    f32 scale;
     u8 unk8[0xC - 0x8];
     u8 unkC;
     u8 unkD;
@@ -22,14 +22,14 @@ typedef struct CollectibleState {
     u8 unkF;
     s16 hideGameBit;
     u8 unk12[0x14 - 0x12];
-    s16 unk14;
+    s16 visibilityGameBit;
     u8 unk16[0x18 - 0x16];
     s32 unk18;
     u8 unk1C[0x1D - 0x1C];
     u8 unk1D;
-    u8 unk1E;
+    u8 gameBitValue;
     u8 unk1F[0x20 - 0x1F];
-    s32 unk20;
+    s32 mapId;
     f32 basePosX;
     f32 basePosY;
     f32 basePosZ;

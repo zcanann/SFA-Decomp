@@ -88,7 +88,7 @@ void fn_8013F100(int obj, register int state)
         if (fn_80179650(*(int *)&((TrickyState *)state)->unk700) != 0) {
             iVar2 = trickyFn_8013b368(obj, lbl_803E24F0, state);
             if (iVar2 == 0) {
-                if (lbl_803E23DC == ((TrickyState *)state)->unk2AC) {
+                if (lbl_803E23DC == ((TrickyState *)state)->waterLevel) {
                     iVar4 = 0;
                 } else if (lbl_803E2410 == ((TrickyState *)state)->unk2B0) {
                     iVar4 = 1;
@@ -126,7 +126,7 @@ void fn_8013F100(int obj, register int state)
             iVar2 = trickyFn_8013b368(obj, lbl_803E2408, state);
             if (iVar2 == 0) {
                 if (*(float *)&((TrickyState *)state)->unk704 > lbl_803E23DC) {
-                    if (lbl_803E23DC == ((TrickyState *)state)->unk2AC) {
+                    if (lbl_803E23DC == ((TrickyState *)state)->waterLevel) {
                         iVar4 = 0;
                     } else if (lbl_803E2410 == ((TrickyState *)state)->unk2B0) {
                         iVar4 = 1;
@@ -146,7 +146,7 @@ void fn_8013F100(int obj, register int state)
                     }
                     *(float *)&((TrickyState *)state)->unk704 -= timeDelta;
                     if (*(float *)&((TrickyState *)state)->unk704 <= lbl_803E23DC) {
-                        if (lbl_803E23DC == ((TrickyState *)state)->unk2AC) {
+                        if (lbl_803E23DC == ((TrickyState *)state)->waterLevel) {
                             iVar4 = 0;
                         } else if (lbl_803E2410 == ((TrickyState *)state)->unk2B0) {
                             iVar4 = 1;
@@ -187,7 +187,7 @@ void fn_8013F100(int obj, register int state)
                     }
                 }
             } else {
-                if (lbl_803E23DC == ((TrickyState *)state)->unk2AC) {
+                if (lbl_803E23DC == ((TrickyState *)state)->waterLevel) {
                     iVar4 = 0;
                 } else if (lbl_803E2410 == ((TrickyState *)state)->unk2B0) {
                     iVar4 = 1;
@@ -241,7 +241,7 @@ void fn_8013F100(int obj, register int state)
     case 3:
         iVar2 = trickyFn_8013b368(obj, lbl_803E2408, state);
         if (iVar2 != 1) {
-            if (lbl_803E23DC == ((TrickyState *)state)->unk2AC) {
+            if (lbl_803E23DC == ((TrickyState *)state)->waterLevel) {
                 iVar4 = 0;
             } else if (lbl_803E2410 == ((TrickyState *)state)->unk2B0) {
                 iVar4 = 1;
@@ -281,7 +281,7 @@ void fn_8013F100(int obj, register int state)
             }
             ((TrickyState *)state)->substate = 5;
             if (trickyFn_8013b368(obj, lbl_803E24C8, state) == 0) {
-                if (lbl_803E23DC == ((TrickyState *)state)->unk2AC) {
+                if (lbl_803E23DC == ((TrickyState *)state)->waterLevel) {
                     iVar4 = 0;
                 } else if (lbl_803E2410 == ((TrickyState *)state)->unk2B0) {
                     iVar4 = 1;
@@ -332,7 +332,7 @@ void fn_8013F9E4(int obj, int state)
                     }
                 }
             }
-            if (lbl_803E23DC == ((TrickyState *)state)->unk2AC) {
+            if (lbl_803E23DC == ((TrickyState *)state)->waterLevel) {
                 iVar4 = 0;
             } else if (lbl_803E2410 == ((TrickyState *)state)->unk2B0) {
                 iVar4 = 1;
@@ -418,7 +418,7 @@ void fn_8013FBE4(int obj, register int state)
             *(float *)&((TrickyState *)state)->unk708 = *(float *)(trackedObj + 0x1c);
             *(float *)&((TrickyState *)state)->unk70C = -(distance * dz - *(float *)(trackedObj + 0x20));
             if (trickyFn_8013b368(obj, lbl_803E2488, state) == 0) {
-                if (lbl_803E23DC == ((TrickyState *)state)->unk2AC) {
+                if (lbl_803E23DC == ((TrickyState *)state)->waterLevel) {
                     iVar4 = 0;
                 } else if (lbl_803E2410 == ((TrickyState *)state)->unk2B0) {
                     iVar4 = 1;
@@ -456,7 +456,7 @@ void fn_8013FEC0(int obj, int state)
 
     result = trickyFn_8013b368(obj, lbl_803E247C, state);
     if (result == 0) {
-        if (lbl_803E23DC == ((TrickyState *)state)->unk2AC) {
+        if (lbl_803E23DC == ((TrickyState *)state)->waterLevel) {
             inWater = false;
         } else if (lbl_803E2410 == ((TrickyState *)state)->unk2B0) {
             inWater = true;

@@ -23,7 +23,7 @@ typedef struct TrickyState {
     u8 padE[0x10 - 0xE];
     f32 prevSpeed;
     f32 speed; /* planar speed magnitude, multiplied into dirX/dirZ */
-    f32 unk18;
+    f32 animTransitionTimer;
     u8 pad1C[0x20 - 0x1C];
     int moveId; /* compared to anim.currentMove, passed to ObjAnim_SetCurrentMove */
     u8 *followObj; /* the followed object (playerObj/target/found stores; dll vtable dispatched) */
@@ -31,19 +31,19 @@ typedef struct TrickyState {
     f32 dirX; /* normalized planar direction (pos delta / length) */
     f32 dirZ;
     f32 moveProgress; /* passed to ObjAnim_SetMoveProgress */
-    f32 unk38;
+    f32 moveProgressTarget;
     f32 unk3C;
-    f32 unk40;
-    f32 unk44;
-    f32 unk48;
-    f32 unk4C;
-    u32 unk50;
+    f32 sidestepDelta;
+    f32 backstepDelta;
+    f32 verticalDelta;
+    f32 rotStepScale;
+    u32 pendingStateFlags;
     u32 stateFlags; /* the TRICKY state flag word (bit masks 0x80..0x100000) */
-    u8 unk58;
+    u8 statusFlags;
     u8 pad59[0x5A - 0x59];
     s16 unk5A;
-    u32 unk5C;
-    f32 unk60;
+    u32 heightTrackObjId;
+    f32 trackedHeight;
     u8 pad64[0x8C - 0x64];
     f32 unk8C;
     f32 unk90;
@@ -71,13 +71,13 @@ typedef struct TrickyState {
     s16 pathRotY;
     s16 pathRotZ;
     u8 pad294[0x29C - 0x294];
-    u32 unk29C;
+    u32 actionTargetObj;
     u16 unk2A0;
     u16 unk2A2;
     u16 unk2A4;
     u16 unk2A6;
     u8 pad2A8[0x2AC - 0x2A8];
-    f32 unk2AC;
+    f32 waterLevel;
     f32 unk2B0;
     f32 unk2B4; /* collectable.c reads an s16 pair at 2B4/2B6 - launder those */
     f32 unk2B8;
@@ -102,7 +102,7 @@ typedef struct TrickyState {
     u8 pad2FA[0x300 - 0x2FA];
     f32 unk300;
     f32 unk304;
-    f32 unk308;
+    f32 animPlaySpeed;
     f32 unk30C;
     f32 unk310;
     f32 unk314;
@@ -199,7 +199,7 @@ typedef struct TrickyState {
     f32 unk810;
     f32 unk814;
     u8 pad818[2];
-    s16 unk81A;
+    s16 rotRate;
     u8 pad81C[0x82C - 0x81C];
     u8 modelVariant; /* progress/10; indexes model bank color */
     u8 unk82D;

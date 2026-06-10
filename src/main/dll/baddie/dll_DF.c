@@ -548,7 +548,7 @@ state_selected:
                         } else {
                             objAnimFn_8013a3f0(obj, 0x17, lbl_803E2490, 0x40000c0);
                         }
-                        ((TrickyState *)state)->unk48 =
+                        ((TrickyState *)state)->verticalDelta =
                             (*(f32 *)(*(int *)(state + 0x4c0) + 0xc) - ((GameObject *)obj)->anim.worldPosY) /
                             lbl_803E2498;
                         ((TrickyState *)state)->unk09 = 0xc;
@@ -575,7 +575,7 @@ state_selected:
                             ((TrickyState *)state)->dirZ = ((TrickyState *)state)->dirZ / len;
                         }
                         objAnimFn_8013a3f0(obj, 0x19, lbl_803E249C, 0x40000c0);
-                        ((TrickyState *)state)->unk48 =
+                        ((TrickyState *)state)->verticalDelta =
                             (((GameObject *)obj)->anim.worldPosY - *(f32 *)(*(int *)(state + 0x4c0) + 0xc)) /
                             lbl_803E24A0;
                         ((TrickyState *)state)->unk09 = 0xe;
@@ -977,7 +977,7 @@ state_selected:
                 } else {
                     objAnimFn_8013a3f0(obj, 0x17, lbl_803E2490, 0x40000c0);
                 }
-                ((TrickyState *)state)->unk48 =
+                ((TrickyState *)state)->verticalDelta =
                     (*(f32 *)(*(int *)(state + 0x4c0) + 0xc) - ((GameObject *)obj)->anim.worldPosY) /
                     lbl_803E2498;
                 ((TrickyState *)state)->unk09 = 0xc;
@@ -1063,7 +1063,7 @@ state_selected:
                     ((TrickyState *)state)->dirZ = ((TrickyState *)state)->dirZ / len;
                 }
                 objAnimFn_8013a3f0(obj, 0x19, lbl_803E249C, 0x40000c0);
-                ((TrickyState *)state)->unk48 =
+                ((TrickyState *)state)->verticalDelta =
                     (((GameObject *)obj)->anim.worldPosY - *(f32 *)(*(int *)(state + 0x4c0) + 0xc)) /
                     lbl_803E24A0;
                 ((TrickyState *)state)->unk09 = 0xe;

@@ -84,8 +84,8 @@ void trickyUpdateCollisionAndPathState(u8 *obj)
     }
 
     if ((s8)state->unk353 != 0) {
-        if ((state->unk58 & 0x20) == 0) {
-            if (state->unk2AC == lbl_803E23DC) {
+        if ((state->statusFlags & 0x20) == 0) {
+            if (state->waterLevel == lbl_803E23DC) {
                 doHeightSnap = 0;
             } else if (state->unk2B0 == lbl_803E2410) {
                 doHeightSnap = 1;
@@ -317,7 +317,7 @@ extern u32 randomGetRange(int min, int max);
 #pragma peephole on
 static int skeetla_isInWater(u8 *state)
 {
-    if (lbl_803E23DC == ((TrickyState *)state)->unk2AC) {
+    if (lbl_803E23DC == ((TrickyState *)state)->waterLevel) {
         return 0;
     }
     if (lbl_803E2410 == ((TrickyState *)state)->unk2B0) {
@@ -376,7 +376,7 @@ static void skeetla_updateFacingFromMoveVector(u8 *obj, s16 *turnDeltaOut)
 static void skeetla_playFootstepSfx(u8 *obj, u16 sfxId)
 {
     u8 *state = ((GameObject *)obj)->extra;
-    if (((((TrickyState *)state)->unk58 >> 6) & 1) == 0 &&
+    if (((((TrickyState *)state)->statusFlags >> 6) & 1) == 0 &&
         ((((GameObject *)obj)->anim.currentMove >= 0x30) || (((GameObject *)obj)->anim.currentMove < 0x29)) &&
         (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0)) {
         objAudioFn_800393f8(obj, state + 0x3a8, sfxId, 0x500, -1, 0);
@@ -1262,11 +1262,11 @@ void FUN_8013939c(uint param_1)
     ((GameObject *)param_1)->anim.localPosY = ((GameObject *)param_1)->anim.localPosY - local_30;
     ((TrickyState *)iVar3)->unk353 = 0;
   }
-  if ((*(char *)&((TrickyState *)iVar3)->unk353 == '\0') || ((((TrickyState *)iVar3)->unk58 >> 5 & 1) != 0)) {
+  if ((*(char *)&((TrickyState *)iVar3)->unk353 == '\0') || ((((TrickyState *)iVar3)->statusFlags >> 5 & 1) != 0)) {
     ((GameObject *)param_1)->anim.velocityY = FLOAT_803e306c;
   }
   else {
-    if (FLOAT_803e306c == ((TrickyState *)iVar3)->unk2AC) {
+    if (FLOAT_803e306c == ((TrickyState *)iVar3)->waterLevel) {
       bVar1 = false;
     }
     else if (FLOAT_803e30a0 == ((TrickyState *)iVar3)->unk2B0) {
