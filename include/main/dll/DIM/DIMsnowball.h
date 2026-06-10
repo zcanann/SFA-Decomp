@@ -19,7 +19,7 @@ void FUN_801aa704(short *param_1,int param_2);
 void FUN_801aa708(short *param_1);
 void FUN_801aa750(int param_1);
 void FUN_801aa820(short *param_1,int param_2);
-undefined4 FUN_801aa8a4(int param_1,undefined4 param_2,int param_3);
+undefined4 FUN_801aa8a4(int param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate);
 void FUN_801aa984(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,int param_10);
@@ -34,7 +34,7 @@ void FUN_801abf34(short *param_1,int param_2);
 undefined4
 FUN_801abf38(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,undefined4 param_9,
-            undefined4 param_10,int param_11);
+            undefined4 param_10,ObjAnimUpdateState *animUpdate);
 void FUN_801abfec(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 void FUN_801ac040(int param_1);

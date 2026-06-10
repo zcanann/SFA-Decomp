@@ -336,16 +336,16 @@ void FUN_801aa820(short *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_801aa8a4(int param_1,undefined4 param_2,int param_3)
+undefined4 FUN_801aa8a4(int param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate)
 {
   byte bVar1;
   byte bVar2;
   int *piVar3;
   
   piVar3 = ((GameObject *)param_1)->extra;
-  if (*(char *)(param_3 + 0x8b) != '\0') {
-    for (bVar2 = 0; bVar2 < *(byte *)(param_3 + 0x8b); bVar2 = bVar2 + 1) {
-      bVar1 = *(byte *)(param_3 + bVar2 + 0x81);
+  if (animUpdate->eventCount != 0) {
+    for (bVar2 = 0; bVar2 < animUpdate->eventCount; bVar2 = bVar2 + 1) {
+      bVar1 = animUpdate->eventIds[bVar2];
       if (bVar1 == 2) {
         (**(code **)(*DAT_803dd718 + 0x10))
                   ((double)((GameObject *)param_1)->anim.worldPosX,(double)((GameObject *)param_1)->anim.worldPosY,
@@ -1115,9 +1115,9 @@ void FUN_801abf34(short *param_1,int param_2)
 undefined4
 FUN_801abf38(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,undefined4 param_9,
-            undefined4 param_10,int param_11)
+            undefined4 param_10,ObjAnimUpdateState *animUpdate)
 {
-  if (*(char *)(param_11 + 0x8b) != '\0') {
+  if (animUpdate->eventCount != 0) {
     FUN_8008112c((double)lbl_803E5360,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                  param_9,1,1,0,1,1,1,0);
   }
