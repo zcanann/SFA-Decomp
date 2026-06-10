@@ -52,15 +52,15 @@ extern void timeOfDayFn_80055000(void);
 extern MapEventInterface **gMapEventInterface;
 extern f32 lbl_803E3E98;
 
-int Transporter_SeqFn(int* obj, int p2, u8* seq)
+int Transporter_SeqFn(int *obj, int p2, ObjAnimUpdateState *animUpdate)
 {
     int i;
     WarpPadPlacement *setup = (WarpPadPlacement *)((GameObject *)obj)->anim.placementData;
     WarpPadState *state = ((GameObject *)obj)->extra;
     int id;
 
-    for (i = 0; i < *(u8*)(seq + 0x8b); i++) {
-        switch (seq[i + 0x81]) {
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        switch (animUpdate->eventIds[i]) {
         case 7:
             state->flags = state->flags | 4;
             Sfx_PlayFromObject(obj, 0x420);

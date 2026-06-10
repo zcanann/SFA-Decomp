@@ -32,7 +32,7 @@ void cfccrate_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     }
 }
 
-int CFCrate_SeqFn(int obj, int unused, u8 *seq)
+int CFCrate_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     CfCcrateState *state;
     int i;
@@ -60,13 +60,13 @@ int CFCrate_SeqFn(int obj, int unused, u8 *seq)
         break;
     case 0x2B7:
         if (GameBit_Get(state->gameBit2) != 0) {
-            seq[0x90] = (u8)(seq[0x90] | 4);
+            ((u8 *)animUpdate)[0x90] = (u8)(((u8 *)animUpdate)[0x90] | 4);
         }
-        for (i = 0; i < (int)seq[0x8b]; i++) {
-            if (seq[0x81 + i] == 1) {
+        for (i = 0; i < (int)animUpdate->eventCount; i++) {
+            if (animUpdate->eventIds[i] == 1) {
                 PARTFX_SPAWN(obj, 0x44, 0, 2, -1, 0);
             }
-            seq[0x81 + i] = 0;
+            animUpdate->eventIds[i] = 0;
         }
         break;
     }

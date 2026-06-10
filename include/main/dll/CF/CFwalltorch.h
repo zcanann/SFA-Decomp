@@ -3,13 +3,14 @@
 
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
+#include "main/objanim_update.h"
 
 extern ObjectDescriptor gTransporterObjDescriptor;
 extern ObjectDescriptor gCflightwallObjDescriptor;
 extern ObjectDescriptor gBarrelPadObjDescriptor;
 extern ObjectDescriptor gCF_DoorLightObjDescriptor;
 
-int Transporter_SeqFn(int* obj, int p2, u8* seq);
+int Transporter_SeqFn(int *obj, int p2, ObjAnimUpdateState *animUpdate);
 int transporter_getExtraSize(void);
 void transporter_render(void);
 void transporter_hitDetect(int obj);
