@@ -8,7 +8,7 @@ typedef struct HightopPlacement {
     u8 pad4[0x19 - 0x4];
     s8 unk19;
     u8 pad1A[0x1E - 0x1A];
-    s16 unk1E;
+    s16 gameBitId;
     u8 pad20[0x25F - 0x20];
     s8 unk25F;
     u8 pad260[0x27A - 0x260];
@@ -42,7 +42,7 @@ typedef struct HightopPlacement {
     u8 unk9FD;
     u8 pad9FE[0xC16 - 0x9FE];
     s16 unkC16;
-    s16 unkC18;
+    s16 airMeterCapacity;
     u8 padC1A[0xC28 - 0xC1A];
     f32 unkC28;
     u8 padC2C[0xC38 - 0xC2C];
@@ -919,7 +919,7 @@ int hightop_stateHandler09(int obj, int p) {
             return 0xb;
         }
     }
-    if (GameBit_Get(((HightopPlacement *)sub)->unk1E) == 0) {
+    if (GameBit_Get(((HightopPlacement *)sub)->gameBitId) == 0) {
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
         if (randFn_80080100(0x64) != 0) {
             objSoundFn_800392f0(obj, (int)((char *)state + 0x3bc), &lbl_803DC308 + randomGetRange(0, 0) * 6, 1);

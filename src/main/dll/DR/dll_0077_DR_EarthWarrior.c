@@ -24,7 +24,7 @@ typedef struct DREarthWarriorState {
     u8 pad4[0x9FD - 0x4];
     u8 unk9FD;
     u8 pad9FE[0xB54 - 0x9FE];
-    s32 unkB54;
+    s32 helperObj;
     u8 padB58[0xF50 - 0xB58];
     s32 unkF50;
     u8 padF54[0xF58 - 0xF54];
@@ -59,7 +59,7 @@ typedef struct DREarthWarriorState {
     u8 pad1448[0x14DE - 0x1448];
     s16 unk14DE;
     u8 pad14E0[0x14E2 - 0x14E0];
-    s16 unk14E2;
+    s16 airMeterCapacity;
     u8 pad14E4[0x14E6 - 0x14E4];
     u8 unk14E6;
     u8 pad14E7[0x14E8 - 0x14E7];
@@ -70,7 +70,7 @@ typedef struct DREarthWarriorState {
     s8 unk14F4;
     u8 unk14F5;
     u8 pad14F6[0x14F8 - 0x14F6];
-    s32 unk14F8;
+    s32 tailSimHandle;
 } DREarthWarriorState;
 
 
@@ -1222,7 +1222,7 @@ void DR_EarthWarrior_init(int obj, int p2)
     fn_80113F94(inner + 0x3ec, lbl_803E8388);
     ((DREarthWarriorState *)inner)->unk9FD |= 2;
     ((DREarthWarriorState *)inner)->unk1444 = lbl_803E82E8;
-    ((DREarthWarriorState *)inner)->unk14E2 = *(s16 *)((char *)p2 + 0x1a);
+    ((DREarthWarriorState *)inner)->airMeterCapacity = *(s16 *)((char *)p2 + 0x1a);
     ((DREarthWarriorState *)inner)->unkF50 = (int)(base + 0xd8);
     ((DREarthWarriorState *)inner)->unkF58 = (int)(base + 0x84);
     {
@@ -1255,12 +1255,12 @@ void DR_EarthWarrior_init(int obj, int p2)
     s16toFloat(inner + 0x14f0, 0x1e);
     ((ByteFlags *)((char *)inner + 0x14ec))->b02 = 0;
     ((DREarthWarriorState *)inner)->unk14F5 = 1;
-    ((DREarthWarriorState *)inner)->unkB54 = 0;
+    ((DREarthWarriorState *)inner)->helperObj = 0;
     if (GameBit_Get(0x9ec) != 0) {
         ((DREarthWarriorState *)inner)->unk14ED = 1;
     }
-    ((DREarthWarriorState *)inner)->unk14F8 = allocModelStruct2(&lbl_803DC768, 1);
-    tailFn_80026c38(((DREarthWarriorState *)inner)->unk14F8, lbl_803E8324, lbl_803E831C, lbl_803E8394);
+    ((DREarthWarriorState *)inner)->tailSimHandle = allocModelStruct2(&lbl_803DC768, 1);
+    tailFn_80026c38(((DREarthWarriorState *)inner)->tailSimHandle, lbl_803E8324, lbl_803E831C, lbl_803E8394);
     *(int *)((char *)obj + 0x108) = (int)fn_802BC788;
-    fn_80026C30(((DREarthWarriorState *)inner)->unk14F8, 1);
+    fn_80026C30(((DREarthWarriorState *)inner)->tailSimHandle, 1);
 }
