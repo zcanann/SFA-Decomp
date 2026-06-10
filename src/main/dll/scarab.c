@@ -11,6 +11,36 @@
 #include "main/objhits_types.h"
 #include "main/objseq.h"
 
+typedef struct DllCBState {
+    f32 unk0;
+    f32 unk4;
+    u8 pad8[0x3DC - 0x8];
+    void *unk3DC;
+    s32 unk3E0;
+    u8 pad3E4[0x3F6 - 0x3E4];
+    s16 unk3F6;
+    u8 pad3F8[0x3FE - 0x3F8];
+    u16 unk3FE;
+    u16 unk400;
+    u8 pad402[0x405 - 0x402];
+    s8 unk405;
+    u8 pad406[0x408 - 0x406];
+} DllCBState;
+
+
+typedef struct GrimbleState {
+    u8 pad0[0x38 - 0x0];
+    s32 unk38;
+    u8 pad3C[0x45 - 0x3C];
+    s8 unk45;
+    u8 pad46[0x48 - 0x46];
+    f32 unk48;
+    u8 pad4C[0x58 - 0x4C];
+    s16 unk58;
+    u8 pad5A[0x60 - 0x5A];
+} GrimbleState;
+
+
 extern undefined8 FUN_80003494();
 extern undefined8 FUN_80006824();
 extern undefined4 FUN_80006920();
@@ -2701,15 +2731,15 @@ int dll_CB_seqFn(short *obj, int p2, u8 *e)
       return 1;
     }
     fn_8016083C((int *)obj, (GroundBaddieState *)sub, (GroundBaddieState *)sub);
-    if (*(s16 *)(sub + 0x3f6) != -1 && GameBit_Get(*(s16 *)(sub + 0x3f6)) != 0) {
+    if (((DllCBState *)sub)->unk3F6 != -1 && GameBit_Get(((DllCBState *)sub)->unk3F6) != 0) {
       (*gObjectTriggerInterface)->yield((ObjSeqState *)e, *(s16 *)(setup + 0x2c));
-      *(s16 *)(sub + 0x3f6) = -1;
+      ((DllCBState *)sub)->unk3F6 = -1;
     }
-    switch (*(u8 *)(sub + 0x405)) {
+    switch (*(u8 *)&((DllCBState *)sub)->unk405) {
     case 2:
       *(s16 *)(e + 0x6e) = 0;
       fn_801606F0((int)obj, e, sub, (GroundBaddieState *)sub);
-      if (*(u8 *)(sub + 0x405) == 1) {
+      if (*(u8 *)&((DllCBState *)sub)->unk405 == 1) {
         ((GroundBaddieState *)sub)->baddie.unk270 = 5;
         (*(void (**)(short *, int, f32, f32, void *, void *))(*(int *)gPlayerInterface + 8))(
             obj, sub, lbl_803E2E8C, *(f32 *)&lbl_803E2E8C, lbl_803AC5E8, lbl_803AC5D0);
@@ -2727,11 +2757,11 @@ int dll_CB_seqFn(short *obj, int p2, u8 *e)
     default:
       *(s16 *)(e + 0x6e) = -1;
       *(s16 *)(e + 0x6e) &= ~0x40;
-      path = *(int **)(sub + 0x3dc);
-      if ((*(u16 *)(sub + 0x400) & 8) != 0) {
+      path = *(int **)&((DllCBState *)sub)->unk3DC;
+      if ((((DllCBState *)sub)->unk400 & 8) != 0) {
         if ((Curve_AdvanceAlongPath(path, ((GroundBaddieState *)sub)->baddie.animSpeedA) != 0 || path[4] != 0) &&
             (*gRomCurveInterface)->goNextPoint(path) != 0) {
-          *(u16 *)(sub + 0x400) &= ~8;
+          ((DllCBState *)sub)->unk400 &= ~8;
         }
         ((GroundBaddieState *)sub)->baddie.animSpeedA = lbl_803E2E98;
         ((GameObject *)obj)->anim.rotX = getAngle(*(f32 *)((char *)path + 0x74), *(f32 *)((char *)path + 0x7c)) + 0x8000;
@@ -2745,10 +2775,10 @@ int dll_CB_seqFn(short *obj, int p2, u8 *e)
     }
   }
   if (((GameObject *)obj)->unkB4 == -1) {
-    *(u16 *)(sub + 0x400) |= 2;
+    ((DllCBState *)sub)->unk400 |= 2;
     return 0;
   }
-  return *(u8 *)(sub + 0x405) != 0;
+  return *(u8 *)&((DllCBState *)sub)->unk405 != 0;
 }
 
 /*
@@ -4722,20 +4752,20 @@ int grimble_stateHandlerA06(short *obj, GroundBaddieState *p, f32 spd)
   }
   p->baddie.moveSpeed = lbl_803E2EF0;
   (*(void (**)(short *, u8 *, f32, int))((char *)*gPlayerInterface + 0x20))(obj, (u8 *)p, spd, 1);
-  (*(void (**)(void *, void *, f32))(**(int **)(*(int *)(hit + 0x38) + 0x68) + 0x28))(
-      *(void **)(hit + 0x38), (void *)(hit + 0x48),
-      p->baddie.animSpeedA * (f32)(1 - (*(s8 *)(hit + 0x45) << 1)));
-  if (*(f32 *)(hit + 0x48) < lbl_803E2EF4) {
-    *(f32 *)(hit + 0x48) = lbl_803E2EF4;
-  } else if (*(f32 *)(hit + 0x48) > lbl_803E2EF8) {
-    *(f32 *)(hit + 0x48) = lbl_803E2EF8;
+  (*(void (**)(void *, void *, f32))(**(int **)(((GrimbleState *)hit)->unk38 + 0x68) + 0x28))(
+      *(void **)&((GrimbleState *)hit)->unk38, (void *)(hit + 0x48),
+      p->baddie.animSpeedA * (f32)(1 - (((GrimbleState *)hit)->unk45 << 1)));
+  if (((GrimbleState *)hit)->unk48 < lbl_803E2EF4) {
+    ((GrimbleState *)hit)->unk48 = lbl_803E2EF4;
+  } else if (((GrimbleState *)hit)->unk48 > lbl_803E2EF8) {
+    ((GrimbleState *)hit)->unk48 = lbl_803E2EF8;
   }
-  (*(void (**)(void *, f32, f32 *, f32 *, f32 *))(**(int **)(*(int *)(hit + 0x38) + 0x68) +
+  (*(void (**)(void *, f32, f32 *, f32 *, f32 *))(**(int **)(((GrimbleState *)hit)->unk38 + 0x68) +
                                                   0x24))(
-      *(void **)(hit + 0x38), *(f32 *)(hit + 0x48) - lbl_803E2EFC, &a.x, &a.y, &a.z);
-  (*(void (**)(void *, f32, f32 *, f32 *, f32 *))(**(int **)(*(int *)(hit + 0x38) + 0x68) +
+      *(void **)&((GrimbleState *)hit)->unk38, ((GrimbleState *)hit)->unk48 - lbl_803E2EFC, &a.x, &a.y, &a.z);
+  (*(void (**)(void *, f32, f32 *, f32 *, f32 *))(**(int **)(((GrimbleState *)hit)->unk38 + 0x68) +
                                                   0x24))(
-      *(void **)(hit + 0x38), lbl_803E2EFC + *(f32 *)(hit + 0x48), &b.x, &b.y, &b.z);
+      *(void **)&((GrimbleState *)hit)->unk38, lbl_803E2EFC + ((GrimbleState *)hit)->unk48, &b.x, &b.y, &b.z);
   a.x = a.x - b.x;
   a.y = a.y - b.y;
   a.z = a.z - b.z;
@@ -4744,7 +4774,7 @@ int grimble_stateHandlerA06(short *obj, GroundBaddieState *p, f32 spd)
   a.x = r;
   {
     int ang = (s16)getAngle(a.y, (f32)d);
-    ((GameObject *)obj)->anim.rotY = ang * ((*(s8 *)(hit + 0x45) << 1) - 1);
+    ((GameObject *)obj)->anim.rotY = ang * ((((GrimbleState *)hit)->unk45 << 1) - 1);
   }
   if (*(char *)&p->baddie.moveDone != '\0') {
     return 5;
@@ -4770,7 +4800,7 @@ int grimble_stateHandlerA07(short *obj, GroundBaddieState *p)
     Sfx_PlayFromObject(obj, SFXsc_attack04);
   }
   p->baddie.moveSpeed = lbl_803E2EEC;
-  yaw = *(s16 *)(hit + 0x58);
+  yaw = ((GrimbleState *)hit)->unk58;
   diff = *obj - (yaw & 0xffff);
   if (diff > 0x8000) {
     diff -= 0xffff;
@@ -4814,12 +4844,12 @@ int grimble_stateHandlerA05(short *obj, GroundBaddieState *p)
     *(s8 *)&p->baddie.moveDone = 0;
   }
   p->baddie.moveSpeed = lbl_803E2EF0;
-  (*(void (**)(void *, f32, f32 *, f32 *, f32 *))(**(int **)(*(int *)(hit + 0x38) + 0x68) +
+  (*(void (**)(void *, f32, f32 *, f32 *, f32 *))(**(int **)(((GrimbleState *)hit)->unk38 + 0x68) +
                                                   0x24))(
-      *(void **)(hit + 0x38), *(f32 *)(hit + 0x48) - lbl_803E2EFC, &a.x, &a.y, &a.z);
-  (*(void (**)(void *, f32, f32 *, f32 *, f32 *))(**(int **)(*(int *)(hit + 0x38) + 0x68) +
+      *(void **)&((GrimbleState *)hit)->unk38, ((GrimbleState *)hit)->unk48 - lbl_803E2EFC, &a.x, &a.y, &a.z);
+  (*(void (**)(void *, f32, f32 *, f32 *, f32 *))(**(int **)(((GrimbleState *)hit)->unk38 + 0x68) +
                                                   0x24))(
-      *(void **)(hit + 0x38), lbl_803E2EFC + *(f32 *)(hit + 0x48), &b.x, &b.y, &b.z);
+      *(void **)&((GrimbleState *)hit)->unk38, lbl_803E2EFC + ((GrimbleState *)hit)->unk48, &b.x, &b.y, &b.z);
   a.x = a.x - b.x;
   a.y = a.y - b.y;
   a.z = a.z - b.z;
@@ -4828,7 +4858,7 @@ int grimble_stateHandlerA05(short *obj, GroundBaddieState *p)
   a.x = r;
   {
     int ang = (s16)getAngle(a.y, (f32)d);
-    ((GameObject *)obj)->anim.rotY = ang * ((*(s8 *)(hit + 0x45) << 1) - 1);
+    ((GameObject *)obj)->anim.rotY = ang * ((((GrimbleState *)hit)->unk45 << 1) - 1);
   }
   return 0;
 }
@@ -4856,12 +4886,12 @@ int grimble_stateHandlerA04(short *obj, GroundBaddieState *p)
     *(s8 *)&p->baddie.moveDone = 0;
   }
   p->baddie.moveSpeed = lbl_803E2EF0;
-  (*(void (**)(void *, f32, f32 *, f32 *, f32 *))(**(int **)(*(int *)(hit + 0x38) + 0x68) +
+  (*(void (**)(void *, f32, f32 *, f32 *, f32 *))(**(int **)(((GrimbleState *)hit)->unk38 + 0x68) +
                                                   0x24))(
-      *(void **)(hit + 0x38), *(f32 *)(hit + 0x48) - lbl_803E2EFC, &a.x, &a.y, &a.z);
-  (*(void (**)(void *, f32, f32 *, f32 *, f32 *))(**(int **)(*(int *)(hit + 0x38) + 0x68) +
+      *(void **)&((GrimbleState *)hit)->unk38, ((GrimbleState *)hit)->unk48 - lbl_803E2EFC, &a.x, &a.y, &a.z);
+  (*(void (**)(void *, f32, f32 *, f32 *, f32 *))(**(int **)(((GrimbleState *)hit)->unk38 + 0x68) +
                                                   0x24))(
-      *(void **)(hit + 0x38), lbl_803E2EFC + *(f32 *)(hit + 0x48), &b.x, &b.y, &b.z);
+      *(void **)&((GrimbleState *)hit)->unk38, lbl_803E2EFC + ((GrimbleState *)hit)->unk48, &b.x, &b.y, &b.z);
   a.x = a.x - b.x;
   a.y = a.y - b.y;
   a.z = a.z - b.z;
@@ -4870,7 +4900,7 @@ int grimble_stateHandlerA04(short *obj, GroundBaddieState *p)
   a.x = r;
   {
     int ang = (s16)getAngle(a.y, (f32)d);
-    ((GameObject *)obj)->anim.rotY = ang * ((*(s8 *)(hit + 0x45) << 1) - 1);
+    ((GameObject *)obj)->anim.rotY = ang * ((((GrimbleState *)hit)->unk45 << 1) - 1);
   }
   if (*(char *)&p->baddie.moveDone != '\0') {
     return 6;
@@ -4901,12 +4931,12 @@ int grimble_stateHandlerA03(short *obj, GroundBaddieState *p)
     *(s8 *)&p->baddie.moveDone = 0;
   }
   p->baddie.moveSpeed = lbl_803E2EE4;
-  (*(void (**)(void *, f32, f32 *, f32 *, f32 *))(**(int **)(*(int *)(hit + 0x38) + 0x68) +
+  (*(void (**)(void *, f32, f32 *, f32 *, f32 *))(**(int **)(((GrimbleState *)hit)->unk38 + 0x68) +
                                                   0x24))(
-      *(void **)(hit + 0x38), *(f32 *)(hit + 0x48) - lbl_803E2EFC, &a.x, &a.y, &a.z);
-  (*(void (**)(void *, f32, f32 *, f32 *, f32 *))(**(int **)(*(int *)(hit + 0x38) + 0x68) +
+      *(void **)&((GrimbleState *)hit)->unk38, ((GrimbleState *)hit)->unk48 - lbl_803E2EFC, &a.x, &a.y, &a.z);
+  (*(void (**)(void *, f32, f32 *, f32 *, f32 *))(**(int **)(((GrimbleState *)hit)->unk38 + 0x68) +
                                                   0x24))(
-      *(void **)(hit + 0x38), lbl_803E2EFC + *(f32 *)(hit + 0x48), &b.x, &b.y, &b.z);
+      *(void **)&((GrimbleState *)hit)->unk38, lbl_803E2EFC + ((GrimbleState *)hit)->unk48, &b.x, &b.y, &b.z);
   a.x = a.x - b.x;
   a.y = a.y - b.y;
   a.z = a.z - b.z;
@@ -4915,7 +4945,7 @@ int grimble_stateHandlerA03(short *obj, GroundBaddieState *p)
   a.x = r;
   {
     int ang = (s16)getAngle(a.y, (f32)d);
-    ((GameObject *)obj)->anim.rotY = ang * ((*(s8 *)(hit + 0x45) << 1) - 1);
+    ((GameObject *)obj)->anim.rotY = ang * ((((GrimbleState *)hit)->unk45 << 1) - 1);
   }
   if (*(char *)&p->baddie.moveDone != '\0') {
     return 1;

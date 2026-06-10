@@ -9,6 +9,41 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 
+typedef struct Dll19DState {
+    u8 pad0[0x8 - 0x0];
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    u8 pad14[0x2C - 0x14];
+    s16 unk2C;
+    s16 unk2E;
+    s16 unk30;
+    s16 unk32;
+    u16 unk34;
+    u8 unk36;
+    u8 pad37[0x38 - 0x37];
+} Dll19DState;
+
+
+typedef struct Dll19CState {
+    u8 pad0[0x2 - 0x0];
+    s16 unk2;
+    s16 unk4;
+    s16 unk6;
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    u8 pad14[0x2C - 0x14];
+    s16 unk2C;
+    s16 unk2E;
+    s16 unk30;
+    s16 unk32;
+    u16 unk34;
+    u8 unk36;
+    u8 pad37[0x38 - 0x37];
+} Dll19CState;
+
+
 typedef struct Dll19BState {
     u8 pad0[0x12 - 0x0];
     u8 unk12;
@@ -331,14 +366,14 @@ void dll_19C_update(int *obj) {
             ((void(*)(int*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 1, 0, 1, -1, 0);
             Sfx_PlayFromObject(0, SFXsc_gemrun1022);
             Resource_Release(res);
-            *(s16*)(sub + 6) = 1;
+            ((Dll19CState *)sub)->unk6 = 1;
             ((GameObject *)obj)->unkF8 = 1;
         }
     }
-    if (*(s16*)(sub + 6) != 0) {
-        *(s16*)(sub + 4) = (s16)(*(s16*)(sub + 4) - *(s16*)(sub + 6) * framesThisStep);
+    if (((Dll19CState *)sub)->unk6 != 0) {
+        ((Dll19CState *)sub)->unk4 = (s16)(((Dll19CState *)sub)->unk4 - ((Dll19CState *)sub)->unk6 * framesThisStep);
     }
-    if (*(s16*)(sub + 4) <= 0 && (s8)def[0x1f] == 0 && (u8)Obj_IsLoadingLocked() != 0) {
+    if (((Dll19CState *)sub)->unk4 <= 0 && (s8)def[0x1f] == 0 && (u8)Obj_IsLoadingLocked() != 0) {
         setup = Obj_AllocObjectSetup(0x18, 0x248);
         ((ObjPlacement *)setup)->posX = *(f32*)(def + 8);
         ((ObjPlacement *)setup)->posY = lbl_803E51B4 + *(f32*)(def + 0xc);
@@ -350,8 +385,8 @@ void dll_19C_update(int *obj) {
         *(u8*)((char*)setup + 6) = def[6];
         *(u8*)((char*)setup + 7) = def[7];
         Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(void**)&((GameObject *)obj)->anim.parent);
-        *(s16*)(sub + 4) = 0x64;
-        *(s16*)(sub + 6) = 0;
+        ((Dll19CState *)sub)->unk4 = 0x64;
+        ((Dll19CState *)sub)->unk6 = 0;
     }
 }
 #pragma peephole reset
@@ -411,8 +446,8 @@ void dll_19C_init(int obj, u8 *initData)
     register int state = *(int *)&((GameObject *)self)->extra;
     *(short *)self = (short)((int)(signed char)initData[0x1e] << 8);
     ((GameObject *)self)->unkF8 = 0;
-    *(short *)(state + 4) = 0x64;
-    *(short *)(state + 6) = 0;
+    ((Dll19CState *)state)->unk4 = 0x64;
+    ((Dll19CState *)state)->unk6 = 0;
     *(int *)state = 0;
     *(u8 *)(self + 0x37) = 0xff;
     ((GameObject *)self)->anim.alpha = 0xff;
@@ -429,9 +464,9 @@ void dll_19D_free(int obj)
 {
     register int self = obj;
     register int state = *(int *)&((GameObject *)self)->extra;
-    if ((*(u8 *)(state + 0x36) & 2) == 0) {
+    if ((((Dll19DState *)state)->unk36 & 2) == 0) {
         getLActions(self, self, 1, 0, 0, 0);
-        *(u8 *)(state + 0x36) = (u8)((u32)*(u8 *)(state + 0x36) | 0x2);
+        ((Dll19DState *)state)->unk36 = (u8)((u32)((Dll19DState *)state)->unk36 | 0x2);
     }
     (*gExpgfxInterface)->freeSource2((u32)self);
 }
@@ -500,7 +535,7 @@ void dll_19D_hitDetect(int obj)
     (*gPartfxInterface)->spawnObject((void *)self, 0x2a0, vec, 1, -1, NULL);
     (*gPartfxInterface)->spawnObject((void *)self, 0x2a0, vec, 1, -1, NULL);
     (*gPartfxInterface)->spawnObject((void *)self, 0x2a0, vec, 1, -1, NULL);
-    *(short *)(state + 0x32) = 0x32;
+    ((Dll19DState *)state)->unk32 = 0x32;
 }
 #pragma peephole reset
 

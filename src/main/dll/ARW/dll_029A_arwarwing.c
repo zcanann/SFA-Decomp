@@ -8,6 +8,13 @@
 
 #include "main/dll/ARW/arwing_state.h"
 
+typedef struct ArwarwingState {
+    u8 pad0[0x47C - 0x0];
+    u16 unk47C;
+    u8 pad47E[0x498 - 0x47E];
+} ArwarwingState;
+
+
 int getArwing(void) { return lbl_803DDD88; }
 
 int arwarwing_getExtraSize(void) { return 0x498; }
@@ -1077,9 +1084,9 @@ int arwarwing_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
         case 7:
             if (!((Arw339Flags *)(state + 0x339))->scoreFlag) {
                 int s2 = *(int *)&((GameObject *)obj)->extra;
-                *(u16 *)(s2 + 0x47c) = *(u16 *)(s2 + 0x47c) + 0xc8;
-                if (*(u16 *)(s2 + 0x47c) > 0x270f)
-                    *(u16 *)(s2 + 0x47c) = 0x270f;
+                ((ArwarwingState *)s2)->unk47C = ((ArwarwingState *)s2)->unk47C + 0xc8;
+                if (((ArwarwingState *)s2)->unk47C > 0x270f)
+                    ((ArwarwingState *)s2)->unk47C = 0x270f;
             }
             registerNewScore((s8)((ArwingState *)state)->scoreSlot, ((ArwingState *)state)->score,
                              ((ArwingState *)state)->collectedRings, 2);

@@ -6,6 +6,22 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 
+typedef struct Dll197State {
+    u8 pad0[0x2 - 0x0];
+    s16 unk2;
+    s16 unk4;
+    u8 pad6[0x8 - 0x6];
+    s16 unk8;
+    s16 unkA;
+    u8 unkC;
+    u8 unkD;
+    u8 unkE;
+    u8 unkF;
+    u8 unk10;
+    u8 pad11[0x18 - 0x11];
+} Dll197State;
+
+
 
 extern undefined8 FUN_80006728();
 extern undefined4 FUN_800067c0();
@@ -82,26 +98,26 @@ void dll_197_init(int obj, int data)
         ((GameObject *)obj)->anim.rootMotionScale = lbl_803E5144;
     }
     *(u8 *)(st + 0xb) = *(u8 *)(data + 0x19);
-    *(u8 *)(st + 0xc) = 0;
-    *(u8 *)(st + 0xf) = 0;
+    ((Dll197State *)st)->unkC = 0;
+    ((Dll197State *)st)->unkF = 0;
     *(int *)st = *(s16 *)(data + 0x1e);
     stk.f = lbl_803E513C;
     switch (*(u8 *)(st + 0xb)) {
     case 0:
-        *(u8 *)(st + 0xc) = 1;
+        ((Dll197State *)st)->unkC = 1;
         res = Resource_Acquire(0x69, 1);
         if (*(s16 *)(data + 0x1c) == 0) {
             (*(void (**)(int, int, void *, int, int, int))(*(int *)res + 4))(obj, 0, stk.buf, 0x10004, -1, 0);
         }
         break;
     case 1:
-        *(u8 *)(st + 0xf) = *(s16 *)(data + 0x1c);
-        *(u8 *)(st + 0xd) = 0;
-        *(s16 *)(st + 8) = *(u8 *)(st + 0xf) * 0x28 + 0x398;
-        *(u8 *)(st + 0xe) = 0;
+        ((Dll197State *)st)->unkF = *(s16 *)(data + 0x1c);
+        ((Dll197State *)st)->unkD = 0;
+        ((Dll197State *)st)->unk8 = ((Dll197State *)st)->unkF * 0x28 + 0x398;
+        ((Dll197State *)st)->unkE = 0;
         break;
     }
-    *(s16 *)(st + 4) = 0;
+    ((Dll197State *)st)->unk4 = 0;
 }
 
 

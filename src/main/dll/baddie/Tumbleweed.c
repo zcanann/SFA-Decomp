@@ -10,6 +10,22 @@
 #include "main/objseq.h"
 #include "stdarg.h"
 
+typedef struct TitlescreenState {
+    s16 unk0;
+    s16 unk2;
+    s16 unk4;
+    u8 pad6[0x18 - 0x6];
+    f32 unk18;
+    f32 unk1C;
+    f32 unk20;
+    u8 pad24[0x30 - 0x24];
+    u8 unk30;
+    s8 unk31;
+    u8 pad32[0x34 - 0x32];
+    f32 unk34;
+} TitlescreenState;
+
+
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_80006728();
 extern undefined4 FUN_800067bc();
@@ -4154,16 +4170,16 @@ void titlescreen_init(u8* obj, u8* p)
 {
     u8* a = ((GameObject *)obj)->extra;
     s16 v;
-    *(u8*)(a + 0x30) = 0;
+    ((TitlescreenState *)a)->unk30 = 0;
     ((GameObject *)obj)->anim.rotX = (s16)((s8)p[0x18] << 8);
     v = ((GameObject *)obj)->anim.seqId;
     if (v >= 0x77d && v < 0x781) {
-        *(s8*)(a + 0x31) = (s8)(v - 0x77d);
-        *(f32*)(a + 0x34) = lbl_8031CE10[((GameObject *)obj)->anim.seqId - 0x77d].moves[0];
+        ((TitlescreenState *)a)->unk31 = (s8)(v - 0x77d);
+        ((TitlescreenState *)a)->unk34 = lbl_8031CE10[((GameObject *)obj)->anim.seqId - 0x77d].moves[0];
         ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E22F8, 0);
     } else {
-        *(f32*)(a + 0x34) = lbl_803E22F8;
-        *(s8*)(a + 0x31) = -2;
+        ((TitlescreenState *)a)->unk34 = lbl_803E22F8;
+        ((TitlescreenState *)a)->unk31 = -2;
         v = ((GameObject *)obj)->anim.seqId;
         if (v == 0x78a) {
             ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E22F8, 0);

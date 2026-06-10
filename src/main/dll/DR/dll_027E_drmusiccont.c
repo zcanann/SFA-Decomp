@@ -2,6 +2,12 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 
+typedef struct DrmusiccontState {
+    u8 pad0[0x4 - 0x0];
+    f32 unk4;
+} DrmusiccontState;
+
+
 
 int drmusiccont_getExtraSize(void) { return 4; }
 
@@ -106,14 +112,14 @@ void drmusiccont_update(int obj)
     d = (u8)GameBit_Get(0x9e7);
     if (!(a && b && c && d)) {
         if (a != f->b_9e0 || b != f->b_9e1 || c != f->b_9e2 || d != f->b_9e7) {
-            *(f32 *)(state + 4) = lbl_803E6BDC;
+            ((DrmusiccontState *)state)->unk4 = lbl_803E6BDC;
         }
     }
     {
         f32 zero = lbl_803E6BD8;
-        if (*(f32 *)(state + 4) > zero) {
-            *(f32 *)(state + 4) = *(f32 *)(state + 4) - timeDelta;
-            if (*(f32 *)(state + 4) <= zero) {
+        if (((DrmusiccontState *)state)->unk4 > zero) {
+            ((DrmusiccontState *)state)->unk4 = ((DrmusiccontState *)state)->unk4 - timeDelta;
+            if (((DrmusiccontState *)state)->unk4 <= zero) {
                 Sfx_PlayFromObject(0, 0x4bd);
             }
         }

@@ -5,6 +5,33 @@
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 
+typedef struct ProjectileSwitchState {
+    u8 pad0[0x4 - 0x0];
+    f32 unk4;
+    u8 pad8[0x20 - 0x8];
+    u8 unk20;
+    u8 unk21;
+    u8 unk22;
+    u8 unk23;
+    u8 pad24[0x28 - 0x24];
+} ProjectileSwitchState;
+
+
+typedef struct InvisibleHitSwitchState {
+    u8 pad0[0x1 - 0x0];
+    u8 unk1;
+    u8 pad2[0x4 - 0x2];
+    f32 unk4;
+    f32 unk8;
+    u8 padC[0x20 - 0xC];
+    u8 unk20;
+    u8 unk21;
+    u8 unk22;
+    u8 unk23;
+    u8 pad24[0x28 - 0x24];
+} InvisibleHitSwitchState;
+
+
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void ObjHitbox_SetSphereRadius(int obj, short radius);
@@ -111,7 +138,7 @@ void ProjectileSwitch_hitDetect(int obj)
     *(u8 *)state = 1;
     GameBit_Set((int)*(short *)(state + 2), 1);
     if ((*(u8 *)(state2 + 0x1e) & 3) == 2) {
-      *(float *)(state + 4) =
+      ((ProjectileSwitchState *)state)->unk4 =
           lbl_803E3704 * lbl_803E3708 *
           (f32)*(s16 *)(state2 + 0x1a);
     }
@@ -147,11 +174,11 @@ void ProjectileSwitch_update(int obj)
       *(u8 *)state2 = 1;
     }
   }
-  if (lbl_803E3718 < *(float *)(state + 4)) {
-    *(float *)(state + 4) =
-        *(float *)(state + 4) - (f32)(u32)framesThisStep;
-    if (*(float *)(state + 4) <= lbl_803E3718) {
-      *(float *)(state + 4) = lbl_803E3718;
+  if (lbl_803E3718 < ((ProjectileSwitchState *)state)->unk4) {
+    ((ProjectileSwitchState *)state)->unk4 =
+        ((ProjectileSwitchState *)state)->unk4 - (f32)(u32)framesThisStep;
+    if (((ProjectileSwitchState *)state)->unk4 <= lbl_803E3718) {
+      ((ProjectileSwitchState *)state)->unk4 = lbl_803E3718;
       GameBit_Set((int)*(short *)(state + 2), 0);
     }
   }
@@ -251,47 +278,47 @@ void InvisibleHitSwitch_update(int obj)
     }
   }
 
-  if (lbl_803E3730 < *(float *)(state + 4)) {
-    *(float *)(state + 4) =
-        *(float *)(state + 4) - (f32)(u32)framesThisStep;
-    if (*(float *)(state + 4) <= lbl_803E3730) {
-      *(float *)(state + 4) = lbl_803E3730;
+  if (lbl_803E3730 < ((InvisibleHitSwitchState *)state)->unk4) {
+    ((InvisibleHitSwitchState *)state)->unk4 =
+        ((InvisibleHitSwitchState *)state)->unk4 - (f32)(u32)framesThisStep;
+    if (((InvisibleHitSwitchState *)state)->unk4 <= lbl_803E3730) {
+      ((InvisibleHitSwitchState *)state)->unk4 = lbl_803E3730;
       GameBit_Set((int)*(short *)(state2 + 0x18), 0);
       return;
     }
     return;
   }
 
-  if (*(float *)(state + 8) != lbl_803E3730) {
-    *(float *)(state + 8) = *(float *)(state + 8) - timeDelta;
-    if (*(float *)(state + 8) < lbl_803E3734) {
+  if (((InvisibleHitSwitchState *)state)->unk8 != lbl_803E3730) {
+    ((InvisibleHitSwitchState *)state)->unk8 = ((InvisibleHitSwitchState *)state)->unk8 - timeDelta;
+    if (((InvisibleHitSwitchState *)state)->unk8 < lbl_803E3734) {
       hitId = ObjHits_GetPriorityHit(obj, 0, 0, 0);
-      if ((int)*(u8 *)(state + 1) == hitId) {
-        *(float *)(state + 8) = lbl_803E3730;
+      if ((int)((InvisibleHitSwitchState *)state)->unk1 == hitId) {
+        ((InvisibleHitSwitchState *)state)->unk8 = lbl_803E3730;
         *(u8 *)state = 1;
         GameBit_Set((int)*(short *)(state2 + 0x18), 1);
-      } else if (lbl_803E3730 < *(float *)(state + 8)) {
+      } else if (lbl_803E3730 < ((InvisibleHitSwitchState *)state)->unk8) {
         /* nothing */
       } else {
-        *(float *)(state + 8) = lbl_803E3730;
+        ((InvisibleHitSwitchState *)state)->unk8 = lbl_803E3730;
       }
     }
   } else {
     hitId = ObjHits_GetPriorityHit(obj, 0, 0, 0);
-    if ((int)*(u8 *)(state + 1) != hitId) return;
+    if ((int)((InvisibleHitSwitchState *)state)->unk1 != hitId) return;
     if (*(u8 *)state != 0) {
       if ((*(u8 *)(state2 + 0x1e) & 3) != 1) return;
       *(u8 *)state = 0;
       GameBit_Set((int)*(short *)(state2 + 0x18), 0);
     } else {
       if ((*(u8 *)(state2 + 0x1e) & 3) == 3) {
-        *(float *)(state + 8) = lbl_803E3738;
+        ((InvisibleHitSwitchState *)state)->unk8 = lbl_803E3738;
         return;
       }
       *(u8 *)state = 1;
       GameBit_Set((int)*(short *)(state2 + 0x18), 1);
       if ((*(u8 *)(state2 + 0x1e) & 3) == 2) {
-        *(float *)(state + 4) =
+        ((InvisibleHitSwitchState *)state)->unk4 =
             lbl_803E3734 * lbl_803E373C *
             (f32)*(s16 *)(state2 + 0x1a);
       }

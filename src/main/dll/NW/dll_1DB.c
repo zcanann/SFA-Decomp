@@ -2,6 +2,16 @@
 #include "main/dll/NW/dll_1DB.h"
 #include "main/game_object.h"
 
+typedef struct EdiblemushroomState {
+    u8 pad0[0x108 - 0x0];
+    f32 unk108;
+    f32 unk10C;
+    u8 pad110[0x134 - 0x110];
+    s16 unk134;
+    u8 pad136[0x138 - 0x136];
+} EdiblemushroomState;
+
+
 
 extern f32 lbl_803E52A8;
 
@@ -53,7 +63,7 @@ void ediblemushroom_update(u8 *self)
       if (((u32)msg - 0x70000) != 0xB) continue;
       ((GameObject *)self)->anim.flags = (s16)(((GameObject *)self)->anim.flags | 0x4000);
       ObjHits_DisableObject(self);
-      gameBitIncrement(*(s16 *)(state + 0x134));
+      gameBitIncrement(((EdiblemushroomState *)state)->unk134);
       GameBit_Set(0x12E, 0);
       if (((GameObject *)self)->anim.seqId == 0x658) {
         itemPickupDoParticleFx(self, lbl_803E52A8, 0xFF, 0x28);
@@ -73,18 +83,18 @@ void ediblemushroom_update(u8 *self)
     state[0x139] = 0;
   }
 
-  *(f32 *)(state + 0x10C) = *(f32 *)(state + 0x108);
+  ((EdiblemushroomState *)state)->unk10C = ((EdiblemushroomState *)state)->unk108;
   distState = vec3f_distanceSquared((f32 *)(player + 0x18), (f32 *)(self + 0x18));
   if (enemy == NULL) {
-    *(f32 *)(state + 0x108) = sqrtf(distState);
+    ((EdiblemushroomState *)state)->unk108 = sqrtf(distState);
   } else {
     distEnemy = vec3f_distanceSquared((f32 *)(enemy + 0x18), (f32 *)(self + 0x18));
     if (distState < distEnemy) {
-      *(f32 *)(state + 0x108) = sqrtf(distState);
+      ((EdiblemushroomState *)state)->unk108 = sqrtf(distState);
     } else {
-      *(f32 *)(state + 0x108) = sqrtf(distEnemy);
+      ((EdiblemushroomState *)state)->unk108 = sqrtf(distEnemy);
     }
-    if (*(f32 *)(state + 0x108) < (f32)(u32)other[0x1F]) {
+    if (((EdiblemushroomState *)state)->unk108 < (f32)(u32)other[0x1F]) {
       (*(void (**)(u8 *, u8 *, int, int))(*(int *)*(int *)(enemy + 0x68) + 0x28))
           (enemy, self, 0, 1);
     }

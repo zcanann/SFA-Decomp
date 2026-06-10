@@ -5,6 +5,16 @@
 #include "main/dll/SC/SClantern.h"
 #include "main/objanim.h"
 
+typedef struct WarpstoneState {
+    u8 pad0[0xC - 0x0];
+    u8 unkC;
+    u8 padD[0xE - 0xD];
+    s16 unkE;
+    s16 unk10;
+    u8 pad12[0x18 - 0x12];
+} WarpstoneState;
+
+
 
 extern undefined8 FUN_80006824();
 extern int ObjHits_GetPriorityHitWithPosition();
@@ -165,7 +175,7 @@ void warpstone_update(int obj)
     objAnimFn_80038f38(obj, (int *)(state + 0x14));
     characterDoEyeAnims(obj, (void *)(state + 0x44));
     if (GameBit_Get(0x887) == 0) {
-        *(u8 *)(state + 0xc) = 0;
+        ((WarpstoneState *)state)->unkC = 0;
     }
     if (((WarpstoneFlags *)(state + 0xd5))->b4 != 0) {
         return;
@@ -244,15 +254,15 @@ void warpstone_init(int obj, u8 *setup)
   setupYaw = (s16)(setup[0x1a] << 8);
   *(s16 *)obj = setupYaw;
   ((GameObject *)obj)->animEventCallback = warpstone_updateMenuAnimObj;
-  *(s16 *)(state + 0xe) = 0x15a;
-  *(s16 *)(state + 0x10) = 0x886;
+  ((WarpstoneState *)state)->unkE = 0x15a;
+  ((WarpstoneState *)state)->unk10 = 0x886;
   ObjHits_EnableObject(obj);
   if (GameBit_Get(0x887) != 0 && GameBit_Get(0x15a) != 0) {
-    *(u8 *)(state + 0xc) = 1;
+    ((WarpstoneState *)state)->unkC = 1;
   } else {
-    *(u8 *)(state + 0xc) = 0;
+    ((WarpstoneState *)state)->unkC = 0;
   }
-  GameBit_Set(*(s16 *)(state + 0x10), 0);
+  GameBit_Set(((WarpstoneState *)state)->unk10, 0);
   *(int *)state = 0;
 }
 

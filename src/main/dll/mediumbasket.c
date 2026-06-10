@@ -7,6 +7,16 @@
 #include "main/objanim.h"
 #include "main/objhits_types.h"
 
+typedef struct MediumbasketUpdateOpenHitStateState {
+    u8 pad0[0x2C - 0x0];
+    f32 unk2C;
+    f32 unk30;
+    f32 unk34;
+    u8 pad38[0x40C - 0x38];
+    s32 unk40C;
+} MediumbasketUpdateOpenHitStateState;
+
+
 extern undefined8 FUN_80003494();
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006920();

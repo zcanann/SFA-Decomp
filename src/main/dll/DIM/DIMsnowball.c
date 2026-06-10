@@ -1633,6 +1633,24 @@ void ccsharpclawpad_update(int obj)
 }
 
 #include "main/dll/SC/SCtotemlogpuz.h"
+
+typedef struct CclightfootState {
+    u8 unk0;
+    u8 pad1[0x4 - 0x1];
+    s16 unk4;
+    u8 unk6;
+    u8 pad7[0x18 - 0x7];
+} CclightfootState;
+
+
+typedef struct CcpedstalState {
+    u8 unk0;
+    u8 pad1[0x4 - 0x1];
+    s16 unk4;
+    u8 unk6;
+    u8 pad7[0x8 - 0x7];
+} CcpedstalState;
+
 extern f32 lbl_803E46D0;
 extern void gameTextShow(int textId);
 extern void *getTrickyObject(void);

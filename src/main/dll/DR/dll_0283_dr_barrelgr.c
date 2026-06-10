@@ -1,6 +1,25 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
+typedef struct DrbarrelgrState {
+    s32 unk0;
+    s32 unk4;
+    s32 unk8;
+    u8 padC[0x10 - 0xC];
+    f32 unk10;
+    f32 unk14;
+    f32 unk18;
+    f32 unk1C;
+    u8 pad20[0x88 - 0x20];
+    f32 unk88;
+    f32 unk8C;
+    f32 unk90;
+    u8 pad94[0x128 - 0x94];
+    s16 unk128;
+    u8 pad12A[0x12C - 0x12A];
+} DrbarrelgrState;
+
+
 int drbarrelgr_getExtraSize(void) { return 0x12c; }
 
 int drbarrelgr_getObjectTypeId(void) { return 0; }
@@ -8,7 +27,7 @@ int drbarrelgr_getObjectTypeId(void) { return 0; }
 void drbarrelgr_free(int obj)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
-    void *heldObj = *(void **)(state + 8);
+    void *heldObj = *(void **)&((DrbarrelgrState *)state)->unk8;
 
     if (heldObj != NULL) {
         gunpowderbarrel_clearHeldState((int)heldObj);
@@ -35,20 +54,20 @@ void drbarrelgr_init(int obj, int setup)
     if (*(s16 *)(setup + 0x1a) <= 0) {
         *(s16 *)(setup + 0x1a) = 0x64;
     }
-    *(int *)(state + 0) = 5;
-    *(int *)(state + 8) = 0;
+    ((DrbarrelgrState *)state)->unk0 = 5;
+    ((DrbarrelgrState *)state)->unk8 = 0;
     ((DrBarrelGrFlags *)(state + 0x12a))->bit80 = 0;
-    *(s16 *)(state + 0x128) = *(u8 *)(setup + 0x19);
-    *(f32 *)(state + 0x10) = lbl_803E6CA4;
-    *(int *)(state + 4) = -3;
+    ((DrbarrelgrState *)state)->unk128 = *(u8 *)(setup + 0x19);
+    ((DrbarrelgrState *)state)->unk10 = lbl_803E6CA4;
+    ((DrbarrelgrState *)state)->unk4 = -3;
     ((DrBarrelGrFlags *)(state + 0x12a))->bit40 = 0;
     storeZeroToFloatParam((void *)(state + 0xc));
     s16toFloat((void *)(state + 0xc), *(s16 *)(setup + 0x1a));
     *(s16 *)obj = (s16)((s8)*(s8 *)(setup + 0x18) << 8);
     (*gRomCurveInterface)->initCurve((void *)(state + 0x20), (void *)obj, lbl_803E6CD0, &one, 0);
-    ((GameObject *)obj)->anim.localPosX = *(f32 *)(state + 0x88);
-    ((GameObject *)obj)->anim.localPosZ = *(f32 *)(state + 0x90);
-    ((GameObject *)obj)->anim.localPosY = *(f32 *)(state + 0x8c);
+    ((GameObject *)obj)->anim.localPosX = ((DrbarrelgrState *)state)->unk88;
+    ((GameObject *)obj)->anim.localPosZ = ((DrbarrelgrState *)state)->unk90;
+    ((GameObject *)obj)->anim.localPosY = ((DrbarrelgrState *)state)->unk8C;
 }
 
 void drbarrelgr_update(int obj)
@@ -63,15 +82,15 @@ void drbarrelgr_update(int obj)
     f32 vec[3];
     f32 tmp[3];
 
-    if (*(void **)(state + 8) != 0) {
+    if (*(void **)&((DrbarrelgrState *)state)->unk8 != 0) {
         nearest = ObjGroup_FindNearestObject(25, obj, 0);
         match = 0;
-        if ((u32)nearest != 0 && *(u32 *)(state + 8) == (u32)nearest) {
+        if ((u32)nearest != 0 && *(u32 *)&((DrbarrelgrState *)state)->unk8 == (u32)nearest) {
             match = 1;
         }
         if (match == 0 ||
-            (flags->bit80 != 0 && gunpowderbarrel_isHeld(*(int *)(state + 8)) == 0)) {
-            *(int *)(state + 8) = 0;
+            (flags->bit80 != 0 && gunpowderbarrel_isHeld(((DrbarrelgrState *)state)->unk8) == 0)) {
+            ((DrbarrelgrState *)state)->unk8 = 0;
             flags->bit80 = 0;
         }
     }
@@ -84,9 +103,9 @@ void drbarrelgr_update(int obj)
     flags->bit40 = 1;
     Sfx_KeepAliveLoopedObjectSound(obj, 958);
 
-    switch (*(int *)(state + 0)) {
+    switch (((DrbarrelgrState *)state)->unk0) {
     case 0:
-        if (*(void **)(state + 8) == 0) {
+        if (*(void **)&((DrbarrelgrState *)state)->unk8 == 0) {
             nearest = ObjGroup_FindNearestObject(25, obj, 0);
             if ((u32)nearest != 0 &&
                 Vec_xzDistance(obj + 24, nearest + 24) < lbl_803E6CB0 &&
@@ -98,7 +117,7 @@ void drbarrelgr_update(int obj)
                     gunpowderbarrel_canBeGrabbed(nearest) != 0) {
                     Sfx_PlayFromObject(obj, 959);
                     newMode = 4;
-                    *(int *)(state + 8) = nearest;
+                    ((DrbarrelgrState *)state)->unk8 = nearest;
                 }
                 break;
             }
@@ -108,37 +127,37 @@ void drbarrelgr_update(int obj)
         }
         break;
     case 4:
-        if (*(void **)(state + 8) == 0 ||
-            gunpowderbarrel_canBeGrabbed(*(int *)(state + 8)) == 0) {
-            *(int *)(state + 0) = 0;
-            *(int *)(state + 8) = 0;
+        if (*(void **)&((DrbarrelgrState *)state)->unk8 == 0 ||
+            gunpowderbarrel_canBeGrabbed(((DrbarrelgrState *)state)->unk8) == 0) {
+            ((DrbarrelgrState *)state)->unk0 = 0;
+            ((DrbarrelgrState *)state)->unk8 = 0;
             flags->bit80 = 0;
             break;
         }
-        if (Vec_xzDistance(obj + 24, *(int *)(state + 8) + 24) > lbl_803E6CB0) {
-            newMode = *(int *)(state + 4);
+        if (Vec_xzDistance(obj + 24, ((DrbarrelgrState *)state)->unk8 + 24) > lbl_803E6CB0) {
+            newMode = ((DrbarrelgrState *)state)->unk4;
             flags->bit80 = 0;
-            *(int *)(state + 8) = 0;
+            ((DrbarrelgrState *)state)->unk8 = 0;
             break;
         }
-        PSVECSubtract((void *)(state + 0x14), (void *)(*(int *)(state + 8) + 12), tmp);
+        PSVECSubtract((void *)(state + 0x14), (void *)(((DrbarrelgrState *)state)->unk8 + 12), tmp);
         if (tmp[0] != lbl_803E6CA4 || tmp[1] != lbl_803E6CA4 || tmp[2] != lbl_803E6CA4) {
             PSVECNormalize(tmp, tmp);
         }
         PSVECScale(tmp, tmp, lbl_803DC3B0);
-        gunpowderbarrel_setScale(*(int *)(state + 8), tmp);
-        if (PSVECDistance((void *)(state + 0x14), (void *)(*(int *)(state + 8) + 12)) < lbl_803E6CA0 ||
-            *(f32 *)(*(int *)(state + 8) + 16) > *(f32 *)(state + 24)) {
+        gunpowderbarrel_setScale(((DrbarrelgrState *)state)->unk8, tmp);
+        if (PSVECDistance((void *)(state + 0x14), (void *)(((DrbarrelgrState *)state)->unk8 + 12)) < lbl_803E6CA0 ||
+            *(f32 *)(((DrbarrelgrState *)state)->unk8 + 16) > ((DrbarrelgrState *)state)->unk18) {
             Sfx_PlayFromObject(obj, 960);
-            gunpowderbarrel_setHeldState(*(int *)(state + 8));
-            newMode = *(int *)(state + 4);
+            gunpowderbarrel_setHeldState(((DrbarrelgrState *)state)->unk8);
+            newMode = ((DrbarrelgrState *)state)->unk4;
             flags->bit80 = 1;
             ObjAnim_SetCurrentMove(obj, 0, lbl_803E6CA4, 0);
         }
         break;
     case 5: {
         int r = Obj_UpdateRomCurveFollowVelocity(obj, state + 0x20,
-                            lbl_803E6CB8 * (f32)*(s16 *)(state + 0x128) * timeDelta,
+                            lbl_803E6CB8 * (f32)((DrbarrelgrState *)state)->unk128 * timeDelta,
                             lbl_803E6CBC, lbl_803E6CB4, 1);
         objMove(obj, ((GameObject *)obj)->anim.velocityX, ((GameObject *)obj)->anim.velocityY, ((GameObject *)obj)->anim.velocityZ);
         if (r != 0) {
@@ -152,45 +171,45 @@ void drbarrelgr_update(int obj)
         break;
     }
     case 2:
-        if (*(s16 *)(state + 0x128) == *(u8 *)(setup + 0x19)) {
-            *(s16 *)(state + 0x128) =
-                (int)((f32)*(s16 *)(state + 0x128) * lbl_803E6CA8);
+        if (((DrbarrelgrState *)state)->unk128 == *(u8 *)(setup + 0x19)) {
+            ((DrbarrelgrState *)state)->unk128 =
+                (int)((f32)((DrbarrelgrState *)state)->unk128 * lbl_803E6CA8);
         } else {
-            *(s16 *)(state + 0x128) = *(u8 *)(setup + 0x19);
+            ((DrbarrelgrState *)state)->unk128 = *(u8 *)(setup + 0x19);
         }
         storeZeroToFloatParam((void *)(state + 12));
         newMode = 5;
         break;
     case 1:
-        if (*(void **)(state + 8) != 0) {
+        if (*(void **)&((DrbarrelgrState *)state)->unk8 != 0) {
             newMode = 3;
         } else if (timerCountDown((void *)(state + 12)) != 0) {
             newMode = 5;
         }
         break;
     case 3:
-        if (*(void **)(state + 8) != 0) {
-            gunpowderbarrel_clearHeldState(*(int *)(state + 8));
+        if (*(void **)&((DrbarrelgrState *)state)->unk8 != 0) {
+            gunpowderbarrel_clearHeldState(((DrbarrelgrState *)state)->unk8);
             flags->bit80 = 0;
             ObjAnim_SetCurrentMove(obj, 0, lbl_803E6CA4, 0);
         }
-        *(int *)(state + 8) = 0;
-        newMode = *(int *)(state + 4);
+        ((DrbarrelgrState *)state)->unk8 = 0;
+        newMode = ((DrbarrelgrState *)state)->unk4;
         break;
     }
 
     ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E6CC0, timeDelta, 0);
-    if (newMode != -1 && newMode != *(int *)(state + 0)) {
-        *(int *)(state + 4) = *(int *)(state + 0);
-        *(int *)(state + 0) = newMode;
+    if (newMode != -1 && newMode != ((DrbarrelgrState *)state)->unk0) {
+        ((DrbarrelgrState *)state)->unk4 = ((DrbarrelgrState *)state)->unk0;
+        ((DrbarrelgrState *)state)->unk0 = newMode;
     }
-    if ((((GameObject *)obj)->objectFlags & 0x800) == 0 && *(void **)(state + 8) != 0) {
-        *(f32 *)(state + 0x14) = ((GameObject *)obj)->anim.localPosX;
-        *(f32 *)(state + 0x18) = ((GameObject *)obj)->anim.localPosY + lbl_803DC3B4;
-        *(f32 *)(state + 0x1c) = ((GameObject *)obj)->anim.localPosZ;
-        *(f32 *)(*(int *)(state + 8) + 12) = *(f32 *)(state + 0x14);
-        *(f32 *)(*(int *)(state + 8) + 16) = *(f32 *)(state + 0x18);
-        *(f32 *)(*(int *)(state + 8) + 20) = *(f32 *)(state + 0x1c);
+    if ((((GameObject *)obj)->objectFlags & 0x800) == 0 && *(void **)&((DrbarrelgrState *)state)->unk8 != 0) {
+        ((DrbarrelgrState *)state)->unk14 = ((GameObject *)obj)->anim.localPosX;
+        ((DrbarrelgrState *)state)->unk18 = ((GameObject *)obj)->anim.localPosY + lbl_803DC3B4;
+        ((DrbarrelgrState *)state)->unk1C = ((GameObject *)obj)->anim.localPosZ;
+        *(f32 *)(((DrbarrelgrState *)state)->unk8 + 12) = ((DrbarrelgrState *)state)->unk14;
+        *(f32 *)(((DrbarrelgrState *)state)->unk8 + 16) = ((DrbarrelgrState *)state)->unk18;
+        *(f32 *)(((DrbarrelgrState *)state)->unk8 + 20) = ((DrbarrelgrState *)state)->unk1C;
     }
 }
 
@@ -218,7 +237,7 @@ void drbarrelgr_render(int obj, int p2, int p3, int p4, int p5)
         params.d = dval;
         objfx_spawnLightPulse(obj, lbl_803E6CA8, 3, 0, 0, lbl_803E6CAC, (int)&params);
     }
-    objRef = *(int *)(state + 8);
+    objRef = ((DrbarrelgrState *)state)->unk8;
     if (objRef != 0) {
         match = 0;
         nearest = ObjGroup_FindNearestObject(0x19, obj, 0);
@@ -226,10 +245,10 @@ void drbarrelgr_render(int obj, int p2, int p3, int p4, int p5)
             match = 1;
         }
         if (match && *(int *)state != 4) {
-            *(f32 *)(*(int *)(state + 8) + 0xc) = *(f32 *)(state + 0x14);
-            *(f32 *)(*(int *)(state + 8) + 0x10) = *(f32 *)(state + 0x18);
-            *(f32 *)(*(int *)(state + 8) + 0x14) = *(f32 *)(state + 0x1c);
-            objRenderFn_8003b8f4(*(int *)(state + 8), p2, p3, p4, p5, lbl_803E6CA0);
+            *(f32 *)(((DrbarrelgrState *)state)->unk8 + 0xc) = ((DrbarrelgrState *)state)->unk14;
+            *(f32 *)(((DrbarrelgrState *)state)->unk8 + 0x10) = ((DrbarrelgrState *)state)->unk18;
+            *(f32 *)(((DrbarrelgrState *)state)->unk8 + 0x14) = ((DrbarrelgrState *)state)->unk1C;
+            objRenderFn_8003b8f4(((DrbarrelgrState *)state)->unk8, p2, p3, p4, p5, lbl_803E6CA0);
         }
     }
 }

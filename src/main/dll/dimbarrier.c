@@ -5,6 +5,24 @@
 #include "main/objanim.h"
 #include "main/objseq.h"
 
+typedef struct EcshCupState {
+    f32 unk0;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    f32 unk14;
+    f32 unk18;
+    f32 unk1C;
+    f32 unk20;
+    s32 unk24;
+    s32 unk28;
+    s16 unk2C;
+    s8 unk2E;
+    u8 pad2F[0x30 - 0x2F];
+} EcshCupState;
+
+
 extern undefined4 FUN_800067e8();
 extern void* FUN_80017624();
 extern undefined4 FUN_8001771c();
@@ -86,25 +104,25 @@ void ecsh_cup_update(short *obj)
     }
     if (lbl_803DDBC8 != 0 && *(short *)(lbl_803DDBC8 + 0x44) != 0) {
         (*(void (*)(int *, u8 *))*(int *)(*(int *)(*(int *)(lbl_803DDBC8 + 0x68)) + 0x28))(&mode, buf);
-        *obj = *obj + *(s16 *)(state + 0x2c);
+        *obj = *obj + ((EcshCupState *)state)->unk2C;
         if (mode != 6) {
-            *(f32 *)(state + 0x1c) -= timeDelta;
-            if (*(f32 *)(state + 0x1c) <= lbl_803E5068) {
-                *(f32 *)(state + 0x1c) = lbl_803E506C;
+            ((EcshCupState *)state)->unk1C -= timeDelta;
+            if (((EcshCupState *)state)->unk1C <= lbl_803E5068) {
+                ((EcshCupState *)state)->unk1C = lbl_803E506C;
                 if (mode != 3 && mode != 6 && mode != 7) {
                     (*gPartfxInterface)->spawnObject(obj, 0x270, NULL, 0, -1, NULL);
                 }
             }
         }
-        *(f32 *)(state + 0x20) -= timeDelta;
-        if (*(f32 *)(state + 0x20) <= lbl_803E5068) {
-            *(s8 *)(state + 0x2e) = *(u8 *)(state + 0x2e) * -1;
-            *(f32 *)(state + 0x20) = lbl_803E5070;
+        ((EcshCupState *)state)->unk20 -= timeDelta;
+        if (((EcshCupState *)state)->unk20 <= lbl_803E5068) {
+            ((EcshCupState *)state)->unk2E = *(u8 *)&((EcshCupState *)state)->unk2E * -1;
+            ((EcshCupState *)state)->unk20 = lbl_803E5070;
         }
-        ((GameObject *)obj)->anim.localPosY = lbl_803E5074 * (f32)*(s8 *)(state + 0x2e) + ((GameObject *)obj)->anim.localPosY;
-        if (mode == 1 && *(int *)(state + 0x24) == 1) {
-            ((GameObject *)obj)->anim.localPosX = *(f32 *)(state + 0xc) * timeDelta + ((GameObject *)obj)->anim.localPosX;
-            ((GameObject *)obj)->anim.localPosZ = *(f32 *)(state + 0x14) * timeDelta + ((GameObject *)obj)->anim.localPosZ;
+        ((GameObject *)obj)->anim.localPosY = lbl_803E5074 * (f32)((EcshCupState *)state)->unk2E + ((GameObject *)obj)->anim.localPosY;
+        if (mode == 1 && ((EcshCupState *)state)->unk24 == 1) {
+            ((GameObject *)obj)->anim.localPosX = ((EcshCupState *)state)->unkC * timeDelta + ((GameObject *)obj)->anim.localPosX;
+            ((GameObject *)obj)->anim.localPosZ = ((EcshCupState *)state)->unk14 * timeDelta + ((GameObject *)obj)->anim.localPosZ;
             ObjHits_EnableObject((int)obj);
             ObjHits_SetHitVolumeSlot((int)obj, 10, 1, 0);
             ObjHits_SyncObjectPositionIfDirty((int)obj);
@@ -114,7 +132,7 @@ void ecsh_cup_update(short *obj)
             ObjHits_SyncObjectPositionIfDirty((int)obj);
         }
         if (mode == 6) {
-            if (((GameObject *)obj)->anim.localPosY < *(f32 *)(state + 0x18)) {
+            if (((GameObject *)obj)->anim.localPosY < ((EcshCupState *)state)->unk18) {
                 ((GameObject *)obj)->anim.localPosY = lbl_803E5078 * timeDelta + ((GameObject *)obj)->anim.localPosY;
             }
             if (*(u8 *)((char *)obj + 0x37) != 0xff) {
@@ -125,17 +143,17 @@ void ecsh_cup_update(short *obj)
                 }
                 *(u8 *)((char *)obj + 0x37) = (u8)(int)a;
             }
-            *(f32 *)(state + 0x1c) -= timeDelta;
-            if (*(f32 *)(state + 0x1c) <= lbl_803E5068) {
-                *(f32 *)(state + 0x1c) = lbl_803E506C;
+            ((EcshCupState *)state)->unk1C -= timeDelta;
+            if (((EcshCupState *)state)->unk1C <= lbl_803E5068) {
+                ((EcshCupState *)state)->unk1C = lbl_803E506C;
                 (*gPartfxInterface)->spawnObject(obj, 0x271, NULL, 0, -1, NULL);
             }
         } else if (mode == 7) {
-            if (((GameObject *)obj)->anim.localPosY > *(f32 *)(state + 0x18) - lbl_803E5084) {
+            if (((GameObject *)obj)->anim.localPosY > ((EcshCupState *)state)->unk18 - lbl_803E5084) {
                 ((GameObject *)obj)->anim.localPosY = -(lbl_803E5078 * timeDelta - ((GameObject *)obj)->anim.localPosY);
-                *(f32 *)(state + 0x1c) -= timeDelta;
-                if (*(f32 *)(state + 0x1c) <= lbl_803E5068) {
-                    *(f32 *)(state + 0x1c) = lbl_803E506C;
+                ((EcshCupState *)state)->unk1C -= timeDelta;
+                if (((EcshCupState *)state)->unk1C <= lbl_803E5068) {
+                    ((EcshCupState *)state)->unk1C = lbl_803E506C;
                     if (mode != 3) {
                         (*gPartfxInterface)->spawnObject(obj, 0x271, NULL, 0, -1, NULL);
                     }
@@ -149,39 +167,39 @@ void ecsh_cup_update(short *obj)
                 }
                 *(u8 *)((char *)obj + 0x37) = (u8)(int)a;
             }
-        } else if (mode == 8 && mode != *(int *)(state + 0x24)) {
-            if (*(int *)(state + 0x28) == buf[0]) {
+        } else if (mode == 8 && mode != ((EcshCupState *)state)->unk24) {
+            if (((EcshCupState *)state)->unk28 == buf[0]) {
                 (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
             }
-            *(int *)(state + 0x24) = mode;
+            ((EcshCupState *)state)->unk24 = mode;
         } else if (mode == 1 && mode != *(int *)(state + 0x24)) {
-            (*(void (*)(int, f32 *, f32 *))*(int *)(*(int *)(*(int *)(lbl_803DDBC8 + 0x68)) + 0x24))((u8)*(int *)(state + 0x28), &v.x, &v.z);
-            *(f32 *)(state + 0xc) = (v.x - ((GameObject *)obj)->anim.localPosX) / lbl_803E5070;
-            *(f32 *)(state + 0x14) = (v.z - ((GameObject *)obj)->anim.localPosZ) / lbl_803E5070;
-            *(f32 *)(state + 0) = ((GameObject *)obj)->anim.localPosX;
-            *(f32 *)(state + 8) = ((GameObject *)obj)->anim.localPosZ;
-            *(int *)(state + 0x24) = mode;
+            (*(void (*)(int, f32 *, f32 *))*(int *)(*(int *)(*(int *)(lbl_803DDBC8 + 0x68)) + 0x24))((u8)((EcshCupState *)state)->unk28, &v.x, &v.z);
+            ((EcshCupState *)state)->unkC = (v.x - ((GameObject *)obj)->anim.localPosX) / lbl_803E5070;
+            ((EcshCupState *)state)->unk14 = (v.z - ((GameObject *)obj)->anim.localPosZ) / lbl_803E5070;
+            ((EcshCupState *)state)->unk0 = ((GameObject *)obj)->anim.localPosX;
+            ((EcshCupState *)state)->unk8 = ((GameObject *)obj)->anim.localPosZ;
+            ((EcshCupState *)state)->unk24 = mode;
         } else if (mode == 0 && mode != *(int *)(state + 0x24)) {
-            *(f32 *)(state + 0xc) = lbl_803E5068;
-            *(f32 *)(state + 0x14) = lbl_803E5068;
-            *(int *)(state + 0x24) = mode;
+            ((EcshCupState *)state)->unkC = lbl_803E5068;
+            ((EcshCupState *)state)->unk14 = lbl_803E5068;
+            ((EcshCupState *)state)->unk24 = mode;
         } else if (mode == 2 && mode != *(int *)(state + 0x24)) {
-            *(f32 *)(state + 0xc) = lbl_803E5068;
-            *(f32 *)(state + 0x14) = lbl_803E5068;
-            (*(void (*)(int, f32, f32))*(int *)(*(int *)(*(int *)(lbl_803DDBC8 + 0x68)) + 0x2c))((u8)*(int *)(state + 0x28), ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosZ);
-            *(int *)(state + 0x24) = mode;
+            ((EcshCupState *)state)->unkC = lbl_803E5068;
+            ((EcshCupState *)state)->unk14 = lbl_803E5068;
+            (*(void (*)(int, f32, f32))*(int *)(*(int *)(*(int *)(lbl_803DDBC8 + 0x68)) + 0x2c))((u8)((EcshCupState *)state)->unk28, ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosZ);
+            ((EcshCupState *)state)->unk24 = mode;
         } else if (mode == 3 && mode != *(int *)(state + 0x24)) {
-            *(int *)(state + 0x24) = mode;
+            ((EcshCupState *)state)->unk24 = mode;
         } else if (mode == 4 && mode != *(int *)(state + 0x24)) {
-            (*(void (*)(int, f32 *, f32 *))*(int *)(*(int *)(*(int *)(lbl_803DDBC8 + 0x68)) + 0x24))((u8)*(int *)(state + 0x28), &v.x, &v.z);
+            (*(void (*)(int, f32 *, f32 *))*(int *)(*(int *)(*(int *)(lbl_803DDBC8 + 0x68)) + 0x24))((u8)((EcshCupState *)state)->unk28, &v.x, &v.z);
             ((GameObject *)obj)->anim.localPosX = v.x;
             ((GameObject *)obj)->anim.localPosZ = v.z;
-            *(int *)(state + 0x24) = mode;
+            ((EcshCupState *)state)->unk24 = mode;
         } else if (mode == 5) {
             if (player != NULL) {
                 if (Vec_distance(&((GameObject *)obj)->anim.worldPosX, (f32 *)(player + 0x18)) < lbl_803E5088) {
-                    (*(void (*)(int))*(int *)(*(int *)(*(int *)(lbl_803DDBC8 + 0x68)) + 0x30))((u8)*(int *)(state + 0x28));
-                    if (*(int *)(state + 0x28) == buf[0]) {
+                    (*(void (*)(int))*(int *)(*(int *)(*(int *)(lbl_803DDBC8 + 0x68)) + 0x30))((u8)((EcshCupState *)state)->unk28);
+                    if (((EcshCupState *)state)->unk28 == buf[0]) {
                         (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
                     }
                 }
@@ -246,24 +264,24 @@ void ecsh_cup_init(int obj, int p2)
     t = *(int *)&((GameObject *)obj)->extra;
     ftmp = lbl_803E5064;
     lbl_803DDBC8 = 0;
-    *(f32 *)(t + 0x0) = ((GameObject *)obj)->anim.localPosX;
-    *(f32 *)(t + 0x4) = ((GameObject *)obj)->anim.localPosY;
-    *(f32 *)(t + 0x8) = ((GameObject *)obj)->anim.localPosZ;
-    *(f32 *)(t + 0x18) = ((GameObject *)obj)->anim.localPosY;
+    ((EcshCupState *)t)->unk0 = ((GameObject *)obj)->anim.localPosX;
+    ((EcshCupState *)t)->unk4 = ((GameObject *)obj)->anim.localPosY;
+    ((EcshCupState *)t)->unk8 = ((GameObject *)obj)->anim.localPosZ;
+    ((EcshCupState *)t)->unk18 = ((GameObject *)obj)->anim.localPosY;
     ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY - lbl_803E5084;
     {
         f32 fz = lbl_803E5068;
-        *(f32 *)(t + 0xc) = fz;
-        *(f32 *)(t + 0x10) = fz;
-        *(f32 *)(t + 0x14) = fz;
+        ((EcshCupState *)t)->unkC = fz;
+        ((EcshCupState *)t)->unk10 = fz;
+        ((EcshCupState *)t)->unk14 = fz;
     }
-    *(int *)(t + 0x24) = 0;
-    *(int *)(t + 0x28) = *(s16 *)(p2 + 0x1a);
-    *(f32 *)(t + 0x20) = (f32)randomGetRange(0, 0x258);
-    *(s16 *)(t + 0x2c) = (s16)randomGetRange(-0x320, 0x320);
-    *(u8 *)(t + 0x2e) = 1;
+    ((EcshCupState *)t)->unk24 = 0;
+    ((EcshCupState *)t)->unk28 = *(s16 *)(p2 + 0x1a);
+    ((EcshCupState *)t)->unk20 = (f32)randomGetRange(0, 0x258);
+    ((EcshCupState *)t)->unk2C = (s16)randomGetRange(-0x320, 0x320);
+    *(u8 *)&((EcshCupState *)t)->unk2E = 1;
     *(u8 *)(obj + 0x37) = 0;
-    *(f32 *)(t + 0x1c) = lbl_803E5068;
+    ((EcshCupState *)t)->unk1C = lbl_803E5068;
     if (lbl_803DDBC8 == 0) {
         lbl_803DDBC8 = ObjGroup_FindNearestObject(0xb, obj, &ftmp);
     }

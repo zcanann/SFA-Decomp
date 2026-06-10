@@ -11,6 +11,25 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 
+typedef struct DimmagicbridgeFlameSeqFnState {
+    u8 pad0[0x51 - 0x0];
+    u8 unk51;
+    u8 pad52[0x60 - 0x52];
+    u16 unk60;
+    u8 pad62[0x64 - 0x62];
+    s16 unk64;
+    u8 pad66[0x68 - 0x66];
+} DimmagicbridgeFlameSeqFnState;
+
+
+typedef struct FnExplosionReleaseV11UnusedState {
+    u8 pad0[0x4 - 0x0];
+    f32 unk4;
+    f32 unk8;
+    u8 padC[0x10 - 0xC];
+} FnExplosionReleaseV11UnusedState;
+
+
 /*
  * Per-object extra state for the dimwooddoor2 burnable door
  * (dimwooddoor2_getExtraSize == 0xC).
@@ -1233,15 +1252,15 @@ void fn_explosion_release_v11_unused(uint param_1)
 
   psVar7 = *(short **)&((GameObject *)param_1)->anim.placementData;
   pcVar6 = ((GameObject *)param_1)->extra;
-  FUN_8002fc3c((double)*(float *)(pcVar6 + 4),(double)lbl_803DC074);
-  ((GameObject *)param_1)->anim.localPosZ = ((GameObject *)param_1)->anim.localPosZ + *(float *)(pcVar6 + 8);
+  FUN_8002fc3c((double)((FnExplosionReleaseV11UnusedState *)pcVar6)->unk4,(double)lbl_803DC074);
+  ((GameObject *)param_1)->anim.localPosZ = ((GameObject *)param_1)->anim.localPosZ + ((FnExplosionReleaseV11UnusedState *)pcVar6)->unk8;
   fVar2 = lbl_803E566C;
-  if (*(float *)(pcVar6 + 8) != lbl_803E566C) {
-    *(float *)(pcVar6 + 8) = *(float *)(pcVar6 + 8) * lbl_803E5670;
-    if (*(float *)(pcVar6 + 8) < fVar2) {
-      fVar2 = *(float *)(pcVar6 + 8);
+  if (((FnExplosionReleaseV11UnusedState *)pcVar6)->unk8 != lbl_803E566C) {
+    ((FnExplosionReleaseV11UnusedState *)pcVar6)->unk8 = ((FnExplosionReleaseV11UnusedState *)pcVar6)->unk8 * lbl_803E5670;
+    if (((FnExplosionReleaseV11UnusedState *)pcVar6)->unk8 < fVar2) {
+      fVar2 = ((FnExplosionReleaseV11UnusedState *)pcVar6)->unk8;
     }
-    *(float *)(pcVar6 + 8) = fVar2;
+    ((FnExplosionReleaseV11UnusedState *)pcVar6)->unk8 = fVar2;
   }
   if ((('\0' < *pcVar6) || (*psVar7 != 0x338)) || (((GameObject *)param_1)->anim.currentMoveProgress <= lbl_803E5674)) {
     bVar3 = false;
@@ -1259,8 +1278,8 @@ void fn_explosion_release_v11_unused(uint param_1)
       } while (iVar4 != 0);
     }
     if (bVar3) {
-      *(float *)(pcVar6 + 4) = lbl_803E5678;
-      *(float *)(pcVar6 + 8) = lbl_803E567C;
+      ((FnExplosionReleaseV11UnusedState *)pcVar6)->unk4 = lbl_803E5678;
+      ((FnExplosionReleaseV11UnusedState *)pcVar6)->unk8 = lbl_803E567C;
       *pcVar6 = '\0';
       GameBit_Set((int)psVar7[0xf],1);
       FUN_80006824(param_1,0x3e1);
@@ -1978,9 +1997,9 @@ int dimmagicbridge_flameSeqFn(int *obj, int unused, ObjAnimUpdateState *animUpda
         sub[0x5f] = 1;
     }
     if (sub[0x5f] != 0) {
-        *(s16*)(sub + 0x64) = *(s16*)(sub + 0x64) - framesThisStep;
-        if (*(s16*)(sub + 0x64) <= 0) {
-            *(s16*)(sub + 0x64) = 0x10;
+        ((DimmagicbridgeFlameSeqFnState *)sub)->unk64 = ((DimmagicbridgeFlameSeqFnState *)sub)->unk64 - framesThisStep;
+        if (((DimmagicbridgeFlameSeqFnState *)sub)->unk64 <= 0) {
+            ((DimmagicbridgeFlameSeqFnState *)sub)->unk64 = 0x10;
             for (j = 1; sub[0x40 + j] != 0 && j < sub[0x4f]; j++) {
             }
             sub[0x40 + j] = 1;

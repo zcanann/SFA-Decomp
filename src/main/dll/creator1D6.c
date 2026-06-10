@@ -2,6 +2,12 @@
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 
+typedef struct NwTrickyState {
+    u8 pad0[0x4 - 0x0];
+    f32 unk4;
+} NwTrickyState;
+
+
 extern undefined4 FUN_8000680c();
 extern undefined4 GameBit_Set(int eventId, int value);
 extern int FUN_80017a90();
@@ -104,7 +110,7 @@ void nw_tricky_update(int *obj)
             if (GameBit_Get(0x544)) {
                 if (!(*(u8 (**)(int *))(*(char **)*(char **)((char *)tricky + 0x68) + 0x40))(tricky)) {
                     GameBit_Set(0x4e4, 0);
-                    *(f32 *)(state + 4) = lbl_803E5260;
+                    ((NwTrickyState *)state)->unk4 = lbl_803E5260;
                 }
 
                 for (i = 0, ip = ids.ids; i < 3; ip++, i++) {
@@ -115,10 +121,10 @@ void nw_tricky_update(int *obj)
                     }
                 }
 
-                *(f32 *)(state + 4) += timeDelta;
-                t = *(f32 *)(state + 4);
+                ((NwTrickyState *)state)->unk4 += timeDelta;
+                t = ((NwTrickyState *)state)->unk4;
                 if (t >= lbl_803E5264) {
-                    *(f32 *)(state + 4) = t - lbl_803E5264;
+                    ((NwTrickyState *)state)->unk4 = t - lbl_803E5264;
                     fn_80138920(tricky, 0x152, 0x1000);
                 }
             }
@@ -138,16 +144,16 @@ void nw_tricky_update(int *obj)
         break;
     case 1:
         if (!(*(u16 *)((char *)tricky + 0xb0) & 0x1000)) {
-            *(f32 *)(state + 4) += timeDelta;
+            ((NwTrickyState *)state)->unk4 += timeDelta;
         }
         if (GameBit_Get(0x4e3) == 1) {
             if ((*gMapEventInterface)->getProgressPtr()[0] >= 4) {
                 GameBit_Set(0x4e3, 0xff);
             }
         }
-        t = *(f32 *)(state + 4);
+        t = ((NwTrickyState *)state)->unk4;
         if (t >= lbl_803E5268) {
-            *(f32 *)(state + 4) = t - lbl_803E5268;
+            ((NwTrickyState *)state)->unk4 = t - lbl_803E5268;
             if (GameBit_Get(0x4e3) == 0xff) {
                 if ((*gMapEventInterface)->getProgressPtr()[0] < 4) {
                     GameBit_Set(0x4e3, 1);

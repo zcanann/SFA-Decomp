@@ -16,6 +16,51 @@ void drakorhoverpad_func15(void) {}
 
 #include "global.h"
 
+typedef struct DrakorhoverpadState {
+    u8 pad0[0xD8 - 0x0];
+    f32 unkD8;
+    u8 padDC[0xE0 - 0xDC];
+    f32 unkE0;
+    f32 unkE4;
+    u8 padE8[0x110 - 0xE8];
+    f32 unk110;
+    f32 unk114;
+    u8 pad118[0x154 - 0x118];
+    f32 unk154;
+    f32 unk158;
+    f32 unk15C;
+    f32 unk160;
+    f32 unk164;
+    f32 unk168;
+    u8 pad16C[0x174 - 0x16C];
+    s16 unk174;
+    s16 unk176;
+    u8 pad178[0x17C - 0x178];
+} DrakorhoverpadState;
+
+
+typedef struct DrakorhoverpadHandlePathPointEventState {
+    u8 pad0[0xD8 - 0x0];
+    f32 unkD8;
+    u8 padDC[0xE0 - 0xDC];
+    f32 unkE0;
+    f32 unkE4;
+    u8 padE8[0x110 - 0xE8];
+    f32 unk110;
+    f32 unk114;
+    u8 pad118[0x154 - 0x118];
+    f32 unk154;
+    f32 unk158;
+    f32 unk15C;
+    f32 unk160;
+    f32 unk164;
+    f32 unk168;
+    u8 pad16C[0x174 - 0x16C];
+    s16 unk174;
+    s16 unk176;
+} DrakorhoverpadHandlePathPointEventState;
+
+
 /* Rom-curve follow block embedded at state+0x4 (passed to the curve
  * interface; drakorhoverpad_update receives it as its first arg). */
 typedef struct DrakorPadCurve {
@@ -154,15 +199,15 @@ void drakorhoverpad_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p
     u8 *p = ((GameObject *)obj)->extra;
     if (visible) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6A48);
-        *(s16 *)(p + 0x176) += framesThisStep;
-        if (*(s16 *)(p + 0x176) == 0 || *(s16 *)(p + 0x176) > 10) {
-            *(s16 *)(p + 0x176) = 0;
-            *(f32 *)(p + 0x154) = ((GameObject *)obj)->anim.localPosX + (f32)(int)randomGetRange(-30, 30);
-            *(f32 *)(p + 0x158) = ((GameObject *)obj)->anim.localPosY;
-            *(f32 *)(p + 0x15c) = ((GameObject *)obj)->anim.localPosZ + (f32)(int)randomGetRange(-30, 30);
-            *(f32 *)(p + 0x160) = ((GameObject *)obj)->anim.localPosX + (f32)(int)randomGetRange(-120, 120);
-            *(f32 *)(p + 0x164) = ((GameObject *)obj)->anim.localPosY - lbl_803E6A88;
-            *(f32 *)(p + 0x168) = ((GameObject *)obj)->anim.localPosZ + (f32)(int)randomGetRange(-120, 120);
+        ((DrakorhoverpadState *)p)->unk176 += framesThisStep;
+        if (((DrakorhoverpadState *)p)->unk176 == 0 || ((DrakorhoverpadState *)p)->unk176 > 10) {
+            ((DrakorhoverpadState *)p)->unk176 = 0;
+            ((DrakorhoverpadState *)p)->unk154 = ((GameObject *)obj)->anim.localPosX + (f32)(int)randomGetRange(-30, 30);
+            ((DrakorhoverpadState *)p)->unk158 = ((GameObject *)obj)->anim.localPosY;
+            ((DrakorhoverpadState *)p)->unk15C = ((GameObject *)obj)->anim.localPosZ + (f32)(int)randomGetRange(-30, 30);
+            ((DrakorhoverpadState *)p)->unk160 = ((GameObject *)obj)->anim.localPosX + (f32)(int)randomGetRange(-120, 120);
+            ((DrakorhoverpadState *)p)->unk164 = ((GameObject *)obj)->anim.localPosY - lbl_803E6A88;
+            ((DrakorhoverpadState *)p)->unk168 = ((GameObject *)obj)->anim.localPosZ + (f32)(int)randomGetRange(-120, 120);
         }
     }
 }
@@ -477,14 +522,14 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void *out) {
     switch (a) {
     case 1:
         player = (int)Obj_GetPlayerObject();
-        *(f32 *)(p + 0x110) = lbl_803E6A78 * -*(f32 *)(p + 0x110);
+        ((DrakorhoverpadHandlePathPointEventState *)p)->unk110 = lbl_803E6A78 * -((DrakorhoverpadHandlePathPointEventState *)p)->unk110;
         *(f32 *)p = lbl_803E6A3C;
         if (((GameObject *)player)->anim.parent == (void *)obj) {
             Camera_EnableViewYOffset();
-            if (*(f32 *)(p + 0x110) >= lbl_803E6A3C) {
-                m = *(f32 *)(p + 0x110);
+            if (((DrakorhoverpadHandlePathPointEventState *)p)->unk110 >= lbl_803E6A3C) {
+                m = ((DrakorhoverpadHandlePathPointEventState *)p)->unk110;
             } else {
-                m = -*(f32 *)(p + 0x110);
+                m = -((DrakorhoverpadHandlePathPointEventState *)p)->unk110;
             }
             CameraShake_SetAllMagnitudes(m);
         }
@@ -493,36 +538,36 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void *out) {
         if (f->b40 != 0) {
             break;
         }
-        if (*(f32 *)(p + 0x110) <= lbl_803E6A3C) {
+        if (((DrakorhoverpadHandlePathPointEventState *)p)->unk110 <= lbl_803E6A3C) {
             break;
         }
         if (f->bit80 != 0) {
             break;
         }
         player = (int)Obj_GetPlayerObject();
-        *(f32 *)(p + 0x110) = lbl_803E6A78 * -*(f32 *)(p + 0x110);
+        ((DrakorhoverpadHandlePathPointEventState *)p)->unk110 = lbl_803E6A78 * -((DrakorhoverpadHandlePathPointEventState *)p)->unk110;
         *(f32 *)p = lbl_803E6A3C;
         if (((GameObject *)player)->anim.parent == (void *)obj) {
             Camera_EnableViewYOffset();
-            if (*(f32 *)(p + 0x110) >= lbl_803E6A3C) {
-                m = *(f32 *)(p + 0x110);
+            if (((DrakorhoverpadHandlePathPointEventState *)p)->unk110 >= lbl_803E6A3C) {
+                m = ((DrakorhoverpadHandlePathPointEventState *)p)->unk110;
             } else {
-                m = -*(f32 *)(p + 0x110);
+                m = -((DrakorhoverpadHandlePathPointEventState *)p)->unk110;
             }
             CameraShake_SetAllMagnitudes(m);
         }
         return 1;
     case 4:
-        if (*(f32 *)(p + 0x110) <= lbl_803E6A3C) {
+        if (((DrakorhoverpadHandlePathPointEventState *)p)->unk110 <= lbl_803E6A3C) {
             break;
         }
         if (f->b40 != 0) {
             GameBit_Set(0x660, 1);
         } else if (GameBit_Get(0x661) != 0) {
             if (*(f32 *)p < lbl_803E6A3C) {
-                *(f32 *)(p + 0x114) += lbl_803E6A74;
+                ((DrakorhoverpadHandlePathPointEventState *)p)->unk114 += lbl_803E6A74;
             } else {
-                *(f32 *)(p + 0x114) += lbl_803E6A38;
+                ((DrakorhoverpadHandlePathPointEventState *)p)->unk114 += lbl_803E6A38;
             }
         } else {
             GameBit_Set(0x788, 1);
@@ -531,14 +576,14 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void *out) {
         }
         break;
     case 9:
-        if (*(f32 *)(p + 0x110) >= lbl_803E6A3C) {
+        if (((DrakorhoverpadHandlePathPointEventState *)p)->unk110 >= lbl_803E6A3C) {
             break;
         }
         if (GameBit_Get(0x661) != 0) {
             if (*(f32 *)p < lbl_803E6A3C) {
-                *(f32 *)(p + 0x114) += lbl_803E6A74;
+                ((DrakorhoverpadHandlePathPointEventState *)p)->unk114 += lbl_803E6A74;
             } else {
-                *(f32 *)(p + 0x114) += lbl_803E6A38;
+                ((DrakorhoverpadHandlePathPointEventState *)p)->unk114 += lbl_803E6A38;
             }
         } else {
             f->state = 1;
@@ -556,9 +601,9 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void *out) {
             break;
         }
         if (*(f32 *)p < lbl_803E6A3C) {
-            *(f32 *)(p + 0x114) += lbl_803E6A7C;
+            ((DrakorhoverpadHandlePathPointEventState *)p)->unk114 += lbl_803E6A7C;
         } else {
-            *(f32 *)(p + 0x114) += lbl_803E6A80;
+            ((DrakorhoverpadHandlePathPointEventState *)p)->unk114 += lbl_803E6A80;
         }
         break;
     case 7:
@@ -612,14 +657,14 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void *out) {
             break;
         }
         player = (int)Obj_GetPlayerObject();
-        *(f32 *)(p + 0x110) = lbl_803E6A78 * -*(f32 *)(p + 0x110);
+        ((DrakorhoverpadHandlePathPointEventState *)p)->unk110 = lbl_803E6A78 * -((DrakorhoverpadHandlePathPointEventState *)p)->unk110;
         *(f32 *)p = lbl_803E6A3C;
         if (((GameObject *)player)->anim.parent == (void *)obj) {
             Camera_EnableViewYOffset();
-            if (*(f32 *)(p + 0x110) >= lbl_803E6A3C) {
-                m = *(f32 *)(p + 0x110);
+            if (((DrakorhoverpadHandlePathPointEventState *)p)->unk110 >= lbl_803E6A3C) {
+                m = ((DrakorhoverpadHandlePathPointEventState *)p)->unk110;
             } else {
-                m = -*(f32 *)(p + 0x110);
+                m = -((DrakorhoverpadHandlePathPointEventState *)p)->unk110;
             }
             CameraShake_SetAllMagnitudes(m);
         }
@@ -632,14 +677,14 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void *out) {
             break;
         }
         player = (int)Obj_GetPlayerObject();
-        *(f32 *)(p + 0x110) = lbl_803E6A78 * -*(f32 *)(p + 0x110);
+        ((DrakorhoverpadHandlePathPointEventState *)p)->unk110 = lbl_803E6A78 * -((DrakorhoverpadHandlePathPointEventState *)p)->unk110;
         *(f32 *)p = lbl_803E6A3C;
         if (((GameObject *)player)->anim.parent == (void *)obj) {
             Camera_EnableViewYOffset();
-            if (*(f32 *)(p + 0x110) >= lbl_803E6A3C) {
-                m = *(f32 *)(p + 0x110);
+            if (((DrakorhoverpadHandlePathPointEventState *)p)->unk110 >= lbl_803E6A3C) {
+                m = ((DrakorhoverpadHandlePathPointEventState *)p)->unk110;
             } else {
-                m = -*(f32 *)(p + 0x110);
+                m = -((DrakorhoverpadHandlePathPointEventState *)p)->unk110;
             }
             CameraShake_SetAllMagnitudes(m);
         }

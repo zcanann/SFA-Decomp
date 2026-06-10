@@ -6,6 +6,17 @@
 #include "main/objlib.h"
 #include "main/objanim_update.h"
 
+typedef struct LevelnameState {
+    u8 pad0[0x8 - 0x0];
+    s32 unk8;
+    u8 padC[0xE - 0xC];
+    s16 unkE;
+    s16 unk10;
+    s16 unk12;
+    u8 pad14[0x18 - 0x14];
+} LevelnameState;
+
+
 extern void *memset(void *dest, int value, u32 size);
 extern int *Obj_GetPlayerObject(void);
 extern void GameBit_Set(int gameBit, int value);
@@ -92,32 +103,32 @@ void levelname_update(int *obj) {
     case 0:
         player = Obj_GetPlayerObject();
         if (Vec_distance(&((GameObject *)obj)->anim.worldPosX, &((GameObject *)player)->anim.worldPosX) < (f32)(u32)sub[0xc]) {
-            if (*(s16*)(sub + 0xe) != -1) {
-                GameBit_Set(*(s16*)(sub + 0xe), 1);
+            if (((LevelnameState *)sub)->unkE != -1) {
+                GameBit_Set(((LevelnameState *)sub)->unkE, 1);
             }
             sub[0x14] = 1;
         }
         break;
     case 1:
-        *(s16*)(sub + 0x12) = (s16)(*(s16*)(sub + 0x12) + framesThisStep * 4);
-        if (*(s16*)(sub + 0x12) > 0xdc) {
-            *(s16*)(sub + 0x12) = 0xdc;
+        ((LevelnameState *)sub)->unk12 = (s16)(((LevelnameState *)sub)->unk12 + framesThisStep * 4);
+        if (((LevelnameState *)sub)->unk12 > 0xdc) {
+            ((LevelnameState *)sub)->unk12 = 0xdc;
             sub[0x14] = 2;
         }
         break;
     case 2:
     {
-        *(s16*)(sub + 0x10) += framesThisStep;
-        if ((u32)*(s16*)(sub + 0x10) > (u32)*(int*)(sub + 8)) {
+        ((LevelnameState *)sub)->unk10 += framesThisStep;
+        if ((u32)((LevelnameState *)sub)->unk10 > (u32)((LevelnameState *)sub)->unk8) {
             sub[0x14] = 3;
         }
-        *(s16*)(sub + 0x12) = (s16)((s32)(lbl_803E36E0 * mathSinf((lbl_803E36E4 * (f32)((s32)*(s16*)(sub + 0x10) * 0x500)) / lbl_803E36E8)) + 0xdc);
+        ((LevelnameState *)sub)->unk12 = (s16)((s32)(lbl_803E36E0 * mathSinf((lbl_803E36E4 * (f32)((s32)((LevelnameState *)sub)->unk10 * 0x500)) / lbl_803E36E8)) + 0xdc);
         break;
     }
     case 3:
-        *(s16*)(sub + 0x12) = (s16)(*(s16*)(sub + 0x12) - framesThisStep * 4);
-        if (*(s16*)(sub + 0x12) < 0) {
-            *(s16*)(sub + 0x12) = 0;
+        ((LevelnameState *)sub)->unk12 = (s16)(((LevelnameState *)sub)->unk12 - framesThisStep * 4);
+        if (((LevelnameState *)sub)->unk12 < 0) {
+            ((LevelnameState *)sub)->unk12 = 0;
             sub[0x14] = 4;
         }
         break;

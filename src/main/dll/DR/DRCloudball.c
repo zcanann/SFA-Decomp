@@ -2,6 +2,17 @@
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 
+typedef struct SpscarabState {
+    f32 unk0;
+    f32 unk4;
+    s32 unk8;
+    s16 unkC;
+    s16 unkE;
+    s16 unk10;
+    u8 pad12[0x18 - 0x12];
+} SpscarabState;
+
+
 extern f32 sqrtf(f32 x);
 extern f32 mathCosf(double x);
 extern f32 mathSinf(double x); /* cos-like */
@@ -58,14 +69,14 @@ void spscarab_update(int param_1)
     p_b8 = *(int *)&((GameObject *)param_1)->extra;
     p_4c = *(int *)&((GameObject *)param_1)->anim.placementData;
 
-    if (((GameObject *)param_1)->anim.localPosY > *(f32 *)(p_b8 + 0)) {
+    if (((GameObject *)param_1)->anim.localPosY > ((SpscarabState *)p_b8)->unk0) {
         ((GameObject *)param_1)->anim.velocityY = ((GameObject *)param_1)->anim.velocityY - lbl_803E5A74 * timeDelta;
     }
 
     objMove(param_1,
-                timeDelta * (((GameObject *)param_1)->anim.velocityX * *(f32 *)(p_b8 + 4)),
+                timeDelta * (((GameObject *)param_1)->anim.velocityX * ((SpscarabState *)p_b8)->unk4),
                 ((GameObject *)param_1)->anim.velocityY * timeDelta,
-                timeDelta * (((GameObject *)param_1)->anim.velocityZ * *(f32 *)(p_b8 + 4)));
+                timeDelta * (((GameObject *)param_1)->anim.velocityZ * ((SpscarabState *)p_b8)->unk4));
 
     distance = sqrtf(((GameObject *)param_1)->anim.velocityX * ((GameObject *)param_1)->anim.velocityX +
                      ((GameObject *)param_1)->anim.velocityZ * ((GameObject *)param_1)->anim.velocityZ);
@@ -73,8 +84,8 @@ void spscarab_update(int param_1)
     ObjAnim_SampleRootCurvePhase(distance, (ObjAnimComponent *)param_1, &phase);
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(param_1, phase, timeDelta, 0);
 
-    if (((GameObject *)param_1)->anim.localPosY < *(f32 *)(p_b8 + 0)) {
-        ((GameObject *)param_1)->anim.localPosY = *(f32 *)(p_b8 + 0);
+    if (((GameObject *)param_1)->anim.localPosY < ((SpscarabState *)p_b8)->unk0) {
+        ((GameObject *)param_1)->anim.localPosY = ((SpscarabState *)p_b8)->unk0;
         ((GameObject *)param_1)->anim.velocityY = lbl_803E5A78;
     }
 
@@ -90,14 +101,14 @@ void spscarab_update(int param_1)
 
     if (getXZDistance((int *)(Obj_GetPlayerObject() + 0x18), (int *)&((GameObject *)param_1)->anim.worldPosX)
         < lbl_803E5A80) {
-        Sfx_PlayFromObject(param_1, (u16)*(s16 *)(p_b8 + 0xc));
-        itemPickupDoParticleFx(param_1, lbl_803E5A84, *(s16 *)(p_b8 + 0xe), 0x28);
+        Sfx_PlayFromObject(param_1, (u16)((SpscarabState *)p_b8)->unkC);
+        itemPickupDoParticleFx(param_1, lbl_803E5A84, ((SpscarabState *)p_b8)->unkE, 0x28);
         ((GameObject *)param_1)->objectFlags = ((GameObject *)param_1)->objectFlags | 0x8000;
         ((GameObject *)param_1)->anim.flags = ((GameObject *)param_1)->anim.flags | 0x4000;
 
         {
             int r5val = (*(s8 *)(p_4c + 0x19) == 0) ? 1 : 0;
-            int v3 = *(int *)(p_b8 + 8);
+            int v3 = ((SpscarabState *)p_b8)->unk8;
             int r4val = (*(s8 *)(p_4c + 0x19) == 0) ? 0 : 1;
             (*(void (**)(int, int, int))(*(int *)(*(int *)(v3 + 0x68)) + 0x50))(
                 v3, r4val, r5val);
@@ -105,8 +116,8 @@ void spscarab_update(int param_1)
     }
 
     if ((((GameObject *)param_1)->objectFlags & 0x800) != 0) {
-        if (*(s16 *)(p_b8 + 0x10) != 0) {
-            objfx_spawnDirectionalBurst(param_1, 5, lbl_803E5A84, (u8)*(s16 *)(p_b8 + 0x10), 1, 0x14,
+        if (((SpscarabState *)p_b8)->unk10 != 0) {
+            objfx_spawnDirectionalBurst(param_1, 5, lbl_803E5A84, (u8)((SpscarabState *)p_b8)->unk10, 1, 0x14,
                         lbl_803E5A88, 0, 0);
         }
     }
@@ -143,9 +154,9 @@ void spscarab_init(int param_1, int param_2)
 
     objAnim->bankIndex = (s8)(1 - *(u8 *)(param_2 + 0x19));
 
-    *(f32 *)(p_b8 + 0) = (f32)(s32)*(s16 *)(param_2 + 0x1a);
-    *(f32 *)(p_b8 + 4) = lbl_803E5A94 + (f32)randomGetRange(0, 0x64) / lbl_803E5A80;
-    *(int *)(p_b8 + 8) = *(int *)(param_2 + 0x14);
+    ((SpscarabState *)p_b8)->unk0 = (f32)(s32)*(s16 *)(param_2 + 0x1a);
+    ((SpscarabState *)p_b8)->unk4 = lbl_803E5A94 + (f32)randomGetRange(0, 0x64) / lbl_803E5A80;
+    ((SpscarabState *)p_b8)->unk8 = *(int *)(param_2 + 0x14);
     *(int *)(param_2 + 0x14) = -1;
 
     Sfx_AddLoopedObjectSound(param_1, 0x406);
@@ -154,14 +165,14 @@ void spscarab_init(int param_1, int param_2)
     switch ((s8)*(u8 *)(param_2 + 0x19)) {
     case 0:
         *(u8 *)(*(int *)(model + 0x34) + 8) = *((u8 *)&pair + randomGetRange(0, 2));
-        *(s16 *)(p_b8 + 0xc) = 0x41;
-        *(s16 *)(p_b8 + 0xe) = 4;
-        *(s16 *)(p_b8 + 0x10) = 2;
+        ((SpscarabState *)p_b8)->unkC = 0x41;
+        ((SpscarabState *)p_b8)->unkE = 4;
+        ((SpscarabState *)p_b8)->unk10 = 2;
         break;
     case 1:
-        *(s16 *)(p_b8 + 0xc) = 0x42;
-        *(s16 *)(p_b8 + 0xe) = 1;
-        *(s16 *)(p_b8 + 0x10) = 0;
+        ((SpscarabState *)p_b8)->unkC = 0x42;
+        ((SpscarabState *)p_b8)->unkE = 1;
+        ((SpscarabState *)p_b8)->unk10 = 0;
         break;
     }
 }

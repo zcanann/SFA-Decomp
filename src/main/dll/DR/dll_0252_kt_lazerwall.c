@@ -3,6 +3,15 @@
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
+
+typedef struct KtlazerwallState {
+    u8 pad0[0x4 - 0x0];
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+    s32 unk10;
+} KtlazerwallState;
+
 int ktlazerwall_getExtraSize(void) { return 0x14; }
 
 int ktlazerwall_getObjectTypeId(void) { return 0x0; }
@@ -15,20 +24,20 @@ void ktlazerwall_release(void) {}
 
 void ktlazerwall_free(int obj) {
     char *p = ((GameObject *)obj)->extra;
-    void *m = *(void **)(p + 0x10);
+    void *m = *(void **)&((KtlazerwallState *)p)->unk10;
     if (m != 0) {
         mm_free(m);
-        *(void **)(p + 0x10) = 0;
+        *(void **)&((KtlazerwallState *)p)->unk10 = 0;
     }
 }
 
 void ktlazerwall_init(int obj, char *arg) {
     char *p = ((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)((s8)arg[0x18] << 8);
-    *(f32 *)(p + 0x4) = lbl_803E6898;
-    *(f32 *)(p + 0xc) = lbl_803E68BC * (f32)(int)randomGetRange(0x50, 0x78);
+    ((KtlazerwallState *)p)->unk4 = lbl_803E6898;
+    ((KtlazerwallState *)p)->unkC = lbl_803E68BC * (f32)(int)randomGetRange(0x50, 0x78);
     if ((s32)randomGetRange(0, 1) != 0) {
-        *(f32 *)(p + 0xc) = -*(f32 *)(p + 0xc);
+        ((KtlazerwallState *)p)->unkC = -((KtlazerwallState *)p)->unkC;
     }
 }
 
@@ -59,7 +68,7 @@ void ktlazerwall_update(int obj) {
             mode = 2;
             (*gPartfxInterface)->spawnObject((void *)obj, 1164, NULL, 2, -1, &mode);
         }
-        *(f32 *)(runtime + 4) = (f32)(int)randomGetRange(1, 60);
+        ((KtlazerwallState *)runtime)->unk4 = (f32)(int)randomGetRange(1, 60);
     }
     if (runtime[0] & 4) {
         mode = 0;
@@ -79,11 +88,11 @@ void ktlazerwall_update(int obj) {
     if ((runtime[0] & 8) == 0 && (runtime[1] & 8) != 0) {
         Sfx_PlayFromObject(obj, SFXmv_blkhit_c);
     }
-    if (*(f32 *)(runtime + 4) > lbl_803E6898) {
-        *(f32 *)(runtime + 4) -= timeDelta;
-        if (*(f32 *)(runtime + 4) <= lbl_803E6898) {
+    if (((KtlazerwallState *)runtime)->unk4 > lbl_803E6898) {
+        ((KtlazerwallState *)runtime)->unk4 -= timeDelta;
+        if (((KtlazerwallState *)runtime)->unk4 <= lbl_803E6898) {
             Sfx_PlayFromObject(obj, SFXmv_bflconc1);
-            *(f32 *)(runtime + 4) = lbl_803E6898;
+            ((KtlazerwallState *)runtime)->unk4 = lbl_803E6898;
         }
     }
 }
@@ -92,23 +101,23 @@ void ktlazerwall_render(int obj) {
     char *p = ((GameObject *)obj)->extra;
     int q = *(int *)&((GameObject *)obj)->anim.placementData;
     int m;
-    if (*(void **)(p + 0x10) != 0) {
-        *(f32 *)(p + 0x8) -= timeDelta;
-        if (*(f32 *)(p + 0x8) <= lbl_803E6898) {
-            f32 t = lbl_803E68B0 * *(f32 *)(p + 0xc);
-            m = *(int *)(p + 0x10);
+    if (*(void **)&((KtlazerwallState *)p)->unk10 != 0) {
+        ((KtlazerwallState *)p)->unk8 -= timeDelta;
+        if (((KtlazerwallState *)p)->unk8 <= lbl_803E6898) {
+            f32 t = lbl_803E68B0 * ((KtlazerwallState *)p)->unkC;
+            m = ((KtlazerwallState *)p)->unk10;
             *(f32 *)(m + 0x10) = *(f32 *)(m + 0x10) - t * lbl_803E68B4;
-            *(f32 *)(p + 0x8) = (f32)(int)randomGetRange(0xa, 0x78);
+            ((KtlazerwallState *)p)->unk8 = (f32)(int)randomGetRange(0xa, 0x78);
         } else {
-            m = *(int *)(p + 0x10);
-            *(f32 *)(m + 0x10) = *(f32 *)(p + 0xc) * timeDelta + *(f32 *)(m + 0x10);
+            m = ((KtlazerwallState *)p)->unk10;
+            *(f32 *)(m + 0x10) = ((KtlazerwallState *)p)->unkC * timeDelta + *(f32 *)(m + 0x10);
         }
-        lightningRender(*(void **)(p + 0x10));
-        *(u16 *)(*(int *)(p + 0x10) + 0x20) += framesThisStep;
-        m = *(int *)(p + 0x10);
+        lightningRender(*(void **)&((KtlazerwallState *)p)->unk10);
+        *(u16 *)(((KtlazerwallState *)p)->unk10 + 0x20) += framesThisStep;
+        m = ((KtlazerwallState *)p)->unk10;
         if (*(u16 *)(m + 0x20) >= *(u16 *)(m + 0x22)) {
             mm_free((void *)m);
-            *(int *)(p + 0x10) = 0;
+            ((KtlazerwallState *)p)->unk10 = 0;
             *(u8 *)p &= ~8;
             GameBit_Set(*(s16 *)(q + 0x1e), 0);
         }

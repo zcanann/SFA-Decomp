@@ -5,6 +5,25 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/objanim_internal.h"
 
+typedef struct EdiblemushroomState {
+    u8 pad0[0x68 - 0x0];
+    f32 unk68;
+    u8 pad6C[0x70 - 0x6C];
+    f32 unk70;
+    u8 pad74[0x108 - 0x74];
+    f32 unk108;
+    f32 unk10C;
+    f32 unk110;
+    f32 unk114;
+    f32 unk118;
+    f32 unk11C;
+    f32 unk120;
+    u8 pad124[0x136 - 0x124];
+    u8 unk136;
+    u8 unk137;
+} EdiblemushroomState;
+
+
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80017688();
@@ -91,33 +110,33 @@ void ediblemushroom_init(int obj, int aux)
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x4000);
 
     if (GameBit_Get(*(short *)(aux + 0x1a)) != 0) {
-        *(u8 *)(state + 0x136) = 8;
+        ((EdiblemushroomState *)state)->unk136 = 8;
         ObjHits_DisableObject(obj);
         ((GameObject *)obj)->anim.flags = (short)(((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
     }
 
     ((GameObject *)obj)->anim.modelState->flags |= 0x810;
 
-    *(f32 *)(state + 0x110) = lbl_803E52E0;
-    *(f32 *)(state + 0x114) = lbl_803E52E4 *
+    ((EdiblemushroomState *)state)->unk110 = lbl_803E52E0;
+    ((EdiblemushroomState *)state)->unk114 = lbl_803E52E4 *
         ((f32)*(u8 *)(aux + 0x1c) / lbl_803E52E8);
 
     ObjAnim_SetCurrentMove(obj, 1, lbl_803E5288, 0);
     ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E52A8, *(f32 *)&lbl_803E52A8, &animEvents);
-    *(f32 *)(state + 0x118) = animEvents.rootDeltaX;
-    if (*(f32 *)(state + 0x118) < lbl_803E5288) {
-        *(f32 *)(state + 0x118) = -*(f32 *)(state + 0x118);
+    ((EdiblemushroomState *)state)->unk118 = animEvents.rootDeltaX;
+    if (((EdiblemushroomState *)state)->unk118 < lbl_803E5288) {
+        ((EdiblemushroomState *)state)->unk118 = -((EdiblemushroomState *)state)->unk118;
     }
-    *(f32 *)(state + 0x118) = *(f32 *)(state + 0x118) * *(f32 *)(state + 0x110);
-    *(f32 *)(state + 0x118) = *(f32 *)(state + 0x118) + lbl_803E52A0;
+    ((EdiblemushroomState *)state)->unk118 = ((EdiblemushroomState *)state)->unk118 * ((EdiblemushroomState *)state)->unk110;
+    ((EdiblemushroomState *)state)->unk118 = ((EdiblemushroomState *)state)->unk118 + lbl_803E52A0;
 
     ObjAnim_SetCurrentMove(obj, 4, lbl_803E5288, 0);
     ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E52A8, *(f32 *)&lbl_803E52A8, &animEvents);
-    *(f32 *)(state + 0x11c) = animEvents.rootDeltaZ;
-    if (*(f32 *)(state + 0x11c) < lbl_803E5288) {
-        *(f32 *)(state + 0x11c) = -*(f32 *)(state + 0x11c);
+    ((EdiblemushroomState *)state)->unk11C = animEvents.rootDeltaZ;
+    if (((EdiblemushroomState *)state)->unk11C < lbl_803E5288) {
+        ((EdiblemushroomState *)state)->unk11C = -((EdiblemushroomState *)state)->unk11C;
     }
-    *(f32 *)(state + 0x11c) = *(f32 *)(state + 0x11c) + lbl_803E52A0;
+    ((EdiblemushroomState *)state)->unk11C = ((EdiblemushroomState *)state)->unk11C + lbl_803E52A0;
 
     ObjMsg_AllocQueue(obj, 1);
 
@@ -125,23 +144,23 @@ void ediblemushroom_init(int obj, int aux)
         int v = *(u8 *)(aux + 0x18);
         if (v < 6) {
             if (v >= 4) {
-                *(u8 *)(state + 0x137) |= 2;
+                ((EdiblemushroomState *)state)->unk137 |= 2;
                 (*gRomCurveInterface)->initCurve((void *)state, (void *)obj, lbl_803E52EC, &local_x, -1);
-                ((GameObject *)obj)->anim.localPosX = *(f32 *)(state + 0x68);
-                ((GameObject *)obj)->anim.localPosZ = *(f32 *)(state + 0x70);
+                ((GameObject *)obj)->anim.localPosX = ((EdiblemushroomState *)state)->unk68;
+                ((GameObject *)obj)->anim.localPosZ = ((EdiblemushroomState *)state)->unk70;
             }
         }
     }
 
-    *(f32 *)(state + 0x120) = lbl_803E52F0;
+    ((EdiblemushroomState *)state)->unk120 = lbl_803E52F0;
 
     if ((void *)player != NULL) {
         dist = Vec_distance(player + 0x18, obj + 0x18);
-        *(f32 *)(state + 0x108) = dist;
-        *(f32 *)(state + 0x10c) = dist;
+        ((EdiblemushroomState *)state)->unk108 = dist;
+        ((EdiblemushroomState *)state)->unk10C = dist;
     } else {
-        *(f32 *)(state + 0x108) = lbl_803E52F4;
-        *(f32 *)(state + 0x10c) = lbl_803E52F4;
+        ((EdiblemushroomState *)state)->unk108 = lbl_803E52F4;
+        ((EdiblemushroomState *)state)->unk10C = lbl_803E52F4;
     }
 
     ObjGroup_AddObject(obj, 0x31);

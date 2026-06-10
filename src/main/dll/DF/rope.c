@@ -11,6 +11,44 @@
 #include "main/dll/DF/rope.h"
 #include "main/dll/mmsh_waterspike.h"
 
+typedef struct DIMbossspitUpdateBurstState {
+    u8 pad0[0x4 - 0x0];
+    s32 unk4;
+    u8 pad8[0x3DC - 0x8];
+    s32 unk3DC;
+    u8 pad3E0[0x400 - 0x3E0];
+    u16 unk400;
+    u8 pad402[0x40C - 0x402];
+    s32 unk40C;
+} DIMbossspitUpdateBurstState;
+
+
+typedef struct Dimbossgut2State {
+    u8 pad0[0x4 - 0x0];
+    s32 unk4;
+    u8 pad8[0x3DC - 0x8];
+    s32 unk3DC;
+    u8 pad3E0[0x400 - 0x3E0];
+    u16 unk400;
+    u8 pad402[0x40C - 0x402];
+    s32 unk40C;
+    u8 pad410[0x42C - 0x410];
+} Dimbossgut2State;
+
+
+typedef struct DIMbossspitState {
+    s16 unk0;
+    s16 unk2;
+    s32 unk4;
+    u8 pad8[0x3DC - 0x8];
+    s32 unk3DC;
+    u8 pad3E0[0x400 - 0x3E0];
+    u16 unk400;
+    u8 pad402[0x40C - 0x402];
+    s32 unk40C;
+} DIMbossspitState;
+
+
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006920();
@@ -254,7 +292,7 @@ void dimbossgut2_free(int param_9)
   void *childObj;
 
   iVar2 = *(int *)&((GameObject *)obj)->extra;
-  uVar1 = *(uint *)(*(int *)(iVar2 + 0x40c) + 0x18);
+  uVar1 = *(uint *)(((Dimbossgut2State *)iVar2)->unk40C + 0x18);
   if (uVar1 != 0) {
     ModelLightStruct_free((void *)uVar1);
   }
@@ -288,7 +326,7 @@ void dimbossgut2_render(int param_1,int param_2,int param_3,int param_4,int para
   light = ((GameObject *)param_1)->extra;
   if (visible != 0) {
     ((void(*)(int,int,int,int,int,f32))objRenderFn_8003b8f4)(param_1, param_2, param_3, param_4, param_5, lbl_803E4CF0);
-    light = *(u8 **)(*(int *)(light + 0x40c) + 0x18);
+    light = *(u8 **)(((Dimbossgut2State *)light)->unk40C + 0x18);
     if (((light != 0) && (light[0x2f8] != 0)) && (light[0x4c] != 0)) {
       queueGlowRender(light);
     }
@@ -340,7 +378,7 @@ void dimbossgut2_update(int obj)
     do {
       iVar = ObjMsg_Pop(obj, &msgA, &msgB, &msgC);
     } while (iVar != 0);
-    pfVar4 = *(float **)(state + 0x40c);
+    pfVar4 = *(float **)&((Dimbossgut2State *)state)->unk40C;
     if ((*pfVar4 < lbl_803E4CD0) && (pfVar4[4] < lbl_803E4CD4)) {
       fdiff = pfVar4[3] - ((GameObject *)obj)->anim.localPosY;
       if (fdiff < lbl_803E4CD8) {
@@ -367,7 +405,7 @@ void dimbossgut2_update(int obj)
     ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumePriority = 9;
     ((ObjHitsPriorityState *)*(int *)&((GameObject *)obj)->anim.hitReactState)->hitVolumeId = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
-    iVar1 = *(int *)(state + 0x40c);
+    iVar1 = ((Dimbossgut2State *)state)->unk40C;
     p = *(u8 **)(iVar1 + 0x18);
     if ((p != NULL) && (p[0x2f8] != 0) && (p[0x4c] != 0)) {
       n = (p[0x2f9] + *(s8 *)(p + 0x2fa)) & 0xffff;
@@ -429,7 +467,7 @@ void dimbossgut2_init(int obj, int def, int p3)
   (*(void (*)(int, int, int, int, int, int, u8, f32))(*(int *)(*gBaddieControlInterface + 0x58)))(
       obj, def, state, 0, 0, 0x102, flags, lbl_803E4CE0);
   ((GameObject *)obj)->animEventCallback = NULL;
-  p = *(int *)(state + 0x40c);
+  p = ((Dimbossgut2State *)state)->unk40C;
   z = lbl_803E4CD8;
   *(f32 *)(p + 0x0) = z;
   *(f32 *)(p + 0x4) = z;
@@ -505,8 +543,8 @@ void DIMbossspit_updateBurst(int obj)
     Sfx_PlayFromObject(obj, SFXar_bblast16);
     CameraShake_SetAllMagnitudes(lbl_803E4D3C);
     doRumble(lbl_803E4D40);
-    if (*(void **)(state + 4) != NULL) {
-      modelLightStruct_setEnabled(*(int *)(state + 4), 0, lbl_803E4D44);
+    if (*(void **)&((DIMbossspitUpdateBurstState *)state)->unk4 != NULL) {
+      modelLightStruct_setEnabled(((DIMbossspitUpdateBurstState *)state)->unk4, 0, lbl_803E4D44);
     }
   }
   *(s16 *)state = *(s16 *)state + (u8)framesThisStep;
@@ -526,9 +564,9 @@ void DIMbossspit_updateBurst(int obj)
     ((GameObject *)obj)->anim.alpha = (u8)n;
   }
   else {
-    if (*(void **)(state + 4) != NULL) {
-      ModelLightStruct_free(*(void **)(state + 4));
-      *(int *)(state + 4) = 0;
+    if (*(void **)&((DIMbossspitUpdateBurstState *)state)->unk4 != NULL) {
+      ModelLightStruct_free(*(void **)&((DIMbossspitUpdateBurstState *)state)->unk4);
+      ((DIMbossspitUpdateBurstState *)state)->unk4 = 0;
     }
     ((GameObject *)obj)->anim.alpha = 0;
     if ((f32)(s32)((radius - 0x40) >> 1) > lbl_803E4D50) {
@@ -586,7 +624,7 @@ void DIMbossspit_render(int param_1,int param_2,int param_3,int param_4,int para
   light = ((GameObject *)param_1)->extra;
   if (visible != 0) {
     ((void(*)(int,int,int,int,int,f32))objRenderFn_8003b8f4)(param_1, param_2, param_3, param_4, param_5, lbl_803E4D44);
-    light = *(u8 **)(light + 4);
+    light = *(u8 **)&((DIMbossspitState *)light)->unk4;
     if (((light != 0) && (light[0x2f8] != 0)) && (light[0x4c] != 0)) {
       queueGlowRender(light);
     }
@@ -646,7 +684,7 @@ void DIMbossspit_update(int obj)
   else {
     DIMbossspit_updateBurst(obj);
   }
-  p = *(u8 **)(state + 4);
+  p = *(u8 **)&((DIMbossspitState *)state)->unk4;
   if (p != NULL && p[0x2f8] != 0 && p[0x4c] != 0) {
     v = (s16)(p[0x2f9] + *(s8 *)(p + 0x2fa));
     if (v < 0) {
@@ -657,10 +695,10 @@ void DIMbossspit_update(int obj)
       v = (s16)(v + randomGetRange(-12, 12));
       if (v > 0xff) {
         v = 0xff;
-        (*(u8 **)(state + 4))[0x2fa] = 0;
+        (*(u8 **)&((DIMbossspitState *)state)->unk4)[0x2fa] = 0;
       }
     }
-    (*(u8 **)(state + 4))[0x2f9] = (u8)v;
+    (*(u8 **)&((DIMbossspitState *)state)->unk4)[0x2f9] = (u8)v;
   }
   return;
 }
@@ -694,23 +732,23 @@ void DIMbossspit_init(int obj)
 {
   u8 *state = ((GameObject *)obj)->extra;
 
-  *(void **)(state + 4) = objCreateLight(obj, 1);
-  if (*(void **)(state + 4) != NULL) {
-    modelLightStruct_setLightKind(*(int *)(state + 4), 2);
-    modelLightStruct_setDiffuseColor(*(int *)(state + 4), 0, 255, 0, 0);
-    modelLightStruct_setSpecularColor(*(int *)(state + 4), 0, 255, 0, 0);
-    modelLightStruct_setDistanceAttenuation(*(int *)(state + 4), lbl_803E4D70, lbl_803E4D74);
-    lightSetField4D(*(int *)(state + 4), 1);
-    modelLightStruct_setEnabled(*(int *)(state + 4), 1, lbl_803E4D78);
-    modelLightStruct_setAffectsAabbLightSelection(*(int *)(state + 4), 1);
-    modelLightStruct_setupGlow(*(int *)(state + 4), 0, 0, 255, 0, 127, lbl_803E4D7C);
-    modelLightStruct_setGlowProjectionRadius(*(int *)(state + 4), lbl_803E4D80);
+  *(void **)&((DIMbossspitState *)state)->unk4 = objCreateLight(obj, 1);
+  if (*(void **)&((DIMbossspitState *)state)->unk4 != NULL) {
+    modelLightStruct_setLightKind(((DIMbossspitState *)state)->unk4, 2);
+    modelLightStruct_setDiffuseColor(((DIMbossspitState *)state)->unk4, 0, 255, 0, 0);
+    modelLightStruct_setSpecularColor(((DIMbossspitState *)state)->unk4, 0, 255, 0, 0);
+    modelLightStruct_setDistanceAttenuation(((DIMbossspitState *)state)->unk4, lbl_803E4D70, lbl_803E4D74);
+    lightSetField4D(((DIMbossspitState *)state)->unk4, 1);
+    modelLightStruct_setEnabled(((DIMbossspitState *)state)->unk4, 1, lbl_803E4D78);
+    modelLightStruct_setAffectsAabbLightSelection(((DIMbossspitState *)state)->unk4, 1);
+    modelLightStruct_setupGlow(((DIMbossspitState *)state)->unk4, 0, 0, 255, 0, 127, lbl_803E4D7C);
+    modelLightStruct_setGlowProjectionRadius(((DIMbossspitState *)state)->unk4, lbl_803E4D80);
   }
   ((GameObject *)obj)->unkF4 = 0xb4;
   ObjHits_SetHitVolumeSlot(obj, 0, 0, 0);
   ObjHitbox_SetSphereRadius(obj, 0);
-  *(s16 *)(state + 0) = 0;
-  *(s16 *)(state + 2) = 0;
+  ((DIMbossspitState *)state)->unk0 = 0;
+  ((DIMbossspitState *)state)->unk2 = 0;
   ObjHits_EnableObject(obj);
   ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), postRenderSetAlphaBlendState);
 }

@@ -9,6 +9,27 @@
 #include "main/objanim.h"
 #include "main/objhits_types.h"
 
+typedef struct GrimbleState {
+    u8 pad0[0x27A - 0x0];
+    s8 unk27A;
+    u8 pad27B[0x2A0 - 0x27B];
+    f32 unk2A0;
+    u8 pad2A4[0x314 - 0x2A4];
+    s32 unk314;
+    u8 pad318[0x346 - 0x318];
+    u8 unk346;
+    u8 pad347[0x3E8 - 0x347];
+    f32 unk3E8;
+    u8 pad3EC[0x400 - 0x3EC];
+    u16 unk400;
+    u8 pad402[0x405 - 0x402];
+    u8 unk405;
+    u8 pad406[0x40C - 0x406];
+    void *unk40C;
+    u8 pad410[0x46C - 0x410];
+} GrimbleState;
+
+
 extern undefined4 FUN_80006824();
 extern int FUN_80017730();
 extern u32 randomGetRange(int min, int max);
@@ -345,7 +366,7 @@ void fn_801627F4(int obj)
 void grimble_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
   char *state = ((GameObject *)obj)->extra;
-  char *sub = *(char **)(state + 0x40c);
+  char *sub = *(char **)&((GrimbleState *)state)->unk40C;
 
   if (visible == 0 || ((GameObject *)obj)->unkF4 != 0) {
     return;
@@ -356,12 +377,12 @@ void grimble_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     (*(void (**)(int, int, int, int, int))(*(int *)lbl_803DCAB4 + 0xc))(obj, 0x52a, 0, 0x64,
                                                                         0);
   }
-  if ((*(u16 *)(state + 0x400) & 0x60) != 0) {
-    objParticleFn_80099d84(obj, lbl_803E2EBC, 3, *(f32 *)(state + 0x3e8), 0);
+  if ((((GrimbleState *)state)->unk400 & 0x60) != 0) {
+    objParticleFn_80099d84(obj, lbl_803E2EBC, 3, ((GrimbleState *)state)->unk3E8, 0);
   }
-  if ((*(u16 *)(state + 0x400) & 0x100) != 0) {
-    objParticleFn_80099d84(obj, lbl_803E2EBC, 4, *(f32 *)(state + 0x3e8), 0);
-    *(u16 *)(state + 0x400) = *(u16 *)(state + 0x400) & ~0x100;
+  if ((((GrimbleState *)state)->unk400 & 0x100) != 0) {
+    objParticleFn_80099d84(obj, lbl_803E2EBC, 4, ((GrimbleState *)state)->unk3E8, 0);
+    ((GrimbleState *)state)->unk400 = ((GrimbleState *)state)->unk400 & ~0x100;
   }
 }
 
@@ -372,7 +393,7 @@ void grimble_update(int obj)
   int def;
 
   state = ((GameObject *)obj)->extra;
-  sub = *(char **)(state + 0x40c);
+  sub = *(char **)&((GrimbleState *)state)->unk40C;
   def = *(int *)&((GameObject *)obj)->anim.placementData;
   if (((GameObject *)obj)->unkF4 != 0) {
     if ((*gMapEventInterface)->isTimedEventActive(*(int *)(def + 0x14)) != 0) {
@@ -400,7 +421,7 @@ void grimble_update(int obj)
                                                                          0x50))(
           obj, state, state + 0x35c, ((GroundBaddieState *)state)->gameBitB, lbl_803200E0, lbl_80320158, 3, 0);
       if (r == 0xe) {
-        *(u8 *)(state + 0x405) = 2;
+        ((GrimbleState *)state)->unk405 = 2;
         ((GroundBaddieState *)state)->baddie.targetObj = Obj_GetPlayerObject();
       }
       {

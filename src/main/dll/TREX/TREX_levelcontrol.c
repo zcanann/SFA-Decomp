@@ -5,6 +5,17 @@
 #include "main/dll/TREX/TREX_levelcontrol.h"
 #include "main/objhits_types.h"
 
+typedef struct SBShipGunState {
+    u8 pad0[0x3 - 0x0];
+    s8 unk3;
+    u8 pad4[0xC - 0x4];
+    u8 unkC;
+    u8 unkD;
+    u8 unkE;
+    u8 padF[0x10 - 0xF];
+} SBShipGunState;
+
+
 typedef struct SBCannonBallState {
     u8 pad0[0x4 - 0x0];
     f32 unk4;
@@ -356,9 +367,9 @@ void SB_ShipGun_init(int obj)
   int state;
 
   state = *(int *)&((GameObject *)obj)->extra;
-  *(u8 *)(state + 0xd) = 0;
-  *(u8 *)(state + 0xc) = SB_SHIPGUN_START_HEALTH;
-  *(u8 *)(state + 0xe) = 0;
+  ((SBShipGunState *)state)->unkD = 0;
+  ((SBShipGunState *)state)->unkC = SB_SHIPGUN_START_HEALTH;
+  ((SBShipGunState *)state)->unkE = 0;
 }
 
 /* 8b "li r3, N; blr" returners. */

@@ -4,6 +4,78 @@
 #include "main/game_object.h"
 #include "main/objhits_types.h"
 
+typedef struct SnowBikeMountState {
+    s16 unk0;
+    u8 pad2[0xC - 0x2];
+    f32 unkC;
+    f32 unk10;
+    f32 unk14;
+    u8 pad18[0x3D3 - 0x18];
+    s8 unk3D3;
+    u8 pad3D4[0x3E8 - 0x3D4];
+    f32 unk3E8;
+    f32 unk3EC;
+    f32 unk3F0;
+    u8 pad3F4[0x400 - 0x3F4];
+    f32 unk400;
+    f32 unk404;
+    f32 unk408;
+    u8 pad40C[0x414 - 0x40C];
+    f32 unk414;
+    u8 pad418[0x420 - 0x418];
+    u8 unk420;
+    u8 pad421[0x428 - 0x421];
+    u8 unk428;
+    u8 pad429[0x434 - 0x429];
+    u8 unk434;
+    u8 unk435;
+    u8 pad436[0x494 - 0x436];
+    f32 unk494;
+    f32 unk498;
+    f32 unk49C;
+} SnowBikeMountState;
+
+
+typedef struct SnowBikeSetTypeState {
+    s16 unk0;
+    u8 pad2[0xC - 0x2];
+    f32 unkC;
+    f32 unk10;
+    f32 unk14;
+    u8 pad18[0x3D3 - 0x18];
+    s8 unk3D3;
+    u8 pad3D4[0x3E8 - 0x3D4];
+    f32 unk3E8;
+    f32 unk3EC;
+    f32 unk3F0;
+    u8 pad3F4[0x400 - 0x3F4];
+    f32 unk400;
+    f32 unk404;
+    f32 unk408;
+    u8 pad40C[0x414 - 0x40C];
+    f32 unk414;
+    u8 pad418[0x420 - 0x418];
+    u8 unk420;
+    s8 unk421;
+    u8 pad422[0x428 - 0x422];
+    u8 unk428;
+    u8 pad429[0x434 - 0x429];
+    u8 unk434;
+    u8 unk435;
+    u8 pad436[0x448 - 0x436];
+    s16 unk448;
+    u8 pad44A[0x494 - 0x44A];
+    f32 unk494;
+    f32 unk498;
+    f32 unk49C;
+    u8 pad4A0[0x4B8 - 0x4A0];
+    f32 unk4B8;
+    f32 unk4BC;
+    f32 unk4C0;
+    u8 pad4C4[0x4C8 - 0x4C4];
+} SnowBikeSetTypeState;
+
+
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -29,12 +101,12 @@ u8 SnowBike_func0B(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x420
 void SnowBike_mount(int obj, f32 *x, f32 *y, f32 *z)
 {
     int t = *(int *)&((GameObject *)obj)->extra;
-    *(f32 *)(t + 0x400) = ((GameObject *)obj)->anim.localPosX;
-    *(f32 *)(t + 0x404) = ((GameObject *)obj)->anim.localPosY;
-    *(f32 *)(t + 0x408) = ((GameObject *)obj)->anim.localPosZ;
-    *x = *(f32 *)(t + 0x400);
-    *y = *(f32 *)(t + 0x404);
-    *z = *(f32 *)(t + 0x408);
+    ((SnowBikeMountState *)t)->unk400 = ((GameObject *)obj)->anim.localPosX;
+    ((SnowBikeMountState *)t)->unk404 = ((GameObject *)obj)->anim.localPosY;
+    ((SnowBikeMountState *)t)->unk408 = ((GameObject *)obj)->anim.localPosZ;
+    *x = ((SnowBikeMountState *)t)->unk400;
+    *y = ((SnowBikeMountState *)t)->unk404;
+    *z = ((SnowBikeMountState *)t)->unk408;
 }
 
 /*
@@ -271,17 +343,17 @@ void SnowBike_setType(int obj, int type)
 {
     int t = *(int *)&((GameObject *)obj)->extra;
     u32 bit;
-    *(s8 *)(t + 0x421) = (s8)type;
+    ((SnowBikeSetTypeState *)t)->unk421 = (s8)type;
     if (type == 2) {
-        GameBit_Set(*(s16 *)(t + 0x448), 1);
+        GameBit_Set(((SnowBikeSetTypeState *)t)->unk448, 1);
         fn_801EC870(obj, t);
-        bit = (*(u8 *)(t + 0x428) >> 5) & 1;
+        bit = (((SnowBikeSetTypeState *)t)->unk428 >> 5) & 1;
         if (bit != 0) {
-            *(f32 *)(t + 0x4b8) = lbl_803E5B90;
-            *(f32 *)(t + 0x4c0) = lbl_803E5AEC;
-            *(f32 *)(t + 0x4bc) = lbl_803E5B94;
-            if (*(s8 *)(t + 0x421) == 2) {
-                (*gGameUIInterface)->initAirMeter((int)*(f32 *)(t + 0x4b8), 0x5cd);
+            ((SnowBikeSetTypeState *)t)->unk4B8 = lbl_803E5B90;
+            ((SnowBikeSetTypeState *)t)->unk4C0 = lbl_803E5AEC;
+            ((SnowBikeSetTypeState *)t)->unk4BC = lbl_803E5B94;
+            if (((SnowBikeSetTypeState *)t)->unk421 == 2) {
+                (*gGameUIInterface)->initAirMeter((int)((SnowBikeSetTypeState *)t)->unk4B8, 0x5cd);
                 (*gGameUIInterface)->airMeterSetRatio(lbl_803E5B98);
             }
         }

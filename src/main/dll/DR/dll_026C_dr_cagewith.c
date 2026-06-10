@@ -1,6 +1,21 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 
+typedef struct DrcagewithState {
+    u8 pad0[0x4 - 0x0];
+    s32 unk4;
+    f32 unk8;
+    u8 padC[0x10 - 0xC];
+    f32 unk10;
+    f32 unk14;
+    f32 unk18;
+    f32 unk1C;
+    f32 unk20;
+    f32 unk24;
+    u8 pad28[0x34 - 0x28];
+} DrcagewithState;
+
+
 int drcagewith_getExtraSize(void) { return 0x34; }
 
 int drcagewith_getObjectTypeId(void) { return 0x0; }
@@ -63,34 +78,34 @@ void drcagewith_hitDetect(int obj) {
             nearest = (int *)ObjGroup_FindNearestObject(10, obj, &maxDist);
             if (nearest != NULL && *(s16 *)((char *)nearest + 0x46) == 1049) {
                 *(int *)((char *)nearest + 0xf4) = 0;
-                *(int *)(p + 4) = 0;
+                ((DrcagewithState *)p)->unk4 = 0;
             }
             return;
         }
         v = oneOverTimeDelta * (((GameObject *)obj)->anim.localPosX - ((GameObject *)obj)->anim.previousLocalPosX) * lbl_803E69FC;
-        v = interpolate(v - *(f32 *)(p + 0x24), lbl_803E6A00, timeDelta);
+        v = interpolate(v - ((DrcagewithState *)p)->unk24, lbl_803E6A00, timeDelta);
         clamped = (v < lbl_803E6A04 * timeDelta)
                       ? lbl_803E6A04 * timeDelta
                       : ((v > lbl_803E6A08 * timeDelta) ? lbl_803E6A08 * timeDelta : v);
-        *(f32 *)(p + 0x24) = *(f32 *)(p + 0x24) + clamped;
+        ((DrcagewithState *)p)->unk24 = ((DrcagewithState *)p)->unk24 + clamped;
         div = lbl_803E6A0C;
         for (i = 0; i < 9; i++) {
             nearest = objModelGetVecFn_800395d8(obj, i);
             if (nearest != NULL) {
-                *(s16 *)((char *)nearest + 4) = *(f32 *)(p + 0x24) / div;
+                *(s16 *)((char *)nearest + 4) = ((DrcagewithState *)p)->unk24 / div;
             }
         }
         if (*(void **)p != NULL) {
-            *(s16 *)(*(int *)p + 4) = (int)*(f32 *)(p + 0x24);
+            *(s16 *)(*(int *)p + 4) = (int)((DrcagewithState *)p)->unk24;
             nearest = (int *)ObjGroup_FindNearestObject(10, obj, &maxDist);
             if (nearest != NULL && *(s16 *)((char *)nearest + 0x46) == 1049) {
                 *(int *)((char *)nearest + 0xf4) = 1;
-                *(int *)(p + 4) = (int)nearest;
+                ((DrcagewithState *)p)->unk4 = (int)nearest;
                 *(s16 *)((char *)nearest + 4) = *(s16 *)(*(int *)p + 4);
                 *(int *)(*(int *)p + 0xf4) = 1;
             }
-            if (*(void **)(p + 4) != NULL && (*(u16 *)(*(int *)(p + 4) + 0xb0) & 0x40) != 0) {
-                *(int *)(p + 4) = 0;
+            if (*(void **)&((DrcagewithState *)p)->unk4 != NULL && (*(u16 *)(((DrcagewithState *)p)->unk4 + 0xb0) & 0x40) != 0) {
+                ((DrcagewithState *)p)->unk4 = 0;
             }
         }
     }
@@ -117,7 +132,7 @@ void drcagewith_free(int obj, int arg) {
     char *p = ((GameObject *)obj)->extra;
     char *x = *(char **)p;
     if (x != 0 && arg == 0 && *(void **)(x + 0x50) != 0) {
-        char *y = *(char **)(p + 0x4);
+        char *y = *(char **)&((DrcagewithState *)p)->unk4;
         if (y != 0) {
             *(int *)(y + 0xf4) = 0;
         }
@@ -146,7 +161,7 @@ void drcagewith_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, u
         if (*(int **)p != 0) {
             ObjPath_GetPointWorldPosition((int)obj, 0, (f32 *)(*(int *)p + 0xc), (f32 *)(*(int *)p + 0x10), (f32 *)(*(int *)p + 0x14), 0);
             objRenderFn_8003b8f4(*(void **)p, p2, p3, p4, p5, (double)lbl_803E69F0);
-            b = *(int **)(p + 0x4);
+            b = *(int **)&((DrcagewithState *)p)->unk4;
             if (b != 0) {
                 *(s16 *)((char *)b + 0x2) = *(s16 *)(*(int *)p + 0x2);
                 *(s16 *)((char *)b + 0x4) = *(s16 *)(*(int *)p + 0x4);
@@ -177,14 +192,14 @@ void drcagewith_init(int obj, char *arg) {
             GameBit_Set(0x7aa, 5);
         }
         *(s16 *)obj = (s16)((s8)arg[0x18] << 8);
-        *(f32 *)(p + 0x8) = (f32)*(s16 *)(arg + 0x1c);
-        *(f32 *)(p + 0x10) = (f32)*(s16 *)(arg + 0x1a) / lbl_803E6A18;
-        *(int *)(p + 0x4) = 0;
+        ((DrcagewithState *)p)->unk8 = (f32)*(s16 *)(arg + 0x1c);
+        ((DrcagewithState *)p)->unk10 = (f32)*(s16 *)(arg + 0x1a) / lbl_803E6A18;
+        ((DrcagewithState *)p)->unk4 = 0;
         fz = lbl_803E6A1C;
-        *(f32 *)(p + 0x14) = fz;
-        *(f32 *)(p + 0x18) = fz;
-        *(f32 *)(p + 0x1c) = fz;
-        *(f32 *)(p + 0x20) = fz;
+        ((DrcagewithState *)p)->unk14 = fz;
+        ((DrcagewithState *)p)->unk18 = fz;
+        ((DrcagewithState *)p)->unk1C = fz;
+        ((DrcagewithState *)p)->unk20 = fz;
         ObjGroup_AddObject(obj, 0x18);
     }
 }

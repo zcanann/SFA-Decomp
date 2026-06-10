@@ -6,6 +6,12 @@
 #include "main/expgfx.h"
 #include "main/game_object.h"
 
+typedef struct WaterFallSprayState {
+    u32 unk0;
+    u32 unk4;
+} WaterFallSprayState;
+
+
 extern undefined4 FUN_80006810();
 extern undefined4 FUN_80006820();
 extern undefined4 FUN_80006824();
@@ -344,13 +350,13 @@ void WaterFallSpray_init(u8* obj, u8* data) {
     v = *(int*)((char*)(*(u8**)&((GameObject *)obj)->anim.placementData) + 0x14);
     if (v < WATERFALLSPRAY_ALT_SFX_DEF_END) {
         if (v >= WATERFALLSPRAY_ALT_SFX_DEF_MIN) {
-            *(u32*)(sub + 0) = WATERFALLSPRAY_ALT_SFX_A;
-            *(u32*)(sub + 4) = WATERFALLSPRAY_ALT_SFX_B;
+            ((WaterFallSprayState *)sub)->unk0 = WATERFALLSPRAY_ALT_SFX_A;
+            ((WaterFallSprayState *)sub)->unk4 = WATERFALLSPRAY_ALT_SFX_B;
             return;
         }
     }
-    *(u32*)(sub + 0) = WATERFALLSPRAY_DEFAULT_SFX_A;
-    *(u32*)(sub + 4) = WATERFALLSPRAY_DEFAULT_SFX_B;
+    ((WaterFallSprayState *)sub)->unk0 = WATERFALLSPRAY_DEFAULT_SFX_A;
+    ((WaterFallSprayState *)sub)->unk4 = WATERFALLSPRAY_DEFAULT_SFX_B;
 }
 
 /* sfxplayerObj_init: prime obj->_b0 with SFXPLAYER_OBJECT_FLAGS, then dispatch

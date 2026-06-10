@@ -1,6 +1,22 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
+typedef struct GfLevelconFindLinkedObjectsState {
+    s32 unk0;
+    s32 unk4;
+    s32 unk8;
+    u8 padC[0x10 - 0xC];
+} GfLevelconFindLinkedObjectsState;
+
+
+typedef struct GfLevelconHandleScriptEventsState {
+    s32 unk0;
+    void *unk4;
+    void *unk8;
+    f32 unkC;
+} GfLevelconHandleScriptEventsState;
+
+
 int gf_levelcon_handleScriptEvents(int obj, int eventId, ObjAnimUpdateState *animUpdate)
 {
     int state = *(int *)&((GameObject *)obj)->extra;
@@ -18,7 +34,7 @@ int gf_levelcon_handleScriptEvents(int obj, int eventId, ObjAnimUpdateState *ani
             getEnvfxAct(obj, obj, 0x21f, 0);
             break;
         case 8:
-            *(f32 *)(state + 0xc) = lbl_803E746C;
+            ((GfLevelconHandleScriptEventsState *)state)->unkC = lbl_803E746C;
             break;
         case 2:
             skyFn_80089710(7, 1, 0);
@@ -73,22 +89,22 @@ int gf_levelcon_handleScriptEvents(int obj, int eventId, ObjAnimUpdateState *ani
         }
     }
 
-    if (*(f32 *)(state + 0xc) > lbl_803E7488) {
+    if (((GfLevelconHandleScriptEventsState *)state)->unkC > lbl_803E7488) {
         gameTextShow(0x476);
-        *(f32 *)(state + 0xc) -= timeDelta;
-        if (*(f32 *)(state + 0xc) < *(f32 *)&lbl_803E7488) {
-            *(f32 *)(state + 0xc) = lbl_803E7488;
+        ((GfLevelconHandleScriptEventsState *)state)->unkC -= timeDelta;
+        if (((GfLevelconHandleScriptEventsState *)state)->unkC < *(f32 *)&lbl_803E7488) {
+            ((GfLevelconHandleScriptEventsState *)state)->unkC = lbl_803E7488;
         }
     }
 
     {
-        s16 *p = *(s16 **)(state + 4);
+        s16 *p = *(s16 **)&((GfLevelconHandleScriptEventsState *)state)->unk4;
         if (p != NULL) {
             *p += (int)(lbl_803E748C * timeDelta);
         }
     }
     {
-        s16 *p = *(s16 **)(state + 8);
+        s16 *p = *(s16 **)&((GfLevelconHandleScriptEventsState *)state)->unk8;
         if (p != NULL) {
             *p -= (int)(lbl_803E748C * timeDelta);
         }
@@ -138,22 +154,22 @@ void gf_levelcon_findLinkedObjects(int obj)
     int objectCount;
     int o;
 
-    *(int *)(state + 0) = 0;
-    *(int *)(state + 4) = 0;
-    *(int *)(state + 8) = 0;
+    ((GfLevelconFindLinkedObjectsState *)state)->unk0 = 0;
+    ((GfLevelconFindLinkedObjectsState *)state)->unk4 = 0;
+    ((GfLevelconFindLinkedObjectsState *)state)->unk8 = 0;
     objects = ObjList_GetObjects(&objectIndex, &objectCount);
     for (; objectIndex < objectCount; objectIndex++) {
         o = objects[objectIndex];
         if ((u32)o != (u32)obj && *(void **)(o + 0x4c) != NULL) {
             switch (*(int *)(*(int *)(o + 0x4c) + 0x14)) {
             case 0x477E3:
-                *(int *)(state + 0) = o;
+                ((GfLevelconFindLinkedObjectsState *)state)->unk0 = o;
                 break;
             case 0x4A946:
-                *(int *)(state + 4) = o;
+                ((GfLevelconFindLinkedObjectsState *)state)->unk4 = o;
                 break;
             case 0x4A947:
-                *(int *)(state + 8) = o;
+                ((GfLevelconFindLinkedObjectsState *)state)->unk8 = o;
                 break;
             }
         }

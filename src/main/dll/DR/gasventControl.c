@@ -549,6 +549,16 @@ void cfforcefield_hitDetect(void) {}
 /* 8b "li r3, N; blr" returners. */
 #include "global.h"
 
+typedef struct FnBlastedInitV11UnusedState {
+    u8 pad0[0x2C - 0x0];
+    f32 unk2C;
+    f32 unk30;
+    u8 pad34[0x38 - 0x34];
+    f32 unk38;
+    u8 pad3C[0x40 - 0x3C];
+} FnBlastedInitV11UnusedState;
+
+
 /* explodable_getExtraSize == 0x6e8 (gas-vent explodable). */
 /* Per-fragment record inside DrExplodableState (stride 0x70). */
 typedef struct DrExplodableChunk {

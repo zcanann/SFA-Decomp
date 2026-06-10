@@ -2,6 +2,31 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 
+typedef struct DrcreatorSpawnProjectileCallbackState {
+    u8 pad0[0x4 - 0x0];
+    s16 unk4;
+    u8 pad6[0xA - 0x6];
+    s16 unkA;
+    u8 padC[0x10 - 0xC];
+} DrcreatorSpawnProjectileCallbackState;
+
+
+typedef struct DrcreatorState {
+    u8 pad0[0x2 - 0x0];
+    s16 unk2;
+    s16 unk4;
+    s16 unk6;
+    s16 unk8;
+    s16 unkA;
+    u8 padC[0x24 - 0xC];
+    f32 unk24;
+    f32 unk28;
+    f32 unk2C;
+    u8 pad30[0xC4 - 0x30];
+    s32 unkC4;
+} DrcreatorState;
+
+
 void drcreator_free(void) {}
 
 int drcreator_getExtraSize(void) { return 0x1c; }
@@ -19,10 +44,10 @@ void drcreator_render(void) {}
 void drcreator_init(int obj, char *arg) {
     char *p = ((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)((s8)arg[0x1e] << 8);
-    *(s16 *)(p + 0x4) = *(s16 *)(arg + 0x18);
-    *(s16 *)(p + 0x6) = *(s16 *)(arg + 0x1c);
-    *(s16 *)(p + 0x8) = (s16)randomGetRange(0, *(s16 *)(p + 0x6));
-    *(s16 *)(p + 0xa) = (s8)arg[0x1f];
+    ((DrcreatorState *)p)->unk4 = *(s16 *)(arg + 0x18);
+    ((DrcreatorState *)p)->unk6 = *(s16 *)(arg + 0x1c);
+    ((DrcreatorState *)p)->unk8 = (s16)randomGetRange(0, ((DrcreatorState *)p)->unk6);
+    ((DrcreatorState *)p)->unkA = (s8)arg[0x1f];
     *(int *)p = (u8)arg[0x20];
     ((BitFlags8 *)(p + 0x18))->b0 = 1;
     GameBit_Set(0x5dd, 0);
@@ -38,15 +63,15 @@ void drcreator_update(int obj) {
         switch (*(s16 *)(q + 0x1a)) {
         case 3:
         case 9:
-            if (GameBit_Get(*(s16 *)(runtime + 4)) != 0) {
+            if (GameBit_Get(((DrcreatorState *)runtime)->unk4) != 0) {
                 (*gObjectTriggerInterface)
                     ->runSequence((*(s16 *)(q + 0x1a) == 3) ? 0 : 4, (void *)obj, -1);
             }
             break;
         case 4:
-            if (GameBit_Get(*(s16 *)(runtime + 4)) != 0) {
-                *(s16 *)(runtime + 8) -= framesThisStep;
-                if (*(s16 *)(runtime + 8) <= 0) {
+            if (GameBit_Get(((DrcreatorState *)runtime)->unk4) != 0) {
+                ((DrcreatorState *)runtime)->unk8 -= framesThisStep;
+                if (((DrcreatorState *)runtime)->unk8 <= 0) {
                     o = Obj_AllocObjectSetup(36, 1725);
                     *(f32 *)(o + 8) = ((GameObject *)obj)->anim.localPosX;
                     *(f32 *)(o + 0xc) = ((GameObject *)obj)->anim.localPosY;
@@ -62,14 +87,14 @@ void drcreator_update(int obj) {
                     }
                     p = (char *)Obj_SetupObject(o, 5, -1, -1, 0);
                     if (p != NULL) {
-                        *(s16 *)(p + 2) = 0;
+                        ((DrcreatorState *)p)->unk2 = 0;
                         *(s16 *)p = (s16)randomGetRange(0, 65535);
-                        *(f32 *)(p + 0x24) = lbl_803E69B8 * (lbl_803E69BC * ((f32)*(int *)runtime * -mathSinf((lbl_803E69C0 * (f32)*(s16 *)obj) / lbl_803E69C4)));
-                        *(f32 *)(p + 0x28) = lbl_803E69B8 * ((f32)*(int *)runtime * (lbl_803E69C8 * (f32)(int)randomGetRange(0, 1000)));
-                        *(f32 *)(p + 0x2c) = lbl_803E69B8 * (lbl_803E69BC * ((f32)*(int *)runtime * -mathCosf((lbl_803E69C0 * (f32)*(s16 *)obj) / lbl_803E69C4)));
-                        *(int *)(p + 0xc4) = obj;
+                        ((DrcreatorState *)p)->unk24 = lbl_803E69B8 * (lbl_803E69BC * ((f32)*(int *)runtime * -mathSinf((lbl_803E69C0 * (f32)*(s16 *)obj) / lbl_803E69C4)));
+                        ((DrcreatorState *)p)->unk28 = lbl_803E69B8 * ((f32)*(int *)runtime * (lbl_803E69C8 * (f32)(int)randomGetRange(0, 1000)));
+                        ((DrcreatorState *)p)->unk2C = lbl_803E69B8 * (lbl_803E69BC * ((f32)*(int *)runtime * -mathCosf((lbl_803E69C0 * (f32)*(s16 *)obj) / lbl_803E69C4)));
+                        ((DrcreatorState *)p)->unkC4 = obj;
                     }
-                    *(s16 *)(runtime + 8) = *(s16 *)(runtime + 6) + randomGetRange(0, *(s16 *)(runtime + 0xa));
+                    ((DrcreatorState *)runtime)->unk8 = ((DrcreatorState *)runtime)->unk6 + randomGetRange(0, ((DrcreatorState *)runtime)->unkA);
                 }
             }
             break;
@@ -93,7 +118,7 @@ int drcreator_spawnProjectileCallback(int obj, int unused, ObjAnimUpdateState *a
         case 4:
         case 9:
             runtime = ((GameObject *)obj)->extra;
-            if (GameBit_Get(*(s16 *)(runtime + 4)) != 0) {
+            if (GameBit_Get(((DrcreatorSpawnProjectileCallbackState *)runtime)->unk4) != 0) {
                 o = Obj_AllocObjectSetup(36, 1725);
                 *(f32 *)(o + 8) = ((GameObject *)obj)->anim.localPosX;
                 *(f32 *)(o + 0xc) = ((GameObject *)obj)->anim.localPosY;
@@ -107,9 +132,9 @@ int drcreator_spawnProjectileCallback(int obj, int unused, ObjAnimUpdateState *a
                 if ((void *)p != NULL) {
                     *(s16 *)(p + 2) = 0;
                     *(s16 *)p = (s16)randomGetRange(0, 65535);
-                    *(f32 *)(p + 0x24) = lbl_803E69A8 * (f32)(int)randomGetRange(-*(s16 *)(runtime + 0xa), *(s16 *)(runtime + 0xa));
+                    *(f32 *)(p + 0x24) = lbl_803E69A8 * (f32)(int)randomGetRange(-((DrcreatorSpawnProjectileCallbackState *)runtime)->unkA, ((DrcreatorSpawnProjectileCallbackState *)runtime)->unkA);
                     *(f32 *)(p + 0x28) = lbl_803E69A8 * (f32)*(int *)runtime;
-                    *(f32 *)(p + 0x2c) = lbl_803E69A8 * (f32)(int)randomGetRange(-*(s16 *)(runtime + 0xa), *(s16 *)(runtime + 0xa));
+                    *(f32 *)(p + 0x2c) = lbl_803E69A8 * (f32)(int)randomGetRange(-((DrcreatorSpawnProjectileCallbackState *)runtime)->unkA, ((DrcreatorSpawnProjectileCallbackState *)runtime)->unkA);
                     *(int *)(p + 0xc4) = obj;
                 }
             }

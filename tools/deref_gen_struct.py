@@ -28,7 +28,9 @@ src = open(path, encoding='latin-1').read()
 if 'typedef struct %s' % sname in src:
     print('ALREADY-DEFINED')
     sys.exit(0)
-inner = r'\(\s*(?:char|u8|s8)\s*\*\)\s*' if esize == 1 else ''
+# esize 1: bytecast OR plain form (int-typed byte addresses); the consuming
+# conversion's byte gate rejects any element-scaled mis-collection
+inner = r'(?:\(\s*(?:char|u8|s8)\s*\*\)\s*)?' if esize == 1 else ''
 deref_re = re.compile(r'\*\(\s*(u8|s8|u16|s16|u32|s32|int|uint|f32|float|char)\s*(\*?)\s*\*\)\s*'
                       r'\(\s*%s(%s)\s*\+\s*(0x[0-9a-fA-F]+|\d+)\s*\)'
                       % (inner, '|'.join(re.escape(v) for v in varnames)))

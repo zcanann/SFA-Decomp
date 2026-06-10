@@ -7,6 +7,31 @@
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 
+typedef struct GunpowderbarrelState {
+    u8 pad0[0x10 - 0x0];
+    s32 unk10;
+    u8 pad14[0x34 - 0x14];
+    f32 unk34;
+} GunpowderbarrelState;
+
+
+typedef struct GunpowderbarrelUpdatePhysicsState {
+    u8 pad0[0xC - 0x0];
+    void *unkC;
+    void *unk10;
+    u8 pad14[0x20 - 0x14];
+    f32 unk20;
+    f32 unk24;
+    f32 unk28;
+    u8 pad2C[0x34 - 0x2C];
+    f32 unk34;
+    f32 unk38;
+    u8 pad3C[0x44 - 0x3C];
+    s16 unk44;
+    s16 unk46;
+} GunpowderbarrelUpdatePhysicsState;
+
+
 
 extern undefined4 FUN_80006824();
 extern int FUN_80017a90();
@@ -404,11 +429,11 @@ void gunpowderbarrel_free(int param_1, int param_2)
   void* child;
   extra = *(int *)&((GameObject *)param_1)->extra;
   (*(code*)(*(int *)gCarryableInterface + 0x10))(param_1);
-  child = *(void**)(extra + 0x10);
+  child = *(void**)&((GunpowderbarrelState *)extra)->unk10;
   if (child != 0 && param_2 == 0) {
     if (Obj_IsObjectAlive(child) != 0) {
-      ObjLink_DetachChild(param_1, *(void**)(extra + 0x10));
-      *(int*)(extra + 0x10) = 0;
+      ObjLink_DetachChild(param_1, *(void**)&((GunpowderbarrelState *)extra)->unk10);
+      ((GunpowderbarrelState *)extra)->unk10 = 0;
     }
   }
   ObjGroup_RemoveObject(param_1, 0x19);
@@ -455,7 +480,7 @@ void gunpowderbarrel_render(int *obj, int param_2, int param_3, int param_4, int
   if (result != 0 || visFlag == -1) {
     objRenderFn_8003b8f4(obj, param_2, param_3, param_4, param_5, lbl_803E42DC);
   }
-  child = *(int **)(sub + 0x10);
+  child = *(int **)&((GunpowderbarrelState *)sub)->unk10;
   if (child != 0) {
     (*(void (**)(int *, int, int, int, int, s8))(*(int *)(*(int *)((char *)child + 0x68)) + 0x10))(
         child, param_2, param_3, param_4, param_5, visFlag);
@@ -610,28 +635,28 @@ void gunpowderbarrel_updatePhysics(int *obj)
         }
         return;
     }
-    if (sub[0x16] == 0 && ((sub[0x49] & 2) || *(f32 *)(sub + 0x24) > lbl_803E430C)) {
+    if (sub[0x16] == 0 && ((sub[0x49] & 2) || ((GunpowderbarrelUpdatePhysicsState *)sub)->unk24 > lbl_803E430C)) {
         ObjHits_SetHitVolumeSlot(obj, 0xe, 1, 0);
         ObjHits_EnableObject(obj);
     }
     if (!((GpbFlags4A *)(sub + 0x4a))->playerHeld) {
-        *(f32 *)(sub + 0x24) -= lbl_803E4310 * timeDelta;
+        ((GunpowderbarrelUpdatePhysicsState *)sub)->unk24 -= lbl_803E4310 * timeDelta;
     }
     {
-        f32 v = *(f32 *)(sub + 0x20);
-        *(f32 *)(sub + 0x20) = (v < lbl_803E4314) ? lbl_803E4314 : ((v > lbl_803E4318) ? lbl_803E4318 : v);
+        f32 v = ((GunpowderbarrelUpdatePhysicsState *)sub)->unk20;
+        ((GunpowderbarrelUpdatePhysicsState *)sub)->unk20 = (v < lbl_803E4314) ? lbl_803E4314 : ((v > lbl_803E4318) ? lbl_803E4318 : v);
     }
     {
-        f32 v = *(f32 *)(sub + 0x24);
-        *(f32 *)(sub + 0x24) = (v < lbl_803E4314) ? lbl_803E4314 : ((v > lbl_803E4318) ? lbl_803E4318 : v);
+        f32 v = ((GunpowderbarrelUpdatePhysicsState *)sub)->unk24;
+        ((GunpowderbarrelUpdatePhysicsState *)sub)->unk24 = (v < lbl_803E4314) ? lbl_803E4314 : ((v > lbl_803E4318) ? lbl_803E4318 : v);
     }
     {
-        f32 v = *(f32 *)(sub + 0x28);
-        *(f32 *)(sub + 0x28) = (v < lbl_803E4314) ? lbl_803E4314 : ((v > lbl_803E4318) ? lbl_803E4318 : v);
+        f32 v = ((GunpowderbarrelUpdatePhysicsState *)sub)->unk28;
+        ((GunpowderbarrelUpdatePhysicsState *)sub)->unk28 = (v < lbl_803E4314) ? lbl_803E4314 : ((v > lbl_803E4318) ? lbl_803E4318 : v);
     }
-    ((GameObject *)obj)->anim.velocityX = *(f32 *)(sub + 0x20);
-    ((GameObject *)obj)->anim.velocityY = *(f32 *)(sub + 0x24);
-    ((GameObject *)obj)->anim.velocityZ = *(f32 *)(sub + 0x28);
+    ((GameObject *)obj)->anim.velocityX = ((GunpowderbarrelUpdatePhysicsState *)sub)->unk20;
+    ((GameObject *)obj)->anim.velocityY = ((GunpowderbarrelUpdatePhysicsState *)sub)->unk24;
+    ((GameObject *)obj)->anim.velocityZ = ((GunpowderbarrelUpdatePhysicsState *)sub)->unk28;
     dt = timeDelta;
     objMove(obj, ((GameObject *)obj)->anim.velocityX * dt, ((GameObject *)obj)->anim.velocityY * dt,
             ((GameObject *)obj)->anim.velocityZ * dt);
@@ -674,30 +699,30 @@ void gunpowderbarrel_updatePhysics(int *obj)
         ((GameObject *)obj)->anim.velocityX = z;
         ((GameObject *)obj)->anim.velocityY = z;
         ((GameObject *)obj)->anim.velocityZ = z;
-        *(f32 *)(sub + 0x20) = z;
-        *(f32 *)(sub + 0x24) = z;
-        *(f32 *)(sub + 0x28) = z;
+        ((GunpowderbarrelUpdatePhysicsState *)sub)->unk20 = z;
+        ((GunpowderbarrelUpdatePhysicsState *)sub)->unk24 = z;
+        ((GunpowderbarrelUpdatePhysicsState *)sub)->unk28 = z;
         if (contact != 0) {
             u32 flags;
             ObjHits_AddContactObject(contact, obj);
             flags = ((ObjAnimComponent *)contact)->modelInstance->flags;
             if ((flags & OBJMODEL_FLAG_SKIP_RESET_UPDATE) && !(flags & 0x8000)) {
-                *(int **)(sub + 0xc) = contact;
-            } else if (*(f32 *)(sub + 0x38) < lbl_803E431C) {
+                *(int **)&((GunpowderbarrelUpdatePhysicsState *)sub)->unkC = contact;
+            } else if (((GunpowderbarrelUpdatePhysicsState *)sub)->unk38 < lbl_803E431C) {
                 sub[0x16] = 4;
             }
         }
         if (((GpbFlags4A *)(sub + 0x4a))->playerHeld) {
             gunpowderbarrel_setPlayerHeldState(obj, 0);
         }
-        *(f32 *)(sub + 0x38) = lbl_803E42C0;
+        ((GunpowderbarrelUpdatePhysicsState *)sub)->unk38 = lbl_803E42C0;
     } else {
-        if (*(f32 *)(sub + 0x24) < lbl_803E4320) {
-            fn_801A0F58(obj, *(s16 *)(sub + 0x44), *(s16 *)(sub + 0x46));
+        if (((GunpowderbarrelUpdatePhysicsState *)sub)->unk24 < lbl_803E4320) {
+            fn_801A0F58(obj, ((GunpowderbarrelUpdatePhysicsState *)sub)->unk44, ((GunpowderbarrelUpdatePhysicsState *)sub)->unk46);
         }
         if (!((GpbFlags4A *)(sub + 0x4a))->held && !((GpbFlags4A *)(sub + 0x4a))->playerHeld) {
-            *(f32 *)(sub + 0x38) += ((GameObject *)obj)->anim.velocityY;
-            if (*(f32 *)(sub + 0x38) < -lbl_803DBE88) {
+            ((GunpowderbarrelUpdatePhysicsState *)sub)->unk38 += ((GameObject *)obj)->anim.velocityY;
+            if (((GunpowderbarrelUpdatePhysicsState *)sub)->unk38 < -lbl_803DBE88) {
                 sub[0x16] = 4;
             }
         }

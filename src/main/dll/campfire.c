@@ -11,6 +11,13 @@
 #include "main/objfx.h"
 #include "main/resource.h"
 
+typedef struct KaldachomState {
+    u8 pad0[0x3E8 - 0x0];
+    f32 unk3E8;
+    u8 pad3EC[0x3F0 - 0x3EC];
+} KaldachomState;
+
+
 extern undefined4 FUN_80006824();
 extern undefined4 Sfx_PlayFromObject();
 extern undefined4 FUN_80017a28();
@@ -447,13 +454,13 @@ void kaldachom_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
   
   state = *(int *)&((GameObject *)obj)->extra;
   if ((visible != 0) && (((GameObject *)obj)->unkF4 == 0)) {
-    if (*(float *)(state + 1000) != lbl_803E3060) {
-      fn_8003B5E0(200,0,0,(int)*(float *)(state + 1000));
+    if (((KaldachomState *)state)->unk3E8 != lbl_803E3060) {
+      fn_8003B5E0(200,0,0,(int)((KaldachomState *)state)->unk3E8);
     }
     ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)
         (obj,p2,p3,p4,p5,lbl_803E3078);
     if ((*(ushort *)(state + 0x400) & 0x60) != 0) {
-      objParticleFn_80099d84(obj,lbl_803E3078,3,*(float *)(state + 1000),0);
+      objParticleFn_80099d84(obj,lbl_803E3078,3,((KaldachomState *)state)->unk3E8,0);
     }
     control = ((CampfireState *)state)->control;
     ObjPath_GetPointWorldPosition(obj,2,&control->upperMouthPosX,&control->upperMouthPosY,&control->upperMouthPosZ,0);

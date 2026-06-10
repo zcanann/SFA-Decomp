@@ -3,6 +3,16 @@
 #include "main/dll/DF/DFcradle.h"
 #include "main/effect_interfaces.h"
 
+typedef struct DimbossfireState {
+    u8 pad0[0x4 - 0x0];
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+    s32 unk10;
+    u8 pad14[0x18 - 0x14];
+} DimbossfireState;
+
+
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void CameraShake_Start(f32 magnitude, f32 duration, f32 param_3);
 extern void doRumble(f32 val);
@@ -93,8 +103,8 @@ void dimbossfire_update(int param_1)
     if (uVar1 != 0) {
       GameBit_Set((int)*(short *)(iVar4 + 0x20),0);
       *pbVar5 = *pbVar5 | 1;
-      *(float *)(pbVar5 + 4) = lbl_80325D68[pbVar5[1]];
-      *(float *)(pbVar5 + 8) = *(float *)(pbVar5 + 4);
+      ((DimbossfireState *)pbVar5)->unk4 = lbl_80325D68[pbVar5[1]];
+      ((DimbossfireState *)pbVar5)->unk8 = ((DimbossfireState *)pbVar5)->unk4;
       pbVar5[1] = pbVar5[1] + 1;
       if (pbVar5[1] >= 10) {
         pbVar5[1] = 0;
@@ -102,19 +112,19 @@ void dimbossfire_update(int param_1)
     }
   }
   else {
-    *(float *)(pbVar5 + 0xc) = *(float *)(pbVar5 + 0xc) - timeDelta;
-    if (*(float *)(pbVar5 + 0xc) <= lbl_803E4DA0) {
-      *(float *)(pbVar5 + 0xc) = (f32)(int)randomGetRange(0xf0,0x1e0);
+    ((DimbossfireState *)pbVar5)->unkC = ((DimbossfireState *)pbVar5)->unkC - timeDelta;
+    if (((DimbossfireState *)pbVar5)->unkC <= lbl_803E4DA0) {
+      ((DimbossfireState *)pbVar5)->unkC = (f32)(int)randomGetRange(0xf0,0x1e0);
       *pbVar5 = *pbVar5 | 1;
-      *(float *)(pbVar5 + 4) = lbl_80325D68[pbVar5[1]];
-      *(float *)(pbVar5 + 8) = *(float *)(pbVar5 + 4);
+      ((DimbossfireState *)pbVar5)->unk4 = lbl_80325D68[pbVar5[1]];
+      ((DimbossfireState *)pbVar5)->unk8 = ((DimbossfireState *)pbVar5)->unk4;
       pbVar5[1] = pbVar5[1] + 1;
       if (pbVar5[1] >= 10) {
         pbVar5[1] = 0;
       }
     }
   }
-  if (*(float *)(pbVar5 + 4) > lbl_803E4DA0) {
+  if (((DimbossfireState *)pbVar5)->unk4 > lbl_803E4DA0) {
     if ((*pbVar5 & 1) != 0) {
       *pbVar5 = *pbVar5 & 0xfe;
       ObjHits_SetHitVolumeSlot(param_1,9,1,0);
@@ -141,27 +151,27 @@ void dimbossfire_update(int param_1)
           doRumble(lbl_803E4DB4 * fVar6);
         }
       }
-      if (*(int *)(pbVar5 + 0x10) == 0) {
+      if (((DimbossfireState *)pbVar5)->unk10 == 0) {
         piVar2 = (int *)objCreateLight(param_1,1);
-        *(int **)(pbVar5 + 0x10) = piVar2;
-        if (*(int *)(pbVar5 + 0x10) != 0) {
-          modelLightStruct_setLightKind(*(int *)(pbVar5 + 0x10),2);
-          lightSetFieldBC_8001db14(*(int *)(pbVar5 + 0x10),1);
+        *(int **)&((DimbossfireState *)pbVar5)->unk10 = piVar2;
+        if (((DimbossfireState *)pbVar5)->unk10 != 0) {
+          modelLightStruct_setLightKind(((DimbossfireState *)pbVar5)->unk10,2);
+          lightSetFieldBC_8001db14(((DimbossfireState *)pbVar5)->unk10,1);
           if (*(short *)(iVar4 + 0x1a) == 0) {
-            modelLightStruct_setDiffuseColor(*(int *)(pbVar5 + 0x10),0x7f,0xff,0,0);
+            modelLightStruct_setDiffuseColor(((DimbossfireState *)pbVar5)->unk10,0x7f,0xff,0,0);
           }
           else {
-            modelLightStruct_setDiffuseColor(*(int *)(pbVar5 + 0x10),0xff,0x7f,0,0);
+            modelLightStruct_setDiffuseColor(((DimbossfireState *)pbVar5)->unk10,0xff,0x7f,0,0);
           }
-          modelLightStruct_setDistanceAttenuation(lbl_803E4DB8,lbl_803E4DBC,*(int *)(pbVar5 + 0x10));
-          modelLightStruct_setEnabled(*(int *)(pbVar5 + 0x10),1,lbl_803E4DA0);
-          modelLightStruct_setEnabled(*(int *)(pbVar5 + 0x10),0,*(float *)(pbVar5 + 4) / lbl_803E4DC0);
+          modelLightStruct_setDistanceAttenuation(lbl_803E4DB8,lbl_803E4DBC,((DimbossfireState *)pbVar5)->unk10);
+          modelLightStruct_setEnabled(((DimbossfireState *)pbVar5)->unk10,1,lbl_803E4DA0);
+          modelLightStruct_setEnabled(((DimbossfireState *)pbVar5)->unk10,0,((DimbossfireState *)pbVar5)->unk4 / lbl_803E4DC0);
         }
       }
       Sfx_PlayFromObject(param_1,SFXar_boost16);
     }
-    *(float *)(pbVar5 + 4) = *(float *)(pbVar5 + 4) - timeDelta;
-    if (*(float *)(pbVar5 + 4) > lbl_803E4DA0) {
+    ((DimbossfireState *)pbVar5)->unk4 = ((DimbossfireState *)pbVar5)->unk4 - timeDelta;
+    if (((DimbossfireState *)pbVar5)->unk4 > lbl_803E4DA0) {
       (*gPartfxInterface)->spawnObject((void *)param_1,0x4ca,NULL,2,-1,NULL);
       if (*(short *)(iVar4 + 0x1a) == 0) {
         (*gPartfxInterface)->spawnObject((void *)param_1,0x4cd,NULL,2,-1,NULL);
@@ -171,10 +181,10 @@ void dimbossfire_update(int param_1)
       }
     }
     else {
-      *(float *)(pbVar5 + 4) = lbl_803E4DA0;
-      if (*(uint *)(pbVar5 + 0x10) != 0) {
-        ModelLightStruct_free(*(void **)(pbVar5 + 0x10));
-        *(int *)(pbVar5 + 0x10) = 0;
+      ((DimbossfireState *)pbVar5)->unk4 = lbl_803E4DA0;
+      if (*(uint *)&((DimbossfireState *)pbVar5)->unk10 != 0) {
+        ModelLightStruct_free(*(void **)&((DimbossfireState *)pbVar5)->unk10);
+        ((DimbossfireState *)pbVar5)->unk10 = 0;
       }
       ObjHits_SetHitVolumeSlot(param_1,0,0,0);
       ObjHitbox_SetSphereRadius(param_1,0);
@@ -208,7 +218,7 @@ void dimbossfire_init(int obj,undefined4 param_2,int param_3)
   ObjHitbox_SetSphereRadius(obj,0);
   ObjHits_DisableObject(obj);
   if (param_3 == 0) {
-    *(float *)(state + 0xc) = (f32)(int)randomGetRange(0xf0,0x1e0);
+    ((DimbossfireState *)state)->unkC = (f32)(int)randomGetRange(0xf0,0x1e0);
     uVar2 = randomGetRange(0,9);
     *(undefined *)(state + 1) = uVar2;
   }

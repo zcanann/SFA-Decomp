@@ -4,6 +4,13 @@
 
 #include "main/audio/sfx_ids.h"
 
+typedef struct KtrexfloorswitchSpawnEnergyArcState {
+    u8 pad0[0x8 - 0x0];
+    f32 unk8;
+    f32 unkC;
+} KtrexfloorswitchSpawnEnergyArcState;
+
+
 typedef struct KtrexfloorswitchState {
     u8 pad0[0x4 - 0x0];
     u8 unk4;
@@ -66,7 +73,7 @@ void ktrexfloorswitch_spawnEnergyArc(int obj, f32 scale, int angle) {
     dir[0] = lbl_803E6898;
     {
         f32 fr = (f32)angle;
-        fr = fr * *(f32 *)(runtime + 0xc);
+        fr = fr * ((KtrexfloorswitchSpawnEnergyArcState *)runtime)->unkC;
         dir[1] = -(fr * lbl_803E689C);
     }
     dir[2] = scale;
@@ -74,7 +81,7 @@ void ktrexfloorswitch_spawnEnergyArc(int obj, f32 scale, int angle) {
     dir[0] += ((GameObject *)obj)->anim.localPosX;
     dir[1] += ((GameObject *)obj)->anim.localPosY;
     dir[2] += ((GameObject *)obj)->anim.localPosZ;
-    *(f32 *)(runtime + 8) = (f32)(int)randomGetRange(10, angle);
+    ((KtrexfloorswitchSpawnEnergyArcState *)runtime)->unk8 = (f32)(int)randomGetRange(10, angle);
     *(void **)(runtime + 0x10) = lightningCreate(pos, dir, lbl_803E68A0, lbl_803E68A4, (u16)angle, 96, 0);
 }
 

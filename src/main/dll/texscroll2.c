@@ -5,6 +5,13 @@
 #include "main/objanim.h"
 #include "main/dll/texscroll2.h"
 
+typedef struct KaldachomState {
+    u8 pad0[0x4A - 0x0];
+    u8 unk4A;
+    u8 pad4B[0x50 - 0x4B];
+} KaldachomState;
+
+
 extern undefined4 GameBit_Set(int eventId, int value);
 
 int kaldachom_stateHandlerA04(int obj, int p2)
@@ -74,9 +81,9 @@ int kaldachom_stateHandlerA05(int obj, int p2)
       ObjAnim_SetCurrentMove(obj, *(s16 *)(lbl_803203F8 + 8), lbl_803E3060, 0);
       ((GroundBaddieState *)p2)->baddie.moveDone = 0;
     }
-    *(u8 *)(sub + 0x4a) = 4;
+    ((KaldachomState *)sub)->unk4A = 4;
   }
-  ((GroundBaddieState *)p2)->baddie.moveSpeed = lbl_80320404[(u32)*(u8 *)(sub + 0x4a)];
+  ((GroundBaddieState *)p2)->baddie.moveSpeed = lbl_80320404[(u32)((KaldachomState *)sub)->unk4A];
   ((GroundBaddieState *)p2)->baddie.unk34D = 1;
   return 0;
 }
@@ -95,9 +102,9 @@ int kaldachom_stateHandlerA02(int obj, int p2)
       ((GroundBaddieState *)p2)->baddie.moveDone = 0;
     }
     ObjHits_EnableObject(obj);
-    *(u8 *)(sub + 0x4a) = 4;
+    ((KaldachomState *)sub)->unk4A = 4;
   }
-  ((GroundBaddieState *)p2)->baddie.moveSpeed = lbl_80320404[(u32)*(u8 *)(sub + 0x4a)];
+  ((GroundBaddieState *)p2)->baddie.moveSpeed = lbl_80320404[(u32)((KaldachomState *)sub)->unk4A];
   ((GroundBaddieState *)p2)->baddie.unk34D = 1;
   return 0;
 }

@@ -5,6 +5,21 @@
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
 
+typedef struct DrshackleState {
+    u8 pad0[0x8 - 0x0];
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    s32 unk14;
+    u8 pad18[0x19 - 0x18];
+    s8 unk19;
+    u8 pad1A[0x1B - 0x1A];
+    u8 unk1B;
+    u8 unk1C;
+    u8 pad1D[0x20 - 0x1D];
+} DrshackleState;
+
+
 static inline int *DrShackle_GetActiveModel(void *obj) {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
     return (int *)objAnim->banks[objAnim->bankIndex];
@@ -34,9 +49,9 @@ int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f) {
     if (bf->b0 == 0) {
         return 1;
     }
-    *(f32 *)(p + 8) = *(f32 *)((char *)obj + 0xc);
-    *(f32 *)(p + 0xc) = *(f32 *)((char *)obj + 0x10);
-    *(f32 *)(p + 0x10) = *(f32 *)((char *)obj + 0x14);
+    ((DrshackleState *)p)->unk8 = *(f32 *)((char *)obj + 0xc);
+    ((DrshackleState *)p)->unkC = *(f32 *)((char *)obj + 0x10);
+    ((DrshackleState *)p)->unk10 = *(f32 *)((char *)obj + 0x14);
 
     joint1 = *(s8 *)(*(int *)(*(int *)((char *)a + 0x50) + 0x2c) + b * 24 + objAnim->bankIndex + 0x12);
     model = DrShackle_GetActiveModel((void *)a);
@@ -67,7 +82,7 @@ int drshackle_setScale(int obj, int a, int b, int c, int d, int e, int f) {
     objRenderFn_8003b8f4((void *)obj, c, d, e, f, (double)lbl_803E6A2C);
 
     ptr = (int *)p;
-    for (i = 0; i < *(int *)(p + 0x14); i++) {
+    for (i = 0; i < ((DrshackleState *)p)->unk14; i++) {
         int entry = *ptr;
         if (entry != 0) {
             ObjPath_GetPointWorldPosition(obj, p[i + 0x1b], (f32 *)(entry + 0xc),
@@ -91,13 +106,13 @@ void drshackle_init(int obj, char *arg) {
     char *p = ((GameObject *)obj)->extra;
     ObjGroup_AddObject(obj, 0x37);
     ((BitFlags8 *)(p + 0x1a))->b0 = (GameBit_Get(*(s16 *)(arg + 0x1e)) == 0);
-    *(u8 *)(p + 0x1b) = (s8)arg[0x18] % 2;
+    ((DrshackleState *)p)->unk1B = (s8)arg[0x18] % 2;
     ((GameObject *)obj)->animEventCallback = (void *)drshackle_toggleEventCallback;
     if (*(s16 *)(arg + 0x1c) == 1) {
-        *(int *)(p + 0x14) = 2;
-        *(u8 *)(p + 0x1c) = 1 - *(u8 *)(p + 0x1b);
+        ((DrshackleState *)p)->unk14 = 2;
+        ((DrshackleState *)p)->unk1C = 1 - ((DrshackleState *)p)->unk1B;
     } else {
-        *(int *)(p + 0x14) = 1;
+        ((DrshackleState *)p)->unk14 = 1;
     }
 }
 
@@ -130,7 +145,7 @@ void drshackle_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, un
     if (((BitFlags8 *)(p + 0x1a))->b0 == 0 && visible != 0) {
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6A2C);
         ptr = (int *)p;
-        for (i = 0; i < *(int *)(p + 0x14); i++) {
+        for (i = 0; i < ((DrshackleState *)p)->unk14; i++) {
             int *entry = *(int **)ptr;
             if (entry != 0) {
                 ObjPath_GetPointWorldPosition((int)obj, p[i + 0x1b], (f32 *)((char *)entry + 0xc), (f32 *)((char *)entry + 0x10), (f32 *)((char *)entry + 0x14), 0);
@@ -150,7 +165,7 @@ void drshackle_update(int obj) {
         list = ObjGroup_GetObjects(0x17, &count);
         while (count-- != 0) {
             int sub = *(int *)(*list + 0x4c);
-            for (j = 0; j < *(int *)(p + 0x14); j++) {
+            for (j = 0; j < ((DrshackleState *)p)->unk14; j++) {
                 if (*(u8 *)(sub + 0x18) == *(s16 *)(q + 0x1a) + j * 4) {
                     *(int *)(p + j * 4) = *list;
                     (*gObjectTriggerInterface)

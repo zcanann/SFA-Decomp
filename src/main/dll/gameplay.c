@@ -6,6 +6,18 @@
 #include "main/mapEventTypes.h"
 #include "main/objanim_internal.h"
 
+typedef struct CarryableUpdateHeldState {
+    u8 pad0[0x2 - 0x0];
+    s16 unk2;
+    u8 pad4[0x5 - 0x4];
+    s8 unk5;
+    u8 unk6;
+    u8 unk7;
+    u8 unk8;
+    u8 pad9[0x10 - 0x9];
+} CarryableUpdateHeldState;
+
+
 
 typedef struct { u32 mode; f32 x, y, z; void *tex; s16 flags; u8 layer; } GfxCmd;
 extern ModgfxInterface **gModgfxInterface;
@@ -13194,10 +13206,10 @@ int Carryable_updateHeld(u8 *obj)
   u8 *held;
   void *player;
   held = ((GameObject *)obj)->extra;
-  *(u8 *)(held + 8) = 0;
-  *(u8 *)(held + 7) &= ~1;
+  ((CarryableUpdateHeldState *)held)->unk8 = 0;
+  ((CarryableUpdateHeldState *)held)->unk7 &= ~1;
   player = Obj_GetPlayerObject();
-  if (*(s8 *)(held + 5) == 0) {
+  if (((CarryableUpdateHeldState *)held)->unk5 == 0) {
     struct { u8 a, b, c, d, e; } *t;
     int v = 0;
     t = (void *)(*(u8 **)(obj + 0x78) + ((GameObject *)obj)->unkE4 * 5);
@@ -13209,10 +13221,10 @@ int Carryable_updateHeld(u8 *obj)
       buttonDisable(0, 0x100);
       v = 1;
     }
-    *(s8 *)(held + 5) = v;
-    if (*(s8 *)(held + 5) != 0) {
-      *(u8 *)(held + 7) |= 1;
-      *(u8 *)(held + 6) = 1;
+    ((CarryableUpdateHeldState *)held)->unk5 = v;
+    if (((CarryableUpdateHeldState *)held)->unk5 != 0) {
+      ((CarryableUpdateHeldState *)held)->unk7 |= 1;
+      ((CarryableUpdateHeldState *)held)->unk6 = 1;
     }
     if (((GameObject *)obj)->unkF8 == 0) {
       int cnt, i, j;
@@ -13220,7 +13232,7 @@ int Carryable_updateHeld(u8 *obj)
       u8 *hit;
       ObjHits_SyncObjectPositionIfDirty(obj);
       *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
-      if ((*(u8 *)(held + 7) & 2) == 0) {
+      if ((((CarryableUpdateHeldState *)held)->unk7 & 2) == 0) {
         ((GameObject *)obj)->anim.velocityY = -(lbl_803E06DC * timeDelta - ((GameObject *)obj)->anim.velocityY);
         ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.velocityY * timeDelta + ((GameObject *)obj)->anim.localPosY;
       }
@@ -13248,8 +13260,8 @@ int Carryable_updateHeld(u8 *obj)
         }
         if (d < lbl_803E06E8) {
           s8 t2 = *(s8 *)((u8 *)list[i] + 0x14);
-          if (t2 > *(u8 *)(held + 8)) {
-            *(s8 *)(held + 8) = t2;
+          if (t2 > ((CarryableUpdateHeldState *)held)->unk8) {
+            *(s8 *)&((CarryableUpdateHeldState *)held)->unk8 = t2;
           }
         }
         i++;
@@ -13267,31 +13279,31 @@ int Carryable_updateHeld(u8 *obj)
     ObjHits_MarkObjectPositionDirty(obj);
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     if ((getButtonsJustPressed(0) & 0x100) != 0) {
-      if ((*(u8 *)(held + 7) & 4) != 0 || fn_80295BF0(player) == 0) {
+      if ((((CarryableUpdateHeldState *)held)->unk7 & 4) != 0 || fn_80295BF0(player) == 0) {
         Sfx_PlayFromObject(0, 0x10a);
       } else {
         buttonDisable(0, 0x100);
-        *(u8 *)(held + 6) = 0;
+        ((CarryableUpdateHeldState *)held)->unk6 = 0;
       }
     }
     if (((GameObject *)obj)->unkF8 == 1) {
-      *(s8 *)(held + 5) = 2;
+      ((CarryableUpdateHeldState *)held)->unk5 = 2;
     }
-    if (*(s8 *)(held + 5) == 2 && ((GameObject *)obj)->unkF8 == 0) {
+    if (((CarryableUpdateHeldState *)held)->unk5 == 2 && ((GameObject *)obj)->unkF8 == 0) {
       u8 *h2 = ((GameObject *)obj)->extra;
-      *(u8 *)(h2 + 5) = 0;
-      *(u8 *)(h2 + 6) = 0;
-      if ((*(u8 *)(h2 + 7) & 8) == 0) {
+      *(u8 *)&((CarryableUpdateHeldState *)h2)->unk5 = 0;
+      ((CarryableUpdateHeldState *)h2)->unk6 = 0;
+      if ((((CarryableUpdateHeldState *)h2)->unk7 & 8) == 0) {
         ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY + lbl_803E06D8;
         saveGame_saveObjectPos((int *)obj);
         ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY - lbl_803E06D8;
       }
     }
-    if (*(s8 *)(held + 6) != 0) {
-      ObjMsg_SendToObject(player, 0x100008, obj, (*(s16 *)(held + 2) << 16) | (u16)*(s16 *)held);
+    if (*(s8 *)&((CarryableUpdateHeldState *)held)->unk6 != 0) {
+      ObjMsg_SendToObject(player, 0x100008, obj, (((CarryableUpdateHeldState *)held)->unk2 << 16) | (u16)*(s16 *)held);
     }
   }
-  return *(s8 *)(held + 5);
+  return ((CarryableUpdateHeldState *)held)->unk5;
 }
 
 void objSaveFn_800ea774(int *obj) {

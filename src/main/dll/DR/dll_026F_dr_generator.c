@@ -3,6 +3,16 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 
+typedef struct DrgeneratorState {
+    u8 pad0[0x124 - 0x0];
+    f32 unk124;
+    u8 pad128[0x198 - 0x128];
+    s16 unk198;
+    u8 unk19A;
+    u8 pad19B[0x19C - 0x19B];
+} DrgeneratorState;
+
+
 int drgenerator_getExtraSize(void) { return 0x19c; }
 
 int drgenerator_getObjectTypeId(void) { return 0x0; }
@@ -45,7 +55,7 @@ void drgenerator_init(int obj, char *arg) {
             *t = 0x100;
         }
     }
-    *(u8 *)(p + 0x19a) = 2;
+    ((DrgeneratorState *)p)->unk19A = 2;
     ObjHits_EnableObject(obj);
     if (GameBit_Get(*(s16 *)(arg + 0x1e)) != 0) {
         ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
@@ -63,10 +73,10 @@ void drgenerator_init(int obj, char *arg) {
             t = 0x14;
             break;
         }
-        *(s16 *)(p + 0x198) = (s16)t;
+        ((DrgeneratorState *)p)->unk198 = (s16)t;
     }
-    *(s16 *)(p + 0x198) = *(s16 *)(p + 0x198) * 0x3c;
-    *(f32 *)(p + 0x124) = lbl_803E6B68;
+    ((DrgeneratorState *)p)->unk198 = ((DrgeneratorState *)p)->unk198 * 0x3c;
+    ((DrgeneratorState *)p)->unk124 = lbl_803E6B68;
     if (GameBit_Get(0x9b9) != 0) {
         ((BitFlags8 *)(p + 0x19b))->b0 = 1;
         ((BitFlags8 *)(p + 0x19b))->b4 = 1;
@@ -111,7 +121,7 @@ void drgenerator_hitDetect(int obj) {
     GameBit_Set(*(s16 *)(q + 0x1e), 1);
     if (((GameObject *)obj)->anim.seqId == 0x716 &&
         (found = (void *)ObjGroup_FindNearestObject(0x4c, obj, 0)) != NULL) {
-        timer_addDuration((int)found, *(s16 *)(p + 0x198));
+        timer_addDuration((int)found, ((DrgeneratorState *)p)->unk198);
     } else {
         ObjHits_DisableObject(obj);
     }
