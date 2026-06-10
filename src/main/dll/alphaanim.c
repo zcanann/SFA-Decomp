@@ -520,22 +520,22 @@ void seqObject_init(short *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8017ca44(int param_1,undefined4 param_2,int param_3)
+undefined4 FUN_8017ca44(int obj, undefined4 unused, ObjAnimUpdateState *animUpdate)
 {
-  char cVar1;
-  int iVar2;
+  u8 eventId;
+  int i;
   SeqObjectState *state;
   SeqObjectPlacement *def;
   
-  def = (SeqObjectPlacement *)((GameObject *)param_1)->anim.placementData;
-  state = ((GameObject *)param_1)->extra;
-  for (iVar2 = 0; iVar2 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar2 = iVar2 + 1) {
-    cVar1 = *(char *)(param_3 + iVar2 + 0x81);
-    if (cVar1 == '\x01') {
+  def = (SeqObjectPlacement *)((GameObject *)obj)->anim.placementData;
+  state = ((GameObject *)obj)->extra;
+  for (i = 0; i < (int)(uint)animUpdate->eventCount; i = i + 1) {
+    eventId = animUpdate->eventIds[i];
+    if (eventId == 1) {
       FUN_80017698(def->openGameBit,1);
       FUN_800723a0();
     }
-    else if (cVar1 == '\0') {
+    else if (eventId == 0) {
       FUN_80017698(def->triggerGameBit,0);
       FUN_800723a0();
     }
@@ -747,11 +747,11 @@ extern int warpToMap(int id, int flags);
  * its GameBit, compare against the def[0x30] mask bit for that slot, and
  * if the polarity flips (GameBit != mask bit) end the current sequence.
  * Always latches state[1] bit 0 before returning 0. */
-int immultiseq_SeqFn(int* obj, int* anim, u8* buf) {
+int immultiseq_SeqFn(int* obj, int* anim, ObjAnimUpdateState *animUpdate) {
     IMMultiSeqState *state = ((GameObject *)obj)->extra;
     IMMultiSeqPlacement *def = *(IMMultiSeqPlacement **)&((GameObject *)obj)->anim.placementData;
-    *(s16*)((char*)buf + 0x6e) = *(s16*)((char*)buf + 0x70);
-    *(u8*)((char*)buf + 0x56) = 0;
+    animUpdate->hitVolumePair = animUpdate->activeHitVolumePair;
+    animUpdate->sequenceEventActive = 0;
     if (((GameObject *)obj)->unkB4 == -1) {
         return 0;
     }
@@ -798,13 +798,13 @@ void seqobj2_init(int *obj, SeqObjectPlacement *def)
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x6000);
 }
 
-int seqobj2_SeqFn(int* obj, int* anim, u8* buf)
+int seqobj2_SeqFn(int* obj, int* anim, ObjAnimUpdateState *animUpdate)
 {
     SeqObjectPlacement *def = *(SeqObjectPlacement **)&((GameObject *)obj)->anim.placementData;
     SeqObj2State *state = ((GameObject *)obj)->extra;
     int i;
-    for (i = 0; i < buf[0x8b]; i++) {
-        int op = buf[0x81 + i];
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        int op = animUpdate->eventIds[i];
         switch (op) {
         case 0:
             GameBit_Set(def->triggerGameBit, 0);
@@ -820,7 +820,7 @@ int seqobj2_SeqFn(int* obj, int* anim, u8* buf)
     return 0;
 }
 
-int seqobject_SeqFn(int* obj, int* anim, u8* buf)
+int seqobject_SeqFn(int* obj, int* anim, ObjAnimUpdateState *animUpdate)
 {
     SeqObjectPlacement *def;
     SeqObjectState *state;
@@ -830,9 +830,9 @@ int seqobject_SeqFn(int* obj, int* anim, u8* buf)
     }
     def = *(SeqObjectPlacement **)&((GameObject *)obj)->anim.placementData;
     state = ((GameObject *)obj)->extra;
-    buf[0x56] = 0;
-    for (i = 0; i < buf[0x8b]; i++) {
-        int op = buf[0x81 + i];
+    animUpdate->sequenceEventActive = 0;
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        int op = animUpdate->eventIds[i];
         switch (op) {
         case 1: {
             u8 flags = def->flags;
@@ -1023,12 +1023,12 @@ void immultiseq_update(int *obj)
     }
 }
 
-int dll_115_seqFn(int *obj, int p2, void *p3) {
+int dll_115_seqFn(int *obj, int p2, ObjAnimUpdateState *animUpdate) {
     int v;
     u8 *state = ((GameObject *)obj)->extra;
     s16 *def = *(s16 **)&((GameObject *)obj)->anim.placementData;
-    *(s16 *)((char *)p3 + 0x6e) = *(s16 *)((char *)p3 + 0x70);
-    *(u8 *)((char *)p3 + 0x56) = 0;
+    animUpdate->hitVolumePair = animUpdate->activeHitVolumePair;
+    animUpdate->sequenceEventActive = 0;
     if (((GameObject *)obj)->unkB4 == -1) {
         return 0;
     }

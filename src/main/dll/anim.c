@@ -7006,7 +7006,7 @@ int dfpseqpoint_SeqFn(int obj, int p2, ObjAnimUpdateState *animUpdate)
     int data = *(int *)&((GameObject *)obj)->anim.placementData;
     int i;
 
-    animUpdate->hitVolumePair = -1;
+    animUpdate->activeHitVolumePair = -1;
     animUpdate->sequenceEventActive = 0;
     for (i = 0; i < animUpdate->eventCount; i++) {
         switch (((DfpSeqPointState *)blob)->triggerId) {

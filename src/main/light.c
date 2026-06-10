@@ -1441,7 +1441,7 @@ void fn_801FC6F4(int obj, int param2, ObjAnimUpdateState *ctx)
     SeqPointState *state = ((GameObject *)obj)->extra;
     int i;
 
-    ctx->hitVolumePair = -1;
+    ctx->activeHitVolumePair = -1;
     ctx->sequenceEventActive = 0;
     for (i = 0; i < ctx->eventCount; i++) {
         switch (state->sequenceId) {
