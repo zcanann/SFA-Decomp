@@ -4624,6 +4624,15 @@ is one level less indirect. The matched-code convention is `extern int *lbl;`
   register-coloring + inlining-unroll artifacts (textrender GameText_*, whose
   standalone getControlCharLen is 100%) -- the "compare width" bucket is the
   real one.
+- `python3 tools/pragma_minimize.py [--apply] [--filter S]` — rewrite a
+  file's sched/peep pragma forest as the MINIMAL straight-line transition set
+  producing the same per-fn states (byte-gated, auto-revert). Run after any
+  per-fn pragma work to keep files in canonical form; the minimal form makes
+  the ON-region/OFF-tail structure (see "Pragma states" section) visible.
+  Skips push/pop files; reverts cleanly when the fn-state model mismatches
+  (mid-fn pragmas). Phase-1/3 sweep results: 90 uniform files migrated to
+  unit cflags (cflags_dll_noopt/nosched/nopeep), 119 mixed files minimized,
+  ~2400 lines removed, all byte-identical.
 - `python3 tools/pragma_audit.py [--max-pct N] [--unit-filter S] [--all]` —
   flag <100% fns whose effective pragma state (stack model, recipe #1) is an
   OUTLIER vs their unit's majority state. THE highest-yield triage signal on
