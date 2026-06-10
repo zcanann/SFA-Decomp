@@ -413,7 +413,7 @@ typedef struct {
     GlyphEntry* entries;
     int field8;
     int count;
-    u8 pad[0x10];
+    u8 pad[0xc];
     int mode;
 } GameTextFont;
 typedef struct {
