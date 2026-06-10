@@ -16,8 +16,8 @@ typedef struct KtlazerwallState {
     u8 pad0[0x4 - 0x0];
     f32 unk4;
     f32 unk8;
-    f32 speedC;
-    s32 bool10;
+    f32 unkC;
+    s32 unk10;
 } KtlazerwallState;
 
 int ktlazerwall_getExtraSize(void) { return 0x14; }
@@ -32,10 +32,10 @@ void ktlazerwall_release(void) {}
 
 void ktlazerwall_free(int obj) {
     char *p = ((GameObject *)obj)->extra;
-    void *m = *(void **)&((KtlazerwallState *)p)->bool10;
+    void *m = *(void **)&((KtlazerwallState *)p)->unk10;
     if (m != 0) {
         mm_free(m);
-        *(void **)&((KtlazerwallState *)p)->bool10 = 0;
+        *(void **)&((KtlazerwallState *)p)->unk10 = 0;
     }
 }
 
@@ -43,9 +43,9 @@ void ktlazerwall_init(int obj, char *arg) {
     char *p = ((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)((s8)arg[0x18] << 8);
     ((KtlazerwallState *)p)->unk4 = lbl_803E6898;
-    ((KtlazerwallState *)p)->speedC = lbl_803E68BC * (f32)(int)randomGetRange(0x50, 0x78);
+    ((KtlazerwallState *)p)->unkC = lbl_803E68BC * (f32)(int)randomGetRange(0x50, 0x78);
     if ((s32)randomGetRange(0, 1) != 0) {
-        ((KtlazerwallState *)p)->speedC = -((KtlazerwallState *)p)->speedC;
+        ((KtlazerwallState *)p)->unkC = -((KtlazerwallState *)p)->unkC;
     }
 }
 
@@ -109,23 +109,23 @@ void ktlazerwall_render(int obj) {
     char *p = ((GameObject *)obj)->extra;
     int q = *(int *)&((GameObject *)obj)->anim.placementData;
     int m;
-    if (*(void **)&((KtlazerwallState *)p)->bool10 != 0) {
+    if (*(void **)&((KtlazerwallState *)p)->unk10 != 0) {
         ((KtlazerwallState *)p)->unk8 -= timeDelta;
         if (((KtlazerwallState *)p)->unk8 <= lbl_803E6898) {
-            f32 t = lbl_803E68B0 * ((KtlazerwallState *)p)->speedC;
-            m = ((KtlazerwallState *)p)->bool10;
+            f32 t = lbl_803E68B0 * ((KtlazerwallState *)p)->unkC;
+            m = ((KtlazerwallState *)p)->unk10;
             *(f32 *)(m + 0x10) = *(f32 *)(m + 0x10) - t * lbl_803E68B4;
             ((KtlazerwallState *)p)->unk8 = (f32)(int)randomGetRange(0xa, 0x78);
         } else {
-            m = ((KtlazerwallState *)p)->bool10;
-            *(f32 *)(m + 0x10) = ((KtlazerwallState *)p)->speedC * timeDelta + *(f32 *)(m + 0x10);
+            m = ((KtlazerwallState *)p)->unk10;
+            *(f32 *)(m + 0x10) = ((KtlazerwallState *)p)->unkC * timeDelta + *(f32 *)(m + 0x10);
         }
-        lightningRender(*(void **)&((KtlazerwallState *)p)->bool10);
-        *(u16 *)(((KtlazerwallState *)p)->bool10 + 0x20) += framesThisStep;
-        m = ((KtlazerwallState *)p)->bool10;
+        lightningRender(*(void **)&((KtlazerwallState *)p)->unk10);
+        *(u16 *)(((KtlazerwallState *)p)->unk10 + 0x20) += framesThisStep;
+        m = ((KtlazerwallState *)p)->unk10;
         if (*(u16 *)(m + 0x20) >= *(u16 *)(m + 0x22)) {
             mm_free((void *)m);
-            ((KtlazerwallState *)p)->bool10 = 0;
+            ((KtlazerwallState *)p)->unk10 = 0;
             *(u8 *)p &= ~8;
             GameBit_Set(((KtlazerwallPlacement *)q)->unk1E, 0);
         }

@@ -173,7 +173,7 @@ void trickyDigTunnel(u8 *obj, u8 *state)
         if (((TrickyState *)state)->unk28 != ((TrickyState *)state)->unk708 + 8) {
             ((TrickyState *)state)->unk28 = ((TrickyState *)state)->unk708 + 8;
             ((TrickyState *)state)->flags54 &= ~0x400;
-            ((TrickyState *)state)->boolD2 = 0;
+            ((TrickyState *)state)->unkD2 = 0;
         }
         state[0xa] = 1;
     case 1:
@@ -200,8 +200,8 @@ void trickyDigTunnel(u8 *obj, u8 *state)
         break;
     case 3:
         objAnimFn_8013a3f0((int)obj, 0xe, lbl_803E2510, 0x4000000);
-        ((TrickyState *)state)->speed2C = *(f32 *)(((TrickyState *)state)->unk704 + 8) - *(f32 *)(((TrickyState *)state)->unk700 + 8);
-        ((TrickyState *)state)->speed30 = *(f32 *)(((TrickyState *)state)->unk704 + 0x10) - *(f32 *)(((TrickyState *)state)->unk700 + 0x10);
+        ((TrickyState *)state)->unk2C = *(f32 *)(((TrickyState *)state)->unk704 + 8) - *(f32 *)(((TrickyState *)state)->unk700 + 8);
+        ((TrickyState *)state)->unk30 = *(f32 *)(((TrickyState *)state)->unk704 + 0x10) - *(f32 *)(((TrickyState *)state)->unk700 + 0x10);
         Sfx_AddLoopedObjectSound(obj, 0x13d);
         *(f32 *)&((TrickyState *)state)->unk70C = (f32)(int)randomGetRange(0x14, 0xb4);
         state[0xa] = 4;
@@ -219,8 +219,8 @@ void trickyDigTunnel(u8 *obj, u8 *state)
             }
         }
         spd = ((f32 (**)(u8 *, u8 *))(**(u8 ***)(((TrickyState *)state)->unk24 + 0x68)))[8](((TrickyState *)state)->unk24, obj);
-        ((GameObject *)obj)->anim.localPosX = ((TrickyState *)state)->speed2C * spd + *(f32 *)(((TrickyState *)state)->unk700 + 8);
-        ((GameObject *)obj)->anim.localPosZ = ((TrickyState *)state)->speed30 * spd + *(f32 *)(((TrickyState *)state)->unk700 + 0x10);
+        ((GameObject *)obj)->anim.localPosX = ((TrickyState *)state)->unk2C * spd + *(f32 *)(((TrickyState *)state)->unk700 + 8);
+        ((GameObject *)obj)->anim.localPosZ = ((TrickyState *)state)->unk30 * spd + *(f32 *)(((TrickyState *)state)->unk700 + 0x10);
         vx = *(f32 *)(*(u8 **)&((GameObject *)obj)->extra + 0x2c);
         vz = *(f32 *)(*(u8 **)&((GameObject *)obj)->extra + 0x30);
         if (vx * vx + vz * vz > lbl_803E23EC) {
@@ -371,7 +371,7 @@ void trickyFn_80141fec(u8 *obj, u8 *state)
                 if (((TrickyState *)state)->unk28 != ((TrickyState *)state)->unk70C + 8) {
                     ((TrickyState *)state)->unk28 = ((TrickyState *)state)->unk70C + 8;
                     ((TrickyState *)state)->flags54 &= ~0x400;
-                    ((TrickyState *)state)->boolD2 = 0;
+                    ((TrickyState *)state)->unkD2 = 0;
                 }
             } else {
                 ((TrickyState *)state)->flags54 |= 0x10;
@@ -412,12 +412,12 @@ void trickyFn_80141fec(u8 *obj, u8 *state)
             *(f32 *)&((TrickyState *)state)->unk708 = ((GameObject *)obj)->anim.worldPosZ;
             ptr = ((TrickyState *)state)->unk70C;
             if (ptr != NULL) {
-                ((TrickyState *)state)->speed2C = *(f32 *)(ptr + 8) - *(f32 *)(((TrickyState *)state)->unk24 + 0x18);
-                ((TrickyState *)state)->speed30 = ((TrickyState *)ptr)->unk10 - *(f32 *)(((TrickyState *)state)->unk24 + 0x20);
-                d = sqrtf(((TrickyState *)state)->speed2C * ((TrickyState *)state)->speed2C + ((TrickyState *)state)->speed30 * ((TrickyState *)state)->speed30);
+                ((TrickyState *)state)->unk2C = *(f32 *)(ptr + 8) - *(f32 *)(((TrickyState *)state)->unk24 + 0x18);
+                ((TrickyState *)state)->unk30 = ((TrickyState *)ptr)->unk10 - *(f32 *)(((TrickyState *)state)->unk24 + 0x20);
+                d = sqrtf(((TrickyState *)state)->unk2C * ((TrickyState *)state)->unk2C + ((TrickyState *)state)->unk30 * ((TrickyState *)state)->unk30);
                 if (lbl_803E23DC != d) {
-                    ((TrickyState *)state)->speed2C = ((TrickyState *)state)->speed2C / d;
-                    ((TrickyState *)state)->speed30 = ((TrickyState *)state)->speed30 / d;
+                    ((TrickyState *)state)->unk2C = ((TrickyState *)state)->unk2C / d;
+                    ((TrickyState *)state)->unk30 = ((TrickyState *)state)->unk30 / d;
                 }
             }
         }
@@ -435,8 +435,8 @@ void trickyFn_80141fec(u8 *obj, u8 *state)
             }
         }
         spd = ((f32 (**)(u8 *, u8 *))(**(u8 ***)(pc + 0x68)))[8](pc, obj);
-        ((GameObject *)obj)->anim.localPosX = *(f32 *)&((TrickyState *)state)->unk704 - ((TrickyState *)state)->speed2C * spd;
-        ((GameObject *)obj)->anim.localPosZ = *(f32 *)&((TrickyState *)state)->unk708 - ((TrickyState *)state)->speed30 * spd;
+        ((GameObject *)obj)->anim.localPosX = *(f32 *)&((TrickyState *)state)->unk704 - ((TrickyState *)state)->unk2C * spd;
+        ((GameObject *)obj)->anim.localPosZ = *(f32 *)&((TrickyState *)state)->unk708 - ((TrickyState *)state)->unk30 * spd;
         if (((u8 (**)(u8 *))(**(u8 ***)(pc + 0x68)))[9](pc) != 0) {
             Sfx_RemoveLoopedObjectSound(obj, 0x13d);
             **(u8 **)state -= 4;
@@ -501,7 +501,7 @@ void trickyFn_80142524(u8 *obj, u8 *state)
                         if (((TrickyState *)other)->unk28 != target + 0x18) {
                             ((TrickyState *)other)->unk28 = target + 0x18;
                             ((TrickyState *)other)->flags54 &= ~0x400;
-                            ((TrickyState *)other)->boolD2 = 0;
+                            ((TrickyState *)other)->unkD2 = 0;
                         }
                         other[0xa] = 0;
                         other[0x8] = 10;
@@ -582,7 +582,7 @@ void trickyFn_80142524(u8 *obj, u8 *state)
         state[9] = 0;
         z = lbl_803E23DC;
         ((TrickyState *)state)->unk10 = z;
-        ((TrickyState *)state)->speed14 = z;
+        ((TrickyState *)state)->unk14 = z;
         ((TrickyState *)state)->homePosX = *(f32 *)(found + 0x18);
         ((TrickyState *)state)->homePosY = *(f32 *)(found + 0x1c);
         ((TrickyState *)state)->homePosZ = *(f32 *)(found + 0x20);
@@ -1316,7 +1316,7 @@ int trickyFn_80143c04(int obj, int state)
   if (*(int *)&((TrickyState *)state)->unk28 != *(int *)&((TrickyState *)state)->unk24 + 0x18) {
     *(int *)&((TrickyState *)state)->unk28 = *(int *)&((TrickyState *)state)->unk24 + 0x18;
     *(int *)&((TrickyState *)state)->flags54 = *(int *)&((TrickyState *)state)->flags54 & 0xfffffbff;
-    *(short *)&((TrickyState *)state)->boolD2 = 0;
+    *(short *)&((TrickyState *)state)->unkD2 = 0;
   }
   if (lbl_803E23DC == ((TrickyState *)state)->timer71C) {
     ((TrickyState *)state)->unkD = -1;
@@ -1519,7 +1519,7 @@ void objAnimFn_801441c0(u8 *obj, u8 *state)
         if (((TrickyState *)state)->unk28 != state + 0x72c) {
             ((TrickyState *)state)->unk28 = state + 0x72c;
             ((TrickyState *)state)->flags54 &= ~0x400;
-            ((TrickyState *)state)->boolD2 = 0;
+            ((TrickyState *)state)->unkD2 = 0;
         }
         ((TrickyState *)state)->flags728 &= ~0x20;
         state[0xa] = 0xc;
@@ -1533,7 +1533,7 @@ void objAnimFn_801441c0(u8 *obj, u8 *state)
         if (((TrickyState *)state)->unk28 != state + 0x72c) {
             ((TrickyState *)state)->unk28 = state + 0x72c;
             ((TrickyState *)state)->flags54 &= ~0x400;
-            ((TrickyState *)state)->boolD2 = 0;
+            ((TrickyState *)state)->unkD2 = 0;
         }
         state[0xa] = 8;
         break;
@@ -1684,14 +1684,14 @@ int trickyFoodFn_8014460c(int param_1,int *param_2)
                         cnt += 1;
                     }
                     if (n < cnt) {
-                        ((TrickyState *)state)->count82D = a + (u8)(n << 2);
+                        ((TrickyState *)state)->unk82D = a + (u8)(n << 2);
                         GameBit_Set(0xc1, 0);
                     } else {
-                        ((TrickyState *)state)->count82D = a + (u8)(cnt << 2);
+                        ((TrickyState *)state)->unk82D = a + (u8)(cnt << 2);
                         GameBit_Set(0xc1, n - cnt);
                     }
-                    if (*(*(u8 **)state + 1) < ((TrickyState *)state)->count82D) {
-                        ((TrickyState *)state)->count82D = *(*(u8 **)state + 1);
+                    if (*(*(u8 **)state + 1) < ((TrickyState *)state)->unk82D) {
+                        ((TrickyState *)state)->unk82D = *(*(u8 **)state + 1);
                     }
                     b = ((GameObject *)obj)->extra;
                     ((TrickyState *)b)->flags54 |= 0x4000;

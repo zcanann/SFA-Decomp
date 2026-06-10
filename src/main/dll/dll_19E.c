@@ -66,11 +66,11 @@ void dfsh_objcreator_update(int obj)
     u8 *spawnSetup;
 
     if (GameBit_Get(0x589) != 0) {
-        ((GameObject *)obj)->moveF8 = 0;
+        ((GameObject *)obj)->unkF8 = 0;
         return;
     }
 
-    if (((GameObject *)obj)->moveF8 == 0 && GameBit_Get((s8)setup[0x1f] + 0xf6) != 0) {
+    if (((GameObject *)obj)->unkF8 == 0 && GameBit_Get((s8)setup[0x1f] + 0xf6) != 0) {
         resource = Resource_Acquire(0x82, 1);
         (*(void (**)(int, int, int, int, int, int))(*(int *)resource + 4))(
             obj, 0, 0, 1, -1, 0);
@@ -79,7 +79,7 @@ void dfsh_objcreator_update(int obj)
         Sfx_PlayFromObject(obj, SFXsc_gemrun1022);
         Resource_Release(resource);
         state->spawnTimerStep = 1;
-        ((GameObject *)obj)->moveF8 = 1;
+        ((GameObject *)obj)->unkF8 = 1;
     }
 
     if (state->spawnTimerStep != 0) {
@@ -201,7 +201,7 @@ void dfsh_objcreator_initialise(void)
 void dfsh_objcreator_init(int obj, s8 *def) {
     DfshObjCreatorState *state = ((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)((s32)def[0x1E] << 8);
-    ((GameObject *)obj)->moveF8 = 0;
+    ((GameObject *)obj)->unkF8 = 0;
     state->spawnTimer = 100;
     state->spawnTimerStep = 0;
     *(u8 *)((char *)obj + 0x37) = 0xFF;

@@ -119,7 +119,7 @@ void tree_updateAmbientEffects(int obj, int p2)
     int i;
     int ambientObject;
 
-    if (((GameObject *)obj)->moveF8 != 0) {
+    if (((GameObject *)obj)->unkF8 != 0) {
         for (i = 0; i < TREE_AMBIENT_EFFECT_COUNT; i++) {
             ambientObject = state->ambientEffectHandles[i];
             if (ambientObject == 0) {
@@ -156,7 +156,7 @@ void tree_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
                     &state->ambientEffectPos[i][1], &state->ambientEffectPos[i][2], 0);
             }
         }
-        ((GameObject *)obj)->moveF8 = 1;
+        ((GameObject *)obj)->unkF8 = 1;
     }
 }
 
@@ -179,7 +179,7 @@ void tree_init(int obj, u8 *setup)
     object->anim.rotX = (s16)(setupData->rotX << 8);
     *(u8 *)&object->anim.resetHitboxMode |= TREE_RESET_HITBOX_FLAG;
     object->objectFlags |= TREE_OBJECT_FLAGS_INIT;
-    object->moveF8 = 0;
+    object->unkF8 = 0;
     if (setupData->scale != 0) {
         state->scale = (f32)(u32)setupData->scale / lbl_803E7328;
         object->anim.rootMotionScale = state->scale;

@@ -50,7 +50,7 @@ typedef struct BaddieState {
     u8 unk1B8[0x25B - 0x1B8];
     s8 contactSfxMuted; /* nonzero suppresses contact sfx unless contactSfxFlags bit 0x10 (intersect.c) */
     u8 unk25C[0x25F - 0x25C];
-    u8 bool25F;
+    u8 unk25F;
     s8 contactSfxFlags; /* bit 0x10 allows contact sfx while contactSfxMuted is set (intersect.c) */
     u8 unk261[0x270 - 0x261];
     s16 unk270; /* CA-family substate 0..5; gates the map-event re-register when != 3 */
@@ -97,12 +97,12 @@ typedef struct BaddieState {
     f32 pathStep; /* path-advance step (lfs/stfs 764; fed to Curve_AdvanceAlongPath) */
     f32 unk300;
     f32 unk304;
-    f32 speed308;
+    f32 unk308;
     u8 unk30C[8];
     u32 eventFlags; /* bits 1/0x200 observed; whirlpool states store an f32 here (union via launder) */
     f32 unk318;
     f32 unk31C;
-    u8 bool320;
+    u8 unk320;
     u8 unk321;
     u8 unk322;
     /* 0x323-0x345 is largely PER-FAMILY scratch: magicPlant/duster/seqObj11E
@@ -110,17 +110,17 @@ typedef struct BaddieState {
      * at 0x338 where the published s16 fields below (mediumbasket whirlpool
      * evidence) overlap them; those families keep RAW spellings here. */
     u8 unk323[0x32E - 0x323];
-    s16 bool32E; /* compared > 0x78 */
-    s16 bool330;
+    s16 unk32E; /* compared > 0x78 */
+    s16 unk330;
     u8 unk332[4];
     s16 unk336; /* (f32)-scaled by timeDelta */
     u8 unk338[2];
-    u8 move33A;
+    u8 unk33A;
     u8 inWhirlpoolGroup; /* ObjGroup 80 membership latch */
     u8 unk33C[0x346 - 0x33C]; /* incl. 0x340: ptr in smallbasket, u32-tested in magicPlant - thin/conflicting, left raw */
     u8 moveDone; /* set when the current move completes; SeqFns chain the next mode off it */
     u8 unk347[2];
-    u8 bool349; /* cleared with death/reset */
+    u8 unk349; /* cleared with death/reset */
     u8 unk34A[3];
     u8 unk34D; /* 0/1/3 */
     u8 unk34E[6];
@@ -166,7 +166,7 @@ typedef struct GroundBaddieState {
     u16 flags400; /* bit flags 2/8/0x100; &flags400 also passed as a buffer base */
     s16 targetState; /* 0 = no target; tryAcquireTarget vs updateTargetMotion */
     u8 configFlags; /* bits 1/2/0x10 */
-    u8 bool405; /* small mode 0..2 */
+    u8 unk405; /* small mode 0..2 */
     u8 aggression; /* percent-ish; randomGetRange(0, x), > 50 compares */
     u8 unk407[0x40C - 0x407];
     void *control; /* per-family control/extra record (engine-allocated; treasurechest casts its slot to LandedArwingState*) */

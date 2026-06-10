@@ -188,9 +188,9 @@ void dfsh_shrine_update(int obj)
 
     state = ((GameObject *)obj)->extra;
     player = Obj_GetPlayerObject();
-    if (((GameObject *)obj)->countF4 != 0) {
-        ((GameObject *)obj)->countF4 = ((GameObject *)obj)->countF4 - 1;
-        if (((GameObject *)obj)->countF4 == 0) {
+    if (((GameObject *)obj)->unkF4 != 0) {
+        ((GameObject *)obj)->unkF4 = ((GameObject *)obj)->unkF4 - 1;
+        if (((GameObject *)obj)->unkF4 == 0) {
             skyFn_80088c94(7, 1);
             getEnvfxAct(obj, player, 0x78, 0);
             getEnvfxAct(obj, player, 0x79, 0);
@@ -421,7 +421,7 @@ void dfsh_shrine_init(int *obj, DfshShrinePlacement *init) {
     if (state->light == NULL) {
         state->light = objCreateLight(NULL, 1);
     }
-    ((GameObject *)obj)->countF4 = 1;
+    ((GameObject *)obj)->unkF4 = 1;
     GameBit_Set(0xe70, 1);
     GameBit_Set(0xefa, 1);
 }
@@ -482,18 +482,18 @@ void SpiritPrize_init(int *obj, u8 *init) {
     state->targetObjectId = -1;
     state->spawnScale = lbl_803E4E98 / (lbl_803E4E98 + (f32)(u32)init[0x24]);
     state->triggerHandle = -1;
-    if (((GameObject *)obj)->countF4 == 0) {
+    if (((GameObject *)obj)->unkF4 == 0) {
         if (*(s16*)(init + 0x18) != 1) {
             (*gObjectTriggerInterface)->loadAnimData((u8 *)state, init);
-            ((GameObject *)obj)->countF4 = *(s16*)(init + 0x18) + 1;
+            ((GameObject *)obj)->unkF4 = *(s16*)(init + 0x18) + 1;
         }
     } else {
-        if (*(s16*)(init + 0x18) != ((GameObject *)obj)->countF4 - 1) {
+        if (*(s16*)(init + 0x18) != ((GameObject *)obj)->unkF4 - 1) {
             (*gObjectTriggerInterface)->freeState((u8 *)state);
             if (*(s16*)(init + 0x18) != -1) {
                 (*gObjectTriggerInterface)->loadAnimData((u8 *)state, init);
             }
-            ((GameObject *)obj)->countF4 = *(s16*)(init + 0x18) + 1;
+            ((GameObject *)obj)->unkF4 = *(s16*)(init + 0x18) + 1;
         }
     }
     if (((GameObject *)obj)->anim.seqId != 0x1d9) {
@@ -567,7 +567,7 @@ void SpiritPrize_update(int obj)
     }
 
     objectIndex = (*gObjectTriggerInterface)->update((u8 *)obj, (f32)(u32)lbl_803DB411);
-    if (objectIndex != 0 && ((GameObject *)obj)->classIdB4 == -2) {
+    if (objectIndex != 0 && ((GameObject *)obj)->unkB4 == -2) {
         int matchingObj;
         int prizeId;
         int duplicateCount;
@@ -592,7 +592,7 @@ void SpiritPrize_update(int obj)
             *(s16 *)(matchingObj + 0xb4) = -1;
             (*gObjectTriggerInterface)->endSequence(prizeId);
         }
-        ((GameObject *)obj)->classIdB4 = -1;
+        ((GameObject *)obj)->unkB4 = -1;
         Obj_FreeObject(obj);
     }
 

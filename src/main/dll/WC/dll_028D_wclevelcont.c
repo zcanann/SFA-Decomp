@@ -204,7 +204,7 @@ void wclevelcont_update(int obj)
     WcLevelControlState *state = ((GameObject *)obj)->extra;
     int hitOut;
 
-    if (((GameObject *)obj)->countF4 == 0) {
+    if (((GameObject *)obj)->unkF4 == 0) {
         if ((u32)GameBit_Get(0xe05) == 0) {
             getEnvfxActImmediately(obj, obj, 0x1fb, 0);
             getEnvfxActImmediately(obj, obj, 0x1ff, 0);
@@ -213,7 +213,7 @@ void wclevelcont_update(int obj)
             skyFn_80088e54(0, lbl_803E6DA8);
             GameBit_Set(0xe05, 1);
         }
-        ((GameObject *)obj)->countF4 = 1;
+        ((GameObject *)obj)->unkF4 = 1;
     }
     switch ((*gMapEventInterface)->getMode(((GameObject *)obj)->anim.mapEventSlot)) {
     case 1:

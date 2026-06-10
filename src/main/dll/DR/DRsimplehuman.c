@@ -257,11 +257,11 @@ void spitembeam_update(int *obj) {
     int *tex;
     f32 d;
 
-    target = *(int**)&((GameObject *)obj)->countF4;
+    target = *(int**)&((GameObject *)obj)->unkF4;
     def = *(u8**)&((GameObject *)obj)->anim.placementData;
     d = lbl_803E5AD8;
     if (target == NULL) {
-        *(int**)&((GameObject *)obj)->countF4 = ObjGroup_FindNearestObject(9, obj, &d);
+        *(int**)&((GameObject *)obj)->unkF4 = ObjGroup_FindNearestObject(9, obj, &d);
     } else {
         if (((int(*)(int*, s16))(**(int ***)((char*)target + 0x68))[10])(target, ((SpitembeamPlacement *)def)->unk1A) == 0
             || ((int(*)(int*, s16))(**(int ***)((char*)target + 0x68))[11])(target, ((SpitembeamPlacement *)def)->unk1A) != 0) {

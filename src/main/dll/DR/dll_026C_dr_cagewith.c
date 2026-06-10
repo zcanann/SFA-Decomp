@@ -73,7 +73,7 @@ void drcagewith_hitDetect(int obj) {
             spawned = Obj_SetupObject(spawned, 5, ((GameObject *)obj)->anim.mapEventSlot, -1,
                                       *(int *)&((GameObject *)obj)->anim.parent);
             ((GameObject *)spawned)->anim.flags |= 0x4000;
-            ((GameObject *)spawned)->countF4 = 1;
+            ((GameObject *)spawned)->unkF4 = 1;
             *(int *)p = spawned;
             return;
         }
@@ -85,7 +85,7 @@ void drcagewith_hitDetect(int obj) {
             bf31->b0 = 1;
             nearest = (int *)ObjGroup_FindNearestObject(10, obj, &maxDist);
             if (nearest != NULL && ((GameObject *)nearest)->anim.seqId == 1049) {
-                ((GameObject *)nearest)->countF4 = 0;
+                ((GameObject *)nearest)->unkF4 = 0;
                 ((DrcagewithState *)p)->unk4 = 0;
             }
             return;
@@ -107,7 +107,7 @@ void drcagewith_hitDetect(int obj) {
             *(s16 *)(*(int *)p + 4) = (int)((DrcagewithState *)p)->unk24;
             nearest = (int *)ObjGroup_FindNearestObject(10, obj, &maxDist);
             if (nearest != NULL && ((GameObject *)nearest)->anim.seqId == 1049) {
-                ((GameObject *)nearest)->countF4 = 1;
+                ((GameObject *)nearest)->unkF4 = 1;
                 ((DrcagewithState *)p)->unk4 = (int)nearest;
                 ((GameObject *)nearest)->anim.rotZ = *(s16 *)(*(int *)p + 4);
                 *(int *)(*(int *)p + 0xf4) = 1;

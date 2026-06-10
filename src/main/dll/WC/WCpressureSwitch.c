@@ -129,7 +129,7 @@ void WM_ObjCreator_update(int obj) {
         switch (placement->spawnMode) {
         case 0: {
             s8 ok = 0;
-            if (((GameObject *)obj)->moveF8 == 0) {
+            if (((GameObject *)obj)->unkF8 == 0) {
                 int *objs;
                 int k;
                 ok = 1;
@@ -161,9 +161,9 @@ void WM_ObjCreator_update(int obj) {
                 *(u8 *)(setup + 0x18) = placement->yaw;
                 spawned = Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
                 if ((u32)spawned != 0) {
-                    ((GameObject *)spawned)->countF4 = 8;
+                    ((GameObject *)spawned)->unkF4 = 8;
                 }
-                ((GameObject *)obj)->moveF8 = 1;
+                ((GameObject *)obj)->unkF8 = 1;
             }
             break;
         }

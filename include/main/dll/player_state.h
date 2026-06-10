@@ -43,7 +43,7 @@ typedef struct PlayerState {
     f32 unk404;
     f32 unk408;
     u8 unk40C;
-    u8 bool40D;
+    u8 unk40D;
     u8 pad40E[0x410 - 0x40E];
     f32 unk410;
     f32 unk414;
@@ -182,7 +182,7 @@ typedef struct PlayerState {
     u8 unk606;
     u8 unk607;
     u8 unk608;
-    u8 bool609;
+    u8 unk609;
     u8 pad60A[0x60C - 0x60A];
     f32 unk60C;
     f32 unk610;
@@ -197,10 +197,10 @@ typedef struct PlayerState {
     f32 unk634;
     u8 pad638[0x63C - 0x638];
     f32 unk63C;
-    f32 speed640;
+    f32 unk640;
     f32 unk644;
-    f32 speed648;
-    f32 speed64C;
+    f32 unk648;
+    f32 unk64C;
     u8 pad650[0x654 - 0x650];
     f32 unk654;
     f32 unk658;
@@ -261,19 +261,19 @@ typedef struct PlayerState {
     f32 unk7BC;
     u8 pad7C0[0x7C8 - 0x7C0];
     f32 unk7C8;
-    f32 speed7CC;
-    f32 speed7D0;
+    f32 unk7CC;
+    f32 unk7D0;
     f32 timer7D4;
     f32 timer7D8;
     f32 unk7DC;
     f32 unk7E0;
     u8 pad7E4[0x7EC - 0x7E4];
     int unk7EC;
-    int bool7F0;
+    int unk7F0;
     u8 pad7F4[0x7F8 - 0x7F4];
     int heldObj; /* carried object (playerSetHeldObject) */
     f32 unk7FC;
-    u8 bool800;
+    u8 unk800;
     u8 pad801[0x806 - 0x801];
     u16 unk806;
     u16 unk808;
@@ -288,7 +288,7 @@ typedef struct PlayerState {
     s16 unk81C;
     s16 unk81E;
     f32 unk820;
-    f32 moveSpeed824;
+    f32 unk824;
     f32 unk828;
     f32 unk82C;
     f32 unk830;
@@ -328,11 +328,11 @@ typedef struct PlayerState {
     u8 unk8A5;
     u8 unk8A6;
     u8 unk8A7;
-    u8 count8A8;
+    u8 unk8A8;
     u8 unk8A9;
     u8 unk8AA;
     u8 counter8AB;
-    u8 count8AC;
+    u8 unk8AC;
     u8 unk8AD;
     u8 pad8AE[0x8B0 - 0x8AE];
     u8 unk8B0;
@@ -341,7 +341,7 @@ typedef struct PlayerState {
     u8 unk8B3;
     u8 unk8B4;
     u8 pad8B5[0x8B8 - 0x8B5];
-    u8 count8B8;
+    u8 unk8B8;
     u8 pad8B9[0x8BF - 0x8B9];
     u8 unk8BF;
     u8 unk8C0;
@@ -359,7 +359,7 @@ typedef struct PlayerState {
     s8 unk8CC;
     s8 unk8CD;
     s8 unk8CE;
-    u8 bool8CF;
+    u8 unk8CF;
     u8 unk8D0;
     u8 unk8D1;
     u8 unk8D2;

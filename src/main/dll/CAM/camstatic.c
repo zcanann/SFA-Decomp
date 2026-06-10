@@ -106,7 +106,7 @@ void camstatic_update(CameraObject *camera)
   else {
     lbl_803DD52C = timeDelta;
   }
-  camera->bool13E = 0;
+  camera->unk13E = 0;
   camcontrol_updateModeSettings((int)camera);
   camMoveFn_80104040((int)camera,(int)target);
   firstperson_updatePosition(camera,&target->anim);

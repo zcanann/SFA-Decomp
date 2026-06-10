@@ -43,7 +43,7 @@ typedef struct CameraArwingWork {
     f32 unk44;
     f32 unk48;
     f32 unk4C;
-    f32 speed50;
+    f32 unk50;
     s16 unk54;
     s16 unk56;
     s16 unk58;
@@ -805,10 +805,10 @@ void FUN_801115e0(undefined8 param_1,double param_2,double param_3,undefined8 pa
   local_10 = DAT_802c2918;
   if ((*(char *)(param_10 + 0x407) != *(char *)(param_10 + 0x409)) &&
      (((GameObject *)param_9)->anim.alpha != 0)) {
-    if (*(int *)&((GameObject *)param_9)->seqIdC8 != 0) {
+    if (*(int *)&((GameObject *)param_9)->unkC8 != 0) {
       param_1 = FUN_80017ac8(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                             *(int *)&((GameObject *)param_9)->seqIdC8);
-      *(undefined4 *)&((GameObject *)param_9)->seqIdC8 = 0;
+                             *(int *)&((GameObject *)param_9)->unkC8);
+      *(undefined4 *)&((GameObject *)param_9)->unkC8 = 0;
     }
     uVar1 = FUN_80017ae8();
     if ((uVar1 & 0xff) == 0) {
@@ -819,8 +819,8 @@ void FUN_801115e0(undefined8 param_1,double param_2,double param_3,undefined8 pa
         puVar2 = FUN_80017aa4(0x18,(&uStack_1a)[*(char *)(param_10 + 0x407)]);
         uVar3 = FUN_80017ae4(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar2,
                              4,0xff,0xffffffff,*(uint **)&((GameObject *)param_9)->anim.parent,in_r8,in_r9,in_r10);
-        *(undefined4 *)&((GameObject *)param_9)->seqIdC8 = uVar3;
-        *(ushort *)(*(int *)&((GameObject *)param_9)->seqIdC8 + 0xb0) = ((GameObject *)param_9)->objectFlags & 7;
+        *(undefined4 *)&((GameObject *)param_9)->unkC8 = uVar3;
+        *(ushort *)(*(int *)&((GameObject *)param_9)->unkC8 + 0xb0) = ((GameObject *)param_9)->objectFlags & 7;
       }
       *(undefined *)(param_10 + 0x409) = *(undefined *)(param_10 + 0x407);
     }
@@ -1395,15 +1395,15 @@ void dll_19_func19(u8 *cam, u8 *ctx) {
     if (((GameObject *)cam)->anim.alpha == 0) {
         return;
     }
-    if (*(void **)&((GameObject *)cam)->seqIdC8 != NULL) {
-        Obj_FreeObject(*(void **)&((GameObject *)cam)->seqIdC8);
-        *(int *)&((GameObject *)cam)->seqIdC8 = 0;
+    if (*(void **)&((GameObject *)cam)->unkC8 != NULL) {
+        Obj_FreeObject(*(void **)&((GameObject *)cam)->unkC8);
+        *(int *)&((GameObject *)cam)->unkC8 = 0;
     }
     if (Obj_IsLoadingLocked() != 0) {
         if ((s8)ctx[1031] > 0) {
             ObjPlacement *setup = Obj_AllocObjectSetup(24, buf[(s8)ctx[1031] - 1]);
-            *(int *)&((GameObject *)cam)->seqIdC8 = (int)Obj_SetupObject(setup, 4, -1, -1, *(int *)&((GameObject *)cam)->anim.parent);
-            *(u16 *)(*(int *)&((GameObject *)cam)->seqIdC8 + 0xb0) = ((GameObject *)cam)->objectFlags & 7;
+            *(int *)&((GameObject *)cam)->unkC8 = (int)Obj_SetupObject(setup, 4, -1, -1, *(int *)&((GameObject *)cam)->anim.parent);
+            *(u16 *)(*(int *)&((GameObject *)cam)->unkC8 + 0xb0) = ((GameObject *)cam)->objectFlags & 7;
         }
         ctx[1033] = ctx[1031];
     } else {
@@ -2819,10 +2819,10 @@ void CameraModeArwing_update(u8 *obj) {
     if (arwarwing_isDead((int)state) != 0) {
         f32 vd, vc, vb, va;
         int step;
-        ((CameraArwingWork *)lbl_803A43C0)->speed50 = lbl_803E1BA8;
+        ((CameraArwingWork *)lbl_803A43C0)->unk50 = lbl_803E1BA8;
         (*(void (**)(u8 *, f32 *, f32 *, f32 *, f32 *, f32, int))(*(int *)gCameraInterface + 56))(
             obj, &va, &vb, &vc, &vd, lbl_803E1BA4, 0);
-        ((GameObject *)obj)->anim.rotZ = ((CameraArwingWork *)lbl_803A43C0)->speed50 * timeDelta +
+        ((GameObject *)obj)->anim.rotZ = ((CameraArwingWork *)lbl_803A43C0)->unk50 * timeDelta +
                             (f32)((GameObject *)obj)->anim.rotZ;
         d = 0x8000 - (u16)getAngle(va, vc);
         pitch0 = (u16)getAngle(vb, vd);
@@ -2845,8 +2845,8 @@ void CameraModeArwing_update(u8 *obj) {
         step = (s32)((f32)d * timeDelta);
         ((GameObject *)obj)->anim.rotY = (f32)step * lbl_803E1BAC + (f32)((GameObject *)obj)->anim.rotY;
     } else if (arwarwing_isExplodingOrWarping((int)state) != 0) {
-        f32 nv = ((CameraArwingWork *)lbl_803A43C0)->speed50 * lbl_803E1BB0;
-        ((CameraArwingWork *)lbl_803A43C0)->speed50 = nv;
+        f32 nv = ((CameraArwingWork *)lbl_803A43C0)->unk50 * lbl_803E1BB0;
+        ((CameraArwingWork *)lbl_803A43C0)->unk50 = nv;
         ((GameObject *)obj)->anim.rotZ = nv * timeDelta + (f32)((GameObject *)obj)->anim.rotZ;
     } else {
         int roll0 = (s32)((f32)((CameraArwingWork *)lbl_803A43C0)->unk58 *

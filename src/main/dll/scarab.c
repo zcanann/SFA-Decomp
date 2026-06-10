@@ -275,7 +275,7 @@ void dll_CA_update(int obj, int p2, int p3)
 
   sub = ((GameObject *)obj)->extra;
   setup = *(int *)&((GameObject *)obj)->anim.placementData;
-  if (((GameObject *)obj)->countF4 != 0) {
+  if (((GameObject *)obj)->unkF4 != 0) {
     if ((sub->baddie.unk270 != 3 || (sub->configFlags & 1) != 0) &&
         (*gMapEventInterface)->isTimedEventActive(((ObjPlacement *)setup)->mapId) != 0) {
       (*(void (**)(int, int, int, int, int, int, int, f32))(*(int *)gBaddieControlInterface +
@@ -288,12 +288,12 @@ void dll_CA_update(int obj, int p2, int p3)
       ((GameObject *)obj)->anim.alpha = 0xff;
       *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     }
-  } else if (((GameObject *)obj)->moveF8 == 0) {
+  } else if (((GameObject *)obj)->unkF8 == 0) {
     ((GameObject *)obj)->anim.localPosX = ((ObjPlacement *)setup)->posX;
     ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)setup)->posY;
     ((GameObject *)obj)->anim.localPosZ = ((ObjPlacement *)setup)->posZ;
     (*gObjectTriggerInterface)->runSequence(*(s8 *)(setup + 0x2e), (void *)obj, -1);
-    ((GameObject *)obj)->moveF8 = 1;
+    ((GameObject *)obj)->unkF8 = 1;
   } else {
     if ((*(int (**)(int, int, int))(*(int *)gBaddieControlInterface + 0x30))(obj, (int)sub, 0) == 0) {
       sub->targetState = 0;
@@ -1321,7 +1321,7 @@ void fn_8015ED1C(int p1, int p2, int p3)
       p1, p3, p2 + 0x35c, (s32)*(s16 *)(p2 + 0x3f4), lbl_8031FEA8, lbl_8031FF20, 1, lbl_803AC580);
 
   if (r != 0) {
-    void *pc8 = ((GameObject *)player)->seqIdC8;
+    void *pc8 = ((GameObject *)player)->unkC8;
     (*(void (**)(void *))(**(int **)((char *)pc8 + 0x68) + 0x50))(pc8);
   }
 }
@@ -1369,7 +1369,7 @@ void dll_CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
   GroundBaddieState *sub = ((GameObject *)p1)->extra;
   f32 t;
 
-  if (visible != 0 && ((GameObject *)p1)->countF4 == 0 && sub->targetState != 0) {
+  if (visible != 0 && ((GameObject *)p1)->unkF4 == 0 && sub->targetState != 0) {
     t = sub->unk3E8;
     if (t != lbl_803E2DC8) {
       fn_8003B5E0(200, 0, 0, (int)t);
@@ -1437,7 +1437,7 @@ void dll_CE_update(int obj, int p2, int p3)
 
   sub = ((GameObject *)obj)->extra;
   setup = *(int *)&((GameObject *)obj)->anim.placementData;
-  if (((GameObject *)obj)->countF4 != 0) {
+  if (((GameObject *)obj)->unkF4 != 0) {
     if ((sub->baddie.unk270 != 3 || (sub->configFlags & 1) != 0) &&
         (*gMapEventInterface)->isTimedEventActive(((ObjPlacement *)setup)->mapId) != 0) {
       (*(void (**)(int, int, int, int, int, int, int, f32))(*(int *)gBaddieControlInterface +
@@ -1450,12 +1450,12 @@ void dll_CE_update(int obj, int p2, int p3)
       ((GameObject *)obj)->anim.alpha = 0xff;
       *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     }
-  } else if (((GameObject *)obj)->moveF8 == 0) {
+  } else if (((GameObject *)obj)->unkF8 == 0) {
     ((GameObject *)obj)->anim.localPosX = ((ObjPlacement *)setup)->posX;
     ((GameObject *)obj)->anim.localPosY = ((ObjPlacement *)setup)->posY;
     ((GameObject *)obj)->anim.localPosZ = ((ObjPlacement *)setup)->posZ;
     (*gObjectTriggerInterface)->runSequence(*(s8 *)(setup + 0x2e), (void *)obj, -1);
-    ((GameObject *)obj)->moveF8 = 1;
+    ((GameObject *)obj)->unkF8 = 1;
   } else {
     if ((*(int (**)(int, int, int))(*(int *)gBaddieControlInterface + 0x30))(obj, (int)sub, 0) == 0) {
       sub->targetState = 0;
@@ -1701,7 +1701,7 @@ int fn_801601C4(int obj, GroundBaddieState *p)
     memcpy(wp, (void *)&((GameObject *)obj)->anim.localPosX, 12);
     memcpy((void *)(sub->route35C + 0xc), (void *)(*(int *)&p->baddie.targetObj + 0xc), 12);
     voxmaps_updateRoutePath(wp, (char *)(sub->route35C + 0x28));
-    if (p->baddie.targetDistance < lbl_803E2E6C && sub->bool405 == 2) {
+    if (p->baddie.targetDistance < lbl_803E2E6C && sub->unk405 == 2) {
       return 5;
     }
     if (*(u8 *)(wp + 0x25) == 0) {
@@ -1799,8 +1799,8 @@ void fn_8016083C(int *obj, GroundBaddieState *sub, GroundBaddieState *p)
   } d;
   f32 *dp = &d.x;
 
-  if (((GameObject *)obj)->seqIdC8 != NULL) {
-    *(int *)(*(int *)&((GameObject *)obj)->seqIdC8 + 0x30) = *(int *)&((GameObject *)obj)->anim.parent;
+  if (((GameObject *)obj)->unkC8 != NULL) {
+    *(int *)(*(int *)&((GameObject *)obj)->unkC8 + 0x30) = *(int *)&((GameObject *)obj)->anim.parent;
   }
   o = *(char **)&p->baddie.targetObj;
   if (o != NULL) {
@@ -1816,12 +1816,12 @@ void fn_8016083C(int *obj, GroundBaddieState *sub, GroundBaddieState *p)
   }
   (*(void (**)(int *, u8 *, u8 *, int, u8 *, int, int, int))(*(int *)gBaddieControlInterface +
                                                              0x54))(
-      obj, (u8 *)p, sub->route35C, sub->gameBitB, &sub->bool405, 0, 0, 0);
+      obj, (u8 *)p, sub->route35C, sub->gameBitB, &sub->unk405, 0, 0, 0);
   t = (*(int (**)(int *, u8 *, u8 *, int, u8 *, u8 *, int, int))(*(int *)gBaddieControlInterface +
                                                                  0x50))(
       obj, (u8 *)p, sub->route35C, sub->gameBitB, lbl_80320008, lbl_80320080, 1, 0);
   if (t >= 4) {
-    *(s8 *)&sub->bool405 = 2;
+    *(s8 *)&sub->unk405 = 2;
     *(int *)&p->baddie.targetObj = Obj_GetPlayerObject();
   }
 }
@@ -1846,10 +1846,10 @@ int dll_CB_seqFn(short *obj, int p2, u8 *e)
 
   setup = *(int *)&((GameObject *)obj)->anim.placementData;
   sub = *(int *)&((GameObject *)obj)->extra;
-  if (((GameObject *)obj)->countF4 != 0) {
+  if (((GameObject *)obj)->unkF4 != 0) {
     return 0;
   }
-  if (((GameObject *)obj)->classIdB4 != -1) {
+  if (((GameObject *)obj)->unkB4 != -1) {
     if ((*(int (**)(short *, int, int))(*(int *)gBaddieControlInterface + 0x30))(obj, sub, 1) ==
         0) {
       return 1;
@@ -1898,7 +1898,7 @@ int dll_CB_seqFn(short *obj, int p2, u8 *e)
       break;
     }
   }
-  if (((GameObject *)obj)->classIdB4 == -1) {
+  if (((GameObject *)obj)->unkB4 == -1) {
     ((DllCBState *)sub)->flags400 |= 2;
     return 0;
   }
@@ -2104,10 +2104,10 @@ void FUN_80161130(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   
   uVar1 = *(undefined4 *)&((GameObject *)param_9)->extra;
   uVar2 = ObjGroup_RemoveObject(param_9,3);
-  if (*(int *)&((GameObject *)param_9)->seqIdC8 != 0) {
+  if (*(int *)&((GameObject *)param_9)->unkC8 != 0) {
     FUN_80017ac8(uVar2,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                 *(int *)&((GameObject *)param_9)->seqIdC8);
-    *(undefined4 *)&((GameObject *)param_9)->seqIdC8 = 0;
+                 *(int *)&((GameObject *)param_9)->unkC8);
+    *(undefined4 *)&((GameObject *)param_9)->unkC8 = 0;
   }
   (**(code **)(*DAT_803dd738 + 0x40))(param_9,uVar1,1);
   return;
@@ -2382,16 +2382,16 @@ void dll_CB_update(int *obj) {
 
     sub = ((GameObject *)obj)->extra;
     def = *(u8**)&((GameObject *)obj)->anim.placementData;
-    if (((GameObject *)obj)->countF4 != 0) return;
-    if (((GameObject *)obj)->moveF8 == 0) {
+    if (((GameObject *)obj)->unkF4 != 0) return;
+    if (((GameObject *)obj)->unkF8 == 0) {
         ((GameObject *)obj)->anim.localPosX = ((DllCBPlacement *)def)->posX8;
         ((GameObject *)obj)->anim.localPosY = ((DllCBPlacement *)def)->posY8;
         ((GameObject *)obj)->anim.localPosZ = ((DllCBPlacement *)def)->posZ8;
-        ((GameObject *)obj)->moveF8 = 1;
+        ((GameObject *)obj)->unkF8 = 1;
         return;
     }
     if ((sub->flags400 & 2) != 0) {
-        ((void(*)(int*, u8*, u8*, s16, u8*, int, int, int, int))((int**)*(int**)gBaddieControlInterface)[10])(obj, (u8 *)sub, sub->route35C, sub->gameBitB, &sub->bool405, 0, 0, 0, 1);
+        ((void(*)(int*, u8*, u8*, s16, u8*, int, int, int, int))((int**)*(int**)gBaddieControlInterface)[10])(obj, (u8 *)sub, sub->route35C, sub->gameBitB, &sub->unk405, 0, 0, 0, 1);
         sub->flags400 = (u16)(sub->flags400 & ~2);
     }
     if (((int(*)(int*, u8*, int))((int**)*(int**)gBaddieControlInterface)[12])(obj, (u8 *)sub, 1) == 0) return;
@@ -2640,7 +2640,7 @@ extern void GameBit_Set(int eventId, int value);
 int grimble_stateHandlerB05(int* obj, u8* obj2) {
     GroundBaddieState* x = ((GameObject *)obj)->extra;
     if ((s8)obj2[0x27b] != 0) {
-        x->bool405 = 0;
+        x->unk405 = 0;
         GameBit_Set(x->gameBitB, 0);
         GameBit_Set(x->gameBitA, 1);
     }
@@ -2673,7 +2673,7 @@ extern f32 lbl_803E2E8C;
 void dll_CB_render(int* obj, int p2, int p3, int p4, int p5, s8 visible) {
     s32 v = visible;
     if (v != 0) {
-        switch (((GameObject *)obj)->countF4) {
+        switch (((GameObject *)obj)->unkF4) {
         case 0:
             objRenderFn_8003b8f4(lbl_803E2E8C);
             break;
@@ -2735,7 +2735,7 @@ int fn_8015DEB4(int* obj, GroundBaddieState *state)
     GroundBaddieState* sub;
     if ((s8)state->baddie.moveJustStartedB != 0) {
         sub = ((GameObject *)obj)->extra;
-        sub->bool405 = 0;
+        sub->unk405 = 0;
         if (sub->gameBitB != -1) {
             GameBit_Set(sub->gameBitB, 0);
         }
@@ -3232,10 +3232,10 @@ void dll_CB_free(int* obj)
     GroundBaddieState* state = ((GameObject *)obj)->extra;
     ObjGroup_RemoveObject(obj, 3);
     {
-        int* sub = ((GameObject *)obj)->seqIdC8;
+        int* sub = ((GameObject *)obj)->unkC8;
         if (sub != NULL) {
             Obj_FreeObject(sub);
-            ((GameObject *)obj)->seqIdC8 = NULL;
+            ((GameObject *)obj)->unkC8 = NULL;
         }
     }
     ((void(*)(int*, int*, int))((void**)*gBaddieControlInterface)[16])(obj, (int *)state, 1);
@@ -3246,10 +3246,10 @@ void dll_CE_free(int* obj)
     GroundBaddieState* state = ((GameObject *)obj)->extra;
     ObjGroup_RemoveObject(obj, 3);
     {
-        int* sub = ((GameObject *)obj)->seqIdC8;
+        int* sub = ((GameObject *)obj)->unkC8;
         if (sub != NULL) {
             Obj_FreeObject(sub);
-            ((GameObject *)obj)->seqIdC8 = NULL;
+            ((GameObject *)obj)->unkC8 = NULL;
         }
     }
     ((void(*)(int*, int*, int))((void**)*gBaddieControlInterface)[16])(obj, (int *)state, 32);

@@ -63,7 +63,7 @@ typedef struct ModelFileHeader {
     u16 vertexCount;
     u16 normalCount;
     u8 unkE8[4];
-    u16 countEC; /* nonzero = per-joint matrix buffers */
+    u16 unkEC; /* nonzero = per-joint matrix buffers */
     u8 unkEE[4];
     u8 textureCount;
     u8 jointCount;
@@ -136,13 +136,13 @@ typedef struct ObjModel {
     u8 *unk54;
     void *renderAttachment;
     u8 *curMtxBuf;
-    u8 bool60;
+    u8 unk60;
     u8 unk61[3];
 } ObjModel;
 
 STATIC_ASSERT(offsetof(ObjModel, bufferFlags) == 0x18);
 STATIC_ASSERT(offsetof(ObjModel, renderCallback) == 0x38);
-STATIC_ASSERT(offsetof(ObjModel, bool60) == 0x60);
+STATIC_ASSERT(offsetof(ObjModel, unk60) == 0x60);
 
 ObjModelJointMatrix *ObjModel_GetJointMatrix(u8 *modelBytes, int jointIndex);
 

@@ -374,7 +374,7 @@ void fn_801542AC(int unused, u8* state) {
     f32 fc;
     ((BaddieState *)state)->unk2AC = lbl_803E2978;
     ((BaddieState *)state)->flags2E4 = 173;
-    ((BaddieState *)state)->speed308 = lbl_803E297C;
+    ((BaddieState *)state)->unk308 = lbl_803E297C;
     ((BaddieState *)state)->unk300 = lbl_803E2954;
     ((BaddieState *)state)->unk304 = lbl_803E2980;
     state[800] = 0;

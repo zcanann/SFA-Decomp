@@ -2476,7 +2476,7 @@ void ObjHits_Update(int objectCount)
         objState->contactFlags = 0;
         *(s8 *)&objState->contactHitVolume = -1;
         *(int *)objState = 0;
-        attachedObj = *(uint *)&((GameObject *)obj)->seqIdC8;
+        attachedObj = *(uint *)&((GameObject *)obj)->unkC8;
         if ((attachedObj != 0) && (((GameObject *)attachedObj)->anim.classId == 0x2d)) {
           objState = ObjAnim_GetPriorityHitState((ObjAnimComponent *)attachedObj);
           objState->flags = objState->flags & ~OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED;
@@ -2496,7 +2496,7 @@ void ObjHits_Update(int objectCount)
     entry = *entrySlot;
     obj = entry->obj;
     objState = (ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState;
-    attachedObj = *(uint *)&((GameObject *)obj)->seqIdC8;
+    attachedObj = *(uint *)&((GameObject *)obj)->unkC8;
     if ((attachedObj != 0) &&
         ((ObjAnim_GetPriorityHitState((ObjAnimComponent *)attachedObj) == NULL) ||
          ((ObjAnim_GetPriorityHitState((ObjAnimComponent *)attachedObj)->flags &
@@ -2581,7 +2581,7 @@ void ObjHits_Update(int objectCount)
                   ((objState->sourceMask & candState->targetMask) != 0) &&
                   (((candState->sourceMask & 0x80) != 0) ||
                    ((candState->sourceMask & objState->targetMask) != 0))) {
-                candAttachedObj = (uint)((GameObject *)candObj)->seqIdC8;
+                candAttachedObj = (uint)((GameObject *)candObj)->unkC8;
                 if ((candAttachedObj != 0) &&
                     ((ObjAnim_GetPriorityHitState((ObjAnimComponent *)candAttachedObj) == NULL) ||
                      ((ObjAnim_GetPriorityHitState((ObjAnimComponent *)candAttachedObj)->flags &
@@ -2603,7 +2603,7 @@ void ObjHits_Update(int objectCount)
     if (((((GameObject *)obj)->anim.hitReactState)->flags &
          OBJHITS_PRIORITY_STATE_TRACK_CONTACT) != 0) {
       ObjHits_CheckTrackContact(obj, obj);
-      attachedObj = (uint)((GameObject *)obj)->seqIdC8;
+      attachedObj = (uint)((GameObject *)obj)->unkC8;
       if (attachedObj != 0) {
         ObjHits_CheckTrackContact(obj, attachedObj);
       }

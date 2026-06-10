@@ -55,7 +55,7 @@ typedef struct CameraObject {
     u8 unk13B;
     u8 unk13C;
     u8 pad13D;
-    u8 bool13E;
+    u8 unk13E;
     u8 pad13F[2];
     u8 unk141;
     u8 unk142;

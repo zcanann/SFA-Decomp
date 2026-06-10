@@ -45,7 +45,7 @@ void vfplevelcontrol_update(int obj) {
     int player = (int)Obj_GetPlayerObject();
     u8 mapEventState;
 
-    if (((GameObject *)obj)->countF4 == 0 && GameBit_Get(0xef6) == 0u) {
+    if (((GameObject *)obj)->unkF4 == 0 && GameBit_Get(0xef6) == 0u) {
         if (GameBit_Get(0xd72) != 0u) {
             getEnvfxActImmediately(obj, obj, 0x10c, 0);
             getEnvfxActImmediately(obj, obj, 0x10d, 0);
@@ -53,7 +53,7 @@ void vfplevelcontrol_update(int obj) {
             skyFn_80088e54(1, lbl_803E6060);
             GameBit_Set(0xd72, 0);
         }
-        ((GameObject *)obj)->countF4 = 1;
+        ((GameObject *)obj)->unkF4 = 1;
     }
 
     coordsToMapCell(*(f32 *)(player + 0xc), *(f32 *)(player + 0x14));

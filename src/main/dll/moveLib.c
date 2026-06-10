@@ -159,7 +159,7 @@ int dll_19_func0F(int obj, char *state, char *st, int p4, int p5, s16 p6)
 
     *(int *)&((BaddieState *)st)->unk318 = 0;
     *(int *)&((BaddieState *)st)->unk31C = 0;
-    ((BaddieState *)st)->bool330 = 0;
+    ((BaddieState *)st)->unk330 = 0;
     {
         f32 rest = lbl_803E1C2C;
         ((BaddieState *)st)->unk290 = rest;
@@ -243,7 +243,7 @@ int dll_19_func0F(int obj, char *state, char *st, int p4, int p5, s16 p6)
         *(int *)&((BaddieState *)st)->targetObj = 0;
         *(s16 *)(state + 0x6e) = -1;
         *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) & ~0x60;
-        ((BaddieState *)st)->bool25F = 0;
+        ((BaddieState *)st)->unk25F = 0;
         GameBit_Set(*(s16 *)(st + 0x3f4), 0);
     }
     return 1;

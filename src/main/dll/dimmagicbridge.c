@@ -356,21 +356,21 @@ void dll_19A_update(int obj)
     setup = *(int *)&((GameObject *)obj)->anim.placementData;
     state = ((GameObject *)obj)->extra;
     if (GameBit_Get(0x5b9) != 0) {
-        ((GameObject *)obj)->moveF8 = 0;
+        ((GameObject *)obj)->unkF8 = 0;
         *state = 100;
         state[1] = 0;
         *(u8 *)(obj + 0x37) = 0xff;
         ((GameObject *)obj)->anim.alpha = 0xff;
     }
     else {
-        if ((((GameObject *)obj)->moveF8 == 0) && (GameBit_Get(((Dll19APlacement *)setup)->unk1F + 0x1cd) != 0)) {
+        if ((((GameObject *)obj)->unkF8 == 0) && (GameBit_Get(((Dll19APlacement *)setup)->unk1F + 0x1cd) != 0)) {
             res = Resource_Acquire(0x82, 1);
             (**(void (**)(int, int, int, int, int, int))(*res + 4))(obj, 0, 0, 1, 0xffffffff, 0);
             (**(void (**)(int, int, int, int, int, int))(*res + 4))(obj, 1, 0, 1, 0xffffffff, 0);
             Sfx_PlayFromObject(obj, 0xaf);
             Resource_Release(res);
             state[1] = 1;
-            ((GameObject *)obj)->moveF8 = 1;
+            ((GameObject *)obj)->unkF8 = 1;
         }
         if (state[1] != 0) {
             *state -= state[1] * framesThisStep;
@@ -426,7 +426,7 @@ int dll_19A_getObjectTypeId(void) { return 0x0; }
 void dll_19A_init(int obj, s8 *def) {
     int *state = ((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)((s32)def[0x1E] << 8);
-    ((GameObject *)obj)->moveF8 = 0;
+    ((GameObject *)obj)->unkF8 = 0;
     *(s16 *)state = 100;
     ((Dll199State *)state)->unk2 = 0;
     *(u8 *)((char *)obj + 0x37) = 0xFF;

@@ -266,33 +266,33 @@ void fn_801EB0D4(uint param_1,int param_2)
   float v;
 
   if ((u32)(st->flags428 >> 5 & 1) != 0) {
-    if (st->speed4BC >= lbl_803E5AE8) {
+    if (st->unk4BC >= lbl_803E5AE8) {
       td = timeDelta;
-      st->speed4BC -=
+      st->unk4BC -=
            td * lbl_803DC0D8 + (f32)(s32)(st->unk4C0 *
                                           (td * PSVECMag(&st->velX494)));
       fVar2 = lbl_803E5AE8;
-      if (fVar2 != st->speed4C4) {
+      if (fVar2 != st->unk4C4) {
         fVar3 = lbl_803E5B14;
-        st->speed4BC =
-             fVar3 * timeDelta + st->speed4BC;
-        st->speed4C4 =
-             st->speed4C4 - (f32)(s32)(fVar3 * timeDelta);
-        fVar1 = st->speed4C4;
-        st->speed4C4 =
+        st->unk4BC =
+             fVar3 * timeDelta + st->unk4BC;
+        st->unk4C4 =
+             st->unk4C4 - (f32)(s32)(fVar3 * timeDelta);
+        fVar1 = st->unk4C4;
+        st->unk4C4 =
             (fVar1 < fVar2) ? fVar2
                             : ((fVar1 > lbl_803E5B80) ? lbl_803E5B80 : fVar1);
-        fVar1 = st->speed4BC;
-        st->speed4BC =
+        fVar1 = st->unk4BC;
+        st->unk4BC =
             (fVar1 < lbl_803E5AE8) ? lbl_803E5AE8
                                    : ((fVar1 > st->unk4B8)
                                           ? st->unk4B8
                                           : fVar1);
       }
-      if (st->speed4BC < lbl_803E5B84) {
+      if (st->unk4BC < lbl_803E5B84) {
         Sfx_KeepAliveLoopedObjectSound(param_1,0x44e);
       }
-      (*gGameUIInterface)->runAirMeter((s32)st->speed4BC);
+      (*gGameUIInterface)->runAirMeter((s32)st->unk4BC);
     }
     else {
       Sfx_StopObjectChannel(param_1,0x7f);
@@ -514,7 +514,7 @@ void fn_801EB634(int param_1,int param_2)
         setMotionBlur(lbl_803E5BAC,1);
         st->timer3E4 = (f32)(s32)lbl_803DC0D0;
         st->unk3E0 = lbl_803DC0C8;
-        st->speed4C4 = (f32)(s32)lbl_803DC0CC;
+        st->unk4C4 = (f32)(s32)lbl_803DC0CC;
       }
       break;
     }

@@ -542,7 +542,7 @@ void objSeqDoBgCmds0D(u8 *seq, u8 *obj, int skipSpawns)
     int transitionSlot;
     int uiId;
 
-    if (lbl_803DD090 != 0 && ((GameObject *)obj)->classIdB4 != (s8)((ObjSeqState *)seq)->slot) {
+    if (lbl_803DD090 != 0 && ((GameObject *)obj)->unkB4 != (s8)((ObjSeqState *)seq)->slot) {
         (*gGameUIInterface)->setHudFields(0, 0, 0);
     }
 
@@ -3266,7 +3266,7 @@ int objRunSeq(int seqIdx, u8 *obj, int flags)
         seqIdx = mapTbl[seqIdx];
     }
 
-    cur = ((GameObject *)obj)->classIdB4;
+    cur = ((GameObject *)obj)->unkB4;
     if (cur != -1 && lbl_803DD07C == NULL) {
         endObjSequence(cur);
     }
@@ -3306,7 +3306,7 @@ checked:
     if (lbl_803DD07C != NULL) {
         obj = lbl_803DD07C;
     }
-    ((GameObject *)obj)->classIdB4 = slot;
+    ((GameObject *)obj)->unkB4 = slot;
     parent = *(u8 **)&((GameObject *)obj)->anim.parent;
     x = ((GameObject *)obj)->anim.localPosX;
     y = ((GameObject *)obj)->anim.localPosY;
@@ -3326,10 +3326,10 @@ checked:
     }
 
     i = 0;
-    st->cmdFlags[((GameObject *)obj)->classIdB4] = 0;
-    base[((GameObject *)obj)->classIdB4 + 0x3334] = 0;
-    lbl_8030ECF8[((GameObject *)obj)->classIdB4] = 0;
-    st->handles[((GameObject *)obj)->classIdB4] = ((GameObject *)obj)->anim.seqId;
+    st->cmdFlags[((GameObject *)obj)->unkB4] = 0;
+    base[((GameObject *)obj)->unkB4 + 0x3334] = 0;
+    lbl_8030ECF8[((GameObject *)obj)->unkB4] = 0;
+    st->handles[((GameObject *)obj)->unkB4] = ((GameObject *)obj)->anim.seqId;
 
     walk = buf;
     bit = 1;
@@ -3427,7 +3427,7 @@ checked:
                 *(s16 *)setup = lbl_803DB72C;
             }
             newObj = Obj_SetupObject(setup, 5, -1, -1, parent);
-            ((GameObject *)newObj)->classIdB4 = -2;
+            ((GameObject *)newObj)->unkB4 = -2;
             seq = ((GameObject *)newObj)->extra;
             ((ObjSeqState *)seq)->heading = heading;
             ((ObjSeqState *)seq)->flags = -1;
@@ -3458,8 +3458,8 @@ checked:
                 if (idx == 0 && player != NULL) {
                     fn_8029726C(player);
                 }
-                if (lbl_803DD064 == 0 || lbl_803DD064 == ((GameObject *)obj)->classIdB4) {
-                    lbl_803DD064 = ((GameObject *)obj)->classIdB4;
+                if (lbl_803DD064 == 0 || lbl_803DD064 == ((GameObject *)obj)->unkB4) {
+                    lbl_803DD064 = ((GameObject *)obj)->unkB4;
                     curSeqNo = slot;
                 }
                 ((ObjSeqState *)seq)->movementState = 4;
@@ -3476,8 +3476,8 @@ checked:
             ((ObjSeqState *)seq)->unk10C = *(int *)walk2;
             ((ObjSeqState *)seq)->unk70 = ((ObjSeqState *)seq)->flags;
             if (idx == 0) {
-                st->cmdFlags[((GameObject *)obj)->classIdB4] = *(u16 *)(walk2 + 4);
-                st->handles[((GameObject *)obj)->classIdB4] =
+                st->cmdFlags[((GameObject *)obj)->unkB4] = *(u16 *)(walk2 + 4);
+                st->handles[((GameObject *)obj)->unkB4] =
                     *(int *)(*(u8 **)&((GameObject *)newObj)->anim.placementData + 0x14);
                 mapFlags = ((ObjAnimComponent *)obj)->modelInstance->flags;
                 if ((mapFlags & OBJMODEL_FLAG_SKIP_RESET_UPDATE) && !(mapFlags & 0x8000)) {
@@ -3490,10 +3490,10 @@ checked:
         walk2 += 8;
     }
 
-    st->headings[((GameObject *)obj)->classIdB4] = heading;
+    st->headings[((GameObject *)obj)->unkB4] = heading;
     j = 0;
-    base[((GameObject *)obj)->classIdB4 + 0x3590] = 0;
-    base[((GameObject *)obj)->classIdB4 + 0x338c] = 0;
+    base[((GameObject *)obj)->unkB4 + 0x3590] = 0;
+    base[((GameObject *)obj)->unkB4 + 0x338c] = 0;
     n = (s8)lbl_803DD124;
     for (; j < n; j++) {
         if (*(u8 **)mon == obj) {
@@ -3513,7 +3513,7 @@ checked:
     seqFlags = 0;
 gotFlags:
     if (seqFlags != 0) {
-        st->cmdFlags[((GameObject *)obj)->classIdB4] |= 0x10;
+        st->cmdFlags[((GameObject *)obj)->unkB4] |= 0x10;
     } else {
         lbl_803DD070 = 0;
         trackId = (u32)(*(s16 *)slotPtr - 1) & 0x3fff;
@@ -3532,8 +3532,8 @@ gotFlags:
         }
     }
 
-    st->dists[((GameObject *)obj)->classIdB4] = (f32)seqFlags;
-    st->frames[((GameObject *)obj)->classIdB4] = (f32)seqFlags;
+    st->dists[((GameObject *)obj)->unkB4] = (f32)seqFlags;
+    st->frames[((GameObject *)obj)->unkB4] = (f32)seqFlags;
 
     if (slot >= 0 && slot < 0x55) {
         if (lbl_803DD0BC < 0x1e) {

@@ -1591,8 +1591,8 @@ void endObjSequence(int seq)
     objs = ret;
     for (; i < objCount; i++) {
         int obj = *objs;
-        if (((GameObject *)obj)->classIdB4 == seq) {
-            ((GameObject *)obj)->classIdB4 = -1;
+        if (((GameObject *)obj)->unkB4 == seq) {
+            ((GameObject *)obj)->unkB4 = -1;
         }
         if (((GameObject *)obj)->anim.classId == 0x10) {
             int st = *(int *)&((GameObject *)obj)->extra;

@@ -268,11 +268,11 @@ void MMP_levelcontrol_update(int obj)
     }
   }
 
-  if (((GameObject *)obj)->countF4 != 0) {
+  if (((GameObject *)obj)->unkF4 != 0) {
     envFxActFn_800887f8(0);
     if (GameBit_Get(0xd47) != 0) {
       skyFn_80088c94(7, 1);
-      if (((GameObject *)obj)->countF4 == 2) {
+      if (((GameObject *)obj)->unkF4 == 2) {
         getEnvfxActImmediately(obj, playerForFx, 0x13a, 0);
         getEnvfxActImmediately(obj, playerForFx, 0x234, 0);
         getEnvfxActImmediately(obj, playerForFx, 0x235, 0);
@@ -281,10 +281,10 @@ void MMP_levelcontrol_update(int obj)
         getEnvfxAct(obj, playerForFx, 0x234, 0);
         getEnvfxAct(obj, playerForFx, 0x235, 0);
       }
-      ((GameObject *)obj)->moveF8 = 0;
+      ((GameObject *)obj)->unkF8 = 0;
     } else if (GameBit_Get(0xf33) != 0) {
       skyFn_80088c94(7, 1);
-      if (((GameObject *)obj)->countF4 == 2) {
+      if (((GameObject *)obj)->unkF4 == 2) {
         getEnvfxActImmediately(obj, playerForFx, 0x13a, 0);
         getEnvfxActImmediately(obj, playerForFx, 0x10c, 0);
         getEnvfxActImmediately(obj, playerForFx, 0x10d, 0);
@@ -293,10 +293,10 @@ void MMP_levelcontrol_update(int obj)
         getEnvfxAct(obj, playerForFx, 0x10c, 0);
         getEnvfxAct(obj, playerForFx, 0x10d, 0);
       }
-      ((GameObject *)obj)->moveF8 = 1;
+      ((GameObject *)obj)->unkF8 = 1;
     } else if (coordsToMapCell(*(f32 *)(playerForMap + 0xc), *(f32 *)(playerForMap + 0x14)) == 0x12) {
       skyFn_80088c94(7, 0);
-      if (((GameObject *)obj)->countF4 == 2) {
+      if (((GameObject *)obj)->unkF4 == 2) {
         getEnvfxActImmediately(obj, playerForFx, 0x13a, 0);
         getEnvfxActImmediately(obj, playerForFx, 0x138, 0);
         getEnvfxActImmediately(obj, playerForFx, 0x139, 0);
@@ -305,24 +305,24 @@ void MMP_levelcontrol_update(int obj)
         getEnvfxAct(obj, playerForFx, 0x138, 0);
         getEnvfxAct(obj, playerForFx, 0x139, 0);
       }
-      ((GameObject *)obj)->moveF8 = 0;
+      ((GameObject *)obj)->unkF8 = 0;
     }
     Music_Trigger(0x31, 1);
-    ((GameObject *)obj)->countF4 = 0;
+    ((GameObject *)obj)->unkF4 = 0;
   }
 
-  if (((GameObject *)obj)->moveF8 != 0 && GameBit_Get(0xf33) == 0) {
+  if (((GameObject *)obj)->unkF8 != 0 && GameBit_Get(0xf33) == 0) {
     skyFn_80088c94(7, 0);
     getEnvfxAct(obj, playerForFx, 0x13a, 0);
     getEnvfxAct(obj, playerForFx, 0x138, 0);
     getEnvfxAct(obj, playerForFx, 0x139, 0);
-    ((GameObject *)obj)->moveF8 = 0;
-  } else if (((GameObject *)obj)->moveF8 == 0 && GameBit_Get(0xf33) != 0) {
+    ((GameObject *)obj)->unkF8 = 0;
+  } else if (((GameObject *)obj)->unkF8 == 0 && GameBit_Get(0xf33) != 0) {
     skyFn_80088c94(7, 1);
     getEnvfxAct(obj, playerForFx, 0x13a, 0);
     getEnvfxAct(obj, playerForFx, 0x10c, 0);
     getEnvfxAct(obj, playerForFx, 0x10d, 0);
-    ((GameObject *)obj)->moveF8 = 1;
+    ((GameObject *)obj)->unkF8 = 1;
   }
 
   SCGameBitLatch_Update(&lbl_803DDB2C, 1, -1, -1, 0x389, 0xd5);
@@ -517,15 +517,15 @@ extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 void mmp_gyservent_update(int obj) {
     int def = *(int *)&((GameObject *)obj)->anim.placementData;
     if (GameBit_Get(((MmpGyserventPlacement *)def)->unk1E) != 0) return;
-    ((GameObject *)obj)->countF4 -= framesThisStep;
-    if (((GameObject *)obj)->countF4 < 0) {
-        ((GameObject *)obj)->countF4 = randomGetRange(0x46, 0xF0);
-        ((GameObject *)obj)->moveF8 = randomGetRange(0x1E, 0x3C);
+    ((GameObject *)obj)->unkF4 -= framesThisStep;
+    if (((GameObject *)obj)->unkF4 < 0) {
+        ((GameObject *)obj)->unkF4 = randomGetRange(0x46, 0xF0);
+        ((GameObject *)obj)->unkF8 = randomGetRange(0x1E, 0x3C);
     }
-    if (((GameObject *)obj)->moveF8 == 0) return;
-    ((GameObject *)obj)->moveF8 -= framesThisStep;
-    if (((GameObject *)obj)->moveF8 <= 0) {
-        ((GameObject *)obj)->moveF8 = 0;
+    if (((GameObject *)obj)->unkF8 == 0) return;
+    ((GameObject *)obj)->unkF8 -= framesThisStep;
+    if (((GameObject *)obj)->unkF8 <= 0) {
+        ((GameObject *)obj)->unkF8 = 0;
     } else {
         (*gPartfxInterface)->spawnObject((void *)obj, 0x724, NULL, 2, -1, NULL);
         Sfx_KeepAliveLoopedObjectSound(obj, 0x450);
@@ -572,11 +572,11 @@ int MoonSeedBush_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate) {
 void MMP_levelcontrol_init(int obj) {
     ((GameObject *)obj)->objectFlags |= 0x6000;
     if (getSaveGameLoadStatus() != 0) {
-        ((GameObject *)obj)->countF4 = 2;
+        ((GameObject *)obj)->unkF4 = 2;
     } else {
-        ((GameObject *)obj)->countF4 = 1;
+        ((GameObject *)obj)->unkF4 = 1;
     }
-    *(u32 *)&((GameObject *)obj)->moveF8 = GameBit_Get(0xF33);
+    *(u32 *)&((GameObject *)obj)->unkF8 = GameBit_Get(0xF33);
     ((GameObject *)obj)->animEventCallback = (void *)MMP_LevelControl_SeqFn;
     unlockLevel(mapGetDirIdx(0x12), 0, 0);
     lbl_803DDB28 = lbl_803E44C8;
@@ -940,7 +940,7 @@ void fn_801A80F0(int obj, u8 flag) {
 #pragma peephole off
 void mmp_gyservent_init(int obj) {
     ((GameObject *)obj)->objectFlags |= 0x6000;
-    *(u32 *)&((GameObject *)obj)->countF4 = randomGetRange(0xa, 0xc8);
+    *(u32 *)&((GameObject *)obj)->unkF4 = randomGetRange(0xa, 0xc8);
     ((GameObject *)obj)->anim.alpha = 0;
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~0x8;
 }

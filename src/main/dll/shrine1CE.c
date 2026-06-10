@@ -47,7 +47,7 @@ typedef struct Dll19CState {
     u8 pad0[0x2 - 0x0];
     s16 unk2;
     s16 unk4;
-    s16 bool6;
+    s16 unk6;
     f32 unk8;
     f32 unkC;
     f32 unk10;
@@ -372,24 +372,24 @@ void dll_19C_update(int *obj) {
 
     def = *(u8**)&((GameObject *)obj)->anim.placementData;
     sub = ((GameObject *)obj)->extra;
-    if (((GameObject *)obj)->moveF8 != 0) {
+    if (((GameObject *)obj)->unkF8 != 0) {
         if (GameBit_Get(0x1d4) != 0) {
-            ((GameObject *)obj)->moveF8 = 0;
+            ((GameObject *)obj)->unkF8 = 0;
         }
     }
-    if (((GameObject *)obj)->moveF8 == 0) {
+    if (((GameObject *)obj)->unkF8 == 0) {
         if (GameBit_Get(0x1d3) != 0) {
             res = Resource_Acquire(0x82, 1);
             ((void(*)(int*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 0, 0, 1, -1, 0);
             ((void(*)(int*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 1, 0, 1, -1, 0);
             Sfx_PlayFromObject(0, SFXsc_gemrun1022);
             Resource_Release(res);
-            ((Dll19CState *)sub)->bool6 = 1;
-            ((GameObject *)obj)->moveF8 = 1;
+            ((Dll19CState *)sub)->unk6 = 1;
+            ((GameObject *)obj)->unkF8 = 1;
         }
     }
-    if (((Dll19CState *)sub)->bool6 != 0) {
-        ((Dll19CState *)sub)->unk4 = (s16)(((Dll19CState *)sub)->unk4 - ((Dll19CState *)sub)->bool6 * framesThisStep);
+    if (((Dll19CState *)sub)->unk6 != 0) {
+        ((Dll19CState *)sub)->unk4 = (s16)(((Dll19CState *)sub)->unk4 - ((Dll19CState *)sub)->unk6 * framesThisStep);
     }
     if (((Dll19CState *)sub)->unk4 <= 0 && (s8)def[0x1f] == 0 && (u8)Obj_IsLoadingLocked() != 0) {
         setup = Obj_AllocObjectSetup(0x18, 0x248);
@@ -404,7 +404,7 @@ void dll_19C_update(int *obj) {
         *(u8*)((char*)setup + 7) = def[7];
         Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(void**)&((GameObject *)obj)->anim.parent);
         ((Dll19CState *)sub)->unk4 = 0x64;
-        ((Dll19CState *)sub)->bool6 = 0;
+        ((Dll19CState *)sub)->unk6 = 0;
     }
 }
 #pragma peephole reset
@@ -438,7 +438,7 @@ void dll_19B_init(u8 *obj, u8 *params) {
     *(s16*)(sub + 8) = 0x1e;
     ((Dll19CState *)sub)->unk2 = 0xc8;
     ((void(*)(int, int, int, int, int))((void**)*(void**)gTitleMenuControlInterface)[6])(2, 0x2b, 0x50, 1, 0);
-    ((Dll19CState *)sub)->bool6 = 0;
+    ((Dll19CState *)sub)->unk6 = 0;
     *(s16*)(sub + 0xa) = 0;
     sub[0x16] = 0;
     *(s16*)(sub + 0x10) = 0xc8;
@@ -463,9 +463,9 @@ void dll_19C_init(int obj, u8 *initData)
     register int self = obj;
     register int state = *(int *)&((GameObject *)self)->extra;
     *(short *)self = (short)((int)(signed char)initData[0x1e] << 8);
-    ((GameObject *)self)->moveF8 = 0;
+    ((GameObject *)self)->unkF8 = 0;
     ((Dll19CState *)state)->unk4 = 0x64;
-    ((Dll19CState *)state)->bool6 = 0;
+    ((Dll19CState *)state)->unk6 = 0;
     *(int *)state = 0;
     *(u8 *)(self + 0x37) = 0xff;
     ((GameObject *)self)->anim.alpha = 0xff;

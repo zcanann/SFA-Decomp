@@ -91,7 +91,7 @@ void arwblocker_update(int obj) {
         objAnim->alpha = a;
         ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
         ObjHits_EnableObject(obj);
-        if (((GameObject *)obj)->countF4 == 0) {
+        if (((GameObject *)obj)->unkF4 == 0) {
             switch (state->sequenceMode) {
             case 1:
                 (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
@@ -101,7 +101,7 @@ void arwblocker_update(int obj) {
                 (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
                 break;
             }
-            ((GameObject *)obj)->countF4 = 1;
+            ((GameObject *)obj)->unkF4 = 1;
         }
     }
 }

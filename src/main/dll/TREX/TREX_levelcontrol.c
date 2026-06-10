@@ -31,8 +31,8 @@ typedef struct SBShipGunState {
 
 typedef struct SBCannonBallState {
     u8 pad0[0x4 - 0x0];
-    f32 speed4;
-    f32 speed8;
+    f32 unk4;
+    f32 unk8;
     f32 posXC;
     f32 posYC;
     f32 posZC;
@@ -440,8 +440,8 @@ void SB_CannonBall_update(int *obj) {
     ((GameObject *)obj)->anim.rotY += SB_CANNONBALL_ROTATION_STEP;
     if ((((SBCannonBallState *)state)->unk1A & SB_CANNONBALL_TRAJECTORY_INITIALIZED_FLAG) == 0) {
         *(f32 *)state = ((GameObject *)obj)->anim.velocityX;
-        ((SBCannonBallState *)state)->speed4 = ((GameObject *)obj)->anim.velocityY;
-        ((SBCannonBallState *)state)->speed8 = ((GameObject *)obj)->anim.velocityZ;
+        ((SBCannonBallState *)state)->unk4 = ((GameObject *)obj)->anim.velocityY;
+        ((SBCannonBallState *)state)->unk8 = ((GameObject *)obj)->anim.velocityZ;
         ((SBCannonBallState *)state)->unk1A = (s8)(((SBCannonBallState *)state)->unk1A | SB_CANNONBALL_TRAJECTORY_INITIALIZED_FLAG);
         ((SBCannonBallState *)state)->posXC = ((GameObject *)obj)->anim.localPosX;
         ((SBCannonBallState *)state)->posYC = ((GameObject *)obj)->anim.localPosY;
@@ -450,14 +450,14 @@ void SB_CannonBall_update(int *obj) {
     {
         f64 scale = lbl_803E58C0;
         ((SBCannonBallState *)state)->posXC = (f32)(scale * (f64)(*(f32 *)state * timeDelta) + (f64)((SBCannonBallState *)state)->posXC);
-        ((SBCannonBallState *)state)->posYC = (f32)(scale * (f64)(((SBCannonBallState *)state)->speed4 * timeDelta) + (f64)((SBCannonBallState *)state)->posYC);
-        ((SBCannonBallState *)state)->posZC = (f32)(scale * (f64)(((SBCannonBallState *)state)->speed8 * timeDelta) + (f64)((SBCannonBallState *)state)->posZC);
+        ((SBCannonBallState *)state)->posYC = (f32)(scale * (f64)(((SBCannonBallState *)state)->unk4 * timeDelta) + (f64)((SBCannonBallState *)state)->posYC);
+        ((SBCannonBallState *)state)->posZC = (f32)(scale * (f64)(((SBCannonBallState *)state)->unk8 * timeDelta) + (f64)((SBCannonBallState *)state)->posZC);
     }
     ((GameObject *)obj)->anim.localPosX = ((SBCannonBallState *)state)->posXC;
     ((GameObject *)obj)->anim.localPosY = ((SBCannonBallState *)state)->posYC;
     ((GameObject *)obj)->anim.localPosZ = ((SBCannonBallState *)state)->posZC;
-    ((GameObject *)obj)->countF4 = ((GameObject *)obj)->countF4 - (int)framesThisStep;
-    if (((GameObject *)obj)->countF4 < 0) {
+    ((GameObject *)obj)->unkF4 = ((GameObject *)obj)->unkF4 - (int)framesThisStep;
+    if (((GameObject *)obj)->unkF4 < 0) {
         Obj_FreeObject(obj);
     }
     if (((SBCannonBallState *)state)->unk18 > SB_CANNONBALL_HITBOX_ENABLE_DELAY) {

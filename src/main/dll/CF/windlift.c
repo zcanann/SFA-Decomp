@@ -698,8 +698,8 @@ void fn_80185868(int obj, f32 arg)
   sub->liftTimer = 800;
   sub->launchPhase = 0;
   sub->rideState = 0;
-  ((GameObject *)obj)->moveF8 = 0;
-  ((GameObject *)obj)->countF4 = 2;
+  ((GameObject *)obj)->unkF8 = 0;
+  ((GameObject *)obj)->unkF4 = 2;
   ObjHits_EnableObject(obj);
   ObjHits_MarkObjectPositionDirty(obj);
   sub->spitTimer = 0;
@@ -739,7 +739,7 @@ void fn_80185A24(int obj, int p2, int p3, int p4, int p5, s8 renderState)
     }
     goto end;
 ok:
-    if (((GameObject *)obj)->moveF8 != 0) {
+    if (((GameObject *)obj)->unkF8 != 0) {
         if (renderState == -1) {
         } else {
             goto end;
@@ -856,7 +856,7 @@ void fn_80185B74(int obj)
             state->ventState = 0;
             ObjHits_EnableObject(obj);
             *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
-            ((GameObject *)obj)->countF4 = 0;
+            ((GameObject *)obj)->unkF4 = 0;
         }
         return;
     }
@@ -879,7 +879,7 @@ void fn_80185B74(int obj)
             int cam = (*gCameraInterface)->getOverrideTarget();
             on = 0;
             if ((void *)cam != (void *)obj &&
-                (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0 && ((GameObject *)obj)->moveF8 == 0) {
+                (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0 && ((GameObject *)obj)->unkF8 == 0) {
                 buttonDisable(0, 0x100);
                 Obj_GetYawDeltaToObject(obj, player, yawBuf);
                 state->yawLow = -32768;
@@ -891,7 +891,7 @@ void fn_80185B74(int obj)
                 state->riding = 1;
                 state->spitTimer = 600;
             }
-            if (((GameObject *)obj)->moveF8 == 0) {
+            if (((GameObject *)obj)->unkF8 == 0) {
                 ObjHits_EnableObject(obj);
                 *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
             }
@@ -916,11 +916,11 @@ void fn_80185B74(int obj)
                 ObjMsg_SendToObject(player, 0x100010, obj,
                                     (state->yawHigh << 0x10) | ((u16)state->yawLow));
             }
-            if (((GameObject *)obj)->moveF8 == 1) {
+            if (((GameObject *)obj)->unkF8 == 1) {
                 state->rideState = 2;
             }
             st21 = state->rideState;
-            if ((s8)st21 == 2 && ((GameObject *)obj)->moveF8 == 0 && ((GameObject *)player)->anim.currentMove != 0x447) {
+            if ((s8)st21 == 2 && ((GameObject *)obj)->unkF8 == 0 && ((GameObject *)player)->anim.currentMove != 0x447) {
                 state->rideState = 0;
                 state->launchPhase = 1;
                 {
@@ -938,7 +938,7 @@ void fn_80185B74(int obj)
                 rot.ang = *(s16 *)player;
                 vecRotateZXY(&rot, &((GameObject *)obj)->anim.velocityX);
                 Sfx_PlayFromObject(obj, SFXmn_dimbos46);
-            } else if ((s8)st21 == 2 && ((GameObject *)obj)->moveF8 == 0) {
+            } else if ((s8)st21 == 2 && ((GameObject *)obj)->unkF8 == 0) {
                 f32 fz;
                 state->rideState = 0;
                 state->launchPhase = 2;
@@ -1003,7 +1003,7 @@ void fn_80185B74(int obj)
             ((GameObject *)obj)->anim.velocityZ = fz;
             state->ventState = 500;
             state->launchPhase = 0;
-            ((GameObject *)obj)->moveF8 = 0;
+            ((GameObject *)obj)->unkF8 = 0;
             ObjHits_EnableObject(obj);
             *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
             ObjHits_ClearHitVolumes(obj);
@@ -1062,7 +1062,7 @@ void fn_801862CC(int obj, int p)
   } else {
     sub->radius = lbl_803E3A84;
   }
-  ((GameObject *)obj)->countF4 = 0;
+  ((GameObject *)obj)->unkF4 = 0;
   if (((GameObject *)obj)->anim.modelState != NULL) {
     p64 = *(int *)&((GameObject *)obj)->anim.modelState;
     *(u32 *)(p64 + 0x30) |= 0x8000;

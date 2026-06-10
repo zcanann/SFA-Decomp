@@ -44,7 +44,7 @@ typedef struct SkyState {
     SkyLight lights[3];
     f32 timeOfDay;
     s32 clockTime;
-    f32 speed214;
+    f32 unk214;
     s32 unk218;
     s32 unk21C;
     s32 unk220;
@@ -54,10 +54,10 @@ typedef struct SkyState {
     s32 unk230;
     s32 unk234;
     s32 unk238;
-    f32 speed23C;
-    f32 speed240;
-    f32 speed244;
-    f32 speed248;
+    f32 unk23C;
+    f32 unk240;
+    f32 unk244;
+    f32 unk248;
     u8 unk24C;
     u8 unk24D;
     u8 unk24E;

@@ -23,7 +23,7 @@ typedef struct SnowclawState {
     u8 pad98[0x9C - 0x98];
     s32 unk9C;
     u8 unkA0;
-    u8 boolA1;
+    u8 unkA1;
     u8 unkA2;
     s8 unkA3;
     u8 unkA4;
@@ -135,8 +135,8 @@ void snowclaw_release(void) {}
 void snowclaw_initialise(void) {}
 
 void snowclaw_free(int obj) {
-    if (((GameObject *)obj)->seqIdC8 != NULL) {
-        Obj_FreeObject(*(int *)&((GameObject *)obj)->seqIdC8);
+    if (((GameObject *)obj)->unkC8 != NULL) {
+        Obj_FreeObject(*(int *)&((GameObject *)obj)->unkC8);
     }
 }
 
@@ -355,7 +355,7 @@ void snowclaw_render(int obj, int p2, int p3, int p4, int p5, int vis) {
         if (found != 0) {
             *(u8 *)((char *)obj + 0x37) = ((SnowclawState *)inner)->unkA0;
         }
-        if (((GameObject *)obj)->seqIdEB == 0 && ((GameObject *)obj)->anim.seqId == 0x389 &&
+        if (((GameObject *)obj)->unkEB == 0 && ((GameObject *)obj)->anim.seqId == 0x389 &&
             ((SnowclawAaFlags *)&((SnowclawState *)inner)->unkAA)->b0 != 0) {
             near = ObjGroup_FindNearestObject(0x1e, obj, &dist);
             if ((u32)near != 0 &&
@@ -470,10 +470,10 @@ void snowclaw_update(int obj) {
 
     pulseTable = lbl_802C2520;
     inner = ((GameObject *)obj)->extra;
-    if (((SnowclawState *)inner)->boolA1 != 0 && (u32)((((SnowclawState *)inner)->unkAA >> 6) & 1) != 0) {
+    if (((SnowclawState *)inner)->unkA1 != 0 && (u32)((((SnowclawState *)inner)->unkAA >> 6) & 1) != 0) {
         ((SnowclawState *)inner)->unkAC = lbl_803E66F0;
     }
-    ((SnowclawState *)inner)->boolA1 = 0;
+    ((SnowclawState *)inner)->unkA1 = 0;
     ((SnowclawState *)inner)->unkA0 = 0xff;
 
     healthState = *(s8 *)&((SnowclawState *)inner)->unkA4;
@@ -497,16 +497,16 @@ void snowclaw_update(int obj) {
 
     dropTable = *(SnowClawAnimTbl *)(pulseTable + 8);
     if (*(s8 *)&((SnowclawState *)inner)->unkA2 != ((SnowclawState *)inner)->unkA3) {
-        if (((GameObject *)obj)->seqIdC8 != NULL) {
-            Obj_FreeObject(*(int *)&((GameObject *)obj)->seqIdC8);
-            *(int *)&((GameObject *)obj)->seqIdC8 = 0;
-            ((GameObject *)obj)->seqIdEB = 0;
+        if (((GameObject *)obj)->unkC8 != NULL) {
+            Obj_FreeObject(*(int *)&((GameObject *)obj)->unkC8);
+            *(int *)&((GameObject *)obj)->unkC8 = 0;
+            ((GameObject *)obj)->unkEB = 0;
         }
         if (*(s8 *)&((SnowclawState *)inner)->unkA2 > 0 && Obj_IsLoadingLocked() != 0) {
-            *(int *)&((GameObject *)obj)->seqIdC8 =
+            *(int *)&((GameObject *)obj)->unkC8 =
                 Obj_SetupObject(Obj_AllocObjectSetup(0x18, dropTable.v[*(s8 *)&((SnowclawState *)inner)->unkA2]),
                                 4, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
-            ((GameObject *)obj)->seqIdEB = 1;
+            ((GameObject *)obj)->unkEB = 1;
         }
         *(u8 *)&((SnowclawState *)inner)->unkA3 = ((SnowclawState *)inner)->unkA2;
     }
@@ -585,15 +585,15 @@ int snowclaw_animEventCallback(int obj, int a2, ObjSeqState *seq) {
 
     dist = lbl_803E6708;
     inner = ((GameObject *)obj)->extra;
-    ((SnowclawState *)inner)->boolA1 = 1;
+    ((SnowclawState *)inner)->unkA1 = 1;
     ObjHits_DisableObject(obj);
     if (*(int **)inner != 0) {
         ObjHits_DisableObject(*(int *)inner);
     }
-    if (((GameObject *)obj)->classIdB4 != -1 &&
+    if (((GameObject *)obj)->unkB4 != -1 &&
         (((GameObject *)obj)->anim.seqId == 0x16d || ((GameObject *)obj)->anim.seqId == 0x170) &&
         GameBit_Get(0x3a3) != 0) {
-        (*gObjectTriggerInterface)->endSequence(((GameObject *)obj)->classIdB4);
+        (*gObjectTriggerInterface)->endSequence(((GameObject *)obj)->unkB4);
         ((SnowclawState *)inner)->unkAC = lbl_803E66F0;
         return 4;
     }
@@ -672,16 +672,16 @@ int snowclaw_animEventCallback(int obj, int a2, ObjSeqState *seq) {
     }
     tbl = lbl_802C2540;
     if (*(s8 *)&((SnowclawState *)inner)->unkA2 != ((SnowclawState *)inner)->unkA3) {
-        if (((GameObject *)obj)->seqIdC8 != 0) {
-            Obj_FreeObject(*(int *)&((GameObject *)obj)->seqIdC8);
-            *(int *)&((GameObject *)obj)->seqIdC8 = 0;
-            ((GameObject *)obj)->seqIdEB = 0;
+        if (((GameObject *)obj)->unkC8 != 0) {
+            Obj_FreeObject(*(int *)&((GameObject *)obj)->unkC8);
+            *(int *)&((GameObject *)obj)->unkC8 = 0;
+            ((GameObject *)obj)->unkEB = 0;
         }
         if (*(s8 *)&((SnowclawState *)inner)->unkA2 > 0 && Obj_IsLoadingLocked() != 0) {
-            *(int *)&((GameObject *)obj)->seqIdC8 =
+            *(int *)&((GameObject *)obj)->unkC8 =
                 Obj_SetupObject(Obj_AllocObjectSetup(0x18, tbl.v[*(s8 *)&((SnowclawState *)inner)->unkA2]), 4,
                                 ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
-            ((GameObject *)obj)->seqIdEB = 1;
+            ((GameObject *)obj)->unkEB = 1;
         }
         ((SnowclawState *)inner)->unkA3 = *(s8 *)&((SnowclawState *)inner)->unkA2;
     }

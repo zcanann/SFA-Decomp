@@ -157,25 +157,25 @@ void TrickyCurve_updateBurstTrigger(int obj)
     }
   }
   if (dz <= 0.0f) {
-    if (dz > -(f32)((TrickyCurveObjState *)state)->count2) {
+    if (dz > -(f32)((TrickyCurveObjState *)state)->unk2) {
       insideCount++;
       zSide = 1;
     }
   }
   if (dz > 0.0f) {
-    if (dz < (f32)((TrickyCurveObjState *)state)->count2) {
+    if (dz < (f32)((TrickyCurveObjState *)state)->unk2) {
       insideCount++;
       zSide--;
     }
   }
   if (dy <= 0.0f) {
-    if (dy > -(f32)((TrickyCurveObjState *)state)->count4) {
+    if (dy > -(f32)((TrickyCurveObjState *)state)->unk4) {
       insideCount++;
       ySide = 1;
     }
   }
   if (dy > 0.0f) {
-    if (dy < (f32)((TrickyCurveObjState *)state)->count4) {
+    if (dy < (f32)((TrickyCurveObjState *)state)->unk4) {
       insideCount++;
       ySide--;
     }
@@ -827,9 +827,9 @@ void TrickyCurve_free(int obj) {
 void TrickyCurve_init(int *obj, u8 *def) {
     u8 *state = ((GameObject *)obj)->extra;
     state[0xc] = def[0x19];
-    ((TrickyCurveObjState *)state)->count4 = (s16)((s32)((TrickyCurveObjectDef *)def)->unk18 << 2);
+    ((TrickyCurveObjState *)state)->unk4 = (s16)((s32)((TrickyCurveObjectDef *)def)->unk18 << 2);
     *(s16 *)state = ((TrickyCurveObjectDef *)def)->unk1A;
-    ((TrickyCurveObjState *)state)->count2 = ((TrickyCurveObjectDef *)def)->unk1C;
+    ((TrickyCurveObjState *)state)->unk2 = ((TrickyCurveObjectDef *)def)->unk1C;
     state[0xe] = def[0x19];
     state[0x10] = 0;
     state[0x11] = 0;

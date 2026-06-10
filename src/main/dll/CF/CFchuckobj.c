@@ -1110,7 +1110,7 @@ void warpPadPlayerStandingOn(int obj)
             player = Obj_GetPlayerObject();
             if (Vec_xzDistance((f32*)(obj + 0x18), (f32*)(player + 0x18)) < lbl_803E3EE0) {
                 (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
-                ((GameObject *)obj)->countF4 = state->activateDelay;
+                ((GameObject *)obj)->unkF4 = state->activateDelay;
                 state->triggerMode = 0;
                 state->countdownActive = 1;
                 lbl_803DCDE0 = 2;
@@ -1122,7 +1122,7 @@ void warpPadPlayerStandingOn(int obj)
              ((GameBit_Get(gameBit) != 0) && ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) != 0))) &&
             (ObjTrigger_IsSet(obj) != 0)) {
             (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
-            ((GameObject *)obj)->countF4 = state->activateDelay;
+            ((GameObject *)obj)->unkF4 = state->activateDelay;
             state->triggerMode = 1;
             state->countdownActive = 1;
         }
@@ -1130,10 +1130,10 @@ void warpPadPlayerStandingOn(int obj)
 
 updateTimer:
     if (state->countdownActive != 0) {
-        if (((GameObject *)obj)->countF4 > 0) {
-            ((GameObject *)obj)->countF4 = ((GameObject *)obj)->countF4 - framesThisStep;
+        if (((GameObject *)obj)->unkF4 > 0) {
+            ((GameObject *)obj)->unkF4 = ((GameObject *)obj)->unkF4 - framesThisStep;
         } else {
-            ((GameObject *)obj)->countF4 = 0;
+            ((GameObject *)obj)->unkF4 = 0;
             state->countdownActive = 0;
         }
     }

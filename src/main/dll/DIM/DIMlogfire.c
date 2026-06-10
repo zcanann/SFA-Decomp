@@ -39,7 +39,7 @@ typedef struct AnimsharpclawState {
 
 typedef struct CcgasventcontrolState {
     u8 pad0[0x4 - 0x0];
-    f32 speed4;
+    f32 unk4;
     f32 unk8;
     s16 unkC;
     u8 padE[0x10 - 0xE];
@@ -227,7 +227,7 @@ FUN_801a9408(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   for (iVar3 = 0; iVar3 < (int)(uint)animUpdate->eventCount; iVar3 = iVar3 + 1) {
     bVar1 = animUpdate->eventIds[iVar3];
     if (bVar1 == 2) {
-      iVar4 = *(int *)&((GameObject *)param_9)->seqIdC8;
+      iVar4 = *(int *)&((GameObject *)param_9)->unkC8;
       if (iVar4 != 0) {
         uVar5 = ObjLink_DetachChild(param_9,iVar4);
         param_1 = FUN_80017ac8(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar4);
@@ -236,7 +236,7 @@ FUN_801a9408(undefined8 param_1,double param_2,double param_3,undefined8 param_4
     }
     else if ((bVar1 < 2) && (bVar1 != 0)) {
       *(undefined4 *)(param_9 + 0xf8) = 0x30b;
-      iVar4 = *(int *)&((GameObject *)param_9)->seqIdC8;
+      iVar4 = *(int *)&((GameObject *)param_9)->unkC8;
       if (iVar4 != 0) {
         uVar5 = ObjLink_DetachChild(param_9,iVar4);
         param_1 = FUN_80017ac8(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar4);
@@ -365,7 +365,7 @@ extern void disableHeavyFog(void);
 void animsharpclaw_free(int obj) {
     char *inner;
     int *child;
-    child = ((GameObject *)obj)->seqIdC8;
+    child = ((GameObject *)obj)->unkC8;
     inner = ((GameObject *)obj)->extra;
     if (child != NULL) {
         ObjLink_DetachChild(obj, (int)child);
@@ -458,7 +458,7 @@ void ccgasventcontrol_update(int obj)
         break;
     case 2:
         (*gGameUIInterface)->initAirMeter(6000, 0x603);
-        ((CcgasventcontrolState *)ex)->speed4 = lbl_803E4624;
+        ((CcgasventcontrolState *)ex)->unk4 = lbl_803E4624;
         *(u8 *)ex = 3;
         *(u8 *)((char *)ex + 0xc) = b;
         break;
@@ -470,18 +470,18 @@ void ccgasventcontrol_update(int obj)
                 ((CcgasventcontrolState *)ex)->unk8 = *(f32 *)&lbl_803E4628;
             }
             if (((GameObject *)player)->anim.localPosY <= ((GameObject *)obj)->anim.localPosY + ((CcgasventcontrolState *)ex)->unk8) {
-                ((CcgasventcontrolState *)ex)->speed4 = -(timeDelta * (f32)b - ((CcgasventcontrolState *)ex)->speed4);
+                ((CcgasventcontrolState *)ex)->unk4 = -(timeDelta * (f32)b - ((CcgasventcontrolState *)ex)->unk4);
             } else {
-                ((CcgasventcontrolState *)ex)->speed4 = lbl_803E462C * timeDelta + ((CcgasventcontrolState *)ex)->speed4;
-                if (((CcgasventcontrolState *)ex)->speed4 > lbl_803E4624) {
-                    ((CcgasventcontrolState *)ex)->speed4 = *(f32 *)&lbl_803E4624;
+                ((CcgasventcontrolState *)ex)->unk4 = lbl_803E462C * timeDelta + ((CcgasventcontrolState *)ex)->unk4;
+                if (((CcgasventcontrolState *)ex)->unk4 > lbl_803E4624) {
+                    ((CcgasventcontrolState *)ex)->unk4 = *(f32 *)&lbl_803E4624;
                 }
             }
             enableHeavyFog(((GameObject *)obj)->anim.localPosY + ((CcgasventcontrolState *)ex)->unk8,
                            ((GameObject *)obj)->anim.localPosY - lbl_803E4630, lbl_803E4634, lbl_803E4638,
                            lbl_803E463C, 0);
-            if (((CcgasventcontrolState *)ex)->speed4 >= lbl_803E4640) {
-                (*gGameUIInterface)->runAirMeter((int)((CcgasventcontrolState *)ex)->speed4);
+            if (((CcgasventcontrolState *)ex)->unk4 >= lbl_803E4640) {
+                (*gGameUIInterface)->runAirMeter((int)((CcgasventcontrolState *)ex)->unk4);
             } else {
                 (*gGameUIInterface)->airMeterSetShutdown();
                 ((GameObject *)obj)->anim.localPosX = ((GameObject *)player)->anim.localPosX;
@@ -715,23 +715,23 @@ int fn_801A8F88(int obj, ObjAnimUpdateState *animUpdate)
         u8 v = animUpdate->eventIds[i];
         switch (v) {
         case 1:
-            ((GameObject *)obj)->moveF8 = 779;
-            state = (int)((GameObject *)obj)->seqIdC8;
+            ((GameObject *)obj)->unkF8 = 779;
+            state = (int)((GameObject *)obj)->unkC8;
             if ((void *)state != NULL) {
                 ObjLink_DetachChild(obj, state);
                 Obj_FreeObject(state);
             }
-            alloc = Obj_AllocObjectSetup(32, ((GameObject *)obj)->moveF8);
+            alloc = Obj_AllocObjectSetup(32, ((GameObject *)obj)->unkF8);
             alloc = Obj_SetupObject(alloc, 4, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
             ObjLink_AttachChild(obj, alloc, 0);
             break;
         case 2:
-            state = (int)((GameObject *)obj)->seqIdC8;
+            state = (int)((GameObject *)obj)->unkC8;
             if ((void *)state != NULL) {
                 ObjLink_DetachChild(obj, state);
                 Obj_FreeObject(state);
             }
-            ((GameObject *)obj)->moveF8 = -1;
+            ((GameObject *)obj)->unkF8 = -1;
             break;
         }
     }
@@ -856,17 +856,17 @@ void animsharpclaw_init(int *obj, u8 *init) {
     ((AnimsharpclawState *)inner)->unk28 = -1;
     ((AnimsharpclawState *)inner)->unk98 = 0;
     ((AnimsharpclawState *)inner)->unk94 = 0;
-    ((GameObject *)obj)->moveF8 = -1;
-    f4 = ((GameObject *)obj)->countF4;
+    ((GameObject *)obj)->unkF8 = -1;
+    f4 = ((GameObject *)obj)->unkF4;
     if (f4 == 0 && *(s16 *)((char *)init + 0x18) != 1) {
         (*gObjectTriggerInterface)->loadAnimData((u8 *)inner, init);
-        ((GameObject *)obj)->countF4 = *(s16 *)((char *)init + 0x18) + 1;
+        ((GameObject *)obj)->unkF4 = *(s16 *)((char *)init + 0x18) + 1;
     } else if (f4 != 0 && *(s16 *)((char *)init + 0x18) != f4 - 1) {
         (*gObjectTriggerInterface)->freeState((u8 *)inner);
         if (*(s16 *)((char *)init + 0x18) != -1) {
             (*gObjectTriggerInterface)->loadAnimData((u8 *)inner, init);
         }
-        ((GameObject *)obj)->countF4 = *(s16 *)((char *)init + 0x18) + 1;
+        ((GameObject *)obj)->unkF4 = *(s16 *)((char *)init + 0x18) + 1;
     }
     if (((GameObject *)obj)->anim.modelState != NULL) {
         ((GameObject *)obj)->anim.modelState->shadowTintA = 0x64;
@@ -906,7 +906,7 @@ void animsharpclaw_update(int *obj) {
             return;
         }
     }
-    if (((GameObject *)obj)->classIdB4 != -2) {
+    if (((GameObject *)obj)->unkB4 != -2) {
         return;
     }
     kind = (s8)((AnimsharpclawState *)inner)->unk57;
@@ -915,10 +915,10 @@ void animsharpclaw_update(int *obj) {
     matchCount = 0;
     for (i = 0; i < count; i++) {
         int *o = (int *)objects[i];
-        if (((GameObject *)o)->classIdB4 == kind) {
+        if (((GameObject *)o)->unkB4 == kind) {
             found = o;
         }
-        if (((GameObject *)o)->classIdB4 == -2 && ((GameObject *)o)->anim.classId == 0x10 &&
+        if (((GameObject *)o)->unkB4 == -2 && ((GameObject *)o)->anim.classId == 0x10 &&
             kind == (s8)*(u8 *)((char *)*(int **)&((GameObject *)o)->extra + 0x57)) {
             matchCount++;
         }
@@ -927,7 +927,7 @@ void animsharpclaw_update(int *obj) {
         *(s16 *)((char *)found + 0xb4) = -1;
         (*gObjectTriggerInterface)->endSequence(kind);
     }
-    ((GameObject *)obj)->classIdB4 = -1;
+    ((GameObject *)obj)->unkB4 = -1;
 }
 #pragma peephole reset
 #pragma scheduling reset

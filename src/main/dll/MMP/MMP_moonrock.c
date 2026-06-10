@@ -329,7 +329,7 @@ void WaterFallSpray_update(int *objParam)
                 Sfx_KeepAliveLoopedObjectSound(obj, state[1] & 0xffff);
             }
 
-            cooldown = ((GameObject *)obj)->countF4;
+            cooldown = ((GameObject *)obj)->unkF4;
             if (cooldown <= 0) {
                 dx = ((GameObject *)obj)->anim.worldPosX - *(f32 *)(player + 0x18);
                 dy = ((GameObject *)obj)->anim.worldPosY - *(f32 *)(player + 0x1c);
@@ -355,10 +355,10 @@ void WaterFallSpray_update(int *objParam)
                         }
                     }
                 }
-                *(u32 *)&((GameObject *)obj)->countF4 = -(u32)data[0x24];
+                *(u32 *)&((GameObject *)obj)->unkF4 = -(u32)data[0x24];
             }
             else if (cooldown > 0) {
-                *(u32 *)&((GameObject *)obj)->countF4 = cooldown - (u32)framesThisStep;
+                *(u32 *)&((GameObject *)obj)->unkF4 = cooldown - (u32)framesThisStep;
             }
         }
     }
@@ -377,7 +377,7 @@ void WaterFallSpray_init(u8* obj, u8* data) {
     ((GameObject *)obj)->anim.rotY = b;
     c = (s16)((s32)(s8)data[0x1c] << 8);
     ((GameObject *)obj)->anim.rotX = c;
-    *(u32 *)&((GameObject *)obj)->countF4 = 0;
+    *(u32 *)&((GameObject *)obj)->unkF4 = 0;
     ((GameObject *)obj)->animEventCallback = (void *)WaterFallSpray_SeqFn;
     v = *(int*)((char*)(*(u8**)&((GameObject *)obj)->anim.placementData) + 0x14);
     if (v < WATERFALLSPRAY_ALT_SFX_DEF_END) {

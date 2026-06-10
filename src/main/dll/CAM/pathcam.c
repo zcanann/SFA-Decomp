@@ -232,7 +232,7 @@ void pathcam_loadSettings(CameraObject *cam, int mode, u8 *data)
         break;
     }
     gCamcontrolModeSettings->wallAvoidanceFlags.b6 = 0;
-    cam->bool13E = 1;
+    cam->unk13E = 1;
 }
 
 void camcontrol_releaseModeSettings(void) { mm_free(cameraMtxVar57); cameraMtxVar57 = 0; }

@@ -73,7 +73,7 @@ void fn_blasted_init_v11_unused(int param_1,int param_2)
   ObjGroup_AddObject(param_1,0x19);
   ObjGroup_AddObject(param_1,0x16);
   ObjMsg_AllocQueue(param_1,8);
-  ((GameObject *)param_1)->moveF8 = 0;
+  ((GameObject *)param_1)->unkF8 = 0;
   *(undefined2 *)(iVar1 + 0x44) = 0;
   *(undefined2 *)(iVar1 + 0x46) = 0;
   *(undefined *)(iVar1 + 0x15) = 0;

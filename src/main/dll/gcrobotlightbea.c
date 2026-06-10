@@ -580,7 +580,7 @@ void smallbasket_render(int param_1, undefined4 param_2, undefined4 param_3, und
     field_a = *(short*)(extra + 0xa);
     if ((field_a != 0 && field_a <= 0x32) || ((SmallbasketState *)extra)->unk14 != 0) {
       ((GameObject *)param_1)->anim.flags = ((GameObject *)param_1)->anim.flags | 0x4000;
-    } else if (((GameObject *)param_1)->moveF8 != 0 && param_6 != -1) {
+    } else if (((GameObject *)param_1)->unkF8 != 0 && param_6 != -1) {
       ((GameObject *)param_1)->anim.flags = ((GameObject *)param_1)->anim.flags | 0x4000;
     } else {
       objRenderFn_8003b8f4((void*)param_1, param_2, param_3, param_4, param_5,

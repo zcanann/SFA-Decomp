@@ -97,14 +97,14 @@ void cannonclaw_update(u8* obj)
     u8* trickyState;
     getTrickyObject();
     trickyState = (u8*)ObjList_FindObjectById(0x1723);
-    if (((GameObject *)obj)->countF4 != 0) return;
+    if (((GameObject *)obj)->unkF4 != 0) return;
     if (((GameObject *)obj)->anim.currentMove != 0x208) {
         ObjAnim_SetCurrentMove((int)obj, 0x208, lbl_803E2F34, 0);
     }
     ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E2F38, timeDelta, NULL);
     if (trickyState == NULL) return;
     if (GameBit_Get(*(s16*)(*(u8**)(trickyState + 0x4c) + 0x1a)) == 0) return;
-    ((GameObject *)obj)->countF4 = 1;
+    ((GameObject *)obj)->unkF4 = 1;
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x8);
     ObjHits_DisableObject(obj);
 }

@@ -184,7 +184,7 @@ int DR_CloudRunner_stateHandler01(int obj, int p2)
         Sfx_PlayFromObject(obj, 0x464);
     }
     if ((u32)GameBit_Get(((DRCloudRunnerPlacement *)q)->unk1E) != 0) {
-        ((GameObject *)obj)->countF4 = 0;
+        ((GameObject *)obj)->unkF4 = 0;
         ObjHits_EnableObject(obj);
         ObjHits_SyncObjectPositionIfDirty(obj);
         ((ByteFlags *)&inner->flagsBC0)->b10 = inner->timerBB0 > 0;
@@ -239,7 +239,7 @@ int DR_CloudRunner_stateHandler03(int obj, int p2)
 void DR_CloudRunner_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
 {
     CloudRunnerState *inner = ((GameObject *)p1)->extra;
-    if (((GameObject *)p1)->countF4 == 0) {
+    if (((GameObject *)p1)->unkF4 == 0) {
         if (vis == -1) {
             objRenderFn_8003b8f4(p1, p2, p3, p4, p5, lbl_803E83A8);
             ObjPath_GetPointWorldPosition(p1, 3, (char *)(int)((char *)inner + 0xae8), (char *)(int)((char *)inner + 0xaec), (char *)(int)((char *)inner + 0xaf0), 0);
@@ -269,13 +269,13 @@ void DR_CloudRunner_func17(int obj, int param)
     inner->unkBB2 = (u8)param;
     if (param == 1) {
         s16 t;
-        inner->bool464 = 0;
-        t = ((GameObject *)obj)->classIdB4;
+        inner->unk464 = 0;
+        t = ((GameObject *)obj)->unkB4;
         if (t != -1) {
             (*gObjectTriggerInterface)->endSequence(t);
         }
     } else {
-        inner->bool464 = 1;
+        inner->unk464 = 1;
     }
     if (param == 2) {
         GameBit_Set(0xed7, 1);
@@ -801,8 +801,8 @@ int DR_CloudRunner_stateHandler06(int obj, int p2)
             ((GameObject *)newObj)->anim.velocityX = dir[0];
             ((GameObject *)newObj)->anim.velocityY = dir[1];
             ((GameObject *)newObj)->anim.velocityZ = dir[2];
-            ((GameObject *)newObj)->countF4 = 0xb4;
-            ((GameObject *)newObj)->moveF8 = obj;
+            ((GameObject *)newObj)->unkF4 = 0xb4;
+            ((GameObject *)newObj)->unkF8 = obj;
             ((GameObject *)newObj)->anim.rotZ = 0;
             ((GameObject *)newObj)->anim.rotY = 0;
             ((GameObject *)newObj)->anim.rotX = 0;
@@ -1015,8 +1015,8 @@ void fn_802BF4D8(int obj)
     } else {
         dist = lbl_803E83B4;
     }
-    ((GameObject *)newObj)->countF4 = (int)dist;
-    ((GameObject *)newObj)->moveF8 = obj;
+    ((GameObject *)newObj)->unkF4 = (int)dist;
+    ((GameObject *)newObj)->unkF8 = obj;
     ((GameObject *)newObj)->anim.rotZ = 0;
     ((GameObject *)newObj)->anim.rotY = 0;
     ((GameObject *)newObj)->anim.rotX = 0;

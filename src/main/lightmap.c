@@ -2134,7 +2134,7 @@ void sceneDraw(void)
     if (player != NULL) {
         i = 0;
         cursor = (u8 *)player;
-        for (; i < ((GameObject *)player)->seqIdEB; i++) {
+        for (; i < ((GameObject *)player)->unkEB; i++) {
             u8 *m = *(u8 **)(cursor + 200);
             if (*(s16 *)(m + 0x44) == 45) {
                 (*(void (***)(void))*(int *)(m + 0x68))[11]();
@@ -2488,7 +2488,7 @@ void getVisibleObjects(s8 *opacity)
         ((GameObject *)o)->objectFlags &= ~0x800;
         j = 0;
         sub = o;
-        for (; j < ((GameObject *)o)->seqIdEB; j++) {
+        for (; j < ((GameObject *)o)->unkEB; j++) {
             att = *(u8 **)(sub + 0xc8);
             if (att != NULL) {
                 *(u16 *)(att + 0xb0) &= ~0x800;

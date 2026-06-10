@@ -162,9 +162,9 @@ void gpsh_shrine_update(int obj)
                 Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
             }
         }
-        if (((GameObject *)obj)->countF4 != 0) {
-            ((GameObject *)obj)->countF4 -= 1;
-            if (((GameObject *)obj)->countF4 == 0) {
+        if (((GameObject *)obj)->unkF4 != 0) {
+            ((GameObject *)obj)->unkF4 -= 1;
+            if (((GameObject *)obj)->unkF4 == 0) {
                 skyFn_80088c94(7, 1);
                 getEnvfxAct(obj, (int)player, 0xcc, 0);
                 getEnvfxAct(obj, (int)player, 0xcd, 0);
@@ -327,7 +327,7 @@ void gpsh_shrine_init(int *obj, int *def) {
     GameBit_Set(0x14e, 0);
     GameBit_Set(0x14a, 0);
     GameBit_Set(0x14b, 0);
-    ((GameObject *)obj)->countF4 = 1;
+    ((GameObject *)obj)->unkF4 = 1;
     if (*(void **)state == NULL) {
         *(void **)state = objCreateLight(0, 1);
     }
@@ -359,16 +359,16 @@ void gpsh_objcreator_update(int *obj) {
 
     sub = ((GameObject *)obj)->extra;
     if (GameBit_Get(0x5af) != 0) {
-        ((GameObject *)obj)->moveF8 = 0;
+        ((GameObject *)obj)->unkF8 = 0;
         ((GpshShrineFlags *)(sub + 5))->b80 = 0;
         *(u8*)((char*)obj + 0x37) = 0xff;
         ((GameObject *)obj)->anim.alpha = 0xff;
     }
     if (((GpshShrineFlags *)(sub + 5))->b80) return;
-    if (((GameObject *)obj)->moveF8 == 0) {
+    if (((GameObject *)obj)->unkF8 == 0) {
         if (GameBit_Get(0x148) != 0) {
             *(f32*)sub = lbl_803E504C;
-            ((GameObject *)obj)->moveF8 = 1;
+            ((GameObject *)obj)->unkF8 = 1;
         }
     }
     if ((u8)Obj_IsLoadingLocked() == 0) return;
@@ -431,7 +431,7 @@ void gpsh_objcreator_init(int *obj, int *def) {
     state = ((GameObject *)obj)->extra;
     *(s16 *)obj = (s16)((s32)((GpshObjcreatorObjectDef *)def)->unk1E << 8);
     zero = 0;
-    ((GameObject *)obj)->moveF8 = zero;
+    ((GameObject *)obj)->unkF8 = zero;
     ((GpshObjcreatorState *)state)->unk4 = (u8)((GpshObjcreatorObjectDef *)def)->unk1A;
     ((GpshShrineFlags *)((char *)state + 5))->b80 = 0;
     *(u8 *)((char *)obj + 0x37) = 0xff;

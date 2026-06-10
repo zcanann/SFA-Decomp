@@ -24,7 +24,7 @@ typedef struct CarryableUpdateHeldState {
     s16 unk2;
     u8 pad4[0x5 - 0x4];
     s8 unk5;
-    u8 bool6;
+    u8 unk6;
     u8 flags7;
     u8 unk8;
     u8 pad9[0x10 - 0x9];
@@ -2579,7 +2579,7 @@ int Carryable_updateHeld(u8 *obj)
     if ((t->e & 0xf) == 6
         && (buttonGetDisabled(0) & 0x100) == 0
         && (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0
-        && ((GameObject *)obj)->moveF8 == 0) {
+        && ((GameObject *)obj)->unkF8 == 0) {
       *(s16 *)held = 0;
       buttonDisable(0, 0x100);
       v = 1;
@@ -2587,9 +2587,9 @@ int Carryable_updateHeld(u8 *obj)
     ((CarryableUpdateHeldState *)held)->unk5 = v;
     if (((CarryableUpdateHeldState *)held)->unk5 != 0) {
       ((CarryableUpdateHeldState *)held)->flags7 |= 1;
-      ((CarryableUpdateHeldState *)held)->bool6 = 1;
+      ((CarryableUpdateHeldState *)held)->unk6 = 1;
     }
-    if (((GameObject *)obj)->moveF8 == 0) {
+    if (((GameObject *)obj)->unkF8 == 0) {
       int cnt, i, j;
       f32 **p;
       u8 *hit;
@@ -2646,23 +2646,23 @@ int Carryable_updateHeld(u8 *obj)
         Sfx_PlayFromObject(0, 0x10a);
       } else {
         buttonDisable(0, 0x100);
-        ((CarryableUpdateHeldState *)held)->bool6 = 0;
+        ((CarryableUpdateHeldState *)held)->unk6 = 0;
       }
     }
-    if (((GameObject *)obj)->moveF8 == 1) {
+    if (((GameObject *)obj)->unkF8 == 1) {
       ((CarryableUpdateHeldState *)held)->unk5 = 2;
     }
-    if (((CarryableUpdateHeldState *)held)->unk5 == 2 && ((GameObject *)obj)->moveF8 == 0) {
+    if (((CarryableUpdateHeldState *)held)->unk5 == 2 && ((GameObject *)obj)->unkF8 == 0) {
       u8 *h2 = ((GameObject *)obj)->extra;
       *(u8 *)&((CarryableUpdateHeldState *)h2)->unk5 = 0;
-      ((CarryableUpdateHeldState *)h2)->bool6 = 0;
+      ((CarryableUpdateHeldState *)h2)->unk6 = 0;
       if ((((CarryableUpdateHeldState *)h2)->flags7 & 8) == 0) {
         ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY + lbl_803E06D8;
         saveGame_saveObjectPos((int *)obj);
         ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY - lbl_803E06D8;
       }
     }
-    if (*(s8 *)&((CarryableUpdateHeldState *)held)->bool6 != 0) {
+    if (*(s8 *)&((CarryableUpdateHeldState *)held)->unk6 != 0) {
       ObjMsg_SendToObject(player, 0x100008, obj, (((CarryableUpdateHeldState *)held)->unk2 << 16) | (u16)*(s16 *)held);
     }
   }
@@ -2718,13 +2718,13 @@ void Carryable_stopCarrying(int *obj, u8 *param2) {
 int Carryable_updateRenderState(int *obj, int flag) {
     int *p50 = *(int **)&((GameObject *)obj)->anim.modelInstance;
     if (((ObjDef *)p50)->shadowType == 2) {
-        if (((GameObject *)obj)->classIdB4 == -1) {
+        if (((GameObject *)obj)->unkB4 == -1) {
             ((GameObject *)obj)->anim.modelState->flags &= ~OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         } else {
             ((GameObject *)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         }
     }
-    if (((GameObject *)obj)->moveF8 != 0) {
+    if (((GameObject *)obj)->unkF8 != 0) {
         if (flag != -1) return 0;
     } else {
         if (flag == 0) return 0;

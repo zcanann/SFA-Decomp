@@ -387,7 +387,7 @@ void objAnimFn_8014a9f0(short *obj, int state)
     if (((((TrickyState *)state)->flags2DC & 0x100) != 0) && ((((TrickyState *)state)->flags2E0 & 0x100) == 0)) {
       int moveId = ((TrickyState *)state)->unk322;
       ((TrickyState *)state)->unk308 = lbl_803E256C / (lbl_803E2570 * ((TrickyState *)state)->unk31C);
-      ((TrickyState *)state)->bool323 = 1;
+      ((TrickyState *)state)->unk323 = 1;
       ObjAnim_SetCurrentMove((int)obj, moveId, lbl_803E2574, 0x10);
       if (*(void **)(obj + 0x2a) != 0) {
         *(u8 *)(*(int *)(obj + 0x2a) + 0x70) = 0;
@@ -395,7 +395,7 @@ void objAnimFn_8014a9f0(short *obj, int state)
     }
     if ((((TrickyState *)state)->flags2DC & 0x40000000) != 0) {
       ((TrickyState *)state)->unk308 = lbl_803E2578;
-      ((TrickyState *)state)->bool323 = 0;
+      ((TrickyState *)state)->unk323 = 0;
       ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2574, 0);
       if (*(void **)(obj + 0x2a) != 0) {
         *(u8 *)(*(int *)(obj + 0x2a) + 0x70) = 0;
@@ -491,8 +491,8 @@ void objAnimFn_8014a9f0(short *obj, int state)
   }
   vy = lbl_803E2574;
   if ((((((TrickyState *)state)->flags2E4 & 0x20) != 0) && ((((TrickyState *)state)->flags2E4 & 0x400000) == 0))
-      && (((((TrickyState *)state)->flags2DC & 0x1800) == 0) && ((((TrickyState *)state)->bool323 & 4) == 0))) {
-    vy = -(((TrickyState *)state)->speed300 * timeDelta - *(f32 *)(obj + 0x14));
+      && (((((TrickyState *)state)->flags2DC & 0x1800) == 0) && ((((TrickyState *)state)->unk323 & 4) == 0))) {
+    vy = -(((TrickyState *)state)->unk300 * timeDelta - *(f32 *)(obj + 0x14));
   }
   v = *(f32 *)(obj + 0x12);
   *(f32 *)(obj + 0x12) = (v < lbl_803E25CC) ? lbl_803E25CC : ((v > lbl_803E25D0) ? lbl_803E25D0 : v);
@@ -501,7 +501,7 @@ void objAnimFn_8014a9f0(short *obj, int state)
   v = *(f32 *)(obj + 0x16);
   *(f32 *)(obj + 0x16) = (v < lbl_803E25CC) ? lbl_803E25CC : ((v > lbl_803E25D0) ? lbl_803E25D0 : v);
   mode = 0;
-  if (((((TrickyState *)state)->flags2E4 & 0x80) != 0) && (((TrickyState *)state)->bool323 != 0)) {
+  if (((((TrickyState *)state)->flags2E4 & 0x80) != 0) && (((TrickyState *)state)->unk323 != 0)) {
     mode = 1;
   }
   else if ((((TrickyState *)state)->flags2E4 & 0x100) != 0) {
@@ -517,16 +517,16 @@ void objAnimFn_8014a9f0(short *obj, int state)
     f32 zero;
     dx = (dz = lbl_803E2574);
     dy = dz;
-    if ((((TrickyState *)state)->bool323 & 2) != 0) {
+    if ((((TrickyState *)state)->unk323 & 2) != 0) {
       dx = res.dx * oneOverTimeDelta;
     }
-    if ((((TrickyState *)state)->bool323 & 4) != 0) {
+    if ((((TrickyState *)state)->unk323 & 4) != 0) {
       dy = res.dy * oneOverTimeDelta;
     }
-    if ((((TrickyState *)state)->bool323 & 1) != 0) {
+    if ((((TrickyState *)state)->unk323 & 1) != 0) {
       dz = -res.dz * oneOverTimeDelta;
     }
-    if ((((TrickyState *)state)->bool323 & 8) != 0) {
+    if ((((TrickyState *)state)->unk323 & 8) != 0) {
       ((GameObject *)obj)->anim.rotX += res.dAngle;
     }
     rec.rx = ((GameObject *)obj)->anim.rotX;
@@ -538,7 +538,7 @@ void objAnimFn_8014a9f0(short *obj, int state)
     rec.y = zero;
     rec.z = zero;
     setMatrixFromObjectPos(mtx, &rec);
-    if ((((TrickyState *)state)->bool323 & 4) != 0) {
+    if ((((TrickyState *)state)->unk323 & 4) != 0) {
       Matrix_TransformPoint(mtx, dx, dy, -dz, (f32 *)(obj + 0x12), (f32 *)(obj + 0x14), (f32 *)(obj + 0x16));
     }
     else {
@@ -569,7 +569,7 @@ void objAnimFn_8014a9f0(short *obj, int state)
   }
   else if ((((TrickyState *)state)->flags2E4 & 0x20) != 0) {
     f32 newY = (*(f32 *)(obj + 0x14) * timeDelta + *(f32 *)(obj + 8))
-                 - lbl_803E25D4 * (((TrickyState *)state)->speed300 * (timeDelta * timeDelta));
+                 - lbl_803E25D4 * (((TrickyState *)state)->unk300 * (timeDelta * timeDelta));
     if ((((TrickyState *)state)->flags2F1 & 0x80) == 0) {
       objMove(obj, *(f32 *)(obj + 0x12) * timeDelta, newY - *(f32 *)(obj + 8),
               *(f32 *)(obj + 0x16) * timeDelta);
@@ -1296,7 +1296,7 @@ int enemy_animEventCallback(int *node, int unused, ObjAnimUpdateState *animUpdat
     int i;
     int *obj;
 
-    if (((GameObject *)node)->countF4 != 0)
+    if (((GameObject *)node)->unkF4 != 0)
         return 0;
     ((TrickyState *)sub)->flags2DC |= 0x8000;
     memcpy(sub + 0x2c4, sub + 0x2b8, 0xc);
@@ -1338,7 +1338,7 @@ int enemy_animEventCallback(int *node, int unused, ObjAnimUpdateState *animUpdat
         }
     }
     baddieInstantiateWeapon(node, (int *)sub);
-    if (((GameObject *)node)->classIdB4 == -1) {
+    if (((GameObject *)node)->unkB4 == -1) {
         ((TrickyState *)sub)->flags2E8 &= ~3;
         ObjHits_DisableObject(node);
         return 0;
@@ -1349,7 +1349,7 @@ int enemy_animEventCallback(int *node, int unused, ObjAnimUpdateState *animUpdat
     }
     if (n29[0x2e] != -1) {
         if ((((TrickyState *)sub)->flags2DC & 0x600) != 0) {
-            if (animUpdate->sequenceSlot == ((GameObject *)node)->classIdB4)
+            if (animUpdate->sequenceSlot == ((GameObject *)node)->unkB4)
                 return 4;
         }
     }

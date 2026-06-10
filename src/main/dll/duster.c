@@ -240,7 +240,7 @@ void fn_801554B4(int *param_1,int param_2)
     else {
       *(float *)(param_2 + 0x354) = (cv[2] - *(float *)(param_2 + 0x364)) / local_c4[2];
     }
-    ((BaddieState *)param_2)->move33A = 1;
+    ((BaddieState *)param_2)->unk33A = 1;
   }
 }
 
@@ -287,7 +287,7 @@ void fn_801557D4(int *param_9,int param_10)
 {
   int iVar1;
 
-  if (((BaddieState *)param_10)->move33A == 0) {
+  if (((BaddieState *)param_10)->unk33A == 0) {
     fn_801554B4(param_9,param_10);
   }
   else {
@@ -320,7 +320,7 @@ void fn_80155884(int *param_9,int param_10)
 {
   int iVar1;
 
-  if (((BaddieState *)param_10)->move33A == 0) {
+  if (((BaddieState *)param_10)->unk33A == 0) {
     fn_801554B4(param_9,param_10);
   }
   else if ((*(short *)(*(int *)&((BaddieState *)param_10)->trackedObj + 0x44) == 1) &&
@@ -357,7 +357,7 @@ void fn_80155948(int *param_9,int param_10)
   ushort local_18 [2];
   float afStack_14 [3];
 
-  if (((BaddieState *)param_10)->move33A == 0) {
+  if (((BaddieState *)param_10)->unk33A == 0) {
     fn_801554B4(param_9,param_10);
   }
   else if ((*(short *)(*(int *)&((BaddieState *)param_10)->trackedObj + 0x44) == 1) &&
@@ -409,10 +409,10 @@ void rachnopInit(undefined4 param_1,int param_2)
   ((BaddieState *)param_2)->unk2AC = lbl_803E2A34;
   *(undefined4 *)&((BaddieState *)param_2)->flags2E4 = 1;
   fVar1 = lbl_803E2A38;
-  ((BaddieState *)param_2)->speed308 = lbl_803E2A38;
+  ((BaddieState *)param_2)->unk308 = lbl_803E2A38;
   ((BaddieState *)param_2)->unk300 = fVar1;
   ((BaddieState *)param_2)->unk304 = lbl_803E2A3C;
-  ((BaddieState *)param_2)->bool320 = 0;
+  ((BaddieState *)param_2)->unk320 = 0;
   fVar2 = lbl_803E2A40;
   *(float *)&((BaddieState *)param_2)->eventFlags = lbl_803E2A40;
   ((BaddieState *)param_2)->unk321 = 4;
@@ -421,7 +421,7 @@ void rachnopInit(undefined4 param_1,int param_2)
   ((BaddieState *)param_2)->unk322 = 0;
   ((BaddieState *)param_2)->unk31C = fVar2;
   *(float *)(param_2 + 0x324) = lbl_803E2A00;
-  ((BaddieState *)param_2)->move33A = 0;
+  ((BaddieState *)param_2)->unk33A = 0;
   ((BaddieState *)param_2)->inWhirlpoolGroup = 0;
   ((BaddieState *)param_2)->pathStep = fVar1;
   return;
@@ -528,13 +528,13 @@ void timeOfDayFn_80155cf8(int param_9,int param_10)
   else {
     bVar1 = 0;
   }
-  if ((bVar1 != 0) && (((BaddieState *)param_10)->move33A == 0)) {
-    ((BaddieState *)param_10)->move33A = 1;
+  if ((bVar1 != 0) && (((BaddieState *)param_10)->unk33A == 0)) {
+    ((BaddieState *)param_10)->unk33A = 1;
     *(uint *)&((BaddieState *)param_10)->flags2E4 = *(uint *)&((BaddieState *)param_10)->flags2E4 | 0x10000;
     fn_8014D08C(param_9,param_10,1,lbl_803E2A78,0,0);
   }
-  else if ((bVar1 == 0) && (((BaddieState *)param_10)->move33A == 2)) {
-    ((BaddieState *)param_10)->move33A = 1;
+  else if ((bVar1 == 0) && (((BaddieState *)param_10)->unk33A == 2)) {
+    ((BaddieState *)param_10)->unk33A = 1;
     *(uint *)&((BaddieState *)param_10)->flags2E4 = *(uint *)&((BaddieState *)param_10)->flags2E4 | 0x10000;
     fn_8014D08C(param_9,param_10,3,lbl_803E2A78,0,0);
   }
@@ -560,7 +560,7 @@ void baddieUpdateWhileFrozen_80155e10(uint param_9,int param_10,undefined4 param
     ((BaddieState *)param_10)->reactionFlags = ((BaddieState *)param_10)->reactionFlags | 0x20;
   }
   else if (param_12 == 0x11) {
-    if ((((BaddieState *)param_10)->move33A == 2) && (((GameObject *)param_9)->anim.currentMove != 5)) {
+    if ((((BaddieState *)param_10)->unk33A == 2) && (((GameObject *)param_9)->anim.currentMove != 5)) {
       fn_8014D08C(param_9,param_10,5,lbl_803E2A7C,0,0);
     }
   }
@@ -601,18 +601,18 @@ void fn_80155F20(int param_9,int param_10)
 {
   *(float *)(param_10 + 0x324) = lbl_803E2A60;
   if ((((BaddieState *)param_10)->controlFlags & 0x40000000) != 0) {
-    if (((BaddieState *)param_10)->move33A == 1) {
+    if (((BaddieState *)param_10)->unk33A == 1) {
       if (((GameObject *)param_9)->anim.currentMove == 1) {
-        ((BaddieState *)param_10)->move33A = 2;
+        ((BaddieState *)param_10)->unk33A = 2;
         *(uint *)&((BaddieState *)param_10)->flags2E4 = *(uint *)&((BaddieState *)param_10)->flags2E4 & ~0x10000;
       }
       else if (((GameObject *)param_9)->anim.currentMove == 3) {
-        ((BaddieState *)param_10)->move33A = 0;
+        ((BaddieState *)param_10)->unk33A = 0;
         *(uint *)&((BaddieState *)param_10)->flags2E4 = *(uint *)&((BaddieState *)param_10)->flags2E4 | 0x10000;
         fn_8014D08C(param_9,param_10,0,lbl_803E2A54,0,0);
       }
     }
-    else if ((((BaddieState *)param_10)->move33A == 2) && (((GameObject *)param_9)->anim.currentMove != 2)) {
+    else if ((((BaddieState *)param_10)->unk33A == 2) && (((GameObject *)param_9)->anim.currentMove != 2)) {
       fn_8014D08C(param_9,param_10,2,lbl_803E2A54,0,0);
     }
   }
@@ -689,10 +689,10 @@ void baddieInit_80156188(undefined4 param_1,int param_2)
   
   ((BaddieState *)param_2)->unk2AC = lbl_803E2A84;
   *(undefined4 *)&((BaddieState *)param_2)->flags2E4 = 1;
-  ((BaddieState *)param_2)->speed308 = lbl_803E2A58;
+  ((BaddieState *)param_2)->unk308 = lbl_803E2A58;
   ((BaddieState *)param_2)->unk300 = lbl_803E2A88;
   ((BaddieState *)param_2)->unk304 = lbl_803E2A8C;
-  ((BaddieState *)param_2)->bool320 = 0;
+  ((BaddieState *)param_2)->unk320 = 0;
   fVar2 = lbl_803E2A90;
   *(float *)&((BaddieState *)param_2)->eventFlags = lbl_803E2A90;
   ((BaddieState *)param_2)->unk321 = 7;
@@ -700,7 +700,7 @@ void baddieInit_80156188(undefined4 param_1,int param_2)
   ((BaddieState *)param_2)->unk318 = lbl_803E2A54;
   ((BaddieState *)param_2)->unk322 = 0;
   ((BaddieState *)param_2)->unk31C = fVar2;
-  ((BaddieState *)param_2)->move33A = 0;
+  ((BaddieState *)param_2)->unk33A = 0;
   *(float *)(param_2 + 0x324) = lbl_803E2A60;
   ((BaddieState *)param_2)->pathStep = fVar1;
   return;
@@ -800,10 +800,10 @@ void fn_8015625C(uint param_9,int param_10)
   }
   if (((dVar5 > lbl_803E2A98) && (((GameObject *)param_9)->anim.velocityY < lbl_803E2AC8)) ||
      ((((BaddieState *)param_10)->controlFlags & 0x8000000) != 0)) {
-    ((BaddieState *)param_10)->move33A = 1;
+    ((BaddieState *)param_10)->unk33A = 1;
   }
-  if ((((BaddieState *)param_10)->move33A != 0) && (dVar5 > lbl_803E2A98)) {
-    ((BaddieState *)param_10)->speed308 = lbl_803E2ACC;
+  if ((((BaddieState *)param_10)->unk33A != 0) && (dVar5 > lbl_803E2A98)) {
+    ((BaddieState *)param_10)->unk308 = lbl_803E2ACC;
     if (((BaddieState *)param_10)->hitCounter != 0) {
       ((GameObject *)param_9)->anim.velocityY = ((GameObject *)param_9)->anim.velocityY + lbl_803E2AD0;
     }
@@ -815,9 +815,9 @@ void fn_8015625C(uint param_9,int param_10)
     }
   }
   else {
-    ((BaddieState *)param_10)->move33A = 0;
-    if (((BaddieState *)param_10)->speed308 > lbl_803E2ADC) {
-      ((BaddieState *)param_10)->speed308 = -(lbl_803E2AE0 * timeDelta - ((BaddieState *)param_10)->speed308);
+    ((BaddieState *)param_10)->unk33A = 0;
+    if (((BaddieState *)param_10)->unk308 > lbl_803E2ADC) {
+      ((BaddieState *)param_10)->unk308 = -(lbl_803E2AE0 * timeDelta - ((BaddieState *)param_10)->unk308);
     }
   }
   fn_8014CD1C(param_9,param_10,0x2d,lbl_803E2A98,*(f32 *)&lbl_803E2A98,0);
@@ -902,10 +902,10 @@ void fn_8015652C(uint param_9,int param_10)
   }
   if (((dVar7 > lbl_803E2A98) && (((GameObject *)param_9)->anim.velocityY < lbl_803E2AC8)) ||
      ((((BaddieState *)param_10)->controlFlags & 0x8000000) != 0)) {
-    ((BaddieState *)param_10)->move33A = 1;
+    ((BaddieState *)param_10)->unk33A = 1;
   }
-  if ((((BaddieState *)param_10)->move33A != 0) && (dVar7 > lbl_803E2A98)) {
-    ((BaddieState *)param_10)->speed308 = lbl_803E2ACC;
+  if ((((BaddieState *)param_10)->unk33A != 0) && (dVar7 > lbl_803E2A98)) {
+    ((BaddieState *)param_10)->unk308 = lbl_803E2ACC;
     if (((BaddieState *)param_10)->hitCounter != 0) {
       ((GameObject *)param_9)->anim.velocityY = ((GameObject *)param_9)->anim.velocityY + lbl_803E2AD0;
     }
@@ -917,9 +917,9 @@ void fn_8015652C(uint param_9,int param_10)
     }
   }
   else {
-    ((BaddieState *)param_10)->move33A = 0;
-    if (((BaddieState *)param_10)->speed308 > lbl_803E2ADC) {
-      ((BaddieState *)param_10)->speed308 = -(lbl_803E2AE0 * timeDelta - ((BaddieState *)param_10)->speed308);
+    ((BaddieState *)param_10)->unk33A = 0;
+    if (((BaddieState *)param_10)->unk308 > lbl_803E2ADC) {
+      ((BaddieState *)param_10)->unk308 = -(lbl_803E2AE0 * timeDelta - ((BaddieState *)param_10)->unk308);
     }
   }
   fn_8014CD1C(param_9,param_10,0x2d,lbl_803E2A98,*(f32 *)&lbl_803E2A98,0);
@@ -945,10 +945,10 @@ void wbInit(undefined4 param_1,int param_2)
   
   ((BaddieState *)param_2)->unk2AC = lbl_803E2AE8;
   *(undefined4 *)&((BaddieState *)param_2)->flags2E4 = 0x2002b029;
-  ((BaddieState *)param_2)->speed308 = lbl_803E2ACC;
+  ((BaddieState *)param_2)->unk308 = lbl_803E2ACC;
   ((BaddieState *)param_2)->unk300 = lbl_803E2AEC;
   ((BaddieState *)param_2)->unk304 = lbl_803E2AF0;
-  ((BaddieState *)param_2)->bool320 = 0;
+  ((BaddieState *)param_2)->unk320 = 0;
   fVar1 = lbl_803E2AF4;
   *(float *)&((BaddieState *)param_2)->eventFlags = lbl_803E2AF4;
   ((BaddieState *)param_2)->unk321 = 1;
@@ -1043,7 +1043,7 @@ void mutatedEbaUpdateWhileFrozen(uint param_9,int param_10,undefined4 param_11,i
       }
       else {
         fn_8014D08C(param_9,param_10,4,lbl_803E2B04,0,0);
-        ((BaddieState *)param_10)->move33A = 0;
+        ((BaddieState *)param_10)->unk33A = 0;
         Sfx_PlayFromObject(param_9,SFXfox_roll1);
         ((BaddieState *)param_10)->reactionFlags = ((BaddieState *)param_10)->reactionFlags | 8;
       }
@@ -1071,22 +1071,22 @@ void fn_80156B0C(uint param_9,int param_10)
   
   ((ObjHitsPriorityState *)*(int *)&((GameObject *)param_9)->anim.hitReactState)->hitVolumePriority = 10;
   ((ObjHitsPriorityState *)*(int *)&((GameObject *)param_9)->anim.hitReactState)->hitVolumeId = 1;
-  if (((((BaddieState *)param_10)->controlFlags & 0x80000000) != 0) && (((BaddieState *)param_10)->move33A <= 1)) {
-    ((BaddieState *)param_10)->move33A = 1;
+  if (((((BaddieState *)param_10)->controlFlags & 0x80000000) != 0) && (((BaddieState *)param_10)->unk33A <= 1)) {
+    ((BaddieState *)param_10)->unk33A = 1;
     ((BaddieState *)param_10)->controlFlags = ((BaddieState *)param_10)->controlFlags | 0x40000000;
   }
   if ((((BaddieState *)param_10)->controlFlags & 0x40000000) != 0) {
-    ((BaddieState *)param_10)->move33A += 1;
-    if (10 < ((BaddieState *)param_10)->move33A) {
-      ((BaddieState *)param_10)->move33A = 3;
+    ((BaddieState *)param_10)->unk33A += 1;
+    if (10 < ((BaddieState *)param_10)->unk33A) {
+      ((BaddieState *)param_10)->unk33A = 3;
     }
     if (*(ushort *)(param_10 + 0x2a0) < 4) {
-      iVar1 = (uint)((BaddieState *)param_10)->move33A * 0xc;
+      iVar1 = (uint)((BaddieState *)param_10)->unk33A * 0xc;
       fn_8014D08C(param_9,param_10,(uint)lbl_8031F318[iVar1 + 8],
                    *(float *)(lbl_8031F318 + iVar1),0,0);
     }
     else {
-      iVar1 = (uint)((BaddieState *)param_10)->move33A * 0xc;
+      iVar1 = (uint)((BaddieState *)param_10)->unk33A * 0xc;
       fn_8014D08C(param_9,param_10,(uint)lbl_8031F318[iVar1 + 9],
                    *(float *)(lbl_8031F318 + iVar1),0,0);
     }
@@ -1107,14 +1107,14 @@ void fn_80156C34(uint param_9,int param_10)
   uint phase;
 
   if ((((BaddieState *)param_10)->controlFlags & 0x40000000) != 0) {
-    phase = ((BaddieState *)param_10)->move33A;
+    phase = ((BaddieState *)param_10)->unk33A;
     if (phase == 0) {
-      ((BaddieState *)param_10)->move33A += 1;
+      ((BaddieState *)param_10)->unk33A += 1;
     }
     else if (phase >= 2) {
-      ((BaddieState *)param_10)->move33A = 0;
+      ((BaddieState *)param_10)->unk33A = 0;
     }
-    iVar1 = (uint)((BaddieState *)param_10)->move33A * 0xc;
+    iVar1 = (uint)((BaddieState *)param_10)->unk33A * 0xc;
     fn_8014D08C(param_9,param_10,(uint)lbl_8031F318[iVar1 + 8],
                  *(float *)(lbl_8031F318 + iVar1),0,0);
   }
@@ -1134,17 +1134,17 @@ void mutatedEbaInit(undefined4 param_1,int param_2)
   
   ((BaddieState *)param_2)->unk2AC = lbl_803E2A84;
   *(undefined4 *)&((BaddieState *)param_2)->flags2E4 = 0x46001;
-  ((BaddieState *)param_2)->speed308 = lbl_803E2A58;
+  ((BaddieState *)param_2)->unk308 = lbl_803E2A58;
   ((BaddieState *)param_2)->unk300 = lbl_803E2A88;
   ((BaddieState *)param_2)->unk304 = lbl_803E2A8C;
-  ((BaddieState *)param_2)->bool320 = 0;
+  ((BaddieState *)param_2)->unk320 = 0;
   fVar1 = lbl_803E2A54;
   *(float *)&((BaddieState *)param_2)->eventFlags = lbl_803E2A54;
   ((BaddieState *)param_2)->unk321 = 4;
   ((BaddieState *)param_2)->unk318 = fVar1;
   ((BaddieState *)param_2)->unk322 = 3;
   ((BaddieState *)param_2)->unk31C = fVar1;
-  ((BaddieState *)param_2)->move33A = 1;
+  ((BaddieState *)param_2)->unk33A = 1;
   ((BaddieState *)param_2)->hitCounter = 0xa;
   return;
 }

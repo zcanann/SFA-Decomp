@@ -184,7 +184,7 @@ void *camcontrol_findBestTarget(int param_1, u8 *focus)
  */
 void camcontrol_updateMoveAverage(int *obj, void *p) {
     f32 mag;
-    *(f32 *)&((GameObject *)obj)->seqIdC8 = *(f32 *)((char *)obj + 0xcc);
+    *(f32 *)&((GameObject *)obj)->unkC8 = *(f32 *)((char *)obj + 0xcc);
     *(f32 *)((char *)obj + 0xcc) = *(f32 *)((char *)obj + 0xd0);
     *(f32 *)((char *)obj + 0xd0) = *(f32 *)((char *)obj + 0xd4);
     *(f32 *)((char *)obj + 0xd4) = *(f32 *)((char *)obj + 0xd8);
@@ -194,7 +194,7 @@ void camcontrol_updateMoveAverage(int *obj, void *p) {
     }
     *(f32 *)((char *)obj + 0xd8) = mag;
     *(f32 *)&((GameObject *)obj)->unkC4 = lbl_803E1630;
-    *(f32 *)&((GameObject *)obj)->unkC4 = *(f32 *)&((GameObject *)obj)->unkC4 + *(f32 *)&((GameObject *)obj)->seqIdC8;
+    *(f32 *)&((GameObject *)obj)->unkC4 = *(f32 *)&((GameObject *)obj)->unkC4 + *(f32 *)&((GameObject *)obj)->unkC8;
     *(f32 *)&((GameObject *)obj)->unkC4 = *(f32 *)&((GameObject *)obj)->unkC4 + *(f32 *)((char *)obj + 0xcc);
     *(f32 *)&((GameObject *)obj)->unkC4 = *(f32 *)&((GameObject *)obj)->unkC4 + *(f32 *)((char *)obj + 0xd0);
     *(f32 *)&((GameObject *)obj)->unkC4 = *(f32 *)&((GameObject *)obj)->unkC4 + *(f32 *)((char *)obj + 0xd4);

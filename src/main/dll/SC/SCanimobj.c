@@ -7,7 +7,7 @@
 
 typedef struct WarpstoneState {
     u8 pad0[0xC - 0x0];
-    u8 boolC;
+    u8 unkC;
     u8 padD[0xE - 0xD];
     s16 unkE;
     s16 unk10;
@@ -175,7 +175,7 @@ void warpstone_update(int obj)
     objAnimFn_80038f38(obj, (int *)(state + 0x14));
     characterDoEyeAnims(obj, (void *)(state + 0x44));
     if (GameBit_Get(0x887) == 0) {
-        ((WarpstoneState *)state)->boolC = 0;
+        ((WarpstoneState *)state)->unkC = 0;
     }
     if (((WarpstoneFlags *)(state + 0xd5))->b4 != 0) {
         return;
@@ -258,9 +258,9 @@ void warpstone_init(int obj, u8 *setup)
   ((WarpstoneState *)state)->unk10 = 0x886;
   ObjHits_EnableObject(obj);
   if (GameBit_Get(0x887) != 0 && GameBit_Get(0x15a) != 0) {
-    ((WarpstoneState *)state)->boolC = 1;
+    ((WarpstoneState *)state)->unkC = 1;
   } else {
-    ((WarpstoneState *)state)->boolC = 0;
+    ((WarpstoneState *)state)->unkC = 0;
   }
   GameBit_Set(((WarpstoneState *)state)->unk10, 0);
   *(int *)state = 0;

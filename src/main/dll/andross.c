@@ -77,13 +77,13 @@ void andross_init(int obj, u8 *setup)
     ((AndrossState *)state)->unkB6 = 5;
     ((AndrossState *)state)->unk7C = 1;
     ((AndrossState *)state)->unk80 = -1;
-    ((AndrossState *)state)->countA0 = -0x8000;
+    ((AndrossState *)state)->unkA0 = -0x8000;
     *(s16 *)obj = -0x8000;
     ((AndrossState *)state)->unk6C = lbl_803E7594;
     ((AndrossState *)state)->unkA8 = lbl_803E74D4;
     ((AndrossState *)state)->unk74 = lbl_803E7598;
     ((AndrossState *)state)->unk78 = lbl_803E7530;
-    ((AndrossState *)state)->boolBC = 1;
+    ((AndrossState *)state)->unkBC = 1;
     ObjHits_SetTargetMask(obj, 4);
     ((GameObject *)obj)->animEventCallback = (void *)andross_updateModelAlpha;
     fn_8006CB50();
@@ -367,7 +367,7 @@ void andross_update(int obj)
   ((AndrossState *)piVar14)->unkD8 = lbl_803E74D4;
   ((AndrossState *)piVar14)->unkDC = fVar2;
   ((AndrossState *)piVar14)->unkE0 = fVar2;
-  if ((-0x4000 < ((AndrossState *)piVar14)->countA0) && (*(s16 *)obj < 0x4000)) {
+  if ((-0x4000 < ((AndrossState *)piVar14)->unkA0) && (*(s16 *)obj < 0x4000)) {
     pathFlag = 1;
   }
   ObjPath_GetPointWorldPosition(obj,pathFlag,(f32 *)(piVar14 + 0x30),(f32 *)(piVar14 + 0x31),(f32 *)(piVar14 + 0x32),0);
@@ -379,8 +379,8 @@ void andross_update(int obj)
   switch (((AndrossState *)piVar14)->unk7C) {
   case 1:
         if (stateChanged) {
-          if (((AndrossState *)piVar14)->boolBC != 0) {
-            ((AndrossState *)piVar14)->boolBC = 0;
+          if (((AndrossState *)piVar14)->unkBC != 0) {
+            ((AndrossState *)piVar14)->unkBC = 0;
           }
           else {
             androsshand_setState(((AndrossState *)piVar14)->unk4,2,1);
@@ -390,7 +390,7 @@ void andross_update(int obj)
           *(undefined *)((int)piVar14 + 0xaf) = 10;
           ((AndrossState *)piVar14)->unkB0 = 10;
         }
-        if (((AndrossState *)piVar14)->bool84 != 0) {
+        if (((AndrossState *)piVar14)->unk84 != 0) {
           switch (((AndrossState *)piVar14)->unk88) {
           default:
           case 3:
@@ -409,7 +409,7 @@ void andross_update(int obj)
             }
             break;
           }
-          ((AndrossState *)piVar14)->bool84 = 0;
+          ((AndrossState *)piVar14)->unk84 = 0;
         }
     break;
   case 2:
@@ -419,7 +419,7 @@ void andross_update(int obj)
         androsshand_setState(((AndrossState *)piVar14)->unk4,1,1);
         androsshand_setState(((AndrossState *)piVar14)->unk8,1,1);
       }
-      if (((AndrossState *)piVar14)->bool84 != 0) {
+      if (((AndrossState *)piVar14)->unk84 != 0) {
         switch(((AndrossState *)piVar14)->unk88) {
         default:
           ((AndrossState *)piVar14)->unk88 = 6;
@@ -438,10 +438,10 @@ void andross_update(int obj)
           break;
         case 0x11:
           ((AndrossState *)piVar14)->unk88 = 0x16;
-          ((AndrossState *)piVar14)->countA0 = 0x8000;
+          ((AndrossState *)piVar14)->unkA0 = 0x8000;
           ((AndrossState *)piVar14)->unk7C = ((AndrossState *)piVar14)->unk7C + -1;
         }
-        ((AndrossState *)piVar14)->bool84 = 0;
+        ((AndrossState *)piVar14)->unk84 = 0;
       }
     break;
   case 3:
@@ -452,7 +452,7 @@ void andross_update(int obj)
         ((AndrossState *)piVar14)->unk88 = 0;
         *(undefined *)((int)piVar14 + 0xb7) = 0;
       }
-      if (((AndrossState *)piVar14)->bool84 != 0) {
+      if (((AndrossState *)piVar14)->unk84 != 0) {
         switch (((AndrossState *)piVar14)->unk88) {
         default:
         case 0:
@@ -469,15 +469,15 @@ void andross_update(int obj)
           else {
             ((AndrossState *)piVar14)->unk7C = ((AndrossState *)piVar14)->unk7C + -1;
             ((AndrossState *)piVar14)->unk88 = 0x16;
-            ((AndrossState *)piVar14)->countA0 = 0;
+            ((AndrossState *)piVar14)->unkA0 = 0;
           }
           break;
         }
-        ((AndrossState *)piVar14)->bool84 = 0;
+        ((AndrossState *)piVar14)->unk84 = 0;
       }
     break;
   case 4:
-    if (((AndrossState *)piVar14)->bool84 != 0) {
+    if (((AndrossState *)piVar14)->unk84 != 0) {
       switch(((AndrossState *)piVar14)->unk88) {
       default:
         ((AndrossState *)piVar14)->unk88 = 6;
@@ -503,7 +503,7 @@ void andross_update(int obj)
       case 0x11:
         ((AndrossState *)piVar14)->unk88 = 0x18;
       }
-      ((AndrossState *)piVar14)->bool84 = 0;
+      ((AndrossState *)piVar14)->unk84 = 0;
     }
     break;
   case 5:
@@ -511,7 +511,7 @@ void andross_update(int obj)
       ((AndrossState *)piVar14)->unk88 = 0xd;
       ((AndrossState *)piVar14)->unkAC = 0;
     }
-    if (((AndrossState *)piVar14)->bool84 != 0) {
+    if (((AndrossState *)piVar14)->unk84 != 0) {
       switch(((AndrossState *)piVar14)->unk88) {
       default:
         *(undefined *)((int)piVar14 + 0xb1) = 3;
@@ -542,7 +542,7 @@ void andross_update(int obj)
       case 0x1a:
         ((AndrossState *)piVar14)->unk88 = 0x1b;
       }
-      ((AndrossState *)piVar14)->bool84 = 0;
+      ((AndrossState *)piVar14)->unk84 = 0;
     }
     break;
   case 6:
@@ -587,13 +587,13 @@ void andross_update(int obj)
     ((AndrossState *)piVar14)->posZCC = ((AndrossState *)piVar14)->unk60;
     ((AndrossState *)piVar14)->unk9C = ((AndrossState *)piVar14)->unk9C - timeDelta;
     if (((AndrossState *)piVar14)->unk9C < lbl_803E74D4) {
-      ((AndrossState *)piVar14)->bool84 = 1;
+      ((AndrossState *)piVar14)->unk84 = 1;
     }
     if ((u32)*(u8 *)((int)piVar14 + 0xae) + (u32)*(u8 *)((int)piVar14 + 0xaf) +
         (u32)((AndrossState *)piVar14)->unkB0 == 0) {
       ((AndrossState *)piVar14)->unk7C = ((AndrossState *)piVar14)->unk7C + 1;
       ((AndrossState *)piVar14)->unk88 = 5;
-      ((AndrossState *)piVar14)->bool84 = 0;
+      ((AndrossState *)piVar14)->unk84 = 0;
       GameBit_Set(0xd,0);
     }
     break;
@@ -620,13 +620,13 @@ void andross_update(int obj)
     ((AndrossState *)piVar14)->posZCC = ((AndrossState *)piVar14)->unk60;
     if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E74DC) {
       ((AndrossState *)piVar14)->unk88 = 2;
-      ((AndrossState *)piVar14)->bool84 = 0;
+      ((AndrossState *)piVar14)->unk84 = 0;
     }
     if ((u32)*(u8 *)((int)piVar14 + 0xae) + (u32)*(u8 *)((int)piVar14 + 0xaf) +
         (u32)((AndrossState *)piVar14)->unkB0 == 0) {
       ((AndrossState *)piVar14)->unk7C = ((AndrossState *)piVar14)->unk7C + 1;
       ((AndrossState *)piVar14)->unk88 = 5;
-      ((AndrossState *)piVar14)->bool84 = 0;
+      ((AndrossState *)piVar14)->unk84 = 0;
       GameBit_Set(0xd,0);
     }
     break;
@@ -662,13 +662,13 @@ void andross_update(int obj)
     ((AndrossState *)piVar14)->unk9C = ((AndrossState *)piVar14)->unk9C - timeDelta;
     if (((AndrossState *)piVar14)->unk9C < lbl_803E74D4) {
       ((AndrossState *)piVar14)->unk88 = 3;
-      ((AndrossState *)piVar14)->bool84 = 0;
+      ((AndrossState *)piVar14)->unk84 = 0;
     }
     if ((u32)*(u8 *)((int)piVar14 + 0xae) + (u32)*(u8 *)((int)piVar14 + 0xaf) +
         (u32)((AndrossState *)piVar14)->unkB0 == 0) {
       ((AndrossState *)piVar14)->unk7C = ((AndrossState *)piVar14)->unk7C + 1;
       ((AndrossState *)piVar14)->unk88 = 5;
-      ((AndrossState *)piVar14)->bool84 = 0;
+      ((AndrossState *)piVar14)->unk84 = 0;
       GameBit_Set(0xd,0);
     }
     break;
@@ -694,7 +694,7 @@ void andross_update(int obj)
                      (float)(((AndrossState *)piVar14)->unk5C + dVar17));
     ((AndrossState *)piVar14)->posZCC = ((AndrossState *)piVar14)->unk60;
     if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E74DC) {
-      ((AndrossState *)piVar14)->bool84 = 1;
+      ((AndrossState *)piVar14)->unk84 = 1;
     }
     break;
   case 4:
@@ -722,14 +722,14 @@ void andross_update(int obj)
     ((AndrossState *)piVar14)->posZCC = ((AndrossState *)piVar14)->unk60;
     ((AndrossState *)piVar14)->unk9C = ((AndrossState *)piVar14)->unk9C - timeDelta;
     if (((AndrossState *)piVar14)->unk9C < lbl_803E74D4) {
-      ((AndrossState *)piVar14)->bool84 = 1;
+      ((AndrossState *)piVar14)->unk84 = 1;
       GameBit_Set(0xd,0);
     }
     if ((u32)*(u8 *)((int)piVar14 + 0xae) + (u32)*(u8 *)((int)piVar14 + 0xaf) +
         (u32)((AndrossState *)piVar14)->unkB0 == 0) {
       ((AndrossState *)piVar14)->unk7C = ((AndrossState *)piVar14)->unk7C + 1;
       ((AndrossState *)piVar14)->unk88 = 5;
-      ((AndrossState *)piVar14)->bool84 = 0;
+      ((AndrossState *)piVar14)->unk84 = 0;
       GameBit_Set(0xd,0);
     }
     break;
@@ -771,7 +771,7 @@ LAB_8023bb18:
     ((AndrossState *)piVar14)->posZCC = ((AndrossState *)piVar14)->unk60;
     ((AndrossState *)piVar14)->unk9C = ((AndrossState *)piVar14)->unk9C - timeDelta;
     if (((AndrossState *)piVar14)->unk9C < lbl_803E74D4) {
-      ((AndrossState *)piVar14)->bool84 = 1;
+      ((AndrossState *)piVar14)->unk84 = 1;
       GameBit_Set(0xd,0);
     }
     break;
@@ -805,7 +805,7 @@ LAB_8023bb18:
       bVar15 = 1;
     }
     if (bVar15 != 0) {
-      ((AndrossState *)piVar14)->bool84 = 1;
+      ((AndrossState *)piVar14)->unk84 = 1;
     }
     break;
   case 7:
@@ -835,7 +835,7 @@ LAB_8023bb18:
       bVar15 = 1;
     }
     if (bVar15 != 0) {
-      ((AndrossState *)piVar14)->bool84 = 1;
+      ((AndrossState *)piVar14)->unk84 = 1;
     }
     break;
   case 9:
@@ -865,7 +865,7 @@ LAB_8023bb18:
       bVar15 = 1;
     }
     if (bVar15 != 0) {
-      ((AndrossState *)piVar14)->bool84 = 1;
+      ((AndrossState *)piVar14)->unk84 = 1;
     }
     break;
   case 8:
@@ -895,7 +895,7 @@ LAB_8023bb18:
       bVar15 = 1;
     }
     if (bVar15 != 0) {
-      ((AndrossState *)piVar14)->bool84 = 1;
+      ((AndrossState *)piVar14)->unk84 = 1;
     }
     break;
   case 10:
@@ -911,7 +911,7 @@ LAB_8023bb18:
         }
         Sfx_PlayFromObject(obj,uVar9);
         ((AndrossState *)piVar14)->unk88 = 0x16;
-        ((AndrossState *)piVar14)->countA0 = 0x8000;
+        ((AndrossState *)piVar14)->unkA0 = 0x8000;
       }
     }
     else {
@@ -942,7 +942,7 @@ LAB_8023bb18:
         bVar15 = 1;
       }
       if (bVar15 != 0) {
-        ((AndrossState *)piVar14)->bool84 = 1;
+        ((AndrossState *)piVar14)->unk84 = 1;
       }
     }
     break;
@@ -1225,7 +1225,7 @@ LAB_8023cbdc:
                      (float)(((AndrossState *)piVar14)->unk5C + dVar17));
     ((AndrossState *)piVar14)->posZCC = ((AndrossState *)piVar14)->unk60;
     if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E74DC) {
-      ((AndrossState *)piVar14)->bool84 = 1;
+      ((AndrossState *)piVar14)->unk84 = 1;
     }
     break;
   case 0x10:
@@ -1298,7 +1298,7 @@ LAB_8023cbdc:
                      (float)(((AndrossState *)piVar14)->unk5C + dVar17));
     ((AndrossState *)piVar14)->posZCC = ((AndrossState *)piVar14)->unk60;
     if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E74DC) {
-      ((AndrossState *)piVar14)->bool84 = 1;
+      ((AndrossState *)piVar14)->unk84 = 1;
     }
     break;
   case 0x12:
@@ -1476,7 +1476,7 @@ LAB_8023db24:
                      (float)(((AndrossState *)piVar14)->unk5C + dVar17));
     ((AndrossState *)piVar14)->posZCC = ((AndrossState *)piVar14)->unk60;
     if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E74DC) {
-      ((AndrossState *)piVar14)->bool84 = 1;
+      ((AndrossState *)piVar14)->unk84 = 1;
     }
     break;
   case 0x19:
@@ -1488,7 +1488,7 @@ LAB_8023db24:
       ((AndrossState *)iVar12)->unk64 = lbl_8032C0A8[0];
     }
     if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E74DC) {
-      ((AndrossState *)piVar14)->bool84 = 1;
+      ((AndrossState *)piVar14)->unk84 = 1;
     }
     break;
   case 0x1b:
@@ -1505,7 +1505,7 @@ LAB_8023db24:
     if (((u32)GameBit_Get(0x10) != 0) &&
        (sVar3 = ((AndrossState *)piVar14)->unk98, ((AndrossState *)piVar14)->unk98 = sVar3 + -1, sVar3 == 0)) {
       GameBit_Set(0x10,0);
-      ((AndrossState *)piVar14)->bool84 = 1;
+      ((AndrossState *)piVar14)->unk84 = 1;
     }
     break;
   case 0x1c:
@@ -1640,7 +1640,7 @@ LAB_8023de5c:
       }
       ((AndrossState *)piVar14)->unkA8 = fVar2;
     }
-    sVar3 = ((AndrossState *)piVar14)->countA0 - *(s16 *)obj;
+    sVar3 = ((AndrossState *)piVar14)->unkA0 - *(s16 *)obj;
     if (0x8000 < sVar3) {
       sVar3 = sVar3 + 1;
     }
@@ -1656,7 +1656,7 @@ LAB_8023de5c:
       if ((((cVar11 != '\x02') && (cVar11 != '\x01')) &&
           (cVar11 = *(char *)(*(int *)(((AndrossState *)piVar14)->unk8 + 0xb8) + 0x23), cVar11 != '\x02')) &&
          (cVar11 != '\x01')) {
-        ((AndrossState *)piVar14)->bool84 = 1;
+        ((AndrossState *)piVar14)->unk84 = 1;
       }
     }
     break;
@@ -1708,10 +1708,10 @@ LAB_8023de5c:
     if ((((cVar11 != '\x02') && (cVar11 != '\x01')) &&
         (cVar11 = *(char *)&((AndrossState *)iVar5)->unk23, cVar11 != '\x02')) && (cVar11 != '\x01')) {
       if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E74DC) {
-        ((AndrossState *)piVar14)->bool84 = 1;
+        ((AndrossState *)piVar14)->unk84 = 1;
       }
       else if (((GameObject *)obj)->anim.currentMoveProgress > lbl_803E7568) {
-        ((AndrossState *)piVar14)->countA0 = 0;
+        ((AndrossState *)piVar14)->unkA0 = 0;
           androsshand_setState(((AndrossState *)piVar14)->unk4,1,(u8)((((AndrossState *)piVar14)->unk7C == 4) + 1));
         androsshand_setState(((AndrossState *)piVar14)->unk8,1,(u8)((((AndrossState *)piVar14)->unk7C == 4) + 1));
         *(u8 *)((int)piVar14 + 0xad) = *(u8 *)((int)piVar14 + 0xad) & ~0x6;
@@ -1762,7 +1762,7 @@ LAB_8023de5c:
       arwarwing_setVelocity(*piVar14,(int)&local_b4);
     }
     if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E74DC) {
-      ((AndrossState *)piVar14)->bool84 = 1;
+      ((AndrossState *)piVar14)->unk84 = 1;
     }
     break;
   case 0x18:
@@ -1804,7 +1804,7 @@ LAB_8023de5c:
       }
     }
     if (((GameObject *)obj)->anim.currentMoveProgress >= lbl_803E74DC) {
-      ((AndrossState *)piVar14)->bool84 = 1;
+      ((AndrossState *)piVar14)->unk84 = 1;
     }
     break;
   case 0x1e:
@@ -1851,7 +1851,7 @@ LAB_8023de5c:
     local_cc = *(SunVec3 *)(piVar14 + 0x36);
     arwarwing_addVelocity(*piVar14,(int)&local_cc);
   }
-  sVar3 = ((AndrossState *)piVar14)->countA0 - *(s16 *)obj;
+  sVar3 = ((AndrossState *)piVar14)->unkA0 - *(s16 *)obj;
   if (0x8000 < sVar3) {
     sVar3 = sVar3 + 1;
   }

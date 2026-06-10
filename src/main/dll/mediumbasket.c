@@ -1320,7 +1320,7 @@ int mediumbasket_stateHandlerB03(int obj, int state)
 
     if ((s8)((GroundBaddieState *)state)->baddie.moveJustStartedB != 0) {
         sub = ((GameObject *)obj)->extra;
-        sub->bool405 = 0;
+        sub->unk405 = 0;
         GameBit_Set((s32)sub->gameBitB, 0);
         GameBit_Set((s32)sub->gameBitA, 1);
     }
@@ -2000,9 +2000,9 @@ void dll_CA_free(int obj)
 
     Camera_DisableViewYOffset();
     ObjGroup_RemoveObject(obj, 3);
-    if (((GameObject *)obj)->seqIdC8 != NULL) {
-        Obj_FreeObject(*(int *)&((GameObject *)obj)->seqIdC8);
-        *(int *)&((GameObject *)obj)->seqIdC8 = 0;
+    if (((GameObject *)obj)->unkC8 != NULL) {
+        Obj_FreeObject(*(int *)&((GameObject *)obj)->unkC8);
+        *(int *)&((GameObject *)obj)->unkC8 = 0;
     }
     ((void (*)(int, int, int))((void **)*gBaddieControlInterface)[16])(obj, (int)state, 0x20);
 }
@@ -2014,7 +2014,7 @@ void dll_CA_render(int obj, int arg1, int arg2, int arg3, int arg4, s8 visible)
     if (visible == 0) {
         goto done;
     }
-    if (((GameObject *)obj)->countF4 != 0) {
+    if (((GameObject *)obj)->unkF4 != 0) {
         goto done;
     }
     if (state->targetState != 0) {

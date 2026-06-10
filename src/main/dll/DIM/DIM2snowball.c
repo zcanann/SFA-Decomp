@@ -265,7 +265,7 @@ typedef struct DimLevelControlState {
     u8 unk9;
     s16 musicTrack;
     u8 gameBitC;
-    u8 boolD;
+    u8 unkD;
     u8 b7 : 1;
     u8 b6 : 1;
     u8 b5 : 1;
@@ -310,10 +310,10 @@ void dim_levelcontrol_update(int obj)
         Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
         st->b3 = 1;
     }
-    if (((GameObject *)obj)->countF4 != 0) {
+    if (((GameObject *)obj)->unkF4 != 0) {
         if ((u32)GameBit_Get(0xa82) == 0 ||
             ((u32)GameBit_Get(0x17) != 0 && (u32)GameBit_Get(0xead) == 0)) {
-            if (((GameObject *)obj)->countF4 == 2) {
+            if (((GameObject *)obj)->unkF4 == 2) {
                 getEnvfxActImmediately(0, 0, 0x160, 0);
                 getEnvfxActImmediately(0, 0, 0x15a, 0);
                 getEnvfxActImmediately(0, 0, 0x15c, 0);
@@ -325,17 +325,17 @@ void dim_levelcontrol_update(int obj)
                 getEnvfxAct(0, 0, 0x15f, 0);
             }
         }
-        ((GameObject *)obj)->countF4 = 0;
+        ((GameObject *)obj)->unkF4 = 0;
     }
-    if (st->boolD != 0) {
+    if (st->unkD != 0) {
         if ((u32)GameBit_Get(0x651) == 0) {
             (*gMapEventInterface)->setAnimEvent(0x13, 0xd, 0);
-            st->boolD = 0;
+            st->unkD = 0;
         }
     } else {
         if ((u32)GameBit_Get(0x651) != 0) {
             (*gMapEventInterface)->setAnimEvent(0x13, 0xd, 1);
-            st->boolD = 1;
+            st->unkD = 1;
         }
     }
     if (st->timer > lbl_803E4A24) {
@@ -774,9 +774,9 @@ void dim_levelcontrol_init(int obj)
     st->saveState = 0;
     st->timer = lbl_803E4A28;
     if (getSaveGameLoadStatus() != 0) {
-        ((GameObject *)obj)->countF4 = 2;
+        ((GameObject *)obj)->unkF4 = 2;
     } else {
-        ((GameObject *)obj)->countF4 = 1;
+        ((GameObject *)obj)->unkF4 = 1;
     }
     for (i = 1; i <= 38; i++) {
         gameBitFn_800ea2e0(i);

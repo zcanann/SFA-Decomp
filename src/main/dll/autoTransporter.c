@@ -187,7 +187,7 @@ void doorf4_free(int obj) {
 
 extern f32 lbl_803E36A0;
 void sidekickball_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
-    if (((GameObject *)obj)->moveF8 == 0 || visible == -1) {
+    if (((GameObject *)obj)->unkF8 == 0 || visible == -1) {
         objRenderFn_8003b8f4(lbl_803E36A0);
     }
 }
@@ -286,11 +286,11 @@ void trickyBallFn_801793b8(int *obj, u8 *params)
         }
     }
 
-    if (((GameObject *)obj)->moveF8 == 1) {
+    if (((GameObject *)obj)->unkF8 == 1) {
         params[0x2c9] = 2;
     }
     if (params[0x2c9] != 2) goto end;
-    if (((GameObject *)obj)->moveF8 != 0) goto end;
+    if (((GameObject *)obj)->unkF8 != 0) goto end;
 
     if (fn_8029669C(player) == 0) {
         params[0x2c9] = 0;
@@ -340,7 +340,7 @@ void doorf4_update(int *obj)
 {
     DoorF4State *state = ((GameObject *)obj)->extra;
     state->triggerLatch = 0;
-    if (((GameObject *)obj)->countF4 == 0) {
+    if (((GameObject *)obj)->unkF4 == 0) {
         int *src = *(int **)&((GameObject *)obj)->anim.placementData;
         s16 type;
         ((GameObject *)obj)->anim.localPosX = ((ObjPlacement *)src)->posX;
@@ -363,7 +363,7 @@ void doorf4_update(int *obj)
         } else {
             (*gObjectTriggerInterface)->runSequence(0, obj, -1);
         }
-        ((GameObject *)obj)->countF4 = 1;
+        ((GameObject *)obj)->unkF4 = 1;
     }
 }
 
@@ -521,7 +521,7 @@ int doorf4_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate) {
             s = mathCosf(ang);
             sd = -(((ObjPlacement *)def)->posX * sd + ((ObjPlacement *)def)->posZ * s)
                + (sd * ((GameObject *)player)->anim.localPosX + s * ((GameObject *)player)->anim.localPosZ);
-            if (((GameObject *)obj)->moveF8 == 0) {
+            if (((GameObject *)obj)->unkF8 == 0) {
                 if (sd < lbl_803E3648 && sd > lbl_803E3658) {
                     active = 1;
                 }
@@ -573,11 +573,11 @@ int doorf4_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate) {
                 if (ObjMsg_Pop(obj, &msg, 0, 0) != 0 && msg < 10 && msg >= 8) {
                     ObjMsg_SendToObject(other, msg, obj, 0);
                 }
-                if (sd < lbl_803E3648 && ((GameObject *)obj)->moveF8 == 0) {
+                if (sd < lbl_803E3648 && ((GameObject *)obj)->unkF8 == 0) {
                     seq[0x90] |= 0x14;
                 }
             } else {
-                if (((GameObject *)obj)->moveF8 == 1) {
+                if (((GameObject *)obj)->unkF8 == 1) {
                     seq[0x90] |= 8;
                 }
             }
@@ -611,14 +611,14 @@ int doorf4_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate) {
         }
         break;
     }
-    if (((GameObject *)obj)->moveF8 == 0) {
+    if (((GameObject *)obj)->unkF8 == 0) {
         if (active != 0) {
             seq[0x90] |= 1;
         }
     } else if (active == 0) {
         seq[0x90] |= 2;
     }
-    ((GameObject *)obj)->moveF8 = active;
+    ((GameObject *)obj)->unkF8 = active;
     if ((((GameObject *)obj)->anim.seqId == 0x13e || ((GameObject *)obj)->anim.seqId == 0x151)
         && sub->triggerLatch != 0) {
         seq[0x90] |= 1;
@@ -727,8 +727,8 @@ int doorf4_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate) {
             animUpdate->eventIds[i] = 0;
         }
     }
-    if (((GameObject *)obj)->countF4 != 0) {
-        ((GameObject *)obj)->countF4 = 0;
+    if (((GameObject *)obj)->unkF4 != 0) {
+        ((GameObject *)obj)->unkF4 = 0;
         return 3;
     }
     return 0;

@@ -324,13 +324,13 @@ void worldobj_update(int obj) {
         ((GameObject *)obj)->anim.rotX = lbl_803E668C * timeDelta + (f32)((GameObject *)obj)->anim.rotX;
         break;
     case 0x5dc:
-        if (((GameObject *)obj)->countF4 == 0) {
-            ((GameObject *)obj)->countF4 = ObjList_FindObjectById(0x431dc);
-            ObjLink_AttachChild(obj, ((GameObject *)obj)->countF4, 0);
+        if (((GameObject *)obj)->unkF4 == 0) {
+            ((GameObject *)obj)->unkF4 = ObjList_FindObjectById(0x431dc);
+            ObjLink_AttachChild(obj, ((GameObject *)obj)->unkF4, 0);
         }
-        if (((GameObject *)obj)->moveF8 == 0) {
-            ((GameObject *)obj)->moveF8 = ObjList_FindObjectById(0x4325b);
-            ObjLink_AttachChild(obj, ((GameObject *)obj)->moveF8, 0);
+        if (((GameObject *)obj)->unkF8 == 0) {
+            ((GameObject *)obj)->unkF8 = ObjList_FindObjectById(0x4325b);
+            ObjLink_AttachChild(obj, ((GameObject *)obj)->unkF8, 0);
         }
         tex = objFindTexture(obj, 0, 0);
         if ((void *)tex != NULL) {
@@ -418,17 +418,17 @@ void worldobj_update(int obj) {
     case 0x5d6:
     case 0x5d7:
     case 0x5d8:
-        if (((GameObject *)obj)->moveF8 == 0) {
+        if (((GameObject *)obj)->unkF8 == 0) {
             child = ObjList_FindObjectById(state->attachChildObjectId);
             if ((void *)child != NULL) {
                 *(f32 *)(child + 8) *= lbl_803E6668;
                 *(u8 *)(child + 0x36) = 0x96;
                 *(s16 *)(child + 6) |= 0x4000;
                 ObjLink_AttachChild(obj, child, 0);
-                ((GameObject *)obj)->moveF8 = 1;
+                ((GameObject *)obj)->unkF8 = 1;
             }
         }
-        if (((GameObject *)obj)->countF4 != 0 && *(void **)&state->lookAtTargetRef != NULL) {
+        if (((GameObject *)obj)->unkF4 != 0 && *(void **)&state->lookAtTargetRef != NULL) {
             view = Camera_GetCurrentViewSlot();
             dx = *(f32 *)(view + 0xc) - ((GameObject *)obj)->anim.localPosX;
             dy = *(f32 *)(view + 0x10) - ((GameObject *)obj)->anim.localPosY;

@@ -26,7 +26,7 @@ typedef struct DIMSnowHorn1State {
     f32 unk9F0;
     u8 pad9F4[0xA84 - 0x9F4];
     s16 unkA84;
-    s16 countA86;
+    s16 unkA86;
     s16 timerA88;
     u8 unkA8A;
     u8 padA8B;
@@ -265,7 +265,7 @@ int DIMSnowHorn1_stateHandler09(int obj, int state, f32 fv)
     near = ObjGroup_FindNearestObject(0x13, obj, &sp);
     *(u32 *)((char *)state) |= 0x200000;
 
-    if (*(s16 *)((char *)state + 0x334) < inner->countA86 ||
+    if (*(s16 *)((char *)state + 0x334) < inner->unkA86 ||
         lbl_803E8234 == *(f32 *)((char *)state + 0x298)) {
         return 8;
     }
@@ -386,11 +386,11 @@ int DIMSnowHorn1_stateHandler07(int obj, int state)
     {
         f32 v = *(f32 *)&((DIMSnowHorn1State *)state)->baddie.trackedObj;
         if (v > lbl_803E8234 && *(f32 *)((char *)state + 0x298) > lbl_803E8234 &&
-            *(s16 *)((char *)state + 0x334) >= inner->countA86) {
+            *(s16 *)((char *)state + 0x334) >= inner->unkA86) {
             return 0xa;
         }
         if (v > lbl_803E8288 && *(f32 *)((char *)state + 0x298) > lbl_803E8288 &&
-            *(s16 *)((char *)state + 0x334) < inner->countA86) {
+            *(s16 *)((char *)state + 0x334) < inner->unkA86) {
             return 0xb;
         }
     }
@@ -828,7 +828,7 @@ int DIMSnowHorn1_animEventCallback(int obj, int unused, ObjAnimUpdateState *anim
     switch (state->modeA8C) {
         case 0:
             animUpdate->sequenceEventActive = 0;
-            if (((GameObject *)obj)->classIdB4 == -1) {
+            if (((GameObject *)obj)->unkB4 == -1) {
                 for (i = 0; i < (int)(u32)animUpdate->eventCount; i++) {
                     GameBit_Set(0x17b, 1);
                     state->flagsA8E |= 0x20;
@@ -846,7 +846,7 @@ int DIMSnowHorn1_animEventCallback(int obj, int unused, ObjAnimUpdateState *anim
             break;
         case 1:
             animUpdate->sequenceEventActive = 0;
-            if (((GameObject *)obj)->classIdB4 != -1) {
+            if (((GameObject *)obj)->unkB4 != -1) {
                 switch (state->modeA8D) {
                     case 0:
                     case 1:
@@ -1327,7 +1327,7 @@ void DIMSnowHorn1_init(int obj, int p2, int p3)
     ObjGroup_AddObject(obj, 0xa);
     inner = ((GameObject *)obj)->extra;
     inner->modeA8C = *(u8 *)((char *)p2 + 0x19);
-    inner->countA86 = 5;
+    inner->unkA86 = 5;
     inner->timerA88 = 0x3e8;
     if (((GameObject *)obj)->anim.modelState != NULL) {
         ((GameObject *)obj)->anim.modelState->flags |= 0xa10;

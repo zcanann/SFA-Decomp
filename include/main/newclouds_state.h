@@ -31,7 +31,7 @@ typedef struct NewCloud {
     s32 unk13F0;
     s32 unk13F4;
     s32 unk13F8;
-    s32 count13FC;
+    s32 unk13FC;
     s32 unk1400;
     u8 unk1404[0x8];
     f32 unk140C;
@@ -39,8 +39,8 @@ typedef struct NewCloud {
     f32 unk1414;
     f32 unk1418;
     f32 unk141C;
-    f32 speed1420;
-    f32 speed1424;
+    f32 unk1420;
+    f32 unk1424;
     f32 unk1428;
     f32 unk142C;
     f32 unk1430;

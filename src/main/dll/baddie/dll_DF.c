@@ -236,9 +236,9 @@ int trickyFn_8013b368(u8 *obj, f32 vel, u8 *state)
         trickyReportError(strs + 0x214, ((GameObject *)obj)->anim.worldPosX, ((GameObject *)obj)->anim.worldPosY,
                           ((GameObject *)obj)->anim.worldPosZ);
     }
-    velBefore = ((TrickyState *)state)->speed14;
+    velBefore = ((TrickyState *)state)->unk14;
     trickyUpdateApproachSpeed(obj, vel, state, (f32 *)target, 0);
-    trickyDebugPrint(strs + 0x268, velBefore, ((TrickyState *)state)->speed14);
+    trickyDebugPrint(strs + 0x268, velBefore, ((TrickyState *)state)->unk14);
     if (targetWg == ((TrickyState *)state)->flagsD0) {
         ((TrickyState *)state)->flags54 = ((TrickyState *)state)->flags54 | 0x400;
         i = 0;
@@ -254,13 +254,13 @@ int trickyFn_8013b368(u8 *obj, f32 vel, u8 *state)
         }
     }
     if ((targetWg != 0) && (targetWg == ((TrickyState *)state)->flagsD0)) {
-        *(s16 *)&((TrickyState *)state)->boolD2 = 0;
+        *(s16 *)&((TrickyState *)state)->unkD2 = 0;
     } else {
         prod = targetWg * ((TrickyState *)state)->flagsD0 & 0xffff;
         if (prod != 0) {
             for (i = 0; i < 4; i++) {
                 if ((prod == wgi.patch[i]) && ((wgi.mask & (1 << i)) != 0)) {
-                    *(s16 *)&((TrickyState *)state)->boolD2 = prod;
+                    *(s16 *)&((TrickyState *)state)->unkD2 = prod;
                     *(f32 *)(state + 0xd4) = *(f32 *)target;
                     *(f32 *)(state + 0xd8) = *(f32 *)(target + 4);
                     *(f32 *)(state + 0xdc) = *(f32 *)(target + 8);
@@ -283,7 +283,7 @@ int trickyFn_8013b368(u8 *obj, f32 vel, u8 *state)
             }
         }
     }
-    if (*(s16 *)&((TrickyState *)state)->boolD2 != 0) {
+    if (*(s16 *)&((TrickyState *)state)->unkD2 != 0) {
         trickyDebugPrint(strs + 0x328, *(f32 *)(state + 0xd4), *(f32 *)(state + 0xd8),
                          *(f32 *)(state + 0xdc));
     }
@@ -354,7 +354,7 @@ int trickyFn_8013b368(u8 *obj, f32 vel, u8 *state)
                         if (wg == 0) {
                             tp = (u16)getPatchGroup((f32 *)(obj + 0x18), ((TrickyState *)state)->flagsD0);
                             if (tp != 0) {
-                                if (*(s16 *)&((TrickyState *)state)->boolD2 == (int)tp) {
+                                if (*(s16 *)&((TrickyState *)state)->unkD2 == (int)tp) {
                                     ((TrickyState *)state)->unk09 = 3;
                                 } else {
                                     fn_800DB240(target, state + 0xec, tp);
@@ -389,7 +389,7 @@ int trickyFn_8013b368(u8 *obj, f32 vel, u8 *state)
                         targetWg = targetWg * wg & 0xffff;
                         if (isPointWithinPatchGroup((f32 *)(obj + 0x18), ((TrickyState *)state)->flagsD0,
                                                     targetWg) != 0) {
-                            if (*(s16 *)&((TrickyState *)state)->boolD2 == (int)targetWg) {
+                            if (*(s16 *)&((TrickyState *)state)->unkD2 == (int)targetWg) {
                                 ((TrickyState *)state)->unk09 = 3;
                             } else {
                                 ((TrickyState *)state)->unk09 = 5;
@@ -402,7 +402,7 @@ int trickyFn_8013b368(u8 *obj, f32 vel, u8 *state)
                                     break;
                                 }
                             }
-                            if ((i == 4) || (targetWg != *(s16 *)&((TrickyState *)state)->boolD2)) {
+                            if ((i == 4) || (targetWg != *(s16 *)&((TrickyState *)state)->unkD2)) {
                                 ((TrickyState *)state)->unk09 = 5;
                             }
                         }
@@ -421,7 +421,7 @@ int trickyFn_8013b368(u8 *obj, f32 vel, u8 *state)
                                     fn_800DB240(target, state + 0xec, p);
                                     ((TrickyState *)state)->unk09 = 4;
                                 }
-                            } else if (*(s16 *)&((TrickyState *)state)->boolD2 == (int)p) {
+                            } else if (*(s16 *)&((TrickyState *)state)->unkD2 == (int)p) {
                                 ((TrickyState *)state)->unk09 = 3;
                             } else {
                                 fn_800DB240(target, state + 0xec, p);
@@ -447,8 +447,8 @@ state_selected:
     case 0:
         trickyDebugPrint(strs + 0x41c);
         v = lbl_803E241C * timeDelta + velBefore;
-        ((TrickyState *)state)->speed14 = (v < lbl_803E23DC) ? lbl_803E23DC : v;
-        if (lbl_803E23DC == ((TrickyState *)state)->speed14) {
+        ((TrickyState *)state)->unk14 = (v < lbl_803E23DC) ? lbl_803E23DC : v;
+        if (lbl_803E23DC == ((TrickyState *)state)->unk14) {
             moved = 0;
         } else {
             moved = trickyMove(obj, target);
@@ -460,19 +460,19 @@ state_selected:
         break;
     case 2:
         trickyDebugPrint(strs + 0x434);
-        ((TrickyState *)state)->speed14 = velBefore;
+        ((TrickyState *)state)->unk14 = velBefore;
         trickyUpdateApproachSpeed(obj, lbl_803E23DC, state, (f32 *)(state + slot * 0xc + 0xa0), 1);
         moved = trickyMove(obj, state + slot * 0xc + 0xa0);
         break;
     case 4:
         trickyDebugPrint(strs + 0x448);
-        ((TrickyState *)state)->speed14 = velBefore;
+        ((TrickyState *)state)->unk14 = velBefore;
         trickyUpdateApproachSpeed(obj, lbl_803E2488, state, (f32 *)(state + 0xec), 1);
         moved = trickyMove(obj, state + 0xec);
         break;
     case 3:
         trickyDebugPrint(strs + 0x45c);
-        ((TrickyState *)state)->speed14 = velBefore;
+        ((TrickyState *)state)->unk14 = velBefore;
         trickyUpdateApproachSpeed(obj, lbl_803E2488, state, (f32 *)(state + 0xd4), 1);
         moved = trickyMove(obj, state + 0xd4);
         break;
@@ -510,38 +510,38 @@ state_selected:
                     }
                     d = (diff >= 0) ? diff : -diff;
                     if (0x1000 < d) {
-                        ((TrickyState *)state)->speed14 = velBefore;
+                        ((TrickyState *)state)->unk14 = velBefore;
                         trickyUpdateApproachSpeed(obj, lbl_803E246C, state, (f32 *)(state + 0x488), 1);
                     }
-                    trickyAdvanceRouteTargetAhead(obj, state + 0x420, ((TrickyState *)state)->speed14);
+                    trickyAdvanceRouteTargetAhead(obj, state + 0x420, ((TrickyState *)state)->unk14);
                     moved = trickyMove(obj, state + 0x488);
                     switch (*(s8 *)(prevNode + 0x1a)) {
                     case 1:
-                        ((TrickyState *)state)->speed2C =
+                        ((TrickyState *)state)->unk2C =
                             *(f32 *)(*(int *)(state + 0x4c0) + 8) - ((GameObject *)obj)->anim.worldPosX;
-                        ((TrickyState *)state)->speed30 =
+                        ((TrickyState *)state)->unk30 =
                             *(f32 *)(*(int *)(state + 0x4c0) + 0x10) - ((GameObject *)obj)->anim.worldPosZ;
-                        len = sqrtf(((TrickyState *)state)->speed2C * ((TrickyState *)state)->speed2C +
-                                    ((TrickyState *)state)->speed30 * ((TrickyState *)state)->speed30);
+                        len = sqrtf(((TrickyState *)state)->unk2C * ((TrickyState *)state)->unk2C +
+                                    ((TrickyState *)state)->unk30 * ((TrickyState *)state)->unk30);
                         if (lbl_803E23DC != len) {
-                            ((TrickyState *)state)->speed2C = ((TrickyState *)state)->speed2C / len;
-                            ((TrickyState *)state)->speed30 = ((TrickyState *)state)->speed30 / len;
+                            ((TrickyState *)state)->unk2C = ((TrickyState *)state)->unk2C / len;
+                            ((TrickyState *)state)->unk30 = ((TrickyState *)state)->unk30 / len;
                         }
-                        ((TrickyState *)state)->speed14 = lbl_803E248C;
+                        ((TrickyState *)state)->unk14 = lbl_803E248C;
                         objAnimFn_8013a3f0(obj, 0x15, lbl_803E2468, 0x4000000);
                         ((TrickyState *)state)->unk09 = 9;
                         ((TrickyState *)state)->timer7A0f = lbl_803E2440;
                         break;
                     case 5:
-                        ((TrickyState *)state)->speed2C =
+                        ((TrickyState *)state)->unk2C =
                             *(f32 *)(*(int *)(state + 0x4c0) + 8) - ((GameObject *)obj)->anim.worldPosX;
-                        ((TrickyState *)state)->speed30 =
+                        ((TrickyState *)state)->unk30 =
                             *(f32 *)(*(int *)(state + 0x4c0) + 0x10) - ((GameObject *)obj)->anim.worldPosZ;
-                        len = sqrtf(((TrickyState *)state)->speed2C * ((TrickyState *)state)->speed2C +
-                                    ((TrickyState *)state)->speed30 * ((TrickyState *)state)->speed30);
+                        len = sqrtf(((TrickyState *)state)->unk2C * ((TrickyState *)state)->unk2C +
+                                    ((TrickyState *)state)->unk30 * ((TrickyState *)state)->unk30);
                         if (lbl_803E23DC != len) {
-                            ((TrickyState *)state)->speed2C = ((TrickyState *)state)->speed2C / len;
-                            ((TrickyState *)state)->speed30 = ((TrickyState *)state)->speed30 / len;
+                            ((TrickyState *)state)->unk2C = ((TrickyState *)state)->unk2C / len;
+                            ((TrickyState *)state)->unk30 = ((TrickyState *)state)->unk30 / len;
                         }
                         if (randomGetRange(0, 1) == 0) {
                             objAnimFn_8013a3f0(obj, 0x18, lbl_803E2494, 0x40000c0);
@@ -564,15 +564,15 @@ state_selected:
                         ((TrickyState *)state)->timer7A0f = lbl_803E2440;
                         break;
                     case 6:
-                        ((TrickyState *)state)->speed2C =
+                        ((TrickyState *)state)->unk2C =
                             *(f32 *)(*(int *)(state + 0x4c0) + 8) - ((GameObject *)obj)->anim.worldPosX;
-                        ((TrickyState *)state)->speed30 =
+                        ((TrickyState *)state)->unk30 =
                             *(f32 *)(*(int *)(state + 0x4c0) + 0x10) - ((GameObject *)obj)->anim.worldPosZ;
-                        len = sqrtf(((TrickyState *)state)->speed2C * ((TrickyState *)state)->speed2C +
-                                    ((TrickyState *)state)->speed30 * ((TrickyState *)state)->speed30);
+                        len = sqrtf(((TrickyState *)state)->unk2C * ((TrickyState *)state)->unk2C +
+                                    ((TrickyState *)state)->unk30 * ((TrickyState *)state)->unk30);
                         if (lbl_803E23DC != len) {
-                            ((TrickyState *)state)->speed2C = ((TrickyState *)state)->speed2C / len;
-                            ((TrickyState *)state)->speed30 = ((TrickyState *)state)->speed30 / len;
+                            ((TrickyState *)state)->unk2C = ((TrickyState *)state)->unk2C / len;
+                            ((TrickyState *)state)->unk30 = ((TrickyState *)state)->unk30 / len;
                         }
                         objAnimFn_8013a3f0(obj, 0x19, lbl_803E249C, 0x40000c0);
                         ((TrickyState *)state)->unk48 =
@@ -611,7 +611,7 @@ state_selected:
             if ((node == 0) && (wg != 0)) {
                 ((TrickyState *)state)->unk09 = 0;
             } else {
-                ((TrickyState *)state)->speed14 = velBefore;
+                ((TrickyState *)state)->unk14 = velBefore;
                 trickyUpdateApproachSpeed(obj, lbl_803E246C, state, (f32 *)(*(int *)(state + 0x418) + 8), 1);
                 moved = trickyMove(obj, (u8 *)(*(int *)(state + 0x418) + 8));
             }
@@ -622,12 +622,12 @@ state_selected:
         trickyRankLinkedRouteCandidates(obj, routeFlags, (s16)wg, routePtrs);
         i = trickyFindReachableRouteIndex(state, routePtrs, routeFlags, ((TrickyState *)state)->unk532);
         if (i == -1) {
-            ((TrickyState *)state)->speed14 = velBefore;
+            ((TrickyState *)state)->unk14 = velBefore;
             return 2;
         }
         *(u8 *)(state + 0x41c) = routeFlags[i];
         *(int *)(state + 0x418) = routePtrs[i];
-        ((TrickyState *)state)->speed14 = velBefore;
+        ((TrickyState *)state)->unk14 = velBefore;
         trickyUpdateApproachSpeed(obj, lbl_803E2488, state, (f32 *)(*(int *)(state + 0x418) + 8), 1);
         moved = trickyMove(obj, (u8 *)(*(int *)(state + 0x418) + 8));
         ((TrickyState *)state)->unk09 = 6;
@@ -636,7 +636,7 @@ state_selected:
         trickyDebugPrint(strs + 0x490);
         if ((((TrickyState *)state)->unk534 != 0) && (wg == ((TrickyState *)state)->unk534)) {
             v = lbl_803E241C * timeDelta + velBefore;
-            ((TrickyState *)state)->speed14 = (v < lbl_803E23DC) ? lbl_803E23DC : v;
+            ((TrickyState *)state)->unk14 = (v < lbl_803E23DC) ? lbl_803E23DC : v;
         }
         node = *(u8 **)(state + 0x4c0);
         if ((*(s8 *)(*(int *)(state + 0x4bc) + 0x1a) != 9) && (*(s8 *)(node + 0x1a) != 9)) {
@@ -648,7 +648,7 @@ state_selected:
             rot.b = 0;
             rot.c = 0;
             vecRotateZXY(&rot, delta);
-            if ((lbl_803E23DC < delta[2]) && (lbl_803E23DC != ((TrickyState *)state)->speed14)) {
+            if ((lbl_803E23DC < delta[2]) && (lbl_803E23DC != ((TrickyState *)state)->unk14)) {
                 step = 0;
                 while ((step < 4) &&
                        ((u16)*(u8 *)(node + step + 4) != ((TrickyState *)state)->unk532)) {
@@ -735,11 +735,11 @@ state_selected:
                     }
                     d = (diff >= 0) ? diff : -diff;
                     if (0x1000 < d) {
-                        ((TrickyState *)state)->speed14 = velBefore;
+                        ((TrickyState *)state)->unk14 = velBefore;
                         trickyUpdateApproachSpeed(obj, lbl_803E246C, state, (f32 *)(state + 0x488), 1);
                     }
                 }
-                trickyAdvanceRouteTargetAhead(obj, state + 0x420, ((TrickyState *)state)->speed14);
+                trickyAdvanceRouteTargetAhead(obj, state + 0x420, ((TrickyState *)state)->unk14);
                 moved = trickyMove(obj, state + 0x488);
                 type = *(s8 *)(*(int *)(state + 0x4c0) + 0x1a);
                 if (type == 5) {
@@ -757,10 +757,10 @@ state_selected:
     case 8:
         trickyDebugPrint(strs + 0x49c);
         v = lbl_803E2420 * timeDelta + velBefore;
-        ((TrickyState *)state)->speed14 = (v > lbl_803E248C) ? lbl_803E248C : v;
+        ((TrickyState *)state)->unk14 = (v > lbl_803E248C) ? lbl_803E248C : v;
         if ((((TrickyState *)state)->unk534 != 0) && (wg == ((TrickyState *)state)->unk534)) {
             v = lbl_803E241C * timeDelta + velBefore;
-            ((TrickyState *)state)->speed14 = (v < lbl_803E23DC) ? lbl_803E23DC : v;
+            ((TrickyState *)state)->unk14 = (v < lbl_803E23DC) ? lbl_803E23DC : v;
         }
         yawA = getAngle(((TrickyState *)state)->unk8C - ((GameObject *)obj)->anim.localPosX,
                         ((TrickyState *)state)->unk94 - ((GameObject *)obj)->anim.localPosZ);
@@ -780,10 +780,10 @@ state_selected:
         }
         d = (diff >= 0) ? diff : -diff;
         if (0x1000 < d) {
-            ((TrickyState *)state)->speed14 = velBefore;
+            ((TrickyState *)state)->unk14 = velBefore;
             trickyUpdateApproachSpeed(obj, lbl_803E246C, state, (f32 *)(state + 0x488), 1);
         }
-        trickyAdvanceRouteTargetAhead(obj, state + 0x420, ((TrickyState *)state)->speed14);
+        trickyAdvanceRouteTargetAhead(obj, state + 0x420, ((TrickyState *)state)->unk14);
         trickyMove(obj, state + 0x488);
         dir = *(u32 *)&((TrickyState *)state)->unk4A0;
         if (((dir == 0) && (*(int *)(state + 0x430) != 0)) ||
@@ -793,17 +793,17 @@ state_selected:
                 ((TrickyState *)state)->unk09 = 0;
             } else {
                 curveFn_800da23c(state + 0x420);
-                ((TrickyState *)state)->speed2C =
+                ((TrickyState *)state)->unk2C =
                     *(f32 *)(*(int *)(state + 0x4c0) + 8) - ((GameObject *)obj)->anim.worldPosX;
-                ((TrickyState *)state)->speed30 =
+                ((TrickyState *)state)->unk30 =
                     *(f32 *)(*(int *)(state + 0x4c0) + 0x10) - ((GameObject *)obj)->anim.worldPosZ;
-                len = sqrtf(((TrickyState *)state)->speed2C * ((TrickyState *)state)->speed2C +
-                            ((TrickyState *)state)->speed30 * ((TrickyState *)state)->speed30);
+                len = sqrtf(((TrickyState *)state)->unk2C * ((TrickyState *)state)->unk2C +
+                            ((TrickyState *)state)->unk30 * ((TrickyState *)state)->unk30);
                 if (lbl_803E23DC != len) {
-                    ((TrickyState *)state)->speed2C = ((TrickyState *)state)->speed2C / len;
-                    ((TrickyState *)state)->speed30 = ((TrickyState *)state)->speed30 / len;
+                    ((TrickyState *)state)->unk2C = ((TrickyState *)state)->unk2C / len;
+                    ((TrickyState *)state)->unk30 = ((TrickyState *)state)->unk30 / len;
                 }
-                ((TrickyState *)state)->speed14 = lbl_803E248C;
+                ((TrickyState *)state)->unk14 = lbl_803E248C;
                 objAnimFn_8013a3f0(obj, 0x15, lbl_803E2468, 0x4000000);
                 ((TrickyState *)state)->unk09 = 9;
                 ((TrickyState *)state)->timer7A0f = lbl_803E2440;
@@ -824,7 +824,7 @@ state_selected:
             k = lbl_803E2420 * timeDelta + velBefore;
             v = (k > v) ? v : k;
         }
-        ((TrickyState *)state)->speed14 = v;
+        ((TrickyState *)state)->unk14 = v;
         {
             f32 dx = *(f32 *)(*(int *)&((GameObject *)obj)->extra + 0x2c);
             f32 dz = *(f32 *)(*(int *)&((GameObject *)obj)->extra + 0x30);
@@ -835,20 +835,20 @@ state_selected:
         }
         if (((GameObject *)obj)->anim.currentMoveProgress < lbl_803E24A8) {
             ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(
-                (int)obj, ((TrickyState *)state)->speed14, (float *)(state + 0x34));
+                (int)obj, ((TrickyState *)state)->unk14, (float *)(state + 0x34));
             ((GameObject *)obj)->anim.localPosX =
-                timeDelta * ((TrickyState *)state)->speed2C * ((TrickyState *)state)->speed14 + ((GameObject *)obj)->anim.localPosX;
+                timeDelta * ((TrickyState *)state)->unk2C * ((TrickyState *)state)->unk14 + ((GameObject *)obj)->anim.localPosX;
             ((GameObject *)obj)->anim.localPosZ =
-                timeDelta * ((TrickyState *)state)->speed30 * ((TrickyState *)state)->speed14 + ((GameObject *)obj)->anim.localPosZ;
+                timeDelta * ((TrickyState *)state)->unk30 * ((TrickyState *)state)->unk14 + ((GameObject *)obj)->anim.localPosZ;
         } else {
             ((ObjAnimSampleRootCurveObjectFirstFn)ObjAnim_SampleRootCurvePhase)(
-                (int)obj, ((TrickyState *)state)->speed14 * lbl_803E24AC, (float *)(state + 0x34));
+                (int)obj, ((TrickyState *)state)->unk14 * lbl_803E24AC, (float *)(state + 0x34));
             k = lbl_803E24AC;
             ((GameObject *)obj)->anim.localPosX =
-                timeDelta * ((TrickyState *)state)->speed2C * ((TrickyState *)state)->speed14 * k +
+                timeDelta * ((TrickyState *)state)->unk2C * ((TrickyState *)state)->unk14 * k +
                 ((GameObject *)obj)->anim.localPosX;
             ((GameObject *)obj)->anim.localPosZ =
-                timeDelta * ((TrickyState *)state)->speed30 * ((TrickyState *)state)->speed14 * k +
+                timeDelta * ((TrickyState *)state)->unk30 * ((TrickyState *)state)->unk14 * k +
                 ((GameObject *)obj)->anim.localPosZ;
         }
         if ((((TrickyState *)state)->flags54 & 0x8000000) != 0) {
@@ -870,7 +870,7 @@ state_selected:
                 -(lbl_803E24B0 * k * k - (*(f32 *)(node + 0xc) - ((GameObject *)obj)->anim.worldPosY)) / k;
             objAnimFn_8013a3f0(obj, 0x16, lbl_803E23DC, 0x4000000);
             ((TrickyState *)state)->unk3C = *(f32 *)(state + 0x68) / *(f32 *)(state + 0x64);
-            ((TrickyState *)state)->speed14 = lbl_803E24A4;
+            ((TrickyState *)state)->unk14 = lbl_803E24A4;
             ((TrickyState *)state)->unk09 = 10;
             if (((TrickyState *)state)->unk4A0 != 0) {
                 while (*(int *)(state + 0x430) != 0) {
@@ -926,10 +926,10 @@ state_selected:
     case 0xb:
         trickyDebugPrint(strs + 0x4c4);
         v = lbl_803E2420 * timeDelta + velBefore;
-        ((TrickyState *)state)->speed14 = (v > lbl_803E248C) ? lbl_803E248C : v;
+        ((TrickyState *)state)->unk14 = (v > lbl_803E248C) ? lbl_803E248C : v;
         if ((((TrickyState *)state)->unk534 != 0) && (wg == ((TrickyState *)state)->unk534)) {
             v = lbl_803E241C * timeDelta + velBefore;
-            ((TrickyState *)state)->speed14 = (v < lbl_803E23DC) ? lbl_803E23DC : v;
+            ((TrickyState *)state)->unk14 = (v < lbl_803E23DC) ? lbl_803E23DC : v;
         }
         yawA = getAngle(((TrickyState *)state)->unk8C - ((GameObject *)obj)->anim.localPosX,
                         ((TrickyState *)state)->unk94 - ((GameObject *)obj)->anim.localPosZ);
@@ -949,10 +949,10 @@ state_selected:
         }
         d = (diff >= 0) ? diff : -diff;
         if (0x1000 < d) {
-            ((TrickyState *)state)->speed14 = velBefore;
+            ((TrickyState *)state)->unk14 = velBefore;
             trickyUpdateApproachSpeed(obj, lbl_803E246C, state, (f32 *)(state + 0x488), 1);
         }
-        trickyAdvanceRouteTargetAhead(obj, state + 0x420, ((TrickyState *)state)->speed14);
+        trickyAdvanceRouteTargetAhead(obj, state + 0x420, ((TrickyState *)state)->unk14);
         trickyMove(obj, state + 0x488);
         dir = *(u32 *)&((TrickyState *)state)->unk4A0;
         if (((dir == 0) && (*(int *)(state + 0x430) != 0)) ||
@@ -962,15 +962,15 @@ state_selected:
                 ((TrickyState *)state)->unk09 = 0;
             } else {
                 curveFn_800da23c(state + 0x420);
-                ((TrickyState *)state)->speed2C =
+                ((TrickyState *)state)->unk2C =
                     *(f32 *)(*(int *)(state + 0x4c0) + 8) - ((GameObject *)obj)->anim.worldPosX;
-                ((TrickyState *)state)->speed30 =
+                ((TrickyState *)state)->unk30 =
                     *(f32 *)(*(int *)(state + 0x4c0) + 0x10) - ((GameObject *)obj)->anim.worldPosZ;
-                len = sqrtf(((TrickyState *)state)->speed2C * ((TrickyState *)state)->speed2C +
-                            ((TrickyState *)state)->speed30 * ((TrickyState *)state)->speed30);
+                len = sqrtf(((TrickyState *)state)->unk2C * ((TrickyState *)state)->unk2C +
+                            ((TrickyState *)state)->unk30 * ((TrickyState *)state)->unk30);
                 if (lbl_803E23DC != len) {
-                    ((TrickyState *)state)->speed2C = ((TrickyState *)state)->speed2C / len;
-                    ((TrickyState *)state)->speed30 = ((TrickyState *)state)->speed30 / len;
+                    ((TrickyState *)state)->unk2C = ((TrickyState *)state)->unk2C / len;
+                    ((TrickyState *)state)->unk30 = ((TrickyState *)state)->unk30 / len;
                 }
                 if (randomGetRange(0, 1) == 0) {
                     objAnimFn_8013a3f0(obj, 0x18, lbl_803E2494, 0x40000c0);
@@ -998,7 +998,7 @@ state_selected:
     case 0xe:
         trickyDebugPrint(strs + 0x4d4);
         ((TrickyState *)state)->unk353 = 0;
-        trickyAdvanceRouteTargetAhead(obj, state + 0x420, ((TrickyState *)state)->speed14);
+        trickyAdvanceRouteTargetAhead(obj, state + 0x420, ((TrickyState *)state)->unk14);
         {
             f32 dx = *(f32 *)(*(int *)&((GameObject *)obj)->extra + 0x2c);
             f32 dz = *(f32 *)(*(int *)&((GameObject *)obj)->extra + 0x30);
@@ -1008,7 +1008,7 @@ state_selected:
             }
         }
         if ((((TrickyState *)state)->flags54 & 0x8000000) != 0) {
-            ((TrickyState *)state)->speed14 = lbl_803E24C0;
+            ((TrickyState *)state)->unk14 = lbl_803E24C0;
             trickyMove(obj, state + 0x488);
             ((TrickyState *)state)->unk09 = 7;
         }
@@ -1016,10 +1016,10 @@ state_selected:
     case 0xd:
         trickyDebugPrint(strs + 0x4e8);
         v = lbl_803E2420 * timeDelta + velBefore;
-        ((TrickyState *)state)->speed14 = (v > lbl_803E248C) ? lbl_803E248C : v;
+        ((TrickyState *)state)->unk14 = (v > lbl_803E248C) ? lbl_803E248C : v;
         if ((((TrickyState *)state)->unk534 != 0) && (wg == ((TrickyState *)state)->unk534)) {
             v = lbl_803E241C * timeDelta + velBefore;
-            ((TrickyState *)state)->speed14 = (v < lbl_803E23DC) ? lbl_803E23DC : v;
+            ((TrickyState *)state)->unk14 = (v < lbl_803E23DC) ? lbl_803E23DC : v;
         }
         yawA = getAngle(((TrickyState *)state)->unk8C - ((GameObject *)obj)->anim.localPosX,
                         ((TrickyState *)state)->unk94 - ((GameObject *)obj)->anim.localPosZ);
@@ -1039,10 +1039,10 @@ state_selected:
         }
         d = (diff >= 0) ? diff : -diff;
         if (0x1000 < d) {
-            ((TrickyState *)state)->speed14 = velBefore;
+            ((TrickyState *)state)->unk14 = velBefore;
             trickyUpdateApproachSpeed(obj, lbl_803E246C, state, (f32 *)(state + 0x488), 1);
         }
-        trickyAdvanceRouteTargetAhead(obj, state + 0x420, ((TrickyState *)state)->speed14);
+        trickyAdvanceRouteTargetAhead(obj, state + 0x420, ((TrickyState *)state)->unk14);
         trickyMove(obj, state + 0x488);
         dir = *(u32 *)&((TrickyState *)state)->unk4A0;
         if (((dir == 0) && (*(int *)(state + 0x430) != 0)) ||
@@ -1052,15 +1052,15 @@ state_selected:
                 ((TrickyState *)state)->unk09 = 0;
             } else {
                 curveFn_800da23c(state + 0x420);
-                ((TrickyState *)state)->speed2C =
+                ((TrickyState *)state)->unk2C =
                     *(f32 *)(*(int *)(state + 0x4c0) + 8) - ((GameObject *)obj)->anim.worldPosX;
-                ((TrickyState *)state)->speed30 =
+                ((TrickyState *)state)->unk30 =
                     *(f32 *)(*(int *)(state + 0x4c0) + 0x10) - ((GameObject *)obj)->anim.worldPosZ;
-                len = sqrtf(((TrickyState *)state)->speed2C * ((TrickyState *)state)->speed2C +
-                            ((TrickyState *)state)->speed30 * ((TrickyState *)state)->speed30);
+                len = sqrtf(((TrickyState *)state)->unk2C * ((TrickyState *)state)->unk2C +
+                            ((TrickyState *)state)->unk30 * ((TrickyState *)state)->unk30);
                 if (lbl_803E23DC != len) {
-                    ((TrickyState *)state)->speed2C = ((TrickyState *)state)->speed2C / len;
-                    ((TrickyState *)state)->speed30 = ((TrickyState *)state)->speed30 / len;
+                    ((TrickyState *)state)->unk2C = ((TrickyState *)state)->unk2C / len;
+                    ((TrickyState *)state)->unk30 = ((TrickyState *)state)->unk30 / len;
                 }
                 objAnimFn_8013a3f0(obj, 0x19, lbl_803E249C, 0x40000c0);
                 ((TrickyState *)state)->unk48 =
@@ -1101,7 +1101,7 @@ state_selected:
     }
     step = ((TrickyState *)state)->unk09;
     if (((((step == 0) || (step == 2)) || (step == 4)) || (step == 3)) &&
-        (lbl_803E23DC == ((TrickyState *)state)->speed14)) {
+        (lbl_803E23DC == ((TrickyState *)state)->unk14)) {
         return 2;
     }
     if (moved != 0) {
@@ -1132,7 +1132,7 @@ void trickyUpdateApproachSpeed(u8 *obj, f32 baseRadius, u8 *state, f32 *targetPo
     u8 *ctx;
 
     sum = lbl_803E2420;
-    v = ((TrickyState *)state)->speed14;
+    v = ((TrickyState *)state)->unk14;
     dec = lbl_803E241C * timeDelta;
     while (v > lbl_803E23DC) {
         sum = sum + v * timeDelta;
@@ -1142,8 +1142,8 @@ void trickyUpdateApproachSpeed(u8 *obj, f32 baseRadius, u8 *state, f32 *targetPo
     distSq = thresh * thresh;
     dist = getXZDistance(targetPos, (f32 *)(obj + 0x18));
     if (dist < distSq) {
-        candidate = lbl_803E241C * timeDelta + ((TrickyState *)state)->speed14;
-        ((TrickyState *)state)->speed14 =
+        candidate = lbl_803E241C * timeDelta + ((TrickyState *)state)->unk14;
+        ((TrickyState *)state)->unk14 =
             (candidate < lbl_803E23DC) ? lbl_803E23DC : candidate;
         return;
     }
@@ -1156,17 +1156,17 @@ void trickyUpdateApproachSpeed(u8 *obj, f32 baseRadius, u8 *state, f32 *targetPo
         params.c = 0;
         vecRotateZXY(&params, delta);
         if (delta[2] > lbl_803E23DC) {
-            candidate = lbl_803E241C * timeDelta + ((TrickyState *)state)->speed14;
-            ((TrickyState *)state)->speed14 =
+            candidate = lbl_803E241C * timeDelta + ((TrickyState *)state)->unk14;
+            ((TrickyState *)state)->unk14 =
                 (candidate < lbl_803E23DC) ? lbl_803E23DC : candidate;
             return;
         }
     }
     if ((((TrickyState *)state)->flags54 & 0x10000000) != 0) {
-        ((TrickyState *)state)->speed14 =
-            lbl_803E23F4 * timeDelta + ((TrickyState *)state)->speed14;
-        if (((TrickyState *)state)->speed14 < lbl_803E23DC) {
-            ((TrickyState *)state)->speed14 = lbl_803E23DC;
+        ((TrickyState *)state)->unk14 =
+            lbl_803E23F4 * timeDelta + ((TrickyState *)state)->unk14;
+        if (((TrickyState *)state)->unk14 < lbl_803E23DC) {
+            ((TrickyState *)state)->unk14 = lbl_803E23DC;
         }
         return;
     }
@@ -1190,35 +1190,35 @@ void trickyUpdateApproachSpeed(u8 *obj, f32 baseRadius, u8 *state, f32 *targetPo
         }
         if (dist < deltaSpeedSq) {
             if (candidate > lbl_803E23DC) {
-                if (candidate < ((TrickyState *)state)->speed14) {
-                    f32 step = lbl_803E241C * timeDelta + ((TrickyState *)state)->speed14;
-                    ((TrickyState *)state)->speed14 = (step < candidate) ? candidate : step;
+                if (candidate < ((TrickyState *)state)->unk14) {
+                    f32 step = lbl_803E241C * timeDelta + ((TrickyState *)state)->unk14;
+                    ((TrickyState *)state)->unk14 = (step < candidate) ? candidate : step;
                     return;
                 } else {
                     f32 step;
                     if (candidate > lbl_803E248C) {
-                        step = lbl_803E2420 * timeDelta + ((TrickyState *)state)->speed14;
-                        ((TrickyState *)state)->speed14 =
+                        step = lbl_803E2420 * timeDelta + ((TrickyState *)state)->unk14;
+                        ((TrickyState *)state)->unk14 =
                             (step > lbl_803E248C) ? lbl_803E248C : step;
                         return;
                     }
-                    step = lbl_803E2420 * timeDelta + ((TrickyState *)state)->speed14;
-                    ((TrickyState *)state)->speed14 = (step > candidate) ? candidate : step;
+                    step = lbl_803E2420 * timeDelta + ((TrickyState *)state)->unk14;
+                    ((TrickyState *)state)->unk14 = (step > candidate) ? candidate : step;
                     return;
                 }
             }
         }
     }
     if ((((TrickyState *)state)->flags54 & 0x00100000) != 0) {
-        ((TrickyState *)state)->speed14 =
-            lbl_803E243C * timeDelta + ((TrickyState *)state)->speed14;
-        if (((TrickyState *)state)->speed14 > lbl_803E248C) {
-            ((TrickyState *)state)->speed14 = lbl_803E248C;
+        ((TrickyState *)state)->unk14 =
+            lbl_803E243C * timeDelta + ((TrickyState *)state)->unk14;
+        if (((TrickyState *)state)->unk14 > lbl_803E248C) {
+            ((TrickyState *)state)->unk14 = lbl_803E248C;
         }
         return;
     }
     {
-        f32 step = lbl_803E2420 * timeDelta + ((TrickyState *)state)->speed14;
-        ((TrickyState *)state)->speed14 = (step > lbl_803E248C) ? lbl_803E248C : step;
+        f32 step = lbl_803E2420 * timeDelta + ((TrickyState *)state)->unk14;
+        ((TrickyState *)state)->unk14 = (step > lbl_803E248C) ? lbl_803E248C : step;
     }
 }

@@ -59,7 +59,7 @@ void drmusiccont_update(int obj)
     u32 d;
 
     cloudSetOverridePosition(obj, lbl_803E6BCC, lbl_803E6BD0, lbl_803E6BD4);
-    if (((GameObject *)obj)->countF4 == 0) {
+    if (((GameObject *)obj)->unkF4 == 0) {
         if ((u32)GameBit_Get(0xe7b) == 0) {
             getEnvfxActImmediately(obj, obj, 0x210, 0);
             getEnvfxActImmediately(obj, obj, 0x20f, 0);
@@ -68,7 +68,7 @@ void drmusiccont_update(int obj)
             skyFn_80088e54(0, lbl_803E6BD8);
             GameBit_Set(0xe7b, 1);
         }
-        ((GameObject *)obj)->countF4 = 1;
+        ((GameObject *)obj)->unkF4 = 1;
     }
 
     SCGameBitLatch_Update(state, 2, 0x1a7, 0x64b, 0xf0e, 0xe5);

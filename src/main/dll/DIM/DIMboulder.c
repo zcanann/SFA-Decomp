@@ -340,9 +340,9 @@ FUN_801addec(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   local_24 = DAT_802c2a8c;
   local_20 = DAT_802c2a90;
   if (*(char *)((int)piVar5 + 0x21) != *(char *)((int)piVar5 + 0x22)) {
-    if (*(int *)&((GameObject *)param_9)->seqIdC8 != 0) {
+    if (*(int *)&((GameObject *)param_9)->unkC8 != 0) {
       param_1 = FUN_80017ac8(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                             *(int *)&((GameObject *)param_9)->seqIdC8);
+                             *(int *)&((GameObject *)param_9)->unkC8);
       *(undefined4 *)(param_9 + 200) = 0;
       *(undefined *)(param_9 + 0xeb) = 0;
     }
@@ -489,7 +489,7 @@ extern f32 lbl_803E4744;
 void magiclight_init(int* obj, u8* params)
 {
     MagicLightState* sub;
-    ((GameObject *)obj)->countF4 = 0;
+    ((GameObject *)obj)->unkF4 = 0;
     *(s16*)obj = (s16)((s8)params[0x18] << 8);
     ((GameObject *)obj)->animEventCallback = (void *)magiclight_SeqFn;
     if (((GameObject *)obj)->anim.seqId == 0x172) {
@@ -617,12 +617,12 @@ void magiclight_free(int obj) {
     }
 }
 void magiclight_update(int obj) {
-    if (((GameObject *)obj)->anim.seqId != 0x172 && ((GameObject *)obj)->countF4 == 0) {
+    if (((GameObject *)obj)->anim.seqId != 0x172 && ((GameObject *)obj)->unkF4 == 0) {
         *(s16 *)obj = 0;
         ((GameObject *)obj)->anim.rotY = 0;
         ((GameObject *)obj)->anim.rotZ = 0;
         (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
-        ((GameObject *)obj)->countF4 = 1;
+        ((GameObject *)obj)->unkF4 = 1;
     }
 }
 #pragma peephole reset
@@ -823,7 +823,7 @@ void imicemountain_updateEventState(int *obj)
             GameBit_Set(0xe6a, 1);
             GameBit_Set(0xe6b, 1);
         }
-        if (((GameObject *)obj)->countF4 == 0) {
+        if (((GameObject *)obj)->unkF4 == 0) {
             getEnvfxAct(obj, obj, 0xa3, 0);
             getEnvfxAct(obj, obj, 0x9e, 0);
             getEnvfxAct(obj, obj, 0x119, 0);
@@ -832,7 +832,7 @@ void imicemountain_updateEventState(int *obj)
             getLActions(obj, obj, 0x17c, 0, 0, 0);
             getLActions(obj, obj, 0x17b, 0, 0, 0);
             (*gCloudActionInterface)->func09Nop(1);
-            ((GameObject *)obj)->countF4 = 1;
+            ((GameObject *)obj)->unkF4 = 1;
         }
         break;
     case 4:
@@ -895,18 +895,18 @@ int dll_16C_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate)
     *(Blob10 *)ids = *(Blob10 *)lbl_802C2308;
 
     if (((Dll16CState *)extra)->subObjIndex != ((Dll16CState *)extra)->subObjIndexApplied) {
-        if (((GameObject *)obj)->seqIdC8 != NULL) {
-            Obj_FreeObject(((GameObject *)obj)->seqIdC8);
-            *(int *)&((GameObject *)obj)->seqIdC8 = 0;
-            ((GameObject *)obj)->seqIdEB = 0;
+        if (((GameObject *)obj)->unkC8 != NULL) {
+            Obj_FreeObject(((GameObject *)obj)->unkC8);
+            *(int *)&((GameObject *)obj)->unkC8 = 0;
+            ((GameObject *)obj)->unkEB = 0;
         }
         if (Obj_IsLoadingLocked()) {
             s8 idx = ((Dll16CState *)extra)->subObjIndex;
             if (idx > 0) {
-                *(int *)&((GameObject *)obj)->seqIdC8 =
+                *(int *)&((GameObject *)obj)->unkC8 =
                     Obj_SetupObject(Obj_AllocObjectSetup(24, ids[idx - 1]), 4, -1, -1,
                                     *(int *)&((GameObject *)obj)->anim.parent);
-                ((GameObject *)obj)->seqIdEB = 1;
+                ((GameObject *)obj)->unkEB = 1;
             }
             ((Dll16CState *)extra)->subObjIndexApplied = ((Dll16CState *)extra)->subObjIndex;
         } else {
@@ -996,12 +996,12 @@ extern f32 lbl_803E46DC;
 void imicemountain_update(int *obj)
 {
     IMIceMountainState *extra = ((GameObject *)obj)->extra;
-    if (((GameObject *)obj)->countF4 == 0) {
+    if (((GameObject *)obj)->unkF4 == 0) {
         getEnvfxAct(obj, obj, 0xa3, 0);
         getEnvfxAct(obj, obj, 0x9e, 0);
         getEnvfxAct(obj, obj, 0x104, 0);
         (*gCloudActionInterface)->func09Nop(1);
-        ((GameObject *)obj)->countF4 = 1;
+        ((GameObject *)obj)->unkF4 = 1;
     }
     switch (extra->mapEventState) {
     case 1:
@@ -1065,18 +1065,18 @@ void dll_16C_update(int *obj)
 
     *(Blob10 *)ids = *(Blob10 *)lbl_802C2308;
     if (extra->subObjIndex != extra->subObjIndexApplied) {
-        if (((GameObject *)obj)->seqIdC8 != NULL) {
-            Obj_FreeObject(((GameObject *)obj)->seqIdC8);
-            *(int *)&((GameObject *)obj)->seqIdC8 = 0;
-            ((GameObject *)obj)->seqIdEB = 0;
+        if (((GameObject *)obj)->unkC8 != NULL) {
+            Obj_FreeObject(((GameObject *)obj)->unkC8);
+            *(int *)&((GameObject *)obj)->unkC8 = 0;
+            ((GameObject *)obj)->unkEB = 0;
         }
         if (Obj_IsLoadingLocked()) {
             s8 idx = extra->subObjIndex;
             if (idx > 0) {
-                *(int *)&((GameObject *)obj)->seqIdC8 =
+                *(int *)&((GameObject *)obj)->unkC8 =
                     Obj_SetupObject(Obj_AllocObjectSetup(24, ids[idx - 1]), 4, -1, -1,
                                     *(int *)&((GameObject *)obj)->anim.parent);
-                ((GameObject *)obj)->seqIdEB = 1;
+                ((GameObject *)obj)->unkEB = 1;
             }
             extra->subObjIndexApplied = extra->subObjIndex;
         } else {

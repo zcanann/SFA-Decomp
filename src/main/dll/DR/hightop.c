@@ -1195,10 +1195,10 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
     moved = 1;
     ret = 0;
     ground = lbl_803E4110;
-    if (((GameObject *)obj)->countF4 == -1) {
+    if (((GameObject *)obj)->unkF4 == -1) {
         return 1;
     }
-    if (((GameObject *)obj)->countF4 == 0) {
+    if (((GameObject *)obj)->unkF4 == 0) {
         sel = p3;
         pt = findRomCurvePointNearObject(obj, sel, 0, 2);
         tgt.x = *(f32 *)(pt + 8);
@@ -1209,7 +1209,7 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
             cmd[0] = 0x19;
             cmd[1] = 0x15;
             (*gRomCurveInterface)->initCurve((void *)p2, (void *)obj, lbl_803E4120, cmd, sel);
-            ((GameObject *)obj)->countF4 = 1;
+            ((GameObject *)obj)->unkF4 = 1;
             moved = 1;
         }
     } else {
@@ -1221,7 +1221,7 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
         ((GameObject *)obj)->anim.localPosY = *(f32 *)(p2 + 0x6c);
         ((GameObject *)obj)->anim.localPosZ = *(f32 *)(p2 + 0x70);
         if (ret != 0) {
-            ((GameObject *)obj)->countF4 = -1;
+            ((GameObject *)obj)->unkF4 = -1;
         }
         if (hitDetectFn_800658a4(((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ, obj, &ground, 0) == 0) {
             ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY - ground;
