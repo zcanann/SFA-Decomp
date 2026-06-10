@@ -62,7 +62,7 @@ extern int Sfx_PlayFromObject();
 extern void Sfx_StopObjectChannel();
 extern s16 getAngle(f32 dx,f32 dz);
 extern f32 sqrtf(f32);
-extern char Obj_IsLoadingLocked(void);
+extern u8 Obj_IsLoadingLocked(void);
 extern void Obj_GetWorldPosition(int obj,float *x,float *y,float *z);
 extern void vecRotateZXY(void *a,void *b);
 extern void *Obj_AllocObjectSetup(int size,int objType);
@@ -201,7 +201,7 @@ void SB_ShipGun_update(int obj)
             *(short *)((int)piVar10 + 6) = 8000;
           }
           *(ushort *)(piVar10 + 2) = *(short *)(piVar10 + 2) - (ushort)framesThisStep;
-          if ((*(short *)(piVar10 + 2) < 0) && (Obj_IsLoadingLocked() != '\0')) {
+          if ((*(short *)(piVar10 + 2) < 0) && (Obj_IsLoadingLocked() != 0)) {
             Obj_GetWorldPosition(obj,&local_78,&local_7c,&local_80);
             local_5c = lbl_803E588C;
             local_58 = lbl_803E588C;
