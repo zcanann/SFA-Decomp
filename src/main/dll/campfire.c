@@ -8,6 +8,7 @@
 #include "main/dll/texscroll2.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
+#include "main/objfx.h"
 #include "main/resource.h"
 
 extern undefined4 FUN_80006824();
@@ -38,7 +39,6 @@ extern undefined4 FUN_8003b818();
 extern undefined4 objParticleFn_80099d84();
 extern undefined4 FUN_8008111c();
 extern undefined4 FUN_80081120();
-extern undefined4 objLightFn_8009a1dc();
 extern undefined4 FUN_801695e8();
 extern int FUN_8028683c();
 extern undefined8 FUN_80286840();
@@ -339,7 +339,7 @@ void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state)
         lbl_803AC668);
     if (result != 0) {
       if ((result != 0x10) && (result != 0x11)) {
-        objLightFn_8009a1dc(lbl_803E30BC, obj, lbl_803AC668, 3, 0);
+        objLightFn_8009a1dc((void *)obj, lbl_803E30BC, lbl_803AC668, 3, 0);
         (*(void (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, state, 4);
         ((GroundBaddieState *)state)->baddie.hitPoints -= 1;
         Obj_SetModelColorFadeRecursive(obj, 0xf, 200, 0, 0, 1);
@@ -366,7 +366,7 @@ void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state)
               0, 1, lbl_803AC668, 0x401, -1, (KaldaCombatParams *)((u8 *)&st + 0xc));
           fn_802961FC(playerObj, 2);
           (*(void (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, state, 5);
-          objLightFn_8009a1dc(lbl_803E30BC, obj, lbl_803AC668, 4, 0);
+          objLightFn_8009a1dc((void *)obj, lbl_803E30BC, lbl_803AC668, 4, 0);
           Sfx_PlayFromObject(obj, 0x255);
         }
       }
@@ -376,7 +376,7 @@ void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state)
           ((GroundBaddieState *)state)->baddie.moveJustStartedB = 1;
           ((GroundBaddieState *)state)->baddie.moveJustStartedA = 1;
           ((GroundBaddieState *)state)->baddie.unk270 = 1;
-          objLightFn_8009a1dc(lbl_803E30BC, obj, lbl_803AC668, 1, 0);
+          objLightFn_8009a1dc((void *)obj, lbl_803E30BC, lbl_803AC668, 1, 0);
           Sfx_PlayFromObject(obj, SFXen_blkscrp6);
           Sfx_PlayFromObject(obj, 0x3ac);
         }
