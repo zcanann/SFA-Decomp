@@ -169,8 +169,8 @@ void wcpressures_update(int obj)
 {
     WCPressuresSetup *setup = *(WCPressuresSetup **)(obj + WCPRESSURES_OBJECT_SETUP_OFFSET);
     WCPressuresState *state = *(WCPressuresState **)(obj + WCPRESSURES_OBJECT_STATE_OFFSET);
-    int i;
     int j;
+    int i;
     f32 thr;
 
     if (setup->activateBit > 0 &&
@@ -178,15 +178,14 @@ void wcpressures_update(int obj)
         fn_80137948(sWCPressuresActivateFormat, setup->activateBit);
         return;
     }
-    state->pressTimer--;
-    if (state->pressTimer < 0)
+    if ((state->pressTimer -= 1) < 0)
         state->pressTimer = 0;
     if ((s8)*(u8 *)(*(int *)(obj + WCPRESSURES_HITLIST_OFFSET) + WCPRESSURES_HITLIST_COUNT_OFFSET) > 0) {
         for (i = 0;
              i < (s8)*(u8 *)(*(int *)(obj + WCPRESSURES_HITLIST_OFFSET) + WCPRESSURES_HITLIST_COUNT_OFFSET);
              i++) {
             int ent = *(int *)(*(int *)(obj + WCPRESSURES_HITLIST_OFFSET) +
-                               (i * 4 + WCPRESSURES_HITLIST_OBJECTS_OFFSET));
+                               i * 4 + WCPRESSURES_HITLIST_OBJECTS_OFFSET);
             if (*(f32 *)(ent + 0x10) - ((GameObject *)obj)->anim.localPosY >
                 (f32)(u32)setup->triggerHeight) {
                 WCPressuresState *s2 = *(WCPressuresState **)(obj + WCPRESSURES_OBJECT_STATE_OFFSET);
