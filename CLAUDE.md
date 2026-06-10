@@ -507,6 +507,14 @@ probes on the bundled compilers):
     `x = Camera_GetCurrentViewSlot();`) instead of a literal. Took fn_802AA2B0
     11.6% → 97.3%. Clean C, no asm.
 
+**(s16)timeDelta DIRECT subtrahend — cracks the 'converted-float subtrahend'
+cap (the #53/#20 documented residual).** `field -= (int)timeDelta;` on an s16
+field emits fctiwz + subf + EXTSH + sth; `field -= (s16)timeDelta;` truncates
+the float straight to s16 (same fctiwz, no (int) node) and the compound folds
+the extension — exactly target's shape. tesla -> 100, fxemit_update +0.5,
+light x3, anim x3 in one sweep; A/B per site (shrine1CE's site reverted -
+its target keeps the extension).
+
 20. **Compound-assign a narrow lvalue (`*(s16*)p += K`) instead of the expanded
     read-modify-write (`*(s16*)p = *(s16*)p + K`).** The expanded form reloads
     the value and re-sign-extends it, emitting a redundant `extsh` (or `extsb`
