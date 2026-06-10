@@ -95,7 +95,7 @@ int dll_DIM_BossGutSpik_update(void *obj,undefined4 param_2,ObjAnimUpdateState *
     switch (eventId) {
     case DIMBOSSTONSIL_ANIM_EVENT_START_STEAM:
       skyFn_80089710(7,1,0);
-      skyFn_800894a8(7,lbl_803E4CC4,lbl_803E4CC4,lbl_803E4CB8);
+      skyFn_800894a8(7,lbl_803E4CC4,*(f32 *)&lbl_803E4CC4,lbl_803E4CB8);
       skyFn_800895e0(7,0xff,0xb4,0xb4,0x7f,0x28);
       getEnvfxAct(obj,obj,DIMBOSSTONSIL_STEAM_ENVFX,0);
       Music_Trigger(DIMBOSSTONSIL_STEAM_MUSIC,1);
@@ -150,7 +150,7 @@ int dll_DIM_BossGutSpik_update(void *obj,undefined4 param_2,ObjAnimUpdateState *
       if (state->hitReactMode == 1) {
         state->field270 = 0;
         (*(void (**)(void *,DIMbosstonsilState *,f32,f32,u8 *,u8 *))(*(int *)gPlayerInterface + 0x8))
-            (obj,state,lbl_803E4CB8,lbl_803E4CB8,&lbl_803DDBB0,&lbl_803DDBA8);
+            (obj,state,lbl_803E4CB8,*(f32 *)&lbl_803E4CB8,&lbl_803DDBB0,&lbl_803DDBA8);
         animUpdate->sequenceEventActive = 0;
       }
       goto updateDone;
