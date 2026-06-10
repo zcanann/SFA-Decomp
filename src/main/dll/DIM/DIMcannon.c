@@ -2727,14 +2727,15 @@ void dimlogfire_free(int *obj, int mode) {
 
 extern int Sfx_PlayFromObject(int *obj, int sfxId);
 extern void Sfx_StopObjectChannel(int *obj, int channel);
-int dimlogfire_SeqFn(int *obj, int unused, int *p3) {
+int dimlogfire_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate) {
     DimLogFireState *state = ((GameObject *)obj)->extra;
+    u8 *animUpdateBytes = (u8 *)animUpdate;
     if (state->mode == 1) {
         Sfx_PlayFromObject(obj, SFXmn_eggylaugh216);
     } else {
         Sfx_StopObjectChannel(obj, 64);
     }
-    switch (*(u8 *)((char *)p3 + 0x80)) {
+    switch (animUpdateBytes[0x80]) {
     case 1:
         state->smokeToggle = (u8)(state->smokeToggle ^ 1);
         break;
@@ -2751,7 +2752,7 @@ int dimlogfire_SeqFn(int *obj, int unused, int *p3) {
     } else {
         Sfx_StopObjectChannel(obj, 1);
     }
-    *(u8 *)((char *)p3 + 0x80) = 0;
+    animUpdateBytes[0x80] = 0;
     return 0;
 }
 

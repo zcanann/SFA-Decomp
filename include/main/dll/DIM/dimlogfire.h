@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "global.h"
+#include "main/objanim_update.h"
 
 /*
  * Per-object extra state for the dimlogfire burning log
@@ -31,6 +32,6 @@ STATIC_ASSERT(sizeof(DimLogFireState) == 0x24);
 
 int MoonSeedPlantingSpot_SeqFn(int obj);
 int CCGasVentControl_SeqFn(int obj);
-int dimlogfire_SeqFn(int *obj, int unused, int *events);
+int dimlogfire_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate);
 
 #endif /* MAIN_DLL_DIM_DIMLOGFIRE_H_ */

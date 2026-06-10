@@ -2,6 +2,7 @@
 #define MAIN_DLL_DIM_DIMLEVCONTROL_H_
 
 #include "ghidra_import.h"
+#include "main/objanim_update.h"
 
 void FUN_801b2550(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
@@ -11,6 +12,6 @@ void FUN_801b2c40(undefined2 *param_1);
 void FUN_801b2ccc(double param_1,double param_2,double param_3,double param_4,undefined8 param_5,
                  undefined8 param_6,undefined8 param_7,undefined8 param_8,short *param_9);
 void dimlavasmash_render(int *obj, int p2, int p3, int p4, int p5, s8 visible);
-int dimlavasmash_SeqFn(int obj, int unused, int *events);
+int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 
 #endif /* MAIN_DLL_DIM_DIMLEVCONTROL_H_ */
