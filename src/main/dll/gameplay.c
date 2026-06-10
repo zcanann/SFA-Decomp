@@ -6,6 +6,19 @@
 #include "main/mapEventTypes.h"
 #include "main/objanim_internal.h"
 
+typedef struct SaveGameData {
+    u8 pad0[0x20 - 0x0];
+    u8 unk20;
+    u8 pad21[0x55E - 0x21];
+    u8 unk55E;
+    u8 pad55F[0x560 - 0x55F];
+    f32 unk560;
+    u8 pad564[0x6A4 - 0x564];
+    s16 unk6A4;
+    u8 pad6A6[0xF70 - 0x6A6];
+} SaveGameData;
+
+
 typedef struct CarryableUpdateHeldState {
     u8 pad0[0x2 - 0x0];
     s16 unk2;
@@ -2722,7 +2735,7 @@ int Carryable_updateRenderState(int *obj, int flag) {
 
 void SaveGame_setCamActionNo(s16 actionNo) { *(s16 *)((char *)lbl_803A32A8 + 0x6a4) = actionNo; }
 void *SaveGame_getLast(void) { return lbl_803A32A8; }
-s32 SaveGame_getCamActionNo(void) { return *(s16 *)((char *)lbl_803A32A8 + 0x6a4); }
+s32 SaveGame_getCamActionNo(void) { return ((SaveGameData *)lbl_803A32A8)->unk6A4; }
 void *saveGameGetEnvState(void) { return (char *)lbl_803A32A8 + 0x6a8; }
 f32 SaveGame_getPlayTime(void) { return *(f32 *)((char *)lbl_803A32A8 + 0x560); }
 extern f32 lbl_803E06D0;
@@ -2808,7 +2821,7 @@ void SaveGame_gplayAddTime(int id, f32 time) {
 }
 void *SaveGame_getTrickyEnergy(void) { return (char *)lbl_803A32A8 + 0x18; }
 void SaveGame_setCharacter(u8 c) { *(u8 *)((char *)lbl_803A32A8 + 0x20) = c; }
-u8 SaveGame_getCurChar(void) { return *(u8 *)((char *)lbl_803A32A8 + 0x20); }
+u8 SaveGame_getCurChar(void) { return ((SaveGameData *)lbl_803A32A8)->unk20; }
 char *getSaveFileName(void) { return (char *)lbl_803A32A8 + 0x1c; }
 void *SaveGame_getCurCharPos(void) {
     int idx = *(u8 *)((char *)lbl_803A32A8 + 0x20);

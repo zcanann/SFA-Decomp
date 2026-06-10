@@ -3,6 +3,15 @@
 #include "main/dll/debug/dimenu.h"
 #include "main/screen_transition.h"
 
+typedef struct WeirdMenuWork {
+    u8 pad0[0x16 - 0x0];
+    u16 unk16;
+    u8 pad18[0x52 - 0x18];
+    u16 unk52;
+    u8 pad54[0x78 - 0x54];
+} WeirdMenuWork;
+
+
 extern undefined4 FUN_800067e8();
 extern undefined4 FUN_80006824();
 extern undefined8 FUN_80006b84();
@@ -467,10 +476,10 @@ int WeirdUnusedMenu_run(void) {
                 Sfx_PlayFromObject(0, SFXqu_shortsob1);
                 lbl_803DD712 = 0;
                 lbl_803DD713 = 1;
-                *(u16 *)((char *)lbl_8031AD20 + 0x16) =
-                    (u16)(*(u16 *)((char *)lbl_8031AD20 + 0x16) | 0x1000);
-                *(u16 *)((char *)lbl_8031AD20 + 0x52) =
-                    (u16)(*(u16 *)((char *)lbl_8031AD20 + 0x52) | 0x1000);
+                ((WeirdMenuWork *)lbl_8031AD20)->unk16 =
+                    (u16)(((WeirdMenuWork *)lbl_8031AD20)->unk16 | 0x1000);
+                ((WeirdMenuWork *)lbl_8031AD20)->unk52 =
+                    (u16)(((WeirdMenuWork *)lbl_8031AD20)->unk52 | 0x1000);
                 (*(void (*)(void))(*(int *)(*gTitleMenuLinkInterface + 0x2c)))();
             }
         } else if (selection == 0) {
@@ -486,10 +495,10 @@ int WeirdUnusedMenu_run(void) {
         *(char *)&lbl_803DD712 = (int)((f32)(s8)lbl_803DD712 + timeDelta);
         if ((f32)(s8)lbl_803DD712 >= lbl_803E1DF0) {
             lbl_803DD713 = 0;
-            *(u16 *)((char *)lbl_8031AD20 + 0x16) =
-                (u16)(*(u16 *)((char *)lbl_8031AD20 + 0x16) & ~0x1000);
-            *(u16 *)((char *)lbl_8031AD20 + 0x52) =
-                (u16)(*(u16 *)((char *)lbl_8031AD20 + 0x52) & ~0x1000);
+            ((WeirdMenuWork *)lbl_8031AD20)->unk16 =
+                (u16)(((WeirdMenuWork *)lbl_8031AD20)->unk16 & ~0x1000);
+            ((WeirdMenuWork *)lbl_8031AD20)->unk52 =
+                (u16)(((WeirdMenuWork *)lbl_8031AD20)->unk52 & ~0x1000);
             (*(void (*)(void))(*(int *)(*gTitleMenuLinkInterface + 0x2c)))();
             (*(void (*)(int))(*(int *)(*gTitleMenuLinkInterface + 0x18)))(0);
         }

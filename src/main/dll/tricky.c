@@ -4,6 +4,14 @@
 #include "main/mapEventTypes.h"
 #include "main/texture.h"
 
+typedef struct GameUIWork10 {
+    u8 pad0[0x8 - 0x0];
+    f32 unk8;
+    s16 unkC;
+    u8 padE[0x10 - 0xE];
+} GameUIWork10;
+
+
 typedef struct TrickyAirMeter {
     u8 pad0[0x18 - 0x0];
     u8 unk18;
@@ -872,8 +880,8 @@ void GameUI_func15(s16 a, int b, int c) {
     lbl_803A9398[0] = (int)t;
     if (t == NULL) return;
     lbl_803A9398[1] = b;
-    *(s16 *)((char *)lbl_803A9398 + 0xc) = (s16)c;
-    *(f32 *)((char *)lbl_803A9398 + 0x8) = lbl_803E1E3C;
+    ((GameUIWork10 *)lbl_803A9398)->unkC = (s16)c;
+    ((GameUIWork10 *)lbl_803A9398)->unk8 = lbl_803E1E3C;
 }
 
 void GameUI_airMeterRun(int v) {
@@ -966,8 +974,8 @@ void GameUI_func14(s16 a, int b, int c) {
     }
     if (*(void **)lbl_803A9398 != NULL) {
         lbl_803A9398[1] = b;
-        *(s16 *)((char *)lbl_803A9398 + 0xc) = (s16)c;
-        *(f32 *)((char *)lbl_803A9398 + 0x8) = lbl_803E1E3C;
+        ((GameUIWork10 *)lbl_803A9398)->unkC = (s16)c;
+        ((GameUIWork10 *)lbl_803A9398)->unk8 = lbl_803E1E3C;
     }
 }
 
