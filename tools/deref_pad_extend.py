@@ -19,8 +19,14 @@ FIELD_T = {1:'u8',2:'u16',4:'s32'}
 
 argv = sys.argv[1:]
 deps = []
-if argv and argv[0] == '--deps':
-    deps = argv[1].split(',')
+extra_types = {}
+while argv and argv[0] in ('--deps', '--types'):
+    if argv[0] == '--deps':
+        deps = argv[1].split(',')
+    else:
+        for kv in argv[1].split(','):
+            k, v = kv.split('=')
+            extra_types[k] = int(v, 0)
     argv = argv[2:]
 cfile, hfile, sname = argv[0], argv[1], argv[2]
 varnames = argv[3:]
@@ -71,7 +77,7 @@ def evaldim(a):
 
 # nested struct sizes from any header content already concatenated? handle only
 # same-file structs defined earlier
-known_structs = {}
+known_structs = dict(extra_types)
 dep_src = '\n'.join(open(d, errors='ignore').read() for d in deps) + '\n' + hsrc
 for sm in re.finditer(r'typedef struct (\w+)\s*\{(.*?)\}\s*\w*\s*;', dep_src, re.S):
     if sm.group(1) == sname:
