@@ -51,12 +51,13 @@ void wmplanets_update(int *obj) {
     WmPlanetsRotationWork rotate;
 
     state = ((GameObject *)obj)->extra;
-    vec.word[0] = lbl_802C2500[0];
-    vec.word[1] = lbl_802C2500[1];
-    vec.word[2] = lbl_802C2500[2];
+    {
+        typedef struct Vec3Words { int w[3]; } Vec3Words;
+        *(Vec3Words *)&vec.word[0] = *(Vec3Words *)&lbl_802C2500[0];
+    }
     vec.f[2] = state->heightOffset;
 
-    state->orbitYaw = state->orbitYaw + state->orbitYawStep;
+    state->orbitYaw += state->orbitYawStep;
 
     rotate.zeroX = lbl_803E5F9C;
     rotate.zeroY = lbl_803E5F9C;
