@@ -87,7 +87,7 @@ void dll_D3_update(int *obj)
 
     if (extra->boundsObj == NULL) {
         extra->surfaceMode = 6;
-        if (((u32)extra->flags92 >> 4) != 0) {
+        if (((u32)extra->flags92 >> 4 & 0xF) != 0u) {
             *(int *)&extra->boundsObj = ObjList_FindNearestObjectByDefNo(obj, 0x4ad, &local_90);
             if (extra->boundsObj != NULL) {
                 (*(void (**)(int, int, int))(*(int **)(*(int *)&extra->boundsObj + 0x68) + 0x20 / 4))(
