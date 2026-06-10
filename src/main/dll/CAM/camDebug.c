@@ -28,15 +28,15 @@ extern f32 lbl_803E19D8;
 extern f32 lbl_803E19DC;
 
 void CameraModeClimb_init(undefined4 param_1, int param_2, s8 *param_3) {
+    undefined4 local_28[1];
+    undefined4 local_24[1];
+    undefined4 local_20[1];
+    undefined4 local_1c[1];
     f32 local_58;
     f32 local_5c;
     f32 local_60;
     f32 local_64;
     f32 local_68;
-    undefined4 local_28[1];
-    undefined4 local_24[1];
-    undefined4 local_20[1];
-    undefined4 local_1c[1];
     int iVar2;
 
     if (lbl_803DD578 == NULL) {
