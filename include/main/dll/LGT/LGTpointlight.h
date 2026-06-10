@@ -19,8 +19,8 @@ typedef struct LightSourceSetup {
 typedef struct LightSourceState {
     void *light;
     f32 fxTimer;
-    u8 pad08[4];
     f32 sparkTimer;
+    f32 unk0C;
     int gameBit;
     u8 mode;
     u8 fxType;
@@ -50,7 +50,7 @@ STATIC_ASSERT(offsetof(LightSourceSetup, gameBit) == 0x1e);
 STATIC_ASSERT(offsetof(LightSourceSetup, options) == 0x22);
 STATIC_ASSERT(sizeof(LightSourceState) == 0x1c);
 STATIC_ASSERT(offsetof(LightSourceState, fxTimer) == 0x04);
-STATIC_ASSERT(offsetof(LightSourceState, sparkTimer) == 0x0c);
+STATIC_ASSERT(offsetof(LightSourceState, sparkTimer) == 0x08);
 STATIC_ASSERT(offsetof(LightSourceState, gameBit) == 0x10);
 STATIC_ASSERT(offsetof(LightSourceState, mode) == 0x14);
 STATIC_ASSERT(offsetof(LightSourceState, fxType) == 0x15);

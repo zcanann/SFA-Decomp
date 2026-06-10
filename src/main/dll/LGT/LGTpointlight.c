@@ -52,7 +52,7 @@ void lightsource_init(GameObject *obj, LightSourceSetup *setup)
 
   state = obj->extra;
   colors = *(LightColorTable *)lbl_802C2488;
-  obj->anim.rotY = (s16)(((int)setup->yaw & 0x3fU) << 10);
+  obj->anim.rotX = (s16)(((int)setup->yaw & 0x3fU) << 10);
   range = setup->range;
   if (range > 0) {
     obj->anim.rootMotionScale = (f32)range / lbl_803E5E20;
