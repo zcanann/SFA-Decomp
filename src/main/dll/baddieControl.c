@@ -1572,7 +1572,7 @@ extern f32 lbl_803E1AC4;
 void CameraModeCrawl_copyToCurrent(void *param1, int param2) {
     int obj;
     GameObject *target;
-    s16 yaw;
+    int yaw;
     f32 c, s;
     f32 pos[3];
     int one;
@@ -1591,15 +1591,24 @@ void CameraModeCrawl_copyToCurrent(void *param1, int param2) {
         c = -mathSinf(lbl_803E1AC0 * (f32)(s32)target->anim.rotX / lbl_803E1AC4);
         s = -mathCosf(lbl_803E1AC0 * (f32)(s32)target->anim.rotX / lbl_803E1AC4);
     }
-    target->anim.rotX = getAngle(c, s);
+    {
+        extern int getAngle(f32 dx, f32 dz);
+        target->anim.rotX = (s16)getAngle(c, s);
+    }
     camcontrol_getTargetPosition(obj, target, pos, 0);
-    target->anim.rotX = yaw;
-    ((CameraObject *)obj)->anim.worldPosX = pos[0];
-    ((CameraObject *)obj)->probePosX = pos[0];
-    ((CameraObject *)obj)->anim.worldPosY = pos[1];
-    ((CameraObject *)obj)->probePosY = pos[1];
-    ((CameraObject *)obj)->anim.worldPosZ = pos[2];
-    ((CameraObject *)obj)->probePosZ = pos[2];
+    target->anim.rotX = (s16)yaw;
+    {
+        f32 p;
+        p = pos[0];
+        ((CameraObject *)obj)->anim.worldPosX = p;
+        ((CameraObject *)obj)->probePosX = p;
+        p = pos[1];
+        ((CameraObject *)obj)->anim.worldPosY = p;
+        ((CameraObject *)obj)->probePosY = p;
+        p = pos[2];
+        ((CameraObject *)obj)->anim.worldPosZ = p;
+        ((CameraObject *)obj)->probePosZ = p;
+    }
     Obj_TransformWorldPointToLocal(((CameraObject *)obj)->anim.worldPosX, ((CameraObject *)obj)->anim.worldPosY, ((CameraObject *)obj)->anim.worldPosZ,
                                    &((GameObject *)obj)->anim.localPosX, &((GameObject *)obj)->anim.localPosY, &((GameObject *)obj)->anim.localPosZ,
                                    *(int *)&((CameraObject *)obj)->anim.parent);
