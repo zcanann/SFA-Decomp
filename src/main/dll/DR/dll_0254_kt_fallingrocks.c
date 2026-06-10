@@ -4,6 +4,15 @@
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
+
+typedef struct KtfallingrocksPlacement {
+    u8 pad0[0x20 - 0x0];
+    u16 unk20;
+    u8 pad22[0x24 - 0x22];
+    s16 unk24;
+    u8 pad26[0x28 - 0x26];
+} KtfallingrocksPlacement;
+
 int ktfallingrocks_getExtraSize(void) { return 0x0; }
 
 int ktfallingrocks_getObjectTypeId(void) { return 0x0; }
@@ -33,7 +42,7 @@ void ktfallingrocks_update(int obj) {
     ObjPosParams params;
     char *player;
     int i;
-    if (GameBit_Get(*(s16 *)(q + 0x24)) == 0) {
+    if (GameBit_Get(((KtfallingrocksPlacement *)q)->unk24) == 0) {
         return;
     }
     player = Obj_GetPlayerObject();
@@ -47,8 +56,8 @@ void ktfallingrocks_update(int obj) {
         params.y = ((GameObject *)obj)->anim.localPosY;
         params.z = ((GameObject *)obj)->anim.localPosZ + (f32)(int)randomGetRange(-200, 200);
         (*gPartfxInterface)->spawnObject(
-            (void *)obj, *(u16 *)(q + 0x20), &params, 0x200001, -1, NULL);
+            (void *)obj, ((KtfallingrocksPlacement *)q)->unk20, &params, 0x200001, -1, NULL);
     }
     Sfx_PlayFromObject(obj, SFXbaddie_haga_spin);
-    GameBit_Set(*(s16 *)(q + 0x24), 0);
+    GameBit_Set(((KtfallingrocksPlacement *)q)->unk24, 0);
 }

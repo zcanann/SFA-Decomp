@@ -2,6 +2,13 @@
 #include "main/game_object.h"
 #include "main/audio/sfx_ids.h"
 
+typedef struct VfpstatueballPlacement {
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    u8 pad1C[0x20 - 0x1C];
+} VfpstatueballPlacement;
+
+
 
 extern void objfx_spawnDirectionalBurst(int *obj, u8 idx, f32 scale, int model, int mode, u8 chance,
                            f32 alpha, int flags, int unused);
@@ -53,7 +60,7 @@ void vfpstatueball_update(int *obj) {
 
     state->timer -= (s16)timeDelta;
 
-    variant = *(s16 *)((char *)setup + 0x1a);
+    variant = ((VfpstatueballPlacement *)setup)->unk1A;
     if (variant == 0) {
         objfx_spawnDirectionalBurst(obj, state->particleIdx, lbl_803E60B8, 5, 1, state->particleChance,
                        (f32)state->particleAlpha, 0, 0);
@@ -72,7 +79,7 @@ void vfpstatueball_update(int *obj) {
         hitType = ObjHits_GetPriorityHit((int)obj, (int *)&hitObj, 0, 0);
         if ((hitObj != NULL) && (hitType != 0) && (hitObj != NULL) &&
             (*(s16 *)((char *)hitObj + 0x46) == 0x14b)) {
-            if ((u8)fn_8016F16C(hitObj) == *(s16 *)((char *)setup + 0x1a)) {
+            if ((u8)fn_8016F16C(hitObj) == ((VfpstatueballPlacement *)setup)->unk1A) {
                 state->active = (u8)(1 - state->active);
             } else {
                 Sfx_PlayFromObject(0, SFXsc_mpick1_b);

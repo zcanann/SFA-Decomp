@@ -7,6 +7,29 @@
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 
+typedef struct TexframeanimatorPlacement {
+    u8 pad0[0x18 - 0x0];
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    s16 unk22;
+    s16 unk24;
+    u8 pad26[0x3C - 0x26];
+    u8 unk3C;
+    u8 pad3D[0x3E - 0x3D];
+    s16 unk3E;
+} TexframeanimatorPlacement;
+
+
+typedef struct ExplodeanimatorState {
+    u8 pad0[0x2 - 0x0];
+    u8 unk2;
+    u8 pad3[0x4 - 0x3];
+} ExplodeanimatorState;
+
+
 typedef struct DimbossicesmashPlacement {
     u8 pad0[0x1A - 0x0];
     s16 unk1A;
@@ -665,7 +688,7 @@ void texframeanimator_update(int *obj)
     params = *(u8 **)&((GameObject *)obj)->anim.placementData;
 
     if ((state->active == 0) &&
-        ((u32)GameBit_Get(*(s16 *)(params + 0x20)) != 0) &&
+        ((u32)GameBit_Get(((TexframeanimatorPlacement *)params)->unk20) != 0) &&
         (state->done == 0)) {
         state->active = 1;
         state->frame = 0;
@@ -684,8 +707,8 @@ void texframeanimator_update(int *obj)
                 if (state->frame < 0) {
                     state->frame = 0;
                 } else if (state->frame > state->endFrame) {
-                    if (*(s16 *)(params + 0x1e) != -1) {
-                        GameBit_Set(*(s16 *)(params + 0x1e), 1);
+                    if (((TexframeanimatorPlacement *)params)->unk1E != -1) {
+                        GameBit_Set(((TexframeanimatorPlacement *)params)->unk1E, 1);
                         state->active = 0;
                         state->done = 1;
                         state->frame = state->endFrame;
@@ -813,7 +836,7 @@ void explodeanimator_init(int* obj, int* def)
     } else {
         v = 0;
     }
-    *(u8*)((char*)state + 2) = (u8)v;
+    ((ExplodeanimatorState *)state)->unk2 = (u8)v;
     ObjGroup_AddObject(obj, 26);
 }
 

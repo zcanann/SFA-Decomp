@@ -8,6 +8,13 @@
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
+typedef struct ShopitemState {
+    u8 pad0[0x88 - 0x0];
+    s16 unk88;
+    u8 pad8A[0xEC - 0x8A];
+} ShopitemState;
+
+
 typedef struct ShopitemPlacement {
     u8 pad0[0x19 - 0x0];
     u8 unk19;
@@ -734,7 +741,7 @@ void shopitem_update(int obj)
         ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x8000);
         *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     } else if (b->flag_80) {
-        *(s16 *)(state + 0x88) = -1;
+        ((ShopitemState *)state)->unk88 = -1;
         ObjMsg_SendToObject(Obj_GetPlayerObject(), 0x7000A, obj, (void *)(state + 0x88));
         b->flag_80 = 0;
         b->flag_40 = 1;

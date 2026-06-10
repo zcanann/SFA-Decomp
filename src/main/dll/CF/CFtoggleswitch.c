@@ -6,6 +6,25 @@
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
 
+typedef struct TrickyguardspotPlacement {
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    u8 pad1C[0x1E - 0x1C];
+    s16 unk1E;
+} TrickyguardspotPlacement;
+
+
+typedef struct MagiccavetopPlacement {
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    s8 unk20;
+    s8 unk21;
+    u8 pad22[0x28 - 0x22];
+} MagiccavetopPlacement;
+
+
 typedef struct MagiccavetopObjectDef {
     u8 pad0[0x1A - 0x0];
     s16 unk1A;
@@ -179,7 +198,7 @@ void trickyguardspot_update(TrickyGuardSpotObject *obj) {
     if (tricky != NULL) {
         if ((u8)TRICKY_GUARD_SPOT_VTABLE(tricky)->isGuardSpotActionReady(tricky) != 0) {
             if (Vec_xzDistance(&((GameObject *)obj)->anim.worldPosX,
-                               (f32 *)((char *)tricky + 0x18)) < (f32)(s32)*(s16 *)(def + 0x1a)) {
+                               (f32 *)((char *)tricky + 0x18)) < (f32)(s32)((TrickyguardspotPlacement *)def)->unk1A) {
                 *(int *)sub = *(int *)sub - framesThisStep;
                 flags->trickyInRange = 1;
             }
@@ -199,7 +218,7 @@ void trickyguardspot_update(TrickyGuardSpotObject *obj) {
         TRICKY_GUARD_SPOT_VTABLE(tricky)->resetGuardSpotAction(tricky);
         *(int *)sub = def[0x19] * 0x3c;
     }
-    GameBit_Set(*(s16 *)(def + 0x1e), flags->trickyInRange);
+    GameBit_Set(((TrickyguardspotPlacement *)def)->unk1E, flags->trickyInRange);
 }
 
 /* 8b "li r3, N; blr" returners. */
@@ -453,7 +472,7 @@ void magiccavetop_update(int *obj) {
         }
         dirIdx = mapGetDirIdx(def[0x1f]);
         dist = vec3f_distanceSquared(&((GameObject *)player)->anim.worldPosX, &((GameObject *)obj)->anim.worldPosX);
-        gb = GameBit_Get(*(s16 *)(def + 0x1c));
+        gb = GameBit_Get(((MagiccavetopPlacement *)def)->unk1C);
         switch (*sub) {
         case 0:
             range = def[0x19] * 2;
@@ -480,7 +499,7 @@ void magiccavetop_update(int *obj) {
             }
             break;
         case 2:
-            GameBit_Set(0x1b8, *(s8 *)(def + 0x21));
+            GameBit_Set(0x1b8, ((MagiccavetopPlacement *)def)->unk21);
             if (def[0x22] != 0) {
                 unlockLevel(0, 0, 1);
                 lockLevel(def[0x1e], 0);
@@ -493,7 +512,7 @@ void magiccavetop_update(int *obj) {
             if (((GameObject *)obj)->anim.mapEventSlot == 0xd) {
                 GameBit_Set(0xe05, 0);
             }
-            warpToMap(*(s8 *)(def + 0x20), 0);
+            warpToMap(((MagiccavetopPlacement *)def)->unk20, 0);
             break;
         case 3:
             if (dist > lbl_803E3C30) {

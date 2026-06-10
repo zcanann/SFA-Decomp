@@ -3,6 +3,13 @@
 #include "main/game_object.h"
 #include "main/dll/MMP/mmp_levelcontrol.h"
 
+typedef struct WallanimatorPlacement {
+    u8 pad0[0x1C - 0x0];
+    s16 unk1C;
+    u8 pad1E[0x20 - 0x1E];
+} WallanimatorPlacement;
+
+
 typedef struct WallanimatorState {
     u8 pad0[0x4 - 0x0];
     u8 unk4;
@@ -130,7 +137,7 @@ f32 wallanimator_setScale(int obj,int target)
     vecRotateZXY(effect.rot,out);
     out[2] -= kD8;
     vecRotateZXY((void *)obj,out);
-    effect.rot[2] = *(s16 *)(desc + 0x1c);
+    effect.rot[2] = ((WallanimatorPlacement *)desc)->unk1C;
     effect.rot[0] = *(s16 *)obj;
     effect.pos[0] = ((GameObject *)obj)->anim.worldPosX + out[0];
     effect.pos[1] = kDC + (((GameObject *)obj)->anim.worldPosY + out[1]);

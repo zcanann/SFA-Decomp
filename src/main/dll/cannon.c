@@ -2,6 +2,20 @@
 #include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"
 
+typedef struct TrickyFlameState {
+    u8 pad0[0x58 - 0x0];
+    u8 unk58;
+    u8 pad59[0x60 - 0x59];
+} TrickyFlameState;
+
+
+typedef struct TrickyGuardState {
+    u8 pad0[0x58 - 0x0];
+    u8 unk58;
+    u8 pad59[0x60 - 0x59];
+} TrickyGuardState;
+
+
 #define TRICKY_STATE_FLAGS_OFFSET 0x54
 #define TRICKY_STATE_TARGET_DIRTY_FLAG 0x00000400
 #define TRICKY_STATE_RESET_FLAG_10 0x00000010
@@ -300,7 +314,7 @@ void trickyFlame(int p1, int p2) {
                     }
                     Sfx_RemoveLoopedObjectSound(p1, 0x3dc);
                     state = ((GameObject *)p1)->extra;
-                    if ((((u32)*(u8 *)((char *)state + 0x58) >> 6) & 1) == 0) {
+                    if ((((u32)((TrickyFlameState *)state)->unk58 >> 6) & 1) == 0) {
                         s16 a0 = ((GameObject *)p1)->anim.currentMove;
                         if (a0 >= 0x30 || a0 < 0x29) {
                             if (Sfx_IsPlayingFromObjectChannel(p1, 0x10) == 0) {
@@ -378,7 +392,7 @@ void trickyFlame(int p1, int p2) {
                     }
                     Sfx_RemoveLoopedObjectSound(p1, 0x3dc);
                     state = ((GameObject *)p1)->extra;
-                    if ((((u32)*(u8 *)((char *)state + 0x58) >> 6) & 1) == 0) {
+                    if ((((u32)((TrickyFlameState *)state)->unk58 >> 6) & 1) == 0) {
                         s16 a0 = ((GameObject *)p1)->anim.currentMove;
                         if (a0 >= 0x30 || a0 < 0x29) {
                             if (Sfx_IsPlayingFromObjectChannel(p1, 0x10) == 0) {
@@ -564,7 +578,7 @@ void trickyGuard(ObjAnimComponent *obj, TrickyRuntime *trickyState) {
             }
             Sfx_RemoveLoopedObjectSound(p1, 0x3dc);
             state = ((GameObject *)p1)->extra;
-            if ((((u32)*(u8 *)((char *)state + 0x58) >> 6) & 1) == 0) {
+            if ((((u32)((TrickyGuardState *)state)->unk58 >> 6) & 1) == 0) {
                 s16 a0 = obj->currentMove;
                 if (a0 >= 0x30 || a0 < 0x29) {
                     if (Sfx_IsPlayingFromObjectChannel(p1, 0x10) == 0) {
@@ -595,7 +609,7 @@ void trickyGuard(ObjAnimComponent *obj, TrickyRuntime *trickyState) {
             objAnimFn_8013a3f0(p1, 0x33, lbl_803E2444, 0x4000000);
             trickyState->guardTimer = lbl_803E23DC;
             state = ((GameObject *)p1)->extra;
-            if ((((u32)*(u8 *)((char *)state + 0x58) >> 6) & 1) == 0) {
+            if ((((u32)((TrickyGuardState *)state)->unk58 >> 6) & 1) == 0) {
                 s16 a0 = obj->currentMove;
                 if (a0 >= 0x30 || a0 < 0x29) {
                     if (Sfx_IsPlayingFromObjectChannel(p1, 0x10) == 0) {
@@ -615,7 +629,7 @@ void trickyGuard(ObjAnimComponent *obj, TrickyRuntime *trickyState) {
         trickyDebugPrint(strBase + 0x6b8);
         if (randomGetRange(0, 10) == 0) {
             state = ((GameObject *)p1)->extra;
-            if ((((u32)*(u8 *)((char *)state + 0x58) >> 6) & 1) == 0) {
+            if ((((u32)((TrickyGuardState *)state)->unk58 >> 6) & 1) == 0) {
                 s16 a0 = obj->currentMove;
                 if (a0 >= 0x30 || a0 < 0x29) {
                     if (Sfx_IsPlayingFromObjectChannel(p1, 0x10) == 0) {

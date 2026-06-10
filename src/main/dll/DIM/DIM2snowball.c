@@ -9,6 +9,14 @@
 #include "main/objanim_internal.h"
 #include "global.h"
 
+typedef struct Dll1D6Placement {
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    s16 unk1C;
+    u8 pad1E[0x20 - 0x1E];
+} Dll1D6Placement;
+
+
 typedef struct DimtruthhorniceObjectDef {
     u8 pad0[0x1A - 0x0];
     s16 unk1A;
@@ -1112,7 +1120,7 @@ void dll_1D6_update(int *obj)
         if (extra->downTimer <= 0) {
             model = DIM2snowball_GetActiveModel(obj);
             ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4A80, 16);
-            extra->upTimer = *(s16 *)((char *)def + 0x1a);
+            extra->upTimer = ((Dll1D6Placement *)def)->unk1A;
             if (extra->upTimer < 15) {
                 extra->upTimer = 15;
             }
@@ -1129,7 +1137,7 @@ void dll_1D6_update(int *obj)
         extra->upTimer -= framesThisStep;
         if (extra->upTimer <= 0) {
             ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4A84, 16);
-            extra->downTimer = *(s16 *)((char *)def + 0x1c);
+            extra->downTimer = ((Dll1D6Placement *)def)->unk1C;
             if (extra->downTimer < 15) {
                 extra->downTimer = 15;
             }

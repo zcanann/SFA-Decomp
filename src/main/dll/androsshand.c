@@ -3,6 +3,13 @@
 #include "main/game_object.h"
 #include "main/objhits_types.h"
 
+typedef struct AndrosshandState {
+    u8 pad0[0x14 - 0x0];
+    f32 unk14;
+    u8 pad18[0x2C - 0x18];
+} AndrosshandState;
+
+
 /*
  * Per-object extra state for an Andross hand
  * (androsshand_getExtraSize == 0x2C).
@@ -322,7 +329,7 @@ void androsshand_init(int obj, u8 *setup)
     *(u8 *)&state->prevState = 3;
     animState = *(int *)&((GameObject *)obj)->extra;
     ObjAnim_SetCurrentMove(obj, 4, lbl_803E75AC, 0);
-    *(f32 *)(animState + 0x14) = lbl_8032C270[4];
+    ((AndrosshandState *)animState)->unk14 = lbl_8032C270[4];
     ((GameObject *)obj)->anim.currentMoveProgress = lbl_803E75B0;
     ObjHits_SetTargetMask(obj, 4);
 }

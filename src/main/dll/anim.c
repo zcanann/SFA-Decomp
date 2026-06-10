@@ -161,6 +161,65 @@ STATIC_ASSERT(sizeof(DrakorEnergyState) == 0xC);
 /* chuka extra block (extraSize 0xC). */
 #include "main/dll/baddie/chuka.h"
 
+typedef struct DfpseqpointPlacement {
+    u8 pad0[0x8 - 0x0];
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    s32 unk14;
+    u8 pad18[0x19 - 0x18];
+    u8 unk19;
+    u8 pad1A[0x1E - 0x1A];
+    s8 unk1E;
+    u8 pad1F[0x24 - 0x1F];
+    s16 unk24;
+    u8 pad26[0x2B - 0x26];
+    u8 unk2B;
+    u8 pad2C[0x2E - 0x2C];
+    s8 unk2E;
+    u8 pad2F[0x30 - 0x2F];
+} DfpseqpointPlacement;
+
+
+typedef struct DrakorenergyPlacement {
+    u8 pad0[0x8 - 0x0];
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    s32 unk14;
+    u8 pad18[0x19 - 0x18];
+    u8 unk19;
+    u8 pad1A[0x1E - 0x1A];
+    s8 unk1E;
+    u8 pad1F[0x20 - 0x1F];
+    s16 unk20;
+    u8 pad22[0x24 - 0x22];
+    s16 unk24;
+    u8 pad26[0x2B - 0x26];
+    u8 unk2B;
+    u8 pad2C[0x2E - 0x2C];
+    s8 unk2E;
+    u8 pad2F[0x30 - 0x2F];
+} DrakorenergyPlacement;
+
+
+typedef struct DbstealerwormState {
+    u8 pad0[0xC - 0x0];
+    f32 unkC;
+    f32 unk10;
+    f32 unk14;
+    s32 unk18;
+    u8 pad1C[0xC8 - 0x1C];
+    s32 unkC8;
+    u8 padCC[0x280 - 0xCC];
+    f32 unk280;
+    f32 unk284;
+    u8 pad288[0x40C - 0x288];
+    s32 unk40C;
+    u8 pad410[0x460 - 0x410];
+} DbstealerwormState;
+
+
 typedef struct DfpobjcreatorObjectDef {
     u8 pad0[0x18 - 0x0];
     s16 unk18;
@@ -4313,7 +4372,7 @@ void drakorenergy_update(int obj)
     data = *(int *)&((GameObject *)obj)->anim.placementData;
     switch (((DrakorEnergyState *)blob)->mode) {
     case 0:
-        if (GameBit_Get(*(s16 *)(data + 0x20)) == 1) {
+        if (GameBit_Get(((DrakorenergyPlacement *)data)->unk20) == 1) {
             ((DrakorEnergyState *)blob)->mode = 2;
         }
         break;
@@ -4404,7 +4463,7 @@ int dfpseqpoint_SeqFn(int obj, int p2, ObjAnimUpdateState *animUpdate)
             break;
         case 0xa:
             if (animUpdate->eventIds[i] == 0x14) {
-                if (*(u32 *)(data + 0x14) == 0x49de8) {
+                if (*(u32 *)&((DfpseqpointPlacement *)data)->unk14 == 0x49de8) {
                     ((DfpFlags7 *)&((DfpSeqPointState *)blob)->flags0F)->b80 = 1;
                 } else {
                     if ((*gMapEventInterface)->getMode(((GameObject *)obj)->anim.mapEventSlot) == 1 ||

@@ -7,6 +7,38 @@
 #include "main/objanim.h"
 #include "main/objhits_types.h"
 
+typedef struct MediumbasketUpdateDropStateState {
+    u8 pad0[0x4 - 0x0];
+    s16 unk4;
+    s16 unk6;
+    u8 pad8[0x28 - 0x8];
+    f32 unk28;
+    f32 unk2C;
+    f32 unk30;
+    f32 unk34;
+    u8 pad38[0x44 - 0x38];
+    u8 unk44;
+    u8 pad45[0x46 - 0x45];
+    u16 unk46;
+} MediumbasketUpdateDropStateState;
+
+
+typedef struct MediumbasketUpdateHeightBlendStateState {
+    u8 pad0[0x4 - 0x0];
+    s16 unk4;
+    s16 unk6;
+    u8 pad8[0x28 - 0x8];
+    f32 unk28;
+    f32 unk2C;
+    f32 unk30;
+    f32 unk34;
+    u8 pad38[0x44 - 0x38];
+    u8 unk44;
+    u8 pad45[0x46 - 0x45];
+    u16 unk46;
+} MediumbasketUpdateHeightBlendStateState;
+
+
 typedef struct MediumbasketUpdateOpenHitStateState {
     u8 pad0[0x2C - 0x0];
     f32 unk2C;
@@ -1415,7 +1447,7 @@ int mediumbasket_updateDropState(int obj, int state)
     int control = *(int *)(*(int *)&((GameObject *)obj)->extra + 0x40c);
     int player;
 
-    *(u8 *)(control + 0x44) |= 4;
+    ((MediumbasketUpdateDropStateState *)control)->unk44 |= 4;
     if ((s8)((GroundBaddieState *)state)->baddie.moveJustStartedA != 0) {
         ObjAnim_SetCurrentMove(obj, 0, lbl_803E2D14, 0);
         ((GroundBaddieState *)state)->baddie.moveDone = 0;
@@ -1464,7 +1496,7 @@ int mediumbasket_updateHeightBlendState(int obj, int state)
     int control = *(int *)(*(int *)&((GameObject *)obj)->extra + 0x40c);
     f32 height;
 
-    *(u8 *)(control + 0x44) |= 0xc;
+    ((MediumbasketUpdateHeightBlendStateState *)control)->unk44 |= 0xc;
     if ((s8)((GroundBaddieState *)state)->baddie.moveJustStartedA != 0) {
         if ((s8)((GroundBaddieState *)state)->baddie.moveJustStartedA != 0) {
             ObjAnim_SetCurrentMove(obj, 0xf, lbl_803E2D14, 0);

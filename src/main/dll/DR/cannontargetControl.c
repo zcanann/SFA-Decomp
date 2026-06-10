@@ -5,6 +5,14 @@
 #include "main/dll/DR/gunpowderbarrel_state.h"
 #include "main/objhits_types.h"
 
+typedef struct GunpowderbarrelPlacement {
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    s16 unk1C;
+    u8 pad1E[0x20 - 0x1E];
+} GunpowderbarrelPlacement;
+
+
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_8001777c();
@@ -680,14 +688,14 @@ void gunpowderbarrel_update(int obj)
                 gunpowderbarrel_setPlayerHeldState(obj, 0);
             }
             gen = 0;
-            if (*(s16 *)(def + 0x1a) != 0) {
+            if (((GunpowderbarrelPlacement *)def)->unk1A != 0) {
                 int cnt;
                 int *objs = ObjGroup_GetObjects(0x3a, &cnt);
                 int *p;
                 i = 0;
                 p = objs;
                 for (; i < cnt; i++) {
-                    if (*(s16 *)(def + 0x1a) == barrelgener_getLinkId(*p)) {
+                    if (((GunpowderbarrelPlacement *)def)->unk1A == barrelgener_getLinkId(*p)) {
                         gen = objs[i];
                         break;
                     }

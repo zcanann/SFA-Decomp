@@ -2,6 +2,13 @@
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 
+typedef struct NwIcePlacement {
+    u8 pad0[0x1B - 0x0];
+    u8 unk1B;
+    u8 pad1C[0x20 - 0x1C];
+} NwIcePlacement;
+
+
 typedef struct NwTrickyState {
     u8 pad0[0x4 - 0x0];
     f32 unk4;
@@ -222,7 +229,7 @@ void nw_ice_update(int *obj) {
         for (i = 0; i < count; scan++, i++) {
             candidate = *scan;
             if ((obj != candidate) &&
-                (*(u8 *)((char *)setup + 0x1b) ==
+                (((NwIcePlacement *)setup)->unk1B ==
                  *(u8 *)((char *)*(int **)((char *)candidate + 0x4c) + 0x1b))) {
                 state->linkedObj = objects[i];
                 break;

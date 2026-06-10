@@ -8,6 +8,26 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 
+typedef struct Dll19APlacement {
+    u8 pad0[0x4 - 0x0];
+    u8 unk4;
+    u8 unk5;
+    u8 unk6;
+    u8 unk7;
+    u8 pad8[0x1F - 0x8];
+    s8 unk1F;
+} Dll19APlacement;
+
+
+typedef struct Dll19AState {
+    u8 pad0[0x7 - 0x0];
+    u8 unk7;
+    u8 unk8;
+    u8 unk9;
+    u8 padA[0x10 - 0xA];
+} Dll19AState;
+
+
 typedef struct Dll199ObjectDef {
     u8 pad0[0x1A - 0x0];
     s16 unk1A;
@@ -343,7 +363,7 @@ void dll_19A_update(int obj)
         ((GameObject *)obj)->anim.alpha = 0xff;
     }
     else {
-        if ((((GameObject *)obj)->unkF8 == 0) && (GameBit_Get(*(s8 *)(setup + 0x1f) + 0x1cd) != 0)) {
+        if ((((GameObject *)obj)->unkF8 == 0) && (GameBit_Get(((Dll19APlacement *)setup)->unk1F + 0x1cd) != 0)) {
             res = Resource_Acquire(0x82, 1);
             (**(void (**)(int, int, int, int, int, int))(*res + 4))(obj, 0, 0, 1, 0xffffffff, 0);
             (**(void (**)(int, int, int, int, int, int))(*res + 4))(obj, 1, 0, 1, 0xffffffff, 0);
@@ -360,10 +380,10 @@ void dll_19A_update(int obj)
             *(f32 *)(newObj + 8) = ((ObjPlacement *)setup)->posX;
             *(f32 *)(newObj + 0xc) = ((ObjPlacement *)setup)->posY;
             *(f32 *)(newObj + 0x10) = ((ObjPlacement *)setup)->posZ;
-            *(u8 *)(newObj + 4) = *(u8 *)(setup + 4);
-            *(u8 *)(newObj + 5) = *(u8 *)(setup + 5);
-            *(u8 *)(newObj + 6) = *(u8 *)(setup + 6);
-            *(u8 *)(newObj + 7) = *(u8 *)(setup + 7);
+            *(u8 *)(newObj + 4) = ((Dll19APlacement *)setup)->unk4;
+            *(u8 *)(newObj + 5) = ((Dll19APlacement *)setup)->unk5;
+            *(u8 *)(newObj + 6) = ((Dll19APlacement *)setup)->unk6;
+            *(u8 *)(newObj + 7) = ((Dll19APlacement *)setup)->unk7;
             *(u8 *)(newObj + 0x27) = 1;
             *(s16 *)(newObj + 0x18) = 0x1e7;
             *(s16 *)(newObj + 0x30) = 0xffff;
@@ -378,7 +398,7 @@ void dll_19A_update(int obj)
             *(u8 *)(newObj + 0x29) = 0xff;
             *(s8 *)(newObj + 0x2e) = -1;
             {
-                int linkIdx = *(s8 *)(setup + 0x1f);
+                int linkIdx = ((Dll19APlacement *)setup)->unk1F;
                 *(u8 *)(newObj + 0x32) = linkIdx;
             }
             r = Obj_SetupObject(newObj, 5, ((GameObject *)obj)->anim.mapEventSlot, 0xffffffff, *(int *)&((GameObject *)obj)->anim.parent);
@@ -408,7 +428,7 @@ void dll_19A_init(int obj, s8 *def) {
     *(s16 *)obj = (s16)((s32)def[0x1E] << 8);
     ((GameObject *)obj)->unkF8 = 0;
     *(s16 *)state = 100;
-    *(s16 *)((char *)state + 2) = 0;
+    ((Dll199State *)state)->unk2 = 0;
     *(u8 *)((char *)obj + 0x37) = 0xFF;
     ((GameObject *)obj)->anim.alpha = 0xFF;
 }

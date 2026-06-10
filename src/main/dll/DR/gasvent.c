@@ -7,6 +7,21 @@
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 
+typedef struct GunpowderbarrelTriggerExplosionPlacement {
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    u8 pad1C[0x20 - 0x1C];
+} GunpowderbarrelTriggerExplosionPlacement;
+
+
+typedef struct GunpowderbarrelTriggerExplosionState {
+    u8 pad0[0x10 - 0x0];
+    void *unk10;
+    u8 pad14[0x34 - 0x14];
+    f32 unk34;
+} GunpowderbarrelTriggerExplosionState;
+
+
 typedef struct GunpowderbarrelState {
     u8 pad0[0x10 - 0x0];
     s32 unk10;
@@ -401,11 +416,11 @@ void gunpowderbarrel_triggerExplosion(int *obj)
             int **objs;
             int i;
             int **p;
-            if (*(s16 *)((char *)def + 0x1a) != 0) {
+            if (((GunpowderbarrelTriggerExplosionPlacement *)def)->unk1A != 0) {
                 objs = (int **)ObjGroup_GetObjects(0x3a, &count);
                 for (i = 0; i < count; i++) {
                     int id = barrelgener_getLinkId(objs[i]);
-                    if (*(s16 *)((char *)def + 0x1a) == id) {
+                    if (((GunpowderbarrelTriggerExplosionPlacement *)def)->unk1A == id) {
                         best = objs[i];
                         break;
                     }
@@ -443,16 +458,16 @@ void gunpowderbarrel_triggerExplosion(int *obj)
         ((GpbFlags4A *)(sub + 0x4a))->held = 0;
         ObjGroup_RemoveObject(obj, 0x19);
         if (((GameObject *)obj)->anim.parent != 0) {
-            *(f32 *)(sub + 0x34) = lbl_803E42C4;
+            ((GunpowderbarrelTriggerExplosionState *)sub)->unk34 = lbl_803E42C4;
         } else {
-            *(f32 *)(sub + 0x34) = lbl_803E42C4;
+            ((GunpowderbarrelTriggerExplosionState *)sub)->unk34 = lbl_803E42C4;
         }
         tricky = getTrickyObject();
         if (tricky != 0) {
             trickyImpress(tricky);
         }
         sub[0x49] = (u8)(sub[0x49] & ~2);
-        timer = *(int **)(sub + 0x10);
+        timer = *(int **)&((GunpowderbarrelTriggerExplosionState *)sub)->unk10;
         if (timer != 0) {
             timer_clearManualFlags(timer);
         }

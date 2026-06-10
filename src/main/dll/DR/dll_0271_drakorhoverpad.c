@@ -16,6 +16,28 @@ void drakorhoverpad_func15(void) {}
 
 #include "global.h"
 
+typedef struct DrakorhoverpadUpdateMainPlacement {
+    u8 pad0[0x20 - 0x0];
+    s16 unk20;
+    u8 pad22[0x28 - 0x22];
+} DrakorhoverpadUpdateMainPlacement;
+
+
+typedef struct DrakorhoverpadUpdateMainState {
+    u8 pad0[0xD8 - 0x0];
+    f32 unkD8;
+    u8 padDC[0xE0 - 0xDC];
+    f32 unkE0;
+    f32 unkE4;
+    u8 padE8[0x110 - 0xE8];
+    f32 unk110;
+    f32 unk114;
+    u8 pad118[0x174 - 0x118];
+    s16 unk174;
+    u8 pad176[0x178 - 0x176];
+} DrakorhoverpadUpdateMainState;
+
+
 typedef struct DrakorhoverpadState {
     u8 pad0[0xD8 - 0x0];
     f32 unkD8;
@@ -368,8 +390,8 @@ void drakorhoverpad_updateMain(int obj) {
         return;
     }
     if (f->bit20 == 0) {
-        f->bit20 = GameBit_Get(*(s16 *)((char *)q + 0x20));
-        *(f32 *)(p + 0x114) = lbl_803E6A3C;
+        f->bit20 = GameBit_Get(((DrakorhoverpadUpdateMainPlacement *)q)->unk20);
+        ((DrakorhoverpadUpdateMainState *)p)->unk114 = lbl_803E6A3C;
         if (f->bit20 != 0) {
             curveArg = 0x2a;
             (*gRomCurveInterface)->initCurve(p + 4, (void *)obj, lbl_803E6A4C, &curveArg, -1);
@@ -397,7 +419,7 @@ void drakorhoverpad_updateMain(int obj) {
             if (absH < lbl_803E6A3C) {
                 absH = -absH;
             }
-            absV = *(f32 *)(p + 0x110);
+            absV = ((DrakorhoverpadUpdateMainState *)p)->unk110;
             if (absV < lbl_803E6A3C) {
                 absV = -absV;
             }
@@ -408,34 +430,34 @@ void drakorhoverpad_updateMain(int obj) {
         if (f->state != 0) {
             limit = limit + lbl_803E6A38;
         }
-        *(f32 *)(p + 0x110) = *(f32 *)(p + 0x114) + (*(f32 *)(p + 0x110) + wobbleY);
-        absV = *(f32 *)(p + 0x110);
+        ((DrakorhoverpadUpdateMainState *)p)->unk110 = ((DrakorhoverpadUpdateMainState *)p)->unk114 + (((DrakorhoverpadUpdateMainState *)p)->unk110 + wobbleY);
+        absV = ((DrakorhoverpadUpdateMainState *)p)->unk110;
         if (absV < lbl_803E6A3C) {
             absV = -absV;
         }
         if (absV < limit) {
-            *(f32 *)(p + 0x110) = *(f32 *)p;
+            ((DrakorhoverpadUpdateMainState *)p)->unk110 = *(f32 *)p;
         } else {
-            if (*(f32 *)(p + 0x110) > *(f32 *)p) {
-                *(f32 *)(p + 0x110) = *(f32 *)(p + 0x110) + -limit;
+            if (((DrakorhoverpadUpdateMainState *)p)->unk110 > *(f32 *)p) {
+                ((DrakorhoverpadUpdateMainState *)p)->unk110 = ((DrakorhoverpadUpdateMainState *)p)->unk110 + -limit;
             } else {
-                *(f32 *)(p + 0x110) = *(f32 *)(p + 0x110) + limit;
+                ((DrakorhoverpadUpdateMainState *)p)->unk110 = ((DrakorhoverpadUpdateMainState *)p)->unk110 + limit;
             }
         }
         ObjHits_SetHitVolumeSlot(obj, 8, 1, 0);
     } else {
         ObjHits_DisableObject(obj);
-        *(f32 *)(p + 0x110) = *(f32 *)p;
+        ((DrakorhoverpadUpdateMainState *)p)->unk110 = *(f32 *)p;
         lbl_803DC2F8 = lbl_803E6A38 * *(f32 *)p;
     }
-    if (*(f32 *)(p + 0x110) < lbl_803E6A3C) {
+    if (((DrakorhoverpadUpdateMainState *)p)->unk110 < lbl_803E6A3C) {
         (*gRomCurveInterface)->setClosed(p + 4, 1);
     } else {
         (*gRomCurveInterface)->setClosed(p + 4, 0);
     }
-    *(f32 *)(p + 0x114) = lbl_803E6A3C;
-    if (lbl_803E6A3C != *(f32 *)(p + 0x110)) {
-        Curve_AdvanceAlongPath(curve, *(f32 *)(p + 0x110));
+    ((DrakorhoverpadUpdateMainState *)p)->unk114 = lbl_803E6A3C;
+    if (lbl_803E6A3C != ((DrakorhoverpadUpdateMainState *)p)->unk110) {
+        Curve_AdvanceAlongPath(curve, ((DrakorhoverpadUpdateMainState *)p)->unk110);
         if ((*(int *)(curve + 0x80) != 0) != (*(int *)(curve + 0x10) != 0)) {
             if (drakorhoverpad_handlePathPointEvent(obj, *(u8 *)(*(int *)(curve + 0xa0) + 0x18),
                                                     *(u8 *)(*(int *)(curve + 0xa4) + 0x18),
@@ -448,9 +470,9 @@ void drakorhoverpad_updateMain(int obj) {
     curvePos[1] = *(f32 *)(curve + 0x6c);
     curvePos[2] = *(f32 *)(curve + 0x70);
     curvePos[1] = curvePos[1] + (lbl_803E6A48 + mathSinf(lbl_803E6A54 *
-                                                            (f32)(int)*(s16 *)(p + 0x174) /
+                                                            (f32)(int)((DrakorhoverpadUpdateMainState *)p)->unk174 /
                                                             lbl_803E6A58));
-    *(s16 *)(p + 0x174) = (s16)(*(s16 *)(p + 0x174) + framesThisStep * 0x320);
+    ((DrakorhoverpadUpdateMainState *)p)->unk174 = (s16)(((DrakorhoverpadUpdateMainState *)p)->unk174 + framesThisStep * 0x320);
     if (g->f10 != 0) {
         nearest = ObjGroup_FindNearestObject(0x45, obj, 0);
         if (nearest != 0) {
@@ -483,7 +505,7 @@ void drakorhoverpad_updateMain(int obj) {
         } else if (yawDelta > 0x800) {
             yawDelta = 0x800;
         }
-        if (*(f32 *)(p + 0x110) < lbl_803E6A3C) {
+        if (((DrakorhoverpadUpdateMainState *)p)->unk110 < lbl_803E6A3C) {
             ((GameObject *)obj)->anim.rotZ = yawDelta;
         } else {
             ((GameObject *)obj)->anim.rotZ = -yawDelta;

@@ -9,6 +9,12 @@
 #include "main/objanim.h"
 #include "main/objhits_types.h"
 
+typedef struct GrimblePlacement {
+    u8 pad0[0x14 - 0x0];
+    s32 unk14;
+} GrimblePlacement;
+
+
 typedef struct GrimbleState {
     u8 pad0[0x27A - 0x0];
     s8 unk27A;
@@ -396,7 +402,7 @@ void grimble_update(int obj)
   sub = *(char **)&((GrimbleState *)state)->unk40C;
   def = *(int *)&((GameObject *)obj)->anim.placementData;
   if (((GameObject *)obj)->unkF4 != 0) {
-    if ((*gMapEventInterface)->isTimedEventActive(*(int *)(def + 0x14)) != 0) {
+    if ((*gMapEventInterface)->isTimedEventActive(((GrimblePlacement *)def)->unk14) != 0) {
       (*(void (**)(int, int, char *, int, int, int, int, f32))(*(int *)gBaddieControlInterface +
                                                                0x58))(obj, def, state, 0xa, 6,
                                                                       0x10e, 0x36, lbl_803E2F28);

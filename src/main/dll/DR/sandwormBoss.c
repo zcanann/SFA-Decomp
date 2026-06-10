@@ -1200,6 +1200,58 @@ typedef struct SpiritDoorSpiritState {
 
 #include "main/dll/DR/gunpowderbarrel_state.h"
 
+typedef struct WindliftPlacement {
+    u8 pad0[0x8 - 0x0];
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    u8 pad14[0x18 - 0x14];
+    s16 unk18;
+    s16 unk1A;
+    u8 pad1C[0x22 - 0x1C];
+    s16 unk22;
+    u8 pad24[0x28 - 0x24];
+} WindliftPlacement;
+
+
+typedef struct CfprisoncagePlacement {
+    u8 pad0[0x18 - 0x0];
+    s16 unk18;
+    u8 pad1A[0x20 - 0x1A];
+} CfprisoncagePlacement;
+
+
+typedef struct GunpowderbarrelLaunchAtTargetPlacement {
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    u8 pad1C[0x1E - 0x1C];
+    s16 unk1E;
+} GunpowderbarrelLaunchAtTargetPlacement;
+
+
+typedef struct SpiritdoorspiritPlacement {
+    u8 pad0[0x8 - 0x0];
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    u8 pad14[0x18 - 0x14];
+    s16 unk18;
+    s16 unk1A;
+    u8 pad1C[0x1E - 0x1C];
+    s16 unk1E;
+    u8 pad20[0x22 - 0x20];
+    s16 unk22;
+    u8 pad24[0x28 - 0x24];
+} SpiritdoorspiritPlacement;
+
+
+typedef struct CfguardianState {
+    u8 pad0[0x68C - 0x0];
+    void *unk68C;
+    u8 pad690[0xA9C - 0x690];
+} CfguardianState;
+
+
 typedef struct BabycloudrunnerObjectDef {
     u8 pad0[0x8 - 0x0];
     f32 unk8;
@@ -1772,7 +1824,7 @@ void spiritdoorspirit_update(int *obj) {
     sub = ((GameObject *)obj)->extra;
     def = *(u8**)&((GameObject *)obj)->anim.placementData;
     if (sub->active == 0) {
-        sub->active = (u8)(GameBit_Get(*(s16*)(def + 0x1e)) == 0);
+        sub->active = (u8)(GameBit_Get(((SpiritdoorspiritPlacement *)def)->unk1E) == 0);
         if (sub->active != 0) {
             ObjGroup_AddObject(obj, 0x4e);
         }
@@ -1781,7 +1833,7 @@ void spiritdoorspirit_update(int *obj) {
         }
     } else {
         fn_80098B18((int)obj, lbl_803DBE78, 5, 0, 0, 0);
-        sub->active = (u8)(GameBit_Get(*(s16*)(def + 0x1e)) == 0);
+        sub->active = (u8)(GameBit_Get(((SpiritdoorspiritPlacement *)def)->unk1E) == 0);
         if (sub->active == 0) {
             ObjGroup_RemoveObject(obj, 0x4e);
         }
@@ -1955,7 +2007,7 @@ void cfguardian_free(int* obj, int p2)
     if (p2 == 0) {
         int i;
         for (i = 0; i < 6; i++) {
-            int* sub = *(int**)(state + 1676);
+            int* sub = *(int**)&((CfguardianState *)state)->unk68C;
             if (sub != NULL) {
                 Obj_FreeObject(sub);
             }
@@ -2212,7 +2264,7 @@ void gunpowderbarrel_launchAtTarget(int obj, u8 flag) {
             int i;
             int* p = barrels;
             for (i = 0; i < count; i++) {
-                if (*(s16*)(params + 0x1a) == barrelgener_getLinkId(*p)) {
+                if (((GunpowderbarrelLaunchAtTargetPlacement *)params)->unk1A == barrelgener_getLinkId(*p)) {
                     target = barrels[i];
                     break;
                 }
@@ -3016,7 +3068,7 @@ void windlift_update(int* obj)
             int m = (u16)framesThisStep * 0xb6;
             *(s16*)obj -= m * ((gb2 << 2) + 0xe);
         }
-        pull = (f32)*(s16*)(def + 0x1a);
+        pull = (f32)((WindliftPlacement *)def)->unk1A;
         player = (char*)Obj_GetPlayerObject();
         if (GameBit_Get(sub->seqId) != 0) {
             if (!sub->musicOn) {

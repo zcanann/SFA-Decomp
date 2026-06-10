@@ -5,6 +5,15 @@
 #include "main/dll/DIM/DIMlavasmash.h"
 #include "main/dll/DIM/dimlogfire.h"
 
+typedef struct DimlogfirePlacement {
+    u8 pad0[0x1E - 0x0];
+    s16 unk1E;
+    u8 pad20[0x68 - 0x20];
+    void *unk68;
+    u8 pad6C[0x70 - 0x6C];
+} DimlogfirePlacement;
+
+
 typedef struct DimlogfireObjectDef {
     u8 pad0[0x1A - 0x0];
     s16 unk1A;
@@ -159,12 +168,12 @@ void dimlogfire_update(int obj)
             ObjHits_DisableObject(obj);
             state->mode = 1;
             state->dousedLatch = 1;
-            GameBit_Set(*(s16 *)(tricky + 0x1e), 1);
+            GameBit_Set(((DimlogfirePlacement *)tricky)->unk1E, 1);
         }
         tricky = getTrickyObject();
         if ((uint)tricky != 0) {
             if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) != 0) {
-                (*(void (**)(int, int, int, int))(**(int **)(tricky + 0x68) + 0x28))(tricky, obj, 1, 4);
+                (*(void (**)(int, int, int, int))(**(int **)&((DimlogfirePlacement *)tricky)->unk68 + 0x28))(tricky, obj, 1, 4);
             }
             *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
         }

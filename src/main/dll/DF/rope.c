@@ -236,12 +236,12 @@ void dimbossgut2_updateTracking(int obj, int state)
   int player;
   int rel;
 
-  curve = *(int *)(state + 0x40c);
-  r30v = *(int *)(state + 0x3dc);
-  if ((*(u16 *)(state + 0x400) & 8) != 0) {
+  curve = ((Dimbossgut2State *)state)->unk40C;
+  r30v = ((Dimbossgut2State *)state)->unk3DC;
+  if ((((Dimbossgut2State *)state)->unk400 & 8) != 0) {
     if ((Curve_AdvanceAlongPath(r30v, *(f32 *)(curve + 0x10)) != 0) || (*(int *)(r30v + 0x10) != 0)) {
       if ((*gRomCurveInterface)->goNextPoint((void *)r30v) != 0) {
-        *(u16 *)(state + 0x400) = *(u16 *)(state + 0x400) & ~0x8;
+        ((Dimbossgut2State *)state)->unk400 = ((Dimbossgut2State *)state)->unk400 & ~0x8;
       }
     }
     angle = (s16)(getAngle(*(f32 *)(r30v + 0x74), *(f32 *)(r30v + 0x7c)) + 0x8000);

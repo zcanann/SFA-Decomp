@@ -271,7 +271,7 @@ void fn_801EC870(int p1, register int p2_int)
     *(f32 *)(p2_int + 0x530) = lbl_803E5C38;
     *(f32 *)(p2_int + 0x534) = lbl_803E5BF4;
     fz = lbl_803E5AE8;
-    *(f32 *)(p2_int + 0x414) = fz;
+    ((SnowBikeSetTypeState *)p2_int)->unk414 = fz;
     *(f32 *)(p2_int + 0x584) = fz;
     *(f32 *)(p2_int + 0x548) = lbl_803E5BFC;
     *(f32 *)(p2_int + 0x54c) = lbl_803E5BE4;

@@ -4,6 +4,13 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 
+typedef struct Dim2prisonmammothPlacement {
+    u8 pad0[0x19 - 0x0];
+    s8 unk19;
+    u8 pad1A[0x20 - 0x1A];
+} Dim2prisonmammothPlacement;
+
+
 typedef struct Dim2prisonmammothState {
     s32 unk0;
     u8 pad4[0x25F - 0x4];
@@ -615,7 +622,7 @@ void dim2prisonmammoth_hitDetect(void) {}
 #pragma peephole off
 int dim2prisonmammoth_stateHandler00(int* obj) {
     int* sub = *(int**)&((GameObject *)obj)->anim.placementData;
-    switch ((s8)*(s8*)((char*)sub + 25)) {
+    switch ((s8)((Dim2prisonmammothPlacement *)sub)->unk19) {
         case 0:
             if ((u32)GameBit_Get(548) != 0) return 3;
             return 2;

@@ -10,6 +10,27 @@
 
 #include "main/dll/DR/shstaff_state.h"
 
+typedef struct ShStaffPlacement {
+    u8 pad0[0x4 - 0x0];
+    u8 unk4;
+    u8 unk5;
+    u8 pad6[0x7 - 0x6];
+    u8 unk7;
+    u8 pad8[0x18 - 0x8];
+    u8 unk18;
+    u8 unk19;
+    u8 pad1A[0x20 - 0x1A];
+} ShStaffPlacement;
+
+
+typedef struct ShBeaconPlacement {
+    u8 pad0[0x1E - 0x0];
+    s16 unk1E;
+    s16 unk20;
+    u8 pad22[0x28 - 0x22];
+} ShBeaconPlacement;
+
+
 /* sh_beacon_getExtraSize == 0x18. */
 typedef struct ShBeaconState {
     int childObj;    /* 0x00: spawned 0x55 flame object */
@@ -543,8 +564,8 @@ void sh_staff_update(int obj)
             int loadResult;
             fn_80295CF4((int)player, 0);
             ObjAnim_SetMoveProgress(lbl_803E54D0, (ObjAnimComponent *)obj);
-            ((GameObject *)obj)->anim.rotY = (s16)(*(u8 *)(setup + 0x19) << 8);
-            ((GameObject *)obj)->anim.rotZ = (s16)(*(u8 *)(setup + 0x18) << 8);
+            ((GameObject *)obj)->anim.rotY = (s16)(((ShStaffPlacement *)setup)->unk19 << 8);
+            ((GameObject *)obj)->anim.rotZ = (s16)(((ShStaffPlacement *)setup)->unk18 << 8);
             ((GameObject *)obj)->animEventCallback = (void *)sh_staff_SeqFn;
             state->phase = 1;
             if (Obj_IsLoadingLocked() == 0) {
@@ -665,7 +686,7 @@ void sh_beacon_update(int obj)
     if (((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) != 0) &&
         ((*gGameUIInterface)->isEventReady(0x194) != 0)) {
       gameBitDecrement(0x194);
-      GameBit_Set(*(s16 *)(def + 0x20), 1);
+      GameBit_Set(((ShBeaconPlacement *)def)->unk20, 1);
       if (Obj_IsLoadingLocked() != 0) {
         setup = Obj_AllocObjectSetup(0x20, 0x55);
         ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.localPosX;
@@ -724,7 +745,7 @@ void sh_beacon_update(int obj)
       (*(code *)(*(int *)(*(int *)(tmp + 0x68)) + 0x28))(tmp, obj, 1, 4);
     }
   } else {
-    if ((GameBit_Get(0x193) != 0) || (*(s16 *)(def + 0x1e) != 0x95)) {
+    if ((GameBit_Get(0x193) != 0) || (((ShBeaconPlacement *)def)->unk1E != 0x95)) {
       *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
     } else {
       *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 0x10;
@@ -737,7 +758,7 @@ void sh_beacon_update(int obj)
     }
     if ((((ShBeaconState *)state)->fadeTimer <= lbl_803E5538) && (((ShBeaconState *)state)->mode == 2)) {
       ((ShBeaconState *)state)->mode = 1;
-      GameBit_Set(*(s16 *)(def + 0x1e), 1);
+      GameBit_Set(((ShBeaconPlacement *)def)->unk1E, 1);
       if ((GameBit_Get(0x190) != 0) && (GameBit_Get(0x191) != 0) && (GameBit_Get(0x192) != 0)) {
         Sfx_PlayFromObject(0, 0x7e);
       } else {

@@ -3,6 +3,15 @@
 #include "main/dll/DF/dll_196.h"
 #include "main/dll/DF/dll_198.h"
 
+typedef struct DFSHDoor2SpeciPlacement {
+    u8 pad0[0x1B - 0x0];
+    u8 unk1B;
+    u8 pad1C[0x22 - 0x1C];
+    s16 unk22;
+    u8 pad24[0x28 - 0x24];
+} DFSHDoor2SpeciPlacement;
+
+
 typedef struct DFDoorSpeciExtra {
   u16 phase;
   u8 pad02;
@@ -266,7 +275,7 @@ int DFSH_Door2Speci_SeqFn(int obj)
   objDef = *(int *)&((GameObject *)obj)->anim.placementData;
   switch (extra->state) {
   case 0:
-    if (GameBit_Get(*(s16 *)(objDef + 0x22)) != 0) {
+    if (GameBit_Get(((DFSHDoor2SpeciPlacement *)objDef)->unk22) != 0) {
       extra->state = 1;
     }
     break;

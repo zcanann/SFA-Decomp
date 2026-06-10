@@ -3,6 +3,14 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 
+typedef struct DrgeneratorPlacement {
+    u8 pad0[0x1E - 0x0];
+    s16 unk1E;
+    s16 unk20;
+    u8 pad22[0x28 - 0x22];
+} DrgeneratorPlacement;
+
+
 typedef struct DrgeneratorState {
     u8 pad0[0x124 - 0x0];
     f32 unk124;
@@ -118,7 +126,7 @@ void drgenerator_hitDetect(int obj) {
         }
     }
     ((BitFlags8 *)(p + 0x19b))->b0 = 1;
-    GameBit_Set(*(s16 *)(q + 0x1e), 1);
+    GameBit_Set(((DrgeneratorPlacement *)q)->unk1E, 1);
     if (((GameObject *)obj)->anim.seqId == 0x716 &&
         (found = (void *)ObjGroup_FindNearestObject(0x4c, obj, 0)) != NULL) {
         timer_addDuration((int)found, ((DrgeneratorState *)p)->unk198);
@@ -140,7 +148,7 @@ void drgenerator_update(int obj) {
     if (((BitFlags8 *)(p + 0x19b))->b3 != 0) {
         goto enable;
     }
-    if (GameBit_Get(*(s16 *)(q + 0x20)) != 0) {
+    if (GameBit_Get(((DrgeneratorPlacement *)q)->unk20) != 0) {
         goto enable;
     }
     if (((GameObject *)obj)->anim.seqId != 0x72e) {
@@ -154,7 +162,7 @@ enable:
     if (((BitFlags8 *)(p + 0x19b))->b3 == 0) {
         goto loop;
     }
-    if (GameBit_Get(*(s16 *)(q + 0x20)) == 0) {
+    if (GameBit_Get(((DrgeneratorPlacement *)q)->unk20) == 0) {
         goto loop;
     }
     if (((GameObject *)obj)->anim.seqId != 0x72e) {

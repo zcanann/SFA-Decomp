@@ -1,6 +1,14 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 
+typedef struct KtlazerlightPlacement {
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    s16 unk1C;
+    u8 pad1E[0x20 - 0x1E];
+} KtlazerlightPlacement;
+
+
 int ktlazerlight_getExtraSize(void) { return 0x14; }
 
 int ktlazerlight_getObjectTypeId(void) { return 0x0; }
@@ -36,8 +44,8 @@ void ktlazerlight_update(int obj) {
     char *p = ((GameObject *)obj)->extra;
     s16 v;
     void *light = *(void **)(p + 0x4);
-    v = (s16)GameBit_Get(*(s16 *)(q + 0x1a));
-    if (v >= 1 || GameBit_Get(*(s16 *)(q + 0x1c)) != 0) {
+    v = (s16)GameBit_Get(((KtlazerlightPlacement *)q)->unk1A);
+    if (v >= 1 || GameBit_Get(((KtlazerlightPlacement *)q)->unk1C) != 0) {
         if (v == 0) {
             v = 0x10;
         }

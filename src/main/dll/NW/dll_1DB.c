@@ -2,6 +2,15 @@
 #include "main/dll/NW/dll_1DB.h"
 #include "main/game_object.h"
 
+typedef struct EdiblemushroomPlacement {
+    u8 pad0[0x8 - 0x0];
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    u8 pad14[0x18 - 0x14];
+} EdiblemushroomPlacement;
+
+
 typedef struct EdiblemushroomState {
     u8 pad0[0x108 - 0x0];
     f32 unk108;
@@ -76,9 +85,9 @@ void ediblemushroom_update(u8 *self)
   }
 
   if (state[0x139] != 0) {
-    ((GameObject *)self)->anim.localPosX = *(f32 *)(other + 0x8);
-    ((GameObject *)self)->anim.localPosY = *(f32 *)(other + 0xC);
-    ((GameObject *)self)->anim.localPosZ = *(f32 *)(other + 0x10);
+    ((GameObject *)self)->anim.localPosX = ((EdiblemushroomPlacement *)other)->unk8;
+    ((GameObject *)self)->anim.localPosY = ((EdiblemushroomPlacement *)other)->unkC;
+    ((GameObject *)self)->anim.localPosZ = ((EdiblemushroomPlacement *)other)->unk10;
     ((GameObject *)self)->anim.alpha = 0xFF;
     state[0x139] = 0;
   }

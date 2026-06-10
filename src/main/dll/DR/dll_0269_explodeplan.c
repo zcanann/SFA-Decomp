@@ -4,6 +4,12 @@
 
 #include "main/audio/sfx_ids.h"
 
+typedef struct ExplodeplanPlacement {
+    u8 pad0[0x1E - 0x0];
+    s16 unk1E;
+} ExplodeplanPlacement;
+
+
 typedef struct ExplodeplanUpdateTriggerCallbackPlacement {
     u8 pad0[0x1E - 0x0];
     s16 unk1E;
@@ -46,7 +52,7 @@ void explodeplan_update(int obj) {
     if (((BitFlags8 *)(p + 0x4))->b1 != 0) {
         return;
     }
-    if (*(int *)p == 0 && GameBit_Get(*(s16 *)(q + 0x1e)) != 0) {
+    if (*(int *)p == 0 && GameBit_Get(((ExplodeplanPlacement *)q)->unk1E) != 0) {
         ((BitFlags8 *)(p + 0x4))->b1 = 1;
         *(int *)p = 2;
     }

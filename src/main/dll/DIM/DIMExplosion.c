@@ -7,6 +7,26 @@
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 
+typedef struct DimbarrierPlacement {
+    u8 pad0[0x1E - 0x0];
+    s16 unk1E;
+} DimbarrierPlacement;
+
+
+typedef struct DimgatePlacement {
+    u8 pad0[0x1E - 0x0];
+    s16 unk1E;
+} DimgatePlacement;
+
+
+typedef struct Dimsnowball1c2State {
+    s8 unk0;
+    u8 pad1[0x2 - 0x1];
+    s16 unk2;
+    u8 pad4[0x8 - 0x4];
+} Dimsnowball1c2State;
+
+
 typedef struct DimicewallPlacement {
     u8 pad0[0x14 - 0x0];
     s32 unk14;
@@ -140,7 +160,7 @@ void dimsnowball1c2_init(int obj, u8 *p) {
     char *inner;
     *(s16 *)obj = (s16)((u32)p[0x1c] << 8);
     inner = ((GameObject *)obj)->extra;
-    *(s16 *)(inner + 2) = *(s16 *)(p + 0x18);
+    ((DimicewallState *)inner)->unk2 = *(s16 *)(p + 0x18);
     *(s16 *)inner = *(s16 *)(p + 0x18);
     ((GameObject *)obj)->objectFlags |= 0x6000;
 }
@@ -158,7 +178,7 @@ void dimgate_init(int obj, s8 *p_unused_passthrough) {
     char *param;
     param = *(char **)&((GameObject *)obj)->anim.placementData;
     inner = ((GameObject *)obj)->extra;
-    if (GameBit_Get(*(s16 *)(param + 0x1e)) != 0) {
+    if (GameBit_Get(((DimgatePlacement *)param)->unk1E) != 0) {
         inner[0] = 2;
         ((GameObject *)obj)->anim.currentMoveProgress = lbl_803E4878;
     } else {
@@ -215,7 +235,7 @@ void dimgate_update(int *obj)
             }
         }
         if (found) {
-            GameBit_Set(*(s16 *)((char *)def + 0x1e), 1);
+            GameBit_Set(((DimgatePlacement *)def)->unk1E, 1);
             if (hitState->stateIndex != 2) {
                 ObjHitbox_SetStateIndex((int)obj, hitState, 2);
             }
@@ -279,7 +299,7 @@ void dimbarrier_update(int *obj)
         ((GameObject *)obj)->anim.alpha = v;
         *(s16 *)extra = *(s16 *)extra - framesThisStep;
         if (*(s16 *)extra <= 0) {
-            GameBit_Set(*(s16 *)((char *)def + 0x1e), 1);
+            GameBit_Set(((DimbarrierPlacement *)def)->unk1E, 1);
             *(s8 *)((char *)extra + 2) = 2;
         }
         break;
@@ -318,7 +338,7 @@ void dimsnowball1c2_update(int *obj)
                     (int)((f32)(u32)((Dimsnowball1c2Placement *)def)->unk1B +
                           (f32)(int)randomGetRange(0, 100) / lbl_803E4864);
                 Obj_SetupObject((int)np, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, 0);
-                *(s16 *)extra = *(s16 *)((char *)extra + 2);
+                *(s16 *)extra = ((Dimsnowball1c2State *)extra)->unk2;
             }
         }
     }

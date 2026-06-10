@@ -1,6 +1,12 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 
+typedef struct CagecontrolPlacement {
+    u8 pad0[0x1E - 0x0];
+    s16 unk1E;
+} CagecontrolPlacement;
+
+
 void cagecontrol_free(void) {}
 
 int cagecontrol_getExtraSize(void) { return 0x4; }
@@ -30,7 +36,7 @@ void cagecontrol_init(int obj, char *arg) {
 
 void cagecontrol_update(int obj) {
     int p = *(int *)&((GameObject *)obj)->anim.placementData;
-    if (GameBit_Get(*(s16 *)(p + 0x1e)) != 0) {
+    if (GameBit_Get(((CagecontrolPlacement *)p)->unk1E) != 0) {
         ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         ObjHits_DisableObject(obj);
     } else {

@@ -18,6 +18,13 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/screen_transition.h"
 
+typedef struct Dll19State {
+    u8 pad0[0x354 - 0x0];
+    s8 unk354;
+    u8 pad355[0x358 - 0x355];
+} Dll19State;
+
+
 typedef struct CameraArwingWork {
     f32 unk0;
     f32 unk4;
@@ -1339,7 +1346,7 @@ f32 dll_19_func1A(int obj)
   int p_4c = *(int *)&((GameObject *)obj)->anim.placementData;
   u8 denom = ((Dll19Placement *)p_4c)->unk32;
   if (denom != 0) {
-    s8 numer = *(s8 *)(p_b8 + 0x354);
+    s8 numer = ((Dll19State *)p_b8)->unk354;
     if (numer != 0) {
       return (f32)numer / (f32)denom;
     }

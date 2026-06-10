@@ -4,6 +4,13 @@
 #include "main/game_object.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 
+typedef struct WmgeneralscalesState {
+    u8 pad0[0x2 - 0x0];
+    s16 unk2;
+    s32 unk4;
+} WmgeneralscalesState;
+
+
 typedef struct WmlevelcontrolState {
     u8 pad0[0x4 - 0x0];
     s16 unk4;

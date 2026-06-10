@@ -7,6 +7,25 @@
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
 
+typedef struct MmpBridgePlacement {
+    u8 pad0[0x4 - 0x0];
+    u8 unk4;
+    u8 unk5;
+    u8 unk6;
+    u8 pad7[0x18 - 0x7];
+    s8 unk18;
+    u8 pad19[0x1E - 0x19];
+    s16 unk1E;
+} MmpBridgePlacement;
+
+
+typedef struct PressureswitchfbState {
+    u8 pad0[0x68 - 0x0];
+    s32 unk68;
+    u8 pad6C[0x70 - 0x6C];
+} PressureswitchfbState;
+
+
 typedef struct DoorObjectDef {
     u8 pad0[0x18 - 0x0];
     s16 unk18;
@@ -364,7 +383,7 @@ skip_insert: ;
         (GameBit_Get(((PressureswitchfbPlacement *)def)->unk1A) == 0)) {
       *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode &= ~8;
       if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) != 0) {
-        (*(code *)(*(int *)(*(int *)(tmp + 0x68)) + 0x28))(tmp, obj, 1, 3);
+        (*(code *)(*(int *)(((PressureswitchfbState *)tmp)->unk68) + 0x28))(tmp, obj, 1, 3);
       }
     }
   }
@@ -563,10 +582,10 @@ void mmp_bridge_init(int *obj) {
     if (tex != NULL) {
         *(s16 *)((char *)tex + 8) = 0x800;
     }
-    *(s16 *)obj = (s16)(*(s8 *)((char *)state + 0x18) << 8);
+    *(s16 *)obj = (s16)(((MmpBridgePlacement *)state)->unk18 << 8);
     ((GameObject *)obj)->objectFlags |= 0x6000;
     ObjHits_DisableObject((int)obj);
-    if (GameBit_Get(*(s16 *)((char *)state + 0x1e)) != 0) {
+    if (GameBit_Get(((MmpBridgePlacement *)state)->unk1E) != 0) {
         ObjHits_EnableObject((int)obj);
     }
 }

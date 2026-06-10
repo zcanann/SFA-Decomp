@@ -11,6 +11,12 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 
+typedef struct Dimwooddoor2Placement {
+    u8 pad0[0x1E - 0x0];
+    s16 unk1E;
+} Dimwooddoor2Placement;
+
+
 typedef struct ExplosionDebris {
     f32 unk0;
     f32 unk4;
@@ -932,7 +938,7 @@ void dimwooddoor2_update(int* obj)
             sub->animSpeed = lbl_803E49E0;
             sub->riseSpeed = lbl_803E49E4;
             sub->burnState = 0;
-            GameBit_Set(*(s16*)((char*)q + 0x1e), 1);
+            GameBit_Set(((Dimwooddoor2Placement *)q)->unk1E, 1);
             Sfx_PlayFromObject((int)obj, 0x3e1);
         }
     }

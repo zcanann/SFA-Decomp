@@ -666,10 +666,10 @@ void *trickyFindNearestLinkedRouteEntry(u8 *context, u8 *routeDef, int linkSelec
     }
 
     if (count != 0) {
-        bestDistance = getXZDistance((f32 *)(*(int *)(context + 4) + 0x18), (f32 *)((u8 *)candidates[0] + 8));
+        bestDistance = getXZDistance((f32 *)(((TrickyState *)context)->playerObj + 0x18), (f32 *)((u8 *)candidates[0] + 8));
         bestIndex = 0;
         for (i = 1; i < count; i++) {
-            distance = getXZDistance((f32 *)(*(int *)(context + 4) + 0x18), (f32 *)((u8 *)candidates[i] + 8));
+            distance = getXZDistance((f32 *)(((TrickyState *)context)->playerObj + 0x18), (f32 *)((u8 *)candidates[i] + 8));
             if (distance < bestDistance) {
                 bestDistance = distance;
                 bestIndex = i;

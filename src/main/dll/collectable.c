@@ -30,6 +30,26 @@
 
 #include "main/dll/tricky_state.h"
 
+typedef struct BaddieInstantiateWeaponPlacement {
+    u8 pad0[0x4 - 0x0];
+    u8 unk4;
+    u8 unk5;
+    u8 unk6;
+    u8 unk7;
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    u8 pad14[0x18 - 0x14];
+} BaddieInstantiateWeaponPlacement;
+
+
+typedef struct TrickyDestroyState {
+    u8 pad0[0x700 - 0x0];
+    s32 unk700;
+    u8 pad704[0x708 - 0x704];
+} TrickyDestroyState;
+
+
 typedef struct TrickyInitFlags {
   u8 initBit7 : 1;
   u8 bit6 : 1;
@@ -875,7 +895,7 @@ void Tricky_destroy(int obj,int shouldKeepFlameChildren)
     i = 0;
     childSlot = state;
     do {
-      objSetAnimSpeedTo1(*(int *)(childSlot + 0x700));
+      objSetAnimSpeedTo1(((TrickyDestroyState *)childSlot)->unk700);
       childSlot = childSlot + 4;
       i = i + 1;
     } while (i < 7);
@@ -2193,7 +2213,7 @@ void baddieInstantiateWeapon(int obj,int state)
     if (Obj_IsLoadingLocked() != 0) {
       if (*(s16 *)(state + 0x2b6) > 0) {
         setup = Obj_AllocObjectSetup(0x20);
-        *(u8 *)(setup + 5) = *(u8 *)(setup + 5) | (*(u8 *)(parentSetup + 5) & 0x18);
+        *(u8 *)(setup + 5) = *(u8 *)(setup + 5) | (((BaddieInstantiateWeaponPlacement *)parentSetup)->unk5 & 0x18);
         child = (void *)Obj_SetupObject(setup,4,((GameObject *)obj)->anim.mapEventSlot,-1,*(int *)&((GameObject *)obj)->anim.parent);
         ObjLink_AttachChild(obj, (int)child, 0);
         *(s16 *)&((TrickyState *)state)->unk2B4 = *(s16 *)(state + 0x2b6);

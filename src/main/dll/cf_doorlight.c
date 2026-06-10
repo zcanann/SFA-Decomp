@@ -6,6 +6,12 @@
 #include "main/dll/wallanimator.h"
 #include "main/objanim.h"
 
+typedef struct KaldachomPlacement {
+    u8 pad0[0x2F - 0x0];
+    u8 unk2F;
+} KaldachomPlacement;
+
+
 
 extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjHits_DisableObject();
@@ -37,7 +43,7 @@ int kaldachom_stateHandlerB05(int obj, int p)
       return 5;
     }
     def = *(int *)&((GameObject *)obj)->anim.placementData;
-    if ((int)randomGetRange(0, 0x63) < (int)*(u8 *)(def + 0x2f)) {
+    if ((int)randomGetRange(0, 0x63) < (int)((KaldachomPlacement *)def)->unk2F) {
       ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, p, 3);
     } else {
       control->pullupSfxTimer = (f32)(int)randomGetRange(0x12c, 0x258);

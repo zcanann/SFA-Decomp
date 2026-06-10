@@ -5,6 +5,12 @@
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
 
+typedef struct Dll14DState {
+    u8 pad0[0x4 - 0x0];
+    u32 unk4;
+} Dll14DState;
+
+
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
@@ -163,7 +169,7 @@ void dll_14D_init(int *obj)
 {
     char *p = ((GameObject *)obj)->extra;
     *p = 0;
-    *(u32*)(p + 4) = 0;
+    ((Dll14DState *)p)->unk4 = 0;
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x4000);
 }
 

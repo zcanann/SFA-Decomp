@@ -4,6 +4,13 @@
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
+typedef struct MmshShrineState {
+    u8 pad0[0x18 - 0x0];
+    s32 unk18;
+    u8 pad1C[0x20 - 0x1C];
+} MmshShrineState;
+
+
 
 extern undefined8 FUN_80006b14();
 extern char FUN_80006bd0();
@@ -294,9 +301,9 @@ extern void audioStopByMask(int mask);
 void mmsh_shrine_free(int obj)
 {
     int t = *(int *)&((GameObject *)obj)->extra;
-    if ((*(int *)(t + 0x18) & 0x20) != 0) {
+    if ((((MmshShrineState *)t)->unk18 & 0x20) != 0) {
         fn_8011F6D4(0);
-        *(int *)(t + 0x18) = *(int *)(t + 0x18) & 0xffffffdf;
+        ((MmshShrineState *)t)->unk18 = ((MmshShrineState *)t)->unk18 & 0xffffffdf;
     }
     if (*(void **)t != NULL) {
         ModelLightStruct_free(*(void **)t);

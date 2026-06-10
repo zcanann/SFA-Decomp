@@ -11,6 +11,36 @@
 #include "main/resource.h"
 #include "global.h"
 
+typedef struct LaserBeamPlacement {
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    u8 pad1C[0x1E - 0x1C];
+    s16 unk1E;
+    u8 pad20[0x4C - 0x20];
+    u8 unk4C;
+    u8 pad4D[0x2F8 - 0x4D];
+    u8 unk2F8;
+    u8 unk2F9;
+    s8 unk2FA;
+    u8 pad2FB[0x300 - 0x2FB];
+} LaserBeamPlacement;
+
+
+typedef struct WMColrisePlacement {
+    u8 pad0[0xC - 0x0];
+    f32 unkC;
+} WMColrisePlacement;
+
+
+typedef struct LightsourceState {
+    u8 pad0[0x4C - 0x0];
+    u8 unk4C;
+    u8 pad4D[0x2F8 - 0x4D];
+    u8 unk2F8;
+    u8 pad2F9[0x300 - 0x2F9];
+} LightsourceState;
+
+
 typedef struct WmlasertargetPlacement {
     u8 pad0[0xC - 0x0];
     f32 unkC;
@@ -322,7 +352,7 @@ void LaserBeam_update(int param_1)
     t = *(char **)&((GameObject *)param_1)->anim.placementData;
     b = ((GameObject *)param_1)->extra;
     b->fireTimer -= framesThisStep;
-    if (GameBit_Get(*(s16 *)(t + 0x1e)) == 0) {
+    if (GameBit_Get(((LaserBeamPlacement *)t)->unk1E) == 0) {
         if (b->fireTimer < 0) {
             if (b->unk25 == 0) {
                 c = b->beamKind;
@@ -397,7 +427,7 @@ void LaserBeam_update(int param_1)
     } else if (b->beamKind == 0 && b->emitterSlot != -1) {
         (*gModgfxInterface)->releaseHandle(&b->emitterSlot);
     }
-    dz = (f32)(int)*(s16 *)(t + 0x1a);
+    dz = (f32)(int)((LaserBeamPlacement *)t)->unk1A;
     dz2 = dz * dz;
     sinv = mathCosf((lbl_803E5D20 * (f32)(int)*(s16 *)param_1) / lbl_803E5D24);
     cosv = mathSinf((lbl_803E5D20 * (f32)(int)*(s16 *)param_1) / lbl_803E5D24);
@@ -429,7 +459,7 @@ void LaserBeam_update(int param_1)
     } else {
         b->unk24 = 2;
     }
-    if (GameBit_Get(*(s16 *)(t + 0x1e)) != 0) {
+    if (GameBit_Get(((LaserBeamPlacement *)t)->unk1E) != 0) {
         b->unk24 = 0;
     }
     if (b->unk27 == 0) {
@@ -886,7 +916,7 @@ void WM_colrise_update(int *obj) {
     }
     reached = 0;
     if ((sub->gameBit == -1 || (u32)GameBit_Get(sub->gameBit) != 0) && (s8)sub->raiseTimer != 0) {
-        target = lbl_803E5DD0 + (lbl_803E5DD4 + *(f32*)(def + 0xc));
+        target = lbl_803E5DD0 + (lbl_803E5DD4 + ((WMColrisePlacement *)def)->unkC);
         if (((GameObject *)obj)->anim.localPosY > target) {
             ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY - lbl_803E5DD8 * timeDelta;
             if (((GameObject *)obj)->anim.localPosY > target) {
@@ -902,8 +932,8 @@ void WM_colrise_update(int *obj) {
         }
     } else {
         ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY - lbl_803E5DE0 * timeDelta;
-        if (((GameObject *)obj)->anim.localPosY < *(f32*)(def + 0xc)) {
-            ((GameObject *)obj)->anim.localPosY = *(f32*)(def + 0xc);
+        if (((GameObject *)obj)->anim.localPosY < ((WMColrisePlacement *)def)->unkC) {
+            ((GameObject *)obj)->anim.localPosY = ((WMColrisePlacement *)def)->unkC;
         } else {
             reached = 1;
         }
@@ -997,7 +1027,7 @@ void lightsource_render(void *obj, int p1, int p2, int p3, int p4, s8 visible)
 {
     extern void objRenderFn_8003b8f4(void *obj, int p1, int p2, int p3, int p4, f32 alpha);
     void *light = (*(LightSourceState **)&((GameObject *)obj)->extra)->light;
-    if (light != NULL && *(u8 *)((char *)light + 0x2f8) != 0 && *(u8 *)((char *)light + 0x4c) != 0) {
+    if (light != NULL && ((LightsourceState *)light)->unk2F8 != 0 && ((LightsourceState *)light)->unk4C != 0) {
         queueGlowRender(light);
     }
     if (visible != 0) {

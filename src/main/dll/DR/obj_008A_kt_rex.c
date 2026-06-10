@@ -6,6 +6,22 @@
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 
+typedef struct KtrexPlacement {
+    u8 pad0[0x38 - 0x0];
+    f32 unk38;
+    u8 pad3C[0x40 - 0x3C];
+} KtrexPlacement;
+
+
+typedef struct KtrexState {
+    u8 pad0[0x38 - 0x0];
+    f32 unk38;
+    u8 pad3C[0x274 - 0x3C];
+    s16 unk274;
+    u8 pad276[0x5A4 - 0x276];
+} KtrexState;
+
+
 /*
  * KT Rex boss arena state, allocated alongside the runtime and linked at
  * runtime+0x40c (gKTRexState points at it).
@@ -244,7 +260,7 @@ int ktrex_isPlayerInLaneThreatRange(int obj) {
 int ktrex_setScale(int obj) {
     void *p = ((GameObject *)obj)->extra;
     gKTRexRuntime = p;
-    return *(s16 *)((char *)p + 0x274);
+    return ((KtrexState *)p)->unk274;
 }
 
 void ktrex_initialise(void) {
@@ -1212,7 +1228,7 @@ int ktrex_stateHandlerA05(int obj, int runtime) {
         (*(void (**)(int, int, int))((char *)*gPlayerInterface + 0x14))(obj, runtime, 1);
         ((KTRexArenaState *)gKTRexState)->unkFC = 1;
         p = (char *)p + ((KTRexArenaState *)gKTRexState)->unkFC * 4;
-        ((KTRexRuntime *)runtime)->unk294 = *(f32 *)((char *)p + 0x38) / lbl_803E67C4;
+        ((KTRexRuntime *)runtime)->unk294 = ((KtrexPlacement *)p)->unk38 / lbl_803E67C4;
     }
     if (RandomTimer_UpdateRangeTrigger((char *)gKTRexState + 0x190, lbl_803E67C8, lbl_803E67CC) != 0) {
         Sfx_PlayFromObject(obj, SFXmv_gdtur2_c);

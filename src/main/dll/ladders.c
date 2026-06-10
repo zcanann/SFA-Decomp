@@ -3,6 +3,13 @@
 #include "main/dll/ladders.h"
 #include "main/objanim.h"
 
+typedef struct TumbleweedbushState {
+    u8 pad0[0x8 - 0x0];
+    u16 unk8;
+    u8 padA[0x54 - 0xA];
+} TumbleweedbushState;
+
+
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_80006824();
 extern uint GameBit_Get(int eventId);
@@ -205,7 +212,7 @@ void tumbleweedbush_init(u8* obj, u8* params, int param3) {
 
     sub = ((GameObject *)obj)->extra;
     *(f32*)sub = lbl_803E2F48;
-    *(u16*)(sub + 8) = (u16)(params[0x1b] * 2);
+    ((TumbleweedbushState *)sub)->unk8 = (u16)(params[0x1b] * 2);
     sub[0x4c] = params[0x23];
     ((GameObject *)obj)->anim.rotZ = (s16)((params[0x18] - 0x7f) << 7);
     ((GameObject *)obj)->anim.rotY = (s16)((params[0x19] - 0x7f) << 7);

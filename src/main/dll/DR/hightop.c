@@ -8,6 +8,14 @@
 #include "main/objseq.h"
 #include "main/dll/rom_curve_interface.h"
 
+typedef struct TriggerPlacement {
+    u8 pad0[0x38 - 0x0];
+    s16 unk38;
+    u8 pad3A[0x46 - 0x3A];
+    u16 unk46;
+} TriggerPlacement;
+
+
 typedef struct ObjInterpretSeqPlacement {
     u8 pad0[0x2 - 0x0];
     s8 unk2;
@@ -1436,7 +1444,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     break;
                 case 5:
-                    if (*(f32 *)(state + 4) != lbl_803E40D8) {
+                    if (((TriggerState *)state)->unk4 != lbl_803E40D8) {
                         break;
                     }
                     break;
@@ -1728,7 +1736,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
         }
     } else {
         *state |= 1;
-        GameBit_Set(*(s16 *)(state + 0x80), 1);
+        GameBit_Set(((TriggerState *)state)->unk80, 1);
     }
 }
 
@@ -1759,7 +1767,7 @@ void Trigger_hitDetect(int obj)
     f32 dist[1];
 
     dist[0] = lbl_803E4104;
-    if (*(s16 *)(def + 0x38) <= 0 || *(s16 *)def == 0xf4) {
+    if (((TriggerPlacement *)def)->unk38 <= 0 || *(s16 *)def == 0xf4) {
         t = Obj_GetPlayerObject();
         if ((void *)t != NULL) {
             r1 = fn_802972A8();
@@ -1855,7 +1863,7 @@ void Trigger_hitDetect(int obj)
                     break;
                 case 0x4e:
                     ((TriggerState *)state)->unk8 = *(int *)&((TriggerState *)state)->unk8 + framesThisStep;
-                    if ((u32)*(u16 *)(def + 0x46) <= ((TriggerState *)state)->unk8) {
+                    if ((u32)((TriggerPlacement *)def)->unk46 <= ((TriggerState *)state)->unk8) {
                         objInterpretSeq(obj, 0, 1, 0);
                     }
                     break;

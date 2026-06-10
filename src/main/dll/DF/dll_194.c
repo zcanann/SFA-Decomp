@@ -3,6 +3,12 @@
 #include "main/dll/DF/DFbarrelanim.h"
 #include "main/dll/DF/dfropenode.h"
 
+typedef struct DfropenodeState {
+    u8 pad0[0x2C - 0x0];
+    void *unk2C;
+} DfropenodeState;
+
+
 extern f32 sqrtf(f32 x);
 
 extern f64 lbl_803E4DF0;

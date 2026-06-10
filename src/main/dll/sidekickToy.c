@@ -8,6 +8,22 @@
 #include "main/dll/mediumbasket.h"
 #include "main/dll/tricky_state.h"
 
+typedef struct BaddieAfterUpdateBonesCbState {
+    u8 pad0[0x2B0 - 0x0];
+    s16 unk2B0;
+    u16 unk2B2;
+    u8 pad2B4[0x2D8 - 0x2B4];
+    f32 unk2D8;
+    u32 unk2DC;
+    u8 pad2E0[0x2F2 - 0x2E0];
+    u8 unk2F2;
+    u8 unk2F3;
+    u8 unk2F4;
+    u8 pad2F5[0x36C - 0x2F5];
+    s32 unk36C;
+} BaddieAfterUpdateBonesCbState;
+
+
 typedef struct SidekickToyUpdateCurveTargetLatchState {
     u8 pad0[0x2B0 - 0x0];
     s16 unk2B0;
@@ -980,10 +996,10 @@ void baddieAfterUpdateBonesCb(int obj, int *p2)
     int v = *p2;
     switch (((GameObject *)obj)->anim.seqId) {
     case 0x7C8:
-        playerTailFn_80026b3c(p2, v, *(int *)((char *)state + 0x36C), (void *)fn_8015983C);
+        playerTailFn_80026b3c(p2, v, ((BaddieAfterUpdateBonesCbState *)state)->unk36C, (void *)fn_8015983C);
         break;
     default:
-        playerTailFn_80026b3c(p2, v, *(int *)((char *)state + 0x36C), NULL);
+        playerTailFn_80026b3c(p2, v, ((BaddieAfterUpdateBonesCbState *)state)->unk36C, NULL);
         break;
     }
 }

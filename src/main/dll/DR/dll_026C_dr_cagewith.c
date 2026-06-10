@@ -1,6 +1,14 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/game_object.h"
 
+typedef struct DrcagewithPlacement {
+    u8 pad0[0x5 - 0x0];
+    u8 unk5;
+    u8 pad6[0x1E - 0x6];
+    s16 unk1E;
+} DrcagewithPlacement;
+
+
 typedef struct DrcagewithState {
     u8 pad0[0x4 - 0x0];
     s32 unk4;
@@ -58,7 +66,7 @@ void drcagewith_hitDetect(int obj) {
             spawned = Obj_AllocObjectSetup(32, 1143);
             *(u8 *)(spawned + 4) = 2;
             *(u8 *)(spawned + 5) = 1;
-            *(u8 *)(spawned + 5) = (u8)(*(u8 *)(spawned + 5) | (*(u8 *)((char *)q + 5) & 0x18));
+            *(u8 *)(spawned + 5) = (u8)(*(u8 *)(spawned + 5) | (((DrcagewithPlacement *)q)->unk5 & 0x18));
             ((GameObject *)spawned)->anim.rootMotionScale = ((GameObject *)obj)->anim.localPosX;
             ((GameObject *)spawned)->anim.localPosX = ((GameObject *)obj)->anim.localPosY;
             ((GameObject *)spawned)->anim.localPosY = ((GameObject *)obj)->anim.localPosZ;
@@ -113,7 +121,7 @@ void drcagewith_hitDetect(int obj) {
         if (GameBit_Get(3175) != 0) {
             px = ((GameObject *)obj)->anim.localPosX;
             if (px >= lbl_803E6A10 && px <= lbl_803E6A14) {
-                GameBit_Set(*(s16 *)((char *)q + 0x1e), 1);
+                GameBit_Set(((DrcagewithPlacement *)q)->unk1E, 1);
             } else {
                 GameBit_Set(3748, 1);
             }

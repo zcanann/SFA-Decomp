@@ -2,6 +2,20 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 
+typedef struct DrcreatorPlacement {
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    u8 pad1C[0x20 - 0x1C];
+} DrcreatorPlacement;
+
+
+typedef struct DrcreatorSpawnProjectileCallbackPlacement {
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    u8 pad1C[0x20 - 0x1C];
+} DrcreatorSpawnProjectileCallbackPlacement;
+
+
 typedef struct DrcreatorSpawnProjectileCallbackState {
     u8 pad0[0x4 - 0x0];
     s16 unk4;
@@ -60,12 +74,12 @@ void drcreator_update(int obj) {
     int o;
     char *p;
     if (Obj_IsLoadingLocked() != 0) {
-        switch (*(s16 *)(q + 0x1a)) {
+        switch (((DrcreatorPlacement *)q)->unk1A) {
         case 3:
         case 9:
             if (GameBit_Get(((DrcreatorState *)runtime)->unk4) != 0) {
                 (*gObjectTriggerInterface)
-                    ->runSequence((*(s16 *)(q + 0x1a) == 3) ? 0 : 4, (void *)obj, -1);
+                    ->runSequence((((DrcreatorPlacement *)q)->unk1A == 3) ? 0 : 4, (void *)obj, -1);
             }
             break;
         case 4:
@@ -113,7 +127,7 @@ int drcreator_spawnProjectileCallback(int obj, int unused, ObjAnimUpdateState *a
         return 0;
     }
     for (i = 0; i < animUpdate->eventCount; i++) {
-        switch (*(s16 *)(q + 0x1a)) {
+        switch (((DrcreatorSpawnProjectileCallbackPlacement *)q)->unk1A) {
         case 3:
         case 4:
         case 9:

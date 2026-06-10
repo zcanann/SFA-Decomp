@@ -299,22 +299,22 @@ int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState *animUpdate)
     st = ((GameObject *)obj)->extra;
     animUpdate->activeHitVolumePair = -1;
     animUpdate->sequenceEventActive = 0;
-    if (*(s16 *)(st + 0xa) != 0) {
-        *(s16 *)(st + 8) += *(s16 *)(st + 0xa);
-        if (*(s16 *)(st + 8) <= 1 && *(s16 *)(st + 0xa) <= 0) {
-            *(s16 *)(st + 8) = 1;
-            *(s16 *)(st + 0xa) = 0;
-        } else if (*(s16 *)(st + 8) >= 0x46 && *(s16 *)(st + 0xa) >= 0) {
-            *(s16 *)(st + 8) = 0x46;
-            *(s16 *)(st + 0xa) = 0;
+    if (((Dll197State *)st)->unkA != 0) {
+        ((Dll197State *)st)->unk8 += ((Dll197State *)st)->unkA;
+        if (((Dll197State *)st)->unk8 <= 1 && ((Dll197State *)st)->unkA <= 0) {
+            ((Dll197State *)st)->unk8 = 1;
+            ((Dll197State *)st)->unkA = 0;
+        } else if (((Dll197State *)st)->unk8 >= 0x46 && ((Dll197State *)st)->unkA >= 0) {
+            ((Dll197State *)st)->unk8 = 0x46;
+            ((Dll197State *)st)->unkA = 0;
         }
-        (**(void (**)(int, int))(*(int *)gTitleMenuControlInterface + 0x38))(3, *(s16 *)(st + 8) & 0xff);
+        (**(void (**)(int, int))(*(int *)gTitleMenuControlInterface + 0x38))(3, ((Dll197State *)st)->unk8 & 0xff);
     }
     for (i = 0; i < animUpdate->eventCount; i++) {
         eventId = animUpdate->eventIds[i];
         switch (eventId) {
         case 0xb:
-            *(u8 *)(st + 0xf) = 7;
+            ((Dll197State *)st)->unkF = 7;
             break;
         case 1:
             getEnvfxAct(obj, obj, 0xc3, 0);
@@ -327,19 +327,19 @@ int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState *animUpdate)
             }
             break;
         case 3:
-            *(u8 *)(st + 0x10) = 1;
+            ((Dll197State *)st)->unk10 = 1;
             break;
         case 4:
-            *(u8 *)(st + 0xf) = 4;
-            *(u8 *)(st + 0x10) = 2;
+            ((Dll197State *)st)->unkF = 4;
+            ((Dll197State *)st)->unk10 = 2;
             GameBit_Set(0x129, 1);
             GameBit_Set(0x1cf, 0);
             GameBit_Set(0x126, 1);
-            *(s16 *)(st + 0xa) = -3;
+            ((Dll197State *)st)->unkA = -3;
             break;
         case 5:
-            *(u8 *)(st + 0x10) = 3;
-            *(s16 *)(st + 0xa) = -3;
+            ((Dll197State *)st)->unk10 = 3;
+            ((Dll197State *)st)->unkA = -3;
             GameBit_Set(0x129, 1);
             break;
         case 6:
@@ -347,7 +347,7 @@ int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState *animUpdate)
             break;
         case 7:
             GameBit_Set(0x1cf, 0);
-            *(s16 *)(st + 0xa) = -3;
+            ((Dll197State *)st)->unkA = -3;
             break;
         case 9:
             GameBit_Set(0x128, 1);
@@ -359,22 +359,22 @@ int dll_199_SeqFn(int obj, int p2, ObjAnimUpdateState *animUpdate)
             GameBit_Set(0x127, 1);
             break;
         case 10:
-            *(s16 *)(st + 8) = 100;
-            (**(void (**)(int, int, int, int, int))(*(int *)gTitleMenuControlInterface + 0x18))(3, 0x2d, 0x50, *(s16 *)(st + 8) & 0xff, 0);
+            ((Dll197State *)st)->unk8 = 100;
+            (**(void (**)(int, int, int, int, int))(*(int *)gTitleMenuControlInterface + 0x18))(3, 0x2d, 0x50, ((Dll197State *)st)->unk8 & 0xff, 0);
             break;
         }
         animUpdate->eventIds[i] = 0;
     }
-    if (*(u8 *)(st + 0xf) != 7) {
+    if (((Dll197State *)st)->unkF != 7) {
     } else {
         if ((getButtonsHeld(0) & 0x100) != 0) {
             (*gObjectTriggerInterface)->endSequence(animUpdate->sequenceSlot);
-            *(u8 *)(st + 0xf) = 8;
-            *(s16 *)(st + 2) = 0;
+            ((Dll197State *)st)->unkF = 8;
+            ((Dll197State *)st)->unk2 = 0;
         } else if ((getButtonsHeld(0) & 0x200) != 0) {
             (*gObjectTriggerInterface)->endSequence(animUpdate->sequenceSlot);
-            *(u8 *)(st + 0xf) = 7;
-            *(s16 *)(st + 2) = 0;
+            ((Dll197State *)st)->unkF = 7;
+            ((Dll197State *)st)->unk2 = 0;
         }
     }
     return 0;

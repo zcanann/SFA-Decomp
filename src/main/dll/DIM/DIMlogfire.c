@@ -7,6 +7,19 @@
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
+typedef struct AnimsharpclawPlacement {
+    u8 pad0[0x18 - 0x0];
+    s16 unk18;
+    u8 pad1A[0x20 - 0x1A];
+} AnimsharpclawPlacement;
+
+
+typedef struct MoonSeedPlantingSpotPlacement {
+    u8 pad0[0xC - 0x0];
+    f32 unkC;
+} MoonSeedPlantingSpotPlacement;
+
+
 typedef struct AnimsharpclawState {
     u8 pad0[0x24 - 0x0];
     f32 unk24;
@@ -602,7 +615,7 @@ void MoonSeedPlantingSpot_update(int obj)
                 *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
                 GameBit_Set(*(s16 *)((char *)ex2 + 0xa), 1);
                 *(u8 *)ex2 = 4;
-                ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)setup2 + 0xc);
+                ((GameObject *)obj)->anim.localPosY = ((MoonSeedPlantingSpotPlacement *)setup2)->unkC;
             }
         }
         break;
@@ -674,7 +687,7 @@ void MoonSeedPlantingSpot_update(int obj)
                 *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
                 GameBit_Set(*(s16 *)((char *)ex2 + 0xa), 1);
                 *(u8 *)ex2 = 4;
-                ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)setup2 + 0xc);
+                ((GameObject *)obj)->anim.localPosY = ((MoonSeedPlantingSpotPlacement *)setup2)->unkC;
             }
         }
         ((MoonSeedPlantingSpotState *)ex)->unk10 = ((MoonSeedPlantingSpotState *)ex)->unk10 - timeDelta;
@@ -883,7 +896,7 @@ void animsharpclaw_update(int *obj) {
     if (child == NULL) {
         return;
     }
-    if (*(s16 *)((char *)child + 0x18) == -1) {
+    if (((AnimsharpclawPlacement *)child)->unk18 == -1) {
         return;
     }
     {

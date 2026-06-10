@@ -6,6 +6,50 @@
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 
+typedef struct Dim2lavacontrolPlacement {
+    u8 pad0[0x14 - 0x0];
+    s32 unk14;
+    s8 unk18;
+    u8 unk19;
+    u8 unk1A;
+    u8 unk1B;
+    s16 unk1C;
+    s16 unk1E;
+} Dim2lavacontrolPlacement;
+
+
+typedef struct Dim2iciclePlacement {
+    u8 pad0[0x1 - 0x0];
+    u8 unk1;
+    u8 pad2[0x3 - 0x2];
+    u8 unk3;
+    u8 unk4;
+    u8 pad5[0xC - 0x5];
+    f32 unkC;
+    u8 pad10[0x1E - 0x10];
+    s16 unk1E;
+} Dim2iciclePlacement;
+
+
+typedef struct Dll1DAState {
+    u8 pad0[0x4 - 0x0];
+    u8 unk4;
+    u8 unk5;
+    u8 unk6;
+    u8 pad7[0x8 - 0x7];
+} Dll1DAState;
+
+
+typedef struct Dll1DFState {
+    u8 pad0[0x4 - 0x0];
+    u8 unk4;
+    u8 unk5;
+    u8 unk6;
+    u8 pad7[0x24 - 0x7];
+    f32 unk24;
+} Dll1DFState;
+
+
 typedef struct Dll1DBPlacement {
     u8 pad0[0x1 - 0x0];
     u8 unk1;
@@ -423,7 +467,7 @@ void dim2icicle_update(int obj)
         }
         ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.velocityY * timeDelta + ((GameObject *)obj)->anim.localPosY;
         if (((GameObject *)obj)->anim.localPosY < ((Dim2IcicleState *)sub)->dropY) {
-            GameBit_Set(*(s16 *)(state + 0x1e), 1);
+            GameBit_Set(((Dim2iciclePlacement *)state)->unk1E, 1);
             ((Dim2IcicleState *)sub)->mode = 2;
             (*gWaterfxInterface)->spawnSplashBurst(
                 (void *)obj, ((GameObject *)obj)->anim.localPosX,
@@ -448,7 +492,7 @@ void dim2icicle_update(int obj)
             int v = ((GameObject *)obj)->anim.alpha - framesThisStep * 8;
             if (v < 0) {
                 v = 0;
-                ((GameObject *)obj)->anim.localPosY = *(f32 *)(state + 0xc);
+                ((GameObject *)obj)->anim.localPosY = ((Dim2iciclePlacement *)state)->unkC;
                 ((GameObject *)obj)->anim.velocityY = lbl_803E4B80;
             }
             ((GameObject *)obj)->anim.alpha = v;
@@ -620,7 +664,7 @@ void dll_1DA_update(int obj)
     RockHitInfo out;
 
     sub = *(int *)&((GameObject *)obj)->extra;
-    if (*(u8 *)(sub + 4) != 0) {
+    if (((Dll1DAState *)sub)->unk4 != 0) {
         ((GameObject *)obj)->anim.velocityX = ((GameObject *)obj)->anim.velocityX * (k = lbl_803E4AE0);
         ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ * k;
     } else {
@@ -659,14 +703,14 @@ void dll_1DA_update(int obj)
     ((GameObject *)obj)->anim.localPosY = -(lbl_803E4B00 * timeDelta - ((GameObject *)obj)->anim.localPosY);
     n = hitDetectFn_80065e50(((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ, obj,
                              &list, 0, 0x11);
-    *(u8 *)(sub + 4) = 0;
+    ((Dll1DAState *)sub)->unk4 = 0;
     i = 0;
     p = list;
     for (; n > 0; n--) {
         if (((GameObject *)obj)->anim.localPosY < lbl_803E4B04 + **(f32 **)p) {
             ((GameObject *)obj)->anim.localPosY = **(f32 **)(list + i * 4);
             ObjHits_AddContactObject(*(int *)(*(int *)(list + i * 4) + 0x10), obj);
-            *(u8 *)(sub + 4) = 1;
+            ((Dll1DAState *)sub)->unk4 = 1;
             break;
         }
         p += 4;
@@ -840,7 +884,7 @@ void dim2lavacontrol_setScale(void* obj)
             ((Dim2lavacontrolState *)sub)->unk0 = cnt - 1;
             if (((Dim2lavacontrolState *)sub)->unk0 == 0) {
                 ((Dim2lavacontrolState *)sub)->unk2 = (s8)(*(u8 *)&((Dim2lavacontrolState *)sub)->unk2 | 1);
-                GameBit_Set(*(s16*)((char*)p + 0x1E), 1);
+                GameBit_Set(((Dim2lavacontrolPlacement *)p)->unk1E, 1);
             }
         }
     }
@@ -893,11 +937,11 @@ void dll_1DF_update(void* obj)
     player = Obj_GetPlayerObject();
     dist = vec3f_distanceSquared(&((GameObject *)player)->anim.worldPosX, &((GameObject *)obj)->anim.worldPosX);
     if (dist < lbl_803E4BA0) {
-        t = *(f32*)((char*)sub + 0x24) - timeDelta;
-        *(f32*)((char*)sub + 0x24) = t;
+        t = ((Dll1DFState *)sub)->unk24 - timeDelta;
+        ((Dll1DFState *)sub)->unk24 = t;
         if (t < lbl_803E4B9C) {
             (*gPartfxInterface)->spawnObject(obj, 525, NULL, 2, -1, NULL);
-            *(f32*)((char*)sub + 0x24) = lbl_803E4BA4;
+            ((Dll1DFState *)sub)->unk24 = lbl_803E4BA4;
         }
     }
 }

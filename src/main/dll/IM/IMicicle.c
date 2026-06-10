@@ -6,6 +6,34 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 
+typedef struct CfmagicwallPlacement {
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    u8 pad1C[0x20 - 0x1C];
+    s16 unk20;
+    u8 pad22[0x28 - 0x22];
+} CfmagicwallPlacement;
+
+
+typedef struct CfforcefieldPlacement {
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    u8 pad1C[0x1E - 0x1C];
+    s16 unk1E;
+    s16 unk20;
+    u8 pad22[0x28 - 0x22];
+} CfforcefieldPlacement;
+
+
+typedef struct CflevelcontrolState {
+    u8 pad0[0x8 - 0x0];
+    s32 unk8;
+    u8 padC[0xD - 0xC];
+    s8 unkD;
+    u8 padE[0x10 - 0xE];
+} CflevelcontrolState;
+
+
 typedef struct SlidingdoorPlacement {
     u8 pad0[0x18 - 0x0];
     s16 unk18;
@@ -182,7 +210,7 @@ void cfforcefield_update(u8 *obj)
   ((GameObject *)obj)->anim.velocityY = z;
   ((GameObject *)obj)->anim.velocityX = z;
 
-  if (GameBit_Get(*(s16 *)(data + 0x1e)) != 0) {
+  if (GameBit_Get(((CfforcefieldPlacement *)data)->unk1E) != 0) {
     if (!((ForceFieldFlags *)state)->disabled) {
       style = (s8)data[0x19] % 3;
       val = *(f32 *)(state + 4);
@@ -231,7 +259,7 @@ void cfforcefield_update(u8 *obj)
           ((ForceFieldFlags *)state)->disabled = 1;
           ((GameObject *)obj)->anim.rotY = 0;
         }
-      } else if (GameBit_Get(*(s16 *)(data + 0x20)) != 0) {
+      } else if (GameBit_Get(((CfforcefieldPlacement *)data)->unk20) != 0) {
         s16toFloat(state + 4, 0x3c);
         Sfx_PlayFromObject((int)obj, 0x366);
         if (*(int *)(*(int *)&((GameObject *)obj)->anim.placementData + 0x14) != 0x47f5e) {
@@ -239,7 +267,7 @@ void cfforcefield_update(u8 *obj)
         }
       }
     } else {
-      ((ForceFieldFlags *)state)->disabled = (u8)GameBit_Get(*(s16 *)(data + 0x20));
+      ((ForceFieldFlags *)state)->disabled = (u8)GameBit_Get(((CfforcefieldPlacement *)data)->unk20);
     }
   }
 }
@@ -385,8 +413,8 @@ void cflevelcontrol_init(u8* obj, u8* params) {
     int i;
 
     sub = ((GameObject *)obj)->extra;
-    *(int*)(sub + 8) = 0;
-    *(s8*)(sub + 0xd) = -1;
+    ((CflevelcontrolState *)sub)->unk8 = 0;
+    ((CflevelcontrolState *)sub)->unkD = -1;
     storeZeroToFloatParam(sub);
     s16toFloat(sub, 0x1e0);
     ((LevelControlFlags *)(sub + 0xc))->b6 = 0;
@@ -447,7 +475,7 @@ void cfmagicwall_update(int obj) {
     int player = (int)Obj_GetPlayerObject();
     int alpha = 0xff;
 
-    if (GameBit_Get(*(s16 *)(data + 0x20)) != 0) {
+    if (GameBit_Get(((CfmagicwallPlacement *)data)->unk20) != 0) {
         int yaw = (s16)Obj_GetYawDeltaToObject(obj, player, NULL);
 
         if (yaw < 0) {
@@ -463,7 +491,7 @@ void cfmagicwall_update(int obj) {
             f32 playerDistance;
             f32 range;
             f32 fadeDistance;
-            range = (f32)(s32)*(s16 *)(data + 0x1a);
+            range = (f32)(s32)((CfmagicwallPlacement *)data)->unk1A;
             playerDistance = Vec_distance((void *)&((GameObject *)obj)->anim.worldPosX, (void *)(player + 0x18));
             fadeDistance = Camera_DistanceToCurrentViewPosition(
                 ((GameObject *)obj)->anim.localPosX, ((GameObject *)obj)->anim.localPosY, ((GameObject *)obj)->anim.localPosZ);

@@ -7,6 +7,20 @@
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
 
+typedef struct Dll115Placement {
+    u8 pad0[0x18 - 0x0];
+    u8 unk18;
+    s8 unk19;
+    u8 pad1A[0x38 - 0x1A];
+    u8 unk38;
+    u8 unk39;
+    u8 unk3A;
+    u8 unk3B;
+    s16 unk3C;
+    u8 pad3E[0x40 - 0x3E];
+} Dll115Placement;
+
+
 typedef struct WmColumnPlacement {
     u8 pad0[0x18 - 0x0];
     u8 unk18;
@@ -130,9 +144,9 @@ void dll_115_update(int obj)
   }
   switch (state[0]) {
   case 9:
-    (*gObjectTriggerInterface)->preempt(obj, *(s16 *)(mapData + 0x3c));
-    (*gObjectTriggerInterface)->runSequence(*(u8 *)(mapData + 0x3a), (void *)obj,
-                                            *(u8 *)(mapData + 0x3b));
+    (*gObjectTriggerInterface)->preempt(obj, ((Dll115Placement *)mapData)->unk3C);
+    (*gObjectTriggerInterface)->runSequence(((Dll115Placement *)mapData)->unk3A, (void *)obj,
+                                            ((Dll115Placement *)mapData)->unk3B);
     break;
   case 8:
   case 10:

@@ -320,6 +320,14 @@ int dimlavasmash_getObjectTypeId(void) { return 0x0; }
 /* if (o->_X == K) return A; else return B; */
 #include "global.h"
 
+typedef struct DimlavasmashPlacement {
+    u8 pad0[0x1E - 0x0];
+    s16 unk1E;
+    s16 unk20;
+    u8 pad22[0x28 - 0x22];
+} DimlavasmashPlacement;
+
+
 typedef struct DimcannonPlacement {
     u8 pad0[0x1A - 0x0];
     s16 unk1A;
@@ -416,7 +424,7 @@ int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
     state = ((GameObject *)obj)->extra;
     def = *(int **)&((GameObject *)obj)->anim.placementData;
     if (((DimlavasmashState *)state)->unk2 == 0) {
-        if (GameBit_Get(*(s16 *)((char *)def + 0x20)) != 0) {
+        if (GameBit_Get(((DimlavasmashPlacement *)def)->unk20) != 0) {
             (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags |= 1;
             if (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0) {
                 if (*(s16 *)((char *)hit + 0x46) == 397) {
@@ -435,7 +443,7 @@ int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
         }
     } else {
         if (animUpdate->triggerCommand == 1) {
-            GameBit_Set(*(s16 *)((char *)def + 0x1e), 1);
+            GameBit_Set(((DimlavasmashPlacement *)def)->unk1E, 1);
             ((DimlavasmashState *)state)->unk2 = 1;
         }
     }

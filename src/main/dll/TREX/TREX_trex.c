@@ -11,6 +11,31 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 
+typedef struct SBShipGunBrokePlacement {
+    u8 pad0[0x1E - 0x0];
+    s16 unk1E;
+} SBShipGunBrokePlacement;
+
+
+typedef struct ShopBuyItemState {
+    u8 pad0[0x1 - 0x0];
+    s8 unk1;
+    u8 pad2[0x4 - 0x2];
+    u8 unk4;
+    u8 pad5[0x56 - 0x5];
+    u8 unk56;
+    u8 pad57[0x6E - 0x57];
+    s16 unk6E;
+    u8 pad70[0x90 - 0x70];
+    u8 unk90;
+    u8 pad91[0x9B0 - 0x91];
+    s32 unk9B0;
+    u8 pad9B4[0x9D6 - 0x9B4];
+    u8 unk9D6;
+    u8 pad9D7[0x9D8 - 0x9D7];
+} ShopBuyItemState;
+
+
 typedef struct LampObjectDef {
     u8 pad0[0x18 - 0x0];
     s8 unk18;
@@ -1112,14 +1137,14 @@ extern f32 lbl_803E59C0;
 void SB_ShipGunBroke_render(int* obj, int p2, int p3, int p4, int p5)
 {
     int* p = *(int**)&((GameObject *)obj)->anim.placementData;
-    if ((u32)GameBit_Get(*(s16*)((char*)p + 30)) != 0u) {
+    if ((u32)GameBit_Get(((SBShipGunBrokePlacement *)p)->unk1E) != 0u) {
         ((void(*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E59C0);
     }
 }
 void SB_ShipGunBroke_update(int* obj)
 {
     int* p = *(int**)&((GameObject *)obj)->anim.placementData;
-    if ((u32)GameBit_Get(*(s16*)((char*)p + 30)) != 0u) {
+    if ((u32)GameBit_Get(((SBShipGunBrokePlacement *)p)->unk1E) != 0u) {
         Sfx_PlayFromObject(obj, SFXen_nlite1_c);
     }
 }
@@ -1245,7 +1270,7 @@ void shop_buyItem(int obj, int price)
     mapEventState = (int)(*gMapEventInterface)->getState(*gMapEventInterface);
     playerAddMoney(player, -price);
 
-    switch (*(s8 *)(state + 1)) {
+    switch (((ShopBuyItemState *)state)->unk1) {
         case 0:
             playerAddHealth(player, 2);
             break;
@@ -1280,7 +1305,7 @@ void shop_buyItem(int obj, int price)
     }
 
     items = lbl_80327FD0;
-    boughtBit = *(s16 *)(items + *(s8 *)(state + 1) * 0xc + 8);
+    boughtBit = *(s16 *)(items + ((ShopBuyItemState *)state)->unk1 * 0xc + 8);
     if (boughtBit != -1) {
         GameBit_Set(boughtBit, 1);
     }

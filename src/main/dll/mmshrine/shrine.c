@@ -5,6 +5,30 @@
 #include "main/objlib.h"
 #include "main/objseq.h"
 
+typedef struct MmshWaterspikePlacement {
+    u8 pad0[0xC - 0x0];
+    f32 unkC;
+    u8 pad10[0x14 - 0x10];
+    s32 unk14;
+} MmshWaterspikePlacement;
+
+
+typedef struct MmshScalesState {
+    u8 pad0[0xC - 0x0];
+    f32 unkC;
+    u8 pad10[0x14 - 0x10];
+    s32 unk14;
+    u8 pad18[0x24 - 0x18];
+    f32 unk24;
+    s32 unk28;
+    u8 pad2C[0x6A - 0x2C];
+    s16 unk6A;
+    u8 pad6C[0x6E - 0x6C];
+    s16 unk6E;
+    u8 pad70[0x140 - 0x70];
+} MmshScalesState;
+
+
 typedef struct MmshWaterspikeObjectDef {
     u8 pad0[0x1A - 0x0];
     s16 unk1A;
@@ -231,7 +255,7 @@ void mmsh_waterspike_update(int param_1)
     dist = objFn_801948c0(o, 3) - ((GameObject *)param_1)->anim.localPosY;
   }
   else {
-    fn_80137948(sWaterSpikeInvalidXyzAnimIdWarning, *(int *)(state + 0x14));
+    fn_80137948(sWaterSpikeInvalidXyzAnimIdWarning, ((MmshWaterspikePlacement *)state)->unk14);
     n = hitDetectFn_80065e50(param_1, ((GameObject *)param_1)->anim.localPosX, ((GameObject *)param_1)->anim.localPosY,
                              ((GameObject *)param_1)->anim.localPosZ, &list, 0, 0);
     if (n != 0) {
@@ -250,7 +274,7 @@ void mmsh_waterspike_update(int param_1)
     }
   }
   newY = ((GameObject *)param_1)->anim.localPosY + dist;
-  maxY = *(f32 *)(state + 0xc);
+  maxY = ((MmshWaterspikePlacement *)state)->unkC;
   if (newY > maxY) {
     ((GameObject *)param_1)->anim.localPosY = maxY;
   }
@@ -289,10 +313,10 @@ void mmsh_scales_init(int *obj, s16 *def) {
     u8 *state = ((GameObject *)obj)->extra;
     u8 *no;
     int active;
-    *(s16 *)(state + 106) = def[13];
-    *(s16 *)(state + 110) = -1;
-    *(f32 *)(state + 36) = lbl_803E4F68 / (lbl_803E4F68 + (f32)(u32)*(u8 *)((char *)def + 36));
-    *(int *)(state + 40) = -1;
+    ((MmshScalesState *)state)->unk6A = def[13];
+    ((MmshScalesState *)state)->unk6E = -1;
+    ((MmshScalesState *)state)->unk24 = lbl_803E4F68 / (lbl_803E4F68 + (f32)(u32)*(u8 *)((char *)def + 36));
+    ((MmshScalesState *)state)->unk28 = -1;
     active = ((GameObject *)obj)->unkF4;
     if (active == 0 && def[12] != 1) {
         (*gObjectTriggerInterface)->loadAnimData(state, (u8 *)def);

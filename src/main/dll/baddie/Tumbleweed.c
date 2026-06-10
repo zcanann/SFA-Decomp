@@ -10,6 +10,26 @@
 #include "main/objseq.h"
 #include "stdarg.h"
 
+typedef struct TrickyImpressState {
+    u8 pad0[0x54 - 0x0];
+    u32 unk54;
+    u8 pad58[0x408 - 0x58];
+    f32 unk408;
+    f32 unk40C;
+    f32 unk410;
+    u8 pad414[0x7A8 - 0x414];
+    s32 unk7A8;
+    u8 pad7AC[0x7B0 - 0x7AC];
+    s32 unk7B0;
+    u8 pad7B4[0x7B8 - 0x7B4];
+    s32 unk7B8;
+    u8 unk7BC;
+    u8 pad7BD[0x808 - 0x7BD];
+    f32 unk808;
+    u8 pad80C[0x810 - 0x80C];
+} TrickyImpressState;
+
+
 typedef struct TitlescreenState {
     s16 unk0;
     s16 unk2;
@@ -1827,8 +1847,8 @@ void titleScreenFn_801368c4(u8 arg)
 void trickyImpress(u8* obj)
 {
     u8* b = ((GameObject *)obj)->extra;
-    *(u32*)(b + 0x54) |= 0x80000000;
-    *(f32*)(b + 0x808) = lbl_803E2408;
+    ((TrickyImpressState *)b)->unk54 |= 0x80000000;
+    ((TrickyImpressState *)b)->unk808 = lbl_803E2408;
 }
 
 extern void* lbl_803DD984;

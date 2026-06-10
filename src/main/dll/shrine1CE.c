@@ -9,6 +9,17 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 
+typedef struct Dll19CPlacement {
+    u8 pad0[0x8 - 0x0];
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    u8 pad14[0x19 - 0x14];
+    u8 unk19;
+    u8 pad1A[0x20 - 0x1A];
+} Dll19CPlacement;
+
+
 typedef struct Dll19DPlacement {
     u8 pad0[0x19 - 0x0];
     u8 unk19;
@@ -382,9 +393,9 @@ void dll_19C_update(int *obj) {
     }
     if (((Dll19CState *)sub)->unk4 <= 0 && (s8)def[0x1f] == 0 && (u8)Obj_IsLoadingLocked() != 0) {
         setup = Obj_AllocObjectSetup(0x18, 0x248);
-        ((ObjPlacement *)setup)->posX = *(f32*)(def + 8);
-        ((ObjPlacement *)setup)->posY = lbl_803E51B4 + *(f32*)(def + 0xc);
-        ((ObjPlacement *)setup)->posZ = *(f32*)(def + 0x10);
+        ((ObjPlacement *)setup)->posX = ((Dll19CPlacement *)def)->unk8;
+        ((ObjPlacement *)setup)->posY = lbl_803E51B4 + ((Dll19CPlacement *)def)->unkC;
+        ((ObjPlacement *)setup)->posZ = ((Dll19CPlacement *)def)->unk10;
         *(s16*)setup = 0x248;
         ((ObjPlacement *)setup)->mapId = -1;
         *(u8*)((char*)setup + 4) = def[4];
@@ -411,7 +422,7 @@ void dll_19B_init(u8 *obj, u8 *params) {
     }
     sub[0x13] = 0;
     sub[0x14] = 0;
-    *(s16*)(sub + 2) = 0;
+    ((Dll19CState *)sub)->unk2 = 0;
     sub[0x12] = 0;
     ((GameObject *)obj)->animEventCallback = (void *)dll_19B_SeqFn;
     ObjMsg_AllocQueue(obj, 4);
@@ -423,11 +434,11 @@ void dll_19B_init(u8 *obj, u8 *params) {
     GameBit_Set(0x40, 1);
     GameBit_Set(0x1d7, 1);
     GameBit_Set(0x1d8, 0);
-    *(s16*)(sub + 4) = 0xc;
+    ((Dll19CState *)sub)->unk4 = 0xc;
     *(s16*)(sub + 8) = 0x1e;
-    *(s16*)(sub + 2) = 0xc8;
+    ((Dll19CState *)sub)->unk2 = 0xc8;
     ((void(*)(int, int, int, int, int))((void**)*(void**)gTitleMenuControlInterface)[6])(2, 0x2b, 0x50, 1, 0);
-    *(s16*)(sub + 6) = 0;
+    ((Dll19CState *)sub)->unk6 = 0;
     *(s16*)(sub + 0xa) = 0;
     sub[0x16] = 0;
     *(s16*)(sub + 0x10) = 0xc8;

@@ -12,6 +12,26 @@
 #include "main/objfx.h"
 #include "main/objhits_types.h"
 
+typedef struct TrickyguardPlacement {
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    u8 pad1C[0x20 - 0x1C];
+} TrickyguardPlacement;
+
+
+typedef struct CurvefishState {
+    u8 pad0[0xA - 0x0];
+    s16 unkA;
+    u8 padC[0x10 - 0xC];
+    s16 unk10;
+    u8 pad12[0x108 - 0x12];
+    u8 unk108;
+    u8 pad109[0x110 - 0x109];
+    f32 unk110;
+    u8 pad114[0x120 - 0x114];
+} CurvefishState;
+
+
 extern bool FUN_800067f0();
 extern bool FUN_800067f8();
 extern undefined4 FUN_8000680c();
@@ -1394,8 +1414,8 @@ void curvefish_init(int obj, u8 *param_2) {
   ((GameObject *)obj)->objectFlags = (u16)v;
   ((GameObject *)obj)->anim.rootMotionScale = *(f32 *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 4) *
                       ((f32)(u32)param_2[0x18] / lbl_803E3928);
-  *(u8 *)(state + 0x108) = 1;
-  *(f32 *)(state + 0x110) = (f32)(u32)param_2[0x19] / lbl_803E3928;
+  ((CurvefishState *)state)->unk108 = 1;
+  ((CurvefishState *)state)->unk110 = (f32)(u32)param_2[0x19] / lbl_803E3928;
 }
 
 typedef struct DusterHitEffectPos {
@@ -1472,8 +1492,8 @@ void trickyguard_update(int *obj) {
     int *tricky;
     int *def = *(int **)&((GameObject *)obj)->anim.placementData;
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 8);
-    if (*(s16 *)((char *)def + 0x1a) != -1) {
-        if ((u32)GameBit_Get(*(s16 *)((char *)def + 0x1a)) == 0) return;
+    if (((TrickyguardPlacement *)def)->unk1A != -1) {
+        if ((u32)GameBit_Get(((TrickyguardPlacement *)def)->unk1A) == 0) return;
     }
     tricky = (int *)getTrickyObject();
     if (tricky == NULL) return;

@@ -5,6 +5,17 @@
 #include "main/mapEvent.h"
 #include "main/resource.h"
 
+typedef struct SmallbasketState {
+    u8 pad0[0x5 - 0x0];
+    s8 unk5;
+    s8 unk6;
+    u8 pad7[0x9 - 0x7];
+    s8 unk9;
+    u8 padA[0x14 - 0xA];
+    s32 unk14;
+} SmallbasketState;
+
+
 
 extern undefined4 GameBit_Set(int eventId, int value);
 extern uint FUN_80017730();
@@ -567,7 +578,7 @@ void smallbasket_render(int param_1, undefined4 param_2, undefined4 param_3, und
     ((GameObject *)param_1)->anim.flags = ((GameObject *)param_1)->anim.flags | 0x4000;
   } else {
     field_a = *(short*)(extra + 0xa);
-    if ((field_a != 0 && field_a <= 0x32) || *(int*)(extra + 0x14) != 0) {
+    if ((field_a != 0 && field_a <= 0x32) || ((SmallbasketState *)extra)->unk14 != 0) {
       ((GameObject *)param_1)->anim.flags = ((GameObject *)param_1)->anim.flags | 0x4000;
     } else if (((GameObject *)param_1)->unkF8 != 0 && param_6 != -1) {
       ((GameObject *)param_1)->anim.flags = ((GameObject *)param_1)->anim.flags | 0x4000;

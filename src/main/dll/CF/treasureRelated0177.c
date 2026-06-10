@@ -6,6 +6,13 @@
 #include "main/objhits_types.h"
 #include "main/screen_transition.h"
 
+typedef struct KtTorchPlacement {
+    u8 pad0[0x1B - 0x0];
+    u8 unk1B;
+    u8 pad1C[0x20 - 0x1C];
+} KtTorchPlacement;
+
+
 
 extern undefined8 FUN_80006894();
 extern undefined4 FUN_800068a0();
@@ -415,7 +422,7 @@ void kt_torch_update(int obj)
   int bit;
 
   mapData = *(int *)&((GameObject *)obj)->anim.placementData;
-  ObjAnim_AdvanceCurrentMove((f32)*(u8 *)(mapData + 0x1b) / lbl_803E3DB4,
+  ObjAnim_AdvanceCurrentMove((f32)((KtTorchPlacement *)mapData)->unk1B / lbl_803E3DB4,
                              timeDelta,obj,(ObjAnimEventList *)0);
   bit = *(short *)(mapData + 0x20);
   if (bit != -1) {

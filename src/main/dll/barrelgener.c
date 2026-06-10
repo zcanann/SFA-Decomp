@@ -4,6 +4,22 @@
 #include "main/objseq.h"
 
 #include "main/audio/sfx_ids.h"
+
+typedef struct ObjUpdateRomCurveFollowVelocityIndexedState {
+    u8 pad0[0x28C - 0x0];
+    f32 unk28C;
+    f32 unk290;
+    u8 pad294[0x298 - 0x294];
+} ObjUpdateRomCurveFollowVelocityIndexedState;
+
+
+typedef struct ObjUpdateRomCurveFollowVelocityState {
+    u8 pad0[0x28C - 0x0];
+    f32 unk28C;
+    f32 unk290;
+    u8 pad294[0x298 - 0x294];
+} ObjUpdateRomCurveFollowVelocityState;
+
 int barrelgener_getLinkId(int obj)
 {
     BarrelGeneratorSetup *setup = (BarrelGeneratorSetup *)((GameObject *)obj)->anim.placementData;
@@ -180,8 +196,8 @@ int Obj_UpdateRomCurveFollowVelocity(int p1, int p2, f32 a, f32 b, f32 c, int fl
         d[0] = ((GameObject *)p1)->anim.localPosX - *(f32 *)(p2 + 0x68);
         d[2] = ((GameObject *)p1)->anim.localPosZ - *(f32 *)(p2 + 0x70);
         ang = lbl_803E6C60 * (f32)(-(s16)getAngle(d[0], d[2])) / lbl_803E6C64;
-        *(f32 *)(state2 + 0x290) = scale * -mathSinf(ang);
-        *(f32 *)(state2 + 0x28c) = scale * -mathCosf(ang);
+        ((ObjUpdateRomCurveFollowVelocityState *)state2)->unk290 = scale * -mathSinf(ang);
+        ((ObjUpdateRomCurveFollowVelocityState *)state2)->unk28C = scale * -mathCosf(ang);
     } else {
         Obj_SteerVelocityTowardVector(p1, &((GameObject *)p1)->anim.velocityX, d, scale, scale / lbl_803E6C7C, lbl_803E6C80);
     }
@@ -217,8 +233,8 @@ int Obj_UpdateRomCurveFollowVelocityIndexed(int p1, int p2, f32 a, f32 b, f32 c,
         d[0] = ((GameObject *)p1)->anim.localPosX - *(f32 *)(p2 + 0x68);
         d[2] = ((GameObject *)p1)->anim.localPosZ - *(f32 *)(p2 + 0x70);
         ang = lbl_803E6C60 * (f32)(-(s16)getAngle(d[0], d[2])) / lbl_803E6C64;
-        *(f32 *)(state2 + 0x290) = scale * -mathSinf(ang);
-        *(f32 *)(state2 + 0x28c) = scale * -mathCosf(ang);
+        ((ObjUpdateRomCurveFollowVelocityIndexedState *)state2)->unk290 = scale * -mathSinf(ang);
+        ((ObjUpdateRomCurveFollowVelocityIndexedState *)state2)->unk28C = scale * -mathCosf(ang);
     } else {
         Obj_SteerVelocityTowardVector(p1, &((GameObject *)p1)->anim.velocityX, d, scale, scale / lbl_803E6C7C, lbl_803E6C80);
     }

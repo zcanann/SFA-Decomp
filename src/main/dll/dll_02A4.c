@@ -1,6 +1,15 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
+typedef struct Dll2A4State {
+    u8 pad0[0x4 - 0x0];
+    s16 unk4;
+    s16 unk6;
+    s16 unk8;
+    u8 padA[0x10 - 0xA];
+} Dll2A4State;
+
+
 int dll_2A4_getExtraSize_ret_12(void) { return 0xc; }
 
 int dll_2A4_getObjectTypeId(void) { return 0x0; }
@@ -46,9 +55,9 @@ void dll_2A4_init(int obj)
     ((GameObject *)obj)->anim.rotX = randomGetRange(0, 0xffff);
     ((GameObject *)obj)->anim.rotY = randomGetRange(0, 0xffff);
     ((GameObject *)obj)->anim.rotZ = randomGetRange(0, 0xffff);
-    *(s16 *)(state + 4) = randomGetRange(-0x14, 0x14);
-    *(s16 *)(state + 6) = randomGetRange(-0x14, 0x14);
-    *(s16 *)(state + 8) = randomGetRange(-0x14, 0x14);
+    ((Dll2A4State *)state)->unk4 = randomGetRange(-0x14, 0x14);
+    ((Dll2A4State *)state)->unk6 = randomGetRange(-0x14, 0x14);
+    ((Dll2A4State *)state)->unk8 = randomGetRange(-0x14, 0x14);
 }
 
 void fn_802315EC(int obj, ARWGeneratorState *state, ARWGeneratorSetup *setup)

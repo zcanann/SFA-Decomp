@@ -2,6 +2,13 @@
 #include "main/game_object.h"
 #include "main/dll/DR/DRsimplehuman.h"
 
+typedef struct SpitembeamPlacement {
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    u8 pad1C[0x20 - 0x1C];
+} SpitembeamPlacement;
+
+
 typedef struct SpdrapeObjectDef {
     u8 pad0[0x18 - 0x0];
     s8 unk18;
@@ -256,8 +263,8 @@ void spitembeam_update(int *obj) {
     if (target == NULL) {
         *(int**)&((GameObject *)obj)->unkF4 = ObjGroup_FindNearestObject(9, obj, &d);
     } else {
-        if (((int(*)(int*, s16))(**(int ***)((char*)target + 0x68))[10])(target, *(s16*)(def + 0x1a)) == 0
-            || ((int(*)(int*, s16))(**(int ***)((char*)target + 0x68))[11])(target, *(s16*)(def + 0x1a)) != 0) {
+        if (((int(*)(int*, s16))(**(int ***)((char*)target + 0x68))[10])(target, ((SpitembeamPlacement *)def)->unk1A) == 0
+            || ((int(*)(int*, s16))(**(int ***)((char*)target + 0x68))[11])(target, ((SpitembeamPlacement *)def)->unk1A) != 0) {
             ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags | OBJANIM_FLAG_HIDDEN);
             ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x8000);
         }

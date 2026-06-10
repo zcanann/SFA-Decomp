@@ -11,6 +11,12 @@
 #include "main/objfx.h"
 #include "main/resource.h"
 
+typedef struct KaldachomPlacement {
+    u8 pad0[0x14 - 0x0];
+    s32 unk14;
+} KaldachomPlacement;
+
+
 typedef struct KaldachomState {
     u8 pad0[0x3E8 - 0x0];
     f32 unk3E8;
@@ -500,7 +506,7 @@ void kaldachom_update(int param_1)
   iVar8 = *(int *)&((GameObject *)param_1)->anim.placementData;
   if (((GameObject *)param_1)->unkF4 != 0) {
     if ((((CampfireState *)iVar9)->unk270 != 3) &&
-        (iVar1 = (*gMapEventInterface)->isTimedEventActive(*(int *)(iVar8 + 0x14)), iVar1 != 0))
+        (iVar1 = (*gMapEventInterface)->isTimedEventActive(((KaldachomPlacement *)iVar8)->unk14), iVar1 != 0))
     {
       (**(code **)(*gBaddieControlInterface + 0x58))((double)lbl_803E30C8,param_1,iVar8,iVar9,8,6,0,0x26);
       *(undefined2 *)(iVar9 + 0x402) = 0;

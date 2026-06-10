@@ -6,6 +6,25 @@
 #include "main/objfx.h"
 #include "main/objseq.h"
 
+typedef struct ScCloudrunneraPlacement {
+    u8 pad0[0x18 - 0x0];
+    s16 unk18;
+    u8 pad1A[0x20 - 0x1A];
+} ScCloudrunneraPlacement;
+
+
+typedef struct ScMusictreeState {
+    u8 pad0[0x30 - 0x0];
+    f32 unk30;
+    f32 unk34;
+    u8 pad38[0x48 - 0x38];
+    u16 unk48;
+    u16 unk4A;
+    u8 unk4C;
+    u8 pad4D[0x50 - 0x4D];
+} ScMusictreeState;
+
+
 extern u32 GameBit_Get(int id);
 extern void GameBit_Set(int id, int value);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -114,18 +133,18 @@ void sc_musictree_update(int obj)
     int *p;
     int *q;
 
-    ObjAnim_AdvanceCurrentMove(*(f32 *)(inner + 0x34), timeDelta, obj,
+    ObjAnim_AdvanceCurrentMove(((ScMusictreeState *)inner)->unk34, timeDelta, obj,
                                (ObjAnimEventList *)&stk);
-    if (*(u8 *)(inner + 0x4c) == 0) {
+    if (((ScMusictreeState *)inner)->unk4C == 0) {
         return;
     }
     if (((CloudRunnerState *)inner)->baddie.velY > lbl_803E5590) {
         ((CloudRunnerState *)inner)->baddie.velY = ((CloudRunnerState *)inner)->baddie.velY - timeDelta;
     }
-    if (*(f32 *)(inner + 0x34) > lbl_803E5594) {
-        *(f32 *)(inner + 0x34) = *(f32 *)(inner + 0x34) - lbl_803E5598;
+    if (((ScMusictreeState *)inner)->unk34 > lbl_803E5594) {
+        ((ScMusictreeState *)inner)->unk34 = ((ScMusictreeState *)inner)->unk34 - lbl_803E5598;
     }
-    if ((*(u8 *)(inner + 0x4c) & 0x80) && ((GameObject *)obj)->unkF8 != 0) {
+    if ((((ScMusictreeState *)inner)->unk4C & 0x80) && ((GameObject *)obj)->unkF8 != 0) {
         p = (int *)inner;
         q = (int *)inner;
         for (i = 0; i < 3; i++) {
@@ -143,10 +162,10 @@ void sc_musictree_update(int obj)
             q = (int *)((char *)q + 0xc);
         }
     }
-    if ((*(u8 *)(inner + 0x4c) & 0x20) == 0) {
+    if ((((ScMusictreeState *)inner)->unk4C & 0x20) == 0) {
         goto end;
     }
-    if (*(u8 *)(inner + 0x4c) & 0xc0) {
+    if (((ScMusictreeState *)inner)->unk4C & 0xc0) {
         rcType = ObjHits_GetPriorityHitWithPosition(obj, &hr1, &hr2, &hr3, &vec[0], &vec[1], &vec[2]);
     } else {
         rcType = ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x129, (int *)(inner + 0x44));
@@ -157,12 +176,12 @@ void sc_musictree_update(int obj)
     if (rcType == 0) goto end;
     if (rcType == 0x11) goto end;
     if (!(((CloudRunnerState *)inner)->baddie.velZ <= lbl_803E5590)) goto end;
-    if (*(u8 *)(inner + 0x4c) & 0xc0) {
+    if (((ScMusictreeState *)inner)->unk4C & 0xc0) {
         vec[0] = vec[0] + playerMapOffsetX;
         vec[2] = vec[2] + playerMapOffsetZ;
         objLightFn_8009a1dc((void *)obj, lbl_803E559C, vec2, 1, 0);
         Obj_SetModelColorFadeRecursive(obj, 0xf, 0xc8, 0, 0, 1);
-        sc_musictree_handleHitObject(obj, inner, *(u8 *)(inner + 0x4c) & 0xf);
+        sc_musictree_handleHitObject(obj, inner, ((ScMusictreeState *)inner)->unk4C & 0xf);
     } else {
         Sfx_PlayFromObject(obj, 0x129);
         Sfx_PlayFromObject(obj, 0x12a);
@@ -172,11 +191,11 @@ void sc_musictree_update(int obj)
         vec[0] = zero;
         vec[1] = lbl_803E55A0 * ((CloudRunnerState *)inner)->baddie.velX;
         vec[2] = zero;
-        objfx_spawnRandomBurst(obj, *(u8 *)(inner + 0x4c) & 0xf, 0x14, vec2, lbl_803E55A4 * ((CloudRunnerState *)inner)->baddie.velX, 0);
+        objfx_spawnRandomBurst(obj, ((ScMusictreeState *)inner)->unk4C & 0xf, 0x14, vec2, lbl_803E55A4 * ((CloudRunnerState *)inner)->baddie.velX, 0);
     }
-    *(f32 *)(inner + 0x34) = lbl_803E5588;
+    ((ScMusictreeState *)inner)->unk34 = lbl_803E5588;
     ((CloudRunnerState *)inner)->baddie.velZ = lbl_803E55A8;
-    if (*(u8 *)(inner + 0x4c) & 0x80) {
+    if (((ScMusictreeState *)inner)->unk4C & 0x80) {
         int *pp;
         int idx;
         for (idx = 0, pp = (int *)inner; idx < 3; idx++) {
@@ -196,25 +215,25 @@ end:
         f32 dx = ((GameObject *)obj)->anim.localPosX - ((GameObject *)player)->anim.localPosX;
         f32 dz = ((GameObject *)obj)->anim.localPosZ - ((GameObject *)player)->anim.localPosZ;
         f32 d = sqrtf(dx * dx + dz * dz);
-        if ((u16)(s32)d < *(u16 *)(inner + 0x48)) {
-            if ((*(u8 *)(inner + 0x4c) & 0x10) && *(u16 *)(inner + 0x4a) >= (u16)(s32)d && ((CloudRunnerState *)inner)->baddie.velY <= lbl_803E5590) {
+        if ((u16)(s32)d < ((ScMusictreeState *)inner)->unk48) {
+            if ((((ScMusictreeState *)inner)->unk4C & 0x10) && ((ScMusictreeState *)inner)->unk4A >= (u16)(s32)d && ((CloudRunnerState *)inner)->baddie.velY <= lbl_803E5590) {
                 vec[0] = lbl_803E5590;
                 vec[1] = lbl_803E55AC * (lbl_803E55A0 * ((CloudRunnerState *)inner)->baddie.velX);
                 vec[2] = lbl_803E5590;
-                objfx_spawnRandomBurst(obj, *(u8 *)(inner + 0x4c) & 0xf, 0xa, vec2, lbl_803E55A4 * ((CloudRunnerState *)inner)->baddie.velX, 1);
+                objfx_spawnRandomBurst(obj, ((ScMusictreeState *)inner)->unk4C & 0xf, 0xa, vec2, lbl_803E55A4 * ((CloudRunnerState *)inner)->baddie.velX, 1);
                 ((CloudRunnerState *)inner)->baddie.velY = lbl_803E55B0;
             }
-            *(f32 *)(inner + 0x30) = *(f32 *)(inner + 0x30) - timeDelta;
-            if (*(f32 *)(inner + 0x30) <= lbl_803E5590) {
+            ((ScMusictreeState *)inner)->unk30 = ((ScMusictreeState *)inner)->unk30 - timeDelta;
+            if (((ScMusictreeState *)inner)->unk30 <= lbl_803E5590) {
                 vec[0] = lbl_803E5590;
                 vec[1] = lbl_803E55A0 * ((CloudRunnerState *)inner)->baddie.velX;
                 vec[2] = lbl_803E5590;
                 vecRotateZXY(obj, vec);
-                objfx_spawnRandomBurst(obj, *(u8 *)(inner + 0x4c) & 0xf, 1, vec2, lbl_803E55A4 * ((CloudRunnerState *)inner)->baddie.velX, 0);
-                *(f32 *)(inner + 0x30) = *(f32 *)(inner + 0x30) + lbl_803E55B4;
+                objfx_spawnRandomBurst(obj, ((ScMusictreeState *)inner)->unk4C & 0xf, 1, vec2, lbl_803E55A4 * ((CloudRunnerState *)inner)->baddie.velX, 0);
+                ((ScMusictreeState *)inner)->unk30 = ((ScMusictreeState *)inner)->unk30 + lbl_803E55B4;
             }
         }
-        *(u16 *)(inner + 0x4a) = (s32)d;
+        ((ScMusictreeState *)inner)->unk4A = (s32)d;
     }
 }
 
@@ -396,7 +415,7 @@ void sc_cloudrunnera_update(int obj)
 
     sub = ((GameObject *)obj)->anim.placementData;
     if (sub == NULL) return;
-    if (*(s16 *)((char *)sub + 0x18) == -1) return;
+    if (((ScCloudrunneraPlacement *)sub)->unk18 == -1) return;
     idx = (*gObjectTriggerInterface)->update((u8 *)obj, (f32)(u32)lbl_803DB411);
     if (idx != 0 && ((GameObject *)obj)->unkB4 == -2) {
         int found;

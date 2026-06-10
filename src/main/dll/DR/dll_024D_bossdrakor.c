@@ -24,6 +24,15 @@ void bossdrakor_initialise(void)
 
 #include "global.h"
 
+typedef struct BossdrakorPlacement {
+    u8 pad0[0x19 - 0x0];
+    s8 unk19;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+} BossdrakorPlacement;
+
+
 /* bossdrakor_getExtraSize == 0x1a4. */
 typedef struct BossDrakorState {
     f32 unk00;
@@ -595,7 +604,7 @@ void bossdrakor_hitDetect(int obj)
             ((BossDrakorState *)inner)->unk170 -= 1;
             ((DrakorFlags *)((char *)inner + 0x198))->b08 = 1;
             if (((BossDrakorState *)inner)->unk170 < 0) {
-                GameBit_Set(*(s16 *)((char *)setup + 0x1e), 1);
+                GameBit_Set(((BossdrakorPlacement *)setup)->unk1E, 1);
                 spawnExplosion((int *)obj, lbl_803E6550, 1, 1, 1, 1, 1, 1, 1);
                 Obj_RemoveFromUpdateList((int *)obj);
                 (*gMapEventInterface)->setMode(0x1d, 3);

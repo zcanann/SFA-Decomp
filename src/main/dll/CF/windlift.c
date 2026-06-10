@@ -14,6 +14,12 @@
 #include "main/resource.h"
 #include "global.h"
 
+typedef struct PortalspelldoorPlacement {
+    u8 pad0[0x1E - 0x0];
+    s16 unk1E;
+} PortalspelldoorPlacement;
+
+
 typedef struct LanternFireFlyPlacement {
     u8 pad0[0x18 - 0x0];
     s8 unk18;
@@ -1105,7 +1111,7 @@ void portalspelldoor_update(int obj)
         if (objGetAnimState80A(player) == 0x5bd) {
             fn_80296B78(player, -1);
         }
-        GameBit_Set(*(s16 *)(p4c + 0x1e), 1);
+        GameBit_Set(((PortalspelldoorPlacement *)p4c)->unk1E, 1);
     } else {
         if (objGetAnimState80A(player) == 0x5bd && state->openTimer == -1) {
             state->openTimer = 0;

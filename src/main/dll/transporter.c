@@ -10,6 +10,46 @@
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
 
+typedef struct IceblastPlacement {
+    u8 pad0[0x19 - 0x0];
+    s8 unk19;
+    s16 unk1A;
+    s8 unk1C;
+    s8 unk1D;
+    s8 unk1E;
+    u8 unk1F;
+} IceblastPlacement;
+
+
+typedef struct PushablePlacement {
+    u8 pad0[0x18 - 0x0];
+    s16 unk18;
+    s16 unk1A;
+    s8 unk1C;
+    s8 unk1D;
+    s8 unk1E;
+    u8 unk1F;
+    u8 pad20[0x23 - 0x20];
+    s8 unk23;
+    u8 pad24[0x28 - 0x24];
+} PushablePlacement;
+
+
+typedef struct InvhitState {
+    u8 pad0[0x8 - 0x0];
+    u8 unk8;
+    u8 pad9[0xC - 0x9];
+} InvhitState;
+
+
+typedef struct FlameblastState {
+    u8 pad0[0x10 - 0x0];
+    u8 unk10;
+    u8 unk11;
+    u8 pad12[0x14 - 0x12];
+} FlameblastState;
+
+
 typedef struct InvhitObjectDef {
     u8 pad0[0x18 - 0x0];
     s16 unk18;
@@ -385,7 +425,7 @@ void pushable_free(int *obj) {
         GameBit_Set(sub->gameBit, 0);
         break;
     default:
-        if (*(s16*)(def + 0x18) > -1 && type != 0x54a && type != 0x5ae && type != 0x108 && sub->savePosEnabled != 0) {
+        if (((PushablePlacement *)def)->unk18 > -1 && type != 0x54a && type != 0x5ae && type != 0x108 && sub->savePosEnabled != 0) {
             saveGame_saveObjectPos(obj);
         }
         break;
@@ -443,7 +483,7 @@ void WarpPoint_render(int *obj, int p1, int p2, int p3, int p4, s8 visible) {
 }
 void invhit_free(int obj) {
     char *inner = ((GameObject *)obj)->extra;
-    switch (*(u8 *)(inner + 8)) {
+    switch (((InvhitState *)inner)->unk8) {
         case 4:
             (*gExpgfxInterface)->freeSource2((u32)obj);
             break;
@@ -488,7 +528,7 @@ void flameblast_update(int *obj) {
         }
     } else {
         if (state[0] > lbl_803E3634) {
-            if (*(u8 *)((char *)state + 0x11) == 0) {
+            if (((FlameblastState *)state)->unk11 == 0) {
                 ObjHits_SetHitVolumeSlot(obj, 0x1a, 1, 0);
             }
         }
@@ -509,7 +549,7 @@ void flameblast_init(int *obj, u8 *def) {
     f32 *state = ((GameObject *)obj)->extra;
     fn_8017805C(obj, state);
     state[0] = lbl_803E3638 * (f32)(s32)*(s16 *)((char *)def + 0x1a);
-    *(u8 *)((char *)state + 0x11) = 2;
+    ((FlameblastState *)state)->unk11 = 2;
 }
 
 void WarpPoint_init(int *obj, u8 *def) {
@@ -551,7 +591,7 @@ void iceblast_update(int *obj) {
     } else {
         return;
     }
-    ObjHits_SetHitVolumeSlot(obj, 0x10, *(s8 *)((char *)def + 0x19) != 0 ? 3 : 1, 0);
+    ObjHits_SetHitVolumeSlot(obj, 0x10, ((IceblastPlacement *)def)->unk19 != 0 ? 3 : 1, 0);
     state[0] = state[0] - timeDelta;
     if (state[0] <= lbl_803E3604) {
         f32 zero;
@@ -1639,7 +1679,7 @@ int pushable_setScale(int *obj, s16 *tgt, int flag, f32 dx, f32 dz) {
             if ((fl2 & 1) != 0) {
                 s16 t;
                 st2->flags = fl2 & ~1;
-                t = *(s16 *)(def2 + 0x18);
+                t = ((PushablePlacement *)def2)->unk18;
                 if (t > -1) {
                     switch (((GameObject *)obj)->anim.seqId) {
                     case 0x21e:
@@ -1649,7 +1689,7 @@ int pushable_setScale(int *obj, s16 *tgt, int flag, f32 dx, f32 dz) {
                     case 0x7df:
                         break;
                     default:
-                        if (*(s8 *)(def2 + 0x23) > -1) {
+                        if (((PushablePlacement *)def2)->unk23 > -1) {
                             GameBit_Set(t, 0);
                         }
                         break;

@@ -8,6 +8,72 @@
 #include "main/dll/baddie_state.h"
 #include "global.h"
 
+typedef struct DREarthWarriorPlacement {
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    u8 pad1C[0xB18 - 0x1C];
+    f32 unkB18;
+    f32 unkB1C;
+    f32 unkB20;
+    u8 padB24[0xB28 - 0xB24];
+} DREarthWarriorPlacement;
+
+
+typedef struct DREarthWarriorState {
+    s32 unk0;
+    u8 pad4[0x9FD - 0x4];
+    u8 unk9FD;
+    u8 pad9FE[0xB54 - 0x9FE];
+    s32 unkB54;
+    u8 padB58[0xF50 - 0xB58];
+    s32 unkF50;
+    u8 padF54[0xF58 - 0xF54];
+    s32 unkF58;
+    u8 padF5C[0xFA8 - 0xF5C];
+    s32 unkFA8;
+    s32 unkFAC;
+    s32 unkFB0;
+    s32 unkFB4;
+    s32 unkFB8;
+    u8 padFBC[0xFCC - 0xFBC];
+    s32 unkFCC;
+    s16 unkFD0;
+    u8 padFD2[0xFDC - 0xFD2];
+    s16 unkFDC;
+    u8 padFDE[0xFEC - 0xFDE];
+    s32 unkFEC;
+    u8 padFF0[0x1338 - 0xFF0];
+    f32 unk1338;
+    u8 pad133C[0x1384 - 0x133C];
+    f32 unk1384;
+    f32 unk1388;
+    f32 unk138C;
+    u8 pad1390[0x1428 - 0x1390];
+    u8 unk1428;
+    u8 unk1429;
+    u8 unk142A;
+    u8 unk142B;
+    u8 unk142C;
+    u8 pad142D[0x1444 - 0x142D];
+    f32 unk1444;
+    u8 pad1448[0x14DE - 0x1448];
+    s16 unk14DE;
+    u8 pad14E0[0x14E2 - 0x14E0];
+    s16 unk14E2;
+    u8 pad14E4[0x14E6 - 0x14E4];
+    u8 unk14E6;
+    u8 pad14E7[0x14E8 - 0x14E7];
+    u8 unk14E8;
+    u8 pad14E9[0x14ED - 0x14E9];
+    u8 unk14ED;
+    u8 pad14EE[0x14F4 - 0x14EE];
+    s8 unk14F4;
+    u8 unk14F5;
+    u8 pad14F6[0x14F8 - 0x14F6];
+    s32 unk14F8;
+} DREarthWarriorState;
+
+
 /* Combat sub-block of the EarthWarrior state (state+0xb58). */
 typedef struct EarthWarriorSub {
     u8 pad000[0x264];
@@ -379,7 +445,7 @@ void DR_EarthWarrior_func17(int obj, int param)
         EarthWarriorState *inner2 = ((GameObject *)obj)->extra;
         int p = *(int *)&((GameObject *)obj)->anim.placementData;
         ((ByteFlags *)&inner2->sub.flags994)->b02 = 1;
-        (*gGameUIInterface)->initAirMeter(*(s16 *)((char *)p + 0x1a), 0x5cf);
+        (*gGameUIInterface)->initAirMeter(((DREarthWarriorPlacement *)p)->unk1A, 0x5cf);
         (*gGameUIInterface)->runAirMeter(inner2->sub.health);
         GameBit_Set(0x7bc, 1);
         GameBit_Set(0x7d4, 0);
@@ -1137,9 +1203,9 @@ void DR_EarthWarrior_init(int obj, int p2)
     *(s16 *)obj = (s16)(*(s8 *)((char *)p2 + 0x18) << 8);
     ((GameObject *)obj)->animEventCallback = (void *)fn_802BDBE8;
     ObjGroup_AddObject(obj, 0xa);
-    *(u8 *)((char *)inner + 0x14e8) = *(u8 *)((char *)p2 + 0x19);
-    *(s16 *)((char *)inner + 0x14de) = 5;
-    *(s8 *)((char *)inner + 0x14f4) = -1;
+    ((DREarthWarriorState *)inner)->unk14E8 = *(u8 *)((char *)p2 + 0x19);
+    ((DREarthWarriorState *)inner)->unk14DE = 5;
+    ((DREarthWarriorState *)inner)->unk14F4 = -1;
     (*(void (*)(int, int, int, int))(*(int *)(*gPlayerInterface + 0x4)))(obj, inner, 4, 1);
     *(int *)inner |= 0x4000;
     ((EarthWarriorState *)inner)->baddie.unk2A4 = lbl_803E8384;
@@ -1154,47 +1220,47 @@ void DR_EarthWarrior_init(int obj, int p2)
     dll_2E_func05(obj, inner + 0x3ec, -0x2000, 0x31c7, 2);
     dll_2E_func09(inner + 0x3ec, &r1, &r2, 2);
     fn_80113F94(inner + 0x3ec, lbl_803E8388);
-    *(u8 *)((char *)inner + 0x9fd) |= 2;
-    *(f32 *)((char *)inner + 0x1444) = lbl_803E82E8;
-    *(s16 *)((char *)inner + 0x14e2) = *(s16 *)((char *)p2 + 0x1a);
-    *(int *)((char *)inner + 0xf50) = (int)(base + 0xd8);
-    *(int *)((char *)inner + 0xf58) = (int)(base + 0x84);
+    ((DREarthWarriorState *)inner)->unk9FD |= 2;
+    ((DREarthWarriorState *)inner)->unk1444 = lbl_803E82E8;
+    ((DREarthWarriorState *)inner)->unk14E2 = *(s16 *)((char *)p2 + 0x1a);
+    ((DREarthWarriorState *)inner)->unkF50 = (int)(base + 0xd8);
+    ((DREarthWarriorState *)inner)->unkF58 = (int)(base + 0x84);
     {
         f32 v = lbl_803E8338;
-        *(f32 *)((char *)inner + 0x138c) = v;
-        *(f32 *)((char *)inner + 0x1384) = v;
+        ((DREarthWarriorState *)inner)->unk138C = v;
+        ((DREarthWarriorState *)inner)->unk1384 = v;
     }
-    *(f32 *)((char *)inner + 0x1388) = lbl_803E838C;
-    *(int *)((char *)inner + 0xfa8) = (int)(base + 0x118);
-    *(u8 *)((char *)inner + 0x1428) = 0x29;
-    *(int *)((char *)inner + 0xfac) = (int)(base + 0x1bc);
-    *(u8 *)((char *)inner + 0x1429) = 0x29;
-    *(int *)((char *)inner + 0xfb0) = (int)(base + 0x260);
-    *(u8 *)((char *)inner + 0x142a) = 0x2e;
-    *(int *)((char *)inner + 0xfb4) = (int)(base + 0x1bc);
-    *(u8 *)((char *)inner + 0x142b) = 0x29;
-    *(int *)((char *)inner + 0xfb8) = (int)(base + 0x260);
-    *(u8 *)((char *)inner + 0x142c) = 0x2e;
-    *(f32 *)((char *)inner + 0x1338) = GXIndTexMtxScale1024;
+    ((DREarthWarriorState *)inner)->unk1388 = lbl_803E838C;
+    ((DREarthWarriorState *)inner)->unkFA8 = (int)(base + 0x118);
+    ((DREarthWarriorState *)inner)->unk1428 = 0x29;
+    ((DREarthWarriorState *)inner)->unkFAC = (int)(base + 0x1bc);
+    ((DREarthWarriorState *)inner)->unk1429 = 0x29;
+    ((DREarthWarriorState *)inner)->unkFB0 = (int)(base + 0x260);
+    ((DREarthWarriorState *)inner)->unk142A = 0x2e;
+    ((DREarthWarriorState *)inner)->unkFB4 = (int)(base + 0x1bc);
+    ((DREarthWarriorState *)inner)->unk142B = 0x29;
+    ((DREarthWarriorState *)inner)->unkFB8 = (int)(base + 0x260);
+    ((DREarthWarriorState *)inner)->unk142C = 0x2e;
+    ((DREarthWarriorState *)inner)->unk1338 = GXIndTexMtxScale1024;
     {
         s16 h = *(s16 *)obj;
-        *(int *)((char *)inner + 0xfec) = h;
-        *(int *)((char *)inner + 0xfcc) = h;
-        *(s16 *)((char *)inner + 0xfdc) = h;
-        *(s16 *)((char *)inner + 0xfd0) = h;
+        ((DREarthWarriorState *)inner)->unkFEC = h;
+        ((DREarthWarriorState *)inner)->unkFCC = h;
+        ((DREarthWarriorState *)inner)->unkFDC = h;
+        ((DREarthWarriorState *)inner)->unkFD0 = h;
     }
     ((ByteFlags *)((char *)inner + 0x14ec))->b08 = 0;
-    *(u8 *)((char *)inner + 0x14f4) = 2;
+    *(u8 *)&((DREarthWarriorState *)inner)->unk14F4 = 2;
     storeZeroToFloatParam(inner + 0x14f0);
     s16toFloat(inner + 0x14f0, 0x1e);
     ((ByteFlags *)((char *)inner + 0x14ec))->b02 = 0;
-    *(u8 *)((char *)inner + 0x14f5) = 1;
-    *(int *)((char *)inner + 0xb54) = 0;
+    ((DREarthWarriorState *)inner)->unk14F5 = 1;
+    ((DREarthWarriorState *)inner)->unkB54 = 0;
     if (GameBit_Get(0x9ec) != 0) {
-        *(u8 *)((char *)inner + 0x14ed) = 1;
+        ((DREarthWarriorState *)inner)->unk14ED = 1;
     }
-    *(int *)((char *)inner + 0x14f8) = allocModelStruct2(&lbl_803DC768, 1);
-    tailFn_80026c38(*(int *)((char *)inner + 0x14f8), lbl_803E8324, lbl_803E831C, lbl_803E8394);
+    ((DREarthWarriorState *)inner)->unk14F8 = allocModelStruct2(&lbl_803DC768, 1);
+    tailFn_80026c38(((DREarthWarriorState *)inner)->unk14F8, lbl_803E8324, lbl_803E831C, lbl_803E8394);
     *(int *)((char *)obj + 0x108) = (int)fn_802BC788;
-    fn_80026C30(*(int *)((char *)inner + 0x14f8), 1);
+    fn_80026C30(((DREarthWarriorState *)inner)->unk14F8, 1);
 }

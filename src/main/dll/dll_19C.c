@@ -6,6 +6,14 @@
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
+typedef struct SpiritPrizePlacement {
+    u8 pad0[0x14 - 0x0];
+    s32 unk14;
+    s16 unk18;
+    u8 pad1A[0x20 - 0x1A];
+} SpiritPrizePlacement;
+
+
 extern undefined8 FUN_80006728();
 extern undefined4 FUN_80006770();
 extern undefined4 FUN_800067c0();
@@ -543,7 +551,7 @@ void SpiritPrize_update(int obj)
 
     params = *(u8 **)&((GameObject *)obj)->anim.placementData;
     state = ((GameObject *)obj)->extra;
-    if (params == NULL || *(s16 *)(params + 0x18) == -1 || *(int *)(params + 0x14) == 0x4ca62) {
+    if (params == NULL || ((SpiritPrizePlacement *)params)->unk18 == -1 || ((SpiritPrizePlacement *)params)->unk14 == 0x4ca62) {
         return;
     }
 

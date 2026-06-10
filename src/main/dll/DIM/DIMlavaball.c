@@ -11,6 +11,30 @@
 #include "main/objseq.h"
 #include "main/objhits_types.h"
 
+typedef struct MmpGyserventPlacement {
+    u8 pad0[0x1E - 0x0];
+    s16 unk1E;
+    u8 unk20;
+    u8 pad21[0x28 - 0x21];
+} MmpGyserventPlacement;
+
+
+typedef struct MmpMoonrockPlacement {
+    u8 pad0[0x1E - 0x0];
+    s16 unk1E;
+    s16 unk20;
+    u8 pad22[0x28 - 0x22];
+} MmpMoonrockPlacement;
+
+
+typedef struct MMPLevelcontrolState {
+    u8 pad0[0x4 - 0x0];
+    f32 unk4;
+    f32 unk8;
+    u8 padC[0x10 - 0xC];
+} MMPLevelcontrolState;
+
+
 typedef struct MoonSeedBushPlacement {
     u8 pad0[0x18 - 0x0];
     s16 unk18;
@@ -492,7 +516,7 @@ extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 #pragma peephole off
 void mmp_gyservent_update(int obj) {
     int def = *(int *)&((GameObject *)obj)->anim.placementData;
-    if (GameBit_Get(*(s16 *)(def + 0x1E)) != 0) return;
+    if (GameBit_Get(((MmpGyserventPlacement *)def)->unk1E) != 0) return;
     ((GameObject *)obj)->unkF4 -= framesThisStep;
     if (((GameObject *)obj)->unkF4 < 0) {
         ((GameObject *)obj)->unkF4 = randomGetRange(0x46, 0xF0);
@@ -1331,7 +1355,7 @@ void mmp_moonrock_update(int obj) {
         (*gMapEventInterface)->getAnimEvent(0x12, 6) == 0) {
         state->flags |= 1;
     } else if ((state->flags & 0x400) == 0) {
-        if (*(s16 *)(def + 0x20) != -1 && GameBit_Get(*(s16 *)(def + 0x20)) == 0) {
+        if (((MmpMoonrockPlacement *)def)->unk20 != -1 && GameBit_Get(((MmpMoonrockPlacement *)def)->unk20) == 0) {
             *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
         } else if ((*(int (**)(int, int))(*(int *)lbl_803DCAC0 + 0x8))(obj, *(int *)&((GameObject *)obj)->extra) != 0) {
             grabbed = 1;

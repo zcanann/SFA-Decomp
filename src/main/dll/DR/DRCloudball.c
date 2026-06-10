@@ -2,6 +2,13 @@
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 
+typedef struct SpscarabPlacement {
+    u8 pad0[0x19 - 0x0];
+    s8 unk19;
+    u8 pad1A[0x20 - 0x1A];
+} SpscarabPlacement;
+
+
 typedef struct SpscarabState {
     f32 unk0;
     f32 unk4;
@@ -107,9 +114,9 @@ void spscarab_update(int param_1)
         ((GameObject *)param_1)->anim.flags = ((GameObject *)param_1)->anim.flags | 0x4000;
 
         {
-            int r5val = (*(s8 *)(p_4c + 0x19) == 0) ? 1 : 0;
+            int r5val = (((SpscarabPlacement *)p_4c)->unk19 == 0) ? 1 : 0;
             int v3 = ((SpscarabState *)p_b8)->unk8;
-            int r4val = (*(s8 *)(p_4c + 0x19) == 0) ? 0 : 1;
+            int r4val = (((SpscarabPlacement *)p_4c)->unk19 == 0) ? 0 : 1;
             (*(void (**)(int, int, int))(*(int *)(*(int *)(v3 + 0x68)) + 0x50))(
                 v3, r4val, r5val);
         }

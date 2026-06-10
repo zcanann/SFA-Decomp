@@ -2,6 +2,14 @@
 #include "main/game_object.h"
 
 #include "main/audio/sfx_ids.h"
+
+typedef struct DrenergydiscPlacement {
+    u8 pad0[0x1E - 0x0];
+    s16 unk1E;
+    s16 unk20;
+    u8 pad22[0x28 - 0x22];
+} DrenergydiscPlacement;
+
 int drenergydisc_getExtraSize(void) { return 1; }
 
 int drenergydisc_getObjectTypeId(void) { return 0; }
@@ -18,7 +26,7 @@ void drenergydisc_update(int obj)
     DrEnergyDiscState *state = ((GameObject *)obj)->extra;
     int setup = *(int *)&((GameObject *)obj)->anim.placementData;
 
-    if ((u32)GameBit_Get(*(s16 *)(setup + 0x20)) != 0) {
+    if ((u32)GameBit_Get(((DrenergydiscPlacement *)setup)->unk20) != 0) {
         if (state->activated == 0) {
             state->activated = 1;
             Sfx_PlayFromObject(obj, SFXfend_rob_servo2);
@@ -39,7 +47,7 @@ void drenergydisc_update(int obj)
         }
     }
 
-    if ((u32)GameBit_Get(*(s16 *)(setup + 0x1e)) != 0) {
+    if ((u32)GameBit_Get(((DrenergydiscPlacement *)setup)->unk1E) != 0) {
         ObjAnim_SetCurrentMove(obj, 0, lbl_803E6BB0, 0);
     }
 }

@@ -6,6 +6,27 @@
 #include "main/expgfx.h"
 #include "main/game_object.h"
 
+typedef struct WaterFallSprayPlacement {
+    u8 pad0[0x14 - 0x0];
+    u32 unk14;
+    u32 unk18;
+    u8 pad1C[0x22 - 0x1C];
+    u16 unk22;
+    u8 pad24[0x28 - 0x24];
+} WaterFallSprayPlacement;
+
+
+typedef struct LightningPlacement {
+    u8 pad0[0x14 - 0x0];
+    u32 unk14;
+    u32 unk18;
+    u8 pad1C[0x22 - 0x1C];
+    u16 unk22;
+    s16 unk24;
+    u8 pad26[0x28 - 0x26];
+} LightningPlacement;
+
+
 typedef struct SfxplayerObjPlacement {
     u8 pad0[0x14 - 0x0];
     u32 unk14;
@@ -163,9 +184,9 @@ void lightning_update(u8 *obj)
 
     state = ((GameObject *)obj)->extra;
     data = *(u8 **)&((GameObject *)obj)->anim.placementData;
-    if (*(s16 *)(data + 0x24) != -1) {
+    if (((LightningPlacement *)data)->unk24 != -1) {
         if (((LightningFlags *)(state + 0x25))->enabled) {
-            if (GameBit_Get(*(s16 *)(data + 0x24)) == 0) {
+            if (GameBit_Get(((LightningPlacement *)data)->unk24) == 0) {
                 ((LightningFlags *)(state + 0x25))->enabled = 0;
                 if (*(u32 *)state != 0) {
                     mm_free(*(void **)state);
@@ -173,7 +194,7 @@ void lightning_update(u8 *obj)
                 }
             }
         }
-        else if (GameBit_Get(*(s16 *)(data + 0x24)) != 0) {
+        else if (GameBit_Get(((LightningPlacement *)data)->unk24) != 0) {
             ((LightningFlags *)(state + 0x25))->enabled = 1;
         }
     }

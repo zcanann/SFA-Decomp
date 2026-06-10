@@ -252,6 +252,37 @@ void cfforcefield_hitDetect(void) {}
 /* 8b "li r3, N; blr" returners. */
 #include "global.h"
 
+typedef struct ExplodablePlacement {
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    s16 unk22;
+    s16 unk24;
+    u8 pad26[0x2C - 0x26];
+    s16 unk2C;
+    s16 unk2E;
+    s16 unk30;
+    u8 pad32[0x38 - 0x32];
+    u16 unk38;
+    u8 pad3A[0x3E - 0x3A];
+    s16 unk3E;
+    s16 unk40;
+    u8 pad42[0x48 - 0x42];
+} ExplodablePlacement;
+
+
+typedef struct BlastedState {
+    u8 pad0[0x10 - 0x0];
+    u8 unk10;
+    u8 unk11;
+    u8 pad12[0x6E4 - 0x12];
+    u8 unk6E4;
+    u8 pad6E5[0x6E8 - 0x6E5];
+} BlastedState;
+
+
 typedef struct FnBlastedInitV11UnusedState {
     u8 pad0[0x2C - 0x0];
     f32 unk2C;
@@ -356,13 +387,13 @@ void blasted_init(int param_1, int param_2)
     objSetSlot((int*)param_1, 0x51);
     targ = *(int**)&((GameObject *)param_1)->anim.hitReactState;
     ((ObjHitsPriorityState *)targ)->flags = (s16)(((ObjHitsPriorityState *)targ)->flags | 1);
-    *(u8*)((char*)state + 0x10) = (u8)*(s16*)(param_2 + 0x1a);
+    ((BlastedState *)state)->unk10 = (u8)*(s16*)(param_2 + 0x1a);
     gbid = *(s16*)(param_2 + 0x20);
     if (gbid != -1) {
         v = (u8)GameBit_Get(gbid);
-        *(u8*)((char*)state + 0x11) = v;
+        ((BlastedState *)state)->unk11 = v;
         if (v != 0) {
-            Obj_SetActiveModelIndex((int*)param_1, (int)*(u8*)((char*)state + 0x11));
+            Obj_SetActiveModelIndex((int*)param_1, (int)((BlastedState *)state)->unk11);
         }
     }
     GameBit_Set(0x2de, 1);
@@ -386,7 +417,7 @@ void explodable_update(int obj)
     def = *(int *)&((GameObject *)obj)->anim.placementData;
     if (((DrExplodableState *)state)->phase6E4 != 2) {
         if (((DrExplodableState *)state)->phase6E4 == 0) {
-            if ((u32)GameBit_Get(*(s16 *)(def + 0x40)) != 0) {
+            if ((u32)GameBit_Get(((ExplodablePlacement *)def)->unk40) != 0) {
                 fn_801A2E80(obj, def, 0, state);
                 if (((DrExplodableState *)state)->unk6D0 != 0) {
                     Sfx_PlayFromObject(obj, ((DrExplodableState *)state)->unk6D0 & 0xffff);
@@ -405,12 +436,12 @@ void explodable_update(int obj)
                     r = (*(code *)(*(int *)*(int *)(o + 0x68) + 0x20))(o);
                     switch (r) {
                     case 2:
-                        GameBit_Set(*(s16 *)(def + 0x3e), 1);
+                        GameBit_Set(((ExplodablePlacement *)def)->unk3E, 1);
                         Obj_FreeObject(*(int *)(p + 0x690));
                         *(int *)(p + 0x690) = 0;
                         break;
                     case 0:
-                        GameBit_Set(*(s16 *)(def + 0x3e), 1);
+                        GameBit_Set(((ExplodablePlacement *)def)->unk3E, 1);
                         if ((((DrExplodableState *)state)->flags6CC & (1 << i)) == 0) {
                             ((DrExplodableState *)state)->flags6CC |= 1 << i;
                         }

@@ -10,6 +10,19 @@
 #include "main/objseq.h"
 #include "main/dll/CF/CFBaby.h"
 
+typedef struct InfopointPlacement {
+    u8 pad0[0x14 - 0x0];
+    s32 unk14;
+} InfopointPlacement;
+
+
+typedef struct Dll109State {
+    u8 pad0[0xA - 0x0];
+    u8 unkA;
+    u8 padB[0x10 - 0xB];
+} Dll109State;
+
+
 typedef struct InfopointObjectDef {
     u8 pad0[0x14 - 0x0];
     s32 unk14;
@@ -1531,7 +1544,7 @@ extern f32 lbl_803E3B40;
 #pragma peephole off
 void dll_109_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
     int *inner = ((GameObject *)obj)->extra;
-    if (*(u8 *)((char *)inner + 0xa) == 0) {
+    if (((Dll109State *)inner)->unkA == 0) {
         if ((*(int (*)(int, s32))(*(int *)(*gCarryableInterface + 0xc)))(obj, visible) != 0) {
             ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E3B40);
         }

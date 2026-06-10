@@ -7,6 +7,22 @@
 
 #include "global.h"
 
+typedef struct ScMusictreePlacement {
+    u8 pad0[0x20 - 0x0];
+    u8 unk20;
+    u8 unk21;
+    u8 unk22;
+    u8 pad23[0x28 - 0x23];
+} ScMusictreePlacement;
+
+
+typedef struct ScLevelcontrolProcessAnimEventsState {
+    u8 pad0[0x1D - 0x0];
+    s8 unk1D;
+    u8 pad1E[0x20 - 0x1E];
+} ScLevelcontrolProcessAnimEventsState;
+
+
 typedef struct ScMusictreeSpawnAmbientEffectPlacement {
     u8 pad0[0x4 - 0x0];
     u8 unk4;
@@ -191,7 +207,7 @@ undefined4 sc_levelcontrol_processAnimEvents(int param_1,undefined4 param_2,ObjA
   FUN_80017698(0x60f,0);
   iVar3 = *(int *)&((GameObject *)param_1)->extra;
   FUN_80017a98();
-  if (*(char *)(iVar3 + 0x1d) == '\x05') {
+  if (((ScLevelcontrolProcessAnimEventsState *)iVar3)->unk1D == '\x05') {
     FUN_80017698(0x60f,1);
     bVar2 = FUN_80006b44();
     if (bVar2 != 0) {
@@ -341,7 +357,7 @@ void sc_musictree_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
     SCMusicTreeState *state = ((GameObject *)obj)->extra;
     int i;
     if (visible == 0) return;
-    fn_8003B608((int)*(u8 *)((char *)def + 0x20), (int)*(u8 *)((char *)def + 0x21), (int)*(u8 *)((char *)def + 0x22));
+    fn_8003B608((int)((ScMusictreePlacement *)def)->unk20, (int)((ScMusictreePlacement *)def)->unk21, (int)((ScMusictreePlacement *)def)->unk22);
     ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E558C);
     if ((state->flags & 0x80) != 0) {
         for (i = 0; i < 3; i++) {

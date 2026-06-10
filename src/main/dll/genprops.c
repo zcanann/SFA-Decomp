@@ -13,6 +13,74 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 
+typedef struct SideloadPlacement {
+    u8 pad0[0x4 - 0x0];
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    u8 pad14[0x18 - 0x14];
+    u8 unk18;
+    u8 pad19[0x1A - 0x19];
+    u8 unk1A;
+    u8 pad1B[0x3C - 0x1B];
+    s16 unk3C;
+    u8 pad3E[0x48 - 0x3E];
+    void *unk48;
+    u8 pad4C[0x50 - 0x4C];
+    f32 unk50;
+    u8 pad54[0x70 - 0x54];
+    u8 unk70;
+    u8 pad71[0x98 - 0x71];
+    f32 unk98;
+    u8 pad9C[0xAA - 0x9C];
+    u8 unkAA;
+    u8 padAB[0xB0 - 0xAB];
+    s16 unkB0;
+    u8 padB2[0xB8 - 0xB2];
+    f32 unkB8;
+    f32 unkBC;
+    f32 unkC0;
+    u8 padC4[0x2B1 - 0xC4];
+    s8 unk2B1;
+    u8 pad2B2[0x2B8 - 0x2B2];
+} SideloadPlacement;
+
+
+typedef struct StaticCameraState {
+    u8 pad0[0x4 - 0x0];
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    u8 pad14[0x18 - 0x14];
+    u8 unk18;
+    u8 pad19[0x1A - 0x19];
+    u8 unk1A;
+    u8 pad1B[0x3C - 0x1B];
+    s16 unk3C;
+    u8 pad3E[0x48 - 0x3E];
+    void *unk48;
+    u8 pad4C[0x50 - 0x4C];
+    f32 unk50;
+    u8 pad54[0x70 - 0x54];
+    u8 unk70;
+    u8 pad71[0x98 - 0x71];
+    f32 unk98;
+    u8 pad9C[0xAA - 0x9C];
+    u8 unkAA;
+    u8 padAB[0xB0 - 0xAB];
+    s16 unkB0;
+    u8 padB2[0xB8 - 0xB2];
+    f32 unkB8;
+    f32 unkBC;
+    f32 unkC0;
+    u8 padC4[0x2B1 - 0xC4];
+    s8 unk2B1;
+    u8 pad2B2[0x2B8 - 0x2B2];
+} StaticCameraState;
+
+
 typedef struct FireballPlacement {
     u8 pad0[0x14 - 0x0];
     s32 unk14;
@@ -1489,7 +1557,7 @@ void sideload_update(int param_1)
     ((GameObject *)obj)->anim.localPosX = ((GameObject *)param_1)->anim.localPosY;
     ((GameObject *)obj)->anim.localPosY = ((GameObject *)param_1)->anim.localPosZ;
     p = (short *)Obj_SetupObject(obj, 5, -1, -1, (void *)0);
-    *p = (short)((u8)*(u8 *)(state + 0x1a) << 8);
+    *p = (short)((u8)((SideloadPlacement *)state)->unk1A << 8);
   }
 }
 
@@ -2578,7 +2646,7 @@ void StaticCamera_init(int *obj, int *params, int flag)
     ((GameObject *)obj)->anim.rotZ = -*(s16 *)((char *)params + 0x20);
     state = ((GameObject *)obj)->extra;
     state[0] = *(u8 *)((char *)params + 0x19);
-    *(f32 *)((char *)state + 4) = (f32)(u32) * (u8 *)((char *)params + 0x1a);
+    ((StaticCameraState *)state)->unk4 = (f32)(u32) * (u8 *)((char *)params + 0x1a);
     state[1] = 0;
     if (flag == 0) {
         ObjGroup_AddObject((int)obj, 7);
@@ -3792,9 +3860,9 @@ void fn_8016F260(int *obj, int *state, int *other)
 {
     f32 *pt = (f32 *)(*(int *)((char *)other + 0x74) + *(u8 *)((char *)other + 0xe4) * 24);
     if (pt != NULL) {
-        f32 dx = pt[0] - *(f32 *)((char *)state + 0x24);
-        f32 dy = pt[1] - lbl_803E3334 - *(f32 *)((char *)state + 0x28);
-        f32 dz = pt[2] - *(f32 *)((char *)state + 0x2c);
+        f32 dx = pt[0] - ((FireballState *)state)->unk24;
+        f32 dy = pt[1] - lbl_803E3334 - *(f32 *)&((FireballState *)state)->unk28;
+        f32 dz = pt[2] - ((FireballState *)state)->unk2C;
         s16 angY;
         s16 angP;
         s16 difY;

@@ -3,6 +3,18 @@
 #include "main/mapEventTypes.h"
 #include "main/objseq.h"
 
+typedef struct GmmazewellClearPendingTriggerCallbackState {
+    u8 pad0[0x4 - 0x0];
+    s32 unk4;
+} GmmazewellClearPendingTriggerCallbackState;
+
+
+typedef struct GmmazewellState {
+    u8 pad0[0x4 - 0x0];
+    s32 unk4;
+} GmmazewellState;
+
+
 int gmmazewell_getExtraSize(void) { return 0x8; }
 
 void gmmazewell_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
@@ -27,8 +39,8 @@ int gmmazewell_clearPendingTriggerCallback(int obj, int unused, ObjAnimUpdateSta
     int i;
     for (i = 0; i < animUpdate->eventCount; i++) {
         if (animUpdate->eventIds[i] == 1 && *(int *)(p + 0x4) != -1) {
-            (*gGameUIInterface)->showNpcDialogue(*(int *)(p + 0x4), 0x14, 0x8c, 0);
-            *(int *)(p + 0x4) = -1;
+            (*gGameUIInterface)->showNpcDialogue(((GmmazewellClearPendingTriggerCallbackState *)p)->unk4, 0x14, 0x8c, 0);
+            ((GmmazewellClearPendingTriggerCallbackState *)p)->unk4 = -1;
         }
     }
     return 0;
@@ -84,14 +96,14 @@ checkValue:
                         saveFileStruct_unlockCheat((u8)i);
                         break;
                     }
-                    *(int *)(runtime + 4) = base32[i + 14];
+                    ((GmmazewellState *)runtime)->unk4 = base32[i + 14];
                     GameBit_Set(base[i + 20], 1);
                 } else {
                     runtime = ((GameObject *)obj)->extra;
                     *(int *)(runtime + 4) = base32[i + 14];
                     switch (i) {
                     case 3:
-                        *(int *)(runtime + 4) = 1316;
+                        ((GmmazewellState *)runtime)->unk4 = 1316;
                         /* fall through */
                     case 0:
                     case 1:

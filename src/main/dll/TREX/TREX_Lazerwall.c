@@ -3,6 +3,23 @@
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/TREX/TREX_Lazerwall.h"
 
+typedef struct TREXLazerwallUpdateTimedChallengeState {
+    u8 pad0[0x9B0 - 0x0];
+    s32 unk9B0;
+    s32 unk9B4;
+    u8 pad9B8[0x9BC - 0x9B8];
+    f32 unk9BC;
+    u8 pad9C0[0x9CA - 0x9C0];
+    s16 unk9CA;
+    u8 pad9CC[0x9D3 - 0x9CC];
+    u8 unk9D3;
+    u8 unk9D4;
+    u8 pad9D5[0x9D6 - 0x9D5];
+    u8 unk9D6;
+    u8 pad9D7[0x9D8 - 0x9D7];
+} TREXLazerwallUpdateTimedChallengeState;
+
+
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void *Obj_GetPlayerObject(void);
@@ -127,11 +144,11 @@ int TREX_Lazerwall_updateTimedChallenge(int arg1)
 
     state = *(int *)&((GameObject *)arg1)->extra;
     *(u8 *)&((GameObject *)arg1)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)arg1)->anim.resetHitboxMode | 8);
-    *(u8 *)(state + 0x9d6) = 0;
+    ((TREXLazerwallUpdateTimedChallengeState *)state)->unk9D6 = 0;
     ObjHits_DisableObject(arg1);
 
-    (*(void (**)(int, int *, int *, int *))(*(int *)*(int *)(*(int *)(state + 0x9b4) + 0x68) + 0x54))(
-        *(int *)(state + 0x9b4), &local10, &localC, &local8);
+    (*(void (**)(int, int *, int *, int *))(*(int *)*(int *)(((TREXLazerwallUpdateTimedChallengeState *)state)->unk9B4 + 0x68) + 0x54))(
+        ((TREXLazerwallUpdateTimedChallengeState *)state)->unk9B4, &local10, &localC, &local8);
 
     localC = localC - local10;
 

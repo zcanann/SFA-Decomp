@@ -12,6 +12,16 @@
 #include "main/objlib.h"
 #include "main/objhits_types.h"
 
+typedef struct LandedArwingTriggerLaunchTargetState {
+    u8 pad0[0x3F0 - 0x0];
+    s16 unk3F0;
+    s16 unk3F2;
+    u8 pad3F4[0x405 - 0x3F4];
+    u8 unk405;
+    u8 pad406[0x408 - 0x406];
+} LandedArwingTriggerLaunchTargetState;
+
+
 
 extern void fn_80098B18(int obj, float f, int a, int b, int c, int d);
 
@@ -389,10 +399,10 @@ void tumbleweed_updateEffects(int obj) {
 int LandedArwing_TriggerLaunchTarget(int obj, int target) {
     int *aux = ((GameObject *)obj)->extra;
     if ((s8)*(u8*)(target + 0x27a) != 0) {
-        (*(int(**)(int, int, int, int))(*(int*)gBaddieControlInterface + 0x4c))(obj, (int)*(s16*)((char*)aux + 0x3f0), -1, 0);
+        (*(int(**)(int, int, int, int))(*(int*)gBaddieControlInterface + 0x4c))(obj, (int)((LandedArwingTriggerLaunchTargetState *)aux)->unk3F0, -1, 0);
         (*(int(**)(int, int, int, int, int))(*(int*)gPlayerInterface + 0x58))(obj, target, 0x3c, 0xa, 0);
-        GameBit_Set((int)*(s16*)((char*)aux + 0x3f2), 1);
-        *(u8*)((char*)aux + 0x405) = 0;
+        GameBit_Set((int)((LandedArwingTriggerLaunchTargetState *)aux)->unk3F2, 1);
+        ((LandedArwingTriggerLaunchTargetState *)aux)->unk405 = 0;
     }
     return 0;
 }

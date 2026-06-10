@@ -33,6 +33,13 @@ STATIC_ASSERT(sizeof(DoorF4State) == 0x24);
  */
 #include "main/dll/sidekickball_state.h"
 
+typedef struct Doorf4State {
+    u8 pad0[0x1C - 0x0];
+    u16 unk1C;
+    u8 pad1E[0x24 - 0x1E];
+} Doorf4State;
+
+
 
 extern undefined4 FUN_80006728();
 extern bool FUN_800067f8();
@@ -170,9 +177,9 @@ extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
 extern void Sfx_StopFromObject(int obj, int sfxId);
 void doorf4_free(int obj) {
     int *state = ((GameObject *)obj)->extra;
-    if (*(u16 *)((char *)state + 0x1C) != 0) {
-        if (Sfx_IsPlayingFromObject(obj, *(u16 *)((char *)state + 0x1C)) != 0) {
-            Sfx_StopFromObject(obj, *(u16 *)((char *)state + 0x1C));
+    if (((Doorf4State *)state)->unk1C != 0) {
+        if (Sfx_IsPlayingFromObject(obj, ((Doorf4State *)state)->unk1C) != 0) {
+            Sfx_StopFromObject(obj, ((Doorf4State *)state)->unk1C);
         }
     }
     ObjGroup_RemoveObject(obj, 14);

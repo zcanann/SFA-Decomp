@@ -15,6 +15,14 @@ STATIC_ASSERT(sizeof(CloudRunnerState) == 0xbc8);
 #include "main/audio/sfx_ids.h"
 #include "main/objanim_internal.h"
 
+typedef struct DRCloudRunnerPlacement {
+    u8 pad0[0x1A - 0x0];
+    s16 unk1A;
+    u8 pad1C[0x1E - 0x1C];
+    s16 unk1E;
+} DRCloudRunnerPlacement;
+
+
 typedef struct DRCloudRunnerState {
     u8 pad0[0xAD5 - 0x0];
     u8 unkAD5;
@@ -175,7 +183,7 @@ int DR_CloudRunner_stateHandler01(int obj, int p2)
     if (RandomTimer_UpdateRangeTrigger((int)((char *)inner + 0xb54), lbl_803E83F8, lbl_803E840C)) {
         Sfx_PlayFromObject(obj, 0x464);
     }
-    if ((u32)GameBit_Get(*(s16 *)((char *)q + 0x1e)) != 0) {
+    if ((u32)GameBit_Get(((DRCloudRunnerPlacement *)q)->unk1E) != 0) {
         ((GameObject *)obj)->unkF4 = 0;
         ObjHits_EnableObject(obj);
         ObjHits_SyncObjectPositionIfDirty(obj);
@@ -1035,7 +1043,7 @@ int DR_CloudRunner_stateHandler04(int obj, int p2)
         inner2 = ((GameObject *)obj)->extra;
         q = *(int *)&((GameObject *)obj)->anim.placementData;
         ((ByteFlags *)&inner2->flagsBC0)->b02 = 1;
-        (*gGameUIInterface)->initAirMeter(*(s16 *)((char *)q + 0x1a), 0x5de);
+        (*gGameUIInterface)->initAirMeter(((DRCloudRunnerPlacement *)q)->unk1A, 0x5de);
         (*gGameUIInterface)->runAirMeter(inner2->unkBB0);
         *(s16 *)((char *)p2 + 0x338) = 0;
         ((CloudRunnerState *)p2)->baddie.moveSpeed = lbl_803E83F4;

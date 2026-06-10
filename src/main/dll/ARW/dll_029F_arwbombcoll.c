@@ -4,6 +4,12 @@
 #include "main/audio/sfx_ids.h"
 #include "main/objhits_types.h"
 #include "main/obj_placement.h"
+
+typedef struct ArwbombcollHandleArwingHitPlacement {
+    u8 pad0[0x1E - 0x0];
+    s16 unk1E;
+} ArwbombcollHandleArwingHitPlacement;
+
 typedef struct ARWBombCollSetup {
     ObjPlacement base;
     s8 rotX;
@@ -95,7 +101,7 @@ void arwbombcoll_handleArwingHit(int obj, RingState *state, int arwing) {
         }
     } else if (mode == 3 || mode == 4) {
         Sfx_PlayFromObject(arwing, SFXbaddie_eba_pollenspin);
-        gameBitIncrement(*(s16 *)(setup + 0x1e));
+        gameBitIncrement(((ArwbombcollHandleArwingHitPlacement *)setup)->unk1E);
     } else {
         Sfx_PlayFromObject(arwing, SFXbaddie_vambat_attack);
         if (*(s16 *)(arwing + 0x46) == 0x601) {

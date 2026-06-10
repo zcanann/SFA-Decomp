@@ -160,7 +160,7 @@ void warpstone_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
         if (player != NULL && fn_80296464() != 0) {
             model = Obj_GetActiveModel((int)player);
             *(u16 *)((char *)model + 24) = (u16)(*(u16 *)((char *)model + 24) & ~0x8);
-            ObjPath_GetPointWorldPosition(obj, *(u8 *)((char *)state + 8), &x, &y, &z, 0);
+            ObjPath_GetPointWorldPosition(obj, ((WarpstoneUpdateMenuAnimObjState *)state)->unk8, &x, &y, &z, 0);
             fn_80295B2C((int)player, x, y, z);
             playerRender((int)player, p2, p3, p4, p5, -1);
         }

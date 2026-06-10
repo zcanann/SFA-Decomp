@@ -9,6 +9,13 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 
+typedef struct WarpPadPlayerStandingOnPlacement {
+    u8 pad0[0x20 - 0x0];
+    s16 unk20;
+    u8 pad22[0x28 - 0x22];
+} WarpPadPlayerStandingOnPlacement;
+
+
 extern undefined4 FUN_80006824();
 extern int FUN_80006a10();
 extern undefined4 FUN_80006b0c();
@@ -1110,7 +1117,7 @@ void warpPadPlayerStandingOn(int obj)
                 goto updateTimer;
             }
         }
-        gameBit = *(s16*)(def + 0x20);
+        gameBit = ((WarpPadPlayerStandingOnPlacement *)def)->unk20;
         if (((gameBit == -1) ||
              ((GameBit_Get(gameBit) != 0) && ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 4) != 0))) &&
             (ObjTrigger_IsSet(obj) != 0)) {

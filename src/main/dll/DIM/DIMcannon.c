@@ -11,6 +11,24 @@
 #include "main/objseq.h"
 #include "global.h"
 
+typedef struct Lavaball1bePlacement {
+    u8 pad0[0x18 - 0x0];
+    s8 unk18;
+    u8 pad19[0x20 - 0x19];
+} Lavaball1bePlacement;
+
+
+typedef struct Lavaball1bfPlacement {
+    u8 pad0[0x18 - 0x0];
+    s8 unk18;
+    u8 pad19[0x1E - 0x19];
+    s16 unk1E;
+    u8 pad20[0x24 - 0x20];
+    s16 unk24;
+    u8 pad26[0x28 - 0x26];
+} Lavaball1bfPlacement;
+
+
 /* imanimspacecraft_getExtraSize == 0x4. */
 typedef struct ImAnimSpacecraftState {
     s16 blinkTimer;  /* 0x00 */
@@ -1416,9 +1434,9 @@ void lavaball1bf_update(int *obj) {
 
     state = ((GameObject *)obj)->extra;
     setup = *(u8 **)&((GameObject *)obj)->anim.placementData;
-    state->gbState = GameBit_Get(*(s16 *)(setup + 0x24));
+    state->gbState = GameBit_Get(((Lavaball1bfPlacement *)setup)->unk24);
     if (state->soloLatch != 0) {
-        if (GameBit_Get(*(s16 *)(setup + 0x1e)) != 0) {
+        if (GameBit_Get(((Lavaball1bfPlacement *)setup)->unk1E) != 0) {
             state->gbState = 1;
             state->soloLatch = 0;
             state->fireTimer = lbl_803E4814;
@@ -1448,7 +1466,7 @@ void lavaball1bf_update(int *obj) {
     if (t <= lbl_803E4814 && ((int (*)(int *))((void **)*(void **)*(int *)((char *)spawned + 0x68))[9])(spawned) != 0) {
         if (state->gbState != 0) {
             int a;
-            if (GameBit_Get(*(s16 *)(setup + 0x1e)) != 0 && state->gateB == 0) {
+            if (GameBit_Get(((Lavaball1bfPlacement *)setup)->unk1E) != 0 && state->gateB == 0) {
                 a = setup[0x20];
                 state->gateB = 1;
             } else {
@@ -1487,7 +1505,7 @@ void lavaball1be_setScale(s16 *obj, int p2, int p3) {
     x = ((GameObject *)obj)->anim.localPosZ;
     ((GameObject *)obj)->anim.previousWorldPosZ = x;
     ((GameObject *)obj)->anim.previousLocalPosZ = x;
-    ((GameObject *)obj)->anim.rotX = (s16)((s32)*(s8 *)(setup + 0x18) << 8);
+    ((GameObject *)obj)->anim.rotX = (s16)((s32)((Lavaball1bePlacement *)setup)->unk18 << 8);
     ((GameObject *)obj)->anim.velocityX = vxz * -mathSinf(lbl_803E47DC * (f32)((GameObject *)obj)->anim.rotX / lbl_803E47E0);
     ((GameObject *)obj)->anim.velocityY = lbl_803E47D8 * (f32)p2;
     ((GameObject *)obj)->anim.velocityZ = vxz * -mathCosf(lbl_803E47DC * (f32)((GameObject *)obj)->anim.rotX / lbl_803E47E0);

@@ -4,6 +4,12 @@
 #include "main/dll/baddie_state.h"
 #include "main/dll/player_80295318_shared.h"
 
+typedef struct LightfootState {
+    u8 pad0[0x40C - 0x0];
+    s32 unk40C;
+} LightfootState;
+
+
 typedef struct LightfootSub {
     s32 unk0;
     s32 unk4;
@@ -85,7 +91,7 @@ void lightfoot_update(int obj)
 {
     int inner = *(int *)&((GameObject *)obj)->extra;
     int p30 = *(int *)&((GameObject *)obj)->anim.placementData;
-    int anim = *(int *)((char *)inner + 0x40c);
+    int anim = ((LightfootState *)inner)->unk40C;
     f32 snd[3];
     f32 buf[6];
     u8 i;
@@ -193,7 +199,7 @@ void lightfoot_update(int obj)
         }
         Lightfoot_UpdatePlayerInteraction(obj, inner, inner);
         if ((((GroundBaddieState *)inner)->configFlags & 1) && (((GameObject *)obj)->objectFlags & 0x800)) {
-            int a40c = *(int *)((char *)inner + 0x40c);
+            int a40c = ((LightfootState *)inner)->unk40C;
             int mode;
             *(f32 *)((char *)a40c + 0xc) -= timeDelta;
             if (*(f32 *)((char *)a40c + 0xc) <= lbl_803E8180) {

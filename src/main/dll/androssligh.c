@@ -1,6 +1,21 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/game_object.h"
 
+typedef struct AndrosslighSetStateState {
+    u8 pad0[0xC - 0x0];
+    s8 unkC;
+    u8 padD[0x10 - 0xD];
+} AndrosslighSetStateState;
+
+
+typedef struct AndrosslighState {
+    u8 pad0[0xC - 0x0];
+    s8 unkC;
+    u8 unkD;
+    u8 padE[0x10 - 0xE];
+} AndrosslighState;
+
+
 int androssligh_getExtraSize(void) { return 0x10; }
 
 int androssligh_getObjectTypeId(void) { return 0; }
@@ -24,12 +39,12 @@ void androssligh_setState(int obj, int newState, u8 force)
         return;
     }
     state = *(int *)&((GameObject *)obj)->extra;
-    if (*(s8 *)(state + 0xc) == 2) {
+    if (((AndrosslighSetStateState *)state)->unkC == 2) {
         if (force == 0) {
             return;
         }
     }
-    *(s8 *)(state + 0xc) = (s8)newState;
+    ((AndrosslighSetStateState *)state)->unkC = (s8)newState;
 }
 
 void androssligh_hitDetect(void) {}
@@ -48,8 +63,8 @@ void androssligh_update(int obj)
         ((GameObject *)obj)->anim.localPosY = *(f32 *)(*(int *)state + 0x10);
         ((GameObject *)obj)->anim.localPosZ = *(f32 *)(*(int *)state + 0x14);
     }
-    *(u8 *)(state + 0xd) = *(u8 *)(state + 0xc);
-    switch (*(s8 *)(state + 0xc)) {
+    ((AndrosslighState *)state)->unkD = *(u8 *)&((AndrosslighState *)state)->unkC;
+    switch (((AndrosslighState *)state)->unkC) {
     case 0:
         break;
     case 1:
