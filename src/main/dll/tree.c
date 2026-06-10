@@ -277,7 +277,7 @@ void tree_update(int obj)
                 if (state->flags & TREE_FLAG_HIT_WITH_POSITION) {
                     colorVec[0] += playerMapOffsetX;
                     colorVec[2] += playerMapOffsetZ;
-                    objLightFn_8009a1dc(obj, lbl_803E7314, vec14, 1, 0);
+                    objLightFn_8009a1dc((void *)obj, lbl_803E7314, vec14, 1, 0);
                     Obj_SetModelColorFadeRecursive(obj, 0xf, 0xc8, 0, 0, 1);
                 }
                 if (state->flags & TREE_FLAG_BURST_MODE_MASK) {

@@ -235,7 +235,7 @@ void Obj_SpawnHitLightAndFade(int obj, f32 *p2)
     s.vec[0] = p2[0] + playerMapOffsetX;
     s.vec[1] = p2[1];
     s.vec[2] = p2[2] + playerMapOffsetZ;
-    objLightFn_8009a1dc(obj, lbl_803E6C68, &s, 1, 0);
+    objLightFn_8009a1dc((void *)obj, lbl_803E6C68, &s, 1, 0);
     Obj_SetModelColorFadeRecursive(obj, 0x5a, 0xc8, 0, 0, 1);
 }
 
