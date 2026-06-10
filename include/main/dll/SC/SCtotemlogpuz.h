@@ -26,7 +26,7 @@ typedef struct SCTotemLogPuzzleUpdateState {
     u8 eventCount;
 } SCTotemLogPuzzleUpdateState;
 
-int SH_LevelControl_SeqFn(void *obj, void *unused, void *p3);
+int SH_LevelControl_SeqFn(void *obj, void *unused, SCTotemLogPuzzleUpdateState *updateState);
 void mapUnloadFn_801d7c94(void *obj, void *p2);
 void SCGameBitLatch_Update(SCGameBitLatchState *state, int mask, s16 clearIfSetBit,
                            s16 clearIfClearBit, s16 latchBit, int musicId);

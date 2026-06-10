@@ -2,6 +2,7 @@
 #define MAIN_DLL_DR_SANDWORMBOSS_H_
 
 #include "ghidra_import.h"
+#include "main/objanim_update.h"
 
 void FUN_8019b1d8(undefined4 param_1,undefined4 param_2,ushort *param_3);
 void FUN_8019b2dc(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
@@ -115,7 +116,7 @@ void FUN_8019f16c(int param_1);
 void FUN_8019f1ac(int param_1);
 void FUN_8019f1dc(void);
 int cfguardian_SeqFn(int *obj, int unused, int *events);
-int cfpowerbase_SeqFn(int obj, int unused, int events);
+int cfpowerbase_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 int cfprisonguard_SeqFn(int *obj, int unused, u8 *events);
 
 #endif /* MAIN_DLL_DR_SANDWORMBOSS_H_ */

@@ -20,13 +20,11 @@ extern MapEventInterface **gMapEventInterface;
  * EN v1.0 Address: 0x801D7C14
  * EN v1.0 Size: 128b
  */
-int SH_LevelControl_SeqFn(void *obj, void *unused, void *p3)
+int SH_LevelControl_SeqFn(void *obj, void *unused, SCTotemLogPuzzleUpdateState *updateState)
 {
     SCTotemLogPuzzleObject *puzzleObj;
-    SCTotemLogPuzzleUpdateState *updateState;
     int i;
     puzzleObj = (SCTotemLogPuzzleObject *)obj;
-    updateState = (SCTotemLogPuzzleUpdateState *)p3;
     i = 0;
     while (i < (int)updateState->eventCount) {
         if ((int)updateState->eventHandled[i] == 0) {

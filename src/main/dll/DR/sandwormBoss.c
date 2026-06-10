@@ -4350,10 +4350,11 @@ void cfmaincrystal_update(int *obj) {
 
 #pragma scheduling off
 #pragma peephole off
-int cfpowerbase_SeqFn(int p1, int unused, int p3)
+int cfpowerbase_SeqFn(int p1, int unused, ObjAnimUpdateState *animUpdate)
 {
   extern int ObjMsg_Pop(int, int *, int *, int *);
   CfPowerBaseState *sub = ((GameObject *)p1)->extra;
+  u8 *animUpdateBytes = (u8 *)animUpdate;
   int msgArg;
   int msgType;
   int msgFlag = 0;
@@ -4362,17 +4363,17 @@ int cfpowerbase_SeqFn(int p1, int unused, int p3)
   while (ObjMsg_Pop(p1, &msgType, &msgArg, &msgFlag) != 0) {
     switch (msgType) {
       case 0x110001:
-        if (sub->typeBit == 84 && *(s16 *)(p3 + 0x58) > 175) {
+        if (sub->typeBit == 84 && *(s16 *)(animUpdateBytes + 0x58) > 175) {
           ObjMsg_SendToObject((void *)msgArg, 0x110001, p1, 0);
         }
         break;
       case 0x110002:
-        if (sub->typeBit == 85 && *(s16 *)(p3 + 0x58) > 175) {
+        if (sub->typeBit == 85 && *(s16 *)(animUpdateBytes + 0x58) > 175) {
           ObjMsg_SendToObject((void *)msgArg, 0x110002, p1, 0);
         }
         break;
       case 0x110003:
-        if (sub->typeBit == 86 && *(s16 *)(p3 + 0x58) > 175) {
+        if (sub->typeBit == 86 && *(s16 *)(animUpdateBytes + 0x58) > 175) {
           ObjMsg_SendToObject((void *)msgArg, 0x110003, p1, 0);
         }
         break;
@@ -4382,8 +4383,8 @@ int cfpowerbase_SeqFn(int p1, int unused, int p3)
     }
   }
 
-  for (i = 0; i < (s32)*(u8 *)(p3 + 0x8b); i++) {
-    if ((s32)*(u8 *)(p3 + 0x81 + i) == 1) {
+  for (i = 0; i < animUpdate->eventCount; i++) {
+    if (animUpdate->eventIds[i] == 1) {
       if (GameBit_Get(84) != 0 && GameBit_Get(85) != 0 && GameBit_Get(86) != 0) {
         GameBit_Set(1248, 1);
       }
