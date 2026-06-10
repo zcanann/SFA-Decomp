@@ -175,6 +175,7 @@ int drlasercannon_aimAtTarget(GameObject *self, GameObject *target, DrLaserCanno
         return 0;
     }
     dp = d;
+    if (target != NULL) dp = d;
     dp[0] = target->anim.localPosX - eyePos[0];
     dp[1] = target->anim.localPosY - eyePos[1];
     dp[2] = target->anim.localPosZ - eyePos[2];
