@@ -1222,71 +1222,71 @@ void FUN_8014c0b4(double param_1,double param_2,undefined8 param_3,undefined8 pa
   
   iVar1 = FUN_80017a98();
   iVar2 = FUN_80017a90();
-  if (((*(int *)(param_10 + 0x29c) == 0) || ((*(uint *)(param_10 + 0x2e4) & 0x10000) != 0)) ||
-     ((*(int *)(param_10 + 0x29c) == iVar1 && ((*(ushort *)(iVar1 + 0xb0) & 0x1000) != 0)))) {
-    *(uint *)(param_10 + 0x2dc) = *(uint *)(param_10 + 0x2dc) & 0xff7ff9ff;
-    if (((*(uint *)(param_10 + 0x2e4) & 0x10000) != 0) ||
-       ((*(int *)(param_10 + 0x29c) == iVar1 && ((*(ushort *)(iVar1 + 0xb0) & 0x1000) != 0)))) {
-      *(uint *)(param_10 + 0x2dc) = *(uint *)(param_10 + 0x2dc) & 0xdfffffff;
+  if (((*(int *)&((TrickyState *)param_10)->unk29C == 0) || ((((TrickyState *)param_10)->unk2E4 & 0x10000) != 0)) ||
+     ((*(int *)&((TrickyState *)param_10)->unk29C == iVar1 && ((*(ushort *)(iVar1 + 0xb0) & 0x1000) != 0)))) {
+    ((TrickyState *)param_10)->flags2DC = ((TrickyState *)param_10)->flags2DC & 0xff7ff9ff;
+    if (((((TrickyState *)param_10)->unk2E4 & 0x10000) != 0) ||
+       ((*(int *)&((TrickyState *)param_10)->unk29C == iVar1 && ((*(ushort *)(iVar1 + 0xb0) & 0x1000) != 0)))) {
+      ((TrickyState *)param_10)->flags2DC = ((TrickyState *)param_10)->flags2DC & 0xdfffffff;
     }
   }
   else {
-    *(uint *)(param_10 + 0x2dc) = *(uint *)(param_10 + 0x2dc) & 0xff7fffff;
+    ((TrickyState *)param_10)->flags2DC = ((TrickyState *)param_10)->flags2DC & 0xff7fffff;
     iVar3 = (**(code **)(*DAT_803dd6d0 + 0x3c))();
     if (iVar3 == param_9) {
-      *(uint *)(param_10 + 0x2dc) = *(uint *)(param_10 + 0x2dc) | 0x800200;
+      ((TrickyState *)param_10)->flags2DC = ((TrickyState *)param_10)->flags2DC | 0x800200;
     }
     uVar4 = (uint)*(ushort *)(param_10 + 0x2a4);
-    if (uVar4 < ((int)*(float *)(param_10 + 0x2ac) & 0xffffU)) {
-      *(uint *)(param_10 + 0x2dc) = *(uint *)(param_10 + 0x2dc) | 0x400;
-      *(uint *)(param_10 + 0x2dc) = *(uint *)(param_10 + 0x2dc) & 0xfffffdff;
+    if (uVar4 < ((int)((TrickyState *)param_10)->unk2AC & 0xffffU)) {
+      ((TrickyState *)param_10)->flags2DC = ((TrickyState *)param_10)->flags2DC | 0x400;
+      ((TrickyState *)param_10)->flags2DC = ((TrickyState *)param_10)->flags2DC & 0xfffffdff;
       param_1 = extraout_f1;
     }
     else {
       param_1 = (double)*(float *)(param_10 + 0x2a8);
       if (uVar4 < ((int)*(float *)(param_10 + 0x2a8) & 0xffffU)) {
-        *(uint *)(param_10 + 0x2dc) = *(uint *)(param_10 + 0x2dc) | 0x200;
-        *(uint *)(param_10 + 0x2dc) = *(uint *)(param_10 + 0x2dc) & 0xfffffbff;
+        ((TrickyState *)param_10)->flags2DC = ((TrickyState *)param_10)->flags2DC | 0x200;
+        ((TrickyState *)param_10)->flags2DC = ((TrickyState *)param_10)->flags2DC & 0xfffffbff;
       }
       else if (((int)((double)lbl_803E326C * param_1) & 0xffffU) < uVar4) {
-        *(uint *)(param_10 + 0x2dc) = *(uint *)(param_10 + 0x2dc) & 0xdffff9ff;
+        ((TrickyState *)param_10)->flags2DC = ((TrickyState *)param_10)->flags2DC & 0xdffff9ff;
       }
     }
   }
-  *(uint *)(param_10 + 0x2dc) = *(uint *)(param_10 + 0x2dc) & 0xf890fff7;
+  ((TrickyState *)param_10)->flags2DC = ((TrickyState *)param_10)->flags2DC & 0xf890fff7;
   if ((iVar2 != 0) &&
      (cVar5 = (**(code **)(**(int **)(iVar2 + 0x68) + 0x40))(iVar2), param_1 = extraout_f1_00,
      cVar5 != '\0')) {
-    *(uint *)(param_10 + 0x2dc) = *(uint *)(param_10 + 0x2dc) | 0x200000;
+    ((TrickyState *)param_10)->flags2DC = ((TrickyState *)param_10)->flags2DC | 0x200000;
   }
-  if (((*(int *)(param_10 + 0x29c) == iVar1) && (bVar6 = FUN_80294c20(iVar1), bVar6 != 0)) &&
-     (*(uint *)(param_10 + 0x2dc) = *(uint *)(param_10 + 0x2dc) | 8,
-     (*(uint *)(param_10 + 0x2e4) & 0x2000) != 0)) {
-    *(uint *)(param_10 + 0x2dc) = *(uint *)(param_10 + 0x2dc) & 0xff7ff9ff;
+  if (((*(int *)&((TrickyState *)param_10)->unk29C == iVar1) && (bVar6 = FUN_80294c20(iVar1), bVar6 != 0)) &&
+     (((TrickyState *)param_10)->flags2DC = ((TrickyState *)param_10)->flags2DC | 8,
+     (((TrickyState *)param_10)->unk2E4 & 0x2000) != 0)) {
+    ((TrickyState *)param_10)->flags2DC = ((TrickyState *)param_10)->flags2DC & 0xff7ff9ff;
   }
-  if ((*(uint *)(param_10 + 0x2dc) & 0x20000600) != 0) {
-    if ((*(uint *)(param_10 + 0x2e4) & 0x1000) == 0) {
-      *(uint *)(param_10 + 0x2dc) = *(uint *)(param_10 + 0x2dc) | 0x1000000;
+  if ((((TrickyState *)param_10)->flags2DC & 0x20000600) != 0) {
+    if ((((TrickyState *)param_10)->unk2E4 & 0x1000) == 0) {
+      ((TrickyState *)param_10)->flags2DC = ((TrickyState *)param_10)->flags2DC | 0x1000000;
     }
     else {
       cVar5 = FUN_80147884(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,
                            param_10,(float *)&((GameObject *)param_9)->anim.worldPosX,
-                           (float *)(*(int *)(param_10 + 0x29c) + 0x18));
+                           (float *)(*(int *)&((TrickyState *)param_10)->unk29C + 0x18));
       if (cVar5 != '\0') {
-        *(uint *)(param_10 + 0x2dc) = *(uint *)(param_10 + 0x2dc) | 0x1000000;
+        ((TrickyState *)param_10)->flags2DC = ((TrickyState *)param_10)->flags2DC | 0x1000000;
       }
-      if ((*(uint *)(param_10 + 0x2dc) & 0x1000000) == 0) {
-        *(uint *)(param_10 + 0x2dc) = *(uint *)(param_10 + 0x2dc) & 0xdfffffff;
+      if ((((TrickyState *)param_10)->flags2DC & 0x1000000) == 0) {
+        ((TrickyState *)param_10)->flags2DC = ((TrickyState *)param_10)->flags2DC & 0xdfffffff;
       }
     }
     if ((*(ushort *)(param_10 + 0x2a0) < 2) || (5 < *(ushort *)(param_10 + 0x2a0))) {
-      *(uint *)(param_10 + 0x2dc) = *(uint *)(param_10 + 0x2dc) | 0x400000;
+      ((TrickyState *)param_10)->flags2DC = ((TrickyState *)param_10)->flags2DC | 0x400000;
     }
-    else if ((*(uint *)(param_10 + 0x2dc) & 0x1000000) != 0) {
-      *(uint *)(param_10 + 0x2dc) = *(uint *)(param_10 + 0x2dc) | 0x2000000;
+    else if ((((TrickyState *)param_10)->flags2DC & 0x1000000) != 0) {
+      ((TrickyState *)param_10)->flags2DC = ((TrickyState *)param_10)->flags2DC | 0x2000000;
     }
-    if ((*(uint *)(param_10 + 0x2e4) & 0x4000) == 0) {
-      iVar1 = *(int *)(param_10 + 0x29c);
+    if ((((TrickyState *)param_10)->unk2E4 & 0x4000) == 0) {
+      iVar1 = *(int *)&((TrickyState *)param_10)->unk29C;
       param_2 = (double)(*(float *)(iVar1 + 0x2c) * *(float *)(iVar1 + 0x2c));
       dVar7 = FUN_80293900((double)(float)(param_2 +
                                           (double)(*(float *)(iVar1 + 0x24) *
@@ -1294,25 +1294,25 @@ void FUN_8014c0b4(double param_1,double param_2,undefined8 param_3,undefined8 pa
                                                   *(float *)(iVar1 + 0x28) *
                                                   *(float *)(iVar1 + 0x28))));
       if ((double)lbl_803E3268 < dVar7) {
-        *(uint *)(param_10 + 0x2dc) = *(uint *)(param_10 + 0x2dc) | 0x4000000;
+        ((TrickyState *)param_10)->flags2DC = ((TrickyState *)param_10)->flags2DC | 0x4000000;
       }
     }
-    uVar4 = *(uint *)(param_10 + 0x2dc);
+    uVar4 = ((TrickyState *)param_10)->flags2DC;
     if ((((uVar4 & 0x600) != 0) && ((uVar4 & 0x6800000) != 0)) && ((uVar4 & 0x1000000) != 0)) {
-      *(uint *)(param_10 + 0x2dc) = uVar4 | 0x20000000;
+      ((TrickyState *)param_10)->flags2DC = uVar4 | 0x20000000;
     }
-    if ((*(uint *)(param_10 + 0x2dc) & 0x20000000) != 0) {
-      if ((*(uint *)(param_10 + 0x2e4) & 0x40) == 0) {
-        *(uint *)(param_10 + 0x2dc) = *(uint *)(param_10 + 0x2dc) | 0xf0000;
+    if ((((TrickyState *)param_10)->flags2DC & 0x20000000) != 0) {
+      if ((((TrickyState *)param_10)->unk2E4 & 0x40) == 0) {
+        ((TrickyState *)param_10)->flags2DC = ((TrickyState *)param_10)->flags2DC | 0xf0000;
       }
       else {
-        FUN_80147a70((double)*(float *)(param_10 + 0x2ac),param_2,param_3,param_4,param_5,param_6,
+        FUN_80147a70((double)((TrickyState *)param_10)->unk2AC,param_2,param_3,param_4,param_5,param_6,
                      param_7,param_8);
       }
     }
   }
   if (*(short *)(param_10 + 0x2b0) == 0) {
-    *(uint *)(param_10 + 0x2dc) = *(uint *)(param_10 + 0x2dc) | 0x800;
+    ((TrickyState *)param_10)->flags2DC = ((TrickyState *)param_10)->flags2DC | 0x800;
   }
   return;
 }

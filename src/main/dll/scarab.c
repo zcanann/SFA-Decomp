@@ -1854,17 +1854,17 @@ void FUN_8015f068(undefined8 param_1,double param_2,double param_3,undefined8 pa
     iVar5 = FUN_80017ae4(dVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar4,5,0xff
                          ,0xffffffff,(uint *)0x0,in_r8,in_r9,in_r10);
     if (iVar5 != 0) {
-      fVar1 = *(float *)(param_10 + 0x2c0) /
+      fVar1 = ((GroundBaddieState *)param_10)->baddie.targetDistance /
               (float)((double)CONCAT44(0x43300000,(uint)*(ushort *)(param_10 + 0x3fe)) -
                      DOUBLE_803e3a58);
       fVar2 = lbl_803E3A90 * fVar1;
       *(float *)(iVar5 + 0x24) =
-           (*(float *)(*(int *)(param_10 + 0x2d0) + 0xc) - ((GameObject *)param_9)->anim.localPosX) / fVar2;
+           (*(float *)(*(int *)&((GroundBaddieState *)param_10)->baddie.targetObj + 0xc) - ((GameObject *)param_9)->anim.localPosX) / fVar2;
       *(float *)(iVar5 + 0x28) =
-           ((lbl_803E3A94 * fVar1 + *(float *)(*(int *)(param_10 + 0x2d0) + 0x10)) -
+           ((lbl_803E3A94 * fVar1 + *(float *)(*(int *)&((GroundBaddieState *)param_10)->baddie.targetObj + 0x10)) -
            ((GameObject *)param_9)->anim.localPosY) / fVar2;
       *(float *)(iVar5 + 0x2c) =
-           (*(float *)(*(int *)(param_10 + 0x2d0) + 0x14) - ((GameObject *)param_9)->anim.localPosZ) / fVar2;
+           (*(float *)(*(int *)&((GroundBaddieState *)param_10)->baddie.targetObj + 0x14) - ((GameObject *)param_9)->anim.localPosZ) / fVar2;
       *(int *)(iVar5 + 0xc4) = param_9;
     }
   }
@@ -3785,24 +3785,24 @@ bool FUN_80161a8c(undefined8 param_1,double param_2,double param_3,undefined8 pa
   int iVar2;
   
   iVar2 = *(int *)&((GameObject *)param_9)->extra;
-  *(undefined *)(param_10 + 0x34d) = 0;
-  *(float *)(param_10 + 0x2a0) = lbl_803E3B78;
+  ((GroundBaddieState *)param_10)->baddie.unk34D = 0;
+  ((GroundBaddieState *)param_10)->baddie.moveSpeed = lbl_803E3B78;
   fVar1 = lbl_803E3B50;
-  *(float *)(param_10 + 0x280) = lbl_803E3B50;
-  *(float *)(param_10 + 0x284) = fVar1;
-  if (*(char *)(param_10 + 0x27a) != '\0') {
+  ((GroundBaddieState *)param_10)->baddie.animSpeedA = lbl_803E3B50;
+  ((GroundBaddieState *)param_10)->baddie.animSpeedB = fVar1;
+  if (*(char *)&((GroundBaddieState *)param_10)->baddie.moveJustStartedA != '\0') {
     FUN_80006824(param_9,SFXsc_death02);
-    if (*(char *)(param_10 + 0x27a) != '\0') {
+    if (*(char *)&((GroundBaddieState *)param_10)->baddie.moveJustStartedA != '\0') {
       FUN_800305f8((double)lbl_803E3B50,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                    param_9,2,0,param_12,param_13,param_14,param_15,param_16);
-      *(undefined *)(param_10 + 0x346) = 0;
+      ((GroundBaddieState *)param_10)->baddie.moveDone = 0;
     }
-    *(float *)(param_10 + 0x2a0) = lbl_803E3B7C;
-    *(undefined *)(param_10 + 0x346) = 0;
+    ((GroundBaddieState *)param_10)->baddie.moveSpeed = lbl_803E3B7C;
+    ((GroundBaddieState *)param_10)->baddie.moveDone = 0;
     ((GameObject *)param_9)->anim.alpha = 0xff;
     *(ushort *)(iVar2 + 0x400) = *(ushort *)(iVar2 + 0x400) | 0x100;
   }
-  return *(char *)(param_10 + 0x346) != '\0';
+  return *(char *)&((GroundBaddieState *)param_10)->baddie.moveDone != '\0';
 }
 
 /*
@@ -3864,15 +3864,15 @@ bool FUN_80161d30(undefined8 param_1,double param_2,double param_3,undefined8 pa
   int iVar3;
   
   iVar3 = *(int *)(*(int *)(param_9 + 0x5c) + 0x40c);
-  if (*(char *)(param_10 + 0x27a) != '\0') {
+  if (*(char *)&((GroundBaddieState *)param_10)->baddie.moveJustStartedA != '\0') {
     FUN_800305f8((double)lbl_803E3B50,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                  param_9,7,0,param_12,param_13,param_14,param_15,param_16);
-    *(undefined *)(param_10 + 0x346) = 0;
+    ((GroundBaddieState *)param_10)->baddie.moveDone = 0;
   }
-  if (*(char *)(param_10 + 0x27a) != '\0') {
+  if (*(char *)&((GroundBaddieState *)param_10)->baddie.moveJustStartedA != '\0') {
     FUN_80006824((uint)param_9,SFXsc_attack04);
   }
-  *(float *)(param_10 + 0x2a0) = lbl_803E3B84;
+  ((GroundBaddieState *)param_10)->baddie.moveSpeed = lbl_803E3B84;
   uVar1 = *(ushort *)(iVar3 + 0x58);
   iVar3 = (int)(short)*param_9 - (uint)uVar1;
   if (0x8000 < iVar3) {
@@ -3886,9 +3886,9 @@ bool FUN_80161d30(undefined8 param_1,double param_2,double param_3,undefined8 pa
     *param_9 = *param_9 + 0x8000;
   }
   fVar2 = lbl_803E3B50;
-  *(float *)(param_10 + 0x280) = lbl_803E3B50;
-  *(float *)(param_10 + 0x284) = fVar2;
-  return *(char *)(param_10 + 0x346) != '\0';
+  ((GroundBaddieState *)param_10)->baddie.animSpeedA = lbl_803E3B50;
+  ((GroundBaddieState *)param_10)->baddie.animSpeedB = fVar2;
+  return *(char *)&((GroundBaddieState *)param_10)->baddie.moveDone != '\0';
 }
 
 /*
