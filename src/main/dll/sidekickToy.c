@@ -1357,93 +1357,93 @@ void fn_8014B878(int *arg1, int *sub) {
 
     player = Obj_GetPlayerObject();
     tricky = getTrickyObject();
-    target = *(int**)((char*)sub + 0x29c);
-    if (target != NULL && (*(u32*)((char*)sub + 0x2e4) & 0x10000) == 0 &&
+    target = *(int**)&((TrickyState *)sub)->unk29C;
+    if (target != NULL && (((TrickyState *)sub)->unk2E4 & 0x10000) == 0 &&
         (target != player || (((GameObject *)player)->objectFlags & 0x1000) == 0)) {
-        *(u32*)((char*)sub + 0x2dc) &= 0xff7fffff;
+        ((TrickyState *)sub)->flags2DC &= 0xff7fffff;
         camTarget = (int *)(*gCameraInterface)->getOverrideTarget();
         if (camTarget == arg1) {
-            *(u32*)((char*)sub + 0x2dc) |= 0x800200;
+            ((TrickyState *)sub)->flags2DC |= 0x800200;
         }
         {
             u16 dist = *(u16*)((char*)sub + 0x2a4);
-            u16 near = (u16)(int)*(f32*)((char*)sub + 0x2ac);
+            u16 near = (u16)(int)((TrickyState *)sub)->unk2AC;
             if (dist < near) {
-                *(u32*)((char*)sub + 0x2dc) |= 0x400;
-                *(u32*)((char*)sub + 0x2dc) &= 0xfffffdff;
+                ((TrickyState *)sub)->flags2DC |= 0x400;
+                ((TrickyState *)sub)->flags2DC &= 0xfffffdff;
             } else {
                 f32 midf = *(f32*)((char*)sub + 0x2a8);
                 u16 mid = (u16)(int)midf;
                 if (dist < mid) {
-                    *(u32*)((char*)sub + 0x2dc) |= 0x200;
-                    *(u32*)((char*)sub + 0x2dc) &= 0xfffffbff;
+                    ((TrickyState *)sub)->flags2DC |= 0x200;
+                    ((TrickyState *)sub)->flags2DC &= 0xfffffbff;
                 } else {
                     u16 far = (u16)(int)(lbl_803E25D8 * midf);
                     if (dist > far) {
-                        *(u32*)((char*)sub + 0x2dc) &= 0xdffff9ff;
+                        ((TrickyState *)sub)->flags2DC &= 0xdffff9ff;
                     }
                 }
             }
         }
     } else {
-        *(u32*)((char*)sub + 0x2dc) &= 0xff7ff9ff;
-        if ((*(u32*)((char*)sub + 0x2e4) & 0x10000) != 0 ||
-            (*(int**)((char*)sub + 0x29c) == player && (((GameObject *)player)->objectFlags & 0x1000) != 0)) {
-            *(u32*)((char*)sub + 0x2dc) &= 0xdfffffff;
+        ((TrickyState *)sub)->flags2DC &= 0xff7ff9ff;
+        if ((((TrickyState *)sub)->unk2E4 & 0x10000) != 0 ||
+            (*(int**)&((TrickyState *)sub)->unk29C == player && (((GameObject *)player)->objectFlags & 0x1000) != 0)) {
+            ((TrickyState *)sub)->flags2DC &= 0xdfffffff;
         }
     }
-    *(u32*)((char*)sub + 0x2dc) &= 0xf890fff7;
+    ((TrickyState *)sub)->flags2DC &= 0xf890fff7;
     if (tricky != NULL) {
         u8 r = (*(u8(**)(int*))(*(int*)*(int*)((char*)tricky + 0x68) + 0x40))(tricky);
-        if ((u8)r != 0) *(u32*)((char*)sub + 0x2dc) |= 0x200000;
+        if ((u8)r != 0) ((TrickyState *)sub)->flags2DC |= 0x200000;
     }
-    if (*(int**)((char*)sub + 0x29c) == player) {
+    if (*(int**)&((TrickyState *)sub)->unk29C == player) {
         if (playerIsDisguised(player) != 0) {
-            *(u32*)((char*)sub + 0x2dc) |= 8;
-            if ((*(u32*)((char*)sub + 0x2e4) & 0x2000) != 0) {
-                *(u32*)((char*)sub + 0x2dc) &= 0xff7ff9ff;
+            ((TrickyState *)sub)->flags2DC |= 8;
+            if ((((TrickyState *)sub)->unk2E4 & 0x2000) != 0) {
+                ((TrickyState *)sub)->flags2DC &= 0xff7ff9ff;
             }
         }
     }
-    if ((*(u32*)((char*)sub + 0x2dc) & 0x20000600) != 0) {
-        if ((*(u32*)((char*)sub + 0x2e4) & 0x1000) != 0) {
+    if ((((TrickyState *)sub)->flags2DC & 0x20000600) != 0) {
+        if ((((TrickyState *)sub)->unk2E4 & 0x1000) != 0) {
             u8 r = baddieTargetFn_8014a150((int)arg1, (u8*)sub, (f32*)((char*)arg1 + 0x18),
-                                            (void*)(*(char**)((char*)sub + 0x29c) + 0x18));
-            if ((u8)r != 0) *(u32*)((char*)sub + 0x2dc) |= 0x1000000;
-            if ((*(u32*)((char*)sub + 0x2dc) & 0x1000000) == 0) {
-                *(u32*)((char*)sub + 0x2dc) &= 0xdfffffff;
+                                            (void*)(*(char**)&((TrickyState *)sub)->unk29C + 0x18));
+            if ((u8)r != 0) ((TrickyState *)sub)->flags2DC |= 0x1000000;
+            if ((((TrickyState *)sub)->flags2DC & 0x1000000) == 0) {
+                ((TrickyState *)sub)->flags2DC &= 0xdfffffff;
             }
         } else {
-            *(u32*)((char*)sub + 0x2dc) |= 0x1000000;
+            ((TrickyState *)sub)->flags2DC |= 0x1000000;
         }
         {
             u16 mode = *(u16*)((char*)sub + 0x2a0);
             if (mode < 2 || mode > 5) {
-                *(u32*)((char*)sub + 0x2dc) |= 0x400000;
-            } else if ((*(u32*)((char*)sub + 0x2dc) & 0x1000000) != 0) {
-                *(u32*)((char*)sub + 0x2dc) |= 0x2000000;
+                ((TrickyState *)sub)->flags2DC |= 0x400000;
+            } else if ((((TrickyState *)sub)->flags2DC & 0x1000000) != 0) {
+                ((TrickyState *)sub)->flags2DC |= 0x2000000;
             }
         }
-        if ((*(u32*)((char*)sub + 0x2e4) & 0x4000) == 0) {
-            f32 *t = (f32*)*(int**)((char*)sub + 0x29c);
+        if ((((TrickyState *)sub)->unk2E4 & 0x4000) == 0) {
+            f32 *t = (f32*)*(int**)&((TrickyState *)sub)->unk29C;
             f32 mag = sqrtf(t[11]*t[11] + (t[9]*t[9] + t[10]*t[10]));
-            if (mag > lbl_803E25D4) *(u32*)((char*)sub + 0x2dc) |= 0x4000000;
+            if (mag > lbl_803E25D4) ((TrickyState *)sub)->flags2DC |= 0x4000000;
         }
-        if ((*(u32*)((char*)sub + 0x2dc) & 0x600) != 0 &&
-            (*(u32*)((char*)sub + 0x2dc) & 0x6800000) != 0 &&
-            (*(u32*)((char*)sub + 0x2dc) & 0x1000000) != 0) {
-            *(u32*)((char*)sub + 0x2dc) |= 0x20000000;
+        if ((((TrickyState *)sub)->flags2DC & 0x600) != 0 &&
+            (((TrickyState *)sub)->flags2DC & 0x6800000) != 0 &&
+            (((TrickyState *)sub)->flags2DC & 0x1000000) != 0) {
+            ((TrickyState *)sub)->flags2DC |= 0x20000000;
         }
-        if ((*(u32*)((char*)sub + 0x2dc) & 0x20000000) != 0) {
-            if ((*(u32*)((char*)sub + 0x2e4) & 0x40) != 0) {
-                baddieFn_8014a304(arg1, sub, *(f32*)((char*)sub + 0x2ac));
+        if ((((TrickyState *)sub)->flags2DC & 0x20000000) != 0) {
+            if ((((TrickyState *)sub)->unk2E4 & 0x40) != 0) {
+                baddieFn_8014a304(arg1, sub, ((TrickyState *)sub)->unk2AC);
             } else {
-                *(u32*)((char*)sub + 0x2dc) |= 0xf0000;
+                ((TrickyState *)sub)->flags2DC |= 0xf0000;
             }
         }
     }
     if (*(u16*)((char*)sub + 0x2b0) == 0) {
-        *(u32*)((char*)sub + 0x2dc) |= 0x800;
+        ((TrickyState *)sub)->flags2DC |= 0x800;
     }
 }
 
@@ -1583,7 +1583,7 @@ void fn_8014CD1C(int *node, int *sub, u16 p3, u8 p5, f32 fa, f32 fb) {
 }
 
 void fn_8014BC98(int *node, int *sub) {
-    int *target = *(int**)((char*)sub + 0x29c);
+    int *target = *(int**)&((TrickyState *)sub)->unk29C;
     if (target != NULL) {
         volatile f32 d[3];
         int angle;
@@ -1592,7 +1592,7 @@ void fn_8014BC98(int *node, int *sub) {
         f32 dist;
         u16 d16;
 
-        if ((*(u32*)((char*)sub + 0x2e4) & 0x8000) != 0) {
+        if ((((TrickyState *)sub)->unk2E4 & 0x8000) != 0) {
             d[0] = *(f32*)((char*)node + 0x18) - *(f32*)((char*)target + 0x18);
             d[1] = lbl_803E2574;
             d[2] = *(f32*)((char*)node + 0x20) - *(f32*)((char*)target + 0x20);
@@ -1618,7 +1618,7 @@ void fn_8014BC98(int *node, int *sub) {
         *(s16*)((char*)sub + 0x2a4) = (s16)(s32)dist;
 
         {
-            int *t = *(int**)((char*)sub + 0x29c);
+            int *t = *(int**)&((TrickyState *)sub)->unk29C;
             *(s16*)((char*)sub + 0x2a6) = (s16)(s32)(*(f32*)((char*)t + 0x1c) - *(f32*)((char*)node + 0x1c));
         }
     }
