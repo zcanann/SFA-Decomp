@@ -278,7 +278,7 @@ void objCallSeqFn(u8 *obj, u8 *sourceObj, u8 *seq, int action)
                 lbl_8039A50C[actionSlot] = callbackResult;
             }
         }
-        ((ObjSeqState *)seq)->unk8B = 0;
+        ((ObjSeqState *)seq)->eventCount = 0;
         ((ObjSeqState *)seq)->unk80 = 0;
     } else {
         if ((s8)((ObjSeqState *)seq)->unk7B != 0) {
@@ -349,7 +349,7 @@ void *ObjSeq_ToggleCommand3Target(u8 *obj, u8 *seq, u8 *src)
             result = seqObj;
             *(void **)(seqObj + 0xc0) = obj;
             *(u16 *)(seqObj + 0xb0) |= 0x1000;
-            ((ObjSeqState *)seq)->unk110 = seqObj;
+            ((ObjSeqState *)seq)->callbackContext = seqObj;
 
             activeObj = *(u8 **)seq;
             j = 0;
@@ -744,9 +744,9 @@ int seqDoSubCmd0B(u8 *obj, u8 *sourceObj, u8 *seq, u8 *cmdsArg, s16 xrot, int co
                 switch (subId) {
                 case 0:
                     ((ObjSeqState *)seq)->unk80 = (u8)top16;
-                    n = ((ObjSeqState *)seq)->unk8B;
+                    n = ((ObjSeqState *)seq)->eventCount;
                     if ((u32)n < 10) {
-                        ((ObjSeqState *)seq)->unk8B = n + 1;
+                        ((ObjSeqState *)seq)->eventCount = n + 1;
                         seq[n + 0x81] = (u8)top16;
                     }
                     break;
@@ -1445,7 +1445,7 @@ void ObjSeq_RebuildCurveStateToFrame(u8 *obj, u8 *seqObj, u8 *seq, int mode)
 
             if (action != NULL) {
                 ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)((int)activeObj, speed, lbl_803DEFC8,
-                                           (ObjAnimEventList *)(seq + 0xf0));
+                                           &((ObjSeqState *)seq)->animEvents);
                 if (mode != 0) {
                     if (((ObjSeqState *)seq)->fade > 0.0f) {
                         if (((ObjSeqState *)seq)->trackRunLength[10] != 0) {
@@ -2265,7 +2265,7 @@ int ObjSeq_update(u8 *obj, f32 t)
     f32 prevZ;
     f32 px;
     f32 pz;
-    int (*cb)(void *, u8 *);
+    ObjAnimSequenceConditionCallback cb;
 
     (void)t;
 
@@ -2348,22 +2348,22 @@ int ObjSeq_update(u8 *obj, f32 t)
             lbl_803DD0D8 = 1;
         }
 
-        if ((((ObjSeqState *)seq)->unk90 & 1) != 0) {
+        if ((((ObjSeqState *)seq)->sequenceControlFlags & 1) != 0) {
             base[(s8)((ObjSeqState *)seq)->slot + 0x3b9c] = 1;
         }
-        if ((((ObjSeqState *)seq)->unk90 & 2) != 0) {
+        if ((((ObjSeqState *)seq)->sequenceControlFlags & 2) != 0) {
             base[(s8)((ObjSeqState *)seq)->slot + 0x3b9c] = 0;
         }
-        if ((((ObjSeqState *)seq)->unk90 & 4) != 0) {
+        if ((((ObjSeqState *)seq)->sequenceControlFlags & 4) != 0) {
             base[(s8)((ObjSeqState *)seq)->slot + 0x3b44] = 1;
         }
-        if ((((ObjSeqState *)seq)->unk90 & 8) != 0) {
+        if ((((ObjSeqState *)seq)->sequenceControlFlags & 8) != 0) {
             base[(s8)((ObjSeqState *)seq)->slot + 0x3b44] = 0;
         }
-        if ((((ObjSeqState *)seq)->unk90 & 0x10) != 0) {
+        if ((((ObjSeqState *)seq)->sequenceControlFlags & 0x10) != 0) {
             base[(s8)((ObjSeqState *)seq)->slot + 0x3a40] = 1;
         }
-        if ((((ObjSeqState *)seq)->unk90 & 0x20) != 0) {
+        if ((((ObjSeqState *)seq)->sequenceControlFlags & 0x20) != 0) {
             base[(s8)((ObjSeqState *)seq)->slot + 0x3a40] = 0;
         }
 
@@ -2509,7 +2509,7 @@ int ObjSeq_update(u8 *obj, f32 t)
 
                 if (action != NULL) {
                     ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)((int)activeObj, scratch[1], lbl_803DEFC8,
-                                               (ObjAnimEventList *)(seq + 0xf0));
+                                               &((ObjSeqState *)seq)->animEvents);
                     if (((ObjSeqState *)seq)->fade > lbl_803DEFB0) {
                         if (((ObjSeqState *)seq)->trackRunLength[10] != 0) {
                             i = ((ObjSeqState *)seq)->curFrame - 1;
@@ -2579,7 +2579,7 @@ int ObjSeq_update(u8 *obj, f32 t)
         }
 
         for (k = 0; k < 10; k++) {
-            opcode = seq[k + 0x12c];
+            opcode = ((ObjSeqState *)seq)->conditionOpcodes[k];
             if (opcode == 0) {
                 continue;
             }
@@ -2602,9 +2602,9 @@ int ObjSeq_update(u8 *obj, f32 t)
                 pressed = isTalkingToNpc() == 0;
                 break;
             default:
-                cb = *(int (**)(void *, u8 *))(seq + 0xec);
+                cb = ((ObjSeqState *)seq)->conditionCallback;
                 if (cb != NULL) {
-                    pressed = cb(((ObjSeqState *)seq)->unk110, obj);
+                    pressed = cb(((ObjSeqState *)seq)->callbackContext, obj);
                 } else {
                     pressed = 0;
                 }
@@ -2612,18 +2612,18 @@ int ObjSeq_update(u8 *obj, f32 t)
             }
             if (pressed != 0) {
                 base[(s8)((ObjSeqState *)seq)->slot + 0x3cf4] = 1;
-                ((ObjSeqState *)seq)->curFrame = *(s16 *)(seq + k * 2 + 0x118);
+                ((ObjSeqState *)seq)->curFrame = ((ObjSeqState *)seq)->conditionFrames[k];
                 ((ObjSeqState *)seq)->prevFrame = ((ObjSeqState *)seq)->curFrame;
-                ((ObjSeqState *)seq)->unk12C[0] = 0;
-                ((ObjSeqState *)seq)->unk12C[1] = 0;
-                ((ObjSeqState *)seq)->unk12C[2] = 0;
-                ((ObjSeqState *)seq)->unk12C[3] = 0;
-                ((ObjSeqState *)seq)->unk12C[4] = 0;
-                ((ObjSeqState *)seq)->unk12C[5] = 0;
-                ((ObjSeqState *)seq)->unk12C[6] = 0;
-                ((ObjSeqState *)seq)->unk12C[7] = 0;
-                ((ObjSeqState *)seq)->unk12C[8] = 0;
-                ((ObjSeqState *)seq)->unk12C[9] = 0;
+                ((ObjSeqState *)seq)->conditionOpcodes[0] = 0;
+                ((ObjSeqState *)seq)->conditionOpcodes[1] = 0;
+                ((ObjSeqState *)seq)->conditionOpcodes[2] = 0;
+                ((ObjSeqState *)seq)->conditionOpcodes[3] = 0;
+                ((ObjSeqState *)seq)->conditionOpcodes[4] = 0;
+                ((ObjSeqState *)seq)->conditionOpcodes[5] = 0;
+                ((ObjSeqState *)seq)->conditionOpcodes[6] = 0;
+                ((ObjSeqState *)seq)->conditionOpcodes[7] = 0;
+                ((ObjSeqState *)seq)->conditionOpcodes[8] = 0;
+                ((ObjSeqState *)seq)->conditionOpcodes[9] = 0;
                 break;
             }
         }
@@ -2632,19 +2632,19 @@ int ObjSeq_update(u8 *obj, f32 t)
             objCallSeqFn(activeObj, obj, seq, base[(s8)((ObjSeqState *)seq)->slot + 0x3c4c]);
         }
 
-        if (((ObjSeqState *)seq)->unk90 != 0) {
+        if (((ObjSeqState *)seq)->sequenceControlFlags != 0) {
             restart = 0;
-            if ((((ObjSeqState *)seq)->unk90 & 0x40) != 0) {
+            if ((((ObjSeqState *)seq)->sequenceControlFlags & 0x40) != 0) {
                 restart = 1;
-                ((ObjSeqState *)seq)->unk90 = ((ObjSeqState *)seq)->unk90 & ~0x40;
+                ((ObjSeqState *)seq)->sequenceControlFlags = ((ObjSeqState *)seq)->sequenceControlFlags & ~0x40;
                 ((ObjSeqState *)seq)->curFrame = (s16)((ObjSeqState *)seq)->unk74;
                 ((ObjSeqState *)seq)->prevFrame = ((ObjSeqState *)seq)->curFrame;
             }
-            ((ObjSeqState *)seq)->unk90 = 0;
+            ((ObjSeqState *)seq)->sequenceControlFlags = 0;
             base[(s8)((ObjSeqState *)seq)->slot + 0x3cf4] = (s8)restart;
         }
 
-        ((ObjSeqState *)seq)->unk8B = 0;
+                ((ObjSeqState *)seq)->eventCount = 0;
         ((ObjSeqState *)seq)->unk80 = 0;
         if (action != NULL && (((ObjSeqState *)seq)->flags & 4) != 0) {
             *(s16 *)(*(u8 **)(action + 0x2c) + 0x58) =
@@ -3432,10 +3432,10 @@ checked:
             ((ObjSeqState *)seq)->heading = heading;
             ((ObjSeqState *)seq)->flags = -1;
             ((ObjSeqState *)seq)->flags = ((ObjSeqState *)seq)->flags & ~0x400;
-            ((ObjSeqState *)seq)->unk12C[0] = 0;
-            ((ObjSeqState *)seq)->unk12C[1] = 0;
-            ((ObjSeqState *)seq)->unk12C[2] = 0;
-            ((ObjSeqState *)seq)->unk12C[3] = 0;
+            ((ObjSeqState *)seq)->conditionOpcodes[0] = 0;
+            ((ObjSeqState *)seq)->conditionOpcodes[1] = 0;
+            ((ObjSeqState *)seq)->conditionOpcodes[2] = 0;
+            ((ObjSeqState *)seq)->conditionOpcodes[3] = 0;
             if (*(u16 *)(walk2 + 4) & 1) {
                 ((ObjSeqState *)seq)->flags = ((ObjSeqState *)seq)->flags & ~1;
             }
@@ -4255,7 +4255,7 @@ void animatedObjFreeAndSavePlayerPos(u8 *obj, u8 *seqObj, u8 *seq) {
 
     callback = ((ObjSeqState *)seq)->freeCallback;
     if (callback != NULL) {
-        callback(((ObjSeqState *)seq)->unk110, obj);
+        callback(((ObjSeqState *)seq)->callbackContext, obj);
         ((ObjSeqState *)seq)->freeCallback = NULL;
     }
 

@@ -10,6 +10,8 @@ typedef struct ObjAnimEventTable ObjAnimEventTable;
 typedef struct ObjAnimEventList ObjAnimEventList;
 typedef struct ObjWeaponDaTable ObjWeaponDaTable;
 
+typedef void (*ObjAnimSequenceFreeCallback)(void *ctx,u8 *obj);
+typedef int (*ObjAnimSequenceConditionCallback)(void *ctx,u8 *obj);
 typedef int (*ObjAnimSetProgressObjectFirstFn)(int objAnimHandle,f32 progress);
 typedef int (*ObjAnimSampleRootCurveObjectFirstFn)(int objAnimHandle,f32 distance,
                                                    float *phaseOut);

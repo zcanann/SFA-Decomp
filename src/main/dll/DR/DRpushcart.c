@@ -981,9 +981,9 @@ void FUN_801e8658(int param_1,int param_2,int param_3,int param_4,int param_5,s8
 #pragma peephole reset
 #pragma scheduling reset
 
-int fn_801E86F4(int obj, int p2, int p3)
+int fn_801E86F4(int obj, int p2, ObjSeqState *seq)
 {
-  extern void fn_801E8660(void);
+  extern void fn_801E8660(int obj);
   extern void fn_801F4D54(int obj, int sub);
   extern void fn_801F4ECC(int obj, int sub);
   extern f32 Curve_EvalBSpline(int p, f32 t, int m);
@@ -995,9 +995,9 @@ int fn_801E86F4(int obj, int p2, int p3)
   int sub = *(int *)&((GameObject *)obj)->extra;
   ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
 
-  *(int *)(p3 + 0xe8) = (int)&fn_801E8660;
-  *(s16 *)(p3 + 0x6e) = (s16)(*(s16 *)(p3 + 0x6e) & ~4);
-  *(s16 *)(p3 + 0x70) = (s16)(*(s16 *)(p3 + 0x70) & ~4);
+  seq->freeCallback = (ObjAnimSequenceFreeCallback)fn_801E8660;
+  seq->flags &= ~4;
+  seq->unk70 &= ~4;
 
   if ((int)objAnim->banks[objAnim->bankIndex] != 0) {
     ObjAnim_AdvanceCurrentMove(lbl_803E5A60, timeDelta, obj, NULL);

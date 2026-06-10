@@ -2642,7 +2642,7 @@ store_ph:
     return 0;
 }
 
-int player_SeqFn(int obj, int obj2, int seq, int endFlag)
+int player_SeqFn(int obj, int obj2, ObjSeqState *seq, int endFlag)
 {
     int ctrl;
     register int va;
@@ -2665,7 +2665,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
     result = 0;
     va = (int)objModelGetVecFn_800395d8(obj, 0);
     vb = (int)objModelGetVecFn_800395d8(obj, 9);
-    *(int *)((char *)seq + 0xe8) = (int)fn_802A93F4;
+    seq->freeCallback = (ObjAnimSequenceFreeCallback)fn_802A93F4;
     if (*(void **)&lbl_803DE450 != NULL) {
         staffFn_80170380(lbl_803DE450, 0);
     }
@@ -3428,7 +3428,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
         }
     }
     if (lbl_803DE458 != 0) {
-        *(u8 *)((char *)seq + 0x90) |= 4;
+        seq->sequenceControlFlags |= 4;
         lbl_803DE458 = 0;
     }
     {
@@ -3456,7 +3456,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
     }
     *(u32 *)((char *)inner + 0x360) |= 0x800000LL;
     ((void (*)(int, int, int, int, int, f32, f32))objAudioFn_8006ef38)(
-        obj, (int)((char *)seq + 0xf0), *(u8 *)((char *)inner + 0x8a6),
+        obj, (int)&seq->animEvents, *(u8 *)((char *)inner + 0x8a6),
         (int)((char *)inner + 0x3c4), (int)((char *)inner + 4),
         *(f32 *)((char *)inner + 0x280), lbl_803E7EE0);
     return result;

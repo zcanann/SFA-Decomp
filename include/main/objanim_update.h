@@ -4,9 +4,6 @@
 #include "global.h"
 #include "main/objanim_internal.h"
 
-typedef void (*ObjAnimSequenceFreeCallback)(void *ctx, u8 *obj);
-typedef int (*ObjAnimSequenceConditionCallback)(void *ctx, u8 *obj);
-
 typedef struct ObjAnimUpdateState {
   u8 pad00[0x56];
   u8 sequenceEventActive;

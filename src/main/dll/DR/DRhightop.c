@@ -371,7 +371,7 @@ void fn_801EB334(int *obj) {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 SnowBike_animEventCallback(short *param_1,undefined4 param_2,int param_3)
+undefined4 SnowBike_animEventCallback(short *param_1,undefined4 param_2,ObjSeqState *seq)
 {
   typedef struct HightopMatrixSeed {
     s16 rotX;
@@ -394,11 +394,11 @@ undefined4 SnowBike_animEventCallback(short *param_1,undefined4 param_2,int para
   double zSpeed;
 
   state = *(int *)(param_1 + 0x5c);
-  *(void (**)(int *))(param_3 + 0xe8) = fn_801EB334;
+  seq->freeCallback = (ObjAnimSequenceFreeCallback)fn_801EB334;
   ObjHits_DisableObject((int)param_1);
 
-  for (i = 0; i < (int)(uint)*(u8 *)(param_3 + 0x8b); i++) {
-    triggerType = *(u8 *)(param_3 + i + 0x81);
+  for (i = 0; i < (int)(uint)seq->eventCount; i++) {
+    triggerType = seq->eventIds[i];
     switch (triggerType) {
     case 2:
       if (param_1[0x23] != 0x16c && param_1[0x23] != 0x16f) {

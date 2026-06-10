@@ -2,6 +2,7 @@
 #define MAIN_OBJSEQ_H_
 
 #include "global.h"
+#include "main/objanim_internal.h"
 
 /*
  * ObjSeqState - per-object sequence playback state, stored in the obj+0xB8
@@ -9,8 +10,6 @@
  * objseq.c). Only fields with read/write evidence in objseq.c are named;
  * everything else is padded.
  */
-typedef void (*ObjSeqFreeCallback)(void *ctx, u8 *obj);
-
 typedef struct ObjectTriggerInterface {
     void *unusedSlot02;
     void (*onMapSetup)(void);
@@ -132,33 +131,42 @@ typedef struct ObjSeqState {
     u8 unk7E;
     u8 unk7F;
     u8 unk80;
-    u8 unk81[0xA];
-    u8 unk8B;
+    u8 eventIds[0xA];
+    u8 eventCount;
     u8 unk8C;
     u8 unk8D;
     u8 unk8E;
     u8 unk8F;
-    u8 unk90;
+    u8 sequenceControlFlags;
     u8 unk91[3];
     u8 *cmds;        /* 4-byte command records */
     u8 *animEntries; /* 8-byte anim records */
     s16 trackAnimStart[19];
     s16 trackRunLength[19];
-    ObjSeqFreeCallback freeCallback;
-    u8 unkEC[0x20];
+    ObjAnimSequenceFreeCallback freeCallback;
+    ObjAnimSequenceConditionCallback conditionCallback;
+    ObjAnimEventList animEvents;
     s32 unk10C;
-    void *unk110;
+    void *callbackContext;
     s16 unk114;
     s16 unk116;
-    s16 unk118[10];
-    u8 unk12C[10];
+    s16 conditionFrames[10];
+    u8 conditionOpcodes[10];
     u8 unk136[2];
 } ObjSeqState;
 
 STATIC_ASSERT(sizeof(ObjSeqState) == 0x138);
 STATIC_ASSERT(offsetof(ObjSeqState, curFrame) == 0x58);
+STATIC_ASSERT(offsetof(ObjSeqState, eventIds) == 0x81);
+STATIC_ASSERT(offsetof(ObjSeqState, eventCount) == 0x8B);
+STATIC_ASSERT(offsetof(ObjSeqState, sequenceControlFlags) == 0x90);
 STATIC_ASSERT(offsetof(ObjSeqState, cmds) == 0x94);
 STATIC_ASSERT(offsetof(ObjSeqState, trackRunLength) == 0xC2);
-STATIC_ASSERT(offsetof(ObjSeqState, unk12C) == 0x12C);
+STATIC_ASSERT(offsetof(ObjSeqState, freeCallback) == 0xE8);
+STATIC_ASSERT(offsetof(ObjSeqState, conditionCallback) == 0xEC);
+STATIC_ASSERT(offsetof(ObjSeqState, animEvents) == 0xF0);
+STATIC_ASSERT(offsetof(ObjSeqState, callbackContext) == 0x110);
+STATIC_ASSERT(offsetof(ObjSeqState, conditionFrames) == 0x118);
+STATIC_ASSERT(offsetof(ObjSeqState, conditionOpcodes) == 0x12C);
 
 #endif

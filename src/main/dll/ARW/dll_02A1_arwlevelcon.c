@@ -54,9 +54,9 @@ int arwlevelcon_ringEventCallback(int obj, int p2, int data)
     int textId;
     ObjSeqState *seq = (ObjSeqState *)data;
 
-    seq->freeCallback = (ObjSeqFreeCallback)arwlevelcon_commitRingChoice;
-    for (i = 0; i < seq->unk8B; i++) {
-        u8 v = seq->unk81[i];
+    seq->freeCallback = (ObjAnimSequenceFreeCallback)arwlevelcon_commitRingChoice;
+    for (i = 0; i < seq->eventCount; i++) {
+        u8 v = seq->eventIds[i];
         if (v == 1) {
             (*gObjectTriggerInterface)->setCamVars(0x56, 0, 0, 0);
         } else if (v == 4) {
