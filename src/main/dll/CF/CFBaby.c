@@ -2654,7 +2654,7 @@ void Fall_Ladders_update(int obj) {
             (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
         }
     } else if (state->delay != 0) {
-        state->delay -= (s32)timeDelta;
+        state->delay -= (s16)timeDelta;
         if (state->delay <= 0) {
             state->motionState = 1;
             if (state->playStartSound != 0) {
