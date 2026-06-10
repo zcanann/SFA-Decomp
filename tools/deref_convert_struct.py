@@ -45,13 +45,27 @@ def _evaldim(a):
 
 def parse_struct(body, structs):
     off, fields = 0, []
+    bit_state = {'unit': 0, 'bits': 0}
     body = re.sub(r'/\*.*?\*/', '', body, flags=re.S)  # strip block comments (multi-line)
     for line in body.split('\n'):
         line = line.split('//')[0].split('/*')[0].strip()
         if not line:
             continue
+        bm = re.match(r'^\s*(\w+)\s+\w+\s*:\s*(\d+)\s*;', line)
+        if bm and bm.group(1) in SIZES:
+            # bitfield run: pack into units of the base type; fields stay
+            # unmapped ('ARR') but offsets keep advancing for later fields
+            unit = SIZES[bm.group(1)]
+            if bit_state['unit'] != unit or bit_state['bits'] + int(bm.group(2)) > unit * 8:
+                off = (off + unit - 1) & ~(unit - 1)
+                fields.append((off, '__bits%X' % off, bm.group(1), unit, 'ARR'))
+                off += unit
+                bit_state['unit'], bit_state['bits'] = unit, 0
+            bit_state['bits'] += int(bm.group(2))
+            continue
+        bit_state['unit'], bit_state['bits'] = 0, 0
         if ':' in line and '[' not in line:
-            return None  # bitfields unsupported
+            return None  # non-simple bitfield form
         m = field_re.match(line)
         if not m:
             if line and not line.startswith('}'):
