@@ -165,7 +165,7 @@ void FUN_801f456c(int param_1)
   fVar3 = DAT_802c2c4c;
   fVar2 = DAT_802c2c48;
   fVar1 = DAT_802c2c44;
-  cVar10 = (*gMapEventInterface)->getMode((int)*(char *)(param_1 + 0xac));
+  cVar10 = (*gMapEventInterface)->getMode((int)((GameObject *)param_1)->anim.mapEventSlot);
   if (cVar10 != '\a') {
     FUN_8005d0ac(0);
     bVar11 = FUN_80080f2c(0);
@@ -345,7 +345,7 @@ void wmlevelcontrol_update(int obj)
     }
   }
   if (*(u8 *)(state + 5) == 0) {
-    areaId = (*gMapEventInterface)->getMode((int)*(char *)(obj + 0xac));
+    areaId = (*gMapEventInterface)->getMode((int)((GameObject *)obj)->anim.mapEventSlot);
     areaId = __cntlzw(6 - (areaId & 0xff));
     areaId = areaId >> 5;
     if ((((int)areaId == 0) || (loadingDone = getCurSeqNo(), loadingDone == 0)) ||
@@ -389,7 +389,7 @@ void wmlevelcontrol_init(int obj)
     *state = lbl_803E5E90;
     *(int *)(state + 4) = 0;
     lockLevel(0xf, 0);
-    mode = (*gMapEventInterface)->getMode((int)*(char *)(obj + 0xac));
+    mode = (*gMapEventInterface)->getMode((int)((GameObject *)obj)->anim.mapEventSlot);
     switch (mode) {
     case 1:
         (*gMapEventInterface)->setMode(0xe, 1);

@@ -224,7 +224,7 @@ void fn_801F3F18(int obj)
     L.color = vecs[2];
     L.light = vecs[3];
 
-    if ((u8)(*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 7) {
+    if ((u8)(*gMapEventInterface)->getMode(((GameObject *)obj)->anim.mapEventSlot) == 7) {
         return;
     }
 

@@ -135,7 +135,7 @@ void wmnewcrystal_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
 void wmnewcrystal_init(int *obj, u8 *init) {
     WmNewCrystalState *inner = ((GameObject *)obj)->extra;
     ((GameObject *)obj)->animEventCallback = (void *)wmnewcrystal_SeqFn;
-    if ((*gMapEventInterface)->getMode(*(s8 *)((char *)obj + 0xac)) > 1) {
+    if ((*gMapEventInterface)->getMode(((GameObject *)obj)->anim.mapEventSlot) > 1) {
         GameBit_Set(WMNEWCRYSTAL_GAMEBIT_ACTIVE, 1);
         inner->active = 1;
     }

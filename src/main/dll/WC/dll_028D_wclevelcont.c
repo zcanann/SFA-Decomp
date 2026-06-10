@@ -215,7 +215,7 @@ void wclevelcont_update(int obj)
         }
         ((GameObject *)obj)->unkF4 = 1;
     }
-    switch ((*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac))) {
+    switch ((*gMapEventInterface)->getMode(((GameObject *)obj)->anim.mapEventSlot)) {
     case 1:
     default:
         wcpushblock_updateLevelControlState(obj, state);
@@ -341,7 +341,7 @@ void wclevelcont_init(int obj)
     GameBit_Set(0x2a6, 1);
     GameBit_Set(0x206, 1);
     GameBit_Set(0x25f, 1);
-    (*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));
+    (*gMapEventInterface)->getMode(((GameObject *)obj)->anim.mapEventSlot);
     state->dialogueFlags.b40 = GameBit_Get(0xc58);
     state->dialogueFlags.b20 = GameBit_Get(0xc59);
     state->dialogueFlags.b18 = GameBit_Get(0xc5a);
