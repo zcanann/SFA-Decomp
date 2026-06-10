@@ -22,9 +22,9 @@ typedef struct DrbarrelgrState {
     f32 unk18;
     f32 unk1C;
     u8 pad20[0x88 - 0x20];
-    f32 unk88;
-    f32 unk8C;
-    f32 unk90;
+    f32 startPosX;
+    f32 startPosY;
+    f32 startPosZ;
     u8 pad94[0x128 - 0x94];
     s16 unk128;
     u8 pad12A[0x12C - 0x12A];
@@ -76,9 +76,9 @@ void drbarrelgr_init(int obj, int setup)
     s16toFloat((void *)(state + 0xc), *(s16 *)(setup + 0x1a));
     *(s16 *)obj = (s16)((s8)*(s8 *)(setup + 0x18) << 8);
     (*gRomCurveInterface)->initCurve((void *)(state + 0x20), (void *)obj, lbl_803E6CD0, &one, 0);
-    ((GameObject *)obj)->anim.localPosX = ((DrbarrelgrState *)state)->unk88;
-    ((GameObject *)obj)->anim.localPosZ = ((DrbarrelgrState *)state)->unk90;
-    ((GameObject *)obj)->anim.localPosY = ((DrbarrelgrState *)state)->unk8C;
+    ((GameObject *)obj)->anim.localPosX = ((DrbarrelgrState *)state)->startPosX;
+    ((GameObject *)obj)->anim.localPosZ = ((DrbarrelgrState *)state)->startPosZ;
+    ((GameObject *)obj)->anim.localPosY = ((DrbarrelgrState *)state)->startPosY;
 }
 
 void drbarrelgr_update(int obj)

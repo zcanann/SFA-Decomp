@@ -254,9 +254,9 @@ void cfforcefield_hitDetect(void) {}
 
 typedef struct ExplodablePlacement {
     u8 pad0[0x1A - 0x0];
-    s16 unk1A;
-    s16 unk1C;
-    s16 unk1E;
+    s16 rotX;
+    s16 rotY;
+    s16 rotZ;
     s16 unk20;
     s16 unk22;
     s16 unk24;
@@ -268,7 +268,7 @@ typedef struct ExplodablePlacement {
     u16 unk38;
     u8 pad3A[0x3E - 0x3A];
     s16 unk3E;
-    s16 unk40;
+    s16 activateGameBit;
     u8 pad42[0x48 - 0x42];
 } ExplodablePlacement;
 
@@ -417,7 +417,7 @@ void explodable_update(int obj)
     def = *(int *)&((GameObject *)obj)->anim.placementData;
     if (((DrExplodableState *)state)->phase6E4 != 2) {
         if (((DrExplodableState *)state)->phase6E4 == 0) {
-            if ((u32)GameBit_Get(((ExplodablePlacement *)def)->unk40) != 0) {
+            if ((u32)GameBit_Get(((ExplodablePlacement *)def)->activateGameBit) != 0) {
                 fn_801A2E80(obj, def, 0, state);
                 if (((DrExplodableState *)state)->unk6D0 != 0) {
                     Sfx_PlayFromObject(obj, ((DrExplodableState *)state)->unk6D0 & 0xffff);
