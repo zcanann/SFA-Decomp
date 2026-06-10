@@ -32,9 +32,9 @@ extern u8 voiceFxRunning;
 extern u8 voiceListInsert;
 extern u8 voiceListRoot;
 
-#define voicePriorityLinks (vidListNodes.priorityLinks)
-#define voicePriorityGroupHeads (vidListNodes.priorityGroupHeads)
-#define voiceFreeListSlots (vidListNodes.freeList)
+extern VoiceListNode voicePriorityLinks[0x40];
+extern u8 voicePriorityGroupHeads[0x100];
+extern VoiceListNode voiceFreeListSlots[0x40];
 
 #define SYNTH_VOICE_STATE(voice) (&synthVoice[voice])
 
