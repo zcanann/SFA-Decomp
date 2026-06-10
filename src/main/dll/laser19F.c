@@ -135,11 +135,11 @@ typedef struct MMSHShrineObject {
  */
 int MMSH_Shrine_SeqFn(int objArg, undefined4 unused, MMSHShrineSequenceState *seq)
 {
-  MMSHShrineObject *obj;
-  MMSHShrineRuntime *runtime;
-  int playerObj;
-  int i;
   u8 command;
+  int i;
+  int playerObj;
+  MMSHShrineRuntime *runtime;
+  MMSHShrineObject *obj;
 
   obj = (MMSHShrineObject *)objArg;
   runtime = obj->runtime;
