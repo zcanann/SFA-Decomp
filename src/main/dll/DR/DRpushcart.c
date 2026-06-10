@@ -1179,7 +1179,7 @@ extern f32 lbl_803E59F0;
 extern f32 lbl_803E5A28;
 extern void *allocModelStruct_800139e8(int, int);
 extern void dll_2E_func05(int, int, int, int, int);
-extern int fn_801E76A0(int obj, int p2, u8 *data, s8 advance);
+extern int fn_801E76A0(int obj, int p2, ObjSeqState *seq, s8 advance);
 extern void *Obj_GetActiveModel(int);
 extern void ObjModel_SetPostRenderCallback(void *, void *);
 extern void ObjGroup_AddObject(int, int);
@@ -1370,7 +1370,7 @@ extern void playerAddMoney(void *player, int amount);
 extern void *objFindTexture(int obj, int target, int p3);
 extern int dll_2E_func07(int obj, u8 *data, int p3, int p4, int p5);
 
-int fn_801E76A0(int obj, int p2, u8 *data, s8 advance)
+int fn_801E76A0(int obj, int p2, ObjSeqState *seq, s8 advance)
 {
     int state;
     int state2;
@@ -1390,15 +1390,15 @@ int fn_801E76A0(int obj, int p2, u8 *data, s8 advance)
     if (((ShopkeeperState *)state)->flags9D4 & 0x10) {
         if ((*gScreenTransitionInterface)->isFinished() != 0) {
             (*gScreenTransitionInterface)->step(0x1E, 1);
-            (*gObjectTriggerInterface)->endSequence(*(s8 *)(data + 0x57));
+            (*gObjectTriggerInterface)->endSequence((s8)seq->slot);
         }
         return 0;
     }
-    if (dll_2E_func07(obj, data, state + 0x35C, 0, 0) != 0) {
+    if (dll_2E_func07(obj, (u8 *)seq, state + 0x35C, 0, 0) != 0) {
         return 1;
     }
-    *(void (**)(int))(data + 0xE8) = DRlaserturret_startTimedChallenge;
-    *(s16 *)(data + 0x6E) = (s16)(*(s16 *)(data + 0x6E) & ~0x20);
+    seq->freeCallback = (ObjAnimSequenceFreeCallback)DRlaserturret_startTimedChallenge;
+    seq->flags &= ~0x20;
     speed = lbl_803E59DC;
     ((ShopkeeperState *)state2)->animSpeed = speed;
     ((ShopkeeperState *)state)->flags9D4 |= 4;
@@ -1406,7 +1406,7 @@ int fn_801E76A0(int obj, int p2, u8 *data, s8 advance)
         ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, speed, timeDelta, NULL);
     }
     if (((GameObject *)obj)->unkB4 == -1) {
-        if (*(s8 *)(data + 0x56) != 0) {
+        if ((s8)seq->movementState != 0) {
             slot = (*(int (**)(int))((char *)**(int ***)(((ShopkeeperState *)state)->vendorObj + 0x68) + 0x44))(((ShopkeeperState *)state)->vendorObj);
             if (slot != -1) {
                 ((ShopkeeperState *)state)->price = (s16)(*(int (**)(int, int))((char *)**(int ***)(((ShopkeeperState *)state)->vendorObj + 0x68) + 0x38))(((ShopkeeperState *)state)->vendorObj, slot);
@@ -1425,16 +1425,16 @@ int fn_801E76A0(int obj, int p2, u8 *data, s8 advance)
                 tex = (int *)objFindTexture(obj, 6, 0);
                 *tex = hundreds << 8;
             }
-            *(u8 *)(data + 0x56) = 0;
-            *(void (**)(int))(data + 0xEC) = DRlaserturret_handlePromptChoice;
+            seq->movementState = 0;
+            seq->conditionCallback = (ObjAnimSequenceConditionCallback)DRlaserturret_handlePromptChoice;
         }
         if ((*(int (**)(int))((char *)**(int ***)(((ShopkeeperState *)state)->vendorObj + 0x68) + 0x44))(((ShopkeeperState *)state)->vendorObj) != -1) {
             setAButtonIcon(0x12);
             setBButtonIcon(0xA);
         }
     }
-    for (i = 0; i < *(u8 *)(data + 0x8B); i++) {
-        switch (*(u8 *)(data + i + 0x81)) {
+    for (i = 0; i < seq->eventCount; i++) {
+        switch (seq->eventIds[i]) {
         case 1:
             fn_801E7DC8(obj, state, ((ShopkeeperState *)state)->unk9D5);
             ((ShopkeeperState *)state)->flags9D4 |= 2;

@@ -389,7 +389,7 @@ void sc_cloudrunnera_hitDetect(void) {}
 void sc_cloudrunnera_update(int obj)
 {
     int i;
-    int inner = *(int *)&((GameObject *)obj)->extra;
+    ObjSeqState *seq = ((GameObject *)obj)->extra;
     void *sub;
     int idx, count;
 
@@ -399,7 +399,7 @@ void sc_cloudrunnera_update(int obj)
     idx = (*gObjectTriggerInterface)->update((u8 *)obj, (f32)(u32)lbl_803DB411);
     if (idx != 0 && ((GameObject *)obj)->unkB4 == -2) {
         int found;
-        s32 mark = *(s8 *)(inner + 0x57);
+        register s32 mark = *(s8 *)&seq->slot;
         int *arr;
         int n;
         int markCopy;
@@ -418,8 +418,8 @@ void sc_cloudrunnera_update(int obj)
                 found = o;
             }
             if (t == -2 && *(s16 *)(o + 0x44) == 0x10) {
-                inner = *(int *)(o + 0xb8);
-                if (markCopy == (s8)*(u8 *)(inner + 0x57)) {
+                seq = *(ObjSeqState **)(o + 0xb8);
+                if (markCopy == (s8)seq->slot) {
                     matchCount++;
                 }
             }
@@ -432,8 +432,8 @@ void sc_cloudrunnera_update(int obj)
         ((GameObject *)obj)->unkB4 = -1;
     }
 
-    for (i = 0; i < *(u8 *)(inner + 0x8b); i++) {
-        switch (*(u8 *)(inner + i + 0x81)) {
+    for (i = 0; i < seq->eventCount; i++) {
+        switch (seq->eventIds[i]) {
         case 0: {
             int setup;
             int newObj;
@@ -492,27 +492,27 @@ void sc_cloudrunnera_update(int obj)
 
 void sc_cloudrunnera_init(int obj, int p2)
 {
-    int inner;
+    ObjSeqState *seq;
     f32 base;
 
     objSetSlot(obj, 0x64);
-    inner = *(int *)(obj + 0xb8);
-    *(s16 *)(inner + 0x6a) = *(s16 *)(p2 + 0x1a);
-    *(s16 *)(inner + 0x6e) = -1;
+    seq = *(ObjSeqState **)(obj + 0xb8);
+    seq->unk6A = *(s16 *)(p2 + 0x1a);
+    seq->flags = -1;
     base = lbl_803E55E0;
-    *(f32 *)(inner + 0x24) = base / (base + (f32)(u32)*(u8 *)(p2 + 0x24));
-    *(int *)(inner + 0x28) = -1;
+    seq->posOffsetDecay = base / (base + (f32)(u32)*(u8 *)(p2 + 0x24));
+    seq->curveId = -1;
     *(int *)(obj + 0xf8) = 0;
 
     if (*(int *)(obj + 0xf4) == 0 && *(s16 *)(p2 + 0x18) != 1) {
         (*gObjectTriggerInterface)
-            ->loadAnimData((u8 *)inner, (u8 *)p2);
+            ->loadAnimData((u8 *)seq, (u8 *)p2);
         *(int *)(obj + 0xf4) = *(s16 *)(p2 + 0x18) + 1;
     } else if (*(int *)(obj + 0xf4) != 0 && *(s16 *)(p2 + 0x18) != *(int *)(obj + 0xf4) - 1) {
-        (*gObjectTriggerInterface)->freeState((u8 *)inner);
+        (*gObjectTriggerInterface)->freeState((u8 *)seq);
         if (*(s16 *)(p2 + 0x18) != -1) {
             (*gObjectTriggerInterface)
-                ->loadAnimData((u8 *)inner, (u8 *)p2);
+                ->loadAnimData((u8 *)seq, (u8 *)p2);
         }
         *(int *)(obj + 0xf4) = *(s16 *)(p2 + 0x18) + 1;
     }

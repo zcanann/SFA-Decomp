@@ -108,7 +108,7 @@ struct ObjSeqState {
     s16 rotOffsetY;
     s16 rotOffsetZ;
     u8 movementState;
-    u8 slot; /* index into per-slot seq globals */
+    u8 slot; /* index into per-slot seq globals; commonly interpreted as s8 */
     s16 curFrame;
     s16 prevFrame;
     s16 endFrame;
