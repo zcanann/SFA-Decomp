@@ -2458,6 +2458,23 @@ re-conversion, at ternary-arm granularity. (task #16, fn_802ABAE8
 86.2->98.3 — the bound exprs `lbl * -f5`/`lbl * f5` stayed single-eval
 while `(f32)gd` emitted 3 blobs, matching target byte shape.)
 
+**#92 PARTIAL CRACK — the POINTER-null branch-over-branch (`cmplwi; bne/beq L;
+b L2`, adjacent targets) is the RETURN-JOIN of an INLINED STATIC HELPER.**
+(snd_groups InsertData 97.1->100, 26 regions -> 0, via MP4 s_data.c.) The
+original factors the scan into a static helper with MULTIPLE returns
+(`if (m->id == id) return m; ... return NULL;`) called via embedded
+assignment `if ((m = GetXAddr(id, data)) != NULL)`. When MWCC inlines it,
+the helper's internal return paths create JOIN EDGES into the test's
+then/else blocks that prevent the fallthrough fold — the b-over-b emerges
+naturally. CONSTRAINTS: (a) the LOOP must live inside the directly-called
+helper — a shared 2-level sub-helper (GetPoolAddr) does NOT inline through
+(MWCC won't auto-inline loop-bearing fns into a fn it then inlines);
+(b) `static inline` does not override the loop-inline refusal. RETRY list
+for this reading: projLib dll_2E_func03's empty-then (the find-or-call
+shape!), scarab dll_CE_render, the objseq family's 15-copy pointer-ternary
+sites, WClaser/door/CFPrisonGuard unsigned-compare instances (the helper
+read may supersede the 'unsigned wall' diagnosis — A/B each).
+
 92. **OPEN — the INT-compare `bge +8; b far` two-branch guard with
     STATEMENT-BLOCK arms (branch-to-NEXT over an unconditional b) has resisted
     every source spelling tried so far.** ⚠️ **SCOPE: this OPEN case is INTEGER
