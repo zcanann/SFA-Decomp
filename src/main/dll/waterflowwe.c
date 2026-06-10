@@ -82,15 +82,14 @@ void waterflowwe_calcCurrentVector(int obj, f32 *vx, f32 *vz)
     hasCurrent = 0;
     for (i = 0; i < count; i++) {
         GameObject *other = objects[i];
-        FoliageCurrentSetup *setup = (FoliageCurrentSetup *)other->anim.placementData;
-        if ((setup->currentFlags & WATERFLOWWE_FOLIAGE_CURRENT_ENABLED) != 0) {
+        if ((((FoliageCurrentSetup *)other->anim.placementData)->currentFlags & WATERFLOWWE_FOLIAGE_CURRENT_ENABLED) != 0) {
             hasCurrent = 1;
             dy = other->anim.localPosY - object->anim.localPosY;
             if ((dy <= lbl_803E72B4) && (dy >= lbl_803E72B8)) {
                 dx = other->anim.localPosX - object->anim.localPosX;
                 dz = other->anim.localPosZ - object->anim.localPosZ;
                 distance = sqrtf(dx * dx + dz * dz);
-                radius = lbl_803E72BC * (f32)(u32)setup->currentRadius;
+                radius = lbl_803E72BC * (f32)(u32)((FoliageCurrentSetup *)other->anim.placementData)->currentRadius;
                 if (distance < radius) {
                     strength = ((radius - distance) / radius) * (lbl_803E72C0 * other->anim.rootMotionScale);
                     currentX += strength * mathSinf((lbl_803E72C4 * (f32)other->anim.rotX) / lbl_803E72C8);
@@ -104,13 +103,11 @@ void waterflowwe_calcCurrentVector(int obj, f32 *vx, f32 *vz)
     {
     for (i = 0; i < count; i++) {
         GameObject *other;
-        ObjectCurrentSourceSetup *setup;
         f32 objectStrength;
         s16 currentAngle;
 
         other = objects[i];
-        setup = (ObjectCurrentSourceSetup *)other->anim.placementData;
-        objectStrength = (f32)(u32)setup->strengthTenths / 10.0f;
+        objectStrength = (f32)(u32)((ObjectCurrentSourceSetup *)other->anim.placementData)->strengthTenths / 10.0f;
         hasCurrent = 1;
         dy = other->anim.localPosY - object->anim.localPosY;
         if ((dy <= 200.0f) && (dy >= lbl_803E72B8)) {
@@ -118,7 +115,7 @@ void waterflowwe_calcCurrentVector(int obj, f32 *vx, f32 *vz)
             dz = other->anim.localPosZ - object->anim.localPosZ;
             currentAngle = (s16)(getAngle(dx, dz) + WATERFLOWWE_OBJECT_CURRENT_ANGLE_OFFSET);
             distance = sqrtf(dx * dx + dz * dz);
-            radius = (f32)(s32)(setup->radiusCells << 3);
+            radius = (f32)(s32)(((ObjectCurrentSourceSetup *)other->anim.placementData)->radiusCells << 3);
             if (distance < radius) {
                 strength = ((radius - distance) / radius) * objectStrength;
                 angle = (lbl_803E72C4 * (f32)currentAngle) / lbl_803E72C8;
