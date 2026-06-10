@@ -1002,7 +1002,7 @@ foundFirst:
                 rot.z = slot->posZ.value;
               }
               gExpgfxFrameParityBit = 1;
-              (*gWaterfxInterface)->spawnRipple(0, 4, rot.x, rot.y, rot.z, lbl_803DF35C);
+              ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(rot.x, rot.y, rot.z, 0, lbl_803DF35C, 4);
               (*gWaterfxInterface)->spawnSplashBurst(NULL, rot.x, rot.y, rot.z,
                                                      gExpgfxSlotMotionStep);
               if (srcObj != NULL &&
