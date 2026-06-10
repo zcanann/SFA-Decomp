@@ -1526,19 +1526,19 @@ void FUN_8016ceb4(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8016d03c(int param_1,undefined4 param_2,int param_3)
+undefined4 FUN_8016d03c(GameObject *obj,undefined4 unused,ObjAnimUpdateState *animUpdate)
 {
   byte bVar1;
   int iVar2;
   byte *pbVar3;
   
-  pbVar3 = ((GameObject *)param_1)->extra;
+  pbVar3 = obj->extra;
   if ((char)*pbVar3 < '\0') {
-    FUN_80053bb0((double)((GameObject *)param_1)->anim.worldPosX,(double)((GameObject *)param_1)->anim.worldPosY,
-                 (double)((GameObject *)param_1)->anim.worldPosZ,pbVar3[1],pbVar3[2]);
+    FUN_80053bb0((double)obj->anim.worldPosX,(double)obj->anim.worldPosY,
+                 (double)obj->anim.worldPosZ,pbVar3[1],pbVar3[2]);
   }
-  for (iVar2 = 0; iVar2 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar2 = iVar2 + 1) {
-    bVar1 = *(byte *)(param_3 + iVar2 + 0x81);
+  for (iVar2 = 0; iVar2 < (int)(uint)animUpdate->eventCount; iVar2 = iVar2 + 1) {
+    bVar1 = animUpdate->eventIds[iVar2];
     if (bVar1 == 2) {
       *pbVar3 = *pbVar3 & 0x7f | 0x80;
       pbVar3[1] = 1;
@@ -2728,27 +2728,27 @@ undefined FUN_8016edb4(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_8016edc0(int param_1,undefined4 param_2,int param_3)
+undefined4 FUN_8016edc0(GameObject *obj,undefined4 unused,ObjAnimUpdateState *animUpdate)
 {
   char cVar1;
   int *piVar2;
   int iVar3;
   
-  piVar2 = ((GameObject *)param_1)->extra;
+  piVar2 = obj->extra;
   if ((*(byte *)(piVar2 + 0x1c) & 8) == 0) {
-    for (iVar3 = 0; iVar3 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar3 = iVar3 + 1) {
-      cVar1 = *(char *)(param_3 + iVar3 + 0x81);
+    for (iVar3 = 0; iVar3 < (int)(uint)animUpdate->eventCount; iVar3 = iVar3 + 1) {
+      cVar1 = animUpdate->eventIds[iVar3];
       if (cVar1 == '\x01') {
         if (*piVar2 != 0) {
           FUN_800175cc((double)lbl_803E3FC8,*piVar2,'\x01');
         }
-        *(ushort *)&((GameObject *)param_1)->anim.flags = *(ushort *)&((GameObject *)param_1)->anim.flags & 0xbfff;
+        *(ushort *)&obj->anim.flags = *(ushort *)&obj->anim.flags & 0xbfff;
       }
       else if (cVar1 == '\x02') {
         if (*piVar2 != 0) {
           FUN_800175cc((double)lbl_803E3FC8,*piVar2,'\0');
         }
-        *(ushort *)&((GameObject *)param_1)->anim.flags = *(ushort *)&((GameObject *)param_1)->anim.flags | 0x4000;
+        *(ushort *)&obj->anim.flags = *(ushort *)&obj->anim.flags | 0x4000;
       }
     }
   }

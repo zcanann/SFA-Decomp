@@ -85,7 +85,7 @@ void FUN_8016ca4c(int param_1);
 void FUN_8016cacc(void);
 void FUN_8016cc88(int param_1);
 void FUN_8016ceb4(int param_1,int param_2);
-undefined4 FUN_8016d03c(int param_1,undefined4 param_2,int param_3);
+undefined4 FUN_8016d03c(GameObject *obj,undefined4 unused,ObjAnimUpdateState *animUpdate);
 void FUN_8016d150(int param_1);
 void FUN_8016d188(int param_1,int param_2);
 void FUN_8016d994(int param_1,undefined param_2,undefined param_3);
@@ -107,7 +107,7 @@ void FUN_8016edac(void);
 void FUN_8016edb0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 undefined FUN_8016edb4(int param_1);
-undefined4 FUN_8016edc0(int param_1,undefined4 param_2,int param_3);
+undefined4 FUN_8016edc0(GameObject *obj,undefined4 unused,ObjAnimUpdateState *animUpdate);
 void FUN_8016ee98(int param_1,int param_2,int param_3);
 void FUN_8016f038(int param_1);
 void FUN_8016f09c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
