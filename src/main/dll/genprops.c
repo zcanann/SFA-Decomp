@@ -7343,9 +7343,9 @@ void staff_hitDetectGeometry(int *obj)
             (*gWaterfxInterface)->spawnSplashBurst(
                 obj, ((ObjHitsPriorityState *)state)->contactPosX, ((ObjHitsPriorityState *)state)->contactPosY,
                 ((ObjHitsPriorityState *)state)->contactPosZ, lbl_803E32B4);
-            (*gWaterfxInterface)->spawnRipple(
-                0, 2, ((ObjHitsPriorityState *)state)->contactPosX, ((ObjHitsPriorityState *)state)->contactPosY,
-                ((ObjHitsPriorityState *)state)->contactPosZ, lbl_803E32B4);
+            ((void (*)(f32, f32, f32, s16, f32, int))(*gWaterfxInterface)->spawnRipple)(
+                ((ObjHitsPriorityState *)state)->contactPosX, ((ObjHitsPriorityState *)state)->contactPosY,
+                ((ObjHitsPriorityState *)state)->contactPosZ, 0, lbl_803E32B4, 2);
         } else {
             QuakePartVec v;
             v.scale = lbl_803E3288;
