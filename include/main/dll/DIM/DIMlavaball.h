@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
+#include "main/objanim_update.h"
 
 extern ObjectDescriptor gMMP_levelcontrolObjDescriptor;
 extern ObjectDescriptor gMoonSeedBushObjDescriptor;
@@ -57,7 +58,7 @@ void MMP_levelcontrol_initialise(void);
 
 int MoonSeedBush_getExtraSize(void);
 int MoonSeedBush_getObjectTypeId(void);
-int MoonSeedBush_SeqFn(int obj, int unused, u8 *events);
+int MoonSeedBush_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 void MoonSeedBush_free(void);
 void MoonSeedBush_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void MoonSeedBush_hitDetect(void);
@@ -68,7 +69,7 @@ void MoonSeedBush_initialise(void);
 
 int mmp_asteroid_re_getExtraSize(void);
 int mmp_asteroid_re_getObjectTypeId(void);
-int fn_801A6F4C(int obj, int unused, int events);
+int fn_801A6F4C(int obj, int unused, ObjAnimUpdateState *animUpdate);
 void mmp_asteroid_re_free(void);
 void mmp_asteroid_re_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void mmp_asteroid_re_hitDetect(void);

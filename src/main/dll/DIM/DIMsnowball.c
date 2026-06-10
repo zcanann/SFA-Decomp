@@ -1221,10 +1221,10 @@ void cclightfoot_init(int* obj, int* def)
     ((GameObject *)obj)->animEventCallback = (void *)ccqueen_SeqFn;
 }
 
-int cclevcontrol_SeqFn(int p1, int p2, u8* state)
+int cclevcontrol_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
 {
-    if (state[139] != 0) {
-        spawnExplosion(p1, lbl_803E46C8, 1, 1, 0, 1, 1, 1, 0);
+    if (animUpdate->eventCount != 0) {
+        spawnExplosion(obj, lbl_803E46C8, 1, 1, 0, 1, 1, 1, 0);
     }
     return 0;
 }
@@ -1474,18 +1474,14 @@ void ccqueen_update(int *obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
-/* ccqueen_SeqFn: ccqueen seqFn dispatcher. Walks the (u8)data[0x8b] command
- * bytes at data[0x81..]: cmd=1 detaches obj's child via ObjLink_DetachChild
- * (only when obj->_c8 != 0); cmd=2 spawns a water splash burst
- * with the obj's xyz position and lbl_803E4670 as a 5-arg call. Returns 0. */
 #pragma scheduling off
 #pragma peephole off
-int ccqueen_SeqFn(int obj, int unused, u8* data) {
+int ccqueen_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate) {
     int* state = ((GameObject *)obj)->extra;
-    if (data[0x8b] != 0) {
+    if (animUpdate->eventCount != 0) {
         int i;
-        for (i = 0; (u8)i < data[0x8b]; i++) {
-            int cmd = data[0x81 + (u8)i];
+        for (i = 0; (u8)i < animUpdate->eventCount; i++) {
+            int cmd = animUpdate->eventIds[(u8)i];
             switch (cmd) {
             case 1:
                 if (((GameObject *)obj)->unkC8 != NULL) {

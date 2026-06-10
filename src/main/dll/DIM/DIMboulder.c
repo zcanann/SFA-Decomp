@@ -1428,13 +1428,12 @@ void dll_16C_render(int *obj, int p1, int p2, int p3, int p4, s8 visible) {
 #pragma peephole reset
 #pragma scheduling reset
 
-/* IMIceMountain_SeqFn: set extra bit-0; scan arr for value==2 and clear two GameBits. */
 #pragma scheduling off
-int IMIceMountain_SeqFn(void *obj, int arg2, u8 *arg3) {
+int IMIceMountain_SeqFn(void *obj, int unused, ObjAnimUpdateState *animUpdate) {
     int i;
     *(u32 *)((char *)((GameObject *)obj)->extra + 4) |= 1;
-    for (i = 0; i < arg3[0x8b]; i++) {
-        if (arg3[i + 0x81] == 2) {
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        if (animUpdate->eventIds[i] == 2) {
             GameBit_Set(888, 0);
             GameBit_Set(953, 0);
         }
@@ -1604,17 +1603,19 @@ typedef struct { s16 v[5]; } Blob10;
  * from a small id table, then run the map-event sub-object state callbacks. */
 #pragma scheduling off
 #pragma peephole off
-int dll_16C_SeqFn(int *obj, int arg2, u8 *arg3)
+int dll_16C_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     int *p;
     int *extra = ((GameObject *)obj)->extra;
     s16 ids[5];
+    u8 *animUpdateBytes;
 
+    animUpdateBytes = (u8 *)animUpdate;
     *(u8 *)((char *)extra + 0x20) = 0xff;
     p = (int *)*extra;
-    if (arg3[0x80] == 3) {
+    if (animUpdateBytes[0x80] == 3) {
         *(s8 *)((char *)extra + 0x21) = -1;
-        arg3[0x80] = 0;
+        animUpdateBytes[0x80] = 0;
     }
     *(Blob10 *)ids = *(Blob10 *)lbl_802C2308;
 
@@ -1638,9 +1639,9 @@ int dll_16C_SeqFn(int *obj, int arg2, u8 *arg3)
         }
     }
 
-    *(s16 *)((char *)arg3 + 0x6e) = *(s16 *)((char *)arg3 + 0x70);
+    animUpdate->hitVolumePair = animUpdate->activeHitVolumePair;
 
-    if (p != NULL && arg3[0x80] == 2) {
+    if (p != NULL && animUpdateBytes[0x80] == 2) {
         *(f32 *)((char *)extra + 4) = lbl_803E4758;
         *(f32 *)((char *)extra + 8) = *(f32 *)((char *)extra + 0x14);
         *(f32 *)((char *)extra + 0xc) = *(f32 *)((char *)extra + 0x18);
@@ -1650,16 +1651,16 @@ int dll_16C_SeqFn(int *obj, int arg2, u8 *arg3)
         if (((GameObject *)obj)->anim.modelState != NULL) {
             ((GameObject *)obj)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         }
-        *(s16 *)((char *)arg3 + 0x6e) &= ~4;
-        arg3[0x80] = 0;
-    } else if (p != NULL && arg3[0x80] == 1) {
+        animUpdate->hitVolumePair &= ~4;
+        animUpdateBytes[0x80] = 0;
+    } else if (p != NULL && animUpdateBytes[0x80] == 1) {
         (*(void (**)(int *, int))(**(int **)((char *)p + 0x68) + 0x3c))(p, 0);
-        arg3[0x80] = 0;
+        animUpdateBytes[0x80] = 0;
     }
 
     if (p != NULL) {
         if ((*(int (**)(int *))(**(int **)((char *)p + 0x68) + 0x38))(p) == 2) {
-            *(s16 *)((char *)arg3 + 0x6e) &= ~3;
+            animUpdate->hitVolumePair &= ~3;
         }
     }
     return 0;

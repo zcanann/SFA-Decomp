@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
+#include "main/objanim_update.h"
 
 extern ObjectDescriptor gIMIceMountainObjDescriptor;
 extern ObjectDescriptor gCRrockfallObjDescriptor;
@@ -49,7 +50,7 @@ FUN_801addec(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 int imicemountain_getExtraSize(void);
 int imicemountain_getObjectTypeId(void);
 void imicemountain_free(void);
-int IMIceMountain_SeqFn(void *obj, int arg2, u8 *arg3);
+int IMIceMountain_SeqFn(void *obj, int unused, ObjAnimUpdateState *animUpdate);
 void imicemountain_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void imicemountain_hitDetect(void);
 void imicemountain_update(int* obj);
@@ -81,7 +82,7 @@ int dll_16C_getObjectTypeId(void);
 void dll_16C_free(int *obj);
 void dll_16C_hitDetect(void *obj);
 void dll_16C_init(void *obj, void *arg2);
-int dll_16C_SeqFn(int *obj, int arg2, u8 *events);
+int dll_16C_SeqFn(int *obj, int unused, ObjAnimUpdateState *animUpdate);
 void dll_16C_release(void);
 void dll_16C_initialise(void);
 

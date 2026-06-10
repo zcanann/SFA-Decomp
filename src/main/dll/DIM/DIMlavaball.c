@@ -1544,7 +1544,7 @@ void mmp_gyservent_update(int obj) {
 
 #pragma scheduling off
 #pragma peephole off
-int MoonSeedBush_SeqFn(int obj, int p2, u8 *p3) {
+int MoonSeedBush_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate) {
     MoonSeedBushState *state = ((GameObject *)obj)->extra;
     int def = *(int *)&((GameObject *)obj)->anim.placementData;
     int i;
@@ -1554,8 +1554,8 @@ int MoonSeedBush_SeqFn(int obj, int p2, u8 *p3) {
             state->seedState = 2;
         }
     }
-    for (i = 0; i < p3[0x8B]; i++) {
-        switch ((s32)p3[0x81 + i]) {
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        switch ((s32)animUpdate->eventIds[i]) {
         case 1:
             state->seedState = 1;
             if (*(s16 *)(def + 0x1A) != -1) {
@@ -1689,12 +1689,12 @@ void fn_801A7B10(int obj) {
 
 #pragma scheduling off
 #pragma peephole off
-int fn_801A6F4C(int obj, int p2, int data) {
+int fn_801A6F4C(int obj, int unused, ObjAnimUpdateState *animUpdate) {
     MmpAsteroidReState *state = ((GameObject *)obj)->extra;
     int i;
-    *(u8 *)(data + 0x56) = 0;
-    for (i = 0; i < (int)*(u8 *)(data + 0x8b); i++) {
-        u8 type = *(u8 *)(data + i + 0x81);
+    animUpdate->sequenceEventActive = 0;
+    for (i = 0; i < (int)animUpdate->eventCount; i++) {
+        u8 type = animUpdate->eventIds[i];
         switch (type) {
         case 0:
             setDrawLights(0);

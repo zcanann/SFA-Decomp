@@ -3,6 +3,7 @@
 
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
+#include "main/objanim_update.h"
 
 extern ObjectDescriptor gCCSharpclawPadObjDescriptor;
 extern ObjectDescriptor gCCpedstalObjDescriptor;
@@ -10,7 +11,7 @@ extern ObjectDescriptor gCClevcontrolObjDescriptor;
 
 void ccqueen_render(int *obj, int p2, int p3, int p4, int p5, s8 visible);
 void ccqueen_update(int *obj);
-int ccqueen_SeqFn(int obj, int unused, u8 *events);
+int ccqueen_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 void FUN_801aa684(int param_1);
 void FUN_801aa6d8(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_801aa700(int param_1);
@@ -45,7 +46,7 @@ int ccsharpclawpad_getExtraSize(void);
 void ccsharpclawpad_update(int obj);
 void ccsharpclawpad_init(int* obj, int* def);
 void cclightfoot_init(int* obj, int* def);
-int cclevcontrol_SeqFn(int p1, int p2, unsigned char* state);
+int cclevcontrol_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate);
 
 int ccpedstal_getExtraSize(void);
 void ccpedstal_update(int obj);
