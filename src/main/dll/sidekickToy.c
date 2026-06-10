@@ -1383,7 +1383,7 @@ void fn_8014B878(int *arg1, int *sub) {
             ((TrickyState *)sub)->flags2DC |= 0x800200;
         }
         {
-            u16 dist = *(u16*)((char*)sub + 0x2a4);
+            u16 dist = ((TrickyState *)sub)->unk2A4;
             u16 near = (u16)(int)((TrickyState *)sub)->unk2AC;
             if (dist < near) {
                 ((TrickyState *)sub)->flags2DC |= 0x400;
@@ -1434,7 +1434,7 @@ void fn_8014B878(int *arg1, int *sub) {
             ((TrickyState *)sub)->flags2DC |= 0x1000000;
         }
         {
-            u16 mode = *(u16*)((char*)sub + 0x2a0);
+            u16 mode = ((TrickyState *)sub)->unk2A0;
             if (mode < 2 || mode > 5) {
                 ((TrickyState *)sub)->flags2DC |= 0x400000;
             } else if ((((TrickyState *)sub)->flags2DC & 0x1000000) != 0) {
@@ -1561,7 +1561,7 @@ void fn_8014CD1C(int *node, int *sub, u16 p3, u8 p5, f32 fa, f32 fb) {
     dt = timeDelta / (f32)(u32)p3;
     if (dt > lbl_803E256C) dt = lbl_803E256C;
 
-    angle = getAngle(-*(f32*)((char*)sub + 0x2b8), -*(f32*)((char*)sub + 0x2c0));
+    angle = getAngle(-((TrickyState *)sub)->unk2B8, -((TrickyState *)sub)->unk2C0);
     delta = (u16)angle - (u16)*(s16*)node;
     delta_f = (f32)delta;
     if (delta_f > lbl_803E25B8) delta_f = lbl_803E25EC + delta_f;
@@ -1585,10 +1585,10 @@ void fn_8014CD1C(int *node, int *sub, u16 p3, u8 p5, f32 fa, f32 fb) {
     }
 
     if (lbl_803E2574 != fb) {
-        f32 dz2 = *(f32*)((char*)sub + 0x2c0) * *(f32*)((char*)sub + 0x2c0);
-        f32 dx2 = *(f32*)((char*)sub + 0x2b8) * *(f32*)((char*)sub + 0x2b8);
+        f32 dz2 = ((TrickyState *)sub)->unk2C0 * ((TrickyState *)sub)->unk2C0;
+        f32 dx2 = ((TrickyState *)sub)->unk2B8 * ((TrickyState *)sub)->unk2B8;
         f32 hyp = sqrtf(dz2 + dx2);
-        int angle2 = getAngle(*(f32*)((char*)sub + 0x2bc) * fb, hyp);
+        int angle2 = getAngle(((TrickyState *)sub)->unk2BC * fb, hyp);
         s32 d2 = (u16)angle2 - (u16)((GameObject *)node)->anim.rotY;
         f32 d2f = (f32)d2;
         s16 newVal2;
@@ -1628,15 +1628,15 @@ void fn_8014BC98(int *node, int *sub) {
         if (delta > 0x8000) delta -= 0xFFFF;
         if (delta < -0x8000) delta += 0xFFFF;
         d16 = (u16)delta;
-        *(u16*)((char*)sub + 0x2a2) = d16;
-        *(u16*)((char*)sub + 0x2a0) = d16 >> 13;
+        ((TrickyState *)sub)->unk2A2 = d16;
+        ((TrickyState *)sub)->unk2A0 = d16 >> 13;
 
         dist = sqrtf(d[2]*d[2] + (d[0]*d[0] + d[1]*d[1]));
-        *(s16*)((char*)sub + 0x2a4) = (s16)(s32)dist;
+        *(s16 *)&((TrickyState *)sub)->unk2A4 = (s16)(s32)dist;
 
         {
             int *t = *(int**)&((TrickyState *)sub)->unk29C;
-            *(s16*)((char*)sub + 0x2a6) = (s16)(s32)(*(f32*)((char*)t + 0x1c) - ((GameObject *)node)->anim.worldPosY);
+            *(s16 *)&((TrickyState *)sub)->unk2A6 = (s16)(s32)(*(f32*)((char*)t + 0x1c) - ((GameObject *)node)->anim.worldPosY);
         }
     }
 }

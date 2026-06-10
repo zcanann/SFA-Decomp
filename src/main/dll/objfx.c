@@ -67,9 +67,9 @@ void objfx_spawnRandomBurst(void *obj, u8 type, u8 count, void *origin, u8 flagB
         params.vec[2] = 0.0f;
         vecRotateZXY(rvec, params.vec);
         if (origin != NULL) {
-            params.vec[0] += *(f32 *)((char *)origin + 0xc);
-            params.vec[1] += *(f32 *)((char *)origin + 0x10);
-            params.vec[2] += *(f32 *)((char *)origin + 0x14);
+            params.vec[0] += ((GameObject *)origin)->anim.localPosX;
+            params.vec[1] += ((GameObject *)origin)->anim.localPosY;
+            params.vec[2] += ((GameObject *)origin)->anim.localPosZ;
         }
         params.f6 = (s16)partbl.e[type].a;
         params.pad[1] = (s16)partbl.e[type].b;
@@ -226,9 +226,9 @@ void objfx_spawnDirectionalBurst(void *obj, u8 idx, u8 kind, u8 mode, u8 chance,
         params.vec[2] = lbl_803DF35C;
         vecRotateZXY(rvec, params.vec);
         if (origin != NULL) {
-            params.vec[0] += *(f32 *)((char *)origin + 0xc);
-            params.vec[1] += *(f32 *)((char *)origin + 0x10);
-            params.vec[2] += *(f32 *)((char *)origin + 0x14);
+            params.vec[0] += ((GameObject *)origin)->anim.localPosX;
+            params.vec[1] += ((GameObject *)origin)->anim.localPosY;
+            params.vec[2] += ((GameObject *)origin)->anim.localPosZ;
         }
         params.pad[2] = (s16)tC.v[idx];
         params.pad[0] = (s16)tD.v[idx];

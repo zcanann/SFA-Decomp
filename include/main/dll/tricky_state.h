@@ -72,11 +72,18 @@ typedef struct TrickyState {
     s16 pathRotZ;
     u8 pad294[0x29C - 0x294];
     u32 unk29C;
-    u8 pad2A0[0x2AC - 0x2A0];
+    u16 unk2A0;
+    u16 unk2A2;
+    u16 unk2A4;
+    u16 unk2A6;
+    u8 pad2A8[0x2AC - 0x2A8];
     f32 unk2AC;
     f32 unk2B0;
     f32 unk2B4; /* collectable.c reads an s16 pair at 2B4/2B6 - launder those */
-    u8 pad2B8[0x2D0 - 0x2B8];
+    f32 unk2B8;
+    f32 unk2BC;
+    f32 unk2C0;
+    u8 pad2C4[0x2D0 - 0x2C4];
     f32 unk2D0;
     f32 unk2D4;
     f32 unk2D8;

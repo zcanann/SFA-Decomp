@@ -6,6 +6,19 @@
 #include "main/objprint_dolphin.h"
 #include "main/objanim_internal.h"
 
+typedef struct ObjModelRenderOp {
+    u8 pad0[0x18 - 0x0];
+    u32 unk18;
+    u32 unk1C;
+    u8 pad20[0x24 - 0x20];
+    u32 unk24;
+    u8 pad28[0x34 - 0x28];
+    u32 unk34;
+    u8 pad38[0x3C - 0x38];
+    u32 unk3C;
+} ObjModelRenderOp;
+
+
 #define OBJPRINT_MODEL_DEF(obj) (((ObjAnimComponent *)(obj))->modelInstance)
 #define OBJPRINT_ACTIVE_BANK_INDEX(obj) (((ObjAnimComponent *)(obj))->bankIndex)
 
@@ -4651,8 +4664,8 @@ u32 objRenderFn_8003edf4(u8 *obj, u8 *p2, int *am, MtxBitStream *bs) {
     refs = ObjModel_GetRenderOpTextureRefs(am, idx);
     resetLotsOfRenderVars();
     envtex = 0;
-    if ((refs[0] != 0 || refs[1] != 0) && *(u32 *)((char *)op + 0x34) != 0) {
-        void *t = textureIdxToPtr(*(u32 *)((char *)op + 0x34));
+    if ((refs[0] != 0 || refs[1] != 0) && ((ObjModelRenderOp *)op)->unk34 != 0) {
+        void *t = textureIdxToPtr(((ObjModelRenderOp *)op)->unk34);
         int nl = lbl_803DCC5C + 1;
         if (refs[0] != 0) {
             nl += 1;
@@ -4660,13 +4673,13 @@ u32 objRenderFn_8003edf4(u8 *obj, u8 *p2, int *am, MtxBitStream *bs) {
         if (refs[1] != 0) {
             nl += 1;
         }
-        envtex = textureFn_80050ad8(t, nl, ((u8 *)op)[0x42], *(u32 *)((char *)op + 0x24));
+        envtex = textureFn_80050ad8(t, nl, ((u8 *)op)[0x42], ((ObjModelRenderOp *)op)->unk24);
     }
     if (refs[0] != 0) {
         textureFn_80051348(refs[0], obj[0xf1]);
     }
     if (refs[1] != 0) {
-        if (*(u32 *)((char *)op + 0x1c) != 0) {
+        if (((ObjModelRenderOp *)op)->unk1C != 0) {
             color[0] = 0xff;
             color[1] = 0xff;
             color[2] = 0xff;
@@ -4726,7 +4739,7 @@ u32 objRenderFn_8003edf4(u8 *obj, u8 *p2, int *am, MtxBitStream *bs) {
     }
     {
         u32 t18;
-        if ((t18 = *(u32 *)((char *)op + 0x18)) != 0 && *(u32 *)((char *)op + 0x1c) == 0 && refs[1] != 0) {
+        if ((t18 = ((ObjModelRenderOp *)op)->unk18) != 0 && ((ObjModelRenderOp *)op)->unk1C == 0 && refs[1] != 0) {
             textureIdxToPtr(t18);
             fn_80050F2C();
         }
@@ -4736,7 +4749,7 @@ u32 objRenderFn_8003edf4(u8 *obj, u8 *p2, int *am, MtxBitStream *bs) {
         if (modelRenderFn_8003e98c(obj, (u8 *)op, refs, 0x80, hl = ((*(u16 *)(p2 + 0xe2) & 2) && !(p2[0x24] & 2)), nlay) == 0) {
             gxTextureFn_80050e28(refs[0] != 0 ? 1 : 0);
         }
-        if (*(u32 *)((char *)op + 0x3c) & 0x100000) {
+        if (((ObjModelRenderOp *)op)->unk3C & 0x100000) {
             u8 *l1 = Shader_getLayer((u8 *)op, 1);
             {
                 f32 tx;
@@ -4767,7 +4780,7 @@ u32 objRenderFn_8003edf4(u8 *obj, u8 *p2, int *am, MtxBitStream *bs) {
         getColor803dd01c(&fogc);
         renderHeavyFog(&fogc);
     }
-    if (*(u32 *)((char *)op + 0x3c) & 0x100) {
+    if (((ObjModelRenderOp *)op)->unk3C & 0x100) {
         f32 *vm = Camera_GetViewMatrix();
         Obj_BuildWorldTransformMatrix((int *)obj, wm, 0);
         PSMTXConcat(vm, wm, t1);
@@ -4788,7 +4801,7 @@ u32 objRenderFn_8003edf4(u8 *obj, u8 *p2, int *am, MtxBitStream *bs) {
             gxTextureFn_80052638(color);
         }
     }
-    if (*(u32 *)((char *)op + 0x3c) & 0x20000) {
+    if (((ObjModelRenderOp *)op)->unk3C & 0x20000) {
         fn_80118240();
     }
     textureFn_800528bc();
@@ -4798,7 +4811,7 @@ u32 objRenderFn_8003edf4(u8 *obj, u8 *p2, int *am, MtxBitStream *bs) {
             pcb((int *)obj, am, idx);
         } else {
             u8 zon = 1;
-            if (obj[0x37] < 0xff || (*(u32 *)((char *)op + 0x3c) & 0x40000000) || shad) {
+            if (obj[0x37] < 0xff || (((ObjModelRenderOp *)op)->unk3C & 0x40000000) || shad) {
                 u16 f2;
                 GXSetBlendMode(1, 4, 5, 5);
                 f2 = *(u16 *)(p2 + 2);
@@ -4813,7 +4826,7 @@ u32 objRenderFn_8003edf4(u8 *obj, u8 *p2, int *am, MtxBitStream *bs) {
                     gxSetZMode_(1, 3, 0);
                     GXSetAlphaCompare(7, 0, 0, 7, 0);
                 }
-            } else if (*(u32 *)((char *)op + 0x3c) & 0x400) {
+            } else if (((ObjModelRenderOp *)op)->unk3C & 0x400) {
                 GXSetBlendMode(0, 1, 0, 5);
                 if (*(u16 *)(p2 + 2) & 0x400) {
                     gxSetZMode_(0, 3, 0);
@@ -4830,13 +4843,13 @@ u32 objRenderFn_8003edf4(u8 *obj, u8 *p2, int *am, MtxBitStream *bs) {
                 }
                 GXSetAlphaCompare(7, 0, 0, 7, 0);
             }
-            if (*(u32 *)((char *)op + 0x3c) & 0x400) {
+            if (((ObjModelRenderOp *)op)->unk3C & 0x400) {
                 zon = 0;
             }
             gxSetPeControl_ZCompLoc_(zon);
         }
     }
-    if (*(u32 *)((char *)op + 0x3c) & 8) {
+    if (((ObjModelRenderOp *)op)->unk3C & 8) {
         GXSetCullMode(2);
     } else {
         GXSetCullMode(0);
