@@ -356,58 +356,7 @@ int OptionsScreen_run(void)
  */
 #pragma scheduling on
 #pragma peephole on
-void FUN_8011d67c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
-{
-  undefined8 uVar1;
-  
-  uVar1 = (**(code **)(*DAT_803dd6cc + 0xc))(0x14,5);
-  FUN_80017488(uVar1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x15);
-  DAT_803de38c = 0;
-  DAT_803de388 = (undefined4)getSaveFileStruct();
-  if (DAT_803de378 == '\0') {
-    OptionsScreen_render(0);
-  }
-  else if (DAT_803de378 == '\x01') {
-    fn_8011C7B4();
-  }
-  else {
-    fn_8011CA74();
-  }
-  DAT_803de386 = 2;
-  DAT_803de385 = 0;
-  DAT_803de379 = 0;
-  return;
-}
 
-/*
- * --INFO--
- *
- * Function: FUN_8011d9f4
- * EN v1.0 Address: 0x8011D9F4
- * EN v1.0 Size: 260b
- * EN v1.1 Address: 0x8011DA30
- * EN v1.1 Size: 84b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_8011d9f4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
-{
-  undefined8 uVar1;
-  
-  FUN_80053754();
-  FUN_80053754();
-  uVar1 = FUN_80053754();
-  FUN_80053c98(uVar1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,'\x01',param_11,
-               param_12,param_13,param_14,param_15,param_16);
-  (**(code **)(*DAT_803dd720 + 8))();
-  return;
-}
 
 /*
  * --INFO--
@@ -464,70 +413,6 @@ FUN_8011dafc(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   return 0;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8011dc20
- * EN v1.0 Address: 0x8011DC20
- * EN v1.0 Size: 32b
- * EN v1.1 Address: 0x8011DBB4
- * EN v1.1 Size: 72b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_8011dc20(void)
-{
-  FUN_80053754();
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_8011dc40
- * EN v1.0 Address: 0x8011DC40
- * EN v1.0 Size: 144b
- * EN v1.1 Address: 0x8011DBFC
- * EN v1.1 Size: 152b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_8011dc40(uint param_1)
-{
-  ushort uVar1;
-  
-  uVar1 = 0;
-  if (DAT_803de542 == 3) {
-    uVar1 = 0x3fc;
-  }
-  else if (DAT_803de542 < 3) {
-    if (DAT_803de542 == 1) {
-      uVar1 = 0x3f8;
-    }
-    else if (DAT_803de542 < 1) {
-      if (-1 < DAT_803de542) {
-        uVar1 = 0x3fb;
-      }
-    }
-    else {
-      uVar1 = 0x3f7;
-    }
-  }
-  else if (DAT_803de542 == 5) {
-    uVar1 = 0x3fa;
-  }
-  else if (DAT_803de542 < 5) {
-    uVar1 = 0x3f9;
-  }
-  if (uVar1 != 0) {
-    FUN_800067e8(param_1,uVar1,1);
-  }
-  return;
-}
 
 
 /* Trivial 4b 0-arg blr leaves. */

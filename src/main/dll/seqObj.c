@@ -247,20 +247,7 @@ void wispbaddie_init(int obj,int setup,int initialised)
  */
 #pragma scheduling on
 #pragma peephole on
-void FUN_8014fd38(int param_1)
-{
-  uint uVar1;
-  uint *puVar2;
-  
-  puVar2 = ((GameObject *)param_1)->extra;
-  ObjGroup_RemoveObject(param_1,3);
-  uVar1 = *puVar2;
-  if (uVar1 != 0) {
-    FUN_80017814(uVar1);
-    *puVar2 = 0;
-  }
-  return;
-}
+
 
 /*
  * --INFO--
@@ -277,9 +264,7 @@ void FUN_8014fd38(int param_1)
  */
 #pragma scheduling off
 #pragma peephole off
-void FUN_8014fd80(uint param_1)
-{
-}
+
 
 /*
  * --INFO--
@@ -296,40 +281,7 @@ void FUN_8014fd80(uint param_1)
  */
 #pragma scheduling on
 #pragma peephole on
-void FUN_8014fd84(uint param_1,int param_2,int param_3)
-{
-  float fVar1;
-  double dVar2;
-  int iVar3;
-  char cVar4;
-  int *piVar5;
-  
-  dVar2 = DOUBLE_803e3398;
-  piVar5 = ((GameObject *)param_1)->extra;
-  fVar1 = (float)((double)CONCAT44(0x43300000,(int)*(short *)(param_2 + 0x1a) ^ 0x80000000) -
-                 DOUBLE_803e3398) / lbl_803E33B4;
-  piVar5[3] = (int)fVar1;
-  piVar5[2] = (int)fVar1;
-  piVar5[6] = (int)(lbl_803E33B8 *
-                   (float)((double)CONCAT44(0x43300000,(int)*(char *)(param_2 + 0x19) ^ 0x80000000)
-                          - dVar2));
-  piVar5[8] = 0x337;
-  if (param_3 == 0) {
-    iVar3 = FUN_80017830(0x108,0x1a);
-    *piVar5 = iVar3;
-    if (*piVar5 != 0) {
-      FUN_800033a8(*piVar5,0,0x108);
-    }
-    cVar4 = (**(code **)(*DAT_803dd71c + 0x8c))
-                      ((double)(float)piVar5[6],*piVar5,param_1,&DAT_803dc8e8,0xffffffff);
-    if (cVar4 == '\0') {
-      *(byte *)(piVar5 + 9) = *(byte *)(piVar5 + 9) | 1;
-    }
-    FUN_80006824(param_1,SFXfox_swimstroke122);
-  }
-  ((GameObject *)param_1)->objectFlags = ((GameObject *)param_1)->objectFlags | 0x2000;
-  return;
-}
+
 
 /*
  * --INFO--
@@ -395,38 +347,6 @@ void FUN_8014ff24(short *param_1,undefined4 param_2)
   return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8014ff4c
- * EN v1.0 Address: 0x8014FF4C
- * EN v1.0 Size: 92b
- * EN v1.1 Address: 0x801503EC
- * EN v1.1 Size: 92b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_8014ff4c(undefined4 param_1,int param_2)
-{
-  float fVar1;
-  
-  *(float *)(param_2 + 0x2ac) = lbl_803E33C0;
-  *(undefined4 *)(param_2 + 0x2e4) = 1;
-  *(uint *)(param_2 + 0x2e4) = *(uint *)(param_2 + 0x2e4) | 0x80;
-  *(float *)(param_2 + 0x308) = lbl_803E33C4;
-  *(float *)(param_2 + 0x300) = lbl_803E33C8;
-  *(float *)(param_2 + 0x304) = lbl_803E33CC;
-  *(undefined *)(param_2 + 800) = 0;
-  fVar1 = lbl_803E33D0;
-  *(float *)(param_2 + 0x314) = lbl_803E33D0;
-  *(undefined *)(param_2 + 0x321) = 0;
-  *(float *)(param_2 + 0x318) = lbl_803E33D4;
-  *(undefined *)(param_2 + 0x322) = 0;
-  *(float *)(param_2 + 0x31c) = fVar1;
-  return;
-}
 
 /*
  * --INFO--

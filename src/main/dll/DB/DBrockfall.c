@@ -192,138 +192,7 @@ int FEseqobject_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
  */
 #pragma scheduling on
 #pragma peephole on
-void FUN_801df45c(undefined2 *param_1)
-{
-  bool bVar1;
-  byte bVar2;
-  short sVar3;
-  float fVar4;
-  int iVar5;
-  char cVar7;
-  undefined4 uVar6;
-  Platform1State *state;
-  
-  state = *(Platform1State **)(param_1 + 0x5c);
-  FUN_80017a98();
-  GameBit_Set(0xf1d,0);
-  cVar7 = (*gMapEventInterface)->getMode(0xe);
-  if (cVar7 == '\x06') {
-    if ((state->flags & PLATFORM1_FLAG_ACTIVE) == 0) {
-      if ((state->flags & PLATFORM1_TRIGGER_FLAG_02) != 0) {
-        sVar3 = state->transitionStep;
-        if (sVar3 == 0) {
-          *param_1 = 0xd700;
-          state->currentTrackOffset = 0xffffd700;
-          state->prevTrackOffset = state->currentTrackOffset;
-          fVar4 = lbl_803E6310;
-          state->motionValue0 = lbl_803E6310;
-          state->offsetVelocity = fVar4;
-          state->transitionStep = 1;
-          state->flags = state->flags & ~PLATFORM1_TRIGGER_FLAG_01;
-        }
-        else if (sVar3 == 1) {
-          GameBit_Set(0xf1d,1);
-          FUN_8011e800(1);
-          uVar6 = (*gObjectTriggerInterface)->runSequence(0, (void *)param_1, -1);
-          state->loopSfxHandle = uVar6;
-        }
-        else if (sVar3 == 2) {
-          state->transitionStep = 0;
-        }
-        else if (sVar3 == 3) {
-          state->transitionStep = 0;
-        }
-      }
-    }
-    else {
-      if (0 < state->loopSfxHandle) {
-        (*gObjectTriggerInterface)->endSequence(state->loopSfxHandle);
-        FUN_80080eec(state->loopSfxHandle);
-      }
-      iVar5 = DAT_803de890 + -1;
-      bVar1 = DAT_803de890 == 0;
-      DAT_803de890 = iVar5;
-      if (bVar1) {
-        state->flags = state->flags & ~PLATFORM1_FLAG_ACTIVE;
-        *(f32 *)(param_1 + 6) = state->savedPosX;
-        *(f32 *)(param_1 + 8) = state->savedPosY;
-        *(f32 *)(param_1 + 10) = state->savedPosZ;
-        state->linkedObject = 0;
-        *param_1 = 0xd700;
-        state->currentTrackOffset = 0xffffd700;
-        bVar2 = state->flags;
-        if ((bVar2 & PLATFORM1_FLAG_EXIT_NEGATIVE) == 0) {
-          if ((bVar2 & PLATFORM1_FLAG_EXIT_POSITIVE) != 0) {
-            state->flags = bVar2 & ~PLATFORM1_FLAG_EXIT_POSITIVE;
-            state->loopSfxHandle = -1;
-            GameBit_Set(0x786,1);
-          }
-        }
-        else {
-          GameBit_Set(0x784,1);
-          state->loopSfxHandle = -1;
-          state->flags = state->flags & ~PLATFORM1_TRIGGER_MASK;
-          state->flags = state->flags & ~PLATFORM1_FLAG_EXIT_NEGATIVE;
-        }
-      }
-    }
-  }
-  return;
-}
 
-/*
- * --INFO--
- *
- * Function: FUN_801df69c
- * EN v1.0 Address: 0x801DF69C
- * EN v1.0 Size: 232b
- * EN v1.1 Address: 0x801DF700
- * EN v1.1 Size: 220b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-uint FUN_801df69c(int param_1,undefined4 param_2,int param_3)
-{
-  bool bVar1;
-  int iVar2;
-  uint uVar3;
-  int iVar5;
-  FEseqobjectState *state;
-  
-  iVar5 = *(int *)&((GameObject *)param_1)->anim.placementData;
-  state = ((GameObject *)param_1)->extra;
-  iVar2 = FUN_80017a98();
-  uVar3 = FUN_80006c00(0);
-  if ((uVar3 & 0x100) == 0) {
-    uVar3 = 0;
-  }
-  else {
-    state->promptState = 0;
-    iVar2 = FUN_80294d20(iVar2);
-    bVar1 = iVar2 < *(short *)(iVar5 + 0x1a);
-    if (bVar1) {
-      state->promptState = 2;
-    }
-    else {
-      state->promptState = 0;
-    }
-    uVar3 = (uint)!bVar1;
-    if (param_3 == 0x15) {
-      uVar3 = countLeadingZeros(uVar3);
-      uVar3 = uVar3 >> 5;
-    }
-    else if ((param_3 < 0x15) && (0x13 < param_3)) {
-      uVar3 = countLeadingZeros(1 - uVar3);
-      uVar3 = uVar3 >> 5;
-    }
-    else {
-      uVar3 = 0;
-    }
-  }
-  return uVar3;
-}
 
 /*
  * --INFO--
@@ -340,11 +209,7 @@ uint FUN_801df69c(int param_1,undefined4 param_2,int param_3)
  */
 #pragma scheduling off
 #pragma peephole off
-void FUN_801df784(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,int param_11)
-{
-}
+
 
 /*
  * --INFO--
@@ -361,38 +226,7 @@ void FUN_801df784(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  */
 #pragma scheduling on
 #pragma peephole on
-void FUN_801df788(int param_1)
-{
-  byte bVar1;
-  uint uVar2;
-  FEseqobjectState *state;
-  
-  state = ((GameObject *)param_1)->extra;
-  bVar1 = state->state;
-  if (bVar1 == 1) {
-    if ((*(byte *)&((GameObject *)param_1)->anim.resetHitboxMode & 1) != 0) {
-      (*gObjectTriggerInterface)->runSequence(0, (void *)param_1, -1);
-    }
-    *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode & 0xf7;
-  }
-  else if (bVar1 == 0) {
-    uVar2 = (uint)*(short *)(*(int *)&((GameObject *)param_1)->anim.placementData + 0x1e);
-    if ((uVar2 == 0xffffffff) || (uVar2 = GameBit_Get(uVar2), uVar2 == 0)) {
-      state->state = 1;
-    }
-    else {
-      state->state = 2;
-    }
-  }
-  else if (bVar1 < 3) {
-    *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode = *(byte *)&((GameObject *)param_1)->anim.resetHitboxMode | 8;
-  }
-  state->promptState = 0;
-  if (((((ObjAnimComponent *)param_1)->modelInstance->flags & 1) != 0) && (*(int *)(param_1 + 0x74) != 0)) {
-    FUN_800400b0();
-  }
-  return;
-}
+
 
 
 /* Trivial 4b 0-arg blr leaves. */

@@ -300,23 +300,6 @@ void nw_mammoth_init(NwMammothObject *obj, NwMammothMapData *mapData, int isRelo
 /*
  * --INFO--
  *
- * Function: FUN_801cf0b0
- * EN v1.0 Address: 0x801CF0B0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801CF3C0
- * EN v1.1 Size: 432b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801cf0b0(uint param_1,int param_2)
-{
-}
-
-/*
- * --INFO--
- *
  * Function: FUN_801cf0b4
  * EN v1.0 Address: 0x801CF0B4
  * EN v1.0 Size: 84b
@@ -329,17 +312,7 @@ void FUN_801cf0b0(uint param_1,int param_2)
  */
 #pragma scheduling on
 #pragma peephole on
-void FUN_801cf0b4(int param_1)
-{
-  int iVar1;
-  
-  iVar1 = *(int *)&((GameObject *)param_1)->extra;
-  ObjGroup_RemoveObject(param_1,0x4d);
-  if ((*(byte *)(iVar1 + 0x43c) & 0x40) != 0) {
-    (**(code **)(*DAT_803dd6e8 + 100))();
-  }
-  return;
-}
+
 
 /*
  * --INFO--
@@ -389,176 +362,7 @@ int nw_tricky_SeqFn(void)
  */
 #pragma scheduling on
 #pragma peephole on
-void FUN_801cf108(int param_1)
-{
-  int iVar1;
-  int iVar2;
-  int iVar3;
-  
-  iVar1 = *(int *)&((GameObject *)param_1)->extra;
-  FUN_8003b818(param_1);
-  iVar2 = 0;
-  iVar3 = iVar1;
-  do {
-    ObjPath_GetPointWorldPosition(param_1,iVar2,(float *)(iVar3 + 0x45c),(undefined4 *)(iVar3 + 0x460),
-                 (float *)(iVar3 + 0x464),0);
-    iVar3 = iVar3 + 0xc;
-    iVar2 = iVar2 + 1;
-  } while (iVar2 < 4);
-  ObjPath_GetPointWorldPosition(param_1,4,(float *)(iVar1 + 0xc),(undefined4 *)(iVar1 + 0x10),(float *)(iVar1 + 0x14)
-               ,0);
-  return;
-}
 
-/*
- * --INFO--
- *
- * Function: FUN_801cf1a0
- * EN v1.0 Address: 0x801CF1A0
- * EN v1.0 Size: 1436b
- * EN v1.1 Address: 0x801CF660
- * EN v1.1 Size: 1120b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801cf1a0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 short *param_9)
-{
-  char cVar1;
-  undefined4 uVar2;
-  undefined uVar3;
-  uint uVar4;
-  float *in_r7;
-  undefined4 in_r8;
-  undefined4 in_r9;
-  undefined4 in_r10;
-  int iVar5;
-  int iVar6;
-  ObjHitReactEntry *hitReactEntries;
-  double dVar8;
-  
-  hitReactEntries = &gNwMammothNormalHitReactEntry;
-  iVar6 = *(int *)(param_9 + 0x5c);
-  iVar5 = *(int *)(param_9 + 0x26);
-  if ((*(byte *)(iVar6 + 0x43c) & 0x20) != 0) {
-    (*gPathControlInterface)->attachObject((NwMammothObject *)param_9,
-                                           ((NwMammothState *)iVar6)->pathState);
-    *(byte *)(iVar6 + 0x43c) = *(byte *)(iVar6 + 0x43c) & 0xdf;
-  }
-  uVar2 = FUN_80017a98();
-  *(undefined4 *)&((NwMammothState *)iVar6)->playerObject = uVar2;
-  if (*(int *)&((NwMammothState *)iVar6)->playerObject == 0) {
-    return;
-  }
-  if (((&gNwMammothStateFlags)[*(byte *)(iVar6 + 0x408)] & 0x20) == 0) {
-    param_9[0x58] = param_9[0x58] & 0xfbff;
-    *(uint *)(*(int *)(param_9 + 0x32) + 0x30) = *(uint *)(*(int *)(param_9 + 0x32) + 0x30) | 4;
-  }
-  else {
-    param_9[0x58] = param_9[0x58] | 0x400;
-    *(uint *)(*(int *)(param_9 + 0x32) + 0x30) =
-         *(uint *)(*(int *)(param_9 + 0x32) + 0x30) & 0xfffffffb;
-  }
-  if (((&gNwMammothStateFlags)[*(byte *)(iVar6 + 0x408)] & 8) == 0) {
-    if (((&gNwMammothStateFlags)[*(byte *)(iVar6 + 0x408)] & 2) != 0) {
-      hitReactEntries = &gNwMammothHeavyHitReactEntry;
-    }
-    in_r7 = (float *)(iVar6 + 0x50);
-    uVar3 = ObjHitReact_Update((int)param_9,hitReactEntries,1,(uint)*(byte *)(iVar6 + 0x3d4),
-                               in_r7);
-    *(undefined *)(iVar6 + 0x3d4) = uVar3;
-    if (*(char *)(iVar6 + 0x3d4) != '\0') {
-      FUN_8003a1c4((int)param_9,iVar6 + 0x40c);
-      FUN_8003b280((int)param_9,iVar6 + 0x40c);
-      return;
-    }
-  }
-  dVar8 = FUN_80017714((float *)(param_9 + 0xc),(float *)(*(int *)&((NwMammothState *)iVar6)->playerObject + 0x18));
-  ((NwMammothState *)iVar6)->playerDistanceSq = (float)dVar8;
-  cVar1 = *(char *)(iVar5 + 0x1d);
-  if (cVar1 == '\x02') {
-    nw_mammoth_update((NwMammothObject *)param_9,iVar6);
-    goto LAB_801cf840;
-  }
-  if (cVar1 < '\x02') {
-    if (cVar1 == '\0') {
-      FUN_801cf0b0((uint)param_9,iVar6);
-      goto LAB_801cf840;
-    }
-    if (cVar1 < '\0') goto LAB_801cf840;
-  }
-  else {
-    if (cVar1 == '\x04') {
-      FUN_801ce638(dVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,iVar6,iVar5
-                  );
-      goto LAB_801cf840;
-    }
-    if ('\x03' < cVar1) goto LAB_801cf840;
-  }
-  nw_mammoth_free(param_9);
-LAB_801cf840:
-  if (((&gNwMammothStateFlags)[*(byte *)(iVar6 + 0x408)] & 1) == 0) {
-    *(byte *)((int)param_9 + 0xaf) = *(byte *)((int)param_9 + 0xaf) & 0xef;
-    if ((((&gNwMammothStateFlags)[*(byte *)(iVar6 + 0x408)] & 0x10) == 0) ||
-       (iVar5 = FUN_8012efc4(), iVar5 == -1)) {
-      in_r7 = (float *)0x0;
-      in_r8 = 2;
-      FUN_80017a6c((int)param_9,0,0,0,'\0','\x02');
-    }
-    else {
-      in_r7 = (float *)0x0;
-      in_r8 = 4;
-      FUN_80017a6c((int)param_9,0,0,0,'\0','\x04');
-    }
-  }
-  else {
-    *(byte *)((int)param_9 + 0xaf) = *(byte *)((int)param_9 + 0xaf) | 0x10;
-  }
-  uVar4 = (uint)*(byte *)(iVar6 + 0x408);
-  iVar5 = (int)*(short *)(&gNwMammothStateMoveIds + uVar4 * 2);
-  if (param_9[0x50] != iVar5) {
-    if ((double)*(float *)(&gNwMammothStateMoveStepScales + uVar4 * 4) <= (double)lbl_803E5EA4) {
-      FUN_800305f8((double)lbl_803E5EA8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                   param_9,iVar5,0,uVar4,in_r7,in_r8,in_r9,in_r10);
-    }
-    else {
-      FUN_800305f8((double)lbl_803E5EA4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                   param_9,iVar5,0,uVar4,in_r7,in_r8,in_r9,in_r10);
-    }
-    *(undefined4 *)&((NwMammothState *)iVar6)->animStepScale =
-         *(undefined4 *)(&gNwMammothStateMoveStepScales + (uint)*(byte *)(iVar6 + 0x408) * 4);
-  }
-  iVar5 = FUN_8002fc3c((double)((NwMammothState *)iVar6)->animStepScale,(double)lbl_803DC074);
-  if (iVar5 == 0) {
-    *(byte *)(iVar6 + 0x43c) = *(byte *)(iVar6 + 0x43c) & 0xfd;
-  }
-  else {
-    *(byte *)(iVar6 + 0x43c) = *(byte *)(iVar6 + 0x43c) | 2;
-  }
-  objAudioFn_8006ef38((double)lbl_803E5EA8,(double)lbl_803E5EA8,param_9,iVar6 + 0x440,8,iVar6 + 0x45c,
-               iVar6 + 0x16c);
-  FUN_801ce340(param_9,iVar6,(byte)(&gNwMammothStateFlags)[*(byte *)(iVar6 + 0x408)] & 4);
-  *(byte *)(iVar6 + 0x43c) = *(byte *)(iVar6 + 0x43c) & 0xfb;
-  if (((*(byte *)(iVar6 + 0x43c) & 0x10) == 0) && (iVar5 = ObjTrigger_IsSet((int)param_9), iVar5 != 0))
-  {
-    uVar4 = randomGetRange(1,(uint)**(byte **)&((NwMammothState *)iVar6)->triggerList);
-    *(byte *)(iVar6 + 0x43c) = *(byte *)(iVar6 + 0x43c) | 4;
-    (*gObjectTriggerInterface)->runSequence(*(u8 *)(*(int *)&((NwMammothState *)iVar6)->triggerList + uVar4),
-                                            (void *)param_9, -1);
-  }
-  if ((*(byte *)(iVar6 + 0x43c) & 1) != 0) {
-    (*gPathControlInterface)->update((NwMammothObject *)param_9,
-                                     ((NwMammothState *)iVar6)->pathState, lbl_803DC074);
-    (*gPathControlInterface)->apply((NwMammothObject *)param_9,
-                                    ((NwMammothState *)iVar6)->pathState);
-    (*gPathControlInterface)->advance((NwMammothObject *)param_9,
-                                      ((NwMammothState *)iVar6)->pathState, lbl_803DC074);
-  }
-  return;
-}
 
 #pragma scheduling off
 #pragma peephole off

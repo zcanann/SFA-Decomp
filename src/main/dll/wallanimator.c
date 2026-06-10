@@ -240,97 +240,7 @@ ObjectDescriptor gKaldaChompMeObjDescriptor = {
  */
 #pragma scheduling on
 #pragma peephole on
-void FUN_801695e8(int param_1,byte param_2)
-{
-  float *pfVar1;
-  int iVar2;
-  
-  if (param_1 == 0) {
-    return;
-  }
-  iVar2 = *(int *)(*(int *)&((GameObject *)param_1)->anim.placementData + 0x14);
-  if (iVar2 == 0x41ccc) {
-    iVar2 = FUN_80017af8(0x4b411);
-  }
-  else if (iVar2 < 0x41ccc) {
-    if (iVar2 == 0x41cc6) {
-      iVar2 = FUN_80017af8(0x4b404);
-    }
-    else if (iVar2 < 0x41cc6) {
-      if (iVar2 == 0x41cc4) {
-        iVar2 = FUN_80017af8(0x4b402);
-      }
-      else if (iVar2 < 0x41cc4) {
-        if (iVar2 != 0x41be9) {
-          return;
-        }
-        iVar2 = FUN_80017af8(0x4b3f9);
-      }
-      else {
-        iVar2 = FUN_80017af8(0x4b403);
-      }
-    }
-    else if (iVar2 == 0x41cc9) {
-      iVar2 = FUN_80017af8(0x4b40f);
-    }
-    else {
-      if (0x41cc8 < iVar2) {
-        return;
-      }
-      if (iVar2 < 0x41cc8) {
-        iVar2 = FUN_80017af8(0x4b40b);
-      }
-      else {
-        iVar2 = FUN_80017af8(0x4b40c);
-      }
-    }
-  }
-  else if (iVar2 == 0x41cd6) {
-    iVar2 = FUN_80017af8(0x4b415);
-  }
-  else if (iVar2 < 0x41cd6) {
-    if (iVar2 == 0x41cd2) {
-      iVar2 = FUN_80017af8(0x4b410);
-    }
-    else {
-      if (iVar2 < 0x41cd2) {
-        return;
-      }
-      if (iVar2 < 0x41cd5) {
-        return;
-      }
-      iVar2 = FUN_80017af8(0x4b414);
-    }
-  }
-  else if (iVar2 == 0x43d14) {
-    iVar2 = FUN_80017af8(0x4b3b5);
-  }
-  else {
-    if (0x43d13 < iVar2) {
-      return;
-    }
-    if (iVar2 != 0x41cd9) {
-      return;
-    }
-    iVar2 = FUN_80017af8(0x4b453);
-  }
-  pfVar1 = *(float **)(iVar2 + 0xb8);
-  if (pfVar1 != (float *)0x0) {
-    if (param_2 == 2) {
-      pfVar1[2] = lbl_803E3D68;
-      *pfVar1 = lbl_803E3D6C;
-      pfVar1[1] = lbl_803E3D70;
-      *(undefined *)(pfVar1 + 3) = 1;
-    }
-    else if ((param_2 < 2) && (param_2 != 0)) {
-      pfVar1[2] = lbl_803E3D68;
-      *pfVar1 = lbl_803E3D6C;
-      pfVar1[1] = lbl_803E3D70;
-      *(undefined *)(pfVar1 + 3) = 0;
-    }
-  }
-  return;
-}
+
 
 /*
  * --INFO--
@@ -353,81 +263,6 @@ void FUN_8016980c(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80169834
- * EN v1.0 Address: 0x80169834
- * EN v1.0 Size: 300b
- * EN v1.1 Address: 0x80169A80
- * EN v1.1 Size: 140b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80169834(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
-{
-  float fVar1;
-  float *pfVar2;
-  double dVar3;
-  double dVar4;
-  
-  pfVar2 = ((GameObject *)param_9)->extra;
-  dVar4 = (double)*pfVar2;
-  fVar1 = pfVar2[2];
-  dVar3 = (double)fVar1;
-  if (dVar4 != dVar3) {
-    param_3 = (double)pfVar2[1];
-    if (param_3 <= (double)lbl_803E3D6C) {
-      if (dVar4 <= dVar3) {
-        *pfVar2 = fVar1;
-      }
-      else {
-        *pfVar2 = (float)(param_3 * (double)lbl_803DC074 + dVar4);
-      }
-    }
-    else if (dVar3 <= dVar4) {
-      *pfVar2 = fVar1;
-    }
-    else {
-      *pfVar2 = (float)(param_3 * (double)lbl_803DC074 + dVar4);
-    }
-  }
-  FUN_800305f8((double)*pfVar2,dVar4,param_3,param_4,param_5,param_6,param_7,param_8,param_9,
-               (uint)*(byte *)(pfVar2 + 3),0,param_12,param_13,param_14,param_15,param_16);
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_80169960
- * EN v1.0 Address: 0x80169960
- * EN v1.0 Size: 228b
- * EN v1.1 Address: 0x80169B0C
- * EN v1.1 Size: 116b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80169960(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 short *param_9,int param_10,undefined4 param_11,undefined4 param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
-{
-  param_9[2] = (ushort)*(byte *)(param_10 + 0x18) << 8;
-  param_9[1] = (ushort)*(byte *)(param_10 + 0x19) << 8;
-  *param_9 = (ushort)*(byte *)(param_10 + 0x1a) << 8;
-  param_9[0x58] = param_9[0x58] | 0x2000;
-  FUN_800305f8((double)lbl_803E3D6C,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-               param_9,0,0,param_12,param_13,param_14,param_15,param_16);
-  return;
-}
 
 /*
  * --INFO--
@@ -489,13 +324,7 @@ void FUN_80169a44(undefined8 param_1,double param_2,double param_3,undefined8 pa
  */
 #pragma scheduling off
 #pragma peephole off
-void FUN_80169c04(int param_1)
-{
-  if (**(uint **)&((GameObject *)param_1)->extra != 0) {
-    FUN_80017620(**(uint **)&((GameObject *)param_1)->extra);
-  }
-  return;
-}
+
 
 
 /* Trivial 4b 0-arg blr leaves. */

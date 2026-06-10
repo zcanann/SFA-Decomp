@@ -222,13 +222,7 @@ void ecsh_cup_update(short *obj)
  * PAL Size: TODO
  */
 #pragma scheduling on
-void FUN_801c83d4(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
-{
-  if (visible != 0) {
-    FUN_8003b818(param_1);
-  }
-  return;
-}
+
 
 /*
  * --INFO--
@@ -309,85 +303,6 @@ void ecsh_cup_initialise(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801c83fc
- * EN v1.0 Address: 0x801C83FC
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801C8680
- * EN v1.1 Size: 528b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801c83fc(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined2 *param_9)
-{
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801c8400
- * EN v1.0 Address: 0x801C8400
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x801C8890
- * EN v1.1 Size: 144b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801c8400(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
-{
-  if (visible != 0) {
-    FUN_8003b818(param_1);
-  }
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801c8428
- * EN v1.0 Address: 0x801C8428
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x801C8920
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801c8428(int obj)
-{
-  (*gExpgfxInterface)->freeSource2((u32)obj);
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801c845c
- * EN v1.0 Address: 0x801C845C
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x801C8950
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801c845c(int param_1, int param_2, int param_3, int param_4, int param_5, s8 visible)
-{
-  if (visible != 0) {
-    FUN_8003b818(param_1);
-  }
-  return;
-}
 
 extern f32 mathSinf(f32 v);
 extern int getAngle(f32 dx, f32 dz);

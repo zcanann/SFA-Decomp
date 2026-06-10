@@ -215,74 +215,7 @@ void dimlogfire_update(int obj)
  */
 #pragma scheduling on
 #pragma peephole on
-undefined4 FUN_801b09dc(uint param_1,undefined4 param_2,int param_3)
-{
-  byte bVar1;
-  int iVar2;
-  
-  iVar2 = *(int *)&((GameObject *)param_1)->extra;
-  if (*(char *)(iVar2 + 0x1a) == '\x01') {
-    FUN_80006824(param_1,SFXmn_eggylaugh216);
-  }
-  else {
-    FUN_8000680c(param_1,0x40);
-  }
-  bVar1 = *(byte *)(param_3 + 0x80);
-  if (bVar1 == 2) {
-    GameBit_Set(0x2e,1);
-  }
-  else if (bVar1 < 2) {
-    if (bVar1 != 0) {
-      *(byte *)(iVar2 + 0x1b) = *(byte *)(iVar2 + 0x1b) ^ 1;
-    }
-  }
-  else if (bVar1 < 4) {
-    *(undefined *)(iVar2 + 0x1a) = 4;
-  }
-  if (*(char *)(iVar2 + 0x1b) == '\0') {
-    FUN_8000680c(param_1,1);
-  }
-  else {
-    (*gPartfxInterface)->spawnObject((void *)param_1, 0xd7, NULL, 0, -1, NULL);
-    FUN_8000680c(param_1,5);
-  }
-  *(undefined *)(param_3 + 0x80) = 0;
-  return 0;
-}
 
-/*
- * --INFO--
- *
- * Function: FUN_801b0ae8
- * EN v1.0 Address: 0x801B0AE8
- * EN v1.0 Size: 256b
- * EN v1.1 Address: 0x801B0D74
- * EN v1.1 Size: 136b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801b0ae8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9,int param_10)
-{
-  uint uVar1;
-  uint *puVar2;
-  
-  puVar2 = ((GameObject *)param_9)->extra;
-  (*gExpgfxInterface)->freeSource2((u32)param_9);
-  uVar1 = puVar2[1];
-  if ((uVar1 != 0) && (param_10 == 0)) {
-    FUN_80017ac8(param_9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,uVar1);
-  }
-  ObjGroup_RemoveObject(param_9,0x31);
-  uVar1 = *puVar2;
-  if (uVar1 != 0) {
-    FUN_80017620(uVar1);
-  }
-  return;
-}
 
 /*
  * --INFO--

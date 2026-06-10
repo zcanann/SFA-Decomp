@@ -147,22 +147,6 @@ void collectible_init(int obj,int setup)
   }
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80173364
- * EN v1.0 Address: 0x80173364
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801733C0
- * EN v1.1 Size: 792b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80173364(short *param_1,int param_2)
-{
-}
 
 void magicdust_free(int param_1)
 {
@@ -173,24 +157,6 @@ void magicdust_free(int param_1)
   return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801733c0
- * EN v1.0 Address: 0x801733C0
- * EN v1.0 Size: 32b
- * EN v1.1 Address: 0x8017372C
- * EN v1.1 Size: 36b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801733c0(int param_1)
-{
-  FUN_8003b818(param_1);
-  return;
-}
 
 /*
  * --INFO--

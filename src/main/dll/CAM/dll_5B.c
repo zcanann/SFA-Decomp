@@ -660,25 +660,6 @@ void CameraModeViewfinder_init(s16 *param_1, int param_2, int *param_3)
   lbl_803DD548->clampedPosY = lbl_803DD548->camPosY;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801089d8
- * EN v1.0 Address: 0x801089D8
- * EN v1.0 Size: 44b
- * EN v1.1 Address: 0x801099E8
- * EN v1.1 Size: 44b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801089d8(void)
-{
-  FUN_80017814(lbl_803DD550);
-  lbl_803DD550 = 0;
-  return;
-}
 
 /*
  * --INFO--
@@ -820,25 +801,6 @@ void *fn_80109B04(f32 x, f32 y, f32 z, int filter1, int filter2)
 }
 #pragma dont_inline reset
 
-/*
- * --INFO--
- *
- * Function: FUN_80108e7c
- * EN v1.0 Address: 0x80108E7C
- * EN v1.0 Size: 44b
- * EN v1.1 Address: 0x80109EB4
- * EN v1.1 Size: 44b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80108e7c(void)
-{
-  FUN_80017814(lbl_803DD558);
-  lbl_803DD558 = 0;
-  return;
-}
 
 /*
  * --INFO--

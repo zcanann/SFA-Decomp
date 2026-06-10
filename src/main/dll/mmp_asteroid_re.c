@@ -154,14 +154,7 @@ void transporter_init(int obj, u8 *params)
  */
 #pragma scheduling on
 #pragma peephole on
-void FUN_801916e8(int param_1)
-{
-  if (*(char *)(*(int *)(param_1 + 0x4c) + 0x1a) != -1) {
-    warpPadPlayerStandingOn(param_1);
-  }
-  warpPadFn_8019042c(param_1);
-  return;
-}
+
 
 /*
  * --INFO--
@@ -178,9 +171,7 @@ void FUN_801916e8(int param_1)
  */
 #pragma scheduling off
 #pragma peephole off
-void FUN_80191730(short *param_1,int param_2)
-{
-}
+
 
 
 /* Trivial 4b 0-arg blr leaves. */

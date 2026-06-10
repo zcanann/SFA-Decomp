@@ -162,25 +162,6 @@ void cameraModeTestStrengthFn_8010b238(f32 fovEnd, CameraObject *camera, f32 *po
                                   (f64)lbl_803E18B4, (f64)lbl_803E18B8);
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8010b428
- * EN v1.0 Address: 0x8010B428
- * EN v1.0 Size: 44b
- * EN v1.1 Address: 0x8010B694
- * EN v1.1 Size: 44b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_8010b428(void)
-{
-  FUN_80017814(lbl_803DD560);
-  lbl_803DD560 = 0;
-  return;
-}
 
 
 /* Trivial 4b 0-arg blr leaves. */

@@ -481,140 +481,19 @@ extern char s__02d__02d__02d_8031cd70[];
 
 #pragma scheduling on
 #pragma peephole on
-void FUN_80128260(void)
-{
-  undefined uVar1;
-  char cVar2;
-  int iVar3;
-  double dVar4;
-  double dVar5;
-  double dVar6;
-  double dVar7;
-  double dVar8;
-  longlong lVar9;
-  double dVar10;
-  undefined4 uStack_9c;
-  undefined4 uStack_94;
 
-  uVar1 = FUN_80286840();
-  dVar4 = (double)FUN_80293f90();
-  dVar4 = (double)(float)((double)FLOAT_803e2b98 * dVar4);
-  for (cVar2 = '\n'; -1 < cVar2; cVar2 = cVar2 + -2) {
-    iVar3 = (int)(short)((0xf5 - cVar2) - DAT_803de3dc);
-    FUN_8011e460((double)FLOAT_803e2d48,(double)FLOAT_803e2b64,DAT_803a972c,iVar3,uVar1,0x200,0);
-    FUN_8011e460((double)FLOAT_803e2d4c,(double)FLOAT_803e2b64,DAT_803a972c,iVar3,uVar1,0x200,0);
-  }
-  dVar6 = (double)FLOAT_803e2d10;
-  dVar8 = (double)FLOAT_803e2d54;
-  lVar9 = (longlong)(int)-(float)(dVar4 * (double)FLOAT_803e2aec - (double)FLOAT_803e2d50);
-  dVar10 = (double)FLOAT_803e2d5c;
-  dVar7 = DOUBLE_803e2af8;
-  for (cVar2 = '\n'; -1 < cVar2; cVar2 = cVar2 + -10) {
-    dVar5 = (double)(float)((double)(float)(dVar4 * (double)(float)(dVar6 - (double)(float)((double)
-                                                  CONCAT44(0x43300000,(int)cVar2 ^ 0x80000000) -
-                                                  dVar7))) / dVar6);
-    iVar3 = (int)(short)((0xff - cVar2) - DAT_803de3dc);
-    uStack_9c = (uint)lVar9;
-    FUN_8011e460((double)(float)(dVar8 + dVar5),(double)FLOAT_803e2d58,DAT_803a9728,iVar3,uVar1,
-                 uStack_9c,0);
-    uStack_94 = (uint)lVar9;
-    FUN_8011e460((double)(float)(dVar10 - dVar5),(double)FLOAT_803e2d58,DAT_803a9728,iVar3,uVar1,
-                 uStack_94,0);
-  }
-  FUN_8028688c();
-  return;
-}
 
 #pragma scheduling off
 #pragma peephole off
-void FUN_8012845c()
-{
-}
 
-void FUN_801287ac()
-{
-}
-
-void FUN_80128db8()
-{
-}
-
-void FUN_801291ac()
-{
-}
-
-void FUN_801294d8()
-{
-}
 
 #pragma scheduling on
 #pragma peephole on
-void FUN_80129a98(void)
-{
-  byte bVar1;
-  uint uVar2;
-  uint uVar3;
-  int iVar4;
-  char cVar5;
-  double dVar6;
-  double dVar7;
-  double dVar8;
-  double dVar9;
-  double dVar10;
 
-  FUN_80286834();
-  if (DAT_803de3f0 != 0) {
-    bVar1 = (byte)DAT_803de3f0;
-    FUN_800709e8((double)FLOAT_803e2dcc,(double)FLOAT_803e2dd0,DAT_803a9720,0xff,0x100);
-    iVar4 = 0xaa;
-    dVar7 = DOUBLE_803e2de8;
-    dVar8 = DOUBLE_803e2af8;
-    dVar9 = DOUBLE_803e2de0;
-    dVar10 = DOUBLE_803e2dd8;
-    for (cVar5 = '\x02'; -1 < cVar5; cVar5 = cVar5 + -1) {
-      uVar3 = (uint)(char)(bVar1 & 0x1f);
-      dVar6 = dVar9 * ((double)CONCAT44(0x43300000,uVar3 ^ 0x80000000) - dVar8);
-      uVar2 = 0x5f - ((int)uVar3 >> 2);
-      uVar3 = uVar3 * 2 + 0xbb;
-      FUN_800709e8((double)(float)(dVar10 + dVar6),
-                   (double)(float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - dVar8),
-                   DAT_803a9724,0xffU - iVar4 & 0xff,uVar3);
-      FUN_800709e0((double)(float)(dVar7 - dVar6),
-                   (double)(float)((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - dVar8),
-                   DAT_803a9724,0xffU - iVar4 & 0xff,uVar3,0x18,0x34,1);
-      bVar1 = (bVar1 & 0x1f) + 3;
-      iVar4 = iVar4 + -0x55;
-    }
-    bVar1 = (byte)DAT_803de3f0 & 0x1f ^ 0x10;
-    iVar4 = 0xaa;
-    dVar7 = DOUBLE_803e2dd8;
-    dVar8 = DOUBLE_803e2de0;
-    dVar9 = DOUBLE_803e2af8;
-    dVar10 = DOUBLE_803e2de8;
-    for (cVar5 = '\x02'; -1 < cVar5; cVar5 = cVar5 + -1) {
-      uVar2 = (uint)(char)bVar1;
-      dVar6 = dVar8 * ((double)CONCAT44(0x43300000,uVar2 ^ 0x80000000) - dVar9);
-      uVar3 = 0x5f - ((int)uVar2 >> 2);
-      uVar2 = uVar2 * 2 + 0xbb;
-      FUN_800709e8((double)(float)(dVar7 + dVar6),
-                   (double)(float)((double)CONCAT44(0x43300000,uVar3 ^ 0x80000000) - dVar9),
-                   DAT_803a9724,0xffU - iVar4 & 0xff,uVar2);
-      FUN_800709e0((double)(float)(dVar10 - dVar6),
-                   (double)(float)((double)CONCAT44(0x43300000,uVar3 ^ 0x80000000) - dVar9),
-                   DAT_803a9724,0xffU - iVar4 & 0xff,uVar2,0x18,0x34,1);
-      bVar1 = bVar1 + 3 & 0x1f;
-      iVar4 = iVar4 + -0x55;
-    }
-  }
-  FUN_80286880();
-  return;
-}
 
 #pragma scheduling off
 #pragma peephole off
-void FUN_80129d10()
-{
-}
+
 
 void fn_80129FB0(void)
 {
@@ -628,22 +507,6 @@ void fn_80129FB0(void)
     fn_8000F7A0();
 }
 
-void FUN_80129ff8()
-{
-}
-
-void FUN_8012a0f0()
-{
-}
-
-void FUN_8012a21c()
-{
-}
-
-undefined4 FUN_8012b800()
-{
-    return 0;
-}
 
 int fn_8012B9F8(void)
 {
@@ -671,67 +534,14 @@ int fn_8012B9F8(void)
     return 1;
 }
 
-void FUN_8012bab8()
-{
-}
-
-void FUN_8012bcb4()
-{
-}
 
 #pragma scheduling on
 #pragma peephole on
-void FUN_8012c1c0(void)
-{
-  char cVar1;
-  uint uVar2;
-  char local_18;
-  undefined auStack_17 [15];
 
-  cVar1 = DAT_803de3db;
-  if (DAT_803de400 == '\0') {
-    uVar2 = FUN_80006c00(0);
-    FUN_80006bb4(0,auStack_17,&local_18);
-    if (local_18 == '\x01') {
-      DAT_803de3db = '\x01';
-    }
-    if (local_18 == -1) {
-      DAT_803de3db = '\x02';
-    }
-    if (DAT_803de3db != cVar1) {
-      FUN_80006824(0,SFXsp_sa_def01);
-    }
-    if ((uVar2 & 0x100) != 0) {
-      FUN_80006ba8(0,0x100);
-      if (DAT_803de3db == '\x01') {
-        GameBit_Set(0x2b3,1);
-      }
-      else {
-        GameBit_Set(0x781,1);
-      }
-      DAT_803de3db = '\0';
-      FUN_800176c8(0);
-      (*gCameraInterface)->loadTriggeredCamAction(3, 0x80, 1);
-      DAT_803de408 = 0x3c;
-      FUN_80006824(0,0x418);
-    }
-    if ((uVar2 & 0x200) != 0) {
-      FUN_80006ba8(0,0x200);
-      DAT_803de3db = '\0';
-      FUN_800176c8(0);
-      (*gCameraInterface)->loadTriggeredCamAction(3, 0x80, 1);
-      DAT_803de408 = 0x3c;
-      FUN_80006824(0,0x419);
-    }
-  }
-  return;
-}
 
 #pragma scheduling off
 #pragma peephole off
-void FUN_8012c33c()
-{
-}
+
 
 void FUN_8012c894()
 {
@@ -739,74 +549,16 @@ void FUN_8012c894()
 
 #pragma scheduling on
 #pragma peephole on
-void FUN_8012c9e8(undefined4 param_1,undefined4 param_2,short param_3,short param_4,uint param_5,
-                 uint param_6)
-{
-  short sVar1;
-  short extraout_r4;
-  uint uVar2;
-  uint uVar3;
-  int iVar4;
-  int iVar5;
-  uint uVar6;
-  uint uVar7;
 
-  sVar1 = FUN_80286818();
-  uVar2 = (uint)sVar1;
-  uVar6 = uVar2 - 5;
-  uVar3 = (uint)extraout_r4;
-  uVar7 = uVar3 - 5;
-  FUN_800709e8((double)(f32)(s32)(uVar6),
-               (double)(f32)(s32)(uVar7),
-               DAT_803a9638,param_5,0x100);
-  iVar4 = (int)param_3;
-  FUN_800709e0((double)(f32)(s32)(uVar2),
-               (double)(f32)(s32)(uVar7),
-               DAT_803a9644,param_5,0x100,iVar4,5,0);
-  iVar5 = (int)param_4;
-  FUN_800709e0((double)(f32)(s32)(uVar6),
-               (double)(f32)(s32)(uVar3),
-               DAT_803a963c,param_5,0x100,5,iVar5,0);
-  if ((param_6 & 0xff) != 0) {
-    FUN_800709e0((double)(f32)(s32)(uVar2),
-                 (double)(f32)(s32)(uVar3),
-                 DAT_803a9640,param_5,0x100,iVar4,iVar5,0);
-  }
-  uVar3 = uVar3 + (int)param_4;
-  FUN_800709e0((double)(float)((double)CONCAT44(0x43300000,(int)sVar1 ^ 0x80000000) -
-                              DOUBLE_803e2af8),
-               (double)(f32)(s32)(uVar3),
-               DAT_803a9644,param_5,0x100,iVar4,5,2);
-  uVar2 = uVar2 + (int)param_3;
-  FUN_800709e0((double)(f32)(s32)(uVar2),
-               (double)(float)((double)CONCAT44(0x43300000,(int)extraout_r4 ^ 0x80000000) -
-                              DOUBLE_803e2af8),DAT_803a963c,param_5,0x100,5,iVar5,1);
-  FUN_800709e0((double)(f32)(s32)(uVar2),
-               (double)(f32)(s32)(uVar3),
-               DAT_803a9638,param_5,0x100,5,5,3);
-  FUN_800709e0((double)(f32)(s32)(uVar2),
-               (double)(f32)(s32)(uVar7),
-               DAT_803a9638,param_5,0x100,5,5,1);
-  FUN_800709e0((double)(f32)(s32)(uVar6),
-               (double)(f32)(s32)(uVar3),
-               DAT_803a9638,param_5,0x100,5,5,2);
-  FUN_80286864();
-  return;
-}
 
 #pragma scheduling off
 #pragma peephole off
-void FUN_8012cd38()
-{
-}
+
 
 void FUN_8012dab8()
 {
 }
 
-void FUN_8012dca8()
-{
-}
 
 void fn_8012E050(void)
 {
@@ -847,9 +599,6 @@ void FUN_8012e0f4(char param_1)
   return;
 }
 
-void FUN_8012e114()
-{
-}
 
 void fn_8012E250(void)
 {
@@ -859,9 +608,6 @@ void fn_8012E250(void)
     fn_800206EC(0xff);
 }
 
-void FUN_8012e2a4()
-{
-}
 
 /* ===== EN v1.0 retargeted leaves ==========================================
  * The FUN_xxx stubs above are still at stale pre-v1.0 addresses and produce

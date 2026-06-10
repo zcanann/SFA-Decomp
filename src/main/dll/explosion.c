@@ -136,102 +136,7 @@ void dll_197_init(int obj, int data)
  */
 #pragma scheduling on
 #pragma peephole on
-void FUN_801caa30(undefined2 *param_1,int param_2)
-{
-  int *piVar1;
-  int *piVar2;
-  undefined auStack_38 [16];
-  float local_28;
-  undefined4 local_20;
-  uint uStack_1c;
-  
-  piVar2 = *(int **)(param_1 + 0x5c);
-  *param_1 = (short)(((int)*(char *)(param_2 + 0x18) & 0x3fU) << 10);
-  if (*(short *)(param_2 + 0x1a) < 1) {
-    *(float *)(param_1 + 4) = lbl_803E5DDC;
-  }
-  else {
-    uStack_1c = (int)*(short *)(param_2 + 0x1a) ^ 0x80000000;
-    local_20 = 0x43300000;
-    *(float *)(param_1 + 4) =
-         (float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e5de0) / lbl_803E5DD8;
-  }
-  *(undefined *)((int)piVar2 + 0xb) = *(undefined *)(param_2 + 0x19);
-  *(undefined *)(piVar2 + 3) = 0;
-  *(undefined *)((int)piVar2 + 0xf) = 0;
-  *piVar2 = (int)*(short *)(param_2 + 0x1e);
-  local_28 = lbl_803E5DD4;
-  if (*(char *)((int)piVar2 + 0xb) == '\x01') {
-    *(char *)((int)piVar2 + 0xf) = (char)*(undefined2 *)(param_2 + 0x1c);
-    *(undefined *)((int)piVar2 + 0xd) = 0;
-    *(ushort *)(piVar2 + 2) = (ushort)*(byte *)((int)piVar2 + 0xf) * 0x28 + 0x398;
-    *(undefined *)((int)piVar2 + 0xe) = 0;
-  }
-  else if (*(char *)((int)piVar2 + 0xb) == '\0') {
-    *(undefined *)(piVar2 + 3) = 1;
-    piVar1 = (int *)FUN_80006b14(0x69);
-    if (*(short *)(param_2 + 0x1c) == 0) {
-      (**(code **)(*piVar1 + 4))(param_1,0,auStack_38,0x10004,0xffffffff,0);
-    }
-  }
-  *(undefined2 *)(piVar2 + 1) = 0;
-  return;
-}
 
-/*
- * --INFO--
- *
- * Function: FUN_801cab60
- * EN v1.0 Address: 0x801CAB60
- * EN v1.0 Size: 320b
- * EN v1.1 Address: 0x801CACCC
- * EN v1.1 Size: 320b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4 FUN_801cab60(undefined4 param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate)
-{
-  int iVar1;
-  int iVar2;
-  
-  iVar1 = FUN_80017a98();
-  if (iVar1 != 0) {
-    for (iVar2 = 0; iVar2 < (int)(uint)animUpdate->eventCount; iVar2 = iVar2 + 1) {
-      if (animUpdate->eventIds[iVar2] == 1) {
-        FUN_80294ccc(iVar1,0x10,1);
-        FUN_80017698(0x174,1);
-        (*gMapEventInterface)->setAnimEvent(0xb,4,1);
-        (*gMapEventInterface)->setAnimEvent(0xb,0x1d,1);
-        (*gMapEventInterface)->setAnimEvent(0xb,0x1e,1);
-        (*gMapEventInterface)->setAnimEvent(0xb,0x1f,1);
-        (*gMapEventInterface)->setMode(0xb,6);
-      }
-    }
-  }
-  return 0;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801caca0
- * EN v1.0 Address: 0x801CACA0
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x801CAE0C
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801caca0(void)
-{
-  FUN_800067c0((int *)0x6,0);
-  FUN_80017698(0xefd,0);
-  return;
-}
 
 /*
  * --INFO--
@@ -254,41 +159,6 @@ void FUN_801cacd4(int param_1,int param_2,int param_3,int param_4,int param_5,s8
   return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801cacfc
- * EN v1.0 Address: 0x801CACFC
- * EN v1.0 Size: 432b
- * EN v1.1 Address: 0x801CAE74
- * EN v1.1 Size: 132b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801cacfc(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9)
-{
-  undefined4 in_r7;
-  undefined4 in_r8;
-  undefined4 in_r9;
-  undefined4 in_r10;
-  undefined8 uVar1;
-  
-  if ((*(int *)(param_9 + 0xf4) != 0) &&
-     (*(int *)(param_9 + 0xf4) = *(int *)(param_9 + 0xf4) + -1, *(int *)(param_9 + 0xf4) == 0)) {
-    uVar1 = FUN_80080f28(7,'\x01');
-    uVar1 = FUN_80006728(uVar1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,0xd1,0,
-                         in_r7,in_r8,in_r9,in_r10);
-    uVar1 = FUN_80006728(uVar1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,0xd6,0,
-                         in_r7,in_r8,in_r9,in_r10);
-    FUN_80006728(uVar1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,0x222,0,in_r7,
-                 in_r8,in_r9,in_r10);
-  }
-  return;
-}
 
 /*
  * --INFO--
@@ -305,9 +175,7 @@ void FUN_801cacfc(undefined8 param_1,double param_2,double param_3,undefined8 pa
  */
 #pragma scheduling off
 #pragma peephole off
-void FUN_801caeac(int param_1)
-{
-}
+
 
 /*
  * --INFO--
@@ -324,113 +192,7 @@ void FUN_801caeac(int param_1)
  */
 #pragma scheduling on
 #pragma peephole on
-void FUN_801caeb0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,ObjAnimUpdateState *animUpdate,undefined4 param_12,
-                 undefined4 param_13,int param_14,undefined4 param_15,undefined4 param_16)
-{
-  int iVar1;
-  uint uVar2;
-  int iVar3;
-  int iVar4;
-  undefined8 extraout_f1;
-  undefined8 uVar5;
-  
-  iVar1 = FUN_80286840();
-  iVar4 = *(int *)(iVar1 + 0xb8);
-  animUpdate->activeHitVolumePair = -1;
-  animUpdate->sequenceEventActive = 0;
-  uVar5 = extraout_f1;
-  if (*(short *)(iVar4 + 10) != 0) {
-    *(short *)(iVar4 + 8) = *(short *)(iVar4 + 8) + *(short *)(iVar4 + 10);
-    if ((*(short *)(iVar4 + 8) < 2) && (*(short *)(iVar4 + 10) < 1)) {
-      *(undefined2 *)(iVar4 + 8) = 1;
-      *(undefined2 *)(iVar4 + 10) = 0;
-    }
-    else if ((0x45 < *(short *)(iVar4 + 8)) && (-1 < *(short *)(iVar4 + 10))) {
-      *(undefined2 *)(iVar4 + 8) = 0x46;
-      *(undefined2 *)(iVar4 + 10) = 0;
-    }
-    uVar5 = (**(code **)(*DAT_803dd6f0 + 0x38))(3,*(ushort *)(iVar4 + 8) & 0xff);
-  }
-  for (iVar3 = 0; iVar3 < (int)(uint)animUpdate->eventCount; iVar3 = iVar3 + 1) {
-    switch(animUpdate->eventIds[iVar3]) {
-    case 1:
-      uVar5 = FUN_80006728(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar1,iVar1
-                           ,0xc3,0,param_13,param_14,param_15,param_16);
-      break;
-    case 2:
-      if (DAT_803dc270 == 0xffffffff) {
-        uVar5 = FUN_80006728(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar1,
-                             iVar1,0x14,0,param_13,param_14,param_15,param_16);
-      }
-      else {
-        uVar5 = FUN_80006728(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar1,
-                             iVar1,DAT_803dc270 & 0xffff,0,param_13,param_14,param_15,param_16);
-      }
-      break;
-    case 3:
-      *(undefined *)(iVar4 + 0x10) = 1;
-      break;
-    case 4:
-      *(undefined *)(iVar4 + 0xf) = 4;
-      *(undefined *)(iVar4 + 0x10) = 2;
-      FUN_80017698(0x129,1);
-      FUN_80017698(0x1cf,0);
-      uVar5 = FUN_80017698(0x126,1);
-      *(undefined2 *)(iVar4 + 10) = 0xfffd;
-      break;
-    case 5:
-      *(undefined *)(iVar4 + 0x10) = 3;
-      *(undefined2 *)(iVar4 + 10) = 0xfffd;
-      uVar5 = FUN_80017698(0x129,1);
-      break;
-    case 6:
-      uVar5 = FUN_80017698(0x1cf,1);
-      break;
-    case 7:
-      uVar5 = FUN_80017698(0x1cf,0);
-      *(undefined2 *)(iVar4 + 10) = 0xfffd;
-      break;
-    case 8:
-      uVar5 = FUN_80017698(0x127,1);
-      break;
-    case 9:
-      uVar5 = FUN_80017698(0x128,1);
-      if (DAT_803de858 == 0) {
-        DAT_803de858 = FUN_80055ef0();
-      }
-      break;
-    case 10:
-      *(undefined2 *)(iVar4 + 8) = 100;
-      param_13 = 0;
-      param_14 = *DAT_803dd6f0;
-      uVar5 = (**(code **)(param_14 + 0x18))(3,0x2d,0x50,*(ushort *)(iVar4 + 8) & 0xff);
-      break;
-    case 0xb:
-      *(undefined *)(iVar4 + 0xf) = 7;
-    }
-    animUpdate->eventIds[iVar3] = 0;
-  }
-  if (*(char *)(iVar4 + 0xf) == '\a') {
-    uVar2 = FUN_80006c10(0);
-    if ((uVar2 & 0x100) == 0) {
-      uVar2 = FUN_80006c10(0);
-      if ((uVar2 & 0x200) != 0) {
-        (*gObjectTriggerInterface)->endSequence(animUpdate->sequenceSlot);
-        *(undefined *)(iVar4 + 0xf) = 7;
-        *(undefined2 *)(iVar4 + 2) = 0;
-      }
-    }
-    else {
-      (*gObjectTriggerInterface)->endSequence(animUpdate->sequenceSlot);
-      *(undefined *)(iVar4 + 0xf) = 8;
-      *(undefined2 *)(iVar4 + 2) = 0;
-    }
-  }
-  FUN_8028688c();
-  return;
-}
+
 
 
 /* Trivial 4b 0-arg blr leaves. */

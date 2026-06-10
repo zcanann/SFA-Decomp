@@ -147,22 +147,6 @@ void pressureSwitch_ensureSharedResource(void)
   return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8014e244
- * EN v1.0 Address: 0x8014E244
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8014E670
- * EN v1.1 Size: 1384b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_8014e244()
-{
-}
 
 /*
  * --INFO--
@@ -179,55 +163,7 @@ void FUN_8014e244()
  */
 #pragma scheduling on
 #pragma peephole on
-void FUN_8014e248(int param_1)
-{
-  uint uVar1;
-  uint *puVar2;
-  
-  puVar2 = ((GameObject *)param_1)->extra;
-  ObjGroup_RemoveObject(param_1,3);
-  FUN_80006810(param_1,SFXstaff_proj_outofmagic);
-  uVar1 = *puVar2;
-  if (uVar1 != 0) {
-    FUN_80017814(uVar1);
-    *puVar2 = 0;
-  }
-  return;
-}
 
-/*
- * --INFO--
- *
- * Function: FUN_8014e2a8
- * EN v1.0 Address: 0x8014E2A8
- * EN v1.0 Size: 204b
- * EN v1.1 Address: 0x8014EC38
- * EN v1.1 Size: 232b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_8014e2a8(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
-{
-  int iVar1;
-  
-  iVar1 = *(int *)&((GameObject *)param_1)->extra;
-  if ((visible != 0) && (((GameObject *)param_1)->unkF4 == 0)) {
-    FUN_8003b818(param_1);
-    if ((*(byte *)(iVar1 + 0x26) & 0x10) != 0) {
-      FUN_8008111c((double)lbl_803E32E8,
-                   (double)((float)((double)CONCAT44(0x43300000,(uint)((GameObject *)param_1)->anim.alpha) -
-                                   DOUBLE_803e32d8) / lbl_803E32EC),param_1,3,(int *)0x0);
-    }
-    if ((*(byte *)(iVar1 + 0x26) & 8) != 0) {
-      FUN_8008111c((double)lbl_803E32E8,
-                   (double)((float)((double)CONCAT44(0x43300000,(uint)((GameObject *)param_1)->anim.alpha) -
-                                   DOUBLE_803e32d8) / lbl_803E32EC),param_1,4,(int *)0x0);
-    }
-  }
-  return;
-}
 
 /*
  * --INFO--
@@ -244,13 +180,7 @@ void FUN_8014e2a8(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  */
 #pragma scheduling off
 #pragma peephole off
-void FUN_8014e374(uint param_1)
-{
-  if ((*(ObjHitsPriorityState **)&((GameObject *)param_1)->anim.hitReactState)->lastHitObject != 0) {
-    FUN_80006824(param_1,SFXand_swipe2);
-  }
-  return;
-}
+
 
 /*
  * --INFO--
@@ -267,296 +197,7 @@ void FUN_8014e374(uint param_1)
  */
 #pragma scheduling on
 #pragma peephole on
-void FUN_8014e3a8(ushort *param_1)
-{
-  uint uVar1;
-  int iVar2;
-  int iVar3;
-  int iVar4;
-  int *piVar5;
-  double dVar6;
-  uint uStack_58;
-  int iStack_54;
-  undefined4 uStack_50;
-  float local_4c;
-  float local_48;
-  float local_44;
-  undefined auStack_40 [12];
-  float local_34;
-  undefined4 uStack_30;
-  float local_2c;
-  undefined8 local_28;
-  undefined8 local_20;
-  
-  piVar5 = *(int **)(param_1 + 0x5c);
-  iVar4 = *piVar5;
-  iVar3 = *(int *)(param_1 + 0x26);
-  if (*(int *)(param_1 + 0x7a) == 0) {
-    iVar2 = FUN_80017a98();
-    dVar6 = (double)FUN_8001771c((float *)(param_1 + 0xc),(float *)(iVar2 + 0x18));
-    if ((double)lbl_803E32F0 <= dVar6) {
-      if ((double)lbl_803E32F4 < dVar6) {
-        FUN_80006810((int)param_1,SFXstaff_proj_outofmagic);
-      }
-    }
-    else {
-      FUN_80006824((uint)param_1,SFXstaff_proj_outofmagic);
-    }
-    if ((*(byte *)(param_1 + 0x1b) == 0) || ((*(byte *)((int)piVar5 + 0x26) & 0x18) == 0)) {
-      iVar2 = ObjHits_GetPriorityHitWithPosition((int)param_1,&uStack_50,&iStack_54,&uStack_58,&local_34,&uStack_30,
-                           &local_2c);
-      if (iVar2 != 0) {
-        FUN_8000680c((int)param_1,0x7f);
-        *(byte *)((int)piVar5 + 0x26) = *(byte *)((int)piVar5 + 0x26) | 0x10;
-        FUN_80006824((uint)param_1,SFXdoor_unlocked);
-        FUN_80006824((uint)param_1,SFXdoor_creak);
-        FUN_80006824((uint)param_1,SFXfox_treadwater222);
-        FUN_80006824((uint)param_1,SFXfoot_metal_run_2);
-        local_34 = local_34 + lbl_803DDA58;
-        local_2c = local_2c + lbl_803DDA5C;
-        FUN_80081120(param_1,auStack_40,3,(int *)0x0);
-        local_20 = (double)CONCAT44(0x43300000,*(short *)(iVar3 + 0x1c) * 0x3c ^ 0x80000000);
-        (**(code **)(*gMapEventInterface + 100))
-                  ((double)(float)(local_20 - DOUBLE_803e32e0),*(undefined4 *)(iVar3 + 0x14));
-        if ((int)*(short *)(iVar3 + 0x20) != 0xffffffff) {
-          GameBit_Set((int)*(short *)(iVar3 + 0x20),1);
-        }
-      }
-      ObjHits_SetHitVolumeSlot((int)param_1,10,1,0);
-      ObjHits_EnableObject((int)param_1);
-    }
-    else {
-      if ((*(byte *)((int)piVar5 + 0x26) & 0x10) != 0) {
-        local_28 = (double)CONCAT44(0x43300000,(uint)*(byte *)(param_1 + 0x1b));
-        iVar2 = (int)((float)(local_28 - DOUBLE_803e32d8) - lbl_803DC074);
-        local_20 = (double)(longlong)iVar2;
-        *(char *)(param_1 + 0x1b) = (char)iVar2;
-        if (*(byte *)(param_1 + 0x1b) < 7) {
-          param_1[0x7a] = 0;
-          param_1[0x7b] = 1;
-          *(undefined *)(param_1 + 0x1b) = 0;
-          *(byte *)((int)piVar5 + 0x26) = *(byte *)((int)piVar5 + 0x26) & 0xef;
-          FUN_80006810((int)param_1,SFXstaff_proj_outofmagic);
-        }
-        ObjHits_DisableObject((int)param_1);
-      }
-      if ((*(byte *)((int)piVar5 + 0x26) & 8) != 0) {
-        local_20 = (double)CONCAT44(0x43300000,(uint)*(byte *)(param_1 + 0x1b));
-        iVar2 = (int)((float)(local_20 - DOUBLE_803e32d8) + lbl_803DC074);
-        local_28 = (double)(longlong)iVar2;
-        *(char *)(param_1 + 0x1b) = (char)iVar2;
-        if (0xf8 < *(byte *)(param_1 + 0x1b)) {
-          *(undefined *)(param_1 + 0x1b) = 0xff;
-          *(byte *)((int)piVar5 + 0x26) = *(byte *)((int)piVar5 + 0x26) & 0xf7;
-        }
-      }
-    }
-    iVar2 = FUN_80017a98();
-    piVar5[1] = iVar2;
-    iVar2 = piVar5[1];
-    if (iVar2 != 0) {
-      local_4c = *(float *)(iVar2 + 0x18) - *(float *)(param_1 + 0xc);
-      local_48 = *(float *)(iVar2 + 0x1c) - *(float *)(param_1 + 0xe);
-      local_44 = *(float *)(iVar2 + 0x20) - *(float *)(param_1 + 0x10);
-      dVar6 = FUN_80293900((double)(local_44 * local_44 + local_4c * local_4c + local_48 * local_48)
-                          );
-      piVar5[4] = (int)(float)dVar6;
-    }
-    if (iVar4 != 0) {
-      local_4c = *(float *)(iVar4 + 0x68) - *(float *)(param_1 + 0xc);
-      local_48 = *(float *)(iVar4 + 0x6c) - *(float *)(param_1 + 0xe);
-      local_44 = *(float *)(iVar4 + 0x70) - *(float *)(param_1 + 0x10);
-      dVar6 = FUN_80293900((double)(local_44 * local_44 + local_4c * local_4c + local_48 * local_48)
-                          );
-      piVar5[5] = (int)(float)dVar6;
-    }
-    if (((*(byte *)((int)piVar5 + 0x26) & 2) != 0) && (lbl_803E32FC < (float)piVar5[5])) {
-      *(byte *)((int)piVar5 + 0x26) = *(byte *)((int)piVar5 + 0x26) & 0xfd;
-      *(byte *)((int)piVar5 + 0x26) = *(byte *)((int)piVar5 + 0x26) | 4;
-    }
-    if (((*(byte *)((int)piVar5 + 0x26) & 4) != 0) && ((float)piVar5[5] < lbl_803E3300)) {
-      *(byte *)((int)piVar5 + 0x26) = *(byte *)((int)piVar5 + 0x26) & 0xfb;
-    }
-    if (((((*(byte *)((int)piVar5 + 0x26) & 6) == 0) && (*(short *)(iVar3 + 0x1e) == 0)) &&
-        (piVar5[1] != 0)) && ((float)piVar5[4] < (float)piVar5[6])) {
-      *(byte *)((int)piVar5 + 0x26) = *(byte *)((int)piVar5 + 0x26) | 2;
-    }
-    FUN_8014e244(param_1,piVar5);
-  }
-  else if ((((int)*(short *)(iVar3 + 0x20) == 0xffffffff) ||
-           (uVar1 = GameBit_Get((int)*(short *)(iVar3 + 0x20)), uVar1 == 0)) &&
-          (iVar3 = (*gMapEventInterface)->isTimedEventActive(*(int *)(iVar3 + 0x14)), iVar3 != 0))
-  {
-    param_1[0x7a] = 0;
-    param_1[0x7b] = 0;
-    *(undefined *)(param_1 + 0x1b) = 1;
-    *(byte *)((int)piVar5 + 0x26) = *(byte *)((int)piVar5 + 0x26) | 8;
-    FUN_80006824((uint)param_1,SFXfox_treadwater122);
-  }
-  return;
-}
 
-/*
- * --INFO--
- *
- * Function: FUN_8014e898
- * EN v1.0 Address: 0x8014E898
- * EN v1.0 Size: 392b
- * EN v1.1 Address: 0x8014F1E4
- * EN v1.1 Size: 316b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_8014e898(int param_1,int param_2,int param_3)
-{
-  double dVar1;
-  int iVar2;
-  char cVar4;
-  uint uVar3;
-  int *piVar5;
-  
-  dVar1 = DOUBLE_803e32e0;
-  piVar5 = ((GameObject *)param_1)->extra;
-  piVar5[2] = (int)((float)((double)CONCAT44(0x43300000,(int)*(short *)(param_2 + 0x1a) ^ 0x80000000
-                                            ) - DOUBLE_803e32e0) / lbl_803E3304);
-  piVar5[3] = (int)lbl_803E3308;
-  piVar5[6] = (int)(lbl_803E330C *
-                   (float)((double)CONCAT44(0x43300000,(int)*(char *)(param_2 + 0x19) ^ 0x80000000)
-                          - dVar1));
-  if (param_3 == 0) {
-    iVar2 = FUN_80017830(0x108,0x1a);
-    *piVar5 = iVar2;
-    if (*piVar5 != 0) {
-      FUN_800033a8(*piVar5,0,0x108);
-    }
-    cVar4 = (**(code **)(*DAT_803dd71c + 0x8c))
-                      ((double)(float)piVar5[6],*piVar5,param_1,&DAT_803dc8d8,0xffffffff);
-    if (cVar4 == '\0') {
-      *(byte *)((int)piVar5 + 0x26) = *(byte *)((int)piVar5 + 0x26) | 1;
-    }
-  }
-  if (((int)*(short *)(param_2 + 0x20) != 0xffffffff) &&
-     (uVar3 = GameBit_Get((int)*(short *)(param_2 + 0x20)), uVar3 != 0)) {
-    ((GameObject *)param_1)->unkF4 = 1;
-  }
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_8014ea20
- * EN v1.0 Address: 0x8014EA20
- * EN v1.0 Size: 888b
- * EN v1.1 Address: 0x8014F320
- * EN v1.1 Size: 872b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_8014ea20(short *param_1,undefined4 *param_2)
-{
-  float fVar1;
-  int iVar2;
-  char cVar3;
-  float *pfVar4;
-  double dVar5;
-  
-  pfVar4 = (float *)*param_2;
-  iVar2 = FUN_80006a10((double)(float)param_2[2],pfVar4);
-  if ((((iVar2 != 0) || (pfVar4[4] != DAT_803de6e0)) &&
-      (cVar3 = (**(code **)(*DAT_803dd71c + 0x90))(pfVar4), cVar3 != '\0')) &&
-     (cVar3 = (**(code **)(*DAT_803dd71c + 0x8c))
-                        ((double)lbl_803E3310,*param_2,param_1,&DAT_803dc8e0,0xffffffff),
-     cVar3 != '\0')) {
-    *(byte *)(param_2 + 7) = *(byte *)(param_2 + 7) & 0xfe;
-  }
-  fVar1 = lbl_803E3314;
-  DAT_803de6e0 = pfVar4[4];
-  if ((*(byte *)(param_2 + 7) & 2) == 0) {
-    *(float *)(param_1 + 0x12) =
-         lbl_803E3314 * (pfVar4[0x1a] - *(float *)(param_1 + 6)) + *(float *)(param_1 + 0x12);
-    *(float *)(param_1 + 0x14) =
-         fVar1 * (pfVar4[0x1b] - *(float *)(param_1 + 8)) + *(float *)(param_1 + 0x14);
-    *(float *)(param_1 + 0x16) =
-         fVar1 * (pfVar4[0x1c] - *(float *)(param_1 + 10)) + *(float *)(param_1 + 0x16);
-  }
-  else {
-    *(float *)(param_1 + 0x12) =
-         lbl_803E3314 * (*(float *)(param_2[1] + 0xc) - *(float *)(param_1 + 6)) +
-         *(float *)(param_1 + 0x12);
-    *(float *)(param_1 + 0x14) =
-         fVar1 * ((lbl_803E3318 + *(float *)(param_2[1] + 0x10)) - *(float *)(param_1 + 8)) +
-         *(float *)(param_1 + 0x14);
-    *(float *)(param_1 + 0x16) =
-         fVar1 * (*(float *)(param_2[1] + 0x14) - *(float *)(param_1 + 10)) +
-         *(float *)(param_1 + 0x16);
-  }
-  fVar1 = lbl_803E331C;
-  *(float *)(param_1 + 0x12) = *(float *)(param_1 + 0x12) * lbl_803E331C;
-  *(float *)(param_1 + 0x14) = *(float *)(param_1 + 0x14) * fVar1;
-  *(float *)(param_1 + 0x16) = *(float *)(param_1 + 0x16) * fVar1;
-  if (lbl_803E3320 < *(float *)(param_1 + 0x12)) {
-    *(float *)(param_1 + 0x12) = lbl_803E3320;
-  }
-  if (lbl_803E3320 < *(float *)(param_1 + 0x14)) {
-    *(float *)(param_1 + 0x14) = lbl_803E3320;
-  }
-  if (lbl_803E3320 < *(float *)(param_1 + 0x16)) {
-    *(float *)(param_1 + 0x16) = lbl_803E3320;
-  }
-  if (*(float *)(param_1 + 0x12) < lbl_803E3324) {
-    *(float *)(param_1 + 0x12) = lbl_803E3324;
-  }
-  if (*(float *)(param_1 + 0x14) < lbl_803E3324) {
-    *(float *)(param_1 + 0x14) = lbl_803E3324;
-  }
-  if (*(float *)(param_1 + 0x16) < lbl_803E3324) {
-    *(float *)(param_1 + 0x16) = lbl_803E3324;
-  }
-  FUN_80017a88((double)(*(float *)(param_1 + 0x12) * lbl_803DC074),
-               (double)(*(float *)(param_1 + 0x14) * lbl_803DC074),
-               (double)(*(float *)(param_1 + 0x16) * lbl_803DC074),(int)param_1);
-  *(short *)((int)param_2 + 0x1e) =
-       *(short *)((int)param_2 + 0x1e) + (short)(int)(lbl_803E3328 * lbl_803DC074);
-  *(short *)(param_2 + 8) = *(short *)(param_2 + 8) + (short)(int)(lbl_803E332C * lbl_803DC074);
-  dVar5 = (double)FUN_80293f90();
-  *param_1 = *param_1 + (short)(int)(lbl_803E3330 * (float)((double)lbl_803E3334 * dVar5));
-  dVar5 = (double)FUN_80293f90();
-  param_1[2] = param_1[2] + (short)(int)(lbl_803E3330 * (float)((double)lbl_803E3334 * dVar5));
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_8014ed98
- * EN v1.0 Address: 0x8014ED98
- * EN v1.0 Size: 72b
- * EN v1.1 Address: 0x8014F688
- * EN v1.1 Size: 88b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_8014ed98(int param_1)
-{
-  uint uVar1;
-  uint *puVar2;
-  
-  puVar2 = ((GameObject *)param_1)->extra;
-  ObjGroup_RemoveObject(param_1,3);
-  uVar1 = *puVar2;
-  if (uVar1 != 0) {
-    FUN_80017814(uVar1);
-    *puVar2 = 0;
-  }
-  return;
-}
 
 /*
  * --INFO--
@@ -573,9 +214,7 @@ void FUN_8014ed98(int param_1)
  */
 #pragma scheduling off
 #pragma peephole off
-void FUN_8014ede0(short *param_1)
-{
-}
+
 
 /*
  * --INFO--
@@ -592,37 +231,7 @@ void FUN_8014ede0(short *param_1)
  */
 #pragma scheduling on
 #pragma peephole on
-void FUN_8014ede4(uint param_1,int param_2,int param_3)
-{
-  double dVar1;
-  int iVar2;
-  char cVar3;
-  int *piVar4;
-  
-  dVar1 = DOUBLE_803e3340;
-  piVar4 = ((GameObject *)param_1)->extra;
-  piVar4[2] = (int)((float)((double)CONCAT44(0x43300000,(int)*(short *)(param_2 + 0x1a) ^ 0x80000000
-                                            ) - DOUBLE_803e3340) / lbl_803E3364);
-  piVar4[5] = (int)(lbl_803E3330 *
-                   (float)((double)CONCAT44(0x43300000,(int)*(char *)(param_2 + 0x19) ^ 0x80000000)
-                          - dVar1));
-  piVar4[6] = (int)lbl_803E334C;
-  if (param_3 == 0) {
-    iVar2 = FUN_80017830(0x108,0x1a);
-    *piVar4 = iVar2;
-    if (*piVar4 != 0) {
-      FUN_800033a8(*piVar4,0,0x108);
-    }
-    cVar3 = (**(code **)(*DAT_803dd71c + 0x8c))
-                      ((double)(float)piVar4[5],*piVar4,param_1,&DAT_803dc8e0,0xffffffff);
-    if (cVar3 == '\0') {
-      *(byte *)(piVar4 + 7) = *(byte *)(piVar4 + 7) | 1;
-    }
-    FUN_80006824(param_1,SFXfox_treadwater422);
-  }
-  ((GameObject *)param_1)->objectFlags = ((GameObject *)param_1)->objectFlags | 0x2000;
-  return;
-}
+
 
 
 /* Trivial 4b 0-arg blr leaves. */

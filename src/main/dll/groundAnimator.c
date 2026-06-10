@@ -831,24 +831,6 @@ void appleontree_handleCollectableHit(int obj)
     }
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8017e0f8
- * EN v1.0 Address: 0x8017E0F8
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x8017E1C4
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_8017e0f8(int obj)
-{
-  (*gExpgfxInterface)->freeSource((u32)obj);
-  return;
-}
 
 /*
  * --INFO--
@@ -865,13 +847,7 @@ void FUN_8017e0f8(int obj)
  */
 #pragma scheduling on
 #pragma peephole on
-void FUN_8017e12c(int param_1)
-{
-  if ((((AppleOnTreeState *)*(int *)&((GameObject *)param_1)->extra)->unk5A & 2) == 0) {
-    FUN_8003b818(param_1);
-  }
-  return;
-}
+
 
 /*
  * --INFO--

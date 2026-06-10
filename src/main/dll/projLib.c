@@ -221,11 +221,6 @@ LAB_801158cc:
   return;
 }
 
-void FUN_801150a4(int param_1,undefined4 param_2)
-{
-  *(undefined4 *)(param_1 + 0x608) = param_2;
-  return;
-}
 
 void FUN_801150ac(void)
 {

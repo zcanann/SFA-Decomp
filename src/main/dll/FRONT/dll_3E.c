@@ -220,64 +220,7 @@ void PlayControl(void)
  */
 #pragma scheduling on
 #pragma peephole on
-void FUN_80118470(void)
-{
-  int iVar1;
-  int iVar2;
-  int local_18 [5];
-  
-  if ((DAT_803a6a58 != 0) && (DAT_803a6a5c != '\0')) {
-    DAT_803a6a5d = 0;
-    DAT_803a6a5c = '\0';
-    FUN_8024c910(DAT_803de2e4);
-    if (DAT_803a6a68 == 0) {
-      FUN_8024bdfc((int *)&DAT_803a69c0);
-      FUN_801197e0();
-    }
-    FUN_80119c60();
-    if (DAT_803a6a5f != '\0') {
-      FUN_801177dc();
-    }
-    do {
-      iVar2 = FUN_80244820((int *)&DAT_803a692c,local_18,0);
-      iVar1 = local_18[0];
-      if (iVar2 != 1) {
-        iVar1 = 0;
-      }
-    } while (iVar1 != 0);
-    DAT_803a6a94 = DAT_803a6a98;
-    DAT_803a6aa0 = 0;
-    DAT_803a6a60 = 0;
-    DAT_803a6a64 = 0;
-  }
-  return;
-}
 
-/*
- * --INFO--
- *
- * Function: FUN_80118524
- * EN v1.0 Address: 0x80118524
- * EN v1.0 Size: 80b
- * EN v1.1 Address: 0x80118BA8
- * EN v1.1 Size: 96b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4 FUN_80118524(void)
-{
-  if ((DAT_803a6a58 != 0) && ((DAT_803a6a5c == '\x01' || (DAT_803a6a5c == '\x04')))) {
-    DAT_803a6a5c = 2;
-    DAT_803a6a88 = 0;
-    DAT_803a6a8c = 0;
-    DAT_803a6a84 = 0xffffffff;
-    DAT_803a6a80 = 0xffffffff;
-    return 1;
-  }
-  return 0;
-}
 
 /*
  * --INFO--
@@ -294,13 +237,7 @@ undefined4 FUN_80118524(void)
  */
 #pragma scheduling off
 #pragma peephole off
-bool FUN_80118574(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 uint param_9,undefined param_10,undefined4 param_11,undefined4 param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
-{
-    return 0;
-}
+
 
 void THPPlayerStop(void) {
     OSMessage msg;

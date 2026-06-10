@@ -747,32 +747,7 @@ int Effect10_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
  */
 #pragma scheduling on
 #pragma peephole on
-void FUN_800c2924(void)
-{
-  double dVar1;
-  
-  lbl_803DC498 = lbl_803DC498 + lbl_803E0B38 * lbl_803DC074;
-  if (lbl_803E0B40 < lbl_803DC498) {
-    lbl_803DC498 = lbl_803E0B3C;
-  }
-  lbl_803DC49C = lbl_803DC49C + lbl_803E0B38 * lbl_803DC074;
-  if (lbl_803E0B40 < lbl_803DC49C) {
-    lbl_803DC49C = lbl_803E0B48;
-  }
-  DAT_803de030 = DAT_803de030 + (uint)DAT_803dc070 * 100;
-  if (0x7fff < DAT_803de030) {
-    DAT_803de030 = 0;
-  }
-  dVar1 = (double)FUN_80293f90();
-  lbl_803DE03C = (float)dVar1;
-  DAT_803de034 = DAT_803de034 + (uint)DAT_803dc070 * 0x32;
-  if (0x7fff < DAT_803de034) {
-    DAT_803de034 = 0;
-  }
-  dVar1 = (double)FUN_80293f90();
-  lbl_803DE038 = (float)dVar1;
-  return;
-}
+
 
 
 extern EffectSrcParams lbl_8039C3C8;
@@ -1105,23 +1080,6 @@ int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
   return (*gExpgfxInterface)->spawnEffect(&p, -1, id, 0);
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_800c2a18
- * EN v1.0 Address: 0x800C2A18
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x800C4AF0
- * EN v1.1 Size: 3708b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_800c2a18(undefined4 param_1,undefined4 param_2,ushort *param_3,uint param_4,
-                 undefined param_5)
-{
-}
 
 extern EffectSrcParams lbl_8039C3E0;
 extern f32 lbl_803DFFA8;
@@ -1415,23 +1373,6 @@ int Effect12_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
   return (*gExpgfxInterface)->spawnEffect(&p, -1, id, 0);
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_800c2a1c
- * EN v1.0 Address: 0x800C2A1C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x800C596C
- * EN v1.1 Size: 3796b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_800c2a1c(undefined4 param_1,undefined4 param_2,undefined2 *param_3,uint param_4,
-                 undefined param_5,float *param_6)
-{
-}
 
 /*
  * --INFO--

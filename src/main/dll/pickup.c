@@ -1255,23 +1255,7 @@ void dll_A6_func03(short *param_1,int param_2,u8 *param_3,uint param_4)
   }
   (*gModgfxInterface)->spawnEffect(&buf,0,3,lbl_80318DF0,1,&lbl_803DB980,0x26a,0);
 }
-/*
- * --INFO--
- *
- * Function: FUN_800fd9c4
- * EN v1.0 Address: 0x800FD9C4
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x800FF93C
- * EN v1.1 Size: 1188b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_800fd9c4(short *param_1,int param_2,int param_3,uint param_4,undefined4 param_5,
-                 uint *param_6)
-{
-}
+
 
 /*
  * --INFO--

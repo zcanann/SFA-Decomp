@@ -430,25 +430,6 @@ void CameraModeCombat_init(int param_1,undefined4 param_2,undefined4 *param_3)
   return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8010cdf4
- * EN v1.0 Address: 0x8010CDF4
- * EN v1.0 Size: 44b
- * EN v1.1 Address: 0x8010D160
- * EN v1.1 Size: 44b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_8010cdf4(void)
-{
-  FUN_80017814(lbl_803DD570);
-  lbl_803DD570 = 0;
-  return;
-}
 
 /*
  * --INFO--
@@ -580,25 +561,6 @@ void CameraModeShipBattle_init(void)
   return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8010d450
- * EN v1.0 Address: 0x8010D450
- * EN v1.0 Size: 44b
- * EN v1.1 Address: 0x8010D5DC
- * EN v1.1 Size: 44b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_8010d450(void)
-{
-  FUN_80017814(lbl_803DD578);
-  lbl_803DD578 = 0;
-  return;
-}
 
 
 /* Trivial 4b 0-arg blr leaves. */

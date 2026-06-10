@@ -287,46 +287,6 @@ RomCurve_projectPointToAdjacentWindow(f32 x,f32 y,f32 z,u32 *curveIds,
   return 1;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_800e1b2c
- * EN v1.0 Address: 0x800E1B2C
- * EN v1.0 Size: 212b
- * EN v1.1 Address: 0x800E21C0
- * EN v1.1 Size: 184b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4 FUN_800e1b2c(double param_1,undefined8 param_2,double param_3,int param_4,int param_5)
-{
-  float fVar1;
-  float fVar2;
-  double dVar3;
-  double dVar4;
-  double dVar5;
-  double dVar6;
-  
-  dVar3 = (double)*(float *)(param_4 + 8);
-  dVar5 = (double)*(float *)(param_4 + 0x10);
-  dVar4 = (double)*(float *)(param_5 + 8);
-  dVar6 = (double)*(float *)(param_5 + 0x10);
-  fVar2 = (float)(dVar4 * dVar5 - (double)(float)(dVar3 * dVar6));
-  fVar1 = fVar2 + (float)(param_1 * (double)(float)(dVar6 - dVar5) +
-                         (double)(float)(param_3 * (double)(float)(dVar3 - dVar4)));
-  if (((fVar1 <= lbl_803E12B8) && (lbl_803E12B8 <= fVar2)) ||
-     ((lbl_803E12B8 <= fVar1 && (fVar2 < lbl_803E12B8)))) {
-    fVar2 = (float)(-param_3 * dVar3 + (double)(float)(param_1 * dVar5));
-    fVar1 = (float)(-param_3 * dVar4 + (double)(float)(param_1 * dVar6));
-    if (((fVar2 <= lbl_803E12B8) && (lbl_803E12B8 <= fVar1)) ||
-       ((lbl_803E12B8 <= fVar2 && (fVar1 < lbl_803E12B8)))) {
-      return 1;
-    }
-  }
-  return 0;
-}
 
 /*
  * --INFO--
@@ -2125,22 +2085,6 @@ void curves_countRandomPoints(int obj,uint *curve)
   }
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_800e49c0
- * EN v1.0 Address: 0x800E49C0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x800E5928
- * EN v1.1 Size: 600b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_800e49c0(int param_1,uint *param_2)
-{
-}
 
 void fn_800E56A4(int obj,f32 *state)
 {
@@ -2541,39 +2485,6 @@ void fn_800E5F1C(int obj,f32 *state)
   collision->resultFloorGap = collision->floorGap[0];
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_800e4db4
- * EN v1.0 Address: 0x800E4DB4
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x800E60BC
- * EN v1.1 Size: 228b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_800e4db4(int param_1,int param_2)
-{
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_800e4db8
- * EN v1.0 Address: 0x800E4DB8
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x800E61A0
- * EN v1.1 Size: 624b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_800e4db8(int param_1,int param_2)
-{
-}
 
 /*
  * --INFO--
@@ -3020,23 +2931,6 @@ f32 dll_15_func0B(int obj,f32 x,f32 baseY,f32 z,f32 height)
   return baseY;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_800e56bc
- * EN v1.0 Address: 0x800E56BC
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x800E6D14
- * EN v1.1 Size: 168b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-double FUN_800e56bc(undefined8 param_1,double param_2,double param_3,double param_4,int param_5)
-{
-    return 0.0;
-}
 
 /*
  * --INFO--
@@ -3433,36 +3327,6 @@ void dll_15_func08(short *curveObj,int *state,uint updateValue,f32 step)
   }
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_800e6140
- * EN v1.0 Address: 0x800E6140
- * EN v1.0 Size: 100b
- * EN v1.1 Address: 0x800E7910
- * EN v1.1 Size: 144b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_800e6140(undefined4 param_1,CurvesCollisionState *state)
-{
-  uint uVar1;
-  uint uVar2;
-  
-  uVar2 = state->flags;
-  if ((((uVar2 & CURVES_COLLISION_STATE_ACTIVE) != 0) &&
-       ((uVar2 & CURVES_COLLISION_STATE_HIT_SEGMENTS) != 0)) &&
-     ((state->subtype == '\x01' || (state->subtype == '\x02')))) {
-    uVar1 = (uint)((uVar2 & 4) != 0);
-    if ((uVar2 & 0x1000000) != 0) {
-      uVar1 = uVar1 | 0x20;
-    }
-    FUN_80063a74(param_1,state->hitBounds,uVar1,'\x01');
-  }
-  return;
-}
 
 /*
  * --INFO--
@@ -3665,32 +3529,6 @@ void dll_15_func05(CurvesCollisionState *state,int count,f32 *segmentLocalPoints
   state->flags |= CURVES_COLLISION_STATE_HIT_SEGMENTS;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_800e65c8
- * EN v1.0 Address: 0x800E65C8
- * EN v1.0 Size: 72b
- * EN v1.1 Address: 0x800E7F08
- * EN v1.1 Size: 156b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_800e65c8(CurvesCollisionState *state,u8 pointCount,f32 *localPointPositions,
-                  f32 *localPointRadii,s8 primaryHitType,s8 secondaryHitType)
-{
-  state->pointCounts &= CURVES_POINT_COUNT_SEGMENT_MASK;
-  state->pointCounts |= pointCount & CURVES_POINT_COUNT_LOCAL_MASK;
-  state->primaryHitType = primaryHitType;
-  state->secondaryHitType = secondaryHitType;
-  state->localPointPositions = localPointPositions;
-  state->localPointRadii = localPointRadii;
-  state->flags |= CURVES_COLLISION_STATE_SECONDARY_LOCAL_POINTS | CURVES_COLLISION_STATE_LOCAL_POINTS;
-  state->activeTimer = 10;
-  return;
-}
 
 /* Forward active hit-segment bounds to ObjHits with the state-derived target mask. */
 extern void hitDetectFn_800691c0(void* a, void* b, u8 mask, int e);

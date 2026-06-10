@@ -476,11 +476,7 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1,undefined8 param_2,u
  */
 #pragma scheduling off
 #pragma peephole off
-void FUN_80207c10(int obj)
-{
-  (*gExpgfxInterface)->freeSource2((u32)obj);
-  return;
-}
+
 
 /*
  * --INFO--

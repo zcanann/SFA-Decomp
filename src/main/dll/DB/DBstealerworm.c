@@ -463,41 +463,6 @@ void fn_801E1588(int obj, int state)
   }
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801e1ee4
- * EN v1.0 Address: 0x801E1EE4
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x801E2398
- * EN v1.1 Size: 204b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4 FUN_801e1ee4(void)
-{
-  return DAT_803de8a0;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801e2184
- * EN v1.0 Address: 0x801E2184
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x801E2B60
- * EN v1.1 Size: 16b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4 FUN_801e2184(void)
-{
-  return DAT_803de8c0;
-}
 
 /*
  * --INFO--

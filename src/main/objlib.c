@@ -2973,27 +2973,6 @@ void playerEyeAnimFn_80038988(int obj,int blinkState,uint flags)
   *(s16 *)(joint + 2) = -rotation;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_80038bb0
- * EN v1.0 Address: 0x80038BB0
- * EN v1.0 Size: 28b
- * EN v1.1 Address: 0x80039014
- * EN v1.1 Size: 28b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80038bb0(char param_1,int param_2)
-{
-  if (param_1 != '\0') {
-    return;
-  }
-  DAT_803dd880 = (byte)(param_2 << 7) | DAT_803dd880 & 0x7f;
-  return;
-}
 
 typedef struct ObjLibFlagByte {
     u8 highBit : 1;

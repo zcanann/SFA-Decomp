@@ -370,22 +370,6 @@ skip_insert: ;
   }
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8017b3b8
- * EN v1.0 Address: 0x8017B3B8
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8017B93C
- * EN v1.1 Size: 484b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_8017b3b8(short *param_1,int param_2)
-{
-}
 
 /*
  * --INFO--
@@ -402,102 +386,7 @@ void FUN_8017b3b8(short *param_1,int param_2)
  */
 #pragma scheduling on
 #pragma peephole on
-void FUN_8017b3bc(int obj, int unused, ObjAnimUpdateState *animUpdate)
-{
-  uint uVar1;
-  undefined4 *puVar2;
-  uint uVar3;
-  uint uVar4;
-  bool bVar5;
-  int iVar6;
-  int iVar7;
-  ushort *puVar8;
-  
-  uVar1 = FUN_8028683c();
-  puVar8 = *(ushort **)&((GameObject *)uVar1)->extra;
-  iVar7 = *(int *)&((GameObject *)uVar1)->anim.placementData;
-  if (((GameObject *)uVar1)->anim.alpha == 0) {
-    ObjHits_DisableObject(uVar1);
-  }
-  if (*(char *)(*(int *)&((GameObject *)uVar1)->anim.modelInstance + 0x59) != '\0') {
-    if (((*(byte *)(puVar8 + 3) & 1) != 0) &&
-       (puVar2 = (undefined4 *)FUN_80039520(uVar1,0), puVar2 != (undefined4 *)0x0)) {
-      *puVar2 = 0x100;
-    }
-    if (((*(byte *)(puVar8 + 3) & 2) != 0) &&
-       (puVar2 = (undefined4 *)FUN_80039520(uVar1,1), puVar2 != (undefined4 *)0x0)) {
-      *puVar2 = 0x100;
-    }
-  }
-  if (*(char *)(puVar8 + 2) == '\0') {
-    uVar3 = FUN_80017690((int)*(short *)(iVar7 + 0x18));
-    bVar5 = false;
-    if (((int)*(short *)(iVar7 + 0x22) == 0xffffffff) ||
-       (uVar4 = FUN_80017690((int)*(short *)(iVar7 + 0x22)), uVar4 != 0)) {
-      bVar5 = true;
-    }
-    if ((uVar3 != 0) && ((*(byte *)(puVar8 + 3) & 1) == 0)) {
-      if (*(char *)(*(int *)&((GameObject *)uVar1)->anim.modelInstance + 0x59) != '\0') {
-        FUN_80006824(uVar1,SFXen_weetinkoneshot);
-      }
-      *(byte *)(puVar8 + 3) = *(byte *)(puVar8 + 3) | 1;
-    }
-    if ((bVar5) && ((*(byte *)(puVar8 + 3) & 2) == 0)) {
-      if (*(char *)(*(int *)&((GameObject *)uVar1)->anim.modelInstance + 0x59) != '\0') {
-        FUN_80006824(uVar1,SFXen_weetinkoneshot);
-      }
-      *(byte *)(puVar8 + 3) = *(byte *)(puVar8 + 3) | 2;
-    }
-    if (*(char *)(puVar8 + 3) == '\x03') {
-      *(undefined *)(puVar8 + 2) = 2;
-      if (*puVar8 != 0) {
-        FUN_80006824(uVar1,*puVar8);
-      }
-    }
-  }
-  else if ((*(char *)(puVar8 + 2) == '\x01') &&
-          (uVar3 = FUN_80017690((int)*(short *)(iVar7 + 0x18)), uVar3 == 0)) {
-    *(undefined *)(puVar8 + 2) = 3;
-    if (*puVar8 != 0) {
-      FUN_80006824(uVar1,*puVar8);
-    }
-  }
-  if (*(char *)(puVar8 + 2) == '\x02') {
-    for (iVar6 = 0; iVar6 < animUpdate->eventCount; iVar6 = iVar6 + 1) {
-      if (animUpdate->eventIds[iVar6] == 2) {
-        *(undefined *)(puVar8 + 2) = 1;
-        if ((int)*(short *)(iVar7 + 0x1a) != 0xffffffff) {
-          FUN_80017698((int)*(short *)(iVar7 + 0x1a),1);
-        }
-        if ((*puVar8 != 0) && (bVar5 = FUN_800067f8(uVar1,*puVar8), bVar5)) {
-          FUN_80006810(uVar1,*puVar8);
-        }
-        if (puVar8[1] != 0) {
-          FUN_80006824(uVar1,puVar8[1]);
-        }
-      }
-    }
-  }
-  else if (*(char *)(puVar8 + 2) == '\x03') {
-    for (iVar6 = 0; iVar6 < animUpdate->eventCount; iVar6 = iVar6 + 1) {
-      if (animUpdate->eventIds[iVar6] == 1) {
-        *(undefined *)(puVar8 + 2) = 0;
-        *(undefined *)(puVar8 + 3) = 0;
-        if ((int)*(short *)(iVar7 + 0x1a) != 0xffffffff) {
-          FUN_80017698((int)*(short *)(iVar7 + 0x1a),0);
-        }
-        if ((*puVar8 != 0) && (bVar5 = FUN_800067f8(uVar1,*puVar8), bVar5)) {
-          FUN_80006810(uVar1,*puVar8);
-        }
-        if (puVar8[1] != 0) {
-          FUN_80006824(uVar1,puVar8[1]);
-        }
-      }
-    }
-  }
-  FUN_80286888();
-  return;
-}
+
 
 /*
  * --INFO--
@@ -514,11 +403,7 @@ void FUN_8017b3bc(int obj, int unused, ObjAnimUpdateState *animUpdate)
  */
 #pragma scheduling off
 #pragma peephole off
-void FUN_8017b6bc(int param_1)
-{
-  FUN_8003b818(param_1);
-  return;
-}
+
 
 /*
  * --INFO--
@@ -535,29 +420,7 @@ void FUN_8017b6bc(int param_1)
  */
 #pragma scheduling on
 #pragma peephole on
-void FUN_8017b6dc(int param_1)
-{
-  uint uVar1;
-  int iVar2;
-  int iVar3;
-  
-  iVar3 = *(int *)&((GameObject *)param_1)->extra;
-  iVar2 = *(int *)&((GameObject *)param_1)->anim.placementData;
-  if (*(char *)(iVar3 + 5) != '\0') {
-    if ((*(short *)(iVar2 + 0x1c) == 0) || (*(char *)(iVar3 + 4) == '\0')) {
-      uVar1 = 0xffffffff;
-    }
-    else {
-      uVar1 = *(byte *)(iVar2 + 0x20) & 0x7f;
-      (*gObjectTriggerInterface)->preempt(param_1, *(s16 *)(iVar2 + 0x1c));
-    }
-    if (*(char *)(iVar2 + 0x1e) != -1) {
-      (*gObjectTriggerInterface)->runSequence((int)*(char *)(iVar2 + 0x1e), (void *)param_1, uVar1);
-    }
-    *(undefined *)(iVar3 + 5) = 0;
-  }
-  return;
-}
+
 
 /*
  * --INFO--
@@ -574,9 +437,7 @@ void FUN_8017b6dc(int param_1)
  */
 #pragma scheduling off
 #pragma peephole off
-void FUN_8017b7a8(short *param_1,int param_2)
-{
-}
+
 
 /*
  * --INFO--
@@ -593,59 +454,7 @@ void FUN_8017b7a8(short *param_1,int param_2)
  */
 #pragma scheduling on
 #pragma peephole on
-void FUN_8017b7ac(int param_1)
-{
-  uint uVar1;
-  int iVar2;
-  
-  uVar1 = FUN_80017690((int)*(short *)(*(int *)&((GameObject *)param_1)->anim.placementData + 0x1e));
-  if (uVar1 != 0) {
-    iVar2 = FUN_80039520(param_1,0);
-    if (iVar2 != 0) {
-      *(short *)(iVar2 + 8) = *(short *)(iVar2 + 8) + (short)((int)lbl_803DC074 << 3);
-      if (0x131e < (int)*(short *)(iVar2 + 8) + (int)lbl_803DC074 * 8) {
-        *(undefined2 *)(iVar2 + 8) = 0x131f;
-      }
-      FUN_80135814();
-    }
-    ObjHits_EnableObject(param_1);
-  }
-  return;
-}
 
-/*
- * --INFO--
- *
- * Function: FUN_8017b858
- * EN v1.0 Address: 0x8017B858
- * EN v1.0 Size: 136b
- * EN v1.1 Address: 0x8017C1B4
- * EN v1.1 Size: 156b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_8017b858(undefined2 *param_1)
-{
-  int iVar1;
-  uint uVar2;
-  int iVar3;
-  
-  iVar3 = *(int *)(param_1 + 0x26);
-  iVar1 = FUN_80039520((int)param_1,0);
-  if (iVar1 != 0) {
-    *(undefined2 *)(iVar1 + 8) = 0x800;
-  }
-  *param_1 = (short)((int)*(char *)(iVar3 + 0x18) << 8);
-  param_1[0x58] = param_1[0x58] | 0x6000;
-  ObjHits_DisableObject((int)param_1);
-  uVar2 = FUN_80017690((int)*(short *)(iVar3 + 0x1e));
-  if (uVar2 != 0) {
-    ObjHits_EnableObject((int)param_1);
-  }
-  return;
-}
 
 
 /* Trivial 4b 0-arg blr leaves. */

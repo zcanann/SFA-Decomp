@@ -204,26 +204,6 @@ void fn_8017F334(int obj, void *setup, void *stateArg)
   }
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_8017f290
- * EN v1.0 Address: 0x8017F290
- * EN v1.0 Size: 60b
- * EN v1.1 Address: 0x8017F508
- * EN v1.1 Size: 64b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_8017f290(int param_1)
-{
-  if (((((ObjAnimComponent *)param_1)->modelInstance->flags & 1) != 0) && (*(int *)(param_1 + 0x74) != 0)) {
-    FUN_800400b0();
-  }
-  return;
-}
 
 
 /* Trivial 4b 0-arg blr leaves. */
