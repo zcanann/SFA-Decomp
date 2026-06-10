@@ -98,10 +98,10 @@ void *camcontrol_findBestTarget(int param_1, u8 *focus)
         } else {
             dy = *(f32 *)(f + 0x1c) - *(f32 *)(*(u8 **)(obj + 0x74) + ((GameObject *)obj)->unkE4 * 0x18 + 0x10);
         }
-        if (dy <= lbl_803E1644) {
+        if (!(dy > lbl_803E1644)) {
             continue;
         }
-        if (dy >= lbl_803E1648) {
+        if (!(dy < lbl_803E1648)) {
             continue;
         }
         dx = *(f32 *)(f + 0x18) - *(f32 *)(*(u8 **)(obj + 0x74) + ((GameObject *)obj)->unkE4 * 0x18 + 0xc);
@@ -109,7 +109,7 @@ void *camcontrol_findBestTarget(int param_1, u8 *focus)
         distsq = dz * dz + dx * dx;
         entry = data + ((GameObject *)obj)->unkE4 * 5;
         range = (f32)(int)(entry[2] << 2);
-        if (distsq >= range * range) {
+        if (!(distsq < range * range)) {
             continue;
         }
         canTarget = 1;
