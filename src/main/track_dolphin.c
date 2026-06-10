@@ -602,10 +602,10 @@ void renderMapBlock(void *objp, u8 type)
     shader = 0;
     flag = 0;
     if (type == 1) {
-        ptr = *(int *)((char *)o + 0x7c);
+        ptr = *(int *)&((GameObject *)o)->anim.banks;
         count = *(u16 *)((char *)o + 0x86);
     } else if (type == 2) {
-        ptr = *(int *)((char *)o + 0x80);
+        ptr = *(int *)&((GameObject *)o)->anim.previousLocalPosX;
         count = *(u16 *)((char *)o + 0x88);
     } else {
         ptr = *(int *)((char *)o + 0x78);
@@ -4549,22 +4549,22 @@ void objBboxFn_800640cc(f32 *p0, f32 *p1, int p5, int *out, int *self, int p8, i
 
         if (o == self) continue;
         if ((s8)*(u8 *)((char *)o + 0x35) <= -1) continue;
-        if (*(u32 *)(*(int *)((char *)o + 0x50) + 0x34) == 0) continue;
-        p54 = *(int **)((char *)o + 0x54);
+        if (*(u32 *)(*(int *)&((GameObject *)o)->anim.modelInstance + 0x34) == 0) continue;
+        p54 = *(int **)&((GameObject *)o)->anim.hitReactState;
         if (p54 != NULL && (*(s16 *)((char *)p54 + 0x60) & 1) == 0) continue;
-        dx = *(f32 *)((char *)o + 0xc) - w0[0];
-        dy = *(f32 *)((char *)o + 0x10) - w0[1];
-        dz = *(f32 *)((char *)o + 0x14) - w0[2];
-        hdr = *(int *)(*(int *)(*(int *)((char *)o + 0x7c)
+        dx = ((GameObject *)o)->anim.localPosX - w0[0];
+        dy = ((GameObject *)o)->anim.localPosY - w0[1];
+        dz = ((GameObject *)o)->anim.localPosZ - w0[2];
+        hdr = *(int *)(*(int *)(*(int *)&((GameObject *)o)->anim.banks
                        + (s8)*(u8 *)((char *)p54 + 0xb0) * 4));
         rad = (f32)((u16)modelFileHeaderGetCullDistance((void *)hdr) + 0x32);
         rad = rad * rad;
         hit = 0;
         if (dy * dy + dx * dx + dz * dz < rad) hit = 1;
         if (hit == 0) {
-            f32 ex = *(f32 *)((char *)o + 0xc) - w1[0];
-            f32 ey = *(f32 *)((char *)o + 0x10) - w1[1];
-            f32 ez = *(f32 *)((char *)o + 0x14) - w1[2];
+            f32 ex = ((GameObject *)o)->anim.localPosX - w1[0];
+            f32 ey = ((GameObject *)o)->anim.localPosY - w1[1];
+            f32 ez = ((GameObject *)o)->anim.localPosZ - w1[2];
             if (ey * ey + ex * ex + ez * ez < rad) hit = 1;
         }
         if (hit == 0) continue;

@@ -13,6 +13,7 @@
  * functions in the unit.
  */
 
+#include "main/dll/hud_textures.h"
 #include "main/dll/baddie/wispBaddie.h"
 #include "main/mapEventTypes.h"
 
@@ -609,7 +610,7 @@ void pauseMenuDrawStatus_801274a0(int *arg1) {
             s16 px = (s16)(0xe6 - lbl_803DD75C);
             for (i = 0; (u16)i < 7; i++) {
                 f32 fy = lbl_803E1FAC * (f32)(u32)(u16)i + lbl_803E1F30;
-                pauseMenuDrawElement(*(int **)((u8 *)hudTextures + 0x5c), fy, lbl_803E20B4, px, (u8)ty,
+                pauseMenuDrawElement(*(int **)&((HudTextures *)hudTextures)->unk5C, fy, lbl_803E20B4, px, (u8)ty,
                                      (s32)lbl_803E20B8, 0);
             }
         }
@@ -631,11 +632,11 @@ void pauseMenuDrawStatus_801274a0(int *arg1) {
                                      (s32)lbl_803E20B8, 0);
             }
         }
-        pauseMenuDrawElement(*(int **)((u8 *)hudTextures + 0xbc), (f32)lbl_803DBAD0, (f32)lbl_803DBAD4, (s16)(0x100 - lbl_803DD75C), (u8)ty,
+        pauseMenuDrawElement(*(int **)&((HudTextures *)hudTextures)->unkBC, (f32)lbl_803DBAD0, (f32)lbl_803DBAD4, (s16)(0x100 - lbl_803DD75C), (u8)ty,
                              0x100, 0);
         drawFn_8011eb3c(*(void **)((u8 *)hudTextures + 0xb8), (f32)(lbl_803DBAD0 + 0x18), (f32)lbl_803DBAD4,
                         (s16)(0x100 - lbl_803DD75C), (u8)ty, 0x100, 0x66, 0x12, 0);
-        pauseMenuDrawElement(*(int **)((u8 *)hudTextures + 0xc0), (f32)(lbl_803DBAD0 + 0x7e), (f32)lbl_803DBAD4, (s16)(0x100 - lbl_803DD75C), (u8)ty,
+        pauseMenuDrawElement(*(int **)&((HudTextures *)hudTextures)->unkC0, (f32)(lbl_803DBAD0 + 0x7e), (f32)lbl_803DBAD4, (s16)(0x100 - lbl_803DD75C), (u8)ty,
                              0x100, 0);
         hudDrawMagicBar((u8)ty, 0x100 - lbl_803DD75C, 1);
         lbl_803DD824 = (void *)lbl_8031BB90;

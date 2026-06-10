@@ -221,7 +221,7 @@ void objAnimFn_80038f38(int obj, char *p2)
         int n = OBJPRINT_JOINT_COUNT(m);
         int j;
         for (j = 0; j < n; j++) {
-            u8 *entries = *(u8 **)((char *)m + 0x10);
+            u8 *entries = *(u8 **)&((ObjDef *)m)->jointData;
             int idx = OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1;
             if ((int)entries[idx] != 0xff && (int)entries[entryIdx] == 1) {
                 found = (s16 *)((char *)((GameObject *)obj)->anim.jointPoseData + vecOffset);
@@ -1521,7 +1521,7 @@ void *objModelGetVecFn_800395d8(void *obj, int target) {
         int i;
         if (count > 0) {
             for (i = 0; i < count; i++) {
-                u8 *entries = *(u8 **)((char *)m + 0x10);
+                u8 *entries = *(u8 **)&((ObjDef *)m)->jointData;
                 int adj = OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx;
                 if (entries[adj + 1] != 0xff && (s32)entries[entryIdx] == target) {
                     result = (char *)((GameObject *)obj)->anim.jointPoseData + vecOffset;
@@ -2410,15 +2410,15 @@ int fn_8003A8B4(int objArg, int *keyList, int countArg, char *p4Arg)
         if (m != NULL) {
             int entryIdx = found;
             int vecOffset = found;
-            int n = *(u8 *)((char *)m + 0x5a);
+            int n = ((ObjDef *)m)->jointCount;
             int j;
             for (j = 0; j < n; j++) {
-                u8 *entries = *(u8 **)((char *)m + 0x10);
+                u8 *entries = *(u8 **)&((ObjDef *)m)->jointData;
                 int idx = OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1;
                 if ((int)entries[idx] != 0xff && key == entries[entryIdx]) {
                     found = *(int *)&((GameObject *)obj)->anim.jointPoseData + vecOffset;
                 }
-                entryIdx += (s8)*(s8 *)((char *)m + 0x55) + 1;
+                entryIdx += (s8)((ObjDef *)m)->modelCount + 1;
                 vecOffset += 0x12;
             }
         }
@@ -2757,15 +2757,15 @@ void fn_8003ADC4(int obj, char *tgt, char *p3, int a, u8 inv, int b)
     m = (void *)((GameObject *)obj)->anim.modelInstance;
     if (m != NULL) {
         int entryIdx = 0, vecOffset = 0;
-        int n = *(u8 *)((char *)m + 0x5a);
+        int n = ((ObjDef *)m)->jointCount;
         int j;
         for (j = 0; j < n; j++) {
-            u8 *entries = *(u8 **)((char *)m + 0x10);
+            u8 *entries = *(u8 **)&((ObjDef *)m)->jointData;
             int idx = OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1;
             if ((int)entries[idx] != 0xff && entries[entryIdx] == 0) {
                 found = (s16 *)((char *)((GameObject *)obj)->anim.jointPoseData + vecOffset);
             }
-            entryIdx += (s8)*(s8 *)((char *)m + 0x55) + 1;
+            entryIdx += (s8)((ObjDef *)m)->modelCount + 1;
             vecOffset += 0x12;
         }
     }
@@ -2916,7 +2916,7 @@ void characterDoEyeAnims(int obj, int p2)
         u8 *p = *(u8 **)((char *)m + 0xc);
         if (p == NULL) {
         } else {
-            int n = *(u8 *)((char *)m + 0x59);
+            int n = ((ObjDef *)m)->unk59;
             int off = 0;
             int j;
             for (j = 0; j < n; j++) {
@@ -2934,7 +2934,7 @@ void characterDoEyeAnims(int obj, int p2)
         u8 *p = *(u8 **)((char *)m + 0xc);
         if (p == NULL) {
         } else {
-            int n = *(u8 *)((char *)m + 0x59);
+            int n = ((ObjDef *)m)->unk59;
             int off = 0;
             int j;
             for (j = 0; j < n; j++) {
@@ -3106,15 +3106,15 @@ int objMathFn_8003a380(int obj, char *tgt, f32 *pos, int p4, s16 *spd, int unk6,
         m = (void *)((GameObject *)obj)->anim.modelInstance;
         if (m != NULL) {
             int entryIdx = 0, vecOffset = 0;
-            int n = *(u8 *)((char *)m + 0x5a);
+            int n = ((ObjDef *)m)->jointCount;
             int j;
             for (j = 0; j < n; j++) {
-                u8 *entries = *(u8 **)((char *)m + 0x10);
+                u8 *entries = *(u8 **)&((ObjDef *)m)->jointData;
                 int idx = OBJPRINT_ACTIVE_BANK_INDEX(obj) + entryIdx + 1;
                 if ((int)entries[idx] != 0xff && key == entries[entryIdx]) {
                     found = (s16 *)((char *)((GameObject *)obj)->anim.jointPoseData + vecOffset);
                 }
-                entryIdx += (s8)*(s8 *)((char *)m + 0x55) + 1;
+                entryIdx += (s8)((ObjDef *)m)->modelCount + 1;
                 vecOffset += 0x12;
             }
         }
