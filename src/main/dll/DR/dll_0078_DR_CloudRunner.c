@@ -142,7 +142,7 @@ int DR_CloudRunner_stateHandler02(int obj, int p2)
         ((GameObject *)obj)->anim.velocityZ = fz;
         *(s16 *)((char *)p2 + 0x338) = 0;
         ((CloudRunnerState *)p2)->baddie.moveSpeed = lbl_803E83F4;
-        *(f32 *)((char *)p2 + 0x2b8) = lbl_803E83F8;
+        ((CloudRunnerState *)p2)->baddie.unk2B8 = lbl_803E83F8;
         if (((GameObject *)obj)->anim.currentMove != 0) {
             ObjAnim_SetCurrentMove(obj, 0, fz, 0);
         }
@@ -151,10 +151,10 @@ int DR_CloudRunner_stateHandler02(int obj, int p2)
             ((CloudRunnerState *)p2)->baddie.unk25F = 0;
         }
     }
-    if (*(f32 *)((char *)p2 + 0x298) < lbl_803E83BC) {
+    if (((CloudRunnerState *)p2)->baddie.unk298 < lbl_803E83BC) {
         *(s16 *)((char *)p2 + 0x334) = 0;
         ((CloudRunnerState *)p2)->baddie.unk336 = 0;
-        *(f32 *)((char *)p2 + 0x298) = lbl_803E83A4;
+        ((CloudRunnerState *)p2)->baddie.unk298 = lbl_803E83A4;
     }
     return 0;
 }
@@ -431,14 +431,14 @@ int DR_CloudRunner_stateHandler05(int obj, int p2, f32 f)
         inner->unkAFC = ((GameObject *)obj)->anim.localPosZ;
     }
     *(int *)((char *)p2 + 0) |= 0x1000000;
-    if (*(f32 *)((char *)p2 + 0x298) < lbl_803E83BC) {
+    if (((CloudRunnerState *)p2)->baddie.unk298 < lbl_803E83BC) {
         *(s16 *)((char *)p2 + 0x334) = 0;
         ((CloudRunnerState *)p2)->baddie.unk336 = 0;
         {
             f32 fz = lbl_803E83A4;
             ((CloudRunnerState *)p2)->baddie.unk290 = fz;
             ((CloudRunnerState *)p2)->baddie.unk28C = fz;
-            *(f32 *)((char *)p2 + 0x298) = fz;
+            ((CloudRunnerState *)p2)->baddie.unk298 = fz;
         }
     }
     speed = ((GameObject *)obj)->anim.currentMoveProgress;
@@ -496,7 +496,7 @@ int DR_CloudRunner_stateHandler05(int obj, int p2, f32 f)
             ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ + vecN.z;
         }
     }
-    if (*(f32 *)((char *)p2 + 0x298) > lbl_803E83BC) {
+    if (((CloudRunnerState *)p2)->baddie.unk298 > lbl_803E83BC) {
         s1.angles[2] = 0;
         s1.angles[1] = 0;
         s1.angles[0] = ((GameObject *)obj)->anim.rotX;
@@ -1047,7 +1047,7 @@ int DR_CloudRunner_stateHandler04(int obj, int p2)
         (*gGameUIInterface)->runAirMeter(inner2->unkBB0);
         *(s16 *)((char *)p2 + 0x338) = 0;
         ((CloudRunnerState *)p2)->baddie.moveSpeed = lbl_803E83F4;
-        *(f32 *)((char *)p2 + 0x2b8) = lbl_803E83F8;
+        ((CloudRunnerState *)p2)->baddie.unk2B8 = lbl_803E83F8;
         ObjAnim_SetCurrentMove(obj, 1, lbl_803E83A4, 0);
         ((ByteFlags *)&inner->flagsBC0)->b01 = 1;
     }
