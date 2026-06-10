@@ -2262,7 +2262,7 @@ void allocLotsOfTextures(void) {
             f32 v;
             dx = dx * 1.1f;
             dz = dz * 1.1f;
-            d2 = dz * dz + dx * dx;
+            d2 = dx * dx + dz * dz;
             if (d2 > 1.0f) {
                 v = 0.0f;
             } else {
@@ -2291,7 +2291,7 @@ void allocLotsOfTextures(void) {
             f32 v;
             dx = dx * 1.2f;
             dz = dz * 1.2f;
-            d2 = dz * dz + dx * dx;
+            d2 = dx * dx + dz * dz;
             if (d2 > 1.0f) {
                 v = 0.0f;
             } else {

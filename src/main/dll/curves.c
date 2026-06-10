@@ -336,7 +336,7 @@ int curves_distFn15(u32 curveId,f32 x,f32 y,f32 z,f32 *outDistance)
         dx = curve->x - x;
         dy = curve->y - y;
         dz = curve->z - z;
-        distance = sqrtf(dz * dz + dx * dx + dy * dy);
+        distance = sqrtf(dx * dx + dz * dz + dy * dy);
         if (distance < *outDistance) {
           *outDistance = distance;
         }

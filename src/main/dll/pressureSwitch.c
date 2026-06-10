@@ -909,7 +909,7 @@ void hagabon_update(int obj)
         dx = ((GameObject *)player)->anim.worldPosX - ((GameObject *)obj)->anim.worldPosX;
         dy = ((GameObject *)player)->anim.worldPosY - ((GameObject *)obj)->anim.worldPosY;
         dz = ((GameObject *)player)->anim.worldPosZ - ((GameObject *)obj)->anim.worldPosZ;
-        state->playerDistance = sqrtf(dz * dz + dx * dx + dy * dy);
+        state->playerDistance = sqrtf(dx * dx + dz * dz + dy * dy);
     }
     if (oldCurve != 0) {
         dx = *(f32 *)&((GameObject *)oldCurve)->anim.dll - ((GameObject *)obj)->anim.worldPosX;
