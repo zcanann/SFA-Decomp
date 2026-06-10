@@ -283,7 +283,7 @@ int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
     }
 
     child = *(int *)state;
-    if (child != 0) {
+    if ((void *)child != NULL) {
         ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
             (child, ((GameObject *)obj)->anim.currentMoveProgress -
                         ((GameObject *)child)->anim.currentMoveProgress,
@@ -298,8 +298,11 @@ int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
         if (playerFn_801d6d58() != 0) {
             *(u8 *)(state + 0xa) = *(u8 *)(state + 0xa) | 1;
         }
-        if (GameBit_Get(0x2e8) != 0 || GameBit_Get(0x123) != 0) {
-            *(u8 *)(state + 0xa) = *(u8 *)(state + 0xa) | 2;
+        {
+            int hit = (GameBit_Get(0x2e8) != 0 || GameBit_Get(0x123) != 0);
+            if (hit) {
+                *(u8 *)(state + 0xa) = *(u8 *)(state + 0xa) | 2;
+            }
         }
         animUpdate->sequenceEventActive = 0;
 
