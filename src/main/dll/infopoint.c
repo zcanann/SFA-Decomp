@@ -56,39 +56,39 @@ void TrickyCurve_updateCooldownTrigger(int obj)
   deltaY = player->y - curve->y;
   deltaZ = player->z - curve->z;
 
-  if (deltaX <= lbl_803E6438) {
+  if (deltaX <= 0.0f) {
     bound = (f32)state->halfWidthX;
     if (-bound < deltaX) {
       axisCount = 1;
     }
   }
-  if (lbl_803E6438 < deltaX) {
+  if (deltaX > 0.0f) {
     bound = (f32)state->halfWidthX;
     if (deltaX < bound) {
       axisCount = axisCount + 1;
     }
   }
 
-  if (deltaZ <= lbl_803E6438) {
+  if (deltaZ <= 0.0f) {
     bound = (f32)state->halfWidthZ;
     if (-bound < deltaZ) {
       axisCount = axisCount + 1;
     }
   }
-  if (lbl_803E6438 < deltaZ) {
+  if (deltaZ > 0.0f) {
     bound = (f32)state->halfWidthZ;
     if (deltaZ < bound) {
       axisCount = axisCount + 1;
     }
   }
 
-  if (deltaY <= lbl_803E6438) {
+  if (deltaY <= 0.0f) {
     bound = (f32)state->halfHeightY;
     if (-bound < deltaY) {
       axisCount = axisCount + 1;
     }
   }
-  if (lbl_803E6438 < deltaY) {
+  if (deltaY > 0.0f) {
     bound = (f32)state->halfHeightY;
     if (deltaY < bound) {
       axisCount = axisCount + 1;
