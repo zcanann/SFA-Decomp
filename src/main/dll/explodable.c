@@ -100,7 +100,7 @@ int fn_801833E4(int obj, int player, int state)
         ((ObjPlacement *)setup)->posY = ((GameObject *)obj)->anim.localPosY;
         ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
         *(s16 *)(setup + 0x1a) = 400;
-        newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
+        newObj = Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
         ((GameObject *)newObj)->anim.velocityX = ((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc);
         ((GameObject *)newObj)->anim.velocityZ = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(player + 0x14);
         len = ((GameObject *)newObj)->anim.velocityX * ((GameObject *)newObj)->anim.velocityX +
@@ -142,7 +142,7 @@ int fn_801833E4(int obj, int player, int state)
         ((ObjPlacement *)setup)->posY = ((GameObject *)obj)->anim.localPosY;
         ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
         *(s16 *)(setup + 0x1a) = 400;
-        newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
+        newObj = Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
         ((GameObject *)newObj)->anim.velocityX = ((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc);
         ((GameObject *)newObj)->anim.velocityZ = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(player + 0x14);
         len = ((GameObject *)newObj)->anim.velocityX * ((GameObject *)newObj)->anim.velocityX +
@@ -184,7 +184,7 @@ int fn_801833E4(int obj, int player, int state)
         ((ObjPlacement *)setup)->posY = ((GameObject *)obj)->anim.localPosY;
         ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
         *(s16 *)(setup + 0x1a) = 2000;
-        newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
+        newObj = Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
         ((GameObject *)newObj)->anim.velocityX = ((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc);
         ((GameObject *)newObj)->anim.velocityZ = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(player + 0x14);
         len = ((GameObject *)newObj)->anim.velocityX * ((GameObject *)newObj)->anim.velocityX +
@@ -233,7 +233,7 @@ int fn_801833E4(int obj, int player, int state)
         ((ObjPlacement *)setup)->posY = lbl_803E39C0 + ((GameObject *)obj)->anim.localPosY;
         ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
         *(s16 *)(setup + 0x24) = -1;
-        newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
+        newObj = Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
         (**(void (**)(f32, f32, f32))(**(int **)&((GameObject *)newObj)->anim.dll + 0x2c))(
             lbl_803E39B8, lbl_803E39AC, lbl_803E39B8);
         break;
@@ -251,7 +251,7 @@ int fn_801833E4(int obj, int player, int state)
             *(u8 *)(setup + 0x6) = 200;
             *(s16 *)(setup + 0x20) = -1;
             *(s16 *)(setup + 0x1a) = 0x7f;
-            Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
+            Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
         }
         break;
     }

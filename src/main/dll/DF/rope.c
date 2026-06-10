@@ -801,7 +801,7 @@ void magicmaker_update(int obj)
           *(u8 *)(setup + 0x5) = *(u8 *)(def + 0x5);
           *(u8 *)(setup + 0x7) = *(u8 *)(def + 0x7);
           *(s16 *)(setup + 0x2e) = 3;
-          newobj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
+          newobj = Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
           if (newobj != NULL) {
             i = 3;
             do {

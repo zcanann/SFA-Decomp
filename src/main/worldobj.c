@@ -172,7 +172,7 @@ void worldobj_init(int obj, int arg) {
                 *(f32 *)(o2 + 8) = ((GameObject *)obj)->anim.localPosX;
                 *(f32 *)(o2 + 0xc) = ((GameObject *)obj)->anim.localPosY;
                 *(f32 *)(o2 + 0x10) = ((GameObject *)obj)->anim.localPosZ;
-                Obj_SetupObject(o2, 5, (s8)*(u8 *)(obj + 0xac), -1, 0);
+                Obj_SetupObject(o2, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, 0);
             }
         }
         break;

@@ -362,7 +362,7 @@ void fn_8017F7B8(int obj,int objectId)
     setup->mapByte6 = mapData[0x06];
     setup->mapByte5 = mapData[0x05];
     setup->yawByte = (u8)(mapData[0x07] - 0xf);
-    childObj = Obj_SetupObject(setup,5,*(s8 *)(obj + 0xac),-1,((GameObject *)obj)->anim.parent);
+    childObj = Obj_SetupObject(setup,5,((GameObject *)obj)->anim.mapEventSlot,-1,((GameObject *)obj)->anim.parent);
     if (childObj != 0) {
       ObjLink_AttachChild(obj,childObj,0);
       state->childObject = childObj;

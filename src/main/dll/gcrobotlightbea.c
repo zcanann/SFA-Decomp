@@ -143,7 +143,7 @@ int fn_801816F8(u8 *obj, u8 *player, u8 *dataIn) {
         ((ObjPlacement *)setup)->posY = ((GameObject *)obj)->anim.localPosY;
         ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
         *(s16 *)(setup + 0x1a) = 0x190;
-        spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, ((GameObject *)obj)->anim.parent);
+        spawned = Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, ((GameObject *)obj)->anim.parent);
         if (slowMo) {
             sc = lbl_803E3948;
             ((GameObject *)spawned)->anim.velocityX = sc * lbl_803AC790[0];
@@ -192,7 +192,7 @@ int fn_801816F8(u8 *obj, u8 *player, u8 *dataIn) {
         ((ObjPlacement *)setup)->posY = ((GameObject *)obj)->anim.localPosY;
         ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
         *(s16 *)(setup + 0x1a) = 0x190;
-        spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, ((GameObject *)obj)->anim.parent);
+        spawned = Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, ((GameObject *)obj)->anim.parent);
         if (slowMo) {
             sc = lbl_803E3948;
             ((GameObject *)spawned)->anim.velocityX = sc * lbl_803AC790[0];
@@ -241,7 +241,7 @@ int fn_801816F8(u8 *obj, u8 *player, u8 *dataIn) {
         ((ObjPlacement *)setup)->posY = ((GameObject *)obj)->anim.localPosY;
         ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
         *(s16 *)(setup + 0x1a) = 0x7d0;
-        spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, ((GameObject *)obj)->anim.parent);
+        spawned = Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, ((GameObject *)obj)->anim.parent);
         if (slowMo) {
             sc = lbl_803E3948;
             ((GameObject *)spawned)->anim.velocityX = sc * lbl_803AC790[0];
@@ -305,7 +305,7 @@ int fn_801816F8(u8 *obj, u8 *player, u8 *dataIn) {
             ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
         }
         *(s16 *)(setup + 0x24) = -1;
-        spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, ((GameObject *)obj)->anim.parent);
+        spawned = Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, ((GameObject *)obj)->anim.parent);
         if (slowMo) {
             sc = lbl_803E3948;
             ((GameObject *)spawned)->anim.velocityX = sc * lbl_803AC790[0];

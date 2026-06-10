@@ -472,7 +472,7 @@ void snowclaw_update(int obj) {
         if (*(s8 *)(inner + 0xa2) > 0 && Obj_IsLoadingLocked() != 0) {
             *(int *)&((GameObject *)obj)->unkC8 =
                 Obj_SetupObject(Obj_AllocObjectSetup(0x18, dropTable.v[*(s8 *)(inner + 0xa2)]),
-                                4, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
+                                4, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
             ((GameObject *)obj)->unkEB = 1;
         }
         *(u8 *)(inner + 0xa3) = *(u8 *)(inner + 0xa2);
@@ -650,7 +650,7 @@ int snowclaw_animEventCallback(int obj, int a2, int evt) {
         if (*(s8 *)((char *)inner + 0xa2) > 0 && Obj_IsLoadingLocked() != 0) {
             *(int *)&((GameObject *)obj)->unkC8 =
                 Obj_SetupObject(Obj_AllocObjectSetup(0x18, tbl.v[*(s8 *)((char *)inner + 0xa2)]), 4,
-                                *(s8 *)((char *)obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
+                                ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
             ((GameObject *)obj)->unkEB = 1;
         }
         *(s8 *)((char *)inner + 0xa3) = *(s8 *)((char *)inner + 0xa2);

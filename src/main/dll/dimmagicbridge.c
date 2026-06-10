@@ -360,7 +360,7 @@ void dll_19A_update(int obj)
                 int linkIdx = *(s8 *)(setup + 0x1f);
                 *(u8 *)(newObj + 0x32) = linkIdx;
             }
-            r = Obj_SetupObject(newObj, 5, *(s8 *)(obj + 0xac), 0xffffffff, *(int *)&((GameObject *)obj)->anim.parent);
+            r = Obj_SetupObject(newObj, 5, ((GameObject *)obj)->anim.mapEventSlot, 0xffffffff, *(int *)&((GameObject *)obj)->anim.parent);
             if ((r != 0) && (*(void **)(r + 0xb8) != 0)) {
                 *(u8 *)(*(int *)(r + 0xb8) + 0x404) = 0x20;
             }

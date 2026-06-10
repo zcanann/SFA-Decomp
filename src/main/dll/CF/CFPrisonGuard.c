@@ -198,7 +198,7 @@ void staffactivated_spawnMapEventDebris(int obj)
       spawnedPlacement->posZ = state->targetZ;
       *(s16 *)(spawnedSetup + 0x1a) = 0x190;
 
-      spawnedObj = Obj_SetupObject(spawnedSetup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
+      spawnedObj = Obj_SetupObject(spawnedSetup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
       *(f32 *)(spawnedObj + 0x24) = ((GameObject *)obj)->anim.localPosX - *(f32 *)(player + 0xc);
       *(f32 *)(spawnedObj + 0x2c) = ((GameObject *)obj)->anim.localPosZ - *(f32 *)(player + 0x14);
 

@@ -383,7 +383,7 @@ void fn_8013E0D0(int *obj, register u8 *st) {
                         *(u8 *)(o + 4) = 2;
                         *(u8 *)(o + 5) = 1;
                         *(s16 *)(o + 0x1a) = i;
-                        *(int *)(p + 0x700) = Obj_SetupObject(o, 5, *(s8 *)((char *)obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
+                        *(int *)(p + 0x700) = Obj_SetupObject(o, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
                         p += 4;
                     }
                 }

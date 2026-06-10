@@ -358,7 +358,7 @@ void gpsh_objcreator_update(int *obj) {
         *(s16*)setup = (s16)(sub[4] + 0x1f4);
         *(u8*)((char*)setup + 0x18) = (u8)((s32)*(s16*)obj >> 8);
         *(s16*)((char*)setup + 0x1a) = lbl_803263B8[sub[4]];
-        Obj_SetupObject(setup, 5, *(s8*)((char*)obj + 0xac), -1, *(void**)&((GameObject *)obj)->anim.parent);
+        Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(void**)&((GameObject *)obj)->anim.parent);
     }
 }
 void gpsh_scene_free(void) {}
