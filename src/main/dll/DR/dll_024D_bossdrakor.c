@@ -414,9 +414,9 @@ void bossdrakor_spawnAttackObjects(int obj, int state, int action)
                             prod = lbl_803DC188 * Vec_distance((int *)&((GameObject *)obj)->anim.worldPosX, (int *)((char *)player + 0x18));
                             lo = (int)-prod;
                             hi = (int)prod;
-                            target[0] = *(f32 *)((char *)player + 0xc) + (f32)(s32)randomGetRange(lo, hi);
-                            target[1] = *(f32 *)((char *)player + 0x10) + (f32)(s32)randomGetRange(lo, hi);
-                            target[2] = *(f32 *)((char *)player + 0x14) + (f32)(s32)randomGetRange(lo, hi);
+                            target[0] = ((GameObject *)player)->anim.localPosX + (f32)(s32)randomGetRange(lo, hi);
+                            target[1] = ((GameObject *)player)->anim.localPosY + (f32)(s32)randomGetRange(lo, hi);
+                            target[2] = ((GameObject *)player)->anim.localPosZ + (f32)(s32)randomGetRange(lo, hi);
                             PSVECSubtract((f32 *)((char *)player + 0xc), (f32 *)((char *)state + 0x1c), vecA);
                             PSVECSubtract(target, (f32 *)((char *)state + 0x1c), vecB);
                             PSVECNormalize(vecA, vecA);

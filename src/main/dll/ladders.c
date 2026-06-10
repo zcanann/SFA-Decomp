@@ -639,8 +639,8 @@ void tumbleweedbush_update(int *obj) {
             }
         }
     }
-    dx = ((GameObject *)obj)->anim.localPosX - *(f32*)((char*)player + 0xc);
-    dy = ((GameObject *)obj)->anim.localPosZ - *(f32*)((char*)player + 0x14);
+    dx = ((GameObject *)obj)->anim.localPosX - ((GameObject *)player)->anim.localPosX;
+    dy = ((GameObject *)obj)->anim.localPosZ - ((GameObject *)player)->anim.localPosZ;
     d = sqrtf(dx * dx + dy * dy);
     if ((u16)(s32)d < state->triggerRadius) {
         while ((s8)fn_801631C8(obj) != -1) {

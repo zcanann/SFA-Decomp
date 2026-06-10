@@ -160,7 +160,7 @@ void FireFlyLantern_init(int obj, int def)
   state = ((GameObject *)obj)->extra;
   ((GameObject *)obj)->animEventCallback = (void *)FireFlyLantern_SeqFn;
   player = Obj_GetPlayerObject();
-  if (*(s16 *)((u8 *)player + 0x46) != 0) {
+  if (((GameObject *)player)->anim.seqId != 0) {
     *(s16 *)(state + 0x20) = 0x13d;
   }
   else {

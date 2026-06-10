@@ -1012,7 +1012,7 @@ void ccgasventcontrol_update(int obj)
             if (*(f32 *)((char *)ex + 8) > lbl_803E4628) {
                 *(f32 *)((char *)ex + 8) = *(f32 *)&lbl_803E4628;
             }
-            if (*(f32 *)((char *)player + 0x10) <= ((GameObject *)obj)->anim.localPosY + *(f32 *)((char *)ex + 8)) {
+            if (((GameObject *)player)->anim.localPosY <= ((GameObject *)obj)->anim.localPosY + *(f32 *)((char *)ex + 8)) {
                 *(f32 *)((char *)ex + 4) = -(timeDelta * (f32)b - *(f32 *)((char *)ex + 4));
             } else {
                 *(f32 *)((char *)ex + 4) = lbl_803E462C * timeDelta + *(f32 *)((char *)ex + 4);
@@ -1027,9 +1027,9 @@ void ccgasventcontrol_update(int obj)
                 (*gGameUIInterface)->runAirMeter((int)*(f32 *)((char *)ex + 4));
             } else {
                 (*gGameUIInterface)->airMeterSetShutdown();
-                ((GameObject *)obj)->anim.localPosX = *(f32 *)((char *)player + 0xc);
-                ((GameObject *)obj)->anim.localPosY = *(f32 *)((char *)player + 0x10);
-                ((GameObject *)obj)->anim.localPosZ = *(f32 *)((char *)player + 0x14);
+                ((GameObject *)obj)->anim.localPosX = ((GameObject *)player)->anim.localPosX;
+                ((GameObject *)obj)->anim.localPosY = ((GameObject *)player)->anim.localPosY;
+                ((GameObject *)obj)->anim.localPosZ = ((GameObject *)player)->anim.localPosZ;
                 (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
                 (*gCameraInterface)->setMode(0x42, 0, 1, 0, NULL, 0x1e, 0xff);
                 *(u8 *)ex = 4;

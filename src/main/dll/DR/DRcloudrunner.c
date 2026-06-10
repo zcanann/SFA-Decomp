@@ -192,8 +192,8 @@ void sc_musictree_update(int obj)
 end:
     {
         void *player = Obj_GetPlayerObject();
-        f32 dx = ((GameObject *)obj)->anim.localPosX - *(f32 *)((char *)player + 0xc);
-        f32 dz = ((GameObject *)obj)->anim.localPosZ - *(f32 *)((char *)player + 0x14);
+        f32 dx = ((GameObject *)obj)->anim.localPosX - ((GameObject *)player)->anim.localPosX;
+        f32 dz = ((GameObject *)obj)->anim.localPosZ - ((GameObject *)player)->anim.localPosZ;
         f32 d = sqrtf(dx * dx + dz * dz);
         if ((u16)(s32)d < *(u16 *)(inner + 0x48)) {
             if ((*(u8 *)(inner + 0x4c) & 0x10) && *(u16 *)(inner + 0x4a) >= (u16)(s32)d && *(f32 *)(inner + 0x3c) <= lbl_803E5590) {

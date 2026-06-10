@@ -481,9 +481,9 @@ void ktrex_update(int obj) {
     ((KTRexRuntime *)runtime)->unk2D0 = Obj_GetPlayerObject();
     if (((KTRexRuntime *)runtime)->unk2D0 != NULL) {
         player = ((KTRexRuntime *)runtime)->unk2D0;
-        d[0] = *(f32 *)((char *)player + 0x18) - ((GameObject *)obj)->anim.worldPosX;
-        d[1] = *(f32 *)((char *)player + 0x1c) - ((GameObject *)obj)->anim.worldPosY;
-        d[2] = *(f32 *)((char *)player + 0x20) - ((GameObject *)obj)->anim.worldPosZ;
+        d[0] = ((GameObject *)player)->anim.worldPosX - ((GameObject *)obj)->anim.worldPosX;
+        d[1] = ((GameObject *)player)->anim.worldPosY - ((GameObject *)obj)->anim.worldPosY;
+        d[2] = ((GameObject *)player)->anim.worldPosZ - ((GameObject *)obj)->anim.worldPosZ;
         ((KTRexRuntime *)runtime)->unk2C0 = sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1]));
     }
     characterDoEyeAnims(obj, (char *)gKTRexRuntime + 0x3ac);
@@ -500,10 +500,10 @@ void ktrex_update(int obj) {
     dx = ((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowBZ)[phase] - ((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowAZ)[phase];
     if ((f32)__fabs(dz) > (f32)__fabs(dx)) {
         ((KTRexArenaState *)gKTRexState)->unkF4 =
-            (*(f32 *)((char *)player + 0xc) - ((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowAX)[phase]) / dz;
+            (((GameObject *)player)->anim.localPosX - ((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowAX)[phase]) / dz;
     } else {
         ((KTRexArenaState *)gKTRexState)->unkF4 =
-            (*(f32 *)((char *)player + 0x14) - ((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowAZ)[phase]) / dx;
+            (((GameObject *)player)->anim.localPosZ - ((f32 *)*(int *)&((KTRexArenaState *)gKTRexState)->rowAZ)[phase]) / dx;
     }
     tmp = lbl_803E67B0;
     ((KTRexArenaState *)gKTRexState)->unkFE = ((u8 *)&tmp)[(((KTRexArenaState *)gKTRexState)->timerFA >> 1) & 3];

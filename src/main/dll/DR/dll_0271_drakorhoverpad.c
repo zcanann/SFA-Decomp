@@ -479,7 +479,7 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void *out) {
         player = (int)Obj_GetPlayerObject();
         *(f32 *)(p + 0x110) = lbl_803E6A78 * -*(f32 *)(p + 0x110);
         *(f32 *)p = lbl_803E6A3C;
-        if (*(void **)((char *)player + 0x30) == (void *)obj) {
+        if (((GameObject *)player)->anim.parent == (void *)obj) {
             Camera_EnableViewYOffset();
             if (*(f32 *)(p + 0x110) >= lbl_803E6A3C) {
                 m = *(f32 *)(p + 0x110);
@@ -502,7 +502,7 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void *out) {
         player = (int)Obj_GetPlayerObject();
         *(f32 *)(p + 0x110) = lbl_803E6A78 * -*(f32 *)(p + 0x110);
         *(f32 *)p = lbl_803E6A3C;
-        if (*(void **)((char *)player + 0x30) == (void *)obj) {
+        if (((GameObject *)player)->anim.parent == (void *)obj) {
             Camera_EnableViewYOffset();
             if (*(f32 *)(p + 0x110) >= lbl_803E6A3C) {
                 m = *(f32 *)(p + 0x110);
@@ -590,7 +590,7 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void *out) {
         if (g->p1 == 0) {
             break;
         }
-        if (*(void **)((char *)player + 0x30) != (void *)obj) {
+        if (((GameObject *)player)->anim.parent != (void *)obj) {
             break;
         }
         GameBit_Set(0x68a, 1);
@@ -599,7 +599,7 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void *out) {
         if (g->p1 == 0) {
             break;
         }
-        if (*(void **)((char *)player + 0x30) != (void *)obj) {
+        if (((GameObject *)player)->anim.parent != (void *)obj) {
             break;
         }
         GameBit_Set(0x68b, 1);
@@ -614,7 +614,7 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void *out) {
         player = (int)Obj_GetPlayerObject();
         *(f32 *)(p + 0x110) = lbl_803E6A78 * -*(f32 *)(p + 0x110);
         *(f32 *)p = lbl_803E6A3C;
-        if (*(void **)((char *)player + 0x30) == (void *)obj) {
+        if (((GameObject *)player)->anim.parent == (void *)obj) {
             Camera_EnableViewYOffset();
             if (*(f32 *)(p + 0x110) >= lbl_803E6A3C) {
                 m = *(f32 *)(p + 0x110);
@@ -634,7 +634,7 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void *out) {
         player = (int)Obj_GetPlayerObject();
         *(f32 *)(p + 0x110) = lbl_803E6A78 * -*(f32 *)(p + 0x110);
         *(f32 *)p = lbl_803E6A3C;
-        if (*(void **)((char *)player + 0x30) == (void *)obj) {
+        if (((GameObject *)player)->anim.parent == (void *)obj) {
             Camera_EnableViewYOffset();
             if (*(f32 *)(p + 0x110) >= lbl_803E6A3C) {
                 m = *(f32 *)(p + 0x110);

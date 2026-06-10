@@ -191,8 +191,8 @@ void drakormissile_update(int obj) {
         break;
     case DRAKORMISSILE_STATE_HOMING:
         player = (int)Obj_GetPlayerObject();
-        if (*(f32 *)((char *)player + 0x24) != (mag = lbl_803E695C) || *(f32 *)((char *)player + 0x28) != mag ||
-            *(f32 *)((char *)player + 0x2c) != mag) {
+        if (((GameObject *)player)->anim.velocityX != (mag = lbl_803E695C) || ((GameObject *)player)->anim.velocityY != mag ||
+            ((GameObject *)player)->anim.velocityZ != mag) {
             mag = PSVECMag((f32 *)((int)player + 0x24));
         }
         mag = lbl_803DC2B8 + mag;

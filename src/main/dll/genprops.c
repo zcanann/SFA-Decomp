@@ -6984,7 +6984,7 @@ void superQuakeFn_8016d9fc(f32 *pos)
         ((ObjPlacement *)setup)->posX = *(f32 *)(lbl_803AC6B8 + 0);
         ((ObjPlacement *)setup)->posY = *(f32 *)(lbl_803AC6B8 + 4);
         ((ObjPlacement *)setup)->posZ = *(f32 *)(lbl_803AC6B8 + 8);
-        *(int **)(lbl_803AC6B8 + 0x1c) = Obj_SetupObject(setup, 5, ((GameObject *)player)->anim.mapEventSlot, -1, *(void **)((u8 *)player + 0x30));
+        *(int **)(lbl_803AC6B8 + 0x1c) = Obj_SetupObject(setup, 5, ((GameObject *)player)->anim.mapEventSlot, -1, ((GameObject *)player)->anim.parent);
         if (GameBit_Get(0xc55) != 0) {
             ((ObjAnimComponent *)*(int *)(lbl_803AC6B8 + 0x1c))->bankIndex = 1;
         }

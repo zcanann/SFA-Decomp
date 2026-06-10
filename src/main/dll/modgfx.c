@@ -11368,9 +11368,9 @@ int Effect7_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         break;
     case 0x85:
         if (param_6 == 0) return 0;
-        cfg.f30 = *(f32 *)((char *)player + 0x18);
-        cfg.f34 = *(f32 *)((char *)player + 0x1c);
-        cfg.f38 = *(f32 *)((char *)player + 0x20);
+        cfg.f30 = ((GameObject *)player)->anim.worldPosX;
+        cfg.f34 = ((GameObject *)player)->anim.worldPosY;
+        cfg.f38 = ((GameObject *)player)->anim.worldPosZ;
         cfg.f3c = lbl_803DFD24;
         cfg.f08 = 0x28;
         cfg.f60 = 0xff;

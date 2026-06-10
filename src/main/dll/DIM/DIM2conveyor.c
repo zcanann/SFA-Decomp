@@ -226,9 +226,9 @@ int dimdismountpoint_setScale(int obj) {
     int side;
 
     result = *(f32 *)((char *)state + 0xC) +
-             (*(f32 *)((char *)state + 8) * *(f32 *)((char *)player + 0x14) +
-              (*(f32 *)((char *)state + 0) * *(f32 *)((char *)player + 0xC) +
-               *(f32 *)((char *)state + 4) * *(f32 *)((char *)player + 0x10)));
+             (*(f32 *)((char *)state + 8) * ((GameObject *)player)->anim.localPosZ +
+              (*(f32 *)((char *)state + 0) * ((GameObject *)player)->anim.localPosX +
+               *(f32 *)((char *)state + 4) * ((GameObject *)player)->anim.localPosY));
 
     if (result >= lbl_803E4908) {
         side = 0;

@@ -127,9 +127,9 @@ void sh_queenearthwalker_update(void *obj)
         }
         player = Obj_GetPlayerObject();
         *(u8 *)((u8 *)state + 0x8) = 1;
-        ((QueenEarthWalkerState *)state)->targetX = *(f32 *)((u8 *)player + 0xc);
-        ((QueenEarthWalkerState *)state)->targetY = *(f32 *)((u8 *)player + 0x10);
-        ((QueenEarthWalkerState *)state)->targetZ = *(f32 *)((u8 *)player + 0x14);
+        ((QueenEarthWalkerState *)state)->targetX = ((GameObject *)player)->anim.localPosX;
+        ((QueenEarthWalkerState *)state)->targetY = ((GameObject *)player)->anim.localPosY;
+        ((QueenEarthWalkerState *)state)->targetZ = ((GameObject *)player)->anim.localPosZ;
         fn_8003B500(obj, (u8 *)state + 0x8, lbl_803E53F8);
         break;
       case 2:
@@ -143,9 +143,9 @@ void sh_queenearthwalker_update(void *obj)
         }
         player = Obj_GetPlayerObject();
         *(u8 *)((u8 *)state + 0x8) = 1;
-        ((QueenEarthWalkerState *)state)->targetX = *(f32 *)((u8 *)player + 0xc);
-        ((QueenEarthWalkerState *)state)->targetY = *(f32 *)((u8 *)player + 0x10);
-        ((QueenEarthWalkerState *)state)->targetZ = *(f32 *)((u8 *)player + 0x14);
+        ((QueenEarthWalkerState *)state)->targetX = ((GameObject *)player)->anim.localPosX;
+        ((QueenEarthWalkerState *)state)->targetY = ((GameObject *)player)->anim.localPosY;
+        ((QueenEarthWalkerState *)state)->targetZ = ((GameObject *)player)->anim.localPosZ;
         fn_8003B500(obj, (u8 *)state + 0x8, lbl_803E53F8);
         break;
       case 4:
@@ -156,17 +156,17 @@ void sh_queenearthwalker_update(void *obj)
         }
         player = Obj_GetPlayerObject();
         *(u8 *)((u8 *)state + 0x8) = 1;
-        ((QueenEarthWalkerState *)state)->targetX = *(f32 *)((u8 *)player + 0xc);
-        ((QueenEarthWalkerState *)state)->targetY = *(f32 *)((u8 *)player + 0x10);
-        ((QueenEarthWalkerState *)state)->targetZ = *(f32 *)((u8 *)player + 0x14);
+        ((QueenEarthWalkerState *)state)->targetX = ((GameObject *)player)->anim.localPosX;
+        ((QueenEarthWalkerState *)state)->targetY = ((GameObject *)player)->anim.localPosY;
+        ((QueenEarthWalkerState *)state)->targetZ = ((GameObject *)player)->anim.localPosZ;
         fn_8003B500(obj, (u8 *)state + 0x8, lbl_803E53F8);
         break;
       case 5:
         player = Obj_GetPlayerObject();
         *(u8 *)((u8 *)state + 0x8) = 1;
-        ((QueenEarthWalkerState *)state)->targetX = *(f32 *)((u8 *)player + 0xc);
-        ((QueenEarthWalkerState *)state)->targetY = *(f32 *)((u8 *)player + 0x10);
-        ((QueenEarthWalkerState *)state)->targetZ = *(f32 *)((u8 *)player + 0x14);
+        ((QueenEarthWalkerState *)state)->targetX = ((GameObject *)player)->anim.localPosX;
+        ((QueenEarthWalkerState *)state)->targetY = ((GameObject *)player)->anim.localPosY;
+        ((QueenEarthWalkerState *)state)->targetZ = ((GameObject *)player)->anim.localPosZ;
         fn_8003B500(obj, (u8 *)state + 0x8, lbl_803E53F8);
         break;
       case 6:
@@ -309,9 +309,9 @@ void queenFeedFn_801d44a4(void *obj, void *state)
       ((QueenEarthWalkerState *)state)->eventTable = &lbl_803DBFD0;
       player = Obj_GetPlayerObject();
       *(u8 *)((u8 *)state + 0x8) = 1;
-      ((QueenEarthWalkerState *)state)->targetX = *(f32 *)((u8 *)player + 0xc);
-      ((QueenEarthWalkerState *)state)->targetY = *(f32 *)((u8 *)player + 0x10);
-      ((QueenEarthWalkerState *)state)->targetZ = *(f32 *)((u8 *)player + 0x14);
+      ((QueenEarthWalkerState *)state)->targetX = ((GameObject *)player)->anim.localPosX;
+      ((QueenEarthWalkerState *)state)->targetY = ((GameObject *)player)->anim.localPosY;
+      ((QueenEarthWalkerState *)state)->targetZ = ((GameObject *)player)->anim.localPosZ;
       fn_8003B500(obj, (void *)((int)state + 0x8), lbl_803E53F8);
       break;
     default:
@@ -343,9 +343,9 @@ void openPortalFn_801d4364(void *obj, void *state)
 
   player = Obj_GetPlayerObject();
   *(u8 *)((u8 *)state + 0x8) = 1;
-  ((QueenEarthWalkerState *)state)->targetX = *(f32 *)((u8 *)player + 0xc);
-  ((QueenEarthWalkerState *)state)->targetY = *(f32 *)((u8 *)player + 0x10);
-  ((QueenEarthWalkerState *)state)->targetZ = *(f32 *)((u8 *)player + 0x14);
+  ((QueenEarthWalkerState *)state)->targetX = ((GameObject *)player)->anim.localPosX;
+  ((QueenEarthWalkerState *)state)->targetY = ((GameObject *)player)->anim.localPosY;
+  ((QueenEarthWalkerState *)state)->targetZ = ((GameObject *)player)->anim.localPosZ;
   fn_8003B500(obj, (void *)((int)state + 0x8), lbl_803E53F8);
 }
 

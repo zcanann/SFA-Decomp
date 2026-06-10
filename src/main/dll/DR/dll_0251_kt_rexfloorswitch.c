@@ -164,8 +164,8 @@ void ktrexfloorswitch_update(int obj) {
             xHi -= lbl_803E6870;
             zLo += lbl_803E6870;
             zHi -= lbl_803E6870;
-            if (*(f32 *)((char *)player + 0xc) >= xLo && *(f32 *)((char *)player + 0xc) <= xHi &&
-                *(f32 *)((char *)player + 0x14) >= zLo && *(f32 *)((char *)player + 0x14) <= zHi) {
+            if (((GameObject *)player)->anim.localPosX >= xLo && ((GameObject *)player)->anim.localPosX <= xHi &&
+                ((GameObject *)player)->anim.localPosZ >= zLo && ((GameObject *)player)->anim.localPosZ <= zHi) {
                 *(u8 *)((char *)state + 0x4) = 5;
             }
         }

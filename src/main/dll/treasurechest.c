@@ -164,7 +164,7 @@ void dll_D3_update(int *obj)
             (int)((TreasureChestState *)state)->gameBitB,
             lbl_803202E8, lbl_80320360, 0, lbl_803AC638);
         if ((int)((TreasureChestState *)state)->hitPoints < hits) {
-            (*(void (**)(void))(*(int **)(*(int *)((char *)player + 0xc8) + 0x68) + 0x50 / 4))();
+            (*(void (**)(void))(*(int **)(*(int *)&((GameObject *)player)->unkC8 + 0x68) + 0x50 / 4))();
             *(f32 *)((char *)lbl_803AC638 + 0xc)  = ((GameObject *)obj)->anim.localPosX;
             *(f32 *)((char *)lbl_803AC638 + 0x10) = ((GameObject *)obj)->anim.localPosY;
             *(f32 *)((char *)lbl_803AC638 + 0x14) = ((GameObject *)obj)->anim.localPosZ;

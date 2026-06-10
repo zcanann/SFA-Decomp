@@ -1012,7 +1012,7 @@ void deathgas_update(int* obj)
 
     player = Obj_GetPlayerObject();
     if (!playerIsDisguised()
-        && *(f32*)((char*)player + 0x1c) <= lbl_803E3CA4 + ((GameObject *)obj)->anim.worldPosY
+        && ((GameObject *)player)->anim.worldPosY <= lbl_803E3CA4 + ((GameObject *)obj)->anim.worldPosY
         && Vec_distance((char*)player + 0x18, (char*)obj + 0x18) <= state->radius) {
         if (!state->draining) {
             (*gGameUIInterface)->initAirMeter(6000, 0x603);
@@ -1086,7 +1086,7 @@ void fuelcell_update(int* obj)
                     ((GameObject *)obj)->anim.alpha = 0xff;
                     state->resetPos = 0;
                 }
-                dy = ((GameObject *)obj)->anim.localPosY - *(f32*)((char*)player + 0x10);
+                dy = ((GameObject *)obj)->anim.localPosY - ((GameObject *)player)->anim.localPosY;
                 if (dy > lbl_803E3D08 && dy < lbl_803E3D0C
                     && GameBit_Get(0xe97) == 0
                     && getXZDistance((char*)obj + 0x18, (char*)player + 0x18) < lbl_803E3D10) {

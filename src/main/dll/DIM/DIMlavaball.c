@@ -1910,7 +1910,7 @@ void fn_801A7CC4(int obj) {
         f32 g;
     } stk;
     int *player = (int *)Obj_GetPlayerObject();
-    int *playerState = *(int **)((char *)player + 0xB8);
+    int *playerState = ((GameObject *)player)->extra;
     f32 c1 = lbl_803E4554;
     ((GameObject *)obj)->anim.velocityX = c1;
     ((GameObject *)obj)->anim.velocityY = lbl_803E4570 * *(f32 *)((char *)playerState + 0x298) + lbl_803E456C;

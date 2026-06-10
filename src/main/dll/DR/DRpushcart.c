@@ -1434,7 +1434,7 @@ int fn_801E76A0(int obj, int p2, ObjSeqState *seq, s8 advance)
             ((ShopkeeperState *)state)->opacity = 0xFF;
             break;
         case 4:
-            if (*(s16 *)((char *)player + 0x46) == 0) {
+            if (((GameObject *)player)->anim.seqId == 0) {
                 warpToMap(0xF, 0);
             } else {
                 warpToMap(0xE, 0);
@@ -1498,8 +1498,8 @@ f32 shopKeeperRotateFn_801e7c4c(s16 *obj, void *player, int mode)
     u16 angle;
     int diff;
 
-    dx = *(f32 *)((char *)player + 0xC) - ((GameObject *)obj)->anim.localPosX;
-    dz = *(f32 *)((char *)player + 0x14) - ((GameObject *)obj)->anim.localPosZ;
+    dx = ((GameObject *)player)->anim.localPosX - ((GameObject *)obj)->anim.localPosX;
+    dz = ((GameObject *)player)->anim.localPosZ - ((GameObject *)obj)->anim.localPosZ;
     dist = sqrtf(dx * dx + dz * dz);
     if (dist != lbl_803E59DC) {
         dx /= dist;

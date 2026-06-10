@@ -265,8 +265,8 @@ void fn_801C5990(MmShrineAnimObj *obj)
                                &animEvents);
 
     if (player != NULL) {
-        angleDelta = (u16)getAngle(obj->posX - *(f32 *)((u8 *)player + 0x18),
-                                   obj->posZ - *(f32 *)((u8 *)player + 0x20)) -
+        angleDelta = (u16)getAngle(obj->posX - ((GameObject *)player)->anim.worldPosX,
+                                   obj->posZ - ((GameObject *)player)->anim.worldPosZ) -
                      (u16)obj->yaw;
         if (angleDelta > 0x8000) {
             angleDelta -= 0xFFFF;

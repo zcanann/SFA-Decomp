@@ -2446,7 +2446,7 @@ void fn_8014B878(int *arg1, int *sub) {
     tricky = getTrickyObject();
     target = *(int**)((char*)sub + 0x29c);
     if (target != NULL && (*(u32*)((char*)sub + 0x2e4) & 0x10000) == 0 &&
-        (target != player || (*(u16*)((char*)player + 0xb0) & 0x1000) == 0)) {
+        (target != player || (((GameObject *)player)->objectFlags & 0x1000) == 0)) {
         *(u32*)((char*)sub + 0x2dc) &= 0xff7fffff;
         camTarget = (int *)(*gCameraInterface)->getOverrideTarget();
         if (camTarget == arg1) {
@@ -2475,7 +2475,7 @@ void fn_8014B878(int *arg1, int *sub) {
     } else {
         *(u32*)((char*)sub + 0x2dc) &= 0xff7ff9ff;
         if ((*(u32*)((char*)sub + 0x2e4) & 0x10000) != 0 ||
-            (*(int**)((char*)sub + 0x29c) == player && (*(u16*)((char*)player + 0xb0) & 0x1000) != 0)) {
+            (*(int**)((char*)sub + 0x29c) == player && (((GameObject *)player)->objectFlags & 0x1000) != 0)) {
             *(u32*)((char*)sub + 0x2dc) &= 0xdfffffff;
         }
     }

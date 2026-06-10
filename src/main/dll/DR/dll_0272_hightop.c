@@ -134,12 +134,12 @@ void hightop_func0F(int obj, f32 *ox, f32 *oy, f32 *oz) {
     ObjPosParams pos;
     f32 mtx[16];
     player = Obj_GetPlayerObject();
-    pos.x = *(f32 *)((char *)player + 0xc);
-    pos.y = *(f32 *)((char *)player + 0x10);
-    pos.z = *(f32 *)((char *)player + 0x14);
+    pos.x = ((GameObject *)player)->anim.localPosX;
+    pos.y = ((GameObject *)player)->anim.localPosY;
+    pos.z = ((GameObject *)player)->anim.localPosZ;
     pos.rx = *(s16 *)player;
-    pos.ry = *(s16 *)((char *)player + 0x2);
-    pos.rz = *(s16 *)((char *)player + 0x4);
+    pos.ry = ((GameObject *)player)->anim.rotY;
+    pos.rz = ((GameObject *)player)->anim.rotZ;
     pos.scale = lbl_803E6AB8;
     setMatrixFromObjectPos(mtx, &pos);
     Matrix_TransformPoint(mtx, lbl_803E6AA8, lbl_803E6B38, lbl_803E6B3C, ox, oy, oz);
@@ -686,7 +686,7 @@ int hightop_stateHandler04(int obj, int p) {
     if (player == 0) {
         state->unk9FD &= ~1;
     } else {
-        f32 dy = *(f32 *)((char *)player + 0x10) - ((GameObject *)obj)->anim.localPosY;
+        f32 dy = ((GameObject *)player)->anim.localPosY - ((GameObject *)obj)->anim.localPosY;
         f32 a = dy >= lbl_803E6AA8 ? dy : -dy;
         int doBlock;
         if (a < lbl_803E6AEC) {
@@ -700,7 +700,7 @@ int hightop_stateHandler04(int obj, int p) {
         } else {
             state->unk9FD |= 1;
             if (randomGetRange(0, 0x64) == 0 && ((GameObject *)obj)->anim.currentMove != 9) {
-                f32 c = *(f32 *)((char *)player + 0x10) - ((GameObject *)obj)->anim.localPosY;
+                f32 c = ((GameObject *)player)->anim.localPosY - ((GameObject *)obj)->anim.localPosY;
                 f32 ac = c >= lbl_803E6AA8 ? c : -c;
                 if (ac < lbl_803E6AEC) {
                     (*gObjectTriggerInterface)->runSequence(9, (void *)obj, -1);

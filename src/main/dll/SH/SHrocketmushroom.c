@@ -343,9 +343,9 @@ int sh_queenearthwalker_processAnimEvents(void *obj, void *unused, ObjAnimUpdate
             animUpdate->hitVolumePair &= ~0x8;
             player = Obj_GetPlayerObject();
             *(u8 *)((int)pState + 0x8) = 1;
-            ((QueenEarthWalkerState *)pState)->targetX = *(f32 *)((u8 *)player + 0xc);
-            ((QueenEarthWalkerState *)pState)->targetY = *(f32 *)((u8 *)player + 0x10);
-            ((QueenEarthWalkerState *)pState)->targetZ = *(f32 *)((u8 *)player + 0x14);
+            ((QueenEarthWalkerState *)pState)->targetX = ((GameObject *)player)->anim.localPosX;
+            ((QueenEarthWalkerState *)pState)->targetY = ((GameObject *)player)->anim.localPosY;
+            ((QueenEarthWalkerState *)pState)->targetZ = ((GameObject *)player)->anim.localPosZ;
             fn_8003B500(obj, (u8 *)pState + 0x8, lbl_803E53F8);
         }
         animUpdate->hitVolumePair &= ~0x40;

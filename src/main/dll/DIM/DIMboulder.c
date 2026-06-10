@@ -1996,7 +1996,7 @@ void crrockfall_update(int *obj)
                     int *def = *(int **)&((GameObject *)obj)->anim.placementData;
                     f32 xz = Vec_xzDistance(&((GameObject *)obj)->anim.worldPosX,
                                             (f32 *)((char *)player + 0x18));
-                    f32 dy = ((GameObject *)obj)->anim.localPosY - *(f32 *)((char *)player + 0x10);
+                    f32 dy = ((GameObject *)obj)->anim.localPosY - ((GameObject *)player)->anim.localPosY;
                     if (dy < lbl_803E46E8) {
                         dy = lbl_803E46E8;
                     }

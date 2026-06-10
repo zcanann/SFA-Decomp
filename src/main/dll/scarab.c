@@ -764,13 +764,13 @@ int fn_8015E210(int *obj, GroundBaddieState *p)
     player = (int *)Obj_GetPlayerObject();
     r = (**(int (**)(int *))(*(int *)(*(int *)((char *)player_b8 + 0x68)) + 0x44))(player_b8);
     if (r != 0) {
-      if (*(s16 *)((char *)player + 0x46) != 0) {
+      if (((GameObject *)player)->anim.seqId != 0) {
         Sfx_PlayFromObject(obj, SFXfoot_metal_run_2);
       } else {
         Sfx_PlayFromObject(obj, SFXmv_ropecreak22);
       }
     } else {
-      if (*(s16 *)((char *)player + 0x46) != 0) {
+      if (((GameObject *)player)->anim.seqId != 0) {
         Sfx_PlayFromObject(obj, SFXfoot_metal_run_2);
       } else {
         Sfx_PlayFromObject(obj, SFXfox_treadwater322);
@@ -1637,7 +1637,7 @@ void fn_8015ED1C(int p1, int p2, int p3)
       p1, p3, p2 + 0x35c, (s32)*(s16 *)(p2 + 0x3f4), lbl_8031FEA8, lbl_8031FF20, 1, lbl_803AC580);
 
   if (r != 0) {
-    void *pc8 = *(void **)((char *)player + 0xc8);
+    void *pc8 = ((GameObject *)player)->unkC8;
     (*(void (**)(void *))(**(int **)((char *)pc8 + 0x68) + 0x50))(pc8);
   }
 }
