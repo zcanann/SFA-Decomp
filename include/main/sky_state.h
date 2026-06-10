@@ -109,15 +109,15 @@ typedef struct Sky2Config {
     u8 unk46[0xE];
     u16 unk54;
     u16 unk56;
-    u8 unk58;
-    u8 unk59;
+    u8 flags58;
+    u8 flags59;
     u8 unk5A[3];
     u8 unk5D;
     u8 unk5E[2];
 } Sky2Config;
 
 STATIC_ASSERT(offsetof(Sky2Config, unk2A) == 0x2A);
-STATIC_ASSERT(offsetof(Sky2Config, unk58) == 0x58);
+STATIC_ASSERT(offsetof(Sky2Config, flags58) == 0x58);
 
 int getSkyStructField24C(void);
 void getAmbientColor(int slot, u8 *red, u8 *green, u8 *blue);

@@ -55,13 +55,13 @@ typedef struct SnowBikeState {
     s8 unk3D9;              /* 0x3d9 */
     u8 pad3DA[0x6];
     f32 unk3E0;             /* 0x3e0 */
-    f32 unk3E4;             /* 0x3e4 */
+    f32 timer3E4;             /* 0x3e4 */
     u8 pad3E8[0xc];
     f32 unk3F4;             /* 0x3f4 */
     f32 unk3F8;             /* 0x3f8 */
     u8 pad3FC[0x10];
     s16 unk40C;             /* 0x40c: yaw current */
-    s16 unk40E;             /* 0x40e: yaw target */
+    s16 flags40E;             /* 0x40e: yaw target */
     int unk410;             /* 0x410 */
     u8 pad414[0x8];
     s16 unk41C;             /* 0x41c */

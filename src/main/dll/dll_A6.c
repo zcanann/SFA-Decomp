@@ -47,7 +47,7 @@ void camcontrol_updateTargetReticle(CamcontrolTargetObject *fallbackTarget, int 
   if (target != NULL) {
     if (*(u32 *)(target + 0x74) == 0) goto end;
 
-    idx = ((GameObject *)target)->unkE4;
+    idx = ((GameObject *)target)->gameBitE4;
     slot = (u8 *)*(u32 *)(target + 0x74) + idx * 0x18;
     otherTbl = (u8 *)*(u32 *)(target + 0x78);
     otherTbl = otherTbl + idx * 5;

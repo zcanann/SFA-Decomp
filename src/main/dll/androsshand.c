@@ -27,7 +27,7 @@ typedef struct AndrossHandState {
     s8 prevState;
     u8 health; /* 0xF */
     u8 pad26;
-    u8 unk27; /* 5 at init */
+    u8 timer27; /* 5 at init */
     u8 pad28;
     u8 unk29;
     u8 pad2A[2];
@@ -59,8 +59,8 @@ void androsshand_update(int obj)
     if (*(int *)&state->otherHand == 0) {
         *(int *)&state->otherHand = getArwing();
     }
-    if (state->unk27 != 0) {
-        state->unk27 -= 1;
+    if (state->timer27 != 0) {
+        state->timer27 -= 1;
         return;
     }
 
@@ -324,7 +324,7 @@ void androsshand_init(int obj, u8 *setup)
     state->unk22 = setup[0x1b];
     state->prevState = -1;
     state->health = 0xf;
-    state->unk27 = 5;
+    state->timer27 = 5;
     *(u8 *)&state->handState = 3;
     *(u8 *)&state->prevState = 3;
     animState = *(int *)&((GameObject *)obj)->extra;

@@ -667,7 +667,7 @@ void smallbasket_playReactionEffects(int *obj, int *st) {
 void smallbasket_initTailModelState(int *obj, int *st) {
     u8 *tab;
     ((BaddieState *)st)->unk2AC = lbl_803E2C7C;
-    *(u32 *)&((BaddieState *)st)->unk2E4 = 0x405009;
+    *(u32 *)&((BaddieState *)st)->flags2E4 = 0x405009;
     ((BaddieState *)st)->unk304 = lbl_803E2C80;
     *((u8*)st + 0x320) = 0;
     {
@@ -708,9 +708,9 @@ void smallbasket_initScaledVariantState(int *obj, int *st) {
     }
     ratio = ratio / lbl_803E2B38;
     ((BaddieState *)st)->unk2AC = lbl_803E2B64;
-    *(u32 *)&((BaddieState *)st)->unk2E4 = 0x8b;
-    v = *(u32 *)&((BaddieState *)st)->unk2E4;
-    *(u32 *)&((BaddieState *)st)->unk2E4 = v | 0x20;
+    *(u32 *)&((BaddieState *)st)->flags2E4 = 0x8b;
+    v = *(u32 *)&((BaddieState *)st)->flags2E4;
+    *(u32 *)&((BaddieState *)st)->flags2E4 = v | 0x20;
     ((BaddieState *)st)->unk308 = lbl_803E2B68 * ratio;
     base_v = lbl_803E2B40;
     ((BaddieState *)st)->unk300 = base_v;
@@ -771,7 +771,7 @@ void smallbasket_initVariantState(int *obj, int *st) {
     ((BaddieState *)st)->unk2AC = lbl_803E2CC0;
     *((u8*)st + 0x33b) = ((BaddieState *)st)->unk2A8;
     ((BaddieState *)st)->unk2A8 = lbl_803E2CC4;
-    *(u32 *)&((BaddieState *)st)->unk2E4 = 0x42003;
+    *(u32 *)&((BaddieState *)st)->flags2E4 = 0x42003;
     ((BaddieState *)st)->unk308 = lbl_803E2CC8;
     ((BaddieState *)st)->unk300 = lbl_803E2CCC;
     ((BaddieState *)st)->unk304 = lbl_803E2CD0;
@@ -873,9 +873,9 @@ extern f32 lbl_803E2C0C;
  * shared state floats and computes obj[0x8] from (s8)params[0x28]. */
 void smallbasket_initModelVariantState(s16* obj, u8* state) {
     u8* params = *(u8**)&((GameObject *)obj)->anim.placementData;
-    *(u32 *)&((BaddieState *)state)->unk2E4 = 0xb;
-    *(u32 *)&((BaddieState *)state)->unk2E4 |= 0x400b0;
-    *(u32 *)&((BaddieState *)state)->unk2E4 |= 0x40001040;
+    *(u32 *)&((BaddieState *)state)->flags2E4 = 0xb;
+    *(u32 *)&((BaddieState *)state)->flags2E4 |= 0x400b0;
+    *(u32 *)&((BaddieState *)state)->flags2E4 |= 0x40001040;
     switch ((s16)obj[0x46/2]) {
     case 0x6a3:
         ((BaddieState *)state)->unk2AC = lbl_803E2BE4;
@@ -888,7 +888,7 @@ void smallbasket_initModelVariantState(s16* obj, u8* state) {
         ((BaddieState *)state)->unk318 = lbl_803E2BEC;
         state[0x322] = 9;
         ((BaddieState *)state)->unk31C = lbl_803E2BE8;
-        *(u32 *)&((BaddieState *)state)->unk2E4 |= 0x400;
+        *(u32 *)&((BaddieState *)state)->flags2E4 |= 0x400;
         break;
     case 0x6a2:
         ((BaddieState *)state)->unk2AC = lbl_803E2BF0;
@@ -901,7 +901,7 @@ void smallbasket_initModelVariantState(s16* obj, u8* state) {
         ((BaddieState *)state)->unk318 = lbl_803E2BEC;
         state[0x322] = 0xe;
         ((BaddieState *)state)->unk31C = lbl_803E2BE8;
-        *(u32 *)&((BaddieState *)state)->unk2E4 |= 0xc00;
+        *(u32 *)&((BaddieState *)state)->flags2E4 |= 0xc00;
         break;
     case 0x6a4:
         ((BaddieState *)state)->unk2AC = lbl_803E2BF4;
@@ -914,7 +914,7 @@ void smallbasket_initModelVariantState(s16* obj, u8* state) {
         ((BaddieState *)state)->unk318 = lbl_803E2BEC;
         state[0x322] = 0xd;
         ((BaddieState *)state)->unk31C = lbl_803E2BE8;
-        *(u32 *)&((BaddieState *)state)->unk2E4 |= 0xc00;
+        *(u32 *)&((BaddieState *)state)->flags2E4 |= 0xc00;
         break;
     }
     ((BaddieState *)state)->unk308 = lbl_803E2BD4;
@@ -1231,7 +1231,7 @@ void fn_80159284(int* obj, u8* state)
             *(f32*)(state + 0x328) = cap;
             *(u32*)(state + 0x2dc) |= 0x40000000LL;
             *(u8*)(state + 0x33c) = t6[*(u8*)(state + 0x33f)].flagC;
-            ((GameObject *)obj)->unkE4 = *(u8*)(state + 0x33c) & 1;
+            ((GameObject *)obj)->gameBitE4 = *(u8*)(state + 0x33c) & 1;
             *(u8*)(state + 0x33f) = t6[*(u8*)(state + 0x33f)].nextA;
         }
     }
@@ -1246,7 +1246,7 @@ void fn_80159284(int* obj, u8* state)
             fn_8014D08C(obj, (int*)state, *(u8*)((char*)t6 + i + 8), *(f32*)((int)t6 + i), 0,
                         *(int*)((char*)t6 + i + 4) & 0xff);
             *(u8*)(state + 0x33c) = t6[*(u8*)(state + 0x33f)].flagC;
-            ((GameObject *)obj)->unkE4 = *(u8*)(state + 0x33c) & 1;
+            ((GameObject *)obj)->gameBitE4 = *(u8*)(state + 0x33c) & 1;
             *(u8*)(state + 0x33f) = t6[*(u8*)(state + 0x33f)].next9;
         } else {
             i = *(u16*)(state + 0x2a0) * 0xc;
@@ -1353,7 +1353,7 @@ void fn_80159FCC(s16* obj, u8* state)
     f32 pw;
 
     if (*(void**)(state + 0x340) != NULL && *(void**)(state + 0x340) == ((BaddieState *)state)->trackedObj) {
-        *(u32 *)&((BaddieState *)state)->unk2E4 |= 0x10000LL;
+        *(u32 *)&((BaddieState *)state)->flags2E4 |= 0x10000LL;
         *(f32*)(state + 0x330) = lbl_803E2C74;
     }
     ((BaddieState *)state)->reactionFlags = ((BaddieState *)state)->reactionFlags | 0x100;
@@ -1417,7 +1417,7 @@ void fn_80159FCC(s16* obj, u8* state)
         dp[2] = *(f32*)(base + 0x70) - ((GameObject *)obj)->anim.worldPosZ;
         *(f32*)(state + 0x32c) = sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1]));
         if (*(f32*)(state + 0x32c) > lbl_803E2C40) {
-            *(u32 *)&((BaddieState *)state)->unk2E4 |= 0x10000LL;
+            *(u32 *)&((BaddieState *)state)->flags2E4 |= 0x10000LL;
             *(f32*)(state + 0x330) = lbl_803E2C30;
         }
     }
@@ -1662,7 +1662,7 @@ void fn_80157EBC(int obj, u8* state, u8* attacker, int cmd, int p5, int damage)
                     *(int*)((char*)tbl + i + 4) & 0xff);
         e = (BasketSeq16*)((char*)tbl + i);
         *(u8*)(state + 0x33c) = e->flagC;
-        ((GameObject *)obj)->unkE4 = *(u8*)(state + 0x33c) & 1;
+        ((GameObject *)obj)->gameBitE4 = *(u8*)(state + 0x33c) & 1;
         *(u8*)(state + 0x33f) = e->next9;
         ((BaddieState *)state)->reactionFlags = ((BaddieState *)state)->reactionFlags | 8;
         if (((GameObject *)obj)->anim.seqId == 0x6a2) {
@@ -1698,7 +1698,7 @@ void fn_80157EBC(int obj, u8* state, u8* attacker, int cmd, int p5, int damage)
         u8 v;
         fn_8014D08C((int*)obj, (int*)state, tbl[1].moveId, tbl[1].spd, 0, tbl[1].mask & 0xff);
         *(u8*)(state + 0x33c) = tbl[1].flagC;
-        ((GameObject *)obj)->unkE4 = *(u8*)(state + 0x33c) & 1;
+        ((GameObject *)obj)->gameBitE4 = *(u8*)(state + 0x33c) & 1;
         *(u8*)(state + 0x33f) = tbl[1].next9;
         v = ((BaddieState *)state)->inWhirlpoolGroup;
         if (v == 0) {
@@ -1832,7 +1832,7 @@ void fn_80158494(s16* obj, u8* state)
             *(f32*)(state + 0x328) = cap;
             *(u32*)(state + 0x2dc) |= 0x40000000LL;
             *(u8*)(state + 0x33c) = seq[*(u8*)(state + 0x33f)].flagC;
-            ((GameObject *)obj)->unkE4 = *(u8*)(state + 0x33c) & 1;
+            ((GameObject *)obj)->gameBitE4 = *(u8*)(state + 0x33c) & 1;
             *(u8*)(state + 0x33f) = seq[*(u8*)(state + 0x33f)].nextA;
         }
         if ((*(u32*)(state + 0x2dc) & 0xc0000000) == 0) {
@@ -1911,7 +1911,7 @@ void fn_80158494(s16* obj, u8* state)
                     fn_8014D08C((int*)obj, (int*)state, *(u8*)((char*)seq + i + 8), *(f32*)((int)seq + i), 0,
                                 *(int*)((char*)seq + i + 4) & 0xff);
                     *(u8*)(state + 0x33c) = seq[*(u8*)(state + 0x33f)].flagC;
-                    ((GameObject *)obj)->unkE4 = *(u8*)(state + 0x33c) & 1;
+                    ((GameObject *)obj)->gameBitE4 = *(u8*)(state + 0x33c) & 1;
                     *(u8*)(state + 0x33f) = seq[*(u8*)(state + 0x33f)].next9;
                 } else {
                     f32* dp2 = dv;
@@ -2013,7 +2013,7 @@ void fn_80158C2C(s16* obj, u8* state)
             *(f32*)(state + 0x328) = cap;
             ((BaddieState *)state)->controlFlags |= 0x40000000LL;
             *(u8*)(state + 0x33c) = seq[*(u8*)(state + 0x33f)].flagC;
-            ((GameObject *)obj)->unkE4 = *(u8*)(state + 0x33c) & 1;
+            ((GameObject *)obj)->gameBitE4 = *(u8*)(state + 0x33c) & 1;
             *(u8*)(state + 0x33f) = seq[*(u8*)(state + 0x33f)].nextA;
         }
     }
@@ -2026,7 +2026,7 @@ void fn_80158C2C(s16* obj, u8* state)
                 fn_8014D08C((int*)obj, (int*)state, *(u8*)((char*)seq + i + 8), *(f32*)((int)seq + i), 0,
                             *(int*)((char*)seq + i + 4) & 0xff);
                 *(u8*)(state + 0x33c) = seq[*(u8*)(state + 0x33f)].flagC;
-                ((GameObject *)obj)->unkE4 = *(u8*)(state + 0x33c) & 1;
+                ((GameObject *)obj)->gameBitE4 = *(u8*)(state + 0x33c) & 1;
                 *(u8*)(state + 0x33f) = seq[*(u8*)(state + 0x33f)].next9;
             } else {
                 f32* dp = dv;
@@ -2080,7 +2080,7 @@ void fn_80158C2C(s16* obj, u8* state)
                 fn_8014D08C((int*)obj, (int*)state, *(u8*)((char*)seq + i + 8), *(f32*)((int)seq + i), 0,
                             *(int*)((char*)seq + i + 4) & 0xff);
                 *(u8*)(state + 0x33c) = seq[*(u8*)(state + 0x33f)].flagC;
-                ((GameObject *)obj)->unkE4 = *(u8*)(state + 0x33c) & 1;
+                ((GameObject *)obj)->gameBitE4 = *(u8*)(state + 0x33c) & 1;
                 *(u8*)(state + 0x33f) = seq[*(u8*)(state + 0x33f)].next9;
             } else {
                 int i2 = *(u8*)(state + 0x33e) * 0xc;
@@ -2211,7 +2211,7 @@ void fn_80159958(s16* obj, u8* state)
         dp[2] = *(f32*)(base + 0x70) - ((GameObject *)obj)->anim.worldPosZ;
         *(f32*)(state + 0x32c) = sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1]));
         if (*(f32*)(state + 0x32c) < lbl_803E2C10 && *(f32*)(state + 0x330) == lbl_803E2C30) {
-            *(u32 *)&((BaddieState *)state)->unk2E4 = *(u32 *)&((BaddieState *)state)->unk2E4 & ~0x10000;
+            *(u32 *)&((BaddieState *)state)->flags2E4 = *(u32 *)&((BaddieState *)state)->flags2E4 & ~0x10000;
         }
         t = lbl_803E2C3C - *(f32*)(state + 0x32c) / lbl_803E2C40;
         if (t < lbl_803E2C30) {

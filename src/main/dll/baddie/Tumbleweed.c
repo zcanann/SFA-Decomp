@@ -12,7 +12,7 @@
 
 typedef struct TrickyImpressState {
     u8 pad0[0x54 - 0x0];
-    u32 unk54;
+    u32 flags54;
     u8 pad58[0x408 - 0x58];
     f32 unk408;
     f32 unk40C;
@@ -1480,7 +1480,7 @@ int trickySelectQueuedCommandTarget(u8* state, int commandType)
         u32 pathMask = 0xfffffbff;
         if (((TrickyState *)state)->unk28 != targetPos) {
             ((TrickyState *)state)->unk28 = targetPos;
-            ((TrickyState *)state)->unk54 = ((TrickyState *)state)->unk54 & pathMask;
+            ((TrickyState *)state)->flags54 = ((TrickyState *)state)->flags54 & pathMask;
             ((TrickyState *)state)->unkD2 = 0;
         }
     }
@@ -1512,8 +1512,8 @@ int trickyFn_80138f14(u8* obj)
 {
     u8* b = ((GameObject *)obj)->extra;
     if ((u32)GameBit_Get(0x4E4) != 0u) {
-        ((TrickyImpressState *)b)->unk54 |= 0x10000;
-        if ((((TrickyImpressState *)b)->unk54 & 0x10) != 0u) {
+        ((TrickyImpressState *)b)->flags54 |= 0x10000;
+        if ((((TrickyImpressState *)b)->flags54 & 0x10) != 0u) {
             return 1;
         }
     }
@@ -1847,7 +1847,7 @@ void titleScreenFn_801368c4(u8 arg)
 void trickyImpress(u8* obj)
 {
     u8* b = ((GameObject *)obj)->extra;
-    ((TrickyImpressState *)b)->unk54 |= 0x80000000;
+    ((TrickyImpressState *)b)->flags54 |= 0x80000000;
     ((TrickyImpressState *)b)->unk808 = lbl_803E2408;
 }
 

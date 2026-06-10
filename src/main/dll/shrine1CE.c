@@ -64,7 +64,7 @@ typedef struct Dll19CState {
 
 typedef struct Dll19BState {
     u8 pad0[0x12 - 0x0];
-    u8 unk12;
+    u8 counter12;
     u8 unk13;
     u8 unk14;
     u8 pad15[0x16 - 0x15];
@@ -253,11 +253,11 @@ void dll_19B_update(int obj)
             }
             break;
         case 2:
-            if (((Dll19BState *)st)->unk12 == 0 && (u32)GameBit_Get(0x1d3) == 0) {
+            if (((Dll19BState *)st)->counter12 == 0 && (u32)GameBit_Get(0x1d3) == 0) {
                 GameBit_Set(0x1d3, 1);
             }
             if ((u32)GameBit_Get(0x1d8) != 0) {
-                ((Dll19BState *)st)->unk12 += 1;
+                ((Dll19BState *)st)->counter12 += 1;
                 GameBit_Set(0x1d8, 0);
             }
             st[7] -= (int)timeDelta;
@@ -271,7 +271,7 @@ void dll_19B_update(int obj)
                     3, 0x35, 0x50, st[4] & 0xff, 0);
                 st[5] = 1;
                 GameBit_Set(0x1d3, 0);
-            } else if (((Dll19BState *)st)->unk12 == 1) {
+            } else if (((Dll19BState *)st)->counter12 == 1) {
                 ((Dll19BState *)st)->unk13 = 3;
                 st[1] = 200;
                 st[5] = -3;
@@ -318,7 +318,7 @@ void dll_19B_update(int obj)
                 Resource_Release(handle);
             }
             GameBit_Set(0x1d8, 0);
-            ((Dll19BState *)st)->unk12 = 0;
+            ((Dll19BState *)st)->counter12 = 0;
             st[7] = 4000;
             GameBit_Set(0x1d4, 0);
             break;

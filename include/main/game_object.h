@@ -44,8 +44,8 @@ typedef struct GameObject {
     u8 unkCC[0x10];
     void *unkDC;
     u8 unkE0[4];
-    u8 unkE4;
-    u8 unkE5;
+    u8 gameBitE4;
+    u8 flagsE5;
     s16 unkE6;
     u8 unkE8;
     s8 unkE9;
@@ -53,7 +53,7 @@ typedef struct GameObject {
     u8 unkEB;
     u8 unkEC[3];
     s8 unkEF;
-    u8 unkF0;
+    u8 counterF0;
     u8 unkF1[3];
     s32 unkF4;
     s32 unkF8;
@@ -64,7 +64,7 @@ typedef struct GameObject {
 
 STATIC_ASSERT(offsetof(GameObject, objectFlags) == 0xB0);
 STATIC_ASSERT(offsetof(GameObject, extra) == 0xB8);
-STATIC_ASSERT(offsetof(GameObject, unkE4) == 0xE4);
+STATIC_ASSERT(offsetof(GameObject, gameBitE4) == 0xE4);
 STATIC_ASSERT(offsetof(GameObject, unkEF) == 0xEF);
 STATIC_ASSERT(offsetof(GameObject, unkF4) == 0xF4);
 STATIC_ASSERT(offsetof(GameObject, unk104) == 0x104);

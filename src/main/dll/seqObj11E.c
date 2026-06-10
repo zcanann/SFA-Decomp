@@ -145,7 +145,7 @@ void fn_80152440(int obj, int p, int p3, int msg)
   ((BaddieState *)p)->reactionFlags |= 0x8;
   *(f32 *)(p + 0x32c) = (f32)(u32)(u16)*(s16 *)(sub + 0x2c);
   fn_8014D08C(obj, p, 1, lbl_803E2810, 0, 0);
-  *(u32 *)&((BaddieState *)p)->unk2E4 &= 0xffffffdf;
+  *(u32 *)&((BaddieState *)p)->flags2E4 &= 0xffffffdf;
   fz = lbl_803E2814;
   ((GameObject *)obj)->anim.velocityZ = lbl_803E2814;
   ((GameObject *)obj)->anim.velocityY = fz;
@@ -215,10 +215,10 @@ void fn_80152514(int *obj, u8 *state)
         *(f32 *)(state + 0x32c) = *(f32 *)(state + 0x32c) - timeDelta;
         if (*(f32 *)(state + 0x32c) <= *(f32 *)&lbl_803E2814) {
             *(f32 *)(state + 0x32c) = lbl_803E2814;
-            *(u32 *)&((BaddieState *)state)->unk2E4 |= 0x20;
+            *(u32 *)&((BaddieState *)state)->flags2E4 |= 0x20;
             Sfx_StopObjectChannel(obj, 4);
             fn_8014D08C(obj, state, 0, lbl_803E2820, 0, 0);
-        } else if (!(*(u32 *)&((BaddieState *)state)->unk2E4 & 0x20)) {
+        } else if (!(*(u32 *)&((BaddieState *)state)->flags2E4 & 0x20)) {
             return;
         }
     }
@@ -635,9 +635,9 @@ void fn_80152A94(int obj, int p)
   f32 fz;
 
   ((BaddieState *)p)->unk2AC = lbl_803E2850;
-  *(u32 *)&((BaddieState *)p)->unk2E4 = 41;
-  *(u32 *)&((BaddieState *)p)->unk2E4 |= 0x7000;
-  *(u32 *)&((BaddieState *)p)->unk2E4 |= 0x20000;
+  *(u32 *)&((BaddieState *)p)->flags2E4 = 41;
+  *(u32 *)&((BaddieState *)p)->flags2E4 |= 0x7000;
+  *(u32 *)&((BaddieState *)p)->flags2E4 |= 0x20000;
   ((BaddieState *)p)->unk308 = lbl_803E2854;
   ((BaddieState *)p)->unk300 = lbl_803E2858;
   ((BaddieState *)p)->unk304 = lbl_803E285C;
@@ -662,7 +662,7 @@ void fn_80152B2C(int obj, int p, int param3, int msg)
   }
   Sfx_PlayFromObject(obj, SFXfox_cough1);
   *(s16 *)&((BaddieState *)p)->hitCounter = 0;
-  *(u32 *)&((BaddieState *)p)->unk2E4 |= 0x20;
+  *(u32 *)&((BaddieState *)p)->flags2E4 |= 0x20;
   ((BaddieState *)p)->reactionFlags |= 0x8;
 }
 
@@ -895,8 +895,8 @@ void fn_801522E0(int* obj, u8* state) {
     f32 fz;
     ((BaddieState *)state)->unk2AC = lbl_803E27F8;
     ((BaddieState *)state)->unk2A8 = lbl_803E27FC;
-    ((BaddieState *)state)->unk2E4 = 1;
-    ((BaddieState *)state)->unk2E4 |= 0xC80;
+    ((BaddieState *)state)->flags2E4 = 1;
+    ((BaddieState *)state)->flags2E4 |= 0xC80;
     ((BaddieState *)state)->unk308 = lbl_803E2800;
     ((BaddieState *)state)->unk300 = lbl_803E2804;
     ((BaddieState *)state)->unk304 = lbl_803E2808;

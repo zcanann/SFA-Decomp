@@ -6,7 +6,7 @@
 
 typedef struct MmshShrineState {
     u8 pad0[0x18 - 0x0];
-    s32 unk18;
+    s32 flags18;
     u8 pad1C[0x20 - 0x1C];
 } MmshShrineState;
 
@@ -301,9 +301,9 @@ extern void audioStopByMask(int mask);
 void mmsh_shrine_free(int obj)
 {
     int t = *(int *)&((GameObject *)obj)->extra;
-    if ((((MmshShrineState *)t)->unk18 & 0x20) != 0) {
+    if ((((MmshShrineState *)t)->flags18 & 0x20) != 0) {
         fn_8011F6D4(0);
-        ((MmshShrineState *)t)->unk18 = ((MmshShrineState *)t)->unk18 & 0xffffffdf;
+        ((MmshShrineState *)t)->flags18 = ((MmshShrineState *)t)->flags18 & 0xffffffdf;
     }
     if (*(void **)t != NULL) {
         ModelLightStruct_free(*(void **)t);

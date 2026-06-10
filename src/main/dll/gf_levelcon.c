@@ -13,7 +13,7 @@ typedef struct GfLevelconHandleScriptEventsState {
     s32 unk0;
     void *unk4;
     void *unk8;
-    f32 unkC;
+    f32 timerC;
 } GfLevelconHandleScriptEventsState;
 
 
@@ -34,7 +34,7 @@ int gf_levelcon_handleScriptEvents(int obj, int eventId, ObjAnimUpdateState *ani
             getEnvfxAct(obj, obj, 0x21f, 0);
             break;
         case 8:
-            ((GfLevelconHandleScriptEventsState *)state)->unkC = lbl_803E746C;
+            ((GfLevelconHandleScriptEventsState *)state)->timerC = lbl_803E746C;
             break;
         case 2:
             skyFn_80089710(7, 1, 0);
@@ -89,11 +89,11 @@ int gf_levelcon_handleScriptEvents(int obj, int eventId, ObjAnimUpdateState *ani
         }
     }
 
-    if (((GfLevelconHandleScriptEventsState *)state)->unkC > lbl_803E7488) {
+    if (((GfLevelconHandleScriptEventsState *)state)->timerC > lbl_803E7488) {
         gameTextShow(0x476);
-        ((GfLevelconHandleScriptEventsState *)state)->unkC -= timeDelta;
-        if (((GfLevelconHandleScriptEventsState *)state)->unkC < *(f32 *)&lbl_803E7488) {
-            ((GfLevelconHandleScriptEventsState *)state)->unkC = lbl_803E7488;
+        ((GfLevelconHandleScriptEventsState *)state)->timerC -= timeDelta;
+        if (((GfLevelconHandleScriptEventsState *)state)->timerC < *(f32 *)&lbl_803E7488) {
+            ((GfLevelconHandleScriptEventsState *)state)->timerC = lbl_803E7488;
         }
     }
 

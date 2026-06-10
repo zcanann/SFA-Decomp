@@ -29,10 +29,10 @@ typedef struct PlayerState {
     u8 unk3E8;
     u8 pad3E9[0x3F0 - 0x3E9];
     u8 unk3F0;
-    u8 unk3F1;
+    u8 flags3F1;
     u8 unk3F2;
     u8 unk3F3;
-    u8 unk3F4;
+    u8 flags3F4;
     u8 pad3F5[0x3F6 - 0x3F5];
     u8 unk3F6;
     u8 unk3F7;
@@ -69,7 +69,7 @@ typedef struct PlayerState {
     int unk460;
     int unk464;
     u8 pad468[0x46C - 0x468];
-    int unk46C;
+    int obj46C;
     f32 unk470;
     int unk474;
     s16 targetYaw; /* desired heading; copied into yaw when applied */
@@ -234,12 +234,12 @@ typedef struct PlayerState {
     s32 unk6D4;
     f32 unk6D8;
     f32 unk6DC;
-    u16 unk6E0;
-    u16 unk6E2;
-    u16 unk6E4;
+    u16 flags6E0;
+    u16 flags6E2;
+    u16 flags6E4;
     u8 pad6E6[0x6E8 - 0x6E6];
     int unk6E8;
-    u8 unk6EC;
+    u8 flags6EC;
     u8 pad6ED[0x768 - 0x6ED];
     f32 unk768;
     f32 unk76C;
@@ -263,8 +263,8 @@ typedef struct PlayerState {
     f32 unk7C8;
     f32 unk7CC;
     f32 unk7D0;
-    f32 unk7D4;
-    f32 unk7D8;
+    f32 timer7D4;
+    f32 timer7D8;
     f32 unk7DC;
     f32 unk7E0;
     u8 pad7E4[0x7EC - 0x7E4];
@@ -331,7 +331,7 @@ typedef struct PlayerState {
     u8 unk8A8;
     u8 unk8A9;
     u8 unk8AA;
-    u8 unk8AB;
+    u8 counter8AB;
     u8 unk8AC;
     u8 unk8AD;
     u8 pad8AE[0x8B0 - 0x8AE];
@@ -351,9 +351,9 @@ typedef struct PlayerState {
     u8 unk8C4;
     u8 unk8C5;
     u8 pad8C6[0x8C7 - 0x8C6];
-    u8 unk8C7;
+    u8 flags8C7;
     u8 curAnimId; /* current move/anim id (0x44 = default) */
-    u8 unk8C9;
+    u8 flags8C9;
     u8 unk8CA;
     u8 pad8CB[0x8CC - 0x8CB];
     s8 unk8CC;
@@ -366,7 +366,7 @@ typedef struct PlayerState {
     u8 unk8D3;
     u8 unk8D4;
     u8 pad8D5[0x8D8 - 0x8D5];
-    u16 unk8D8;
+    u16 flags8D8;
     u8 pad8DA[0x8DC - 0x8DA];
     int unk8DC;
 } PlayerState;
@@ -375,6 +375,6 @@ STATIC_ASSERT(sizeof(PlayerState) == 0x8E0);
 STATIC_ASSERT(offsetof(PlayerState, unk35C) == 0x35C);
 STATIC_ASSERT(offsetof(PlayerState, targetYaw) == 0x478);
 STATIC_ASSERT(offsetof(PlayerState, heldObj) == 0x7F8);
-STATIC_ASSERT(offsetof(PlayerState, unk8D8) == 0x8D8);
+STATIC_ASSERT(offsetof(PlayerState, flags8D8) == 0x8D8);
 
 #endif /* MAIN_DLL_PLAYER_STATE_H_ */

@@ -27,7 +27,7 @@ typedef struct GrimbleState {
     u8 pad347[0x3E8 - 0x347];
     f32 unk3E8;
     u8 pad3EC[0x400 - 0x3EC];
-    u16 unk400;
+    u16 flags400;
     u8 pad402[0x405 - 0x402];
     u8 unk405;
     u8 pad406[0x40C - 0x406];
@@ -383,12 +383,12 @@ void grimble_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     (*(void (**)(int, int, int, int, int))(*(int *)lbl_803DCAB4 + 0xc))(obj, 0x52a, 0, 0x64,
                                                                         0);
   }
-  if ((((GrimbleState *)state)->unk400 & 0x60) != 0) {
+  if ((((GrimbleState *)state)->flags400 & 0x60) != 0) {
     objParticleFn_80099d84(obj, lbl_803E2EBC, 3, ((GrimbleState *)state)->unk3E8, 0);
   }
-  if ((((GrimbleState *)state)->unk400 & 0x100) != 0) {
+  if ((((GrimbleState *)state)->flags400 & 0x100) != 0) {
     objParticleFn_80099d84(obj, lbl_803E2EBC, 4, ((GrimbleState *)state)->unk3E8, 0);
-    ((GrimbleState *)state)->unk400 = ((GrimbleState *)state)->unk400 & ~0x100;
+    ((GrimbleState *)state)->flags400 = ((GrimbleState *)state)->flags400 & ~0x100;
   }
 }
 

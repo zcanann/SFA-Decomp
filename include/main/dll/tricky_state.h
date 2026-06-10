@@ -37,9 +37,9 @@ typedef struct TrickyState {
     f32 unk44;
     f32 unk48;
     f32 unk4C;
-    u32 unk50;
-    u32 unk54;
-    u8 unk58;
+    u32 flags50;
+    u32 flags54;
+    u8 flags58;
     u8 pad59[0x5A - 0x59];
     s16 unk5A;
     u32 unk5C;
@@ -51,7 +51,7 @@ typedef struct TrickyState {
     u16 patch[4]; /* curve-walk patch values (dll_DF trickyFn_8013b368); the
                      indexed s16 copy loop stays raw */
     u8 padA0[0xD0 - 0xA0]; /* 0xA0: f32 triples at stride 0xC (walker, raw) */
-    u16 unkD0;
+    u16 flagsD0;
     u16 unkD2;
     u8 padD4[0xE0 - 0xD4];
     f32 homePosX; /* home position, init from obj world pos */
@@ -84,21 +84,21 @@ typedef struct TrickyState {
     f32 unk2BC;
     f32 unk2C0;
     u8 pad2C4[0x2D0 - 0x2C4];
-    f32 unk2D0;
-    f32 unk2D4;
-    f32 unk2D8;
+    f32 timer2D0;
+    f32 timer2D4;
+    f32 timer2D8;
     u32 flags2DC; /* flag word */
-    u32 unk2E0;
-    u32 unk2E4;
-    u32 unk2E8;
+    u32 flags2E0;
+    u32 flags2E4;
+    u32 flags2E8;
     u8 pad2EC[0x2EF - 0x2EC];
     u8 unk2EF;
     u8 unk2F0;
-    u8 unk2F1;
+    u8 flags2F1;
     u8 pad2F2[0x2F5 - 0x2F2];
     u8 unk2F5;
     u8 pad2F6[0x2F8 - 0x2F6];
-    u16 unk2F8;
+    u16 flags2F8;
     u8 pad2FA[0x300 - 0x2FA];
     f32 unk300;
     f32 unk304;
@@ -122,7 +122,7 @@ typedef struct TrickyState {
     int unk368; /* object link */
     int unk36C; /* object link */
     f32 hitCooldown;
-    u8 unk374;
+    u8 timer374;
     u8 pad375[0x378 - 0x375];
     u8 unk378;
     u8 pad379[0x37C - 0x379];
@@ -164,28 +164,28 @@ typedef struct TrickyState {
     u8 *unk70C;
     f32 unk710;
     u8 pad714[0x71C - 0x714];
-    f32 unk71C;
-    f32 unk720;
+    f32 timer71C;
+    f32 timer720;
     void *unk724;
-    u8 unk728;
+    u8 flags728;
     u8 pad729[0x72C - 0x729];
     f32 unk72C;
     u32 unk730;
     f32 unk734;
-    f32 unk738;
+    f32 timer738;
     f32 unk73C;
     f32 unk740;
     u8 pad744[0x798 - 0x744];
     u8 unk798;
     u8 pad799[0x79C - 0x799];
-    f32 unk79C;
-    f32 unk7A0f;
+    f32 timer79C;
+    f32 timer7A0f;
     f32 unk7A4;
     u8 *unk7A8;
     u8 pad7AC[0x7B0 - 0x7AC];
     u8 *unk7B0;
     u8 pad7B4[0x7B8 - 0x7B4];
-    u8 *unk7B8;
+    u8 *obj7B8;
     u8 pad7BC[0x7C0 - 0x7BC];
     f32 unk7C0;
     f32 unk7C4;
@@ -194,7 +194,7 @@ typedef struct TrickyState {
     u8 pad7D0[0x7D4 - 0x7D0];
     u8 *unk7D4;
     u8 pad7D8[0x808 - 0x7D8];
-    f32 unk808;
+    f32 timer808;
     f32 unk80C;
     f32 unk810;
     f32 unk814;
@@ -203,14 +203,14 @@ typedef struct TrickyState {
     u8 pad81C[0x82C - 0x81C];
     u8 modelVariant; /* progress/10; indexes model bank color */
     u8 unk82D;
-    u8 unk82E; /* bit flags 5/6/7 (collectable.c overlays) */
+    u8 flags82E; /* bit flags 5/6/7 (collectable.c overlays) */
     u8 pad82F[0x838 - 0x82F];
     f32 unk838;
     u8 pad83C[0x840 - 0x83C];
 } TrickyState;
 
 STATIC_ASSERT(sizeof(TrickyState) == 0x840);
-STATIC_ASSERT(offsetof(TrickyState, unk54) == 0x54);
+STATIC_ASSERT(offsetof(TrickyState, flags54) == 0x54);
 STATIC_ASSERT(offsetof(TrickyState, pathRotY) == 0x290);
 STATIC_ASSERT(offsetof(TrickyState, lastContactObj) == 0x360);
 STATIC_ASSERT(offsetof(TrickyState, hitCooldown) == 0x370);

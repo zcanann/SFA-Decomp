@@ -797,12 +797,12 @@ void enemy_init(int obj, u8 *setup, int flag)
         }
         if ((((EnemyState *)state)->flags2E4 & 0x8000022) != 0 || *(u16 *)(setup + 0x34) != 0
             || ((GameObject *)obj)->anim.seqId == 1022 || ((GameObject *)obj)->anim.seqId == 1990) {
-            ((EnemyState *)state)->unk4 |= 0x40000;
+            ((EnemyState *)state)->flags4 |= 0x40000;
         } else {
-            ((EnemyState *)state)->unk4 &= ~0x40000;
+            ((EnemyState *)state)->flags4 &= ~0x40000;
         }
         if ((((EnemyState *)state)->flags2E4 & 4) == 0 && (((EnemyState *)state)->flags2E4 & 8) != 0) {
-            ((EnemyState *)state)->unk4 &= ~0x3800;
+            ((EnemyState *)state)->flags4 &= ~0x3800;
         }
         if (((GameObject *)obj)->unkF4 != 0) {
             ((EnemyState *)state)->controlFlags |= 0x1000;

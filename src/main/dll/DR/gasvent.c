@@ -36,7 +36,7 @@ typedef struct GunpowderbarrelUpdatePhysicsState {
     void *unk10;
     u8 pad14[0x20 - 0x14];
     f32 unk20;
-    f32 unk24;
+    f32 timer24;
     f32 unk28;
     u8 pad2C[0x34 - 0x2C];
     f32 unk34;
@@ -496,27 +496,27 @@ void gunpowderbarrel_updatePhysics(int *obj)
         }
         return;
     }
-    if (sub[0x16] == 0 && ((sub[0x49] & 2) || ((GunpowderbarrelUpdatePhysicsState *)sub)->unk24 > lbl_803E430C)) {
+    if (sub[0x16] == 0 && ((sub[0x49] & 2) || ((GunpowderbarrelUpdatePhysicsState *)sub)->timer24 > lbl_803E430C)) {
         ObjHits_SetHitVolumeSlot(obj, 0xe, 1, 0);
         ObjHits_EnableObject(obj);
     }
     if (!((GpbFlags4A *)(sub + 0x4a))->playerHeld) {
-        ((GunpowderbarrelUpdatePhysicsState *)sub)->unk24 -= lbl_803E4310 * timeDelta;
+        ((GunpowderbarrelUpdatePhysicsState *)sub)->timer24 -= lbl_803E4310 * timeDelta;
     }
     {
         f32 v = ((GunpowderbarrelUpdatePhysicsState *)sub)->unk20;
         ((GunpowderbarrelUpdatePhysicsState *)sub)->unk20 = (v < lbl_803E4314) ? lbl_803E4314 : ((v > lbl_803E4318) ? lbl_803E4318 : v);
     }
     {
-        f32 v = ((GunpowderbarrelUpdatePhysicsState *)sub)->unk24;
-        ((GunpowderbarrelUpdatePhysicsState *)sub)->unk24 = (v < lbl_803E4314) ? lbl_803E4314 : ((v > lbl_803E4318) ? lbl_803E4318 : v);
+        f32 v = ((GunpowderbarrelUpdatePhysicsState *)sub)->timer24;
+        ((GunpowderbarrelUpdatePhysicsState *)sub)->timer24 = (v < lbl_803E4314) ? lbl_803E4314 : ((v > lbl_803E4318) ? lbl_803E4318 : v);
     }
     {
         f32 v = ((GunpowderbarrelUpdatePhysicsState *)sub)->unk28;
         ((GunpowderbarrelUpdatePhysicsState *)sub)->unk28 = (v < lbl_803E4314) ? lbl_803E4314 : ((v > lbl_803E4318) ? lbl_803E4318 : v);
     }
     ((GameObject *)obj)->anim.velocityX = ((GunpowderbarrelUpdatePhysicsState *)sub)->unk20;
-    ((GameObject *)obj)->anim.velocityY = ((GunpowderbarrelUpdatePhysicsState *)sub)->unk24;
+    ((GameObject *)obj)->anim.velocityY = ((GunpowderbarrelUpdatePhysicsState *)sub)->timer24;
     ((GameObject *)obj)->anim.velocityZ = ((GunpowderbarrelUpdatePhysicsState *)sub)->unk28;
     dt = timeDelta;
     objMove(obj, ((GameObject *)obj)->anim.velocityX * dt, ((GameObject *)obj)->anim.velocityY * dt,
@@ -561,7 +561,7 @@ void gunpowderbarrel_updatePhysics(int *obj)
         ((GameObject *)obj)->anim.velocityY = z;
         ((GameObject *)obj)->anim.velocityZ = z;
         ((GunpowderbarrelUpdatePhysicsState *)sub)->unk20 = z;
-        ((GunpowderbarrelUpdatePhysicsState *)sub)->unk24 = z;
+        ((GunpowderbarrelUpdatePhysicsState *)sub)->timer24 = z;
         ((GunpowderbarrelUpdatePhysicsState *)sub)->unk28 = z;
         if (contact != 0) {
             u32 flags;
@@ -578,7 +578,7 @@ void gunpowderbarrel_updatePhysics(int *obj)
         }
         ((GunpowderbarrelUpdatePhysicsState *)sub)->unk38 = lbl_803E42C0;
     } else {
-        if (((GunpowderbarrelUpdatePhysicsState *)sub)->unk24 < lbl_803E4320) {
+        if (((GunpowderbarrelUpdatePhysicsState *)sub)->timer24 < lbl_803E4320) {
             fn_801A0F58(obj, ((GunpowderbarrelUpdatePhysicsState *)sub)->unk44, ((GunpowderbarrelUpdatePhysicsState *)sub)->unk46);
         }
         if (!((GpbFlags4A *)(sub + 0x4a))->held && !((GpbFlags4A *)(sub + 0x4a))->playerHeld) {

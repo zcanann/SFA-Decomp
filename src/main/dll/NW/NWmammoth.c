@@ -20,7 +20,7 @@ typedef struct EdiblemushroomState {
     f32 unk120;
     u8 pad124[0x136 - 0x124];
     u8 unk136;
-    u8 unk137;
+    u8 flags137;
 } EdiblemushroomState;
 
 
@@ -145,7 +145,7 @@ void ediblemushroom_init(int obj, int aux)
         switch (v) {
         case 4:
         case 5:
-            ((EdiblemushroomState *)state)->unk137 |= 2;
+            ((EdiblemushroomState *)state)->flags137 |= 2;
             (*gRomCurveInterface)->initCurve((void *)state, (void *)obj, lbl_803E52EC, &local_x, -1);
             ((GameObject *)obj)->anim.localPosX = ((EdiblemushroomState *)state)->unk68;
             ((GameObject *)obj)->anim.localPosZ = ((EdiblemushroomState *)state)->unk70;

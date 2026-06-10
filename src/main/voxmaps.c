@@ -574,12 +574,12 @@ void voxmapsFn_80010ff4(struct RouteState *state, VoxBoxArg *a2, int a3, u16 cou
     int blocked, dir, next, chosen, sumCur, sumNext;
 
     if (box[0] == state->tgtX && box[2] == state->tgtY) {
-        s16 idx = state->unk1C;
+        s16 idx = state->timer1C;
         if (idx == 200) {
             debugPrintf(sVoxmapsRouteNodesListOverflow);
         } else {
             n = &state->nodes[idx];
-            state->unk1C = idx + 1;
+            state->timer1C = idx + 1;
             n->x = box[0];
             n->unk2 = box[1];
             n->y = box[2];
@@ -700,7 +700,7 @@ void voxmapsFn_80010ff4(struct RouteState *state, VoxBoxArg *a2, int a3, u16 cou
     {
         int kkk = 0;
         int boff = 0;
-        nodeCount = state->unk1C;
+        nodeCount = state->timer1C;
         for (; nodeCount != 0; nodeCount--) {
             RouteNode *nn = (RouteNode *)((char *)state->nodes + boff);
             if (nn->x == box[0] && nn->y == box[2]) {
@@ -714,7 +714,7 @@ void voxmapsFn_80010ff4(struct RouteState *state, VoxBoxArg *a2, int a3, u16 cou
         foundIdx = -1;
     }
 searched:
-    nodeCount = state->unk1C;
+    nodeCount = state->timer1C;
 
     if (foundIdx >= 0 && savedFlag == 0) {
         n = &state->nodes[foundIdx];
@@ -751,7 +751,7 @@ searched:
         n = NULL;
     } else {
         n = &state->nodes[nodeCount];
-        state->unk1C = nodeCount + 1;
+        state->timer1C = nodeCount + 1;
         n->x = box[0];
         n->unk2 = box[1];
         n->y = box[2];
@@ -839,29 +839,29 @@ int voxmaps_updateRoutePath(RouteNav *nav, RouteState *state) {
         int pathDirect;
 
         state->queueCount = 0;
-        state->unk1C = 0;
+        state->timer1C = 0;
         for (i = 0; i < 200; i++) {
             state->queue[i].priority = 0;
             state->nodes[i].flag = 0;
         }
-        voxmaps_worldToGrid(nav->destPos, &state->unk12);
+        voxmaps_worldToGrid(nav->destPos, &state->flags12);
         voxmaps_worldToGrid(nav->curPos, &state->tgtX);
-        state->unk12 &= ~1;
-        state->unk16 &= ~1;
+        state->flags12 &= ~1;
+        state->flags16 &= ~1;
         state->tgtX &= ~1;
         state->tgtY &= ~1;
-        if (fn_800119FC(&state->unk12, &state->tgtX, out) != 0) {
+        if (fn_800119FC(&state->flags12, &state->tgtX, out) != 0) {
             pathDirect = 1;
         } else {
             int count;
             state->unk24 = 0x2710;
-            count = state->unk1C;
+            count = state->timer1C;
             if (count == 0xc8) {
                 debugPrintf(sVoxmapsRouteNodesListOverflow);
                 node = NULL;
             } else {
                 int dx, dz, d2;
-                state->unk1C = count + 1;
+                state->timer1C = count + 1;
                 node = &state->nodes[count];
                 node->x = out[0];
                 node->unk2 = out[1];
@@ -882,7 +882,7 @@ int voxmaps_updateRoutePath(RouteNav *nav, RouteState *state) {
                 int parent;
 
                 state->queueCount++;
-                queue[state->queueCount].value = (u16)(state->unk1C - 1);
+                queue[state->queueCount].value = (u16)(state->timer1C - 1);
                 queue[state->queueCount].priority = (u16)(0xffff - cost);
                 pos = state->queueCount;
                 key = queue[pos].priority;
@@ -1139,9 +1139,9 @@ int fn_80011EB0(RouteState *state, int count) {
         i = j;
     }
 
-    startNode.x = state->unk12;
+    startNode.x = state->flags12;
     startNode.unk2 = state->unk14;
-    startNode.y = state->unk16;
+    startNode.y = state->flags16;
     startNode.unkB = (u8)i;
     if (node->unkB == 0xff) {
         cand = NULL;

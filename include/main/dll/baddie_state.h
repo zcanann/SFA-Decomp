@@ -91,7 +91,7 @@ typedef struct BaddieState {
     u8 pad2D4[0x2DC - 0x2D4];
     u32 controlFlags; /* control flag word: 0x2000 path-follow, 0x2000_0000/0x4000_0000/0x8000_0000 move gates */
     u8 pad2E0[4];
-    int unk2E4; /* whirlpool: 0x42001 flag word */
+    int flags2E4; /* whirlpool: 0x42001 flag word */
     u32 reactionFlags; /* event/reaction flag word: bits 8/0x10/0x20/0x28/0x80 */
     u8 pad2EC[0x2FC - 0x2EC];
     f32 pathStep; /* path-advance step (lfs/stfs 764; fed to Curve_AdvanceAlongPath) */

@@ -336,7 +336,7 @@ typedef struct DrExplodableState {
     DrExplodableChunk chunks[15]; /* 0x000 */
     int children[15]; /* 0x690: spawned fragment objects */
     u32 flags6CC;
-    int unk6D0;
+    int flags6D0;
     u8 count6D4;
     u8 spawnedFlags[15]; /* 0x6d5 */
     u8 phase6E4;
@@ -419,8 +419,8 @@ void explodable_update(int obj)
         if (((DrExplodableState *)state)->phase6E4 == 0) {
             if ((u32)GameBit_Get(((ExplodablePlacement *)def)->unk40) != 0) {
                 fn_801A2E80(obj, def, 0, state);
-                if (((DrExplodableState *)state)->unk6D0 != 0) {
-                    Sfx_PlayFromObject(obj, ((DrExplodableState *)state)->unk6D0 & 0xffff);
+                if (((DrExplodableState *)state)->flags6D0 != 0) {
+                    Sfx_PlayFromObject(obj, ((DrExplodableState *)state)->flags6D0 & 0xffff);
                 }
                 ((DrExplodableState *)state)->phase6E4 = 1;
                 ((GameObject *)obj)->anim.alpha = 0;
@@ -593,7 +593,7 @@ void fn_801A2E80(int obj, int def, int p3, int state)
 
     e = (GasVentTableEntry *)lbl_80322DA0;
     iVar12 = e[((DrExplodableState *)state)->unk6E5].objType;
-    ((DrExplodableState *)state)->unk6D0 = e[((DrExplodableState *)state)->unk6E5].sfx;
+    ((DrExplodableState *)state)->flags6D0 = e[((DrExplodableState *)state)->unk6E5].sfx;
     uVar1 = e[((DrExplodableState *)state)->unk6E5].mode;
     if (iVar12 != -1) {
         i13 = 0;

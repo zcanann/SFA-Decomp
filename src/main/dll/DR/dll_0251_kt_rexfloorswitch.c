@@ -27,12 +27,12 @@ typedef struct KtrexfloorswitchSpawnEnergyArcState {
 
 typedef struct KtrexfloorswitchState {
     u8 pad0[0x4 - 0x0];
-    u8 unk4;
+    u8 timer4;
     u8 unk5;
     u8 pad6[0x8 - 0x6];
-    f32 unk8;
+    f32 timer8;
     f32 unkC;
-    u8 unk10;
+    u8 flags10;
     u8 pad11[0x14 - 0x11];
 } KtrexfloorswitchState;
 
@@ -59,7 +59,7 @@ void ktrexfloorswitch_init(int obj, char *arg) {
     int q;
     int r;
     *(s16 *)obj = (s16)(((u8 *)arg)[0x18] << 8);
-    ((KtrexfloorswitchState *)p)->unk8 = (f32)(u32)((u8 *)arg)[0x19];
+    ((KtrexfloorswitchState *)p)->timer8 = (f32)(u32)((u8 *)arg)[0x19];
     ((GameObject *)obj)->unkF4 = 1;
     ((GameObject *)obj)->unkF8 = 1;
     q = *(int *)&((GameObject *)obj)->anim.placementData;
@@ -125,11 +125,11 @@ void ktrexfloorswitch_update(int obj) {
     if (((GameObject *)obj)->unkF4 <= 1) {
         *tex = 0;
         if (((GameObject *)obj)->unkF4 == 0 && ((GameObject *)obj)->unkF8 != 0) {
-            ((KtrexfloorswitchState *)state)->unk10 |= 0x4;
+            ((KtrexfloorswitchState *)state)->flags10 |= 0x4;
         }
         if (((GameObject *)obj)->unkF4 != 0 && ((GameObject *)obj)->unkF8 == 0) {
             int cp;
-            ((KtrexfloorswitchState *)state)->unk10 |= 0x2;
+            ((KtrexfloorswitchState *)state)->flags10 |= 0x2;
             ((GameObject *)obj)->anim.localPosY = ((KtrexfloorswitchPlacement *)sub)->unkC - (f32)(u32)((KtrexfloorswitchPlacement *)sub)->unk1F;
             cp = (*gRomCurveInterface)->find(
                 &lbl_803DC2A0, 1, GameBit_Get(0x572) >> 1, *(f32 *)(*(int *)&((GameObject *)obj)->anim.placementData + 8),
@@ -142,16 +142,16 @@ void ktrexfloorswitch_update(int obj) {
                 }
             }
         }
-        if ((((KtrexfloorswitchState *)state)->unk10 & 0x6) == 0) {
+        if ((((KtrexfloorswitchState *)state)->flags10 & 0x6) == 0) {
             return;
         }
     } else {
         if (((GameObject *)obj)->unkF8 == 0) {
             *tex = 0x100;
-            ((KtrexfloorswitchState *)state)->unk10 &= ~1;
+            ((KtrexfloorswitchState *)state)->flags10 &= ~1;
         } else {
             int cp;
-            ((KtrexfloorswitchState *)state)->unk10 |= 0x2;
+            ((KtrexfloorswitchState *)state)->flags10 |= 0x2;
             ((GameObject *)obj)->anim.localPosY = ((KtrexfloorswitchPlacement *)sub)->unkC - (f32)(u32)((KtrexfloorswitchPlacement *)sub)->unk1F;
             cp = (*gRomCurveInterface)->find(
                 &lbl_803DC2A0, 1, GameBit_Get(0x572) >> 1, *(f32 *)(*(int *)&((GameObject *)obj)->anim.placementData + 8),
@@ -165,9 +165,9 @@ void ktrexfloorswitch_update(int obj) {
             }
         }
     }
-    ((KtrexfloorswitchState *)state)->unk4 -= 1;
-    if ((s8)((KtrexfloorswitchState *)state)->unk4 < 0) {
-        ((KtrexfloorswitchState *)state)->unk4 = 0;
+    ((KtrexfloorswitchState *)state)->timer4 -= 1;
+    if ((s8)((KtrexfloorswitchState *)state)->timer4 < 0) {
+        ((KtrexfloorswitchState *)state)->timer4 = 0;
     }
     if ((s8)*(s8 *)(*(int *)((char *)obj + 0x58) + 0x10f) > 0 && ((GameObject *)obj)->unkF4 == 2) {
         player = (int *)Obj_GetPlayerObject();
@@ -199,34 +199,34 @@ void ktrexfloorswitch_update(int obj) {
             zHi -= lbl_803E6870;
             if (((GameObject *)player)->anim.localPosX >= xLo && ((GameObject *)player)->anim.localPosX <= xHi &&
                 ((GameObject *)player)->anim.localPosZ >= zLo && ((GameObject *)player)->anim.localPosZ <= zHi) {
-                ((KtrexfloorswitchState *)state)->unk4 = 5;
+                ((KtrexfloorswitchState *)state)->timer4 = 5;
             }
         }
     }
-    if ((((KtrexfloorswitchState *)state)->unk10 & 0x4) != 0) {
+    if ((((KtrexfloorswitchState *)state)->flags10 & 0x4) != 0) {
         height = ((KtrexfloorswitchPlacement *)sub)->unkC - (f32)(u32)((KtrexfloorswitchPlacement *)sub)->unk1F;
         if (((GameObject *)obj)->anim.localPosY > height) {
             ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY - lbl_803E6874 * timeDelta;
             if (((GameObject *)obj)->anim.localPosY <= height) {
                 ((GameObject *)obj)->anim.localPosY = height;
-                ((KtrexfloorswitchState *)state)->unk10 &= ~0x4;
+                ((KtrexfloorswitchState *)state)->flags10 &= ~0x4;
             } else {
                 anim = 1;
                 (*gPartfxInterface)->spawnObject((void *)obj, 0x488, NULL, 2, -1, NULL);
             }
         }
-    } else if ((((KtrexfloorswitchState *)state)->unk10 & 0x2) != 0) {
+    } else if ((((KtrexfloorswitchState *)state)->flags10 & 0x2) != 0) {
         if (((GameObject *)obj)->anim.localPosY < ((KtrexfloorswitchPlacement *)sub)->unkC) {
             ((GameObject *)obj)->anim.localPosY = lbl_803E6874 * timeDelta + ((GameObject *)obj)->anim.localPosY;
             if (((GameObject *)obj)->anim.localPosY >= ((KtrexfloorswitchPlacement *)sub)->unkC) {
                 ((GameObject *)obj)->anim.localPosY = ((KtrexfloorswitchPlacement *)sub)->unkC;
-                ((KtrexfloorswitchState *)state)->unk10 &= ~0x2;
+                ((KtrexfloorswitchState *)state)->flags10 &= ~0x2;
             } else {
                 anim = 1;
                 (*gPartfxInterface)->spawnObject((void *)obj, 0x488, NULL, 2, -1, NULL);
             }
         }
-    } else if ((s8)((KtrexfloorswitchState *)state)->unk4 != 0 && (((KtrexfloorswitchState *)state)->unk10 & 1) == 0) {
+    } else if ((s8)((KtrexfloorswitchState *)state)->timer4 != 0 && (((KtrexfloorswitchState *)state)->flags10 & 1) == 0) {
         height = ((KtrexfloorswitchPlacement *)sub)->unkC - (f32)(u32)((KtrexfloorswitchPlacement *)sub)->unk1E;
         if (((GameObject *)obj)->anim.localPosY > height) {
             ((GameObject *)obj)->anim.localPosY = ((GameObject *)obj)->anim.localPosY - lbl_803E6878 * timeDelta;
@@ -236,18 +236,18 @@ void ktrexfloorswitch_update(int obj) {
                 anim = 1;
             }
         }
-        if (((KtrexfloorswitchState *)state)->unk8 < lbl_803E687C) {
-            ((KtrexfloorswitchState *)state)->unk8 = (f32)(u32)((KtrexfloorswitchPlacement *)sub)->unk19;
+        if (((KtrexfloorswitchState *)state)->timer8 < lbl_803E687C) {
+            ((KtrexfloorswitchState *)state)->timer8 = (f32)(u32)((KtrexfloorswitchPlacement *)sub)->unk19;
             level = GameBit_Get(((KtrexfloorswitchPlacement *)sub)->unk1A) & 0xff;
             if (level < 0xf) {
                 level += 1;
                 GameBit_Set(((KtrexfloorswitchPlacement *)sub)->unk1A, level);
                 if (level == 0xf) {
-                    ((KtrexfloorswitchState *)state)->unk10 |= 0x8;
+                    ((KtrexfloorswitchState *)state)->flags10 |= 0x8;
                 }
             } else {
-                ((KtrexfloorswitchState *)state)->unk10 &= ~0x8;
-                ((KtrexfloorswitchState *)state)->unk10 |= 1;
+                ((KtrexfloorswitchState *)state)->flags10 &= ~0x8;
+                ((KtrexfloorswitchState *)state)->flags10 |= 1;
                 GameBit_Set(((KtrexfloorswitchPlacement *)sub)->unk1A, 0);
                 if (GameBit_Get(0x55a) != 0) {
                     GameBit_Set(0x55a, 0);
@@ -259,7 +259,7 @@ void ktrexfloorswitch_update(int obj) {
                 ktrexlevel_updatePathGameBits();
             }
         }
-        ((KtrexfloorswitchState *)state)->unk8 -= timeDelta;
+        ((KtrexfloorswitchState *)state)->timer8 -= timeDelta;
     } else {
         ((GameObject *)obj)->anim.localPosY = lbl_803E6878 * timeDelta + ((GameObject *)obj)->anim.localPosY;
         if (((GameObject *)obj)->anim.localPosY > ((KtrexfloorswitchPlacement *)sub)->unkC) {
@@ -267,10 +267,10 @@ void ktrexfloorswitch_update(int obj) {
         } else {
             anim = 1;
         }
-        if ((((KtrexfloorswitchState *)state)->unk10 & 0x8) != 0) {
-            if (((KtrexfloorswitchState *)state)->unk8 < lbl_803E687C) {
-                ((KtrexfloorswitchState *)state)->unk10 &= ~0x8;
-                ((KtrexfloorswitchState *)state)->unk10 |= 1;
+        if ((((KtrexfloorswitchState *)state)->flags10 & 0x8) != 0) {
+            if (((KtrexfloorswitchState *)state)->timer8 < lbl_803E687C) {
+                ((KtrexfloorswitchState *)state)->flags10 &= ~0x8;
+                ((KtrexfloorswitchState *)state)->flags10 |= 1;
                 GameBit_Set(((KtrexfloorswitchPlacement *)sub)->unk1A, 0);
                 if (GameBit_Get(0x55a) != 0) {
                     GameBit_Set(0x55a, 0);
@@ -281,10 +281,10 @@ void ktrexfloorswitch_update(int obj) {
                 }
                 ktrexlevel_updatePathGameBits();
             }
-            ((KtrexfloorswitchState *)state)->unk8 -= timeDelta;
+            ((KtrexfloorswitchState *)state)->timer8 -= timeDelta;
         }
     }
-    if ((((KtrexfloorswitchState *)state)->unk10 & 1) == 0 && (s8)((KtrexfloorswitchState *)state)->unk5 != (s8)((KtrexfloorswitchState *)state)->unk4) {
+    if ((((KtrexfloorswitchState *)state)->flags10 & 1) == 0 && (s8)((KtrexfloorswitchState *)state)->unk5 != (s8)((KtrexfloorswitchState *)state)->timer4) {
         GameBit_Get(((KtrexfloorswitchPlacement *)sub)->unk1A);
         GameBit_Set(((KtrexfloorswitchPlacement *)sub)->unk1A, 0);
     }
@@ -293,7 +293,7 @@ void ktrexfloorswitch_update(int obj) {
     }
     lbl_803DDD60 = (s8)anim;
     if (((GameObject *)obj)->unkF4 == 2) {
-        if ((s8)((KtrexfloorswitchState *)state)->unk4 != 0) {
+        if ((s8)((KtrexfloorswitchState *)state)->timer4 != 0) {
             if (lbl_803E687C == ((KtrexfloorswitchState *)state)->unkC) {
                 ((KtrexfloorswitchState *)state)->unkC = lbl_803E6880;
             }
@@ -317,7 +317,7 @@ void ktrexfloorswitch_update(int obj) {
             }
             *tex = scroll;
         }
-        if ((((KtrexfloorswitchState *)state)->unk10 & 0x6) == 0) {
+        if ((((KtrexfloorswitchState *)state)->flags10 & 0x6) == 0) {
             (*gPartfxInterface)->spawnObject((void *)obj, 0x486, NULL, 2, -1, NULL);
         }
     } else {
@@ -332,5 +332,5 @@ void ktrexfloorswitch_update(int obj) {
             *tex = scroll;
         }
     }
-    ((KtrexfloorswitchState *)state)->unk5 = ((KtrexfloorswitchState *)state)->unk4;
+    ((KtrexfloorswitchState *)state)->unk5 = ((KtrexfloorswitchState *)state)->timer4;
 }

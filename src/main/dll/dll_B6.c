@@ -84,19 +84,19 @@ void *camcontrol_findBestTarget(int param_1, u8 *focus)
            || (!(((GameObject *)obj)->objectFlags & 0x800) && !(((ObjAnimComponent *)obj)->modelInstance->flags & 1))
            || (((GameObject *)obj)->anim.flags & OBJANIM_FLAG_HIDDEN)
            || (((GameObject *)obj)->objectFlags & 0x40)
-           || (lbl_803DB992 & ((ok = 1) << (data[((GameObject *)obj)->unkE4 * 5 + 4] & 0xf))) == 0) {
+           || (lbl_803DB992 & ((ok = 1) << (data[((GameObject *)obj)->gameBitE4 * 5 + 4] & 0xf))) == 0) {
             ok = 0;
         }
         if (ok == 0) {
             continue;
         }
-        if ((int)*(u8 *)(*(u8 **)(*(u8 **)&((GameObject *)obj)->anim.modelInstance + 0x40) + ((GameObject *)obj)->unkE4 * 0x18 + 0x11) < bestPri) {
+        if ((int)*(u8 *)(*(u8 **)(*(u8 **)&((GameObject *)obj)->anim.modelInstance + 0x40) + ((GameObject *)obj)->gameBitE4 * 0x18 + 0x11) < bestPri) {
             continue;
         }
-        if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 0x80) || (data[((GameObject *)obj)->unkE4 * 5 + 4] & 0x80)) {
+        if ((*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 0x80) || (data[((GameObject *)obj)->gameBitE4 * 5 + 4] & 0x80)) {
             dy = lbl_803E1630;
         } else {
-            dy = *(f32 *)(f + 0x1c) - *(f32 *)(*(u8 **)(obj + 0x74) + ((GameObject *)obj)->unkE4 * 0x18 + 0x10);
+            dy = *(f32 *)(f + 0x1c) - *(f32 *)(*(u8 **)(obj + 0x74) + ((GameObject *)obj)->gameBitE4 * 0x18 + 0x10);
         }
         if (!(dy > lbl_803E1644)) {
             continue;
@@ -104,10 +104,10 @@ void *camcontrol_findBestTarget(int param_1, u8 *focus)
         if (!(dy < lbl_803E1648)) {
             continue;
         }
-        dx = *(f32 *)(f + 0x18) - *(f32 *)(*(u8 **)(obj + 0x74) + ((GameObject *)obj)->unkE4 * 0x18 + 0xc);
-        dz = *(f32 *)(f + 0x20) - *(f32 *)(*(u8 **)(obj + 0x74) + ((GameObject *)obj)->unkE4 * 0x18 + 0x14);
+        dx = *(f32 *)(f + 0x18) - *(f32 *)(*(u8 **)(obj + 0x74) + ((GameObject *)obj)->gameBitE4 * 0x18 + 0xc);
+        dz = *(f32 *)(f + 0x20) - *(f32 *)(*(u8 **)(obj + 0x74) + ((GameObject *)obj)->gameBitE4 * 0x18 + 0x14);
         distsq = dz * dz + dx * dx;
-        entry = data + ((GameObject *)obj)->unkE4 * 5;
+        entry = data + ((GameObject *)obj)->gameBitE4 * 5;
         range = (f32)(int)(entry[2] << 2);
         if (!(distsq < range * range)) {
             continue;
@@ -119,7 +119,7 @@ void *camcontrol_findBestTarget(int param_1, u8 *focus)
         if (canTarget == 0) {
             continue;
         }
-        bestPri = *(u8 *)(*(u8 **)(*(u8 **)&((GameObject *)obj)->anim.modelInstance + 0x40) + ((GameObject *)obj)->unkE4 * 0x18 + 0x11);
+        bestPri = *(u8 *)(*(u8 **)(*(u8 **)&((GameObject *)obj)->anim.modelInstance + 0x40) + ((GameObject *)obj)->gameBitE4 * 0x18 + 0x11);
         i = 0;
         pa = arr;
         while (i < count

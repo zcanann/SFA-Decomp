@@ -39,7 +39,7 @@ typedef struct DllCBState {
     s16 unk3F6;
     u8 pad3F8[0x3FE - 0x3F8];
     u16 unk3FE;
-    u16 unk400;
+    u16 flags400;
     u8 pad402[0x405 - 0x402];
     s8 unk405;
     u8 pad406[0x408 - 0x406];
@@ -1882,10 +1882,10 @@ int dll_CB_seqFn(short *obj, int p2, u8 *e)
       *(s16 *)(e + 0x6e) = -1;
       *(s16 *)(e + 0x6e) &= ~0x40;
       path = *(int **)&((DllCBState *)sub)->unk3DC;
-      if ((((DllCBState *)sub)->unk400 & 8) != 0) {
+      if ((((DllCBState *)sub)->flags400 & 8) != 0) {
         if ((Curve_AdvanceAlongPath(path, ((GroundBaddieState *)sub)->baddie.animSpeedA) != 0 || path[4] != 0) &&
             (*gRomCurveInterface)->goNextPoint(path) != 0) {
-          ((DllCBState *)sub)->unk400 &= ~8;
+          ((DllCBState *)sub)->flags400 &= ~8;
         }
         ((GroundBaddieState *)sub)->baddie.animSpeedA = lbl_803E2E98;
         ((GameObject *)obj)->anim.rotX = getAngle(*(f32 *)((char *)path + 0x74), *(f32 *)((char *)path + 0x7c)) + 0x8000;
@@ -1899,7 +1899,7 @@ int dll_CB_seqFn(short *obj, int p2, u8 *e)
     }
   }
   if (((GameObject *)obj)->unkB4 == -1) {
-    ((DllCBState *)sub)->unk400 |= 2;
+    ((DllCBState *)sub)->flags400 |= 2;
     return 0;
   }
   return *(u8 *)&((DllCBState *)sub)->unk405 != 0;

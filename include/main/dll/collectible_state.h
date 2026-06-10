@@ -27,7 +27,7 @@ typedef struct CollectibleState {
     s32 unk18;
     u8 unk1C[0x1D - 0x1C];
     u8 unk1D;
-    u8 unk1E;
+    u8 gameBit1E;
     u8 unk1F[0x20 - 0x1F];
     s32 unk20;
     f32 basePosX;

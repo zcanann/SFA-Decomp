@@ -383,11 +383,11 @@ typedef struct RouteState {
     s16 tgtX;
     s16 unk0E;
     s16 tgtY;
-    s16 unk12;
+    s16 flags12;
     s16 unk14;
-    s16 unk16;
+    s16 flags16;
     int cur;
-    s16 unk1C;
+    s16 timer1C;
     s16 queueCount;
     s16 unk20;
     s16 pad22;

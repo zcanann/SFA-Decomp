@@ -207,17 +207,17 @@ void CameraModeCombat_update(short *cam)
                                 ty = ty + lbl_803E18D0;
                             }
                             if (*(u8 *)(*(int *)&((GameObject *)tgt)->anim.modelInstance + 0x72) <= 1) {
-                                dx = path[((GameObject *)tgt)->unkE4].x - ((GameObject *)focus)->anim.worldPosX;
-                                dy = path[((GameObject *)tgt)->unkE4].y - ty;
-                                dz = path[((GameObject *)tgt)->unkE4].z - ((GameObject *)focus)->anim.worldPosZ;
+                                dx = path[((GameObject *)tgt)->gameBitE4].x - ((GameObject *)focus)->anim.worldPosX;
+                                dy = path[((GameObject *)tgt)->gameBitE4].y - ty;
+                                dz = path[((GameObject *)tgt)->gameBitE4].z - ((GameObject *)focus)->anim.worldPosZ;
                             } else {
                                 fn_8010BF08((int)cam, &dx, &dy, &dz, &ty);
                             }
                         } else {
                             ty = lbl_803E18D0 + ((GameObject *)focus)->anim.worldPosY;
-                            dx = path[((GameObject *)tgt)->unkE4].x - ((GameObject *)focus)->anim.worldPosX;
-                            dy = path[((GameObject *)tgt)->unkE4].y - ty;
-                            dz = path[((GameObject *)tgt)->unkE4].z - ((GameObject *)focus)->anim.worldPosZ;
+                            dx = path[((GameObject *)tgt)->gameBitE4].x - ((GameObject *)focus)->anim.worldPosX;
+                            dy = path[((GameObject *)tgt)->gameBitE4].y - ty;
+                            dz = path[((GameObject *)tgt)->gameBitE4].z - ((GameObject *)focus)->anim.worldPosZ;
                         }
                         dist = sqrtf(dx * dx + dz * dz);
                         ((CameraObject *)cam)->unk13B = 0x30;

@@ -50,7 +50,7 @@ typedef struct ShopkeeperState {
     f32 animSpeed;    /* 0x280 */
     u8 pad284[0x35C - 0x284];
     u8 dll2EBlock[0x96D - 0x35C]; /* 0x35c: dll_2E look-controller block (address-used) */
-    u8 unk96D;        /* 0x96d */
+    u8 flags96D;        /* 0x96d */
     u8 pad96E[0x980 - 0x96E];
     u8 eyeAnimBlock[0x9B0 - 0x980]; /* 0x980: characterDoEyeAnims block (address-used) */
     void *msgStack;   /* 0x9b0: Stack_Free'd on free */
@@ -685,7 +685,7 @@ void shopkeeper_init(int obj) {
     ((ShopkeeperState *)state)->opacity = 0xFF;
     ((ShopkeeperState *)state)->textTimer = lbl_803E5A28;
     dll_2E_func05(obj, state + 0x35C, -0x1C71, 0x3555, 2);
-    ((ShopkeeperState *)state)->unk96D |= 0x12;
+    ((ShopkeeperState *)state)->flags96D |= 0x12;
 }
 
 typedef struct {

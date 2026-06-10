@@ -13,7 +13,7 @@ typedef struct EcshCupState {
     f32 unk10;
     f32 unk14;
     f32 unk18;
-    f32 unk1C;
+    f32 timer1C;
     f32 unk20;
     s32 unk24;
     s32 unk28;
@@ -106,9 +106,9 @@ void ecsh_cup_update(short *obj)
         (*(void (*)(int *, u8 *))*(int *)(*(int *)(*(int *)(lbl_803DDBC8 + 0x68)) + 0x28))(&mode, buf);
         *obj = *obj + ((EcshCupState *)state)->unk2C;
         if (mode != 6) {
-            ((EcshCupState *)state)->unk1C -= timeDelta;
-            if (((EcshCupState *)state)->unk1C <= lbl_803E5068) {
-                ((EcshCupState *)state)->unk1C = lbl_803E506C;
+            ((EcshCupState *)state)->timer1C -= timeDelta;
+            if (((EcshCupState *)state)->timer1C <= lbl_803E5068) {
+                ((EcshCupState *)state)->timer1C = lbl_803E506C;
                 if (mode != 3 && mode != 6 && mode != 7) {
                     (*gPartfxInterface)->spawnObject(obj, 0x270, NULL, 0, -1, NULL);
                 }
@@ -143,17 +143,17 @@ void ecsh_cup_update(short *obj)
                 }
                 *(u8 *)((char *)obj + 0x37) = (u8)(int)a;
             }
-            ((EcshCupState *)state)->unk1C -= timeDelta;
-            if (((EcshCupState *)state)->unk1C <= lbl_803E5068) {
-                ((EcshCupState *)state)->unk1C = lbl_803E506C;
+            ((EcshCupState *)state)->timer1C -= timeDelta;
+            if (((EcshCupState *)state)->timer1C <= lbl_803E5068) {
+                ((EcshCupState *)state)->timer1C = lbl_803E506C;
                 (*gPartfxInterface)->spawnObject(obj, 0x271, NULL, 0, -1, NULL);
             }
         } else if (mode == 7) {
             if (((GameObject *)obj)->anim.localPosY > ((EcshCupState *)state)->unk18 - lbl_803E5084) {
                 ((GameObject *)obj)->anim.localPosY = -(lbl_803E5078 * timeDelta - ((GameObject *)obj)->anim.localPosY);
-                ((EcshCupState *)state)->unk1C -= timeDelta;
-                if (((EcshCupState *)state)->unk1C <= lbl_803E5068) {
-                    ((EcshCupState *)state)->unk1C = lbl_803E506C;
+                ((EcshCupState *)state)->timer1C -= timeDelta;
+                if (((EcshCupState *)state)->timer1C <= lbl_803E5068) {
+                    ((EcshCupState *)state)->timer1C = lbl_803E506C;
                     if (mode != 3) {
                         (*gPartfxInterface)->spawnObject(obj, 0x271, NULL, 0, -1, NULL);
                     }
@@ -275,7 +275,7 @@ void ecsh_cup_init(int obj, int p2)
     ((EcshCupState *)t)->unk2C = (s16)randomGetRange(-0x320, 0x320);
     *(u8 *)&((EcshCupState *)t)->unk2E = 1;
     *(u8 *)(obj + 0x37) = 0;
-    ((EcshCupState *)t)->unk1C = lbl_803E5068;
+    ((EcshCupState *)t)->timer1C = lbl_803E5068;
     if (lbl_803DDBC8 == 0) {
         lbl_803DDBC8 = ObjGroup_FindNearestObject(0xb, obj, &ftmp);
     }

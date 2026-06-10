@@ -57,7 +57,7 @@ typedef struct CameraArwingWork {
 
 typedef struct Dll19Placement {
     u8 pad0[0x22 - 0x0];
-    s16 unk22;
+    s16 flags22;
     u8 pad24[0x32 - 0x24];
     u8 unk32;
     u8 pad33[0x3E8 - 0x33];
@@ -1957,7 +1957,7 @@ int dll_19_func15(u8 *p1, int p2, int p3, int p4) {
     if (Obj_IsLoadingLocked() == 0) {
         return 0;
     }
-    if ((((Dll19Placement *)state)->unk22 & 0xf00) != 0) {
+    if ((((Dll19Placement *)state)->flags22 & 0xf00) != 0) {
         idx = ((p2 & 0xf00) >> 8) - 1;
         if (idx > 3) {
             idx = 3;
@@ -1965,7 +1965,7 @@ int dll_19_func15(u8 *p1, int p2, int p3, int p4) {
         setup = Obj_AllocObjectSetup(48, ids1[idx]);
         scale = lbl_803E1C54;
     }
-    if ((((Dll19Placement *)state)->unk22 & 0xf000) != 0) {
+    if ((((Dll19Placement *)state)->flags22 & 0xf000) != 0) {
         idx = ((p2 & 0xf000) >> 12) - 1;
         if (idx > 3) {
             idx = 3;
@@ -1973,7 +1973,7 @@ int dll_19_func15(u8 *p1, int p2, int p3, int p4) {
         setup = Obj_AllocObjectSetup(48, ids2[idx]);
         scale = lbl_803E1C54;
     }
-    if ((u8)((Dll19Placement *)state)->unk22 != 0) {
+    if ((u8)((Dll19Placement *)state)->flags22 != 0) {
         switch (p2) {
         case 1:
             setup = Obj_AllocObjectSetup(48, 717);
