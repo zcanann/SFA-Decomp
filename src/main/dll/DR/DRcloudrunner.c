@@ -1,3 +1,4 @@
+#include "main/dll/DR/cloudrunner_state.h"
 #include "main/objanim.h"
 #include "main/game_object.h"
 #include "main/obj_placement.h"
@@ -118,8 +119,8 @@ void sc_musictree_update(int obj)
     if (*(u8 *)(inner + 0x4c) == 0) {
         return;
     }
-    if (*(f32 *)(inner + 0x3c) > lbl_803E5590) {
-        *(f32 *)(inner + 0x3c) = *(f32 *)(inner + 0x3c) - timeDelta;
+    if (((CloudRunnerState *)inner)->baddie.velY > lbl_803E5590) {
+        ((CloudRunnerState *)inner)->baddie.velY = ((CloudRunnerState *)inner)->baddie.velY - timeDelta;
     }
     if (*(f32 *)(inner + 0x34) > lbl_803E5594) {
         *(f32 *)(inner + 0x34) = *(f32 *)(inner + 0x34) - lbl_803E5598;
@@ -150,12 +151,12 @@ void sc_musictree_update(int obj)
     } else {
         rcType = ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x129, (int *)(inner + 0x44));
     }
-    if (*(f32 *)(inner + 0x40) >= lbl_803E5590) {
-        *(f32 *)(inner + 0x40) = *(f32 *)(inner + 0x40) - timeDelta;
+    if (((CloudRunnerState *)inner)->baddie.velZ >= lbl_803E5590) {
+        ((CloudRunnerState *)inner)->baddie.velZ = ((CloudRunnerState *)inner)->baddie.velZ - timeDelta;
     }
     if (rcType == 0) goto end;
     if (rcType == 0x11) goto end;
-    if (!(*(f32 *)(inner + 0x40) <= lbl_803E5590)) goto end;
+    if (!(((CloudRunnerState *)inner)->baddie.velZ <= lbl_803E5590)) goto end;
     if (*(u8 *)(inner + 0x4c) & 0xc0) {
         vec[0] = vec[0] + playerMapOffsetX;
         vec[2] = vec[2] + playerMapOffsetZ;
@@ -169,12 +170,12 @@ void sc_musictree_update(int obj)
     {
         f32 zero = lbl_803E5590;
         vec[0] = zero;
-        vec[1] = lbl_803E55A0 * *(f32 *)(inner + 0x38);
+        vec[1] = lbl_803E55A0 * ((CloudRunnerState *)inner)->baddie.velX;
         vec[2] = zero;
-        objfx_spawnRandomBurst(obj, *(u8 *)(inner + 0x4c) & 0xf, 0x14, vec2, lbl_803E55A4 * *(f32 *)(inner + 0x38), 0);
+        objfx_spawnRandomBurst(obj, *(u8 *)(inner + 0x4c) & 0xf, 0x14, vec2, lbl_803E55A4 * ((CloudRunnerState *)inner)->baddie.velX, 0);
     }
     *(f32 *)(inner + 0x34) = lbl_803E5588;
-    *(f32 *)(inner + 0x40) = lbl_803E55A8;
+    ((CloudRunnerState *)inner)->baddie.velZ = lbl_803E55A8;
     if (*(u8 *)(inner + 0x4c) & 0x80) {
         int *pp;
         int idx;
@@ -196,20 +197,20 @@ end:
         f32 dz = ((GameObject *)obj)->anim.localPosZ - ((GameObject *)player)->anim.localPosZ;
         f32 d = sqrtf(dx * dx + dz * dz);
         if ((u16)(s32)d < *(u16 *)(inner + 0x48)) {
-            if ((*(u8 *)(inner + 0x4c) & 0x10) && *(u16 *)(inner + 0x4a) >= (u16)(s32)d && *(f32 *)(inner + 0x3c) <= lbl_803E5590) {
+            if ((*(u8 *)(inner + 0x4c) & 0x10) && *(u16 *)(inner + 0x4a) >= (u16)(s32)d && ((CloudRunnerState *)inner)->baddie.velY <= lbl_803E5590) {
                 vec[0] = lbl_803E5590;
-                vec[1] = lbl_803E55AC * (lbl_803E55A0 * *(f32 *)(inner + 0x38));
+                vec[1] = lbl_803E55AC * (lbl_803E55A0 * ((CloudRunnerState *)inner)->baddie.velX);
                 vec[2] = lbl_803E5590;
-                objfx_spawnRandomBurst(obj, *(u8 *)(inner + 0x4c) & 0xf, 0xa, vec2, lbl_803E55A4 * *(f32 *)(inner + 0x38), 1);
-                *(f32 *)(inner + 0x3c) = lbl_803E55B0;
+                objfx_spawnRandomBurst(obj, *(u8 *)(inner + 0x4c) & 0xf, 0xa, vec2, lbl_803E55A4 * ((CloudRunnerState *)inner)->baddie.velX, 1);
+                ((CloudRunnerState *)inner)->baddie.velY = lbl_803E55B0;
             }
             *(f32 *)(inner + 0x30) = *(f32 *)(inner + 0x30) - timeDelta;
             if (*(f32 *)(inner + 0x30) <= lbl_803E5590) {
                 vec[0] = lbl_803E5590;
-                vec[1] = lbl_803E55A0 * *(f32 *)(inner + 0x38);
+                vec[1] = lbl_803E55A0 * ((CloudRunnerState *)inner)->baddie.velX;
                 vec[2] = lbl_803E5590;
                 vecRotateZXY(obj, vec);
-                objfx_spawnRandomBurst(obj, *(u8 *)(inner + 0x4c) & 0xf, 1, vec2, lbl_803E55A4 * *(f32 *)(inner + 0x38), 0);
+                objfx_spawnRandomBurst(obj, *(u8 *)(inner + 0x4c) & 0xf, 1, vec2, lbl_803E55A4 * ((CloudRunnerState *)inner)->baddie.velX, 0);
                 *(f32 *)(inner + 0x30) = *(f32 *)(inner + 0x30) + lbl_803E55B4;
             }
         }

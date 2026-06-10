@@ -1,3 +1,4 @@
+#include "main/dll/MMP/mmp_moonrock_state.h"
 #include "main/dll/MMP/MMP_moonrock.h"
 #include "main/camera_interface.h"
 #include "main/dll/rom_curve_interface.h"
@@ -162,9 +163,9 @@ void lightning_update(u8 *obj)
 
     if (*(u32 *)state == 0 && ((LightningFlags *)(state + 0x25))->enabled) {
         spawnLightning = 0;
-        *(f32 *)(state + 0x18) -= timeDelta;
-        if (*(f32 *)(state + 0x18) <= lbl_803E4088) {
-            *(f32 *)(state + 0x18) += (f32)(s32)((u32)data[0x23] * 0x3c);
+        ((MmpMoonrockState *)state)->homeX -= timeDelta;
+        if (((MmpMoonrockState *)state)->homeX <= lbl_803E4088) {
+            ((MmpMoonrockState *)state)->homeX += (f32)(s32)((u32)data[0x23] * 0x3c);
             spawnLightning = 1;
         }
         if (spawnLightning != 0) {
@@ -172,7 +173,7 @@ void lightning_update(u8 *obj)
             objectIndex = 0;
             while (objectIndex < objectCount) {
                 u32 linkedHandle = *(u32 *)(*(u32 *)(objects[objectIndex] + 0x4c) + 0x14);
-                if (linkedHandle == *(u32 *)(state + 0x20)) {
+                if (linkedHandle == *(u32 *)&((MmpMoonrockState *)state)->homeZ) {
                     break;
                 }
                 objectIndex++;
@@ -183,13 +184,13 @@ void lightning_update(u8 *obj)
             }
 
             handle = lightningCreate((float *)(obj + 0x0c),(float *)(objects[objectIndex] + 0x0c),
-                                 *(f32 *)(state + 0x08),*(f32 *)(state + 0x0c),
+                                 *(f32 *)(state + 0x08),((MmpMoonrockState *)state)->baseY,
                                  (u16)(state[0x1c] + randomGetRange(-5,5)),state[0x1d],
                                  ((LightningFlags *)(state + 0x25))->style ? 1 : 0);
             *(int *)state = handle;
             *(f32 *)(state + 0x04) = lbl_803E4088;
             if ((((LightningMode *)(state + 0x24))->mode & 1) != 0) {
-                hitDetectFn_80097070(obj,*(f32 *)(state + 0x10),1,7,0x1e,0);
+                hitDetectFn_80097070(obj,((MmpMoonrockState *)state)->baseY2,1,7,0x1e,0);
             }
             otherState = *(u8 **)(objects[objectIndex] + 0xb8);
             if ((((LightningMode *)(otherState + 0x24))->mode & 1) != 0) {
@@ -197,7 +198,7 @@ void lightning_update(u8 *obj)
                                      0x1e,0);
             }
             if ((((LightningMode *)(state + 0x24))->mode & 2) != 0) {
-                objfx_spawnDirectionalBurst(obj,5,*(f32 *)(state + 0x14),1,1,100,lbl_803E408C,0,0);
+                objfx_spawnDirectionalBurst(obj,5,((MmpMoonrockState *)state)->respawnTimer,1,1,100,lbl_803E408C,0,0);
             }
             if ((((LightningMode *)(otherState + 0x24))->mode & 2) != 0) {
                 objfx_spawnDirectionalBurst((u8 *)objects[objectIndex],5,*(f32 *)(otherState + 0x14),
@@ -227,19 +228,19 @@ void lightning_init(u8 *obj, u8 *data)
     ObjGroup_AddObject(obj, MMP_LIGHTNING_OBJGROUP);
     ((LightningMode *)(state + 0x24))->mode = data[0x21];
     defaultScale = lbl_803E40A0;
-    *(f32 *)(state + 0x10) = defaultScale;
-    *(f32 *)(state + 0x14) = defaultScale;
+    ((MmpMoonrockState *)state)->baseY2 = defaultScale;
+    ((MmpMoonrockState *)state)->respawnTimer = defaultScale;
     *(f32 *)(state + 0x08) = (f32)(u32)data[0x1c];
-    *(f32 *)(state + 0x0c) = (f32)(u32)data[0x1d];
+    ((MmpMoonrockState *)state)->baseY = (f32)(u32)data[0x1d];
     state[0x1c] = data[0x1e];
     state[0x1d] = data[0x1f];
-    *(u32 *)(state + 0x20) = *(u32 *)(data + 0x18);
+    *(u32 *)&((MmpMoonrockState *)state)->homeZ = *(u32 *)(data + 0x18);
 
     ((LightningFlags *)(state + 0x25))->enabled = (data[0x20] & 1) ? 1 : 0;
     ((LightningFlags *)(state + 0x25))->style = (data[0x20] & 2) ? 1 : 0;
     ((LightningFlags *)(state + 0x25))->noAge = (data[0x20] & 4) ? 1 : 0;
 
-    *(f32 *)(state + 0x18) = (f32)(s32)((u32)data[0x22] * 0x3c);
+    ((MmpMoonrockState *)state)->homeX = (f32)(s32)((u32)data[0x22] * 0x3c);
 }
 void WaterFallSpray_free(u8* obj)
 {
@@ -563,7 +564,7 @@ void fn_80198A00(u8 *obj, int seqArg)
         curveHit, *(f32 *)(state + 0x28), *(f32 *)(state + 0x2c), *(f32 *)(state + 0x30),
         &hitDistance);
     rearBlocked = ((int (*)(int, f32, f32, f32, f32 *))(*gRomCurveInterface)->slot4C)(
-        curveHit, *(f32 *)(state + 0x1c), *(f32 *)(state + 0x20), *(f32 *)(state + 0x24),
+        curveHit, ((MmpMoonrockState *)state)->homeY, ((MmpMoonrockState *)state)->homeZ, *(f32 *)(state + 0x24),
         &hitDistance);
 
     if (frontBlocked != 0) {
@@ -664,14 +665,14 @@ void fn_80198DE8(u8 *obj, int seqArg)
     data = *(u8 **)&((GameObject *)obj)->anim.placementData;
     state = ((GameObject *)obj)->extra;
 
-    planeBase = *(f32 *)(state + 0x18);
-    normalZ = *(f32 *)(state + 0x14);
+    planeBase = ((MmpMoonrockState *)state)->homeX;
+    normalZ = ((MmpMoonrockState *)state)->respawnTimer;
     nearZ = *(f32 *)(state + 0x24);
     prodZ = normalZ * nearZ;
-    normalX = *(f32 *)(state + 0x0c);
-    nearX = *(f32 *)(state + 0x1c);
-    normalY = *(f32 *)(state + 0x10);
-    nearY = *(f32 *)(state + 0x20);
+    normalX = ((MmpMoonrockState *)state)->baseY;
+    nearX = ((MmpMoonrockState *)state)->homeY;
+    normalY = ((MmpMoonrockState *)state)->baseY2;
+    nearY = ((MmpMoonrockState *)state)->homeZ;
     prodY = normalY * nearY;
     nearDist = planeBase + (prodZ + (normalX * nearX + prodY));
     farZ = *(f32 *)(state + 0x30);
@@ -694,7 +695,7 @@ void fn_80198DE8(u8 *obj, int seqArg)
             ((normalY * deltaY) + (normalX * deltaX) + (normalZ * deltaZ));
 
         localPos[0] = t * deltaX + nearX;
-        localPos[1] = t * deltaY + *(f32 *)(state + 0x20);
+        localPos[1] = t * deltaY + ((MmpMoonrockState *)state)->homeZ;
         localPos[2] = t * deltaZ + *(f32 *)(state + 0x24);
         PSMTXMultVec((f32 *)(state + 0x38), localPos, localPos);
 
@@ -958,7 +959,7 @@ void FUN_80197e84(void)
   iVar1 = FUN_80286840();
   puVar7 = *(uint **)(iVar1 + 0xb8);
   iVar5 = *(int *)(iVar1 + 0x4c);
-  uVar2 = (uint)*(short *)(iVar5 + 0x24);
+  uVar2 = (uint)*(short *)&((MmpMoonrockState *)iVar5)->flags;
   if (uVar2 != 0xffffffff) {
     if (*(char *)((int)puVar7 + 0x25) < '\0') {
       uVar2 = GameBit_Get(uVar2);
@@ -1016,7 +1017,7 @@ void FUN_80197e84(void)
         FUN_800810f4((double)(float)puVar7[5],(double)lbl_803E4D24,iVar1,5,1,1,100,0,0);
       }
       if ((*(byte *)(iVar5 + 0x24) & 2) != 0) {
-        FUN_800810f4((double)*(float *)(iVar5 + 0x14),(double)lbl_803E4D24,piVar3[iVar6],5,1,1,100
+        FUN_800810f4((double)((MmpMoonrockState *)iVar5)->respawnTimer,(double)lbl_803E4D24,piVar3[iVar6],5,1,1,100
                      ,0,0);
       }
     }
@@ -1061,23 +1062,23 @@ void FUN_80198230(int param_1,int param_2)
   ObjGroup_AddObject(param_1,MMP_LIGHTNING_OBJGROUP);
   *(byte *)(iVar3 + 0x24) = *(byte *)(param_2 + 0x21) & 0xf | *(byte *)(iVar3 + 0x24) & 0xf0;
   fVar1 = lbl_803E4D38;
-  *(float *)(iVar3 + 0x10) = lbl_803E4D38;
-  *(float *)(iVar3 + 0x14) = fVar1;
+  ((MmpMoonrockState *)iVar3)->baseY2 = lbl_803E4D38;
+  ((MmpMoonrockState *)iVar3)->respawnTimer = fVar1;
   dVar2 = DOUBLE_803e4d40;
   *(float *)(iVar3 + 8) =
        (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_2 + 0x1c)) - DOUBLE_803e4d40);
-  *(float *)(iVar3 + 0xc) =
+  ((MmpMoonrockState *)iVar3)->baseY =
        (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_2 + 0x1d)) - dVar2);
   *(undefined *)(iVar3 + 0x1c) = *(undefined *)(param_2 + 0x1e);
   *(undefined *)(iVar3 + 0x1d) = *(undefined *)(param_2 + 0x1f);
-  *(undefined4 *)(iVar3 + 0x20) = *(undefined4 *)(param_2 + 0x18);
+  *(undefined4 *)&((MmpMoonrockState *)iVar3)->homeZ = *(undefined4 *)(param_2 + 0x18);
   *(byte *)(iVar3 + 0x25) =
        ((*(byte *)(param_2 + 0x20) & 1) != 0) << 7 | *(byte *)(iVar3 + 0x25) & 0x7f;
   *(byte *)(iVar3 + 0x25) =
        ((*(byte *)(param_2 + 0x20) & 2) != 0) << 5 | *(byte *)(iVar3 + 0x25) & 0xdf;
   *(byte *)(iVar3 + 0x25) =
        ((*(byte *)(param_2 + 0x20) & 4) != 0) << 6 | *(byte *)(iVar3 + 0x25) & 0xbf;
-  *(float *)(iVar3 + 0x18) =
+  ((MmpMoonrockState *)iVar3)->homeX =
        (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(param_2 + 0x22) * 0x3c ^ 0x80000000) -
               DOUBLE_803e4d30);
   return;
@@ -1293,15 +1294,15 @@ void FUN_801986d4(uint param_1)
     if (iVar3 == 0) {
       iVar3 = FUN_80017a98();
       (**(code **)(*DAT_803dd71c + 0x20))
-                ((double)*(float *)(iVar3 + 0x18),(double)*(float *)(iVar3 + 0x1c),
-                 (double)*(float *)(iVar3 + 0x20),7,(int)*(char *)(iVar6 + 0x20),param_1 + 0xc,
+                ((double)((MmpMoonrockState *)iVar3)->homeX,(double)((MmpMoonrockState *)iVar3)->homeY,
+                 (double)((MmpMoonrockState *)iVar3)->homeZ,7,(int)*(char *)(iVar6 + 0x20),param_1 + 0xc,
                  param_1 + 0x10,param_1 + 0x14);
     }
     else {
       iVar3 = (int)(*gCameraInterface)->getCamera();
       (**(code **)(*DAT_803dd71c + 0x20))
-                ((double)*(float *)(iVar3 + 0x18),(double)*(float *)(iVar3 + 0x1c),
-                 (double)*(float *)(iVar3 + 0x20),7,(int)*(char *)(iVar6 + 0x20),param_1 + 0xc,
+                ((double)((MmpMoonrockState *)iVar3)->homeX,(double)((MmpMoonrockState *)iVar3)->homeY,
+                 (double)((MmpMoonrockState *)iVar3)->homeZ,7,(int)*(char *)(iVar6 + 0x20),param_1 + 0xc,
                  param_1 + 0x10,param_1 + 0x14);
     }
   }
@@ -1624,9 +1625,9 @@ void FUN_80198e08(void)
   iVar3 = (**(code **)(*DAT_803dd71c + 0x4c))
                     ((double)*(float *)(iVar5 + 0x28),(double)*(float *)(iVar5 + 0x2c),
                      (double)*(float *)(iVar5 + 0x30),uVar2,&local_24);
-  dVar6 = (double)*(float *)(iVar5 + 0x20);
+  dVar6 = (double)((MmpMoonrockState *)iVar5)->homeZ;
   dVar7 = (double)*(float *)(iVar5 + 0x24);
-  iVar5 = (**(code **)(*DAT_803dd71c + 0x4c))((double)*(float *)(iVar5 + 0x1c),uVar2,&local_24);
+  iVar5 = (**(code **)(*DAT_803dd71c + 0x4c))((double)((MmpMoonrockState *)iVar5)->homeY,uVar2,&local_24);
   if (iVar3 == 0) {
     if (iVar5 == 0) {
       local_20 = (longlong)(int)local_24;

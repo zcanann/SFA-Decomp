@@ -1,3 +1,4 @@
+#include "main/dll/MMP/mmp_asteroid_re_state.h"
 #include "main/dll/MMP/MMP_asteroid.h"
 #include "main/obj_placement.h"
 #include "main/effect_interfaces.h"
@@ -1286,7 +1287,7 @@ void FUN_80196384(int param_1)
           piVar5[4] = piVar5[2];
         }
       }
-      *(int *)(iVar2 + 4) = piVar5[4];
+      *(int *)&((MmpAsteroidReState *)iVar2)->stateTimer = piVar5[4];
     }
   }
   return;

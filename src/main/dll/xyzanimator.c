@@ -1,3 +1,4 @@
+#include "main/dll/MMP/MMP_asteroid.h"
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/xyzanimator.h"
@@ -160,7 +161,7 @@ void kaldachompspit_render(undefined4 param_1,undefined4 param_2,undefined4 para
   
   iVar1 = FUN_8028683c();
   iVar2 = **(int **)(iVar1 + 0xb8);
-  if (((iVar2 != 0) && (*(char *)(iVar2 + 0x2f8) != '\0')) && (*(char *)(iVar2 + 0x4c) != '\0')) {
+  if (((iVar2 != 0) && (*(char *)(iVar2 + 0x2f8) != '\0')) && (((XyzAnimatorState *)iVar2)->unk4C != '\0')) {
     FUN_8005fe14(iVar2);
   }
   if (visible != '\0') {
@@ -880,10 +881,10 @@ void FUN_8016b174(int param_1)
   int iVar2;
   
   iVar2 = *(int *)&((GameObject *)param_1)->extra;
-  uVar1 = *(uint *)(iVar2 + 0x18);
+  uVar1 = *(uint *)&((XyzAnimatorState *)iVar2)->unk18;
   if (uVar1 != 0) {
     FUN_80017620(uVar1);
-    *(undefined4 *)(iVar2 + 0x18) = 0;
+    ((XyzAnimatorState *)iVar2)->unk18 = 0;
   }
   (*gExpgfxInterface)->freeSource2((u32)param_1);
   return;
@@ -943,21 +944,21 @@ void FUN_8016b228(undefined8 param_1,double param_2,double param_3,undefined8 pa
   if (uVar1 == 0) {
     iVar2 = ObjHits_GetPriorityHit(param_9,auStack_18,(int *)0x0,(uint *)0x0);
     if ((iVar2 == 0xe) || (iVar2 == 0xf)) {
-      if (*(short *)(*(int *)(iVar3 + 0x1c) + 4) != -1) {
+      if (*(short *)(((XyzAnimatorState *)iVar3)->unk1C + 4) != -1) {
         FUN_8008112c((double)lbl_803E3DF4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                      param_9,0,1,0,1,0,1,0);
-        FUN_800067e8(param_9,*(ushort *)(*(int *)(iVar3 + 0x1c) + 4),3);
+        FUN_800067e8(param_9,*(ushort *)(((XyzAnimatorState *)iVar3)->unk1C + 4),3);
       }
       ObjHits_DisableObject(param_9);
       FUN_8007f718((float *)(iVar3 + 0x20),0x78);
     }
     if ((*(ObjHitsPriorityState **)&((GameObject *)param_9)->anim.hitReactState)->contactFlags != 0) {
       ObjHits_DisableObject(param_9);
-      *(float *)(iVar3 + 8) = lbl_803E3DF8;
-      if (*(short *)(*(int *)(iVar3 + 0x1c) + 4) != -1) {
+      *(float *)&((XyzAnimatorState *)iVar3)->unk8 = lbl_803E3DF8;
+      if (*(short *)(((XyzAnimatorState *)iVar3)->unk1C + 4) != -1) {
         FUN_8008112c((double)lbl_803E3DF4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                      param_9,0,1,0,1,0,1,0);
-        FUN_800067e8(param_9,*(ushort *)(*(int *)(iVar3 + 0x1c) + 4),3);
+        FUN_800067e8(param_9,*(ushort *)(((XyzAnimatorState *)iVar3)->unk1C + 4),3);
       }
       FUN_8007f718((float *)(iVar3 + 0x20),0x78);
     }
@@ -1391,9 +1392,9 @@ extern f32 lbl_803E3148;
 void pollen_init(int *obj) {
     s16 *state = ((GameObject *)obj)->extra;
     state[0] = (s16)randomGetRange(-0x8000, 0x7fff);
-    *(f32 *)((char *)state + 0xc) = lbl_803E3148 * (f32)(s32)randomGetRange(0xfa0, 0x1388);
+    *(f32 *)&((XyzAnimatorState *)state)->unkC = lbl_803E3148 * (f32)(s32)randomGetRange(0xfa0, 0x1388);
     *(s16 *)((char *)state + 4) = (s16)randomGetRange(-0x8000, 0x7fff);
-    *(f32 *)((char *)state + 8) = lbl_803E313C;
+    *(f32 *)&((XyzAnimatorState *)state)->unk8 = lbl_803E313C;
     *(s16 *)((char *)state + 6) = (s16)randomGetRange(0xe6, 0x1f4);
     *(s16 *)((char *)state + 0x10) = 0;
     *(s16 *)((char *)state + 0x12) = 0;

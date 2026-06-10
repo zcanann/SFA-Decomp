@@ -1,3 +1,4 @@
+#include "main/dll/groundanimator_state.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/groundAnimator.h"
 #include "main/effect_interfaces.h"
@@ -626,8 +627,8 @@ void FUN_8017db40(uint param_1,int param_2)
 LAB_8017de10:
   *(undefined2 *)(iVar4 + 0x38) = uVar1;
   *(undefined *)(iVar4 + 0x3a) = 4;
-  *(float *)(iVar4 + 8) = lbl_803DC074;
-  *(float *)(iVar4 + 0xc) = lbl_803DC074;
+  *(float *)&((GroundAnimatorState *)iVar4)->linkedObj = lbl_803DC074;
+  ((GroundAnimatorState *)iVar4)->sinkDepth = lbl_803DC074;
   uVar2 = randomGetRange(0xffff8000,0x7fff);
   *(short *)(iVar4 + 0x48) = (short)uVar2;
   uVar2 = randomGetRange(0xffff8000,0x7fff);

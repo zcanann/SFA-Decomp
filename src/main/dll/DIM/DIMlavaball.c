@@ -1,3 +1,5 @@
+#include "main/dll/MMP/mmp_asteroid_re_state.h"
+#include "main/dll/MMP/mmp_moonrock_state.h"
 #include "ghidra_import.h"
 #include "main/effect_interfaces.h"
 #include "main/expgfx.h"
@@ -24,20 +26,6 @@ STATIC_ASSERT(sizeof(MoonSeedBushState) == 0x2);
  * Per-object extra state for the mmp asteroid set piece
  * (mmp_asteroid_re_getExtraSize == 0x1C).
  */
-typedef struct MmpAsteroidReState {
-    u8 eventFlags; /* 1/8/0x10/0x20 fx bursts, 0x40 periodic fx, 0x80 seq-ran latch */
-    u8 phase; /* gamebit 0x87B value 0..3 */
-    u8 intensity; /* gamebit 0x88C / 0xD52; scales rise height + sfx volume */
-    u8 pad03;
-    f32 stateTimer; /* counts down; clears gamebit 0x88B on expiry */
-    f32 periodicFxTimer; /* rand(10,60); flag 0x40 fx cadence */
-    f32 baseY; /* obj Y at init */
-    f32 baseY2;
-    u16 bobPhase; /* angle accumulators for the float wobble */
-    u16 rollPhase;
-    u16 pitchPhase;
-    u8 pad1A[2];
-} MmpAsteroidReState;
 
 STATIC_ASSERT(sizeof(MmpAsteroidReState) == 0x1C);
 
@@ -69,22 +57,6 @@ STATIC_ASSERT(sizeof(MmpTrenchfxState) == 0x30);
  * (mmp_moonrock_getExtraSize == 0x30). The leading bytes belong to the
  * gCarryableInterface record (the state pointer itself is handed to it).
  */
-typedef struct MmpMoonrockState {
-    u8 carryable[0xC];
-    f32 baseY; /* lava base height */
-    f32 baseY2;
-    f32 respawnTimer; /* counts down while flag 0x200 (sunk/reset) */
-    f32 homeX; /* spawn position for the reset */
-    f32 homeY;
-    f32 homeZ;
-    u16 flags; /* 1 drop, 2 armed, 4 held?, 8 grab-frame, 0x10/0x20 icon kind, 0x40 thrown, 0x200 respawning, 0x400 placed */
-    u16 bobPhase; /* angle accumulators for the float wobble */
-    u16 rollPhase;
-    u16 pitchPhase;
-    u8 pad2C[2];
-    u8 kind; /* gamebit-derived 0..6 */
-    u8 raised; /* gamebit 0x894 while placed */
-} MmpMoonrockState;
 
 STATIC_ASSERT(sizeof(MmpMoonrockState) == 0x30);
 
