@@ -71,8 +71,8 @@ void vfplevelcontrol_update(int obj) {
             GameBit_Get(0x9b2) != 0u) {
             GameBit_Set(0x4ec, 1);
         }
-        if (GameBit_Get(0xd6d) != 0 && GameBit_Get(0xd6e) != 0 &&
-            GameBit_Get(0xd6f) != 0 && GameBit_Get(0xd70) != 0) {
+        if (GameBit_Get(0xd6d) != 0u && GameBit_Get(0xd6e) != 0u &&
+            GameBit_Get(0xd6f) != 0u && GameBit_Get(0xd70) != 0u) {
             GameBit_Set(0xcfb, 1);
         }
         break;
