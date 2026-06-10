@@ -426,7 +426,7 @@ int curves_distanceToNearestOfType16(f32 x,f32 y,f32 z,int param_4)
   for (i = 0; i < objectCount; i = i + 1) {
     obj = objects[i];
     if ((((((GameObject *)obj)->anim.classId == 0x2c) && (*(char *)(obj + 0xac) != param_4)) &&
-        (curve = *(RomCurveDef **)&((GameObject *)obj)->anim.placementData, curve != NULL)) &&
+        (curve = (RomCurveDef *)((GameObject *)obj)->anim.placementData, curve != NULL)) &&
        ((curve->type == 0x16 &&
          ((dx = ((GameObject *)obj)->anim.worldPosX - x,
          dy = ((GameObject *)obj)->anim.worldPosY - y,
@@ -3907,7 +3907,7 @@ int pushable_savePos(int obj)
   for (i = 0; i < SAVEGAME_OBJECT_POSITION_COUNT; i++) {
     position = (CurvesSaveGameObjectPosition *)(lbl_803A32A8 + SAVEGAME_OBJECT_POSITION_OFFSET +
                                                 i * sizeof(CurvesSaveGameObjectPosition));
-    objectId = *(u32 *)(*(u32 *)&((GameObject *)obj)->anim.placementData + 0x14);
+    objectId = ((RomCurveDef *)((GameObject *)obj)->anim.placementData)->id;
     if (objectId == position->objectId) {
       if ((((GameObject *)obj)->anim.localPosX == position->x) && (((GameObject *)obj)->anim.localPosY == position->y) &&
           (((GameObject *)obj)->anim.localPosZ == position->z)) {
