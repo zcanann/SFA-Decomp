@@ -100,19 +100,21 @@ int sc_totempuzzle_checkSolvedSequence(SCTotemPuzzleObject *obj, SCTotemPuzzleSt
     }
 
     if (solvedThisObject != 0) {
+        extern void objfx_spawnArcedBurst(SCTotemPuzzleObject *obj, int enabled, f32 radius, int particleKind,
+                                          int particleCount, int lifetime, f32 speedA, f32 speedB, f32 scale,
+                                          SCTotemPuzzleParticleBox *box, int flags);
+        extern int *objFindTexture(SCTotemPuzzleObject *obj, int textureIndex, int materialIndex);
         particleBox.x = lbl_803E55F4;
         particleBox.y = lbl_803E55F8;
         particleBox.z = lbl_803E55F4;
         particleBox.alpha = lbl_803E55FC;
 
-        objectIndex = 20;
-        while (objectIndex != 0) {
-            objfx_spawnArcedBurst((int)obj, 7, lbl_803E5600, 5, 7, 100, lbl_803E5604,
-                                   lbl_803E5604, lbl_803E5608, &particleBox, 0);
-            objectIndex--;
+        for (objectIndex = 20; objectIndex != 0; objectIndex--) {
+            objfx_spawnArcedBurst(obj, 7, lbl_803E5600, 5, 7, 100, lbl_803E5604,
+                                   *(f32 *)&lbl_803E5604, lbl_803E5608, &particleBox, 0);
         }
 
-        objects = objFindTexture((int)obj, 0, 0);
+        objects = objFindTexture(obj, 0, 0);
         if (objects != NULL) {
             *objects = 0x100;
         }
