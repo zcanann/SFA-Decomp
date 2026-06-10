@@ -35,7 +35,7 @@ extern ObjectDescriptor12 gLFXEmitterObjDescriptor;
 
 typedef struct AreaFxEmitObject AreaFxEmitObject;
 typedef struct LfxEmitterObject LfxEmitterObject;
-typedef int (*AreaFxEmitSeqCallback)(AreaFxEmitObject *obj, int unused, u8 *events);
+typedef int (*AreaFxEmitSeqCallback)(AreaFxEmitObject *obj, int unused, ObjAnimUpdateState *animUpdate);
 
 typedef struct AreaFxEmitPlacement {
     ObjPlacement base;

@@ -1175,11 +1175,11 @@ void areafxemit_emitEffect(AreaFxEmitObject *obj)
     }
 }
 
-int areafxemit_SeqFn(AreaFxEmitObject *obj, int unused, u8 *events)
+int areafxemit_SeqFn(AreaFxEmitObject *obj, int unused, ObjAnimUpdateState *animUpdate)
 {
     u8 i;
-    for (i = 0; i < events[139]; i++) {
-        switch ((s32)events[i + 129]) {
+    for (i = 0; i < animUpdate->eventCount; i++) {
+        switch ((s32)animUpdate->eventIds[i]) {
         case 1:
             areafxemit_emitEffect(obj);
             break;
