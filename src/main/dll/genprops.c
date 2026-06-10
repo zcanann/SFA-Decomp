@@ -4490,10 +4490,10 @@ int siderepel_getExtraSize(void) { return 0x1; }
 extern void gcbaddieshield_update(int *obj);
 extern void animatedobj_free();
 extern void animatedobj_render(int *obj, int p2, int p3, int p4, int p5, s8 visible);
-extern void animatedobj_update();
+extern void animatedobj_update(int *obj);
 extern void animatedobj_init();
-extern void dim2roofrub_render();
-extern void dim2roofrub_update();
+extern void dim2roofrub_render(int *obj, int p2, int p3, int p4, int p5);
+extern void dim2roofrub_update(int *obj);
 extern void dim2roofrub_init();
 extern void depthoffieldpoint_update();
 extern void depthoffieldpoint_init();
@@ -5903,7 +5903,7 @@ extern f32 lbl_803E322C;
 #pragma opt_loop_invariants off
 void animatedobj_update(int *obj)
 {
-    u8 *state = ((GameObject *)obj)->extra;
+    ObjSeqState *seq = ((GameObject *)obj)->extra;
     int *params = *(int **)&((GameObject *)obj)->anim.placementData;
 
     if (params != NULL && *(s16 *)((char *)params + 0x18) != -1) {
@@ -5911,7 +5911,7 @@ void animatedobj_update(int *obj)
         int count;
         res = (*gObjectTriggerInterface)->update((u8 *)obj, timeDelta);
         if (res != 0 && ((GameObject *)obj)->unkB4 == -2) {
-            int slot8 = *(s8 *)(state + 0x57);
+            int slot8 = (s8)seq->slot;
             int *match = NULL;
             int *list;
             int cnt;
@@ -5925,8 +5925,8 @@ void animatedobj_update(int *obj)
                     match = other;
                 }
                 if (*(s16 *)((char *)other + 0xb4) == -2 && *(s16 *)((char *)other + 0x44) == 0x10) {
-                    u8 *st2 = *(u8 **)((char *)other + 0xb8);
-                    if (slot == *(s8 *)(st2 + 0x57)) {
+                    ObjSeqState *otherSeq = *(ObjSeqState **)((char *)other + 0xb8);
+                    if (slot == (s8)otherSeq->slot) {
                         cnt++;
                     }
                 }
@@ -5942,8 +5942,8 @@ void animatedobj_update(int *obj)
         }
         if (((GameObject *)obj)->anim.seqId == 0x774) {
             int i;
-            for (i = 0; i < *(u8 *)(state + 0x8b); i++) {
-                int b = *(u8 *)(state + i + 0x81);
+            for (i = 0; i < seq->eventCount; i++) {
+                int b = seq->eventIds[i];
                 if (b == 0xb) {
                     if (((GameObject *)obj)->unkEB != 0) {
                         Obj_FreeObject(((GameObject *)obj)->unkC8);
@@ -5993,8 +5993,8 @@ void animatedobj_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
     f32 mD[12];
     f32 mFinal[12];
 
-    u8 *state = ((GameObject *)obj)->extra;
-    if ((state[0x7f] & 4) != 0) {
+    ObjSeqState *seq = ((GameObject *)obj)->extra;
+    if ((seq->unk7F & 4) != 0) {
         int *prm;
         s16 *cam;
         Obj_BuildWorldTransformMatrix(obj, mWorld, 0);
@@ -6130,7 +6130,7 @@ void dim2roofrub_render(int *obj, int p2, int p3, int p4, int p5)
     f32 mFinal[12];
 
     dim2roofrub_spawnEffects(obj);
-    if ((*(u8 *)(*(u8 **)&((GameObject *)obj)->extra + 0x7f) & 4) != 0) {
+    if ((((ObjSeqState *)((GameObject *)obj)->extra)->unk7F & 4) != 0) {
         int *prm;
         s16 *cam;
         Obj_BuildWorldTransformMatrix(obj, mWorld, 0);
@@ -6170,15 +6170,15 @@ typedef struct Dim2PartVec {
 
 void dim2roofrub_update(int *obj)
 {
-    u8 *state = ((GameObject *)obj)->extra;
+    ObjSeqState *seq = ((GameObject *)obj)->extra;
     int *params = *(int **)&((GameObject *)obj)->anim.placementData;
 
     if (params != NULL && *(s16 *)((char *)params + 0x18) != -1) {
         Dim2PartVec v;
         int count;
         int res;
-        for (res = 0; res < *(u8 *)(state + 0x8b); res++) {
-            int b = *(u8 *)(state + res + 0x81);
+        for (res = 0; res < seq->eventCount; res++) {
+            int b = seq->eventIds[res];
             switch (b) {
             case 1:
                 ((GameObject *)obj)->unkF8 ^= 1;
@@ -6203,7 +6203,7 @@ void dim2roofrub_update(int *obj)
         }
         res = (*gObjectTriggerInterface)->update((u8 *)obj, timeDelta);
         if (res != 0 && ((GameObject *)obj)->unkB4 == -2) {
-            int slot8 = *(s8 *)(state + 0x57);
+            int slot8 = (s8)seq->slot;
             int *match = NULL;
             int *list;
             int cnt;
@@ -6216,8 +6216,8 @@ void dim2roofrub_update(int *obj)
                     match = other;
                 }
                 if (*(s16 *)((char *)other + 0xb4) == -2 && *(s16 *)((char *)other + 0x44) == 0x10) {
-                    u8 *st2 = *(u8 **)((char *)other + 0xb8);
-                    if (slot == *(s8 *)(st2 + 0x57)) {
+                    ObjSeqState *otherSeq = *(ObjSeqState **)((char *)other + 0xb8);
+                    if (slot == (s8)otherSeq->slot) {
                         cnt++;
                     }
                 }
