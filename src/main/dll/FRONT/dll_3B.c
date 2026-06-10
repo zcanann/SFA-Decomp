@@ -172,12 +172,13 @@ void AttractMovieAudio_Decode(void *readBufferArg)
     audioBuf = received;
   }
   for (track = 0; track < lbl_803A5D60.compInfo.mNumComponents; track++) {
-    if (lbl_803A5D60.compInfo.mFrameComp[track] == 1) {
+    switch (lbl_803A5D60.compInfo.mFrameComp[track]) {
+    case 1:
       audioBuf->validSample = THPAudioDecode(audioBuf->buffer,audioFrame,0);
       audioBuf->curPtr = audioBuf->buffer;
       audioBuf->frameNumber = readBuffer->frameNumber;
       OSSendMessage(&lbl_803A4460,audioBuf,1);
-    } else {
+      break;
     }
     audioFrame += *audioFrameSizes;
     audioFrameSizes++;
