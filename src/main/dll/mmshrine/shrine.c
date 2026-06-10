@@ -119,7 +119,7 @@ extern u8 lbl_803DB411;
 
 void mmsh_scales_update(int param_1)
 {
-  char typeId;
+  int typeId;
   int *list;
   int obj;
   int found;
@@ -131,7 +131,7 @@ void mmsh_scales_update(int param_1)
   if ((((GameObject *)param_1)->anim.placementData != NULL) && (*(short *)(*(int *)&((GameObject *)param_1)->anim.placementData + 0x18) != -1)) {
     i = (*gObjectTriggerInterface)->update((u8 *)param_1, (f32)(u32)lbl_803DB411);
     if ((i != 0) && (((GameObject *)param_1)->unkB4 == -2)) {
-      typeId = *(char *)(*(int *)&((GameObject *)param_1)->extra + 0x57);
+      typeId = *(s8 *)(*(int *)&((GameObject *)param_1)->extra + 0x57);
       found = 0;
       list = (int *)ObjList_GetObjects(&i, &count);
       n = 0;
