@@ -254,8 +254,7 @@ int fn_802239A4(int obj, int ai)
 
     if (*(s8 *)(ai + 0x27b) != 0) {
         ((EarthwalkerState *)state)->flagsAC0 &= ~1;
-        (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, ai, 3);
-        result = 0;
+        result = (*(int (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, ai, 3);
     } else if (*(s8 *)(ai + 0x346) != 0) {
         result = 3;
     } else {
