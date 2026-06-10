@@ -10,6 +10,30 @@
 #include "main/objseq.h"
 #include "main/dll/CF/CFBaby.h"
 
+typedef struct ColdwatercontrolState {
+    u8 pad0[0x8 - 0x0];
+    u8 unk8;
+    u8 unk9;
+    u8 padA[0x10 - 0xA];
+} ColdwatercontrolState;
+
+
+typedef struct InfopointState {
+    u8 pad0[0x8 - 0x0];
+    u8 unk8;
+    u8 unk9;
+    u8 padA[0x20 - 0xA];
+} InfopointState;
+
+
+typedef struct FlammablevineState {
+    u8 pad0[0x8 - 0x0];
+    u8 unk8;
+    u8 unk9;
+    u8 padA[0x14 - 0xA];
+} FlammablevineState;
+
+
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068c4();
 extern undefined4 FUN_80006ba8();

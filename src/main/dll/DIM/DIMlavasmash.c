@@ -5,6 +5,13 @@
 #include "main/dll/DIM/DIMlavasmash.h"
 #include "main/dll/DIM/dimlogfire.h"
 
+typedef struct DimsnowballState {
+    u8 pad0[0xC - 0x0];
+    s8 unkC;
+    u8 padD[0x10 - 0xD];
+} DimsnowballState;
+
+
 
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006824();
@@ -451,13 +458,13 @@ void dimsnowball_update(int obj)
     z[3] = (f32)lbl_80323BC0[idx[3] + 2] * lbl_803E484C;
     dy1 = y[1] - y[0];
     dy2 = y[2] - y[3];
-    if (dy2 <= lbl_803E4850 && dy1 <= lbl_803E4850 && *(s8 *)((u8 *)state + 0xc) <= 0) {
+    if (dy2 <= lbl_803E4850 && dy1 <= lbl_803E4850 && ((DimsnowballState *)state)->unkC <= 0) {
         sqrtf(((GameObject *)obj)->anim.velocityZ * ((GameObject *)obj)->anim.velocityZ +
               (((GameObject *)obj)->anim.velocityX * ((GameObject *)obj)->anim.velocityX + ((GameObject *)obj)->anim.velocityY * ((GameObject *)obj)->anim.velocityY));
         if ((((GameObject *)player)->objectFlags & 0x1000) == 0) {
             Sfx_PlayFromObject(obj, SFXfoot_run_jingle2);
         }
-        *(s8 *)((u8 *)state + 0xc) = 0x1e;
+        ((DimsnowballState *)state)->unkC = 0x1e;
     }
     ((GameObject *)obj)->anim.localPosX = lbl_803E4850 * (x[2] - x[1]) + x[1];
     ((GameObject *)obj)->anim.localPosY = lbl_803E4850 * (y[2] - y[1]) + y[1];
@@ -469,8 +476,8 @@ void dimsnowball_update(int obj)
     ((GameObject *)obj)->anim.velocityY = oneOverTimeDelta * (((GameObject *)obj)->anim.localPosY - ((GameObject *)obj)->anim.previousLocalPosY);
     ((GameObject *)obj)->anim.velocityZ = oneOverTimeDelta * (((GameObject *)obj)->anim.localPosZ - ((GameObject *)obj)->anim.previousLocalPosZ);
     state[2] = state[2] + frames;
-    if (*(s8 *)((u8 *)state + 0xc) > 0) {
-        *(s8 *)((u8 *)state + 0xc) -= frames;
+    if (((DimsnowballState *)state)->unkC > 0) {
+        ((DimsnowballState *)state)->unkC -= frames;
     }
     v24 = ((GameObject *)obj)->anim.velocityX;
     ((GameObject *)obj)->anim.rotY = (int)-(lbl_803E4854 * -((GameObject *)obj)->anim.velocityZ - (f32)((GameObject *)obj)->anim.rotY);

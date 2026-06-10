@@ -2,6 +2,20 @@
 #include "main/obj_placement.h"
 #include "main/game_object.h"
 
+typedef struct DrakordThornbushState {
+    s32 unk0;
+    u8 pad4[0x8 - 0x4];
+    s32 unk8;
+    f32 unkC;
+    u8 pad10[0x64 - 0x10];
+    s32 unk64;
+    f32 unk68;
+    s32 unk6C;
+    f32 unk70;
+    s32 unk74;
+} DrakordThornbushState;
+
+
 /*
  * Function: drakord_thornbush_getExtraSize
  * EN v1.0 Address: 0x8020BAB4
@@ -48,8 +62,8 @@ void drakord_thornbush_free(int obj)
     if (((GameObject *)obj)->anim.seqId == 0x709) {
         ((void (*)(int, int, int, f32, int))fn_80221978)(obj, inner + 0x14, 3, lbl_803E6588, inner + 0x64);
     }
-    if (*(void **)((char *)inner + 0x64) != NULL) {
-        ModelLightStruct_free(*(int *)((char *)inner + 0x64));
+    if (*(void **)&((DrakordThornbushState *)inner)->unk64 != NULL) {
+        ModelLightStruct_free(((DrakordThornbushState *)inner)->unk64);
     }
 }
 
@@ -58,7 +72,7 @@ void drakord_thornbush_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
     int inner = *(int *)&((GameObject *)p1)->extra;
     f32 v;
     if (((GameObject *)p1)->anim.seqId == 0x709) {
-        v = *(f32 *)((char *)inner + 0x68);
+        v = ((DrakordThornbushState *)inner)->unk68;
         if (v < lbl_803E6590) {
             v = lbl_803E658C;
         }
@@ -73,9 +87,9 @@ void drakord_thornbush_update(int obj)
     int setup = *(int *)&((GameObject *)obj)->anim.placementData;
     int s2;
     if (fn_80080150((int)((char *)inner + 0xc)) != 0) {
-        if (*(f32 *)((char *)inner + 0xc) < (f32)(s32)*(s16 *)((char *)setup + 0x1c)) {
+        if (((DrakordThornbushState *)inner)->unkC < (f32)(s32)*(s16 *)((char *)setup + 0x1c)) {
             ObjHits_EnableObject(obj);
-            ObjHitbox_SetSphereRadius(obj, (int)(lbl_803E65A8 + (f32)(s32)*(s16 *)((char *)setup + 0x1c) - *(f32 *)((char *)inner + 0xc)));
+            ObjHitbox_SetSphereRadius(obj, (int)(lbl_803E65A8 + (f32)(s32)*(s16 *)((char *)setup + 0x1c) - ((DrakordThornbushState *)inner)->unkC));
         }
         if (timerCountDown((f32 *)((char *)inner + 0xc)) != 0) {
             ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
@@ -105,17 +119,17 @@ void drakord_thornbush_update(int obj)
             }
             break;
         }
-        if (*(int *)((char *)inner + 0) == 0) {
+        if (((DrakordThornbushState *)inner)->unk0 == 0) {
             s2 = *(int *)&((GameObject *)obj)->anim.placementData;
             ObjHits_EnableObject(obj);
-            *(int *)((char *)inner + 0) = *(u8 *)((char *)s2 + 0x19);
-            ObjHitbox_SetSphereRadius(obj, (s16)*(int *)((char *)inner + 0x74));
+            ((DrakordThornbushState *)inner)->unk0 = *(u8 *)((char *)s2 + 0x19);
+            ObjHitbox_SetSphereRadius(obj, (s16)((DrakordThornbushState *)inner)->unk74);
         }
         if (((GameObject *)obj)->anim.seqId == 0x709) {
-            if (*(f32 *)((char *)inner + 0x68) < lbl_803E658C) {
-                *(f32 *)((char *)inner + 0x68) = lbl_803E65AC * (f32)(u32)framesThisStep + *(f32 *)((char *)inner + 0x68);
+            if (((DrakordThornbushState *)inner)->unk68 < lbl_803E658C) {
+                ((DrakordThornbushState *)inner)->unk68 = lbl_803E65AC * (f32)(u32)framesThisStep + ((DrakordThornbushState *)inner)->unk68;
                 ((GameObject *)obj)->anim.rootMotionScale =
-                    *(f32 *)((char *)inner + 0x68) * (*(f32 *)((char *)*(int *)&((GameObject *)obj)->anim.modelInstance + 4) * (f32)(s32)*(s16 *)((char *)setup + 0x1c)) / lbl_803E65B0;
+                    ((DrakordThornbushState *)inner)->unk68 * (*(f32 *)((char *)*(int *)&((GameObject *)obj)->anim.modelInstance + 4) * (f32)(s32)*(s16 *)((char *)setup + 0x1c)) / lbl_803E65B0;
             }
         }
     }
@@ -132,35 +146,35 @@ void drakord_thornbush_hitDetect(int obj)
     int flag;
     int hit;
     int setup;
-    if (*(int *)((char *)inner + 0) != 0) {
+    if (((DrakordThornbushState *)inner)->unk0 != 0) {
         flag = timerCountDown((f32 *)((char *)inner + 0x10));
         hit = ObjHits_GetPriorityHitWithPosition(obj, &hitObj, 0, &pC, &v0, &v1, &v2);
         if (hit != 0) {
             if (*(s16 *)((char *)hitObj + 0x46) != 0x35f &&
-                *(void **)((char *)inner + 8) != (void *)hitObj &&
-                arrayIndexOf(*(int *)((char *)inner + 0x6c), 2) != -1) {
-                *(int *)((char *)inner + 8) = hitObj;
+                *(void **)&((DrakordThornbushState *)inner)->unk8 != (void *)hitObj &&
+                arrayIndexOf(((DrakordThornbushState *)inner)->unk6C, 2) != -1) {
+                ((DrakordThornbushState *)inner)->unk8 = hitObj;
                 Obj_SpawnHitLightAndFade(obj, &v0, lbl_803E6598);
-                *(int *)((char *)inner + 0) -= pC;
-                if (*(int *)((char *)inner + 0) <= 0) {
+                ((DrakordThornbushState *)inner)->unk0 -= pC;
+                if (((DrakordThornbushState *)inner)->unk0 <= 0) {
                     flag = 1;
                 } else {
                     Sfx_PlayFromObject(obj, 0x496);
                 }
             }
         } else {
-            *(int *)((char *)inner + 8) = 0;
+            ((DrakordThornbushState *)inner)->unk8 = 0;
         }
         if (flag != 0) {
             setup = *(int *)&((GameObject *)obj)->anim.placementData;
-            *(int *)((char *)inner + 0) = 0;
+            ((DrakordThornbushState *)inner)->unk0 = 0;
             switch (((GameObject *)obj)->anim.seqId) {
             case 0x727:
                 spawnExplosion((int *)obj, (f32)(s32)*(s16 *)((char *)setup + 0x1c), 1, 0, 0, 0, 0, 1, 1);
                 break;
             case 0x709:
                 Sfx_PlayFromObject(obj, 0x2f9);
-                spawnExplosion((int *)obj, (f32)(s32)(*(int *)((char *)inner + 0x74) << 1), 1, 1, 1, 1, 0, 1, 0);
+                spawnExplosion((int *)obj, (f32)(s32)(((DrakordThornbushState *)inner)->unk74 << 1), 1, 1, 1, 1, 0, 1, 0);
                 ((void (*)(int, int, int, f32, int))fn_80221978)(obj, inner + 0x14, 3, lbl_803E6588, inner + 0x64);
                 break;
             }
@@ -182,7 +196,7 @@ void drakord_thornbush_hitDetect(int obj)
 void drakord_thornbush_init(int obj, u8 *init)
 {
     int inner = *(int *)&((GameObject *)obj)->extra;
-    *(int *)((char *)inner + 0) = 0;
+    ((DrakordThornbushState *)inner)->unk0 = 0;
     ObjHits_SetTargetMask(obj, 4);
     ((GameObject *)obj)->anim.rotY = (s16)((s8)init[0x18] << 8);
     if (*(u32 *)((char *)init + 0x14) == 0xffffffff) {
@@ -190,25 +204,25 @@ void drakord_thornbush_init(int obj, u8 *init)
     }
     storeZeroToFloatParam((f32 *)((char *)inner + 0xc));
     storeZeroToFloatParam((f32 *)((char *)inner + 0x10));
-    *(int *)((char *)inner + 8) = 0;
+    ((DrakordThornbushState *)inner)->unk8 = 0;
     switch (((GameObject *)obj)->anim.seqId) {
     case 0x727:
-        *(void **)((char *)inner + 0x6c) = &lbl_803DC1A8;
+        *(void **)&((DrakordThornbushState *)inner)->unk6C = &lbl_803DC1A8;
         ObjHitbox_SetSphereRadius(obj, *(s16 *)((char *)init + 0x1c));
-        *(int *)((char *)inner + 0x74) = *(s16 *)((char *)init + 0x1c);
-        *(f32 *)((char *)inner + 0x70) = lbl_803E65C0;
+        ((DrakordThornbushState *)inner)->unk74 = *(s16 *)((char *)init + 0x1c);
+        ((DrakordThornbushState *)inner)->unk70 = lbl_803E65C0;
         ((GameObject *)obj)->anim.rootMotionScale =
             *(f32 *)((char *)*(int *)&((GameObject *)obj)->anim.modelInstance + 4) * (f32)(s32)*(s16 *)((char *)init + 0x1c) / lbl_803E6590;
         break;
     case 0x709:
-        *(void **)((char *)inner + 0x6c) = &lbl_803DC1A0;
+        *(void **)&((DrakordThornbushState *)inner)->unk6C = &lbl_803DC1A0;
         ((GameObject *)obj)->anim.rootMotionScale =
             *(f32 *)((char *)*(int *)&((GameObject *)obj)->anim.modelInstance + 4) * (f32)(s32)*(s16 *)((char *)init + 0x1c) / lbl_803E65C4;
         ObjHitbox_SetSphereRadius(obj, (s16)(*(s16 *)((char *)init + 0x1c) / 7));
         s16toFloat((f32 *)((char *)inner + 0x10), (int)lbl_803DC1B0);
-        *(f32 *)((char *)inner + 0x70) = lbl_803E65C8;
-        *(int *)((char *)inner + 0x74) = *(s16 *)((char *)init + 0x1c) / 5;
-        *(f32 *)((char *)inner + 0x68) = lbl_803E6594;
+        ((DrakordThornbushState *)inner)->unk70 = lbl_803E65C8;
+        ((DrakordThornbushState *)inner)->unk74 = *(s16 *)((char *)init + 0x1c) / 5;
+        ((DrakordThornbushState *)inner)->unk68 = lbl_803E6594;
         break;
     }
 }

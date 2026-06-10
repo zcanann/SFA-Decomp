@@ -5,6 +5,17 @@
 #include "main/dll/IM/IMsnowbike.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 
+typedef struct ShLevelcontrolState {
+    u8 pad0[0x5 - 0x0];
+    u8 unk5;
+    u8 pad6[0xC - 0x6];
+    f32 unkC;
+    s16 unk10;
+    s16 unk12;
+    u8 pad14[0x18 - 0x14];
+} ShLevelcontrolState;
+
+
 extern u32 GameBit_Get(u32 id);
 extern void GameBit_Set(u32 id, u32 value);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -335,16 +346,16 @@ void sh_levelcontrol_init(int obj) {
         ((GameObject *)obj)->unkF4 = 1;
     }
 
-    *(s16 *)((char *)state + 0x10) = -1;
-    *(f32 *)((char *)state + 0xC) = lbl_803E54C0;
+    ((ShLevelcontrolState *)state)->unk10 = -1;
+    ((ShLevelcontrolState *)state)->unkC = lbl_803E54C0;
 
     if (GameBit_Get(0x611) != 0) {
         *(int *)state |= 0x40;
     }
 
-    *(u8 *)((char *)state + 5) = (*gMapEventInterface)->getMode((int)((GameObject *)obj)->anim.mapEventSlot);
+    ((ShLevelcontrolState *)state)->unk5 = (*gMapEventInterface)->getMode((int)((GameObject *)obj)->anim.mapEventSlot);
 
-    *(s16 *)((char *)state + 0x12) = -1;
+    ((ShLevelcontrolState *)state)->unk12 = -1;
     Music_Trigger(34, 0);
     Music_Trigger(49, 0);
     Music_Trigger(178, 0);

@@ -10,6 +10,18 @@
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
 
+typedef struct WarpPointState {
+    u8 pad0[0x8 - 0x0];
+    f32 unk8;
+    u8 unkC;
+    u8 unkD;
+    u8 padE[0x10 - 0xE];
+    u8 unk10;
+    u8 unk11;
+    u8 pad12[0x18 - 0x12];
+} WarpPointState;
+
+
 static inline int *Transporter_GetActiveModel(void *obj) {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
     return (int *)objAnim->banks[objAnim->bankIndex];
@@ -1294,13 +1306,13 @@ void WarpPoint_init(int *obj, u8 *def) {
     ((GameObject *)obj)->animEventCallback = (void *)WarpPoint_SeqFn;
     *(s16 *)obj = (s16)((u32)def[0x18] << 8);
     state[0] = 0x1e;
-    *(f32 *)((char *)state + 8) = (f32)((s32)*(s8 *)((char *)def + 0x1e) << 2);
+    ((WarpPointState *)state)->unk8 = (f32)((s32)*(s8 *)((char *)def + 0x1e) << 2);
     state[1] = *(s16 *)((char *)def + 0x20);
     state[2] = (s16)(s32)*(s8 *)((char *)def + 0x1b);
     if (*(s8 *)((char *)def + 0x1c) != 0) {
-        *(u8 *)((char *)state + 0xc) = 0;
+        ((WarpPointState *)state)->unkC = 0;
     } else {
-        *(u8 *)((char *)state + 0xc) = 1;
+        ((WarpPointState *)state)->unkC = 1;
     }
     if (*(s8 *)((char *)def + 0x1d) == 2) {
         state[0] = 0;
@@ -1748,11 +1760,11 @@ void WarpPoint_update(int *obj) {
     if (*state < 0) {
         *state = 0;
     }
-    if (*(u8 *)(def + 0x1f) != 0 && *(u8 *)((char *)state + 0xd) == 0 && lbl_803DCEB8 > -1 &&
+    if (*(u8 *)(def + 0x1f) != 0 && ((WarpPointState *)state)->unkD == 0 && lbl_803DCEB8 > -1 &&
         lbl_803DCEB8 == *(s8 *)(def + 0x19)) {
         (*gMapEventInterface)->triggerEvent((int)(player + 0xc), *(s16 *)player,
                                                                  0, getCurMapLayer());
-        *(u8 *)((char *)state + 0xd) = 1;
+        ((WarpPointState *)state)->unkD = 1;
     }
     switch (*(s8 *)(def + 0x1d)) {
     case 0:
@@ -1761,8 +1773,8 @@ void WarpPoint_update(int *obj) {
             f32 dy = ((PushableState *)player)->scale - ((GameObject *)obj)->anim.localPosY;
             f32 dz = ((PushableState *)player)->timer_0x14 - ((GameObject *)obj)->anim.localPosZ;
             dist = sqrtf(dx * dx + dy * dy + dz * dz);
-            if (*(u8 *)((char *)state + 0xc) == 0 && *(s8 *)(def + 0x1c) != 0 &&
-                dist < *(f32 *)((char *)state + 8) &&
+            if (((WarpPointState *)state)->unkC == 0 && *(s8 *)(def + 0x1c) != 0 &&
+                dist < ((WarpPointState *)state)->unk8 &&
                 *(u32 *)&((GameObject *)player)->anim.parent == *(u32 *)&((GameObject *)obj)->anim.parent) {
                 if (((GameObject *)obj)->anim.seqId == 0x27e) {
                     GameBit_Set(0xd53, 1);
@@ -1772,12 +1784,12 @@ void WarpPoint_update(int *obj) {
                 (*gObjectTriggerInterface)->runSequence(state[2], obj, -1);
                 GameBit_Set(0xd53, 0);
                 lbl_803DCDE0 = 2;
-                *(u8 *)((char *)state + 0xc) = 1;
+                ((WarpPointState *)state)->unkC = 1;
             }
         }
         if (*(s8 *)(def + 0x1a) > -1) {
             f32 d2 = Vec_distance(&((GameObject *)obj)->anim.worldPosX, (f32 *)(player + 0x18));
-            if (d2 < *(f32 *)((char *)state + 8)) {
+            if (d2 < ((WarpPointState *)state)->unk8) {
                 warpToMap(*(s8 *)(def + 0x1a), 1);
             }
         }
@@ -1799,20 +1811,20 @@ void WarpPoint_update(int *obj) {
         break;
     }
     case 2:
-        if (lbl_803E35DC != (dist = *(f32 *)((char *)state + 8))) {
+        if (lbl_803E35DC != (dist = ((WarpPointState *)state)->unk8)) {
             f32 dx = ((GameObject *)player)->anim.worldPosX - ((GameObject *)obj)->anim.worldPosX;
             f32 dy = ((PushableState *)player)->probeLocal[0].y - ((GameObject *)obj)->anim.worldPosY;
             f32 dz = ((PushableState *)player)->probeLocal[0].z - ((GameObject *)obj)->anim.worldPosZ;
             dist = sqrtf(dx * dx + dy * dy + dz * dz);
         }
-        if (GameBit_Get(state[1]) != 0 && *(u8 *)((char *)state + 0xc) == 0 &&
-            *(s8 *)(def + 0x1c) != 0 && dist <= *(f32 *)((char *)state + 8) &&
+        if (GameBit_Get(state[1]) != 0 && ((WarpPointState *)state)->unkC == 0 &&
+            *(s8 *)(def + 0x1c) != 0 && dist <= ((WarpPointState *)state)->unk8 &&
             *(u32 *)&((GameObject *)player)->anim.parent == *(u32 *)&((GameObject *)obj)->anim.parent) {
             (*gObjectTriggerInterface)->runSequence(state[2], obj, -1);
-            *(u8 *)((char *)state + 0xc) = 1;
+            ((WarpPointState *)state)->unkC = 1;
         } else {
-            if (*(u8 *)((char *)state + 0xc) == 1 && GameBit_Get(state[1]) != 0 && *state == 0 &&
-                dist <= *(f32 *)((char *)state + 8) && *(s8 *)(def + 0x1a) > -1) {
+            if (((WarpPointState *)state)->unkC == 1 && GameBit_Get(state[1]) != 0 && *state == 0 &&
+                dist <= ((WarpPointState *)state)->unk8 && *(s8 *)(def + 0x1a) > -1) {
                 GameBit_Set(state[1], 0);
                 warpToMap(*(s8 *)(def + 0x1a), 0);
             }
@@ -1823,30 +1835,30 @@ void WarpPoint_update(int *obj) {
         f32 dy = ((PushableState *)player)->scale - ((GameObject *)obj)->anim.localPosY;
         f32 dz = ((PushableState *)player)->timer_0x14 - ((GameObject *)obj)->anim.localPosZ;
         dist = sqrtf(dx * dx + dy * dy + dz * dz);
-        if (GameBit_Get(state[1]) != 0 && *(u8 *)((char *)state + 0xc) == 0 &&
-            *(s8 *)(def + 0x1c) != 0 && dist < *(f32 *)((char *)state + 8) &&
+        if (GameBit_Get(state[1]) != 0 && ((WarpPointState *)state)->unkC == 0 &&
+            *(s8 *)(def + 0x1c) != 0 && dist < ((WarpPointState *)state)->unk8 &&
             *(u32 *)&((GameObject *)player)->anim.parent == *(u32 *)&((GameObject *)obj)->anim.parent) {
             GameBit_Set(state[1], 0);
             (*gObjectTriggerInterface)->runSequence(state[2], obj, -1);
-            *(u8 *)((char *)state + 0xc) = 1;
+            ((WarpPointState *)state)->unkC = 1;
         }
         break;
     }
     case 4:
-        if (lbl_803E35DC != (dist = *(f32 *)((char *)state + 8))) {
+        if (lbl_803E35DC != (dist = ((WarpPointState *)state)->unk8)) {
             f32 dx = ((GameObject *)player)->anim.worldPosX - ((GameObject *)obj)->anim.worldPosX;
             f32 dy = ((PushableState *)player)->probeLocal[0].y - ((GameObject *)obj)->anim.worldPosY;
             f32 dz = ((PushableState *)player)->probeLocal[0].z - ((GameObject *)obj)->anim.worldPosZ;
             dist = sqrtf(dx * dx + dy * dy + dz * dz);
         }
-        if (lbl_803DCEB8 > -1 && *(u8 *)((char *)state + 0xc) == 0 && *(s8 *)(def + 0x1c) != 0 &&
-            dist < *(f32 *)((char *)state + 8) &&
+        if (lbl_803DCEB8 > -1 && ((WarpPointState *)state)->unkC == 0 && *(s8 *)(def + 0x1c) != 0 &&
+            dist < ((WarpPointState *)state)->unk8 &&
             *(u32 *)&((GameObject *)player)->anim.parent == *(u32 *)&((GameObject *)obj)->anim.parent) {
             (*gObjectTriggerInterface)->runSequence(state[2], obj, -1);
             lbl_803DCDE0 = 2;
-            *(u8 *)((char *)state + 0xc) = 1;
+            ((WarpPointState *)state)->unkC = 1;
         }
-        if (GameBit_Get(state[1]) != 0 && *state == 0 && dist <= *(f32 *)((char *)state + 8) &&
+        if (GameBit_Get(state[1]) != 0 && *state == 0 && dist <= ((WarpPointState *)state)->unk8 &&
             *(s8 *)(def + 0x1a) > -1) {
             GameBit_Set(state[1], 0);
             warpToMap(*(s8 *)(def + 0x1a), 1);

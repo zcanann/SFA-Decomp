@@ -7,6 +7,17 @@
 #include "main/objhits_types.h"
 #include "main/game_object.h"
 
+typedef struct PollenfragmentState {
+    u8 pad0[0x4 - 0x0];
+    s16 unk4;
+    s16 unk6;
+    u8 pad8[0x10 - 0x8];
+    s16 unk10;
+    s16 unk12;
+    u8 pad14[0x28 - 0x14];
+} PollenfragmentState;
+
+
 extern undefined4 FUN_800067e8();
 extern undefined8 FUN_8000680c();
 extern undefined4 FUN_80006814();

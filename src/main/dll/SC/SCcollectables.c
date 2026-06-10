@@ -6,6 +6,13 @@
 #include "main/objanim_update.h"
 #include "main/objfx.h"
 
+typedef struct WarpstoneUpdateMenuAnimObjState {
+    u8 pad0[0x8 - 0x0];
+    u8 unk8;
+    u8 pad9[0x10 - 0x9];
+} WarpstoneUpdateMenuAnimObjState;
+
+
 extern undefined4 FUN_80006820();
 extern undefined4 FUN_80006824();
 extern undefined8 FUN_80006bb4();
@@ -323,11 +330,11 @@ int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
             break;
 
         case 3:
-            *(u8 *)(state + 8) = 0;
+            ((WarpstoneUpdateMenuAnimObjState *)state)->unk8 = 0;
             break;
 
         case 4:
-            *(u8 *)(state + 8) = 1;
+            ((WarpstoneUpdateMenuAnimObjState *)state)->unk8 = 1;
             break;
 
         case 6:

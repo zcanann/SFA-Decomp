@@ -4,6 +4,13 @@
 #include "main/game_object.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 
+typedef struct WmlevelcontrolState {
+    u8 pad0[0x4 - 0x0];
+    s16 unk4;
+    s16 unk6;
+} WmlevelcontrolState;
+
+
 extern undefined4 FUN_800067c0();
 extern undefined4 FUN_80006c88();
 extern undefined8 FUN_80017484();
@@ -373,7 +380,7 @@ void wmlevelcontrol_init(int obj)
     unlockLevel(mapGetDirIdx(0xb), 0, 0);
     state = ((GameObject *)obj)->extra;
     *((u8 *)state + 0xb) = 0;
-    *(s16 *)((char *)state + 6) = 0x1e;
+    ((WmlevelcontrolState *)state)->unk6 = 0x1e;
     *state = lbl_803E5E90;
     *(int *)(state + 4) = 0;
     lockLevel(0xf, 0);
@@ -403,7 +410,7 @@ void wmlevelcontrol_init(int obj)
         GameBit_Set(0xa7f, 1);
         GameBit_Set(0xf43, 0);
         GameBit_Set(0xf44, 1);
-        *(s16 *)((char *)state + 4) = -1;
+        ((WmlevelcontrolState *)state)->unk4 = -1;
         break;
     case 5:
         GameBit_Set(0xd1b, 1);
@@ -426,7 +433,7 @@ void wmlevelcontrol_init(int obj)
     case 7:
         *(s16 *)(state + 2) = 700;
         *((u8 *)state + 0xa) = 0x1e;
-        *(s16 *)((char *)state + 6) = *((u8 *)state + 0xa);
+        ((WmlevelcontrolState *)state)->unk6 = *((u8 *)state + 0xa);
         *((u8 *)state + 0x14) = 1;
         break;
     }

@@ -3,6 +3,20 @@
 #include "main/game_object.h"
 #include "main/dll/MMP/mmp_levelcontrol.h"
 
+typedef struct WallanimatorState {
+    u8 pad0[0x4 - 0x0];
+    u8 unk4;
+    u8 pad5[0x8 - 0x5];
+} WallanimatorState;
+
+
+typedef struct XyzanimatorState {
+    u8 pad0[0x4 - 0x0];
+    u8 unk4;
+    u8 pad5[0x8 - 0x5];
+} XyzanimatorState;
+
+
 
 extern undefined4 FUN_80006824();
 extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -912,7 +926,7 @@ void wallanimator_init(s16* obj, s16* p2)
     ObjGroup_AddObject((int)obj, WALLANIMATOR_GROUP_PRIMARY);
     ObjGroup_AddObject((int)obj, WALLANIMATOR_GROUP_SECONDARY);
     if (GameBit_Get((int)p2[0x18 / 2]) != 0) {
-        *(u8*)((char*)state + 4) |= WALLANIMATOR_RUNTIME_ACTIVE_FLAG;
+        ((WallanimatorState *)state)->unk4 |= WALLANIMATOR_RUNTIME_ACTIVE_FLAG;
         *state = WALLANIMATOR_DONE_TIMER;
     }
 }

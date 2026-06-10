@@ -3,6 +3,16 @@
 #include "main/objanim.h"
 #include "main/objseq.h"
 
+typedef struct EcshShrineState {
+    u8 pad0[0x24 - 0x0];
+    s16 unk24;
+    s16 unk26;
+    u8 pad28[0x2E - 0x28];
+    u8 unk2E;
+    u8 pad2F[0x30 - 0x2F];
+} EcshShrineState;
+
+
 extern u32 randomGetRange(int min, int max);
 extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ae4();
@@ -343,18 +353,18 @@ void ecsh_shrine_modelMtxFn(int *p1, u8 *p2) {
     int *inner;
     if (obj == NULL) return;
     inner = ((GameObject *)obj)->extra;
-    *p2 = *(u8 *)((char *)inner + 0x2e);
-    *p1 = *(s16 *)((char *)inner + 0x24);
+    *p2 = ((EcshShrineState *)inner)->unk2E;
+    *p1 = ((EcshShrineState *)inner)->unk24;
 }
 void ecsh_shrine_func0E(u8 v) {
     int *obj = (int *)lbl_803DDBC4;
     int *inner;
     if (obj == NULL) return;
     inner = ((GameObject *)obj)->extra;
-    if ((u32)(u8)v == *(u8 *)((char *)inner + 0x2e)) {
-        *(s16 *)((char *)inner + 0x26) = 1;
+    if ((u32)(u8)v == ((EcshShrineState *)inner)->unk2E) {
+        ((EcshShrineState *)inner)->unk26 = 1;
     } else {
-        *(s16 *)((char *)inner + 0x26) = 0;
+        ((EcshShrineState *)inner)->unk26 = 0;
     }
 }
 

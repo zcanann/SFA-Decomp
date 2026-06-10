@@ -6,6 +6,15 @@
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
 
+typedef struct MagiccavetopState {
+    u8 pad0[0x1 - 0x0];
+    u8 unk1;
+    u8 pad2[0x4 - 0x2];
+    f32 unk4;
+    u8 pad8[0xC - 0x8];
+} MagiccavetopState;
+
+
 extern undefined8 FUN_80006728();
 extern undefined4 FUN_800067c0();
 extern undefined4 FUN_80006824();
@@ -737,13 +746,13 @@ void magiccavetop_init(int *obj, s8 *def) {
     int *refs;
     ((GameObject *)obj)->objectFlags = (u16)((u32)((GameObject *)obj)->objectFlags | 0x6000);
     if (GameBit_Get(*(s16 *)((char *)def + 0x1c)) != 0) {
-        *(f32 *)((char *)state + 4) = lbl_803E3C4C;
+        ((MagiccavetopState *)state)->unk4 = lbl_803E3C4C;
     }
     *(s16 *)obj = (s16)((s32)(u8)def[0x23] << 8);
     refs = ObjModel_GetRenderOpTextureRefs(Obj_GetActiveModel(obj), 0);
     if (*(s16 *)((char *)def + 0x24) > 0) {
         if (GameBit_Get(*(s16 *)((char *)def + 0x24)) != 0) {
-            *(u8 *)((char *)state + 1) = (u8)(*(u8 *)((char *)state + 1) | 0x0c);
+            ((MagiccavetopState *)state)->unk1 = (u8)(((MagiccavetopState *)state)->unk1 | 0x0c);
             *(u8 *)((char *)refs + 8) = 23;
         } else {
             *(u8 *)((char *)refs + 8) = 22;
@@ -1020,16 +1029,16 @@ void magiccavetop_update(int *obj) {
         }
     }
     if (gb != 0) {
-        if (lbl_803E3C38 == *(f32 *)(sub + 4)) {
+        if (lbl_803E3C38 == ((MagiccavetopState *)sub)->unk4) {
             Sfx_PlayFromObject(obj, 0x4a2);
         }
-        *(f32 *)(sub + 4) += timeDelta;
-        if (*(f32 *)(sub + 4) > lbl_803E3C4C) {
-            *(f32 *)(sub + 4) = lbl_803E3C4C;
+        ((MagiccavetopState *)sub)->unk4 += timeDelta;
+        if (((MagiccavetopState *)sub)->unk4 > lbl_803E3C4C) {
+            ((MagiccavetopState *)sub)->unk4 = lbl_803E3C4C;
             ((GameObject *)obj)->anim.alpha = 0xff;
         } else {
             ((GameObject *)obj)->anim.alpha =
-                (u8)(int)(lbl_803E3C50 * (*(f32 *)(sub + 4) / lbl_803E3C4C));
+                (u8)(int)(lbl_803E3C50 * (((MagiccavetopState *)sub)->unk4 / lbl_803E3C4C));
         }
     } else {
         ((GameObject *)obj)->anim.alpha = 0;

@@ -8,6 +8,19 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 
+typedef struct Dll199State {
+    u8 pad0[0x2 - 0x0];
+    s16 unk2;
+    u8 pad4[0xE - 0x4];
+    u8 unkE;
+    u8 unkF;
+    u8 unk10;
+    u8 pad11[0x12 - 0x11];
+    u8 unk12;
+    u8 pad13[0x18 - 0x13];
+} Dll199State;
+
+
 
 extern u32 GameBit_Get(int eventId);
 extern int GameBit_Set(int eventId, int value);
@@ -103,9 +116,9 @@ void dll_199_update(int obj)
         state[1] -= framesThisStep;
         if (state[1] <= 0) {
             state[1] = 0;
-            if (*(u8 *)((char *)state + 0x12) == 0) {
+            if (((Dll199State *)state)->unk12 == 0) {
                 (**(void (**)(int, int, int, int, int))(*gTitleMenuControlInterface + 0x18))(3, 0x2c, 0x50, state[4], 0);
-                *(u8 *)((char *)state + 0x12) = 1;
+                ((Dll199State *)state)->unk12 = 1;
             }
         }
     }
@@ -132,14 +145,14 @@ void dll_199_update(int obj)
                 (**(void (**)(int, int))(*gTitleMenuControlInterface + 0x38))(2, n & 0xff);
             }
         }
-        switch (*(u8 *)((char *)state + 0xf)) {
+        switch (((Dll199State *)state)->unkF) {
         case 0:
             if ((GameBit_Get(0x5b5) == 0) && (GameBit_Get(0x594) != 0)) {
                 GameBit_Set(0x5b5, 1);
             }
             GameBit_Set(0x5b9, 0);
             if (Vec_distance((f32 *)(obj + 0x18), (f32 *)(player + 0x18)) < (f32)state[0]) {
-                *(u8 *)((char *)state + 0xf) = 1;
+                ((Dll199State *)state)->unkF = 1;
                 GameBit_Set(0x129, 0);
                 (*gObjectTriggerInterface)->runSequence(0, (void *)obj, 0xffffffff);
                 {
@@ -157,32 +170,32 @@ void dll_199_update(int obj)
             }
             break;
         case 1:
-            if (*(u8 *)((char *)state + 0x10) == 1) {
-                *(u8 *)((char *)state + 0xf) = 2;
+            if (((Dll199State *)state)->unk10 == 1) {
+                ((Dll199State *)state)->unkF = 2;
                 state[1] = 0xa0;
             }
             break;
         case 2:
-            if ((*(u8 *)((char *)state + 0xe) == 0) && (GameBit_Get(0x1cd) == 0)) {
+            if ((((Dll199State *)state)->unkE == 0) && (GameBit_Get(0x1cd) == 0)) {
                 GameBit_Set(0x1cd, 1);
             }
             if (GameBit_Get(0x5b2) != 0) {
-                *(u8 *)((char *)state + 0xe) += 1;
+                ((Dll199State *)state)->unkE += 1;
                 state[1] = 100;
-                if (*(u8 *)((char *)state + 0xe) == 1) {
+                if (((Dll199State *)state)->unkE == 1) {
                     (*gObjectTriggerInterface)->runSequence(3, (void *)obj, 0xffffffff);
                 }
             }
             break;
         case 7:
             (*gObjectTriggerInterface)->runSequence(5, (void *)obj, 0xffffffff);
-            *(u8 *)((char *)state + 0xf) = 3;
+            ((Dll199State *)state)->unkF = 3;
             state[1] = 0;
             state[5] = -3;
             break;
         case 8:
             (*gObjectTriggerInterface)->runSequence(4, (void *)obj, 0xffffffff);
-            *(u8 *)((char *)state + 0xf) = 6;
+            ((Dll199State *)state)->unkF = 6;
             state[1] = 0;
             state[5] = -3;
             break;
@@ -195,7 +208,7 @@ void dll_199_update(int obj)
             if (found != 0) {
                 Obj_FreeObject(found);
             }
-            *(u8 *)((char *)state + 0xf) = 0;
+            ((Dll199State *)state)->unkF = 0;
             state[1] = 400;
             GameBit_Set(0x129, 1);
             GameBit_Set(0x126, 1);
@@ -208,8 +221,8 @@ void dll_199_update(int obj)
                 Resource_Release(res);
             }
             GameBit_Set(0x1cd, 0);
-            *(u8 *)((char *)state + 0xe) = 0;
-            *(u8 *)((char *)state + 0x10) = 0;
+            ((Dll199State *)state)->unkE = 0;
+            ((Dll199State *)state)->unk10 = 0;
             break;
         case 3:
             dist = lbl_803E5174;
@@ -222,7 +235,7 @@ void dll_199_update(int obj)
                 (**(void (**)(int, int, int, int, int))(*gTitleMenuControlInterface + 0x18))(3, 0x2c, 0x50, state[4] & 0xff, 0);
                 state[5] = 1;
                 GameBit_Set(0x129, 1);
-                *(u8 *)((char *)state + 0xf) = 5;
+                ((Dll199State *)state)->unkF = 5;
             }
             else {
                 GameBit_Set(0x126, 0);
@@ -237,7 +250,7 @@ void dll_199_update(int obj)
             }
             GameBit_Set(0x1cf, 0);
             GameBit_Set(0x127, 0);
-            *(u8 *)((char *)state + 0xf) = 5;
+            ((Dll199State *)state)->unkF = 5;
             (**(void (**)(int, int, int, int, int))(*gTitleMenuControlInterface + 0x18))(3, 0x2c, 0x50, state[4] & 0xff, 0);
             GameBit_Set(0x1ce, 1);
             (*gMapEventInterface)->setMode(0xb, 6);
@@ -268,7 +281,7 @@ void dll_199_init(int obj, int def)
     if (*(s16 *)(def + 0x1a) > 0) {
         *state = *(s16 *)(def + 0x1a) >> 8;
     }
-    *(u8 *)((char *)state + 0xf) = 0;
+    ((Dll199State *)state)->unkF = 0;
     *(u8 *)(state + 8) = 0;
     state[1] = 0;
     *(u8 *)(state + 7) = 0;

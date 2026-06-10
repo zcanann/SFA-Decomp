@@ -7,6 +7,37 @@
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 
+typedef struct DimicewallState {
+    u8 pad0[0x1 - 0x0];
+    u8 unk1;
+    s16 unk2;
+    u8 pad4[0x8 - 0x4];
+} DimicewallState;
+
+
+typedef struct DimbarrierState {
+    u8 pad0[0x1 - 0x0];
+    u8 unk1;
+    s16 unk2;
+} DimbarrierState;
+
+
+typedef struct DIMwooddoorUpdateFallingDebrisState {
+    u8 pad0[0x1 - 0x0];
+    u8 unk1;
+    s16 unk2;
+    u8 pad4[0x5 - 0x4];
+    s8 unk5;
+    s8 unk6;
+    u8 unk7;
+    u8 unk8;
+    s8 unk9;
+    s8 unkA;
+    s8 unkB;
+    u8 padC[0x10 - 0xC];
+} DIMwooddoorUpdateFallingDebrisState;
+
+
 extern undefined4 FUN_80006824();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
@@ -89,7 +120,7 @@ void dimicewall_init(int obj, s8 *p) {
     char *inner = ((GameObject *)obj)->extra;
     *(s8 *)(inner + 0) = (s8)*(s16 *)(p + 0x1a);
     if (*(s16 *)(p + 0x1e) != -1) {
-        *(u8 *)(inner + 1) = (u8)GameBit_Get(*(s16 *)(p + 0x1e));
+        ((DimicewallState *)inner)->unk1 = (u8)GameBit_Get(*(s16 *)(p + 0x1e));
     }
     *(s16 *)obj = (s16)((s32)p[0x18] << 8);
     ((GameObject *)obj)->objectFlags |= 0x4000;
@@ -281,7 +312,7 @@ extern f32 lbl_803DBEF0;
 void DIMwooddoor_updateFallingDebris(int *obj)
 {
     int *extra = ((GameObject *)obj)->extra;
-    switch (*(u8 *)((char *)extra + 8)) {
+    switch (((DIMwooddoorUpdateFallingDebrisState *)extra)->unk8) {
     case 0: {
         f32 oldvy = ((GameObject *)obj)->anim.velocityY;
         ObjHitsPriorityState *hitState;
@@ -289,19 +320,19 @@ void DIMwooddoor_updateFallingDebris(int *obj)
         objMove(obj, ((GameObject *)obj)->anim.velocityX * timeDelta,
                 lbl_803E48A8 * (oldvy + ((GameObject *)obj)->anim.velocityY) * timeDelta,
                 ((GameObject *)obj)->anim.velocityZ * timeDelta);
-        ((GameObject *)obj)->anim.rotZ = ((GameObject *)obj)->anim.rotZ + *(s8 *)((char *)extra + 9) * 10;
-        ((GameObject *)obj)->anim.rotY = ((GameObject *)obj)->anim.rotY + *(s8 *)((char *)extra + 0xa) * 10;
-        *(s16 *)obj = *(s16 *)obj + *(s8 *)((char *)extra + 0xb) * 10;
+        ((GameObject *)obj)->anim.rotZ = ((GameObject *)obj)->anim.rotZ + ((DIMwooddoorUpdateFallingDebrisState *)extra)->unk9 * 10;
+        ((GameObject *)obj)->anim.rotY = ((GameObject *)obj)->anim.rotY + ((DIMwooddoorUpdateFallingDebrisState *)extra)->unkA * 10;
+        *(s16 *)obj = *(s16 *)obj + ((DIMwooddoorUpdateFallingDebrisState *)extra)->unkB * 10;
         hitState = (ObjHitsPriorityState *)((GameObject *)obj)->anim.hitReactState;
         if (hitState != NULL) {
             int *vol;
-            ObjHits_SetHitVolumeSlot(obj, 5, *(s8 *)((char *)extra + 6), 0);
+            ObjHits_SetHitVolumeSlot(obj, 5, ((DIMwooddoorUpdateFallingDebrisState *)extra)->unk6, 0);
             vol = (int *)hitState->lastHitObject;
             if (vol != NULL && vol != *(int **)extra) {
-                ObjHitbox_SetSphereRadius(obj, *(s8 *)((char *)extra + 5));
+                ObjHitbox_SetSphereRadius(obj, ((DIMwooddoorUpdateFallingDebrisState *)extra)->unk5);
                 spawnExplosion(obj, lbl_803E48A0, 2, 1, 0, 1, 1, 1, 0);
                 ((GameObject *)obj)->unkF4 = 1180;
-                *(s8 *)((char *)extra + 8) = 1;
+                *(s8 *)&((DIMwooddoorUpdateFallingDebrisState *)extra)->unk8 = 1;
                 ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
             }
         }
@@ -310,10 +341,10 @@ void DIMwooddoor_updateFallingDebris(int *obj)
             ((GameObject *)obj)->unkF4 = 1200;
         }
         if (hitState->contactFlags != 0) {
-            ObjHitbox_SetSphereRadius(obj, *(s8 *)((char *)extra + 5));
+            ObjHitbox_SetSphereRadius(obj, ((DIMwooddoorUpdateFallingDebrisState *)extra)->unk5);
             spawnExplosion(obj, lbl_803E48A0, 2, 1, 0, 1, 1, 1, 0);
             ((GameObject *)obj)->unkF4 = 1180;
-            *(s8 *)((char *)extra + 8) = 1;
+            *(s8 *)&((DIMwooddoorUpdateFallingDebrisState *)extra)->unk8 = 1;
             ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
         }
         break;
@@ -324,8 +355,8 @@ void DIMwooddoor_updateFallingDebris(int *obj)
     ((GameObject *)obj)->unkF4 = ((GameObject *)obj)->unkF4 + framesThisStep;
     if (((GameObject *)obj)->unkF4 > 1200) {
         Obj_FreeObject(obj);
-    } else if (*(u8 *)((char *)extra + 7) != 0) {
-        *(s8 *)((char *)extra + 7) = 0;
+    } else if (((DIMwooddoorUpdateFallingDebrisState *)extra)->unk7 != 0) {
+        *(s8 *)&((DIMwooddoorUpdateFallingDebrisState *)extra)->unk7 = 0;
     }
 }
 
@@ -343,7 +374,7 @@ void dimicewall_update(int *obj)
     int *extra = ((GameObject *)obj)->extra;
     int *def = *(int **)&((GameObject *)obj)->anim.placementData;
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
-    if (*(u8 *)((char *)extra + 1) == 0) {
+    if (((DimicewallState *)extra)->unk1 == 0) {
         if (*(s8 *)extra <= 0) {
             f32 desc[6];
             int i;
@@ -362,7 +393,7 @@ void dimicewall_update(int *obj)
             if (*(int *)((char *)def + 0x14) != 7433) {
                 Sfx_PlayFromObject((int)obj, 1147);
             }
-            *(u8 *)((char *)extra + 1) = 1;
+            ((DimicewallState *)extra)->unk1 = 1;
             if (*(s16 *)((char *)def + 0x1e) != -1) {
                 GameBit_Set(*(s16 *)((char *)def + 0x1e), 1);
             }

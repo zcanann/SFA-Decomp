@@ -3,6 +3,30 @@
 #include "main/dll/baddie_state.h"
 #include "main/objseq.h"
 
+typedef struct HightopState {
+    s32 unk0;
+    u8 pad4[0x27A - 0x4];
+    u8 unk27A;
+    u8 pad27B[0x280 - 0x27B];
+    f32 unk280;
+    f32 unk284;
+    u8 pad288[0x294 - 0x288];
+    f32 unk294;
+    f32 unk298;
+    f32 unk29C;
+    f32 unk2A0;
+    u8 pad2A4[0x2B8 - 0x2A4];
+    f32 unk2B8;
+    u8 pad2BC[0x334 - 0x2BC];
+    s16 unk334;
+    s16 unk336;
+    s16 unk338;
+    u8 pad33A[0x346 - 0x33A];
+    u8 unk346;
+    u8 pad347[0xC4C - 0x347];
+} HightopState;
+
+
 typedef struct HighTopRuntime {
     BaddieState baddie;
     u8 pad35C[0x3ec - 0x35c];

@@ -7,6 +7,14 @@
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
 
+typedef struct DoorState {
+    u8 pad0[0x18 - 0x0];
+    s8 unk18;
+    u8 pad19[0x1E - 0x19];
+    s16 unk1E;
+} DoorState;
+
+
 extern bool FUN_800067f8();
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006810();

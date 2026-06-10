@@ -536,6 +536,31 @@ int dimlavasmash_getObjectTypeId(void) { return 0x0; }
 /* if (o->_X == K) return A; else return B; */
 #include "global.h"
 
+typedef struct DimcannonState {
+    u8 pad0[0x7 - 0x0];
+    u8 unk7;
+    u8 pad8[0x9 - 0x8];
+    s8 unk9;
+    s8 unkA;
+    s8 unkB;
+    u8 padC[0x10 - 0xC];
+} DimcannonState;
+
+
+typedef struct DimlavasmashState {
+    u8 pad0[0x1 - 0x0];
+    u8 unk1;
+    u8 unk2;
+    u8 pad3[0x7 - 0x3];
+    u8 unk7;
+    u8 pad8[0x9 - 0x8];
+    s8 unk9;
+    s8 unkA;
+    s8 unkB;
+    u8 padC[0x10 - 0xC];
+} DimlavasmashState;
+
+
 /* dimcannon extra block (0xb4); the head is the per-cannonball column
  * arrays walked via state + i*4 (kept raw), this names the scalar tail. */
 STATIC_ASSERT(sizeof(DimCannonState) == 0xb4);
@@ -594,20 +619,20 @@ int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
     int *state;
     state = ((GameObject *)obj)->extra;
     def = *(int **)&((GameObject *)obj)->anim.placementData;
-    if (*(u8 *)((char *)state + 2) == 0) {
+    if (((DimlavasmashState *)state)->unk2 == 0) {
         if (GameBit_Get(*(s16 *)((char *)def + 0x20)) != 0) {
             (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags |= 1;
             if (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0) {
                 if (*(s16 *)((char *)hit + 0x46) == 397) {
-                    *(u8 *)((char *)state + 2) = 2;
+                    ((DimlavasmashState *)state)->unk2 = 2;
                     Sfx_PlayFromObject(obj, SFXbaddie_eggsnatch_sniff1);
                     objPosToMapBlockIdx(((GameObject *)obj)->anim.localPosX,
                                         ((GameObject *)obj)->anim.localPosY,
                                         ((GameObject *)obj)->anim.localPosZ);
                     block = mapGetBlock();
                     if ((void *)block != NULL) {
-                        dimlavasmash_setBlockSurfaceFlags(block, 1, *(u8 *)((char *)state + 1));
-                        dimlavasmash_setBlockSurfaceFlags(block, 0, *(u8 *)((char *)state + 1) + 1);
+                        dimlavasmash_setBlockSurfaceFlags(block, 1, ((DimlavasmashState *)state)->unk1);
+                        dimlavasmash_setBlockSurfaceFlags(block, 0, ((DimlavasmashState *)state)->unk1 + 1);
                     }
                 }
             }
@@ -615,10 +640,10 @@ int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
     } else {
         if (animUpdate->triggerCommand == 1) {
             GameBit_Set(*(s16 *)((char *)def + 0x1e), 1);
-            *(u8 *)((char *)state + 2) = 1;
+            ((DimlavasmashState *)state)->unk2 = 1;
         }
     }
-    return *(u8 *)((char *)state + 2) == 0;
+    return ((DimlavasmashState *)state)->unk2 == 0;
 }
 
 extern void *lbl_803DDB50;
@@ -654,10 +679,10 @@ void dimcannon_init(int *obj, int *arg)
             *(u32 *)((char *)p + 0x30) |= 0x8000LL;
         }
         state = ((GameObject *)obj)->extra;
-        *(s8 *)((char *)state + 0x9) = (s8)randomGetRange(-0x64, 0x64);
-        *(s8 *)((char *)state + 0xa) = (s8)randomGetRange(-0x64, 0x64);
-        *(s8 *)((char *)state + 0xb) = (s8)randomGetRange(-0x64, 0x64);
-        *(u8 *)((char *)state + 0x7) = 1;
+        ((DimcannonState *)state)->unk9 = (s8)randomGetRange(-0x64, 0x64);
+        ((DimcannonState *)state)->unkA = (s8)randomGetRange(-0x64, 0x64);
+        ((DimcannonState *)state)->unkB = (s8)randomGetRange(-0x64, 0x64);
+        ((DimcannonState *)state)->unk7 = 1;
         p = *(int **)&((GameObject *)obj)->anim.hitReactState;
         if (p != 0) {
             *(s16 *)((char *)p + 0xb2) = 1;

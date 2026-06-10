@@ -8,6 +8,18 @@
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
+typedef struct GpshShrineState {
+    u8 pad0[0x4 - 0x0];
+    f32 unk4;
+    f32 unk8;
+    u8 padC[0x12 - 0xC];
+    u8 unk12;
+    u8 pad13[0x14 - 0x13];
+    u8 unk14;
+    u8 pad15[0x18 - 0x15];
+} GpshShrineState;
+
+
 extern undefined8 FUN_80006728();
 extern undefined4 FUN_80006770();
 extern undefined4 FUN_800067c0();
@@ -146,23 +158,23 @@ void gpsh_shrine_update(int obj)
         SCGameBitLatch_Update(data + 0x13, 2, -1, -1, 0xdd2, 0xb);
         SCGameBitLatch_UpdateInverted(data + 0x13, 1, -1, -1, 0xcbb, 8);
         SCGameBitLatch_Update(data + 0x13, 4, -1, -1, 0xcbb, 0xc4);
-        if (*(f32 *)((char *)data + 4) > (k = lbl_803E503C)) {
-            *(f32 *)((char *)data + 4) -= timeDelta;
-            if (*(f32 *)((char *)data + 4) <= k) {
-                *(f32 *)((char *)data + 4) = k;
+        if (((GpshShrineState *)data)->unk4 > (k = lbl_803E503C)) {
+            ((GpshShrineState *)data)->unk4 -= timeDelta;
+            if (((GpshShrineState *)data)->unk4 <= k) {
+                ((GpshShrineState *)data)->unk4 = k;
             }
         } else {
-            switch (*(u8 *)((char *)data + 0x14)) {
+            switch (((GpshShrineState *)data)->unk14) {
             case 0:
                 ((GameObject *)obj)->anim.flags &= ~OBJANIM_FLAG_HIDDEN;
-                t = *(f32 *)((char *)data + 8) - timeDelta;
-                *(f32 *)((char *)data + 8) = t;
+                t = ((GpshShrineState *)data)->unk8 - timeDelta;
+                ((GpshShrineState *)data)->unk8 = t;
                 if (t <= k) {
                     Sfx_PlayFromObject(obj, 0x343);
-                    *(f32 *)((char *)data + 8) = (f32)(int)randomGetRange(500, 1000);
+                    ((GpshShrineState *)data)->unk8 = (f32)(int)randomGetRange(500, 1000);
                 }
                 if (*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode & 1) {
-                    *(u8 *)((char *)data + 0x14) = 5;
+                    ((GpshShrineState *)data)->unk14 = 5;
                     GameBit_Set(0x129, 0);
                     GameBit_Set(0x5af, 0);
                     GameBit_Set(0xdd2, 1);
@@ -171,74 +183,74 @@ void gpsh_shrine_update(int obj)
                 }
                 break;
             case 5:
-                *(f32 *)((char *)data + 4) = lbl_803E5040;
+                ((GpshShrineState *)data)->unk4 = lbl_803E5040;
                 (*gScreenTransitionInterface)->step(0x1e, 1);
-                *(u8 *)((char *)data + 0x14) = 1;
+                ((GpshShrineState *)data)->unk14 = 1;
                 ((GameObject *)obj)->anim.flags |= OBJANIM_FLAG_HIDDEN;
                 break;
             case 1:
                 if (((GpshShrineFlags *)((char *)data + 0x15))->b80 == 1) {
                     GameBit_Set(0x148, 1);
-                    *(u8 *)((char *)data + 0x14) = 2;
+                    ((GpshShrineState *)data)->unk14 = 2;
                     gameTimerInit(0x1d, 0x4e);
                     timerSetToCountUp();
                 }
                 break;
             case 2:
-                *(u8 *)((char *)data + 0x12) = 0;
+                ((GpshShrineState *)data)->unk12 = 0;
                 if (GameBit_Get(0x149)) {
-                    *(u8 *)((char *)data + 0x12) += 1;
+                    ((GpshShrineState *)data)->unk12 += 1;
                 }
                 if (GameBit_Get(0x14b)) {
-                    *(u8 *)((char *)data + 0x12) += 1;
+                    ((GpshShrineState *)data)->unk12 += 1;
                 }
                 if (GameBit_Get(0x14e)) {
-                    *(u8 *)((char *)data + 0x12) += 1;
+                    ((GpshShrineState *)data)->unk12 += 1;
                 }
                 if (GameBit_Get(0x14d)) {
-                    *(u8 *)((char *)data + 0x12) += 1;
+                    ((GpshShrineState *)data)->unk12 += 1;
                 }
                 if (GameBit_Get(0x14c)) {
-                    *(u8 *)((char *)data + 0x12) += 1;
+                    ((GpshShrineState *)data)->unk12 += 1;
                 }
                 if (GameBit_Get(0x14a)) {
-                    *(u8 *)((char *)data + 0x12) += 1;
+                    ((GpshShrineState *)data)->unk12 += 1;
                 }
-                if (*(u8 *)((char *)data + 0x12) == 6) {
-                    *(u8 *)((char *)data + 0x14) = 6;
+                if (((GpshShrineState *)data)->unk12 == 6) {
+                    ((GpshShrineState *)data)->unk14 = 6;
                     gameTimerStop();
                     GameBit_Set(0xdd2, 0);
-                    *(f32 *)((char *)data + 4) = lbl_803E5040;
+                    ((GpshShrineState *)data)->unk4 = lbl_803E5040;
                     (*gScreenTransitionInterface)->start(0x1e, 1);
                     Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
                 } else if (isGameTimerDisabled()) {
-                    *(u8 *)((char *)data + 0x14) = 7;
+                    ((GpshShrineState *)data)->unk14 = 7;
                     objs = (int *)ObjGroup_GetObjects(0x10, &count);
                     for (; count != 0; count--) {
                         Obj_FreeObject(objs[count - 1]);
                     }
-                    *(f32 *)((char *)data + 4) = lbl_803E5040;
+                    ((GpshShrineState *)data)->unk4 = lbl_803E5040;
                     (*gScreenTransitionInterface)->start(0x1e, 1);
                 } else {
-                    *(u8 *)((char *)data + 0x12) = 0;
+                    ((GpshShrineState *)data)->unk12 = 0;
                 }
                 break;
             case 7:
-                *(u8 *)((char *)data + 0x14) = 4;
+                ((GpshShrineState *)data)->unk14 = 4;
                 GameBit_Set(0xdd2, 0);
                 GameBit_Set(0xe37, 1);
                 break;
             case 6:
-                *(u8 *)((char *)data + 0x14) = 3;
+                ((GpshShrineState *)data)->unk14 = 3;
                 break;
             case 3:
                 if (objGetAnimStateFlags((int)player, 0x80)) {
                     GameBit_Set(0x129, 1);
-                    *(u8 *)((char *)data + 0x14) = 4;
+                    ((GpshShrineState *)data)->unk14 = 4;
                 } else {
                     audioStopByMask(3);
                     (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
-                    *(u8 *)((char *)data + 0x14) = 4;
+                    ((GpshShrineState *)data)->unk14 = 4;
                     GameBit_Set(0x36a, 0);
                     (*gMapEventInterface)->setAnimEvent(0xd, 0, 1);
                     (*gMapEventInterface)->setAnimEvent(0xd, 1, 1);
@@ -250,7 +262,7 @@ void gpsh_shrine_update(int obj)
                 }
                 break;
             case 4:
-                *(u8 *)((char *)data + 0x14) = 0;
+                ((GpshShrineState *)data)->unk14 = 0;
                 ((GpshShrineFlags *)((char *)data + 0x15))->b80 = 0;
                 GameBit_Set(0xdd2, 0);
                 GameBit_Set(0x129, 1);

@@ -2,6 +2,15 @@
 #include "main/game_object.h"
 #include "main/dll/DR/DRsimplehuman.h"
 
+typedef struct SpdrapeState {
+    u8 pad0[0x10 - 0x0];
+    s32 unk10;
+    s16 unk14;
+    u8 unk16;
+    u8 pad17[0x18 - 0x17];
+} SpdrapeState;
+
+
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068cc();
@@ -91,20 +100,20 @@ void spdrape_update(int obj)
     player = (char *)Obj_GetPlayerObject();
     switch (((GameObject *)obj)->anim.currentMove) {
     case 0:
-        if ((s16)(*(s16 *)((char *)state + 0x14) -= framesThisStep) <= 0) {
+        if ((s16)(((SpdrapeState *)state)->unk14 -= framesThisStep) <= 0) {
             Sfx_PlayFromObject(obj, 0x13f);
-            *(s16 *)((char *)state + 0x14) = randomGetRange(0xb4, 300);
+            ((SpdrapeState *)state)->unk14 = randomGetRange(0xb4, 300);
         }
         if (getXZDistance(&((GameObject *)obj)->anim.worldPosX, (f32 *)(player + 0x18)) < lbl_803E5AA4) {
             if (player != 0) {
                 if (state[3] + (state[1] * *(f32 *)(player + 0xc) + state[2] * *(f32 *)(player + 0x14)) < lbl_803E5AA0) {
-                    *(int *)((char *)state + 0x10) = (int)&lbl_803DC0B0;
+                    ((SpdrapeState *)state)->unk10 = (int)&lbl_803DC0B0;
                 }
                 else {
-                    *(int *)((char *)state + 0x10) = (int)&lbl_803DC0B4;
+                    ((SpdrapeState *)state)->unk10 = (int)&lbl_803DC0B4;
                 }
             }
-            ObjAnim_SetCurrentMove(obj, **(u8 **)((char *)state + 0x10), lbl_803E5AA0, 0);
+            ObjAnim_SetCurrentMove(obj, **(u8 **)&((SpdrapeState *)state)->unk10, lbl_803E5AA0, 0);
             *state = lbl_803E5AA8;
             Sfx_PlayFromObject(obj, 0x140);
             Camera_GetCurrentViewSlot();
@@ -112,14 +121,14 @@ void spdrape_update(int obj)
         break;
     case 1:
     case 4:
-        if (*(u8 *)((char *)state + 0x16) != 0) {
+        if (((SpdrapeState *)state)->unk16 != 0) {
             if (getXZDistance(&((GameObject *)obj)->anim.worldPosX, (f32 *)(player + 0x18)) > lbl_803E5AAC) {
-                ObjAnim_SetCurrentMove(obj, (*(u8 **)((char *)state + 0x10))[2], lbl_803E5AA0, 0);
+                ObjAnim_SetCurrentMove(obj, (*(u8 **)&((SpdrapeState *)state)->unk10)[2], lbl_803E5AA0, 0);
                 Sfx_PlayFromObject(obj, 0x140);
                 *state = lbl_803E5AB0;
             }
             else {
-                ObjAnim_SetCurrentMove(obj, (*(u8 **)((char *)state + 0x10))[1], lbl_803E5AA0, 0);
+                ObjAnim_SetCurrentMove(obj, (*(u8 **)&((SpdrapeState *)state)->unk10)[1], lbl_803E5AA0, 0);
                 *state = lbl_803E5AB4;
             }
         }
@@ -128,7 +137,7 @@ void spdrape_update(int obj)
     case 5:
         Sfx_PlayFromObject(obj, 0x141);
         if (getXZDistance(&((GameObject *)obj)->anim.worldPosX, (f32 *)(player + 0x18)) > lbl_803E5AAC) {
-            ObjAnim_SetCurrentMove(obj, (*(u8 **)((char *)state + 0x10))[2], lbl_803E5AA0, 0);
+            ObjAnim_SetCurrentMove(obj, (*(u8 **)&((SpdrapeState *)state)->unk10)[2], lbl_803E5AA0, 0);
             Sfx_StopObjectChannel(obj, 0x40);
             Sfx_PlayFromObject(obj, 0x140);
             *state = lbl_803E5AB0;
@@ -139,24 +148,24 @@ void spdrape_update(int obj)
         if ((((GameObject *)obj)->anim.currentMoveProgress > lbl_803E5AB8) && (getXZDistance(&((GameObject *)obj)->anim.worldPosX, (f32 *)(player + 0x18)) < lbl_803E5AA4)) {
             if (player != 0) {
                 if (state[3] + (state[1] * *(f32 *)(player + 0xc) + state[2] * *(f32 *)(player + 0x14)) < lbl_803E5AA0) {
-                    *(int *)((char *)state + 0x10) = (int)&lbl_803DC0B0;
+                    ((SpdrapeState *)state)->unk10 = (int)&lbl_803DC0B0;
                 }
                 else {
-                    *(int *)((char *)state + 0x10) = (int)&lbl_803DC0B4;
+                    ((SpdrapeState *)state)->unk10 = (int)&lbl_803DC0B4;
                 }
             }
-            ObjAnim_SetCurrentMove(obj, **(u8 **)((char *)state + 0x10), lbl_803E5AA0, 0);
+            ObjAnim_SetCurrentMove(obj, **(u8 **)&((SpdrapeState *)state)->unk10, lbl_803E5AA0, 0);
             Sfx_PlayFromObject(obj, 0x140);
             *state = lbl_803E5AA8;
         }
-        else if (*(u8 *)((char *)state + 0x16) != 0) {
+        else if (((SpdrapeState *)state)->unk16 != 0) {
             ObjAnim_SetCurrentMove(obj, 0, lbl_803E5AA0, 0);
             *state = lbl_803E5ABC;
             Camera_GetCurrentViewSlot();
         }
         break;
     }
-    *(u8 *)((char *)state + 0x16) = ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, *state, timeDelta, NULL);
+    ((SpdrapeState *)state)->unk16 = ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, *state, timeDelta, NULL);
 }
 
 /*
@@ -429,13 +438,13 @@ void spdrape_init(int *obj, u8 *def) {
     state[1] = mathSinf(lbl_803E5AC8 * (f32)(s32)*(s16 *)obj / lbl_803E5ACC);
     state[2] = mathCosf(lbl_803E5AC8 * (f32)(s32)*(s16 *)obj / lbl_803E5ACC);
     state[3] = -(state[1] * ((GameObject *)obj)->anim.localPosX + state[2] * ((GameObject *)obj)->anim.localPosZ);
-    *(s16 *)((char *)state + 0x14) = (s16)randomGetRange(0xb4, 0x12c);
+    ((SpdrapeState *)state)->unk14 = (s16)randomGetRange(0xb4, 0x12c);
     player = (int *)Obj_GetPlayerObject();
     if (player != NULL) {
         if (state[1] * ((GameObject *)player)->anim.localPosX + state[2] * ((GameObject *)player)->anim.localPosZ + state[3] < lbl_803E5AA0) {
-            *(int *)((char *)state + 0x10) = (int)&lbl_803DC0B0;
+            ((SpdrapeState *)state)->unk10 = (int)&lbl_803DC0B0;
         } else {
-            *(int *)((char *)state + 0x10) = (int)&lbl_803DC0B4;
+            ((SpdrapeState *)state)->unk10 = (int)&lbl_803DC0B4;
         }
     }
 }

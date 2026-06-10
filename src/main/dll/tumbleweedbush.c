@@ -1,6 +1,15 @@
 #include "main/dll/tumbleweedbush.h"
 #include "main/game_object.h"
 
+typedef struct TrickyGrowlState {
+    u8 pad0[0x8 - 0x0];
+    f32 unk8;
+    u8 padC[0x58 - 0xC];
+    u8 unk58;
+    u8 pad59[0x60 - 0x59];
+} TrickyGrowlState;
+
+
 
 extern int trickyDebugPrint(const char *fmt, ...);
 extern int trickyFn_8013b368(void *param_1, float threshold, void *param_2);
@@ -46,7 +55,7 @@ void trickyGrowl(void *param_1, void *param_2)
         trickyDebugPrint(strBase + 0x558);
         if (trickyFn_8013b368(param_1, lbl_803E24C8, param_2) == 0) {
             state = ((GameObject *)param_1)->extra;
-            if ((((uint)*(u8 *)((char *)state + 0x58) >> 6) & 1) == 0u) {
+            if ((((uint)((TrickyGrowlState *)state)->unk58 >> 6) & 1) == 0u) {
                 s16 a0 = ((GameObject *)param_1)->anim.currentMove;
                 if (a0 >= 0x30 || a0 < 0x29) {
                     if (Sfx_IsPlayingFromObjectChannel(param_1, 0x10) == 0) {
@@ -67,10 +76,10 @@ void trickyGrowl(void *param_1, void *param_2)
             void *target = *(void **)((char *)((GameObject *)param_1)->extra + 0x28);
             trickyTurnTowardYaw(param_1, (s16)getAngle(
                 -(*(f32 *)target - ((GameObject *)param_1)->anim.worldPosX),
-                -(*(f32 *)((char *)target + 0x8) - ((GameObject *)param_1)->anim.worldPosZ)));
+                -(((TrickyGrowlState *)target)->unk8 - ((GameObject *)param_1)->anim.worldPosZ)));
             if (randomGetRange(0, 10) == 0) {
                 state = ((GameObject *)param_1)->extra;
-                if (((*(u8 *)((char *)state + 0x58) >> 6) & 1) == 0u) {
+                if (((((TrickyGrowlState *)state)->unk58 >> 6) & 1) == 0u) {
                     s16 a0 = ((GameObject *)param_1)->anim.currentMove;
                     if (a0 >= 0x30 || a0 < 0x29) {
                         if (Sfx_IsPlayingFromObjectChannel(param_1, 0x10) == 0) {
@@ -115,7 +124,7 @@ void trickyGrowl(void *param_1, void *param_2)
             }
             Sfx_RemoveLoopedObjectSound(param_1, 0x3dc);
             state = ((GameObject *)param_1)->extra;
-            if (((*(u8 *)((char *)state + 0x58) >> 6) & 1) == 0u) {
+            if (((((TrickyGrowlState *)state)->unk58 >> 6) & 1) == 0u) {
                 s16 a0 = ((GameObject *)param_1)->anim.currentMove;
                 if (a0 >= 0x30 || a0 < 0x29) {
                     if (Sfx_IsPlayingFromObjectChannel(param_1, 0x10) == 0) {
@@ -139,7 +148,7 @@ void trickyGrowl(void *param_1, void *param_2)
             void *target = *(void **)((char *)((GameObject *)param_1)->extra + 0x28);
             trickyTurnTowardYaw(param_1, (s16)getAngle(
                 -(*(f32 *)target - ((GameObject *)param_1)->anim.worldPosX),
-                -(*(f32 *)((char *)target + 0x8) - ((GameObject *)param_1)->anim.worldPosZ)));
+                -(((TrickyGrowlState *)target)->unk8 - ((GameObject *)param_1)->anim.worldPosZ)));
         }
         break;
     }

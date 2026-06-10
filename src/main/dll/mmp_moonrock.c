@@ -2,6 +2,17 @@
 #include "main/dll/mmp_moonrock.h"
 #include "global.h"
 
+typedef struct WaveanimatorState {
+    u8 pad0[0x34 - 0x0];
+    u8 unk34;
+    u8 pad35[0x36 - 0x35];
+    u8 unk36;
+    u8 unk37;
+    u8 unk38;
+    u8 pad39[0x40 - 0x39];
+} WaveanimatorState;
+
+
 extern uint GameBit_Get(int eventId);
 
 void texscroll2_setScale(TexScroll2Object *obj, s8 scale)
@@ -155,11 +166,11 @@ int texscroll_getObjectTypeId(void) { return 0x0; }
 void waveanimator_modelMtxFn(int obj, int a, int b, int c) {
     int *state = ((GameObject *)obj)->extra;
     u32 v;
-    v = (u32)*(u8 *)((char *)state + 0x34) | 4;
-    *(u8 *)((char *)state + 0x34) = (u8)v;
-    *(u8 *)((char *)state + 0x36) = (u8)a;
-    *(u8 *)((char *)state + 0x37) = (u8)b;
-    *(u8 *)((char *)state + 0x38) = (u8)c;
+    v = (u32)((WaveanimatorState *)state)->unk34 | 4;
+    ((WaveanimatorState *)state)->unk34 = (u8)v;
+    ((WaveanimatorState *)state)->unk36 = (u8)a;
+    ((WaveanimatorState *)state)->unk37 = (u8)b;
+    ((WaveanimatorState *)state)->unk38 = (u8)c;
 }
 
 void texscroll2_init(TexScroll2Object *obj, TexScrollPlacement *placement, int loadFlags) {

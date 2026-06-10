@@ -14,6 +14,22 @@ STATIC_ASSERT(sizeof(CloudRunnerState) == 0xbc8);
 
 #include "main/audio/sfx_ids.h"
 #include "main/objanim_internal.h"
+
+typedef struct DRCloudRunnerState {
+    u8 pad0[0xAD5 - 0x0];
+    u8 unkAD5;
+    u8 padAD6[0xB50 - 0xAD6];
+    f32 unkB50;
+    u8 padB54[0xBAE - 0xB54];
+    s16 unkBAE;
+    s16 unkBB0;
+    u8 padBB2[0xBB4 - 0xBB2];
+    u8 unkBB4;
+    u8 padBB5[0xBC4 - 0xBB5];
+    s8 unkBC4;
+    u8 padBC5[0xBC8 - 0xBC5];
+} DRCloudRunnerState;
+
 int DR_CloudRunner_defaultStateHandler(void) { return 0x0; }
 
 void DR_CloudRunner_func21(void) {}
@@ -309,11 +325,11 @@ void DR_CloudRunner_init(int obj, int p2)
     ((GameObject *)obj)->animEventCallback = (void *)DR_CloudRunner_SeqFn;
     ObjGroup_AddObject(obj, 0xa);
     inner = *(int *)&((GameObject *)obj)->extra;
-    *(u8 *)((char *)inner + 0xbb4) = *(u8 *)((char *)p2 + 0x19);
-    *(s16 *)((char *)inner + 0xbae) = 5;
-    *(s16 *)((char *)inner + 0xbb0) = *(s16 *)((char *)p2 + 0x1a);
-    *(s8 *)((char *)inner + 0xbc4) = -1;
-    *(f32 *)((char *)inner + 0xb50) = (f32)*(s16 *)((char *)p2 + 0x1c) / lbl_803E8414;
+    ((DRCloudRunnerState *)inner)->unkBB4 = *(u8 *)((char *)p2 + 0x19);
+    ((DRCloudRunnerState *)inner)->unkBAE = 5;
+    ((DRCloudRunnerState *)inner)->unkBB0 = *(s16 *)((char *)p2 + 0x1a);
+    ((DRCloudRunnerState *)inner)->unkBC4 = -1;
+    ((DRCloudRunnerState *)inner)->unkB50 = (f32)*(s16 *)((char *)p2 + 0x1c) / lbl_803E8414;
     if (((GameObject *)obj)->anim.modelState != NULL) {
         ((GameObject *)obj)->anim.modelState->flags |= 0xa10;
     }

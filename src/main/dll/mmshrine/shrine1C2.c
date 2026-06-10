@@ -10,6 +10,30 @@
 #include "main/resource.h"
 #include "main/screen_transition.h"
 
+typedef struct EcshShrineState {
+    u8 pad0[0x4 - 0x0];
+    f32 unk4;
+    f32 unk8;
+    u8 padC[0x18 - 0xC];
+    s16 unk18;
+    s16 unk1A;
+    s16 unk1C;
+    s16 unk1E;
+    s16 unk20;
+    s16 unk22;
+    s16 unk24;
+    s16 unk26;
+    u8 pad28[0x2E - 0x28];
+    u8 unk2E;
+    u8 unk2F;
+    u8 unk30;
+    u8 pad31[0x32 - 0x31];
+    u8 unk32;
+    u8 pad33[0x34 - 0x33];
+    s32 unk34;
+} EcshShrineState;
+
+
 extern undefined8 FUN_80006728();
 extern undefined4 FUN_80006770();
 extern undefined4 FUN_800067c0();
@@ -211,10 +235,10 @@ void ecsh_shrine_update(s16 *obj)
     SCGameBitLatch_Update(sub + 0x34, 2, -1, -1, 0xb9d, 0xd);
     SCGameBitLatch_UpdateInverted(sub + 0x34, 1, -1, -1, 0xcbb, 8);
     SCGameBitLatch_Update(sub + 0x34, 0x10, -1, -1, 0xcbb, 0xc4);
-    if (*(f32 *)(sub + 8) > (z = *(f32 *)&lbl_803E4FCC)) {
-        *(f32 *)(sub + 8) = *(f32 *)(sub + 8) - timeDelta;
-        if (*(f32 *)(sub + 8) <= z) {
-            *(f32 *)(sub + 8) = z;
+    if (((EcshShrineState *)sub)->unk8 > (z = *(f32 *)&lbl_803E4FCC)) {
+        ((EcshShrineState *)sub)->unk8 = ((EcshShrineState *)sub)->unk8 - timeDelta;
+        if (((EcshShrineState *)sub)->unk8 <= z) {
+            ((EcshShrineState *)sub)->unk8 = z;
         }
     } else {
         switch (sub[0x2f]) {
@@ -258,10 +282,10 @@ void ecsh_shrine_update(s16 *obj)
         case 1:
             if (sub[0x30] == 1) {
                 sub[0x2f] = 2;
-                *(f32 *)(sub + 8) = lbl_803E4FD0;
-                *(s16 *)(sub + 0x24) = 6;
+                ((EcshShrineState *)sub)->unk8 = lbl_803E4FD0;
+                ((EcshShrineState *)sub)->unk24 = 6;
                 Sfx_PlayFromObject(obj, 0x16f);
-                *(f32 *)(sub + 4) = lbl_803E4FCC;
+                ((EcshShrineState *)sub)->unk4 = lbl_803E4FCC;
                 GameBit_Set(0xb9d, 1);
                 (*gScreenTransitionInterface)->step(0x78, 1);
             }
@@ -269,10 +293,10 @@ void ecsh_shrine_update(s16 *obj)
             break;
         case 2:
             sub[0x2f] = 3;
-            *(f32 *)(sub + 8) = lbl_803E4FD4;
-            *(s16 *)(sub + 0x24) = 8;
-            *(f32 *)(sub + 4) = lbl_803E4FD8;
-            *(s16 *)(sub + 0x22) = 5;
+            ((EcshShrineState *)sub)->unk8 = lbl_803E4FD4;
+            ((EcshShrineState *)sub)->unk24 = 8;
+            ((EcshShrineState *)sub)->unk4 = lbl_803E4FD8;
+            ((EcshShrineState *)sub)->unk22 = 5;
             gv = randomGetRange(0, 5);
             sub[0x2e] = gv;
             (*gObjectTriggerInterface)->runSequence(2, obj, -1);
@@ -280,40 +304,40 @@ void ecsh_shrine_update(s16 *obj)
         case 3:
         case 4:
         case 5:
-            if (*(f32 *)(sub + 4) > (fv = lbl_803E4FCC)) {
-                if (*(s16 *)(sub + 0x24) == 1 && sub[0x31] == 0
-                    && *(f32 *)(sub + 4) < *(f32 *)(sub + 0x14)) {
+            if (((EcshShrineState *)sub)->unk4 > (fv = lbl_803E4FCC)) {
+                if (((EcshShrineState *)sub)->unk24 == 1 && sub[0x31] == 0
+                    && ((EcshShrineState *)sub)->unk4 < *(f32 *)(sub + 0x14)) {
                     if ((int)randomGetRange(0, 10) > 7) {
                         Sfx_PlayFromObject(obj, 0x345);
                     }
                     sub[0x31] = 1;
                 }
-                *(f32 *)(sub + 4) = *(f32 *)(sub + 4) - timeDelta;
-                if (*(f32 *)(sub + 4) < lbl_803E4FCC) {
-                    *(f32 *)(sub + 4) = *(f32 *)&lbl_803E4FCC;
+                ((EcshShrineState *)sub)->unk4 = ((EcshShrineState *)sub)->unk4 - timeDelta;
+                if (((EcshShrineState *)sub)->unk4 < lbl_803E4FCC) {
+                    ((EcshShrineState *)sub)->unk4 = *(f32 *)&lbl_803E4FCC;
                 }
             } else {
-                switch (*(s16 *)(sub + 0x24)) {
+                switch (((EcshShrineState *)sub)->unk24) {
                 case 8:
-                    *(s16 *)(sub + 0x24) = 2;
-                    *(f32 *)(sub + 4) = lbl_803E4FD8;
-                    *(f32 *)(sub + 8) = lbl_803E4FDC;
+                    ((EcshShrineState *)sub)->unk24 = 2;
+                    ((EcshShrineState *)sub)->unk4 = lbl_803E4FD8;
+                    ((EcshShrineState *)sub)->unk8 = lbl_803E4FDC;
                     break;
                 case 9:
-                    *(s16 *)(sub + 0x24) = 8;
-                    *(f32 *)(sub + 4) = lbl_803E4FD8;
-                    *(f32 *)(sub + 8) = lbl_803E4FDC;
+                    ((EcshShrineState *)sub)->unk24 = 8;
+                    ((EcshShrineState *)sub)->unk4 = lbl_803E4FD8;
+                    ((EcshShrineState *)sub)->unk8 = lbl_803E4FDC;
                     break;
                 case 7:
-                    *(s16 *)(sub + 0x24) = 3;
-                    *(f32 *)(sub + 4) = lbl_803E4FD8;
-                    *(f32 *)(sub + 8) = lbl_803E4FDC;
+                    ((EcshShrineState *)sub)->unk24 = 3;
+                    ((EcshShrineState *)sub)->unk4 = lbl_803E4FD8;
+                    ((EcshShrineState *)sub)->unk8 = lbl_803E4FDC;
                     break;
                 case 2:
-                    *(s16 *)(sub + 0x22) -= 1;
-                    if (*(s16 *)(sub + 0x22) <= 0) {
+                    ((EcshShrineState *)sub)->unk22 -= 1;
+                    if (((EcshShrineState *)sub)->unk22 <= 0) {
                         Sfx_PlayFromObject(0, 0x3a8);
-                        *(s16 *)(sub + 0x24) = 5;
+                        ((EcshShrineState *)sub)->unk24 = 5;
                         if (sub[0x2f] == 3) {
                             *(f32 *)(sub + 0xc) = lbl_803E4FA8;
                         } else if (sub[0x2f] == 4) {
@@ -325,8 +349,8 @@ void ecsh_shrine_update(s16 *obj)
                         sub[0x31] = 0;
                         *(f32 *)(sub + 0x14) = (f32)(int)randomGetRange(0x28, 0x3c);
                         Sfx_PlayFromObject(obj, 0x344);
-                        *(s16 *)(sub + 0x24) = 0;
-                        *(f32 *)(sub + 4) = lbl_803E4FE0;
+                        ((EcshShrineState *)sub)->unk24 = 0;
+                        ((EcshShrineState *)sub)->unk4 = lbl_803E4FE0;
                         if (sub[0x2f] == 3) {
                             pick = randomGetRange(0, 1);
                         } else if (sub[0x2f] == 4) {
@@ -394,55 +418,55 @@ void ecsh_shrine_update(s16 *obj)
                     }
                     break;
                 case 0:
-                    *(s16 *)(sub + 0x24) = 1;
-                    *(f32 *)(sub + 4) = lbl_803E4FE4;
+                    ((EcshShrineState *)sub)->unk24 = 1;
+                    ((EcshShrineState *)sub)->unk4 = lbl_803E4FE4;
                     break;
                 case 1:
-                    *(s16 *)(sub + 0x24) = 4;
-                    *(f32 *)(sub + 4) = fv;
+                    ((EcshShrineState *)sub)->unk24 = 4;
+                    ((EcshShrineState *)sub)->unk4 = fv;
                     break;
                 case 4:
-                    *(s16 *)(sub + 0x24) = 2;
-                    *(f32 *)(sub + 4) = fv;
+                    ((EcshShrineState *)sub)->unk24 = 2;
+                    ((EcshShrineState *)sub)->unk4 = fv;
                     break;
                 case 5:
                     Sfx_KeepAliveLoopedObjectSound(0, 0x3a8);
-                    if (*(s16 *)(sub + 0x26) == 0) {
+                    if (((EcshShrineState *)sub)->unk26 == 0) {
                         (*gScreenTransitionInterface)->start(0x1e, 1);
-                        *(f32 *)(sub + 8) = lbl_803E4FE8;
-                        *(s16 *)(sub + 0x24) = 7;
+                        ((EcshShrineState *)sub)->unk8 = lbl_803E4FE8;
+                        ((EcshShrineState *)sub)->unk24 = 7;
                         Sfx_PlayFromObject(obj, 0x16f);
                         sub[0x2f] = 10;
-                    } else if (*(s16 *)(sub + 0x26) == 1) {
+                    } else if (((EcshShrineState *)sub)->unk26 == 1) {
                         if (sub[0x2f] == 3) {
                             gv = randomGetRange(0, 5);
                             sub[0x2e] = gv;
                             sub[0x2f] = 4;
-                            *(s16 *)(sub + 0x24) = 9;
-                            *(f32 *)(sub + 8) = lbl_803E4FEC;
-                            *(f32 *)(sub + 4) = lbl_803E4FB0;
-                            *(s16 *)(sub + 0x22) = 7;
-                            *(s16 *)(sub + 0x26) = -1;
+                            ((EcshShrineState *)sub)->unk24 = 9;
+                            ((EcshShrineState *)sub)->unk8 = lbl_803E4FEC;
+                            ((EcshShrineState *)sub)->unk4 = lbl_803E4FB0;
+                            ((EcshShrineState *)sub)->unk22 = 7;
+                            ((EcshShrineState *)sub)->unk26 = -1;
                             Sfx_PlayFromObject(obj, 0x170);
                             (*gObjectTriggerInterface)->runSequence(2, obj, -1);
                         } else if (sub[0x2f] == 4) {
                             gv = randomGetRange(0, 5);
                             sub[0x2e] = gv;
                             sub[0x2f] = 5;
-                            *(s16 *)(sub + 0x24) = 9;
-                            *(f32 *)(sub + 8) = lbl_803E4FEC;
-                            *(f32 *)(sub + 4) = lbl_803E4FB0;
-                            *(s16 *)(sub + 0x22) = 9;
-                            *(s16 *)(sub + 0x26) = -1;
+                            ((EcshShrineState *)sub)->unk24 = 9;
+                            ((EcshShrineState *)sub)->unk8 = lbl_803E4FEC;
+                            ((EcshShrineState *)sub)->unk4 = lbl_803E4FB0;
+                            ((EcshShrineState *)sub)->unk22 = 9;
+                            ((EcshShrineState *)sub)->unk26 = -1;
                             Sfx_PlayFromObject(obj, 0x170);
                             (*gObjectTriggerInterface)->runSequence(2, obj, -1);
                         } else {
-                            *(f32 *)(sub + 8) = lbl_803E4FE8;
+                            ((EcshShrineState *)sub)->unk8 = lbl_803E4FE8;
                             (*gScreenTransitionInterface)->start(0x1e, 1);
                             sub[0x2f] = 6;
-                            *(s16 *)(sub + 0x24) = 3;
-                            *(s16 *)(sub + 0x26) = 0;
-                            *(s16 *)(sub + 0x24) = 7;
+                            ((EcshShrineState *)sub)->unk24 = 3;
+                            ((EcshShrineState *)sub)->unk26 = 0;
+                            ((EcshShrineState *)sub)->unk24 = 7;
                             Sfx_PlayFromObject(obj, 0x7e);
                             Sfx_PlayFromObject(obj, 0x16f);
                         }
@@ -451,8 +475,8 @@ void ecsh_shrine_update(s16 *obj)
                         if (*(f32 *)(sub + 0xc) <= lbl_803E4FCC) {
                             sub[0x2f] = 10;
                             (*gScreenTransitionInterface)->start(0x1e, 1);
-                            *(f32 *)(sub + 8) = lbl_803E4FE8;
-                            *(s16 *)(sub + 0x24) = 7;
+                            ((EcshShrineState *)sub)->unk8 = lbl_803E4FE8;
+                            ((EcshShrineState *)sub)->unk24 = 7;
                             Sfx_PlayFromObject(obj, 0x16f);
                         }
                     }
@@ -481,14 +505,14 @@ void ecsh_shrine_update(s16 *obj)
             break;
         case 8:
             sub[0x2f] = 0;
-            *(f32 *)(sub + 4) = z;
-            *(s16 *)(sub + 0x20) = 0;
-            *(s16 *)(sub + 0x22) = 0;
-            *(s16 *)(sub + 0x24) = 0;
-            *(s16 *)(sub + 0x26) = -1;
+            ((EcshShrineState *)sub)->unk4 = z;
+            ((EcshShrineState *)sub)->unk20 = 0;
+            ((EcshShrineState *)sub)->unk22 = 0;
+            ((EcshShrineState *)sub)->unk24 = 0;
+            ((EcshShrineState *)sub)->unk26 = -1;
             sub[0x2e] = 0;
             sub[0x30] = 0;
-            *(f32 *)(sub + 8) = lbl_803E4FF0;
+            ((EcshShrineState *)sub)->unk8 = lbl_803E4FF0;
             GameBit_Set(0x129, 1);
             GameBit_Set(0xb9d, 0);
             GameBit_Set(0xa6d, 0);
@@ -496,7 +520,7 @@ void ecsh_shrine_update(s16 *obj)
             GameBit_Set(0xa70, 0);
             GameBit_Set(0x143, 0);
             sub[0x30] = 0;
-            *(s16 *)(sub + 0x26) = -1;
+            ((EcshShrineState *)sub)->unk26 = -1;
             break;
         }
     }
@@ -967,27 +991,27 @@ void ecsh_shrine_init(s16 *obj, s8 *def) {
     lbl_803DDBC0 = 0;
     lbl_803DDBC4 = 0;
     *obj = (s16)((s32)def[0x18] << 8);
-    *(u8 *)((char *)sub + 0x2f) = 0;
-    *(u8 *)((char *)sub + 0x30) = 0;
-    *(f32 *)((char *)sub + 4) = lbl_803E4FCC;
-    *(s16 *)((char *)sub + 0x20) = 0;
-    *(s16 *)((char *)sub + 0x22) = 0;
-    *(s16 *)((char *)sub + 0x24) = 0;
-    *(s16 *)((char *)sub + 0x26) = -1;
-    *(u8 *)((char *)sub + 0x2e) = 0;
-    *(int *)((char *)sub + 0x34) = 0;
+    ((EcshShrineState *)sub)->unk2F = 0;
+    ((EcshShrineState *)sub)->unk30 = 0;
+    ((EcshShrineState *)sub)->unk4 = lbl_803E4FCC;
+    ((EcshShrineState *)sub)->unk20 = 0;
+    ((EcshShrineState *)sub)->unk22 = 0;
+    ((EcshShrineState *)sub)->unk24 = 0;
+    ((EcshShrineState *)sub)->unk26 = -1;
+    ((EcshShrineState *)sub)->unk2E = 0;
+    ((EcshShrineState *)sub)->unk34 = 0;
     ((GameObject *)obj)->animEventCallback = (void *)fn_801C5CE4;
     ObjMsg_AllocQueue(obj, 4);
     GameBit_Set(0xba5, 1);
     GameBit_Set(0x129, 1);
     GameBit_Set(0x143, 0);
-    *(s16 *)((char *)sub + 0x18) = 0xc;
-    *(s16 *)((char *)sub + 0x1c) = 0x1e;
-    *(f32 *)((char *)sub + 8) = lbl_803E4FD0;
-    *(s16 *)((char *)sub + 0x1a) = 0;
-    *(s16 *)((char *)sub + 0x1e) = 0;
+    ((EcshShrineState *)sub)->unk18 = 0xc;
+    ((EcshShrineState *)sub)->unk1C = 0x1e;
+    ((EcshShrineState *)sub)->unk8 = lbl_803E4FD0;
+    ((EcshShrineState *)sub)->unk1A = 0;
+    ((EcshShrineState *)sub)->unk1E = 0;
     gv = GameBit_Get(0x58b);
-    *(u8 *)((char *)sub + 0x32) = gv;
+    ((EcshShrineState *)sub)->unk32 = gv;
     lbl_803DDBC4 = obj;
     ObjGroup_AddObject(obj, 0xb);
     ((GameObject *)obj)->unkF4 = 1;

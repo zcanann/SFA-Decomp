@@ -9,6 +9,17 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 
+typedef struct Dll19BState {
+    u8 pad0[0x12 - 0x0];
+    u8 unk12;
+    u8 unk13;
+    u8 unk14;
+    u8 pad15[0x16 - 0x15];
+    u8 unk16;
+    u8 pad17[0x18 - 0x17];
+} Dll19BState;
+
+
 
 
 #pragma peephole off
@@ -133,10 +144,10 @@ void dll_19B_update(int obj)
         st[1] -= framesThisStep;
         if (st[1] <= 0) {
             st[1] = 0;
-            if (*(u8 *)((char *)st + 0x16) == 0) {
+            if (((Dll19BState *)st)->unk16 == 0) {
                 (*(void (**)(int, int, int, int, int))(*(int *)gTitleMenuControlInterface + 0x18))(
                     3, 0x2c, 0x50, st[4], 0);
-                *(u8 *)((char *)st + 0x16) = 1;
+                ((Dll19BState *)st)->unk16 = 1;
             }
         }
     } else {
@@ -162,10 +173,10 @@ void dll_19B_update(int obj)
                 (*(void (**)(int, int))(*(int *)gTitleMenuControlInterface + 0x38))(2, v & 0xff);
             }
         }
-        switch (*(u8 *)((char *)st + 0x13)) {
+        switch (((Dll19BState *)st)->unk13) {
         case 0:
             if (Vec_distance(&((GameObject *)obj)->anim.worldPosX, (f32 *)(player + 0x18)) < (f32)st[0]) {
-                *(u8 *)((char *)st + 0x13) = 1;
+                ((Dll19BState *)st)->unk13 = 1;
                 GameBit_Set(0x129, 0);
                 (*gObjectTriggerInterface)->runSequence(0, (void *)obj, -1);
                 {
@@ -183,17 +194,17 @@ void dll_19B_update(int obj)
             }
             break;
         case 1:
-            if (*(u8 *)((char *)st + 0x14) == 1) {
-                *(u8 *)((char *)st + 0x13) = 2;
+            if (((Dll19BState *)st)->unk14 == 1) {
+                ((Dll19BState *)st)->unk13 = 2;
                 st[1] = 160;
             }
             break;
         case 2:
-            if (*(u8 *)((char *)st + 0x12) == 0 && (u32)GameBit_Get(0x1d3) == 0) {
+            if (((Dll19BState *)st)->unk12 == 0 && (u32)GameBit_Get(0x1d3) == 0) {
                 GameBit_Set(0x1d3, 1);
             }
             if ((u32)GameBit_Get(0x1d8) != 0) {
-                *(u8 *)((char *)st + 0x12) += 1;
+                ((Dll19BState *)st)->unk12 += 1;
                 GameBit_Set(0x1d8, 0);
             }
             st[7] -= (int)timeDelta;
@@ -202,13 +213,13 @@ void dll_19B_update(int obj)
                 GameBit_Set(0x1d4, 1);
                 (*gObjectTriggerInterface)->runSequence(2, (void *)obj, -1);
                 st[1] = 10;
-                *(u8 *)((char *)st + 0x13) = 6;
+                ((Dll19BState *)st)->unk13 = 6;
                 (*(void (**)(int, int, int, int, int))(*(int *)gTitleMenuControlInterface + 0x18))(
                     3, 0x35, 0x50, st[4] & 0xff, 0);
                 st[5] = 1;
                 GameBit_Set(0x1d3, 0);
-            } else if (*(u8 *)((char *)st + 0x12) == 1) {
-                *(u8 *)((char *)st + 0x13) = 3;
+            } else if (((Dll19BState *)st)->unk12 == 1) {
+                ((Dll19BState *)st)->unk13 = 3;
                 st[1] = 200;
                 st[5] = -3;
             }
@@ -220,7 +231,7 @@ void dll_19B_update(int obj)
                     3, 0x2c, 0x50, st[4] & 0xff, 0);
                 st[5] = 1;
                 GameBit_Set(0x129, 1);
-                *(u8 *)((char *)st + 0x13) = 5;
+                ((Dll19BState *)st)->unk13 = 5;
             } else {
                 fn_80296B78(player, -1);
                 GameBit_Set(0x126, 0);
@@ -228,7 +239,7 @@ void dll_19B_update(int obj)
                     3, 0x2a, 0x50, st[4] & 0xff, 0);
                 st[5] = 1;
                 (*gObjectTriggerInterface)->runSequence(1, (void *)obj, -1);
-                *(u8 *)((char *)st + 0x13) = 4;
+                ((Dll19BState *)st)->unk13 = 4;
             }
             break;
         case 4:
@@ -237,13 +248,13 @@ void dll_19B_update(int obj)
             }
             GameBit_Set(0x1d2, 0);
             GameBit_Set(0x127, 0);
-            *(u8 *)((char *)st + 0x13) = 5;
+            ((Dll19BState *)st)->unk13 = 5;
             (*(void (**)(int, int, int, int, int))(*(int *)gTitleMenuControlInterface + 0x18))(
                 3, 0x2c, 0x50, st[4] & 0xff, 0);
             break;
         case 6:
-            *(u8 *)((char *)st + 0x13) = 0;
-            *(u8 *)((char *)st + 0x14) = 0;
+            ((Dll19BState *)st)->unk13 = 0;
+            ((Dll19BState *)st)->unk14 = 0;
             st[1] = 400;
             GameBit_Set(0x129, 1);
             GameBit_Set(0x126, 1);
@@ -254,7 +265,7 @@ void dll_19B_update(int obj)
                 Resource_Release(handle);
             }
             GameBit_Set(0x1d8, 0);
-            *(u8 *)((char *)st + 0x12) = 0;
+            ((Dll19BState *)st)->unk12 = 0;
             st[7] = 4000;
             GameBit_Set(0x1d4, 0);
             break;

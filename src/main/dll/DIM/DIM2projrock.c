@@ -6,6 +6,26 @@
 #include "main/objanim_internal.h"
 #include "main/objhits_types.h"
 
+typedef struct Dim2lavacontrolState {
+    s8 unk0;
+    u8 pad1[0x2 - 0x1];
+    s8 unk2;
+    u8 pad3[0x24 - 0x3];
+    f32 unk24;
+} Dim2lavacontrolState;
+
+
+typedef struct Dll1DBState {
+    s8 unk0;
+    u8 pad1[0x2 - 0x1];
+    s8 unk2;
+    u8 pad3[0x4 - 0x3];
+    u8 unk4;
+    u8 pad5[0x24 - 0x5];
+    f32 unk24;
+} Dll1DBState;
+
+
 extern undefined8 FUN_80006724();
 extern undefined8 FUN_80006728();
 extern undefined4 FUN_800067c0();
@@ -1277,19 +1297,19 @@ void dll_1DB_update(int obj)
         }
         i += 4;
     }
-    switch (*(u8 *)(sub + 4)) {
+    switch (((Dll1DBState *)sub)->unk4) {
     case 1:
         Sfx_StopObjectChannel(obj, 8);
         if (found == 0) {
             *(u8 *)(sub + 6) = 1;
         } else if (*(u8 *)(sub + 6) != 0 && *(u8 *)(sub + 5) != 0) {
             Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt3);
-            *(u8 *)(sub + 4) = 4;
+            ((Dll1DBState *)sub)->unk4 = 4;
             *(f32 *)sub = lbl_803E4B0C;
         }
         if (GameBit_Get(*(s16 *)(state + 0x20)) != 0) {
             Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt3);
-            *(u8 *)(sub + 4) = 4;
+            ((Dll1DBState *)sub)->unk4 = 4;
             *(f32 *)sub = lbl_803E4B0C;
         }
         break;
@@ -1298,7 +1318,7 @@ void dll_1DB_update(int obj)
         if (*(u8 *)(sub + 5) != 0) {
             if (found == 0) {
                 Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt3);
-                *(u8 *)(sub + 4) = 3;
+                ((Dll1DBState *)sub)->unk4 = 3;
                 *(f32 *)sub = lbl_803E4B0C;
                 *(u8 *)(sub + 5) = 0;
                 GameBit_Set(*(s16 *)(state + 0x1e), 0);
@@ -1306,7 +1326,7 @@ void dll_1DB_update(int obj)
         } else {
             if (GameBit_Get(*(s16 *)(state + 0x20)) == 0) {
                 Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt3);
-                *(u8 *)(sub + 4) = 3;
+                ((Dll1DBState *)sub)->unk4 = 3;
                 *(f32 *)sub = lbl_803E4B0C;
                 *(u8 *)(sub + 5) = 0;
                 GameBit_Set(*(s16 *)(state + 0x1e), 0);
@@ -1326,7 +1346,7 @@ void dll_1DB_update(int obj)
         if (((GameObject *)obj)->anim.localPosY > *(f32 *)(state + 0xc)) {
             Sfx_PlayFromObject(obj, SFXchar_on_firelp);
             ((GameObject *)obj)->anim.localPosY = *(f32 *)(state + 0xc);
-            *(u8 *)(sub + 4) = 1;
+            ((Dll1DBState *)sub)->unk4 = 1;
             if (found != 0) {
                 *(u8 *)(sub + 5) = 1;
                 *(u8 *)(sub + 6) = 0;
@@ -1345,12 +1365,12 @@ void dll_1DB_update(int obj)
         if (((GameObject *)obj)->anim.localPosY < *(f32 *)(state + 0xc) - lbl_803E4B24) {
             Sfx_PlayFromObject(obj, SFXchar_on_firelp);
             ((GameObject *)obj)->anim.localPosY = *(f32 *)(state + 0xc) - lbl_803E4B24;
-            *(u8 *)(sub + 4) = 2;
+            ((Dll1DBState *)sub)->unk4 = 2;
             GameBit_Set(*(s16 *)(state + 0x1e), 1);
         }
         if (*(u8 *)(sub + 5) == 0) {
             if (GameBit_Get(*(s16 *)(state + 0x20)) == 0) {
-                *(u8 *)(sub + 4) = 3;
+                ((Dll1DBState *)sub)->unk4 = 3;
                 GameBit_Set(*(s16 *)(state + 0x1e), 0);
             }
         }
@@ -1618,13 +1638,13 @@ void dll_1DF_init(void* obj, void* p)
 void dim2lavacontrol_setScale(void* obj)
 {
     void* sub = ((GameObject *)obj)->extra;
-    if (((s32)*(s8*)((char*)sub + 0x2) & 1) == 0) {
+    if (((s32)((Dim2lavacontrolState *)sub)->unk2 & 1) == 0) {
         void* p = *(void**)&((GameObject *)obj)->anim.placementData;
-        s8 cnt = *(s8*)((char*)sub + 0x0);
+        s8 cnt = ((Dim2lavacontrolState *)sub)->unk0;
         if ((s32)cnt > 0) {
-            *(s8*)((char*)sub + 0x0) = cnt - 1;
-            if (*(s8*)((char*)sub + 0x0) == 0) {
-                *(s8*)((char*)sub + 0x2) = (s8)(*(u8*)((char*)sub + 0x2) | 1);
+            ((Dim2lavacontrolState *)sub)->unk0 = cnt - 1;
+            if (((Dim2lavacontrolState *)sub)->unk0 == 0) {
+                ((Dim2lavacontrolState *)sub)->unk2 = (s8)(*(u8 *)&((Dim2lavacontrolState *)sub)->unk2 | 1);
                 GameBit_Set(*(s16*)((char*)p + 0x1E), 1);
             }
         }
@@ -1693,9 +1713,9 @@ void dll_1DB_init(void* obj, void* p)
     s16 t = (s16)((s32)*(s8*)((char*)p + 0x18) << 8);
     ((GameObject *)obj)->anim.rotX = t;
     if (GameBit_Get(*(s16*)((char*)p + 0x1E)) != 0) {
-        *(u8*)((char*)sub + 0x4) = 2;
+        ((Dll1DBState *)sub)->unk4 = 2;
     } else {
-        *(u8*)((char*)sub + 0x4) = 1;
+        ((Dll1DBState *)sub)->unk4 = 1;
     }
     ((GameObject *)obj)->objectFlags |= 0x2000;
 }
@@ -1719,22 +1739,22 @@ void dim2lavacontrol_init(int obj, int param2)
         gameBitFn_800ea2e0(i);
     }
     state = *(int *)&((GameObject *)obj)->extra;
-    *(s8 *)(state + 0) = (s8)*(s16 *)(param2 + 0x1a);
-    *(u8 *)(state + 1) = *(u8 *)(state + 0);
+    ((Dim2lavacontrolState *)state)->unk0 = (s8)*(s16 *)(param2 + 0x1a);
+    *(u8 *)(state + 1) = *(u8 *)&((Dim2lavacontrolState *)state)->unk0;
     if (GameBit_Get(*(s16 *)(param2 + 0x1e)) != 0) {
         g = 1;
     } else {
         g = 0;
     }
-    *(s8 *)(state + 2) = (s8)(*(u8 *)(state + 2) | g);
+    ((Dim2lavacontrolState *)state)->unk2 = (s8)(*(u8 *)&((Dim2lavacontrolState *)state)->unk2 | g);
     *(int *)(state + 0xc) = 0xd7;
     *(u8 *)(state + 4) = 0;
-    if ((*(s8 *)(state + 2) & 1) != 0) {
-        *(u8 *)(state + 0) = 0;
+    if ((((Dim2lavacontrolState *)state)->unk2 & 1) != 0) {
+        *(u8 *)&((Dim2lavacontrolState *)state)->unk0 = 0;
         *(u8 *)(state + 3) = lbl_803DBF28[0];
         fn_8004C1E4(lbl_803DBF28[0], lbl_803E4B90);
     } else {
-        *(u8 *)(state + 0) = 3;
+        *(u8 *)&((Dim2lavacontrolState *)state)->unk0 = 3;
         *(u8 *)(state + 3) = lbl_803DBF28[3];
         fn_8004C1E4(lbl_803DBF28[3], lbl_803E4B90);
     }

@@ -4,6 +4,14 @@
 #include "main/objanim_internal.h"
 #include "main/objseq.h"
 
+typedef struct DimdismountpointState {
+    f32 unk0;
+    f32 unk4;
+    f32 unk8;
+    f32 unkC;
+} DimdismountpointState;
+
+
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined8 ObjGroup_RemoveObject();
@@ -225,10 +233,10 @@ int dimdismountpoint_setScale(int obj) {
     f32 result;
     int side;
 
-    result = *(f32 *)((char *)state + 0xC) +
-             (*(f32 *)((char *)state + 8) * ((GameObject *)player)->anim.localPosZ +
-              (*(f32 *)((char *)state + 0) * ((GameObject *)player)->anim.localPosX +
-               *(f32 *)((char *)state + 4) * ((GameObject *)player)->anim.localPosY));
+    result = ((DimdismountpointState *)state)->unkC +
+             (((DimdismountpointState *)state)->unk8 * ((GameObject *)player)->anim.localPosZ +
+              (((DimdismountpointState *)state)->unk0 * ((GameObject *)player)->anim.localPosX +
+               ((DimdismountpointState *)state)->unk4 * ((GameObject *)player)->anim.localPosY));
 
     if (result >= lbl_803E4908) {
         side = 0;
