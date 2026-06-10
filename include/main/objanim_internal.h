@@ -525,6 +525,14 @@ static inline ObjAnimMoveData *ObjAnim_GetCurrentBlendMoveData(ObjAnimDef *animD
   return ObjAnim_GetBlendMoveData(animDef, state, state->blendCacheSlot);
 }
 
+static inline ObjAnimRootCurve *ObjAnim_GetMoveDataRootCurve(ObjAnimMoveData *moveData) {
+  return (ObjAnimRootCurve *)((u8 *)moveData + moveData->rootCurveOffset);
+}
+
+static inline s16 *ObjAnim_GetRootCurveAxisData(ObjAnimRootCurve *curve) {
+  return &curve->axes[0].firstSample;
+}
+
 static inline ObjAnimRootCurve *ObjAnim_GetMoveRootCurve(ObjAnimDef *animDef,
                                                          ObjAnimState *state) {
   ObjAnimMoveData *moveData;
@@ -533,7 +541,7 @@ static inline ObjAnimRootCurve *ObjAnim_GetMoveRootCurve(ObjAnimDef *animDef,
   if (moveData->rootCurveOffset == 0) {
     return NULL;
   }
-  return (ObjAnimRootCurve *)((u8 *)moveData + moveData->rootCurveOffset);
+  return ObjAnim_GetMoveDataRootCurve(moveData);
 }
 
 static inline ObjAnimRootCurve *ObjAnim_GetBlendMoveRootCurve(ObjAnimDef *animDef,
@@ -544,7 +552,7 @@ static inline ObjAnimRootCurve *ObjAnim_GetBlendMoveRootCurve(ObjAnimDef *animDe
   if (moveData->rootCurveOffset == 0) {
     return NULL;
   }
-  return (ObjAnimRootCurve *)((u8 *)moveData + moveData->rootCurveOffset);
+  return ObjAnim_GetMoveDataRootCurve(moveData);
 }
 
 static inline s32 ObjAnim_GetPackedEventFrame(ObjAnimPackedEvent eventEntry) {

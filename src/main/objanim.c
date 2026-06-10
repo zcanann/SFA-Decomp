@@ -8,7 +8,7 @@ static inline s16 *ObjAnim_FindFirstRootTranslationAxis(ObjAnimRootCurve *curve)
   s16 *axis;
   int axisIndex;
 
-  axis = (s16 *)((u8 *)curve + OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET);
+  axis = ObjAnim_GetRootCurveAxisData(curve);
   for (axisIndex = 0; axisIndex < OBJANIM_ROOT_CURVE_TRANSLATION_AXIS_COUNT; axisIndex++) {
     if (*axis != 0) {
       return axis;
@@ -591,9 +591,9 @@ int ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,float *p
     moveWeight = gObjAnimProgressOne - blendWeight;
     moveData = ObjAnim_GetCurrentBlendMoveData(animDef,state);
     if (moveData->rootCurveOffset != 0) {
-      blendCurve = (ObjAnimRootCurve *)((u8 *)moveData + moveData->rootCurveOffset);
+      blendCurve = ObjAnim_GetMoveDataRootCurve(moveData);
       blendScale = blendCurve->scale * objAnim->rootMotionScale;
-      blendSamples = (s16 *)((u8 *)blendCurve + OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET);
+      blendSamples = ObjAnim_GetRootCurveAxisData(blendCurve);
       if (*blendSamples == 0) {
         blendSamples++;
         if (*blendSamples == 0) {
@@ -613,11 +613,11 @@ int ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,float *p
   if (moveData->rootCurveOffset == 0) {
     return 0;
   }
-  curve = (ObjAnimRootCurve *)((u8 *)moveData + moveData->rootCurveOffset);
+  curve = ObjAnim_GetMoveDataRootCurve(moveData);
 
   rootScale = curve->scale * objAnim->rootMotionScale;
   segmentCount = curve->sampleCount - 1;
-  axis = (s16 *)((u8 *)curve + OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET);
+  axis = ObjAnim_GetRootCurveAxisData(curve);
   hasFirstAxis = 0;
   axisFirstSample = *axis;
   if (axisFirstSample != 0) {
@@ -919,7 +919,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimHandle
   rootScale = curve->scale * objAnim->rootMotionScale;
   sampleCount = curve->sampleCount;
   segmentCount = sampleCount - 1;
-  axis = (s16 *)((u8 *)curve + OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET);
+  axis = ObjAnim_GetRootCurveAxisData(curve);
   previousScaledSample = (f32)segmentCount * previousProgress;
   previousSampleIndex = (int)previousScaledSample;
   previousFraction = previousScaledSample - (f32)previousSampleIndex;
@@ -933,7 +933,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimHandle
     moveWeight = gObjAnimProgressOne - blendWeight;
     blendCurve = ObjAnim_GetBlendMoveRootCurve(animDef,state);
     if (blendCurve != NULL) {
-      blendAxis = (s16 *)((u8 *)blendCurve + OBJANIM_ROOT_CURVE_AXIS_DATA_OFFSET);
+      blendAxis = ObjAnim_GetRootCurveAxisData(blendCurve);
     }
   }
   else {
