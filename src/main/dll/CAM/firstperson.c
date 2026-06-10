@@ -75,8 +75,7 @@ void firstperson_updatePosition(CameraObject *camera, ObjAnimComponent *target)
   f32 ratio;
   f32 speed;
 
-  (*gCameraInterface)->getRelativePosition(gCamcontrolModeSettings->targetHeight, (int)camera, &dx,
-                                           &dz, &dy, &dist, 1);
+  ((void (*)(int, f32 *, f32 *, f32 *, f32 *, int, f32))(*gCameraInterface)->getRelativePosition)((int)camera, &dx, &dz, &dy, &dist, 1, gCamcontrolModeSettings->targetHeight);
   dist = dy * dy + (dx * dx + dz * dz);
   if (dist > lbl_803E16AC) {
     dist = sqrtf(dist);

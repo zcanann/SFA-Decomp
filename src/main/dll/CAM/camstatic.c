@@ -196,9 +196,7 @@ void camstatic_update(CameraObject *camera)
       gCamcontrolModeSettings->collisionProbeTimer = 0;
     }
   }
-  (*gCameraInterface)->getRelativePosition(gCamcontrolModeSettings->targetHeight,
-                                           (int)camera, &local_138, (f32 *)auStack_13c,
-                                           &local_140, &local_144, 0);
+  ((void (*)(int, f32 *, f32 *, f32 *, f32 *, int, f32))(*gCameraInterface)->getRelativePosition)((int)camera, &local_138, (f32 *)auStack_13c, &local_140, &local_144, 0, gCamcontrolModeSettings->targetHeight);
   sVar4 = getAngle(local_138,local_140);
   gCamcontrolModeSettings->pitchOffset = 0;
   camera->anim.rotX = (-0x8000 - sVar4) - gCamcontrolModeSettings->pitchOffset;
