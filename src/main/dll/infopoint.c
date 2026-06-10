@@ -58,7 +58,7 @@ void TrickyCurve_updateCooldownTrigger(int obj)
 
   if (deltaX <= 0.0f) {
     bound = (f32)state->halfWidthX;
-    if (-bound < deltaX) {
+    if (deltaX > -bound) {
       axisCount = 1;
     }
   }
@@ -71,7 +71,7 @@ void TrickyCurve_updateCooldownTrigger(int obj)
 
   if (deltaZ <= 0.0f) {
     bound = (f32)state->halfWidthZ;
-    if (-bound < deltaZ) {
+    if (deltaZ > -bound) {
       axisCount = axisCount + 1;
     }
   }
@@ -84,7 +84,7 @@ void TrickyCurve_updateCooldownTrigger(int obj)
 
   if (deltaY <= 0.0f) {
     bound = (f32)state->halfHeightY;
-    if (-bound < deltaY) {
+    if (deltaY > -bound) {
       axisCount = axisCount + 1;
     }
   }
