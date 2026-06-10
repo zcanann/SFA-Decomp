@@ -102,7 +102,7 @@ void CameraModeStaffAnim_init(CameraObject *camera, undefined4 param_2, u8 *sett
   cosFacing = mathSinf(CameraModeStaffAnim_angleToRadians(target->anim.rotX));
   sinFacing = mathCosf(CameraModeStaffAnim_angleToRadians(target->anim.rotX));
 
-  if (gCamcontrolPathState->localFrameObj != 0) {
+  if ((void *)gCamcontrolPathState->localFrameObj != NULL) {
     facingDelta = target->anim.rotX - ((s16 *)gCamcontrolPathState->localFrameObj)[0];
   }
   else {
