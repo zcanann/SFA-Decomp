@@ -424,13 +424,13 @@ void FUN_801ac490(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 FUN_801accf4(int param_1,undefined4 param_2,int param_3)
+undefined4 FUN_801accf4(int param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate)
 {
   int iVar1;
   
   *(uint *)(*(int *)&((GameObject *)param_1)->extra + 4) = *(uint *)(*(int *)&((GameObject *)param_1)->extra + 4) | 1;
-  for (iVar1 = 0; iVar1 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar1 = iVar1 + 1) {
-    if (*(char *)(param_3 + iVar1 + 0x81) == '\x02') {
+  for (iVar1 = 0; iVar1 < (int)(uint)animUpdate->eventCount; iVar1 = iVar1 + 1) {
+    if (animUpdate->eventIds[iVar1] == 2) {
       GameBit_Set(0x378,0);
       GameBit_Set(0x3b9,0);
     }

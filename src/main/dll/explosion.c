@@ -178,15 +178,15 @@ void FUN_801caa30(undefined2 *param_1,int param_2)
  */
 #pragma scheduling on
 #pragma peephole on
-undefined4 FUN_801cab60(undefined4 param_1,undefined4 param_2,int param_3)
+undefined4 FUN_801cab60(undefined4 param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate)
 {
   int iVar1;
   int iVar2;
   
   iVar1 = FUN_80017a98();
   if (iVar1 != 0) {
-    for (iVar2 = 0; iVar2 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar2 = iVar2 + 1) {
-      if (*(char *)(param_3 + iVar2 + 0x81) == '\x01') {
+    for (iVar2 = 0; iVar2 < (int)(uint)animUpdate->eventCount; iVar2 = iVar2 + 1) {
+      if (animUpdate->eventIds[iVar2] == 1) {
         FUN_80294ccc(iVar1,0x10,1);
         FUN_80017698(0x174,1);
         (*gMapEventInterface)->setAnimEvent(0xb,4,1);
@@ -325,7 +325,7 @@ void FUN_801caeac(int param_1)
 #pragma peephole on
 void FUN_801caeb0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,int param_11,undefined4 param_12,
+                 undefined4 param_9,undefined4 param_10,ObjAnimUpdateState *animUpdate,undefined4 param_12,
                  undefined4 param_13,int param_14,undefined4 param_15,undefined4 param_16)
 {
   int iVar1;
@@ -337,8 +337,8 @@ void FUN_801caeb0(undefined8 param_1,double param_2,double param_3,undefined8 pa
   
   iVar1 = FUN_80286840();
   iVar4 = *(int *)(iVar1 + 0xb8);
-  *(undefined2 *)(param_11 + 0x70) = 0xffff;
-  *(undefined *)(param_11 + 0x56) = 0;
+  animUpdate->activeHitVolumePair = -1;
+  animUpdate->sequenceEventActive = 0;
   uVar5 = extraout_f1;
   if (*(short *)(iVar4 + 10) != 0) {
     *(short *)(iVar4 + 8) = *(short *)(iVar4 + 8) + *(short *)(iVar4 + 10);
@@ -352,8 +352,8 @@ void FUN_801caeb0(undefined8 param_1,double param_2,double param_3,undefined8 pa
     }
     uVar5 = (**(code **)(*DAT_803dd6f0 + 0x38))(3,*(ushort *)(iVar4 + 8) & 0xff);
   }
-  for (iVar3 = 0; iVar3 < (int)(uint)*(byte *)(param_11 + 0x8b); iVar3 = iVar3 + 1) {
-    switch(*(undefined *)(param_11 + iVar3 + 0x81)) {
+  for (iVar3 = 0; iVar3 < (int)(uint)animUpdate->eventCount; iVar3 = iVar3 + 1) {
+    switch(animUpdate->eventIds[iVar3]) {
     case 1:
       uVar5 = FUN_80006728(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar1,iVar1
                            ,0xc3,0,param_13,param_14,param_15,param_16);
@@ -409,20 +409,20 @@ void FUN_801caeb0(undefined8 param_1,double param_2,double param_3,undefined8 pa
     case 0xb:
       *(undefined *)(iVar4 + 0xf) = 7;
     }
-    *(undefined *)(param_11 + iVar3 + 0x81) = 0;
+    animUpdate->eventIds[iVar3] = 0;
   }
   if (*(char *)(iVar4 + 0xf) == '\a') {
     uVar2 = FUN_80006c10(0);
     if ((uVar2 & 0x100) == 0) {
       uVar2 = FUN_80006c10(0);
       if ((uVar2 & 0x200) != 0) {
-        (*gObjectTriggerInterface)->endSequence((s8)*(u8 *)(param_11 + 0x57));
+        (*gObjectTriggerInterface)->endSequence(animUpdate->sequenceSlot);
         *(undefined *)(iVar4 + 0xf) = 7;
         *(undefined2 *)(iVar4 + 2) = 0;
       }
     }
     else {
-      (*gObjectTriggerInterface)->endSequence((s8)*(u8 *)(param_11 + 0x57));
+      (*gObjectTriggerInterface)->endSequence(animUpdate->sequenceSlot);
       *(undefined *)(iVar4 + 0xf) = 8;
       *(undefined2 *)(iVar4 + 2) = 0;
     }
