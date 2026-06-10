@@ -320,7 +320,7 @@ void WM_ObjCreator_update(int obj) {
                 *(u8 *)(setup + 5) = 2;
                 *(u8 *)(setup + 7) = 0xff;
                 *(s16 *)(setup + 0x1e) = 0xffff;
-                *(s8 *)(setup + 0x18) = (u16)*(s16 *)obj >> 8;
+                *(s8 *)(setup + 0x18) = *(s16 *)obj >> 8;
                 Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
                 {
                     f32 size = lbl_803E5CC8;
