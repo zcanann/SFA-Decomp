@@ -39,23 +39,13 @@ typedef struct AramTransferQueue {
 void aramQueueCallback(void *req)
 {
     AramTransferQueue *queue;
-    AramQueueSlot *slot;
-    AramQueueSlot *callbackSlot;
     u32 i;
 
     queue = (*(u32 *)((u8 *)req + 0xc) == 1) ? (AramTransferQueue *)lbl_803D41E4 : (AramTransferQueue *)lbl_803D3F60;
-    i = 0;
-    callbackSlot = &queue->slots[i];
-    slot = queue->slots;
-    for (; i < 0x10; i++) {
-        if (req == slot) {
-            void (*cb)(void *) = slot->callback;
-            if (cb != NULL) {
-                cb(callbackSlot->callbackArg);
-            }
+    for (i = 0; i < 0x10; i++) {
+        if (req == &queue->slots[i] && queue->slots[i].callback != NULL) {
+            queue->slots[i].callback(queue->slots[i].callbackArg);
         }
-        slot++;
-        callbackSlot++;
     }
     queue->count = queue->count - 1;
 }
