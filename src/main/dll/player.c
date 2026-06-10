@@ -8943,7 +8943,7 @@ void Lightfoot_UpdateAttachedChild(int obj, int inner)
     if (Obj_IsLoadingLocked()) {
         if (*(s16 *)((char *)animState + 0x28) > 0) {
             setup = Obj_AllocObjectSetup(0x20);
-            setup = Obj_SetupObject(setup, 4, *(s8 *)((char *)obj + 0xac), -1,
+            setup = Obj_SetupObject(setup, 4, ((GameObject *)obj)->anim.mapEventSlot, -1,
                                     *(int *)&((GameObject *)obj)->anim.parent);
             ObjLink_AttachChild(obj, setup, 0);
             *(s16 *)((char *)animState + 0x26) = *(s16 *)((char *)animState + 0x28);
@@ -11870,7 +11870,7 @@ int fn_802A418C(int obj, int state, f32 fv)
                     *(int *)&((ObjPlacement *)setup)->posX = *(int *)&((GameObject *)player)->anim.localPosX;
                     *(int *)&((ObjPlacement *)setup)->posY = *(int *)&((GameObject *)player)->anim.localPosY;
                     *(int *)&((ObjPlacement *)setup)->posZ = *(int *)&((GameObject *)player)->anim.localPosZ;
-                    att = (void *)Obj_SetupObject((int)setup, 4, *(s8 *)((char *)player + 0xac),
+                    att = (void *)Obj_SetupObject((int)setup, 4, ((GameObject *)player)->anim.mapEventSlot,
                                                   -1, *(int *)&((GameObject *)player)->anim.parent);
                     lbl_803DE444 = att;
                 }

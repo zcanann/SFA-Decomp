@@ -481,7 +481,7 @@ void hightop_hitDetect(int obj) {
                 *(s16 *)(spawn + 0x1a) = 0x675;
                 *(s16 *)(spawn + 0x1c) = 0;
                 *(s16 *)(spawn + 0x1e) = -1;
-                Obj_SetupObject(spawn, 5, *(s8 *)((char *)obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
+                Obj_SetupObject(spawn, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
             }
             ((GameObject *)obj)->anim.rotY = 0;
             ((GameObject *)obj)->anim.rotZ = 0;

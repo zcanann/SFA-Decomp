@@ -47,7 +47,7 @@ void drcagewith_hitDetect(int obj) {
             ((GameObject *)spawned)->anim.rootMotionScale = ((GameObject *)obj)->anim.localPosX;
             ((GameObject *)spawned)->anim.localPosX = ((GameObject *)obj)->anim.localPosY;
             ((GameObject *)spawned)->anim.localPosY = ((GameObject *)obj)->anim.localPosZ;
-            spawned = Obj_SetupObject(spawned, 5, *(s8 *)((char *)obj + 0xac), -1,
+            spawned = Obj_SetupObject(spawned, 5, ((GameObject *)obj)->anim.mapEventSlot, -1,
                                       *(int *)&((GameObject *)obj)->anim.parent);
             ((GameObject *)spawned)->anim.flags |= 0x4000;
             ((GameObject *)spawned)->unkF4 = 1;

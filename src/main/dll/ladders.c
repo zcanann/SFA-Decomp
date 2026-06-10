@@ -826,7 +826,7 @@ s8 fn_801631C8(int *obj) {
         }
     }
 
-    *(int **)(state + freeSlot * 4 + 0xc) = Obj_SetupObject(newObj, 5, (s8)*((u8 *)obj + 0xac), -1, ((GameObject *)obj)->anim.parent);
+    *(int **)(state + freeSlot * 4 + 0xc) = Obj_SetupObject(newObj, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, ((GameObject *)obj)->anim.parent);
     (**(void(***)(f64, f64))(*(int *)((char*)(*(int **)(state + freeSlot * 4 + 0xc)) + 0x68) + 0x24))(
         (f64)((GameObject *)obj)->anim.localPosX, (f64)((GameObject *)obj)->anim.localPosZ);
     *(u16 *)(state + 0x4e) = *(u16 *)(state + 0x4e) + 1;

@@ -1907,7 +1907,7 @@ void FUN_8016d9a4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     *(undefined4 *)(puVar3 + 4) = DAT_803ad318;
     *(float *)(puVar3 + 6) = DAT_803ad31c;
     *(undefined4 *)(puVar3 + 8) = DAT_803ad320;
-    DAT_803ad334 = (int)Obj_SetupObject(puVar3, 5, *(s8 *)(iVar1 + 0xac), -1,
+    DAT_803ad334 = (int)Obj_SetupObject(puVar3, 5, ((GameObject *)iVar1)->anim.mapEventSlot, -1,
                                         *(void **)(iVar1 + 0x30));
     uVar2 = FUN_80017690(0xc55);
     if (uVar2 != 0) {
@@ -6732,7 +6732,7 @@ void dll_F7_update(int *obj)
                 *(u8 *)((char *)alloc + 0x1a) = 3;
                 alloc[0x16] = -1;
                 alloc[0x12] = -1;
-                Obj_SetupObject(alloc, 5, *(s8 *)((char *)obj + 0xac), -1, ((GameObject *)obj)->anim.parent);
+                Obj_SetupObject(alloc, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, ((GameObject *)obj)->anim.parent);
             }
         } else {
             int *near;
@@ -6986,7 +6986,7 @@ void superQuakeFn_8016d9fc(f32 *pos)
         ((ObjPlacement *)setup)->posX = *(f32 *)(lbl_803AC6B8 + 0);
         ((ObjPlacement *)setup)->posY = *(f32 *)(lbl_803AC6B8 + 4);
         ((ObjPlacement *)setup)->posZ = *(f32 *)(lbl_803AC6B8 + 8);
-        *(int **)(lbl_803AC6B8 + 0x1c) = Obj_SetupObject(setup, 5, *(s8 *)((u8 *)player + 0xac), -1, *(void **)((u8 *)player + 0x30));
+        *(int **)(lbl_803AC6B8 + 0x1c) = Obj_SetupObject(setup, 5, ((GameObject *)player)->anim.mapEventSlot, -1, *(void **)((u8 *)player + 0x30));
         if (GameBit_Get(0xc55) != 0) {
             ((ObjAnimComponent *)*(int *)(lbl_803AC6B8 + 0x1c))->bankIndex = 1;
         }

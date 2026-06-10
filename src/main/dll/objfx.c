@@ -1028,7 +1028,7 @@ void DIMexplosionFn_8009a96c(u8 *src, f32 vx, f32 vy, f32 vz, f32 fval, u8 a, u8
                 }
             }
         }
-        Obj_SetupObject(obj, 5, *(s8 *)(src + 0xac), -1, 0);
+        Obj_SetupObject(obj, 5, ((ObjAnimComponent *)src)->mapEventSlot, -1, 0);
     }
 }
 
@@ -1070,7 +1070,7 @@ void spawnExplosion(u8 *src, f32 fval, u8 a, u8 flag4, u8 flag8, u8 flag10, u8 d
                 }
             }
         }
-        Obj_SetupObject(obj, 5, *(s8 *)(src + 0xac), -1, 0);
+        Obj_SetupObject(obj, 5, ((ObjAnimComponent *)src)->mapEventSlot, -1, 0);
     }
 }
 

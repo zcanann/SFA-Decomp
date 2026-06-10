@@ -338,7 +338,7 @@ void dll_19C_update(int *obj) {
         *(u8*)((char*)setup + 5) = def[5];
         *(u8*)((char*)setup + 6) = def[6];
         *(u8*)((char*)setup + 7) = def[7];
-        Obj_SetupObject(setup, 5, *(s8*)((char*)obj + 0xac), -1, *(void**)&((GameObject *)obj)->anim.parent);
+        Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(void**)&((GameObject *)obj)->anim.parent);
         *(s16*)(sub + 4) = 0x64;
         *(s16*)(sub + 6) = 0;
     }

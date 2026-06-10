@@ -708,7 +708,7 @@ int trickyFlameFn_80142b6c(u8 *obj, u8 *state)
                     e[4] = 2;
                     e[5] = 1;
                     *(s16 *)(e + 0x1a) = i;
-                    *(u8 **)(p + 0x700) = Obj_SetupObject(e, 5, *(s8 *)(obj + 0xac), -1, ((GameObject *)obj)->anim.parent);
+                    *(u8 **)(p + 0x700) = Obj_SetupObject(e, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, ((GameObject *)obj)->anim.parent);
                     p += 4;
                 }
                 Sfx_PlayFromObject((int)obj, 0x3db);

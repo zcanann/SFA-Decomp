@@ -838,7 +838,7 @@ int fn_801A2BDC(int p1, int p2, int p3, int p4)
     *(s8 *)(s + 0x3d) = (s8)(int)(lbl_803E435C * (*(f32 *)(p1 + 8) / *(f32 *)(*(int *)(p1 + 0x50) + 4)));
     *(u16 *)(s + 0x38) = c->unk5C;
     *(u16 *)(s + 0x3a) = (int)c->unk58;
-    return Obj_SetupObject(s, 5, (int)*(s8 *)(p1 + 0xac), -1, 0);
+    return Obj_SetupObject(s, 5, ((GameObject *)p1)->anim.mapEventSlot, -1, 0);
 }
 #pragma peephole reset
 #pragma scheduling reset

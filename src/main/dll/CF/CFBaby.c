@@ -1769,7 +1769,7 @@ void carryable_break_respawn_update(int obj) {
                     ((ObjPlacement *)setup)->posX = ((GameObject *)obj)->anim.localPosX;
                     ((ObjPlacement *)setup)->posY = ((GameObject *)obj)->anim.localPosY;
                     ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
-                    Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)&((GameObject *)obj)->anim.parent);
+                    Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, *(int *)&((GameObject *)obj)->anim.parent);
                 }
                 (*gPartfxInterface)->spawnObject((void *)obj, 0x355, NULL, 0, -1, NULL);
                 (*gPartfxInterface)->spawnObject((void *)obj, 0x352, NULL, 0, -1, NULL);
@@ -2551,7 +2551,7 @@ void landed_arwing_updateHitReaction(int obj, CFLandedArwingState *state) {
                                 ((ObjPlacement *)setup)->posY = ((GameObject *)obj)->anim.localPosY + yOffset;
                                 ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
                                 *(u8 *)(setup + 4) = 1;
-                                Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1,
+                                Obj_SetupObject(setup, 5, ((GameObject *)obj)->anim.mapEventSlot, -1,
                                                 *(int *)&((GameObject *)obj)->anim.parent);
                             }
                         }

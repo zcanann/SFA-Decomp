@@ -491,7 +491,7 @@ void fn_801E7DC8(int p1, int p2, int count)
     *(u8 *)(o + 4) = 16;
     *(u8 *)(o + 6) = 6;
     *(int *)(o + 20) = ((ShopkeeperState *)p2)->vendorObj;
-    Obj_SetupObject(o, 5, (s32)(s8)*(u8 *)(p1 + 0xac), -1, *(int *)(p1 + 0x30));
+    Obj_SetupObject(o, 5, ((GameObject *)p1)->anim.mapEventSlot, -1, *(int *)(p1 + 0x30));
   }
 
   for (i = 0; i < count; i++) {
@@ -507,7 +507,7 @@ void fn_801E7DC8(int p1, int p2, int count)
     *(u8 *)(o + 6) = 6;
     *(u8 *)(o + 25) = 1;
     *(int *)(o + 20) = ((ShopkeeperState *)p2)->vendorObj;
-    Obj_SetupObject(o, 5, (s32)(s8)*(u8 *)(p1 + 0xac), -1, *(int *)(p1 + 0x30));
+    Obj_SetupObject(o, 5, ((GameObject *)p1)->anim.mapEventSlot, -1, *(int *)(p1 + 0x30));
   }
 }
 

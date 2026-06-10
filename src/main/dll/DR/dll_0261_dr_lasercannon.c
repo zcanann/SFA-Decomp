@@ -484,7 +484,7 @@ void drlasercannon_update(int obj) {
                             *(f32 *)(o + 0x8) = state->muzzleX;
                             *(f32 *)(o + 0xc) = state->muzzleY;
                             *(f32 *)(o + 0x10) = state->muzzleZ;
-                            spawned = Obj_SetupObject(o, 5, (s8)*(s8 *)((char *)obj + 0xac), -1, 0);
+                            spawned = Obj_SetupObject(o, 5, ((GameObject *)obj)->anim.mapEventSlot, -1, 0);
                         }
                         if (spawned != 0) {
                             outv[3] = state->muzzleX;
