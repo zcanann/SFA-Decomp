@@ -158,9 +158,9 @@ void PushFreeAudioBuffer(void *message)
 void AttractMovieAudio_Decode(void *readBufferArg)
 {
   u32 *audioFrameSizes;
-  u8 *audioFrame;
   AttractMovieReadBuffer *readBuffer;
   AttractMovieAudioBuffer *audioBuf;
+  u8 *audioFrame;
   u32 track;
 
   readBuffer = (AttractMovieReadBuffer *)readBufferArg;
