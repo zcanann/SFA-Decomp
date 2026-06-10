@@ -406,7 +406,7 @@ void grimble_update(int obj)
       (*(void (**)(int, int, char *, int, int, int, int, f32))(*(int *)gBaddieControlInterface +
                                                                0x58))(obj, def, state, 0xa, 6,
                                                                       0x10e, 0x36, lbl_803E2F28);
-      ((GroundBaddieState *)state)->baddie.unk270 = 1;
+      ((GroundBaddieState *)state)->baddie.substate = 1;
       ((GroundBaddieState *)state)->baddie.moveJustStartedB = 1;
       ((GameObject *)obj)->anim.alpha = 0;
     }
@@ -466,7 +466,7 @@ void grimble_init(int obj, int p2, int p3)
       obj, p2, state, 0, 0, 0, flags, lbl_803E2F28);
   ((GameObject *)obj)->animEventCallback = (void *)grimble_animEventCallback;
   (*(void (**)(int, char *, int))(*(int *)gPlayerInterface + 0x14))(obj, state, 0);
-  ((GroundBaddieState *)state)->baddie.unk270 = 0;
+  ((GroundBaddieState *)state)->baddie.substate = 0;
   ((GroundBaddieState *)state)->baddie.animSpeedA = lbl_803E2EB8;
   *(int *)(*(int *)(state + 0x40c) + 0x34) = 0;
 }

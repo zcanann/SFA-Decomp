@@ -4226,17 +4226,17 @@ void fn_800D915C(int p1, int *obj, void *fnTable, f32 fval)
     int done;
     s16 startState;
     int result;
-    if (((BaddieState *)obj)->unk270 != ((BaddieState *)obj)->unk272) {
+    if (((BaddieState *)obj)->substate != ((BaddieState *)obj)->prevSubstate) {
         ((BaddieState *)obj)->moveJustStartedB = 1;
         ((BaddieState *)obj)->unk32E = 0;
     }
     do {
         done = 0;
-        startState = ((BaddieState *)obj)->unk270;
+        startState = ((BaddieState *)obj)->substate;
         result = ((int (*)(int, int *, f32))((int **)fnTable)[startState])(p1, obj, fval);
         if (result > 0) {
-            ((BaddieState *)obj)->unk272 = ((BaddieState *)obj)->unk270;
-            ((BaddieState *)obj)->unk270 = result - 1;
+            ((BaddieState *)obj)->prevSubstate = ((BaddieState *)obj)->substate;
+            ((BaddieState *)obj)->substate = result - 1;
             ((BaddieState *)obj)->moveJustStartedB = 1;
             ((BaddieState *)obj)->unk32E = 0;
         } else if (result < 0) {
@@ -4244,11 +4244,11 @@ void fn_800D915C(int p1, int *obj, void *fnTable, f32 fval)
             if (result == startState) {
                 ((BaddieState *)obj)->moveJustStartedB = 0;
             } else {
-                ((BaddieState *)obj)->unk272 = startState;
+                ((BaddieState *)obj)->prevSubstate = startState;
                 ((BaddieState *)obj)->moveJustStartedB = 1;
                 ((BaddieState *)obj)->unk32E = 0;
             }
-            ((BaddieState *)obj)->unk270 = result;
+            ((BaddieState *)obj)->substate = result;
             done = 1;
             flag30 = 1;
         } else {
@@ -4259,7 +4259,7 @@ void fn_800D915C(int p1, int *obj, void *fnTable, f32 fval)
             done = 1;
         }
     } while (done == 0);
-    ((BaddieState *)obj)->unk272 = ((BaddieState *)obj)->unk270;
+    ((BaddieState *)obj)->prevSubstate = ((BaddieState *)obj)->substate;
     if (flag30 == 0) {
         ((BaddieState *)obj)->moveJustStartedB = 0;
         if ((f32)*(s16 *)((char *)obj + 0x338) > lbl_803E05BC) {

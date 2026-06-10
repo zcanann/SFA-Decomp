@@ -352,7 +352,7 @@ void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state)
         Sfx_PlayFromObject(obj, SFXen_blkscrp6);
       }
       if (*(s8 *)&((GroundBaddieState *)state)->baddie.hitPoints < 1) {
-        ((GroundBaddieState *)state)->baddie.unk270 = 2;
+        ((GroundBaddieState *)state)->baddie.substate = 2;
       }
     }
   }
@@ -377,11 +377,11 @@ void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state)
         }
       }
       else {
-        if (((GroundBaddieState *)state)->baddie.unk270 != 1) {
+        if (((GroundBaddieState *)state)->baddie.substate != 1) {
           (*(void (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, state, 6);
           ((GroundBaddieState *)state)->baddie.moveJustStartedB = 1;
           ((GroundBaddieState *)state)->baddie.moveJustStartedA = 1;
-          ((GroundBaddieState *)state)->baddie.unk270 = 1;
+          ((GroundBaddieState *)state)->baddie.substate = 1;
           objLightFn_8009a1dc((void *)obj, lbl_803E30BC, lbl_803AC668, 1, 0);
           Sfx_PlayFromObject(obj, SFXen_blkscrp6);
           Sfx_PlayFromObject(obj, 0x3ac);
@@ -389,7 +389,7 @@ void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state)
       }
     }
     if (*(s8 *)&((GroundBaddieState *)state)->baddie.hitPoints < 1) {
-      ((GroundBaddieState *)state)->baddie.unk270 = 2;
+      ((GroundBaddieState *)state)->baddie.substate = 2;
     }
   }
 
@@ -602,7 +602,7 @@ void kaldachom_init(int obj, int data, int skip_alloc)
   ((GameObject *)obj)->anim.currentMoveProgress = lbl_803E307C;
   *(byte *)&((GameObject *)obj)->anim.resetHitboxMode = *(byte *)&((GameObject *)obj)->anim.resetHitboxMode | 8;
   (**(code **)(*gPlayerInterface + 0x14))(obj,state,0);
-  *(undefined2 *)&((GroundBaddieState *)state)->baddie.unk270 = 0;
+  *(undefined2 *)&((GroundBaddieState *)state)->baddie.substate = 0;
   ((GroundBaddieState *)state)->baddie.moveSpeed = lbl_803E307C;
   ((GroundBaddieState *)state)->baddie.animSpeedA = lbl_803E3060;
   player = Obj_GetPlayerObject();

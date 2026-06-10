@@ -1811,7 +1811,7 @@ int fn_802A5384(int obj, int state)
         }
     }
     {
-        f32 v = (f32)((PlayerState *)state)->baddie.unk19C / lbl_803E7EE8;
+        f32 v = (f32)((PlayerState *)state)->baddie.spawnRotY / lbl_803E7EE8;
         t = (v < (t = lbl_803E7ECC)) ? t : ((v > (t = lbl_803E7EE0)) ? t : v);
     }
     {
@@ -6494,9 +6494,9 @@ void fn_802B0EA4(int obj, int inner, int state)
         ((PlayerState *)inner)->unk840 =
             -(lbl_803E7E98 * ((PlayerState *)inner)->unk840 - lbl_803E7EE0);
     } else {
-        if (((PlayerState *)state)->baddie.unk19C > 0) {
+        if (((PlayerState *)state)->baddie.spawnRotY > 0) {
             ((PlayerState *)inner)->unk840 =
-                (f32)((PlayerState *)state)->baddie.unk19C / lbl_803E7EE8;
+                (f32)((PlayerState *)state)->baddie.spawnRotY / lbl_803E7EE8;
             v = ((PlayerState *)inner)->unk840;
             ((PlayerState *)inner)->unk840 =
                 (v < lbl_803E7EA4) ? lbl_803E7EA4 : ((v > lbl_803E7EE0) ? lbl_803E7EE0 : v);

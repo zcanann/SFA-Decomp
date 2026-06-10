@@ -1234,8 +1234,8 @@ void fn_80156DA0(int param_9,int param_10)
         }
       }
     }
-    ((GameObject *)param_9)->anim.rotY = ((BaddieState *)param_10)->unk19C;
-    ((GameObject *)param_9)->anim.rotZ = ((BaddieState *)param_10)->unk19E;
+    ((GameObject *)param_9)->anim.rotY = ((BaddieState *)param_10)->spawnRotY;
+    ((GameObject *)param_9)->anim.rotZ = ((BaddieState *)param_10)->spawnRotZ;
   }
   return;
 }

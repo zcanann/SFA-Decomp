@@ -231,7 +231,7 @@ void lightfoot_init(int obj, int p2, int p3)
         obj, p2, inner, 5, 3, 0x108, flags, lbl_803E8228);
     ((GameObject *)obj)->animEventCallback = (void *)Lightfoot_SeqFn;
     ((GroundBaddieState *)inner)->baddie.controlMode = 0;
-    ((GroundBaddieState *)inner)->baddie.unk270 = 0;
+    ((GroundBaddieState *)inner)->baddie.substate = 0;
     ((GameObject *)obj)->objectFlags = (u16)(((GameObject *)obj)->objectFlags | 0x2000);
     sub = ((LightfootState *)inner)->unk40C;
     ((LightfootSub *)sub)->unk26 = -1;
@@ -240,7 +240,7 @@ void lightfoot_init(int obj, int p2, int p3)
         (u16)(((GameObject *)obj)->objectFlags | (*(s8 *)((char *)p2 + 0x28) & 0x7));
     if (*(s16 *)((char *)p2 + 0x1a) == 0x64c) {
         ((GroundBaddieState *)inner)->baddie.controlMode = 2;
-        ((GroundBaddieState *)inner)->baddie.unk270 = 1;
+        ((GroundBaddieState *)inner)->baddie.substate = 1;
         ObjHits_DisableObject(obj);
         ((LightfootSub *)sub)->unk24 = (u16)randomGetRange(0, 3);
         ((LightfootSub *)sub)->unk28 = 0x6f1;
@@ -319,7 +319,7 @@ void lightfoot_init(int obj, int p2, int p3)
         case 0x499b0:
         case 0x499b1:
         case 0x499b2:
-            ((GroundBaddieState *)inner)->baddie.unk270 = 2;
+            ((GroundBaddieState *)inner)->baddie.substate = 2;
             ((LightfootSub *)sub)->unk0 = (int)((char *)lbl_80334EE8 + 0x30);
             ((LightfootSub *)sub)->unk4 = (int)((char *)lbl_80334EE8 + 0x40);
             ((LightfootSub *)sub)->unk14 = (f32)(s32)randomGetRange(0x78, 0xb4);

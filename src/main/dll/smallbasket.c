@@ -1166,8 +1166,8 @@ void fn_80157558(s16* obj, u8* state)
                     }
                 }
             }
-            ((GameObject *)obj)->anim.rotY = ((BaddieState *)state)->unk19C;
-            ((GameObject *)obj)->anim.rotZ = ((BaddieState *)state)->unk19E;
+            ((GameObject *)obj)->anim.rotY = ((BaddieState *)state)->spawnRotY;
+            ((GameObject *)obj)->anim.rotZ = ((BaddieState *)state)->spawnRotZ;
         }
     }
 }
@@ -1548,8 +1548,8 @@ void fn_80157004(s16* obj, u8* state)
                         if ((((BaddieState *)state)->controlFlags & 0x40000000) != 0) {
                             fn_8014D08C((int*)obj, (int*)state, 7, lbl_803E2B40 / (lbl_803E2B4C * scale), 0, 1);
                         }
-                        ((GameObject *)obj)->anim.rotY = ((BaddieState *)state)->unk19C;
-                        ((GameObject *)obj)->anim.rotZ = ((BaddieState *)state)->unk19E;
+                        ((GameObject *)obj)->anim.rotY = ((BaddieState *)state)->spawnRotY;
+                        ((GameObject *)obj)->anim.rotZ = ((BaddieState *)state)->spawnRotZ;
                     }
                     *(s16*)obj = -*(s16*)obj;
                 }
@@ -1581,8 +1581,8 @@ void fn_80157004(s16* obj, u8* state)
                 }
             }
         }
-        ((GameObject *)obj)->anim.rotY = ((BaddieState *)state)->unk19C;
-        ((GameObject *)obj)->anim.rotZ = ((BaddieState *)state)->unk19E;
+        ((GameObject *)obj)->anim.rotY = ((BaddieState *)state)->spawnRotY;
+        ((GameObject *)obj)->anim.rotZ = ((BaddieState *)state)->spawnRotZ;
     }
 }
 

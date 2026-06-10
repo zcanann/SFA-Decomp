@@ -1299,7 +1299,7 @@ void dll_CA_func0B(int obj, int message)
     switch ((u8)message) {
     case 0x80:
         ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, (int)state, 2);
-        state->baddie.unk270 = 4;
+        state->baddie.substate = 4;
         state->baddie.moveJustStartedB = 1;
         break;
     }
@@ -1877,7 +1877,7 @@ void mediumbasket_updateControlEffects(int obj, int state)
     }
     paletteIndex = 0;
     if ((s8)((GroundBaddieState *)state)->baddie.unk25F != 0) {
-        paletteIndex = lbl_8031FE48[(s8)((GroundBaddieState *)state)->baddie.unkBC];
+        paletteIndex = lbl_8031FE48[(s8)((GroundBaddieState *)state)->baddie.paletteSlot];
         if (paletteIndex > 0x1e) {
             paletteIndex = 0;
         }
@@ -1981,7 +1981,7 @@ void fn_8015D3C0(int obj, int sub, int state)
         if ((s8)((GroundBaddieState *)state)->baddie.hitPoints > 0 && *(s16 *)(control + 6) >= 2) {
             ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, state, 3);
             *(s16 *)(control + 6) = 0;
-            ((GroundBaddieState *)state)->baddie.unk270 = 5;
+            ((GroundBaddieState *)state)->baddie.substate = 5;
         }
     }
 }

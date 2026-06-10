@@ -1014,8 +1014,8 @@ void fn_80153E0C(int obj, int state)
     } else if ((((BaddieState *)state)->controlFlags & 0x40000000) != 0) {
         ((void(*)(int, int, int, f32, int, int))fn_8014D08C)(obj, state, 0, lbl_803E2958, 0, 3);
     }
-    ((GameObject *)obj)->anim.rotY = ((BaddieState *)state)->unk19C;
-    ((GameObject *)obj)->anim.rotZ = ((BaddieState *)state)->unk19E;
+    ((GameObject *)obj)->anim.rotY = ((BaddieState *)state)->spawnRotY;
+    ((GameObject *)obj)->anim.rotZ = ((BaddieState *)state)->spawnRotZ;
     *(f32*)(state + 0x330) = *(f32*)(state + 0x330) - timeDelta;
     if (*(f32*)(state + 0x330) <= lbl_803E294C) {
         rnd = randomGetRange(0x3c, 0x78);

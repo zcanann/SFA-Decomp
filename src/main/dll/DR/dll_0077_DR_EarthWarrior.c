@@ -538,8 +538,8 @@ void fn_802BE6E8(int obj, int t, int p3)
     *(int *)((char *)inner + 0) |= 0x1000000;
     fn_802B0EA4(obj, q, inner);
     (*(void (*)(int, int, f32, f32, int, void *))(*(int *)(*gPlayerInterface + 0x8)))(obj, inner, timeDelta, timeDelta, (int)gDREarthWarriorStateHandlers, &gDREarthWarriorDefaultStateHandler);
-    ((GameObject *)obj)->anim.rotY = (s16)(((GameObject *)obj)->anim.rotY + (((EarthWarriorState *)inner)->baddie.unk19C >> 2));
-    ((GameObject *)obj)->anim.rotZ = (s16)(((GameObject *)obj)->anim.rotZ + (((EarthWarriorState *)inner)->baddie.unk19E >> 2));
+    ((GameObject *)obj)->anim.rotY = (s16)(((GameObject *)obj)->anim.rotY + (((EarthWarriorState *)inner)->baddie.spawnRotY >> 2));
+    ((GameObject *)obj)->anim.rotZ = (s16)(((GameObject *)obj)->anim.rotZ + (((EarthWarriorState *)inner)->baddie.spawnRotZ >> 2));
     if (((ByteFlags *)((char *)inner + 0x14ec))->b02) {
         (*gGameUIInterface)->runAirMeter(*(s16 *)((char *)inner + 0x14e2));
     }
@@ -619,7 +619,7 @@ void fn_802BCA10(int obj, int q, int p2)
     ((EarthWarriorSub *)q)->unk4D4 = (f32)d * timeDelta + (f32)(s32)((EarthWarriorSub *)q)->unk4D4;
     ((EarthWarriorSub *)q)->unk4D2 = ((EarthWarriorSub *)q)->unk4D4 / 2;
     {
-        f32 ph = (f32)(s32)((BaddieState *)p2)->unk19C / lbl_803E8328;
+        f32 ph = (f32)(s32)((BaddieState *)p2)->spawnRotY / lbl_803E8328;
         f32 t;
         if (ph < lbl_803E8334) {
             t = lbl_803E8334;

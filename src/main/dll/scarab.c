@@ -276,7 +276,7 @@ void dll_CA_update(int obj, int p2, int p3)
   sub = ((GameObject *)obj)->extra;
   setup = *(int *)&((GameObject *)obj)->anim.placementData;
   if (((GameObject *)obj)->unkF4 != 0) {
-    if ((sub->baddie.unk270 != 3 || (sub->configFlags & 1) != 0) &&
+    if ((sub->baddie.substate != 3 || (sub->configFlags & 1) != 0) &&
         (*gMapEventInterface)->isTimedEventActive(((ObjPlacement *)setup)->mapId) != 0) {
       (*(void (**)(int, int, int, int, int, int, int, f32))(*(int *)gBaddieControlInterface +
                                                             0x58))(
@@ -767,7 +767,7 @@ void dll_CA_init(int obj, u8 *p, int flags)
   ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2D14, 0);
   *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
   (*(void (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, (int)sub, 0);
-  sub->baddie.unk270 = 0;
+  sub->baddie.substate = 0;
   *(s8 *)&sub->baddie.unk25F = 0;
 }
 
@@ -1351,7 +1351,7 @@ void dll_CE_func0B(int obj, int v)
     *(u8 *)(*(int *)&sub->control + 9) |= 2;
     Sfx_PlayFromObject(obj, SFXfoxcom_flame);
     (*(void (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, (int)sub2, 1);
-    sub2->baddie.unk270 = 4;
+    sub2->baddie.substate = 4;
     *(s8 *)&sub2->baddie.moveJustStartedB = 1;
     break;
   case 0x81:
@@ -1407,7 +1407,7 @@ void dll_CE_init(int obj, u8 *p, int flags)
   ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E2DC8, 0);
   *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;
   (*(void (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, (int)sub, 0);
-  sub->baddie.unk270 = 0;
+  sub->baddie.substate = 0;
   *(s8 *)&sub->baddie.unk25F = 0;
   ObjHits_DisableObject(obj);
 }
@@ -1438,7 +1438,7 @@ void dll_CE_update(int obj, int p2, int p3)
   sub = ((GameObject *)obj)->extra;
   setup = *(int *)&((GameObject *)obj)->anim.placementData;
   if (((GameObject *)obj)->unkF4 != 0) {
-    if ((sub->baddie.unk270 != 3 || (sub->configFlags & 1) != 0) &&
+    if ((sub->baddie.substate != 3 || (sub->configFlags & 1) != 0) &&
         (*gMapEventInterface)->isTimedEventActive(((ObjPlacement *)setup)->mapId) != 0) {
       (*(void (**)(int, int, int, int, int, int, int, f32))(*(int *)gBaddieControlInterface +
                                                             0x58))(
@@ -1864,7 +1864,7 @@ int dll_CB_seqFn(short *obj, int p2, u8 *e)
       *(s16 *)(e + 0x6e) = 0;
       fn_801606F0((int)obj, e, sub, (GroundBaddieState *)sub);
       if (*(u8 *)&((DllCBState *)sub)->unk405 == 1) {
-        ((GroundBaddieState *)sub)->baddie.unk270 = 5;
+        ((GroundBaddieState *)sub)->baddie.substate = 5;
         (*(void (**)(short *, int, f32, f32, void *, void *))(*(int *)gPlayerInterface + 8))(
             obj, sub, lbl_803E2E8C, *(f32 *)&lbl_803E2E8C, lbl_803AC5E8, lbl_803AC5D0);
         *(s8 *)(e + 0x56) = 0;
@@ -2363,7 +2363,7 @@ void dll_CB_init(int *obj, u8 *params, int extra) {
     ((void(*)(int*, u8*, u8*, int, int, int, u8, f32))((void**)*(int*)gBaddieControlInterface)[22])(obj, params, (u8 *)sub, 4, 6, 0x82, flags, lbl_803E2EA8);
     ((GameObject *)obj)->animEventCallback = (void *)dll_CB_seqFn;
     ((void(*)(int*, u8*, int))((void**)*(int*)gPlayerInterface)[5])(obj, (u8 *)sub, 0);
-    sub->baddie.unk270 = 0;
+    sub->baddie.substate = 0;
     if (sub->aggroRange < 0x32) {
         sub->aggroRange = 0x32;
     }
@@ -2884,8 +2884,8 @@ int fn_801605D4(int* obj, GroundBaddieState *def)
         *(s8 *)&def->baddie.moveDone = 0;
     }
     *(s8 *)&def->baddie.unk25F = 1;
-    ((GameObject *)obj)->anim.rotZ = def->baddie.unk19E;
-    ((GameObject *)obj)->anim.rotY = def->baddie.unk19C;
+    ((GameObject *)obj)->anim.rotZ = def->baddie.spawnRotZ;
+    ((GameObject *)obj)->anim.rotY = def->baddie.spawnRotY;
     ((void(*)(int*, u8*, int*, f32, f32))((void**)*gBaddieControlInterface)[4])(obj, (u8 *)def, (int *)state, lbl_803E2E8C, lbl_803E2E90);
     def->baddie.moveSpeed = lbl_803E2E94 * def->baddie.animSpeedA;
     return 0;

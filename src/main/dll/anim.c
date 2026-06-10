@@ -1624,7 +1624,7 @@ void dbstealerworm_init(int *obj, u8 *def, int param3) {
     ObjAnim_SetCurrentMove((int)obj, 8, lbl_803E62A8, 0);
     *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode = (u8)(*(u8 *)&((GameObject *)obj)->anim.resetHitboxMode | 0x8);
     ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, sub, 3);
-    ((GroundBaddieState *)sub)->baddie.unk270 = 0;
+    ((GroundBaddieState *)sub)->baddie.substate = 0;
     ((GroundBaddieState *)sub)->baddie.unk25F = 1;
     ObjHits_EnableObject(obj);
     ObjMsg_AllocQueue(obj, 4);

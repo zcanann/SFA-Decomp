@@ -39,12 +39,12 @@ typedef struct BaddieState {
     u8 unk44[0xB8 - 0x44];
     s8 surfaceSoundIndex; /* 0..0x22 index into the per-type contact-sfx tables (intersect.c objAudioFn_8006ef38) */
     u8 padB9[0xBC - 0xB9];
-    u8 unkBC;
+    u8 paletteSlot; /* indexes the palette table (paletteIndex = lbl_8031FE48[slot]) */
     u8 unkBD[0xC4 - 0xBD];
     void *contactObj; /* GameObject*; its anim.seqId (0x5d/0x99/0x1db/0x223) switches a sfx override (intersect.c) */
     u8 unkC8[0x19C - 0xC8];
-    s16 unk19C; /* pair copied into the spawn-setup shorts */
-    s16 unk19E;
+    s16 spawnRotY; /* pair copied into the spawn-setup shorts; restored into anim.rotY */
+    s16 spawnRotZ; /* restored into anim.rotZ */
     u8 unk1A0[0x1B4 - 0x1A0];
     f32 waterDepth; /* compared > threshold to fire the waterfx splash path (intersect.c) */
     u8 unk1B8[0x25B - 0x1B8];
@@ -53,8 +53,8 @@ typedef struct BaddieState {
     u8 unk25F;
     s8 contactSfxFlags; /* bit 0x10 allows contact sfx while contactSfxMuted is set (intersect.c) */
     u8 unk261[0x270 - 0x261];
-    s16 unk270; /* CA-family substate 0..5; gates the map-event re-register when != 3 */
-    s16 unk272;
+    s16 substate; /* CA-family substate 0..5; gates the map-event re-register when != 3 */
+    s16 prevSubstate; /* latched from substate for change detection (prevSubstate = startState in objseq) */
     s16 controlMode; /* current control move/mode; gPlayerInterface[5](obj,state,N) requests N */
     s16 unk276; /* compared != 4 */
     u8 unk278[2];
