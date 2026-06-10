@@ -3146,6 +3146,17 @@ today's #100. Same resolution pattern as the #70-72/#93-95 collision.)*
       has to change the construct census without changing the instruction
       stream, or change the priority function's inputs some other way (an
       open research direction, not a closed door).
+    RESEARCH NOTE (timer probe, this window): a CONDITIONAL REDUNDANT
+    RE-DEF (`if (obj == 0) { state = EXTRA(obj); setup = PDATA(obj); }` —
+    the #94-addendum phi trick) MOVES webs between pools — the FIRST
+    source-side lever observed to shift the cross-class interleave
+    (obj r29->r30, setup r30->r29, flag r28->r27 on the timer probe).
+    It costs ~6 added instrs (cmp+branch+defs) so it is NOT match-
+    preserving by itself; use only where target ITSELF shows a mid-fn
+    re-derive (the #55 read — check fresh lwz of the same offsets in T
+    first; timer's T has none, so it stays banked). The pool-membership
+    mechanism (single-def copies vs multi-def phi webs) is confirmed
+    manipulable — the remaining question is the within-pool ORDER.
     DIAGNOSTIC (to RECOGNIZE the class, then bank-and-retry): residual =
     pure saved-reg permutation where a
     multi-def/copy web and param webs swap ranks, AND the fn contains a
