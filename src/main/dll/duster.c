@@ -820,7 +820,7 @@ void fn_8015625C(uint param_9,int param_10)
       ((BaddieState *)param_10)->unk308 = -(lbl_803E2AE0 * timeDelta - ((BaddieState *)param_10)->unk308);
     }
   }
-  fn_8014CD1C(param_9,param_10,0x2d,lbl_803E2A98,lbl_803E2A98,0);
+  fn_8014CD1C(param_9,param_10,0x2d,lbl_803E2A98,*(f32 *)&lbl_803E2A98,0);
 }
 
 /*
@@ -922,7 +922,7 @@ void fn_8015652C(uint param_9,int param_10)
       ((BaddieState *)param_10)->unk308 = -(lbl_803E2AE0 * timeDelta - ((BaddieState *)param_10)->unk308);
     }
   }
-  fn_8014CD1C(param_9,param_10,0x2d,lbl_803E2A98,lbl_803E2A98,0);
+  fn_8014CD1C(param_9,param_10,0x2d,lbl_803E2A98,*(f32 *)&lbl_803E2A98,0);
 }
 
 /*

@@ -191,7 +191,7 @@ void tree_init(int obj, u8 *setup)
         state->scale = lbl_803E7308;
     }
     ObjAnim_SetCurrentMove(obj, 0, lbl_803E72F8, 0);
-    ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E7308, lbl_803E7308, &animOut);
+    ((int (*)(int, f32, f32, void *))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E7308, *(f32 *)&lbl_803E7308, &animOut);
     if (state->flags & TREE_FLAG_AMBIENT_EFFECTS) {
         state->flags |= TREE_FLAG_HIT_ENABLED;
     }
