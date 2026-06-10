@@ -952,31 +952,31 @@ void dll_16C_syncSubObjectTransform(void *a, void *b, int c, int d, int e, int f
     if (i != 0 && (s8)g != 0 && h > 0) {
         u8 saved = *(u8 *)((char *)b + 0x37);
         *(u8 *)((char *)b + 0x37) = h;
-        (*(void (**)(void *, int, int, int, int, int))(**(int **)((char *)b + 0x68) + 0x10))(b, c, d, e, f, -1);
+        (*(void (**)(void *, int, int, int, int, int))(**(int **)&((GameObject *)b)->anim.dll + 0x10))(b, c, d, e, f, -1);
         *(u8 *)((char *)b + 0x37) = saved;
     }
-    *(f32 *)((char *)a + 0x8c) = *(f32 *)((char *)a + 0x18);
-    *(f32 *)((char *)a + 0x90) = *(f32 *)((char *)a + 0x1c);
-    *(f32 *)((char *)a + 0x94) = *(f32 *)((char *)a + 0x20);
-    *(f32 *)((char *)a + 0x80) = *(f32 *)((char *)a + 0xc);
-    *(f32 *)((char *)a + 0x84) = *(f32 *)((char *)a + 0x10);
-    *(f32 *)((char *)a + 0x88) = *(f32 *)((char *)a + 0x14);
+    ((GameObject *)a)->anim.previousWorldPosX = ((GameObject *)a)->anim.worldPosX;
+    ((GameObject *)a)->anim.previousWorldPosY = ((GameObject *)a)->anim.worldPosY;
+    ((GameObject *)a)->anim.previousWorldPosZ = ((GameObject *)a)->anim.worldPosZ;
+    ((GameObject *)a)->anim.previousLocalPosX = ((GameObject *)a)->anim.localPosX;
+    ((GameObject *)a)->anim.previousLocalPosY = ((GameObject *)a)->anim.localPosY;
+    ((GameObject *)a)->anim.previousLocalPosZ = ((GameObject *)a)->anim.localPosZ;
     {
         f32 x, y, z;
-        (*(void (**)(void *, f32 *, f32 *, f32 *))(**(int **)((char *)b + 0x68) + 0x28))(b, &x, &y, &z);
-        *(f32 *)((char *)a + 0xc) = x;
-        *(f32 *)((char *)a + 0x10) = y;
-        *(f32 *)((char *)a + 0x14) = z;
+        (*(void (**)(void *, f32 *, f32 *, f32 *))(**(int **)&((GameObject *)b)->anim.dll + 0x28))(b, &x, &y, &z);
+        ((GameObject *)a)->anim.localPosX = x;
+        ((GameObject *)a)->anim.localPosY = y;
+        ((GameObject *)a)->anim.localPosZ = z;
     }
-    *(s16 *)((char *)a + 0) = *(s16 *)((char *)b + 0);
-    *(s16 *)((char *)a + 2) = *(s16 *)((char *)b + 2);
-    *(s16 *)((char *)a + 4) = *(s16 *)((char *)b + 4);
-    *(f32 *)((char *)a + 0x18) = *(f32 *)((char *)a + 0xc);
-    *(f32 *)((char *)a + 0x1c) = *(f32 *)((char *)a + 0x10);
-    *(f32 *)((char *)a + 0x20) = *(f32 *)((char *)a + 0x14);
-    *(f32 *)((char *)a + 0x24) = *(f32 *)((char *)b + 0x24);
-    *(f32 *)((char *)a + 0x28) = *(f32 *)((char *)b + 0x28);
-    *(f32 *)((char *)a + 0x2c) = *(f32 *)((char *)b + 0x2c);
+    ((GameObject *)a)->anim.rotX = ((GameObject *)b)->anim.rotX;
+    ((GameObject *)a)->anim.rotY = ((GameObject *)b)->anim.rotY;
+    ((GameObject *)a)->anim.rotZ = ((GameObject *)b)->anim.rotZ;
+    ((GameObject *)a)->anim.worldPosX = ((GameObject *)a)->anim.localPosX;
+    ((GameObject *)a)->anim.worldPosY = ((GameObject *)a)->anim.localPosY;
+    ((GameObject *)a)->anim.worldPosZ = ((GameObject *)a)->anim.localPosZ;
+    ((GameObject *)a)->anim.velocityX = ((GameObject *)b)->anim.velocityX;
+    ((GameObject *)a)->anim.velocityY = ((GameObject *)b)->anim.velocityY;
+    ((GameObject *)a)->anim.velocityZ = ((GameObject *)b)->anim.velocityZ;
 }
 #pragma peephole reset
 #pragma scheduling reset

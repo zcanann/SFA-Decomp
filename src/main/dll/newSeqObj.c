@@ -1,3 +1,4 @@
+#include "main/dll/baddie_state.h"
 #include "main/audio/sfx_ids.h"
 #include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"
@@ -167,18 +168,18 @@ int fn_801504F8(int *obj, u8 *state, int *p3, int msgId, int arrIdx, int p6)
 
 void fn_80150EDC(void *p1, void *p2) {
     u8 *table = lbl_8031DD30;
-    u8 idx = *(u8 *)((u8 *)p2 + 0x33b);
+    u8 idx = ((BaddieState *)p2)->inWhirlpoolGroup;
     u8 *entry = table + idx * 0x28;
     void *r30 = *(void **)(entry + 0x143c);
     void *r29 = *(void **)(entry + 0x1454);
     u8 *r28 = *(u8 **)(entry + 0x1458);
 
-    if (idx == 5 && (*(u32 *)((u8 *)p2 + 0x2dc) & 0x800000) != 0) {
+    if (idx == 5 && (((BaddieState *)p2)->controlFlags & 0x800000) != 0) {
         GameBit_Set(0x1c8, 1);
     }
 
-    if (*(void **)((u8 *)p2 + 0x29c) != NULL &&
-        *(s16 *)((u8 *)*(void **)((u8 *)p2 + 0x29c) + 0x44) == 1) {
+    if (((BaddieState *)p2)->trackedObj != NULL &&
+        *(s16 *)((u8 *)((BaddieState *)p2)->trackedObj + 0x44) == 1) {
         fn_8001FEA8();
     }
 
@@ -189,7 +190,7 @@ void fn_80150EDC(void *p1, void *p2) {
         *(f32 *)((u8 *)p2 + 0x328) = *(f32 *)((u8 *)p2 + 0x328) - timeDelta;
         if (*(f32 *)((u8 *)p2 + 0x328) <= lbl_803E2740) {
             *(f32 *)((u8 *)p2 + 0x328) = lbl_803E2740;
-            *(u32 *)((u8 *)p2 + 0x2dc) |= 0x40000000;
+            ((BaddieState *)p2)->controlFlags |= 0x40000000;
             {
                 SeqRow16 *arow = (SeqRow16 *)r28 + *(u16 *)((u8 *)p2 + 0x338);
                 *(u16 *)((u8 *)p2 + 0x338) = arow->alt;
@@ -201,13 +202,13 @@ void fn_80150EDC(void *p1, void *p2) {
         return;
     }
 
-    if ((*(u32 *)((u8 *)p2 + 0x2dc) & 0x20000000) != 0 &&
+    if ((((BaddieState *)p2)->controlFlags & 0x20000000) != 0 &&
         (*(u32 *)((u8 *)p2 + 0x2e0) & 0x20000000) == 0) {
         Sfx_PlayFromObject(p1, SFXdn_boar5_c);
-        *(u32 *)((u8 *)p2 + 0x2dc) |= 0x40000000;
+        ((BaddieState *)p2)->controlFlags |= 0x40000000;
     }
 
-    if ((*(u32 *)((u8 *)p2 + 0x2dc) & 0x40000000) != 0) {
+    if ((((BaddieState *)p2)->controlFlags & 0x40000000) != 0) {
         u16 cur338 = *(u16 *)((u8 *)p2 + 0x338);
         if (cur338 != 0) {
             *(u8 *)((u8 *)p2 + 0x2f2) = (u8)((SeqRow16 *)r28)[cur338].extra;
@@ -240,18 +241,18 @@ void fn_80150EDC(void *p1, void *p2) {
     }
 
     if ((s32)((GameObject *)p1)->anim.currentMove == *(u8 *)((u8 *)r30 + 0x2c)) {
-        *(f32 *)((u8 *)p2 + 0x308) =
-            *(f32 *)((u8 *)p2 + 0x2fc) *
+        ((BaddieState *)p2)->unk308 =
+            ((BaddieState *)p2)->pathStep *
             (((f32)(u32)*(u16 *)((u8 *)p2 + 0x2a4) /
-              *(f32 *)((u8 *)p2 + 0x2a8) / lbl_803E274C) *
-             *(f32 *)(table + (*(u8 *)((u8 *)p2 + 0x33b) << 2) + 0x1538));
-        if (*(f32 *)((u8 *)p2 + 0x308) < lbl_803E27A0) {
-            *(f32 *)((u8 *)p2 + 0x308) = lbl_803E27A0;
+              ((BaddieState *)p2)->unk2A8 / lbl_803E274C) *
+             *(f32 *)(table + (((BaddieState *)p2)->inWhirlpoolGroup << 2) + 0x1538));
+        if (((BaddieState *)p2)->unk308 < lbl_803E27A0) {
+            ((BaddieState *)p2)->unk308 = lbl_803E27A0;
         }
     }
 
     if ((*(u8 *)((u8 *)p2 + 0x323) & 8) == 0) {
-        void *p_29c = *(void **)((u8 *)p2 + 0x29c);
+        void *p_29c = ((BaddieState *)p2)->trackedObj;
         fn_8014CF7C(p1, p2, *(f32 *)((u8 *)p_29c + 0xc), *(f32 *)((u8 *)p_29c + 0x14), 0xf, 0);
     }
 }

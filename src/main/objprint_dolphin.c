@@ -2966,7 +2966,7 @@ void objRenderChild(int *child, int *parent, u8 p3) {
     f32 dx, dz;
     int off;
     f32 *mtx;
-    if (lbl_803DEA04 == *(f32 *)((char *)child + 8)) {
+    if (lbl_803DEA04 == ((GameObject *)child)->anim.rootMotionScale) {
         curObjMtx = 0;
         return;
     }
@@ -2975,8 +2975,8 @@ void objRenderChild(int *child, int *parent, u8 p3) {
         int *pmodel = Obj_GetActiveModel(parent);
         ChildEnt *ent;
         int j;
-        u8 *tbl = *(u8 **)(*(int *)((char *)parent + 0x50) + 0x2c);
-        off = (*(u16 *)((char *)child + 0xb0) & 7) * 0x18;
+        u8 *tbl = *(u8 **)(*(int *)&((GameObject *)parent)->anim.modelInstance + 0x2c);
+        off = (((GameObject *)child)->objectFlags & 7) * 0x18;
         ent = (ChildEnt *)(tbl + off);
         j = ent->joints[OBJPRINT_ACTIVE_BANK_INDEX(parent)];
         blk.pos[0] = *(f32 *)(off + (char *)tbl);
@@ -2991,11 +2991,11 @@ void objRenderChild(int *child, int *parent, u8 p3) {
     }
     if (OBJPRINT_MODEL_DEF(child)->renderFlags & 8) {
         int *cam = Camera_GetCurrentViewSlot();
-        blk.scale = *(f32 *)((char *)child + 8);
-        dx = *(f32 *)((char *)child + 0xc) - *(f32 *)((char *)cam + 0xc);
-        dz = *(f32 *)((char *)child + 0x14) - *(f32 *)((char *)cam + 0x14);
+        blk.scale = ((GameObject *)child)->anim.rootMotionScale;
+        dx = ((GameObject *)child)->anim.localPosX - *(f32 *)((char *)cam + 0xc);
+        dz = ((GameObject *)child)->anim.localPosZ - *(f32 *)((char *)cam + 0x14);
         blk.rot[0] = getAngle(dx, dz) + 0x8000;
-        blk.rot[1] = getAngle(*(f32 *)((char *)child + 0x10) - *(f32 *)((char *)cam + 0x10), sqrtf(dx * dx + dz * dz));
+        blk.rot[1] = getAngle(((GameObject *)child)->anim.localPosY - *(f32 *)((char *)cam + 0x10), sqrtf(dx * dx + dz * dz));
         blk.rot[2] = ((s16 *)cam)[2];
         setMatrixFromObjectTransposed(&blk, m2);
         res[0] = m2[3];
@@ -3008,7 +3008,7 @@ void objRenderChild(int *child, int *parent, u8 p3) {
     } else {
         ChildEnt *pr;
         blk.scale = lbl_803DEA1C;
-        pr = (ChildEnt *)(*(u8 **)(*(int *)((char *)parent + 0x50) + 0x2c) + off);
+        pr = (ChildEnt *)(*(u8 **)(*(int *)&((GameObject *)parent)->anim.modelInstance + 0x2c) + off);
         blk.rot[0] = pr->rot[0];
         blk.rot[1] = pr->rot[1];
         blk.rot[2] = pr->rot[2];
@@ -3017,26 +3017,26 @@ void objRenderChild(int *child, int *parent, u8 p3) {
     }
     if (p3 == 0) {
         void *space;
-        *(f32 *)((char *)child + 0x18) = m2[3] + playerMapOffsetX;
-        *(f32 *)((char *)child + 0x1c) = m2[7];
-        *(f32 *)((char *)child + 0x20) = m2[11] + playerMapOffsetZ;
-        space = *(void **)((char *)child + 0x30);
+        ((GameObject *)child)->anim.worldPosX = m2[3] + playerMapOffsetX;
+        ((GameObject *)child)->anim.worldPosY = m2[7];
+        ((GameObject *)child)->anim.worldPosZ = m2[11] + playerMapOffsetZ;
+        space = ((GameObject *)child)->anim.parent;
         if (space != NULL) {
-            Obj_TransformWorldPointToLocal(*(f32 *)((char *)child + 0x18), *(f32 *)((char *)child + 0x1c), *(f32 *)((char *)child + 0x20),
+            Obj_TransformWorldPointToLocal(((GameObject *)child)->anim.worldPosX, ((GameObject *)child)->anim.worldPosY, ((GameObject *)child)->anim.worldPosZ,
                 (f32 *)((char *)child + 0xc), (f32 *)((char *)child + 0x10), (f32 *)((char *)child + 0x14), space);
         } else {
-            *(f32 *)((char *)child + 0xc) = *(f32 *)((char *)child + 0x18);
-            *(f32 *)((char *)child + 0x10) = *(f32 *)((char *)child + 0x1c);
-            *(f32 *)((char *)child + 0x14) = *(f32 *)((char *)child + 0x20);
+            ((GameObject *)child)->anim.localPosX = ((GameObject *)child)->anim.worldPosX;
+            ((GameObject *)child)->anim.localPosY = ((GameObject *)child)->anim.worldPosY;
+            ((GameObject *)child)->anim.localPosZ = ((GameObject *)child)->anim.worldPosZ;
         }
         objRotateFn_8003bce8(m2, (s16 *)child, (s16 *)child + 1, (s16 *)child + 2);
     }
-    *(u8 *)((char *)child + 0x37) = ((*(u8 *)((char *)child + 0x36) + 1) * *(u8 *)((char *)parent + 0x37)) >> 8;
+    *(u8 *)((char *)child + 0x37) = ((((GameObject *)child)->anim.alpha + 1) * *(u8 *)((char *)parent + 0x37)) >> 8;
     *(u8 *)((char *)child + 0xf1) = *(u8 *)((char *)parent + 0xf1);
-    if (!(*(s16 *)((char *)child + 6) & 0x4000)) {
+    if (!(((GameObject *)child)->anim.flags & 0x4000)) {
         curObjMtx = (u32)m2;
         if (p3 == 0) {
-            *(u16 *)((char *)child + 0xb0) |= 0x800;
+            ((GameObject *)child)->objectFlags |= 0x800;
             objRenderModel(child);
         } else {
             objRenderShadow(child);
@@ -3944,7 +3944,7 @@ void objRenderShadow2(int *obj, int *obj2, u8 *m, int p4) {
             } else {
                 vtx = *(int *)&((ModelFileHeader *)m)->vertices;
             }
-            ObjModel_BlendPrimaryVertexStream(lbl_80342E10, m + 0x88, vtx, *(int *)((char *)am + 0x40), ((int *)((char *)am + 0x1c))[(*(u16 *)((char *)am + 0x18) >> 1) & 1]);
+            ObjModel_BlendPrimaryVertexStream(lbl_80342E10, m + 0x88, vtx, *(int *)&((ModelFileHeader *)am)->unk40, ((int *)((char *)am + 0x1c))[(*(u16 *)((char *)am + 0x18) >> 1) & 1]);
             ObjModel_BlendSecondaryVertexStream(lbl_80342E10, m + 0xac, *(int *)&((ModelFileHeader *)m)->normals, *(int *)((char *)am + 0x44), ((ModelFileHeader *)m)->flags24 & 8);
         }
         if (((ModelFileHeader *)m)->unkF7 != 0) {
@@ -4222,7 +4222,7 @@ void modelDoRenderInstrs(int *obj, int *obj2, u8 *m, u8 mode) {
                 } else {
                     vtx = *(int *)&((ModelFileHeader *)m)->vertices;
                 }
-                ObjModel_BlendPrimaryVertexStream(lbl_80342E10, m + 0x88, vtx, *(int *)((char *)am + 0x40), ((int *)((char *)am + 0x1c))[(*(u16 *)((char *)am + 0x18) >> 1) & 1]);
+                ObjModel_BlendPrimaryVertexStream(lbl_80342E10, m + 0x88, vtx, *(int *)&((ModelFileHeader *)am)->unk40, ((int *)((char *)am + 0x1c))[(*(u16 *)((char *)am + 0x18) >> 1) & 1]);
                 ObjModel_BlendSecondaryVertexStream(lbl_80342E10, m + 0xac, *(int *)&((ModelFileHeader *)m)->normals, *(int *)((char *)am + 0x44), ((ModelFileHeader *)m)->flags24 & 8);
             }
         }

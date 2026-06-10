@@ -126,17 +126,17 @@ int Checkpoint_func07(int* obj, int* state)
     f32 dist, dist2, nx, nz, offs, dz;
     f32 offs2, distA, distB, dx, dy, len, q, proj, proj2, t0, sum, frac, zero;
 
-    if (*(int*)((char*)state + 0x18) < 0) {
-        *(int*)((char*)state + 0x1c) = 0;
+    if (*(int *)&((BaddieState *)state)->posY < 0) {
+        *(int *)&((BaddieState *)state)->posZ = 0;
         *(f32*)((char*)state + 0xc) = lbl_803E04E8;
         if (*(int*)((char*)state + 0x10) < 0) {
             return 0;
         }
-        *(int*)((char*)state + 0x18) = *(int*)((char*)state + 0x10);
+        *(int *)&((BaddieState *)state)->posY = *(int*)((char*)state + 0x10);
     }
-    cp = (char*)Checkpoint_find(*(int*)((char*)state + 0x18), &slot8);
+    cp = (char*)Checkpoint_find(*(int *)&((BaddieState *)state)->posY, &slot8);
     if (cp == NULL) {
-        *(int*)((char*)state + 0x18) = -1;
+        *(int *)&((BaddieState *)state)->posY = -1;
         return 0;
     }
     cosv = mathSinf((lbl_803E04D8 * (f32)(*(u8*)(cp + 0x29) << 8)) / lbl_803E04DC);
@@ -144,9 +144,9 @@ int Checkpoint_func07(int* obj, int* state)
     offs = -(*(f32*)(cp + 8) * cosv + *(f32*)(cp + 0x10) * sinv);
     dist = offs + (cosv * ((GameObject *)obj)->anim.localPosX + sinv * ((GameObject *)obj)->anim.localPosZ);
     if (*(int*)(cp + 0x18) > -1 && dist >= lbl_803E04E8) {
-        *(int*)((char*)state + 0x18) = *(int*)(cp + 0x18);
+        *(int *)&((BaddieState *)state)->posY = *(int*)(cp + 0x18);
         *(f32*)((char*)state + 0xc) = lbl_803E050C;
-        *(int*)((char*)state + 0x1c) = *(int*)((char*)state + 0x1c) - 1;
+        *(int *)&((BaddieState *)state)->posZ = *(int *)&((BaddieState *)state)->posZ - 1;
         return *(u8*)(cp + 0x29);
     }
     if (*(int*)(cp + 0x20) < 0) {
@@ -160,9 +160,9 @@ int Checkpoint_func07(int* obj, int* state)
     dist2 = offs2 + (cos2 * ((GameObject *)obj)->anim.localPosX + sin2 * ((GameObject *)obj)->anim.localPosZ);
     zero = lbl_803E04E8;
     if (dist2 < zero) {
-        *(int*)((char*)state + 0x18) = *(int*)(cp + 0x20);
+        *(int *)&((BaddieState *)state)->posY = *(int*)(cp + 0x20);
         *(f32*)((char*)state + 0xc) = zero;
-        *(int*)((char*)state + 0x1c) = *(int*)((char*)state + 0x1c) + 1;
+        *(int *)&((BaddieState *)state)->posZ = *(int *)&((BaddieState *)state)->posZ + 1;
         return ang;
     }
     distA = offs + (cosv * *(f32*)(cp2 + 8) + sinv * *(f32*)(cp2 + 0x10));
@@ -307,9 +307,9 @@ void player_clearXZvel(int *obj, int *state) {
     f32 z = lbl_803E0570;
     ((GameObject *)obj)->anim.velocityX = z;
     ((GameObject *)obj)->anim.velocityZ = z;
-    *(f32*)((char*)state + 0x294) = z;
-    *(f32*)((char*)state + 0x280) = z;
-    *(f32*)((char*)state + 0x284) = z;
+    ((BaddieState *)state)->unk294 = z;
+    ((BaddieState *)state)->animSpeedA = z;
+    ((BaddieState *)state)->animSpeedB = z;
 }
 
 /* Checkpoint table initialiser. */
@@ -336,9 +336,9 @@ void player_playSoundFn0F(int* obj, int* state, int bit, int idx, int* sfxTable)
     register int flags;
     register int mask;
     mask = 1 << bit;
-    flags = *(int*)((char*)state + 788);
+    flags = *(int *)&((BaddieState *)state)->eventFlags;
     if ((flags & mask) != 0) {
-        *(int*)((char*)state + 788) = flags & ~mask;
+        *(int *)&((BaddieState *)state)->eventFlags = flags & ~mask;
         Sfx_PlayFromObject(obj, (u16)sfxTable[idx]);
     }
 }
@@ -348,16 +348,16 @@ void player_playSoundFn10(int* obj, int* state, int bit, int idx, int* sfxTable)
     register int flags;
     register int mask;
     mask = 1 << bit;
-    flags = *(int*)((char*)state + 788);
+    flags = *(int *)&((BaddieState *)state)->eventFlags;
     if ((flags & mask) != 0) {
-        *(int*)((char*)state + 788) = flags & ~mask;
+        *(int *)&((BaddieState *)state)->eventFlags = flags & ~mask;
         Sfx_PlayFromObject(obj, (u16)sfxTable[idx]);
     }
 }
 
 void player_render2(s16* obj, int* state, f32 f1, f32 f2)
 {
-    f32 cur = *(f32*)((char*)state + 680);
+    f32 cur = ((BaddieState *)state)->unk2A8;
     f32 new_ = f2 * f1 + cur;
     if (new_ > lbl_803E0588) {
         new_ = lbl_803E0588;
@@ -365,15 +365,15 @@ void player_render2(s16* obj, int* state, f32 f1, f32 f2)
     {
         f32 delta = new_ - cur;
         if (delta > lbl_803E0570) {
-            *obj = *obj + (s32)(*(f32*)((char*)state + 768) * delta);
+            *obj = *obj + (s32)(((BaddieState *)state)->unk300 * delta);
         }
     }
-    *(f32*)((char*)state + 680) = new_;
+    ((BaddieState *)state)->unk2A8 = new_;
 }
 
 void player_modelMtxFn(f32* mtx, int* state, f32 f1, f32 f2)
 {
-    f32 cur = *(f32*)((char*)state + 684);
+    f32 cur = ((BaddieState *)state)->unk2AC;
     f32 new_ = f2 * f1 + cur;
     if (new_ > lbl_803E0588) {
         new_ = lbl_803E0588;
@@ -383,8 +383,8 @@ void player_modelMtxFn(f32* mtx, int* state, f32 f1, f32 f2)
         if (delta > lbl_803E0570) {
             *(f32*)((char*)mtx + 12) = *(f32*)((char*)state + 756) * delta + *(f32*)((char*)mtx + 12);
             *(f32*)((char*)mtx + 16) = *(f32*)((char*)state + 760) * delta + *(f32*)((char*)mtx + 16);
-            *(f32*)((char*)mtx + 20) = *(f32*)((char*)state + 764) * delta + *(f32*)((char*)mtx + 20);
-            *(f32*)((char*)state + 684) = new_;
+            *(f32*)((char*)mtx + 20) = ((BaddieState *)state)->pathStep * delta + *(f32*)((char*)mtx + 20);
+            ((BaddieState *)state)->unk2AC = new_;
         }
     }
 }
@@ -488,28 +488,28 @@ void player_followCurve(int* obj, int* state, f32 cx, f32 cz, f32 t, int p5)
     max = lbl_803E0578;
     if (*(f32*)((char*)state + 0x2bc) < lbl_803E0580) {
         max = lbl_803E0584 * *(f32*)((char*)state + 0x2bc);
-        *(f32*)((char*)state + 0x294) = *(f32*)((char*)state + 0x294) * lbl_803E0574;
+        ((BaddieState *)state)->unk294 = ((BaddieState *)state)->unk294 * lbl_803E0574;
     }
     if (dist > max) {
         f32 q = dist / max;
         dx = dx / q;
         dz = dz / q;
     }
-    *(f32*)((char*)state + 0x290) = dx;
-    *(f32*)((char*)state + 0x28c) = -dz;
-    *(f32*)((char*)state + 0x290) = *(f32*)((char*)state + 0x290) * t;
-    *(f32*)((char*)state + 0x28c) = *(f32*)((char*)state + 0x28c) * t;
-    if (*(f32*)((char*)state + 0x290) > lbl_803E0578) {
-        *(f32*)((char*)state + 0x290) = lbl_803E0578;
+    ((BaddieState *)state)->unk290 = dx;
+    ((BaddieState *)state)->unk28C = -dz;
+    ((BaddieState *)state)->unk290 = ((BaddieState *)state)->unk290 * t;
+    ((BaddieState *)state)->unk28C = ((BaddieState *)state)->unk28C * t;
+    if (((BaddieState *)state)->unk290 > lbl_803E0578) {
+        ((BaddieState *)state)->unk290 = lbl_803E0578;
     }
-    if (*(f32*)((char*)state + 0x290) < lbl_803E057C) {
-        *(f32*)((char*)state + 0x290) = lbl_803E057C;
+    if (((BaddieState *)state)->unk290 < lbl_803E057C) {
+        ((BaddieState *)state)->unk290 = lbl_803E057C;
     }
-    if (*(f32*)((char*)state + 0x28c) > lbl_803E0578) {
-        *(f32*)((char*)state + 0x28c) = lbl_803E0578;
+    if (((BaddieState *)state)->unk28C > lbl_803E0578) {
+        ((BaddieState *)state)->unk28C = lbl_803E0578;
     }
-    if (*(f32*)((char*)state + 0x28c) < lbl_803E057C) {
-        *(f32*)((char*)state + 0x28c) = lbl_803E057C;
+    if (((BaddieState *)state)->unk28C < lbl_803E057C) {
+        ((BaddieState *)state)->unk28C = lbl_803E057C;
     }
 }
 #pragma opt_common_subs reset
@@ -548,17 +548,17 @@ void dll_0F_func13(s16* obj, int* state, int angle, f32 t, f32 scale)
     q = ((GameObject *)obj)->anim.velocityX * ((GameObject *)obj)->anim.velocityX;
     w = ((GameObject *)obj)->anim.velocityZ * ((GameObject *)obj)->anim.velocityZ;
     dist = sqrtf(q + w);
-    *(f32*)((char*)state + 0x294) = dist;
-    if (*(f32*)((char*)state + 0x294) < lbl_803E05B0) {
+    ((BaddieState *)state)->unk294 = dist;
+    if (((BaddieState *)state)->unk294 < lbl_803E05B0) {
         f32 z = lbl_803E0570;
-        *(f32*)((char*)state + 0x294) = z;
+        ((BaddieState *)state)->unk294 = z;
         ((GameObject *)obj)->anim.velocityX = z;
         ((GameObject *)obj)->anim.velocityZ = z;
     }
     c = mathSinf((lbl_803E05A4 * (f32)*obj) / lbl_803E05A8);
     s = mathCosf((lbl_803E05A4 * (f32)*obj) / lbl_803E05A8);
-    *(f32*)((char*)state + 0x284) = ((GameObject *)obj)->anim.velocityX * s - ((GameObject *)obj)->anim.velocityZ * c;
-    *(f32*)((char*)state + 0x280) = -((GameObject *)obj)->anim.velocityZ * s - ((GameObject *)obj)->anim.velocityX * c;
+    ((BaddieState *)state)->animSpeedB = ((GameObject *)obj)->anim.velocityX * s - ((GameObject *)obj)->anim.velocityZ * c;
+    ((BaddieState *)state)->animSpeedA = -((GameObject *)obj)->anim.velocityZ * s - ((GameObject *)obj)->anim.velocityX * c;
 }
 #pragma opt_common_subs reset
 #pragma peephole reset
@@ -1197,7 +1197,7 @@ void Checkpoint_func06(int* obj, int* state, int filter)
                     if (outX < lbl_803E0530 || outX > lbl_803E0534 || outY < lbl_803E0538 || outY > lbl_803E0534) {
                     } else {
                         *(int*)((char*)state + 0x10) = *(int*)(cp + 0x14);
-                        *(int*)((char*)state + 0x14) = *(int*)(cp + 0x14);
+                        *(int *)&((BaddieState *)state)->posX = *(int*)(cp + 0x14);
                         *(f32*)((char*)state + 0) = outX;
                         *(f32*)((char*)state + 4) = outY;
                         *(f32*)((char*)state + 8) = frac;

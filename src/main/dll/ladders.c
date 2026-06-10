@@ -483,28 +483,28 @@ extern f32 lbl_803E2F68;
 void fn_80163990(int *piece, u8 *state) {
     f32 gh;
 
-    *(f32 *)((char*)piece + 0x24) = *(f32 *)((char*)piece + 0x24) / lbl_803E2F5C;
-    if (fn_80065684((int)piece, *(f32 *)((char*)piece + 0xc), *(f32 *)((char*)piece + 0x10), *(f32 *)((char*)piece + 0x14), &gh, 0) != 0) {
+    ((GameObject *)piece)->anim.velocityX = ((GameObject *)piece)->anim.velocityX / lbl_803E2F5C;
+    if (fn_80065684((int)piece, ((GameObject *)piece)->anim.localPosX, ((GameObject *)piece)->anim.localPosY, ((GameObject *)piece)->anim.localPosZ, &gh, 0) != 0) {
         if (gh > lbl_803E2F60) {
-            *(f32 *)((char*)piece + 0x28) = *(f32 *)((char*)piece + 0x28) + lbl_803E2F64 * timeDelta;
+            ((GameObject *)piece)->anim.velocityY = ((GameObject *)piece)->anim.velocityY + lbl_803E2F64 * timeDelta;
         } else {
-            *(f32 *)((char*)piece + 0x10) = *(f32 *)((char*)piece + 0x10) - (gh - lbl_803E2F60);
-            *(f32 *)((char*)piece + 0x28) = lbl_803E2F68;
+            ((GameObject *)piece)->anim.localPosY = ((GameObject *)piece)->anim.localPosY - (gh - lbl_803E2F60);
+            ((GameObject *)piece)->anim.velocityY = lbl_803E2F68;
         }
     }
-    *(f32 *)((char*)piece + 0x2c) = *(f32 *)((char*)piece + 0x2c) / lbl_803E2F5C;
+    ((GameObject *)piece)->anim.velocityZ = ((GameObject *)piece)->anim.velocityZ / lbl_803E2F5C;
 
     *(s16 *)(state + 0x27c) = (s16)(*(s16 *)(state + 0x27c) / 100);
     *(s16 *)(state + 0x27e) = (s16)(*(s16 *)(state + 0x27e) / 100);
     *(s16 *)(state + 0x280) = (s16)(*(s16 *)(state + 0x280) / 100);
 
-    *(f32 *)((char*)piece + 0xc) = *(f32 *)((char*)piece + 0xc) + *(f32 *)((char*)piece + 0x24) * timeDelta;
-    *(f32 *)((char*)piece + 0x10) = *(f32 *)((char*)piece + 0x10) + *(f32 *)((char*)piece + 0x28) * timeDelta;
-    *(f32 *)((char*)piece + 0x14) = *(f32 *)((char*)piece + 0x14) + *(f32 *)((char*)piece + 0x2c) * timeDelta;
+    ((GameObject *)piece)->anim.localPosX = ((GameObject *)piece)->anim.localPosX + ((GameObject *)piece)->anim.velocityX * timeDelta;
+    ((GameObject *)piece)->anim.localPosY = ((GameObject *)piece)->anim.localPosY + ((GameObject *)piece)->anim.velocityY * timeDelta;
+    ((GameObject *)piece)->anim.localPosZ = ((GameObject *)piece)->anim.localPosZ + ((GameObject *)piece)->anim.velocityZ * timeDelta;
 
-    *(s16 *)((char*)piece + 0x4) = (s16)(s32)((f32)(int)*(s16 *)(state + 0x27c) * timeDelta + (f32)(int)*(s16 *)((char*)piece + 0x4));
-    *(s16 *)((char*)piece + 0x2) = (s16)(s32)((f32)(int)*(s16 *)(state + 0x27e) * timeDelta + (f32)(int)*(s16 *)((char*)piece + 0x2));
-    *(s16 *)((char*)piece + 0x0) = (s16)(s32)((f32)(int)*(s16 *)(state + 0x280) * timeDelta + (f32)(int)*(s16 *)((char*)piece + 0x0));
+    ((GameObject *)piece)->anim.rotZ = (s16)(s32)((f32)(int)*(s16 *)(state + 0x27c) * timeDelta + (f32)(int)((GameObject *)piece)->anim.rotZ);
+    ((GameObject *)piece)->anim.rotY = (s16)(s32)((f32)(int)*(s16 *)(state + 0x27e) * timeDelta + (f32)(int)((GameObject *)piece)->anim.rotY);
+    ((GameObject *)piece)->anim.rotX = (s16)(s32)((f32)(int)*(s16 *)(state + 0x280) * timeDelta + (f32)(int)((GameObject *)piece)->anim.rotX);
 }
 
 
