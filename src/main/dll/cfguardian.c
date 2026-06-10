@@ -727,18 +727,22 @@ void Door_init(int *obj, u8 *def) {
     if (GameBit_Get(*(s16 *)(def + 0x22)) != 0) state[6] = (u8)(state[6] | 2);
     {
         s16 model = ((GameObject *)obj)->anim.seqId;
-        if (model == 1101) {
+        switch (model) {
+        case 1101: {
             s32 subtype = ((GameObject *)obj)->anim.mapEventSlot;
-            if ((subtype >= 31 && subtype < 35) || (subtype >= 40 && subtype < 43)) {
+            if ((subtype < 35 && subtype >= 31) || (subtype < 43 && subtype >= 40)) {
                 *(s16 *)state = 832;
                 *(s16 *)(state + 2) = 833;
             } else {
                 *(s16 *)state = 1154;
                 *(s16 *)(state + 2) = 1155;
             }
-        } else if (model == 358) {
+            break;
+        }
+        case 358:
             *(s16 *)state = 275;
             *(s16 *)(state + 2) = 504;
+            break;
         }
     }
 }
