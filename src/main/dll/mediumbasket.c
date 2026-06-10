@@ -1640,7 +1640,7 @@ void FUN_8015d91c(undefined8 param_1,double param_2,double param_3,undefined8 pa
       *(undefined4 *)(iVar3 + 0x24) = *(undefined4 *)&((GroundBaddieState *)param_10)->baddie.velX;
       *(undefined4 *)(iVar3 + 0x28) = *(undefined4 *)&((GroundBaddieState *)param_10)->baddie.velY;
       *(undefined4 *)(iVar3 + 0x2c) = *(undefined4 *)&((GroundBaddieState *)param_10)->baddie.velZ;
-      *(undefined4 *)(iVar3 + 0xc4) = param_9;
+      *(undefined4 *)&((GroundBaddieState *)iVar3)->baddie.contactObj = param_9;
     }
   }
   return;
