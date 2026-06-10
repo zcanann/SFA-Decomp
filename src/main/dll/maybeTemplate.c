@@ -4,8 +4,6 @@
 #include "main/screen_transition.h"
 
 
-#pragma peephole off
-#pragma scheduling off
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068c4();
 extern undefined4 FUN_80006c64();
@@ -1264,7 +1262,6 @@ void cMenuUpdateAnims(void)
  * EN v1.0 Address: 0x801241CC
  * EN v1.0 Size: 0x110
  */
-#pragma peephole off
 int trickyBitFn_801241cc(short* arr, sbyte flag)
 {
   short* entry;

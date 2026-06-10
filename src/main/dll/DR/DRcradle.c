@@ -5,8 +5,6 @@
 #include "main/objhits_types.h"
 
 
-#pragma peephole off
-#pragma scheduling off
 
 /* Trivial 4b 0-arg blr leaves. */
 void SnowBike_func17(void) {}

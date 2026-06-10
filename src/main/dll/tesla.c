@@ -71,8 +71,6 @@ extern f32 lbl_803E6448;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void fn_80206968(TrickyCurveObject *obj)
 {
     u8 insideAxes;
@@ -165,8 +163,6 @@ void fn_80206968(TrickyCurveObject *obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void fn_80206C18(TrickyCurveObject *obj)
 {
     u8 insideAxes;

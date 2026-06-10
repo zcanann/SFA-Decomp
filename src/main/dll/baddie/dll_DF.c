@@ -4,8 +4,6 @@
 #include "main/game_object.h"
 #include "main/objanim.h"
 
-#pragma peephole off
-#pragma scheduling off
 
 extern double FUN_80017708();
 extern int FUN_80017730();

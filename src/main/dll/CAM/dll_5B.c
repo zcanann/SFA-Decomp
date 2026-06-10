@@ -14,8 +14,6 @@
 #include "main/pad.h"
 
 
-#pragma peephole off
-#pragma scheduling off
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_80006810();
 extern undefined4 FUN_80006824();

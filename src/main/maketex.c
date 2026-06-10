@@ -6,8 +6,6 @@
 #include "main/objseq.h"
 
 
-#pragma peephole off
-#pragma scheduling off
 extern int FUN_800033a8();
 extern undefined4 FUN_80003494();
 extern undefined8 FUN_80006868();

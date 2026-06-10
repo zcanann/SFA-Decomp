@@ -9,8 +9,6 @@
 #include "main/objseq.h"
 #include "main/resource.h"
 
-#pragma peephole off
-#pragma scheduling off
 
 #define DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG OBJ_MODEL_STATE_SHADOW_VISIBLE
 

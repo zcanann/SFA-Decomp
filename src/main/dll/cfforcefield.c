@@ -5,8 +5,6 @@
 #include "main/resource.h"
 
 
-#pragma peephole off
-#pragma scheduling off
 extern uint GameBit_Get(int eventId);
 extern void ObjHits_DisableObject(u32 obj);
 extern u32 randomGetRange(int min, int max);

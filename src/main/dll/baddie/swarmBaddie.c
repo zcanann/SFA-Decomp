@@ -4,8 +4,6 @@
 #include "main/game_object.h"
 
 
-#pragma peephole off
-#pragma scheduling off
 extern undefined4 FUN_80006868();
 extern char FUN_80006884();
 extern undefined4 FUN_80006894();

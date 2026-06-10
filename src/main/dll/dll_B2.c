@@ -20,8 +20,6 @@ extern void GXSetCullMode(int mode);
  * EN v1.0 Address: 0x80100C90
  * EN v1.0 Size: 316b
  */
-#pragma peephole off
-#pragma scheduling off
 
 int aButtonIconTexCb(GameObject *obj, void **objPtr, undefined4 arg3)
 {

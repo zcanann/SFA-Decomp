@@ -20,7 +20,6 @@ extern f32 lbl_803E162C;
 extern f32 lbl_803E1630;
 extern f32 lbl_803E1640;
 
-#pragma scheduling off
 
 /*
  * --INFO--

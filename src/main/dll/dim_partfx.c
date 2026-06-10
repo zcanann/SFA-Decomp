@@ -5,8 +5,6 @@
 
 
 
-#pragma peephole off
-#pragma scheduling off
 extern undefined4 FUN_80006824();
 extern double FUN_80006a30();
 extern int FUN_80017730();
@@ -2332,7 +2330,6 @@ typedef struct PartFxNode {
 /* Binary search for key in lbl_8039C458 (count = lbl_803DD410). */
 #pragma dont_inline on
 #pragma push
-#pragma scheduling off
 u32 Checkpoint_find(s32 key, s32 *idx_out)
 {
     s32 high;
@@ -2372,7 +2369,6 @@ typedef struct CheckpointPair {
 
 /* Build particle quad positions from a checkpoint pair. */
 #pragma push
-#pragma scheduling off
 s32 fn_800D55BC(u8 *p, s32 idx, f32 *out1, f32 *out2, f32 *out3, u8 mode, f32 fa, f32 fb)
 {
     s32 local_idx;
@@ -2505,8 +2501,6 @@ u32 Checkpoint_func0E(s32 *p)
 
 /* Swap lbl_803DD418 with lbl_803DD41C; copy 416 into 414 then clear 416. */
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 void fn_800D6584(void)
 {
     u32 tmp = lbl_803DD418;
@@ -2527,7 +2521,6 @@ typedef struct PartFxItem {
 
 /* NOTE: 96.8% ? register choice differs (r5 vs r7 for rank). */
 #pragma push
-#pragma scheduling off
 s32 Checkpoint_func0F(PartFxItem *p)
 {
     PartFxItem *q;
@@ -2629,8 +2622,6 @@ void Checkpoint_func0A(s32 key, f32 *out_vec, u8 *flag_byte)
 
 /* Walk a chain via Checkpoint_find lookups starting from o->_0x10. */
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 void Checkpoint_func0C(PartFxNode *o)
 {
     s32 local_idx;
@@ -2661,7 +2652,6 @@ void Checkpoint_func0D(u32 v)
 
 /* Tick: counter1, counter2 + rate*timeDelta; clamp; periodic sin. */
 #pragma push
-#pragma scheduling off
 void Effect16_func05(void)
 {
     f32 sum;
@@ -6582,7 +6572,6 @@ extern u16 getAngle(f32 a, f32 b);
 
 /* Advance along the checkpoint curve by dist; write position/angles to out. */
 #pragma push
-#pragma scheduling off
 s32 Checkpoint_func08(u8 *out, u8 *o, f32 dist, s32 p3, u8 flag)
 {
     f32 v1[4];

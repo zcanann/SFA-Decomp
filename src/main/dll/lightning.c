@@ -9,8 +9,6 @@
 #include "main/game_object.h"
 #include "main/resource.h"
 
-#pragma peephole off
-#pragma scheduling off
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopFromObject(int obj, int sfxId);
 extern void itemPickupDoParticleFx(int obj, f32 scale, int p3, int p4);

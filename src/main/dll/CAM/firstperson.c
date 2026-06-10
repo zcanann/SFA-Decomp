@@ -3,8 +3,6 @@
 #include "main/object_transform.h"
 
 
-#pragma peephole off
-#pragma scheduling off
 extern undefined4 FUN_800068f4();
 extern double FUN_800176f4();
 extern undefined4 camcontrol_getTargetPosition();

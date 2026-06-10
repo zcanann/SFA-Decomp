@@ -9,8 +9,6 @@
 #include "main/objseq.h"
 
 
-#pragma peephole off
-#pragma scheduling off
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068cc();
 extern undefined4 FUN_800068d0();
@@ -755,8 +753,6 @@ int trickyFlameFn_80142b6c(u8 *obj, u8 *state)
  */
 extern u32 lbl_802C21DC[];
 
-#pragma scheduling off
-#pragma peephole off
 int trickyFoodFn_80142d2c(int obj, int state)
 {
   int tex;
@@ -817,8 +813,6 @@ extern f32 lbl_803E23F0;
 extern f32 lbl_803E249C;
 extern EffectInterface **gPartfxInterface;
 
-#pragma scheduling off
-#pragma peephole off
 int trickyFn_80142eb0(int obj, int state)
 {
   short sVar;
@@ -1490,8 +1484,6 @@ undefined4 fn_80143DD4(int param_1,int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 extern f32 mathSinf(f64 x);
 extern f64 mathCosf(f64 x);
 extern f64 lbl_803E2528;

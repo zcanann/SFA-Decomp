@@ -10,8 +10,6 @@ extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z,
 extern void objRenderFn_8003b8f4(u8 *reticle, undefined4 a, undefined4 b, undefined4 c,
                         undefined4 d, f32 f);
 
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--

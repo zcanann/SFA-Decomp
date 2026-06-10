@@ -286,8 +286,6 @@ extern f32 lbl_803E227C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 typedef struct {
   u32 mode;       /* +0x00 */
   f32 x, y, z;    /* +0x04 +0x08 +0x0c */

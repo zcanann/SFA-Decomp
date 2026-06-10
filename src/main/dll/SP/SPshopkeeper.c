@@ -66,8 +66,6 @@ extern MapEventInterface **gMapEventInterface;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void SH_LevelControl_doThornTailEvents(int obj, ShopkeeperLevelControlState *state)
 {
     ShopkeeperObject *thornTailObj;
@@ -149,8 +147,6 @@ void SH_LevelControl_doThornTailEvents(int obj, ShopkeeperLevelControlState *sta
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void SH_LevelControl_doEarlyScenes(int obj, ShopkeeperLevelControlState *state)
 {
     ShopkeeperObject *playerObj;

@@ -6,8 +6,6 @@
 #include "main/objseq.h"
 
 
-#pragma peephole off
-#pragma scheduling off
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);

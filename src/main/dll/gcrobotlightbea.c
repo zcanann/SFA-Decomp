@@ -6,8 +6,6 @@
 #include "main/resource.h"
 
 
-#pragma peephole off
-#pragma scheduling off
 extern undefined4 GameBit_Set(int eventId, int value);
 extern uint FUN_80017730();
 extern undefined4 FUN_80017748();

@@ -5,8 +5,6 @@
 #include "main/objanim.h"
 
 
-#pragma peephole off
-#pragma scheduling off
 
 extern int GameBit_Set(int bit, int value);
 extern int Sfx_PlayFromObject(void *obj, int sfxId);

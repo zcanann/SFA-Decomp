@@ -4,8 +4,6 @@
 #include "main/dll/CAM/camcannon_state.h"
 
 
-#pragma peephole off
-#pragma scheduling off
 extern f32 Curve_EvalLinear(f32 param_1, float *param_2, float *param_3);
 extern f32 Curve_EvalHermite(f32 param_1, float *param_2, float *param_3);
 extern undefined4 FUN_80017814();

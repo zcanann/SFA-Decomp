@@ -7,8 +7,6 @@
 #include "main/screen_transition.h"
 
 
-#pragma peephole off
-#pragma scheduling off
 extern undefined8 FUN_80006894();
 extern undefined4 FUN_800068a0();
 extern undefined4 FUN_800068cc();

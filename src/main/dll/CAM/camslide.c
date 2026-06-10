@@ -4,8 +4,6 @@
 #include "main/camera_object.h"
 #include "main/dll/CAM/camcontrol_mode_settings.h"
 
-#pragma peephole off
-#pragma scheduling off
 
 extern uint getAngle();
 extern void mtxRotateByVec3s(void *matrix, void *angles);

@@ -881,27 +881,19 @@ extern undefined2 uRam803dddfa;
 extern undefined4 uRam803dde08;
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
 extern u8 lbl_803DD16C;
 extern void getEnvfxActImmediately(void *obj, void *target, int effectId, int flags);
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 void lightningRenderActive(void)
@@ -986,7 +978,6 @@ void cloudClearOverridePosition(void) {
 }
 
 #pragma push
-#pragma scheduling off
 void cloudSetOverridePosition(f32 a, f32 b, f32 c) {
     lbl_803DD1EC = 1;
     lbl_803DD1E8 = a;
@@ -1016,8 +1007,6 @@ void skyFn_80088e54(int mode, f32 brightness);
 void fn_8008BDA8(void);
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 extern void textureFree(void *handle);
@@ -1044,7 +1033,6 @@ extern u8 lbl_803DD1CC;
 void snowFreeSnowCloud(int index);
 
 #pragma push
-#pragma scheduling off
 void newclouds_release(void) {
     int i;
 
@@ -1070,7 +1058,6 @@ void newclouds_release(void) {
 #pragma pop
 
 #pragma push
-#pragma scheduling off
 void newclouds_onMapSetup(void) {
     int i;
     f32 a;
@@ -1108,15 +1095,12 @@ extern f32 lbl_803DF148;
 extern s8 lbl_803DB750;
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 
 extern void Obj_SetModelColorOverrideRecursive(int obj, int r, int g, int b, int a, int flag);
 
 #pragma pop
 
 #pragma push
-#pragma scheduling off
 #pragma dont_inline on
 void *lightningCreate(f32 *a, f32 *b, f32 c, f32 d, int e, int f, int g) {
     u8 *p = mmAlloc(40, 23, 0);
@@ -1189,33 +1173,21 @@ extern f32 lbl_803DF01C;
 extern f32 lbl_803DF020;
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 typedef struct ObjCurveKey {
@@ -1226,14 +1198,10 @@ typedef struct ObjCurveKey {
 } ObjCurveKey;
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 typedef struct Dll06InterpState {
@@ -1248,8 +1216,6 @@ typedef struct Dll06InterpState {
 } Dll06InterpState;
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 typedef struct FogColor {
@@ -1266,7 +1232,6 @@ extern f32 lbl_8039A8F0[];
 extern int lbl_803DF198;
 
 #pragma push
-#pragma scheduling off
 void dll_07_func07(int arg) {
     int i;
     int total;
@@ -1292,7 +1257,6 @@ extern char sSnowKillSnowCloudInvalidCloudId[];
 extern void debugPrintf(char *fmt, ...);
 
 #pragma push
-#pragma scheduling off
 #pragma dont_inline on
 void newclouds_snowKillSnowCloud(int cloudId, int flag)
 {
@@ -1342,7 +1306,6 @@ extern f32 lbl_803DF2B0;
 extern f32 lbl_803DF2B4;
 
 #pragma push
-#pragma scheduling off
 void *cloudGetLayerTextureSize(f32 *out1, f32 *out2) {
     int *tex;
     int *layer;
@@ -1377,15 +1340,12 @@ extern f32 lbl_803DF190;
 extern f32 lbl_803DF194;
 
 #pragma push
-#pragma scheduling off
 #pragma pop
 
 extern u8 *saveGameGetEnvState(void);
 extern int getSaveGameLoadStatus(void);
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma pop
 
 extern char sSnowFreeSnowCloudInvalidCloudId[];
@@ -1398,8 +1358,6 @@ extern char sSnowFreeSnowCloudInvalidCloudId[];
  * EN v1.0 Size: 504b
  */
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 #pragma dont_inline on
 void snowFreeSnowCloud(int cloudId) {
     u8 *env;
@@ -1478,8 +1436,6 @@ extern void normalize(f32 *x, f32 *y, f32 *z);
  * EN v1.0 Size: 776b
  */
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 void snowCloudComputeDrift(f32 *out, f32 *pos, f32 scale) {
     f32 accX;
     f32 accZ;
@@ -1558,8 +1514,6 @@ void lightningDrawBolt(f32 *start, f32 *end, int width, f32 c, f32 d, int *seed,
  * EN v1.0 Size: 496b
  */
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 void lightningRender(void *state) {
     u8 *p = state;
     f32 start[3];
@@ -1635,8 +1589,6 @@ extern const f32 lbl_803DF1F8;
  * EN v1.0 Size: 988b
  */
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 void snowCloudInitFlakes(f32 *buf, int cloudId, f32 a, f32 b) {
     u8 *p;
     u8 *e;
@@ -1749,8 +1701,6 @@ extern f32 lbl_803DF28C;
  * EN v1.0 Size: 724b
  */
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 void drawSkyStars(void) {
     int timeOk;
     int start;
@@ -1871,7 +1821,6 @@ extern f32 lbl_803DF1CC;
  * EN v1.0 Size: 1200b
  */
 #pragma push
-#pragma scheduling off
 void lightningDrawStrand(f32 *from, f32 *to, int width, f32 segScale, int *seed) {
     int savedRand;
     int segs;
@@ -1974,7 +1923,6 @@ void lightningDrawStrand(f32 *from, f32 *to, int width, f32 segScale, int *seed)
  * EN v1.0 Size: 892b
  */
 #pragma push
-#pragma scheduling off
 void snowCloudUpdateFlakes(u8 *snow) {
     s16 *cam;
     u8 *e;
@@ -2052,7 +2000,6 @@ extern f32 lbl_803DF1D0;
  * EN v1.0 Size: 1596b
  */
 #pragma push
-#pragma scheduling off
 void lightningDrawBolt(f32 *start, f32 *end, int width, f32 segScale, f32 d, int *seed, int depth,
                  int flags) {
     f32 len;
@@ -2194,7 +2141,6 @@ extern f32 lbl_803DF2A4;
  * EN v1.0 Size: 1464b
  */
 #pragma push
-#pragma scheduling off
 void titleScreenDrawFn_80093db4(void) {
     f32 *constellation;
     f32 *cp;
@@ -2320,8 +2266,6 @@ extern f32 lbl_803DF230;
  * EN v1.0 Size: 1848b
  */
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 void snowReposSnowCloud(int cloudId) {
     u8 *p;
     u8 *part;
@@ -2472,8 +2416,6 @@ extern f32 lbl_803DF244;
  * EN v1.0 Size: 2632b
  */
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 void newClouds(u8 *params, void *owner, f32 x, f32 y, f32 z) {
     char *strs;
     int ok;
@@ -2710,8 +2652,6 @@ extern f32 lbl_803DF27C;
  * EN v1.0 Size: 2324b
  */
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 void newclouds_update(u8 *objA, u8 *objB, u8 *params) {
     u8 *env;
     u8 *p;
@@ -2916,8 +2856,6 @@ extern f32 lbl_803DF278;
  * EN v1.0 Size: 2376b
  */
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 void dll_07_func06(void) {
     s16 *cam;
     u8 *p;
@@ -3192,8 +3130,6 @@ extern f32 lbl_803DF204;
  * EN v1.0 Size: 2456b
  */
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 int snowPrintSnowCloud(int arg, int cloudId) {
     u8 *p;
     u8 *part;

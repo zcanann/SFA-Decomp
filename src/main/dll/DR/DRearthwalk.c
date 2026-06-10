@@ -24,8 +24,6 @@ typedef struct ShBeaconState {
 STATIC_ASSERT(sizeof(ShBeaconState) == 0x18);
 
 
-#pragma peephole off
-#pragma scheduling off
 extern undefined4 FUN_80006824();
 extern uint GameBit_Get(int eventId);
 extern double FUN_80017708();

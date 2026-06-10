@@ -7,8 +7,6 @@
 #include "main/objlib.h"
 
 
-#pragma peephole off
-#pragma scheduling off
 extern void Obj_TransformWorldVectorToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, int obj);
 extern undefined4 Obj_TransformWorldPointToLocal();
 extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, int obj);

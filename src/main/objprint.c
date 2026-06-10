@@ -10,8 +10,6 @@
 #define OBJPRINT_MODEL_COUNT(model) (((ObjDef *)(model))->modelCount)
 #define OBJPRINT_JOINT_COUNT(model) (((ObjDef *)(model))->jointCount)
 
-#pragma peephole off
-#pragma scheduling off
 extern bool FUN_800067f0();
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_8000681c();

@@ -9,8 +9,6 @@
 #include "string.h"
 
 
-#pragma peephole off
-#pragma scheduling off
 extern int getAngle(f32 dx,f32 dz);
 extern undefined4 camcontrol_getTargetPosition();
 

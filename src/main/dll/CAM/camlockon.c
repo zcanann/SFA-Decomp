@@ -1,8 +1,6 @@
 #include "main/dll/CAM/camlockon.h"
 #include "main/dll/CAM/camcontrol_path_state.h"
 
-#pragma peephole off
-#pragma scheduling off
 
 extern void vecRotateZXY(s16 *rot, f32 *vec);
 

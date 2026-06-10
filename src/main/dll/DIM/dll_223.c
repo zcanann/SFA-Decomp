@@ -94,8 +94,6 @@ extern f32 lbl_803E5920;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 
-#pragma peephole off
-#pragma scheduling off
 
 #define DIMBOSSTONSIL_HIT_EFFECT_ID 0x4b2
 #define DIMBOSSTONSIL_HIT_EFFECT_ALT_ID 0x4b3

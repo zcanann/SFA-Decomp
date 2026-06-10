@@ -96,8 +96,6 @@ s16 fn_801D129C(u8 *obj, u8 *player, u8 *state, f32 dist);
  * EN v1.0 Size: 2656b
  */
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
     u8 sval;
     int curMove;
@@ -393,8 +391,6 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
  * EN v1.0 Size: 704b
  */
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 s16 fn_801D129C(u8 *obj, u8 *player, u8 *state, f32 dist) {
     s16 angle;
     int anglePlus;
@@ -465,8 +461,6 @@ s16 fn_801D129C(u8 *obj, u8 *player, u8 *state, f32 dist) {
  * EN v1.0 Size: 60b
  */
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 void ediblemushroom_free(int obj) {
     ObjGroup_RemoveObject(obj, 0x47);
     ObjGroup_RemoveObject(obj, 0x31);
@@ -492,8 +486,6 @@ int ediblemushroom_getExtraSize(void) {
  * EN v1.0 Size: 332b
  */
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 void ediblemushroom_hitDetect(u8 *obj) {
     u8 *state;
     u8 *mapObj;

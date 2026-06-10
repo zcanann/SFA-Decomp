@@ -42,8 +42,6 @@ typedef struct WmGalleonState {
 STATIC_ASSERT(sizeof(WmGalleonState) == 0x10);
 
 
-#pragma peephole off
-#pragma scheduling off
 extern uint GameBit_Get(int eventId);
 extern undefined8 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);

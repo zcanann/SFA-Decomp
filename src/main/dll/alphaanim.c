@@ -5,8 +5,6 @@
 #include "main/objseq.h"
 
 
-#pragma peephole off
-#pragma scheduling off
 extern undefined4 FUN_80006ba8();
 extern uint GameBit_Get(int eventId);
 extern uint FUN_80017690();

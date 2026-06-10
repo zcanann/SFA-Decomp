@@ -7,8 +7,6 @@
 #include "main/dll/SH/SHrocketmushroom.h"
 #include "main/dll/SH/SHspore.h"
 
-#pragma peephole off
-#pragma scheduling off
 
 extern uint GameBit_Get(int bit);
 extern int GameBit_Set(int bit, int value);

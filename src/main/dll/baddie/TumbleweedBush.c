@@ -66,8 +66,6 @@ typedef struct LinkMenuItem {
 #define LINK_FLAG_NO_ACCEPT      0x0020
 #define LINK_IS_NAVIGABLE(index) ((lbl_803A9458[(index)].flags & LINK_FLAG_DISABLE_NAV_TO) == 0)
 
-#pragma peephole off
-#pragma scheduling off
 
 extern undefined8 FUN_80003494();
 extern undefined4 FUN_800067b0();

@@ -45,8 +45,6 @@ extern f64 lbl_803E3E28;
  * EN v1.0 Address: 0x8018D8DC
  * EN v1.0 Size: 1992b
  */
-#pragma scheduling off
-#pragma peephole off
 void cfccrate_update(int obj)
 {
     CfCcrateState *state; /* r31 = obj->b8 */

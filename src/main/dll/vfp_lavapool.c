@@ -4,8 +4,6 @@
 #include "main/dll/DIM/DIMbosstonsil.h"
 
 
-#pragma peephole off
-#pragma scheduling off
 extern void Music_Trigger(s32 triggerId,s32 mode);
 extern uint GameBit_Get(int eventId);
 extern void modelLightStruct_getSpecularColor(void *light,void *red,void *green,void *blue,void *alpha);

@@ -9,8 +9,6 @@
 #include "main/shader.h"
 
 
-#pragma peephole off
-#pragma scheduling off
 extern float ABS();
 extern undefined4 FUN_800033a8();
 extern undefined8 FUN_80006724();

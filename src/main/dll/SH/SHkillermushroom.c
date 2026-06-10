@@ -8,8 +8,6 @@
 #include "main/objfx.h"
 #include "main/objseq.h"
 
-#pragma peephole off
-#pragma scheduling off
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068c4();
 extern void ModelLightStruct_free(void *light);

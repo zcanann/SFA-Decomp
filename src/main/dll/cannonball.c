@@ -2,8 +2,6 @@
 #include "main/game_object.h"
 #include "main/dll/rom_curve_interface.h"
 
-#pragma peephole off
-#pragma scheduling off
 
 #define CANNONBALL_INIT_DONE 0x0a
 #define CANNONBALL_SPEED 0x14

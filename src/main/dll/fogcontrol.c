@@ -3,8 +3,6 @@
 #include "main/dll/path_control_interface.h"
 
 
-#pragma peephole off
-#pragma scheduling off
 extern void OSReport(const char *msg, ...);
 extern uint FUN_80006ba0();
 extern uint GameBit_Get(int eventId);

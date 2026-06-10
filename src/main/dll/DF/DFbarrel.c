@@ -18,8 +18,6 @@ extern void DFPulley_integrateLinks(u8 *self);
 #define DFBARREL_LINK_FIRST_NODE_OFFSET 0x4
 #define DFBARREL_LINK_SECOND_NODE_OFFSET 0x8
 
-#pragma scheduling off
-#pragma peephole off
 
 /*
  * --INFO--

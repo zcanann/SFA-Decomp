@@ -2,8 +2,6 @@
 #include "main/resource.h"
 
 
-#pragma peephole off
-#pragma scheduling off
 extern void Music_Trigger(s32 triggerId, s32 mode);
 extern undefined8 FUN_80006728();
 extern undefined4 FUN_800069b8();
@@ -521,7 +519,6 @@ int DIMboss_getObjectTypeId(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
 void DIMboss_free(DIMbossObject *obj)
 {
   DIMbossRuntime *runtime;

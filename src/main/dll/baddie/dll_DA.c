@@ -1,8 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/baddie/dll_DA.h"
 
-#pragma peephole off
-#pragma scheduling off
 
 typedef struct LinkTexture {
     void *texture;

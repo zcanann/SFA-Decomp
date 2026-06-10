@@ -2,8 +2,6 @@
 #include "main/game_object.h"
 #include "main/dll/DF/dfropenode.h"
 
-#pragma peephole off
-#pragma scheduling off
 
 extern f32 sqrtf(f32 x);
 extern void *mmAlloc(int size, int heap, int flags);

@@ -6,8 +6,6 @@
 
 
 
-#pragma peephole off
-#pragma scheduling off
 typedef struct SaveSelectPanel {
     TitleMenuTextEntry *entries;
     u8 count;

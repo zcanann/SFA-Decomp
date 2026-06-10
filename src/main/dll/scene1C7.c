@@ -69,8 +69,6 @@ extern f64 lbl_803E50D0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 void dbsh_shrine_update(DbshShrineObject *obj)
 {
     int player;

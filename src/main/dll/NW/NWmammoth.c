@@ -75,8 +75,6 @@ extern f64 lbl_803E5308;
  * EN v1.0 Address: 0x801D1978
  * EN v1.0 Size: 644b
  */
-#pragma scheduling off
-#pragma peephole off
 void ediblemushroom_init(int obj, int aux)
 {
     int state;

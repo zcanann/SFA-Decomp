@@ -32,8 +32,6 @@ typedef struct SBShipHeadState {
 STATIC_ASSERT(sizeof(SBShipHeadState) == 0x10);
 #include "main/objhits_types.h"
 
-#pragma peephole off
-#pragma scheduling off
 extern undefined4 getLActions();
 extern undefined4 FUN_800067c0();
 extern undefined4 FUN_8000680c();

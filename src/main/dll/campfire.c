@@ -112,8 +112,6 @@ extern f32 lbl_803E30C4;
 extern f32 lbl_803E30C8;
 extern f32 lbl_803E30CC;
 
-#pragma peephole off
-#pragma scheduling off
 
 /*
  * --INFO--
@@ -306,8 +304,6 @@ typedef struct KaldaCombatStack {
 extern u8 lbl_803AC668[0x18];
 
 #pragma push
-#pragma scheduling off
-#pragma peephole off
 void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state)
 {
   KaldaChomControl *control;

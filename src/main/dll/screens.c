@@ -2,8 +2,6 @@
 #include "main/dll/screens.h"
 
 
-#pragma peephole off
-#pragma scheduling off
 extern u32 randomGetRange(int min, int max);
 extern int FUN_80286838();
 extern undefined8 FUN_8028683c();

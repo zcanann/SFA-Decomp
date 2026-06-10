@@ -4,8 +4,6 @@
 #include "main/game_object.h"
 
 
-#pragma peephole off
-#pragma scheduling off
 extern void *objCreateLight(void *obj, int);
 extern void modelLightStruct_setLightKind(void *, int);
 extern void modelLightStruct_setPosition(f32, f32, f32);

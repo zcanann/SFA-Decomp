@@ -12,8 +12,6 @@
 #include "main/dll/mmsh_waterspike.h"
 
 
-#pragma peephole off
-#pragma scheduling off
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006920();
 extern int FUN_80006a10();

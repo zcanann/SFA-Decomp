@@ -5,8 +5,6 @@
 #include "main/dll/FRONT/n_options.h"
 
 
-#pragma peephole off
-#pragma scheduling off
 extern void *memset(void *dst, int value, uint size);
 extern void *memcpy(void *dst, const void *src, uint size);
 extern void gxSetPeControl_ZCompLoc_();

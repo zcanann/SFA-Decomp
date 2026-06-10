@@ -179,8 +179,6 @@ typedef struct DbHoleControl1State {
 
 STATIC_ASSERT(sizeof(DbHoleControl1State) == 0xC);
 
-#pragma peephole off
-#pragma scheduling off
 extern undefined4 FUN_800033a8();
 extern undefined8 FUN_80003494();
 extern undefined4 getLActions();

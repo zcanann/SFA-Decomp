@@ -10,8 +10,6 @@
 #include "main/pad.h"
 
 
-#pragma peephole off
-#pragma scheduling off
 extern undefined4 FUN_800033a8();
 extern f32 Curve_EvalCatmullRom(f32 *samples, f32 t, f32 *out);
 extern f32 Curve_EvalBSpline(f32 *samples, f32 t, f32 *out);

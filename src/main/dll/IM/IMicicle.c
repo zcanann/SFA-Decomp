@@ -6,8 +6,6 @@
 #include "main/game_object.h"
 #include "main/objseq.h"
 
-#pragma peephole off
-#pragma scheduling off
 extern undefined8 FUN_80006724();
 extern undefined8 FUN_80006824();
 extern undefined4 FUN_80006958();

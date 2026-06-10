@@ -2,8 +2,6 @@
 #include "main/game_object.h"
 #include "main/objlib.h"
 
-#pragma peephole off
-#pragma scheduling off
 
 extern void *fn_80296118(void *p);
 extern f32 Vec_xzDistance(void *a, void *b);

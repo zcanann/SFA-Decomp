@@ -52,8 +52,6 @@ extern f32 lbl_803E3E40;
  * EN v1.0 Address: 0x8018E0A4
  * EN v1.0 Size: 1560b
  */
-#pragma scheduling off
-#pragma peephole off
 void cfccrate_init(int obj, int aux)
 {
     ObjAnimComponent *objAnim;

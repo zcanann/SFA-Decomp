@@ -6,8 +6,6 @@
 #include "main/objhits_types.h"
 
 
-#pragma peephole off
-#pragma scheduling off
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068fc();

@@ -1,8 +1,6 @@
 #include "main/dll/DR/DRpickup.h"
 #include "main/camera_interface.h"
 
-#pragma peephole off
-#pragma scheduling off
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Matrix_TransformPoint(void *mtx, float x, float y, float z, float *ox, float *oy, float *oz);

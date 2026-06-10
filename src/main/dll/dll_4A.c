@@ -9,8 +9,6 @@
 #define ENTER_SAVE_NAME_SFX_DELETE 0x419
 #define ENTER_SAVE_NAME_SFX_TYPE 0x41A
 
-#pragma peephole off
-#pragma scheduling off
 extern void Sfx_PlayFromObject(u32 obj, u32 sfxId);
 extern void set_uiDllIdx_803dc8f0(int idx);
 extern void loadUiDll(int index);

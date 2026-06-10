@@ -9,8 +9,6 @@
 #define OBJPRINT_MODEL_DEF(obj) (((ObjAnimComponent *)(obj))->modelInstance)
 #define OBJPRINT_ACTIVE_BANK_INDEX(obj) (((ObjAnimComponent *)(obj))->bankIndex)
 
-#pragma peephole off
-#pragma scheduling off
 undefined4 FUN_80043E64(uint *param_1,int param_2,int param_3);
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_800068f4();
@@ -6986,8 +6984,6 @@ void tex0tab2readCb(s32 result, void *fileInfo)
     }
 }
 
-#pragma peephole off
-#pragma scheduling off
 void tex1tab1readCb(s32 result, void *fileInfo)
 {
     if (result < 0) {

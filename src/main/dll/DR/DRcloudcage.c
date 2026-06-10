@@ -52,8 +52,6 @@ extern f32 lbl_803E5B5C;
 extern f32 lbl_803E5B60;
 extern f32 lbl_803E5B64;
 
-#pragma scheduling off
-#pragma peephole off
 
 typedef struct DRCloudCagePointPair {
     f32 startX;

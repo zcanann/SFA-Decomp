@@ -150,8 +150,6 @@ extern f32 lbl_803E6864;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-#pragma scheduling off
-#pragma peephole off
 extern int lbl_803DC0BC;
 extern s16 lbl_803DC0DC;
 extern f32 lbl_803E5B68;

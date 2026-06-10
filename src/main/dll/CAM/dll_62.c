@@ -4,8 +4,6 @@
 #include "main/object_transform.h"
 
 
-#pragma peephole off
-#pragma scheduling off
 
 extern uint getAngle(f32 dx, f32 dz);
 extern void camcontrol_traceMove(f32 *from, void *to, f32 *out, void *work, int a, int b, int c, f32 radius);

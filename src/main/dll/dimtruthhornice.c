@@ -25,8 +25,6 @@ typedef struct TreeBirdState {
 #define TREEBIRD_SPAWN_PARTICLE(obj,id) \
   (*gPartfxInterface)->spawnObject((void *)(obj),(id),0,1,-1,0)
 
-#pragma peephole off
-#pragma scheduling off
 
 /*
  * --INFO--

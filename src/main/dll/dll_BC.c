@@ -6,7 +6,6 @@ extern int lbl_803DD518;
 extern int gameTextFn_80134be8(void);
 extern void setAButtonIcon(int kind);
 
-#pragma scheduling off
 
 /*
  * --INFO--
