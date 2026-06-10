@@ -24,8 +24,6 @@
 #define SUNTEMPLE_SEQ_TIMER_LOCKOUT 0x830
 #define SUNTEMPLE_TEXTURE_LATCHED 0x100
 #define SUNTEMPLE_BUTTON_DISABLE_MASK 0x100
-#define SUNTEMPLE_MAP_EVENT_ID(obj) (*(s8 *)((u8 *)(obj) + 0xAC))
-
 #define SUNTEMPLE_GAMEBIT_WC_INV_A 0x25a
 #define SUNTEMPLE_GAMEBIT_WC_INV_B 0x25b
 #define SUNTEMPLE_GAMEBIT_WC_INV_C 0x202
@@ -141,7 +139,7 @@ void suntemple_init(u8 *obj, u8 *setup)
     }
     state = ((GameObject *)obj)->extra;
     state->activationLatched = (u8)GameBit_Get(setupData->activationGameBit);
-    state->mapEventMode = (*gMapEventInterface)->getMode(SUNTEMPLE_MAP_EVENT_ID(obj));
+    state->mapEventMode = (*gMapEventInterface)->getMode(((GameObject *)obj)->anim.mapEventSlot);
     if ((setupData->flags & SUNTEMPLE_FLAG_HIDE_WHEN_ACTIVE) != 0 && state->activationLatched != 0) {
         ((GameObject *)obj)->anim.alpha = 0;
     }

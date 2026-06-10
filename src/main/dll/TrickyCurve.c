@@ -61,7 +61,6 @@ extern f32 lbl_803E6468;
 extern f64 lbl_803E6470;
 extern f32 lbl_803E6478;
 
-#define SFXPLAYER_OBJECT_MAP_ID_OFFSET 0xAC
 #define SFXPLAYER_OBJECT_FLAGS_OFFSET 0xB0
 #define SFXPLAYER_OBJECT_STATE_OFFSET 0xB8
 #define SFXPLAYER_EFFECT_RING_COUNT 4
@@ -637,7 +636,7 @@ void TrickyCurve_updateEffectHandleRing(int obj)
 
     if (flags->bit10 != 0 && flags->bit20 == 0 && state->variantSfxTimer > 0x32) {
         Sfx_KeepAliveLoopedObjectSound(obj, SFXPLAYER_RING_START_SFX);
-        if ((*gMapEventInterface)->getMode((s8)*(u8 *)(obj + SFXPLAYER_OBJECT_MAP_ID_OFFSET)) ==
+        if ((*gMapEventInterface)->getMode(((GameObject *)obj)->anim.mapEventSlot) ==
             SFXPLAYER_MODE_SEQUENCE) {
             *(s16 *)obj += (s16)((lbl_803E6458 + (f32)state->ringCount) * lbl_803E645C * timeDelta);
         } else {
@@ -702,7 +701,7 @@ int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
         *(u8 *)(setup + 0x1a) = 0;
         *(u8 *)(setup + 0x18) = 0;
         *(u8 *)(setup + 0x19) = 0;
-        if ((*gMapEventInterface)->getMode((s8)*(u8 *)(obj + SFXPLAYER_OBJECT_MAP_ID_OFFSET)) ==
+        if ((*gMapEventInterface)->getMode(((GameObject *)obj)->anim.mapEventSlot) ==
             SFXPLAYER_MODE_SEQUENCE) {
             ringIds = (s16 *)ringIdWords;
             *(u8 *)(setup + 0x1b) = (u8)ringIds[ringIndex & 0xff];
@@ -719,7 +718,7 @@ int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
         *(u8 *)(setup + 0x2a) = 0;
         *(int *)((int)handles + handleOffset) =
             Obj_SetupObject(setup, SFXPLAYER_RING_SETUP_MODE,
-                            (s8)*(u8 *)(obj + SFXPLAYER_OBJECT_MAP_ID_OFFSET), -1,
+                            ((GameObject *)obj)->anim.mapEventSlot, -1,
                             *(int *)&((GameObject *)obj)->anim.parent);
     }
 
@@ -734,7 +733,7 @@ int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
         ((ObjPlacement *)setup)->posY = ((GameObject *)obj)->anim.localPosY;
         ((ObjPlacement *)setup)->posZ = ((GameObject *)obj)->anim.localPosZ;
         *pair = Obj_SetupObject(setup, SFXPLAYER_RING_SETUP_MODE,
-                                (s8)*(u8 *)(obj + SFXPLAYER_OBJECT_MAP_ID_OFFSET), -1,
+                                ((GameObject *)obj)->anim.mapEventSlot, -1,
                                 *(int *)&((GameObject *)obj)->anim.parent);
     }
 

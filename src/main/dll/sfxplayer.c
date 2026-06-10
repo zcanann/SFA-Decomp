@@ -1,6 +1,7 @@
 #include "main/mapEvent.h"
 #include "main/dll/TrickyCurve.h"
 #include "main/dll/sfxplayer.h"
+#include "main/game_object.h"
 
 extern void Obj_FreeObject(int obj);
 extern int ObjHits_GetPriorityHit(int obj,undefined4 *outHitObject,int *outSphereIndex,uint *outHitVolume);
@@ -13,7 +14,6 @@ extern int isGameTimerDisabled(void);
 extern void timerSetToCountUp(void);
 extern MapEventInterface **gMapEventInterface;
 
-#define SFXPLAYER_OBJECT_MAP_ID_OFFSET 0xAC
 #define SFXPLAYER_OBJECT_FLAGS_OFFSET 0xB0
 #define SFXPLAYER_OBJECT_STATE_OFFSET 0xB8
 #define SFXPLAYER_OBJECT_CALLBACK_OFFSET 0xBC
@@ -69,7 +69,7 @@ void sfxplayer_update(int obj)
       flags->bit40 = 0;
       GameBit_Set(state->eventId,1);
       GameBit_Set(SFXPLAYER_GAMEBIT_RING_ACTIVE,0);
-      mode = (*gMapEventInterface)->getMode((int)*(char *)(obj + SFXPLAYER_OBJECT_MAP_ID_OFFSET));
+      mode = (*gMapEventInterface)->getMode(((GameObject *)obj)->anim.mapEventSlot);
       if (mode == SFXPLAYER_MODE_SINGLE) {
         GameBit_Set(SFXPLAYER_GAMEBIT_SINGLE_COMPLETE,1);
       }
@@ -79,7 +79,7 @@ void sfxplayer_update(int obj)
       if (flags->bit80 != 0) {
         flags->bit80 = 0;
         if (flags->bit10 != 0) {
-          mode = (*gMapEventInterface)->getMode((int)*(char *)(obj + SFXPLAYER_OBJECT_MAP_ID_OFFSET));
+          mode = (*gMapEventInterface)->getMode(((GameObject *)obj)->anim.mapEventSlot);
           if (mode == SFXPLAYER_MODE_SINGLE) {
             gameTimerInit(SFXPLAYER_TIMER_ID,SFXPLAYER_TIMER_SHORT_FRAMES);
           }
@@ -115,7 +115,7 @@ void sfxplayer_update(int obj)
           hitObj = 0;
           hitType = ObjHits_GetPriorityHit(handles[1],&hitObj,(int *)0x0,(uint *)0x0);
           if (hitType == SFXPLAYER_HIT_TYPE_RING_TARGET) {
-            mode = (*gMapEventInterface)->getMode((int)*(char *)(obj + SFXPLAYER_OBJECT_MAP_ID_OFFSET));
+            mode = (*gMapEventInterface)->getMode(((GameObject *)obj)->anim.mapEventSlot);
             if ((mode == SFXPLAYER_MODE_SINGLE) || (*(int *)((int)hitObj + 0xf4) == i)) {
               if (handles[0] != 0) {
                 Obj_FreeObject(handles[0]);
