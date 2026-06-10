@@ -129,7 +129,7 @@ void ring_update(int obj)
     f32 mtx[12];
 
     arwing = getArwing();
-    if (arwing == 0)
+    if (arwing == 0u)
         arwing = Obj_GetPlayerObject();
 
     switch (state->phase) {
@@ -142,12 +142,12 @@ void ring_update(int obj)
         ((GameObject *)obj)->anim.alpha = (u8)r;
         bit = *(s16 *)(setup + RING_SETUP_ACTIVATE_BIT_OFFSET);
         if (bit > -1) {
-            if (GameBit_Get(bit) != 0) {
+            if (GameBit_Get(bit) != 0u) {
                 ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags & ~RING_OBJFLAG_HIDDEN);
                 state->phase = RING_PHASE_ACTIVE;
             }
         } else {
-            if (getArwing() != 0) {
+            if (getArwing() != 0u) {
                 ((GameObject *)obj)->anim.flags = (s16)(((GameObject *)obj)->anim.flags & ~RING_OBJFLAG_HIDDEN);
                 state->phase = RING_PHASE_ACTIVE;
             }
@@ -159,7 +159,7 @@ void ring_update(int obj)
         ((GameObject *)obj)->anim.alpha = (u8)r;
         bit = *(s16 *)(setup + RING_SETUP_ACTIVATE_BIT_OFFSET);
         if (bit > -1) {
-            if (GameBit_Get(bit) == 0)
+            if (GameBit_Get(bit) == 0u)
                 state->phase = RING_PHASE_ACTIVE;
         }
         switch (state->route) {
