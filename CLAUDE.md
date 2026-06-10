@@ -2469,11 +2469,15 @@ then/else blocks that prevent the fallthrough fold — the b-over-b emerges
 naturally. CONSTRAINTS: (a) the LOOP must live inside the directly-called
 helper — a shared 2-level sub-helper (GetPoolAddr) does NOT inline through
 (MWCC won't auto-inline loop-bearing fns into a fn it then inlines);
-(b) `static inline` does not override the loop-inline refusal. RETRY list
-for this reading: projLib dll_2E_func03's empty-then (the find-or-call
-shape!), scarab dll_CE_render, the objseq family's 15-copy pointer-ternary
-sites, WClaser/door/CFPrisonGuard unsigned-compare instances (the helper
-read may supersede the 'unsigned wall' diagnosis — A/B each).
+(b) `static inline` does not override the loop-inline refusal. SCOPE BOUNDARY
+(retry-sweep verified): the crack requires the helper's RETURN VALUE to be
+USED in the surviving arm (InsertData's m feeds &m->data.cmd; projLib's
+target handle feeds the body — both work). VALUE-LESS guards (scarab
+dll_CE_render's conditional fade call, WClaser dll_1FB's render guard)
+still fold under helper/bool-helper/ternary/empty-then spellings — the
+DCE'd materialization removes the join. The objseq 15-copy ternary IS
+value-producing (prime retry candidate; unit has 27 blockers so it's a
+fuzzy win not a unit win).
 
 92. **OPEN — the INT-compare `bge +8; b far` two-branch guard with
     STATEMENT-BLOCK arms (branch-to-NEXT over an unconditional b) has resisted
