@@ -254,7 +254,7 @@ char *gameStrcpy(char *dst, char *src)
 void gameTextFn_8001628c(int id, int a, int b, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY)
 {
     GameTextFont* font = gameTextFonts;
-    int found = 0;
+    int found;
     if (font->mode == 2) {
         GlyphEntry* e = font->entries;
         int count = font->count;
@@ -262,11 +262,13 @@ void gameTextFn_8001628c(int id, int a, int b, int* outMaxX, int* outMaxY, int* 
         for (i = 0; i < count; i++) {
             if (e->id == id) {
                 found = 1;
-                break;
+                goto checked;
             }
             e++;
         }
     }
+    found = 0;
+checked:
     if (!found) {
         *outMaxX = 0;
         *outMaxY = 0;
