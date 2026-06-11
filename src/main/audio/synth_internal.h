@@ -372,13 +372,10 @@ u32 synthLookupCallbackLinkId(u32 callbackId);
 void synthCopyControllerValue(u32 controller, McmdVoiceState* dst, McmdVoiceState* src);
 void synthScaleFadeTime(s32* value);
 extern const f32 lbl_803E8430;
-extern const f32 lbl_803E8440;
-extern const f32 lbl_803E846C;
+extern const f32 sSynthFadeUnit;
+extern const f32 sSynthFadeTimeScale;
 
 #define sSynthFadeScale lbl_803E8430
-#define sSynthFadeUnit lbl_803E8440
-#define sSynthFadeTimeScale lbl_803E846C
-
 void synthInitVoices(void);
 void synthSetStudioChannelScale(s32 value, u8 studioIndex, u32 channelIndex);
 u32 synthGetVoiceSlotChannelScale(McmdVoiceState * slot);

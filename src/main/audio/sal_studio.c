@@ -17,12 +17,11 @@ extern DSPvoice* dspVoice;
 extern void* dspITDBuffer;
 extern s32* dspSurround;
 extern void* dspCmdList;
-extern u32 lbl_803DE310; /* dspARAMZeroBuffer */
+extern u32 dspARAMZeroBuffer; /* dspARAMZeroBuffer */
 extern DSPstudioinfo lbl_803CC1E0[];
 extern u8 salMaxStudioNum;
 extern u8 salNumVoices;
 
-#define dspARAMZeroBuffer lbl_803DE310
 #define dspStudio lbl_803CC1E0
 
 void salInitHRTFBuffer(void); /* salInitHRTFBuffer */

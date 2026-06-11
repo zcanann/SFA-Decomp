@@ -4386,7 +4386,7 @@ extern int pauseMenuGetState(void);
 extern void fn_8008912C(void);
 extern void getAmbientColor(int a, u8* r, u8* g, u8* b);
 extern void _gxSetTevColor2(int r, int g, int b, int a);
-extern int lbl_803E8440;
+extern int sSynthFadeUnit;
 extern int renderFlags;
 extern u8 colorScale;
 extern f32 lbl_803DCE18;
@@ -4408,7 +4408,7 @@ void renderGlows(void)
     u8 sky;
     f32 sunDot;
 
-    fogCol = *(GlowGXColor*)&lbl_803E8440;
+    fogCol = *(GlowGXColor*)&sSynthFadeUnit;
     GXSetCullMode(0);
     Camera_RebuildProjectionMatrix();
     GXClearVtxDesc();

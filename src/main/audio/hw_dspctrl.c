@@ -60,32 +60,22 @@ typedef struct SalStudio
 #define dspStudio ((DSPstudioinfo *)lbl_803CC1E0)
 #define dspSortedVoices ((DSPvoice **)(lbl_803CC1E0 + 0x5e0))
 
-extern u16* lbl_803DE314; /* dspCmdLastLoad */
-extern u16* lbl_803DE318; /* dspCmdLastBase */
-extern u16 lbl_803DE31C; /* dspCmdLastSize */
-extern u16* lbl_803DE320; /* dspCmdCurBase */
-extern u16* lbl_803DE324; /* dspCmdMaxPtr */
-extern u16* lbl_803DE328; /* dspCmdPtr */
+extern u16* dspCmdLastLoad; /* dspCmdLastLoad */
+extern u16* dspCmdLastBase; /* dspCmdLastBase */
+extern u16 dspCmdLastSize; /* dspCmdLastSize */
+extern u16* dspCmdCurBase; /* dspCmdCurBase */
+extern u16* dspCmdMaxPtr; /* dspCmdMaxPtr */
+extern u16* dspCmdPtr; /* dspCmdPtr */
 extern u16 dspCmdFirstSize;
 extern u16* dspCmdList;
 extern u32 dspHRTFOn;
-extern u32 lbl_803DE310; /* dspARAMZeroBuffer */
+extern u32 dspARAMZeroBuffer; /* dspARAMZeroBuffer */
 extern s32* dspSurround;
 extern u8 salFrame;
-extern u16 lbl_802C26B8[]; /* dspMixerCycles[32] */
-extern u16 lbl_802C26F8[]; /* pbOffsets[9] */
-extern u16 lbl_8032FDA0[3][3]; /* dspSRCCycles */
+extern u16 dspMixerCycles[]; /* dspMixerCycles[32] */
+extern u16 pbOffsets[]; /* pbOffsets[9] */
+extern u16 dspSRCCycles[3][3]; /* dspSRCCycles */
 
-#define dspCmdLastLoad lbl_803DE314
-#define dspCmdLastBase lbl_803DE318
-#define dspCmdLastSize lbl_803DE31C
-#define dspCmdCurBase lbl_803DE320
-#define dspCmdMaxPtr lbl_803DE324
-#define dspCmdPtr lbl_803DE328
-#define dspARAMZeroBuffer lbl_803DE310
-#define dspMixerCycles lbl_802C26B8
-#define pbOffsets lbl_802C26F8
-#define dspSRCCycles lbl_8032FDA0
 #define __OSBusClock (*(u32 *)0x800000F8)
 
 extern int salCheckVolErrorAndResetDelta(u16* dsp_vol, u16* dsp_delta, u16* last_vol, u16 targetVol,
