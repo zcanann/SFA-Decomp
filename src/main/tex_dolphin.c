@@ -188,7 +188,7 @@ typedef struct IndMtxCopy
     int w[6];
 } IndMtxCopy;
 
-void mapBlockRender_drawLightmapIndirectPasses(int param_1, u8* param_2, int* param_3, Mtx param_4)
+void mapBlockRender_drawLightmapIndirectPasses(int blockData, u8* arg2, int* param_3, Mtx param_4)
 {
     Mtx m2;
     float m[2][3];
@@ -212,8 +212,8 @@ void mapBlockRender_drawLightmapIndirectPasses(int param_1, u8* param_2, int* pa
     word = word | (u32)(*(u8*)(bptr + 1) << 8);
     word = word | (u32)(*(u8*)(bptr + 2) << 16);
     param_3[4] = pos + 8;
-    ptr = *(int*)(param_1 + 0x68) + ((word >> (pos & 7)) & 0xff) * 0x1c;
-    flags = *(uint*)(param_2 + 0x3c);
+    ptr = *(int*)(blockData + 0x68) + ((word >> (pos & 7)) & 0xff) * 0x1c;
+    flags = *(uint*)(arg2 + 0x3c);
     if ((flags & 0x4000) != 0)
     {
         count = 4;
@@ -259,56 +259,56 @@ void mapBlockRender_drawLightmapIndirectPasses(int param_1, u8* param_2, int* pa
  * EN v1.1 Address: 0x8005E6DC
  * EN v1.1 Size: 464b
  */
-int mapBlockRender_setLightmapShader(int param_1, int* param_3, int* param_2)
+int mapBlockRender_setLightmapShader(int blockData, int* bitReader, int* outPtr)
 {
-    int iVar1;
-    uint uVar2;
-    uint uVar3;
-    undefined uVar4;
-    undefined uVar5;
-    undefined uVar6;
-    volatile int local_18;
-    byte local_14;
-    byte local_15;
-    byte local_16;
-    int local_10;
-    int local_C;
-    int local_8;
+    int shader;
+    uint bitPos;
+    uint shaderIdx;
+    undefined b1;
+    undefined b2;
+    undefined b0;
+    volatile int colorWord;
+    byte colR;
+    byte colG;
+    byte colB;
+    int ia;
+    int ib;
+    int ic;
 
-    local_18 = lbl_803E8448;
-    uVar2 = param_3[4];
-    iVar1 = *param_3;
-    uVar6 = *(undefined*)(iVar1 + ((int)uVar2 >> 3));
-    iVar1 = iVar1 + ((int)uVar2 >> 3);
-    uVar4 = *(undefined*)(iVar1 + 1);
-    uVar5 = *(undefined*)(iVar1 + 2);
-    param_3[4] = uVar2 + 6;
-    iVar1 = *(int*)((int)param_1 + 0x64);
-    uVar3 = ((uint3)(uVar6 | (uVar4 << 8) | (uVar5 << 16)) >> (uVar2 & 7)) & 0x3f;
-    iVar1 = iVar1 + uVar3 * 0x44;
+    colorWord = lbl_803E8448;
+    bitPos = bitReader[4];
+    shader = *bitReader;
+    b0 = *(undefined*)(shader + ((int)bitPos >> 3));
+    shader = shader + ((int)bitPos >> 3);
+    b1 = *(undefined*)(shader + 1);
+    b2 = *(undefined*)(shader + 2);
+    bitReader[4] = bitPos + 6;
+    shader = *(int*)((int)blockData + 0x64);
+    shaderIdx = ((uint3)(b0 | (b1 << 8) | (b2 << 16)) >> (bitPos & 7)) & 0x3f;
+    shader = shader + shaderIdx * 0x44;
     GXSetTevAlphaIn(0, 7, 4, 5, 7);
-    selectTexture(*(int*)Shader_getLayer(iVar1, 0), 0);
-    if ((*(uint*)(iVar1 + 0x3c) & 4) != 0)
+    selectTexture(*(int*)Shader_getLayer(shader, 0), 0);
+    if ((*(uint*)(shader + 0x3c) & 4) != 0)
     {
         _gxSetFogParams();
         goto LAB_8005E630;
     }
-    local_10 = local_18;
-    GXSetFog(0, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, *(GXColor*)&local_10);
+    ia = colorWord;
+    GXSetFog(0, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, *(GXColor*)&ia);
 LAB_8005E630:
-    if ((*(uint*)(iVar1 + 0x3c) & 1) == 0)
+    if ((*(uint*)(shader + 0x3c) & 1) == 0)
     {
-        if ((*(uint*)(iVar1 + 0x3c) & 0x40000) == 0)
+        if ((*(uint*)(shader + 0x3c) & 0x40000) == 0)
         {
-            if ((*(uint*)(iVar1 + 0x3c) & 0x800) == 0)
+            if ((*(uint*)(shader + 0x3c) & 0x800) == 0)
             {
-                if ((*(uint*)(iVar1 + 0x3c) & 0x1000) == 0) goto LAB_8005E6D0;
+                if ((*(uint*)(shader + 0x3c) & 0x1000) == 0) goto LAB_8005E6D0;
             }
         }
     }
-    local_C = lbl_803DB640;
-    GXSetChanAmbColor(0, *(GXColor*)&local_C);
-    if ((*(uint*)(iVar1 + 0x3c) & 0x40000) != 0)
+    ib = lbl_803DB640;
+    GXSetChanAmbColor(0, *(GXColor*)&ib);
+    if ((*(uint*)(shader + 0x3c) & 0x40000) != 0)
     {
         GXSetChanCtrl(0, 0, 0, 1, 0, 0, 2);
         goto LAB_8005E718;
@@ -316,12 +316,12 @@ LAB_8005E630:
     GXSetChanCtrl(0, 1, 0, 1, 0, 0, 2);
     goto LAB_8005E718;
 LAB_8005E6D0:
-    objGetColor(0, &local_16, &local_15, &local_14);
+    objGetColor(0, &colB, &colG, &colR);
     GXSetChanCtrl(0, 1, 0, 1, 0, 0, 2);
-    local_8 = *(int*)&local_16;
-    GXSetChanAmbColor(0, *(GXColor*)&local_8);
+    ic = *(int*)&colB;
+    GXSetChanAmbColor(0, *(GXColor*)&ic);
 LAB_8005E718:
-    return iVar1;
+    return shader;
 }
 
 /*
@@ -738,154 +738,154 @@ end:
  * EN v1.1 Address: 0x8005F35C
  * EN v1.1 Size: 888b
  */
-void mapBlockRender_setupShaderTextures(int param_1, int param_2)
+void mapBlockRender_setupShaderTextures(int shader, int mode)
 {
-    int iVar1;
-    int* piVar2;
-    int iVar3;
-    float* pfVar4;
-    int* piVar5;
-    int iVar6;
-    int iVar7;
-    byte bVar1;
+    int texId;
+    int* layer;
+    int layerIdx;
+    float* texMtx;
+    int* ovr;
+    int overrideIdx;
+    int remain;
+    byte layerByte;
     TexOverride* pE;
-    undefined4 local_48;
+    undefined4 colorWord;
     Mtx afStack_44;
 
-    local_48 = lbl_803DEBB0;
-    if ((*(byte*)(param_1 + 0x41) == 2) &&
-        (iVar1 = Shader_getLayer(param_1, 1), (int)(*(byte*)(iVar1 + 4) & 0x7f) == 9))
+    colorWord = lbl_803DEBB0;
+    if ((*(byte*)(shader + 0x41) == 2) &&
+        (texId = Shader_getLayer(shader, 1), (int)(*(byte*)(texId + 4) & 0x7f) == 9))
     {
-        piVar2 = (int*)Shader_getLayer(param_1, 0);
-        bVar1 = *(byte*)((int)piVar2 + 5);
-        if (bVar1 == '\0')
+        layer = (int*)Shader_getLayer(shader, 0);
+        layerByte = *(byte*)((int)layer + 5);
+        if (layerByte == '\0')
         {
-            iVar1 = *piVar2;
+            texId = *layer;
         }
         else
         {
-            iVar1 = *piVar2;
-            iVar6 = 0;
+            texId = *layer;
+            overrideIdx = 0;
             pE = (TexOverride*)lbl_803DCE6C;
-            for (iVar7 = 0x50; iVar7 != 0; iVar7--)
+            for (remain = 0x50; remain != 0; remain--)
             {
-                if (((0 < pE->count) && (pE->id == iVar1)) &&
-                    ((int)bVar1 == pE->layerByte))
+                if (((0 < pE->count) && (pE->id == texId)) &&
+                    ((int)layerByte == pE->layerByte))
                 {
-                    iVar1 = textureCrazyPointerFollowFn_80054c30(iVar1, ((TexOverride*)lbl_803DCE6C)[iVar6].ptr);
+                    texId = textureCrazyPointerFollowFn_80054c30(texId, ((TexOverride*)lbl_803DCE6C)[overrideIdx].ptr);
                     break;
                 }
                 pE = pE + 1;
-                iVar6 = iVar6 + 1;
+                overrideIdx = overrideIdx + 1;
             }
         }
-        if (*(byte*)((int)piVar2 + 6) == 0xff)
+        if (*(byte*)((int)layer + 6) == 0xff)
         {
-            pfVar4 = (float*)0x0;
+            texMtx = (float*)0x0;
         }
         else
         {
-            iVar3 = (uint) * (byte*)((int)piVar2 + 6) * 0x10;
+            layerIdx = (uint) * (byte*)((int)layer + 6) * 0x10;
             PSMTXTrans(afStack_44,
-                       *(float*)(lbl_803DCE68 + iVar3) / lbl_803DEBC8,
-                       *(float*)(lbl_803DCE68 + iVar3 + 4) / lbl_803DEBC8,
+                       *(float*)(lbl_803DCE68 + layerIdx) / lbl_803DEBC8,
+                       *(float*)(lbl_803DCE68 + layerIdx + 4) / lbl_803DEBC8,
                        lbl_803DEBCC);
-            pfVar4 = (float*)afStack_44;
+            texMtx = (float*)afStack_44;
         }
-        fn_80051B00(iVar1, pfVar4, 0, (char*)&local_48);
-        if ((*(uint*)(param_1 + 0x3c) & 0x100) != 0)
+        fn_80051B00(texId, texMtx, 0, (char*)&colorWord);
+        if ((*(uint*)(shader + 0x3c) & 0x100) != 0)
         {
             fn_8004D928();
         }
-        piVar2 = (int*)Shader_getLayer(param_1, 1);
-        bVar1 = *(byte*)((int)piVar2 + 5);
-        if (bVar1 == '\0')
+        layer = (int*)Shader_getLayer(shader, 1);
+        layerByte = *(byte*)((int)layer + 5);
+        if (layerByte == '\0')
         {
-            iVar1 = *piVar2;
+            texId = *layer;
         }
         else
         {
-            iVar1 = *piVar2;
-            iVar6 = 0;
+            texId = *layer;
+            overrideIdx = 0;
             pE = (TexOverride*)lbl_803DCE6C;
-            for (iVar7 = 0x50; iVar7 != 0; iVar7--)
+            for (remain = 0x50; remain != 0; remain--)
             {
-                if (((0 < pE->count) && (pE->id == iVar1)) &&
-                    ((int)bVar1 == pE->layerByte))
+                if (((0 < pE->count) && (pE->id == texId)) &&
+                    ((int)layerByte == pE->layerByte))
                 {
-                    iVar1 = textureCrazyPointerFollowFn_80054c30(iVar1, ((TexOverride*)lbl_803DCE6C)[iVar6].ptr);
+                    texId = textureCrazyPointerFollowFn_80054c30(texId, ((TexOverride*)lbl_803DCE6C)[overrideIdx].ptr);
                     break;
                 }
                 pE = pE + 1;
-                iVar6 = iVar6 + 1;
+                overrideIdx = overrideIdx + 1;
             }
         }
-        if (*(byte*)((int)piVar2 + 6) == 0xff)
+        if (*(byte*)((int)layer + 6) == 0xff)
         {
-            pfVar4 = (float*)0x0;
+            texMtx = (float*)0x0;
         }
         else
         {
-            iVar3 = (uint) * (byte*)((int)piVar2 + 6) * 0x10;
+            layerIdx = (uint) * (byte*)((int)layer + 6) * 0x10;
             PSMTXTrans(afStack_44,
-                       *(float*)(lbl_803DCE68 + iVar3) / lbl_803DEBC8,
-                       *(float*)(lbl_803DCE68 + iVar3 + 4) / lbl_803DEBC8,
+                       *(float*)(lbl_803DCE68 + layerIdx) / lbl_803DEBC8,
+                       *(float*)(lbl_803DCE68 + layerIdx + 4) / lbl_803DEBC8,
                        lbl_803DEBCC);
-            pfVar4 = (float*)afStack_44;
+            texMtx = (float*)afStack_44;
         }
-        fn_80051868(iVar1, pfVar4, 9);
-        textureFn_800524ec((char*)&local_48);
+        fn_80051868(texId, texMtx, 9);
+        textureFn_800524ec((char*)&colorWord);
     }
     else
     {
-        for (iVar3 = 0; iVar3 < (int)(uint) * (byte*)(param_1 + 0x41); iVar3 = iVar3 + 1)
+        for (layerIdx = 0; layerIdx < (int)(uint) * (byte*)(shader + 0x41); layerIdx = layerIdx + 1)
         {
-            piVar2 = (int*)Shader_getLayer(param_1, iVar3);
-            iVar1 = *piVar2;
-            if (iVar1 == 0)
+            layer = (int*)Shader_getLayer(shader, layerIdx);
+            texId = *layer;
+            if (texId == 0)
             {
                 gxColorFn_800523d0();
             }
             else
             {
-                bVar1 = *(byte*)((int)piVar2 + 5);
-                if (bVar1 != '\0')
+                layerByte = *(byte*)((int)layer + 5);
+                if (layerByte != '\0')
                 {
-                    iVar6 = 0;
-                    piVar5 = (int*)lbl_803DCE6C;
-                    for (iVar7 = 0x50; iVar7 != 0; iVar7--)
+                    overrideIdx = 0;
+                    ovr = (int*)lbl_803DCE6C;
+                    for (remain = 0x50; remain != 0; remain--)
                     {
-                        if (((0 < *(short*)(piVar5 + 3)) && (*piVar5 == iVar1)) &&
-                            (bVar1 == *(byte*)((int)piVar5 + 0xe)))
+                        if (((0 < *(short*)(ovr + 3)) && (*ovr == texId)) &&
+                            (layerByte == *(byte*)((int)ovr + 0xe)))
                         {
-                            iVar1 = textureCrazyPointerFollowFn_80054c30(iVar1, ((int*)lbl_803DCE6C)[iVar6 * 4 + 1]);
+                            texId = textureCrazyPointerFollowFn_80054c30(texId, ((int*)lbl_803DCE6C)[overrideIdx * 4 + 1]);
                             break;
                         }
-                        piVar5 = piVar5 + 4;
-                        iVar6 = iVar6 + 1;
+                        ovr = ovr + 4;
+                        overrideIdx = overrideIdx + 1;
                     }
                 }
-                if (*(byte*)((int)piVar2 + 6) == 0xff)
+                if (*(byte*)((int)layer + 6) == 0xff)
                 {
-                    pfVar4 = (float*)0x0;
+                    texMtx = (float*)0x0;
                 }
                 else
                 {
-                    pfVar4 = (float*)(lbl_803DCE68 + (uint) * (byte*)((int)piVar2 + 6) * 0x10);
-                    PSMTXTrans(afStack_44, *pfVar4 / lbl_803DEBC8, pfVar4[1] / lbl_803DEBC8, lbl_803DEBCC);
-                    pfVar4 = (float*)afStack_44;
+                    texMtx = (float*)(lbl_803DCE68 + (uint) * (byte*)((int)layer + 6) * 0x10);
+                    PSMTXTrans(afStack_44, *texMtx / lbl_803DEBC8, texMtx[1] / lbl_803DEBC8, lbl_803DEBCC);
+                    texMtx = (float*)afStack_44;
                 }
-                if ((*(uint*)(param_1 + 0x3c) & 0x40000) == 0)
+                if ((*(uint*)(shader + 0x3c) & 0x40000) == 0)
                 {
-                    fn_80051868(iVar1, pfVar4, *(byte*)(piVar2 + 1) & 0x7f);
+                    fn_80051868(texId, texMtx, *(byte*)(layer + 1) & 0x7f);
                 }
                 else
                 {
-                    fn_80051528(iVar1, pfVar4);
+                    fn_80051528(texId, texMtx);
                 }
             }
         }
-        if ((*(uint*)(param_1 + 0x3c) & 0x100) != 0)
+        if ((*(uint*)(shader + 0x3c) & 0x100) != 0)
         {
             fn_8004D928();
         }
