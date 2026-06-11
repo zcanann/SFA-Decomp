@@ -546,21 +546,21 @@ void Camera_ProjectWorldSphere(
     PSMTXMultVec(gCameraViewMatrix, pos, pos);
 
     *outX = gCameraProjectionMatrix[3] +
-    (gCameraProjectionMatrix[1] * pos[1] +
-        gCameraProjectionMatrix[0] * pos[0] +
+    (gCameraProjectionMatrix[0] * pos[0] +
+        gCameraProjectionMatrix[1] * pos[1] +
         gCameraProjectionMatrix[2] * pos[2]);
     *outY = gCameraProjectionMatrix[7] +
-    (gCameraProjectionMatrix[5] * pos[1] +
-        gCameraProjectionMatrix[4] * pos[0] +
+    (gCameraProjectionMatrix[4] * pos[0] +
+        gCameraProjectionMatrix[5] * pos[1] +
         gCameraProjectionMatrix[6] * pos[2]);
     *outZ = gCameraProjectionMatrix[11] +
-    (gCameraProjectionMatrix[9] * pos[1] +
-        gCameraProjectionMatrix[8] * pos[0] +
+    (gCameraProjectionMatrix[8] * pos[0] +
+        gCameraProjectionMatrix[9] * pos[1] +
         gCameraProjectionMatrix[10] * pos[2]);
 
     w = gCameraProjectionMatrix[15] +
-    (gCameraProjectionMatrix[13] * pos[1] +
-        gCameraProjectionMatrix[12] * pos[0] +
+    (gCameraProjectionMatrix[12] * pos[0] +
+        gCameraProjectionMatrix[13] * pos[1] +
         gCameraProjectionMatrix[14] * pos[2]);
     if (w != lbl_803DE60C)
     {
@@ -576,8 +576,8 @@ void Camera_ProjectWorldSphere(
         }
 
         w = gCameraProjectionMatrix[15] +
-        (gCameraProjectionMatrix[13] * pos[1] +
-            gCameraProjectionMatrix[12] * pos[0] +
+        (gCameraProjectionMatrix[12] * pos[0] +
+        gCameraProjectionMatrix[13] * pos[1] +
             gCameraProjectionMatrix[14] * pos[2]);
         if (w != lbl_803DE60C)
         {
