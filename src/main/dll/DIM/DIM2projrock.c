@@ -1211,11 +1211,11 @@ void dim2lavacontrol_update(int obj)
     {
         if (diff > 0)
         {
-            *(u8*)(obj + 3) = *(u8*)(obj + 3) - 1;
+            *(u8*)(obj + 3) -= 1;
         }
         else
         {
-            *(u8*)(obj + 3) = *(u8*)(obj + 3) + 1;
+            *(u8*)(obj + 3) += 1;
         }
         fn_8004C1E4(*(u8*)(obj + 3), lbl_803E4B90);
     }

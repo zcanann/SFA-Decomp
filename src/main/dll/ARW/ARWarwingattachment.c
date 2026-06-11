@@ -746,7 +746,7 @@ void fn_801F20D4(int obj)
         if ((*gGameUIInterface)->isOneOfItemsBeingUsed((s32*)stk, 3) > -1)
         {
             GameBit_Set(784, 1);
-            *(u8*)(sub + 0x27) = *(u8*)(sub + 0x27) + 1;
+            *(u8*)(sub + 0x27) += 1;
             buttonDisable(0, 256);
         }
     }
