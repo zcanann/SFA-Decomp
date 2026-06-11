@@ -8,17 +8,9 @@
 #define SEQOBJ_ANIM_BLEND_ACTIVE_FLAG 0x40
 #define SEQOBJ_ANIM_EVENT_HOLD_FLAG 0x40000000
 
-extern undefined4 FUN_800033a8();
 extern void* mmAlloc(int size, int tag, int flags);
 extern void* memset(void* dst, int value, uint size);
-extern undefined4 FUN_80006820();
-extern undefined4 FUN_80006824();
-extern int FUN_80006a10();
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_80017814();
-extern int FUN_80017830();
-extern undefined4 FUN_80017a88();
-extern int FUN_80017a98();
 extern undefined4 FUN_800305c4();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
@@ -37,15 +29,10 @@ extern undefined4 FUN_80151844();
 extern void fn_801513AC(int obj, int state);
 extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028688c();
-extern double FUN_80293900();
-extern undefined4 FUN_80293f90();
 
 extern undefined4 DAT_8031e980;
 extern undefined4 DAT_8031feac;
 extern undefined4 DAT_8031fead;
-extern undefined4 DAT_803dc8e8;
-extern undefined4* DAT_803dd71c;
-extern undefined4 DAT_803de6e8;
 extern f64 DOUBLE_803e3398;
 extern f64 lbl_803E2700;
 extern f64 DOUBLE_803e33f0;
