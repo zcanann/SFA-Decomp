@@ -94,7 +94,7 @@ extern undefined4 jumptable_8030E844;
  * EN v1.1 Address: 0x8005E0D8
  * EN v1.1 Size: 1004b
  */
-u8 mapBlockBounds_HasCornerPastDepthThreshold(int param_1,float *param_2)
+u8 mapBlockBounds_HasCornerPastDepthThreshold(int bounds,float *xform)
 {
   float v[3];
   uint i;
@@ -108,51 +108,51 @@ u8 mapBlockBounds_HasCornerPastDepthThreshold(int param_1,float *param_2)
     {
       switch (i) {
       case 0:
-        v[0] = (f32)*(s16 *)(param_1 + 0x6);
-        v[1] = (f32)*(s16 *)(param_1 + 0x8);
-        v[2] = (f32)*(s16 *)(param_1 + 0xa);
+        v[0] = (f32)*(s16 *)(bounds + 0x6);
+        v[1] = (f32)*(s16 *)(bounds + 0x8);
+        v[2] = (f32)*(s16 *)(bounds + 0xa);
         break;
       case 1:
-        v[0] = (f32)*(s16 *)(param_1 + 0xc);
-        v[1] = (f32)*(s16 *)(param_1 + 0x8);
-        v[2] = (f32)*(s16 *)(param_1 + 0xa);
+        v[0] = (f32)*(s16 *)(bounds + 0xc);
+        v[1] = (f32)*(s16 *)(bounds + 0x8);
+        v[2] = (f32)*(s16 *)(bounds + 0xa);
         break;
       case 2:
-        v[0] = (f32)*(s16 *)(param_1 + 0x6);
-        v[1] = (f32)*(s16 *)(param_1 + 0xe);
-        v[2] = (f32)*(s16 *)(param_1 + 0xa);
+        v[0] = (f32)*(s16 *)(bounds + 0x6);
+        v[1] = (f32)*(s16 *)(bounds + 0xe);
+        v[2] = (f32)*(s16 *)(bounds + 0xa);
         break;
       case 3:
-        v[0] = (f32)*(s16 *)(param_1 + 0xc);
-        v[1] = (f32)*(s16 *)(param_1 + 0xe);
-        v[2] = (f32)*(s16 *)(param_1 + 0xa);
+        v[0] = (f32)*(s16 *)(bounds + 0xc);
+        v[1] = (f32)*(s16 *)(bounds + 0xe);
+        v[2] = (f32)*(s16 *)(bounds + 0xa);
         break;
       case 4:
-        v[0] = (f32)*(s16 *)(param_1 + 0x6);
-        v[1] = (f32)*(s16 *)(param_1 + 0x8);
-        v[2] = (f32)*(s16 *)(param_1 + 0x10);
+        v[0] = (f32)*(s16 *)(bounds + 0x6);
+        v[1] = (f32)*(s16 *)(bounds + 0x8);
+        v[2] = (f32)*(s16 *)(bounds + 0x10);
         break;
       case 5:
-        v[0] = (f32)*(s16 *)(param_1 + 0xc);
-        v[1] = (f32)*(s16 *)(param_1 + 0x8);
-        v[2] = (f32)*(s16 *)(param_1 + 0x10);
+        v[0] = (f32)*(s16 *)(bounds + 0xc);
+        v[1] = (f32)*(s16 *)(bounds + 0x8);
+        v[2] = (f32)*(s16 *)(bounds + 0x10);
         break;
       case 6:
-        v[0] = (f32)*(s16 *)(param_1 + 0x6);
-        v[1] = (f32)*(s16 *)(param_1 + 0xe);
-        v[2] = (f32)*(s16 *)(param_1 + 0x10);
+        v[0] = (f32)*(s16 *)(bounds + 0x6);
+        v[1] = (f32)*(s16 *)(bounds + 0xe);
+        v[2] = (f32)*(s16 *)(bounds + 0x10);
         break;
       case 7:
-        v[0] = (f32)*(s16 *)(param_1 + 0xc);
-        v[1] = (f32)*(s16 *)(param_1 + 0xe);
-        v[2] = (f32)*(s16 *)(param_1 + 0x10);
+        v[0] = (f32)*(s16 *)(bounds + 0xc);
+        v[1] = (f32)*(s16 *)(bounds + 0xe);
+        v[2] = (f32)*(s16 *)(bounds + 0x10);
         break;
       }
     }
     v[0] = v[0] * timing;
     v[1] = v[1] * timing;
     v[2] = v[2] * timing;
-    PSMTXMultVec((const float (*)[4])param_2,(Vec *)v,(Vec *)v);
+    PSMTXMultVec((const float (*)[4])xform,(Vec *)v,(Vec *)v);
     if (v[2] >= fbset) {
       return 1;
     }

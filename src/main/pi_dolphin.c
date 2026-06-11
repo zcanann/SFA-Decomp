@@ -3927,7 +3927,7 @@ void texPreGetMipmap(u32 param_1, int param_2, int *param_3, int *param_4, int p
     }
 }
 
-void tex0GetFrame(int param_1, int param_2, int *param_3, int *param_4, int param_5, u8 *param_6, int param_7) {
+void tex0GetFrame(int texId, int unused, int *outA, int *outB, int count, u8 *frameTable, int queryMode) {
     int idx = -1;
     if (lbl_8035F3E8[0x23] != 0 || lbl_8035F3E8[0x4d] != 0) {
         int s = OSDisableInterrupts();
@@ -3937,28 +3937,28 @@ void tex0GetFrame(int param_1, int param_2, int *param_3, int *param_4, int para
         OSRestoreInterrupts(s);
         f478 = lbl_8035F3E8[0x24];
         f520 = lbl_8035F3E8[0x4e];
-        if ((param_1 & 0x80000000) != 0 && (flags & 0x200) == 0) {
+        if ((texId & 0x80000000) != 0 && (flags & 0x200) == 0) {
             idx = 0x4d;
-        } else if ((param_1 & 0x40000000) != 0 && (flags & 0x100) == 0) {
+        } else if ((texId & 0x40000000) != 0 && (flags & 0x100) == 0) {
             idx = 0x23;
         } else if (f478 != 0 && (flags & 0x100) == 0) {
             idx = 0x23;
         } else if (f520 != 0 && (flags & 0x200) == 0) {
             idx = 0x4d;
         }
-        if (param_7 == 1 && param_6 != 0) {
+        if (queryMode == 1 && frameTable != 0) {
             int base = lbl_8035F3E8[idx];
-            int e = base + (param_1 & 0xffffff) * 2 + *(int *)(param_6 + param_5 * 4) + 4;
+            int e = base + (texId & 0xffffff) * 2 + *(int *)(frameTable + count * 4) + 4;
             int v = *(int *)(e + 8);
-            *param_3 = *(int *)(e + 4);
-            *param_4 = v;
-        } else if (param_7 == 2 && param_6 != 0) {
-            memcpy(param_6, (void *)(lbl_8035F3E8[idx] + (param_1 & 0xffffff) * 2), (param_5 + 1) * 4);
+            *outA = *(int *)(e + 4);
+            *outB = v;
+        } else if (queryMode == 2 && frameTable != 0) {
+            memcpy(frameTable, (void *)(lbl_8035F3E8[idx] + (texId & 0xffffff) * 2), (count + 1) * 4);
         } else {
-            int e = lbl_8035F3E8[idx] + (param_1 & 0xffffff) * 2 + 4;
+            int e = lbl_8035F3E8[idx] + (texId & 0xffffff) * 2 + 4;
             int v = *(int *)(e + 8);
-            *param_3 = *(int *)(e + 4);
-            *param_4 = v;
+            *outA = *(int *)(e + 4);
+            *outB = v;
         }
     }
 }

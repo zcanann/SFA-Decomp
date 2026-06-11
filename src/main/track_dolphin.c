@@ -3403,77 +3403,77 @@ extern void Obj_TransformLocalVectorToWorld(f32 x, f32 y, f32 z, f32 *ox, f32 *o
 extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz, void *obj);
 extern void Obj_TransformWorldVectorToLocal(f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz, void *obj);
 
-void objHitDetectFn_80062e84(u8 *p1, u8 *p2, int p3)
+void objHitDetectFn_80062e84(u8 *obj, u8 *newParent, int mode)
 {
-    u8 *psVar2;
-    u8 *iVar1;
-    int iVar3;
-    f32 local_24;
-    f32 local_28;
-    u8 auStack32[16];
+    u8 *oldParent;
+    u8 *hitReact;
+    int yawSum;
+    f32 dirX;
+    f32 dirZ;
+    u8 dirBuf[16];
 
-    psVar2 = *(u8 **)(p1 + 0x30);
-    if (psVar2 == p2) return;
+    oldParent = *(u8 **)(obj + 0x30);
+    if (oldParent == newParent) return;
 
-    if (psVar2 != NULL) Obj_BuildTransformMatrices(psVar2);
-    if (p2 != NULL) Obj_BuildTransformMatrices(p2);
+    if (oldParent != NULL) Obj_BuildTransformMatrices(oldParent);
+    if (newParent != NULL) Obj_BuildTransformMatrices(newParent);
 
-    if (*(s16 *)(p1 + 0x44) == 1) {
-        fn_80296EB4(p1, p2);
+    if (*(s16 *)(obj + 0x44) == 1) {
+        fn_80296EB4(obj, newParent);
         return;
     }
 
-    *(u8 **)(p1 + 0x30) = p2;
-    iVar1 = *(u8 **)(p1 + 0x54);
-    if (psVar2 != NULL) {
-        Obj_TransformLocalPointToWorld(*(f32 *)(p1 + 0xc), *(f32 *)(p1 + 0x10), *(f32 *)(p1 + 0x14),
-                                       (f32 *)(p1 + 0x18), (f32 *)(p1 + 0x1c), (f32 *)(p1 + 0x20), psVar2);
-        Obj_TransformLocalPointToWorld(*(f32 *)(p1 + 0x80), *(f32 *)(p1 + 0x84), *(f32 *)(p1 + 0x88),
-                                       (f32 *)(p1 + 0x8c), (f32 *)(p1 + 0x90), (f32 *)(p1 + 0x94), psVar2);
-        Obj_TransformLocalVectorToWorld(*(f32 *)(p1 + 0x24), __AR_Callback, *(f32 *)(p1 + 0x2c),
-                                        &local_24, (f32 *)auStack32, &local_28, psVar2);
-        iVar3 = *(s16 *)psVar2 + *(s16 *)p1;
+    *(u8 **)(obj + 0x30) = newParent;
+    hitReact = *(u8 **)(obj + 0x54);
+    if (oldParent != NULL) {
+        Obj_TransformLocalPointToWorld(*(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14),
+                                       (f32 *)(obj + 0x18), (f32 *)(obj + 0x1c), (f32 *)(obj + 0x20), oldParent);
+        Obj_TransformLocalPointToWorld(*(f32 *)(obj + 0x80), *(f32 *)(obj + 0x84), *(f32 *)(obj + 0x88),
+                                       (f32 *)(obj + 0x8c), (f32 *)(obj + 0x90), (f32 *)(obj + 0x94), oldParent);
+        Obj_TransformLocalVectorToWorld(*(f32 *)(obj + 0x24), __AR_Callback, *(f32 *)(obj + 0x2c),
+                                        &dirX, (f32 *)dirBuf, &dirZ, oldParent);
+        yawSum = *(s16 *)oldParent + *(s16 *)obj;
     } else {
-        local_24 = *(f32 *)(p1 + 0x24);
-        local_28 = *(f32 *)(p1 + 0x2c);
-        iVar3 = *(s16 *)p1;
+        dirX = *(f32 *)(obj + 0x24);
+        dirZ = *(f32 *)(obj + 0x2c);
+        yawSum = *(s16 *)obj;
     }
 
-    if (p3 != 0) {
-        if (*(u8 **)(p1 + 0x30) != NULL) {
-            Obj_TransformWorldPointToLocal(*(f32 *)(p1 + 0x18), *(f32 *)(p1 + 0x1c), *(f32 *)(p1 + 0x20),
-                                           (f32 *)(p1 + 0xc), (f32 *)(p1 + 0x10), (f32 *)(p1 + 0x14),
-                                           *(u8 **)(p1 + 0x30));
-            Obj_TransformWorldPointToLocal(*(f32 *)(p1 + 0x8c), *(f32 *)(p1 + 0x90), *(f32 *)(p1 + 0x94),
-                                           (f32 *)(p1 + 0x80), (f32 *)(p1 + 0x84), (f32 *)(p1 + 0x88),
-                                           *(u8 **)(p1 + 0x30));
-            Obj_TransformWorldVectorToLocal(local_24, __AR_Callback, local_28,
-                                            (f32 *)(p1 + 0x24), (f32 *)auStack32, (f32 *)(p1 + 0x2c),
-                                            *(u8 **)(p1 + 0x30));
-            iVar3 = iVar3 - *(s16 *)(*(u8 **)(p1 + 0x30));
-            if (iVar3 > 0x8000) iVar3 -= 0xffff;
-            if (iVar3 < -0x8000) iVar3 += 0xffff;
-            *(s16 *)p1 = (s16)iVar3;
+    if (mode != 0) {
+        if (*(u8 **)(obj + 0x30) != NULL) {
+            Obj_TransformWorldPointToLocal(*(f32 *)(obj + 0x18), *(f32 *)(obj + 0x1c), *(f32 *)(obj + 0x20),
+                                           (f32 *)(obj + 0xc), (f32 *)(obj + 0x10), (f32 *)(obj + 0x14),
+                                           *(u8 **)(obj + 0x30));
+            Obj_TransformWorldPointToLocal(*(f32 *)(obj + 0x8c), *(f32 *)(obj + 0x90), *(f32 *)(obj + 0x94),
+                                           (f32 *)(obj + 0x80), (f32 *)(obj + 0x84), (f32 *)(obj + 0x88),
+                                           *(u8 **)(obj + 0x30));
+            Obj_TransformWorldVectorToLocal(dirX, __AR_Callback, dirZ,
+                                            (f32 *)(obj + 0x24), (f32 *)dirBuf, (f32 *)(obj + 0x2c),
+                                            *(u8 **)(obj + 0x30));
+            yawSum = yawSum - *(s16 *)(*(u8 **)(obj + 0x30));
+            if (yawSum > 0x8000) yawSum -= 0xffff;
+            if (yawSum < -0x8000) yawSum += 0xffff;
+            *(s16 *)obj = (s16)yawSum;
         } else {
-            *(f32 *)(p1 + 0xc) = *(f32 *)(p1 + 0x18);
-            *(f32 *)(p1 + 0x10) = *(f32 *)(p1 + 0x1c);
-            *(f32 *)(p1 + 0x14) = *(f32 *)(p1 + 0x20);
-            *(f32 *)(p1 + 0x80) = *(f32 *)(p1 + 0x8c);
-            *(f32 *)(p1 + 0x84) = *(f32 *)(p1 + 0x90);
-            *(f32 *)(p1 + 0x88) = *(f32 *)(p1 + 0x94);
-            *(f32 *)(p1 + 0x24) = local_24;
-            *(f32 *)(p1 + 0x2c) = local_28;
-            *(s16 *)p1 = (s16)iVar3;
+            *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0x18);
+            *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x1c);
+            *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x20);
+            *(f32 *)(obj + 0x80) = *(f32 *)(obj + 0x8c);
+            *(f32 *)(obj + 0x84) = *(f32 *)(obj + 0x90);
+            *(f32 *)(obj + 0x88) = *(f32 *)(obj + 0x94);
+            *(f32 *)(obj + 0x24) = dirX;
+            *(f32 *)(obj + 0x2c) = dirZ;
+            *(s16 *)obj = (s16)yawSum;
         }
     }
 
-    if (iVar1 != NULL) {
-        *(f32 *)(iVar1 + 0x10) = *(f32 *)(p1 + 0xc);
-        *(f32 *)(iVar1 + 0x14) = *(f32 *)(p1 + 0x10);
-        *(f32 *)(iVar1 + 0x18) = *(f32 *)(p1 + 0x14);
-        *(f32 *)(iVar1 + 0x1c) = *(f32 *)(p1 + 0x18);
-        *(f32 *)(iVar1 + 0x20) = *(f32 *)(p1 + 0x1c);
-        *(f32 *)(iVar1 + 0x24) = *(f32 *)(p1 + 0x20);
+    if (hitReact != NULL) {
+        *(f32 *)(hitReact + 0x10) = *(f32 *)(obj + 0xc);
+        *(f32 *)(hitReact + 0x14) = *(f32 *)(obj + 0x10);
+        *(f32 *)(hitReact + 0x18) = *(f32 *)(obj + 0x14);
+        *(f32 *)(hitReact + 0x1c) = *(f32 *)(obj + 0x18);
+        *(f32 *)(hitReact + 0x20) = *(f32 *)(obj + 0x1c);
+        *(f32 *)(hitReact + 0x24) = *(f32 *)(obj + 0x20);
     }
 }
 

@@ -72,7 +72,7 @@ void fn_801F4C28(u8 *obj, u8 *rec)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_801F4D54(int param_1, u8 *param_2)
+void fn_801F4D54(int obj, u8 *rec)
 {
   struct {
     s16 angle;
@@ -85,34 +85,34 @@ void fn_801F4D54(int param_1, u8 *param_2)
     f32 z2;
   } locals;
 
-  *(f32 *)(param_2 + 0x34) = lbl_803E5EC4;
-  if (param_2[0x6b] != 0) {
-    *(f32 *)(param_2 + 0x38) = (f32)(s32)(*(s16 *)(param_2 + 0x64));
-    param_2[0x6b] = 0;
+  *(f32 *)(rec + 0x34) = lbl_803E5EC4;
+  if (rec[0x6b] != 0) {
+    *(f32 *)(rec + 0x38) = (f32)(s32)(*(s16 *)(rec + 0x64));
+    rec[0x6b] = 0;
   } else {
-    *(f32 *)(param_2 + 0x38) =
-        (f32)(s32)(randomGetRange(0, *(s16 *)(param_2 + 0x64)));
+    *(f32 *)(rec + 0x38) =
+        (f32)(s32)(randomGetRange(0, *(s16 *)(rec + 0x64)));
   }
-  if (*(f32 *)(param_2 + 0x50) < lbl_803E5EC8) {
-    *(f32 *)(param_2 + 0x3c) = lbl_803E5EC4;
+  if (*(f32 *)(rec + 0x50) < lbl_803E5EC8) {
+    *(f32 *)(rec + 0x3c) = lbl_803E5EC4;
   } else {
-    *(f32 *)(param_2 + 0x3c) =
-        *(f32 *)(param_2 + 0x50) -
-        (f32)(s32)(randomGetRange(0x14, (s16)(s32)*(f32 *)(param_2 + 0x50)));
+    *(f32 *)(rec + 0x3c) =
+        *(f32 *)(rec + 0x50) -
+        (f32)(s32)(randomGetRange(0x14, (s16)(s32)*(f32 *)(rec + 0x50)));
   }
-  *(s16 *)(param_2 + 0x60) += (s16)randomGetRange(0xbb8, 0x1388);
+  *(s16 *)(rec + 0x60) += (s16)randomGetRange(0xbb8, 0x1388);
   locals.z0 = lbl_803E5EC4;
   locals.z1 = lbl_803E5EC4;
   locals.z2 = lbl_803E5EC4;
   locals.m = lbl_803E5EB4;
   locals.b = 0;
   locals.a = 0;
-  locals.angle = *(s16 *)(param_2 + 0x60);
-  vecRotateZXY(&locals, param_2 + 0x34);
-  *(f32 *)(param_2 + 0x34) =
-      *(f32 *)(param_2 + 0x34) + *(f32 *)(param_2 + 0x54);
-  *(f32 *)(param_2 + 0x38) =
-      *(f32 *)(param_2 + 0x38) + *(f32 *)(param_2 + 0x58);
-  *(f32 *)(param_2 + 0x3c) =
-      *(f32 *)(param_2 + 0x3c) + *(f32 *)(param_2 + 0x5c);
+  locals.angle = *(s16 *)(rec + 0x60);
+  vecRotateZXY(&locals, rec + 0x34);
+  *(f32 *)(rec + 0x34) =
+      *(f32 *)(rec + 0x34) + *(f32 *)(rec + 0x54);
+  *(f32 *)(rec + 0x38) =
+      *(f32 *)(rec + 0x38) + *(f32 *)(rec + 0x58);
+  *(f32 *)(rec + 0x3c) =
+      *(f32 *)(rec + 0x3c) + *(f32 *)(rec + 0x5c);
 }
