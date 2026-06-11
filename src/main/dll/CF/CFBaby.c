@@ -236,12 +236,7 @@ void FireFlyLantern_init(int obj, int def)
     }
     else
     {
-        childCount = *(u8*)(state + 0x1d);
-        if (childCount >= 6)
-        {
-            childCount = 6;
-        }
-        *(u8*)(state + 0x1c) = (u8)childCount;
+        *(u8*)(state + 0x1c) = (*(u8*)(state + 0x1d) < 6) ? *(u8*)(state + 0x1d) : 6;
 
         i = 0;
         childSlot = state;
@@ -831,7 +826,7 @@ void flammablevine_init(int obj, int def)
         0,
         (s16)(lbl_803E3B30 * scale));
     *(f32*)(state + 0x10) = lbl_803E3B34;
-    ObjAnim_SetMoveProgress(lbl_803E3B00, (ObjAnimComponent*)obj);
+    ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)((ObjAnimComponent*)obj, lbl_803E3B00);
 
     if (((FlammablevineObjectDef*)def)->unk1E != -1 && GameBit_Get(((FlammablevineObjectDef*)def)->unk1E) != 0)
     {
@@ -947,9 +942,9 @@ checked_vine_use:
 
         if (*(f32*)(state + 4) < lbl_803E3B08 && *(f32*)(state + 4) > lbl_803E3B04)
         {
-            ObjAnim_SetMoveProgress(
-                lbl_803E3AF8 - ((*(f32*)(state + 4) - lbl_803E3B04) / lbl_803E3B0C),
-                (ObjAnimComponent*)obj);
+            ((int (*)(ObjAnimComponent*, f32))ObjAnim_SetMoveProgress)(
+                (ObjAnimComponent*)obj,
+                lbl_803E3AF8 - ((*(f32*)(state + 4) - lbl_803E3B04) / lbl_803E3B0C));
         }
 
         if (*(f32*)(state + 4) < lbl_803E3B10)
@@ -1706,7 +1701,7 @@ int InfoPoint_SeqFn(int obj, int unused, ObjAnimUpdateState* animUpdate)
             break;
         case 2: inner[0xb] = 0;
             break;
-        case 5: break;
+        case 3: break;
         }
     }
     return 0;
@@ -1788,10 +1783,7 @@ void Fall_Ladders_update(int obj)
                 ((GameObject*)obj)->anim.localPosY = ((ObjPlacement*)def)->posY;
                 ((GameObject*)obj)->anim.velocityY = lbl_803E3B54 * -((GameObject*)obj)->anim.velocityY;
                 speed = ((GameObject*)obj)->anim.velocityY;
-                if (speed < lbl_803E3B58)
-                {
-                    speed = -speed;
-                }
+                speed = (speed >= lbl_803E3B58) ? speed : -speed;
                 if (speed < lbl_803E3B5C)
                 {
                     state->motionState = 2;
