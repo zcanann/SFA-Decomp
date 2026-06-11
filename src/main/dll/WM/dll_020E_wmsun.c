@@ -27,6 +27,7 @@
  * variable reuse and decl-order-tuned saved-FP coloring (see commit
  * 9397d81b0). Do not reorder declarations, inline, hoist or re-cast.
  */
+#include "main/audio/sfx_ids.h"
 #include "main/dll/WM/wm_shared.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
@@ -400,7 +401,7 @@ void wmsun_update(int obj)
                 randomGetRange(0, 0xffff);
                 randomGetRange(0, 0xffff);
                 randomGetRange(0, 0xffff);
-                Sfx_PlayFromObject(obj, 0x81);
+                Sfx_PlayFromObject(obj, SFXmn_sml_trex_snap2);
             }
             wmsun_updateGlare(obj);
         }

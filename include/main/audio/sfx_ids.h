@@ -60,6 +60,7 @@
 #define SFXmn_sml_trex_fstep 126
 #define SFXmn_sml_trex_roar 127
 #define SFXmn_sml_trex_snap1 128
+#define SFXmn_sml_trex_snap2 129
 #define SFXmn_sml_trex_snap3 130
 #define SFXmv_bflconc1 131
 #define SFXmv_blkhit_c 132
