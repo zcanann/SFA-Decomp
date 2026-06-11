@@ -5,12 +5,11 @@
 #include "main/objhits.h"
 #include "main/objanim_internal.h"
 #include "main/objlib.h"
+#include "main/object_transform.h"
 
-extern void Obj_TransformWorldVectorToLocal(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, int obj);
-extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32* outX, f32* outY, f32* outZ, int obj);
 extern uint getAngle(f32 a, f32 b);
-extern undefined4 mtxRotateByVec3s();
-extern undefined4 setMatrixFromObjectPos();
+extern void mtxRotateByVec3s(f32* mtx, void* transform);
+extern void setMatrixFromObjectPos(f32* mtx, void* transform);
 extern byte hitDetectFn_80067958(int obj, float* startPoints, float* endPoints, int pointCount,
                                  void* outHits, int flags);
 extern void hitDetectFn_800691c0(int obj, void* bounds, uint mask, int flags);
