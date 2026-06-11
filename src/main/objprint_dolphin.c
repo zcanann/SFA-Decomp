@@ -3,8 +3,10 @@
 #include "main/effect_interfaces.h"
 #include "main/mapEvent.h"
 #include "main/model.h"
+#include "main/object_transform.h"
 #include "main/objprint_dolphin.h"
 #include "main/objanim_internal.h"
+#include "main/vecmath.h"
 
 typedef struct ObjModelRenderOp
 {
@@ -2590,11 +2592,9 @@ extern f32 sqrtf(f32);
 extern int getAngle(f32 a, f32 b);
 extern void PSMTXMultVec(f32 * m, f32 * src, f32 * dst);
 extern void PSMTXConcat(f32 * a, f32 * b, f32 * ab);
-extern void setMatrixFromObjectPos(f32* m, void* blk);
 extern void setMatrixFromObjectTransposed(void* blk, f32* m);
 extern void Matrix_TransformPoint(f32* m, f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz);
 extern void Obj_BuildWorldTransformMatrix(int* obj, f32* m, int p3);
-extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32* ox, f32* oy, f32* oz, void* space);
 extern void objRotateFn_8003bce8(f32 * m, s16 * a, s16 * b, s16 * c);
 extern void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 w, f32* a, f32* b, f32* c);
 extern void Camera_NdcToScreen(f32 a, f32 b, f32 c, int* x, int* y, int* z);
@@ -3010,7 +3010,7 @@ void objRenderChild(int* child, int* parent, u8 p3)
             Obj_TransformWorldPointToLocal(((GameObject*)child)->anim.worldPosX, ((GameObject*)child)->anim.worldPosY,
                                            ((GameObject*)child)->anim.worldPosZ,
                                            &((GameObject*)child)->anim.localPosX, &((GameObject*)child)->anim.localPosY,
-                                           &((GameObject*)child)->anim.localPosZ, space);
+                                           &((GameObject*)child)->anim.localPosZ, (u32)space);
         }
         else
         {
