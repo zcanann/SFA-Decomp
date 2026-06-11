@@ -215,9 +215,9 @@ extern GXColor lbl_803DB6EC;
 extern GXColor lbl_803DB6F0;
 /* Narrow-typed aliases for sbss/sdata state vars touched by the small
  * helpers below. */
-extern u8 lbl_803DC2D9;
+extern u8 hudOpacity;
 extern volatile s32 lbl_803DB700;
-extern u32 lbl_803DD004;
+extern u32 screenWidth;
 extern u8 lbl_803DD019;
 extern u8 lbl_803DD01A;
 extern GXColor lbl_803DD01C;
@@ -971,7 +971,7 @@ int depthReadRequestPoll(int x, int y, int requestKey)
  */
 uint getScreenResolution(void)
 {
-    u32 v = lbl_803DD004;
+    u32 v = screenWidth;
     if (v != 0) {
         return v | (v << 16);
     }
@@ -993,7 +993,7 @@ uint getScreenResolution(void)
  */
 void setScreenWidth(u32 width)
 {
-    lbl_803DD004 = width;
+    screenWidth = width;
 }
 
 /*
@@ -1011,7 +1011,7 @@ void setScreenWidth(u32 width)
  */
 void clearScreenWidth(void)
 {
-    lbl_803DD004 = 0;
+    screenWidth = 0;
 }
 
 /*
@@ -1232,7 +1232,7 @@ void resetSomeGxFlags(void)
  */
 void setHudOpacity(u8 opacity)
 {
-    lbl_803DC2D9 = opacity;
+    hudOpacity = opacity;
 }
 
 /*

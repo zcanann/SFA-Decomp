@@ -832,7 +832,7 @@ extern u8 lbl_803DD988;
 extern u32 lbl_803DD9B8;
 extern u32 lbl_803DD9BC;
 extern u8 lbl_803DD9AB;
-extern u8 lbl_803DD993;
+extern u8 showCredits;
 
 /* 4-byte and 8-byte trivial leaves. */
 void dll_3F_frameEnd_nop(void)
@@ -856,7 +856,7 @@ void reportAllocFail(void)
 }
 
 int dll_3F_frameStart_ret_0(void) { return 0; }
-u8 shouldShowCredits(void) { return lbl_803DD993; }
+u8 shouldShowCredits(void) { return showCredits; }
 
 /* EN v1.0 0x801334D4  size: 12b  u16-narrow getter for lbl_803DD938. */
 u16 getMinimapY(void) { return (u16)lbl_803DD938; }
@@ -1040,7 +1040,7 @@ void titlescreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
     if (v == 0) return;
     if (lbl_803DD9AB == 0) return;
     objRenderFn_8003b8f4(lbl_803E2318);
-    if (lbl_803DD993 == 0) return;
+    if (showCredits == 0) return;
     if (lbl_803DD9AA != 0) return;
     GameBit_Set(0xDF6, 1);
     lbl_803DD9AA = 1;
@@ -1658,11 +1658,11 @@ void WarpstoneUI_initialise(void)
 #pragma scheduling reset
 
 /* EN v1.0 0x80134BC4  size: 32b  Reset the per-frame state group:
- * latch lbl_803DD993 = 1 and zero five halfword/byte counters. */
+ * latch showCredits = 1 and zero five halfword/byte counters. */
 #pragma scheduling off
 void creditsStart(void)
 {
-    lbl_803DD993 = 1;
+    showCredits = 1;
     lbl_803DD994 = 0;
     lbl_803DD996 = 0;
     lbl_803DD9A8 = 0;
@@ -1729,7 +1729,7 @@ void fn_80138908(int* obj, u8 v)
 }
 
 /* EN v1.0 0x80135BF0  size: 60b  titlescreen_free: if obj->_46 == 0x77d,
- * trigger Music_Trigger(0x3a, 0) and clear lbl_803DD993. */
+ * trigger Music_Trigger(0x3a, 0) and clear showCredits. */
 extern void Music_Trigger(s32 triggerId, s32 mode);
 
 void titlescreen_free(u8* obj)
@@ -1737,7 +1737,7 @@ void titlescreen_free(u8* obj)
     if (((GameObject*)obj)->anim.seqId == 0x77d)
     {
         Music_Trigger(0x3a, 0);
-        lbl_803DD993 = 0;
+        showCredits = 0;
     }
 }
 
@@ -2743,7 +2743,7 @@ void creditsStart_(void)
     {
         if ((*gCameraInterface)->getMode() == 0x57)
         {
-            lbl_803DD993 = 0;
+            showCredits = 0;
             loadUiDll(4);
             TitleMenu_setSelection(4);
         }
