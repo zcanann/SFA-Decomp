@@ -80,7 +80,7 @@ extern int curLanguage;
 extern u8* gameTextFonts;
 extern void* gameTextDrawFunc;
 extern char* sLanguageNameTable[][2];
-extern u8 lbl_802C7400[];
+extern u8 gTextBoxes[];
 extern u8 lbl_802C8680[];
 extern f32 lbl_803DE704;
 extern f32 lbl_803DE708;
@@ -196,7 +196,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
     }
 
     if (curLanguage != 4 && mode == 1 && saveFileStruct_isCheatActive(3) &&
-        win == lbl_802C7400 + 0x140)
+        win == gTextBoxes + 0x140)
     {
         translateToDinoLanguage(str);
     }
@@ -214,7 +214,7 @@ void textRenderStr(u8* str, u8* win, f32 x, f32 y, f32 lineH, int mode)
 
     x = x + (f32) * (s16*)(win + 0x14);
     y = y + (f32) * (s16*)(win + 0x16);
-    winBase = lbl_802C7400;
+    winBase = gTextBoxes;
 
     while (p = str + byteOff, (ch = utf8GetNextChar(p, &charLen)) != 0)
     {
@@ -1268,14 +1268,14 @@ void gameTextSetWindow(u8* param_1)
         i = lbl_803DC9C8;
         lbl_803DC9C8 = i + 1;
         s = &lbl_8033A540[i];
-        idx = (param_1 - lbl_802C7400) / 0x20;
+        idx = (param_1 - gTextBoxes) / 0x20;
         if (idx == 0xff)
         {
             lbl_803DC9CC = NULL;
         }
         else
         {
-            lbl_803DC9CC = lbl_802C7400 + idx * 0x20;
+            lbl_803DC9CC = gTextBoxes + idx * 0x20;
         }
         s->v = 8;
         s->f4 = idx;
@@ -1432,7 +1432,7 @@ void gameTextSetWindowStrPos(int idx, int x, int y)
     if (gameTextDrawFunc != NULL)
     {
         s16 sx = x;
-        u8* p = lbl_802C7400 + idx * 0x20;
+        u8* p = gTextBoxes + idx * 0x20;
         *(s16*)(p + 0x18) = sx;
         *(s16*)(p + 0x1a) = y;
     }
@@ -1712,7 +1712,7 @@ void gameTextInitFn_8001a234(void)
     gameTextBase = lbl_80339980;
 
     i = 0x94;
-    textWindow = lbl_802C7400 + 0x1280;
+    textWindow = gTextBoxes + 0x1280;
     p = textWindow;
     while (p -= 0x20, i-- != 0)
     {
@@ -1918,7 +1918,7 @@ void gameTextRun(void)
         *(f32*)(gameTextFonts + 0x20) = lbl_803DE704;
     }
 
-    textWindow = lbl_802C7400;
+    textWindow = gTextBoxes;
     for (i = 148; i != 0; i--)
     {
         *(u16*)(textWindow + 0x1c) &= 0xfffe;
@@ -1951,7 +1951,7 @@ void gameTextRun(void)
             {
                 int t1 = cmd->fc;
                 int t2 = (s16)cmd->f8;
-                textWindow = lbl_802C7400 + cmd->f4 * 0x20;
+                textWindow = gTextBoxes + cmd->f4 * 0x20;
                 *(s16*)(textWindow + 0x18) = t2;
                 *(s16*)(textWindow + 0x1a) = (s16)t1;
                 break;
@@ -1965,7 +1965,7 @@ void gameTextRun(void)
         case 5:
             if (lbl_803DC9CC != NULL)
             {
-                gameTextRenderStrs(cmd->f4, ((u8*)lbl_803DC9CC - lbl_802C7400) / 0x20);
+                gameTextRenderStrs(cmd->f4, ((u8*)lbl_803DC9CC - gTextBoxes) / 0x20);
             }
             break;
         case 6:
@@ -1976,7 +1976,7 @@ void gameTextRun(void)
                 int t3 = cmd->f10;
                 int t2 = cmd->f8;
                 int t1 = cmd->f4;
-                textWindow = lbl_802C7400 + t2 * 0x20;
+                textWindow = gTextBoxes + t2 * 0x20;
                 *(s16*)(textWindow + 0x18) = (s16)cmd->fc;
                 *(s16*)(textWindow + 0x1a) = (s16)t3;
                 gameTextRenderStrs(t1, t2);
@@ -1989,7 +1989,7 @@ void gameTextRun(void)
             }
             else
             {
-                lbl_803DC9CC = lbl_802C7400 + cmd->f4 * 0x20;
+                lbl_803DC9CC = gTextBoxes + cmd->f4 * 0x20;
             }
             break;
         case 9:
@@ -2036,7 +2036,7 @@ void gameTextRun(void)
     lbl_803DC9C8 = 0;
     lbl_803DC9C4 = gameTextBase + GAMETEXT_COMMAND_STRING_BUFFER_OFFSET;
 
-    textWindow = lbl_802C7400 + 0x1280;
+    textWindow = gTextBoxes + 0x1280;
     for (i = 0x94; i > 0; i--)
     {
         textWindow -= 0x20;
@@ -2369,7 +2369,7 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
         }
         else if (boxId != 0)
         {
-            gameTextBoxFn_800164b0(boxId, (int)(box - lbl_802C7400) / 0x20, &c6x0, &c6x1, &c6y0, &c6y1);
+            gameTextBoxFn_800164b0(boxId, (int)(box - gTextBoxes) / 0x20, &c6x0, &c6x1, &c6y0, &c6y1);
         }
         gameTextSetWindow(cur);
         hw = (c6x1 - c6x0) >> 1;
@@ -2397,7 +2397,7 @@ void gameTextDrawBox(u16* strPtr, int boxId, u8* box)
         }
         else if (boxId != 0)
         {
-            gameTextBoxFn_800164b0(boxId, (int)(box - lbl_802C7400) / 0x20, &c3x0, &c3x1, &c3y0, &c3y1);
+            gameTextBoxFn_800164b0(boxId, (int)(box - gTextBoxes) / 0x20, &c3x0, &c3x1, &c3y0, &c3y1);
         }
         gameTextSetWindow(cur);
         drawTexture((f32)(c3x0 - 0x16), (f32)(c3y0 - 9), lbl_8033BE40[5], ((GameTextBox*)box)->alpha, 0x100);
@@ -3152,7 +3152,7 @@ void subtitleBuildLineTable(void)
         gameTextSetCharset(1, 1);
     }
     t = (SubtitleTextEntry*)gameTextGet(lbl_803DC9FC);
-    win = lbl_802C7400 + 0x140;
+    win = gTextBoxes + 0x140;
     lbl_803DCA18 = 0;
     lbl_803DCA14 = 0;
     for (i = 0; i < 256; i++)

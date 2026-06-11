@@ -2419,7 +2419,7 @@ void fn_80128470(int p1)
 
 extern f32 fsin16Approx(u16 angle);
 extern void drawPartialTexture(void* tex, f32 x, f32 y, int alpha, int u, int w, int h, int a, int b);
-extern u8 lbl_802C7400[];
+extern u8 gTextBoxes[];
 extern u16 lbl_803DD77C;
 extern f32 lbl_803E1E9C;
 extern f32 lbl_803E1ECC;
@@ -2474,14 +2474,14 @@ void mapScreenDrawHud(int p1, int p2, int p3)
             h0 = 0;
         }
         h0 = (s16)(h0 << 4);
-        if (h0 > *(u16*)(lbl_802C7400 + 0x186))
+        if (h0 > *(u16*)(gTextBoxes + 0x186))
         {
-            h0 = (s16) * (u16*)(lbl_802C7400 + 0x186);
+            h0 = (s16) * (u16*)(gTextBoxes + 0x186);
         }
-        x = *(s16*)(lbl_802C7400 + 0x194);
-        y = *(s16*)(lbl_802C7400 + 0x196);
+        x = *(s16*)(gTextBoxes + 0x194);
+        y = *(s16*)(gTextBoxes + 0x196);
         h = h0;
-        w = (s16) * (u16*)(lbl_802C7400 + 0x182);
+        w = (s16) * (u16*)(gTextBoxes + 0x182);
         drawTexture(*(void**)(hudTextures + 0x28), (f32)(x - 5), (f32)(y - 5), alpha, 0x100);
         drawScaledTexture(*(void**)(hudTextures + 0x34), (f32)x, (f32)(y - 5), alpha, 0x100, w, 5, 0);
         drawScaledTexture(*(void**)(hudTextures + 0x2c), (f32)(x - 5), (f32)y, alpha, 0x100, 5, h, 0);
@@ -2491,7 +2491,7 @@ void mapScreenDrawHud(int p1, int p2, int p3)
         drawScaledTexture(*(void**)(hudTextures + 0x28), (f32)(x + w), (f32)(y + h), alpha, 0x100, 5, 5, 3);
         drawScaledTexture(*(void**)(hudTextures + 0x28), (f32)(x + w), (f32)(y - 5), alpha, 0x100, 5, 5, 1);
         drawScaledTexture(*(void**)(hudTextures + 0x28), (f32)(x - 5), (f32)(y + h), alpha, 0x100, 5, 5, 2);
-        *(u16*)(lbl_802C7400 + 0x18a) = (u16)h0;
+        *(u16*)(gTextBoxes + 0x18a) = (u16)h0;
         {
             s8 fi;
             s8 li_;

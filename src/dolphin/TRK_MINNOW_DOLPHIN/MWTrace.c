@@ -1,6 +1,6 @@
 #include "dolphin.h"
 
-extern char lbl_802C7400[];
+extern char gTextBoxes[];
 extern volatile u32 lbl_8033A540[][5];
 extern volatile u32 lbl_803DC9C8;
 extern void* lbl_803DC9CC;
@@ -22,7 +22,7 @@ char* format;
     if (level == 0xFF) {
         trace_message = NULL;
     } else {
-        trace_message = &lbl_802C7400[level * 0x20];
+        trace_message = &gTextBoxes[level * 0x20];
     }
     lbl_803DC9CC = trace_message;
 

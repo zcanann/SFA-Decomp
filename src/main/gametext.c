@@ -13,7 +13,7 @@ int isSpace(u32 c)
 
 void* gameTextGetBox(int box)
 {
-    return &lbl_802C7400[box * 0x20];
+    return &gTextBoxes[box * 0x20];
 }
 
 void* gameTextGetCurBox(void)
@@ -124,7 +124,7 @@ void gameTextShowStr(char* text, int box, int arg2, int arg3)
     char* buf;
     if (gameTextDrawFunc != NULL)
     {
-        u8* slot = &lbl_802C7400[box * 0x20];
+        u8* slot = &gTextBoxes[box * 0x20];
         *(s16*)(slot + 0x18) = (s16)arg2;
         *(s16*)(slot + 0x1a) = (s16)arg3;
         gameTextRenderStrs(text, box);
@@ -166,7 +166,7 @@ void gameTextAppendStr(char* str, int arg2)
 
 void gameTextBoxFn_800164b0(char* str, int boxIdx, int* outMaxX, int* outMaxY, int* outMinX, int* outMinY)
 {
-    u8* box = &lbl_802C7400[boxIdx * 0x20];
+    u8* box = &gTextBoxes[boxIdx * 0x20];
     s16 savedX = *(s16*)(box + 0x18);
     s16 savedY = *(s16*)(box + 0x1a);
     lbl_803DC9BC = 1;
@@ -199,7 +199,7 @@ void gameTextBoxFn_800164b0(char* str, int boxIdx, int* outMaxX, int* outMaxY, i
 void gameTextMeasureFn_800163c4(char* str, int boxIdx, int x, int y, int* outMaxX, int* outMaxY, int* outMinX,
                                 int* outMinY)
 {
-    u8* box = &lbl_802C7400[boxIdx * 0x20];
+    u8* box = &gTextBoxes[boxIdx * 0x20];
     s16 savedX = *(s16*)(box + 0x18);
     s16 savedY = *(s16*)(box + 0x1a);
     lbl_803DC9BC = 1;
@@ -584,7 +584,7 @@ char** textMeasureFn_80016c9c(char* str, f32 width, f32 height, int* outCount, f
 
 void gameTextRenderStrs(char* str, int boxIdx)
 {
-    TextSlot* slot = (TextSlot*)lbl_802C7400 + boxIdx;
+    TextSlot* slot = (TextSlot*)gTextBoxes + boxIdx;
     char** lines;
     int count;
     f32 lineH;
@@ -805,14 +805,14 @@ void gameTextFn_8001658c(int a, int b, int c)
     }
     else if (def->slotHint == 255)
     {
-        slot = (TextSlot*)lbl_802C7400 + 2;
+        slot = (TextSlot*)gTextBoxes + 2;
     }
     else
     {
-        slot = (TextSlot*)lbl_802C7400 + def->slotHint;
+        slot = (TextSlot*)gTextBoxes + def->slotHint;
     }
 
-    if ((u8*)slot == lbl_802C7400 + 0x10a0)
+    if ((u8*)slot == gTextBoxes + 0x10a0)
     {
         lbl_803DC9A7 = 255;
         lbl_803DC9A6 = 255;
@@ -882,7 +882,7 @@ void gameTextFn_8001658c(int a, int b, int c)
     i = 0;
     for (; i < def->count; i++)
     {
-        gameTextRenderStrs(def->strings[i], slot - (TextSlot*)lbl_802C7400);
+        gameTextRenderStrs(def->strings[i], slot - (TextSlot*)gTextBoxes);
     }
 
     lbl_803DC9C0 = 0;
