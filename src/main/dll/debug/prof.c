@@ -1,6 +1,6 @@
 #include "main/dll/debug/prof.h"
 
-extern undefined4 saveFileStruct_isCheatActive();
+extern int saveFileStruct_isCheatActive();
 extern int isCheatUnlocked();
 extern u32 OSGetSoundMode(void);
 extern int Rcp_GetColorFilterEnabled(void);

@@ -3,7 +3,6 @@
 
 #include "ghidra_import.h"
 
-undefined4 saveFileStruct_isCheatActive(uint param_1);
 void saveFileStruct_unlockCheat(uint param_1);
 uint isCheatUnlocked(uint param_1);
 void saveFileStruct_resetVolumes(void);

@@ -1570,32 +1570,6 @@ int saveSelect_getInfo(void* outPtr)
 /*
  * --INFO--
  *
- * Function: saveFileStruct_isCheatActive
- * EN v1.0 Address: 0x800E7E94
- * EN v1.0 Size: 68b
- * EN v1.1 Address: 0x800E8118
- * EN v1.1 Size: 68b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4 saveFileStruct_isCheatActive(uint cheatId)
-{
-    uint cheatMask;
-
-    cheatMask = 1 << (cheatId & 0xff);
-    if (((gGameplayRegisteredDebugOptions & cheatMask) != 0) &&
-        ((gGameplayEnabledDebugOptions & cheatMask) != 0))
-    {
-        return 1;
-    }
-    return 0;
-}
-
-/*
- * --INFO--
- *
  * Function: saveFileStruct_unlockCheat
  * EN v1.0 Address: 0x800E7ED8
  * EN v1.0 Size: 36b

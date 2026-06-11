@@ -35,7 +35,6 @@ extern undefined4 FUN_8005d018();
 extern undefined4 FUN_8005d090();
 extern undefined4 FUN_8005d17c();
 extern undefined4 saveFileStruct_setCheatActive();
-extern undefined4 saveFileStruct_isCheatActive();
 extern uint isCheatUnlocked();
 extern u8* getSaveFileStruct();
 extern void saveGame_save();
