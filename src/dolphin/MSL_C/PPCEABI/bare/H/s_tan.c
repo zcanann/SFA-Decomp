@@ -22,7 +22,5 @@ double tan(int* out_n, float x)
     scaled = lbl_803E7C00 * ax;
     n = (__cvt_fp2unsigned(scaled) + 1) & ~1U;
     *out_n = n;
-    conv.words.lo = n;
-    conv.words.hi = 0x43300000;
-    return ax - lbl_803E7C08 * (conv.d - lbl_803E7C10);
+    return ax - lbl_803E7C08 * (double)n;
 }
