@@ -221,10 +221,9 @@ void inpAddCtrl(int obj, int b, int c, int d, u32 flag)
     {
         ring->count = 0;
     }
-    counter = ring->count;
-    if (counter < 4)
+    if (ring->count < 4)
     {
-        ring->count = counter + 1;
+        counter = ring->count++;
         if (flag == 0)
         {
             b = inpTranslateExCtrl(b);
