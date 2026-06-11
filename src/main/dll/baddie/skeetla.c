@@ -345,7 +345,6 @@ extern f32 lbl_803E243C;
 extern f32 lbl_803E2440;
 extern f32 lbl_803E2454;
 extern f32 lbl_803E2458;
-extern f64 lbl_803E2460;
 extern f32 lbl_803E2468;
 extern f32 lbl_803E246C;
 extern f32 lbl_803E2470;
@@ -1326,18 +1325,14 @@ typedef struct TrickyApplyObjectAvoidanceToStepPlacement
 } TrickyApplyObjectAvoidanceToStepPlacement;
 
 
-extern bool FUN_800067f0();
 extern undefined4 FUN_80006824();
 extern uint FUN_80017690();
 extern double FUN_80017708();
 extern double FUN_80017714();
-extern int FUN_80017730();
 extern int FUN_80017a98();
-extern int FUN_80017b00();
 extern int ObjGroup_FindNearestObject();
 extern void* ObjGroup_GetObjects();
 extern int ObjHits_PollPriorityHitWithCooldown();
-extern undefined4 FUN_80039468();
 extern undefined4 FUN_800469d0();
 extern undefined4 FUN_80046a00();
 extern int fn_8004B394();
@@ -1347,56 +1342,28 @@ extern int FUN_8005b398();
 extern undefined4 FUN_800632e8();
 extern undefined4 FUN_800810e8();
 extern undefined4 FUN_80081120();
-extern undefined4 FUN_800da594();
-extern undefined4 FUN_80146fa0();
-extern undefined8 FUN_8028682c();
 extern undefined8 FUN_80286834();
-extern undefined8 FUN_80286838();
-extern undefined8 FUN_8028683c();
 extern undefined8 FUN_80286840();
-extern undefined4 FUN_80286878();
 extern undefined4 FUN_80286880();
-extern undefined4 FUN_80286884();
-extern undefined4 FUN_80286888();
 extern undefined4 FUN_8028688c();
 extern double FUN_80293900();
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294964();
 
 extern undefined4* DAT_803dd71c;
-extern undefined4 DAT_803e3064;
-extern undefined4 DAT_803e3068;
-extern f64 DOUBLE_803e3090;
-extern f64 DOUBLE_803e30f0;
 extern f32 FLOAT_803dc074;
-extern f32 FLOAT_803dc078;
 extern f32 FLOAT_803e306c;
 extern f32 FLOAT_803e3070;
 extern f32 FLOAT_803e3078;
 extern f32 FLOAT_803e307c;
-extern f32 FLOAT_803e3088;
 extern f32 FLOAT_803e30a0;
 extern f32 FLOAT_803e30a4;
-extern f32 FLOAT_803e30a8;
-extern f32 FLOAT_803e30b0;
 extern f32 FLOAT_803e30b4;
 extern f32 FLOAT_803e30b8;
 extern f32 FLOAT_803e30bc;
 extern f32 FLOAT_803e30c0;
 extern f32 FLOAT_803e30c8;
-extern f32 FLOAT_803e30cc;
-extern f32 FLOAT_803e30d0;
-extern f32 FLOAT_803e30d8;
-extern f32 FLOAT_803e30dc;
 extern f32 FLOAT_803e30e0;
-extern f32 FLOAT_803e30f8;
-extern f32 FLOAT_803e30fc;
-extern f32 FLOAT_803e3100;
-extern f32 FLOAT_803e3104;
-extern f32 FLOAT_803e3108;
 extern f32 FLOAT_803e310c;
 extern f32 FLOAT_803e3110;
-extern f32 FLOAT_803e3114;
 
 /*
  * --INFO--
@@ -1420,7 +1387,7 @@ void FUN_8013939c(uint param_1)
     float local_38;
     int local_34;
     float local_30;
-    undefined auStack_2c[12];
+    u8 auStack_2c[12];
     float afStack_20[5];
 
     iVar3 = *(int*)&((GameObject*)param_1)->extra;
@@ -1513,7 +1480,7 @@ void FUN_8013939c(uint param_1)
             {
                 ((TrickyState*)iVar3)->contactTimer = ((TrickyState*)iVar3)->contactTimer - FLOAT_803e3070;
                 ((TrickyState*)iVar3)->stateFlags = ((TrickyState*)iVar3)->stateFlags | 8;
-                *(undefined*)(*(int*)&((GameObject*)param_1)->anim.modelInstance + 0x71) = 0x7e;
+                *(u8*)(*(int*)&((GameObject*)param_1)->anim.modelInstance + 0x71) = 0x7e;
             }
         }
     }
@@ -1527,7 +1494,7 @@ void FUN_8013939c(uint param_1)
             if ((double)FLOAT_803e30c0 < dVar4)
             {
                 ((TrickyState*)iVar3)->contactTimer = ((TrickyState*)iVar3)->contactTimer - FLOAT_803e30bc;
-                *(undefined*)(*(int*)&((GameObject*)param_1)->anim.modelInstance + 0x71) = 0x7f;
+                *(u8*)(*(int*)&((GameObject*)param_1)->anim.modelInstance + 0x71) = 0x7f;
                 ((TrickyState*)iVar3)->stateFlags = ((TrickyState*)iVar3)->stateFlags & 0xfffffff7;
             }
         }
