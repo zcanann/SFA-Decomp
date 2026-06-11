@@ -21,24 +21,17 @@ typedef struct AppleontreeObjectDef
 } AppleontreeObjectDef;
 
 
-extern undefined8 FUN_80006824();
 extern uint GameBit_Get(int eventId);
 extern undefined4 FUN_80017a78();
-extern int FUN_80017a98();
-extern undefined8 FUN_80017ac8();
 extern undefined4 FUN_8002fc3c();
 extern undefined8 ObjHits_DisableObject();
 extern int ObjHits_GetPriorityHit();
 extern int ObjMsg_Pop();
 extern undefined4 FUN_80039520();
-extern undefined4 FUN_80081118();
 extern undefined4 FUN_8017db40();
 extern undefined4 FUN_8017de58();
 extern int FUN_8017e15c();
 extern int FUN_8017e3c0();
-extern undefined4 FUN_80286840();
-extern undefined4 FUN_8028688c();
-extern undefined4 FUN_80294d60();
 
 extern u8* Obj_GetPlayerObject(void);
 extern void Obj_FreeObject(int obj);
