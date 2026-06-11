@@ -14,14 +14,9 @@ extern byte FUN_80006b44();
 extern undefined4 FUN_80006b4c();
 extern undefined4 FUN_80006b50();
 extern undefined4 FUN_80006b54();
-extern undefined4 FUN_80006c88();
 extern uint GameBit_Get();
 extern undefined4 GameBit_Set();
-extern undefined4 FUN_80017a98();
-extern undefined4 FUN_80080f14();
 extern undefined4 SCGameBitLatch_Update();
-extern int FUN_80286840();
-extern undefined4 FUN_8028688c();
 extern u8* Obj_GetPlayerObject(void);
 extern void gameTextShow(int p);
 
