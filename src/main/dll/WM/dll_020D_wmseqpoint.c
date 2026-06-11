@@ -1,4 +1,5 @@
 #include "main/dll/WM/wm_shared.h"
+#include "main/object_descriptor.h"
 #include "main/game_object.h"
 #include "main/mapEvent.h"
 #include "main/objanim_update.h"
@@ -153,7 +154,46 @@ sizeof
 0x24
 );
 
-void fn_801F654C(int obj)
+void wmseqpoint_onSeqFree(int obj);
+int wmseqpoint_SeqFn(int obj, int unused, ObjAnimUpdateState* actor);
+int wmseqpoint_getExtraSize(void);
+int wmseqpoint_getObjectTypeId(void);
+void wmseqpoint_free(void);
+void wmseqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
+void wmseqpoint_hitDetect(void);
+void wmseqpoint_update(int obj);
+void wmseqpoint_init(int obj, int setup);
+void wmseqpoint_release(void);
+void wmseqpoint_initialise(void);
+
+/* {game bit, placement id} per released-spirit indicator; bits 0xD1B-0xD1F
+   are granted by the spirit places (see dll_020C_wmspiritplace.c) */
+int gWM_seqpointSpiritTargets[10] = {
+    0xD1B, 0x4AEB1,
+    0xD1C, 0x4AEB2,
+    0xD1D, 0x4AEB3,
+    0xD1E, 0x4AEB4,
+    0xD1F, 0x4AEB5,
+};
+
+ObjectDescriptor gWM_seqpointObjDescriptor = {
+    0,
+    0,
+    0,
+    OBJECT_DESCRIPTOR_FLAGS_10_SLOTS,
+    wmseqpoint_initialise,
+    wmseqpoint_release,
+    0,
+    (ObjectDescriptorCallback)wmseqpoint_init,
+    (ObjectDescriptorCallback)wmseqpoint_update,
+    wmseqpoint_hitDetect,
+    (ObjectDescriptorCallback)wmseqpoint_render,
+    wmseqpoint_free,
+    (ObjectDescriptorCallback)wmseqpoint_getObjectTypeId,
+    wmseqpoint_getExtraSize,
+};
+
+void wmseqpoint_onSeqFree(int obj)
 {
     WmSeqPointState* state;
     int skyOn;
@@ -199,7 +239,7 @@ int wmseqpoint_SeqFn(int obj, int unused, ObjAnimUpdateState* actor)
     state = ((GameObject*)obj)->extra;
     player = (int)Obj_GetPlayerObject();
     actor->sequenceEventActive = 0;
-    actor->freeCallback = (ObjAnimSequenceFreeCallback)fn_801F654C;
+    actor->freeCallback = (ObjAnimSequenceFreeCallback)wmseqpoint_onSeqFree;
 
     for (i = 0; i < actor->eventCount; i++)
     {
@@ -342,8 +382,8 @@ void wmseqpoint_update(int obj)
             {
                 for (i = 0; i < 5; i++)
                 {
-                    GameBit_Set(lbl_80328CC8[i * 2], 0);
-                    target = ObjList_FindObjectById(lbl_80328CC8[i * 2 + 1]);
+                    GameBit_Set(gWM_seqpointSpiritTargets[i * 2], 0);
+                    target = ObjList_FindObjectById(gWM_seqpointSpiritTargets[i * 2 + 1]);
                     *(u8*)(*(int*)(target + 0xb8) + 0xd) = 0;
                     if (*(s16*)(target + 0xb4) != -1)
                     {

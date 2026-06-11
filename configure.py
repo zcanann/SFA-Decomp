@@ -792,7 +792,7 @@ config.libs = [
             Object(NonMatching, "main/audio_decode_thread.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/WM/dll_020B_firefly.c", cflags=cflags_dll_noopt),
             Object(MatchingFor("GSAE01"), "main/dll/WM/dll_020C_wmspiritplace.c", cflags=cflags_dll_noopt),
-            Object(NonMatching, "main/dll/WM/dll_020D_wmseqpoint.c", cflags=cflags_dll_noopt),
+            Object(MatchingFor("GSAE01"), "main/dll/WM/dll_020D_wmseqpoint.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/WM/dll_020E_wmsun.c"),
             Object(NonMatching, "main/dll/WM/dll_020F_wmspiritset.c", cflags=cflags_dll_noopt),
             Object(NonMatching, "main/dll/WM/dll_0210_wmplanets.c", cflags=cflags_dll_noopt),

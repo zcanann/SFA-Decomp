@@ -294,7 +294,6 @@ extern void fn_80296518(int obj, int arg, int enable);
 extern void objRenderFn_8003b8f4(f32 scale);
 extern f32 Vec_distance(void *a, void *b);
 extern int ObjList_FindObjectById(int objectId);
-extern int lbl_80328CC8[];
 extern f32 lbl_803E5F10;
 extern void mm_free(void *p);
 extern void Music_Trigger(int id, int a);
