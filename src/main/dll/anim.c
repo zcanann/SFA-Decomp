@@ -3231,7 +3231,7 @@ int fn_80202A2C(int obj, int* objs, f32* weights, int n, f32 limit)
     } stk;
 
     accX = lbl_803E62A8;
-    accZ = lbl_803E62A8;
+    accZ = *(f32 *)&lbl_803E62A8;
     i = 0;
     po = objs;
     pw = weights;
