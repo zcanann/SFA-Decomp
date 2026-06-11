@@ -1315,17 +1315,17 @@ extern void* PTR_LAB_803108a0;
  */
 void modgfx_releaseExpgfxPools(void)
 {
-  int iVar1;
-  uint *puVar2;
+  int poolIndex;
+  uint *slotPoolBases;
   
   expgfxRemoveAll();
-  iVar1 = 0;
-  puVar2 = gExpgfxSlotPoolBases;
+  poolIndex = 0;
+  slotPoolBases = gExpgfxSlotPoolBases;
   do {
-    FUN_80017814(*puVar2);
-    puVar2 = puVar2 + 1;
-    iVar1 = iVar1 + 1;
-  } while (iVar1 < EXPGFX_POOL_COUNT);
+    FUN_80017814(*slotPoolBases);
+    slotPoolBases = slotPoolBases + 1;
+    poolIndex = poolIndex + 1;
+  } while (poolIndex < EXPGFX_POOL_COUNT);
   return;
 }
 
@@ -1416,13 +1416,13 @@ void modgfx_allocExpgfxPools(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void modgfx_initExpgfxSpawnConfig(undefined4 param_1,undefined4 param_2,undefined param_3,
-                                  undefined4 param_4,undefined4 param_5)
+void modgfx_initExpgfxSpawnConfig(undefined4 param_1,undefined4 param_2,undefined colorLowByte,
+                                  undefined4 textureWord,undefined4 scaleBits)
 {
-  undefined4 uVar1;
+  undefined4 setupWord;
   ushort setupValue;
   
-  uVar1 = FUN_80286840();
+  setupWord = FUN_80286840();
   FUN_800033a8((int)&gExpgfxSpawnConfig,0,EXPGFX_SPAWN_CONFIG_PREFIX_BYTES);
   gExpgfxSpawnConfig.colorByte0.value = (u8)setupValue;
   gExpgfxSpawnConfig.behaviorFlags = setupValue & 0xff;
@@ -1435,10 +1435,10 @@ void modgfx_initExpgfxSpawnConfig(undefined4 param_1,undefined4 param_2,undefine
   gExpgfxSpawnConfig.startPosZ.value = lbl_803E00B4;
   gExpgfxSpawnConfig.colorByte1.value = 0;
   gExpgfxSpawnConfig.colorByte1.lowByte = 0;
-  gExpgfxSpawnConfig.quadVertex3Pad06 = (s32)uVar1;
-  *(undefined4 *)&gExpgfxSpawnConfig.scale = param_5;
-  gExpgfxSpawnConfig.texture.word = param_4;
-  gExpgfxSpawnConfig.colorByte0.lowByte = param_3;
+  gExpgfxSpawnConfig.quadVertex3Pad06 = (s32)setupWord;
+  *(undefined4 *)&gExpgfxSpawnConfig.scale = scaleBits;
+  gExpgfxSpawnConfig.texture.word = textureWord;
+  gExpgfxSpawnConfig.colorByte0.lowByte = colorLowByte;
   FUN_8028688c();
   return;
 }
@@ -1456,63 +1456,63 @@ void modgfx_initExpgfxSpawnConfig(undefined4 param_1,undefined4 param_2,undefine
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void modgfx_scrollVertexTexcoords(int param_1,int param_2)
+void modgfx_scrollVertexTexcoords(int stateArg,int command)
 {
   ModgfxState *state;
-  short sVar1;
-  float fVar2;
-  float fVar3;
-  int iVar4;
+  short coord;
+  float stepS;
+  float stepT;
+  int i;
   ModgfxVertexData *activeVertexData;
   ModgfxVertexData *inactiveVertexData;
-  uint uVar7;
-  uint uVar8;
+  uint wrapCountS;
+  uint wrapCountT;
   
-  state = (ModgfxState *)param_1;
-  fVar2 = lbl_803E00B8 * *(float *)(param_2 + 4) * lbl_803DDF04;
-  fVar3 = lbl_803E00B8 * *(float *)(param_2 + 8) * lbl_803DDF04;
+  state = (ModgfxState *)stateArg;
+  stepS = lbl_803E00B8 * *(float *)(command + 4) * lbl_803DDF04;
+  stepT = lbl_803E00B8 * *(float *)(command + 8) * lbl_803DDF04;
   activeVertexData = modgfx_getActiveVertexBuffer(state);
   inactiveVertexData = modgfx_getInactiveVertexBuffer(state);
-  uVar7 = 0;
-  uVar8 = 0;
-  for (iVar4 = 0; iVar4 < state->vertexCount; iVar4 = iVar4 + 1) {
+  wrapCountS = 0;
+  wrapCountT = 0;
+  for (i = 0; i < state->vertexCount; i = i + 1) {
     activeVertexData->texCoordS = inactiveVertexData->texCoordS;
     activeVertexData->texCoordT = inactiveVertexData->texCoordT;
-    activeVertexData->texCoordS = activeVertexData->texCoordS + (short)(int)fVar2;
+    activeVertexData->texCoordS = activeVertexData->texCoordS + (short)(int)stepS;
     if (0x100 < activeVertexData->texCoordS) {
-      uVar7 = uVar7 + 1 & 0xff;
+      wrapCountS = wrapCountS + 1 & 0xff;
     }
     if (activeVertexData->texCoordS < -0x100) {
-      uVar7 = uVar7 + 1 & 0xff;
+      wrapCountS = wrapCountS + 1 & 0xff;
     }
-    activeVertexData->texCoordT = activeVertexData->texCoordT + (short)(int)fVar3;
+    activeVertexData->texCoordT = activeVertexData->texCoordT + (short)(int)stepT;
     if (0x100 < activeVertexData->texCoordT) {
-      uVar8 = uVar8 + 1 & 0xff;
+      wrapCountT = wrapCountT + 1 & 0xff;
     }
     if (activeVertexData->texCoordT < -0x100) {
-      uVar8 = uVar8 + 1 & 0xff;
+      wrapCountT = wrapCountT + 1 & 0xff;
     }
     activeVertexData = activeVertexData + 1;
     inactiveVertexData = inactiveVertexData + 1;
   }
   activeVertexData = modgfx_getActiveVertexBuffer(state);
-  for (iVar4 = 0; iVar4 < state->vertexCount; iVar4 = iVar4 + 1) {
-    if (uVar7 == (int)state->vertexCount) {
-      sVar1 = activeVertexData->texCoordS;
-      if (sVar1 < 0x101) {
-        activeVertexData->texCoordS = sVar1 + 0x100;
+  for (i = 0; i < state->vertexCount; i = i + 1) {
+    if (wrapCountS == (int)state->vertexCount) {
+      coord = activeVertexData->texCoordS;
+      if (coord < 0x101) {
+        activeVertexData->texCoordS = coord + 0x100;
       }
       else {
-        activeVertexData->texCoordS = sVar1 + -0x100;
+        activeVertexData->texCoordS = coord + -0x100;
       }
     }
-    if (uVar8 == (int)state->vertexCount) {
-      sVar1 = activeVertexData->texCoordT;
-      if (sVar1 < 0x101) {
-        activeVertexData->texCoordT = sVar1 + 0x100;
+    if (wrapCountT == (int)state->vertexCount) {
+      coord = activeVertexData->texCoordT;
+      if (coord < 0x101) {
+        activeVertexData->texCoordT = coord + 0x100;
       }
       else {
-        activeVertexData->texCoordT = sVar1 + -0x100;
+        activeVertexData->texCoordT = coord + -0x100;
       }
     }
     activeVertexData = activeVertexData + 1;
@@ -1533,19 +1533,19 @@ void modgfx_scrollVertexTexcoords(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void modgfx_resetBaseVertexState(int param_1)
+void modgfx_resetBaseVertexState(int stateArg)
 {
   ModgfxState *state;
-  float fVar1;
-  float fVar2;
-  int iVar3;
+  float zero;
+  float one;
+  int i;
   ModgfxVertexData *baseVertexData;
   ModgfxVertexData *inactiveVertexData;
   
-  state = (ModgfxState *)param_1;
+  state = (ModgfxState *)stateArg;
   inactiveVertexData = modgfx_getInactiveVertexBuffer(state);
   baseVertexData = state->baseVertexData;
-  for (iVar3 = 0; fVar2 = lbl_803E00B4, iVar3 < state->vertexCount; iVar3 = iVar3 + 1) {
+  for (i = 0; one = lbl_803E00B4, i < state->vertexCount; i = i + 1) {
     baseVertexData->posX = inactiveVertexData->posX;
     baseVertexData->posY = inactiveVertexData->posY;
     baseVertexData->posZ = inactiveVertexData->posZ;
@@ -1557,18 +1557,18 @@ void modgfx_resetBaseVertexState(int param_1)
     inactiveVertexData = inactiveVertexData + 1;
   }
   state->scaleChannels[0].cur[0] = lbl_803E00B4;
-  state->scaleChannels[0].cur[1] = fVar2;
-  state->scaleChannels[0].cur[2] = fVar2;
-  fVar1 = lbl_803E00B0;
+  state->scaleChannels[0].cur[1] = one;
+  state->scaleChannels[0].cur[2] = one;
+  zero = lbl_803E00B0;
   state->scaleChannels[0].step[0] = lbl_803E00B0;
-  state->scaleChannels[0].step[1] = fVar1;
-  state->scaleChannels[0].step[2] = fVar1;
-  state->scaleChannels[1].cur[0] = fVar2;
-  state->scaleChannels[1].cur[1] = fVar2;
-  state->scaleChannels[1].cur[2] = fVar2;
-  state->scaleChannels[1].step[0] = fVar1;
-  state->scaleChannels[1].step[1] = fVar1;
-  state->scaleChannels[1].step[2] = fVar1;
+  state->scaleChannels[0].step[1] = zero;
+  state->scaleChannels[0].step[2] = zero;
+  state->scaleChannels[1].cur[0] = one;
+  state->scaleChannels[1].cur[1] = one;
+  state->scaleChannels[1].cur[2] = one;
+  state->scaleChannels[1].step[0] = zero;
+  state->scaleChannels[1].step[1] = zero;
+  state->scaleChannels[1].step[2] = zero;
   return;
 }
 
@@ -1585,104 +1585,104 @@ void modgfx_resetBaseVertexState(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void modgfx_updateVertexRgb(int param_1,int param_2,int param_3)
+void modgfx_updateVertexRgb(int state,int command,int mode)
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  double dVar4;
-  double dVar5;
-  int iVar6;
-  int iVar7;
-  int iVar8;
-  undefined8 local_18;
-  undefined8 local_10;
-  undefined8 local_8;
+  float targetR;
+  float targetG;
+  float targetB;
+  double biasU;
+  double biasS;
+  int vtxData;
+  int idxOff;
+  int i;
+  undefined8 convFrames;
+  undefined8 convBlueBase;
+  undefined8 convFrames2;
   
-  dVar4 = DOUBLE_803e00c0;
-  iVar6 = *(int *)(param_1 + (uint)*(byte *)(param_1 + 0x130) * 4 + 0x78);
-  if (param_3 == 1) {
-    fVar1 = ((ModgfxVertexGroupCmd *)param_2)->valueX;
-    fVar2 = ((ModgfxVertexGroupCmd *)param_2)->valueY;
-    fVar3 = ((ModgfxVertexGroupCmd *)param_2)->valueZ;
-    if (((ModgfxState *)param_1)->blendFrameCount == 0) {
-      ((ModgfxState *)param_1)->blendColorR = fVar1;
-      ((ModgfxState *)param_1)->blendColorG = fVar2;
-      ((ModgfxState *)param_1)->blendColorB = fVar3;
-      fVar1 = lbl_803E00B0;
-      ((ModgfxState *)param_1)->blendColorStepR = lbl_803E00B0;
-      ((ModgfxState *)param_1)->blendColorStepG = fVar1;
-      ((ModgfxState *)param_1)->blendColorStepB = fVar1;
+  biasU = DOUBLE_803e00c0;
+  vtxData = *(int *)(state + (uint)*(byte *)(state + 0x130) * 4 + 0x78);
+  if (mode == 1) {
+    targetR = ((ModgfxVertexGroupCmd *)command)->valueX;
+    targetG = ((ModgfxVertexGroupCmd *)command)->valueY;
+    targetB = ((ModgfxVertexGroupCmd *)command)->valueZ;
+    if (((ModgfxState *)state)->blendFrameCount == 0) {
+      ((ModgfxState *)state)->blendColorR = targetR;
+      ((ModgfxState *)state)->blendColorG = targetG;
+      ((ModgfxState *)state)->blendColorB = targetB;
+      targetR = lbl_803E00B0;
+      ((ModgfxState *)state)->blendColorStepR = lbl_803E00B0;
+      ((ModgfxState *)state)->blendColorStepG = targetR;
+      ((ModgfxState *)state)->blendColorStepB = targetR;
     }
     else {
-      ((ModgfxState *)param_1)->blendColorR =
+      ((ModgfxState *)state)->blendColorR =
            (float)((double)CONCAT44(0x43300000,
-                                    (uint)*(byte *)(iVar6 + *((ModgfxVertexGroupCmd *)param_2)->indices * 0x10 +
+                                    (uint)*(byte *)(vtxData + *((ModgfxVertexGroupCmd *)command)->indices * 0x10 +
                                                    0xc)) - DOUBLE_803e00c0);
-      ((ModgfxState *)param_1)->blendColorG =
+      ((ModgfxState *)state)->blendColorG =
            (float)((double)CONCAT44(0x43300000,
-                                    (uint)*(byte *)(iVar6 + *((ModgfxVertexGroupCmd *)param_2)->indices * 0x10 +
-                                                   0xd)) - dVar4);
-      ((ModgfxState *)param_1)->blendColorB =
+                                    (uint)*(byte *)(vtxData + *((ModgfxVertexGroupCmd *)command)->indices * 0x10 +
+                                                   0xd)) - biasU);
+      ((ModgfxState *)state)->blendColorB =
            (float)((double)CONCAT44(0x43300000,
-                                    (uint)*(byte *)(iVar6 + *((ModgfxVertexGroupCmd *)param_2)->indices * 0x10 +
-                                                   0xe)) - dVar4);
-      dVar5 = DOUBLE_803e00c8;
-      ((ModgfxState *)param_1)->blendColorStepR =
-           (fVar1 - (float)((double)CONCAT44(0x43300000,
-                                             (uint)*(byte *)(iVar6 + *((ModgfxVertexGroupCmd *)param_2)->indices *
-                                                                     0x10 + 0xc)) - dVar4)) /
-           (float)((double)CONCAT44(0x43300000,(int)((ModgfxState *)param_1)->blendFrameCount ^ 0x80000000) -
+                                    (uint)*(byte *)(vtxData + *((ModgfxVertexGroupCmd *)command)->indices * 0x10 +
+                                                   0xe)) - biasU);
+      biasS = DOUBLE_803e00c8;
+      ((ModgfxState *)state)->blendColorStepR =
+           (targetR - (float)((double)CONCAT44(0x43300000,
+                                             (uint)*(byte *)(vtxData + *((ModgfxVertexGroupCmd *)command)->indices *
+                                                                     0x10 + 0xc)) - biasU)) /
+           (float)((double)CONCAT44(0x43300000,(int)((ModgfxState *)state)->blendFrameCount ^ 0x80000000) -
                   DOUBLE_803e00c8);
-      local_18 = (double)CONCAT44(0x43300000,(int)((ModgfxState *)param_1)->blendFrameCount ^ 0x80000000);
-      ((ModgfxState *)param_1)->blendColorStepG =
-           (fVar2 - (float)((double)CONCAT44(0x43300000,
-                                             (uint)*(byte *)(iVar6 + *((ModgfxVertexGroupCmd *)param_2)->indices *
-                                                                     0x10 + 0xd)) - dVar4)) /
-           (float)(local_18 - dVar5);
-      local_10 = (double)CONCAT44(0x43300000,
-                                  (uint)*(byte *)(iVar6 + *((ModgfxVertexGroupCmd *)param_2)->indices * 0x10 + 0xe)
+      convFrames = (double)CONCAT44(0x43300000,(int)((ModgfxState *)state)->blendFrameCount ^ 0x80000000);
+      ((ModgfxState *)state)->blendColorStepG =
+           (targetG - (float)((double)CONCAT44(0x43300000,
+                                             (uint)*(byte *)(vtxData + *((ModgfxVertexGroupCmd *)command)->indices *
+                                                                     0x10 + 0xd)) - biasU)) /
+           (float)(convFrames - biasS);
+      convBlueBase = (double)CONCAT44(0x43300000,
+                                  (uint)*(byte *)(vtxData + *((ModgfxVertexGroupCmd *)command)->indices * 0x10 + 0xe)
                                  );
-      local_8 = (double)CONCAT44(0x43300000,(int)((ModgfxState *)param_1)->blendFrameCount ^ 0x80000000);
-      ((ModgfxState *)param_1)->blendColorStepB = (fVar3 - (float)(local_10 - dVar4)) / (float)(local_8 - dVar5);
+      convFrames2 = (double)CONCAT44(0x43300000,(int)((ModgfxState *)state)->blendFrameCount ^ 0x80000000);
+      ((ModgfxState *)state)->blendColorStepB = (targetB - (float)(convBlueBase - biasU)) / (float)(convFrames2 - biasS);
     }
   }
-  ((ModgfxState *)param_1)->blendColorR = ((ModgfxState *)param_1)->blendColorR + ((ModgfxState *)param_1)->blendColorStepR;
-  ((ModgfxState *)param_1)->blendColorG = ((ModgfxState *)param_1)->blendColorG + ((ModgfxState *)param_1)->blendColorStepG;
-  ((ModgfxState *)param_1)->blendColorB = ((ModgfxState *)param_1)->blendColorB + ((ModgfxState *)param_1)->blendColorStepB;
-  if (lbl_803E00B0 <= ((ModgfxState *)param_1)->blendColorR) {
-    if (lbl_803E00BC < ((ModgfxState *)param_1)->blendColorR) {
-      ((ModgfxState *)param_1)->blendColorR = lbl_803E00BC;
-    }
-  }
-  else {
-    ((ModgfxState *)param_1)->blendColorR = lbl_803E00B0;
-  }
-  if (lbl_803E00B0 <= ((ModgfxState *)param_1)->blendColorG) {
-    if (lbl_803E00BC < ((ModgfxState *)param_1)->blendColorG) {
-      ((ModgfxState *)param_1)->blendColorG = lbl_803E00BC;
+  ((ModgfxState *)state)->blendColorR = ((ModgfxState *)state)->blendColorR + ((ModgfxState *)state)->blendColorStepR;
+  ((ModgfxState *)state)->blendColorG = ((ModgfxState *)state)->blendColorG + ((ModgfxState *)state)->blendColorStepG;
+  ((ModgfxState *)state)->blendColorB = ((ModgfxState *)state)->blendColorB + ((ModgfxState *)state)->blendColorStepB;
+  if (lbl_803E00B0 <= ((ModgfxState *)state)->blendColorR) {
+    if (lbl_803E00BC < ((ModgfxState *)state)->blendColorR) {
+      ((ModgfxState *)state)->blendColorR = lbl_803E00BC;
     }
   }
   else {
-    ((ModgfxState *)param_1)->blendColorG = lbl_803E00B0;
+    ((ModgfxState *)state)->blendColorR = lbl_803E00B0;
   }
-  if (lbl_803E00B0 <= ((ModgfxState *)param_1)->blendColorB) {
-    if (lbl_803E00BC < ((ModgfxState *)param_1)->blendColorB) {
-      ((ModgfxState *)param_1)->blendColorB = lbl_803E00BC;
+  if (lbl_803E00B0 <= ((ModgfxState *)state)->blendColorG) {
+    if (lbl_803E00BC < ((ModgfxState *)state)->blendColorG) {
+      ((ModgfxState *)state)->blendColorG = lbl_803E00BC;
     }
   }
   else {
-    ((ModgfxState *)param_1)->blendColorB = lbl_803E00B0;
+    ((ModgfxState *)state)->blendColorG = lbl_803E00B0;
   }
-  iVar7 = 0;
-  for (iVar8 = 0; iVar8 < ((ModgfxVertexGroupCmd *)param_2)->indexCount; iVar8 = iVar8 + 1) {
-    *(char *)(iVar6 + *(short *)((int)((ModgfxVertexGroupCmd *)param_2)->indices + iVar7) * 0x10 + 0xc) =
-         (char)(int)((ModgfxState *)param_1)->blendColorR;
-    *(char *)(iVar6 + *(short *)((int)((ModgfxVertexGroupCmd *)param_2)->indices + iVar7) * 0x10 + 0xd) =
-         (char)(int)((ModgfxState *)param_1)->blendColorG;
-    *(char *)(iVar6 + *(short *)((int)((ModgfxVertexGroupCmd *)param_2)->indices + iVar7) * 0x10 + 0xe) =
-         (char)(int)((ModgfxState *)param_1)->blendColorB;
-    iVar7 = iVar7 + 2;
+  if (lbl_803E00B0 <= ((ModgfxState *)state)->blendColorB) {
+    if (lbl_803E00BC < ((ModgfxState *)state)->blendColorB) {
+      ((ModgfxState *)state)->blendColorB = lbl_803E00BC;
+    }
+  }
+  else {
+    ((ModgfxState *)state)->blendColorB = lbl_803E00B0;
+  }
+  idxOff = 0;
+  for (i = 0; i < ((ModgfxVertexGroupCmd *)command)->indexCount; i = i + 1) {
+    *(char *)(vtxData + *(short *)((int)((ModgfxVertexGroupCmd *)command)->indices + idxOff) * 0x10 + 0xc) =
+         (char)(int)((ModgfxState *)state)->blendColorR;
+    *(char *)(vtxData + *(short *)((int)((ModgfxVertexGroupCmd *)command)->indices + idxOff) * 0x10 + 0xd) =
+         (char)(int)((ModgfxState *)state)->blendColorG;
+    *(char *)(vtxData + *(short *)((int)((ModgfxVertexGroupCmd *)command)->indices + idxOff) * 0x10 + 0xe) =
+         (char)(int)((ModgfxState *)state)->blendColorB;
+    idxOff = idxOff + 2;
   }
   return;
 }
@@ -1700,31 +1700,31 @@ void modgfx_updateVertexRgb(int param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void modgfx_updateEffectPosition(int param_1,int command,int mode)
+void modgfx_updateEffectPosition(int stateArg,int command,int mode)
 {
   ModgfxState *state;
-  double dVar1;
-  ushort local_38;
-  ushort local_36;
-  ushort local_34;
-  float local_30;
-  float local_2c;
-  float local_28;
-  float local_24;
+  double biasS;
+  ushort rotAngle0;
+  ushort rotAngle1;
+  ushort rotAngle2;
+  float unusedW;
+  float unusedX;
+  float unusedY;
+  float unusedZ;
 
-  state = (ModgfxState *)param_1;
-  dVar1 = DOUBLE_803e00c8;
+  state = (ModgfxState *)stateArg;
+  biasS = DOUBLE_803e00c8;
   if (mode == 1) {
     if (*(s16 *)((u8 *)state + state->activeChannel * 2 + 0xee) == 0) {
       if (((state->flags & 4) != 0) || ((state->flags & 0x80000) != 0)) {
-        local_2c = lbl_803E00B0;
-        local_28 = lbl_803E00B0;
-        local_24 = lbl_803E00B0;
-        local_30 = lbl_803E00B4;
-        local_38 = *(ushort *)state->unk04;
-        local_36 = local_38;
-        local_34 = local_38;
-        FUN_80017748(&local_38,(float *)(command + 4));
+        unusedX = lbl_803E00B0;
+        unusedY = lbl_803E00B0;
+        unusedZ = lbl_803E00B0;
+        unusedW = lbl_803E00B4;
+        rotAngle0 = *(ushort *)state->unk04;
+        rotAngle1 = rotAngle0;
+        rotAngle2 = rotAngle0;
+        FUN_80017748(&rotAngle0,(float *)(command + 4));
       }
       *(undefined4 *)&state->posStepX = *(undefined4 *)(command + 4);
       *(undefined4 *)&state->posStepY = *(undefined4 *)(command + 8);
@@ -1737,11 +1737,11 @@ void modgfx_updateEffectPosition(int param_1,int command,int mode)
                   DOUBLE_803e00c8);
       state->posStepY =
            *(float *)(command + 8) /
-           (float)((double)CONCAT44(0x43300000,(int)state->blendFrameCount ^ 0x80000000) - dVar1
+           (float)((double)CONCAT44(0x43300000,(int)state->blendFrameCount ^ 0x80000000) - biasS
                   );
       state->posStepZ =
            *(float *)(command + 0xc) /
-           (float)((double)CONCAT44(0x43300000,(int)state->blendFrameCount ^ 0x80000000) - dVar1
+           (float)((double)CONCAT44(0x43300000,(int)state->blendFrameCount ^ 0x80000000) - biasS
                   );
     }
     state->posCurX = state->posCurX + state->posStepX;
@@ -1772,35 +1772,35 @@ void modgfx_updateEffectPosition(int param_1,int command,int mode)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void modgfx_updateEffectRotation(int param_1,int command,int mode)
+void modgfx_updateEffectRotation(int stateArg,int command,int mode)
 {
   ModgfxState *state;
-  short sVar1;
-  short sVar2;
-  short sVar3;
+  short targetRotZ;
+  short targetRotY;
+  short targetRotX;
 
-  state = (ModgfxState *)param_1;
+  state = (ModgfxState *)stateArg;
   if (mode == 1) {
-    sVar1 = (short)(int)*(float *)(command + 4);
-    sVar2 = (short)(int)*(float *)(command + 8);
-    sVar3 = (short)(int)*(float *)(command + 0xc);
+    targetRotZ = (short)(int)*(float *)(command + 4);
+    targetRotY = (short)(int)*(float *)(command + 8);
+    targetRotX = (short)(int)*(float *)(command + 0xc);
     if (state->blendFrameCount == 0) {
-      state->rotOffsetZ = sVar1;
+      state->rotOffsetZ = targetRotZ;
       state->rotStepZ = 0;
-      state->rotOffsetY = sVar2;
+      state->rotOffsetY = targetRotY;
       state->rotStepY = 0;
-      state->rotOffsetX = sVar3;
+      state->rotOffsetX = targetRotX;
       state->rotStepX = 0;
     }
     else {
       state->rotStepZ =
-           (short)(((int)sVar1 - (int)state->rotOffsetZ) / (int)state->blendFrameCount
+           (short)(((int)targetRotZ - (int)state->rotOffsetZ) / (int)state->blendFrameCount
                   );
       state->rotStepY =
-           (short)(((int)sVar2 - (int)state->rotOffsetY) / (int)state->blendFrameCount
+           (short)(((int)targetRotY - (int)state->rotOffsetY) / (int)state->blendFrameCount
                   );
       state->rotStepX =
-           (short)(((int)sVar3 - (int)state->rotOffsetX) / (int)state->blendFrameCount
+           (short)(((int)targetRotX - (int)state->rotOffsetX) / (int)state->blendFrameCount
                   );
     }
   }
@@ -1823,63 +1823,63 @@ void modgfx_updateEffectRotation(int param_1,int command,int mode)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void modgfx_updateVertexAlpha(int param_1,int param_2,int param_3,uint param_4)
+void modgfx_updateVertexAlpha(int state,int command,int mode,uint channel)
 {
-  float fVar1;
-  double dVar2;
-  int iVar3;
-  int iVar4;
-  int iVar5;
-  int iVar6;
-  int iVar7;
-  int iVar8;
-  undefined8 local_8;
+  float targetAlpha;
+  double biasU;
+  int work0;
+  int vtxOff;
+  int curVtxData;
+  int baseVtxData;
+  int work1;
+  int work2;
+  undefined8 convAlphaBase;
   
-  dVar2 = DOUBLE_803e00c0;
-  iVar5 = *(int *)(param_1 + (uint)*(byte *)(param_1 + 0x130) * 4 + 0x78);
-  iVar6 = (int)((ModgfxState *)param_1)->baseVertexData;
-  if (param_3 == 1) {
-    fVar1 = ((ModgfxVertexGroupCmd *)param_2)->valueX;
-    if ((int)((ModgfxState *)param_1)->blendFrameCount == 0) {
-      iVar7 = 0;
-      for (iVar3 = 0; iVar3 < ((ModgfxVertexGroupCmd *)param_2)->indexCount; iVar3 = iVar3 + 1) {
-        *(char *)(iVar6 + *(short *)((int)((ModgfxVertexGroupCmd *)param_2)->indices + iVar7) * 0x10 + 0xf) =
-             (char)(int)fVar1;
-        iVar8 = *(short *)((int)((ModgfxVertexGroupCmd *)param_2)->indices + iVar7) * 0x10 + 0xf;
-        *(undefined *)(iVar5 + iVar8) = *(undefined *)(iVar6 + iVar8);
-        iVar7 = iVar7 + 2;
+  biasU = DOUBLE_803e00c0;
+  curVtxData = *(int *)(state + (uint)*(byte *)(state + 0x130) * 4 + 0x78);
+  baseVtxData = (int)((ModgfxState *)state)->baseVertexData;
+  if (mode == 1) {
+    targetAlpha = ((ModgfxVertexGroupCmd *)command)->valueX;
+    if ((int)((ModgfxState *)state)->blendFrameCount == 0) {
+      work1 = 0;
+      for (work0 = 0; work0 < ((ModgfxVertexGroupCmd *)command)->indexCount; work0 = work0 + 1) {
+        *(char *)(baseVtxData + *(short *)((int)((ModgfxVertexGroupCmd *)command)->indices + work1) * 0x10 + 0xf) =
+             (char)(int)targetAlpha;
+        work2 = *(short *)((int)((ModgfxVertexGroupCmd *)command)->indices + work1) * 0x10 + 0xf;
+        *(undefined *)(curVtxData + work2) = *(undefined *)(baseVtxData + work2);
+        work1 = work1 + 2;
       }
       return;
     }
-    iVar7 = param_1 + (param_4 & 0xff) * 8;
-    *(float *)(iVar7 + 0xac) =
-         (fVar1 - (float)((double)CONCAT44(0x43300000,
-                                           (uint)*(byte *)(iVar6 + *((ModgfxVertexGroupCmd *)param_2)->indices *
+    work1 = state + (channel & 0xff) * 8;
+    *(float *)(work1 + 0xac) =
+         (targetAlpha - (float)((double)CONCAT44(0x43300000,
+                                           (uint)*(byte *)(baseVtxData + *((ModgfxVertexGroupCmd *)command)->indices *
                                                                    0x10 + 0xf)) - DOUBLE_803e00c0))
-         / (float)((double)CONCAT44(0x43300000,(int)((ModgfxState *)param_1)->blendFrameCount ^ 0x80000000) -
+         / (float)((double)CONCAT44(0x43300000,(int)((ModgfxState *)state)->blendFrameCount ^ 0x80000000) -
                   DOUBLE_803e00c8);
-    local_8 = (double)CONCAT44(0x43300000,
-                               (uint)*(byte *)(iVar6 + *((ModgfxVertexGroupCmd *)param_2)->indices * 0x10 + 0xf));
-    *(float *)(iVar7 + 0xb0) = (float)(local_8 - dVar2);
+    convAlphaBase = (double)CONCAT44(0x43300000,
+                               (uint)*(byte *)(baseVtxData + *((ModgfxVertexGroupCmd *)command)->indices * 0x10 + 0xf));
+    *(float *)(work1 + 0xb0) = (float)(convAlphaBase - biasU);
   }
-  iVar7 = (param_4 & 0xff) * 8;
-  iVar3 = param_1 + iVar7;
-  *(float *)(iVar3 + 0xb0) = *(float *)(iVar3 + 0xac) * lbl_803DDF04 + *(float *)(iVar3 + 0xb0);
-  if (lbl_803E00B0 <= *(float *)(iVar3 + 0xb0)) {
-    if (lbl_803E00BC < *(float *)(iVar3 + 0xb0)) {
-      *(float *)(iVar3 + 0xb0) = lbl_803E00BC;
+  work1 = (channel & 0xff) * 8;
+  work0 = state + work1;
+  *(float *)(work0 + 0xb0) = *(float *)(work0 + 0xac) * lbl_803DDF04 + *(float *)(work0 + 0xb0);
+  if (lbl_803E00B0 <= *(float *)(work0 + 0xb0)) {
+    if (lbl_803E00BC < *(float *)(work0 + 0xb0)) {
+      *(float *)(work0 + 0xb0) = lbl_803E00BC;
     }
   }
   else {
-    *(float *)(iVar3 + 0xb0) = lbl_803E00B0;
+    *(float *)(work0 + 0xb0) = lbl_803E00B0;
   }
-  iVar3 = 0;
-  for (iVar8 = 0; iVar8 < ((ModgfxVertexGroupCmd *)param_2)->indexCount; iVar8 = iVar8 + 1) {
-    *(char *)(iVar5 + *(short *)((int)((ModgfxVertexGroupCmd *)param_2)->indices + iVar3) * 0x10 + 0xf) =
-         (char)(int)*(float *)(param_1 + iVar7 + 0xb0);
-    iVar4 = *(short *)((int)((ModgfxVertexGroupCmd *)param_2)->indices + iVar3) * 0x10 + 0xf;
-    *(undefined *)(iVar6 + iVar4) = *(undefined *)(iVar5 + iVar4);
-    iVar3 = iVar3 + 2;
+  work0 = 0;
+  for (work2 = 0; work2 < ((ModgfxVertexGroupCmd *)command)->indexCount; work2 = work2 + 1) {
+    *(char *)(curVtxData + *(short *)((int)((ModgfxVertexGroupCmd *)command)->indices + work0) * 0x10 + 0xf) =
+         (char)(int)*(float *)(state + work1 + 0xb0);
+    vtxOff = *(short *)((int)((ModgfxVertexGroupCmd *)command)->indices + work0) * 0x10 + 0xf;
+    *(undefined *)(baseVtxData + vtxOff) = *(undefined *)(curVtxData + vtxOff);
+    work0 = work0 + 2;
   }
   return;
 }
@@ -1897,94 +1897,94 @@ void modgfx_updateVertexAlpha(int param_1,int param_2,int param_3,uint param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void modgfx_updateVertexScale(int param_1,int param_2,int param_3,uint param_4)
+void modgfx_updateVertexScale(int state,int command,int mode,uint channel)
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  double dVar4;
-  int iVar5;
-  int iVar6;
-  int iVar7;
-  int iVar8;
-  int iVar9;
-  int iVar10;
-  undefined8 local_30;
-  undefined8 local_18;
-  undefined8 local_10;
+  float targetX;
+  float targetY;
+  float targetZ;
+  double biasS;
+  int work0;
+  int work1;
+  int vtxBufA;
+  int work2;
+  int vtxOff;
+  int off;
+  undefined8 convFrames;
+  undefined8 convA;
+  undefined8 convB;
   
-  dVar4 = DOUBLE_803e00c8;
-  if (param_3 == 1) {
-    fVar1 = ((ModgfxVertexGroupCmd *)param_2)->valueX;
-    fVar2 = ((ModgfxVertexGroupCmd *)param_2)->valueY;
-    fVar3 = ((ModgfxVertexGroupCmd *)param_2)->valueZ;
-    if ((int)((ModgfxState *)param_1)->blendFrameCount == 0) {
-      iVar8 = (int)((ModgfxState *)param_1)->baseVertexData;
-      iVar7 = *(int *)(param_1 + (uint)*(byte *)(param_1 + 0x130) * 4 + 0x78);
-      iVar6 = 0;
-      for (iVar5 = 0; iVar5 < ((ModgfxVertexGroupCmd *)param_2)->indexCount; iVar5 = iVar5 + 1) {
-        iVar10 = *(short *)((int)((ModgfxVertexGroupCmd *)param_2)->indices + iVar6) * 0x10;
-        *(short *)(iVar8 + iVar10) =
+  biasS = DOUBLE_803e00c8;
+  if (mode == 1) {
+    targetX = ((ModgfxVertexGroupCmd *)command)->valueX;
+    targetY = ((ModgfxVertexGroupCmd *)command)->valueY;
+    targetZ = ((ModgfxVertexGroupCmd *)command)->valueZ;
+    if ((int)((ModgfxState *)state)->blendFrameCount == 0) {
+      work2 = (int)((ModgfxState *)state)->baseVertexData;
+      vtxBufA = *(int *)(state + (uint)*(byte *)(state + 0x130) * 4 + 0x78);
+      work1 = 0;
+      for (work0 = 0; work0 < ((ModgfxVertexGroupCmd *)command)->indexCount; work0 = work0 + 1) {
+        off = *(short *)((int)((ModgfxVertexGroupCmd *)command)->indices + work1) * 0x10;
+        *(short *)(work2 + off) =
              (short)(int)((float)((double)CONCAT44(0x43300000,
-                                                   (int)*(short *)(iVar8 + iVar10) ^ 0x80000000) -
-                                 dVar4) * fVar1);
-        iVar10 = *(short *)((int)((ModgfxVertexGroupCmd *)param_2)->indices + iVar6) * 0x10 + 2;
-        *(short *)(iVar8 + iVar10) =
+                                                   (int)*(short *)(work2 + off) ^ 0x80000000) -
+                                 biasS) * targetX);
+        off = *(short *)((int)((ModgfxVertexGroupCmd *)command)->indices + work1) * 0x10 + 2;
+        *(short *)(work2 + off) =
              (short)(int)((float)((double)CONCAT44(0x43300000,
-                                                   (int)*(short *)(iVar8 + iVar10) ^ 0x80000000) -
-                                 dVar4) * fVar2);
-        iVar10 = *(short *)((int)((ModgfxVertexGroupCmd *)param_2)->indices + iVar6) * 0x10 + 4;
-        local_18 = (double)CONCAT44(0x43300000,(int)*(short *)(iVar8 + iVar10) ^ 0x80000000);
-        *(short *)(iVar8 + iVar10) = (short)(int)((float)(local_18 - dVar4) * fVar3);
-        iVar10 = *(short *)((int)((ModgfxVertexGroupCmd *)param_2)->indices + iVar6) * 0x10;
-        *(undefined2 *)(iVar7 + iVar10) = *(undefined2 *)(iVar8 + iVar10);
-        iVar10 = *(short *)((int)((ModgfxVertexGroupCmd *)param_2)->indices + iVar6) * 0x10 + 2;
-        *(undefined2 *)(iVar7 + iVar10) = *(undefined2 *)(iVar8 + iVar10);
-        iVar10 = *(short *)((int)((ModgfxVertexGroupCmd *)param_2)->indices + iVar6) * 0x10 + 4;
-        *(undefined2 *)(iVar7 + iVar10) = *(undefined2 *)(iVar8 + iVar10);
-        iVar6 = iVar6 + 2;
+                                                   (int)*(short *)(work2 + off) ^ 0x80000000) -
+                                 biasS) * targetY);
+        off = *(short *)((int)((ModgfxVertexGroupCmd *)command)->indices + work1) * 0x10 + 4;
+        convA = (double)CONCAT44(0x43300000,(int)*(short *)(work2 + off) ^ 0x80000000);
+        *(short *)(work2 + off) = (short)(int)((float)(convA - biasS) * targetZ);
+        off = *(short *)((int)((ModgfxVertexGroupCmd *)command)->indices + work1) * 0x10;
+        *(undefined2 *)(vtxBufA + off) = *(undefined2 *)(work2 + off);
+        off = *(short *)((int)((ModgfxVertexGroupCmd *)command)->indices + work1) * 0x10 + 2;
+        *(undefined2 *)(vtxBufA + off) = *(undefined2 *)(work2 + off);
+        off = *(short *)((int)((ModgfxVertexGroupCmd *)command)->indices + work1) * 0x10 + 4;
+        *(undefined2 *)(vtxBufA + off) = *(undefined2 *)(work2 + off);
+        work1 = work1 + 2;
       }
       return;
     }
-    iVar6 = param_1 + (param_4 & 0xff) * 0x18;
-    *(float *)(iVar6 + 0x3c) =
-         (fVar1 - *(float *)(iVar6 + 0x30)) /
-         (float)((double)CONCAT44(0x43300000,(int)((ModgfxState *)param_1)->blendFrameCount ^ 0x80000000) -
+    work1 = state + (channel & 0xff) * 0x18;
+    *(float *)(work1 + 0x3c) =
+         (targetX - *(float *)(work1 + 0x30)) /
+         (float)((double)CONCAT44(0x43300000,(int)((ModgfxState *)state)->blendFrameCount ^ 0x80000000) -
                 DOUBLE_803e00c8);
-    local_30 = (double)CONCAT44(0x43300000,(int)((ModgfxState *)param_1)->blendFrameCount ^ 0x80000000);
-    *(float *)(iVar6 + 0x40) = (fVar2 - *(float *)(iVar6 + 0x34)) / (float)(local_30 - dVar4);
-    *(float *)(iVar6 + 0x44) =
-         (fVar3 - *(float *)(iVar6 + 0x38)) /
-         (float)((double)CONCAT44(0x43300000,(int)((ModgfxState *)param_1)->blendFrameCount ^ 0x80000000) - dVar4);
+    convFrames = (double)CONCAT44(0x43300000,(int)((ModgfxState *)state)->blendFrameCount ^ 0x80000000);
+    *(float *)(work1 + 0x40) = (targetY - *(float *)(work1 + 0x34)) / (float)(convFrames - biasS);
+    *(float *)(work1 + 0x44) =
+         (targetZ - *(float *)(work1 + 0x38)) /
+         (float)((double)CONCAT44(0x43300000,(int)((ModgfxState *)state)->blendFrameCount ^ 0x80000000) - biasS);
   }
-  iVar5 = param_1 + (param_4 & 0xff) * 0x18;
-  *(float *)(iVar5 + 0x30) = *(float *)(iVar5 + 0x3c) * lbl_803DDF04 + *(float *)(iVar5 + 0x30);
-  *(float *)(iVar5 + 0x34) = *(float *)(iVar5 + 0x40) * lbl_803DDF04 + *(float *)(iVar5 + 0x34);
-  *(float *)(iVar5 + 0x38) = *(float *)(iVar5 + 0x44) * lbl_803DDF04 + *(float *)(iVar5 + 0x38);
-  fVar1 = lbl_803E00B4;
-  iVar7 = (int)((ModgfxState *)param_1)->baseVertexData;
-  iVar6 = *(int *)(param_1 + (uint)*(byte *)(param_1 + 0x130) * 4 + 0x78);
-  iVar10 = 0;
-  for (iVar8 = 0; iVar8 < ((ModgfxVertexGroupCmd *)param_2)->indexCount; iVar8 = iVar8 + 1) {
-    if (fVar1 != *(float *)(iVar5 + 0x30)) {
-      iVar9 = *(short *)((int)((ModgfxVertexGroupCmd *)param_2)->indices + iVar10) * 0x10;
-      local_10 = (double)CONCAT44(0x43300000,(int)*(short *)(iVar7 + iVar9) ^ 0x80000000);
-      *(short *)(iVar6 + iVar9) =
-           (short)(int)(*(float *)(iVar5 + 0x30) * (float)(local_10 - DOUBLE_803e00c8));
+  work0 = state + (channel & 0xff) * 0x18;
+  *(float *)(work0 + 0x30) = *(float *)(work0 + 0x3c) * lbl_803DDF04 + *(float *)(work0 + 0x30);
+  *(float *)(work0 + 0x34) = *(float *)(work0 + 0x40) * lbl_803DDF04 + *(float *)(work0 + 0x34);
+  *(float *)(work0 + 0x38) = *(float *)(work0 + 0x44) * lbl_803DDF04 + *(float *)(work0 + 0x38);
+  targetX = lbl_803E00B4;
+  vtxBufA = (int)((ModgfxState *)state)->baseVertexData;
+  work1 = *(int *)(state + (uint)*(byte *)(state + 0x130) * 4 + 0x78);
+  off = 0;
+  for (work2 = 0; work2 < ((ModgfxVertexGroupCmd *)command)->indexCount; work2 = work2 + 1) {
+    if (targetX != *(float *)(work0 + 0x30)) {
+      vtxOff = *(short *)((int)((ModgfxVertexGroupCmd *)command)->indices + off) * 0x10;
+      convB = (double)CONCAT44(0x43300000,(int)*(short *)(vtxBufA + vtxOff) ^ 0x80000000);
+      *(short *)(work1 + vtxOff) =
+           (short)(int)(*(float *)(work0 + 0x30) * (float)(convB - DOUBLE_803e00c8));
     }
-    if (fVar1 != *(float *)(iVar5 + 0x34)) {
-      iVar9 = *(short *)((int)((ModgfxVertexGroupCmd *)param_2)->indices + iVar10) * 0x10 + 2;
-      local_10 = (double)CONCAT44(0x43300000,(int)*(short *)(iVar7 + iVar9) ^ 0x80000000);
-      *(short *)(iVar6 + iVar9) =
-           (short)(int)(*(float *)(iVar5 + 0x34) * (float)(local_10 - DOUBLE_803e00c8));
+    if (targetX != *(float *)(work0 + 0x34)) {
+      vtxOff = *(short *)((int)((ModgfxVertexGroupCmd *)command)->indices + off) * 0x10 + 2;
+      convB = (double)CONCAT44(0x43300000,(int)*(short *)(vtxBufA + vtxOff) ^ 0x80000000);
+      *(short *)(work1 + vtxOff) =
+           (short)(int)(*(float *)(work0 + 0x34) * (float)(convB - DOUBLE_803e00c8));
     }
-    if (fVar1 != *(float *)(iVar5 + 0x38)) {
-      iVar9 = *(short *)((int)((ModgfxVertexGroupCmd *)param_2)->indices + iVar10) * 0x10 + 4;
-      local_10 = (double)CONCAT44(0x43300000,(int)*(short *)(iVar7 + iVar9) ^ 0x80000000);
-      *(short *)(iVar6 + iVar9) =
-           (short)(int)(*(float *)(iVar5 + 0x38) * (float)(local_10 - DOUBLE_803e00c8));
+    if (targetX != *(float *)(work0 + 0x38)) {
+      vtxOff = *(short *)((int)((ModgfxVertexGroupCmd *)command)->indices + off) * 0x10 + 4;
+      convB = (double)CONCAT44(0x43300000,(int)*(short *)(vtxBufA + vtxOff) ^ 0x80000000);
+      *(short *)(work1 + vtxOff) =
+           (short)(int)(*(float *)(work0 + 0x38) * (float)(convB - DOUBLE_803e00c8));
     }
-    iVar10 = iVar10 + 2;
+    off = off + 2;
   }
   return;
 }
@@ -2002,17 +2002,17 @@ void modgfx_updateVertexScale(int param_1,int param_2,int param_3,uint param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void modgfx_restoreActiveVertexState(int param_1)
+void modgfx_restoreActiveVertexState(int stateArg)
 {
   ModgfxState *state;
-  int iVar1;
+  int i;
   ModgfxVertexData *activeVertexData;
   ModgfxVertexData *baseVertexData;
   
-  state = (ModgfxState *)param_1;
+  state = (ModgfxState *)stateArg;
   activeVertexData = modgfx_getActiveVertexBuffer(state);
   baseVertexData = state->baseVertexData;
-  for (iVar1 = 0; iVar1 < state->vertexCount; iVar1 = iVar1 + 1) {
+  for (i = 0; i < state->vertexCount; i = i + 1) {
     activeVertexData->posX = baseVertexData->posX;
     activeVertexData->posY = baseVertexData->posY;
     activeVertexData->posZ = baseVertexData->posZ;
@@ -2041,19 +2041,19 @@ void modgfx_restoreActiveVertexState(int param_1)
  */
 void modgfx_releaseActiveEffectsByType(undefined8 param_1,undefined8 param_2,undefined8 param_3,
                                        undefined8 param_4,undefined8 param_5,undefined8 param_6,
-                                       undefined8 param_7,undefined8 param_8,short param_9,
-                                       int param_10)
+                                       undefined8 param_7,undefined8 param_8,short effectType,
+                                       int releaseAll)
 {
   ModgfxActiveEffect *activeEffect;
   ModgfxActiveEffect **activeEffects;
-  int iVar3;
+  int i;
   
   activeEffects = modgfx_getActiveEffectRegistry();
-  iVar3 = 0;
+  i = 0;
   do {
-    activeEffect = activeEffects[iVar3];
+    activeEffect = activeEffects[i];
     if ((activeEffect != (ModgfxActiveEffect *)0x0) &&
-       ((param_9 == activeEffect->effectType || (param_10 != 0)))) {
+       ((effectType == activeEffect->effectType || (releaseAll != 0)))) {
       if (activeEffect->releaseTransformSource != 0) {
         param_1 = FUN_80017814(activeEffect->releaseTransformSource);
       }
@@ -2069,10 +2069,10 @@ void modgfx_releaseActiveEffectsByType(undefined8 param_1,undefined8 param_2,und
         activeEffect->sharedResourceHandle = 0;
       }
       param_1 = FUN_80017814(activeEffect);
-      activeEffects[iVar3] = (ModgfxActiveEffect *)0x0;
+      activeEffects[i] = (ModgfxActiveEffect *)0x0;
     }
-    iVar3 = iVar3 + 1;
-  } while (iVar3 < MODGFX_ACTIVE_EFFECT_COUNT);
+    i = i + 1;
+  } while (i < MODGFX_ACTIVE_EFFECT_COUNT);
   return;
 }
 
@@ -2092,17 +2092,17 @@ void modgfx_releaseActiveEffectsByType(undefined8 param_1,undefined8 param_2,und
  */
 void modgfx_releaseActiveEffectsByOwner(undefined8 param_1,undefined8 param_2,undefined8 param_3,
                                         undefined8 param_4,undefined8 param_5,undefined8 param_6,
-                                        undefined8 param_7,undefined8 param_8,int param_9)
+                                        undefined8 param_7,undefined8 param_8,int ownerToken)
 {
   ModgfxActiveEffect *activeEffect;
   ModgfxActiveEffect **activeEffects;
-  int iVar2;
+  int i;
   
   activeEffects = modgfx_getActiveEffectRegistry();
-  iVar2 = 0;
+  i = 0;
   do {
-    activeEffect = activeEffects[iVar2];
-    if ((activeEffect != (ModgfxActiveEffect *)0x0) && (activeEffect->ownerToken == param_9)) {
+    activeEffect = activeEffects[i];
+    if ((activeEffect != (ModgfxActiveEffect *)0x0) && (activeEffect->ownerToken == ownerToken)) {
       if (activeEffect->instanceHandle != 0) {
         FUN_80017ac8(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                     activeEffect->instanceHandle);
@@ -2115,10 +2115,10 @@ void modgfx_releaseActiveEffectsByOwner(undefined8 param_1,undefined8 param_2,un
         activeEffect->sharedResourceHandle = 0;
       }
       param_1 = FUN_80017814(activeEffect);
-      activeEffects[iVar2] = (ModgfxActiveEffect *)0x0;
+      activeEffects[i] = (ModgfxActiveEffect *)0x0;
     }
-    iVar2 = iVar2 + 1;
-  } while (iVar2 < MODGFX_ACTIVE_EFFECT_COUNT);
+    i = i + 1;
+  } while (i < MODGFX_ACTIVE_EFFECT_COUNT);
   return;
 }
 
@@ -2163,15 +2163,15 @@ void modgfx_resetActiveEffectRegistry(undefined8 param_1,undefined8 param_2,unde
                                       undefined8 param_7,undefined8 param_8)
 {
   ModgfxActiveEffect **activeEffects;
-  int iVar1;
+  int i;
   
   modgfx_releaseActiveEffectsByType(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                                     0,1);
   activeEffects = modgfx_getActiveEffectRegistry();
-  for (iVar1 = 0; iVar1 < MODGFX_ACTIVE_EFFECT_COUNT; iVar1 = iVar1 + 1) {
-    activeEffects[iVar1] = (ModgfxActiveEffect *)0x0;
+  for (i = 0; i < MODGFX_ACTIVE_EFFECT_COUNT; i = i + 1) {
+    activeEffects[i] = (ModgfxActiveEffect *)0x0;
   }
-  iVar1 = 2;
+  i = 2;
   {
     ModgfxActiveEffect **tailEffects;
 
@@ -2179,8 +2179,8 @@ void modgfx_resetActiveEffectRegistry(undefined8 param_1,undefined8 param_2,unde
     do {
       *tailEffects = (ModgfxActiveEffect *)0x0;
       tailEffects = tailEffects + 1;
-      iVar1 = iVar1 + -1;
-    } while (iVar1 != 0);
+      i = i + -1;
+    } while (i != 0);
   }
   return;
 }
@@ -2221,54 +2221,54 @@ FUN_800a2a98(int param_1,int param_2,ExpgfxAttachedSourceState *param_3,uint par
  * PAL Size: TODO
  */
 undefined4
-projgfx_spawnPresetEffect(int param_1,undefined4 param_2,ExpgfxAttachedSourceState *param_3,
-                          uint param_4,undefined param_5,undefined2 *param_6)
+projgfx_spawnPresetEffect(int sourceObj,undefined4 effectId,ExpgfxAttachedSourceState *sourceState,
+                          uint spawnFlags,undefined modelId,undefined2 *extraArgs)
 {
-  undefined4 uVar1;
-  uint uVar2;
-  int local_b8 [3];
-  undefined2 local_ac;
-  undefined2 local_aa;
-  undefined2 local_a8;
-  undefined4 local_a4;
-  float local_a0;
-  float local_9c;
-  float local_98;
-  float local_94;
-  float local_90;
-  float local_8c;
-  float local_88;
-  float local_84;
-  float local_80;
-  float local_7c;
-  undefined2 local_78;
-  undefined2 local_76;
-  uint local_74;
-  undefined4 local_70;
-  undefined4 local_6c;
-  uint local_68;
-  uint local_64;
-  undefined2 local_60;
-  undefined2 local_5e;
-  undefined2 local_5c;
-  undefined local_5a;
-  undefined local_58;
-  undefined local_57;
-  undefined local_56;
-  undefined4 local_50;
-  uint uStack_4c;
-  undefined4 local_48;
-  uint uStack_44;
-  undefined4 local_40;
-  uint uStack_3c;
-  undefined4 local_38;
-  uint uStack_34;
-  undefined4 local_30;
-  uint uStack_2c;
-  undefined4 local_28;
-  uint uStack_24;
-  undefined4 local_20;
-  uint uStack_1c;
+  undefined4 spawnResult;
+  uint randPick;
+  int cfgHead [3];
+  undefined2 cfgSourceVecX;
+  undefined2 cfgSourceVecY;
+  undefined2 cfgSourceVecZ;
+  undefined4 cfgSourcePosX;
+  float cfgSourcePosY;
+  float cfgSourcePosZ;
+  float cfgSourcePosW;
+  float cfgVelocityX;
+  float cfgVelocityY;
+  float cfgVelocityZ;
+  float cfgStartPosX;
+  float cfgStartPosY;
+  float cfgStartPosZ;
+  float cfgScale;
+  undefined2 cfgTextureSetupFlags;
+  undefined2 cfgTextureId;
+  uint cfgBehaviorFlags;
+  undefined4 cfgRenderFlags;
+  undefined4 cfgOverrideColor0;
+  uint cfgOverrideColor1;
+  uint cfgOverrideColor2;
+  undefined2 cfgColorWord0;
+  undefined2 cfgColorWord1;
+  undefined2 cfgColorWord2;
+  undefined cfgEffectIdByte;
+  undefined cfgInitialAlpha;
+  undefined cfgLinkGroup;
+  undefined cfgModelIdByte;
+  undefined4 convHi0;
+  uint randVal0;
+  undefined4 convHi1;
+  uint randVal1;
+  undefined4 convHi2;
+  uint randVal2;
+  undefined4 convHi3;
+  uint randVal3;
+  undefined4 convHi4;
+  uint randVal4;
+  undefined4 convHi5;
+  uint randVal5;
+  undefined4 convHi6;
+  uint randVal6;
   
   lbl_803DC450 = lbl_803DC450 + lbl_803E0900;
   if (lbl_803E0908 < lbl_803DC450) {
@@ -2278,227 +2278,227 @@ projgfx_spawnPresetEffect(int param_1,undefined4 param_2,ExpgfxAttachedSourceSta
   if (lbl_803E0908 < lbl_803DC454) {
     lbl_803DC454 = lbl_803E0910;
   }
-  if (param_1 == 0) {
-    uVar1 = 0xffffffff;
+  if (sourceObj == 0) {
+    spawnResult = 0xffffffff;
   }
   else {
-    if ((param_4 & PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE) != 0) {
-      if (param_3 == (ExpgfxAttachedSourceState *)0x0) {
+    if ((spawnFlags & PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE) != 0) {
+      if (sourceState == (ExpgfxAttachedSourceState *)0x0) {
         return 0xffffffff;
       }
-      local_a0 = param_3->sourcePosY.value;
-      local_9c = param_3->sourcePosZ.value;
-      local_98 = param_3->sourcePosW.value;
-      local_a4 = param_3->sourcePosX.bits;
-      local_a8 = param_3->sourceVecZ;
-      local_aa = param_3->sourceVecY;
-      local_ac = param_3->sourceVecX;
-      local_56 = param_5;
+      cfgSourcePosY = sourceState->sourcePosY.value;
+      cfgSourcePosZ = sourceState->sourcePosZ.value;
+      cfgSourcePosW = sourceState->sourcePosW.value;
+      cfgSourcePosX = sourceState->sourcePosX.bits;
+      cfgSourceVecZ = sourceState->sourceVecZ;
+      cfgSourceVecY = sourceState->sourceVecY;
+      cfgSourceVecX = sourceState->sourceVecX;
+      cfgModelIdByte = modelId;
     }
-    local_74 = 0;
-    local_70 = 0;
-    local_5a = (undefined)param_2;
-    local_88 = lbl_803E0914;
-    local_84 = lbl_803E0914;
-    local_80 = lbl_803E0914;
-    local_94 = lbl_803E0914;
-    local_90 = lbl_803E0914;
-    local_8c = lbl_803E0914;
-    local_7c = lbl_803E0914;
-    local_b8[2] = 0;
-    local_b8[1] = 0xffffffff;
-    local_58 = 0xff;
-    local_57 = 0;
-    local_76 = 0;
-    local_60 = 0xffff;
-    local_5e = 0xffff;
-    local_5c = 0xffff;
-    local_6c = 0xffff;
-    local_68 = 0xffff;
-    local_64 = 0xffff;
-    local_78 = 0;
-    local_b8[0] = param_1;
-    switch(param_2) {
+    cfgBehaviorFlags = 0;
+    cfgRenderFlags = 0;
+    cfgEffectIdByte = (undefined)effectId;
+    cfgStartPosX = lbl_803E0914;
+    cfgStartPosY = lbl_803E0914;
+    cfgStartPosZ = lbl_803E0914;
+    cfgVelocityX = lbl_803E0914;
+    cfgVelocityY = lbl_803E0914;
+    cfgVelocityZ = lbl_803E0914;
+    cfgScale = lbl_803E0914;
+    cfgHead[2] = 0;
+    cfgHead[1] = 0xffffffff;
+    cfgInitialAlpha = 0xff;
+    cfgLinkGroup = 0;
+    cfgTextureId = 0;
+    cfgColorWord0 = 0xffff;
+    cfgColorWord1 = 0xffff;
+    cfgColorWord2 = 0xffff;
+    cfgOverrideColor0 = 0xffff;
+    cfgOverrideColor1 = 0xffff;
+    cfgOverrideColor2 = 0xffff;
+    cfgTextureSetupFlags = 0;
+    cfgHead[0] = sourceObj;
+    switch(effectId) {
     case 0x422:
-      if (param_6 == (undefined2 *)0x0) {
+      if (extraArgs == (undefined2 *)0x0) {
         return 0;
       }
-      local_7c = lbl_803E0918;
-      local_b8[2] = randomGetRange(10,0xd);
-      local_58 = (undefined)*param_6;
-      local_74 = 0x80100;
-      local_76 = 100;
-      local_57 = 0x1e;
+      cfgScale = lbl_803E0918;
+      cfgHead[2] = randomGetRange(10,0xd);
+      cfgInitialAlpha = (undefined)*extraArgs;
+      cfgBehaviorFlags = 0x80100;
+      cfgTextureId = 100;
+      cfgLinkGroup = 0x1e;
       break;
     case 0x423:
-      uStack_4c = randomGetRange(0xfffffff6,10);
-      local_88 = lbl_803E0910 * (f32)(s32)uStack_4c;
-      uStack_44 = randomGetRange(0xfffffff6,10);
-      local_84 = lbl_803E0910 * (f32)(s32)uStack_44;
-      uStack_3c = randomGetRange(0xfffffff6,10);
-      local_80 = lbl_803E0910 * (f32)(s32)uStack_3c;
-      uStack_34 = randomGetRange(5,0xb);
-      local_7c = lbl_803E0900 * (f32)(s32)uStack_34;
-      local_b8[2] = 0x3c;
-      local_74 = 0x80110;
-      local_57 = 0x10;
-      local_76 = 0xde;
+      randVal0 = randomGetRange(0xfffffff6,10);
+      cfgStartPosX = lbl_803E0910 * (f32)(s32)randVal0;
+      randVal1 = randomGetRange(0xfffffff6,10);
+      cfgStartPosY = lbl_803E0910 * (f32)(s32)randVal1;
+      randVal2 = randomGetRange(0xfffffff6,10);
+      cfgStartPosZ = lbl_803E0910 * (f32)(s32)randVal2;
+      randVal3 = randomGetRange(5,0xb);
+      cfgScale = lbl_803E0900 * (f32)(s32)randVal3;
+      cfgHead[2] = 0x3c;
+      cfgBehaviorFlags = 0x80110;
+      cfgLinkGroup = 0x10;
+      cfgTextureId = 0xde;
       break;
     case 0x424:
-      uStack_34 = randomGetRange(0xfffffff6,10);
-      local_88 = lbl_803E0910 * (f32)(s32)uStack_34;
-      uStack_3c = randomGetRange(0xfffffff6,10);
-      local_84 = lbl_803E0910 * (f32)(s32)uStack_3c;
-      uStack_44 = randomGetRange(0xfffffff6,10);
-      local_80 = lbl_803E0910 * (f32)(s32)uStack_44;
-      uStack_4c = randomGetRange(0xfffffffb,5);
-      local_94 = lbl_803E0904 * (f32)(s32)uStack_4c;
-      uStack_2c = randomGetRange(3,10);
-      local_90 = lbl_803E0904 * (f32)(s32)uStack_2c;
-      uStack_24 = randomGetRange(0xfffffffb,5);
-      local_8c = lbl_803E0904 * (f32)(s32)uStack_24;
-      uStack_1c = randomGetRange(5,0xb);
-      local_7c = lbl_803E091C * (f32)(s32)uStack_1c;
-      local_b8[2] = 0x3c;
-      local_74 = 0x1480200;
-      local_57 = 0x10;
-      local_76 = 0xde;
+      randVal3 = randomGetRange(0xfffffff6,10);
+      cfgStartPosX = lbl_803E0910 * (f32)(s32)randVal3;
+      randVal2 = randomGetRange(0xfffffff6,10);
+      cfgStartPosY = lbl_803E0910 * (f32)(s32)randVal2;
+      randVal1 = randomGetRange(0xfffffff6,10);
+      cfgStartPosZ = lbl_803E0910 * (f32)(s32)randVal1;
+      randVal0 = randomGetRange(0xfffffffb,5);
+      cfgVelocityX = lbl_803E0904 * (f32)(s32)randVal0;
+      randVal4 = randomGetRange(3,10);
+      cfgVelocityY = lbl_803E0904 * (f32)(s32)randVal4;
+      randVal5 = randomGetRange(0xfffffffb,5);
+      cfgVelocityZ = lbl_803E0904 * (f32)(s32)randVal5;
+      randVal6 = randomGetRange(5,0xb);
+      cfgScale = lbl_803E091C * (f32)(s32)randVal6;
+      cfgHead[2] = 0x3c;
+      cfgBehaviorFlags = 0x1480200;
+      cfgLinkGroup = 0x10;
+      cfgTextureId = 0xde;
       break;
     case 0x425:
-      uStack_1c = randomGetRange(8,10);
-      local_90 = lbl_803E0920 * (f32)(s32)uStack_1c;
-      uVar2 = randomGetRange(0,0x28);
-      if (uVar2 == 0) {
-        uStack_1c = randomGetRange(0x15,0x29);
-        local_7c = lbl_803E0900 *
-                   (f32)(s32)uStack_1c;
-        local_b8[2] = 0x1cc;
+      randVal6 = randomGetRange(8,10);
+      cfgVelocityY = lbl_803E0920 * (f32)(s32)randVal6;
+      randPick = randomGetRange(0,0x28);
+      if (randPick == 0) {
+        randVal6 = randomGetRange(0x15,0x29);
+        cfgScale = lbl_803E0900 *
+                   (f32)(s32)randVal6;
+        cfgHead[2] = 0x1cc;
       }
       else {
-        uStack_1c = randomGetRange(8,0x14);
-        local_7c = lbl_803E0900 *
-                   (f32)(s32)uStack_1c;
-        local_b8[2] = randomGetRange(0x5a,0x78);
+        randVal6 = randomGetRange(8,0x14);
+        cfgScale = lbl_803E0900 *
+                   (f32)(s32)randVal6;
+        cfgHead[2] = randomGetRange(0x5a,0x78);
       }
-      local_74 = 0x80180200;
-      local_70 = 0x1000020;
-      local_76 = 0xc0b;
-      local_58 = 0x7f;
-      local_5c = 0x3fff;
-      local_5e = 0x3fff;
-      local_60 = 0x3fff;
-      local_64 = 0xffff;
-      local_68 = 0xffff;
-      local_6c = 0xffff;
+      cfgBehaviorFlags = 0x80180200;
+      cfgRenderFlags = 0x1000020;
+      cfgTextureId = 0xc0b;
+      cfgInitialAlpha = 0x7f;
+      cfgColorWord2 = 0x3fff;
+      cfgColorWord1 = 0x3fff;
+      cfgColorWord0 = 0x3fff;
+      cfgOverrideColor2 = 0xffff;
+      cfgOverrideColor1 = 0xffff;
+      cfgOverrideColor0 = 0xffff;
       break;
     case 0x426:
-      uStack_1c = randomGetRange(0xffffffec,0x14);
-      local_94 = lbl_803E0920 * (f32)(s32)uStack_1c;
-      uStack_24 = randomGetRange(8,0x14);
-      local_90 = lbl_803E0920 * (f32)(s32)uStack_24;
-      uStack_2c = randomGetRange(0xffffffec,0x14);
-      local_8c = lbl_803E0920 * (f32)(s32)uStack_2c;
-      local_7c = lbl_803E0924;
-      local_b8[2] = 0x32;
-      local_74 = 0x3000200;
-      local_70 = 0x200020;
-      local_76 = 0x33;
-      local_58 = 0xff;
-      local_60 = 0xffff;
-      local_5e = 0xffff;
-      local_5c = 0xffff;
-      local_6c = 0xffff;
-      local_68 = randomGetRange(0,0x8000);
-      local_64 = local_68;
+      randVal6 = randomGetRange(0xffffffec,0x14);
+      cfgVelocityX = lbl_803E0920 * (f32)(s32)randVal6;
+      randVal5 = randomGetRange(8,0x14);
+      cfgVelocityY = lbl_803E0920 * (f32)(s32)randVal5;
+      randVal4 = randomGetRange(0xffffffec,0x14);
+      cfgVelocityZ = lbl_803E0920 * (f32)(s32)randVal4;
+      cfgScale = lbl_803E0924;
+      cfgHead[2] = 0x32;
+      cfgBehaviorFlags = 0x3000200;
+      cfgRenderFlags = 0x200020;
+      cfgTextureId = 0x33;
+      cfgInitialAlpha = 0xff;
+      cfgColorWord0 = 0xffff;
+      cfgColorWord1 = 0xffff;
+      cfgColorWord2 = 0xffff;
+      cfgOverrideColor0 = 0xffff;
+      cfgOverrideColor1 = randomGetRange(0,0x8000);
+      cfgOverrideColor2 = cfgOverrideColor1;
       break;
     case 0x427:
-      uStack_1c = randomGetRange(0xffffff9c,100);
-      local_88 = (f32)(s32)uStack_1c / lbl_803E0928;
-      uStack_24 = randomGetRange(0xffffffce,0x32);
-      local_84 = (f32)(s32)uStack_24 / lbl_803E092C;
-      uStack_2c = randomGetRange(0xffffff9c,100);
-      local_80 = (f32)(s32)uStack_2c / lbl_803E0928;
-      uStack_34 = randomGetRange(1,4);
-      local_90 = lbl_803E0930 * (f32)(s32)uStack_34;
-      uStack_3c = randomGetRange(0,10);
-      local_7c = lbl_803E0938 * (f32)(s32)uStack_3c
+      randVal6 = randomGetRange(0xffffff9c,100);
+      cfgStartPosX = (f32)(s32)randVal6 / lbl_803E0928;
+      randVal5 = randomGetRange(0xffffffce,0x32);
+      cfgStartPosY = (f32)(s32)randVal5 / lbl_803E092C;
+      randVal4 = randomGetRange(0xffffff9c,100);
+      cfgStartPosZ = (f32)(s32)randVal4 / lbl_803E0928;
+      randVal3 = randomGetRange(1,4);
+      cfgVelocityY = lbl_803E0930 * (f32)(s32)randVal3;
+      randVal2 = randomGetRange(0,10);
+      cfgScale = lbl_803E0938 * (f32)(s32)randVal2
                  + lbl_803E0934;
-      local_b8[2] = 0xa0;
-      local_57 = 0;
-      local_74 = 0x100200;
-      local_76 = 0x33;
+      cfgHead[2] = 0xa0;
+      cfgLinkGroup = 0;
+      cfgBehaviorFlags = 0x100200;
+      cfgTextureId = 0x33;
       break;
     default:
       return 0xffffffff;
     case 0x42b:
-      if (param_6 == (undefined2 *)0x0) {
+      if (extraArgs == (undefined2 *)0x0) {
         return 0;
       }
-      local_7c = lbl_803E093C;
-      local_b8[2] = randomGetRange(10,0xd);
-      local_58 = (undefined)*param_6;
-      local_74 = 0x80100;
-      local_76 = 0xc7e;
-      local_57 = 0x1e;
+      cfgScale = lbl_803E093C;
+      cfgHead[2] = randomGetRange(10,0xd);
+      cfgInitialAlpha = (undefined)*extraArgs;
+      cfgBehaviorFlags = 0x80100;
+      cfgTextureId = 0xc7e;
+      cfgLinkGroup = 0x1e;
       break;
     case 0x42c:
-      uStack_1c = randomGetRange(0xfffffff6,10);
-      local_94 = lbl_803E0940 * (f32)(s32)uStack_1c;
-      uStack_24 = randomGetRange(10,0x14);
-      local_90 = lbl_803E0918 * (f32)(s32)uStack_24;
-      uStack_2c = randomGetRange(0xfffffff6,10);
-      local_8c = lbl_803E0940 * (f32)(s32)uStack_2c;
-      local_7c = lbl_803E0944;
-      local_b8[2] = 0x6e;
-      local_74 = 0x8a100208;
-      local_70 = 0x20;
-      local_76 = 0x5f;
-      local_60 = 0xffff;
-      local_5e = 0xffff;
-      local_5c = 0xffff;
-      local_6c = 0x400;
-      local_68 = 60000;
-      local_64 = 0x1000;
+      randVal6 = randomGetRange(0xfffffff6,10);
+      cfgVelocityX = lbl_803E0940 * (f32)(s32)randVal6;
+      randVal5 = randomGetRange(10,0x14);
+      cfgVelocityY = lbl_803E0918 * (f32)(s32)randVal5;
+      randVal4 = randomGetRange(0xfffffff6,10);
+      cfgVelocityZ = lbl_803E0940 * (f32)(s32)randVal4;
+      cfgScale = lbl_803E0944;
+      cfgHead[2] = 0x6e;
+      cfgBehaviorFlags = 0x8a100208;
+      cfgRenderFlags = 0x20;
+      cfgTextureId = 0x5f;
+      cfgColorWord0 = 0xffff;
+      cfgColorWord1 = 0xffff;
+      cfgColorWord2 = 0xffff;
+      cfgOverrideColor0 = 0x400;
+      cfgOverrideColor1 = 60000;
+      cfgOverrideColor2 = 0x1000;
       break;
     case 0x42d:
-      uStack_1c = randomGetRange(0xffffffec,0x14);
-      local_94 = lbl_803E0944 * (f32)(s32)uStack_1c;
-      uStack_24 = randomGetRange(0xffffffec,0x14);
-      local_8c = lbl_803E0944 * (f32)(s32)uStack_24;
-      local_7c = lbl_803E0904;
-      local_b8[2] = 600;
-      local_58 = 0x7f;
-      local_74 = 0xa100100;
-      local_70 = 0x20;
-      local_76 = 0x62;
-      local_60 = 0x400;
-      local_5e = 60000;
-      local_5c = 0x1000;
-      local_6c = 0;
-      local_68 = 50000;
-      local_64 = 0;
+      randVal6 = randomGetRange(0xffffffec,0x14);
+      cfgVelocityX = lbl_803E0944 * (f32)(s32)randVal6;
+      randVal5 = randomGetRange(0xffffffec,0x14);
+      cfgVelocityZ = lbl_803E0944 * (f32)(s32)randVal5;
+      cfgScale = lbl_803E0904;
+      cfgHead[2] = 600;
+      cfgInitialAlpha = 0x7f;
+      cfgBehaviorFlags = 0xa100100;
+      cfgRenderFlags = 0x20;
+      cfgTextureId = 0x62;
+      cfgColorWord0 = 0x400;
+      cfgColorWord1 = 60000;
+      cfgColorWord2 = 0x1000;
+      cfgOverrideColor0 = 0;
+      cfgOverrideColor1 = 50000;
+      cfgOverrideColor2 = 0;
     }
-    local_74 = local_74 | param_4;
-    if (((local_74 & 1) != 0) && ((local_74 & 2) != 0)) {
-      local_74 = local_74 ^ 2;
+    cfgBehaviorFlags = cfgBehaviorFlags | spawnFlags;
+    if (((cfgBehaviorFlags & 1) != 0) && ((cfgBehaviorFlags & 2) != 0)) {
+      cfgBehaviorFlags = cfgBehaviorFlags ^ 2;
     }
-    if ((local_74 & 1) != 0) {
-      if ((param_4 & PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE) == 0) {
-        if (local_b8[0] != 0) {
-          local_88 = local_88 + *(float *)(local_b8[0] + 0x18);
-          local_84 = local_84 + *(float *)(local_b8[0] + 0x1c);
-          local_80 = local_80 + *(float *)(local_b8[0] + 0x20);
+    if ((cfgBehaviorFlags & 1) != 0) {
+      if ((spawnFlags & PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE) == 0) {
+        if (cfgHead[0] != 0) {
+          cfgStartPosX = cfgStartPosX + *(float *)(cfgHead[0] + 0x18);
+          cfgStartPosY = cfgStartPosY + *(float *)(cfgHead[0] + 0x1c);
+          cfgStartPosZ = cfgStartPosZ + *(float *)(cfgHead[0] + 0x20);
         }
       }
       else {
-        local_88 = local_88 + local_a0;
-        local_84 = local_84 + local_9c;
-        local_80 = local_80 + local_98;
+        cfgStartPosX = cfgStartPosX + cfgSourcePosY;
+        cfgStartPosY = cfgStartPosY + cfgSourcePosZ;
+        cfgStartPosZ = cfgStartPosZ + cfgSourcePosW;
       }
     }
-    uVar1 = (*gExpgfxInterface)->spawnEffect(local_b8, -1, param_2, 0);
+    spawnResult = (*gExpgfxInterface)->spawnEffect(cfgHead, -1, effectId, 0);
   }
-  return uVar1;
+  return spawnResult;
 }
 
 
@@ -5344,185 +5344,185 @@ extern void vecRotateZXY(void *obj, f32 *vec);
 extern char sModgfxAlphaDebugFormat[];
 extern void fn_80137948(char *fmt, ...);
 
-int partfx_update(s16 *param_1, u32 p2_, s16 *param_3, u32 param_4,
-                  u32 p5_, void *p6_)
+int partfx_update(s16 *sourceObj, u32 effectIdArg, s16 *spawnParams, u32 spawnFlags,
+                  u32 modelIdArg, void *extraArgsArg)
 {
-    int param_5 = (int)p5_;
-    int param_2 = (int)p2_;
-    f32 *param_6 = (f32 *)p6_;
-    int iVar8;
-    s16 sVar10;
-    u8 cVar4;
-    f32 fVar1;
-    f32 fVar2;
-    f32 fVar3;
-    f32 dVar12;
-    f32 dVar13;
-    f32 dVar14;
-    f32 dVar15;
-    f32 dVar16;
+    int modelId = (int)modelIdArg;
+    int effectId = (int)effectIdArg;
+    f32 *extraArgs = (f32 *)extraArgsArg;
+    int intVal;
+    s16 i;
+    u8 variant;
+    f32 srcPosX;
+    f32 srcPosY;
+    f32 srcPosZ;
+    f32 ftmp0;
+    f32 ftmp1;
+    f32 ftmp2;
+    f32 ftmp3;
+    f32 ftmp4;
     struct { s16 x, y, z; f32 m[4]; } rot;
     PartFxSpawn cfg;
 
-  if (((899 < param_2) && (param_2 < 0x3b5)) || ((0x5dc < param_2 && (param_2 < 0x641)))) {
+  if (((899 < effectId) && (effectId < 0x3b5)) || ((0x5dc < effectId && (effectId < 0x641)))) {
     gPartfxResourceTimeouts[0] = 2000;
     if (gPartfxResourceModule00 == NULL) {
       gPartfxCachedResourceCount += 1;
       gPartfxResourceModule00 = Resource_Acquire(0x1a,2);
     }
-    return (*(int (**)())(*(int *)gPartfxResourceModule00 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule00 + 8))(sourceObj,effectId,spawnParams,spawnFlags,modelId,extraArgs);
   }
-  if ((0x257 < param_2) && (param_2 < 0x2bc)) {
+  if ((0x257 < effectId) && (effectId < 0x2bc)) {
     gPartfxResourceTimeouts[1] = 2000;
     if (gPartfxResourceModule01 == NULL) {
       gPartfxCachedResourceCount += 1;
       gPartfxResourceModule01 = Resource_Acquire(0x1b,2);
     }
-    return (*(int (**)())(*(int *)gPartfxResourceModule01 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule01 + 8))(sourceObj,effectId,spawnParams,spawnFlags,modelId,extraArgs);
   }
-  if ((0x1f3 < param_2) && (param_2 < 0x258)) {
+  if ((0x1f3 < effectId) && (effectId < 0x258)) {
     gPartfxResourceTimeouts[2] = 2000;
     if (gPartfxResourceModule02 == NULL) {
       gPartfxCachedResourceCount += 1;
       gPartfxResourceModule02 = Resource_Acquire(0x1c,2);
     }
-    return (*(int (**)())(*(int *)gPartfxResourceModule02 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule02 + 8))(sourceObj,effectId,spawnParams,spawnFlags,modelId,extraArgs);
   }
-  if ((0x18f < param_2) && (param_2 < 0x1f4)) {
+  if ((0x18f < effectId) && (effectId < 0x1f4)) {
     gPartfxResourceTimeouts[3] = 2000;
     if (gPartfxResourceModule03 == NULL) {
       gPartfxCachedResourceCount += 1;
       gPartfxResourceModule03 = Resource_Acquire(0x1d,2);
     }
-    return (*(int (**)())(*(int *)gPartfxResourceModule03 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule03 + 8))(sourceObj,effectId,spawnParams,spawnFlags,modelId,extraArgs);
   }
-  if ((0xc7 < param_2) && (param_2 < 0x12c)) {
+  if ((0xc7 < effectId) && (effectId < 0x12c)) {
     gPartfxResourceTimeouts[4] = 2000;
     if (gPartfxResourceModule04 == NULL) {
       gPartfxCachedResourceCount += 1;
       gPartfxResourceModule04 = Resource_Acquire(0x1e,2);
     }
-    return (*(int (**)())(*(int *)gPartfxResourceModule04 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule04 + 8))(sourceObj,effectId,spawnParams,spawnFlags,modelId,extraArgs);
   }
-  if ((0x419 < param_2) && (param_2 < 0x44c)) {
+  if ((0x419 < effectId) && (effectId < 0x44c)) {
     gPartfxResourceTimeouts[5] = 2000;
     if (gPartfxResourceModule05 == NULL) {
       gPartfxCachedResourceCount += 1;
       gPartfxResourceModule05 = Resource_Acquire(0x1f,2);
     }
-    return (*(int (**)())(*(int *)gPartfxResourceModule05 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule05 + 8))(sourceObj,effectId,spawnParams,spawnFlags,modelId,extraArgs);
   }
-  if ((0x739 < param_2) && (param_2 < 0x76c)) {
+  if ((0x739 < effectId) && (effectId < 0x76c)) {
     gPartfxResourceTimeouts[16] = 2000;
     if (gPartfxResourceModule16 == NULL) {
       gPartfxCachedResourceCount += 1;
       gPartfxResourceModule16 = Resource_Acquire(0x2a,2);
     }
-    return (*(int (**)())(*(int *)gPartfxResourceModule16 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule16 + 8))(sourceObj,effectId,spawnParams,spawnFlags,modelId,extraArgs);
   }
-  if ((param_2 - 0x84U < 2) || ((0x89 < param_2 && (param_2 < 200)))) {
+  if ((effectId - 0x84U < 2) || ((0x89 < effectId && (effectId < 200)))) {
     gPartfxResourceTimeouts[6] = 2000;
     if (gPartfxResourceModule06 == NULL) {
       gPartfxCachedResourceCount += 1;
       gPartfxResourceModule06 = Resource_Acquire(0x20,2);
     }
-    return (*(int (**)())(*(int *)gPartfxResourceModule06 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule06 + 8))(sourceObj,effectId,spawnParams,spawnFlags,modelId,extraArgs);
   }
-  if ((0x3b5 < param_2) && (param_2 < 0x3de)) {
+  if ((0x3b5 < effectId) && (effectId < 0x3de)) {
     gPartfxResourceTimeouts[8] = 2000;
     if (gPartfxResourceModule08 == NULL) {
       gPartfxCachedResourceCount += 1;
       gPartfxResourceModule08 = Resource_Acquire(0x22,2);
     }
-    return (*(int (**)())(*(int *)gPartfxResourceModule08 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule08 + 8))(sourceObj,effectId,spawnParams,spawnFlags,modelId,extraArgs);
   }
-  if ((0x351 < param_2) && (param_2 < 0x384)) {
+  if ((0x351 < effectId) && (effectId < 0x384)) {
     gPartfxResourceTimeouts[7] = 2000;
     if (gPartfxResourceModule07 == NULL) {
       gPartfxCachedResourceCount += 1;
       gPartfxResourceModule07 = Resource_Acquire(0x21,2);
     }
-    return (*(int (**)())(*(int *)gPartfxResourceModule07 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule07 + 8))(sourceObj,effectId,spawnParams,spawnFlags,modelId,extraArgs);
   }
-  if ((0x329 < param_2) && (param_2 < 0x351)) {
+  if ((0x329 < effectId) && (effectId < 0x351)) {
     gPartfxResourceTimeouts[9] = 2000;
     if (gPartfxResourceModule09 == NULL) {
       gPartfxCachedResourceCount += 1;
       gPartfxResourceModule09 = Resource_Acquire(0x23,2);
     }
-    return (*(int (**)())(*(int *)gPartfxResourceModule09 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule09 + 8))(sourceObj,effectId,spawnParams,spawnFlags,modelId,extraArgs);
   }
-  if ((0x12b < param_2) && (param_2 < 0x190)) {
+  if ((0x12b < effectId) && (effectId < 0x190)) {
     gPartfxResourceTimeouts[10] = 2000;
     if (gPartfxResourceModule10 == NULL) {
       gPartfxCachedResourceCount += 1;
       gPartfxResourceModule10 = Resource_Acquire(0x24,2);
     }
-    return (*(int (**)())(*(int *)gPartfxResourceModule10 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule10 + 8))(sourceObj,effectId,spawnParams,spawnFlags,modelId,extraArgs);
   }
-  if ((0x47d < param_2) && (param_2 < 0x4b0)) {
+  if ((0x47d < effectId) && (effectId < 0x4b0)) {
     gPartfxResourceTimeouts[11] = 2000;
     if (gPartfxResourceModule11 == NULL) {
       gPartfxCachedResourceCount += 1;
       gPartfxResourceModule11 = Resource_Acquire(0x25,2);
     }
-    return (*(int (**)())(*(int *)gPartfxResourceModule11 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule11 + 8))(sourceObj,effectId,spawnParams,spawnFlags,modelId,extraArgs);
   }
-  if ((0x4af < param_2) && (param_2 < 0x4e2)) {
+  if ((0x4af < effectId) && (effectId < 0x4e2)) {
     gPartfxResourceTimeouts[12] = 2000;
     if (gPartfxResourceModule12 == NULL) {
       gPartfxCachedResourceCount += 1;
       gPartfxResourceModule12 = Resource_Acquire(0x27,2);
     }
-    return (*(int (**)())(*(int *)gPartfxResourceModule12 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule12 + 8))(sourceObj,effectId,spawnParams,spawnFlags,modelId,extraArgs);
   }
-  if ((param_2 >= 0x3e8) && (param_2 <= 0x419)) {
+  if ((effectId >= 0x3e8) && (effectId <= 0x419)) {
     gPartfxResourceTimeouts[13] = 2000;
     if (gPartfxResourceModule13 == NULL) {
       gPartfxCachedResourceCount += 1;
       gPartfxResourceModule13 = Resource_Acquire(0x28,2);
     }
-    return (*(int (**)())(*(int *)gPartfxResourceModule13 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule13 + 8))(sourceObj,effectId,spawnParams,spawnFlags,modelId,extraArgs);
   }
-  if ((0x44b < param_2) && (param_2 < 0x47e)) {
+  if ((0x44b < effectId) && (effectId < 0x47e)) {
     gPartfxResourceTimeouts[14] = 2000;
     if (gPartfxResourceModule14 == NULL) {
       gPartfxCachedResourceCount += 1;
       gPartfxResourceModule14 = Resource_Acquire(0x26,2);
     }
-    return (*(int (**)())(*(int *)gPartfxResourceModule14 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule14 + 8))(sourceObj,effectId,spawnParams,spawnFlags,modelId,extraArgs);
   }
-  if ((param_2 >= 0x6d7) && (param_2 <= 0x707)) {
+  if ((effectId >= 0x6d7) && (effectId <= 0x707)) {
     gPartfxResourceTimeouts[15] = 2000;
     if (gPartfxResourceModule15 == NULL) {
       gPartfxCachedResourceCount += 1;
       gPartfxResourceModule15 = Resource_Acquire(0x29,2);
     }
-    return (*(int (**)())(*(int *)gPartfxResourceModule15 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule15 + 8))(sourceObj,effectId,spawnParams,spawnFlags,modelId,extraArgs);
   }
-  if ((param_2 >= 0x708) && (param_2 <= 0x739)) {
+  if ((effectId >= 0x708) && (effectId <= 0x739)) {
     gPartfxResourceTimeouts[17] = 2000;
     if (gPartfxResourceModule17 == NULL) {
       gPartfxCachedResourceCount += 1;
       gPartfxResourceModule17 = Resource_Acquire(0x2b,2);
     }
-    return (*(int (**)())(*(int *)gPartfxResourceModule17 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule17 + 8))(sourceObj,effectId,spawnParams,spawnFlags,modelId,extraArgs);
   }
-  if ((param_2 >= 0x76c) && (param_2 <= 0x79d)) {
+  if ((effectId >= 0x76c) && (effectId <= 0x79d)) {
     gPartfxResourceTimeouts[18] = 2000;
     if (gPartfxResourceModule18 == NULL) {
       gPartfxCachedResourceCount += 1;
       gPartfxResourceModule18 = Resource_Acquire(0x2c,2);
     }
-    return (*(int (**)())(*(int *)gPartfxResourceModule18 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule18 + 8))(sourceObj,effectId,spawnParams,spawnFlags,modelId,extraArgs);
   }
-  if ((param_2 >= 0x79e) && (param_2 <= 0x833)) {
+  if ((effectId >= 0x79e) && (effectId <= 0x833)) {
     gPartfxResourceTimeouts[19] = 2000;
     if (gPartfxResourceModule19 == NULL) {
       gPartfxCachedResourceCount += 1;
       gPartfxResourceModule19 = Resource_Acquire(0x2d,2);
     }
-    return (*(int (**)())(*(int *)gPartfxResourceModule19 + 8))(param_1,param_2,param_3,param_4,param_5,param_6);
+    return (*(int (**)())(*(int *)gPartfxResourceModule19 + 8))(sourceObj,effectId,spawnParams,spawnFlags,modelId,extraArgs);
   }
   lbl_803DB7A0 = lbl_803DB7A0 + lbl_803DF4C8;
   if (lbl_803DB7A0 > 1.0f) {
@@ -5532,26 +5532,26 @@ int partfx_update(s16 *param_1, u32 p2_, s16 *param_3, u32 param_4,
   if (lbl_803DB7A4 > 1.0f) {
     lbl_803DB7A4 = lbl_803DF4D8;
   }
-  if (param_1 == NULL) {
+  if (sourceObj == NULL) {
     return -1;
   }
-  if ((param_4 & 0x200000) != 0) {
-    if (param_3 == NULL) {
+  if ((spawnFlags & 0x200000) != 0) {
+    if (spawnParams == NULL) {
       return -1;
     }
-    cfg.sourcePosY = ((PartFxSpawnParams *)param_3)->unkC;
-    cfg.sourcePosZ = ((PartFxSpawnParams *)param_3)->unk10;
-    cfg.sourcePosW = ((PartFxSpawnParams *)param_3)->unk14;
-    cfg.sourcePosX = ((PartFxSpawnParams *)param_3)->unk8;
-    cfg.sourceVecZ = ((PartFxSpawnParams *)param_3)->unk4;
-    cfg.sourceVecY = ((PartFxSpawnParams *)param_3)->unk2;
-    cfg.sourceVecX = *param_3;
-    cfg.modelIdByte = param_5;
+    cfg.sourcePosY = ((PartFxSpawnParams *)spawnParams)->unkC;
+    cfg.sourcePosZ = ((PartFxSpawnParams *)spawnParams)->unk10;
+    cfg.sourcePosW = ((PartFxSpawnParams *)spawnParams)->unk14;
+    cfg.sourcePosX = ((PartFxSpawnParams *)spawnParams)->unk8;
+    cfg.sourceVecZ = ((PartFxSpawnParams *)spawnParams)->unk4;
+    cfg.sourceVecY = ((PartFxSpawnParams *)spawnParams)->unk2;
+    cfg.sourceVecX = *spawnParams;
+    cfg.modelIdByte = modelId;
   }
-  cVar4 = '\0';
+  variant = '\0';
   cfg.behaviorFlags = 0x0;
   cfg.renderFlags = 0;
-  cfg.effectIdByte = (u8)param_2;
+  cfg.effectIdByte = (u8)effectId;
   cfg.startPosX = lbl_803DF4DC;
   cfg.startPosY = lbl_803DF4DC;
   cfg.startPosZ = lbl_803DF4DC;
@@ -5571,21 +5571,21 @@ int partfx_update(s16 *param_1, u32 p2_, s16 *param_3, u32 param_4,
   cfg.overrideColor1 = 0xffff;
   cfg.overrideColor2 = 0xffff;
   cfg.textureSetupFlags = 0;
-  cfg.attachedSource = param_1;
-  switch (param_2) {
+  cfg.attachedSource = sourceObj;
+  switch (effectId) {
   case 0x5e:
 
         cfg.scale = lbl_803DF4C8 * (f32)(s32)randomGetRange(0x14,0x1e);
         cfg.lifetimeFrames = 0x1e;
         cfg.behaviorFlags = 0x80180000;
         cfg.textureId = 0x60;
-        if (param_6 != NULL) {
-          cfg.colorWord0 = *(ushort *)((int)param_6 + 6);
-          cfg.colorWord1 = *(ushort *)(param_6 + 2);
-          cfg.colorWord2 = *(ushort *)((int)param_6 + 10);
-          cfg.overrideColor0 = (u32)*(ushort *)param_6;
-          cfg.overrideColor1 = (u32)*(ushort *)((int)param_6 + 2);
-          cfg.overrideColor2 = (u32)*(ushort *)(param_6 + 1);
+        if (extraArgs != NULL) {
+          cfg.colorWord0 = *(ushort *)((int)extraArgs + 6);
+          cfg.colorWord1 = *(ushort *)(extraArgs + 2);
+          cfg.colorWord2 = *(ushort *)((int)extraArgs + 10);
+          cfg.overrideColor0 = (u32)*(ushort *)extraArgs;
+          cfg.overrideColor1 = (u32)*(ushort *)((int)extraArgs + 2);
+          cfg.overrideColor2 = (u32)*(ushort *)(extraArgs + 1);
         }
         cfg.renderFlags = 0x8400820;
     break;
@@ -5613,11 +5613,11 @@ cfg.scale = lbl_803DF4E0;
       cfg.scale = lbl_803DF4C8 * (f32)(s32)randomGetRange(0x32,100);
       cfg.behaviorFlags = 0x80180202;
       cfg.textureId = 0x60;
-      if (param_6 != NULL) {
-        cfg.colorWord0 = *(ushort *)param_6;
-        cfg.colorWord1 = *(ushort *)((int)param_6 + 2);
-        cfg.colorWord2 = *(ushort *)(param_6 + 1);
-        cfg.lifetimeFrames = (u32)*(ushort *)((int)param_6 + 6);
+      if (extraArgs != NULL) {
+        cfg.colorWord0 = *(ushort *)extraArgs;
+        cfg.colorWord1 = *(ushort *)((int)extraArgs + 2);
+        cfg.colorWord2 = *(ushort *)(extraArgs + 1);
+        cfg.lifetimeFrames = (u32)*(ushort *)((int)extraArgs + 6);
       }
       else {
         cfg.colorWord0 = 0x2000;
@@ -5720,9 +5720,9 @@ cfg.startPosX = (f32)(s32)randomGetRange(0xfffffff9,7);
       cfg.renderFlags = 0x20;
     break;
   case 0x68b:
-if (param_3 != NULL) {
-          cfg.startPosX = ((PartFxSpawnParams *)param_3)->unkC - *(f32 *)(param_1 + 0xc);
-          cfg.startPosZ = ((PartFxSpawnParams *)param_3)->unk14 - *(f32 *)(param_1 + 0x10);
+if (spawnParams != NULL) {
+          cfg.startPosX = ((PartFxSpawnParams *)spawnParams)->unkC - *(f32 *)(sourceObj + 0xc);
+          cfg.startPosZ = ((PartFxSpawnParams *)spawnParams)->unk14 - *(f32 *)(sourceObj + 0x10);
         }
         else {
           cfg.startPosX = (f32)(s32)randomGetRange(0xfffffff9,7);
@@ -5733,8 +5733,8 @@ if (param_3 != NULL) {
         cfg.velocityY = lbl_803DF4E4 * (f32)(s32)randomGetRange(0,0x32);
         cfg.velocityZ = lbl_803DF4E4 * (f32)(s32)randomGetRange(0xffffffce,0x32);
         cfg.scale = lbl_803DF4E8;
-        if (param_3 != NULL) {
-          cfg.scale = ((PartFxSpawnParams *)param_3)->unk8;
+        if (spawnParams != NULL) {
+          cfg.scale = ((PartFxSpawnParams *)spawnParams)->unk8;
         }
         cfg.lifetimeFrames = 0x32;
         cfg.initialAlpha = 0x96;
@@ -5756,7 +5756,7 @@ cfg.startPosY = lbl_803DF4FC;
             cfg.behaviorFlags = 0x500010;
             cfg.renderFlags = 0x400200;
             cfg.textureId = 0xe4;
-            (*gExpgfxInterface)->spawnEffect(&cfg,0,param_2,0);
+            (*gExpgfxInterface)->spawnEffect(&cfg,0,effectId,0);
 LAB_800a69a8:
               cfg.startPosY = lbl_803DF4FC;
               cfg.scale = lbl_803DF4E8;
@@ -5765,7 +5765,7 @@ LAB_800a69a8:
               cfg.behaviorFlags = 0x500010;
               cfg.renderFlags = 0x400100;
               cfg.textureId = 0xe4;
-              (*gExpgfxInterface)->spawnEffect(&cfg,0,param_2,0);
+              (*gExpgfxInterface)->spawnEffect(&cfg,0,effectId,0);
 LAB_800a6a18:
             cfg.startPosY = lbl_803DF4FC;
             cfg.scale = lbl_803DF504;
@@ -5774,14 +5774,14 @@ LAB_800a6a18:
             cfg.behaviorFlags = 0x100210;
             cfg.renderFlags = 0x200;
             cfg.textureId = 0xe4;
-            (*gExpgfxInterface)->spawnEffect(&cfg,0,param_2,0);
+            (*gExpgfxInterface)->spawnEffect(&cfg,0,effectId,0);
             goto LAB_800a6a6c;
   case 0x55d:
             goto LAB_800aeb28;
   case 0x557:
 LAB_800a6a6c:
           cfg.startPosY = lbl_803DF4FC;
-          if (param_6 != NULL) {
+          if (extraArgs != NULL) {
             cfg.velocityY = lbl_803DF508;
           }
           else {
@@ -5793,13 +5793,13 @@ LAB_800a6a6c:
           cfg.behaviorFlags = 0x500010;
           cfg.renderFlags = 0x400200;
           cfg.textureId = 0xe4;
-          (*gExpgfxInterface)->spawnEffect(&cfg,0,param_2,0);
+          (*gExpgfxInterface)->spawnEffect(&cfg,0,effectId,0);
           goto LAB_800a6aec;
   case 0x558:
 
 LAB_800a6aec:
         cfg.startPosY = lbl_803DF4FC;
-        if (param_6 != NULL) {
+        if (extraArgs != NULL) {
           cfg.velocityY = lbl_803DF50C;
         }
         else {
@@ -5811,10 +5811,10 @@ LAB_800a6aec:
         cfg.behaviorFlags = 0x500010;
         cfg.renderFlags = 0x400200;
         cfg.textureId = 0xe4;
-        (*gExpgfxInterface)->spawnEffect(&cfg,0,param_2,0);
+        (*gExpgfxInterface)->spawnEffect(&cfg,0,effectId,0);
 LAB_800a6b6c:
         cfg.startPosY = lbl_803DF4FC;
-        if (param_6 != NULL) {
+        if (extraArgs != NULL) {
           cfg.velocityY = lbl_803DF508;
         }
         else {
@@ -5826,11 +5826,11 @@ LAB_800a6b6c:
         cfg.behaviorFlags = 0x500010;
         cfg.renderFlags = 0x400100;
         cfg.textureId = 0xe4;
-        (*gExpgfxInterface)->spawnEffect(&cfg,0,param_2,0);
+        (*gExpgfxInterface)->spawnEffect(&cfg,0,effectId,0);
     break;
   case 0x55b:
 cfg.startPosY = lbl_803DF4FC;
-      if (param_6 != NULL) {
+      if (extraArgs != NULL) {
         cfg.velocityY = lbl_803DF50C;
       }
       else {
@@ -5845,7 +5845,7 @@ cfg.startPosY = lbl_803DF4FC;
     break;
   case 0x55e:
 
-      if (param_3 == NULL) {
+      if (spawnParams == NULL) {
         *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
         *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
         *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -5854,9 +5854,9 @@ cfg.startPosY = lbl_803DF4FC;
         lbl_8039C308[1] = 0;
         lbl_8039C308[2] = 0;
         lbl_8039C308[3] = 0;
-        param_3 = lbl_8039C308;
+        spawnParams = lbl_8039C308;
       }
-      cfg.startPosY = ((PartFxSpawnParams *)param_3)->unk10 + (f32)(s32)randomGetRange(0xfffffffa,6);
+      cfg.startPosY = ((PartFxSpawnParams *)spawnParams)->unk10 + (f32)(s32)randomGetRange(0xfffffffa,6);
       cfg.velocityX = lbl_803DF4E8 * (f32)(s32)randomGetRange(0xffffff9c,100);
       cfg.velocityZ = lbl_803DF4E8 * (f32)(s32)randomGetRange(0xffffff9c,100);
       cfg.scale = lbl_803DF514;
@@ -5867,7 +5867,7 @@ cfg.startPosY = lbl_803DF4FC;
       cfg.textureId = 0xe4;
     break;
   case 0x551:
-if (param_3 == NULL) {
+if (spawnParams == NULL) {
           *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
           *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
           *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -5886,7 +5886,7 @@ if (param_3 == NULL) {
     break;
   case 0x552:
 
-      if (param_3 == NULL) {
+      if (spawnParams == NULL) {
         *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
         *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
         *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -5904,7 +5904,7 @@ if (param_3 == NULL) {
       cfg.textureId = 0x91;
     break;
   case 0x554:
-if (param_3 == NULL) {
+if (spawnParams == NULL) {
                 *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
                 *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
                 *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -5922,7 +5922,7 @@ if (param_3 == NULL) {
               cfg.textureId = 0x73;
     break;
   case 0x553:
-if (param_3 == NULL) {
+if (spawnParams == NULL) {
                 *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
                 *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
                 *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -5942,7 +5942,7 @@ if (param_3 == NULL) {
               rot.m[0] = lbl_803DF4D0;
               rot.z = 0;
               rot.y = 0;
-              rot.x = *(s16 *)param_1;
+              rot.x = *(s16 *)sourceObj;
               vecRotateZXY((s16 *)&rot,&cfg.startPosX);
               cfg.scale = lbl_803DF520;
               cfg.lifetimeFrames = 0x91;
@@ -5960,7 +5960,7 @@ if (param_3 == NULL) {
           cfg.lifetimeFrames = randomGetRange(100,0x96);
           cfg.initialAlpha = 0xff;
           cfg.behaviorFlags = 0x80480110;
-          if (param_6 != NULL) {
+          if (extraArgs != NULL) {
             cfg.behaviorFlags = 0xc0480110;
           }
           cfg.textureId = 0x85;
@@ -5973,7 +5973,7 @@ cfg.startPosX = lbl_803DF508 * (f32)(s32)randomGetRange(0xfffffff6,10);
           cfg.lifetimeFrames = randomGetRange(100,0x96);
           cfg.initialAlpha = 0xff;
           cfg.behaviorFlags = 0x80480110;
-          if (param_6 != NULL) {
+          if (extraArgs != NULL) {
             cfg.behaviorFlags = 0xc0480110;
           }
           cfg.textureId = 0x84;
@@ -5986,7 +5986,7 @@ cfg.startPosX = lbl_803DF508 * (f32)(s32)randomGetRange(0xfffffff6,10);
           cfg.lifetimeFrames = randomGetRange(100,0x96);
           cfg.initialAlpha = 0xff;
           cfg.behaviorFlags = 0x80480110;
-          if (param_6 != NULL) {
+          if (extraArgs != NULL) {
             cfg.behaviorFlags = 0xc0480110;
           }
           cfg.textureId = 0xc0f;
@@ -6000,24 +6000,24 @@ cfg.startPosX = lbl_803DF508 * (f32)(s32)randomGetRange(0xfffffff6,10);
         cfg.lifetimeFrames = randomGetRange(100,0x96);
         cfg.initialAlpha = 0xff;
         cfg.behaviorFlags = 0x80480110;
-        if (param_6 != NULL) {
+        if (extraArgs != NULL) {
           cfg.behaviorFlags = 0xc0480110;
         }
         cfg.textureId = 0x157;
     break;
   case 0x54d:
-if (param_6 == NULL) {
-            cVar4 = '\0';
+if (extraArgs == NULL) {
+            variant = '\0';
           }
           else {
-            cVar4 = *(u8 *)param_6;
+            variant = *(u8 *)extraArgs;
           }
-          if (cVar4 == '\x01') {
+          if (variant == '\x01') {
             cfg.scale = lbl_803DF524 * (f32)(s32)randomGetRange(10,0x14);
             cfg.behaviorFlags = 0x4c0800;
             cfg.renderFlags = 0x202;
           }
-          else if (cVar4 == '\x02') {
+          else if (variant == '\x02') {
             cfg.scale = lbl_803DF528 * (f32)(s32)randomGetRange(10,0x14);
             cfg.behaviorFlags = 0x4c0800;
             cfg.renderFlags = 0x102;
@@ -6032,15 +6032,15 @@ if (param_6 == NULL) {
           cfg.textureId = 0x85;
     break;
   case 0x54e:
-if (param_6 != NULL) {
-            cVar4 = *(u8 *)param_6;
+if (extraArgs != NULL) {
+            variant = *(u8 *)extraArgs;
           }
-          if (cVar4 == '\x01') {
+          if (variant == '\x01') {
             cfg.scale = lbl_803DF524 * (f32)(s32)randomGetRange(10,0x14);
             cfg.behaviorFlags = 0x4c0800;
             cfg.renderFlags = 0x202;
           }
-          else if (cVar4 == '\x02') {
+          else if (variant == '\x02') {
             cfg.scale = lbl_803DF528 * (f32)(s32)randomGetRange(10,0x14);
             cfg.behaviorFlags = 0x4c0800;
             cfg.renderFlags = 0x102;
@@ -6056,15 +6056,15 @@ if (param_6 != NULL) {
     break;
   case 0x54f:
 
-        if (param_6 != NULL) {
-          cVar4 = *(u8 *)param_6;
+        if (extraArgs != NULL) {
+          variant = *(u8 *)extraArgs;
         }
-        if (cVar4 == '\x01') {
+        if (variant == '\x01') {
           cfg.scale = lbl_803DF524 * (f32)(s32)randomGetRange(10,0x14);
           cfg.behaviorFlags = 0x4c0800;
           cfg.renderFlags = 0x202;
         }
-        else if (cVar4 == '\x02') {
+        else if (variant == '\x02') {
           cfg.scale = lbl_803DF528 * (f32)(s32)randomGetRange(10,0x14);
           cfg.behaviorFlags = 0x4c0800;
           cfg.renderFlags = 0x102;
@@ -6079,15 +6079,15 @@ if (param_6 != NULL) {
         cfg.textureId = 0xc0f;
     break;
   case 0x550:
-if (param_6 != NULL) {
-          cVar4 = *(u8 *)param_6;
+if (extraArgs != NULL) {
+          variant = *(u8 *)extraArgs;
         }
-        if (cVar4 == '\x01') {
+        if (variant == '\x01') {
           cfg.scale = lbl_803DF524 * (f32)(s32)randomGetRange(10,0x14);
           cfg.behaviorFlags = 0x4c0800;
           cfg.renderFlags = 0x202;
         }
-        else if (cVar4 == '\x02') {
+        else if (variant == '\x02') {
           cfg.scale = lbl_803DF528 * (f32)(s32)randomGetRange(10,0x14);
           cfg.behaviorFlags = 0x4c0800;
           cfg.renderFlags = 0x102;
@@ -6102,7 +6102,7 @@ if (param_6 != NULL) {
         cfg.textureId = 0x157;
     break;
   case 0x545:
-if (param_3 == NULL) {
+if (spawnParams == NULL) {
             *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
             *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
             *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -6111,9 +6111,9 @@ if (param_3 == NULL) {
             lbl_8039C308[1] = 0;
             lbl_8039C308[2] = 0;
             lbl_8039C308[3] = 0;
-            param_3 = lbl_8039C308;
+            spawnParams = lbl_8039C308;
           }
-          cfg.scale = lbl_803DF530 * ((PartFxSpawnParams *)param_3)->unk8;
+          cfg.scale = lbl_803DF530 * ((PartFxSpawnParams *)spawnParams)->unk8;
           cfg.lifetimeFrames = 4;
           cfg.behaviorFlags = 0x480000;
           cfg.renderFlags = 2;
@@ -6122,7 +6122,7 @@ if (param_3 == NULL) {
     break;
   case 0x546:
 
-        if (param_3 == NULL) {
+        if (spawnParams == NULL) {
           *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
           *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
           *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -6131,9 +6131,9 @@ if (param_3 == NULL) {
           lbl_8039C308[1] = 0;
           lbl_8039C308[2] = 0;
           lbl_8039C308[3] = 0;
-          param_3 = lbl_8039C308;
+          spawnParams = lbl_8039C308;
         }
-        cfg.scale = lbl_803DF534 * ((PartFxSpawnParams *)param_3)->unk8;
+        cfg.scale = lbl_803DF534 * ((PartFxSpawnParams *)spawnParams)->unk8;
         cfg.lifetimeFrames = 4;
         cfg.behaviorFlags = 0x480000;
         cfg.renderFlags = 0x2000002;
@@ -6144,7 +6144,7 @@ if (param_3 == NULL) {
 cfg.startPosX = lbl_803DF538;
             cfg.startPosY = (f32)(s32)randomGetRange(0xffffffb0,0x50);
             cfg.velocityY = lbl_803DF4E8 * (f32)(s32)randomGetRange(0xffffff9c,100);
-            if (param_3 == NULL) {
+            if (spawnParams == NULL) {
               *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
               *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
               *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -6172,7 +6172,7 @@ cfg.startPosX = lbl_803DF538;
             cfg.behaviorFlags = (cfg.behaviorFlags | 0x20000);
     break;
   case 0x548:
-if (param_3 == NULL) {
+if (spawnParams == NULL) {
               *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
               *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
               *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -6190,7 +6190,7 @@ if (param_3 == NULL) {
             cfg.initialAlpha = 0xff;
     break;
   case 0x52b: case 0x52c: case 0x52d:
-if (param_3 == NULL) {
+if (spawnParams == NULL) {
           *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
           *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
           *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -6199,12 +6199,12 @@ if (param_3 == NULL) {
           lbl_8039C308[1] = 0;
           lbl_8039C308[2] = 0;
           lbl_8039C308[3] = 0;
-          param_3 = lbl_8039C308;
+          spawnParams = lbl_8039C308;
         }
-        if (param_3 != NULL) {
-          cfg.startPosX = ((PartFxSpawnParams *)param_3)->unkC;
-          cfg.startPosY = ((PartFxSpawnParams *)param_3)->unk10;
-          cfg.startPosZ = ((PartFxSpawnParams *)param_3)->unk14;
+        if (spawnParams != NULL) {
+          cfg.startPosX = ((PartFxSpawnParams *)spawnParams)->unkC;
+          cfg.startPosY = ((PartFxSpawnParams *)spawnParams)->unk10;
+          cfg.startPosZ = ((PartFxSpawnParams *)spawnParams)->unk14;
           cfg.startPosX = cfg.startPosX - *(f32 *)((char *)cfg.attachedSource + 0x18);
           cfg.startPosY = cfg.startPosY - *(f32 *)((char *)cfg.attachedSource + 0x1c);
           cfg.startPosZ = cfg.startPosZ - *(f32 *)((char *)cfg.attachedSource + 0x20);
@@ -6218,10 +6218,10 @@ if (param_3 == NULL) {
         cfg.lifetimeFrames = 0x14;
         cfg.initialAlpha = 0xff;
         cfg.behaviorFlags = 0x80210;
-        cfg.textureId = (s16)param_2 + -0x3d5;
+        cfg.textureId = (s16)effectId + -0x3d5;
     break;
   case 0x52f: case 0x530: case 0x531:
-if (param_3 == NULL) {
+if (spawnParams == NULL) {
                 *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
                 *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
                 *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -6230,12 +6230,12 @@ if (param_3 == NULL) {
                 lbl_8039C308[1] = 0;
                 lbl_8039C308[2] = 0;
                 lbl_8039C308[3] = 0;
-                param_3 = lbl_8039C308;
+                spawnParams = lbl_8039C308;
               }
-              if (param_3 != NULL) {
-                cfg.startPosX = ((PartFxSpawnParams *)param_3)->unkC;
-                cfg.startPosY = ((PartFxSpawnParams *)param_3)->unk10;
-                cfg.startPosZ = ((PartFxSpawnParams *)param_3)->unk14;
+              if (spawnParams != NULL) {
+                cfg.startPosX = ((PartFxSpawnParams *)spawnParams)->unkC;
+                cfg.startPosY = ((PartFxSpawnParams *)spawnParams)->unk10;
+                cfg.startPosZ = ((PartFxSpawnParams *)spawnParams)->unk14;
                 cfg.startPosX = cfg.startPosX - *(f32 *)((char *)cfg.attachedSource + 0x18);
                 cfg.startPosY = cfg.startPosY - *(f32 *)((char *)cfg.attachedSource + 0x1c);
                 cfg.startPosZ = cfg.startPosZ - *(f32 *)((char *)cfg.attachedSource + 0x20);
@@ -6246,10 +6246,10 @@ if (param_3 == NULL) {
     break;
   case 0x53c:
 
-          if (param_6 != NULL) {
-            iVar8 = (int)(lbl_803DF548 * (lbl_803DF4D0 - *param_6));
-            cfg.initialAlpha = (u8)iVar8;
-            fn_80137948(sModgfxAlphaDebugFormat, iVar8);
+          if (extraArgs != NULL) {
+            intVal = (int)(lbl_803DF548 * (lbl_803DF4D0 - *extraArgs));
+            cfg.initialAlpha = (u8)intVal;
+            fn_80137948(sModgfxAlphaDebugFormat, intVal);
           }
           cfg.scale = lbl_803DF54C;
           cfg.behaviorFlags = 0x80000;
@@ -6270,7 +6270,7 @@ cfg.initialAlpha = 0x69;
             cfg.overrideColor0 = 0xb1df;
             cfg.overrideColor1 = 0xb1df;
             cfg.overrideColor2 = 0xffff;
-            (*gExpgfxInterface)->spawnEffect(&cfg,0,param_2,0);
+            (*gExpgfxInterface)->spawnEffect(&cfg,0,effectId,0);
             cfg.startPosZ = lbl_803DF554;
             cfg.initialAlpha = 0x69;
             cfg.scale = lbl_803DF558;
@@ -6284,7 +6284,7 @@ cfg.initialAlpha = 0x69;
             cfg.overrideColor2 = 0xffff;
             cfg.lifetimeFrames = 0;
             cfg.textureId = 0x4ff;
-            (*gExpgfxInterface)->spawnEffect(&cfg,0,param_2,0);
+            (*gExpgfxInterface)->spawnEffect(&cfg,0,effectId,0);
             cfg.startPosZ = lbl_803DF55C;
             cfg.initialAlpha = 0x69;
             cfg.scale = lbl_803DF560;
@@ -6318,7 +6318,7 @@ cfg.startPosX = lbl_803DF564;
     break;
   case 0x532:
 
-              if (param_3 == NULL) {
+              if (spawnParams == NULL) {
                 *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
                 *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
                 *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -6327,14 +6327,14 @@ cfg.startPosX = lbl_803DF564;
                 lbl_8039C308[1] = 0;
                 lbl_8039C308[2] = 0;
                 lbl_8039C308[3] = 0;
-                param_3 = lbl_8039C308;
+                spawnParams = lbl_8039C308;
               }
-              if (param_3 == NULL) {
+              if (spawnParams == NULL) {
                 return -1;
               }
-              cfg.startPosX = ((PartFxSpawnParams *)param_3)->unkC;
-              cfg.startPosY = ((PartFxSpawnParams *)param_3)->unk10;
-              cfg.startPosZ = ((PartFxSpawnParams *)param_3)->unk14;
+              cfg.startPosX = ((PartFxSpawnParams *)spawnParams)->unkC;
+              cfg.startPosY = ((PartFxSpawnParams *)spawnParams)->unk10;
+              cfg.startPosZ = ((PartFxSpawnParams *)spawnParams)->unk14;
               cfg.velocityX = lbl_803DF568 * (f32)(s32)randomGetRange(0xffffffe2,0x1e);
               cfg.velocityY = lbl_803DF568 * (f32)(s32)randomGetRange(0xffffffe2,0x1e);
               cfg.velocityZ = lbl_803DF56C * (f32)(s32)randomGetRange(0x14,0x1e);
@@ -6342,9 +6342,9 @@ cfg.startPosX = lbl_803DF564;
               rot.m[2] = lbl_803DF4DC;
               rot.m[3] = lbl_803DF4DC;
               rot.m[0] = lbl_803DF4D0;
-              rot.z = param_1[2];
-              rot.y = param_1[1];
-              rot.x = *(s16 *)param_1;
+              rot.z = sourceObj[2];
+              rot.y = sourceObj[1];
+              rot.x = *(s16 *)sourceObj;
               vecRotateZXY((s16 *)&rot,&cfg.velocityX);
               cfg.initialAlpha = 0xcd;
               cfg.behaviorFlags = 0x100110;
@@ -6353,7 +6353,7 @@ cfg.startPosX = lbl_803DF564;
               cfg.textureId = 0x89;
     break;
   case 0x533:
-if (param_3 == NULL) {
+if (spawnParams == NULL) {
                 *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
                 *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
                 *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -6362,14 +6362,14 @@ if (param_3 == NULL) {
                 lbl_8039C308[1] = 0;
                 lbl_8039C308[2] = 0;
                 lbl_8039C308[3] = 0;
-                param_3 = lbl_8039C308;
+                spawnParams = lbl_8039C308;
               }
-              if (param_3 == NULL) {
+              if (spawnParams == NULL) {
                 return -1;
               }
-              cfg.startPosX = ((PartFxSpawnParams *)param_3)->unkC;
-              cfg.startPosY = ((PartFxSpawnParams *)param_3)->unk10;
-              cfg.startPosZ = ((PartFxSpawnParams *)param_3)->unk14;
+              cfg.startPosX = ((PartFxSpawnParams *)spawnParams)->unkC;
+              cfg.startPosY = ((PartFxSpawnParams *)spawnParams)->unk10;
+              cfg.startPosZ = ((PartFxSpawnParams *)spawnParams)->unk14;
               cfg.velocityX = lbl_803DF568 * (f32)(s32)randomGetRange(0xffffffe2,0x1e);
               cfg.velocityY = lbl_803DF4E8 * (f32)(s32)randomGetRange(8,10);
               cfg.velocityZ = lbl_803DF574 * (f32)(s32)randomGetRange(10,0x1e);
@@ -6377,9 +6377,9 @@ if (param_3 == NULL) {
               rot.m[2] = lbl_803DF4DC;
               rot.m[3] = lbl_803DF4DC;
               rot.m[0] = lbl_803DF4D0;
-              rot.z = param_1[2];
-              rot.y = param_1[1];
-              rot.x = *(s16 *)param_1;
+              rot.z = sourceObj[2];
+              rot.y = sourceObj[1];
+              rot.x = *(s16 *)sourceObj;
               vecRotateZXY((s16 *)&rot,&cfg.velocityX);
               cfg.scale = lbl_803DF4D4 * (f32)(s32)randomGetRange(8,0x14);
               cfg.lifetimeFrames = randomGetRange(0x3c,0x78);
@@ -6395,7 +6395,7 @@ if (param_3 == NULL) {
               cfg.overrideColor2 = 0x3caf;
     break;
   case 0x535:
-if (param_3 == NULL) {
+if (spawnParams == NULL) {
               *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
               *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
               *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -6404,14 +6404,14 @@ if (param_3 == NULL) {
               lbl_8039C308[1] = 0;
               lbl_8039C308[2] = 0;
               lbl_8039C308[3] = 0;
-              param_3 = lbl_8039C308;
+              spawnParams = lbl_8039C308;
             }
-            if (param_3 == NULL) {
+            if (spawnParams == NULL) {
               return -1;
             }
-            cfg.startPosX = ((PartFxSpawnParams *)param_3)->unkC;
-            cfg.startPosY = ((PartFxSpawnParams *)param_3)->unk10;
-            cfg.startPosZ = ((PartFxSpawnParams *)param_3)->unk14;
+            cfg.startPosX = ((PartFxSpawnParams *)spawnParams)->unkC;
+            cfg.startPosY = ((PartFxSpawnParams *)spawnParams)->unk10;
+            cfg.startPosZ = ((PartFxSpawnParams *)spawnParams)->unk14;
             cfg.velocityX = lbl_803DF4E8 * (f32)(s32)randomGetRange(0xffffffe2,0x1e);
             cfg.velocityY = lbl_803DF4E8 * (f32)(s32)randomGetRange(0xffffffe2,0x1e);
             cfg.velocityZ = lbl_803DF578 * (f32)(s32)randomGetRange(0x14,0x1e);
@@ -6419,9 +6419,9 @@ if (param_3 == NULL) {
             rot.m[2] = lbl_803DF4DC;
             rot.m[3] = lbl_803DF4DC;
             rot.m[0] = lbl_803DF4D0;
-            rot.z = param_1[2];
-            rot.y = param_1[1];
-            rot.x = *(s16 *)param_1;
+            rot.z = sourceObj[2];
+            rot.y = sourceObj[1];
+            rot.x = *(s16 *)sourceObj;
             vecRotateZXY((s16 *)&rot,&cfg.velocityX);
             cfg.initialAlpha = 0xff;
             cfg.scale = lbl_803DF57C * (f32)(s32)randomGetRange(0x96,200);
@@ -6440,9 +6440,9 @@ if (param_3 == NULL) {
             rot.m[2] = lbl_803DF4DC;
             rot.m[3] = lbl_803DF4DC;
             rot.m[0] = lbl_803DF4D0;
-            rot.z = param_1[2];
-            rot.y = param_1[1];
-            rot.x = *(s16 *)param_1;
+            rot.z = sourceObj[2];
+            rot.y = sourceObj[1];
+            rot.x = *(s16 *)sourceObj;
             vecRotateZXY((s16 *)&rot,&cfg.velocityX);
             cfg.initialAlpha = 0xff;
             cfg.scale = lbl_803DF588 * (f32)(s32)randomGetRange(10,0x14);
@@ -6453,7 +6453,7 @@ if (param_3 == NULL) {
     break;
   case 0x52a:
 
-        if (param_3 == NULL) {
+        if (spawnParams == NULL) {
           *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
           *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
           *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -6462,14 +6462,14 @@ if (param_3 == NULL) {
           lbl_8039C308[1] = 0;
           lbl_8039C308[2] = 0;
           lbl_8039C308[3] = 0;
-          param_3 = lbl_8039C308;
+          spawnParams = lbl_8039C308;
         }
-        if (param_3 == NULL) {
+        if (spawnParams == NULL) {
           return -1;
         }
-        cfg.startPosX = ((PartFxSpawnParams *)param_3)->unkC;
-        cfg.startPosY = ((PartFxSpawnParams *)param_3)->unk10;
-        cfg.startPosZ = ((PartFxSpawnParams *)param_3)->unk14;
+        cfg.startPosX = ((PartFxSpawnParams *)spawnParams)->unkC;
+        cfg.startPosY = ((PartFxSpawnParams *)spawnParams)->unk10;
+        cfg.startPosZ = ((PartFxSpawnParams *)spawnParams)->unk14;
         cfg.scale = lbl_803DF58C;
         cfg.lifetimeFrames = 10;
         cfg.initialAlpha = 0xff;
@@ -6489,7 +6489,7 @@ if (param_3 == NULL) {
           cfg.textureId = 0x159;
     break;
   case 0x51e:
-if (param_3 == NULL) {
+if (spawnParams == NULL) {
             *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
             *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
             *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -6498,14 +6498,14 @@ if (param_3 == NULL) {
             lbl_8039C308[1] = 0;
             lbl_8039C308[2] = 0;
             lbl_8039C308[3] = 0;
-            param_3 = lbl_8039C308;
+            spawnParams = lbl_8039C308;
           }
-          if (param_3 == NULL) {
+          if (spawnParams == NULL) {
             return -1;
           }
-          cfg.startPosX = ((PartFxSpawnParams *)param_3)->unkC;
-          cfg.startPosY = ((PartFxSpawnParams *)param_3)->unk10;
-          cfg.startPosZ = ((PartFxSpawnParams *)param_3)->unk14;
+          cfg.startPosX = ((PartFxSpawnParams *)spawnParams)->unkC;
+          cfg.startPosY = ((PartFxSpawnParams *)spawnParams)->unk10;
+          cfg.startPosZ = ((PartFxSpawnParams *)spawnParams)->unk14;
           cfg.scale = lbl_803DF598;
           cfg.lifetimeFrames = 10;
           cfg.initialAlpha = 0xff;
@@ -6545,7 +6545,7 @@ cfg.startPosX = lbl_803DF4CC * (f32)(s32)randomGetRange(0xffffffe2,0x1e);
           cfg.textureId = 0xe4;
     break;
   case 0x2bc: case 0x2bd: case 0x2be:
-if (param_3 == NULL) {
+if (spawnParams == NULL) {
               *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
               *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
               *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -6554,12 +6554,12 @@ if (param_3 == NULL) {
               lbl_8039C308[1] = 0;
               lbl_8039C308[2] = 0;
               lbl_8039C308[3] = 0;
-              param_3 = lbl_8039C308;
+              spawnParams = lbl_8039C308;
             }
-            if (param_3 != NULL) {
-              cfg.startPosX = ((PartFxSpawnParams *)param_3)->unkC;
-              cfg.startPosY = ((PartFxSpawnParams *)param_3)->unk10;
-              cfg.startPosZ = ((PartFxSpawnParams *)param_3)->unk14;
+            if (spawnParams != NULL) {
+              cfg.startPosX = ((PartFxSpawnParams *)spawnParams)->unkC;
+              cfg.startPosY = ((PartFxSpawnParams *)spawnParams)->unk10;
+              cfg.startPosZ = ((PartFxSpawnParams *)spawnParams)->unk14;
               cfg.startPosX = cfg.startPosX - *(f32 *)((char *)cfg.attachedSource + 0x18);
               cfg.startPosY = cfg.startPosY - *(f32 *)((char *)cfg.attachedSource + 0x1c);
               cfg.startPosZ = cfg.startPosZ - *(f32 *)((char *)cfg.attachedSource + 0x20);
@@ -6569,7 +6569,7 @@ if (param_3 == NULL) {
             cfg.initialAlpha = 0xff;
             cfg.behaviorFlags = 0x80210;
             cfg.renderFlags = 0x100;
-            cfg.textureId = (s16)param_2 - 0x28c;
+            cfg.textureId = (s16)effectId - 0x28c;
     break;
   case 0x4b:
 
@@ -6613,7 +6613,7 @@ cfg.startPosX = lbl_803DF4CC * (f32)(s32)randomGetRange(0xffffff9c,100);
               cfg.behaviorFlags = (cfg.behaviorFlags | 0x100000);
             }
             if (randomGetRange(0,10) == 0) {
-              param_4 = param_4 ^ 4 | 1;
+              spawnFlags = spawnFlags ^ 4 | 1;
             }
             cfg.lifetimeFrames = 0xdc;
             cfg.colorWord0 = 0xb1df;
@@ -6674,7 +6674,7 @@ cfg.velocityY = lbl_803DF5CC * (f32)(s32)randomGetRange(10,0x14);
               cfg.textureId = 0x47;
     break;
   case 0x3:
-if (param_3 == NULL) {
+if (spawnParams == NULL) {
                 return -1;
               }
               cfg.startPosY = lbl_803DF4D8 * (f32)(s32)randomGetRange(0x14,0x3c);
@@ -6684,11 +6684,11 @@ if (param_3 == NULL) {
               cfg.linkGroup = 0x14;
               cfg.behaviorFlags = 0x9100110;
               cfg.renderFlags = 0x4000000;
-              cfg.textureId = ((PartFxSpawnParams *)param_3)->unk4;
+              cfg.textureId = ((PartFxSpawnParams *)spawnParams)->unk4;
     break;
   case 0x5:
 
-            if (param_3 == NULL) {
+            if (spawnParams == NULL) {
               return -1;
             }
             cfg.startPosX = lbl_803DF5D8 * (f32)(s32)randomGetRange(0xffffffe2,0x1e);
@@ -6700,7 +6700,7 @@ if (param_3 == NULL) {
             cfg.linkGroup = randomGetRange(10,0x1e);
             cfg.behaviorFlags = 0x100218;
             cfg.renderFlags = 0x4000000;
-            cfg.textureId = ((PartFxSpawnParams *)param_3)->unk4;
+            cfg.textureId = ((PartFxSpawnParams *)spawnParams)->unk4;
             if (cfg.textureId == 0x4c) {
               cfg.colorWord0 = 0x6400;
               cfg.colorWord1 = 0x3200;
@@ -6712,7 +6712,7 @@ if (param_3 == NULL) {
             }
     break;
   case 0x7:
-if (param_3 == NULL) {
+if (spawnParams == NULL) {
                 return -1;
               }
               cfg.startPosX = lbl_803DF5D8 * (f32)(s32)randomGetRange(0xffffffe2,0x1e);
@@ -6726,7 +6726,7 @@ if (param_3 == NULL) {
               cfg.linkGroup = 0x1e;
               cfg.behaviorFlags = 0x511;
               cfg.renderFlags = 0x4000000;
-              cfg.textureId = ((PartFxSpawnParams *)param_3)->unk4;
+              cfg.textureId = ((PartFxSpawnParams *)spawnParams)->unk4;
     break;
   case 0x7b:
 cfg.startPosY = lbl_803DF5E4 + (f32)(s32)randomGetRange(0,10);
@@ -6877,7 +6877,7 @@ cfg.startPosX = (f32)(s32)randomGetRange(0xfffffffe,2);
     break;
   case 0x6d:
 
-      if (param_3 == NULL) {
+      if (spawnParams == NULL) {
         *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
         *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
         *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -6886,19 +6886,19 @@ cfg.startPosX = (f32)(s32)randomGetRange(0xfffffffe,2);
         lbl_8039C308[1] = 0;
         lbl_8039C308[2] = 0;
         lbl_8039C308[3] = 0;
-        param_3 = lbl_8039C308;
+        spawnParams = lbl_8039C308;
       }
-      if (param_3 == NULL) {
+      if (spawnParams == NULL) {
         return -1;
       }
-      cfg.startPosX = ((PartFxSpawnParams *)param_3)->unkC;
-      cfg.startPosY = ((PartFxSpawnParams *)param_3)->unk10;
-      cfg.startPosZ = ((PartFxSpawnParams *)param_3)->unk14;
-      cfg.scale = ((PartFxSpawnParams *)param_3)->unk8;
+      cfg.startPosX = ((PartFxSpawnParams *)spawnParams)->unkC;
+      cfg.startPosY = ((PartFxSpawnParams *)spawnParams)->unk10;
+      cfg.startPosZ = ((PartFxSpawnParams *)spawnParams)->unk14;
+      cfg.scale = ((PartFxSpawnParams *)spawnParams)->unk8;
       cfg.lifetimeFrames = 1;
       cfg.linkGroup = 0;
       cfg.initialAlpha = 0x19;
-      if (((PartFxSpawnParams *)param_3)->unk4 != 0) {
+      if (((PartFxSpawnParams *)spawnParams)->unk4 != 0) {
         cfg.initialAlpha = 0x7d;
       }
       cfg.behaviorFlags = 0xc0012;
@@ -6947,7 +6947,7 @@ cfg.velocityX = lbl_803DF5EC * (f32)(s32)randomGetRange(0xfffffff6,10);
     break;
   case 0x65:
 
-          if (param_3 == NULL) {
+          if (spawnParams == NULL) {
             *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
             *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
             *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -6956,14 +6956,14 @@ cfg.velocityX = lbl_803DF5EC * (f32)(s32)randomGetRange(0xfffffff6,10);
             lbl_8039C308[1] = 0;
             lbl_8039C308[2] = 0;
             lbl_8039C308[3] = 0;
-            param_3 = lbl_8039C308;
+            spawnParams = lbl_8039C308;
           }
-          if (param_3 == NULL) {
+          if (spawnParams == NULL) {
             return -1;
           }
-          cfg.startPosX = ((PartFxSpawnParams *)param_3)->unkC;
-          cfg.startPosY = ((PartFxSpawnParams *)param_3)->unk10;
-          cfg.startPosZ = ((PartFxSpawnParams *)param_3)->unk14;
+          cfg.startPosX = ((PartFxSpawnParams *)spawnParams)->unkC;
+          cfg.startPosY = ((PartFxSpawnParams *)spawnParams)->unk10;
+          cfg.startPosZ = ((PartFxSpawnParams *)spawnParams)->unk14;
           cfg.overrideColor0 = 0xffff;
           cfg.overrideColor1 = 0xffff;
           cfg.overrideColor2 = 0xffff;
@@ -7123,16 +7123,16 @@ cfg.startPosX = lbl_803DF4F8 - (f32)(s32)randomGetRange(0,4);
           cfg.textureId = 0x5c;
     break;
   case 0x41:
-dVar16 = lbl_803DF63C;
-dVar15 = lbl_803DF640;
-dVar14 = lbl_803DF638;
-dVar13 = lbl_803DF5B4;
-          for (sVar10 = 0; sVar10 < 0x1e; sVar10 = sVar10 + 1) {
-            cfg.startPosY = (f32)dVar16;
-            cfg.velocityX = dVar15 * (f32)(s32)(2 - randomGetRange(0,4));
-            cfg.velocityY = dVar14 * (f32)(s32)randomGetRange(1,2);
-            cfg.velocityZ = dVar15 * (f32)(s32)(2U - randomGetRange(0,4));
-            cfg.scale = (f32)dVar13;
+ftmp4 = lbl_803DF63C;
+ftmp3 = lbl_803DF640;
+ftmp2 = lbl_803DF638;
+ftmp1 = lbl_803DF5B4;
+          for (i = 0; i < 0x1e; i = i + 1) {
+            cfg.startPosY = (f32)ftmp4;
+            cfg.velocityX = ftmp3 * (f32)(s32)(2 - randomGetRange(0,4));
+            cfg.velocityY = ftmp2 * (f32)(s32)randomGetRange(1,2);
+            cfg.velocityZ = ftmp3 * (f32)(s32)(2U - randomGetRange(0,4));
+            cfg.scale = (f32)ftmp1;
             cfg.lifetimeFrames = 0x3c;
             cfg.behaviorFlags = 0x108;
             cfg.textureId = 0x5c;
@@ -7148,34 +7148,34 @@ dVar13 = lbl_803DF5B4;
                 cfg.startPosZ = cfg.startPosZ + cfg.sourcePosW;
               }
             }
-            (*gExpgfxInterface)->spawnEffect(&cfg,0,param_2,0);
+            (*gExpgfxInterface)->spawnEffect(&cfg,0,effectId,0);
           }
     break;
   case 0x55c:
 LAB_800aa8ac:
         cfg.behaviorFlags = 0x20100100;
         cfg.lifetimeFrames = 400;
-        if (param_2 == 0x3d) {
+        if (effectId == 0x3d) {
           cfg.startPosX = lbl_803DF580 - (f32)(s32)randomGetRange(0,0x14);
           cfg.startPosY = lbl_803DF644;
           cfg.startPosZ = lbl_803DF580 - (f32)(s32)randomGetRange(0,0x14);
           cfg.scale = lbl_803DF4EC * (f32)(s32)randomGetRange(1,3);
           cfg.renderFlags = cfg.renderFlags | 0x1000000;
         }
-        else if (param_2 == 0x3e) {
+        else if (effectId == 0x3e) {
           cfg.startPosX = lbl_803DF580 - (f32)(s32)randomGetRange(0,0x14);
           cfg.startPosY = lbl_803DF648;
           cfg.startPosZ = lbl_803DF580 - (f32)(s32)randomGetRange(0,0x14);
           cfg.scale = lbl_803DF624 * (f32)(s32)randomGetRange(1,3);
           cfg.renderFlags = cfg.renderFlags | 0x1000000;
         }
-        else if (param_2 == 0x3f) {
+        else if (effectId == 0x3f) {
           cfg.startPosY = lbl_803DF64C;
           cfg.lifetimeFrames = 100;
           cfg.scale = lbl_803DF624 * (f32)(s32)randomGetRange(1,3);
           cfg.renderFlags = cfg.renderFlags | 0x1000000;
         }
-        else if (param_2 == 0x43) {
+        else if (effectId == 0x43) {
           cfg.startPosX = lbl_803DF650;
           cfg.startPosY = lbl_803DF538;
           cfg.startPosZ = lbl_803DF564 + (f32)(s32)randomGetRange(0,0x78);
@@ -7183,7 +7183,7 @@ LAB_800aa8ac:
           cfg.behaviorFlags = (cfg.behaviorFlags | 8);
           cfg.renderFlags = cfg.renderFlags | 0x1000000;
         }
-        else if (param_2 == 0x44) {
+        else if (effectId == 0x44) {
           cfg.startPosX = lbl_803DF650;
           cfg.startPosY = lbl_803DF654;
           cfg.startPosZ = (f32)(s32)randomGetRange(0,0x78);
@@ -7193,7 +7193,7 @@ LAB_800aa8ac:
         }
         cfg.linkGroup = 0x20;
         cfg.textureId = 0x5f;
-        cfg.behaviorFlags = (cfg.behaviorFlags | param_4);
+        cfg.behaviorFlags = (cfg.behaviorFlags | spawnFlags);
         if ((cfg.behaviorFlags & 1) != 0) {
           if (cfg.attachedSource != NULL) {
             cfg.startPosX = cfg.startPosX + *(f32 *)((char *)cfg.attachedSource + 0x18);
@@ -7206,7 +7206,7 @@ LAB_800aa8ac:
             cfg.startPosZ = cfg.startPosZ + cfg.sourcePosW;
           }
         }
-        if ((param_2 == 0x3e) || (param_2 == 0x3f)) {
+        if ((effectId == 0x3e) || (effectId == 0x3f)) {
           cfg.behaviorFlags = (cfg.behaviorFlags | 0x8000000);
         }
     break;
@@ -7214,7 +7214,7 @@ LAB_800aa8ac:
     goto LAB_800aa8ac;
   case 0x48:
 
-          if (param_3 == NULL) {
+          if (spawnParams == NULL) {
             *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
             *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
             *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -7244,30 +7244,30 @@ LAB_800aa8ac:
     break;
   case 0x38:
 srand(0x4233d);
-dVar13 = lbl_803DF644;
-dVar14 = lbl_803DF4E8;
-dVar15 = lbl_803DF600;
-dVar16 = lbl_803DF660;
-            for (sVar10 = 0; sVar10 < 0x28; sVar10 = sVar10 + 1) {
-              cfg.startPosY = (f32)dVar13;
-              cfg.velocityX = dVar14 * (f32)(s32)(0x50 - randomGetRange(0,0xa0));
-              cfg.velocityZ = dVar14 * (f32)(s32)(0x50U - randomGetRange(0,0xa0));
-              cfg.scale = (f32)dVar15;
-              cfg.lifetimeFrames = (u32)(dVar16 * (f32)(s32)randomGetRange(1,4));
+ftmp1 = lbl_803DF644;
+ftmp2 = lbl_803DF4E8;
+ftmp3 = lbl_803DF600;
+ftmp4 = lbl_803DF660;
+            for (i = 0; i < 0x28; i = i + 1) {
+              cfg.startPosY = (f32)ftmp1;
+              cfg.velocityX = ftmp2 * (f32)(s32)(0x50 - randomGetRange(0,0xa0));
+              cfg.velocityZ = ftmp2 * (f32)(s32)(0x50U - randomGetRange(0,0xa0));
+              cfg.scale = (f32)ftmp3;
+              cfg.lifetimeFrames = (u32)(ftmp4 * (f32)(s32)randomGetRange(1,4));
               cfg.behaviorFlags = 0x100011;
               cfg.textureId = 0x30;
-              fVar1 = cfg.sourcePosY;
-              fVar2 = cfg.sourcePosZ;
-              fVar3 = cfg.sourcePosW;
+              srcPosX = cfg.sourcePosY;
+              srcPosY = cfg.sourcePosZ;
+              srcPosZ = cfg.sourcePosW;
               if (cfg.attachedSource != NULL) {
-                fVar1 = *(f32 *)((char *)cfg.attachedSource + 0xc);
-                fVar2 = *(f32 *)((char *)cfg.attachedSource + 0x10);
-                fVar3 = *(f32 *)((char *)cfg.attachedSource + 0x14);
+                srcPosX = *(f32 *)((char *)cfg.attachedSource + 0xc);
+                srcPosY = *(f32 *)((char *)cfg.attachedSource + 0x10);
+                srcPosZ = *(f32 *)((char *)cfg.attachedSource + 0x14);
               }
-              cfg.startPosZ = cfg.startPosZ + fVar3;
-              cfg.startPosY = cfg.startPosY + fVar2;
-              cfg.startPosX = cfg.startPosX + fVar1;
-              (*gExpgfxInterface)->spawnEffect(&cfg,0,param_2,0);
+              cfg.startPosZ = cfg.startPosZ + srcPosZ;
+              cfg.startPosY = cfg.startPosY + srcPosY;
+              cfg.startPosX = cfg.startPosX + srcPosX;
+              (*gExpgfxInterface)->spawnEffect(&cfg,0,effectId,0);
             }
     break;
   case 0x35:
@@ -7477,7 +7477,7 @@ cfg.startPosX = lbl_803DF4CC * (f32)(s32)randomGetRange(0xffffffe2,0x1e);
           cfg.initialAlpha = 0x9b;
           cfg.linkGroup = 0xe;
           cfg.behaviorFlags = 0x100110;
-          if (param_6 == NULL) {
+          if (extraArgs == NULL) {
             cfg.textureId = 0x88;
           }
           else {
@@ -7494,7 +7494,7 @@ cfg.startPosX = lbl_803DF4CC * (f32)(s32)randomGetRange(0xffffffe2,0x1e);
     break;
   case 0x2b:
 
-          if (param_3 == NULL) {
+          if (spawnParams == NULL) {
             *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
             *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
             *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -7505,16 +7505,16 @@ cfg.startPosX = lbl_803DF4CC * (f32)(s32)randomGetRange(0xffffffe2,0x1e);
             lbl_8039C308[3] = 0;
           }
           cfg.velocityX = lbl_803DF608;
-          dVar12 = (f32)(s32)randomGetRange(0,0xfffe);
-          dVar13 = (f32)(s32)randomGetRange(0,0xfffe);
-          dVar14 = (f32)(s32)randomGetRange(0,0xfffe);
+          ftmp0 = (f32)(s32)randomGetRange(0,0xfffe);
+          ftmp1 = (f32)(s32)randomGetRange(0,0xfffe);
+          ftmp2 = (f32)(s32)randomGetRange(0,0xfffe);
           rot.m[1] = lbl_803DF4DC;
           rot.m[2] = lbl_803DF4DC;
           rot.m[3] = lbl_803DF4DC;
           rot.m[0] = lbl_803DF4D0;
-          rot.z = dVar14;
-          rot.y = dVar13;
-          rot.x = dVar12;
+          rot.z = ftmp2;
+          rot.y = ftmp1;
+          rot.x = ftmp0;
           vecRotateZXY((s16 *)&rot,&cfg.velocityX);
           cfg.scale = lbl_803DF690;
           cfg.lifetimeFrames = 0x32;
@@ -7555,7 +7555,7 @@ cfg.startPosY = lbl_803DF644;
     break;
   case 0x25:
 
-          if (param_3 == NULL) {
+          if (spawnParams == NULL) {
             *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
             *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
             *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -7564,14 +7564,14 @@ cfg.startPosY = lbl_803DF644;
             lbl_8039C308[1] = 0;
             lbl_8039C308[2] = 0;
             lbl_8039C308[3] = 0;
-            param_3 = lbl_8039C308;
+            spawnParams = lbl_8039C308;
           }
-          if (param_3 == NULL) {
+          if (spawnParams == NULL) {
             return -1;
           }
-          cfg.startPosX = ((PartFxSpawnParams *)param_3)->unkC + (f32)(s32)randomGetRange(0,6);
-          cfg.startPosY = ((PartFxSpawnParams *)param_3)->unk10;
-          cfg.startPosZ = ((PartFxSpawnParams *)param_3)->unk14 + (f32)(s32)randomGetRange(0,6);
+          cfg.startPosX = ((PartFxSpawnParams *)spawnParams)->unkC + (f32)(s32)randomGetRange(0,6);
+          cfg.startPosY = ((PartFxSpawnParams *)spawnParams)->unk10;
+          cfg.startPosZ = ((PartFxSpawnParams *)spawnParams)->unk14 + (f32)(s32)randomGetRange(0,6);
           cfg.velocityY = lbl_803DF634 * (f32)(s32)randomGetRange(0,10);
           cfg.scale = lbl_803DF5B4 * (f32)(s32)randomGetRange(4,8);
           cfg.lifetimeFrames = 0x24;
@@ -7580,7 +7580,7 @@ cfg.startPosY = lbl_803DF644;
           cfg.textureId = 0x61;
     break;
   case 0x36:
-if (param_6 == NULL) {
+if (extraArgs == NULL) {
                 return -1;
               }
               cfg.scale = lbl_803DF568;
@@ -7592,18 +7592,18 @@ if (param_6 == NULL) {
     break;
   case 0x26:
 cfg.startPosX = (f32)(s32)randomGetRange(0xffffffff,1);
-          if (param_6 != NULL) {
-            cfg.startPosX = cfg.startPosX + param_6[1];
+          if (extraArgs != NULL) {
+            cfg.startPosX = cfg.startPosX + extraArgs[1];
           }
           cfg.startPosY = lbl_803DF4DC;
           cfg.startPosZ = (f32)(s32)randomGetRange(0xffffffff,1);
           cfg.velocityY = lbl_803DF608;
           cfg.scale = lbl_803DF4E0;
-          if (param_6 == NULL) {
+          if (extraArgs == NULL) {
             cfg.lifetimeFrames = 0x78;
           }
           else {
-            cfg.lifetimeFrames = (u32)*param_6;
+            cfg.lifetimeFrames = (u32)*extraArgs;
           }
           cfg.linkGroup = 0;
           cfg.behaviorFlags = 0x100201;
@@ -7614,7 +7614,7 @@ cfg.startPosX = (f32)(s32)randomGetRange(0xffffffff,1);
           rot.m[0] = lbl_803DF4D0;
           rot.z = 0;
           rot.y = 0;
-          rot.x = *(s16 *)param_1;
+          rot.x = *(s16 *)sourceObj;
           vecRotateZXY((s16 *)&rot,&cfg.startPosX);
     break;
   case 0xc:
@@ -7873,7 +7873,7 @@ cfg.scale = lbl_803DF4EC;
             cfg.textureId = 0x2c;
     break;
   case 0x6b:
-if (param_3 == NULL) {
+if (spawnParams == NULL) {
           *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
           *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
           *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -7882,20 +7882,20 @@ if (param_3 == NULL) {
           lbl_8039C308[1] = 0;
           lbl_8039C308[2] = 0;
           lbl_8039C308[3] = 0;
-          param_3 = lbl_8039C308;
+          spawnParams = lbl_8039C308;
         }
-        if (param_6 == NULL) {
+        if (extraArgs == NULL) {
           return -1;
         }
-        cfg.startPosX = ((PartFxSpawnParams *)param_3)->unkC;
-        cfg.startPosY = ((PartFxSpawnParams *)param_3)->unk10;
-        cfg.startPosZ = ((PartFxSpawnParams *)param_3)->unk14;
-        cfg.velocityX = *param_6;
-        cfg.velocityY = param_6[1];
-        cfg.velocityZ = param_6[2];
+        cfg.startPosX = ((PartFxSpawnParams *)spawnParams)->unkC;
+        cfg.startPosY = ((PartFxSpawnParams *)spawnParams)->unk10;
+        cfg.startPosZ = ((PartFxSpawnParams *)spawnParams)->unk14;
+        cfg.velocityX = *extraArgs;
+        cfg.velocityY = extraArgs[1];
+        cfg.velocityZ = extraArgs[2];
         cfg.scale = lbl_803DF4C8;
         cfg.lifetimeFrames = 0x28;
-        cfg.initialAlpha = (u8)(int)((PartFxSpawnParams *)param_3)->unk8;
+        cfg.initialAlpha = (u8)(int)((PartFxSpawnParams *)spawnParams)->unk8;
         cfg.linkGroup = 10;
         cfg.behaviorFlags = 0x200;
         cfg.textureId = 0xc13;
@@ -7905,7 +7905,7 @@ if (param_3 == NULL) {
         cfg.sourcePosX = lbl_803DF4D0;
         cfg.sourceVecZ = 0;
         cfg.sourceVecY = 0;
-        cfg.sourceVecX = *param_3;
+        cfg.sourceVecX = *spawnParams;
     break;
   case 0x6c:
 cfg.scale = lbl_803DF568;
@@ -7916,7 +7916,7 @@ cfg.scale = lbl_803DF568;
         cfg.textureId = 0xdd;
     break;
   case 0x56:
-if (param_3 == NULL) {
+if (spawnParams == NULL) {
             *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
             *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
             *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -7925,24 +7925,24 @@ if (param_3 == NULL) {
             lbl_8039C308[1] = 0;
             lbl_8039C308[2] = 0;
             lbl_8039C308[3] = 0;
-            param_3 = lbl_8039C308;
+            spawnParams = lbl_8039C308;
           }
           cfg.startPosX = (f32)(s32)randomGetRange(0xfffffffa,6);
           cfg.startPosZ = (f32)(s32)randomGetRange(0xfffffffa,6);
-          cfg.velocityX = ((PartFxSpawnParams *)param_3)->unk8 * (lbl_803DF508 * (f32)(s32)randomGetRange(0xfffffffe,2));
-          cfg.velocityY = ((PartFxSpawnParams *)param_3)->unk8 * (lbl_803DF4CC * (f32)(s32)randomGetRange(0,4));
-          cfg.velocityZ = ((PartFxSpawnParams *)param_3)->unk8 * (lbl_803DF508 * (f32)(s32)randomGetRange(0xfffffffe,2));
-          cfg.scale = lbl_803DF634 * ((PartFxSpawnParams *)param_3)->unk8;
+          cfg.velocityX = ((PartFxSpawnParams *)spawnParams)->unk8 * (lbl_803DF508 * (f32)(s32)randomGetRange(0xfffffffe,2));
+          cfg.velocityY = ((PartFxSpawnParams *)spawnParams)->unk8 * (lbl_803DF4CC * (f32)(s32)randomGetRange(0,4));
+          cfg.velocityZ = ((PartFxSpawnParams *)spawnParams)->unk8 * (lbl_803DF508 * (f32)(s32)randomGetRange(0xfffffffe,2));
+          cfg.scale = lbl_803DF634 * ((PartFxSpawnParams *)spawnParams)->unk8;
           cfg.lifetimeFrames = 0x18;
           cfg.behaviorFlags = 0x1080000;
           cfg.renderFlags = 0x1000000;
           cfg.initialAlpha = 0xa5;
-          if (param_6 != NULL) {
-            cfg.overrideColor0 = (u32)*(byte *)param_6 << 8;
+          if (extraArgs != NULL) {
+            cfg.overrideColor0 = (u32)*(byte *)extraArgs << 8;
             cfg.colorWord0 = (ushort)cfg.overrideColor0;
-            cfg.overrideColor1 = (u32)*(byte *)((int)param_6 + 1) << 8;
+            cfg.overrideColor1 = (u32)*(byte *)((int)extraArgs + 1) << 8;
             cfg.colorWord1 = (ushort)cfg.overrideColor1;
-            cfg.overrideColor2 = (u32)*(byte *)((int)param_6 + 2) << 8;
+            cfg.overrideColor2 = (u32)*(byte *)((int)extraArgs + 2) << 8;
             cfg.colorWord2 = (ushort)cfg.overrideColor2;
             cfg.renderFlags = 0x1000020;
           }
@@ -7950,7 +7950,7 @@ if (param_3 == NULL) {
     break;
   case 0x57:
 
-        if (param_3 == NULL) {
+        if (spawnParams == NULL) {
           *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
           *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
           *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -7959,30 +7959,30 @@ if (param_3 == NULL) {
           lbl_8039C308[1] = 0;
           lbl_8039C308[2] = 0;
           lbl_8039C308[3] = 0;
-          param_3 = lbl_8039C308;
+          spawnParams = lbl_8039C308;
         }
         cfg.startPosY = (f32)(s32)randomGetRange(0,10);
-        cfg.velocityX = ((PartFxSpawnParams *)param_3)->unk8 * (lbl_803DF5B4 * (f32)(s32)randomGetRange(0xffffff9c,100));
-        cfg.velocityY = ((PartFxSpawnParams *)param_3)->unk8 * (lbl_803DF5B4 * (f32)(s32)randomGetRange(200,400));
-        cfg.velocityZ = ((PartFxSpawnParams *)param_3)->unk8 * (lbl_803DF5B4 * (f32)(s32)randomGetRange(0xffffff9c,100));
-        cfg.scale = ((PartFxSpawnParams *)param_3)->unk8 * (lbl_803DF524 * (f32)(s32)randomGetRange(8,0xb));
+        cfg.velocityX = ((PartFxSpawnParams *)spawnParams)->unk8 * (lbl_803DF5B4 * (f32)(s32)randomGetRange(0xffffff9c,100));
+        cfg.velocityY = ((PartFxSpawnParams *)spawnParams)->unk8 * (lbl_803DF5B4 * (f32)(s32)randomGetRange(200,400));
+        cfg.velocityZ = ((PartFxSpawnParams *)spawnParams)->unk8 * (lbl_803DF5B4 * (f32)(s32)randomGetRange(0xffffff9c,100));
+        cfg.scale = ((PartFxSpawnParams *)spawnParams)->unk8 * (lbl_803DF524 * (f32)(s32)randomGetRange(8,0xb));
         cfg.initialAlpha = 0xbe;
-        cfg.lifetimeFrames = (u32)(lbl_803DF6C8 * ((PartFxSpawnParams *)param_3)->unk8);
+        cfg.lifetimeFrames = (u32)(lbl_803DF6C8 * ((PartFxSpawnParams *)spawnParams)->unk8);
         cfg.behaviorFlags = 0x1200000;
         cfg.renderFlags = 0x1000000;
         cfg.textureId = 0x77;
-        if (param_6 != NULL) {
-          cfg.overrideColor0 = (u32)*(byte *)param_6 << 8;
+        if (extraArgs != NULL) {
+          cfg.overrideColor0 = (u32)*(byte *)extraArgs << 8;
           cfg.colorWord0 = (ushort)cfg.overrideColor0;
-          cfg.overrideColor1 = (u32)*(byte *)((int)param_6 + 1) << 8;
+          cfg.overrideColor1 = (u32)*(byte *)((int)extraArgs + 1) << 8;
           cfg.colorWord1 = (ushort)cfg.overrideColor1;
-          cfg.overrideColor2 = (u32)*(byte *)((int)param_6 + 2) << 8;
+          cfg.overrideColor2 = (u32)*(byte *)((int)extraArgs + 2) << 8;
           cfg.colorWord2 = (ushort)cfg.overrideColor2;
           cfg.renderFlags = 0x1000020;
         }
     break;
   case 0x58:
-if (param_3 == NULL) {
+if (spawnParams == NULL) {
             *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
             *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
             *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -7991,28 +7991,28 @@ if (param_3 == NULL) {
             lbl_8039C308[1] = 0;
             lbl_8039C308[2] = 0;
             lbl_8039C308[3] = 0;
-            param_3 = lbl_8039C308;
+            spawnParams = lbl_8039C308;
           }
-          cfg.velocityX = ((PartFxSpawnParams *)param_3)->unk8 * (lbl_803DF4F0 * (f32)(s32)randomGetRange(0xffffff9c,100));
-          cfg.velocityY = ((PartFxSpawnParams *)param_3)->unk8 * (lbl_803DF4F0 * (f32)(s32)randomGetRange(10,200));
-          cfg.velocityZ = ((PartFxSpawnParams *)param_3)->unk8 * (lbl_803DF4F0 * (f32)(s32)randomGetRange(0xffffff9c,100));
-          cfg.scale = ((PartFxSpawnParams *)param_3)->unk8 * (lbl_803DF524 * (f32)(s32)randomGetRange(8,0xb));
+          cfg.velocityX = ((PartFxSpawnParams *)spawnParams)->unk8 * (lbl_803DF4F0 * (f32)(s32)randomGetRange(0xffffff9c,100));
+          cfg.velocityY = ((PartFxSpawnParams *)spawnParams)->unk8 * (lbl_803DF4F0 * (f32)(s32)randomGetRange(10,200));
+          cfg.velocityZ = ((PartFxSpawnParams *)spawnParams)->unk8 * (lbl_803DF4F0 * (f32)(s32)randomGetRange(0xffffff9c,100));
+          cfg.scale = ((PartFxSpawnParams *)spawnParams)->unk8 * (lbl_803DF524 * (f32)(s32)randomGetRange(8,0xb));
           cfg.lifetimeFrames = 0x4b;
           cfg.behaviorFlags = 0x1080000;
           cfg.renderFlags = 0x1000000;
           cfg.textureId = 0x77;
-          if (param_6 != NULL) {
-            cfg.overrideColor0 = (u32)*(byte *)param_6 << 8;
+          if (extraArgs != NULL) {
+            cfg.overrideColor0 = (u32)*(byte *)extraArgs << 8;
             cfg.colorWord0 = (ushort)cfg.overrideColor0;
-            cfg.overrideColor1 = (u32)*(byte *)((int)param_6 + 1) << 8;
+            cfg.overrideColor1 = (u32)*(byte *)((int)extraArgs + 1) << 8;
             cfg.colorWord1 = (ushort)cfg.overrideColor1;
-            cfg.overrideColor2 = (u32)*(byte *)((int)param_6 + 2) << 8;
+            cfg.overrideColor2 = (u32)*(byte *)((int)extraArgs + 2) << 8;
             cfg.colorWord2 = (ushort)cfg.overrideColor2;
             cfg.renderFlags = 0x1000020;
           }
     break;
   case 0x323:
-if (param_3 == NULL) {
+if (spawnParams == NULL) {
             *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
             *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
             *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -8026,14 +8026,14 @@ if (param_3 == NULL) {
           cfg.startPosY = lbl_803DF6D0 * (f32)(s32)randomGetRange(0xffffffe9,0x16) + cfg.startPosY;
           cfg.startPosZ = lbl_803DF6D4 * (f32)(s32)randomGetRange(0xffffffe9,0x19) + cfg.startPosZ;
           cfg.scale = lbl_803DF6D8 * (f32)(s32)randomGetRange(1,6);
-          iVar8 = randomGetRange(7,0xf);
-          cfg.lifetimeFrames = iVar8 + 5;
+          intVal = randomGetRange(7,0xf);
+          cfg.lifetimeFrames = intVal + 5;
           cfg.textureId = 0xc9a;
           cfg.behaviorFlags = 0x100210;
           cfg.renderFlags = 0x4000800;
-          if (param_6 != NULL) {
-            cVar4 = *(u8 *)param_6;
-            if (cVar4 == '\x01') {
+          if (extraArgs != NULL) {
+            variant = *(u8 *)extraArgs;
+            if (variant == '\x01') {
               cfg.overrideColor0 = 0x2898;
               cfg.overrideColor1 = 0xffff;
               cfg.overrideColor2 = 0xffff;
@@ -8042,7 +8042,7 @@ if (param_3 == NULL) {
               cfg.colorWord2 = 0xffff;
               cfg.renderFlags |= 0x20;
             }
-            else if (cVar4 == '\x02') {
+            else if (variant == '\x02') {
               cfg.overrideColor0 = 0xff65;
               cfg.overrideColor1 = 0xd23c;
               cfg.overrideColor2 = 0x7fff;
@@ -8051,9 +8051,9 @@ if (param_3 == NULL) {
               cfg.colorWord2 = 0x2603;
               cfg.renderFlags |= 0x20;
               cfg.scale = cfg.scale * lbl_803DF6DC;
-              cfg.lifetimeFrames = iVar8 + 0xc;
+              cfg.lifetimeFrames = intVal + 0xc;
             }
-            else if (cVar4 == '\x03') {
+            else if (variant == '\x03') {
               cfg.overrideColor0 = 0xfebe;
               cfg.overrideColor1 = 0x5cb2;
               cfg.overrideColor2 = 0xfd01;
@@ -8062,9 +8062,9 @@ if (param_3 == NULL) {
               cfg.colorWord2 = 0x1f5;
               cfg.renderFlags |= 0x20;
               cfg.scale = cfg.scale * lbl_803DF6E0;
-              cfg.lifetimeFrames = iVar8 + 0x19;
+              cfg.lifetimeFrames = intVal + 0x19;
             }
-            else if (cVar4 == '\x04') {
+            else if (variant == '\x04') {
               cfg.overrideColor0 = 0xffff;
               cfg.overrideColor1 = 0xffff;
               cfg.overrideColor2 = 0xffff;
@@ -8074,7 +8074,7 @@ if (param_3 == NULL) {
               cfg.renderFlags |= 0x20;
               cfg.scale = cfg.scale * lbl_803DF6E0;
             }
-            else if (cVar4 == '\x05') {
+            else if (variant == '\x05') {
               cfg.overrideColor0 = 0xffff;
               cfg.overrideColor1 = 0xffff;
               cfg.overrideColor2 = 0xffff;
@@ -8084,7 +8084,7 @@ if (param_3 == NULL) {
               cfg.renderFlags |= 0x20;
               cfg.scale = cfg.scale * lbl_803DF6E0;
             }
-            else if (cVar4 == '\x06') {
+            else if (variant == '\x06') {
               cfg.overrideColor0 = 0xffff;
               cfg.overrideColor1 = 0xffff;
               cfg.overrideColor2 = 0xffff;
@@ -8094,7 +8094,7 @@ if (param_3 == NULL) {
               cfg.renderFlags |= 0x20;
               cfg.scale = cfg.scale * lbl_803DF6E0;
             }
-            else if (cVar4 == '\a') {
+            else if (variant == '\a') {
               cfg.overrideColor0 = 0xffff;
               cfg.overrideColor1 = 0xffff;
               cfg.overrideColor2 = 0xffff;
@@ -8104,7 +8104,7 @@ if (param_3 == NULL) {
               cfg.renderFlags |= 0x20;
               cfg.scale = cfg.scale * lbl_803DF6E0;
             }
-            else if (cVar4 == '\b') {
+            else if (variant == '\b') {
               cfg.overrideColor0 = 0xffff;
               cfg.overrideColor1 = 0xffff;
               cfg.overrideColor2 = 0xffff;
@@ -8118,7 +8118,7 @@ if (param_3 == NULL) {
     break;
   case 0x325:
 
-        if (param_3 == NULL) {
+        if (spawnParams == NULL) {
           *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
           *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
           *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -8144,9 +8144,9 @@ if (param_3 == NULL) {
         cfg.lifetimeFrames = randomGetRange(7,0x12) + 0xc;
         cfg.textureId = 0xc98;
         cfg.behaviorFlags = 0x480110;
-        if (param_6 != NULL) {
-          cVar4 = *(u8 *)param_6;
-          if (cVar4 == '\x01') {
+        if (extraArgs != NULL) {
+          variant = *(u8 *)extraArgs;
+          if (variant == '\x01') {
             cfg.overrideColor0 = 0x2898;
             cfg.overrideColor1 = 0xffff;
             cfg.overrideColor2 = 0xffff;
@@ -8155,7 +8155,7 @@ if (param_3 == NULL) {
             cfg.colorWord2 = 0xffff;
             cfg.renderFlags = cfg.renderFlags | 0x20;
           }
-          else if (cVar4 == '\x02') {
+          else if (variant == '\x02') {
             cfg.overrideColor0 = 0xff65;
             cfg.overrideColor1 = 0xd23c;
             cfg.overrideColor2 = 0x7fff;
@@ -8165,7 +8165,7 @@ if (param_3 == NULL) {
             cfg.renderFlags = cfg.renderFlags | 0x20;
             cfg.scale = cfg.scale * lbl_803DF6DC;
           }
-          else if (cVar4 == '\x03') {
+          else if (variant == '\x03') {
             cfg.overrideColor0 = 0xfebe;
             cfg.overrideColor1 = 0x5cb2;
             cfg.overrideColor2 = 0xfd01;
@@ -8195,9 +8195,9 @@ randomGetRange(1,1);
             cfg.textureId = 0xc99;
             cfg.behaviorFlags = 0x180210;
             cfg.initialAlpha = 0x7d;
-            if (param_6 != NULL) {
-              cVar4 = *(u8 *)param_6;
-              if (cVar4 == '\x01') {
+            if (extraArgs != NULL) {
+              variant = *(u8 *)extraArgs;
+              if (variant == '\x01') {
                 cfg.overrideColor0 = 0x2898;
                 cfg.overrideColor1 = 0xffff;
                 cfg.overrideColor2 = 0xffff;
@@ -8207,7 +8207,7 @@ randomGetRange(1,1);
                 cfg.renderFlags = cfg.renderFlags | 0x20;
                 cfg.scale = cfg.scale * lbl_803DF6F4;
               }
-              else if (cVar4 == '\x02') {
+              else if (variant == '\x02') {
                 cfg.overrideColor0 = 0xff65;
                 cfg.overrideColor1 = 0xd23c;
                 cfg.overrideColor2 = 0x7fff;
@@ -8216,7 +8216,7 @@ randomGetRange(1,1);
                 cfg.colorWord2 = 0x2603;
                 cfg.renderFlags = cfg.renderFlags | 0x20;
               }
-              else if (cVar4 == '\x03') {
+              else if (variant == '\x03') {
                 cfg.overrideColor0 = 0xfebe;
                 cfg.overrideColor1 = 0x5cb2;
                 cfg.overrideColor2 = 0xfd01;
@@ -8226,7 +8226,7 @@ randomGetRange(1,1);
                 cfg.renderFlags = cfg.renderFlags | 0x20;
                 cfg.scale = cfg.scale * lbl_803DF6F8;
               }
-              else if (cVar4 == '\x04') {
+              else if (variant == '\x04') {
                 cfg.overrideColor0 = 0xffff;
                 cfg.overrideColor1 = 0xffff;
                 cfg.overrideColor2 = 0xffff;
@@ -8236,7 +8236,7 @@ randomGetRange(1,1);
                 cfg.renderFlags = cfg.renderFlags | 0x20;
                 cfg.scale = cfg.scale * lbl_803DF6E0;
               }
-              else if (cVar4 == '\x05') {
+              else if (variant == '\x05') {
                 cfg.overrideColor0 = 0xffff;
                 cfg.overrideColor1 = 0xffff;
                 cfg.overrideColor2 = 0xffff;
@@ -8246,7 +8246,7 @@ randomGetRange(1,1);
                 cfg.renderFlags = cfg.renderFlags | 0x20;
                 cfg.scale = cfg.scale * lbl_803DF6E0;
               }
-              else if (cVar4 == '\x06') {
+              else if (variant == '\x06') {
                 cfg.overrideColor0 = 0xffff;
                 cfg.overrideColor1 = 0xffff;
                 cfg.overrideColor2 = 0xffff;
@@ -8256,7 +8256,7 @@ randomGetRange(1,1);
                 cfg.renderFlags = cfg.renderFlags | 0x20;
                 cfg.scale = cfg.scale * lbl_803DF6E0;
               }
-              else if (cVar4 == '\a') {
+              else if (variant == '\a') {
                 cfg.overrideColor0 = 0xffff;
                 cfg.overrideColor1 = 0xffff;
                 cfg.overrideColor2 = 0xffff;
@@ -8266,7 +8266,7 @@ randomGetRange(1,1);
                 cfg.renderFlags = cfg.renderFlags | 0x20;
                 cfg.scale = cfg.scale * lbl_803DF6E0;
               }
-              else if (cVar4 == '\b') {
+              else if (variant == '\b') {
                 cfg.overrideColor0 = 0xffff;
                 cfg.overrideColor1 = 0xffff;
                 cfg.overrideColor2 = 0xffff;
@@ -8290,7 +8290,7 @@ randomGetRange(1,1);
             cfg.textureId = 0xc9d;
     break;
   case 0x3de:
-if (param_3 == NULL) {
+if (spawnParams == NULL) {
             *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
             *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
             *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -8299,17 +8299,17 @@ if (param_3 == NULL) {
             lbl_8039C308[1] = 0;
             lbl_8039C308[2] = 0;
             lbl_8039C308[3] = 0;
-            param_3 = lbl_8039C308;
+            spawnParams = lbl_8039C308;
           }
-          if (param_3 == NULL) {
+          if (spawnParams == NULL) {
             cfg.startPosX = lbl_803DF4CC * (f32)(s32)randomGetRange(0xfffffff6,10);
             cfg.startPosY = lbl_803DF4CC * (f32)(s32)randomGetRange(0xfffffff6,10);
             cfg.startPosZ = lbl_803DF4CC * (f32)(s32)randomGetRange(0xfffffff6,10);
           }
           else {
-            cfg.startPosX = ((PartFxSpawnParams *)param_3)->unkC;
-            cfg.startPosY = ((PartFxSpawnParams *)param_3)->unk10;
-            cfg.startPosZ = ((PartFxSpawnParams *)param_3)->unk14;
+            cfg.startPosX = ((PartFxSpawnParams *)spawnParams)->unkC;
+            cfg.startPosY = ((PartFxSpawnParams *)spawnParams)->unk10;
+            cfg.startPosZ = ((PartFxSpawnParams *)spawnParams)->unk14;
           }
           cfg.velocityX = lbl_803DF4DC;
           cfg.velocityY = lbl_803DF508;
@@ -8355,7 +8355,7 @@ if (param_3 == NULL) {
     break;
   case 0x320:
 
-            if (param_3 == NULL) {
+            if (spawnParams == NULL) {
               *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
               *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
               *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -8364,14 +8364,14 @@ if (param_3 == NULL) {
               lbl_8039C308[1] = 0;
               lbl_8039C308[2] = 0;
               lbl_8039C308[3] = 0;
-              param_3 = lbl_8039C308;
+              spawnParams = lbl_8039C308;
             }
             cfg.velocityX = lbl_803DF608 * (f32)(s32)randomGetRange(0xfffffffe,2);
             cfg.velocityY = lbl_803DF674 * (f32)(s32)randomGetRange(2,5);
             cfg.velocityZ = lbl_803DF700 * (f32)(s32)randomGetRange(1,3);
-            cfg.startPosX = ((PartFxSpawnParams *)param_3)->unkC;
-            cfg.startPosY = ((PartFxSpawnParams *)param_3)->unk10;
-            cfg.startPosZ = ((PartFxSpawnParams *)param_3)->unk14;
+            cfg.startPosX = ((PartFxSpawnParams *)spawnParams)->unkC;
+            cfg.startPosY = ((PartFxSpawnParams *)spawnParams)->unk10;
+            cfg.startPosZ = ((PartFxSpawnParams *)spawnParams)->unk14;
             cfg.scale = lbl_803DF550;
             cfg.lifetimeFrames = 0x28;
             cfg.renderFlags = 0x5000000;
@@ -8379,7 +8379,7 @@ if (param_3 == NULL) {
             cfg.textureId = 0xc8f;
     break;
   case 0x321:
-if (param_3 == NULL) {
+if (spawnParams == NULL) {
               *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
               *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
               *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -8388,13 +8388,13 @@ if (param_3 == NULL) {
               lbl_8039C308[1] = 0;
               lbl_8039C308[2] = 0;
               lbl_8039C308[3] = 0;
-              param_3 = lbl_8039C308;
+              spawnParams = lbl_8039C308;
             }
             cfg.velocityY = lbl_803DF4CC * (f32)(s32)randomGetRange(0,4);
             cfg.velocityZ = lbl_803DF704 * (f32)(s32)randomGetRange(2,4);
-            cfg.startPosX = ((PartFxSpawnParams *)param_3)->unkC;
-            cfg.startPosY = ((PartFxSpawnParams *)param_3)->unk10;
-            cfg.startPosZ = ((PartFxSpawnParams *)param_3)->unk14;
+            cfg.startPosX = ((PartFxSpawnParams *)spawnParams)->unkC;
+            cfg.startPosY = ((PartFxSpawnParams *)spawnParams)->unk10;
+            cfg.startPosZ = ((PartFxSpawnParams *)spawnParams)->unk14;
             cfg.scale = lbl_803DF4E8;
             cfg.lifetimeFrames = 100;
             cfg.behaviorFlags = 0x1180200;
@@ -8403,7 +8403,7 @@ if (param_3 == NULL) {
     break;
   case 0x322:
 
-          if (param_3 == NULL) {
+          if (spawnParams == NULL) {
             *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
             *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
             *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -8412,11 +8412,11 @@ if (param_3 == NULL) {
             lbl_8039C308[1] = 0;
             lbl_8039C308[2] = 0;
             lbl_8039C308[3] = 0;
-            param_3 = lbl_8039C308;
+            spawnParams = lbl_8039C308;
           }
-          cfg.startPosX = ((PartFxSpawnParams *)param_3)->unkC;
-          cfg.startPosY = ((PartFxSpawnParams *)param_3)->unk10;
-          cfg.startPosZ = ((PartFxSpawnParams *)param_3)->unk14;
+          cfg.startPosX = ((PartFxSpawnParams *)spawnParams)->unkC;
+          cfg.startPosY = ((PartFxSpawnParams *)spawnParams)->unk10;
+          cfg.startPosZ = ((PartFxSpawnParams *)spawnParams)->unk14;
           cfg.scale = lbl_803DF504;
           cfg.lifetimeFrames = 0x50;
           cfg.behaviorFlags = 0x180200;
@@ -8426,7 +8426,7 @@ if (param_3 == NULL) {
     break;
   case 0x351:
 
-          if (param_3 == NULL) {
+          if (spawnParams == NULL) {
             *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
             *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
             *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -8435,12 +8435,12 @@ if (param_3 == NULL) {
             lbl_8039C308[1] = 0;
             lbl_8039C308[2] = 0;
             lbl_8039C308[3] = 0;
-            param_3 = lbl_8039C308;
+            spawnParams = lbl_8039C308;
           }
           cfg.velocityZ = lbl_803DF708;
-          cfg.startPosX = ((PartFxSpawnParams *)param_3)->unkC;
-          cfg.startPosY = ((PartFxSpawnParams *)param_3)->unk10;
-          cfg.startPosZ = ((PartFxSpawnParams *)param_3)->unk14;
+          cfg.startPosX = ((PartFxSpawnParams *)spawnParams)->unkC;
+          cfg.startPosY = ((PartFxSpawnParams *)spawnParams)->unk10;
+          cfg.startPosZ = ((PartFxSpawnParams *)spawnParams)->unk14;
           cfg.scale = lbl_803DF618 * (f32)(s32)randomGetRange(0x32,100);
           cfg.lifetimeFrames = randomGetRange(0x28,0x50);
           cfg.behaviorFlags = 0x8100200;
@@ -8449,7 +8449,7 @@ if (param_3 == NULL) {
     break;
   case 0x51d:
 
-        if (param_3 == NULL) {
+        if (spawnParams == NULL) {
           *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
           *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
           *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -8458,12 +8458,12 @@ if (param_3 == NULL) {
           lbl_8039C308[1] = 0;
           lbl_8039C308[2] = 0;
           lbl_8039C308[3] = 0;
-          param_3 = lbl_8039C308;
+          spawnParams = lbl_8039C308;
         }
         cfg.sourceVecX = 700;
         cfg.textureId = 0xc09;
-        cfg.startPosX = ((PartFxSpawnParams *)param_3)->unkC;
-        cfg.startPosY = ((PartFxSpawnParams *)param_3)->unk10;
+        cfg.startPosX = ((PartFxSpawnParams *)spawnParams)->unkC;
+        cfg.startPosY = ((PartFxSpawnParams *)spawnParams)->unk10;
         cfg.scale = lbl_803DF524 * (f32)(s32)randomGetRange(10,0x14);
         cfg.lifetimeFrames = 0xaa;
         cfg.behaviorFlags = 0xa0104;
@@ -8476,7 +8476,7 @@ if (param_3 == NULL) {
     break;
   case 0x55a:
           {
-            if (param_3 == NULL) {
+            if (spawnParams == NULL) {
               *(f32 *)(lbl_8039C308 + 6) = lbl_803DF4DC;
               *(f32 *)(lbl_8039C308 + 8) = lbl_803DF4DC;
               *(f32 *)(lbl_8039C308 + 10) = lbl_803DF4DC;
@@ -8533,12 +8533,12 @@ LAB_800aeb28:
     return -1;
   }
 LAB_800aeb30:
-  cfg.behaviorFlags = (cfg.behaviorFlags | param_4);
+  cfg.behaviorFlags = (cfg.behaviorFlags | spawnFlags);
   if (((cfg.behaviorFlags & 1) != 0) && ((cfg.behaviorFlags & 2) != 0)) {
     cfg.behaviorFlags ^= 2LL;
   }
   if ((cfg.behaviorFlags & 1) != 0) {
-    if ((param_4 & 0x200000) != 0) {
+    if ((spawnFlags & 0x200000) != 0) {
       cfg.startPosX = cfg.startPosX + cfg.sourcePosY;
       cfg.startPosY = cfg.startPosY + cfg.sourcePosZ;
       cfg.startPosZ = cfg.startPosZ + cfg.sourcePosW;
@@ -8551,7 +8551,7 @@ LAB_800aeb30:
       }
     }
   }
-  return (*gExpgfxInterface)->spawnEffect(&cfg,0xffffffff,param_2,0);
+  return (*gExpgfxInterface)->spawnEffect(&cfg,0xffffffff,effectId,0);
 }
 
 
@@ -10727,7 +10727,7 @@ int Effect4_func04(void *sourceObj, int effectId, s16 *spawnParams, u32 spawnFla
                    u8 modelId, s16 *extraArgs)
 {
     int spawnResult;
-    int iVar1;
+    int randPick;
     MtxBuildArg es;
     PartFxSpawn cfg;
 
@@ -11009,12 +11009,12 @@ int Effect4_func04(void *sourceObj, int effectId, s16 *spawnParams, u32 spawnFla
         cfg.lifetimeFrames = 0;
         cfg.initialAlpha = (u8)(randomGetRange(0, 0x37) + 0xc8);
         cfg.linkGroup = 0;
-        iVar1 = randomGetRange(0, 2);
-        if (iVar1 == 0) {
+        randPick = randomGetRange(0, 2);
+        if (randPick == 0) {
             cfg.textureId = 0x156;
-        } else if (iVar1 == 1) {
+        } else if (randPick == 1) {
             cfg.textureId = 0x157;
-        } else if (iVar1 == 2) {
+        } else if (randPick == 2) {
             cfg.textureId = 0xc0e;
         }
         cfg.behaviorFlags = 0x80011;
@@ -11043,12 +11043,12 @@ int Effect4_func04(void *sourceObj, int effectId, s16 *spawnParams, u32 spawnFla
         cfg.lifetimeFrames = 0x2;
         cfg.initialAlpha = 0x9b;
         cfg.linkGroup = 0;
-        iVar1 = randomGetRange(0, 2);
-        if (iVar1 == 0) {
+        randPick = randomGetRange(0, 2);
+        if (randPick == 0) {
             cfg.textureId = 0x156;
-        } else if (iVar1 == 1) {
+        } else if (randPick == 1) {
             cfg.textureId = 0x157;
-        } else if (iVar1 == 2) {
+        } else if (randPick == 2) {
             cfg.textureId = 0xc0e;
         }
         cfg.behaviorFlags = 0x480001;
@@ -11150,12 +11150,12 @@ int Effect4_func04(void *sourceObj, int effectId, s16 *spawnParams, u32 spawnFla
         cfg.initialAlpha = 0x9b;
         cfg.quadVertex3Pad06 = 0x281;
         cfg.behaviorFlags = 0x81488000;
-        iVar1 = randomGetRange(0, 2);
-        if (iVar1 == 0) {
+        randPick = randomGetRange(0, 2);
+        if (randPick == 0) {
             cfg.textureId = 0x208;
-        } else if (iVar1 == 1) {
+        } else if (randPick == 1) {
             cfg.textureId = 0x209;
-        } else if (iVar1 == 2) {
+        } else if (randPick == 2) {
             cfg.textureId = 0x20a;
         }
         break;
@@ -11194,12 +11194,12 @@ int Effect4_func04(void *sourceObj, int effectId, s16 *spawnParams, u32 spawnFla
         cfg.initialAlpha = 0x9b;
         cfg.quadVertex3Pad06 = 0x281;
         cfg.behaviorFlags = 0x81488000;
-        iVar1 = randomGetRange(0, 2);
-        if (iVar1 == 0) {
+        randPick = randomGetRange(0, 2);
+        if (randPick == 0) {
             cfg.textureId = 0x208;
-        } else if (iVar1 == 1) {
+        } else if (randPick == 1) {
             cfg.textureId = 0x209;
-        } else if (iVar1 == 2) {
+        } else if (randPick == 2) {
             cfg.textureId = 0x20a;
         }
         cfg.colorWord0 = 0x3200;
