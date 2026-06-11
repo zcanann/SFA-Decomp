@@ -2182,16 +2182,16 @@ void ObjMsg_AllocQueue(void* obj, int capacity)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 Obj_IsObjectAlive(u32 param_1)
+undefined4 Obj_IsObjectAlive(u32 obj)
 {
-    undefined4 uVar1;
+    undefined4 alive;
 
-    uVar1 = 0;
-    if ((param_1 != 0) && ((*(ushort*)(param_1 + OBJLINK_FLAGS_OFFSET) & OBJLINK_FLAGS_DEAD) == 0))
+    alive = 0;
+    if ((obj != 0) && ((*(ushort*)(obj + OBJLINK_FLAGS_OFFSET) & OBJLINK_FLAGS_DEAD) == 0))
     {
-        uVar1 = 1;
+        alive = 1;
     }
-    return uVar1;
+    return alive;
 }
 
 /*
@@ -2207,21 +2207,21 @@ undefined4 Obj_IsObjectAlive(u32 param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-bool ObjTrigger_UpdateIdBlockFlag(int param_1)
+bool ObjTrigger_UpdateIdBlockFlag(int obj)
 {
-    int iVar1;
+    int val;
     byte flags;
 
-    iVar1 = (int)Obj_GetPlayerObject();
-    iVar1 = playerIsDisguised(iVar1);
-    if (iVar1 != 0)
+    val = (int)Obj_GetPlayerObject();
+    val = playerIsDisguised(val);
+    if (val != 0)
     {
-        flags = *(byte*)(param_1 + OBJTRIGGER_FLAGS_OFFSET) | OBJTRIGGER_ID_BLOCK_FLAG;
-        *(byte*)(param_1 + OBJTRIGGER_FLAGS_OFFSET) = flags;
+        flags = *(byte*)(obj + OBJTRIGGER_FLAGS_OFFSET) | OBJTRIGGER_ID_BLOCK_FLAG;
+        *(byte*)(obj + OBJTRIGGER_FLAGS_OFFSET) = flags;
         return false;
     }
-    flags = *(byte*)(param_1 + OBJTRIGGER_FLAGS_OFFSET) & ~OBJTRIGGER_ID_BLOCK_FLAG;
-    *(byte*)(param_1 + OBJTRIGGER_FLAGS_OFFSET) = flags;
+    flags = *(byte*)(obj + OBJTRIGGER_FLAGS_OFFSET) & ~OBJTRIGGER_ID_BLOCK_FLAG;
+    *(byte*)(obj + OBJTRIGGER_FLAGS_OFFSET) = flags;
     return true;
 }
 
@@ -2336,32 +2336,32 @@ int ObjHits_PollPriorityHitEffectWithCooldown(int obj, uint hitFxMode, uint colo
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjLink_DetachChild(int param_1, int param_2)
+void ObjLink_DetachChild(int obj, int child)
 {
     int q;
     int p;
     int i;
 
     i = 0;
-    for (p = param_1; i < (int)*(u8*)(param_1 + OBJLINK_CHILD_COUNT_OFFSET); i++)
+    for (p = obj; i < (int)*(u8*)(obj + OBJLINK_CHILD_COUNT_OFFSET); i++)
     {
-        if ((u32) * (int*)(p + OBJLINK_CHILD_LIST_OFFSET) == (u32)param_2)
+        if ((u32) * (int*)(p + OBJLINK_CHILD_LIST_OFFSET) == (u32)child)
         {
             break;
         }
         p += 4;
     }
-    q = param_1 + i * 4;
-    while (i < (int)*(u8*)(param_1 + OBJLINK_CHILD_COUNT_OFFSET) - 1)
+    q = obj + i * 4;
+    while (i < (int)*(u8*)(obj + OBJLINK_CHILD_COUNT_OFFSET) - 1)
     {
         *(int*)(q + OBJLINK_CHILD_LIST_OFFSET) = *(int*)(q + OBJLINK_CHILD_LIST_OFFSET + sizeof(int));
         q += 4;
         i++;
     }
-    (*(u8*)(param_1 + OBJLINK_CHILD_COUNT_OFFSET))--;
-    *(int*)(param_1 + OBJLINK_CHILD_LIST_OFFSET +
-        (uint) * (u8*)(param_1 + OBJLINK_CHILD_COUNT_OFFSET) * 4) = 0;
-    *(int*)(param_2 + OBJLINK_PARENT_OFFSET) = 0;
+    (*(u8*)(obj + OBJLINK_CHILD_COUNT_OFFSET))--;
+    *(int*)(obj + OBJLINK_CHILD_LIST_OFFSET +
+        (uint) * (u8*)(obj + OBJLINK_CHILD_COUNT_OFFSET) * 4) = 0;
+    *(int*)(child + OBJLINK_PARENT_OFFSET) = 0;
     return;
 }
 
@@ -2451,7 +2451,7 @@ void ObjContact_DispatchCallbacks(int objA, int objB)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjContact_RemoveObjectCallbacks(int param_1)
+void ObjContact_RemoveObjectCallbacks(int obj)
 {
     int count;
     ObjContactCallbackEntry* entry;
@@ -2460,7 +2460,7 @@ void ObjContact_RemoveObjectCallbacks(int param_1)
     count = gObjContactCallbackCount;
     while (count-- > 0)
     {
-        if (((u32)entry->objA == (u32)param_1) || ((u32)entry->objB == (u32)param_1))
+        if (((u32)entry->objA == (u32)obj) || ((u32)entry->objB == (u32)obj))
         {
             gObjContactCallbackCount--;
             count--;
@@ -2490,21 +2490,21 @@ void ObjContact_RemoveObjectCallbacks(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 ObjContact_AddCallback(int param_1, int param_2, ObjContactCallback callback)
+undefined4 ObjContact_AddCallback(int obj, int otherObj, ObjContactCallback callback)
 {
     int count;
     ObjContactCallbackEntry* entry;
-    int iVar3;
+    int i;
 
-    if (((void*)param_1 == NULL) || ((void*)param_2 == NULL))
+    if (((void*)obj == NULL) || ((void*)otherObj == NULL))
     {
         return 0;
     }
     entry = gObjContactCallbacks;
     count = gObjContactCallbackCount;
-    for (iVar3 = 0; iVar3 < count; iVar3++)
+    for (i = 0; i < count; i++)
     {
-        if (((u32)entry->objA == (u32)param_1) && ((u32)entry->objB == (u32)param_2))
+        if (((u32)entry->objA == (u32)obj) && ((u32)entry->objB == (u32)otherObj))
         {
             return 0;
         }
@@ -2515,13 +2515,13 @@ undefined4 ObjContact_AddCallback(int param_1, int param_2, ObjContactCallback c
         return 0;
     }
     entry = &gObjContactCallbacks[count];
-    entry->objA = param_1;
-    entry->objB = param_2;
+    entry->objA = obj;
+    entry->objB = otherObj;
     entry->callback = callback;
-    *(undefined*)(param_1 + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) =
-        *(u8*)(param_1 + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) + 1;
-    *(undefined*)(param_2 + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) =
-        *(u8*)(param_2 + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) + 1;
+    *(undefined*)(obj + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) =
+        *(u8*)(obj + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) + 1;
+    *(undefined*)(otherObj + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) =
+        *(u8*)(otherObj + OBJCONTACT_OBJECT_REFCOUNT_OFFSET) + 1;
     gObjContactCallbackCount = gObjContactCallbackCount + 1;
     return 1;
 }
@@ -2539,22 +2539,22 @@ undefined4 ObjContact_AddCallback(int param_1, int param_2, ObjContactCallback c
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 ObjTrigger_IsSetById(int param_1, short param_2)
+undefined4 ObjTrigger_IsSetById(int obj, short eventId)
 {
-    int iVar1;
+    int val;
     int triggerFlags;
     int flagEnabled;
     int flagBlocked;
 
-    triggerFlags = *(byte*)(param_1 + OBJTRIGGER_FLAGS_OFFSET);
+    triggerFlags = *(byte*)(obj + OBJTRIGGER_FLAGS_OFFSET);
     flagEnabled = triggerFlags & OBJTRIGGER_ID_ENABLE_FLAG;
     if (flagEnabled != 0)
     {
         flagBlocked = triggerFlags & OBJTRIGGER_ID_BLOCK_FLAG;
-        if ((flagBlocked == 0) && (iVar1 = (*gGameUIInterface)->isEventReady((int)param_2), iVar1 != 0))
+        if ((flagBlocked == 0) && (val = (*gGameUIInterface)->isEventReady((int)eventId), val != 0))
         {
-            iVar1 = objGetAnimState80A(Obj_GetPlayerObject());
-            if (iVar1 == OBJTRIGGER_PLAYER_STATE_NONE)
+            val = objGetAnimState80A(Obj_GetPlayerObject());
+            if (val == OBJTRIGGER_PLAYER_STATE_NONE)
             {
                 buttonDisable(OBJTRIGGER_BUTTON_DISABLE_INDEX,OBJTRIGGER_BUTTON_DISABLE_FLAG);
                 return 1;
@@ -2577,30 +2577,30 @@ undefined4 ObjTrigger_IsSetById(int param_1, short param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 ObjTrigger_IsSet(int param_1)
+undefined4 ObjTrigger_IsSet(int obj)
 {
     uint flags;
-    int iVar1;
+    int val;
     int triggerFlags;
     int flagEnabled;
     int flagBlocked;
 
-    if (*(uint*)(*(int*)(param_1 + 0x50) + 0x40) == 0)
+    if (*(uint*)(*(int*)(obj + 0x50) + 0x40) == 0)
     {
         return 0;
     }
     flags = buttonGetDisabled(0);
     if ((flags & OBJTRIGGER_BUTTON_DISABLE_FLAG) == 0)
     {
-        triggerFlags = *(byte*)(param_1 + OBJTRIGGER_FLAGS_OFFSET);
+        triggerFlags = *(byte*)(obj + OBJTRIGGER_FLAGS_OFFSET);
         flagEnabled = triggerFlags & OBJTRIGGER_CURRENT_ENABLE_FLAG;
         if (flagEnabled != 0)
         {
             flagBlocked = triggerFlags & OBJTRIGGER_CURRENT_BLOCK_FLAG;
-            if ((flagBlocked == 0) && (iVar1 = (*gGameUIInterface)->isCurrentTriggerClear(), iVar1 == 0))
+            if ((flagBlocked == 0) && (val = (*gGameUIInterface)->isCurrentTriggerClear(), val == 0))
             {
-                iVar1 = objGetAnimState80A(Obj_GetPlayerObject());
-                if ((iVar1 == OBJTRIGGER_PLAYER_STATE_NONE) || (iVar1 == OBJTRIGGER_PLAYER_STATE_CLEAR))
+                val = objGetAnimState80A(Obj_GetPlayerObject());
+                if ((val == OBJTRIGGER_PLAYER_STATE_NONE) || (val == OBJTRIGGER_PLAYER_STATE_CLEAR))
                 {
                     buttonDisable(OBJTRIGGER_BUTTON_DISABLE_INDEX,OBJTRIGGER_BUTTON_DISABLE_FLAG);
                     return 1;
@@ -2689,7 +2689,7 @@ int ObjList_FindNearestObjectByDefNo(int obj, int defNo, float* maxDistanceSq)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 ObjList_ContainsObject(int param_1)
+undefined4 ObjList_ContainsObject(int obj)
 {
     uint* entry;
     int i;
@@ -2699,7 +2699,7 @@ undefined4 ObjList_ContainsObject(int param_1)
     i = 0;
     while (i < count)
     {
-        if (*entry == (uint)param_1)
+        if (*entry == (uint)obj)
         {
             return 1;
         }
@@ -2750,15 +2750,15 @@ void ObjPath_GetPointWorldPositionArray(int obj, int pointIndex, int count, floa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjPath_GetPointLocalPosition(int param_1, int param_2, float* param_3, float* param_4,
-                                   float* param_5)
+void ObjPath_GetPointLocalPosition(int obj, int pointIndex, float* xOut, float* yOut,
+                                   float* zOut)
 {
-    *param_3 = ((ObjPathPoint*)(*(int*)(*(int*)(param_1 + OBJ_MODEL_INSTANCE_OFFSET) + OBJPATH_POINTS_OFFSET) +
-        param_2 * sizeof(ObjPathPoint)))->x;
-    *param_4 = *(f32*)(*(int*)(*(int*)(param_1 + OBJ_MODEL_INSTANCE_OFFSET) + OBJPATH_POINTS_OFFSET) + 4 +
-        param_2 * sizeof(ObjPathPoint));
-    *param_5 = *(f32*)(*(int*)(*(int*)(param_1 + OBJ_MODEL_INSTANCE_OFFSET) + OBJPATH_POINTS_OFFSET) + 8 +
-        param_2 * sizeof(ObjPathPoint));
+    *xOut = ((ObjPathPoint*)(*(int*)(*(int*)(obj + OBJ_MODEL_INSTANCE_OFFSET) + OBJPATH_POINTS_OFFSET) +
+        pointIndex * sizeof(ObjPathPoint)))->x;
+    *yOut = *(f32*)(*(int*)(*(int*)(obj + OBJ_MODEL_INSTANCE_OFFSET) + OBJPATH_POINTS_OFFSET) + 4 +
+        pointIndex * sizeof(ObjPathPoint));
+    *zOut = *(f32*)(*(int*)(*(int*)(obj + OBJ_MODEL_INSTANCE_OFFSET) + OBJPATH_POINTS_OFFSET) + 8 +
+        pointIndex * sizeof(ObjPathPoint));
     return;
 }
 
@@ -2775,22 +2775,22 @@ void ObjPath_GetPointLocalPosition(int param_1, int param_2, float* param_3, flo
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjPath_GetPointLocalMtx(int param_1, int param_2, float* param_3)
+void ObjPath_GetPointLocalMtx(int obj, int pointIndex, float* mtxOut)
 {
     ObjPathPoint* pathPoint;
     ObjPathTransform transform;
 
-    pathPoint = (ObjPathPoint*)(*(int*)(*(int*)(param_1 + OBJ_MODEL_INSTANCE_OFFSET) +
+    pathPoint = (ObjPathPoint*)(*(int*)(*(int*)(obj + OBJ_MODEL_INSTANCE_OFFSET) +
         OBJPATH_POINTS_OFFSET));
-    transform.x = pathPoint[param_2].x;
-    pathPoint += param_2;
+    transform.x = pathPoint[pointIndex].x;
+    pathPoint += pointIndex;
     transform.y = pathPoint->y;
     transform.z = pathPoint->z;
     transform.rotX = pathPoint->rotX;
     transform.rotY = pathPoint->rotY;
     transform.rotZ = pathPoint->rotZ;
     transform.scale = OBJLIB_UNIT_SCALE;
-    setMatrixFromObjectTransposed(&transform, param_3);
+    setMatrixFromObjectTransposed(&transform, mtxOut);
     return;
 }
 
@@ -2807,17 +2807,17 @@ void ObjPath_GetPointLocalMtx(int param_1, int param_2, float* param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjPath_GetPointModelMtx(int param_1, int param_2)
+void ObjPath_GetPointModelMtx(int obj, int pointIndex)
 {
     int* model;
     ObjPathPoint* pathPoint;
     int jointIndex;
 
-    model = Obj_GetActiveModel(param_1);
-    pathPoint = (ObjPathPoint*)(*(int*)(*(int*)(param_1 + OBJ_MODEL_INSTANCE_OFFSET) +
+    model = Obj_GetActiveModel(obj);
+    pathPoint = (ObjPathPoint*)(*(int*)(*(int*)(obj + OBJ_MODEL_INSTANCE_OFFSET) +
         OBJPATH_POINTS_OFFSET));
-    pathPoint += param_2;
-    jointIndex = pathPoint->modelIndex[(int)*(char*)(param_1 + OBJ_ACTIVE_MODEL_INDEX_OFFSET)];
+    pathPoint += pointIndex;
+    jointIndex = pathPoint->modelIndex[(int)*(char*)(obj + OBJ_ACTIVE_MODEL_INDEX_OFFSET)];
     if ((jointIndex >= 0) && (jointIndex < (int)(uint) * (byte*)(*model + OBJ_MODEL_JOINT_COUNT_OFFSET)))
     {
         ObjModel_GetJointMatrix(model, jointIndex);
