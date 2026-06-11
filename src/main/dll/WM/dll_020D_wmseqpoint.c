@@ -1,14 +1,15 @@
 /*
- * wmseqpoint (DLL 0x20D) - world-map sequence trigger points.
+ * wmseqpoint (DLL 0x20D) - sequence trigger points at Krazoa Palace
+ * (map 'warlock').
  * Each placed instance arms one trigger sequence (state->sequenceId),
  * fired by player proximity and/or a condition game bit per
  * WMSEQPOINT_TRIGGER_*, then latches done. Two sequence families get
- * bespoke handling: the sky-toggle sequence swaps the world-map sky
+ * bespoke handling: the sky-toggle sequence swaps the palace sky
  * envfx set when it ends (wmseqpoint_onSeqFree), and the spirit
  * sequences re-arm the released-spirit indicator objects
  * (gWM_seqpointSpiritTargets) before re-running. Sequence 0's event
  * opcodes (wmseqpoint_SeqFn) drive game bits shared with the shrine
- * DLLs (0x143) and the world-map sun (0x21D).
+ * DLLs (0x143) and the palace sun (0x21D).
  */
 #include "main/dll/WM/wm_shared.h"
 #include "main/object_descriptor.h"
@@ -72,7 +73,7 @@ enum
 /* trigger-sequence ids with bespoke handling in this DLL */
 enum
 {
-    WMSEQPOINT_SEQ_SKY_TOGGLE = 0x1,   /* swaps the world-map sky envfx set on end */
+    WMSEQPOINT_SEQ_SKY_TOGGLE = 0x1,   /* swaps the palace sky envfx set on end */
     WMSEQPOINT_SEQ_SPIRIT_1 = 0x21,    /* grants spirit bit 0xD1B on end */
     WMSEQPOINT_SEQ_SPIRIT_RESET = 0x22 /* re-arms all five spirit indicators */
 };

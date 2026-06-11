@@ -1,7 +1,9 @@
 /*
- * wmspiritplace (DLL 0x20C) - the six spirit places on the world map.
+ * wmspiritplace (DLL 0x20C) - the six Krazoa-spirit places at Krazoa
+ * Palace (map 'warlock' = Dinosaur Planet's Warlock Mountain, hence
+ * the WM dll prefix).
  * Each placed instance is tagged by its placement mapId
- * (WMSPIRITPLACE_MAP_N) and becomes interactive once the world map's
+ * (WMSPIRITPLACE_MAP_N) and becomes interactive once the palace's
  * map-event mode reaches N: it raises the A-button prompt, runs trigger
  * sequence 0 when the player interacts, and once the sequence game bit
  * is granted runs follow-up sequence 1. Level locks/loads, map warps,
@@ -62,7 +64,7 @@ STATIC_ASSERT(offsetof(WmSpiritPlaceMapData, promptGameBit) == 0x20);
 STATIC_ASSERT(sizeof(WmSpiritPlaceMapData) == 0x24);
 
 /* placement mapId tags of the six spirit-place instances; place N
-   becomes active once the world map's map-event mode reaches N. */
+   becomes active once the palace's map-event mode reaches N. */
 enum
 {
     WMSPIRITPLACE_MAP_1 = 0x2183,

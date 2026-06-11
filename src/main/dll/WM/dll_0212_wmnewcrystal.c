@@ -1,6 +1,6 @@
 /*
- * wmnewcrystal (DLL 0x212) - the blue/green power crystals on the world
- * map. While the active game bit is set, the blue crystal runs its two
+ * wmnewcrystal (DLL 0x212) - the blue/green power crystals at Krazoa
+ * Palace (map 'warlock'). While the active game bit is set, the blue crystal runs its two
  * glow effects every sequence tick (plus an ambient particle pair until
  * the ambient bit is granted) and the green crystal sprays directional
  * bursts from its two path points. Sequence event 1 yanks the crystal

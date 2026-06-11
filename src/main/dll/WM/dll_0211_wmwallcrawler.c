@@ -1,5 +1,6 @@
 /*
- * wmwallcrawler (DLL 0x211) - the crawling baddies on the world map.
+ * wmwallcrawler (DLL 0x211) - the crawling baddies at Krazoa Palace
+ * (map 'warlock').
  * Each crawler perches at its spawn point until the player (or, for the
  * WMWALLCRAWLER_FLAG_TARGET_NEAREST variant, the nearest group-10
  * object) comes within triggerRadius, then dives to its home height and
