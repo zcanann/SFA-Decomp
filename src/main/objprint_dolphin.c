@@ -3800,7 +3800,7 @@ void modelDoAltRenderInstrs(int *obj, int *obj2, u8 *m, int p4) {
         }
         *(u16 *)((char *)am + 0x18) |= 8;
     }
-    modelRenderInstrsState_init(&bs, ((ModelFileHeader *)m)->unkD4, *(u16 *)(m + 0xd8) << 3, *(u16 *)(m + 0xd8) << 3);
+    modelRenderInstrsState_init(&bs, ((ModelFileHeader *)m)->instrs, *(u16 *)(m + 0xd8) << 3, *(u16 *)(m + 0xd8) << 3);
     if (((ModelFileHeader *)m)->shaderFlags & 2) {
         if (lbl_803DCC28 != 0) {
             color[0] = lbl_803DCC58;
@@ -3974,7 +3974,7 @@ void objRenderShadow2(int *obj, int *obj2, u8 *m, int p4) {
         *(u16 *)((char *)am + 0x18) |= 8;
     }
     modelInitMtxs(m, am);
-    modelRenderInstrsState_init(&bs, ((ModelFileHeader *)m)->unkD4, *(u16 *)(m + 0xd8) << 3, *(u16 *)(m + 0xd8) << 3);
+    modelRenderInstrsState_init(&bs, ((ModelFileHeader *)m)->instrs, *(u16 *)(m + 0xd8) << 3, *(u16 *)(m + 0xd8) << 3);
     if (*(u32 *)&((ModelFileHeader *)m)->vertexAnimEntries != 0) {
         PSMTXConcat(vm, wm, cm);
         GXLoadPosMtxImm(cm, lbl_802CAED0[9]);
@@ -4283,7 +4283,7 @@ void modelDoRenderInstrs(int *obj, int *obj2, u8 *m, u8 mode) {
         }
     }
     modelInitMtxs(m, am);
-    modelRenderInstrsState_init(&bs, ((ModelFileHeader *)m)->unkD4, *(u16 *)(m + 0xd8) << 3, *(u16 *)(m + 0xd8) << 3);
+    modelRenderInstrsState_init(&bs, ((ModelFileHeader *)m)->instrs, *(u16 *)(m + 0xd8) << 3, *(u16 *)(m + 0xd8) << 3);
     {
         f32 inv = lbl_803DEA1C / ((GameObject *)obj)->anim.rootMotionScale;
         PSMTXScale(sm, inv, inv, inv);

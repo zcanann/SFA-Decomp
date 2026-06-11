@@ -38,7 +38,7 @@ typedef struct NewCloud {
     f32 worldPosY;
     f32 worldPosZ;
     f32 cloudHeight;
-    f32 unk141C;
+    f32 scale;
     f32 windVelX;
     f32 windVelZ;
     f32 unk1428;

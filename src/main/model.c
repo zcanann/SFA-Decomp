@@ -530,8 +530,8 @@ void ObjModel_RelocateModelData(u8 *m) {
     if (*(u32 *)&((ModelFileHeader *)m)->unk34) {
         ((ModelFileHeader *)m)->unk34 = m + *(u32 *)&((ModelFileHeader *)m)->unk34;
     }
-    if (*(u32 *)&((ModelFileHeader *)m)->unkD4) {
-        ((ModelFileHeader *)m)->unkD4 = m + *(u32 *)&((ModelFileHeader *)m)->unkD4;
+    if (*(u32 *)&((ModelFileHeader *)m)->instrs) {
+        ((ModelFileHeader *)m)->instrs = m + *(u32 *)&((ModelFileHeader *)m)->instrs;
     }
     if (*(u32 *)&((ModelFileHeader *)m)->displayLists) {
         ((ModelFileHeader *)m)->displayLists = m + *(u32 *)&((ModelFileHeader *)m)->displayLists;

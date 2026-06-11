@@ -2024,12 +2024,12 @@ typedef struct GameTextBox {
     s16 unk18;
     s16 unk1A;
     u16 flags;
-    u8 unk1E;
+    u8 alpha;
     u8 unk1F;
 } GameTextBox;
 
 STATIC_ASSERT(offsetof(GameTextBox, style) == 0x13);
-STATIC_ASSERT(offsetof(GameTextBox, unk1E) == 0x1E);
+STATIC_ASSERT(offsetof(GameTextBox, alpha) == 0x1E);
 
 extern void boxDrawFn_8001c5ac(u16 *strPtr, int boxId, u8 *box);
 
@@ -2131,10 +2131,10 @@ void gameTextDrawBox(u16 *strPtr, int boxId, u8 *box) {
             gameTextBoxFn_800164b0(boxId, (int)(box - lbl_802C7400) / 0x20, &c3x0, &c3x1, &c3y0, &c3y1);
         }
         gameTextSetWindow(cur);
-        drawTexture((f32)(c3x0 - 0x16), (f32)(c3y0 - 9), lbl_8033BE40[5], ((GameTextBox *)box)->unk1E, 0x100);
-        drawScaledTexture((f32)c3x0, (f32)(c3y0 - 9), lbl_8033BE40[6], ((GameTextBox *)box)->unk1E, 0x100,
+        drawTexture((f32)(c3x0 - 0x16), (f32)(c3y0 - 9), lbl_8033BE40[5], ((GameTextBox *)box)->alpha, 0x100);
+        drawScaledTexture((f32)c3x0, (f32)(c3y0 - 9), lbl_8033BE40[6], ((GameTextBox *)box)->alpha, 0x100,
                           c3x1 - c3x0, 0x24, 0);
-        drawTexture((f32)c3x1, (f32)(c3y0 - 9), lbl_8033BE40[7], ((GameTextBox *)box)->unk1E, 0x100);
+        drawTexture((f32)c3x1, (f32)(c3y0 - 9), lbl_8033BE40[7], ((GameTextBox *)box)->alpha, 0x100);
         break;
     case 2:
         x2 = ((GameTextBox *)box)->x;
@@ -2150,16 +2150,16 @@ void gameTextDrawBox(u16 *strPtr, int boxId, u8 *box) {
             rem = 0;
         }
         GXSetScissor(0, 0, 0x280, 0x1e0);
-        drawTexture((f32)(x2 - 0x34), (f32)(y2 - 0x23), lbl_8033BE40[0], ((GameTextBox *)box)->unk1E, 0x100);
-        drawTexture((f32)xw, (f32)(y2 - 0x23), lbl_8033BE40[4], ((GameTextBox *)box)->unk1E, 0x100);
+        drawTexture((f32)(x2 - 0x34), (f32)(y2 - 0x23), lbl_8033BE40[0], ((GameTextBox *)box)->alpha, 0x100);
+        drawTexture((f32)xw, (f32)(y2 - 0x23), lbl_8033BE40[4], ((GameTextBox *)box)->alpha, 0x100);
         if (half != 0) {
-            drawScaledTexture((f32)x2, (f32)(y2 - 0x13), lbl_8033BE40[1], ((GameTextBox *)box)->unk1E, 0x100,
+            drawScaledTexture((f32)x2, (f32)(y2 - 0x13), lbl_8033BE40[1], ((GameTextBox *)box)->alpha, 0x100,
                               half, 0x3a, 0);
-            drawPartialTexture((f32)(xw - half), (f32)(y2 - 0x13), lbl_8033BE40[3], ((GameTextBox *)box)->unk1E, 0x100,
+            drawPartialTexture((f32)(xw - half), (f32)(y2 - 0x13), lbl_8033BE40[3], ((GameTextBox *)box)->alpha, 0x100,
                                half, 0x3a, 0xc - half, 0);
         }
         if (rem != 0) {
-            drawScaledTexture((f32)(x2 + half), (f32)(y2 - 0x13), lbl_8033BE40[2], ((GameTextBox *)box)->unk1E, 0x100,
+            drawScaledTexture((f32)(x2 + half), (f32)(y2 - 0x13), lbl_8033BE40[2], ((GameTextBox *)box)->alpha, 0x100,
                               rem, 0x3a, 0);
         }
         break;

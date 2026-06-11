@@ -46,7 +46,7 @@ typedef struct AlphaanimatorPlacement {
     u8 unk20;
     u8 pad21[0x22 - 0x21];
     u16 fadeMax;
-    u16 unk24;
+    u16 sfxId;
     u8 pad26[0x28 - 0x26];
 } AlphaanimatorPlacement;
 
@@ -1014,7 +1014,7 @@ void alphaanimator_update(int *obj) {
         if ((s8)s->doneCount > 2 &&
             (s8)s->gateVal != (s8)s->prevGate) {
             if ((((AlphaanimatorPlacement *)d)->unk20 >> 2) != 0) {
-                Sfx_PlayFromObject(obj, ((AlphaanimatorPlacement *)d)->unk24);
+                Sfx_PlayFromObject(obj, ((AlphaanimatorPlacement *)d)->sfxId);
             }
             s->doneCount = 0;
             s->prevGate = s->gateVal;
@@ -1032,7 +1032,7 @@ void alphaanimator_update(int *obj) {
                 return;
             }
             if ((((AlphaanimatorPlacement *)d)->unk20 >> 2) != 0) {
-                Sfx_PlayFromObject(obj, ((AlphaanimatorPlacement *)d)->unk24);
+                Sfx_PlayFromObject(obj, ((AlphaanimatorPlacement *)d)->sfxId);
             }
         }
     }

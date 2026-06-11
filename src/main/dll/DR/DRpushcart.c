@@ -66,7 +66,7 @@ typedef struct ShopkeeperState {
     u8 unk9D2;        /* 0x9d2 */
     u8 pad9D3;
     u8 flags9D4;      /* 0x9d4: 2 purchased-event, 4 facing, 0x10 leave, 0x20 tick */
-    u8 unk9D5;        /* 0x9d5 */
+    u8 amount;        /* 0x9d5 */
     u8 opacity;       /* 0x9d6: copied to obj alpha */
     u8 pad9D7;
 } ShopkeeperState;
@@ -897,7 +897,7 @@ int fn_801E76A0(int obj, int p2, ObjSeqState *seq, s8 advance)
     for (i = 0; i < seq->eventCount; i++) {
         switch (seq->eventIds[i]) {
         case 1:
-            fn_801E7DC8(obj, state, ((ShopkeeperState *)state)->unk9D5);
+            fn_801E7DC8(obj, state, ((ShopkeeperState *)state)->amount);
             ((ShopkeeperState *)state)->flags9D4 |= 2;
             break;
         case 2:
@@ -936,17 +936,17 @@ int fn_801E76A0(int obj, int p2, ObjSeqState *seq, s8 advance)
             }
             break;
         case 9:
-            playerAddMoney(player, ((ShopkeeperState *)state)->unk9D5);
+            playerAddMoney(player, ((ShopkeeperState *)state)->amount);
             break;
         case 10:
-            playerAddMoney(player, -(int)((ShopkeeperState *)state)->unk9D5);
+            playerAddMoney(player, -(int)((ShopkeeperState *)state)->amount);
             break;
         case 0xB:
             (*(void (**)(int, int, f32 *, int, int))(*(int *)lbl_803DCAB4 + 0xC))(obj, 0x7EF, &range, 0x50, 0);
             break;
         case 0xC:
-            ((ShopkeeperState *)state)->unk9D5 = 1;
-            digit = ((ShopkeeperState *)state)->unk9D5;
+            ((ShopkeeperState *)state)->amount = 1;
+            digit = ((ShopkeeperState *)state)->amount;
             tex = (int *)objFindTexture(obj, 8, 0);
             *tex = (digit % 10) * 0x100;
             tex = (int *)objFindTexture(obj, 7, 0);

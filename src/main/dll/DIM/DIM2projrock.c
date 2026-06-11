@@ -330,7 +330,7 @@ void dim2icefloe_update(int obj)
         }
         ((GameObject *)obj)->anim.alpha = v;
         if ((((Dim2IceFloeState *)sub)->unkB6 & 1) == 0) {
-            ((Dim2IceFloeState *)sub)->unk9C = ObjList_FindObjectById(((Dim2IceFloeState *)sub)->unkA0);
+            ((Dim2IceFloeState *)sub)->unk9C = ObjList_FindObjectById(((Dim2IceFloeState *)sub)->objectId);
             ((Dim2IceFloeState *)sub)->unk90 = (*(code *)(**(int **)(((Dim2IceFloeState *)sub)->unk9C + 0x68) + 0x20))(
                 ((Dim2IceFloeState *)sub)->unk9C, sub + 0x84, sub + 0x88, sub + 0x8c, 0);
             ((Dim2IceFloeState *)sub)->unk80 = 0;
@@ -374,7 +374,7 @@ void dim2icefloe_init(int obj, int p)
 {
     ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
     int sub = *(int *)&((GameObject *)obj)->extra;
-    ((Dim2IceFloeState *)sub)->unkA0 = *(int *)(p + 0x14);
+    ((Dim2IceFloeState *)sub)->objectId = *(int *)(p + 0x14);
     ((Dim2IceFloeState *)sub)->unkA4 = (f32)*(s16 *)(p + 0x1c) / lbl_803E4B48;
     ((Dim2IceFloeState *)sub)->unkA8 = (f32)(s32)randomGetRange(-0x1e, 0x1e);
     *(int *)(p + 0x14) = -1;

@@ -5,7 +5,7 @@
 
 typedef struct CfGuardianState {
     u8 pad0[0x2 - 0x0];
-    u16 unk2;
+    u16 sfxId;
     s32 unk4;
     s32 unk8;
     s32 unkC;

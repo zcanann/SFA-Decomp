@@ -16,7 +16,7 @@ typedef struct ScCloudrunneraPlacement {
 typedef struct ScMusictreeState {
     u8 pad0[0x30 - 0x0];
     f32 unk30;
-    f32 unk34;
+    f32 moveStepScale;
     u8 pad38[0x48 - 0x38];
     u16 unk48;
     u16 unk4A;
@@ -133,7 +133,7 @@ void sc_musictree_update(int obj)
     int *p;
     int *q;
 
-    ObjAnim_AdvanceCurrentMove(((ScMusictreeState *)inner)->unk34, timeDelta, obj,
+    ObjAnim_AdvanceCurrentMove(((ScMusictreeState *)inner)->moveStepScale, timeDelta, obj,
                                (ObjAnimEventList *)&stk);
     if (((ScMusictreeState *)inner)->unk4C == 0) {
         return;
@@ -141,8 +141,8 @@ void sc_musictree_update(int obj)
     if (((CloudRunnerState *)inner)->baddie.velY > lbl_803E5590) {
         ((CloudRunnerState *)inner)->baddie.velY = ((CloudRunnerState *)inner)->baddie.velY - timeDelta;
     }
-    if (((ScMusictreeState *)inner)->unk34 > lbl_803E5594) {
-        ((ScMusictreeState *)inner)->unk34 = ((ScMusictreeState *)inner)->unk34 - lbl_803E5598;
+    if (((ScMusictreeState *)inner)->moveStepScale > lbl_803E5594) {
+        ((ScMusictreeState *)inner)->moveStepScale = ((ScMusictreeState *)inner)->moveStepScale - lbl_803E5598;
     }
     if ((((ScMusictreeState *)inner)->unk4C & 0x80) && ((GameObject *)obj)->unkF8 != 0) {
         p = (int *)inner;
@@ -193,7 +193,7 @@ void sc_musictree_update(int obj)
         vec[2] = zero;
         objfx_spawnRandomBurst(obj, ((ScMusictreeState *)inner)->unk4C & 0xf, 0x14, vec2, lbl_803E55A4 * ((CloudRunnerState *)inner)->baddie.velX, 0);
     }
-    ((ScMusictreeState *)inner)->unk34 = lbl_803E5588;
+    ((ScMusictreeState *)inner)->moveStepScale = lbl_803E5588;
     ((CloudRunnerState *)inner)->baddie.velZ = lbl_803E55A8;
     if (((ScMusictreeState *)inner)->unk4C & 0x80) {
         int *pp;

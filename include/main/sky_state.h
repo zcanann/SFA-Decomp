@@ -34,7 +34,7 @@ typedef struct SkyState {
     u8 unk00;
     u8 unk01;
     u8 unk02[2];
-    u8 *unk04;
+    u8 *handle;
     u8 *unk08;
     u8 unk0C[4];
     u8 *unk10;

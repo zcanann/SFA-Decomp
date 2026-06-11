@@ -13,8 +13,8 @@ typedef struct SpscarabState {
     f32 unk0;
     f32 unk4;
     s32 unk8;
-    s16 unkC;
-    s16 unkE;
+    s16 sfxId;
+    s16 mode;
     s16 unk10;
     u8 pad12[0x18 - 0x12];
 } SpscarabState;
@@ -108,8 +108,8 @@ void spscarab_update(int param_1)
 
     if (getXZDistance((int *)(Obj_GetPlayerObject() + 0x18), (int *)&((GameObject *)param_1)->anim.worldPosX)
         < lbl_803E5A80) {
-        Sfx_PlayFromObject(param_1, (u16)((SpscarabState *)p_b8)->unkC);
-        itemPickupDoParticleFx(param_1, lbl_803E5A84, ((SpscarabState *)p_b8)->unkE, 0x28);
+        Sfx_PlayFromObject(param_1, (u16)((SpscarabState *)p_b8)->sfxId);
+        itemPickupDoParticleFx(param_1, lbl_803E5A84, ((SpscarabState *)p_b8)->mode, 0x28);
         ((GameObject *)param_1)->objectFlags = ((GameObject *)param_1)->objectFlags | 0x8000;
         ((GameObject *)param_1)->anim.flags = ((GameObject *)param_1)->anim.flags | 0x4000;
 
@@ -172,13 +172,13 @@ void spscarab_init(int param_1, int param_2)
     switch ((s8)*(u8 *)(param_2 + 0x19)) {
     case 0:
         *(u8 *)(*(int *)(model + 0x34) + 8) = *((u8 *)&pair + randomGetRange(0, 2));
-        ((SpscarabState *)p_b8)->unkC = 0x41;
-        ((SpscarabState *)p_b8)->unkE = 4;
+        ((SpscarabState *)p_b8)->sfxId = 0x41;
+        ((SpscarabState *)p_b8)->mode = 4;
         ((SpscarabState *)p_b8)->unk10 = 2;
         break;
     case 1:
-        ((SpscarabState *)p_b8)->unkC = 0x42;
-        ((SpscarabState *)p_b8)->unkE = 1;
+        ((SpscarabState *)p_b8)->sfxId = 0x42;
+        ((SpscarabState *)p_b8)->mode = 1;
         ((SpscarabState *)p_b8)->unk10 = 0;
         break;
     }

@@ -131,7 +131,7 @@ void SnowBike_hitDetect(int obj)
         ((GameObject *)obj)->anim.velocityZ = k2 * (oneOverTimeDelta * (((GameObject *)obj)->anim.localPosZ - ((GameObject *)obj)->anim.previousLocalPosZ));
     }
     Matrix_TransformPoint((f32 *)((u8 *)state + 0x12c), ((GameObject *)obj)->anim.velocityX, lbl_803E5AE8, ((GameObject *)obj)->anim.velocityZ,
-                          &state->unk494, &dummy, &state->unk49C);
+                          &state->unk494, &dummy, &state->distanceScale);
 clamp:
     {
         f32 lim;
@@ -165,7 +165,7 @@ clamp:
     }
     {
         f32 lim;
-        f32 v = state->unk49C;
+        f32 v = state->distanceScale;
         f32 c;
         lim = state->unk484;
         if (v < -lim) {
@@ -175,10 +175,10 @@ clamp:
         } else {
             c = v;
         }
-        state->unk49C = c;
+        state->distanceScale = c;
     }
-    if (state->unk49C < lbl_803E5B8C && state->unk49C > lbl_803E5BA4) {
-        state->unk49C = lbl_803E5AE8;
+    if (state->distanceScale < lbl_803E5B8C && state->distanceScale > lbl_803E5BA4) {
+        state->distanceScale = lbl_803E5AE8;
     }
     state->unk16C = ((GameObject *)obj)->anim.localPosX;
     state->unk170 = ((GameObject *)obj)->anim.localPosY;

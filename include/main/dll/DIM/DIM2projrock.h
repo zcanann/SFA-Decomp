@@ -99,7 +99,7 @@ typedef struct Dim2IceFloeState {
     void *unk94;
     void *unk98;
     int unk9C;
-    int unkA0;
+    int objectId;
     f32 unkA4;
     f32 unkA8;
     f32 unkAC;

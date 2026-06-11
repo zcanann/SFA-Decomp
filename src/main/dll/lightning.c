@@ -144,12 +144,12 @@ typedef struct MagicDustState {
     f32 unk26C; /* sparkle scale; reset on collect */
     u16 unk270;
     u16 unk272; /* partfx effect id */
-    s16 unk274; /* collect sfx id */
+    s16 sfxId; /* collect sfx id */
     s16 unk276;
     s16 unk278;
     u8 flags27A; /* bits 8/0x10/0x40 observed; &0xFA clear on collect */
     u8 unk27B;
-    u8 unk27C; /* particle color row */
+    u8 mode; /* particle color row */
     u8 unk27D[3];
     u16 unk280;
 } MagicDustState;
@@ -192,9 +192,9 @@ void magicdust_update(int obj)
     if (local_24[0] == msgId) {
       iVar6 = *(int *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x18);
       (*gExpgfxInterface)->freeSource2((u32)obj);
-      itemPickupDoParticleFx(obj,lbl_803E34B0,((MagicDustState *)iVar8)->unk27C,0x28);
+      itemPickupDoParticleFx(obj,lbl_803E34B0,((MagicDustState *)iVar8)->mode,0x28);
       ObjHits_DisableObject(obj);
-      Sfx_PlayFromObject(obj,(u16)((MagicDustState *)iVar8)->unk274);
+      Sfx_PlayFromObject(obj,(u16)((MagicDustState *)iVar8)->sfxId);
       Sfx_StopFromObject(obj,0x56);
       playerAddRemoveMagic(iVar5,(int)*(s8 *)(iVar6 + 0xb));
       ((MagicDustState *)iVar8)->flags27A = ((MagicDustState *)iVar8)->flags27A & 0xfa;
@@ -350,9 +350,9 @@ void magicdust_update(int obj)
         else {
           iVar6 = *(int *)(*(int *)&((GameObject *)obj)->anim.modelInstance + 0x18);
           (*gExpgfxInterface)->freeSource2((u32)obj);
-          itemPickupDoParticleFx(obj,lbl_803E34B0,((MagicDustState *)iVar8)->unk27C,0x28);
+          itemPickupDoParticleFx(obj,lbl_803E34B0,((MagicDustState *)iVar8)->mode,0x28);
           ObjHits_DisableObject(obj);
-          Sfx_PlayFromObject(obj,(u16)((MagicDustState *)iVar8)->unk274);
+          Sfx_PlayFromObject(obj,(u16)((MagicDustState *)iVar8)->sfxId);
           Sfx_StopFromObject(obj,0x56);
           playerAddRemoveMagic(iVar5,(int)*(s8 *)(iVar6 + 0xb));
           ((MagicDustState *)iVar8)->flags27A = ((MagicDustState *)iVar8)->flags27A & 0xfa;
@@ -452,34 +452,34 @@ void magicdust_init(int param_1,int param_2)
     *(undefined *)(*(int *)(iVar4 + 0x34) + 8) = *(u8 *)((int)local_50 + uVar3);
     *(undefined2 *)&((MagicDustState *)iVar5)->unk272 = 0x54f;
     *(undefined2 *)&((MagicDustState *)iVar5)->unk270 = 0x54b;
-    *(undefined2 *)&((MagicDustState *)iVar5)->unk274 = 0x58;
+    *(undefined2 *)&((MagicDustState *)iVar5)->sfxId = 0x58;
     *(undefined2 *)&((MagicDustState *)iVar5)->unk276 = 0x5b0;
-    *(undefined *)&((MagicDustState *)iVar5)->unk27C = 4;
+    *(undefined *)&((MagicDustState *)iVar5)->mode = 4;
     break;
   case 0x2cd:
     uVar3 = randomGetRange(0,1);
     *(undefined *)(*(int *)(iVar4 + 0x34) + 8) = *(u8 *)((int)local_54 + uVar3);
     *(undefined2 *)&((MagicDustState *)iVar5)->unk272 = 0x54e;
     *(undefined2 *)&((MagicDustState *)iVar5)->unk270 = 0x54a;
-    *(undefined2 *)&((MagicDustState *)iVar5)->unk274 = 0x59;
+    *(undefined2 *)&((MagicDustState *)iVar5)->sfxId = 0x59;
     *(undefined2 *)&((MagicDustState *)iVar5)->unk276 = 0x5b1;
-    *(undefined *)&((MagicDustState *)iVar5)->unk27C = 1;
+    *(undefined *)&((MagicDustState *)iVar5)->mode = 1;
     break;
   case 0x2ce:
     *(undefined *)(*(int *)(iVar4 + 0x34) + 8) = 3;
     *(undefined2 *)&((MagicDustState *)iVar5)->unk272 = 0x54d;
     *(undefined2 *)&((MagicDustState *)iVar5)->unk270 = 0x549;
-    *(undefined2 *)&((MagicDustState *)iVar5)->unk274 = 0x5a;
+    *(undefined2 *)&((MagicDustState *)iVar5)->sfxId = 0x5a;
     *(undefined2 *)&((MagicDustState *)iVar5)->unk276 = 0x5b2;
-    *(undefined *)&((MagicDustState *)iVar5)->unk27C = 2;
+    *(undefined *)&((MagicDustState *)iVar5)->mode = 2;
     break;
   default:
     *(undefined *)(*(int *)(iVar4 + 0x34) + 8) = 2;
     *(undefined2 *)&((MagicDustState *)iVar5)->unk272 = 0x550;
     *(undefined2 *)&((MagicDustState *)iVar5)->unk270 = 0x54c;
-    *(undefined2 *)&((MagicDustState *)iVar5)->unk274 = 0x5b;
+    *(undefined2 *)&((MagicDustState *)iVar5)->sfxId = 0x5b;
     *(undefined2 *)&((MagicDustState *)iVar5)->unk276 = 0x5b3;
-    *(undefined *)&((MagicDustState *)iVar5)->unk27C = 6;
+    *(undefined *)&((MagicDustState *)iVar5)->mode = 6;
     break;
   }
   ((MagicDustState *)iVar5)->unk268 = lbl_803E34F8;

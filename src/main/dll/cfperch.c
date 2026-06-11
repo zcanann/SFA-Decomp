@@ -135,12 +135,12 @@ void smallbasket_init(int obj, int def)
 
     mode = ((GameObject *)obj)->anim.seqId;
     if (mode == 0x3cf) {
-        ((CfperchState *)state)->unk10 = 0x60;
+        ((CfperchState *)state)->sfxId = 0x60;
     } else if (mode == 0x662) {
         ((CfperchState *)state)->unk20 = 1;
-        ((CfperchState *)state)->unk10 = 0x37d;
+        ((CfperchState *)state)->sfxId = 0x37d;
     } else {
-        ((CfperchState *)state)->unk10 = 0x4a;
+        ((CfperchState *)state)->sfxId = 0x4a;
     }
 }
 
@@ -454,7 +454,7 @@ void smallbasket_update(int obj)
                 objLightFn_8009a1dc((void *)obj, lbl_803E3934, &blk, 1, 0);
                 (**(void (**)(int, int, int, int, int, int))(*(int *)lbl_803DDAC0 + 0x4))(
                     obj, 1, 0, 2, -1, 0);
-                Sfx_PlayFromObject(obj, (u16)((CfperchState *)state)->unk10);
+                Sfx_PlayFromObject(obj, (u16)((CfperchState *)state)->sfxId);
                 ((CfperchState *)state)->unkA = 0x32;
                 ((CfperchState *)state)->unk9 = 0;
                 *(u8 *)&((GameObject *)obj)->anim.resetHitboxMode |= 8;

@@ -2405,10 +2405,10 @@ void newClouds(u8 *params, void *owner, f32 x, f32 y, f32 z) {
     ((NewCloud *)NC_CLOUD)->unk1438 = *(f32 *)(params + 8);
     if (((NewCloud *)NC_CLOUD)->cloudType == 0) {
         ((NewCloud *)NC_CLOUD)->cloudHeight = lbl_803DF234;
-        ((NewCloud *)NC_CLOUD)->unk141C = lbl_803DF238;
+        ((NewCloud *)NC_CLOUD)->scale = lbl_803DF238;
     } else {
         ((NewCloud *)NC_CLOUD)->cloudHeight = *(f32 *)(params + 4);
-        ((NewCloud *)NC_CLOUD)->unk141C = lbl_803DF1E4 * *(f32 *)(params + 0);
+        ((NewCloud *)NC_CLOUD)->scale = lbl_803DF1E4 * *(f32 *)(params + 0);
     }
     if (*(f32 *)(params + 8) < lbl_803DF1A4) {
         *(f32 *)(params + 8) = lbl_803DF1A0;
@@ -2428,9 +2428,9 @@ void newClouds(u8 *params, void *owner, f32 x, f32 y, f32 z) {
         ((NewCloud *)NC_CLOUD)->unk1448 = 0x64;
     }
     snowCloudInitFlakes((f32 *)(NC_CLOUD + 8), id, ((NewCloud *)NC_CLOUD)->cloudHeight,
-                         ((NewCloud *)NC_CLOUD)->unk141C);
+                         ((NewCloud *)NC_CLOUD)->scale);
     snowCloudBuildBoxVerts((f32 *)(NC_CLOUD + 0x1378), ((NewCloud *)NC_CLOUD)->cloudHeight,
-                ((NewCloud *)NC_CLOUD)->unk141C);
+                ((NewCloud *)NC_CLOUD)->scale);
     *(void **)(NC_CLOUD + 4) = mmAlloc(((NewCloud *)NC_CLOUD)->flakeCount * 0x18, 0x17, 0);
     if (*(void **)(NC_CLOUD + 4) == NULL) {
         ok = 0;
@@ -2843,7 +2843,7 @@ void dll_07_func06(void) {
         }
         if (p != NULL && ((NewCloud *)p)->unk1400 != 0) {
             snowCloudInitFlakes((f32 *)(p + 8), i, ((NewCloud *)p)->cloudHeight,
-                                 ((NewCloud *)p)->unk141C);
+                                 ((NewCloud *)p)->scale);
         } else if (p != NULL && p[0x144f] == 0) {
             if (((NewCloud *)p)->cloudType == 4) {
                 lbl_803DD19B = 1;

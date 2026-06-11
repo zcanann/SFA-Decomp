@@ -555,9 +555,9 @@ void objAnimFn_8014a9f0(short *obj, int state)
   }
   else if (mode == 3) {
     if ((((TrickyState *)state)->unk2F1 & 0x80) == 0) {
-      *(f32 *)(obj + 0x12) = *(f32 *)(obj + 0x12) * powfBitEstimate(((TrickyState *)state)->unk304, timeDelta);
-      *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x14) * powfBitEstimate(((TrickyState *)state)->unk304, timeDelta);
-      *(f32 *)(obj + 0x16) = *(f32 *)(obj + 0x16) * powfBitEstimate(((TrickyState *)state)->unk304, timeDelta);
+      *(f32 *)(obj + 0x12) = *(f32 *)(obj + 0x12) * powfBitEstimate(((TrickyState *)state)->base, timeDelta);
+      *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x14) * powfBitEstimate(((TrickyState *)state)->base, timeDelta);
+      *(f32 *)(obj + 0x16) = *(f32 *)(obj + 0x16) * powfBitEstimate(((TrickyState *)state)->base, timeDelta);
     }
   }
   Tricky_applyFloorResponse(obj, state);

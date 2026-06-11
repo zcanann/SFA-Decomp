@@ -354,7 +354,7 @@ typedef struct DimcannonState {
 typedef struct DimlavasmashState {
     u8 pad0[0x1 - 0x0];
     u8 unk1;
-    u8 unk2;
+    u8 state;
     u8 pad3[0x7 - 0x3];
     u8 unk7;
     u8 pad8[0x9 - 0x8];
@@ -423,12 +423,12 @@ int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
     int *state;
     state = ((GameObject *)obj)->extra;
     def = *(int **)&((GameObject *)obj)->anim.placementData;
-    if (((DimlavasmashState *)state)->unk2 == 0) {
+    if (((DimlavasmashState *)state)->state == 0) {
         if (GameBit_Get(((DimlavasmashPlacement *)def)->unk20) != 0) {
             (*(ObjHitsPriorityState **)&((GameObject *)obj)->anim.hitReactState)->flags |= 1;
             if (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0) {
                 if (*(s16 *)((char *)hit + 0x46) == 397) {
-                    ((DimlavasmashState *)state)->unk2 = 2;
+                    ((DimlavasmashState *)state)->state = 2;
                     Sfx_PlayFromObject(obj, SFXbaddie_eggsnatch_sniff1);
                     objPosToMapBlockIdx(((GameObject *)obj)->anim.localPosX,
                                         ((GameObject *)obj)->anim.localPosY,
@@ -444,10 +444,10 @@ int dimlavasmash_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
     } else {
         if (animUpdate->triggerCommand == 1) {
             GameBit_Set(((DimlavasmashPlacement *)def)->unk1E, 1);
-            ((DimlavasmashState *)state)->unk2 = 1;
+            ((DimlavasmashState *)state)->state = 1;
         }
     }
-    return ((DimlavasmashState *)state)->unk2 == 0;
+    return ((DimlavasmashState *)state)->state == 0;
 }
 
 extern void *lbl_803DDB50;

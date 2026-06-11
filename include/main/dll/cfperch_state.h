@@ -21,7 +21,7 @@ typedef struct CfperchState {
     s16 unkA;
     s16 unkC;
     s16 randomTimer;
-    s16 unk10;
+    s16 sfxId;
     s16 unk12;
     int unk14;
     int unk18;

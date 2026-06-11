@@ -335,7 +335,7 @@ void fn_801EB334(int *obj) {
         f32 fz = lbl_803E5AE8;
         state->unk494 = fz;
         state->unk498 = fz;
-        state->unk49C = lbl_803E5B9C;
+        state->distanceScale = lbl_803E5B9C;
         ((HightopFlags *)&state->flags428)->resetLatch = 0;
         state->unk424 = fz;
         sv = *(s16 *)obj;
@@ -433,7 +433,7 @@ undefined4 SnowBike_animEventCallback(short *param_1,undefined4 param_2,ObjSeqSt
       ((SnowBikeState *)state)->stickY = 0x46;
     }
 
-    fn_801EA240(((SnowBikeState *)state)->unk49C, (int)param_1, state,
+    fn_801EA240(((SnowBikeState *)state)->distanceScale, (int)param_1, state,
                 (int)(lbl_803E5BA0 * -((SnowBikeState *)state)->unk430),
                 state + 0x461, 4);
   }
@@ -707,7 +707,7 @@ void fn_801EBD60(int param_1,int param_2)
   f32 k;
   HightopPartfxTransform effect;
 
-  speed = sqrtf(st->unk49C * st->unk49C +
+  speed = sqrtf(st->distanceScale * st->distanceScale +
                 (st->unk494 * st->unk494 +
                  st->unk498 * st->unk498));
   st->unk43C -= timeDelta;

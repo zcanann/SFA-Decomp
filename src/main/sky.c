@@ -1846,8 +1846,8 @@ void fn_8008BDA8(void)
             if (*(u8 **)lbl_803DD12C != NULL) {
                 textureFree(*(u8 **)lbl_803DD12C);
             }
-            if (((SkyState *)lbl_803DD12C)->unk04 != NULL) {
-                textureFree(((SkyState *)lbl_803DD12C)->unk04);
+            if (((SkyState *)lbl_803DD12C)->handle != NULL) {
+                textureFree(((SkyState *)lbl_803DD12C)->handle);
             }
             mm_free(((SkyState *)lbl_803DD12C)->unk08);
             mm_free(((SkyState *)lbl_803DD12C)->unk10);
@@ -1874,7 +1874,7 @@ void fn_8008BDA8(void)
     ((SkyState *)lbl_803DD12C)->skyTextureIds[6] = 0xc38;
     ((SkyState *)lbl_803DD12C)->skyTextureIds[7] = 0xc38;
     *(u8 **)lbl_803DD12C = textureLoadAsset(((SkyState *)lbl_803DD12C)->skyTextureIds[0]);
-    ((SkyState *)lbl_803DD12C)->unk04 = textureLoadAsset(((SkyState *)lbl_803DD12C)->skyTextureIds[1]);
+    ((SkyState *)lbl_803DD12C)->handle = textureLoadAsset(((SkyState *)lbl_803DD12C)->skyTextureIds[1]);
     ((SkyState *)lbl_803DD12C)->unk14 = 0xc38;
     ((SkyState *)lbl_803DD12C)->unk18 = 0xc38;
     tex0 = *(u8 **)lbl_803DD12C;

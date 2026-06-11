@@ -16,7 +16,7 @@ typedef struct EdiblemushroomState {
     f32 unk108;
     f32 unk10C;
     u8 pad110[0x134 - 0x110];
-    s16 unk134;
+    s16 eventId;
     u8 pad136[0x138 - 0x136];
 } EdiblemushroomState;
 
@@ -72,7 +72,7 @@ void ediblemushroom_update(u8 *self)
       if (((u32)msg - 0x70000) != 0xB) continue;
       ((GameObject *)self)->anim.flags = (s16)(((GameObject *)self)->anim.flags | 0x4000);
       ObjHits_DisableObject(self);
-      gameBitIncrement(((EdiblemushroomState *)state)->unk134);
+      gameBitIncrement(((EdiblemushroomState *)state)->eventId);
       GameBit_Set(0x12E, 0);
       if (((GameObject *)self)->anim.seqId == 0x658) {
         itemPickupDoParticleFx(self, lbl_803E52A8, 0xFF, 0x28);

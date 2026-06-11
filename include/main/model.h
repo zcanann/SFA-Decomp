@@ -55,7 +55,7 @@ typedef struct ModelFileHeader {
     u8 *blendAnimEntries; /* 0x74-stride entries */
     u8 *blendAnimBase;
     u8 *displayLists; /* 0x1c-stride entries, unkF5 + unkF6 */
-    u8 *unkD4;
+    u8 *instrs;
     u8 unkD8[4];
     u8 *morphTargetPtrs; /* pointer table, morphTargetCount entries */
     u16 cullDistance;

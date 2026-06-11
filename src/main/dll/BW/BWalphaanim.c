@@ -389,9 +389,9 @@ void SnowBike_update(int obj)
                     p = powfBitEstimate(((SnowBikeState *)state)->unk548, timeDelta);
                     ((SnowBikeState *)state)->unk494 *= p;
                     p = powfBitEstimate(((SnowBikeState *)state)->unk54C, timeDelta);
-                    ((SnowBikeState *)state)->unk49C *= p;
+                    ((SnowBikeState *)state)->distanceScale *= p;
                     fn_801EC1AC(obj, (int)state);
-                    Matrix_TransformPoint((f32 *)(state + 0xec), ((SnowBikeState *)state)->unk494, ((SnowBikeState *)state)->unk498, ((SnowBikeState *)state)->unk49C, &((GameObject *)obj)->anim.velocityX, &((GameObject *)obj)->anim.velocityY, &((GameObject *)obj)->anim.velocityZ);
+                    Matrix_TransformPoint((f32 *)(state + 0xec), ((SnowBikeState *)state)->unk494, ((SnowBikeState *)state)->unk498, ((SnowBikeState *)state)->distanceScale, &((GameObject *)obj)->anim.velocityX, &((GameObject *)obj)->anim.velocityY, &((GameObject *)obj)->anim.velocityZ);
                     objApplyVelocity(obj);
                 }
             } else {
@@ -448,13 +448,13 @@ void SnowBike_update(int obj)
                 p = powfBitEstimate(((SnowBikeState *)state)->unk548, timeDelta);
                 ((SnowBikeState *)state)->unk494 *= p;
                 p = powfBitEstimate(((SnowBikeState *)state)->unk54C, timeDelta);
-                ((SnowBikeState *)state)->unk49C *= p;
+                ((SnowBikeState *)state)->distanceScale *= p;
                 fn_801EC1AC(obj, (int)state);
-                Matrix_TransformPoint((f32 *)(state + 0xec), ((SnowBikeState *)state)->unk494, ((SnowBikeState *)state)->unk498, ((SnowBikeState *)state)->unk49C, &((GameObject *)obj)->anim.velocityX, &((GameObject *)obj)->anim.velocityY, &((GameObject *)obj)->anim.velocityZ);
+                Matrix_TransformPoint((f32 *)(state + 0xec), ((SnowBikeState *)state)->unk494, ((SnowBikeState *)state)->unk498, ((SnowBikeState *)state)->distanceScale, &((GameObject *)obj)->anim.velocityX, &((GameObject *)obj)->anim.velocityY, &((GameObject *)obj)->anim.velocityZ);
                 objApplyVelocity(obj);
             }
             fn_801EB0D4(obj, state);
-            fn_801EA240(obj, state, ((SnowBikeState *)state)->unk49C, (int)(lbl_803E5BA0 * -((SnowBikeState *)state)->unk430), state + 0x461, 7);
+            fn_801EA240(obj, state, ((SnowBikeState *)state)->distanceScale, (int)(lbl_803E5BA0 * -((SnowBikeState *)state)->unk430), state + 0x461, 7);
             fn_801EB634(obj, state);
             *(s16 *)obj = ((SnowBikeState *)state)->yaw;
         }

@@ -8,7 +8,7 @@ typedef struct DimbossfireState {
     f32 unk4;
     f32 unk8;
     f32 unkC;
-    s32 unk10;
+    s32 light;
     u8 pad14[0x18 - 0x14];
 } DimbossfireState;
 
@@ -151,21 +151,21 @@ void dimbossfire_update(int param_1)
           doRumble(lbl_803E4DB4 * fVar6);
         }
       }
-      if (((DimbossfireState *)pbVar5)->unk10 == 0) {
+      if (((DimbossfireState *)pbVar5)->light == 0) {
         piVar2 = (int *)objCreateLight(param_1,1);
-        *(int **)&((DimbossfireState *)pbVar5)->unk10 = piVar2;
-        if (((DimbossfireState *)pbVar5)->unk10 != 0) {
-          modelLightStruct_setLightKind(((DimbossfireState *)pbVar5)->unk10,2);
-          lightSetFieldBC_8001db14(((DimbossfireState *)pbVar5)->unk10,1);
+        *(int **)&((DimbossfireState *)pbVar5)->light = piVar2;
+        if (((DimbossfireState *)pbVar5)->light != 0) {
+          modelLightStruct_setLightKind(((DimbossfireState *)pbVar5)->light,2);
+          lightSetFieldBC_8001db14(((DimbossfireState *)pbVar5)->light,1);
           if (*(short *)(iVar4 + 0x1a) == 0) {
-            modelLightStruct_setDiffuseColor(((DimbossfireState *)pbVar5)->unk10,0x7f,0xff,0,0);
+            modelLightStruct_setDiffuseColor(((DimbossfireState *)pbVar5)->light,0x7f,0xff,0,0);
           }
           else {
-            modelLightStruct_setDiffuseColor(((DimbossfireState *)pbVar5)->unk10,0xff,0x7f,0,0);
+            modelLightStruct_setDiffuseColor(((DimbossfireState *)pbVar5)->light,0xff,0x7f,0,0);
           }
-          modelLightStruct_setDistanceAttenuation(lbl_803E4DB8,lbl_803E4DBC,((DimbossfireState *)pbVar5)->unk10);
-          modelLightStruct_setEnabled(((DimbossfireState *)pbVar5)->unk10,1,lbl_803E4DA0);
-          modelLightStruct_setEnabled(((DimbossfireState *)pbVar5)->unk10,0,((DimbossfireState *)pbVar5)->unk4 / lbl_803E4DC0);
+          modelLightStruct_setDistanceAttenuation(lbl_803E4DB8,lbl_803E4DBC,((DimbossfireState *)pbVar5)->light);
+          modelLightStruct_setEnabled(((DimbossfireState *)pbVar5)->light,1,lbl_803E4DA0);
+          modelLightStruct_setEnabled(((DimbossfireState *)pbVar5)->light,0,((DimbossfireState *)pbVar5)->unk4 / lbl_803E4DC0);
         }
       }
       Sfx_PlayFromObject(param_1,SFXar_boost16);
@@ -182,9 +182,9 @@ void dimbossfire_update(int param_1)
     }
     else {
       ((DimbossfireState *)pbVar5)->unk4 = lbl_803E4DA0;
-      if (*(uint *)&((DimbossfireState *)pbVar5)->unk10 != 0) {
-        ModelLightStruct_free(*(void **)&((DimbossfireState *)pbVar5)->unk10);
-        ((DimbossfireState *)pbVar5)->unk10 = 0;
+      if (*(uint *)&((DimbossfireState *)pbVar5)->light != 0) {
+        ModelLightStruct_free(*(void **)&((DimbossfireState *)pbVar5)->light);
+        ((DimbossfireState *)pbVar5)->light = 0;
       }
       ObjHits_SetHitVolumeSlot(param_1,0,0,0);
       ObjHitbox_SetSphereRadius(param_1,0);

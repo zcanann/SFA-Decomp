@@ -104,7 +104,7 @@ typedef struct SnowBikeState {
     u8 pad488[0xc];
     f32 unk494;             /* 0x494 */
     f32 unk498;             /* 0x498 */
-    f32 unk49C;             /* 0x49c */
+    f32 distanceScale;             /* 0x49c */
     u8 pad4A0[0xC];
     f32 unk4AC;             /* 0x4ac */
     f32 unk4B0;             /* 0x4b0 */

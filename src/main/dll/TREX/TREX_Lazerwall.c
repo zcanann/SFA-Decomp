@@ -5,7 +5,7 @@
 
 typedef struct TREXLazerwallUpdateTimedChallengeState {
     u8 pad0[0x9B0 - 0x0];
-    s32 unk9B0;
+    s32 stack;
     s32 unk9B4;
     u8 pad9B8[0x9BC - 0x9B8];
     f32 unk9BC;
@@ -68,7 +68,7 @@ int TREX_Lazerwall_popQueuedState(int arg1, int arg2)
     state = *(int *)(arg1 + 0xb8);
 
     if (*(s8 *)(arg2 + 0x27a) != 0) {
-        if (Stack_IsEmpty(((TREXLazerwallUpdateTimedChallengeState *)state)->unk9B0) != 0) {
+        if (Stack_IsEmpty(((TREXLazerwallUpdateTimedChallengeState *)state)->stack) != 0) {
             int found = (*gRomCurveInterface)->find((int *)head, 2, -1,
                                                     *(f32 *)(playerObj + 0xc),
                                                     *(f32 *)(playerObj + 0x10),
@@ -87,13 +87,13 @@ int TREX_Lazerwall_popQueuedState(int arg1, int arg2)
 
             if ((s8)*(u8 *)(hit + 0x19) == 0xc) {
                 pushKindA = 1;
-                if (Stack_IsFull(((TREXLazerwallUpdateTimedChallengeState *)state)->unk9B0) == 0) {
-                    Stack_Push(((TREXLazerwallUpdateTimedChallengeState *)state)->unk9B0, &pushKindA);
+                if (Stack_IsFull(((TREXLazerwallUpdateTimedChallengeState *)state)->stack) == 0) {
+                    Stack_Push(((TREXLazerwallUpdateTimedChallengeState *)state)->stack, &pushKindA);
                 }
             } else {
                 pushKindB = 2;
-                if (Stack_IsFull(((TREXLazerwallUpdateTimedChallengeState *)state)->unk9B0) == 0) {
-                    Stack_Push(((TREXLazerwallUpdateTimedChallengeState *)state)->unk9B0, &pushKindB);
+                if (Stack_IsFull(((TREXLazerwallUpdateTimedChallengeState *)state)->stack) == 0) {
+                    Stack_Push(((TREXLazerwallUpdateTimedChallengeState *)state)->stack, &pushKindB);
                 }
             }
 
@@ -105,8 +105,8 @@ int TREX_Lazerwall_popQueuedState(int arg1, int arg2)
     ((TREXLazerwallUpdateTimedChallengeState *)state)->unk9D6 = 0xff;
     if (((TREXLazerwallUpdateTimedChallengeState *)state)->unk9D6 == 0xff) {
         popOut = 0;
-        if (Stack_IsEmpty(((TREXLazerwallUpdateTimedChallengeState *)state)->unk9B0) == 0) {
-            Stack_Pop(((TREXLazerwallUpdateTimedChallengeState *)state)->unk9B0, &popOut);
+        if (Stack_IsEmpty(((TREXLazerwallUpdateTimedChallengeState *)state)->stack) == 0) {
+            Stack_Pop(((TREXLazerwallUpdateTimedChallengeState *)state)->stack, &popOut);
         }
         return popOut + 1;
     }

@@ -1180,7 +1180,7 @@ int trickyFoodFn_801437d4(u8 *obj, u8 *state)
         }
         ((TrickyState *)state)->unk738 = lbl_803E2440;
     }
-    if (((TrickyState *)state)->unk7B8 == NULL && Obj_IsLoadingLocked() != 0) {
+    if (((TrickyState *)state)->child == NULL && Obj_IsLoadingLocked() != 0) {
         e = Obj_AllocObjectSetup(0x20, 0x17b);
         slots[0] = -1;
         slots[1] = -1;
@@ -1191,7 +1191,7 @@ int trickyFoodFn_801437d4(u8 *obj, u8 *state)
         if (((TrickyState *)state)->unk7B0 != NULL) {
             slots[((TrickyPackedSlots *)(state + 0x7bc))->b] = 1;
         }
-        if (((TrickyState *)state)->unk7B8 != NULL) {
+        if (((TrickyState *)state)->child != NULL) {
             slots[((TrickyPackedSlots *)(state + 0x7bc))->c] = 1;
         }
         if (slots[0] == -1) {
@@ -1206,8 +1206,8 @@ int trickyFoodFn_801437d4(u8 *obj, u8 *state)
             idx = -1;
         }
         ((TrickyPackedSlots *)(state + 0x7bc))->c = idx;
-        ((TrickyState *)state)->unk7B8 = Obj_SetupObject(e, 4, -1, -1, ((GameObject *)obj)->anim.parent);
-        ObjLink_AttachChild(obj, ((TrickyState *)state)->unk7B8, ((TrickyPackedSlots *)(state + 0x7bc))->c);
+        ((TrickyState *)state)->child = Obj_SetupObject(e, 4, -1, -1, ((GameObject *)obj)->anim.parent);
+        ObjLink_AttachChild(obj, ((TrickyState *)state)->child, ((TrickyPackedSlots *)(state + 0x7bc))->c);
         z = lbl_803E23DC;
         ((TrickyState *)state)->unk7C0 = z;
         ((TrickyState *)state)->unk7C4 = z;

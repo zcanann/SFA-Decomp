@@ -638,16 +638,16 @@ void Door_init(int *obj, u8 *def) {
             s32 subtype = ((GameObject *)obj)->anim.mapEventSlot;
             if ((subtype < 35 && subtype >= 31) || (subtype < 43 && subtype >= 40)) {
                 *(s16 *)state = 832;
-                *(s16 *)&((CfGuardianState *)state)->unk2 = 833;
+                *(s16 *)&((CfGuardianState *)state)->sfxId = 833;
             } else {
                 *(s16 *)state = 1154;
-                *(s16 *)&((CfGuardianState *)state)->unk2 = 1155;
+                *(s16 *)&((CfGuardianState *)state)->sfxId = 1155;
             }
             break;
         }
         case 358:
             *(s16 *)state = 275;
-            *(s16 *)&((CfGuardianState *)state)->unk2 = 504;
+            *(s16 *)&((CfGuardianState *)state)->sfxId = 504;
             break;
         }
     }
@@ -782,8 +782,8 @@ int Door_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
         if ((*(u16 *)state != 0) && (Sfx_IsPlayingFromObject(obj, *(u16 *)state) != 0)) {
           Sfx_StopFromObject(obj, *(u16 *)state);
         }
-        if (((CfGuardianState *)state)->unk2 != 0) {
-          Sfx_PlayFromObject(obj, ((CfGuardianState *)state)->unk2);
+        if (((CfGuardianState *)state)->sfxId != 0) {
+          Sfx_PlayFromObject(obj, ((CfGuardianState *)state)->sfxId);
         }
       }
     }
@@ -798,8 +798,8 @@ int Door_SeqFn(int obj, int unused, ObjAnimUpdateState *animUpdate)
         if ((*(u16 *)state != 0) && (Sfx_IsPlayingFromObject(obj, *(u16 *)state) != 0)) {
           Sfx_StopFromObject(obj, *(u16 *)state);
         }
-        if (((CfGuardianState *)state)->unk2 != 0) {
-          Sfx_PlayFromObject(obj, ((CfGuardianState *)state)->unk2);
+        if (((CfGuardianState *)state)->sfxId != 0) {
+          Sfx_PlayFromObject(obj, ((CfGuardianState *)state)->sfxId);
         }
       }
     }

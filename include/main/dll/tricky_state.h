@@ -96,12 +96,12 @@ typedef struct TrickyState {
     u8 unk2F0;
     u8 unk2F1;
     u8 pad2F2[0x2F5 - 0x2F2];
-    u8 unk2F5;
+    u8 spawnBits;
     u8 pad2F6[0x2F8 - 0x2F6];
     u16 unk2F8;
     u8 pad2FA[0x300 - 0x2FA];
     f32 unk300;
-    f32 unk304;
+    f32 base;
     f32 animPlaySpeed;
     f32 currentMoveProgress;
     f32 unk310;
@@ -119,7 +119,7 @@ typedef struct TrickyState {
     u8 pad359[0x360 - 0x359];
     void *lastContactObj;
     f32 contactTimer;
-    int unk368; /* object link */
+    int light; /* object link */
     int unk36C; /* object link */
     f32 hitCooldown;
     u8 unk374;
@@ -185,7 +185,7 @@ typedef struct TrickyState {
     u8 pad7AC[0x7B0 - 0x7AC];
     u8 *unk7B0;
     u8 pad7B4[0x7B8 - 0x7B4];
-    u8 *unk7B8;
+    u8 *child;
     u8 pad7BC[0x7C0 - 0x7BC];
     f32 unk7C0;
     f32 unk7C4;
