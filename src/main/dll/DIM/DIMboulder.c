@@ -128,18 +128,8 @@ sizeof
 
 
 extern undefined4 getLActions();
-extern undefined4 FUN_80006724();
-extern undefined8 FUN_80006728();
-extern undefined4 FUN_800067c0();
-extern undefined4 FUN_8000680c();
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_80006b0c();
-extern undefined4 FUN_80006b14();
-extern undefined4 FUN_80006c88();
-extern undefined8 FUN_80017484();
 extern uint GameBit_Get(int eventId);
 extern undefined8 GameBit_Set(int eventId, int value);
-extern undefined4 FUN_80017710();
 extern undefined4 FUN_8001771c();
 extern int FUN_80017a98();
 extern void* FUN_80017aa4();
@@ -149,62 +139,13 @@ extern uint FUN_80017ae8();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHitbox_SetCapsuleBounds();
 extern undefined4 ObjHits_DisableObject();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_80042b9c();
-extern undefined4 FUN_80042bec();
-extern undefined4 FUN_80044404();
-extern undefined4 FUN_80053c98();
-extern undefined4 FUN_800614c4();
-extern int FUN_800632f4();
-extern undefined8 FUN_80080f14();
-extern undefined4 FUN_80080f18();
-extern undefined4 FUN_8008112c();
-extern int FUN_800e8b98();
-extern undefined4 FUN_800ea9b8();
-extern undefined4 FUN_801abf38();
-extern undefined4 SH_LevelControl_runBloopEvent();
-extern uint FUN_8028683c();
-extern undefined4 FUN_80286888();
-extern int FUN_80294dbc();
 
 extern undefined4 DAT_802c2a88;
 extern undefined4 DAT_802c2a8c;
 extern undefined4 DAT_802c2a90;
-extern undefined4 DAT_80324188;
-extern undefined4 DAT_803241c0;
-extern undefined4 DAT_803241f8;
-extern undefined4 DAT_80324230;
-extern undefined4 DAT_803242f8;
-extern undefined4 DAT_80324304;
-extern undefined4 DAT_803dc070;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern undefined4* DAT_803dd6d8;
-extern undefined4* DAT_803dd6e4;
-extern undefined4* DAT_803dd6e8;
 extern MapEventInterface** gMapEventInterface;
-extern undefined4 DAT_803de7c0;
-extern f64 DOUBLE_803e5390;
-extern f64 DOUBLE_803e53c0;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E536C;
-extern f32 lbl_803E5374;
-extern f32 lbl_803E5378;
-extern f32 lbl_803E5380;
-extern f32 lbl_803E5384;
-extern f32 lbl_803E5388;
-extern f32 lbl_803E5398;
-extern f32 lbl_803E539C;
-extern f32 lbl_803E53A0;
-extern f32 lbl_803E53A4;
-extern f32 lbl_803E53A8;
-extern f32 lbl_803E53AC;
-extern f32 lbl_803E53B0;
-extern f32 lbl_803E53B4;
-extern f32 lbl_803E53B8;
-extern f32 lbl_803E53C8;
 extern f32 lbl_803E53D0;
-extern f32 lbl_803E53D8;
-extern f32 lbl_803E53DC;
 extern f32 lbl_803E53E0;
 extern f32 lbl_803E53F0;
 
@@ -263,14 +204,14 @@ FUN_801ad984(undefined8 param_1, undefined8 param_2, double param_3, undefined8 
             if (((double)(float)((double)lbl_803E53D0 + dVar4) < dVar3) &&
                 (*(char*)((int)pfVar2 + 0xb) != '\0'))
             {
-                *(undefined*)((int)pfVar2 + 0xb) = 0;
+                *(u8*)((int)pfVar2 + 0xb) = 0;
                 getLActions(dVar3, dVar4, param_3, param_4, param_5, param_6, param_7, param_8, param_9, param_9,
                             (uint) * (ushort*)(pfVar2 + 2), 0, 0, 0, in_r9, in_r10);
             }
         }
         else
         {
-            *(undefined*)((int)pfVar2 + 0xb) = 1;
+            *(u8*)((int)pfVar2 + 0xb) = 1;
             getLActions(dVar3, dVar4, param_3, param_4, param_5, param_6, param_7, param_8, param_9, param_9,
                         (uint) * (ushort*)((int)pfVar2 + 6), 0, 0, 0, in_r9, in_r10);
         }
@@ -295,18 +236,18 @@ FUN_801ad984(undefined8 param_1, undefined8 param_2, double param_3, undefined8 
 void FUN_801adca0(undefined2* param_1, undefined2* param_2, undefined4 param_3, undefined4 param_4,
                   undefined4 param_5, undefined4 param_6, char param_7, int param_8, int param_9)
 {
-    undefined uVar1;
+    u8 uVar1;
     undefined4 local_28;
     undefined4 local_24;
     undefined4 local_20[5];
 
     if (((param_9 != 0) && (param_7 != '\0')) && (0 < param_8))
     {
-        uVar1 = *(undefined*)((int)param_2 + 0x37);
+        uVar1 = *(u8*)((int)param_2 + 0x37);
         *(char*)((int)param_2 + 0x37) = (char)param_8;
         (**(code**)(**(int**)(param_2 + 0x34) + 0x10))
             (param_2, param_3, param_4, param_5, param_6, 0xffffffff);
-        *(undefined*)((int)param_2 + 0x37) = uVar1;
+        *(u8*)((int)param_2 + 0x37) = uVar1;
     }
     *(undefined4*)(param_1 + 0x46) = *(undefined4*)(param_1 + 0xc);
     *(undefined4*)(param_1 + 0x48) = *(undefined4*)(param_1 + 0xe);
@@ -361,12 +302,12 @@ FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 para
     undefined2 local_20;
 
     piVar5 = ((GameObject*)param_9)->extra;
-    *(undefined*)(piVar5 + 8) = 0xff;
+    *(u8*)(piVar5 + 8) = 0xff;
     iVar6 = *piVar5;
     if (*(char*)(param_11 + 0x80) == '\x03')
     {
-        *(undefined*)((int)piVar5 + 0x21) = 0xff;
-        *(undefined*)(param_11 + 0x80) = 0;
+        *(u8*)((int)piVar5 + 0x21) = 0xff;
+        *(u8*)(param_11 + 0x80) = 0;
     }
     local_28 = DAT_802c2a88;
     local_24 = DAT_802c2a8c;
@@ -378,12 +319,12 @@ FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 para
             param_1 = FUN_80017ac8(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8,
                                    *(int*)&((GameObject*)param_9)->childObjs[0]);
             *(undefined4*)(param_9 + 200) = 0;
-            *(undefined*)(param_9 + 0xeb) = 0;
+            *(u8*)(param_9 + 0xeb) = 0;
         }
         uVar1 = FUN_80017ae8();
         if ((uVar1 & 0xff) == 0)
         {
-            *(undefined*)((int)piVar5 + 0x22) = 0;
+            *(u8*)((int)piVar5 + 0x22) = 0;
         }
         else
         {
@@ -395,9 +336,9 @@ FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 para
                 uVar3 = FUN_80017ae4(param_1, param_2, param_3, param_4, param_5, param_6, param_7, param_8, puVar2,
                                      4, 0xff, 0xffffffff, param_13, param_14, param_15, param_16);
                 *(undefined4*)(param_9 + 200) = uVar3;
-                *(undefined*)(param_9 + 0xeb) = 1;
+                *(u8*)(param_9 + 0xeb) = 1;
             }
-            *(undefined*)((int)piVar5 + 0x22) = *(undefined*)((int)piVar5 + 0x21);
+            *(u8*)((int)piVar5 + 0x22) = *(u8*)((int)piVar5 + 0x21);
         }
     }
     *(undefined2*)(param_11 + 0x6e) = *(undefined2*)(param_11 + 0x70);
@@ -406,7 +347,7 @@ FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 para
         if ((iVar6 != 0) && (*(char*)(param_11 + 0x80) == '\x01'))
         {
             (**(code**)(**(int**)(iVar6 + 0x68) + 0x3c))(iVar6, 0);
-            *(undefined*)(param_11 + 0x80) = 0;
+            *(u8*)(param_11 + 0x80) = 0;
         }
     }
     else
@@ -424,7 +365,7 @@ FUN_801addec(undefined8 param_1, double param_2, double param_3, undefined8 para
             ((GameObject*)param_9)->anim.modelState->flags |= OBJ_MODEL_STATE_SHADOW_FADE_OUT;
         }
         *(ushort*)(param_11 + 0x6e) = *(ushort*)(param_11 + 0x6e) & ~0x4;
-        *(undefined*)(param_11 + 0x80) = 0;
+        *(u8*)(param_11 + 0x80) = 0;
     }
     if ((iVar6 != 0) && (iVar6 = (**(code**)(**(int**)(iVar6 + 0x68) + 0x38))(iVar6), iVar6 == 2))
     {
