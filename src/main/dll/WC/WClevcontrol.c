@@ -25,20 +25,7 @@ typedef struct SBCloudRunnerState
 } SBCloudRunnerState;
 
 
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_80006b0c();
-extern undefined4 FUN_80006b14();
-extern undefined4 FUN_80006b94();
-extern char FUN_80006bc8();
-extern char FUN_80006bd0();
-extern uint FUN_80006c10();
 extern uint GameBit_Get(int eventId);
-extern byte FUN_80017a20();
-extern undefined4 FUN_80017a28();
-extern undefined4 FUN_80017a4c();
-extern undefined4 FUN_80017a98();
-extern int FUN_8002fc3c();
-extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_SetTargetMask();
 extern int ObjHits_GetPriorityHitWithPosition();
 extern void* ObjGroup_GetObjects();
@@ -46,21 +33,10 @@ extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined4 ObjPath_GetPointModelMtx();
 extern undefined4 ObjPath_GetPointWorldPosition();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_8004036c();
-extern undefined4 FUN_80053754();
-extern undefined4 FUN_8005398c();
-extern undefined4 FUN_80061a80();
-extern undefined4 FUN_8011e868();
 extern void WCPushBlock_SpawnFromPath(s16 * path, u8 * state);
-extern undefined4 FUN_80247bf8();
-extern undefined4 FUN_8028683c();
-extern undefined4 FUN_80286888();
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
-extern undefined4 FUN_80294bd4();
 
-extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6e4;
 extern EffectInterface** gPartfxInterface;
 extern f64 DOUBLE_803e6938;
