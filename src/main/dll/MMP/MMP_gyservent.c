@@ -208,14 +208,13 @@ void objSeqFn_801992ec(void* obj, int arg2)
     dz1 = ((MmpGyserventState*)state)->unk30 - ((GameObject*)obj)->anim.worldPosZ;
     d1 = dx1 * dx1 + dy1 * dy1 + dz1 * dz1;
 
-    r = ((MmpGyserventState*)state)->unk4;
-    if (d1 < r)
+    if (d1 < ((MmpGyserventState*)state)->unk4)
     {
-        cat = (d0 < r) ? 2 : 1;
+        cat = (d0 < ((MmpGyserventState*)state)->unk4) ? 2 : 1;
     }
     else
     {
-        cat = (d0 < r) ? -1 : -2;
+        cat = (d0 < ((MmpGyserventState*)state)->unk4) ? -1 : -2;
     }
     objInterpretSeq(obj, arg2, (int)cat, (int)d1);
 }
