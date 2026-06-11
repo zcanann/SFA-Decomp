@@ -6,25 +6,12 @@
 #include "main/objHitReact.h"
 #include "main/objanim.h"
 
-extern undefined4 FUN_80017680();
-extern double FUN_80017714();
-extern undefined4 FUN_80017a6c();
-extern undefined4 FUN_80017a98();
-extern int FUN_8002fc3c();
-extern undefined4 FUN_800305f8();
 extern undefined4 ObjGroup_AddObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern int ObjTrigger_IsSetById();
 extern int ObjTrigger_IsSet();
 extern undefined4 ObjPath_GetPointWorldPosition();
-extern undefined4 FUN_8003a1c4();
-extern undefined4 FUN_8003b280();
-extern undefined4 FUN_8003b818();
 extern undefined4 objAudioFn_8006ef38();
-extern int FUN_8012efc4();
-extern undefined4 FUN_801ce340();
-extern int FUN_801ce424();
-extern undefined4 FUN_801ce638();
 
 extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
 extern void fn_8003A168(int obj, void* p);
@@ -46,14 +33,6 @@ extern ObjHitReactEntry DAT_80327414;
 extern undefined4 DAT_80327468;
 extern undefined4 DAT_80327498;
 extern undefined4 DAT_803274f4;
-extern undefined4 DAT_803dcbd8;
-extern undefined4 DAT_803dcbdc;
-extern undefined4 DAT_803dcbe0;
-extern undefined4 DAT_803dcbe4;
-extern undefined4 DAT_803dcc1c;
-extern undefined4 DAT_803dcc20;
-extern undefined4 DAT_803dcc24;
-extern undefined4* DAT_803dd6e8;
 extern NwMammothGameUiInterface** gGameUIInterface;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern NwMammothPathControlInterface** gPathControlInterface;
