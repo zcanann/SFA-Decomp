@@ -3,10 +3,11 @@
 
 #include "global.h"
 #include "ghidra_import.h"
+#include "main/dll/curve_walker.h"
 #include "main/object_descriptor.h"
 
 typedef struct WispBaddieState {
-  int curve;
+  RomCurveWalker *curve;
   int playerObj;
   f32 hitRadius;
   f32 maxHitRadius;
