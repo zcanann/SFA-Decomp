@@ -13,23 +13,15 @@ extern undefined4 FUN_80006824();
 extern undefined4 FUN_8001766c();
 extern undefined4 GameBit_Set(int eventId, int value);
 extern int FUN_80017730();
-extern undefined4 FUN_800178a0();
-extern undefined4 FUN_800178a4();
-extern undefined4 FUN_800178b4();
-extern int FUN_80017a98();
 extern undefined4 FUN_800305c4();
 extern undefined4 FUN_800305f8();
 extern int FUN_8014c78c();
 extern undefined4 FUN_8014d3d0();
 extern undefined4 FUN_8014d4c8();
-extern undefined4 FUN_8014d59c();
 extern char FUN_8014ffa8();
 extern undefined4 FUN_801504f8();
 extern undefined8 FUN_8028683c();
-extern undefined8 FUN_80286840();
 extern undefined4 FUN_80286888();
-extern undefined4 FUN_8028688c();
-extern int FUN_80294c54();
 
 extern undefined4 DAT_8031e980;
 extern undefined4 DAT_8031feb8;
@@ -39,24 +31,11 @@ extern undefined4 DAT_803dc8f0;
 extern f64 DOUBLE_803e3408;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E33D8;
-extern f32 lbl_803E33E0;
 extern f32 lbl_803E33E4;
-extern f32 lbl_803E33EC;
 extern f32 lbl_803E3438;
-extern f32 lbl_803E343C;
 extern f32 lbl_803E3440;
-extern f32 lbl_803E3448;
-extern f32 lbl_803E344C;
-extern f32 lbl_803E3450;
-extern f32 lbl_803E3454;
-extern f32 lbl_803E3458;
-extern f32 lbl_803E345C;
-extern f32 lbl_803E3460;
-extern f32 lbl_803E3464;
-extern f32 lbl_803E3468;
 extern void* PTR_DAT_8031fdbc;
 extern void* PTR_DAT_8031fdc8;
-extern void* PTR_DAT_8031fdd0;
 extern void* PTR_DAT_8031fdd4;
 extern void* PTR_DAT_8031fdd8;
 
@@ -141,13 +120,13 @@ void FUN_801511e8(undefined8 param_1, undefined8 param_2, double param_3, undefi
         {
             if (*(ushort*)(iVar5 + 0x338) == 0)
             {
-                *(undefined*)(iVar5 + 0x2f2) = 0;
-                *(undefined*)(iVar5 + 0x2f3) = 0;
-                *(undefined*)(iVar5 + 0x2f4) = 0;
+                *(u8*)(iVar5 + 0x2f2) = 0;
+                *(u8*)(iVar5 + 0x2f3) = 0;
+                *(u8*)(iVar5 + 0x2f4) = 0;
                 iVar2 = (uint) * (ushort*)(iVar5 + 0x2a0) * 0xc;
                 if ((byte)puVar8[iVar2 + 8] == 0)
                 {
-                    *(undefined*)(iVar5 + 0x323) = 3;
+                    *(u8*)(iVar5 + 0x323) = 3;
                     FUN_800305f8((double)lbl_803E33D8, dVar11, param_3, param_4, param_5, param_6, param_7, param_8
                                  , psVar3, (uint)(byte)puVar9[0x2c], 0, in_r6, in_r7, in_r8, in_r9, in_r10);
                 }
@@ -248,7 +227,7 @@ void FUN_80151844(undefined8 param_1, undefined8 param_2, double param_3, undefi
             {
                 uVar3 = (uint)(short)((short)uVar3 + -1);
             }
-            *(undefined*)(param_10 + 0x33a) =
+            *(u8*)(param_10 + 0x33a) =
                 puVar4[8] + (&DAT_803dc8f0)[(short)((uVar3 & 0xffff) >> 0xd)];
         }
         else if (DAT_803ad08c < 0x47)
@@ -258,7 +237,7 @@ void FUN_80151844(undefined8 param_1, undefined8 param_2, double param_3, undefi
                 *(char*)(param_10 + 0x33a) = *(char*)(param_10 + 0x33a) + '\x01';
                 if ((byte)puVar4[8] < *(byte*)(param_10 + 0x33a))
                 {
-                    *(undefined*)(param_10 + 0x33a) = 1;
+                    *(u8*)(param_10 + 0x33a) = 1;
                 }
             }
         }
@@ -278,12 +257,12 @@ void FUN_80151844(undefined8 param_1, undefined8 param_2, double param_3, undefi
         *(char*)(param_10 + 0x33a) = *(char*)(param_10 + 0x33a) + '\x01';
         if ((byte)puVar4[8] < *(byte*)(param_10 + 0x33a))
         {
-            *(undefined*)(param_10 + 0x33a) = 1;
+            *(u8*)(param_10 + 0x33a) = 1;
         }
     }
-    *(undefined*)(param_10 + 0x2f2) = puVar4[(uint) * (byte*)(param_10 + 0x33a) * 0x10 + 10];
-    *(undefined*)(param_10 + 0x2f3) = puVar4[(uint) * (byte*)(param_10 + 0x33a) * 0x10 + 0xb];
-    *(undefined*)(param_10 + 0x2f4) = puVar4[(uint) * (byte*)(param_10 + 0x33a) * 0x10 + 0xc];
+    *(u8*)(param_10 + 0x2f2) = puVar4[(uint) * (byte*)(param_10 + 0x33a) * 0x10 + 10];
+    *(u8*)(param_10 + 0x2f3) = puVar4[(uint) * (byte*)(param_10 + 0x33a) * 0x10 + 0xb];
+    *(u8*)(param_10 + 0x2f4) = puVar4[(uint) * (byte*)(param_10 + 0x33a) * 0x10 + 0xc];
     iVar2 = (uint) * (byte*)(param_10 + 0x33a) * 0x10;
     FUN_8014d4c8((double)*(float*)(puVar4 + iVar2), dVar5, param_3, param_4, param_5, param_6, param_7,
                  param_8, (int)param_9, param_10, (uint)(byte)puVar4[iVar2 + 8], 0, 3, in_r8, in_r9, in_r10);
@@ -295,7 +274,7 @@ void FUN_80151844(undefined8 param_1, undefined8 param_2, double param_3, undefi
     *(char*)(param_10 + 0x33a) = *(char*)(param_10 + 0x33a) + '\x01';
     if ((byte)puVar4[8] < *(byte*)(param_10 + 0x33a))
     {
-        *(undefined*)(param_10 + 0x33a) = 1;
+        *(u8*)(param_10 + 0x33a) = 1;
     }
     return;
 }
