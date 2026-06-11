@@ -9,45 +9,22 @@
 #include "main/objseq.h"
 #include "main/screen_transition.h"
 
-extern bool FUN_800067f0();
-extern undefined4 FUN_8000680c();
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_800068cc();
-extern undefined4 FUN_800068d0();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-extern double FUN_80017708();
-extern double FUN_80017714();
 extern u32 randomGetRange(int min, int max);
-extern int FUN_80017a90();
-extern undefined4 FUN_80017ac8();
-extern int FUN_80017af8();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern undefined4 ObjGroup_FindNearestObject();
 extern int ObjTrigger_IsSet();
-extern int FUN_80039520();
 extern undefined4 FUN_8003a1c4();
 extern undefined4 fn_8003A328();
 extern undefined4 FUN_8003b1a4();
 extern undefined4 FUN_8003b280();
 extern undefined4 objAudioFn_8006ef38();
-extern undefined4 FUN_8014ccac();
-extern int FUN_80163ac8();
-extern undefined4 FUN_80163b8c();
-extern undefined8 FUN_80286834();
-extern undefined4 FUN_80286880();
-extern int FUN_80294c54();
 extern uint countLeadingZeros();
 
 extern undefined4 DAT_803274f4;
-extern int DAT_8032750c;
-extern uint DAT_8032751c;
-extern undefined4 DAT_803dcc10;
-extern undefined4 DAT_803dcc14;
-extern undefined4 DAT_803dcc18;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern undefined4* DAT_803dd6d8;
 extern EffectInterface** gPartfxInterface;
 extern MapEventInterface** gMapEventInterface;
 extern f64 DOUBLE_803e5eb8;
