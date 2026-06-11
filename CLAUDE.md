@@ -403,6 +403,14 @@ probes on the bundled compilers):
     empty case whose position lets it merge with default at the EDGE of
     the value range (worldobj_render's 0x61e re-canonicalized both
     directions) — works only when the case value sits INSIDE the range.
+    TREE-BUILDER FACTS (dll_179, 160-variant brute-force sweep): empty-case
+    blocks fully unify (block splits inert); SINGLE value holes absorb into
+    runs (`cmpwi K-1; beq/bge`); 2+ value gaps keep exact bounds; run
+    leaves emit `cmpwi hi+1; bge` + a dead `cmpwi lo; b`. A tree shape no
+    case-set reproduces can mean the import FABRICATED or DROPPED case
+    values — brute-force the case-set space before banking (dll_179's
+    "vestigial run [0x87-0x8D]" never existed in v1.0; true set recovered,
+    CFCrate_SeqFn → 100).
     ⚠️ OVERTURNED SAME-DAY (CFBaby maverick): the dead-`cmpwi K+1`-no-beq
     island is PEEPHOLE-STATE-BOUND — switch lowering EMITS it for empty
     cases whose block == default, and the PEEPHOLE pass is what deletes
@@ -2216,6 +2224,12 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
       bank it, recognize the signature, and re-attack when a lever for
       unnamed expression-temp coloring lands (the #114 conversion-node
       splitter is the closest existing tool to try).
+      RANK-MODEL DIAGNOSTIC (CFBaby decoration11a, banked 99.66): our
+      FP volatile assignment behaves as use-count-descending with
+      decl-order tie-break, first-fit from f0 — target's block wants the
+      2-use bMax BELOW the 4-use px (a queue-jump no known lever
+      produces; 30+ spellings probed across two campaigns). Recognize the
+      inversion signature before grinding.
       4th member — NAMED-WEB PRIORITY INVERSION (mtxRotateByVec3s,
       probe-characterized via probe_battery): target gives the NAMED
       multi-def temps (u, zero) the LOWEST volatiles (f0) and the unnamed
@@ -3162,7 +3176,13 @@ today's #100. Same resolution pattern as the #70-72/#93-95 collision.)*
       source-controllable. ⚠️ PARTIAL ESCAPE: an unrelated third web's
       decl position can flip which saved reg disjoint short webs inherit
       (#61b third-web edition, wmwallcrawler_update → 100) — bisect a
-      full-reverse decl battery before banking.
+      full-reverse decl battery before banking. ⚠️ SEE-SAW ESCAPE
+      (CFcrystal FireFlyLantern_SeqFn → 100): when decl perms only flip
+      the PAIRING POLARITY (fixing one loop inverts the other), the
+      cross-pairing IS the import's web structure — convert the named
+      walker to INDEX form (#107/#160, the walker becomes an SR temp) so
+      the webs target coalesces actually coalesce; pair with #121 in-loop
+      literals whose LICM hoist lands after the SR-init mr.
     - **All-const multi-def flag webs** (`int found = 0; ... found = 1;`)
       sink to the very bottom, descending creation (Music_Update r20/r19
       — both compiles agree on these).
@@ -3573,7 +3593,10 @@ still #92-open. Pairs with #21 (snd ternary invert), #58 (u32 clamp cmplwi),
   landed_arwing_updateHitReaction → 100, MP4 oracle SetTeamResultTarget).
   TRIAGE RULE for any bne/beq-next-b-far: check whether `far` is ALSO the
   target of an EARLIER guard branch — if yes, merge the guards into one
-  `||` chain; the b-over-b is its final term. This is the unifying
+  `||` chain; the b-over-b is its final term. REFINEMENT (CFTreasSharpy,
+  pointer-terms variant `player==NULL || def==NULL`): the then-block must
+  contain REAL code (`return;`) — an empty-then `{}else{}` folds the
+  final term even when pinned. This is the unifying
   PINNING principle: a branch-over-branch survives folding iff its
   then-block is a join target of another branch (#17 merges, #91/#118
   value joins, #92's inlined-helper returns).
