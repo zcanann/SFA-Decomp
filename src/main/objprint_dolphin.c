@@ -357,45 +357,45 @@ extern undefined2 uRam803dd8da;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void objRenderFuzzFn_8003d6f8(int param_1)
+void objRenderFuzzFn_8003d6f8(int obj)
 {
-    int* piVar1;
-    double dVar2;
-    uint local_58;
-    undefined4 local_54;
-    uint local_50;
-    uint local_4c;
-    undefined4 uStack_48;
-    int local_44;
-    int local_40;
-    undefined4 local_3c;
-    float afStack_38[12];
+    int* renderHandle;
+    double fade;
+    uint matColor;
+    undefined4 envColor;
+    uint ambColor;
+    uint tevColor;
+    undefined4 shadowParam;
+    int shadowStride;
+    int shadowTable;
+    undefined4 savedEnvColor;
+    float mtx[12];
 
-    local_3c = DAT_803df670;
-    piVar1 = FUN_80017624(param_1, '\0');
-    if (piVar1 != (int*)0x0)
+    savedEnvColor = DAT_803df670;
+    renderHandle = FUN_80017624(obj, '\0');
+    if (renderHandle != (int*)0x0)
     {
-        FUN_800175b0((int)piVar1, 4);
-        FUN_800175d4((double)lbl_803DF684, (double)lbl_803DF6B4, (double)lbl_803DF684, piVar1);
-        FUN_8001759c((int)piVar1, 0xff, 0xff, 0xff, 0xff);
+        FUN_800175b0((int)renderHandle, 4);
+        FUN_800175d4((double)lbl_803DF684, (double)lbl_803DF6B4, (double)lbl_803DF684, renderHandle);
+        FUN_8001759c((int)renderHandle, 0xff, 0xff, 0xff, 0xff);
         FUN_80017608(0);
         FUN_80017600(2, 0, 0);
-        local_4c = DAT_803dc0d0;
-        FUN_8025a2ec(2, &local_4c);
-        local_50 = DAT_803dc0c8;
-        FUN_8025a454(2, &local_50);
-        FUN_800175fc(2, piVar1, param_1);
+        tevColor = DAT_803dc0d0;
+        FUN_8025a2ec(2, &tevColor);
+        ambColor = DAT_803dc0c8;
+        FUN_8025a454(2, &ambColor);
+        FUN_800175fc(2, renderHandle, obj);
         FUN_80017604();
-        FUN_80017620((uint)piVar1);
+        FUN_80017620((uint)renderHandle);
     }
-    local_54 = local_3c;
-    FUN_8025c510(0, (byte*)&local_54);
+    envColor = savedEnvColor;
+    FUN_8025c510(0, (byte*)&envColor);
     FUN_8025c5f0(0, 0x1c);
     GXSetBlendMode(0, 0xc);
-    newshadows_getShadowTextureTable4x8(&local_40, &local_44, &uStack_48);
-    FUN_8004812c(*(int*)(local_40 + ((DAT_803dd8c4 >> 2) + (uint)DAT_803dd8bd * local_44) * 4), 0);
-    FUN_80247a7c((double)lbl_803DF6B8, (double)lbl_803DF6B8, (double)lbl_803DF69C, afStack_38);
-    FUN_8025d8c4(afStack_38, 0x40, 0);
+    newshadows_getShadowTextureTable4x8(&shadowTable, &shadowStride, &shadowParam);
+    FUN_8004812c(*(int*)(shadowTable + ((DAT_803dd8c4 >> 2) + (uint)DAT_803dd8bd * shadowStride) * 4), 0);
+    FUN_80247a7c((double)lbl_803DF6B8, (double)lbl_803DF6B8, (double)lbl_803DF69C, mtx);
+    FUN_8025d8c4(mtx, 0x40, 0);
     FUN_80258674(1, 1, 4, 0x3c, 1, 0x40);
     FUN_8025be80(0);
     FUN_8025c828(0, 1, 0, 4);
@@ -408,9 +408,9 @@ void objRenderFuzzFn_8003d6f8(int param_1)
     FUN_8025be54(0);
     FUN_80258944(2);
     FUN_80259288(2);
-    local_58 = DAT_803dc0c8;
-    dVar2 = (double)lbl_803DF684;
-    FUN_8025ca38(dVar2, dVar2, dVar2, dVar2, 0, (uint3*)&local_58);
+    matColor = DAT_803dc0c8;
+    fade = (double)lbl_803DF684;
+    FUN_8025ca38(fade, fade, fade, fade, 0, (uint3*)&matColor);
     gxSetZMode_(1, 3, 0);
     gxSetPeControl_ZCompLoc_(1);
     FUN_8025cce8(1, 4, 5, 5);
@@ -518,227 +518,227 @@ void FUN_8003df64(undefined4 param_1, undefined4 param_2, int* param_3, float* p
  * PAL Address: TODO
  * PAL Size: TODO
  */
-char fn_8003EA84(undefined4 param_1, undefined4 param_2, int* param_3, uint param_4, int param_5,
-                 int param_6)
+char fn_8003EA84(undefined4 param_1, undefined4 param_2, int* node, uint phaseMask, int useDecal,
+                 int extraFlags)
 {
-    char cVar1;
-    bool bVar2;
-    byte bVar4;
-    uint uVar3;
-    int iVar5;
-    uint* puVar6;
-    uint* puVar7;
-    uint uVar8;
-    int iVar9;
-    char* pcVar10;
-    float* pfVar11;
-    int iVar12;
-    int iVar13;
-    double dVar14;
-    double dVar15;
-    undefined8 uVar16;
-    char local_88;
-    char local_87;
-    char local_86;
-    char local_85;
-    float afStack_84[13];
-    undefined4 local_50;
-    uint uStack_4c;
-    undefined4 local_48;
-    uint uStack_44;
+    char brightness;
+    bool singleHit;
+    byte hitCount;
+    uint boneCount;
+    int modelData;
+    uint* entry;
+    uint* prevEntry;
+    uint texId;
+    int boneEntry;
+    char* desc;
+    float* uvPtr;
+    int boneIndex;
+    int i;
+    double u;
+    double v;
+    undefined8 ctx;
+    char r;
+    char g;
+    char b;
+    char a;
+    float uvMtx[13];
+    undefined4 convHi0;
+    uint convLo0;
+    undefined4 convHi1;
+    uint convLo1;
 
-    uVar16 = FUN_80286820();
-    iVar5 = (int)((ulonglong)uVar16 >> 0x20);
-    pcVar10 = (char*)(u32)uVar16;
-    bVar2 = true;
-    if ((*param_3 != 0) || (param_3[1] != 0))
+    ctx = FUN_80286820();
+    modelData = (int)((ulonglong)ctx >> 0x20);
+    desc = (char*)(u32)ctx;
+    singleHit = true;
+    if ((*node != 0) || (node[1] != 0))
     {
-        bVar4 = 0;
-        for (iVar13 = 0; iVar13 < (int)(uint)(byte)pcVar10[0x41];
-        iVar13 = iVar13 + 1
+        hitCount = 0;
+        for (i = 0; i < (int)(uint)(byte)desc[0x41];
+        i = i + 1
         )
         {
-            iVar9 = FUN_800480a0((int)pcVar10, iVar13);
-            if ((*(byte*)(iVar9 + 4) & 0x80) != 0)
+            boneEntry = FUN_800480a0((int)desc, i);
+            if ((*(byte*)(boneEntry + 4) & 0x80) != 0)
             {
-                bVar4 = bVar4 + 1;
+                hitCount = hitCount + 1;
             }
         }
-        if (1 < bVar4)
+        if (1 < hitCount)
         {
-            bVar2 = false;
+            singleHit = false;
         }
     }
-    puVar7 = (uint*)0x0;
-    iVar13 = 0;
+    prevEntry = (uint*)0x0;
+    i = 0;
     do
     {
-        if ((int)(uint)(byte)pcVar10[0x41] <= iVar13
+        if ((int)(uint)(byte)desc[0x41] <= i
         )
         {
             FUN_8028686c();
             return '\0';
         }
-        puVar6 = (uint*)FUN_800480a0((int)pcVar10, iVar13);
-        if ((*(byte*)(puVar6 + 1) & 0x80) == param_4)
+        entry = (uint*)FUN_800480a0((int)desc, i);
+        if ((*(byte*)(entry + 1) & 0x80) == phaseMask)
         {
-            if (((*(uint*)(pcVar10 + 0x3c) & 0x100000) != 0) && (iVar13 == 1))
+            if (((*(uint*)(desc + 0x3c) & 0x100000) != 0) && (i == 1))
             {
-                FUN_8004bc68(*param_3 != 0);
+                FUN_8004bc68(*node != 0);
                 FUN_8028686c();
                 return '\x01';
             }
-            cVar1 = (char)
-            ((*(byte*)(iVar5 + 0x37) + 1) * (uint)(byte)
-            pcVar10[0xc] >> 8
+            brightness = (char)
+            ((*(byte*)(modelData + 0x37) + 1) * (uint)(byte)
+            desc[0xc] >> 8
             )
             ;
-            if (*puVar6 == 0)
+            if (*entry == 0)
             {
-                local_88 = pcVar10[4];
-                local_87 = pcVar10[5];
-                local_86 = pcVar10[6];
-                if ((*param_3 == 0) && (((*pcVar10 != -1 || (pcVar10[1] != -1)) || (pcVar10[2] != -1))))
+                r = desc[4];
+                g = desc[5];
+                b = desc[6];
+                if ((*node == 0) && (((*desc != -1 || (desc[1] != -1)) || (desc[2] != -1))))
                 {
-                    if (param_5 == 0)
+                    if (useDecal == 0)
                     {
-                        if ((pcVar10[0x40] & 0x10U) == 0)
+                        if ((desc[0x40] & 0x10U) == 0)
                         {
-                            local_85 = cVar1;
-                            FUN_80052500(&local_88);
+                            a = brightness;
+                            FUN_80052500(&r);
                         }
                         else
                         {
-                            local_85 = cVar1;
+                            a = brightness;
                             FUN_800523e4();
-                            if (local_85 != -1)
+                            if (a != -1)
                             {
-                                FUN_80052778(&local_88);
+                                FUN_80052778(&r);
                             }
                         }
                     }
                     else
                     {
-                        *(char*)((int)&DAT_803dd8d4 + 3) = cVar1;
-                        local_85 = cVar1;
+                        *(char*)((int)&DAT_803dd8d4 + 3) = brightness;
+                        a = brightness;
                         FUN_80052778((char*)&DAT_803dd8d4);
                     }
                 }
                 else
                 {
-                    local_85 = cVar1;
-                    FUN_80052778(&local_88);
+                    a = brightness;
+                    FUN_80052778(&r);
                 }
             }
             else
             {
-                uVar8 = FUN_80053078(*puVar6);
-                if (*(char*)((int)puVar6 + 5) == '\0')
+                texId = FUN_80053078(*entry);
+                if (*(char*)((int)entry + 5) == '\0')
                 {
-                    pfVar11 = (float*)0x0;
+                    uvPtr = (float*)0x0;
                 }
                 else
                 {
-                    iVar9 = *(int*)(*(int*)(iVar5 + 0x50) + 0xc);
-                    iVar12 = 0;
-                    for (uVar3 = (uint) * (byte*)(*(int*)(iVar5 + 0x50) + 0x59); uVar3 != 0; uVar3 = uVar3 - 1
+                    boneEntry = *(int*)(*(int*)(modelData + 0x50) + 0xc);
+                    boneIndex = 0;
+                    for (boneCount = (uint) * (byte*)(*(int*)(modelData + 0x50) + 0x59); boneCount != 0; boneCount = boneCount - 1
                     )
                     {
-                        if (*(char*)((int)puVar6 + 5) == *(char*)(iVar9 + 1))
+                        if (*(char*)((int)entry + 5) == *(char*)(boneEntry + 1))
                         {
-                            uVar8 = FUN_8005375c(uVar8, *(int*)(*(int*)(iVar5 + 0x70) + iVar12 * 0x10));
+                            texId = FUN_8005375c(texId, *(int*)(*(int*)(modelData + 0x70) + boneIndex * 0x10));
                             break;
                         }
-                        iVar9 = iVar9 + 2;
-                        iVar12 = iVar12 + 1;
+                        boneEntry = boneEntry + 2;
+                        boneIndex = boneIndex + 1;
                     }
-                    iVar9 = *(int*)(*(int*)(iVar5 + 0x50) + 0xc);
-                    iVar12 = 0;
-                    for (uVar3 = (uint) * (byte*)(*(int*)(iVar5 + 0x50) + 0x59); uVar3 != 0; uVar3 = uVar3 - 1
+                    boneEntry = *(int*)(*(int*)(modelData + 0x50) + 0xc);
+                    boneIndex = 0;
+                    for (boneCount = (uint) * (byte*)(*(int*)(modelData + 0x50) + 0x59); boneCount != 0; boneCount = boneCount - 1
                     )
                     {
-                        if (*(char*)((int)puVar6 + 5) == *(char*)(iVar9 + 1))
+                        if (*(char*)((int)entry + 5) == *(char*)(boneEntry + 1))
                         {
-                            iVar9 = *(int*)(iVar5 + 0x70) + iVar12 * 0x10;
-                            uStack_4c = (int)*(short*)(iVar9 + 8) ^ 0x80000000;
-                            local_50 = 0x43300000;
-                            dVar14 = (double)(lbl_803DF6C8 *
-                                (float)((double)CONCAT44(0x43300000, uStack_4c) - DOUBLE_803df6c0));
-                            uStack_44 = (int)*(short*)(iVar9 + 10) ^ 0x80000000;
-                            local_48 = 0x43300000;
-                            dVar15 = (double)(lbl_803DF6C8 *
-                                (float)((double)CONCAT44(0x43300000, uStack_44) - DOUBLE_803df6c0));
+                            boneEntry = *(int*)(modelData + 0x70) + boneIndex * 0x10;
+                            convLo0 = (int)*(short*)(boneEntry + 8) ^ 0x80000000;
+                            convHi0 = 0x43300000;
+                            u = (double)(lbl_803DF6C8 *
+                                (float)((double)CONCAT44(0x43300000, convLo0) - DOUBLE_803df6c0));
+                            convLo1 = (int)*(short*)(boneEntry + 10) ^ 0x80000000;
+                            convHi1 = 0x43300000;
+                            v = (double)(lbl_803DF6C8 *
+                                (float)((double)CONCAT44(0x43300000, convLo1) - DOUBLE_803df6c0));
                             goto LAB_8003eca4;
                         }
-                        iVar9 = iVar9 + 2;
-                        iVar12 = iVar12 + 1;
+                        boneEntry = boneEntry + 2;
+                        boneIndex = boneIndex + 1;
                     }
-                    dVar14 = (double)lbl_803DF684;
-                    dVar15 = dVar14;
+                    u = (double)lbl_803DF684;
+                    v = u;
                 LAB_8003eca4:
-                    FUN_80247a48(dVar14, dVar15, (double)lbl_803DF684, afStack_84);
-                    pfVar11 = afStack_84;
+                    FUN_80247a48(u, v, (double)lbl_803DF684, uvMtx);
+                    uvPtr = uvMtx;
                 }
-                if (iVar13 == 0)
+                if (i == 0)
                 {
-                    if ((((*param_3 == 0) && (param_3[1] == 0)) && (param_6 == 0)) || (!bVar2))
+                    if ((((*node == 0) && (node[1] == 0)) && (extraFlags == 0)) || (!singleHit))
                     {
-                        uVar3 = 0;
-                        local_85 = cVar1;
+                        boneCount = 0;
+                        a = brightness;
                     }
                     else
                     {
-                        uVar3 = 8;
-                        local_85 = cVar1;
+                        boneCount = 8;
+                        a = brightness;
                     }
                 }
                 else
                 {
-                    uVar3 = *(byte*)(puVar7 + 1) & 0x7f;
-                    local_85 = -1;
+                    boneCount = *(byte*)(prevEntry + 1) & 0x7f;
+                    a = -1;
                 }
-                local_88 = -1;
-                local_87 = -1;
-                local_86 = -1;
-                if ((*param_3 == 0) && (((*pcVar10 != -1 || (pcVar10[1] != -1)) || (pcVar10[2] != -1))))
+                r = -1;
+                g = -1;
+                b = -1;
+                if ((*node == 0) && (((*desc != -1 || (desc[1] != -1)) || (desc[2] != -1))))
                 {
-                    if (param_5 == 0)
+                    if (useDecal == 0)
                     {
-                        if ((pcVar10[0x40] & 0x10U) == 0)
+                        if ((desc[0x40] & 0x10U) == 0)
                         {
-                            FUN_80051d64(uVar8, pfVar11, uVar3, &local_88);
+                            FUN_80051d64(texId, uvPtr, boneCount, &r);
                         }
                         else
                         {
-                            FUN_80051868(uVar8, pfVar11, uVar3);
-                            if (local_85 != -1)
+                            FUN_80051868(texId, uvPtr, boneCount);
+                            if (a != -1)
                             {
-                                FUN_80052778(&local_88);
+                                FUN_80052778(&r);
                             }
                         }
                     }
                     else
                     {
-                        *(char*)((int)&DAT_803dd8d4 + 3) = local_85;
-                        if ((pcVar10[0x40] & 0x10U) == 0)
+                        *(char*)((int)&DAT_803dd8d4 + 3) = a;
+                        if ((desc[0x40] & 0x10U) == 0)
                         {
-                            FUN_80051fc4(uVar8, pfVar11, uVar3, (char*)&DAT_803dd8d4,
-                                         (uint) * (byte*)(param_3 + 2), 1);
+                            FUN_80051fc4(texId, uvPtr, boneCount, (char*)&DAT_803dd8d4,
+                                         (uint) * (byte*)(node + 2), 1);
                         }
                         else
                         {
-                            FUN_80051b04(uVar8, pfVar11, uVar3, (char*)&DAT_803dd8d4);
+                            FUN_80051b04(texId, uvPtr, boneCount, (char*)&DAT_803dd8d4);
                         }
                     }
                 }
                 else
                 {
-                    FUN_80051fc4(uVar8, pfVar11, uVar3, &local_88, (uint) * (byte*)(param_3 + 2), 1);
+                    FUN_80051fc4(texId, uvPtr, boneCount, &r, (uint) * (byte*)(node + 2), 1);
                 }
             }
         }
-        iVar13 = iVar13 + 1;
-        puVar7 = puVar6;
+        i = i + 1;
+        prevEntry = entry;
     }
     while (true);
 }
@@ -756,250 +756,250 @@ char fn_8003EA84(undefined4 param_1, undefined4 param_2, int* param_3, uint para
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8003EEEC(undefined4 param_1, undefined4 param_2, int* param_3, int* param_4)
+void fn_8003EEEC(undefined4 param_1, undefined4 param_2, int* node, int* cmdStream)
 {
-    undefined uVar1;
-    undefined uVar2;
-    byte bVar3;
-    undefined uVar4;
-    bool bVar5;
-    ushort* puVar6;
-    int iVar7;
-    code* pcVar8;
-    char cVar12;
-    int* piVar9;
-    uint* puVar10;
-    float* pfVar11;
-    int iVar13;
-    int iVar14;
-    int iVar15;
-    uint uVar16;
-    int iVar17;
-    int iVar18;
-    byte* pbVar19;
-    uint uVar20;
-    int* piVar21;
-    double dVar22;
-    double dVar23;
-    undefined8 uVar24;
-    undefined4 local_128;
-    uint local_124;
-    undefined4 uStack_120;
-    undefined4 local_11c;
-    int local_118;
-    int local_114;
-    float afStack_110[12];
-    float afStack_e0[12];
-    float afStack_b0[12];
-    undefined4 auStack_80[12];
-    undefined4 local_50;
-    uint uStack_4c;
-    undefined4 local_48;
-    uint uStack_44;
+    undefined cmdByte1;
+    undefined cmdByte2;
+    byte renderFlags;
+    undefined cmdByte0;
+    bool needsAlpha;
+    ushort* modelData;
+    int subNode;
+    code* callback;
+    char callbackResult;
+    int* hitList;
+    uint* decalEntry;
+    float* projMtx;
+    int obj;
+    int lightCount;
+    int lightSlot;
+    uint cmd;
+    int light;
+    int lightIdx;
+    byte* lightFlags;
+    uint texMaterial;
+    int* lightId;
+    double u;
+    double v;
+    undefined8 ctx;
+    undefined4 envColor;
+    uint matColor;
+    undefined4 litColor;
+    undefined4 alphaColor;
+    int lightInfo;
+    int lightType;
+    float viewMtx[12];
+    float localMtx[12];
+    float worldMtx[12];
+    undefined4 decalMtx[12];
+    undefined4 convHi0;
+    uint convLo0;
+    undefined4 convHi1;
+    uint convLo1;
 
-    uVar24 = FUN_80286820();
-    puVar6 = (ushort*)((ulonglong)uVar24 >> 0x20);
-    iVar13 = (int)(u32)uVar24;
-    bVar5 = false;
-    uVar16 = param_4[4];
-    uVar4 = *(undefined*)(*param_4 + ((int)uVar16 >> 3));
-    iVar7 = *param_4 + ((int)uVar16 >> 3);
-    uVar1 = *(undefined*)(iVar7 + 1);
-    uVar2 = *(undefined*)(iVar7 + 2);
-    param_4[4] = uVar16 + 6;
-    uVar16 = (CONCAT12(uVar2, CONCAT11(uVar1, uVar4)) >> (uVar16 & 7)) & 0x3f;
-    pcVar8 = (code*)FUN_8001795c((int)param_3);
-    if ((pcVar8 == (code*)0x0) || (cVar12 = (*pcVar8)(puVar6, param_3, uVar16), cVar12 == '\0'))
+    ctx = FUN_80286820();
+    modelData = (ushort*)((ulonglong)ctx >> 0x20);
+    obj = (int)(u32)ctx;
+    needsAlpha = false;
+    cmd = cmdStream[4];
+    cmdByte0 = *(undefined*)(*cmdStream + ((int)cmd >> 3));
+    subNode = *cmdStream + ((int)cmd >> 3);
+    cmdByte1 = *(undefined*)(subNode + 1);
+    cmdByte2 = *(undefined*)(subNode + 2);
+    cmdStream[4] = cmd + 6;
+    cmd = (CONCAT12(cmdByte2, CONCAT11(cmdByte1, cmdByte0)) >> (cmd & 7)) & 0x3f;
+    callback = (code*)FUN_8001795c((int)node);
+    if ((callback == (code*)0x0) || (callbackResult = (*callback)(modelData, node, cmd), callbackResult == '\0'))
     {
-        iVar7 = FUN_8001792c(*param_3, uVar16);
-        piVar9 = (int*)FUN_80017978((int)param_3, uVar16);
+        subNode = FUN_8001792c(*node, cmd);
+        hitList = (int*)FUN_80017978((int)node, cmd);
         FUN_80052904();
-        uVar20 = 0;
-        if (((*piVar9 != 0) || (piVar9[1] != 0)) && (*(uint*)(iVar7 + 0x34) != 0))
+        texMaterial = 0;
+        if (((*hitList != 0) || (hitList[1] != 0)) && (*(uint*)(subNode + 0x34) != 0))
         {
-            uVar20 = FUN_80053078(*(uint*)(iVar7 + 0x34));
-            iVar14 = DAT_803dd8dc + 1;
-            if (*piVar9 != 0)
+            texMaterial = FUN_80053078(*(uint*)(subNode + 0x34));
+            lightCount = DAT_803dd8dc + 1;
+            if (*hitList != 0)
             {
-                iVar14 = DAT_803dd8dc + 2;
+                lightCount = DAT_803dd8dc + 2;
             }
-            if (piVar9[1] != 0)
+            if (hitList[1] != 0)
             {
-                iVar14 = iVar14 + 1;
+                lightCount = lightCount + 1;
             }
-            uVar20 = FUN_8004b960(uVar20, iVar14, (uint) * (byte*)(iVar7 + 0x42), *(uint*)(iVar7 + 0x24));
-            uVar20 = uVar20 & 0xff;
+            texMaterial = FUN_8004b960(texMaterial, lightCount, (uint) * (byte*)(subNode + 0x42), *(uint*)(subNode + 0x24));
+            texMaterial = texMaterial & 0xff;
         }
-        if (*piVar9 != 0)
+        if (*hitList != 0)
         {
-            FUN_8004c174(*piVar9, *(char*)((int)puVar6 + 0xf1));
+            FUN_8004c174(*hitList, *(char*)((int)modelData + 0xf1));
         }
-        if (piVar9[1] == 0)
+        if (hitList[1] == 0)
         {
-            local_128 = DAT_803dc0cc;
-            FUN_8025c428(3, (byte*)&local_128);
+            envColor = DAT_803dc0cc;
+            FUN_8025c428(3, (byte*)&envColor);
         }
         else
         {
-            local_11c = DAT_803dd8d4 & 0xffffff00;
-            if (*(int*)(iVar7 + 0x1c) != 0)
+            alphaColor = DAT_803dd8d4 & 0xffffff00;
+            if (*(int*)(subNode + 0x1c) != 0)
             {
-                local_11c = CONCAT31(0xffffff, *(undefined*)(iVar7 + 0x22));
+                alphaColor = CONCAT31(0xffffff, *(undefined*)(subNode + 0x22));
             }
-            local_124 = local_11c;
-            FUN_8025c428(3, (byte*)&local_124);
-            FUN_8004bf28(piVar9[1], *piVar9 != 0, (uint) * (byte*)(iVar7 + 0x20));
-            if ((char)local_11c != '\0')
+            matColor = alphaColor;
+            FUN_8025c428(3, (byte*)&matColor);
+            FUN_8004bf28(hitList[1], *hitList != 0, (uint) * (byte*)(subNode + 0x20));
+            if ((char)alphaColor != '\0')
             {
-                FUN_8004be30(*piVar9 != 0);
+                FUN_8004be30(*hitList != 0);
             }
         }
-        iVar14 = DAT_803dd8dc;
+        lightCount = DAT_803dd8dc;
         if (DAT_803dd8cc == '\0')
         {
-            bVar3 = *(byte*)(*(int*)(puVar6 + 0x28) + 0x5f);
-            if (((bVar3 & 4) == 0) || (*(float**)(*(int*)(puVar6 + 0x32) + 0xc) == (float*)0x0))
+            renderFlags = *(byte*)(*(int*)(modelData + 0x28) + 0x5f);
+            if (((renderFlags & 4) == 0) || (*(float**)(*(int*)(modelData + 0x32) + 0xc) == (float*)0x0))
             {
-                if ((bVar3 & 0x10) == 0)
+                if ((renderFlags & 0x10) == 0)
                 {
-                    if ((bVar3 & 4) == 0)
+                    if ((renderFlags & 4) == 0)
                     {
-                        piVar21 = &DAT_803dd8e4;
-                        pbVar19 = &DAT_803dd8e0;
-                        for (iVar18 = 0; iVar18 < DAT_803dd8dc; iVar18 = iVar18 + 1)
+                        lightId = &DAT_803dd8e4;
+                        lightFlags = &DAT_803dd8e0;
+                        for (lightIdx = 0; lightIdx < DAT_803dd8dc; lightIdx = lightIdx + 1)
                         {
-                            iVar17 = FUN_80017570(*piVar21);
-                            if (iVar17 != 0)
+                            light = FUN_80017570(*lightId);
+                            if (light != 0)
                             {
-                                FUN_80017550(*piVar21, &local_114, &local_118);
-                                if (local_114 == 2)
+                                FUN_80017550(*lightId, &lightType, &lightInfo);
+                                if (lightType == 2)
                                 {
-                                    bVar5 = true;
+                                    needsAlpha = true;
                                 }
-                                iVar15 = FUN_80017558(*piVar21);
-                                FUN_8004b41c(iVar17, iVar15, local_114, local_118, (uint) * pbVar19);
+                                lightSlot = FUN_80017558(*lightId);
+                                FUN_8004b41c(light, lightSlot, lightType, lightInfo, (uint) * lightFlags);
                             }
-                            piVar21 = piVar21 + 1;
-                            pbVar19 = pbVar19 + 1;
+                            lightId = lightId + 1;
+                            lightFlags = lightFlags + 1;
                         }
                     }
                 }
                 else
                 {
                     FUN_80049024();
-                    iVar14 = 0;
+                    lightCount = 0;
                 }
             }
             else
             {
-                FUN_8004afc0(*(float**)(*(int*)(puVar6 + 0x32) + 0xc));
-                iVar14 = 0;
+                FUN_8004afc0(*(float**)(*(int*)(modelData + 0x32) + 0xc));
+                lightCount = 0;
             }
         }
         else
         {
             FUN_80048bc4();
-            bVar5 = true;
-            iVar14 = 0;
+            needsAlpha = true;
+            lightCount = 0;
         }
-        if (uVar20 != 0)
+        if (texMaterial != 0)
         {
-            FUN_8004b8cc(uVar20);
+            FUN_8004b8cc(texMaterial);
         }
-        if (((*(uint*)(iVar7 + 0x18) != 0) && (*(int*)(iVar7 + 0x1c) == 0)) && (piVar9[1] != 0))
+        if (((*(uint*)(subNode + 0x18) != 0) && (*(int*)(subNode + 0x1c) == 0)) && (hitList[1] != 0))
         {
-            FUN_80053078(*(uint*)(iVar7 + 0x18));
+            FUN_80053078(*(uint*)(subNode + 0x18));
             FUN_8004bd68();
         }
-        iVar18 = 0;
-        if (((*(ushort*)(iVar13 + 0xe2) & 2) != 0) && ((*(byte*)(iVar13 + 0x24) & 2) == 0))
+        lightIdx = 0;
+        if (((*(ushort*)(obj + 0xe2) & 2) != 0) && ((*(byte*)(obj + 0x24) & 2) == 0))
         {
-            iVar18 = 1;
+            lightIdx = 1;
         }
-        cVar12 = fn_8003EA84((undefined4)(u32)puVar6, (undefined4)iVar7, piVar9, 0x80, iVar18, iVar14);
-        if (cVar12 == '\0')
+        callbackResult = fn_8003EA84((undefined4)(u32)modelData, (undefined4)subNode, hitList, 0x80, lightIdx, lightCount);
+        if (callbackResult == '\0')
         {
-            FUN_8004bc68(*piVar9 != 0);
+            FUN_8004bc68(*hitList != 0);
         }
-        if ((*(uint*)(iVar7 + 0x3c) & 0x100000) != 0)
+        if ((*(uint*)(subNode + 0x3c) & 0x100000) != 0)
         {
-            puVar10 = (uint*)FUN_800480a0(iVar7, 1);
-            iVar17 = *(int*)(*(int*)(puVar6 + 0x28) + 0xc);
-            iVar15 = 0;
-            for (uVar20 = (uint) * (byte*)(*(int*)(puVar6 + 0x28) + 0x59); uVar20 != 0;
-                 uVar20 = uVar20 - 1)
+            decalEntry = (uint*)FUN_800480a0(subNode, 1);
+            light = *(int*)(*(int*)(modelData + 0x28) + 0xc);
+            lightSlot = 0;
+            for (texMaterial = (uint) * (byte*)(*(int*)(modelData + 0x28) + 0x59); texMaterial != 0;
+                 texMaterial = texMaterial - 1)
             {
-                if (*(char*)((int)puVar10 + 5) == *(char*)(iVar17 + 1))
+                if (*(char*)((int)decalEntry + 5) == *(char*)(light + 1))
                 {
-                    iVar17 = *(int*)(puVar6 + 0x38) + iVar15 * 0x10;
-                    uStack_4c = (int)*(short*)(iVar17 + 8) ^ 0x80000000;
-                    local_50 = 0x43300000;
-                    dVar22 = (double)(lbl_803DF6C8 *
-                        (float)((double)CONCAT44(0x43300000, uStack_4c) - DOUBLE_803df6c0));
-                    uStack_44 = (int)*(short*)(iVar17 + 10) ^ 0x80000000;
-                    local_48 = 0x43300000;
-                    dVar23 = (double)(lbl_803DF6C8 *
-                        (float)((double)CONCAT44(0x43300000, uStack_44) - DOUBLE_803df6c0));
+                    light = *(int*)(modelData + 0x38) + lightSlot * 0x10;
+                    convLo0 = (int)*(short*)(light + 8) ^ 0x80000000;
+                    convHi0 = 0x43300000;
+                    u = (double)(lbl_803DF6C8 *
+                        (float)((double)CONCAT44(0x43300000, convLo0) - DOUBLE_803df6c0));
+                    convLo1 = (int)*(short*)(light + 10) ^ 0x80000000;
+                    convHi1 = 0x43300000;
+                    v = (double)(lbl_803DF6C8 *
+                        (float)((double)CONCAT44(0x43300000, convLo1) - DOUBLE_803df6c0));
                     goto LAB_8003f328;
                 }
-                iVar17 = iVar17 + 2;
-                iVar15 = iVar15 + 1;
+                light = light + 2;
+                lightSlot = lightSlot + 1;
             }
-            dVar22 = (double)lbl_803DF684;
-            dVar23 = dVar22;
+            u = (double)lbl_803DF684;
+            v = u;
         LAB_8003f328:
-            FUN_80247a48(dVar22, dVar23, (double)lbl_803DF684, auStack_80);
-            FUN_80053078(*puVar10);
+            FUN_80247a48(u, v, (double)lbl_803DF684, decalMtx);
+            FUN_80053078(*decalEntry);
             FUN_80048178();
         }
-        fn_8003EA84((undefined4)(u32)puVar6, (undefined4)iVar7, piVar9, 0, iVar18, iVar14);
-        cVar12 = FUN_80048094();
-        if ((cVar12 != '\0') && ((*(ushort*)(iVar13 + 2) & 0x100) == 0))
+        fn_8003EA84((undefined4)(u32)modelData, (undefined4)subNode, hitList, 0, lightIdx, lightCount);
+        callbackResult = FUN_80048094();
+        if ((callbackResult != '\0') && ((*(ushort*)(obj + 2) & 0x100) == 0))
         {
-            trackIntersect_getColorRgb((undefined*)&uStack_120);
-            FUN_80049910(&uStack_120);
+            trackIntersect_getColorRgb((undefined*)&litColor);
+            FUN_80049910(&litColor);
         }
-        if ((*(uint*)(iVar7 + 0x3c) & 0x100) != 0)
+        if ((*(uint*)(subNode + 0x3c) & 0x100) != 0)
         {
-            pfVar11 = (float*)FUN_80006974();
-            FUN_80017a50(puVar6, afStack_e0, '\0');
-            FUN_80247618(pfVar11, afStack_e0, afStack_110);
-            FUN_80247618((float*)&DAT_80397450, afStack_110, afStack_b0);
-            FUN_8025d8c4(afStack_b0, 0x24, 0);
+            projMtx = (float*)FUN_80006974();
+            FUN_80017a50(modelData, localMtx, '\0');
+            FUN_80247618(projMtx, localMtx, viewMtx);
+            FUN_80247618((float*)&DAT_80397450, viewMtx, worldMtx);
+            FUN_8025d8c4(worldMtx, 0x24, 0);
             FUN_80049260();
         }
-        if ((*(byte*)(*(int*)(puVar6 + 0x28) + 0x5f) & 0x10) != 0)
+        if ((*(byte*)(*(int*)(modelData + 0x28) + 0x5f) & 0x10) != 0)
         {
-            FUN_80048f00(iVar7);
+            FUN_80048f00(subNode);
         }
-        if (((*(byte*)((int)puVar6 + 0xe5) & 2) != 0) || ((*(byte*)((int)puVar6 + 0xe5) & 0x10) != 0))
+        if (((*(byte*)((int)modelData + 0xe5) & 2) != 0) || ((*(byte*)((int)modelData + 0xe5) & 0x10) != 0))
         {
-            local_11c = *(uint*)(puVar6 + 0x76);
-            FUN_8005264c((char*)&local_11c);
+            alphaColor = *(uint*)(modelData + 0x76);
+            FUN_8005264c((char*)&alphaColor);
         }
-        if ((*(uint*)(iVar7 + 0x3c) & 0x20000) != 0)
+        if ((*(uint*)(subNode + 0x3c) & 0x20000) != 0)
         {
             PlayControl();
         }
         FUN_800528d0();
-        pcVar8 = (code*)FUN_8001794c((int)param_3);
-        if (pcVar8 == (code*)0x0)
+        callback = (code*)FUN_8001794c((int)node);
+        if (callback == (code*)0x0)
         {
-            uVar16 = 1;
-            if (((*(char*)((int)puVar6 + 0x37) != -1) || ((*(uint*)(iVar7 + 0x3c) & 0x40000000) != 0))
-                || (bVar5))
+            cmd = 1;
+            if (((*(char*)((int)modelData + 0x37) != -1) || ((*(uint*)(subNode + 0x3c) & 0x40000000) != 0))
+                || (needsAlpha))
             {
                 FUN_8025cce8(1, 4, 5, 5);
-                if ((*(ushort*)(iVar13 + 2) & 0x400) == 0)
+                if ((*(ushort*)(obj + 2) & 0x400) == 0)
                 {
-                    if ((*(ushort*)(iVar13 + 2) & 0x2000) == 0)
+                    if ((*(ushort*)(obj + 2) & 0x2000) == 0)
                     {
                         gxSetZMode_(1, 3, 0);
                         FUN_8025c754(7, 0, 0, 7, 0);
                     }
                     else
                     {
-                        uVar16 = 0;
+                        cmd = 0;
                         gxSetZMode_(1, 3, 1);
                         FUN_8025c754(4, (uint)DAT_803dd8bc, 0, 4, (uint)DAT_803dd8bc);
                     }
@@ -1010,10 +1010,10 @@ void fn_8003EEEC(undefined4 param_1, undefined4 param_2, int* param_3, int* para
                     FUN_8025c754(7, 0, 0, 7, 0);
                 }
             }
-            else if ((*(uint*)(iVar7 + 0x3c) & 0x400) == 0)
+            else if ((*(uint*)(subNode + 0x3c) & 0x400) == 0)
             {
                 FUN_8025cce8(0, 1, 0, 5);
-                if ((*(ushort*)(iVar13 + 2) & 0x400) == 0)
+                if ((*(ushort*)(obj + 2) & 0x400) == 0)
                 {
                     gxSetZMode_(1, 3, 1);
                 }
@@ -1026,7 +1026,7 @@ void fn_8003EEEC(undefined4 param_1, undefined4 param_2, int* param_3, int* para
             else
             {
                 FUN_8025cce8(0, 1, 0, 5);
-                if ((*(ushort*)(iVar13 + 2) & 0x400) == 0)
+                if ((*(ushort*)(obj + 2) & 0x400) == 0)
                 {
                     gxSetZMode_(1, 3, 1);
                 }
@@ -1036,17 +1036,17 @@ void fn_8003EEEC(undefined4 param_1, undefined4 param_2, int* param_3, int* para
                 }
                 FUN_8025c754(4, 0x40, 0, 4, 0x40);
             }
-            if ((*(uint*)(iVar7 + 0x3c) & 0x400) != 0)
+            if ((*(uint*)(subNode + 0x3c) & 0x400) != 0)
             {
-                uVar16 = 0;
+                cmd = 0;
             }
-            gxSetPeControl_ZCompLoc_(uVar16);
+            gxSetPeControl_ZCompLoc_(cmd);
         }
         else
         {
-            (*pcVar8)(puVar6, param_3, uVar16);
+            (*callback)(modelData, node, cmd);
         }
-        if ((*(uint*)(iVar7 + 0x3c) & 8) == 0)
+        if ((*(uint*)(subNode + 0x3c) & 8) == 0)
         {
             FUN_80259288(0);
         }
@@ -1073,152 +1073,152 @@ void fn_8003EEEC(undefined4 param_1, undefined4 param_2, int* param_3, int* para
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8003F8EC(undefined4 param_1, undefined4 param_2, int param_3)
+void fn_8003F8EC(undefined4 param_1, undefined4 param_2, int obj)
 {
-    ushort* puVar1;
-    int* piVar2;
-    float* pfVar3;
-    code* pcVar4;
-    char cVar8;
-    uint uVar5;
-    int iVar6;
-    undefined4* puVar7;
-    int iVar9;
-    uint local_a8;
-    undefined4 uStack_a4;
-    undefined4 local_a0;
-    int local_9c[4];
-    int local_8c;
-    float afStack_88[12];
-    float afStack_58[22];
+    ushort* modelData;
+    int* renderNode;
+    float* mtx;
+    code* callback;
+    char callbackResult;
+    uint texId;
+    int cmdPtr;
+    undefined4* texEntry;
+    int cmdOffset;
+    uint colorWord;
+    undefined4 litColor;
+    undefined4 color;
+    int cmdDesc[4];
+    int cmdCursor;
+    float worldMtx[12];
+    float localMtx[22];
 
-    puVar1 = (ushort*)FUN_80286840();
-    piVar2 = (int*)FUN_80017a54((int)puVar1);
+    modelData = (ushort*)FUN_80286840();
+    renderNode = (int*)FUN_80017a54((int)modelData);
     if (DAT_803dd8a4 == 0)
     {
-        FUN_80017a50(puVar1, afStack_58, '\0');
+        FUN_80017a50(modelData, localMtx, '\0');
     }
     else
     {
-        FUN_802475e4((float*)DAT_803dd8a4, afStack_58);
+        FUN_802475e4((float*)DAT_803dd8a4, localMtx);
         DAT_803dd8a4 = 0;
     }
-    pfVar3 = (float*)FUN_80006974();
-    FUN_80247618(pfVar3, afStack_58, afStack_88);
-    if ((*(ushort*)(piVar2 + 6) & 8) == 0)
+    mtx = (float*)FUN_80006974();
+    FUN_80247618(mtx, localMtx, worldMtx);
+    if ((*(ushort*)(renderNode + 6) & 8) == 0)
     {
-        *(undefined*)(piVar2 + 0x18) = 0;
-        if (((*(short*)(param_3 + 0xec) == 0) || ((*(ushort*)(param_3 + 2) & 2) != 0)) ||
-            (*(char*)(param_3 + 0xf3) == '\0'))
+        *(undefined*)(renderNode + 0x18) = 0;
+        if (((*(short*)(obj + 0xec) == 0) || ((*(ushort*)(obj + 2) & 2) != 0)) ||
+            (*(char*)(obj + 0xf3) == '\0'))
         {
-            FUN_8001796c((int)piVar2);
-            pfVar3 = (float*)FUN_80017970(piVar2, 0);
-            FUN_802475e4((float*)&DAT_802cbac0, pfVar3);
+            FUN_8001796c((int)renderNode);
+            mtx = (float*)FUN_80017970(renderNode, 0);
+            FUN_802475e4((float*)&DAT_802cbac0, mtx);
             DAT_803dd8c8 = 3;
         }
-        else if (DAT_803dd8b0 == param_3)
+        else if (DAT_803dd8b0 == obj)
         {
             DAT_803dd8c8 = 1;
         }
         else
         {
-            FUN_80017988(piVar2, param_3, (int)puVar1, &DAT_802cbac0);
-            FUN_8003c10c(param_3, piVar2);
+            FUN_80017988(renderNode, obj, (int)modelData, &DAT_802cbac0);
+            FUN_8003c10c(obj, renderNode);
         }
-        iVar9 = *(int*)(puVar1 + 0x2a);
-        if (iVar9 != 0)
+        cmdOffset = *(int*)(modelData + 0x2a);
+        if (cmdOffset != 0)
         {
-            *(char*)(iVar9 + 0xaf) = *(char*)(iVar9 + 0xaf) + -1;
-            if (*(char*)(*(int*)(puVar1 + 0x2a) + 0xaf) < '\0')
+            *(char*)(cmdOffset + 0xaf) = *(char*)(cmdOffset + 0xaf) + -1;
+            if (*(char*)(*(int*)(modelData + 0x2a) + 0xaf) < '\0')
             {
-                *(undefined*)(*(int*)(puVar1 + 0x2a) + 0xaf) = 0;
+                *(undefined*)(*(int*)(modelData + 0x2a) + 0xaf) = 0;
             }
         }
-        *(ushort*)(piVar2 + 6) = *(ushort*)(piVar2 + 6) | 8;
+        *(ushort*)(renderNode + 6) = *(ushort*)(renderNode + 6) | 8;
     }
-    uVar5 = (uint) * (ushort*)(param_3 + 0xd8) << 3;
-    FUN_80006adc(local_9c, *(undefined4*)(param_3 + 0xd4), uVar5, uVar5);
-    if ((*(ushort*)(param_3 + 0xe2) & 2) == 0)
+    texId = (uint) * (ushort*)(obj + 0xd8) << 3;
+    FUN_80006adc(cmdDesc, *(undefined4*)(obj + 0xd4), texId, texId);
+    if ((*(ushort*)(obj + 0xe2) & 2) == 0)
     {
-        local_a0 = 0xffffff00;
+        color = 0xffffff00;
     }
     else if (DAT_803dd8a8 == '\0')
     {
-        FUN_80080f88((uint) * (byte*)(puVar1 + 0x79), (byte*)&local_a0, (byte*)((int)&local_a0 + 1),
-                     (byte*)((int)&local_a0 + 2));
+        FUN_80080f88((uint) * (byte*)(modelData + 0x79), (byte*)&color, (byte*)((int)&color + 1),
+                     (byte*)((int)&color + 2));
     }
     else
     {
-        *(byte*)&local_a0 = *(byte*)&DAT_803dd8d8;
-        *(byte*)((int)&local_a0 + 1) = *(byte*)((int)&DAT_803dd8d8 + 1);
-        *(byte*)((int)&local_a0 + 2) = *(byte*)((int)&DAT_803dd8d8 + 2);
-        local_a0 = local_a0 << 8;
+        *(byte*)&color = *(byte*)&DAT_803dd8d8;
+        *(byte*)((int)&color + 1) = *(byte*)((int)&DAT_803dd8d8 + 1);
+        *(byte*)((int)&color + 2) = *(byte*)((int)&DAT_803dd8d8 + 2);
+        color = color << 8;
         DAT_803dd8a8 = '\0';
     }
-    *(undefined*)((int)&local_a0 + 3) = *(undefined*)((int)puVar1 + 0x37);
-    pcVar4 = (code*)FUN_8001795c((int)piVar2);
-    if ((DAT_803dd8aa == '\0') || (pcVar4 != (code*)0x0))
+    *(undefined*)((int)&color + 3) = *(undefined*)((int)modelData + 0x37);
+    callback = (code*)FUN_8001795c((int)renderNode);
+    if ((DAT_803dd8aa == '\0') || (callback != (code*)0x0))
     {
         FUN_800069d4();
-        if ((pcVar4 == (code*)0x0) || (cVar8 = (*pcVar4)(puVar1, piVar2, 0), cVar8 == '\0'))
+        if ((callback == (code*)0x0) || (callbackResult = (*callback)(modelData, renderNode, 0), callbackResult == '\0'))
         {
             trackIntersect_drawColorBand();
             FUN_80052904();
-            uVar5 = FUN_80053078(*(uint*)(*(int*)(param_3 + 0x38) + 0x24));
-            FUN_80051fc4(uVar5, 0, 0, (char*)&local_a0, 0, 0);
-            cVar8 = FUN_80048094();
-            if (cVar8 != '\0')
+            texId = FUN_80053078(*(uint*)(*(int*)(obj + 0x38) + 0x24));
+            FUN_80051fc4(texId, 0, 0, (char*)&color, 0, 0);
+            callbackResult = FUN_80048094();
+            if (callbackResult != '\0')
             {
-                trackIntersect_getColorRgb((undefined*)&uStack_a4);
-                FUN_80049910(&uStack_a4);
+                trackIntersect_getColorRgb((undefined*)&litColor);
+                FUN_80049910(&litColor);
             }
             FUN_800528d0();
             FUN_8025a608(4, 0, 0, 0, 0, 0, 2);
             FUN_8025a608(5, 0, 0, 0, 0, 0, 2);
             FUN_8025a5bc(0);
             DAT_803dd8aa = '\x01';
-            DAT_803dc0e4 = local_a0;
+            DAT_803dc0e4 = color;
         }
     }
     else
     {
-        uVar5 = FUN_80053078(*(uint*)(*(int*)(param_3 + 0x38) + 0x24));
-        if (DAT_803dd8ac != uVar5)
+        texId = FUN_80053078(*(uint*)(*(int*)(obj + 0x38) + 0x24));
+        if (DAT_803dd8ac != texId)
         {
-            DAT_803dd8ac = uVar5;
-            FUN_8004812c(uVar5, 0);
+            DAT_803dd8ac = texId;
+            FUN_8004812c(texId, 0);
         }
-        if ((*(byte*)&DAT_803dc0e4 != *(byte*)&local_a0) ||
-            (*(byte*)((int)&DAT_803dc0e4 + 1) != *(byte*)((int)&local_a0 + 1)) ||
-            (*(byte*)((int)&DAT_803dc0e4 + 2) != *(byte*)((int)&local_a0 + 2)) ||
-            (*(byte*)((int)&DAT_803dc0e4 + 3) != *(byte*)((int)&local_a0 + 3)))
+        if ((*(byte*)&DAT_803dc0e4 != *(byte*)&color) ||
+            (*(byte*)((int)&DAT_803dc0e4 + 1) != *(byte*)((int)&color + 1)) ||
+            (*(byte*)((int)&DAT_803dc0e4 + 2) != *(byte*)((int)&color + 2)) ||
+            (*(byte*)((int)&DAT_803dc0e4 + 3) != *(byte*)((int)&color + 3)))
         {
-            local_a8 = local_a0;
-            FUN_8025c510(0, (byte*)&local_a8);
-            DAT_803dc0e4 = local_a0;
+            colorWord = color;
+            FUN_8025c510(0, (byte*)&colorWord);
+            DAT_803dc0e4 = color;
         }
     }
-    if (DAT_803dd8b0 != param_3)
+    if (DAT_803dd8b0 != obj)
     {
-        FUN_802585d8(9, piVar2[(*(ushort*)(piVar2 + 6) >> 1 & 1) + 7], 6);
-        FUN_802585d8(0xd, *(uint*)(param_3 + 0x34), 4);
-        DAT_803dd8b0 = param_3;
+        FUN_802585d8(9, renderNode[(*(ushort*)(renderNode + 6) >> 1 & 1) + 7], 6);
+        FUN_802585d8(0xd, *(uint*)(obj + 0x34), 4);
+        DAT_803dd8b0 = obj;
     }
-    FUN_8003f3b4((undefined4)(u32)puVar1, (undefined4)param_3, *(int*)(param_3 + 0x38));
-    local_8c = local_8c + 4;
-    FUN_8003e358(param_3, *(undefined4*)(param_3 + 0x38), local_9c);
-    local_8c = local_8c + 4;
-    FUN_8003df64((undefined4)param_3, (undefined4)piVar2, local_9c, afStack_88);
-    uVar5 = local_8c + 4;
-    iVar9 = (int)uVar5 >> 3;
-    iVar6 = local_9c[0] + iVar9;
-    local_8c = local_8c + 0xc;
-    puVar7 = (undefined4*)
-        FUN_80017914(param_3, (CONCAT12(*(undefined*)(iVar6 + 2),
-                                        CONCAT11(*(undefined*)(iVar6 + 1),
-                                                 *(undefined*)(local_9c[0] + iVar9))) >>
-                         (uVar5 & 7)) & 0xff);
-    FUN_8025d63c(*puVar7, (uint) * (ushort*)(puVar7 + 1));
+    FUN_8003f3b4((undefined4)(u32)modelData, (undefined4)obj, *(int*)(obj + 0x38));
+    cmdCursor = cmdCursor + 4;
+    FUN_8003e358(obj, *(undefined4*)(obj + 0x38), cmdDesc);
+    cmdCursor = cmdCursor + 4;
+    FUN_8003df64((undefined4)obj, (undefined4)renderNode, cmdDesc, worldMtx);
+    texId = cmdCursor + 4;
+    cmdOffset = (int)texId >> 3;
+    cmdPtr = cmdDesc[0] + cmdOffset;
+    cmdCursor = cmdCursor + 0xc;
+    texEntry = (undefined4*)
+        FUN_80017914(obj, (CONCAT12(*(undefined*)(cmdPtr + 2),
+                                        CONCAT11(*(undefined*)(cmdPtr + 1),
+                                                 *(undefined*)(cmdDesc[0] + cmdOffset))) >>
+                         (texId & 7)) & 0xff);
+    FUN_8025d63c(*texEntry, (uint) * (ushort*)(texEntry + 1));
     FUN_8028688c();
     return;
 }
@@ -1265,151 +1265,151 @@ void FUN_8003f9f8(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8003FDA8(undefined4 param_1, undefined4 param_2, int param_3)
+void fn_8003FDA8(undefined4 param_1, undefined4 param_2, int obj)
 {
-    bool bVar1;
-    uint uVar2;
-    uint uVar3;
-    ushort* puVar4;
-    ushort* puVar5;
-    int* piVar6;
-    float* pfVar7;
-    float* pfVar8;
-    ushort* puVar9;
-    undefined4* puVar10;
-    int iVar11;
-    uint uVar12;
-    undefined* puVar13;
-    int iVar14;
-    double dVar15;
-    undefined8 uVar16;
-    uint local_108;
-    undefined4 local_104;
-    undefined4 local_100;
-    undefined4 local_fc;
-    int local_f8[4];
-    uint local_e8;
-    float afStack_e4[16];
-    float afStack_a4[16];
-    float afStack_64[25];
+    bool done;
+    uint opcode;
+    uint nextCursor;
+    ushort* childNode;
+    ushort* modelData;
+    int* renderNode;
+    float* viewMtx;
+    float* jointMtx;
+    ushort* leafNode;
+    undefined4* texEntry;
+    int node;
+    uint fadeLevel;
+    undefined* cmdPtr;
+    int subNode;
+    double fade;
+    undefined8 ctx;
+    uint colorWord;
+    undefined4 envColor;
+    undefined4 matColor;
+    undefined4 glowColor;
+    int cmdDesc[4];
+    uint cmdCursor;
+    float prevMtx[16];
+    float localMtx[16];
+    float worldMtx[25];
 
-    uVar16 = FUN_80286838();
-    puVar5 = (ushort*)((ulonglong)uVar16 >> 0x20);
-    piVar6 = (int*)FUN_80017a54((int)puVar5);
-    pfVar7 = (float*)FUN_80006974();
+    ctx = FUN_80286838();
+    modelData = (ushort*)((ulonglong)ctx >> 0x20);
+    renderNode = (int*)FUN_80017a54((int)modelData);
+    viewMtx = (float*)FUN_80006974();
     if (DAT_803dd8a4 == 0)
     {
-        FUN_80017a50(puVar5, afStack_a4, '\0');
+        FUN_80017a50(modelData, localMtx, '\0');
     }
     else
     {
-        FUN_802475e4((float*)DAT_803dd8a4, afStack_a4);
+        FUN_802475e4((float*)DAT_803dd8a4, localMtx);
         DAT_803dd8a4 = 0;
     }
-    if ((*(ushort*)(piVar6 + 6) & 8) == 0)
+    if ((*(ushort*)(renderNode + 6) & 8) == 0)
     {
-        bVar1 = false;
-        *(undefined*)(piVar6 + 0x18) = 0;
-        FUN_80017968((int)piVar6);
-        if (((*(short*)(param_3 + 0xec) == 0) || ((*(ushort*)(param_3 + 2) & 2) != 0)) ||
-            (*(char*)(param_3 + 0xf3) == '\0'))
+        done = false;
+        *(undefined*)(renderNode + 0x18) = 0;
+        FUN_80017968((int)renderNode);
+        if (((*(short*)(obj + 0xec) == 0) || ((*(ushort*)(obj + 2) & 2) != 0)) ||
+            (*(char*)(obj + 0xf3) == '\0'))
         {
-            FUN_8001796c((int)piVar6);
-            pfVar8 = (float*)FUN_80017970(piVar6, 0);
-            FUN_802475e4(afStack_a4, pfVar8);
+            FUN_8001796c((int)renderNode);
+            jointMtx = (float*)FUN_80017970(renderNode, 0);
+            FUN_802475e4(localMtx, jointMtx);
         }
         else
         {
-            bVar1 = *(int*)(param_3 + 0xa4) == 0;
-            if (bVar1)
+            done = *(int*)(obj + 0xa4) == 0;
+            if (done)
             {
-                FUN_80017988(piVar6, param_3, (int)puVar5, afStack_a4);
+                FUN_80017988(renderNode, obj, (int)modelData, localMtx);
             }
             else
             {
-                FUN_802475b8(afStack_e4);
-                FUN_80017988(piVar6, param_3, (int)puVar5, afStack_e4);
-                FUN_800178d0(piVar6, afStack_a4, (float*)&DAT_80343a70);
+                FUN_802475b8(prevMtx);
+                FUN_80017988(renderNode, obj, (int)modelData, prevMtx);
+                FUN_800178d0(renderNode, localMtx, (float*)&DAT_80343a70);
             }
-            bVar1 = !bVar1;
-            if ((*(code**)(puVar5 + 0x84) != (code*)0x0) && ((ushort*)(u32)uVar16 == puVar5))
+            done = !done;
+            if ((*(code**)(modelData + 0x84) != (code*)0x0) && ((ushort*)(u32)ctx == modelData))
             {
-                (**(code**)(puVar5 + 0x84))(puVar5, piVar6, afStack_a4);
+                (**(code**)(modelData + 0x84))(modelData, renderNode, localMtx);
             }
         }
-        if (*(char*)(param_3 + 0xf9) != '\0')
+        if (*(char*)(obj + 0xf9) != '\0')
         {
             FUN_800178d4();
         }
-        if (bVar1)
+        if (done)
         {
-            if (*(char*)(piVar6 + 0x18) == '\0')
+            if (*(char*)(renderNode + 0x18) == '\0')
             {
-                iVar11 = *(int*)(param_3 + 0x28);
+                node = *(int*)(obj + 0x28);
             }
             else
             {
-                iVar11 = piVar6[(*(ushort*)(piVar6 + 6) >> 1 & 1) + 7];
+                node = renderNode[(*(ushort*)(renderNode + 6) >> 1 & 1) + 7];
             }
-            FUN_800179cc(&DAT_80343a70, param_3 + 0x88, iVar11, (int*)piVar6[0x10],
-                         piVar6[(*(ushort*)(piVar6 + 6) >> 1 & 1) + 7]);
-            FUN_800179c8(&DAT_80343a70, param_3 + 0xac, *(int*)(param_3 + 0x2c), (uint*)piVar6[0x11],
-                         *(byte*)(param_3 + 0x24) & 8);
+            FUN_800179cc(&DAT_80343a70, obj + 0x88, node, (int*)renderNode[0x10],
+                         renderNode[(*(ushort*)(renderNode + 6) >> 1 & 1) + 7]);
+            FUN_800179c8(&DAT_80343a70, obj + 0xac, *(int*)(obj + 0x2c), (uint*)renderNode[0x11],
+                         *(byte*)(obj + 0x24) & 8);
         }
-        if (*(char*)(param_3 + 0xf7) == '\0')
+        if (*(char*)(obj + 0xf7) == '\0')
         {
-            iVar11 = *(int*)(puVar5 + 0x2a);
-            if (iVar11 != 0)
+            node = *(int*)(modelData + 0x2a);
+            if (node != 0)
             {
-                *(char*)(iVar11 + 0xaf) = *(char*)(iVar11 + 0xaf) + -1;
-                if (*(char*)(*(int*)(puVar5 + 0x2a) + 0xaf) < '\0')
+                *(char*)(node + 0xaf) = *(char*)(node + 0xaf) + -1;
+                if (*(char*)(*(int*)(modelData + 0x2a) + 0xaf) < '\0')
                 {
-                    *(undefined*)(*(int*)(puVar5 + 0x2a) + 0xaf) = 0;
+                    *(undefined*)(*(int*)(modelData + 0x2a) + 0xaf) = 0;
                 }
             }
         }
         else
         {
-            FUN_800178f0(piVar6, param_3, (int)puVar5, (float*)0x0, (int)(ushort*)(u32)uVar16);
+            FUN_800178f0(renderNode, obj, (int)modelData, (float*)0x0, (int)(ushort*)(u32)ctx);
         }
-        *(ushort*)(piVar6 + 6) = *(ushort*)(piVar6 + 6) | 8;
+        *(ushort*)(renderNode + 6) = *(ushort*)(renderNode + 6) | 8;
     }
-    FUN_8003c10c(param_3, piVar6);
-    uVar12 = (uint) * (ushort*)(param_3 + 0xd8) << 3;
-    FUN_80006adc(local_f8, *(undefined4*)(param_3 + 0xd4), uVar12, uVar12);
-    puVar4 = puVar5;
-    if (*(int*)(param_3 + 0xa4) != 0)
+    FUN_8003c10c(obj, renderNode);
+    fadeLevel = (uint) * (ushort*)(obj + 0xd8) << 3;
+    FUN_80006adc(cmdDesc, *(undefined4*)(obj + 0xd4), fadeLevel, fadeLevel);
+    childNode = modelData;
+    if (*(int*)(obj + 0xa4) != 0)
     {
-        FUN_80247618(pfVar7, afStack_a4, afStack_64);
-        FUN_8025d80c(afStack_64, (uint)DAT_802cbab1);
+        FUN_80247618(viewMtx, localMtx, worldMtx);
+        FUN_8025d80c(worldMtx, (uint)DAT_802cbab1);
     }
     do
     {
-        puVar9 = puVar4;
-        puVar4 = *(ushort**)(puVar9 + 0x62);
+        leafNode = childNode;
+        childNode = *(ushort**)(leafNode + 0x62);
     }
-    while (puVar4 != (ushort*)0x0);
-    uVar12 = (uint) * (byte*)(*(int*)(*(int*)(puVar9 + 0x32) + 0xc) + 0x65);
-    if (uVar12 == 0xff)
+    while (childNode != (ushort*)0x0);
+    fadeLevel = (uint) * (byte*)(*(int*)(*(int*)(leafNode + 0x32) + 0xc) + 0x65);
+    if (fadeLevel == 0xff)
     {
-        local_100 = DAT_803dc0c8;
-        FUN_8025c428(3, (byte*)&local_100);
+        matColor = DAT_803dc0c8;
+        FUN_8025c428(3, (byte*)&matColor);
         FUN_8025cce8(0, 1, 0, 5);
     }
     else
     {
-        if (uVar12 < 8)
+        if (fadeLevel < 8)
         {
-            local_fc = ((1 << uVar12) << 0x18) >> 0x10;
+            glowColor = ((1 << fadeLevel) << 0x18) >> 0x10;
         }
         else
         {
-            local_fc = (1 << (uVar12 - 8)) & 0xff;
+            glowColor = (1 << (fadeLevel - 8)) & 0xff;
         }
-        local_fc = local_fc << 0x10;
-        local_fc = CONCAT31((u32)local_fc >> 8, 0xff);
-        local_104 = local_fc;
-        FUN_8025c428(3, (byte*)&local_104);
+        glowColor = glowColor << 0x10;
+        glowColor = CONCAT31((u32)glowColor >> 8, 0xff);
+        envColor = glowColor;
+        FUN_8025c428(3, (byte*)&envColor);
         FUN_8025cce8(2, 1, 0, 7);
     }
     FUN_80258944(0);
@@ -1422,14 +1422,14 @@ void fn_8003FDA8(undefined4 param_1, undefined4 param_2, int param_3)
     FUN_8025c65c(0, 0, 0);
     FUN_8025c2a8(0, 0, 0, 0, 1, 0);
     FUN_8025c368(0, 0, 0, 0, 1, 0);
-    local_108 = DAT_803dc0c8;
-    dVar15 = (double)lbl_803DF684;
-    FUN_8025ca38(dVar15, dVar15, dVar15, dVar15, 0, (uint3*)&local_108);
+    colorWord = DAT_803dc0c8;
+    fade = (double)lbl_803DF684;
+    FUN_8025ca38(fade, fade, fade, fade, 0, (uint3*)&colorWord);
     gxSetPeControl_ZCompLoc_(1);
     FUN_8025c754(7, 0, 0, 7, 0);
     FUN_8025a608(4, 0, 0, 0, 0, 0, 2);
     FUN_8025a5bc(1);
-    if ((*(byte*)(*(int*)(puVar5 + 0x28) + 0x5f) & 4) == 0)
+    if ((*(byte*)(*(int*)(modelData + 0x28) + 0x5f) & 4) == 0)
     {
         gxSetZMode_(0, 3, 0);
         FUN_80259288(0);
@@ -1439,76 +1439,76 @@ void fn_8003FDA8(undefined4 param_1, undefined4 param_2, int param_3)
         gxSetZMode_(1, 3, 1);
         FUN_80259288(1);
     }
-    FUN_802585d8(9, piVar6[(*(ushort*)(piVar6 + 6) >> 1 & 1) + 7], 6);
-    bVar1 = false;
-    uVar12 = local_e8;
-    while (local_e8 = uVar12, !bVar1)
+    FUN_802585d8(9, renderNode[(*(ushort*)(renderNode + 6) >> 1 & 1) + 7], 6);
+    done = false;
+    fadeLevel = cmdCursor;
+    while (cmdCursor = fadeLevel, !done)
     {
-        puVar13 = (undefined*)(local_f8[0] + ((int)local_e8 >> 3));
-        uVar3 = local_e8 + 4;
-        uVar2 = (CONCAT12(puVar13[2], CONCAT11(puVar13[1], *puVar13)) >> (local_e8 & 7)) & 0xf;
-        if (uVar2 == 3)
+        cmdPtr = (undefined*)(cmdDesc[0] + ((int)cmdCursor >> 3));
+        nextCursor = cmdCursor + 4;
+        opcode = (CONCAT12(cmdPtr[2], CONCAT11(cmdPtr[1], *cmdPtr)) >> (cmdCursor & 7)) & 0xf;
+        if (opcode == 3)
         {
-            local_e8 = uVar3;
+            cmdCursor = nextCursor;
             FUN_80257b5c();
-            if (1 < *(byte*)(param_3 + 0xf3))
+            if (1 < *(byte*)(obj + 0xf3))
             {
                 FUN_802570dc(0, 1);
             }
-            puVar13 = (undefined*)(local_f8[0] + ((int)local_e8 >> 3));
-            if ((CONCAT12(puVar13[2], CONCAT11(puVar13[1], *puVar13)) >> (local_e8 & 7) & 1) == 0)
+            cmdPtr = (undefined*)(cmdDesc[0] + ((int)cmdCursor >> 3));
+            if ((CONCAT12(cmdPtr[2], CONCAT11(cmdPtr[1], *cmdPtr)) >> (cmdCursor & 7) & 1) == 0)
             {
-                uVar12 = 2;
+                fadeLevel = 2;
             }
             else
             {
-                uVar12 = 3;
+                fadeLevel = 3;
             }
-            local_e8 = local_e8 + 1;
-            FUN_802570dc(9, uVar12);
-            if ((*(byte*)(iVar14 + 0x40) & 1) != 0)
+            cmdCursor = cmdCursor + 1;
+            FUN_802570dc(9, fadeLevel);
+            if ((*(byte*)(subNode + 0x40) & 1) != 0)
             {
-                local_e8 = local_e8 + 1;
+                cmdCursor = cmdCursor + 1;
             }
-            if ((*(byte*)(iVar14 + 0x40) & 2) != 0)
+            if ((*(byte*)(subNode + 0x40) & 2) != 0)
             {
-                local_e8 = local_e8 + 1;
+                cmdCursor = cmdCursor + 1;
             }
             FUN_802570dc(0xb, 1);
-            uVar12 = local_e8 + 1;
+            fadeLevel = cmdCursor + 1;
         }
-        else if (uVar2 < 3)
+        else if (opcode < 3)
         {
-            if (uVar2 == 1)
+            if (opcode == 1)
             {
-                puVar13 = (undefined*)(local_f8[0] + ((int)uVar3 >> 3));
-                local_e8 = local_e8 + 10;
-                iVar14 = FUN_8001792c(param_3,
-                                      (CONCAT12(puVar13[2], CONCAT11(puVar13[1], *puVar13)) >>
-                                          (uVar3 & 7)) & 0x3f);
-                uVar12 = local_e8;
+                cmdPtr = (undefined*)(cmdDesc[0] + ((int)nextCursor >> 3));
+                cmdCursor = cmdCursor + 10;
+                subNode = FUN_8001792c(obj,
+                                      (CONCAT12(cmdPtr[2], CONCAT11(cmdPtr[1], *cmdPtr)) >>
+                                          (nextCursor & 7)) & 0x3f);
+                fadeLevel = cmdCursor;
             }
-            else if (uVar2 != 0)
+            else if (opcode != 0)
             {
-                puVar13 = (undefined*)(local_f8[0] + ((int)uVar3 >> 3));
-                local_e8 = local_e8 + 0xc;
-                puVar10 = (undefined4*)
-                    FUN_80017914(param_3, (uint) * (byte*)(param_3 + 0xf5) +
-                                 ((CONCAT12(puVar13[2], CONCAT11(puVar13[1], *puVar13)) >>
-                                     (uVar3 & 7)) & 0xff));
-                FUN_8025d63c(*puVar10, (uint) * (ushort*)(puVar10 + 1));
-                uVar12 = local_e8;
+                cmdPtr = (undefined*)(cmdDesc[0] + ((int)nextCursor >> 3));
+                cmdCursor = cmdCursor + 0xc;
+                texEntry = (undefined4*)
+                    FUN_80017914(obj, (uint) * (byte*)(obj + 0xf5) +
+                                 ((CONCAT12(cmdPtr[2], CONCAT11(cmdPtr[1], *cmdPtr)) >>
+                                     (nextCursor & 7)) & 0xff));
+                FUN_8025d63c(*texEntry, (uint) * (ushort*)(texEntry + 1));
+                fadeLevel = cmdCursor;
             }
         }
-        else if (uVar2 == 5)
+        else if (opcode == 5)
         {
-            bVar1 = true;
+            done = true;
         }
-        else if (uVar2 == 4)
+        else if (opcode == 4)
         {
-            local_e8 = uVar3;
-            FUN_8003df64((undefined4)param_3, (undefined4)piVar6, local_f8, pfVar7);
-            uVar12 = local_e8;
+            cmdCursor = nextCursor;
+            FUN_8003df64((undefined4)obj, (undefined4)renderNode, cmdDesc, viewMtx);
+            fadeLevel = cmdCursor;
         }
     }
     FUN_80286884();
