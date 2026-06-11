@@ -75,15 +75,15 @@ extern f32 lbl_803E2450;
 #pragma peephole on
 void CameraModeBike_update(CameraObject* camera)
 {
-    int ref;
-    float fa;
-    float fb;
-    short angle;
+    int rotVal;
+    float followDist;
+    float clampedHeight;
+    short angleDelta;
     GameObject* target;
-    float fc;
-    float fd;
-    float fe;
-    float ff;
+    float sinYaw;
+    float cosYaw;
+    float cosPitch;
+    float sinPitch;
     float posX;
     float posY;
     float posZ;
@@ -132,56 +132,56 @@ void CameraModeBike_update(CameraObject* camera)
             lbl_803E1790 *
             (lbl_803E1794 * lbl_803DD540->turnInput - lbl_803DD540->smoothedYawOffset) +
             lbl_803DD540->smoothedYawOffset;
-        ref = (int)
+        rotVal = (int)
         ((f32)(s32)
         camera->anim.rotX + lbl_803DD540->smoothedYawOffset
         )
         ;
-        camera->anim.rotX = (short)ref;
-        ref = (int)(lbl_803E1798 - lbl_803DD540->pitchTarget);
-        angle = (short)ref - camera->anim.rotY;
-        if (0x8000 < angle)
+        camera->anim.rotX = (short)rotVal;
+        rotVal = (int)(lbl_803E1798 - lbl_803DD540->pitchTarget);
+        angleDelta = (short)rotVal - camera->anim.rotY;
+        if (0x8000 < angleDelta)
         {
-            angle = angle + 1;
+            angleDelta = angleDelta + 1;
         }
-        if (angle < -0x8000)
+        if (angleDelta < -0x8000)
         {
-            angle = angle + -1;
+            angleDelta = angleDelta + -1;
         }
-        camera->anim.rotY = camera->anim.rotY + (angle >> 3);
-        fc = mathSinf(lbl_803E179C * (f32)(s32)((int)camera->anim.rotX - 0x4000) / lbl_803E17A0);
-        fd = mathCosf(lbl_803E179C * (f32)(s32)((int)camera->anim.rotX - 0x4000) / lbl_803E17A0);
-        fe = mathCosf(lbl_803E179C * (f32)(s32)camera->anim.rotY / lbl_803E17A0);
-        ff = mathSinf(lbl_803E179C * (f32)(s32)camera->anim.rotY / lbl_803E17A0);
-        fa = -lbl_803DD540->heightInput / lbl_803E17A4;
-        fb = (fa < lbl_803E1780) ? lbl_803E1780 : ((fa > lbl_803E1788) ? lbl_803E1788 : fa);
+        camera->anim.rotY = camera->anim.rotY + (angleDelta >> 3);
+        sinYaw = mathSinf(lbl_803E179C * (f32)(s32)((int)camera->anim.rotX - 0x4000) / lbl_803E17A0);
+        cosYaw = mathCosf(lbl_803E179C * (f32)(s32)((int)camera->anim.rotX - 0x4000) / lbl_803E17A0);
+        cosPitch = mathCosf(lbl_803E179C * (f32)(s32)camera->anim.rotY / lbl_803E17A0);
+        sinPitch = mathSinf(lbl_803E179C * (f32)(s32)camera->anim.rotY / lbl_803E17A0);
+        followDist = -lbl_803DD540->heightInput / lbl_803E17A4;
+        clampedHeight = (followDist < lbl_803E1780) ? lbl_803E1780 : ((followDist > lbl_803E1788) ? lbl_803E1788 : followDist);
         lbl_803DD540->followDistance =
             lbl_803E17A8 *
-            ((lbl_803E17B0 * fb + lbl_803E17AC) - lbl_803DD540->followDistance) +
+            ((lbl_803E17B0 * clampedHeight + lbl_803E17AC) - lbl_803DD540->followDistance) +
             lbl_803DD540->followDistance;
-        fa = lbl_803DD540->followDistance;
-        fe = fa * fe;
-        camera->anim.worldPosX = posZ + fe * fd;
-        camera->anim.worldPosY = posY + fa * ff;
-        camera->anim.worldPosZ = posX + fe * fc;
-        ref = (int)(lbl_803E17A8 * lbl_803DD540->rollInput);
-        local_60 = (longlong)ref;
-        angle = (short)ref - camera->anim.rotZ;
-        if (0x8000 < angle)
+        followDist = lbl_803DD540->followDistance;
+        cosPitch = followDist * cosPitch;
+        camera->anim.worldPosX = posZ + cosPitch * cosYaw;
+        camera->anim.worldPosY = posY + followDist * sinPitch;
+        camera->anim.worldPosZ = posX + cosPitch * sinYaw;
+        rotVal = (int)(lbl_803E17A8 * lbl_803DD540->rollInput);
+        local_60 = (longlong)rotVal;
+        angleDelta = (short)rotVal - camera->anim.rotZ;
+        if (0x8000 < angleDelta)
         {
-            angle = angle + 1;
+            angleDelta = angleDelta + 1;
         }
-        if (angle < -0x8000)
+        if (angleDelta < -0x8000)
         {
-            angle = angle + -1;
+            angleDelta = angleDelta + -1;
         }
-        ref = (int)
+        rotVal = (int)
         ((f32)(s32)
-        angle * timeDelta * lbl_803E17B4 + (f32)(s32)
+        angleDelta * timeDelta * lbl_803E17B4 + (f32)(s32)
         camera->anim.rotZ
         )
         ;
-        camera->anim.rotZ = (short)ref;
+        camera->anim.rotZ = (short)rotVal;
         Obj_TransformWorldPointToLocal(camera->anim.worldPosX, camera->anim.worldPosY,
                                        camera->anim.worldPosZ, &camera->anim.localPosX, &camera->anim.localPosY,
                                        &camera->anim.localPosZ, (u32)camera->anim.parent);
@@ -233,23 +233,23 @@ void firstPersonPlaceCamera(GameObject* focus, int resetClamp)
 {
     register GameObject* self = focus;
     GameObject* galleon;
-    int iVar2;
-    float local_20;
-    float local_24;
-    float local_28;
-    float local_1c[3];
+    int galleonState;
+    float prevPosZ;
+    float prevPosY;
+    float prevPosX;
+    float localOffset[3];
 
     if (self->anim.classId == 1)
     {
-        cameraGetPrevPos2((int)self, &local_28, &local_24, &local_20);
-        if (((resetClamp != 0) || (lbl_803DD548->camPosX != local_28)) ||
-            (lbl_803DD548->camPosZ != local_20))
+        cameraGetPrevPos2((int)self, &prevPosX, &prevPosY, &prevPosZ);
+        if (((resetClamp != 0) || (lbl_803DD548->camPosX != prevPosX)) ||
+            (lbl_803DD548->camPosZ != prevPosZ))
         {
-            lbl_803DD548->clampedPosY = local_24;
+            lbl_803DD548->clampedPosY = prevPosY;
         }
-        lbl_803DD548->camPosX = local_28;
-        lbl_803DD548->camPosY = local_24;
-        lbl_803DD548->camPosZ = local_20;
+        lbl_803DD548->camPosX = prevPosX;
+        lbl_803DD548->camPosY = prevPosY;
+        lbl_803DD548->camPosZ = prevPosZ;
     }
     else
     {
@@ -261,16 +261,16 @@ void firstPersonPlaceCamera(GameObject* focus, int resetClamp)
     galleon = getSbGalleon();
     if (galleon != NULL)
     {
-        iVar2 = DBprotection_getCameraState(galleon);
-        if (iVar2 == 2)
+        galleonState = DBprotection_getCameraState(galleon);
+        if (galleonState == 2)
         {
-            local_1c[0] = self->anim.worldPosX - galleon->anim.worldPosX;
-            local_1c[1] = (lbl_803E17C0 + self->anim.worldPosY) - galleon->anim.worldPosY;
-            local_1c[2] = self->anim.worldPosZ - galleon->anim.worldPosZ;
-            vecRotateZXY(galleon, local_1c);
-            lbl_803DD548->camPosX = galleon->anim.worldPosX + local_1c[0];
-            lbl_803DD548->camPosY = galleon->anim.worldPosY + local_1c[1];
-            lbl_803DD548->camPosZ = galleon->anim.worldPosZ + local_1c[2];
+            localOffset[0] = self->anim.worldPosX - galleon->anim.worldPosX;
+            localOffset[1] = (lbl_803E17C0 + self->anim.worldPosY) - galleon->anim.worldPosY;
+            localOffset[2] = self->anim.worldPosZ - galleon->anim.worldPosZ;
+            vecRotateZXY(galleon, localOffset);
+            lbl_803DD548->camPosX = galleon->anim.worldPosX + localOffset[0];
+            lbl_803DD548->camPosY = galleon->anim.worldPosY + localOffset[1];
+            lbl_803DD548->camPosZ = galleon->anim.worldPosZ + localOffset[2];
         }
     }
     return;
@@ -294,9 +294,9 @@ void firstPersonExit(CameraObject* camera)
     register CameraObject* self = camera;
     GameObject* target;
     float fVar1;
-    float fVar2;
-    int sVar3;
-    float local_24[3];
+    float dz;
+    int targetYaw;
+    float targetPos[3];
     undefined auStack_28[4];
 
     target = (GameObject*)self->anim.targetObj;
@@ -310,13 +310,13 @@ void firstPersonExit(CameraObject* camera)
     lbl_803DD548->posZCurve.start = self->anim.worldPosZ;
     lbl_803DD548->posZCurve.startTangent = fVar1;
     lbl_803DD548->posZCurve.endTangent = fVar1;
-    camcontrol_getTargetPosition((int)self, (int)target, local_24, auStack_28);
-    lbl_803DD548->posXCurve.end = local_24[0];
-    lbl_803DD548->posYCurve.end = local_24[1];
-    lbl_803DD548->posZCurve.end = local_24[2];
+    camcontrol_getTargetPosition((int)self, (int)target, targetPos, auStack_28);
+    lbl_803DD548->posXCurve.end = targetPos[0];
+    lbl_803DD548->posYCurve.end = targetPos[1];
+    lbl_803DD548->posZCurve.end = targetPos[2];
     fVar1 = lbl_803DD548->posXCurve.end - lbl_803DD548->posXCurve.start;
-    fVar2 = lbl_803DD548->posZCurve.end - lbl_803DD548->posZCurve.start;
-    lbl_803DD548->exitDistance = sqrtf(fVar1 * fVar1 + fVar2 * fVar2);
+    dz = lbl_803DD548->posZCurve.end - lbl_803DD548->posZCurve.start;
+    lbl_803DD548->exitDistance = sqrtf(fVar1 * fVar1 + dz * dz);
     lbl_803DD548->viewCurve.px = &lbl_803DD548->yawCurve.start;
     lbl_803DD548->viewCurve.py = &lbl_803DD548->pitchCurve.start;
     lbl_803DD548->viewCurve.pz = NULL;
@@ -325,9 +325,9 @@ void firstPersonExit(CameraObject* camera)
     lbl_803DD548->viewCurve.eval = Curve_EvalHermite;
     lbl_803DD548->viewCurve.coeffFn = Curve_BuildHermiteCoeffs;
     lbl_803DD548->yawCurve.start = (float)(int)self->anim.rotX;
-    sVar3 = getAngle((double)(lbl_803DD548->posXCurve.end - target->anim.worldPosX),
+    targetYaw = getAngle((double)(lbl_803DD548->posXCurve.end - target->anim.worldPosX),
                      (double)(lbl_803DD548->posZCurve.end - target->anim.worldPosZ));
-    lbl_803DD548->yawCurve.end = (float)(int)(short)(0x8000 - sVar3);
+    lbl_803DD548->yawCurve.end = (float)(int)(short)(0x8000 - targetYaw);
     fVar1 = lbl_803E17C4;
     lbl_803DD548->yawCurve.startTangent = lbl_803E17C4;
     lbl_803DD548->yawCurve.endTangent = fVar1;
