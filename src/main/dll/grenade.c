@@ -1003,33 +1003,33 @@ undefined4 trickyFn_801432cc(int param_1,int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 trickyFn_80143388(int param_1,int *param_2)
+undefined4 trickyFn_80143388(int obj,int *trickyState)
 {
-  int iVar1;
-  int iVar3;
+  int val;
+  int ref;
 
-  iVar1 = trickyFoodFn_8014460c(param_1,param_2);
-  if (iVar1 != 0) {
+  val = trickyFoodFn_8014460c(obj,trickyState);
+  if (val != 0) {
     return 1;
   }
-  for (iVar1 = 0; iVar1 < *(char *)((int)param_2 + 0x827); iVar1 = iVar1 + 1) {
-    iVar3 = iVar1 + 0x81f;
-    if (*(char *)((int)param_2 + iVar3) != '\0') continue;
-    iVar3 = *(int *)&((GameObject *)param_1)->extra;
-    if (((u32)(*(byte *)(iVar3 + 0x58) >> 6 & 1)) != 0U) continue;
-    if (((GameObject *)param_1)->anim.currentMove >= 0x30 || ((GameObject *)param_1)->anim.currentMove < 0x29) {
-      if (Sfx_IsPlayingFromObjectChannel(param_1,0x10) == 0) {
-        objAudioFn_800393f8(param_1,(void *)(iVar3 + 0x3a8),0x357,0,0xffffffff,0);
+  for (val = 0; val < *(char *)((int)trickyState + 0x827); val = val + 1) {
+    ref = val + 0x81f;
+    if (*(char *)((int)trickyState + ref) != '\0') continue;
+    ref = *(int *)&((GameObject *)obj)->extra;
+    if (((u32)(*(byte *)(ref + 0x58) >> 6 & 1)) != 0U) continue;
+    if (((GameObject *)obj)->anim.currentMove >= 0x30 || ((GameObject *)obj)->anim.currentMove < 0x29) {
+      if (Sfx_IsPlayingFromObjectChannel(obj,0x10) == 0) {
+        objAudioFn_800393f8(obj,(void *)(ref + 0x3a8),0x357,0,0xffffffff,0);
       }
     }
   }
-  iVar1 = trickyFoodFn_8014460c(param_1,param_2);
-  if (iVar1 != 0) {
+  val = trickyFoodFn_8014460c(obj,trickyState);
+  if (val != 0) {
     return 1;
   }
-  if ((param_2[0x15] & 0x8000000U) != 0) {
-    if (param_2[8] == (int)((GameObject *)param_1)->anim.currentMove) {
-      *(undefined *)((int)param_2 + 10) = 0;
+  if ((trickyState[0x15] & 0x8000000U) != 0) {
+    if (trickyState[8] == (int)((GameObject *)obj)->anim.currentMove) {
+      *(undefined *)((int)trickyState + 10) = 0;
     }
   }
   return 1;
