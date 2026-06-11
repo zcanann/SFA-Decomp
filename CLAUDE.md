@@ -116,7 +116,13 @@ probes on the bundled compilers):
    tumbleweed_updateRollingMotion, lightmap drawFn_8005cf8c, mm.c mmFreeTick,
    shrine1CE dll_19B_update — kept). Before ADDING a `peephole on` wrapper,
    check the file's effective pragma state — in a default-ON file it does
-   nothing.
+   nothing. ⚠️ "Load-bearing" ≠ "original": shrine1CE dll_19B_update's wrap
+   (and dimmagicbridge's) was a COMPENSATING INSTRUMENT — its real job was
+   fusing the extsh on an `s16 += int`; replacing it with a width-correct
+   compound `(s16)` addend cast let the wrap drop AND restored the #68
+   deref-via-copy + the dense jump table under peephole-off (both units →
+   100.0, near-100 sweep). Re-audit any "kept" wrap for a width-cast
+   replacement before calling it load-bearing.
    **Treat the two pragmas independently — `scheduling off` ALONE is often the
    win.** For vtable-dispatch / call-heavy / FP-heavy functions, `scheduling
    off` by itself takes 40-70% → 95-100% (it stops MWCC reordering loads/stores
@@ -512,8 +518,11 @@ cap (the #53/#20 documented residual).** `field -= (int)timeDelta;` on an s16
 field emits fctiwz + subf + EXTSH + sth; `field -= (s16)timeDelta;` truncates
 the float straight to s16 (same fctiwz, no (int) node) and the compound folds
 the extension — exactly target's shape. tesla -> 100, fxemit_update +0.5,
-light x3, anim x3 in one sweep; A/B per site (shrine1CE's site reverted -
-its target keeps the extension).
+light x3, anim x3 in one sweep; A/B per site. ⚠️ CORRECTED (near-100 sweep):
+the old "shrine1CE's site reverted - its target keeps the extension" was a
+WRONG attribution — the extension only looked kept because the fn carried a
+`#pragma peephole on` wrap; under the correct OFF state the `(s16)`
+subtrahend IS the fix (shrine1CE → 100 by dropping the wrap + this cast).
 
 20. **Compound-assign a narrow lvalue (`*(s16*)p += K`) instead of the expanded
     read-modify-write (`*(s16*)p = *(s16*)p + K`).** The expanded form reloads
@@ -1675,6 +1684,13 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
     target's shape. Keep the named extern when target DOES keep it live. Took
     13 Effect*_func05 fns to 100% and lifted every Effect*_func04 head
     (modgfx + dim_partfx).
+    **fcmpo OPERAND-ORDER corollary (wmsun campaign): a LITERAL comparand
+    loads/evaluates FIRST regardless of which side of the compare you write
+    it (`prod != 0.0f` emits the 0.0 load first); the EXTERN form follows
+    written order.** So pick literal-vs-extern by target's fcmpo operand
+    order too, not just by reload shape — and mix per SITE within one fn
+    (wmsun fn_801F6EA4: literals at the compares whose const loads lead,
+    externs at the value-first compares).
 
 72. **`sum = g + (step = k * timeDelta);` — embedded assignment keeps
     LHS-first eval AND forces the product into a fresh named FP reg.** When
@@ -1832,6 +1848,13 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
     `cmpwi`→`cmplwi` — launder with `if (((int)state != 0) ...)`;
     (b) `&state->field` as a call arg breaks the import's `(char*)base+K`
     address-CSE — keep the ORIGINAL arg spelling (`(char *)state + K`);
+    the INVERSE bites too: converting matched raw-arith args (`st + K`
+    timer args, `(f32*)(obj + 0x18)` vec args) TO `&state->field` /
+    `&obj->anim.worldPosX` can CSE the member-address node into a hoisted
+    saved-reg web (+1 saved reg, +1 instr) where the raw arith re-derived
+    per site — and it is PER-FN (same spellings byte-neutral in init,
+    perturbing in update; wmwallcrawler gold pass). VALUE access converts
+    safely; ADDRESS-of-member args need a byte-gate per fn;
     (c) field signedness/width must mirror the original deref EXACTLY:
     a u8-array decrement (`sub[9] -= 1`) needs a u8 field to keep the
     `clrlwi` (s8 emits `extsb` under peephole-off); an int-deref'd flag
@@ -2448,6 +2471,12 @@ compare's immediate and subtract 1 for the real case value.
     match. Embedded-assignment `(t = lblK)` in the arg EXPLODES (allocates
     f31 + psq spills) even when t is otherwise dead — re-confirmed, never
     embed assignments in call args. (fn_80154870 95.55→99.85.)
+    NOT UNIVERSAL: on a TRIPLED named-extern arg the `*(f32 *)&` launder is
+    VN'd through (hoist survives) — the working escape there is the LITERAL
+    spelling (`10.0f` ×3): a literal materializes at its L2R arg slot and
+    fmr-CSEs within the statement (#71; magiccavetop → 100, near-100 sweep —
+    where the import's `t = lbl` embedded form was the #84 miscompile hazard,
+    silently reading stale f31 and SCORING HIGHER than correct code).
 
 91. **The #25 counter-caveat cap (target has cror-FREE `bge`/`ble` clamps
     where your `>=`/`<=` if-chain emits the cror combine) is CRACKED — write
@@ -2541,6 +2570,12 @@ b-over-b; snd_groups worked because target HAS the GetXAddr symbols).
     local emits `extsh rDST,r0` directly into the variable's home —
     `(s16)(int)(f)` routes through `extsh r0,r0; mr rDST,r0` (+1);
     `s16`-typing the local moves the extension to the USE side (worse).
+    ⚠️ That s16-local verdict is CONTEXT-BOUND to float→int conversion
+    results: for an INT-ARITHMETIC RHS, `s16 v; v = intExpr;` executes the
+    extsh at the def INTO the var's home (`extsh r27,r0`) where the
+    int-local + `(s16)` cast routes via `extsh r0,r0; mr r27,r0` — the s16
+    local was exactly the fix on wmsun_update ×4 (94.25→100 campaign).
+    Read the RHS kind before picking the local's width.
     And `x -= timeDelta * (x * k);` compound gives `fnmsubs` with
     timeDelta-first load order where `x = -(timeDelta*(x*k) - x);` splits
     to fmsubs+fneg.
@@ -3787,6 +3822,12 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
 119. **VARIABLE RECYCLING is a recoverable signature: target reusing a DEAD
     variable's home register for a "new" value = the original source
     REASSIGNED that variable; write the reassignment, not a fresh local.**
+    GUARD (wmsun campaign): GC/2.0 -O4 LIVE-RANGE-SPLITS same-variable
+    disjoint webs, so #119 only pins the home when the reuse CHANGES
+    LIVENESS at the allocation decision point (e.g. keeps the old value
+    live into the def that would otherwise coalesce); a 4-way reuse of one
+    dead var did NOT keep the webs in one reg. Minimal merges (one
+    variable, one boundary) work; bulk merges don't.
     (task #18, objhits reconstructions -- 6 instances, each fixing placement
     AND coloring at once.) Read the target reg: when a mid-fn value lands in
     a register that previously held a now-dead param/local (f28=t becomes
@@ -3993,7 +4034,17 @@ speculative unroller" / the ppc_unroll_* pragmas mean THIS entry.)*
     demands unnatural spellings for lines that match naturally at O4, the
     integral-param O4 reading is the faithful one — prefer it.
 
-**Object-DLL lane recipe-effectiveness map (terrain note, saves trial-and-error).**
+127. **`extern const f32 lbl_X;` = a STORE-ALIASING EXEMPTION — cross-
+    statement load CSE without naming a local.** When target loads a float
+    symbol ONCE and keeps it live across intervening STORES (sth/stfs)
+    while the plain `extern f32` form re-loads after each store (MWCC
+    assumes the store may alias the global), adding `const` to the extern
+    exempts the load from store invalidation so the CSE survives — AND the
+    value stays an UN-named temp-class web (a named local achieves the
+    same CSE but flips the FP pair per #107's class model). rope → 100,
+    CRsnowbike clamp (near-100 sweep). Decl-only change, A/B per unit —
+    `const` on a symbol other fns WRITE would be wrong; check writers
+    first.
 Field-tested across the object DLL near-100 tier (src/main/dll/{baddie,DIM,DR,CF,
 WC,ARW,MMP,WM,DB,SH,...}). RELIABLE here — reach for these first:
 #12 bitfield single-bit clear (rlwimi-from-bitfield, e.g. `((Flags *)&f)->b80 = 0`);
