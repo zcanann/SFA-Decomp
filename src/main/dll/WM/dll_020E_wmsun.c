@@ -304,7 +304,7 @@ void wmsun_update(int obj)
     int t;
     s8 c;
     u8 b;
-    register int v;
+    s16 v;
 
     objAnim = (ObjAnimComponent*)obj;
     thresh = 0;
@@ -387,7 +387,7 @@ void wmsun_update(int obj)
             b = objAnim->alpha;
             if (b < 0xfa)
             {
-                v = (s16)(b + framesThisStep);
+                v = b + framesThisStep;
             }
             if (v > 0xfa)
             {
@@ -413,7 +413,7 @@ void wmsun_update(int obj)
         {
             if (b < 0xff)
             {
-                v = (s16)(b + framesThisStep);
+                v = b + framesThisStep;
             }
             if (v > 0xff)
             {
@@ -425,7 +425,7 @@ void wmsun_update(int obj)
         {
             if (b < 0x55)
             {
-                v = (s16)(b + framesThisStep);
+                v = b + framesThisStep;
             }
             if (v > 0x55)
             {
@@ -437,7 +437,7 @@ void wmsun_update(int obj)
         {
             if (b < 0x19)
             {
-                v = (s16)(b + framesThisStep);
+                v = b + framesThisStep;
             }
             if (v > 0x19)
             {
@@ -471,8 +471,8 @@ void wmsun_update(int obj)
                 }
                 if (lbl_803DDCA8 > 0)
                 {
-                    lbl_803DDCA8 = lbl_803DDCA8 - framesThisStep;
-                    if (lbl_803DDCA8 < 1)
+                    lbl_803DDCA8 -= framesThisStep;
+                    if (lbl_803DDCA8 <= 0)
                     {
                         lbl_803DDCA8 = 0;
                         GameBit_Set(0x38d, 0);
@@ -484,7 +484,7 @@ void wmsun_update(int obj)
             {
                 if (lbl_803DDCAE > 0)
                 {
-                    lbl_803DDCAE = lbl_803DDCAE - framesThisStep;
+                    lbl_803DDCAE -= framesThisStep;
                     if (lbl_803DDCAE < 0)
                     {
                         lbl_803DDCAE = 0;
@@ -495,8 +495,8 @@ void wmsun_update(int obj)
             {
                 if (lbl_803DDCB0 > 0)
                 {
-                    lbl_803DDCB0 = lbl_803DDCB0 - framesThisStep;
-                    if (lbl_803DDCB0 < 1)
+                    lbl_803DDCB0 -= framesThisStep;
+                    if (lbl_803DDCB0 <= 0)
                     {
                         lbl_803DDCB0 = 0;
                         getEnvfxAct(obj, obj, 0x30, 0);
@@ -541,8 +541,10 @@ extern f32 lbl_803E5F40;
 extern f32 lbl_803E5F44;
 extern f32 lbl_803E5F48;
 extern f32 lbl_803E5F4C;
+extern f32 lbl_803E5F50;
 extern f32 lbl_803E5F54;
 extern f32 lbl_803E5F58;
+extern f32 lbl_803E5F5C;
 extern f32 lbl_803E5F60;
 extern f32 lbl_803E5F64;
 extern f32 lbl_803E5F68;
@@ -558,8 +560,8 @@ void fn_801F6EA4(int obj)
     WmSunGlare g;
     int cam;
     f32 dx, dy, dz, len;
-    f32 dot, prod, denom, cosang, zero;
-    f32 hx, hy, hz, hlen;
+    f32 dot, prod, denom;
+    f32 hy, hz, cosang, hlen;
     f32 f;
     f32 cz;
 
@@ -582,7 +584,7 @@ void fn_801F6EA4(int obj)
         dy = ((GameObject*)obj)->anim.localPosY - *(f32*)(cam + 0x10);
         dz = ((GameObject*)obj)->anim.localPosZ - *(f32*)(cam + 0x14);
         len = sqrtf(dz * dz + (dx * dx + dy * dy));
-        if (lbl_803E5F20 != len)
+        if (0.0f != len)
         {
             dx = dx / len;
             dy = dy / len;
@@ -603,90 +605,92 @@ void fn_801F6EA4(int obj)
         {
             cosang = cz;
         }
-        zero = lbl_803E5F20;
-        if (cosang > zero)
+        hy = 0.0f;
+        if (cosang > hy)
         {
-            hx = ((GameObject*)obj)->anim.localPosX - *(f32*)(cam + 0xc);
-            hy = zero;
+            dot = ((GameObject*)obj)->anim.localPosX - *(f32*)(cam + 0xc);
             hz = ((GameObject*)obj)->anim.localPosZ - *(f32*)(cam + 0x14);
-            hlen = sqrtf(hz * hz + (hx * hx + hy));
-            if (lbl_803E5F20 != hlen)
+            hlen = sqrtf(hz * hz + (dot * dot + hy));
+            if (0.0f != hlen)
             {
-                hx = hx / hlen;
+                dot = dot / hlen;
                 hy = hy / hlen;
                 hz = hz / hlen;
             }
-            prod = dir.z * dir.z + (dir.x * dir.x + dir.y * dir.y);
-            prod = prod * (hz * hz + (hx * hx + hy * hy));
+            len = dir.y;
+            f = dir.z;
+            prod = f * f + (dir.x * dir.x + len * len);
+            prod = prod * (hz * hz + (dot * dot + hy * hy));
             if (prod != lbl_803E5F20)
             {
                 sqrtf(prod);
             }
             if (cosang > lbl_803E5F28)
             {
-                g.vx = lbl_803E5F2C * hx;
+                g.vx = lbl_803E5F2C * dot;
                 g.vy = lbl_803E5F20;
                 g.vz = lbl_803E5F2C * hz;
-                f = mathSinf((lbl_803E5F30 * lbl_803E5F34 * (cosang - lbl_803E5F28)) / lbl_803E5F38) - lbl_803DDCA0;
+                f = mathSinf(lbl_803E5F30 * (lbl_803E5F34 * (cosang - lbl_803E5F28)) / lbl_803E5F38) - lbl_803DDCA0;
                 if (f > lbl_803E5F3C || f < lbl_803E5F40)
                 {
                     lbl_803DDCA0 = lbl_803DDCA0 + f / timeDelta;
                 }
                 g.intensity = lbl_803DDCA0;
-                if (lbl_803DDCA0 > lbl_803E5F44)
+                if (lbl_803DDCA0 > *(f32*)&lbl_803E5F44)
                 {
                     if (lbl_803DDCA4 < lbl_803E5F4C)
                     {
                         lbl_803DDCA4 = lbl_803DDCA4 + (lbl_803DDCA0 - lbl_803E5F44) / lbl_803E5F48;
                     }
-                    g.intensity = g.intensity - lbl_803DDCA4;
-                    if (g.intensity < lbl_803E5F44)
+                    f = g.intensity - lbl_803DDCA4;
+                    g.intensity = f;
+                    if (f < *(f32*)&lbl_803E5F44)
                     {
-                        g.intensity = lbl_803E5F44;
+                        g.intensity = *(f32*)&lbl_803E5F44;
                     }
                 }
                 else
                 {
                     lbl_803DDCA4 = lbl_803DDCA4 - (lbl_803DDCA0 - lbl_803E5F44) / lbl_803E5F2C;
                 }
-                randomGetRange(0, 0x1e);
-                if (lbl_803E5F58 < lbl_803DDCA0)
+                g.intensity = lbl_803E5F50 * (f32)(int)randomGetRange(0, 0x1e) + g.intensity;
+                if (lbl_803DDCA0 > lbl_803E5F58)
                 {
                     lbl_803DDCA0 = lbl_803DDCA0 - lbl_803E5F54;
                 }
+                g.ang[2] = 0;
+                g.ang[1] = 0;
+                g.ang[0] = lbl_803E5F5C * cosang;
             }
             else
             {
                 f = lbl_803E5F20 - lbl_803DDCA0;
-                if (f <= lbl_803E5F60)
-                {
-                    if (f < lbl_803E5F64)
-                    {
-                        lbl_803DDCA0 = oneOverTimeDelta * f + lbl_803DDCA0;
-                    }
-                }
-                else
+                if (f > lbl_803E5F60)
                 {
                     lbl_803DDCA0 = oneOverTimeDelta * f + lbl_803DDCA0;
                 }
-                if (lbl_803E5F20 < lbl_803DDCA4)
+                else if (f < lbl_803E5F64)
+                {
+                    lbl_803DDCA0 = oneOverTimeDelta * f + lbl_803DDCA0;
+                }
+                if (lbl_803DDCA4 > *(f32*)&lbl_803E5F20)
                 {
                     lbl_803DDCA4 = -(lbl_803E5F68 * timeDelta - lbl_803DDCA4);
-                    if (lbl_803DDCA4 < lbl_803E5F20)
+                    if (lbl_803DDCA4 < *(f32*)&lbl_803E5F20)
                     {
-                        lbl_803DDCA4 = lbl_803E5F20;
+                        lbl_803DDCA4 = *(f32*)&lbl_803E5F20;
                     }
                 }
             }
         }
         else
         {
-            if (zero < lbl_803DDCA4)
+            if (lbl_803DDCA4 > hy)
             {
                 lbl_803DDCA4 = -(lbl_803E5F68 * timeDelta - lbl_803DDCA4);
-                if (lbl_803DDCA4 < zero)
+                if (lbl_803DDCA4 < hy)
                 {
-                    lbl_803DDCA4 = lbl_803E5F20;
+                    lbl_803DDCA4 = hy;
                 }
             }
         }
