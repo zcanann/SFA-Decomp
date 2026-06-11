@@ -8316,7 +8316,7 @@ void playerDoHitDetection(int obj)
                     (((GameObject*)obj)->anim.worldPosY - ((GameObject*)obj)->anim.previousWorldPosY) / dt;
                 if (((GameObject*)obj)->anim.velocityY < lbl_803E811C)
                 {
-                    ((GameObject*)obj)->anim.velocityY = lbl_803E811C;
+                    ((GameObject*)obj)->anim.velocityY = *(f32 *)&lbl_803E811C;
                 }
                 if (((GameObject*)obj)->anim.velocityY > lbl_803E7EA4)
                 {
