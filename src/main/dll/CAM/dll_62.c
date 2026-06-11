@@ -35,24 +35,24 @@ extern f32 lbl_803E19B4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void CameraModeClimb_update(short* param_1)
+void CameraModeClimb_update(short* camObj)
 {
-    f32 fVar1;
-    f32 fVar2;
+    f32 blend;
+    f32 fb;
     f32 hi;
     f32 lo;
-    int iVar4;
-    short* psVar5;
+    int yawDelta;
+    short* viewObj;
     f32 trigValue;
-    f32 local_cc;
-    f32 local_d0;
-    f32 local_d4;
-    f32 local_d8;
+    f32 fd;
+    f32 clamped;
+    f32 fc;
+    f32 dist;
     f32 traceFrom[3];
     f32 traceOut[3];
     undefined auStack176[112];
 
-    psVar5 = *(short**)(param_1 + 0x52);
+    viewObj = *(short**)(camObj + 0x52);
     if (lbl_803DD578->transitionTimer != 0)
     {
         lbl_803DD578->transitionTimer -= framesThisStep;
@@ -60,88 +60,88 @@ void CameraModeClimb_update(short* param_1)
         {
             lbl_803DD578->transitionTimer = 0;
         }
-        fVar1 = (f32)(s32)(lbl_803DD578->transitionDuration - lbl_803DD578->transitionTimer) /
+        blend = (f32)(s32)(lbl_803DD578->transitionDuration - lbl_803DD578->transitionTimer) /
             (f32)(s32)
         lbl_803DD578->transitionDuration;
         lbl_803DD578->relativePosition =
-            fVar1 * (f32)(s32)((u16)lbl_803DD578->targetRelativePosition - (u16)lbl_803DD578->startRelativePosition) +
+            blend * (f32)(s32)((u16)lbl_803DD578->targetRelativePosition - (u16)lbl_803DD578->startRelativePosition) +
             (f32)(u32)(u16)
         lbl_803DD578->startRelativePosition;
-        lbl_803DD578->targetDistance = fVar1 * (lbl_803DD578->endDistance - lbl_803DD578->startDistance) + lbl_803DD578
+        lbl_803DD578->targetDistance = blend * (lbl_803DD578->endDistance - lbl_803DD578->startDistance) + lbl_803DD578
             ->startDistance;
-        lbl_803DD578->minHeight = fVar1 * (lbl_803DD578->endMinHeight - lbl_803DD578->startMinHeight) + lbl_803DD578->
+        lbl_803DD578->minHeight = blend * (lbl_803DD578->endMinHeight - lbl_803DD578->startMinHeight) + lbl_803DD578->
             startMinHeight;
-        lbl_803DD578->maxHeight = fVar1 * (lbl_803DD578->endMaxHeight - lbl_803DD578->startMaxHeight) + lbl_803DD578->
+        lbl_803DD578->maxHeight = blend * (lbl_803DD578->endMaxHeight - lbl_803DD578->startMaxHeight) + lbl_803DD578->
             startMaxHeight;
     }
-    fVar2 = *(f32*)(psVar5 + 0xe);
-    hi = fVar2 + lbl_803DD578->maxHeight;
-    lo = fVar2 + lbl_803DD578->minHeight;
-    fVar1 = *(f32*)(param_1 + 0xe);
-    if (fVar1 < lo)
+    fb = *(f32*)(viewObj + 0xe);
+    hi = fb + lbl_803DD578->maxHeight;
+    lo = fb + lbl_803DD578->minHeight;
+    blend = *(f32*)(camObj + 0xe);
+    if (blend < lo)
     {
-        local_d0 = lo - fVar1;
+        clamped = lo - blend;
     }
-    else if (fVar1 > hi)
+    else if (blend > hi)
     {
-        local_d0 = hi - fVar1;
+        clamped = hi - blend;
     }
     else
     {
-        local_d0 = lbl_803E19A0;
+        clamped = lbl_803E19A0;
     }
-    local_d0 = local_d0 * (lbl_803DD578->heightAdjustRate * timeDelta);
-    *(f32*)(param_1 + 0xe) = *(f32*)(param_1 + 0xe) + local_d0;
-    local_d8 = lbl_803DD578->targetDistance;
-    local_d8 = local_d8 - lbl_803DD578->smoothedDistance;
-    local_d8 = local_d8 * (lbl_803E19A4 * timeDelta);
-    lbl_803DD578->smoothedDistance = lbl_803DD578->smoothedDistance + local_d8;
-    trigValue = mathSinf((lbl_803E19AC * (f32)(s32) * psVar5) / lbl_803E19B0);
-    traceFrom[0] = lbl_803E19A8 * trigValue + *(f32*)(psVar5 + 0xc);
-    traceFrom[1] = *(f32*)(psVar5 + 0xe);
-    trigValue = mathCosf((lbl_803E19AC * (f32)(s32) * psVar5) / lbl_803E19B0);
-    traceFrom[2] = lbl_803E19A8 * trigValue + *(f32*)(psVar5 + 0x10);
-    trigValue = mathSinf((lbl_803E19AC * (f32)(s32) * psVar5) / lbl_803E19B0);
-    *(f32*)(param_1 + 0xc) = lbl_803DD578->smoothedDistance * trigValue + traceFrom[0];
-    trigValue = mathCosf((lbl_803E19AC * (f32)(s32) * psVar5) / lbl_803E19B0);
-    *(f32*)(param_1 + 0x10) = lbl_803DD578->smoothedDistance * trigValue + traceFrom[2];
-    camcontrol_traceMove(traceFrom, param_1 + 0xc, traceOut, auStack176, 3, 1, 1, lbl_803E19B4);
-    *(f32*)(param_1 + 0xc) = traceOut[0];
-    *(f32*)(param_1 + 0xe) = traceOut[1];
-    *(f32*)(param_1 + 0x10) = traceOut[2];
+    clamped = clamped * (lbl_803DD578->heightAdjustRate * timeDelta);
+    *(f32*)(camObj + 0xe) = *(f32*)(camObj + 0xe) + clamped;
+    dist = lbl_803DD578->targetDistance;
+    dist = dist - lbl_803DD578->smoothedDistance;
+    dist = dist * (lbl_803E19A4 * timeDelta);
+    lbl_803DD578->smoothedDistance = lbl_803DD578->smoothedDistance + dist;
+    trigValue = mathSinf((lbl_803E19AC * (f32)(s32) * viewObj) / lbl_803E19B0);
+    traceFrom[0] = lbl_803E19A8 * trigValue + *(f32*)(viewObj + 0xc);
+    traceFrom[1] = *(f32*)(viewObj + 0xe);
+    trigValue = mathCosf((lbl_803E19AC * (f32)(s32) * viewObj) / lbl_803E19B0);
+    traceFrom[2] = lbl_803E19A8 * trigValue + *(f32*)(viewObj + 0x10);
+    trigValue = mathSinf((lbl_803E19AC * (f32)(s32) * viewObj) / lbl_803E19B0);
+    *(f32*)(camObj + 0xc) = lbl_803DD578->smoothedDistance * trigValue + traceFrom[0];
+    trigValue = mathCosf((lbl_803E19AC * (f32)(s32) * viewObj) / lbl_803E19B0);
+    *(f32*)(camObj + 0x10) = lbl_803DD578->smoothedDistance * trigValue + traceFrom[2];
+    camcontrol_traceMove(traceFrom, camObj + 0xc, traceOut, auStack176, 3, 1, 1, lbl_803E19B4);
+    *(f32*)(camObj + 0xc) = traceOut[0];
+    *(f32*)(camObj + 0xe) = traceOut[1];
+    *(f32*)(camObj + 0x10) = traceOut[2];
     (*gCameraInterface)->getRelativePosition((f32)(u32)(u16)lbl_803DD578->relativePosition,
-                                             (int)param_1, &local_cc, &local_d0,
-                                             &local_d4, &local_d8, 0);
+                                             (int)camObj, &fd, &clamped,
+                                             &fc, &dist, 0);
     {
-        int t = 0x8000 - (u16)getAngle(local_cc, local_d4);
-        iVar4 = t - (u16) * param_1;
+        int t = 0x8000 - (u16)getAngle(fd, fc);
+        yawDelta = t - (u16) * camObj;
     }
-    if (0x8000 < iVar4)
+    if (0x8000 < yawDelta)
     {
-        iVar4 = iVar4 + -0xffff;
+        yawDelta = yawDelta + -0xffff;
     }
-    if (iVar4 < -0x8000)
+    if (yawDelta < -0x8000)
     {
-        iVar4 = iVar4 + 0xffff;
+        yawDelta = yawDelta + 0xffff;
     }
-    *param_1 += iVar4;
-    local_d0 = *(f32*)(param_1 + 0xe) -
-        (*(f32*)(psVar5 + 0xe) + (f32)(u32)(u16)
+    *camObj += yawDelta;
+    clamped = *(f32*)(camObj + 0xe) -
+        (*(f32*)(viewObj + 0xe) + (f32)(u32)(u16)
     lbl_803DD578->relativePosition
     )
     ;
-    iVar4 = (u16)getAngle(local_d0, local_d8) - (u16)param_1[1];
-    if (0x8000 < iVar4)
+    yawDelta = (u16)getAngle(clamped, dist) - (u16)camObj[1];
+    if (0x8000 < yawDelta)
     {
-        iVar4 = iVar4 + -0xffff;
+        yawDelta = yawDelta + -0xffff;
     }
-    if (iVar4 < -0x8000)
+    if (yawDelta < -0x8000)
     {
-        iVar4 = iVar4 + 0xffff;
+        yawDelta = yawDelta + 0xffff;
     }
-    param_1[1] += (iVar4 * framesThisStep) / 6;
-    Obj_TransformWorldPointToLocal(*(f32*)(param_1 + 0xc), *(f32*)(param_1 + 0xe),
-                                   *(f32*)(param_1 + 0x10), (f32*)(param_1 + 6), (f32*)(param_1 + 8),
-                                   (f32*)(param_1 + 10),
-                                   *(int*)(param_1 + 0x18));
+    camObj[1] += (yawDelta * framesThisStep) / 6;
+    Obj_TransformWorldPointToLocal(*(f32*)(camObj + 0xc), *(f32*)(camObj + 0xe),
+                                   *(f32*)(camObj + 0x10), (f32*)(camObj + 6), (f32*)(camObj + 8),
+                                   (f32*)(camObj + 10),
+                                   *(int*)(camObj + 0x18));
 }

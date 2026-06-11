@@ -88,135 +88,135 @@ extern f64 lbl_803E4DF0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimbossfire_update(int param_1)
+void dimbossfire_update(int obj)
 {
-    uint uVar1;
-    int* piVar2;
-    int iVar3;
-    int iVar4;
-    byte* pbVar5;
-    float fVar6;
+    uint bitVal;
+    int* light;
+    int ref;
+    int placement;
+    byte* state;
+    float heat;
 
-    pbVar5 = ((GameObject*)param_1)->extra;
-    iVar4 = *(int*)&((GameObject*)param_1)->anim.placementData;
-    if ((int)*(short*)(iVar4 + 0x20) != 0xffffffff)
+    state = ((GameObject*)obj)->extra;
+    placement = *(int*)&((GameObject*)obj)->anim.placementData;
+    if ((int)*(short*)(placement + 0x20) != 0xffffffff)
     {
-        uVar1 = GameBit_Get((int)*(short*)(iVar4 + 0x20));
-        if (uVar1 != 0)
+        bitVal = GameBit_Get((int)*(short*)(placement + 0x20));
+        if (bitVal != 0)
         {
-            GameBit_Set((int)*(short*)(iVar4 + 0x20), 0);
-            *pbVar5 = *pbVar5 | 1;
-            ((DimbossfireState*)pbVar5)->unk4 = lbl_80325D68[pbVar5[1]];
-            ((DimbossfireState*)pbVar5)->unk8 = ((DimbossfireState*)pbVar5)->unk4;
-            pbVar5[1] = pbVar5[1] + 1;
-            if (pbVar5[1] >= 10)
+            GameBit_Set((int)*(short*)(placement + 0x20), 0);
+            *state = *state | 1;
+            ((DimbossfireState*)state)->unk4 = lbl_80325D68[state[1]];
+            ((DimbossfireState*)state)->unk8 = ((DimbossfireState*)state)->unk4;
+            state[1] = state[1] + 1;
+            if (state[1] >= 10)
             {
-                pbVar5[1] = 0;
+                state[1] = 0;
             }
         }
     }
     else
     {
-        ((DimbossfireState*)pbVar5)->unkC = ((DimbossfireState*)pbVar5)->unkC - timeDelta;
-        if (((DimbossfireState*)pbVar5)->unkC <= lbl_803E4DA0)
+        ((DimbossfireState*)state)->unkC = ((DimbossfireState*)state)->unkC - timeDelta;
+        if (((DimbossfireState*)state)->unkC <= lbl_803E4DA0)
         {
-            ((DimbossfireState*)pbVar5)->unkC = (f32)(int)
+            ((DimbossfireState*)state)->unkC = (f32)(int)
             randomGetRange(0xf0, 0x1e0);
-            *pbVar5 = *pbVar5 | 1;
-            ((DimbossfireState*)pbVar5)->unk4 = lbl_80325D68[pbVar5[1]];
-            ((DimbossfireState*)pbVar5)->unk8 = ((DimbossfireState*)pbVar5)->unk4;
-            pbVar5[1] = pbVar5[1] + 1;
-            if (pbVar5[1] >= 10)
+            *state = *state | 1;
+            ((DimbossfireState*)state)->unk4 = lbl_80325D68[state[1]];
+            ((DimbossfireState*)state)->unk8 = ((DimbossfireState*)state)->unk4;
+            state[1] = state[1] + 1;
+            if (state[1] >= 10)
             {
-                pbVar5[1] = 0;
+                state[1] = 0;
             }
         }
     }
-    if (((DimbossfireState*)pbVar5)->unk4 > lbl_803E4DA0)
+    if (((DimbossfireState*)state)->unk4 > lbl_803E4DA0)
     {
-        if ((*pbVar5 & 1) != 0)
+        if ((*state & 1) != 0)
         {
-            *pbVar5 = *pbVar5 & 0xfe;
-            ObjHits_SetHitVolumeSlot(param_1, 9, 1, 0);
-            ObjHitbox_SetSphereRadius(param_1, 0xf);
-            ObjHits_EnableObject(param_1);
-            if ((((GameObject*)param_1)->objectFlags & 0x800) != 0)
+            *state = *state & 0xfe;
+            ObjHits_SetHitVolumeSlot(obj, 9, 1, 0);
+            ObjHitbox_SetSphereRadius(obj, 0xf);
+            ObjHits_EnableObject(obj);
+            if ((((GameObject*)obj)->objectFlags & 0x800) != 0)
             {
-                iVar3 = 0;
+                ref = 0;
                 do
                 {
-                    if (*(short*)(iVar4 + 0x1a) == 0)
+                    if (*(short*)(placement + 0x1a) == 0)
                     {
-                        (*gPartfxInterface)->spawnObject((void*)param_1, 0x4cc, NULL, 2, -1, NULL);
+                        (*gPartfxInterface)->spawnObject((void*)obj, 0x4cc, NULL, 2, -1, NULL);
                     }
                     else
                     {
-                        (*gPartfxInterface)->spawnObject((void*)param_1, 0x4c9, NULL, 2, -1, NULL);
+                        (*gPartfxInterface)->spawnObject((void*)obj, 0x4c9, NULL, 2, -1, NULL);
                     }
-                    iVar3 = iVar3 + 1;
+                    ref = ref + 1;
                 }
-                while (iVar3 < 0x32);
+                while (ref < 0x32);
             }
-            iVar3 = Obj_GetPlayerObject();
-            if ((iVar3 != 0) && ((*(ushort*)(iVar3 + 0xb0) & 0x1000) == 0))
+            ref = Obj_GetPlayerObject();
+            if ((ref != 0) && ((*(ushort*)(ref + 0xb0) & 0x1000) == 0))
             {
-                fVar6 = Vec_distance((float*)&((GameObject*)param_1)->anim.worldPosX, (float*)(iVar3 + 0x18));
-                if (fVar6 <= lbl_803E4DA4)
+                heat = Vec_distance((float*)&((GameObject*)obj)->anim.worldPosX, (float*)(ref + 0x18));
+                if (heat <= lbl_803E4DA4)
                 {
-                    fVar6 = lbl_803E4DA8 - fVar6 / lbl_803E4DA4;
-                    CameraShake_Start(lbl_803E4DAC * fVar6, lbl_803E4DAC, lbl_803E4DB0);
-                    doRumble(lbl_803E4DB4 * fVar6);
+                    heat = lbl_803E4DA8 - heat / lbl_803E4DA4;
+                    CameraShake_Start(lbl_803E4DAC * heat, lbl_803E4DAC, lbl_803E4DB0);
+                    doRumble(lbl_803E4DB4 * heat);
                 }
             }
-            if (((DimbossfireState*)pbVar5)->light == 0)
+            if (((DimbossfireState*)state)->light == 0)
             {
-                piVar2 = (int*)objCreateLight(param_1, 1);
-                *(int**)&((DimbossfireState*)pbVar5)->light = piVar2;
-                if (((DimbossfireState*)pbVar5)->light != 0)
+                light = (int*)objCreateLight(obj, 1);
+                *(int**)&((DimbossfireState*)state)->light = light;
+                if (((DimbossfireState*)state)->light != 0)
                 {
-                    modelLightStruct_setLightKind(((DimbossfireState*)pbVar5)->light, 2);
-                    lightSetFieldBC_8001db14(((DimbossfireState*)pbVar5)->light, 1);
-                    if (*(short*)(iVar4 + 0x1a) == 0)
+                    modelLightStruct_setLightKind(((DimbossfireState*)state)->light, 2);
+                    lightSetFieldBC_8001db14(((DimbossfireState*)state)->light, 1);
+                    if (*(short*)(placement + 0x1a) == 0)
                     {
-                        modelLightStruct_setDiffuseColor(((DimbossfireState*)pbVar5)->light, 0x7f, 0xff, 0, 0);
+                        modelLightStruct_setDiffuseColor(((DimbossfireState*)state)->light, 0x7f, 0xff, 0, 0);
                     }
                     else
                     {
-                        modelLightStruct_setDiffuseColor(((DimbossfireState*)pbVar5)->light, 0xff, 0x7f, 0, 0);
+                        modelLightStruct_setDiffuseColor(((DimbossfireState*)state)->light, 0xff, 0x7f, 0, 0);
                     }
                     modelLightStruct_setDistanceAttenuation(lbl_803E4DB8, lbl_803E4DBC,
-                                                            ((DimbossfireState*)pbVar5)->light);
-                    modelLightStruct_setEnabled(((DimbossfireState*)pbVar5)->light, 1, lbl_803E4DA0);
-                    modelLightStruct_setEnabled(((DimbossfireState*)pbVar5)->light, 0,
-                                                ((DimbossfireState*)pbVar5)->unk4 / lbl_803E4DC0);
+                                                            ((DimbossfireState*)state)->light);
+                    modelLightStruct_setEnabled(((DimbossfireState*)state)->light, 1, lbl_803E4DA0);
+                    modelLightStruct_setEnabled(((DimbossfireState*)state)->light, 0,
+                                                ((DimbossfireState*)state)->unk4 / lbl_803E4DC0);
                 }
             }
-            Sfx_PlayFromObject(param_1, SFXar_boost16);
+            Sfx_PlayFromObject(obj, SFXar_boost16);
         }
-        ((DimbossfireState*)pbVar5)->unk4 = ((DimbossfireState*)pbVar5)->unk4 - timeDelta;
-        if (((DimbossfireState*)pbVar5)->unk4 > lbl_803E4DA0)
+        ((DimbossfireState*)state)->unk4 = ((DimbossfireState*)state)->unk4 - timeDelta;
+        if (((DimbossfireState*)state)->unk4 > lbl_803E4DA0)
         {
-            (*gPartfxInterface)->spawnObject((void*)param_1, 0x4ca, NULL, 2, -1, NULL);
-            if (*(short*)(iVar4 + 0x1a) == 0)
+            (*gPartfxInterface)->spawnObject((void*)obj, 0x4ca, NULL, 2, -1, NULL);
+            if (*(short*)(placement + 0x1a) == 0)
             {
-                (*gPartfxInterface)->spawnObject((void*)param_1, 0x4cd, NULL, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, 0x4cd, NULL, 2, -1, NULL);
             }
             else
             {
-                (*gPartfxInterface)->spawnObject((void*)param_1, 0x4cb, NULL, 2, -1, NULL);
+                (*gPartfxInterface)->spawnObject((void*)obj, 0x4cb, NULL, 2, -1, NULL);
             }
         }
         else
         {
-            ((DimbossfireState*)pbVar5)->unk4 = lbl_803E4DA0;
-            if (*(uint*)&((DimbossfireState*)pbVar5)->light != 0)
+            ((DimbossfireState*)state)->unk4 = lbl_803E4DA0;
+            if (*(uint*)&((DimbossfireState*)state)->light != 0)
             {
-                ModelLightStruct_free(*(void**)&((DimbossfireState*)pbVar5)->light);
-                ((DimbossfireState*)pbVar5)->light = 0;
+                ModelLightStruct_free(*(void**)&((DimbossfireState*)state)->light);
+                ((DimbossfireState*)state)->light = 0;
             }
-            ObjHits_SetHitVolumeSlot(param_1, 0, 0, 0);
-            ObjHitbox_SetSphereRadius(param_1, 0);
-            ObjHits_DisableObject(param_1);
+            ObjHits_SetHitVolumeSlot(obj, 0, 0, 0);
+            ObjHitbox_SetSphereRadius(obj, 0);
+            ObjHits_DisableObject(obj);
         }
     }
     return;
@@ -235,22 +235,22 @@ void dimbossfire_update(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimbossfire_init(int obj, undefined4 param_2, int param_3)
+void dimbossfire_init(int obj, undefined4 arg2, int placement)
 {
-    uint uVar1;
-    undefined uVar2;
+    uint ua;
+    undefined randVal;
     int state;
 
     state = *(int*)&((GameObject*)obj)->extra;
     ObjHits_SetHitVolumeSlot(obj, 0, 0, 0);
     ObjHitbox_SetSphereRadius(obj, 0);
     ObjHits_DisableObject(obj);
-    if (param_3 == 0)
+    if (placement == 0)
     {
         ((DimbossfireState*)state)->unkC = (f32)(int)
         randomGetRange(0xf0, 0x1e0);
-        uVar2 = randomGetRange(0, 9);
-        *(undefined*)(state + 1) = uVar2;
+        randVal = randomGetRange(0, 9);
+        *(undefined*)(state + 1) = randVal;
     }
     return;
 }
