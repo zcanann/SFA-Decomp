@@ -63,68 +63,68 @@ extern int spscarab_getExtraSize(void);
  * EN v1.0 Address: 0x801E8EE0
  * EN v1.0 Size: 588b
  */
-void spscarab_update(int param_1)
+void spscarab_update(int obj)
 {
-    int p_b8;
-    int p_4c;
+    int state;
+    int placement;
     s16 angle;
     f32 distance;
     f32 phase;        /* sp+0x10 */
     f32 outV[3];      /* sp+0x14 (output of Vec3_ReflectAgainstNormal) */
     f32 hit_buf[24];  /* sp+0x20 .. sp+0x80 (collision struct, objBboxFn_800640cc out) */
 
-    p_b8 = *(int *)&((GameObject *)param_1)->extra;
-    p_4c = *(int *)&((GameObject *)param_1)->anim.placementData;
+    state = *(int *)&((GameObject *)obj)->extra;
+    placement = *(int *)&((GameObject *)obj)->anim.placementData;
 
-    if (((GameObject *)param_1)->anim.localPosY > ((SpscarabState *)p_b8)->unk0) {
-        ((GameObject *)param_1)->anim.velocityY = ((GameObject *)param_1)->anim.velocityY - lbl_803E5A74 * timeDelta;
+    if (((GameObject *)obj)->anim.localPosY > ((SpscarabState *)state)->unk0) {
+        ((GameObject *)obj)->anim.velocityY = ((GameObject *)obj)->anim.velocityY - lbl_803E5A74 * timeDelta;
     }
 
-    objMove(param_1,
-                timeDelta * (((GameObject *)param_1)->anim.velocityX * ((SpscarabState *)p_b8)->unk4),
-                ((GameObject *)param_1)->anim.velocityY * timeDelta,
-                timeDelta * (((GameObject *)param_1)->anim.velocityZ * ((SpscarabState *)p_b8)->unk4));
+    objMove(obj,
+                timeDelta * (((GameObject *)obj)->anim.velocityX * ((SpscarabState *)state)->unk4),
+                ((GameObject *)obj)->anim.velocityY * timeDelta,
+                timeDelta * (((GameObject *)obj)->anim.velocityZ * ((SpscarabState *)state)->unk4));
 
-    distance = sqrtf(((GameObject *)param_1)->anim.velocityX * ((GameObject *)param_1)->anim.velocityX +
-                     ((GameObject *)param_1)->anim.velocityZ * ((GameObject *)param_1)->anim.velocityZ);
+    distance = sqrtf(((GameObject *)obj)->anim.velocityX * ((GameObject *)obj)->anim.velocityX +
+                     ((GameObject *)obj)->anim.velocityZ * ((GameObject *)obj)->anim.velocityZ);
 
-    ObjAnim_SampleRootCurvePhase(distance, (ObjAnimComponent *)param_1, &phase);
-    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(param_1, phase, timeDelta, 0);
+    ObjAnim_SampleRootCurvePhase(distance, (ObjAnimComponent *)obj, &phase);
+    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, phase, timeDelta, 0);
 
-    if (((GameObject *)param_1)->anim.localPosY < ((SpscarabState *)p_b8)->unk0) {
-        ((GameObject *)param_1)->anim.localPosY = ((SpscarabState *)p_b8)->unk0;
-        ((GameObject *)param_1)->anim.velocityY = lbl_803E5A78;
+    if (((GameObject *)obj)->anim.localPosY < ((SpscarabState *)state)->unk0) {
+        ((GameObject *)obj)->anim.localPosY = ((SpscarabState *)state)->unk0;
+        ((GameObject *)obj)->anim.velocityY = lbl_803E5A78;
     }
 
-    if (objBboxFn_800640cc(param_1 + 0x80, param_1 + 0xc,
-                    lbl_803E5A7C, 0, (int)&hit_buf[0] /* sp+0x20 */, param_1,
+    if (objBboxFn_800640cc(obj + 0x80, obj + 0xc,
+                    lbl_803E5A7C, 0, (int)&hit_buf[0] /* sp+0x20 */, obj,
                     8, -1, 0xff, 0xa) != 0) {
-        Vec3_ReflectAgainstNormal((int)&hit_buf[7] /* sp+0x3c */, param_1 + 0x24, (int)outV);
-        ((GameObject *)param_1)->anim.velocityX = outV[0];
-        ((GameObject *)param_1)->anim.velocityZ = outV[2];
-        angle = (s16)getAngle(-((GameObject *)param_1)->anim.velocityX, -((GameObject *)param_1)->anim.velocityZ);
-        *(s16 *)(param_1) = angle;
+        Vec3_ReflectAgainstNormal((int)&hit_buf[7] /* sp+0x3c */, obj + 0x24, (int)outV);
+        ((GameObject *)obj)->anim.velocityX = outV[0];
+        ((GameObject *)obj)->anim.velocityZ = outV[2];
+        angle = (s16)getAngle(-((GameObject *)obj)->anim.velocityX, -((GameObject *)obj)->anim.velocityZ);
+        *(s16 *)(obj) = angle;
     }
 
-    if (getXZDistance((int *)(Obj_GetPlayerObject() + 0x18), (int *)&((GameObject *)param_1)->anim.worldPosX)
+    if (getXZDistance((int *)(Obj_GetPlayerObject() + 0x18), (int *)&((GameObject *)obj)->anim.worldPosX)
         < lbl_803E5A80) {
-        Sfx_PlayFromObject(param_1, (u16)((SpscarabState *)p_b8)->sfxId);
-        itemPickupDoParticleFx(param_1, lbl_803E5A84, ((SpscarabState *)p_b8)->mode, 0x28);
-        ((GameObject *)param_1)->objectFlags = ((GameObject *)param_1)->objectFlags | 0x8000;
-        ((GameObject *)param_1)->anim.flags = ((GameObject *)param_1)->anim.flags | 0x4000;
+        Sfx_PlayFromObject(obj, (u16)((SpscarabState *)state)->sfxId);
+        itemPickupDoParticleFx(obj, lbl_803E5A84, ((SpscarabState *)state)->mode, 0x28);
+        ((GameObject *)obj)->objectFlags = ((GameObject *)obj)->objectFlags | 0x8000;
+        ((GameObject *)obj)->anim.flags = ((GameObject *)obj)->anim.flags | 0x4000;
 
         {
-            int r5val = (((SpscarabPlacement *)p_4c)->unk19 == 0) ? 1 : 0;
-            int v3 = ((SpscarabState *)p_b8)->unk8;
-            int r4val = (((SpscarabPlacement *)p_4c)->unk19 == 0) ? 0 : 1;
+            int r5val = (((SpscarabPlacement *)placement)->unk19 == 0) ? 1 : 0;
+            int v3 = ((SpscarabState *)state)->unk8;
+            int r4val = (((SpscarabPlacement *)placement)->unk19 == 0) ? 0 : 1;
             (*(void (**)(int, int, int))(*(int *)(*(int *)(v3 + 0x68)) + 0x50))(
                 v3, r4val, r5val);
         }
     }
 
-    if ((((GameObject *)param_1)->objectFlags & 0x800) != 0) {
-        if (((SpscarabState *)p_b8)->unk10 != 0) {
-            objfx_spawnDirectionalBurst(param_1, 5, lbl_803E5A84, (u8)((SpscarabState *)p_b8)->unk10, 1, 0x14,
+    if ((((GameObject *)obj)->objectFlags & 0x800) != 0) {
+        if (((SpscarabState *)state)->unk10 != 0) {
+            objfx_spawnDirectionalBurst(obj, 5, lbl_803E5A84, (u8)((SpscarabState *)state)->unk10, 1, 0x14,
                         lbl_803E5A88, 0, 0);
         }
     }

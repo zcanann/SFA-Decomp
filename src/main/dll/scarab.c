@@ -434,7 +434,7 @@ FUN_8015e0d0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8015E210(int *obj, GroundBaddieState *p)
+int fn_8015E210(int *obj, GroundBaddieState *state)
 {
   extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
   extern void *Obj_GetPlayerObject(void);
@@ -443,15 +443,15 @@ int fn_8015E210(int *obj, GroundBaddieState *p)
   int *objs;
   int count;
   int i;
-  int *player_b8;
+  int *playerChild;
   int *player;
-  int r;
+  int result;
 
-  if (*(char *)&p->baddie.moveJustStartedA != '\0') {
+  if (*(char *)&state->baddie.moveJustStartedA != '\0') {
     ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2DC8, 0);
-    *(s8 *)&p->baddie.moveDone = 0;
+    *(s8 *)&state->baddie.moveDone = 0;
   }
-  if (*(char *)&p->baddie.moveJustStartedA != '\0') {
+  if (*(char *)&state->baddie.moveJustStartedA != '\0') {
     objs = ObjList_GetObjects(&i, &count);
     for (; i < count; i++) {
       void *o = (void *)objs[i];
@@ -460,10 +460,10 @@ int fn_8015E210(int *obj, GroundBaddieState *p)
             o, 129, 0);
       }
     }
-    player_b8 = *(int **)((char *)Obj_GetPlayerObject() + 0xc8);
+    playerChild = *(int **)((char *)Obj_GetPlayerObject() + 0xc8);
     player = (int *)Obj_GetPlayerObject();
-    r = (**(int (**)(int *))(*(int *)(*(int *)&((GameObject *)player_b8)->anim.dll) + 0x44))(player_b8);
-    if (r != 0) {
+    result = (**(int (**)(int *))(*(int *)(*(int *)&((GameObject *)playerChild)->anim.dll) + 0x44))(playerChild);
+    if (result != 0) {
       if (((GameObject *)player)->anim.seqId != 0) {
         Sfx_PlayFromObject(obj, SFXfoot_metal_run_2);
       } else {
@@ -478,9 +478,9 @@ int fn_8015E210(int *obj, GroundBaddieState *p)
     }
     Sfx_PlayFromObject(obj, SFXfoxcom_stay);
   }
-  *(s8 *)&p->baddie.unk34D = 3;
-  p->baddie.moveSpeed = lbl_803E2DD4;
-  p->baddie.animSpeedA = lbl_803E2DC8;
+  *(s8 *)&state->baddie.unk34D = 3;
+  state->baddie.moveSpeed = lbl_803E2DD4;
+  state->baddie.animSpeedA = lbl_803E2DC8;
   return 0;
 }
 
@@ -972,7 +972,7 @@ int fn_8015E8BC(int obj, GroundBaddieState *p)
   return 0;
 }
 
-void fn_8015EA48(int obj, GroundBaddieState *p)
+void fn_8015EA48(int obj, GroundBaddieState *state)
 {
   extern u8 Obj_IsLoadingLocked(void);
   extern int Obj_AllocObjectSetup(int size, int id);
@@ -997,14 +997,14 @@ void fn_8015EA48(int obj, GroundBaddieState *p)
     *(u8 *)(setup + 7) = 0xff;
     o = Obj_SetupObject(setup, 5, -1, -1, 0);
     if (o != NULL) {
-      t = p->baddie.targetDistance / (f32)(u32)p->aggroRange;
+      t = state->baddie.targetDistance / (f32)(u32)state->aggroRange;
       dur = lbl_803E2DF8 * t;
       ((GameObject *)o)->anim.velocityX =
-          (*(f32 *)(*(int *)&p->baddie.targetObj + 0xc) - ((GameObject *)obj)->anim.localPosX) / dur;
+          (*(f32 *)(*(int *)&state->baddie.targetObj + 0xc) - ((GameObject *)obj)->anim.localPosX) / dur;
       ((GameObject *)o)->anim.velocityY =
-          ((lbl_803E2DFC * t + *(f32 *)(*(int *)&p->baddie.targetObj + 0x10)) - ((GameObject *)obj)->anim.localPosY) / dur;
+          ((lbl_803E2DFC * t + *(f32 *)(*(int *)&state->baddie.targetObj + 0x10)) - ((GameObject *)obj)->anim.localPosY) / dur;
       ((GameObject *)o)->anim.velocityZ =
-          (*(f32 *)(*(int *)&p->baddie.targetObj + 0x14) - ((GameObject *)obj)->anim.localPosZ) / dur;
+          (*(f32 *)(*(int *)&state->baddie.targetObj + 0x14) - ((GameObject *)obj)->anim.localPosZ) / dur;
       *(int *)&((GameObject *)o)->ownerObj = obj;
     }
   }

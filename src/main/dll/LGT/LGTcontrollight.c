@@ -27,36 +27,36 @@ extern f64 lbl_803E5ED0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_801F4C28(u8 *param_1, u8 *param_2)
+void fn_801F4C28(u8 *obj, u8 *rec)
 {
-  *(f32 *)(param_2 + 0x04) = *(f32 *)(param_1 + 0x0c);
-  *(f32 *)(param_2 + 0x14) = *(f32 *)(param_1 + 0x10);
-  *(f32 *)(param_2 + 0x24) = *(f32 *)(param_1 + 0x14);
-  *(f32 *)(param_2 + 0x08) = *(f32 *)(param_1 + 0x0c);
-  *(f32 *)(param_2 + 0x18) = *(f32 *)(param_1 + 0x10);
-  *(f32 *)(param_2 + 0x28) = *(f32 *)(param_1 + 0x14);
-  *(f32 *)(param_2 + 0x0c) = *(f32 *)(param_1 + 0x0c);
-  *(f32 *)(param_2 + 0x1c) = *(f32 *)(param_1 + 0x10);
-  *(f32 *)(param_2 + 0x2c) = *(f32 *)(param_1 + 0x14);
-  *(f32 *)(param_2 + 0x10) = *(f32 *)(param_1 + 0x0c);
-  *(f32 *)(param_2 + 0x20) = *(f32 *)(param_1 + 0x10);
-  *(f32 *)(param_2 + 0x30) = *(f32 *)(param_1 + 0x14);
-  *(f32 *)(param_2 + 0x44) = lbl_803E5EAC;
-  *(f32 *)(param_2 + 0x48) = lbl_803E5EB0;
-  *(f32 *)(param_2 + 0x40) = lbl_803E5EB4;
-  param_2[0x68] = 0;
-  param_2[0x67] = 0;
-  *(s16 *)(param_2 + 0x62) = (s16)randomGetRange(0x1f4, 0x5dc);
-  *(s16 *)(param_2 + 0x60) = (s16)randomGetRange(0, 0xfde8);
-  *(s16 *)(param_2 + 0x64) = 0x3c;
-  param_2[0x66] = 4;
-  *(f32 *)(param_2 + 0x4c) = lbl_803E5EB8;
-  *(f32 *)(param_2 + 0x50) = lbl_803E5EBC;
-  *(f32 *)(param_2 + 0x54) = *(f32 *)(param_1 + 0x0c);
-  *(f32 *)(param_2 + 0x58) = *(f32 *)(param_1 + 0x10);
-  *(f32 *)(param_2 + 0x5c) = *(f32 *)(param_1 + 0x14);
-  param_2[0x6b] = 1;
-  *(f32 *)(param_2 + 0x78) = lbl_803E5EC0;
+  *(f32 *)(rec + 0x04) = *(f32 *)(obj + 0x0c);
+  *(f32 *)(rec + 0x14) = *(f32 *)(obj + 0x10);
+  *(f32 *)(rec + 0x24) = *(f32 *)(obj + 0x14);
+  *(f32 *)(rec + 0x08) = *(f32 *)(obj + 0x0c);
+  *(f32 *)(rec + 0x18) = *(f32 *)(obj + 0x10);
+  *(f32 *)(rec + 0x28) = *(f32 *)(obj + 0x14);
+  *(f32 *)(rec + 0x0c) = *(f32 *)(obj + 0x0c);
+  *(f32 *)(rec + 0x1c) = *(f32 *)(obj + 0x10);
+  *(f32 *)(rec + 0x2c) = *(f32 *)(obj + 0x14);
+  *(f32 *)(rec + 0x10) = *(f32 *)(obj + 0x0c);
+  *(f32 *)(rec + 0x20) = *(f32 *)(obj + 0x10);
+  *(f32 *)(rec + 0x30) = *(f32 *)(obj + 0x14);
+  *(f32 *)(rec + 0x44) = lbl_803E5EAC;
+  *(f32 *)(rec + 0x48) = lbl_803E5EB0;
+  *(f32 *)(rec + 0x40) = lbl_803E5EB4;
+  rec[0x68] = 0;
+  rec[0x67] = 0;
+  *(s16 *)(rec + 0x62) = (s16)randomGetRange(0x1f4, 0x5dc);
+  *(s16 *)(rec + 0x60) = (s16)randomGetRange(0, 0xfde8);
+  *(s16 *)(rec + 0x64) = 0x3c;
+  rec[0x66] = 4;
+  *(f32 *)(rec + 0x4c) = lbl_803E5EB8;
+  *(f32 *)(rec + 0x50) = lbl_803E5EBC;
+  *(f32 *)(rec + 0x54) = *(f32 *)(obj + 0x0c);
+  *(f32 *)(rec + 0x58) = *(f32 *)(obj + 0x10);
+  *(f32 *)(rec + 0x5c) = *(f32 *)(obj + 0x14);
+  rec[0x6b] = 1;
+  *(f32 *)(rec + 0x78) = lbl_803E5EC0;
 }
 
 /*
