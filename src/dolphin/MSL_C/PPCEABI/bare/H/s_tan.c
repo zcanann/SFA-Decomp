@@ -16,7 +16,6 @@ double tan(int* out_n, float x)
     unsigned int n;
     double ax;
     double scaled;
-    IntDouble conv;
 
     ax = __fabsf(x);
     scaled = lbl_803E7C00 * ax;
