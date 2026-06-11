@@ -1,5 +1,6 @@
 #include "dolphin/card.h"
 #include "main/effect_interfaces.h"
+#include "main/gamebits.h"
 #include "main/game_object.h"
 #include "dolphin/gx.h"
 #include "dolphin/mtx.h"
@@ -2135,7 +2136,6 @@ int moonFxCb_80074110(u8 *obj, int *objB, int slot)
     extern int* Shader_getLayer(int op, int slot);
     extern int textureIdxToPtr(int idx);
     extern void selectTexture(int tex, int slot);
-    extern int GameBit_Get(int bit);
     GXColor colorK;
     GXColor colorFog;
     Mtx mtx;

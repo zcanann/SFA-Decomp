@@ -1,6 +1,7 @@
 #include "dolphin/PPCArch.h"
 #include "dolphin/gx/GXStruct.h"
 #include "main/dll/rom_curve_interface.h"
+#include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/pi_dolphin.h"
 
@@ -4383,8 +4384,6 @@ int fn_8004B218(void* q_, u32 n_)
     }
     return result;
 }
-
-extern u32 GameBit_Get(int eventId);
 extern char* lbl_803DCD08;
 extern void fn_8004AB5C(int* q, int* elem, int idx, u32 d, char* obj);
 
