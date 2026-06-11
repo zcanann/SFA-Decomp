@@ -1,4 +1,13 @@
-#include "main/dll/WM/deaddino.h"
+/*
+ * sctotempuzzle (DLL 0x1BA) - head of the SC totem-pole puzzle pair.
+ * Formerly misnamed deaddino.c: the WM_deaddino OBJECT is an instance
+ * of the earthwalker DLL (0x28A) and has no unit of its own; this
+ * address range holds sc_totempuzzle code (descriptor gResourceDescriptors
+ * [0x1BA]). NOTE: dll 0x1BA's remaining fns spill past this unit's end
+ * into dll_01BB_sctotembond.c - the interleaved layout there shows both
+ * descriptors came from one original TU (boundary fix pending).
+ */
+#include "main/dll/SC/sctotempuzzle.h"
 #include "main/objlib.h"
 
 #define SC_TOTEMPUZZLE_OBJECT_TYPE 0x3c1

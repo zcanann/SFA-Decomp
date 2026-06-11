@@ -1,9 +1,15 @@
+/*
+ * sctotembond (DLL 0x1BB) + the tail of sctotempuzzle (DLL 0x1BA).
+ * Formerly misnamed WMcrystal.c - the WM_Crystal OBJECT is handled by
+ * the wmsun DLL (0x20E), not by this unit. The sc_totempuzzle and
+ * sc_totembond fns interleave across this range (one original TU).
+ */
 #include "main/audio/sfx_ids.h"
 #include "main/obj_placement.h"
 #include "main/camera_interface.h"
 #include "main/game_ui_interface.h"
 #include "main/mapEventTypes.h"
-#include "main/dll/WM/WMcrystal.h"
+#include "main/dll/SC/sctotembond.h"
 #include "main/objfx.h"
 #include "main/objseq.h"
 #include "main/screen_transition.h"

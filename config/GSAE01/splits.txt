@@ -1200,13 +1200,10 @@ main/dll/CR/CRsnowbike.c:
 main/dll/DR/DRcloudrunner.c:
 	.text       start:0x801DC310 end:0x801DD1A8
 
-main/dll/WM/deaddino.c:
+main/dll/SC/dll_01BA_sctotempuzzle.c:
 	.text       start:0x801DD1A8 end:0x801DD46C
 
-main/dll/WM/WMlevcontrol.c:
-	.text       start:0x801DD46C end:0x801DD46C
-
-main/dll/WM/WMcrystal.c:
+main/dll/SC/dll_01BB_sctotembond.c:
 	.text       start:0x801DD46C end:0x801DE430
 
 main/dll/VF/platform1.c:

@@ -1,5 +1,5 @@
-#ifndef MAIN_DLL_WM_WMCRYSTAL_H_
-#define MAIN_DLL_WM_WMCRYSTAL_H_
+#ifndef MAIN_DLL_SC_SCTOTEMBOND_H_
+#define MAIN_DLL_SC_SCTOTEMBOND_H_
 
 #include "ghidra_import.h"
 #include "main/objanim_update.h"
@@ -78,4 +78,4 @@ void sc_totembond_update(ScTotemBondObject *obj);
 void sc_totembond_init(ScTotemBondObject *obj,int params);
 int fn_801DE320(u16 *gameBitIds,u16 newValue);
 
-#endif /* MAIN_DLL_WM_WMCRYSTAL_H_ */
+#endif /* MAIN_DLL_SC_SCTOTEMBOND_H_ */
