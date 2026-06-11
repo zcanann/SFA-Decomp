@@ -2542,9 +2542,9 @@ void* MapBlock_loadFromFile(int blockId)
         }
     }
     goto cont;
-ret0a:
-    return 0;
 ret0b:
+    return 0;
+ret0a:
     return 0;
 cont:
     if (compressedLen <= 0)
