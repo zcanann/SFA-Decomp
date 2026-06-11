@@ -1,10 +1,10 @@
 #include "main/game_object.h"
+#include "main/audio/sfx.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/rom_curve_interface.h"
 #include "main/dll/fireflyLantern.h"
 
 
-extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern int Curve_AdvanceAlongPath(int curve, f32 t);
 extern uint randomGetRange(int min, int max);
 extern undefined4 ObjHits_SetHitVolumeSlot();
@@ -59,7 +59,7 @@ void fn_80154870(int obj, int* state)
     curve = *state;
     if (state[0xb7] & 0x80000000U)
     {
-        Sfx_PlayFromObject(obj, 0x4c0);
+        Sfx_PlayFromObject((u32)obj, 0x4c0);
     }
     if (((state[0xb7] & 0x2000U) != 0) &&
         ((Curve_AdvanceAlongPath(curve, lbl_803E2990) != 0 || *(int*)(curve + 0x10) != 0) &&
@@ -113,12 +113,12 @@ void fn_80154870(int obj, int* state)
             }
             else if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E29C8)
             {
-                Sfx_PlayFromObject(obj, SFXfox_fightbreath1);
+                Sfx_PlayFromObject((u32)obj, SFXfox_fightbreath1);
                 *(f32*)(state + 0xc2) = lbl_803E29D0;
             }
             else
             {
-                Sfx_PlayFromObject(obj, SFXfox_fightbreath2);
+                Sfx_PlayFromObject((u32)obj, SFXfox_fightbreath2);
                 *(f32*)(state + 0xc2) = lbl_803E29D4;
             }
         }
@@ -130,12 +130,12 @@ void fn_80154870(int obj, int* state)
                 *(f32*)(state + 0xca) = fval;
                 if (((GameObject*)obj)->anim.currentMoveProgress > lbl_803E29C8)
                 {
-                    Sfx_PlayFromObject(obj, SFXfox_fightbreath1);
+                    Sfx_PlayFromObject((u32)obj, SFXfox_fightbreath1);
                     *(f32*)(state + 0xc2) = lbl_803E29D0;
                 }
                 else
                 {
-                    Sfx_PlayFromObject(obj, SFXfox_fightbreath2);
+                    Sfx_PlayFromObject((u32)obj, SFXfox_fightbreath2);
                     *(f32*)(state + 0xc2) = lbl_803E29B4;
                 }
             }

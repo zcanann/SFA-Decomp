@@ -1,11 +1,11 @@
 #include "main/dll/landedArwing.h"
 #include "main/dll/baddie_state.h"
 #include "main/dll/path_control_interface.h"
+#include "main/gamebits.h"
 #include "main/game_object.h"
 #include "main/objlib.h"
 
 extern void* Obj_GetPlayerObject(void);
-extern u32 GameBit_Get(int eventId);
 extern u32 randomGetRange(int min, int max);
 extern f32 fsin16Precise(u16 angle);
 extern f32 fcos16Precise(u16 angle);
