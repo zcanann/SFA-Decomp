@@ -539,16 +539,12 @@ void sideCommandEnable(int obj, int targetObj, int commandKind, int commandType)
         commandEntry = commandEntry + 8;
         commandIndex = commandIndex + 1;
     }
-    commandEntry = state + (uint)((TrickyState*)state)->unk798 * 8;
-    *(int*)(commandEntry + 0x748) = targetObj;
+    *(int*)((state + 0x748) + (uint)((TrickyState*)state)->unk798 * 8) = targetObj;
     commandKind = (s8)commandKind;
-    commandEntry = state + (uint)((TrickyState*)state)->unk798 * 8;
-    *(char*)(commandEntry + 0x74c) = (char)commandKind;
+    *(char*)((state + 0x74c) + (uint)((TrickyState*)state)->unk798 * 8) = (char)commandKind;
     commandType = (s8)commandType;
-    commandEntry = state + (uint)((TrickyState*)state)->unk798 * 8;
-    *(char*)(commandEntry + 0x74d) = (char)commandType;
-    commandEntry = state + (uint)((TrickyState*)state)->unk798 * 8;
-    *(u8*)(commandEntry + 0x74e) = 3;
+    *(char*)((state + 0x74d) + (uint)((TrickyState*)state)->unk798 * 8) = (char)commandType;
+    *(u8*)((state + 0x74e) + (uint)((TrickyState*)state)->unk798 * 8) = 3;
     *(char*)&((TrickyState*)state)->unk798 = *(char*)&((TrickyState*)state)->unk798 + '\x01';
     return;
 }
