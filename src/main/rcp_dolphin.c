@@ -3062,7 +3062,7 @@ void texRestructRefs(int mode)
     for (; i < gLoadedTextureCount; i++, entry++)
     {
         tex = entry->texture;
-        if (tex != NULL && entry->flag != 0 && ((Texture*)tex)->cached == 0 && entry->size != -1 &&
+        if (tex != NULL && entry->flag != 0 && ((Texture*)tex)->cached == 0 && (int)entry->size != -1 &&
             mmGetRegionForPtr(tex) == 0 && *(void**)tex == NULL)
         {
             size = entry->size;
@@ -3097,7 +3097,7 @@ void texRestructRefs(int mode)
         for (; i < gLoadedTextureCount; i++, entry++)
         {
             tex = entry->texture;
-            if (tex != NULL && entry->flag != 0 && ((Texture*)tex)->cached == 0 && entry->size != -1)
+            if (tex != NULL && entry->flag != 0 && ((Texture*)tex)->cached == 0 && (int)entry->size != -1)
             {
                 if (mmGetRegionForPtr(tex) == 0)
                 {
