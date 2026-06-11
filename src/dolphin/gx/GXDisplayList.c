@@ -11,12 +11,10 @@ typedef struct {
 } GXDisplayListBss;
 
 GXDisplayListBss lbl_803AECC0;
-extern volatile __GXFifoObj* lbl_803DE0F0;
+extern volatile __GXFifoObj* OldCPUFifo;
 
 #define DisplayListFifo (lbl_803AECC0.DisplayListFifo)
 #define __savedGXdata (lbl_803AECC0.savedGXdata)
-#define OldCPUFifo lbl_803DE0F0
-
 void GXBeginDisplayList(void* list, u32 size) {
     __GXFifoObj* CPUFifo = (__GXFifoObj*)GXGetCPUFifo();
 

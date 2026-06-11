@@ -3,15 +3,10 @@
 #define EXI_TX 0x800400u
 #define EXI_MAGIC 0xA5FF005A
 
-extern s32 lbl_803DE098;
-extern u32 lbl_803DE09C;
-extern u32 lbl_803DE0A0;
-extern u32 lbl_803DE0A4;
-
-#define Chan lbl_803DE098
-#define Dev lbl_803DE09C
-#define Enabled lbl_803DE0A0
-#define BarnacleEnabled lbl_803DE0A4
+extern s32 Chan;
+extern u32 Dev;
+extern u32 Enabled;
+extern u32 BarnacleEnabled;
 
 u32 InitializeUART(u32 baudRate) {
     (void)baudRate;
