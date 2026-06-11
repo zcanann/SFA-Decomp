@@ -11,8 +11,8 @@
  */
 typedef struct Torch1CDState {
     u8 unk0[0x8 - 0x0];
-    s16 unk8;
-    s16 unkA;
+    s16 flameFrame;
+    s16 flameFrameVel;
     u8 unkC[0x13 - 0xC];
     u8 unk13;
     u8 unk14;
