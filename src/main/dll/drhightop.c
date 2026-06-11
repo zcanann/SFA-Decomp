@@ -1,4 +1,5 @@
 #include "main/audio/sfx_ids.h"
+#include "main/audio/sfx.h"
 #include "main/effect_interfaces.h"
 #include "main/game_ui_interface.h"
 #include "main/game_object.h"
@@ -44,9 +45,6 @@ extern f32 lbl_803DC0D8;
 extern f32 lbl_803E5BA0;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern void PSVECScale(f32* dst, f32* src, f32 s);
-extern void Sfx_KeepAliveLoopedObjectSound(uint obj, int sfxId);
-extern void Sfx_StopObjectChannel(uint obj, int channel);
-extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern f32 lbl_803E5BBC;
 extern f32 lbl_803E5BC4;
 extern f32 lbl_803E5BD8;
@@ -107,7 +105,6 @@ extern f32 lbl_803E5BD0;
 extern f32 lbl_803E5BD4;
 extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_SetAllMagnitudes(f32 mag);
-extern void Sfx_SetObjectSfxVolume(f32 ratio, s16* obj, int sfx, int vol);
 extern f32 powfBitEstimate(f32 base, f32 exp);
 extern f32 mathSinf(f32 x);
 extern f32 sqrtf(f32);
@@ -251,13 +248,13 @@ void fn_801EB0D4(uint obj, int stateRaw)
             }
             if (st->airMeterCurrent < lbl_803E5B84)
             {
-                Sfx_KeepAliveLoopedObjectSound(obj, 0x44e);
+                Sfx_KeepAliveLoopedObjectSound((u32)obj, 0x44e);
             }
             (*gGameUIInterface)->runAirMeter((s32)st->airMeterCurrent);
         }
         else
         {
-            Sfx_StopObjectChannel(obj, 0x7f);
+            Sfx_StopObjectChannel((u32)obj, 0x7f);
             if (st->unk464 > lbl_803E5B20)
             {
                 if ((u32)randomGetRange(0, 10) == 0)
@@ -541,11 +538,11 @@ void fn_801EB940(short* obj, int stateRaw)
                 doRumble(st->unk424 * fa);
                 Camera_EnableViewYOffset();
                 CameraShake_SetAllMagnitudes(st->unk424 / lbl_803E5BC0);
-                Sfx_PlayFromObject((int)obj, 0x3bc);
+                Sfx_PlayFromObject((u32)obj, 0x3bc);
                 fb = (lbl_803E5B40 < lbl_803E5BC4 * st->unk424)
                          ? lbl_803E5B40
                          : lbl_803E5BC4 * st->unk424;
-                Sfx_SetObjectSfxVolume(lbl_803E5B20, obj, 0x3bc, (int)fb);
+                Sfx_SetObjectSfxVolume((u32)obj, 0x3bc, (u8)(int)fb, lbl_803E5B20);
             }
         }
         ((HightopFlagsB*)&st->flags428)->resetLatch = 0;
