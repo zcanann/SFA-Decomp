@@ -9,118 +9,27 @@
 #include "main/objseq.h"
 #include "main/dll/DIM/DIMsnowball.h"
 
-extern undefined4 FUN_800067c0();
-extern undefined4 FUN_80006818();
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_800068cc();
-extern undefined4 FUN_800068d0();
-extern undefined4 FUN_80006c88();
-extern undefined4 FUN_80017680();
-extern undefined4 FUN_80017688();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-extern double FUN_80017708();
-extern double FUN_80017714();
-extern int FUN_80017730();
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_80017a28();
-extern undefined4 FUN_80017a6c();
-extern undefined4 FUN_80017a78();
-extern int FUN_80017a90();
-extern int FUN_80017a98();
-extern void* FUN_80017aa4();
-extern undefined4 FUN_80017ac8();
-extern int FUN_80017ae4();
-extern uint FUN_80017ae8();
-extern int FUN_80017af8();
-extern int FUN_8002fc3c();
-extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_DisableObject();
 extern int ObjHits_GetPriorityHit();
-extern int ObjGroup_FindNearestObject();
-extern void* ObjGroup_GetObjects();
 extern int ObjHits_PollPriorityHitWithCooldown();
 extern undefined4 ObjLink_DetachChild();
 extern undefined4 ObjLink_AttachChild();
 extern int ObjTrigger_IsSetById();
 extern int ObjTrigger_IsSet();
-extern undefined4 FUN_8003b280();
-extern undefined4 FUN_8003b818();
 extern void objRenderFn_8003b8f4(f32);
-extern undefined4 FUN_80048000();
-extern undefined4 FUN_8004800c();
-extern undefined4 FUN_80080f14();
-extern undefined4 FUN_800810e8();
-extern undefined4 FUN_800810f8();
-extern undefined4 FUN_80081120();
 extern undefined4 FUN_8008112c();
-extern undefined4 FUN_801141e8();
-extern undefined4 FUN_801149bc();
-extern undefined4 FUN_80114b10();
 extern undefined4 dll_2E_func03();
 extern void dll_2E_func06(int* obj, void* state, int flags);
-extern undefined4 FUN_801150ac();
-extern undefined4 FUN_8012f744();
-extern char FUN_80132034();
-extern double FUN_8014cbcc();
-extern undefined4 FUN_8014ccac();
-extern undefined4 FUN_801aa4a4();
-extern undefined4 SH_LevelControl_runBloopEvent();
-extern undefined4 FUN_801d8480();
-extern undefined4 FUN_80286834();
-extern undefined8 FUN_8028683c();
-extern undefined4 FUN_80286880();
-extern undefined4 FUN_80286888();
-extern byte FUN_80294c20();
-extern int FUN_80294c54();
 
-extern undefined4 DAT_80324048;
-extern undefined4 DAT_80324058;
-extern undefined4 DAT_80324068;
 extern ObjectTriggerInterface** gObjectTriggerInterface;
-extern undefined4* DAT_803dd6e8;
-extern undefined4* DAT_803dd718;
-extern undefined4 DAT_803de7b8;
-extern undefined4 DAT_803e52e8;
-extern undefined4 DAT_803e52ec;
-extern undefined4 DAT_803e52f0;
-extern undefined4 DAT_803e52f4;
-extern f64 DOUBLE_803e52e0;
-extern f64 DOUBLE_803e5338;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E52B0;
-extern f32 lbl_803E52B4;
 extern f32 lbl_803E4660;
-extern f32 lbl_803E52BC;
-extern f32 lbl_803E52C0;
-extern f32 lbl_803E52C4;
-extern f32 lbl_803E52C8;
-extern f32 lbl_803E52CC;
-extern f32 lbl_803E52D0;
-extern f32 lbl_803E52D4;
-extern f32 lbl_803E52D8;
-extern f32 lbl_803E52FC;
-extern f32 lbl_803E5300;
-extern f32 lbl_803E5308;
 extern f32 lbl_803E530C;
 extern f32 lbl_803E5310;
 extern f32 lbl_803E5314;
-extern f32 lbl_803E5318;
-extern f32 lbl_803E531C;
-extern f32 lbl_803E5320;
-extern f32 lbl_803E5324;
-extern f32 lbl_803E5328;
-extern f32 lbl_803E5330;
-extern f32 lbl_803E5340;
-extern f32 lbl_803E5344;
-extern f32 lbl_803E5348;
-extern f32 lbl_803E534C;
-extern f32 lbl_803E5350;
-extern f32 lbl_803E5354;
-extern f32 lbl_803E5358;
-extern f32 lbl_803E535C;
 extern f32 lbl_803E5360;
-extern f32 lbl_803E5368;
 
 /*
  * --INFO--
@@ -178,30 +87,30 @@ void FUN_801aaa6c(double param_1, int param_2, int param_3)
 {
     if ((double)lbl_803E530C == param_1)
     {
-        *(undefined*)(param_2 + 0x10) = 0xc;
+        *(u8*)(param_2 + 0x10) = 0xc;
         return;
     }
     if ((*(byte*)(param_2 + 0x11) & 2) != 0)
     {
-        *(undefined*)(param_2 + 0x10) = 1;
+        *(u8*)(param_2 + 0x10) = 1;
         return;
     }
     if ((double)lbl_803E5310 <= param_1)
     {
-        *(undefined*)(param_2 + 0x10) = 2;
+        *(u8*)(param_2 + 0x10) = 2;
         return;
     }
     if ((*(short*)(param_3 + 0xa0) == 0x18) && (lbl_803E5314 < *(float*)(param_3 + 0x98)))
     {
-        *(undefined*)(param_2 + 0x10) = 8;
+        *(u8*)(param_2 + 0x10) = 8;
         return;
     }
     if (*(short*)(param_3 + 0xa0) == 0x19)
     {
-        *(undefined*)(param_2 + 0x10) = 5;
+        *(u8*)(param_2 + 0x10) = 5;
         return;
     }
-    *(undefined*)(param_2 + 0x10) = 0xb;
+    *(u8*)(param_2 + 0x10) = 0xb;
     return;
 }
 
@@ -524,7 +433,6 @@ extern f32 timeDelta;
 extern f32 vec3f_distanceSquared(f32 * p1, f32 * p2);
 extern void characterDoEyeAnims(int obj, void* p);
 extern void* Obj_GetPlayerObject(void);
-extern void ObjHits_DisableObject_xx(int* obj);
 
 void ccqueen_update(int* obj)
 {
