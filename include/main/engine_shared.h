@@ -478,7 +478,7 @@ extern u32 gAudioResetting;
 extern u32 gAudioManagedChannelMask;
 extern u32 gAudioActiveChannelMask;
 extern u8 gAudioInitStarted;
-extern s32 lbl_803DD610;
+extern s32 gAttractMovieState;
 extern u8 gAudioStreamDefaultVolume;
 extern u8 gAudioStreamVolumeLeft;
 extern u8 gAudioStreamVolumeRight;

@@ -245,15 +245,15 @@ int alignUp2(int x)
 }
 
 
-extern int lbl_803DD610;
-extern void* lbl_803DD61C;
+extern int gAttractMovieState;
+extern void* gAttractMovieScratchBuffer;
 
 
 void* getCache(void)
 {
-    if (lbl_803DD610 != 4 && lbl_803DD610 != 0)
+    if (gAttractMovieState != 4 && gAttractMovieState != 0)
     {
-        return lbl_803DD61C;
+        return gAttractMovieScratchBuffer;
     }
     return (void*)0xe0000000;
 }
@@ -266,7 +266,7 @@ extern void mmFreeDeferred(void* p);
 
 void cacheQueueWait(int sync)
 {
-    if (lbl_803DD610 == 4 || lbl_803DD610 == 0)
+    if (gAttractMovieState == 4 || gAttractMovieState == 0)
     {
         LCQueueWait();
     }
@@ -1110,7 +1110,7 @@ extern void LCLoadBlocks(void* destTag, void* srcAddr, u32 numBlocks);
 
 void copyToCache(void* dst, void* src, u32 count)
 {
-    if (lbl_803DD610 != 4 && lbl_803DD610 != 0)
+    if (gAttractMovieState != 4 && gAttractMovieState != 0)
     {
         int len;
         if (count != 0)
@@ -1135,7 +1135,7 @@ extern void LCStoreBlocks(void* destAddr, void* srcTag, u32 numBlocks);
 
 void memcpyToCache(void* dst, void* src, u32 count)
 {
-    if (lbl_803DD610 != 4 && lbl_803DD610 != 0)
+    if (gAttractMovieState != 4 && gAttractMovieState != 0)
     {
         int len;
         if (count != 0)

@@ -21,28 +21,28 @@ extern void titleScreenFn_801368a4(u8 arg);
 extern void* PopReadedBuffer(void);
 extern void PushReadedBuffer2(void* arg);
 
-extern TitleMenuTextEntry lbl_8031A1D8[1];
+extern TitleMenuTextEntry sNAttractModeStringBlock[1];
 extern TitleMenuTextEntry lbl_8031A214[4];
 extern OSMessageQueue lbl_803A4460;
 extern OSMessageQueue lbl_803A4480;
 extern OSThread lbl_803A54A0;
 extern u8* lbl_803DD498;
 extern u8 lbl_803DB424;
-extern s32 lbl_803DD610;
-extern u8 lbl_803DD614;
+extern s32 gAttractMovieState;
+extern u8 gTitleMenuSelection;
 extern u8 gTitleMenuSelectionFade;
-extern u8 lbl_803DD619;
+extern u8 gAttractMoviePreparePending;
 extern u8 gAttractMovieAutoplayEnabled;
 extern s32 gTitleMenuInputCooldown;
 extern u8 gAttractMovieReplayCountdown;
-extern u8 lbl_803DD64D;
+extern u8 gAttractMovieRetraceCountdown;
 extern u8 gTitleMenuReadyForInput;
-extern u8 lbl_803DD64F;
+extern u8 gAttractMoviePlaybackEnabled;
 extern u8 gTitleMenuNextDllId;
 extern u8 gTitleMenuLoadDelay;
 extern u8 gTitleMenuPanelOpen;
 extern u8 gAttractMovieLoopCompleted;
-extern s32 lbl_803DD698;
+extern s32 gAttractMovieIdleFrameCount;
 extern s32 gAttractMovieAudioThreadActive;
 extern TitleMenuControl* gScreenTransitionInterface;
 extern TitleMenuControl* gTitleMenuLinkInterface;
@@ -86,7 +86,7 @@ void TitleMenu_initialise(void)
     if (mode == 3)
     {
         ((void (**)(TitleMenuTextEntry*, int, int, int, int, int, int, int, int, int, int, int))
-            gTitleMenuLinkInterface->vtable)[1](lbl_8031A1D8, 1, 0, 0, 0, 0, 0x14, 200, 0xff, 0xff, 0xff, 0xff);
+            gTitleMenuLinkInterface->vtable)[1](sNAttractModeStringBlock, 1, 0, 0, 0, 0, 0x14, 200, 0xff, 0xff, 0xff, 0xff);
         gTitleMenuPanelOpen = 0;
     }
     else

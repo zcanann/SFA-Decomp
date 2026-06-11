@@ -45,7 +45,7 @@ void audioStopAll(void)
     AudioStream_StopCurrent();
     gAudioManagedChannelMask &= ~0xfU;
     gAudioResetting = 1;
-    if ((lbl_803DD610 == 2) || (lbl_803DD610 == 3))
+    if ((gAttractMovieState == 2) || (gAttractMovieState == 3))
     {
         Movie_SetVolumeFade(0, 500);
     }

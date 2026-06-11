@@ -46,7 +46,7 @@ extern undefined4 lbl_803E1D38;
 extern undefined4 lbl_803E1D3C;
 extern undefined4 lbl_803E1D40;
 extern f32 lbl_803E1D44;
-extern s32 lbl_803DD610;
+extern s32 gAttractMovieState;
 extern s32 lbl_803DD660;
 extern AIDCallback lbl_803DD668;
 extern s32 lbl_803DD66C;
@@ -507,7 +507,7 @@ void fn_80118240(void)
 {
     AttractMovieTextureSet* textureSet;
 
-    if (lbl_803DD610 == 2)
+    if (gAttractMovieState == 2)
     {
         textureSet = lbl_803A5D60.curTextureSet;
         fn_8004C7AC(textureSet->yTexture, textureSet->uTexture, textureSet->vTexture,
@@ -536,7 +536,7 @@ uint AttractMovie_DrawTextureCallback(undefined4 param_1, undefined4* modelPtr, 
         renderOp = NULL;
     }
 
-    if (((renderOp == NULL) || (renderOp[0x29] == 1)) && (lbl_803DD610 == 2))
+    if (((renderOp == NULL) || (renderOp[0x29] == 1)) && (gAttractMovieState == 2))
     {
         textureSet = lbl_803A5D60.curTextureSet;
         THPPlayerDrawCurrentFrame(textureSet->yTexture, textureSet->uTexture, textureSet->vTexture,

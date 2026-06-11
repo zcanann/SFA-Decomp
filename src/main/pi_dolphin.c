@@ -7648,7 +7648,7 @@ extern int lbl_803DCCA0;
 extern u16 lbl_803DCCAA;
 extern u8 lbl_803DCCA9;
 extern int lbl_803DB5C8;
-extern int lbl_803DD610;
+extern int gAttractMovieState;
 extern s16 gDepthReadPendingQueue[];
 extern s16 gDepthReadResults[];
 extern u16 gDepthReadPendingCount;
@@ -7925,7 +7925,7 @@ void videoFn_800499e8(void)
     u16* src;
     u16* dst;
 
-    if (lbl_803DD610 == 2 || lbl_803DD610 == 3)
+    if (gAttractMovieState == 2 || gAttractMovieState == 3)
     {
         THPPlayerPostDrawDone();
     }

@@ -17,7 +17,7 @@ extern void gameTextBoxFn_80134d40(int param_1, int param_2, int param_3);
 extern void titleScreenPositionElements(f32 param_1, f32 param_2);
 extern void titleScreenTextDrawFunc(void);
 
-extern char lbl_8031A1D8[];
+extern char sNAttractModeStringBlock[];
 static char sNRarewareReportTag[] = "n_rareware\n";
 
 extern void* mmAlloc(int size, int heap, int flags);
@@ -40,22 +40,22 @@ extern u8 lbl_803DD608;
 extern s8 lbl_803DD609;
 extern u8 lbl_803DD60A;
 extern u8 gTitleMenuSelectionFade;
-extern int lbl_803DD610;
-extern u8 lbl_803DD614;
-extern u8 lbl_803DD619;
-extern void* lbl_803DD61C;
-extern void* lbl_803DD620;
-extern void* lbl_803DD624;
-extern void* lbl_803DD628;
-extern void* lbl_803DD62C;
-extern void* lbl_803DD630;
-extern void* lbl_803DD634;
-extern NAttractModeMovieDims lbl_803DD638;
-extern int lbl_803DD640;
-extern int lbl_803DD644;
-extern u8 lbl_803DD64D;
-extern u8 lbl_803DD64F;
-extern int lbl_803DD698;
+extern int gAttractMovieState;
+extern u8 gTitleMenuSelection;
+extern u8 gAttractMoviePreparePending;
+extern void* gAttractMovieScratchBuffer;
+extern void* gAttractMovieWorkBuffer;
+extern void* gAttractMovieOptionalBuffer;
+extern void* gAttractMovieBuffer3;
+extern void* gAttractMovieBuffer2;
+extern void* gAttractMovieBuffer1;
+extern void* gAttractMovieBuffer0;
+extern NAttractModeMovieDims gAttractMovieDims;
+extern int gAttractMovieOffsetY;
+extern int gAttractMovieOffsetX;
+extern u8 gAttractMovieRetraceCountdown;
+extern u8 gAttractMoviePlaybackEnabled;
+extern int gAttractMovieIdleFrameCount;
 extern u16* gRenderModeObj;
 extern f32 lbl_803E1D10;
 extern f32 lbl_803E1D14;
@@ -66,8 +66,6 @@ extern f32 lbl_803E1D18;
 #define NATTRACTMODE_RESTRUCT_MOVIE_OFFSET 0x18C
 #define NATTRACTMODE_SOURCE_FILE_OFFSET 0x1B4
 #define NATTRACTMODE_FAIL_TO_PREPARE_OFFSET 0x1C4
-#define sNAttractModeStringBlock lbl_8031A1D8
-
 /*
  * --INFO--
  *

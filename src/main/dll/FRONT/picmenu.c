@@ -39,7 +39,7 @@ extern u32 lbl_803DD678;
 extern s32 lbl_803DD688;
 extern s32 lbl_803DD690;
 extern s32 lbl_803DD694;
-extern u32 lbl_803DD698;
+extern u32 gAttractMovieIdleFrameCount;
 
 /* Forward declarations needed by OSCreateThread */
 void THPRead_Reader(void);
@@ -452,7 +452,7 @@ void AttractMovieVideo_Decode(void* param)
                     player2->videoDecodeCount++;
                     OSRestoreInterrupts(intr);
                 }
-                lbl_803DD698 = 0;
+                gAttractMovieIdleFrameCount = 0;
             }
             dvdData += *compSizes;
             compSizes++;
