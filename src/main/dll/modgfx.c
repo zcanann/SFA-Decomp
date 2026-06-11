@@ -547,289 +547,29 @@ static ModgfxActiveEffect** modgfx_getActiveEffectRegistry(void)
 }
 
 extern undefined4 FUN_800033a8();
-extern undefined4 FUN_80003494();
 extern void* memcpy(void* dst, const void* src, u32 n);
-extern int FUN_80006714();
-extern undefined4 FUN_8000680c();
-extern undefined4 FUN_80006824();
-extern undefined4 FUN_800068d4();
-extern undefined4 FUN_80006930();
-extern undefined4 FUN_80006974();
-extern void* FUN_800069a8();
-extern undefined4 FUN_80006b0c();
-extern undefined4 FUN_80006b14();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
-extern undefined4 FUN_80017704();
-extern uint FUN_80017730();
 extern undefined4 FUN_80017748();
-extern undefined4 FUN_80017754();
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_80017778();
 extern undefined4 FUN_80017814();
 extern uint FUN_80017830();
 extern void* mmAlloc(int size, int heap, int flags);
-extern undefined4 FUN_80017970();
-extern undefined4 FUN_80017a54();
-extern int FUN_80017a98();
-extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ac8();
-extern int FUN_80017ae4();
-extern uint FUN_80017ae8();
-extern undefined4 FUN_80017b00();
-extern undefined4 FUN_8004812c();
-extern undefined4 FUN_8005360c();
-extern undefined4 FUN_80053740();
 extern undefined4 FUN_80053754();
-extern undefined4 FUN_8005398c();
 extern void fn_8005D108();
-extern undefined4 FUN_8005d340();
-extern undefined4 FUN_8005d370();
-extern undefined4 FUN_80063a74();
 extern void trackDolphin_buildSweptBounds(uint* boundsOut, float* startPoints, float* endPoints,
                                           float* radii, int pointCount);
 extern void trackDolphin_getCurrentTrackPoint(uint * *param_1);
 extern void trackDolphin_getCurrentIntersectionList(int* entryCountOut, undefined4* entryListOut);
-extern undefined4 FUN_80071204();
-extern undefined4 FUN_800712d4();
-extern undefined4 FUN_80071584();
-extern undefined4 FUN_80071658();
-extern undefined4 FUN_800719dc();
-extern undefined4 FUN_80071ab0();
-extern undefined4 FUN_80071e78();
-extern undefined4 FUN_80071f8c();
-extern undefined4 FUN_80071f90();
-extern undefined4 FUN_800723a0();
-extern undefined4 FUN_8007f3c8();
-extern undefined4 FUN_8007f718();
-extern undefined4 FUN_8007f960();
-extern undefined4 FUN_80080f8c();
-extern undefined4 FUN_80135814();
 extern undefined4 FUN_802420e0();
 extern void DCFlushRange(void* addr, u32 nBytes);
-extern undefined4 FUN_80247618();
-extern undefined4 FUN_80247bf8();
-extern undefined4 FUN_80259288();
-extern undefined4 FUN_8025d80c();
-extern undefined8 FUN_80286818();
-extern undefined4 FUN_80286820();
-extern undefined4 FUN_80286824();
-extern undefined4 FUN_80286828();
-extern undefined8 FUN_80286834();
-extern undefined8 FUN_80286838();
-extern undefined8 FUN_8028683c();
 extern undefined8 FUN_80286840();
-extern undefined4 FUN_80286864();
-extern undefined4 FUN_8028686c();
-extern undefined4 FUN_80286870();
-extern undefined4 FUN_80286874();
-extern undefined4 FUN_80286880();
-extern undefined4 FUN_80286884();
-extern undefined4 FUN_80286888();
 extern undefined4 FUN_8028688c();
-extern undefined4 FUN_80293544();
-extern double FUN_80293900();
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294964();
 
-extern undefined DAT_80000100;
-extern undefined DAT_80000108;
-extern undefined4 DAT_80000119;
-extern undefined4 DAT_80000200;
-extern undefined DAT_80000201;
-extern undefined4 DAT_802c28e0;
-extern undefined4 DAT_802c28e4;
-extern undefined4 DAT_802c28e8;
-extern undefined4 DAT_802c28ec;
-extern undefined4 DAT_803109a8;
-extern undefined4 DAT_803109ac;
-extern undefined4 DAT_803109b0;
-extern undefined4 DAT_803109f8;
-extern undefined4 DAT_80310a88;
-extern undefined4 DAT_80310b18;
-extern undefined2 DAT_80310ba8;
-extern undefined4 DAT_80310bb2;
-extern undefined4 DAT_80310f88;
-extern undefined DAT_80310fac;
-extern undefined4 DAT_80310fd0;
-extern undefined4 DAT_8031105c;
-extern undefined4 DAT_80311120;
-extern undefined4 DAT_80311124;
-extern undefined4 DAT_80311128;
-extern undefined4 DAT_8031112c;
-extern undefined4 DAT_80311130;
-extern undefined4 DAT_80311134;
-extern undefined4 DAT_80311138;
-extern undefined4 DAT_8031113c;
-extern undefined4 DAT_80311140;
-extern undefined4 DAT_80311144;
-extern undefined4 DAT_80311148;
-extern undefined4 DAT_8031114c;
-extern undefined4 DAT_80311150;
-extern undefined4 DAT_80311154;
-extern undefined4 DAT_80311158;
-extern undefined4 DAT_8031115c;
-extern undefined4 DAT_80311160;
-extern undefined4 DAT_80311164;
-extern undefined4 DAT_80311168;
-extern undefined4 DAT_8031116c;
-extern undefined4 DAT_80311170;
-extern undefined4 DAT_80311174;
-extern undefined4 DAT_80311178;
-extern undefined4 DAT_8031117c;
-extern undefined4 DAT_80311180;
-extern undefined4 DAT_80311184;
-extern undefined4 DAT_80311188;
-extern undefined4 DAT_8031118c;
-extern undefined4 DAT_80311190;
-extern undefined4 DAT_80311194;
-extern undefined4 DAT_80311198;
-extern undefined4 DAT_8031119c;
-extern undefined4 DAT_803111a0;
-extern undefined4 DAT_803111a4;
-extern undefined4 DAT_803111a8;
-extern undefined4 DAT_803111ac;
-extern undefined4 DAT_803111b0;
-extern undefined4 DAT_803111b4;
-extern undefined4 DAT_803111b6;
-extern undefined4 DAT_803111b8;
-extern undefined4 DAT_803111ba;
-extern undefined4 DAT_803111bc;
-extern undefined4 DAT_803111be;
-extern undefined4 DAT_803111c0;
-extern undefined4 DAT_803111c1;
-extern undefined4 DAT_8031122c;
-extern undefined DAT_80380209;
-extern int DAT_8039b7b8;
-extern undefined4 DAT_8039c7c8;
-extern undefined4 DAT_8039c7cc;
-extern undefined4 DAT_8039c7d0;
-extern undefined4 DAT_8039c7d4;
 extern ExpgfxSpawnConfig gExpgfxSpawnConfig;
-extern undefined4 DAT_8039cf40;
-extern undefined4 DAT_8039cf42;
-extern undefined4 DAT_8039cf44;
-extern undefined4 DAT_8039cf46;
-extern undefined4 DAT_8039cf48;
-extern undefined4 DAT_8039cf4a;
-extern undefined4 DAT_8039cf4c;
-extern undefined4 DAT_8039cf4e;
-extern undefined4 DAT_8039cf50;
-extern undefined4 DAT_8039cf52;
-extern undefined4 DAT_8039cf54;
-extern undefined4 DAT_8039cf56;
-extern undefined4 DAT_8039cf58;
-extern undefined4 DAT_8039cf5a;
-extern undefined4 DAT_8039cf5c;
-extern undefined4 DAT_8039cf5e;
-extern undefined4 DAT_8039cf60;
-extern undefined4 DAT_8039cf62;
-extern undefined4 DAT_8039cf64;
-extern undefined4 DAT_8039cf66;
-extern undefined2 DAT_8039cf68;
-extern undefined4 DAT_8039cf6a;
-extern undefined4 DAT_8039cf6c;
-extern undefined4 DAT_8039cf6e;
-extern undefined4 DAT_8039cf70;
-extern undefined4 DAT_8039cf74;
-extern undefined4 DAT_8039cf78;
-extern undefined4 DAT_8039cf7c;
-extern undefined4 DAT_8039cf80;
-extern undefined4 DAT_8039cf82;
-extern undefined4 DAT_8039cf84;
-extern undefined4 DAT_8039cf88;
-extern undefined4 DAT_8039cf8c;
-extern undefined4 DAT_8039cf90;
-extern undefined4 DAT_8039cf94;
-extern undefined4 DAT_8039cf98;
-extern undefined4 DAT_8039cf9a;
-extern undefined4 DAT_8039cf9c;
-extern undefined4 DAT_8039cfa0;
-extern undefined4 DAT_8039cfa4;
-extern undefined4 DAT_8039cfa8;
-extern undefined4 DAT_8039cfac;
-extern undefined4 DAT_8039cfb0;
-extern undefined4 DAT_8039cfb2;
-extern undefined4 DAT_8039cfb4;
-extern undefined4 DAT_8039cfb8;
-extern undefined4 DAT_8039cfbc;
-extern undefined4 DAT_8039cfc0;
-extern undefined4 DAT_8039cfc4;
-extern undefined4 DAT_8039cfc8;
-extern undefined4 DAT_8039cfca;
-extern undefined4 DAT_8039cfcc;
-extern undefined4 DAT_8039cfd0;
-extern undefined4 DAT_8039cfd4;
-extern undefined4 DAT_8039cfd8;
-extern undefined4 DAT_8039cfdc;
-extern undefined4 DAT_8039cfe0;
-extern undefined4 DAT_8039cfe2;
-extern undefined4 DAT_8039cfe4;
-extern undefined4 DAT_8039cfe8;
-extern undefined4 DAT_8039cfec;
-extern undefined4 DAT_8039cff0;
-extern undefined4 DAT_8039cff4;
 extern ExpgfxAttachedSourceState gProjgfxDefaultAttachedSource;
-extern undefined4 DAT_803dc070;
-extern undefined4 DAT_803dd430;
 extern EffectInterface** gPartfxInterface;
-extern undefined4 DAT_803dded8;
-extern undefined4 DAT_803ddf00;
-extern undefined4 DAT_803ddf02;
-extern undefined4 DAT_803ddf08;
-extern undefined4 DAT_803ddf0c;
-extern undefined4 DAT_803ddf10;
-extern undefined4 DAT_803ddf18;
-extern undefined4 DAT_803ddf1a;
-extern undefined4 DAT_803ddf1c;
-extern undefined4 DAT_803ddf20;
-extern undefined4 DAT_803ddf24;
-extern undefined4 DAT_803ddf28;
-extern undefined4 DAT_803ddf30;
-extern undefined4 DAT_803ddf34;
-extern undefined4 DAT_803ddf38;
-extern undefined4 DAT_803ddf3c;
-extern undefined4 DAT_803ddf40;
-extern undefined4 DAT_803ddf44;
-extern undefined4* DAT_803ddf48;
-extern undefined4* DAT_803ddf4c;
-extern undefined4* DAT_803ddf50;
-extern undefined4* DAT_803ddf54;
-extern undefined4* DAT_803ddf58;
-extern undefined4* DAT_803ddf5c;
-extern undefined4* DAT_803ddf60;
-extern undefined4* DAT_803ddf64;
-extern undefined4* DAT_803ddf68;
-extern undefined4* DAT_803ddf6c;
-extern undefined4* DAT_803ddf70;
-extern undefined4* DAT_803ddf74;
-extern undefined4* DAT_803ddf78;
-extern undefined4* DAT_803ddf7c;
-extern undefined4* DAT_803ddf80;
-extern undefined4* DAT_803ddf84;
-extern undefined4* DAT_803ddf88;
-extern undefined4* DAT_803ddf8c;
-extern undefined4* DAT_803ddf90;
-extern undefined4* DAT_803ddf94;
-extern undefined4 DAT_803ddf98;
-extern undefined4 DAT_803ddf9c;
-extern undefined4 DAT_803ddfa8;
-extern undefined4 DAT_803ddfac;
-extern undefined4 DAT_803ddfb8;
-extern undefined4 DAT_803ddfbc;
-extern undefined4 DAT_803ddfc8;
-extern undefined4 DAT_803ddfd0;
-extern undefined4 DAT_803ddfd4;
-extern undefined4 DAT_803ddfe0;
-extern undefined4 DAT_803ddfe4;
-extern undefined4 DAT_803ddff0;
-extern undefined4 DAT_803ddff4;
-extern undefined4 DAT_803de000;
-extern undefined4 DAT_803de004;
-extern undefined4 DAT_803de010;
-extern undefined4 DAT_803de014;
-extern undefined4 DAT_803de020;
-extern undefined4 DAT_803de024;
 extern f64 DOUBLE_803e00c0;
 extern f64 DOUBLE_803e00c8;
 extern f64 DOUBLE_803e0100;
@@ -6820,14 +6560,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-            lbl_8039C308[0] = 0;
-            lbl_8039C308[1] = 0;
-            lbl_8039C308[2] = 0;
-            lbl_8039C308[3] = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
             spawnParams = lbl_8039C308;
         }
         cfg.startPosY = ((PartFxSpawnParams*)spawnParams)->unk10 + (f32)(s32)
@@ -6846,14 +6586,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x551:
         if (spawnParams == NULL)
         {
-            *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-            lbl_8039C308[0] = 0;
-            lbl_8039C308[1] = 0;
-            lbl_8039C308[2] = 0;
-            lbl_8039C308[3] = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
         }
         cfg.startPosZ = lbl_803DF518;
         cfg.scale = lbl_803DF4EC;
@@ -6866,14 +6606,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-            lbl_8039C308[0] = 0;
-            lbl_8039C308[1] = 0;
-            lbl_8039C308[2] = 0;
-            lbl_8039C308[3] = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
         }
         cfg.startPosZ = lbl_803DF518;
         cfg.scale = lbl_803DF4EC;
@@ -6885,14 +6625,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x554:
         if (spawnParams == NULL)
         {
-            *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-            lbl_8039C308[0] = 0;
-            lbl_8039C308[1] = 0;
-            lbl_8039C308[2] = 0;
-            lbl_8039C308[3] = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
         }
         cfg.startPosZ = lbl_803DF518;
         cfg.scale = lbl_803DF51C;
@@ -6904,14 +6644,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x553:
         if (spawnParams == NULL)
         {
-            *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-            lbl_8039C308[0] = 0;
-            lbl_8039C308[1] = 0;
-            lbl_8039C308[2] = 0;
-            lbl_8039C308[3] = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
         }
         cfg.velocityX = lbl_803DF4F0 * (f32)(s32)
         randomGetRange(0xffffffe2, 0x1e);
@@ -7137,14 +6877,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x545:
         if (spawnParams == NULL)
         {
-            *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-            lbl_8039C308[0] = 0;
-            lbl_8039C308[1] = 0;
-            lbl_8039C308[2] = 0;
-            lbl_8039C308[3] = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
             spawnParams = lbl_8039C308;
         }
         cfg.scale = lbl_803DF530 * ((PartFxSpawnParams*)spawnParams)->unk8;
@@ -7158,14 +6898,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-            lbl_8039C308[0] = 0;
-            lbl_8039C308[1] = 0;
-            lbl_8039C308[2] = 0;
-            lbl_8039C308[3] = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
             spawnParams = lbl_8039C308;
         }
         cfg.scale = lbl_803DF534 * ((PartFxSpawnParams*)spawnParams)->unk8;
@@ -7183,14 +6923,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
         randomGetRange(0xffffff9c, 100);
         if (spawnParams == NULL)
         {
-            *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-            lbl_8039C308[0] = 0;
-            lbl_8039C308[1] = 0;
-            lbl_8039C308[2] = 0;
-            lbl_8039C308[3] = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
         }
         cfg.scale = lbl_803DF53C;
         cfg.lifetimeFrames = 300;
@@ -7212,14 +6952,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x548:
         if (spawnParams == NULL)
         {
-            *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-            lbl_8039C308[0] = 0;
-            lbl_8039C308[1] = 0;
-            lbl_8039C308[2] = 0;
-            lbl_8039C308[3] = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
         }
         cfg.scale = lbl_803DF544;
         cfg.lifetimeFrames = 0x50;
@@ -7233,14 +6973,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x52d:
         if (spawnParams == NULL)
         {
-            *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-            lbl_8039C308[0] = 0;
-            lbl_8039C308[1] = 0;
-            lbl_8039C308[2] = 0;
-            lbl_8039C308[3] = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
             spawnParams = lbl_8039C308;
         }
         if (spawnParams != NULL)
@@ -7270,14 +7010,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x531:
         if (spawnParams == NULL)
         {
-            *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-            lbl_8039C308[0] = 0;
-            lbl_8039C308[1] = 0;
-            lbl_8039C308[2] = 0;
-            lbl_8039C308[3] = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
             spawnParams = lbl_8039C308;
         }
         if (spawnParams != NULL)
@@ -7370,14 +7110,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-            lbl_8039C308[0] = 0;
-            lbl_8039C308[1] = 0;
-            lbl_8039C308[2] = 0;
-            lbl_8039C308[3] = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
             spawnParams = lbl_8039C308;
         }
         if (spawnParams == NULL)
@@ -7411,14 +7151,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x533:
         if (spawnParams == NULL)
         {
-            *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-            lbl_8039C308[0] = 0;
-            lbl_8039C308[1] = 0;
-            lbl_8039C308[2] = 0;
-            lbl_8039C308[3] = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
             spawnParams = lbl_8039C308;
         }
         if (spawnParams == NULL)
@@ -7459,14 +7199,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x535:
         if (spawnParams == NULL)
         {
-            *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-            lbl_8039C308[0] = 0;
-            lbl_8039C308[1] = 0;
-            lbl_8039C308[2] = 0;
-            lbl_8039C308[3] = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
             spawnParams = lbl_8039C308;
         }
         if (spawnParams == NULL)
@@ -7526,14 +7266,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-            lbl_8039C308[0] = 0;
-            lbl_8039C308[1] = 0;
-            lbl_8039C308[2] = 0;
-            lbl_8039C308[3] = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
             spawnParams = lbl_8039C308;
         }
         if (spawnParams == NULL)
@@ -7564,14 +7304,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x51e:
         if (spawnParams == NULL)
         {
-            *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-            lbl_8039C308[0] = 0;
-            lbl_8039C308[1] = 0;
-            lbl_8039C308[2] = 0;
-            lbl_8039C308[3] = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
             spawnParams = lbl_8039C308;
         }
         if (spawnParams == NULL)
@@ -7632,14 +7372,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x2be:
         if (spawnParams == NULL)
         {
-            *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-            lbl_8039C308[0] = 0;
-            lbl_8039C308[1] = 0;
-            lbl_8039C308[2] = 0;
-            lbl_8039C308[3] = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
             spawnParams = lbl_8039C308;
         }
         if (spawnParams != NULL)
@@ -8041,14 +7781,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-            lbl_8039C308[0] = 0;
-            lbl_8039C308[1] = 0;
-            lbl_8039C308[2] = 0;
-            lbl_8039C308[3] = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
             spawnParams = lbl_8039C308;
         }
         if (spawnParams == NULL)
@@ -8120,14 +7860,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-            lbl_8039C308[0] = 0;
-            lbl_8039C308[1] = 0;
-            lbl_8039C308[2] = 0;
-            lbl_8039C308[3] = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
             spawnParams = lbl_8039C308;
         }
         if (spawnParams == NULL)
@@ -8433,14 +8173,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-            lbl_8039C308[0] = 0;
-            lbl_8039C308[1] = 0;
-            lbl_8039C308[2] = 0;
-            lbl_8039C308[3] = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
         }
         cfg.velocityY = lbl_803DF508 * (f32)(s32)
         randomGetRange(1, 10);
@@ -8764,14 +8504,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-            lbl_8039C308[0] = 0;
-            lbl_8039C308[1] = 0;
-            lbl_8039C308[2] = 0;
-            lbl_8039C308[3] = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
         }
         cfg.velocityX = lbl_803DF608;
         ftmp0 = (f32)(s32)
@@ -8829,14 +8569,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-            lbl_8039C308[0] = 0;
-            lbl_8039C308[1] = 0;
-            lbl_8039C308[2] = 0;
-            lbl_8039C308[3] = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
             spawnParams = lbl_8039C308;
         }
         if (spawnParams == NULL)
@@ -9176,14 +8916,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x6b:
         if (spawnParams == NULL)
         {
-            *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-            lbl_8039C308[0] = 0;
-            lbl_8039C308[1] = 0;
-            lbl_8039C308[2] = 0;
-            lbl_8039C308[3] = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
             spawnParams = lbl_8039C308;
         }
         if (extraArgs == NULL)
@@ -9221,14 +8961,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x56:
         if (spawnParams == NULL)
         {
-            *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-            lbl_8039C308[0] = 0;
-            lbl_8039C308[1] = 0;
-            lbl_8039C308[2] = 0;
-            lbl_8039C308[3] = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
             spawnParams = lbl_8039C308;
         }
         cfg.startPosX = (f32)(s32)
@@ -9268,14 +9008,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-            lbl_8039C308[0] = 0;
-            lbl_8039C308[1] = 0;
-            lbl_8039C308[2] = 0;
-            lbl_8039C308[3] = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
             spawnParams = lbl_8039C308;
         }
         cfg.startPosY = (f32)(s32)
@@ -9315,14 +9055,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x58:
         if (spawnParams == NULL)
         {
-            *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-            lbl_8039C308[0] = 0;
-            lbl_8039C308[1] = 0;
-            lbl_8039C308[2] = 0;
-            lbl_8039C308[3] = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
             spawnParams = lbl_8039C308;
         }
         cfg.velocityX = ((PartFxSpawnParams*)spawnParams)->unk8 * (lbl_803DF4F0 * (f32)(s32)
@@ -9359,14 +9099,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x323:
         if (spawnParams == NULL)
         {
-            *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-            lbl_8039C308[0] = 0;
-            lbl_8039C308[1] = 0;
-            lbl_8039C308[2] = 0;
-            lbl_8039C308[3] = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
         }
         cfg.startPosX = lbl_803DF6CC * (f32)(s32)
         randomGetRange(0xffffffea, 0x15) + cfg.startPosX;
@@ -9479,14 +9219,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-            lbl_8039C308[0] = 0;
-            lbl_8039C308[1] = 0;
-            lbl_8039C308[2] = 0;
-            lbl_8039C308[3] = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
         }
         cfg.startPosZ = lbl_803DF6E4;
         rot.m[1] = lbl_803DF4DC;
@@ -9670,14 +9410,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x3de:
         if (spawnParams == NULL)
         {
-            *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-            lbl_8039C308[0] = 0;
-            lbl_8039C308[1] = 0;
-            lbl_8039C308[2] = 0;
-            lbl_8039C308[3] = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
             spawnParams = lbl_8039C308;
         }
         if (spawnParams == NULL)
@@ -9749,14 +9489,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-            lbl_8039C308[0] = 0;
-            lbl_8039C308[1] = 0;
-            lbl_8039C308[2] = 0;
-            lbl_8039C308[3] = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
             spawnParams = lbl_8039C308;
         }
         cfg.velocityX = lbl_803DF608 * (f32)(s32)
@@ -9777,14 +9517,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
     case 0x321:
         if (spawnParams == NULL)
         {
-            *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-            lbl_8039C308[0] = 0;
-            lbl_8039C308[1] = 0;
-            lbl_8039C308[2] = 0;
-            lbl_8039C308[3] = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
             spawnParams = lbl_8039C308;
         }
         cfg.velocityY = lbl_803DF4CC * (f32)(s32)
@@ -9804,14 +9544,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-            lbl_8039C308[0] = 0;
-            lbl_8039C308[1] = 0;
-            lbl_8039C308[2] = 0;
-            lbl_8039C308[3] = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
             spawnParams = lbl_8039C308;
         }
         cfg.startPosX = ((PartFxSpawnParams*)spawnParams)->unkC;
@@ -9828,14 +9568,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-            lbl_8039C308[0] = 0;
-            lbl_8039C308[1] = 0;
-            lbl_8039C308[2] = 0;
-            lbl_8039C308[3] = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
             spawnParams = lbl_8039C308;
         }
         cfg.velocityZ = lbl_803DF708;
@@ -9853,14 +9593,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
 
         if (spawnParams == NULL)
         {
-            *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-            *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-            lbl_8039C308[0] = 0;
-            lbl_8039C308[1] = 0;
-            lbl_8039C308[2] = 0;
-            lbl_8039C308[3] = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+            ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
             spawnParams = lbl_8039C308;
         }
         cfg.sourceVecX = 700;
@@ -9882,14 +9622,14 @@ int partfx_spawnObject(s16* sourceObj, u32 effectIdArg, s16* spawnParams, u32 sp
         {
             if (spawnParams == NULL)
             {
-                *(f32*)(lbl_8039C308 + 6) = lbl_803DF4DC;
-                *(f32*)(lbl_8039C308 + 8) = lbl_803DF4DC;
-                *(f32*)(lbl_8039C308 + 10) = lbl_803DF4DC;
-                *(f32*)(lbl_8039C308 + 4) = lbl_803DF4D0;
-                lbl_8039C308[0] = 0;
-                lbl_8039C308[1] = 0;
-                lbl_8039C308[2] = 0;
-                lbl_8039C308[3] = 0;
+                ((PartFxSpawnParams*)lbl_8039C308)->unkC = lbl_803DF4DC;
+                ((PartFxSpawnParams*)lbl_8039C308)->unk10 = lbl_803DF4DC;
+                ((PartFxSpawnParams*)lbl_8039C308)->unk14 = lbl_803DF4DC;
+                ((PartFxSpawnParams*)lbl_8039C308)->unk8 = lbl_803DF4D0;
+                ((PartFxSpawnParams*)lbl_8039C308)->unk0 = 0;
+                ((PartFxSpawnParams*)lbl_8039C308)->unk2 = 0;
+                ((PartFxSpawnParams*)lbl_8039C308)->unk4 = 0;
+                ((PartFxSpawnParams*)lbl_8039C308)->unk6 = 0;
             }
             cfg.velocityX = lbl_803DF5CC * (f32)(s32)
             randomGetRange(0xffffffd8, 0x28);
