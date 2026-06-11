@@ -2732,7 +2732,7 @@ typedef struct
     u16 b;
 } CreditEntry;
 
-extern CreditEntry lbl_8031CE90[];
+extern CreditEntry gCreditEntries[];
 
 #pragma scheduling off
 #pragma peephole off
@@ -2762,24 +2762,24 @@ void creditsStart_(void)
     {
         alpha = (u8)(lbl_803DD996 * 0xff / 0x14);
     }
-    else if (lbl_803DD996 >= lbl_8031CE90[lbl_803DD998].b - 0x14)
+    else if (lbl_803DD996 >= gCreditEntries[lbl_803DD998].b - 0x14)
     {
         if (lbl_803DD998 == lbl_803DBC0A - 1 && lbl_803DD9A4 == 0)
         {
             streamFn_8000a380(3, 2, 0xfa0);
             lbl_803DD9A4 = 1;
         }
-        alpha = (u8)(0xff - (lbl_803DD996 - lbl_8031CE90[lbl_803DD998].b) * 0xff / 0x14);
+        alpha = (u8)(0xff - (lbl_803DD996 - gCreditEntries[lbl_803DD998].b) * 0xff / 0x14);
     }
     else
     {
         alpha = 0xff;
     }
     gameTextSetColor(0xff, 0xff, 0xff, alpha);
-    gameTextFn_80016810(lbl_8031CE90[lbl_803DD998].a, 0, 0);
+    gameTextFn_80016810(gCreditEntries[lbl_803DD998].a, 0, 0);
     lbl_803DD994 = lbl_803DD994 + lbl_803DB411;
     lbl_803DD996 = lbl_803DD996 + lbl_803DB411;
-    if (lbl_803DD996 < lbl_8031CE90[lbl_803DD998].b)
+    if (lbl_803DD996 < gCreditEntries[lbl_803DD998].b)
     {
         return;
     }
@@ -2882,7 +2882,7 @@ typedef struct
     u8 pad95[3];
 } CreditsPage;
 
-extern CreditsPage lbl_8031C620[];
+extern CreditsPage gCreditsPages[];
 extern f32 lbl_803E22AC;
 extern f32 lbl_803E22B0;
 extern f32 lbl_803E22B4;
@@ -2904,7 +2904,7 @@ int Credits_frameStart(void)
     {
         t = lbl_803DD968;
         lbl_803DD968 = t + timeDelta;
-        if (lbl_803DD968 >= (f32)lbl_8031C620[idx].f92)
+        if (lbl_803DD968 >= (f32)gCreditsPages[idx].f92)
         {
             lbl_803DD970 = idx + 1;
         }
@@ -2912,7 +2912,7 @@ int Credits_frameStart(void)
         {
             i = 0;
             cur = lbl_803DD968;
-            page = &lbl_8031C620[lbl_803DD970];
+            page = &gCreditsPages[lbl_803DD970];
             for (; i < page->count; i++)
             {
                 if (cur < (f32)page->lines[i].t0)
@@ -2957,7 +2957,7 @@ int Credits_frameStart(void)
                 }
                 page->lines[i].alpha = a;
                 if (cur >= (f32)page->lines[i].t0 && cur <= (f32)page->lines[i].t3 &&
-                    cur >= (f32)lbl_8031C620[lbl_803DD970].f90)
+                    cur >= (f32)gCreditsPages[lbl_803DD970].f90)
                 {
                     page->lines[i].y = lbl_803E22B4 * (timeDelta / lbl_803E22B8) + page->lines[i].y;
                 }

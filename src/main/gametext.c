@@ -65,7 +65,7 @@ void gameTextFn_80016810(int a, int b, int c)
 int gameTextGetTaskText(int id, int* outA, int* outB)
 {
     int i;
-    TaskTextEntry* e = lbl_802C8860;
+    TaskTextEntry* e = gTaskTextTable;
     for (i = 0; i < 0x7a; i++)
     {
         if (e->key == id)
@@ -235,7 +235,7 @@ void gameTextMeasureFn_800163c4(char* str, int boxIdx, int x, int y, int* outMax
 int utf8GetNextChar(u8* str, int* outLen)
 {
     u8 first = *str;
-    int cls = lbl_802C6E98[first];
+    int cls = gUtf8CharClassTable[first];
     u32 acc = 0;
     switch (cls)
     {
@@ -260,7 +260,7 @@ int utf8GetNextChar(u8* str, int* outLen)
         break;
     }
     *outLen = cls + 1;
-    return acc - lbl_802C6F98[cls];
+    return acc - gUtf8ClassOffsetTable[cls];
 }
 #pragma dont_inline reset
 
