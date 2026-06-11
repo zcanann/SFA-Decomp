@@ -234,13 +234,10 @@ void cfccrate_update(int obj)
             fz = *(f32*)(p + 0x20) - ((GameObject*)obj)->anim.worldPosZ;
             fy = *(f32*)(p + 0x1c) - ((GameObject*)obj)->anim.worldPosY;
             dist = sqrtf(fy * fy + (fx * fx + fz * fz));
-            if (dist < lbl_803E3E20)
+            if (dist < lbl_803E3E20 && state->proximityLatch == 1)
             {
-                if (state->proximityLatch == 1)
-                {
-                    state->proximityLatch = 0;
-                    getLActions(obj, obj, 0x5c, 0, 0, 0);
-                }
+                state->proximityLatch = 0;
+                getLActions(obj, obj, 0x5c, 0, 0, 0);
             }
             else if ((dist > *(volatile f32*)&lbl_803E3E20) && (state->proximityLatch == 0))
             {
