@@ -1,4 +1,5 @@
 #include "main/effect_interfaces.h"
+#include "main/audio/sfx.h"
 #include "main/game_object.h"
 #include "main/map_block.h"
 #include "main/dll/MMP/MMP_asteroid.h"
@@ -25,7 +26,6 @@ extern f32 lbl_803E3FF8;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E4004;
 extern int mmAlloc(int size, int pool, int tag);
-extern void Sfx_KeepAliveLoopedObjectSound(int obj);
 extern f32 timeDelta;
 extern f32 lbl_803E4018;
 extern f32 sqrtf(f32);
@@ -405,9 +405,9 @@ void xyzanimator_update(int obj)
         {
             goto done_lbl;
         }
-        if (((XyzAnimatorState*)state)->unk4E != 0)
+        if (((XyzAnimatorState*)state)->loopSfxId != 0)
         {
-            Sfx_KeepAliveLoopedObjectSound(obj);
+            Sfx_KeepAliveLoopedObjectSound((u32)obj, ((XyzAnimatorState*)state)->loopSfxId);
         }
     }
     else

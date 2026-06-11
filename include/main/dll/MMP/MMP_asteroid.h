@@ -26,7 +26,7 @@ void texframeanimator_init(int *obj, u8 *params);
 
 
 /* xyzanimator per-object extra state (xyzanimator_getExtraSize == 0x50):
- * 16 int slots, current-offset vec at 0x40, mode/active bytes, frame u16. */
+ * 16 int slots, current-offset vec at 0x40, mode/active bytes, looped SFX id. */
 typedef struct XyzAnimatorState {
     int rowCount;
     int unk4;
@@ -49,7 +49,7 @@ typedef struct XyzAnimatorState {
     f32 unk48;
     s8 gameBitValue;
     s8 unk4D;
-    u16 unk4E;
+    u16 loopSfxId;
 } XyzAnimatorState;
 
 STATIC_ASSERT(sizeof(XyzAnimatorState) == 0x50);
