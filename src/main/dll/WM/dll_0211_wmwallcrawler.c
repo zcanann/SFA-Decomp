@@ -284,20 +284,18 @@ void wmwallcrawler_update(int obj)
                             n = hitDetectFn_80065e50(obj, *(f32*)(obj + 0xc), *(f32*)(obj + 0x10), *(f32*)(obj + 0x14),
                                                      &list, 0, 0);
                             idx = 0;
-                            walk = list;
                             for (k = 0; k < n; k++)
                             {
-                                d = **walk - *(f32*)(obj + 0x10);
-                                if (d < lbl_803E5FB0)
+                                d = *list[idx] - *(f32*)(obj + 0x10);
+                                if (d < *(f32*)&lbl_803E5FB0)
                                 {
-                                    d = d * lbl_803E5FE0;
+                                    d = d * *(f32*)&lbl_803E5FE0;
                                 }
                                 if (d < best)
                                 {
                                     bestIdx = idx;
                                     best = d;
                                 }
-                                walk++;
                                 idx++;
                             }
                             if (list != 0)
@@ -378,20 +376,18 @@ void wmwallcrawler_update(int obj)
                                     n = hitDetectFn_80065e50(obj, *(f32*)(obj + 0xc), *(f32*)(obj + 0x10),
                                                              *(f32*)(obj + 0x14), &list, 0, 0);
                                     idx = 0;
-                                    walk = list;
                                     for (k = 0; k < n; k++)
                                     {
-                                        d = **walk - *(f32*)(obj + 0x10);
-                                        if (d < lbl_803E5FB0)
+                                        d = *list[idx] - *(f32*)(obj + 0x10);
+                                        if (d < *(f32*)&lbl_803E5FB0)
                                         {
-                                            d = d * lbl_803E5FE0;
+                                            d = d * *(f32*)&lbl_803E5FE0;
                                         }
                                         if (d < best)
                                         {
                                             bestIdx = idx;
                                             best = d;
                                         }
-                                        walk++;
                                         idx++;
                                     }
                                     if (list != 0)
