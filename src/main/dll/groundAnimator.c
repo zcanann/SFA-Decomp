@@ -45,24 +45,17 @@ extern undefined4 FUN_8001771c();
 extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
 extern undefined4 FUN_80017ac8();
-extern int FUN_80017b00();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjGroup_FindNearestObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined4 ObjMsg_SendToObject();
-extern undefined4 FUN_8003b818();
 extern void objRenderFn_8003b8f4(int param_1, int param_2, int param_3, int param_4, int param_5,
                                  f32 scale);
 extern int FUN_800632d8();
 extern undefined4 FUN_80081118();
-extern undefined4 FUN_8011e868();
-extern int FUN_80286840();
-extern undefined4 FUN_8028688c();
 extern double FUN_80293900();
 extern undefined4 FUN_80294d60();
-extern uint FUN_80294db4();
-extern uint countLeadingZeros();
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
@@ -76,15 +69,11 @@ extern ObjectTriggerInterface** gObjectTriggerInterface;
 extern undefined4* lbl_803DCAC0;
 #define gCarryableInterface lbl_803DCAC0
 extern undefined4* DAT_803dd718;
-extern undefined4* DAT_803dd740;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E37B8;
 extern f32 lbl_803E37BC;
 extern f32 lbl_803E37C0;
 extern f32 lbl_803E37C4;
-extern f32 lbl_803E4454;
-extern f32 lbl_803E4458;
-extern f32 lbl_803E445C;
 extern f32 lbl_803E4460;
 extern f32 lbl_803E446C;
 extern f32 lbl_803E4470;
@@ -730,7 +719,7 @@ void FUN_8017db40(uint param_1, int param_2)
     }
 LAB_8017de10:
     *(undefined2*)(iVar4 + 0x38) = uVar1;
-    *(undefined*)(iVar4 + 0x3a) = 4;
+    *(u8*)(iVar4 + 0x3a) = 4;
     *(float*)&((GroundAnimatorState*)iVar4)->linkedObj = lbl_803DC074;
     ((GroundAnimatorState*)iVar4)->sinkDepth = lbl_803DC074;
     uVar2 = randomGetRange(0xffff8000, 0x7fff);
