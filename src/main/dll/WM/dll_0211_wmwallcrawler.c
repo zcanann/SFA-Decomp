@@ -90,6 +90,9 @@ void wmwallcrawler_update(int obj)
     f32** list;
     f32** list2;
     f32 best;
+    f32 d;
+    f32 dy;
+    f32 dz;
 
     st = ((GameObject*)obj)->extra;
     bestIdx = 0;
@@ -242,8 +245,8 @@ void wmwallcrawler_update(int obj)
                             {
                                 Sfx_StopObjectChannel(obj, 0x10);
                                 *(u8*)(st + 0x296) = 5;
-                                *(f32*)(obj + 0x24) = -*(f32*)(obj + 0x24) * lbl_803E5FD8;
-                                *(f32*)(obj + 0x2c) = -*(f32*)(obj + 0x2c) * lbl_803E5FD8;
+                                *(f32*)(obj + 0x24) = -*(f32*)(obj + 0x24) * (d = lbl_803E5FD8);
+                                *(f32*)(obj + 0x2c) = -*(f32*)(obj + 0x2c) * d;
                             }
                         }
                     }
@@ -282,25 +285,20 @@ void wmwallcrawler_update(int obj)
                                                      &list, 0, 0);
                             idx = 0;
                             walk = list;
-                            if (n > 0)
+                            for (k = 0; k < n; k++)
                             {
-                                do
+                                d = **walk - *(f32*)(obj + 0x10);
+                                if (d < lbl_803E5FB0)
                                 {
-                                    dist = **walk - *(f32*)(obj + 0x10);
-                                    if (dist < lbl_803E5FB0)
-                                    {
-                                        dist = dist * lbl_803E5FE0;
-                                    }
-                                    if (dist < best)
-                                    {
-                                        bestIdx = idx;
-                                        best = dist;
-                                    }
-                                    walk++;
-                                    idx++;
-                                    n--;
+                                    d = d * lbl_803E5FE0;
                                 }
-                                while (n != 0);
+                                if (d < best)
+                                {
+                                    bestIdx = idx;
+                                    best = d;
+                                }
+                                walk++;
+                                idx++;
                             }
                             if (list != 0)
                             {
@@ -381,25 +379,20 @@ void wmwallcrawler_update(int obj)
                                                              *(f32*)(obj + 0x14), &list, 0, 0);
                                     idx = 0;
                                     walk = list;
-                                    if (n > 0)
+                                    for (k = 0; k < n; k++)
                                     {
-                                        do
+                                        d = **walk - *(f32*)(obj + 0x10);
+                                        if (d < lbl_803E5FB0)
                                         {
-                                            dist = **walk - *(f32*)(obj + 0x10);
-                                            if (dist < lbl_803E5FB0)
-                                            {
-                                                dist = dist * lbl_803E5FE0;
-                                            }
-                                            if (dist < best)
-                                            {
-                                                bestIdx = idx;
-                                                best = dist;
-                                            }
-                                            walk++;
-                                            idx++;
-                                            n--;
+                                            d = d * lbl_803E5FE0;
                                         }
-                                        while (n != 0);
+                                        if (d < best)
+                                        {
+                                            bestIdx = idx;
+                                            best = d;
+                                        }
+                                        walk++;
+                                        idx++;
                                     }
                                     if (list != 0)
                                     {
@@ -415,21 +408,20 @@ void wmwallcrawler_update(int obj)
                                 {
                                     *(f32*)(obj + 0x10) = *(f32*)(st + 0x274);
                                 }
-                                *(f32*)(obj + 0x24) = ((*(f32*)(player + 0xc) - *(f32*)(obj + 0xc)) / lbl_803E5FF0) *
-                                    timeDelta;
-                                *(f32*)(obj + 0x28) = ((*(f32*)(player + 0x10) - *(f32*)(obj + 0x10)) / lbl_803E5FF0) *
-                                    timeDelta;
-                                *(f32*)(obj + 0x2c) = ((*(f32*)(player + 0x14) - *(f32*)(obj + 0x14)) / lbl_803E5FF0) *
-                                    timeDelta;
+                                dy = *(f32*)(player + 0x10) - *(f32*)(obj + 0x10);
+                                dz = *(f32*)(player + 0x14) - *(f32*)(obj + 0x14);
+                                *(f32*)(obj + 0x24) = ((*(f32*)(player + 0xc) - *(f32*)(obj + 0xc)) / (d = lbl_803E5FF0)) * timeDelta;
+                                *(f32*)(obj + 0x28) = (dy / d) * timeDelta;
+                                *(f32*)(obj + 0x2c) = (dz / d) * timeDelta;
                                 if ((((WmwallcrawlerState*)st)->unk294 & 0x20) != 0 &&
                                     sqrtf(*(f32*)(obj + 0x2c) * *(f32*)(obj + 0x2c) +
-                                        *(f32*)(obj + 0x24) * *(f32*)(obj + 0x24) +
-                                        *(f32*)(obj + 0x28) * *(f32*)(obj + 0x28)) > lbl_803DC130)
+                                        (*(f32*)(obj + 0x24) * *(f32*)(obj + 0x24) +
+                                        *(f32*)(obj + 0x28) * *(f32*)(obj + 0x28))) > lbl_803DC130)
                                 {
                                     Vec3_Normalize((f32*)(obj + 0x24));
-                                    *(f32*)(obj + 0x24) = *(f32*)(obj + 0x24) * timeDelta * lbl_803DC130;
-                                    *(f32*)(obj + 0x28) = *(f32*)(obj + 0x28) * timeDelta * lbl_803DC130;
-                                    *(f32*)(obj + 0x2c) = *(f32*)(obj + 0x2c) * timeDelta * lbl_803DC130;
+                                    *(f32*)(obj + 0x24) = *(f32*)(obj + 0x24) * (timeDelta * lbl_803DC130);
+                                    *(f32*)(obj + 0x28) = *(f32*)(obj + 0x28) * (timeDelta * lbl_803DC130);
+                                    *(f32*)(obj + 0x2c) = *(f32*)(obj + 0x2c) * (timeDelta * lbl_803DC130);
                                 }
                                 if (((GameObject*)obj)->anim.currentMove == 0 && (((WmwallcrawlerState*)st)->unk294 &
                                     0x400) != 0 && dist < lbl_803E5FF4)
@@ -469,13 +461,15 @@ void wmwallcrawler_update(int obj)
                                     }
                                     if ((((WmwallcrawlerState*)st)->unk294 & 0x10) == 0)
                                     {
-                                        *(f32*)(obj + 0xc) = lbl_803E6008 * -*(f32*)(obj + 0x24) + *(f32*)(obj + 0xc);
-                                        *(f32*)(obj + 0x14) = lbl_803E6008 * -*(f32*)(obj + 0x2c) + *(f32*)(obj + 0x14);
+                                        d = lbl_803E6008;
+                                        *(f32*)(obj + 0xc) = d * -*(f32*)(obj + 0x24) + *(f32*)(obj + 0xc);
+                                        *(f32*)(obj + 0x14) = d * -*(f32*)(obj + 0x2c) + *(f32*)(obj + 0x14);
                                     }
                                     else
                                     {
-                                        *(f32*)(obj + 0xc) = lbl_803E600C * -*(f32*)(obj + 0x24) + *(f32*)(obj + 0xc);
-                                        *(f32*)(obj + 0x14) = lbl_803E600C * -*(f32*)(obj + 0x2c) + *(f32*)(obj + 0x14);
+                                        d = lbl_803E600C;
+                                        *(f32*)(obj + 0xc) = d * -*(f32*)(obj + 0x24) + *(f32*)(obj + 0xc);
+                                        *(f32*)(obj + 0x14) = d * -*(f32*)(obj + 0x2c) + *(f32*)(obj + 0x14);
                                     }
                                     s16toFloat(st + 0x288, (s16)(randomGetRange(0, 0x14) + 100));
                                 }
