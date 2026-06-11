@@ -141,14 +141,14 @@ typedef struct MagicDustState {
     s8 unk261;
     u8 unk262[6];
     f32 unk268;
-    f32 unk26C; /* sparkle scale; reset on collect */
-    u16 unk270;
-    u16 unk272; /* partfx effect id */
+    f32 burstTimer; /* counts down to the next 30-particle burst */
+    u16 burstEffectId;
+    u16 ambientEffectId; /* partfx effect id */
     s16 sfxId; /* collect sfx id */
     s16 unk276;
-    s16 unk278;
+    s16 ambientTimer;
     u8 flags27A; /* bits 8/0x10/0x40 observed; &0xFA clear on collect */
-    u8 unk27B;
+    u8 bounceCount;
     u8 mode; /* particle color row */
     u8 unk27D[3];
     u16 unk280;
@@ -200,7 +200,7 @@ void magicdust_update(int obj)
       ((MagicDustState *)state)->flags27A = ((MagicDustState *)state)->flags27A & 0xfa;
       ((MagicDustState *)state)->flags27A = ((MagicDustState *)state)->flags27A | 8;
       ((MagicDustState *)state)->flags27A = ((MagicDustState *)state)->flags27A | 0x40;
-      ((MagicDustState *)state)->unk26C = lbl_803E34B4;
+      ((MagicDustState *)state)->burstTimer = lbl_803E34B4;
       OSReport(sMagicDustCollectedMessage);
       ((GameObject *)obj)->anim.alpha = 1;
     }
@@ -211,13 +211,13 @@ void magicdust_update(int obj)
       ((MagicDustState *)state)->flags27A = ((MagicDustState *)state)->flags27A | 0x10;
       fxArg = '\0';
       (*gPartfxInterface)->spawnObject((void *)obj,
-                ((MagicDustState *)state)->unk272,NULL,0x10002,-1,&fxArg);
+                ((MagicDustState *)state)->ambientEffectId,NULL,0x10002,-1,&fxArg);
       fxArg = '\x01';
       (*gPartfxInterface)->spawnObject((void *)obj,
-                ((MagicDustState *)state)->unk272,NULL,0x10002,-1,&fxArg);
+                ((MagicDustState *)state)->ambientEffectId,NULL,0x10002,-1,&fxArg);
       fxArg = '\x02';
       (*gPartfxInterface)->spawnObject((void *)obj,
-                ((MagicDustState *)state)->unk272,NULL,0x10002,-1,&fxArg);
+                ((MagicDustState *)state)->ambientEffectId,NULL,0x10002,-1,&fxArg);
     }
   }
   else {
@@ -229,11 +229,11 @@ void magicdust_update(int obj)
   if ((((GameObject *)obj)->anim.flags & 0x2000) != 0) {
     if ((((MagicDustState *)state)->flags27A & 2) != 0) {
       *(short *)obj = *(short *)obj + (u16)framesThisStep * 0x100;
-      ((MagicDustState *)state)->unk278 -= (u16)framesThisStep;
-      if (((MagicDustState *)state)->unk278 < 0) {
+      ((MagicDustState *)state)->ambientTimer -= (u16)framesThisStep;
+      if (((MagicDustState *)state)->ambientTimer < 0) {
         Sfx_PlayFromObject(obj,SFXen_statue_wave);
         val = randomGetRange(0xf0,300);
-        ((MagicDustState *)state)->unk278 = (short)val;
+        ((MagicDustState *)state)->ambientTimer = (short)val;
       }
     }
     if (*(uint *)&((GameObject *)obj)->ownerObj != 0) {
@@ -255,24 +255,24 @@ void magicdust_update(int obj)
       ((GameObject *)obj)->anim.velocityZ = ((GameObject *)obj)->anim.velocityZ * fval;
       ((GameObject *)obj)->anim.velocityY = -(lbl_803E34C0 * timeDelta - ((GameObject *)obj)->anim.velocityY);
     }
-    ((MagicDustState *)state)->unk26C = ((MagicDustState *)state)->unk26C - timeDelta;
+    ((MagicDustState *)state)->burstTimer = ((MagicDustState *)state)->burstTimer - timeDelta;
     byteVal = ((MagicDustState *)state)->flags27A;
     if ((byteVal & 1) == 0) {
       if ((byteVal & 4) == 0) {
-        if (((MagicDustState *)state)->unk26C <= lbl_803E34C4) {
+        if (((MagicDustState *)state)->burstTimer <= lbl_803E34C4) {
           Obj_FreeObject(obj);
         }
         goto LAB_80173f80;
       }
-      if (((MagicDustState *)state)->unk26C <= lbl_803E34C4) {
+      if (((MagicDustState *)state)->burstTimer <= lbl_803E34C4) {
         ((MagicDustState *)state)->flags27A = byteVal & 0xfb;
         ((MagicDustState *)state)->flags27A = ((MagicDustState *)state)->flags27A | 8;
-        ((MagicDustState *)state)->unk26C = lbl_803E34B4;
+        ((MagicDustState *)state)->burstTimer = lbl_803E34B4;
         (*gExpgfxInterface)->freeSource2((u32)obj);
         if (*(int *)&((GameObject *)obj)->anim.parent == 0) {
           for (burstArg[0] = '\x1e'; burstArg[0] != '\0'; burstArg[0] = burstArg[0] + -1) {
             (*gPartfxInterface)->spawnObject((void *)obj,
-                ((MagicDustState *)state)->unk270,NULL,1,-1,burstArg);
+                ((MagicDustState *)state)->burstEffectId,NULL,1,-1,burstArg);
           }
         }
         ((GameObject *)obj)->anim.alpha = 1;
@@ -282,17 +282,17 @@ void magicdust_update(int obj)
           ((GameObject *)obj)->anim.velocityZ * timeDelta, obj);
     }
     else {
-      if (((MagicDustState *)state)->unk26C <= lbl_803E34C4) {
+      if (((MagicDustState *)state)->burstTimer <= lbl_803E34C4) {
         ((MagicDustState *)state)->flags27A = byteVal & 0xfe;
         ((MagicDustState *)state)->flags27A = ((MagicDustState *)state)->flags27A | 4;
-        ((MagicDustState *)state)->unk26C = lbl_803E34C8;
+        ((MagicDustState *)state)->burstTimer = lbl_803E34C8;
         ((GameObject *)obj)->anim.alpha = 0xff;
       }
       if (*(int *)&((GameObject *)obj)->anim.parent == 0) {
         (*gPartfxInterface)->spawnObject((void *)obj,
-            ((MagicDustState *)state)->unk270,NULL,1,-1,NULL);
+            ((MagicDustState *)state)->burstEffectId,NULL,1,-1,NULL);
         (*gPartfxInterface)->spawnObject((void *)obj,
-            ((MagicDustState *)state)->unk270,NULL,1,-1,NULL);
+            ((MagicDustState *)state)->burstEffectId,NULL,1,-1,NULL);
       }
     }
     if ((((MagicDustState *)state)->flags27A & 3) == 0) {
@@ -318,8 +318,8 @@ void magicdust_update(int obj)
           ((GameObject *)obj)->anim.velocityY = -((GameObject *)obj)->anim.velocityY;
           ((GameObject *)obj)->anim.velocityY = ((GameObject *)obj)->anim.velocityY * lbl_803E34D4;
         }
-        byteVal = *(char *)&((MagicDustState *)state)->unk27B + 1;
-        ((MagicDustState *)state)->unk27B = byteVal;
+        byteVal = *(char *)&((MagicDustState *)state)->bounceCount + 1;
+        ((MagicDustState *)state)->bounceCount = byteVal;
         if (5 < byteVal) {
           ((MagicDustState *)state)->flags27A = ((MagicDustState *)state)->flags27A | 2;
           fval = lbl_803E34C4;
@@ -358,7 +358,7 @@ void magicdust_update(int obj)
           ((MagicDustState *)state)->flags27A = ((MagicDustState *)state)->flags27A & 0xfa;
           ((MagicDustState *)state)->flags27A = ((MagicDustState *)state)->flags27A | 8;
           ((MagicDustState *)state)->flags27A = ((MagicDustState *)state)->flags27A | 0x40;
-          ((MagicDustState *)state)->unk26C = lbl_803E34B4;
+          ((MagicDustState *)state)->burstTimer = lbl_803E34B4;
           OSReport(sMagicDustCollectedMessage);
           ((GameObject *)obj)->anim.alpha = 1;
         }
@@ -450,8 +450,8 @@ void magicdust_init(int obj,int placement)
   case 0x2c4:
     randVal = randomGetRange(0,1);
     *(undefined *)(*(int *)(ref + 0x34) + 8) = *(u8 *)((int)texPickA + randVal);
-    *(undefined2 *)&((MagicDustState *)state)->unk272 = 0x54f;
-    *(undefined2 *)&((MagicDustState *)state)->unk270 = 0x54b;
+    *(undefined2 *)&((MagicDustState *)state)->ambientEffectId = 0x54f;
+    *(undefined2 *)&((MagicDustState *)state)->burstEffectId = 0x54b;
     *(undefined2 *)&((MagicDustState *)state)->sfxId = 0x58;
     *(undefined2 *)&((MagicDustState *)state)->unk276 = 0x5b0;
     *(undefined *)&((MagicDustState *)state)->mode = 4;
@@ -459,24 +459,24 @@ void magicdust_init(int obj,int placement)
   case 0x2cd:
     randVal = randomGetRange(0,1);
     *(undefined *)(*(int *)(ref + 0x34) + 8) = *(u8 *)((int)texPickB + randVal);
-    *(undefined2 *)&((MagicDustState *)state)->unk272 = 0x54e;
-    *(undefined2 *)&((MagicDustState *)state)->unk270 = 0x54a;
+    *(undefined2 *)&((MagicDustState *)state)->ambientEffectId = 0x54e;
+    *(undefined2 *)&((MagicDustState *)state)->burstEffectId = 0x54a;
     *(undefined2 *)&((MagicDustState *)state)->sfxId = 0x59;
     *(undefined2 *)&((MagicDustState *)state)->unk276 = 0x5b1;
     *(undefined *)&((MagicDustState *)state)->mode = 1;
     break;
   case 0x2ce:
     *(undefined *)(*(int *)(ref + 0x34) + 8) = 3;
-    *(undefined2 *)&((MagicDustState *)state)->unk272 = 0x54d;
-    *(undefined2 *)&((MagicDustState *)state)->unk270 = 0x549;
+    *(undefined2 *)&((MagicDustState *)state)->ambientEffectId = 0x54d;
+    *(undefined2 *)&((MagicDustState *)state)->burstEffectId = 0x549;
     *(undefined2 *)&((MagicDustState *)state)->sfxId = 0x5a;
     *(undefined2 *)&((MagicDustState *)state)->unk276 = 0x5b2;
     *(undefined *)&((MagicDustState *)state)->mode = 2;
     break;
   default:
     *(undefined *)(*(int *)(ref + 0x34) + 8) = 2;
-    *(undefined2 *)&((MagicDustState *)state)->unk272 = 0x550;
-    *(undefined2 *)&((MagicDustState *)state)->unk270 = 0x54c;
+    *(undefined2 *)&((MagicDustState *)state)->ambientEffectId = 0x550;
+    *(undefined2 *)&((MagicDustState *)state)->burstEffectId = 0x54c;
     *(undefined2 *)&((MagicDustState *)state)->sfxId = 0x5b;
     *(undefined2 *)&((MagicDustState *)state)->unk276 = 0x5b3;
     *(undefined *)&((MagicDustState *)state)->mode = 6;
@@ -490,10 +490,10 @@ void magicdust_init(int obj,int placement)
   }
   ((GameObject *)obj)->objectFlags = ((GameObject *)obj)->objectFlags | 0x2000;
   if ((((MagicDustState *)state)->flags27A & 1) != 0) {
-    ((MagicDustState *)state)->unk26C = lbl_803E34FC;
+    ((MagicDustState *)state)->burstTimer = lbl_803E34FC;
   }
   else {
-    ((MagicDustState *)state)->unk26C = lbl_803E34C8;
+    ((MagicDustState *)state)->burstTimer = lbl_803E34C8;
     ((MagicDustState *)state)->flags27A = ((MagicDustState *)state)->flags27A | 4;
   }
   ObjMsg_AllocQueue(obj,1);
